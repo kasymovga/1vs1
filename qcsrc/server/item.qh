@@ -1,7 +1,7 @@
 float g_balance_pause_armor_rot;
 float g_balance_pause_health_rot;
 float g_weapon_stay;
-void() item_init;
+void(void) item_init;
 float item_start_failed;
 float(entity item, entity player) item_give_to;
 floatfield(float it) item_counter_field;

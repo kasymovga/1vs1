@@ -210,6 +210,7 @@ weapon/selectable.qc
 shooter.qc
 laser.qc
 item.qc
+target_items.qc
 powerup.qc
 backpack.qc
 pinata.qc
