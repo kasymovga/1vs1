@@ -9,7 +9,7 @@ float g_balance_powerup_strength_force;
 float g_balance_powerup_strength_selfdamage;
 float g_balance_powerup_strength_selfforce;
 
-void(.float powerupfield, string _model, string _sound, string _name, float it) powerup_drop {
+void(.float powerupfield, string _model, string _defmodel, string _sound, string _name, float it) powerup_drop {
 	entity oldself;
 	if (self.powerupfield > time) {
 		entity e = spawn();
@@ -18,7 +18,7 @@ void(.float powerupfield, string _model, string _sound, string _name, float it) 
 		setorigin(e, self.origin);
 		oldself = self;
 		self = e;
-		item_start(_model, _sound, 0, 0, _name, it, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+		item_start(_model, _defmodel, _sound, 0, 0, _name, it, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 		self = oldself;
 	}
 }
@@ -27,16 +27,16 @@ var void(float killed) powerup_player_clear_next;
 void(float killed) powerup_player_clear {
 	if (killed) {
 		if (g_powerup_strength_droppable)
-			powerup_drop(strength_finished, "models/items/g_strength.md3", "misc/powerup.wav", "Strength Powerup", IT_STRENGTH);
+			powerup_drop(strength_finished, sv_model_powerupstrength, "models/items/g_strength.md3", "misc/powerup.wav", "Strength Powerup", IT_STRENGTH);
 
 		if (g_powerup_shield_droppable)
-			powerup_drop(invincible_finished, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_INVINCIBLE);
+			powerup_drop(invincible_finished, sv_model_powerupinvincible, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_INVINCIBLE);
 
 		if (g_powerup_invisibility_droppable)
-			powerup_drop(invisibility_finished, "models/items/g_strength.md3", "misc/powerup.wav", "Invisibility", IT_INVISIBILITY);
+			powerup_drop(invisibility_finished, sv_model_powerupinvisibility, "models/items/g_strength.md3", "misc/powerup.wav", "Invisibility", IT_INVISIBILITY);
 
 		if (g_powerup_speed_droppable)
-			powerup_drop(speed_finished, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_SPEED);
+			powerup_drop(speed_finished, sv_model_powerupspeed, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_SPEED);
 	}
 	self.invincible_finished = 0;
 	self.invisibility_finished = 0;

@@ -166,6 +166,7 @@ typedef void() voidfunc;
 #endif
 .float cvar_cl_gunalign;
 .float cvar_cl_showweaponspawns;
+.float cvar_cl_simpleitems;
 
 .float modelindex_lod0;
 .float modelindex_lod0_from_nexuiz;

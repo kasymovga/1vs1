@@ -549,7 +549,7 @@ void(float wpn) weapon_defaultspawnfunc {
 	if (self.team)
 		self.flags |= FL_NO_WEAPON_STAY;
 
-	item_start(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	item_start(e.model, e.lodmodel1, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if not(item_start_failed)
 	if (self.classname != "droppedweapon") {
 		weapon_precache(e.weapon);

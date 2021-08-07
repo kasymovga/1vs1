@@ -2,18 +2,6 @@
 entity _weapon_info[24];
 entity weapon_info_dummy;
 
-#ifdef SVQC
-string(string wname) weapon_modelname {
-	string model_replacement;
-	model_replacement = cvar_string(strcat("sv_model_", wname));
-	if (model_replacement == "")
-	{
-		model_replacement = wname;
-	}
-	return model_replacement;
-}
-#endif
-
 void(float id, float(float) func, float ammotype, float i, float normalweapon, float canclimb, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname, vector wcolor) weapon_register_real {
 	entity e;
 #ifdef SVQC
@@ -36,9 +24,13 @@ void(float id, float(float) func, float ammotype, float i, float normalweapon, f
 #endif
 #ifdef SVQC
 	e.weapon_func = func;
-	e.model = strzone(strcat("models/weapons/g_", weapon_modelname(modelname), ".md3"));
-	e.mdl = strzone(weapon_modelname(modelname));
+	string s = cvar_string(strcat("sv_model_", modelname));
+	if (s == "")
+		s = modelname;
 
+	e.model = strzone(strcat("models/weapons/g_", s, ".md3"));
+	e.mdl = strzone(s);
+	e.lodmodel1 = strzone(strcat("models/weapons/g_", modelname, ".md3"));
 	float animfile;
 	string animfilename = strcat("models/weapons/h_", e.mdl, ".dpm.animinfo");
 	animfile = fopen(animfilename, FILE_READ);
@@ -47,8 +39,7 @@ void(float id, float(float) func, float ammotype, float i, float normalweapon, f
 	e.anim_fire2  = '1 1 0.01';
 	e.anim_idle   = '2 1 0.01';
 	e.anim_reload = '3 1 0.01';
-	if (animfile >= 0)
-	{
+	if (animfile >= 0) {
 		anim_parseerror = FALSE;
 		anim_parseline(e, animfile, anim_fire1);
 		anim_parseline(e, animfile, anim_fire2);
@@ -61,12 +52,15 @@ void(float id, float(float) func, float ammotype, float i, float normalweapon, f
 #endif
 	e.spawnflags = 0;
 	e.model2 = strzone(strcat("wpn-", e.mdl));
-	if(normalweapon > 0)
+	if (normalweapon > 0)
 		e.spawnflags |= WEPSPAWNFLAG_NORMAL;
-	if(normalweapon < 0)
+
+	if (normalweapon < 0)
 		e.spawnflags |= WEPSPAWNFLAG_HIDDEN;
-	if(canclimb)
+
+	if (canclimb)
 		e.spawnflags |= WEPSPAWNFLAG_CANCLIMB;
+
 	e.impulse = i;
 	e.weapon_type = weapontype;
 	e.bot_pickupbasevalue = pickupbasevalue;
@@ -95,23 +89,21 @@ void(void) weapon_register_done {
 
 	float i;
 	weaponpriority_hudselector_0 = "";
-	for(i = 24; i >= 1; --i)
-		if(_weapon_info[i-1])
+	for (i = 24; i >= 1; --i)
+		if (_weapon_info[i-1])
 			weaponpriority_hudselector_0 = strcat(weaponpriority_hudselector_0, " ", ftos(i));
 
 	float imp;
 	weaponpriority_hudselector_1 = "";
-	for(i = 1; i <= 24; ++i)
-	{
+	for (i = 1; i <= 24; ++i) {
 		wi = _weapon_info[i-1];
-		if(wi && wi.impulse == 0)
+		if (wi && wi.impulse == 0)
 			weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(i));
 	}
-	for(imp = 9; imp > 0; --imp)
-		for(i = 1; i <= 24; ++i)
-		{
+	for (imp = 9; imp > 0; --imp)
+		for (i = 1; i <= 24; ++i) {
 			wi = _weapon_info[i-1];
-			if(wi && wi.impulse == imp)
+			if (wi && wi.impulse == imp)
 				weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(i));
 		}
 
@@ -121,11 +113,13 @@ void(void) weapon_register_done {
 
 entity weapon_info(float id) {
 	entity w;
-	if(id < WEP_FIRST || id > WEP_LAST)
+	if (id < WEP_FIRST || id > WEP_LAST)
 		return weapon_info_dummy;
+
 	w = _weapon_info[id - 1];
-	if(w)
+	if (w)
 		return w;
+
 	return weapon_info_dummy;
 }
 

@@ -633,6 +633,7 @@ void client_cvars_request() {
 			"sendcvar cl_voice_directional\n"
 			"sendcvar cl_voice_directional_taunt_attenuation\n"
 			"sendcvar cl_netfps\n"
+			"sendcvar cl_simpleitems\n"
 			"sendcvar _cl_rate\n"
 	);
 #ifdef ALLOW_FORCEMODELS
@@ -690,14 +691,15 @@ void() client_cvars_parse {
 
 		if (self.weaponentity)
 			self.weaponentity.cnt = 0;
-	} else if (s == "cl_showweaponspawns") {
-		self.cvar_cl_showweaponspawns = stof(val);
+	} else if (s == "cl_simpleitems") {
+		self.cvar_cl_simpleitems = stof(val);
 	} else if (s == "cl_netfps") {
 		f = stof(val);
 		float reqfps = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout")));
 		if (f < reqfps) {
 			stuffcmd(self, strcat("seta cl_netfps ", ftos(reqfps), "\n"));
 		}
+	} else if (s == "cl_netfps") {
 	} else if (s == "_cl_rate") {
 		f = stof(val);
 		float reqrate = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout"))) * 125;

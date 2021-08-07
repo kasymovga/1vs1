@@ -19,8 +19,7 @@ void minstagib_items (float itemid)
 		self.classname = "minstagib";
 
 	// replace rocket launchers and nex guns with ammo cells
-	if (itemid == IT_CELLS)
-	{
+	if (itemid == IT_CELLS) {
 		if not(minstagib_ammo || g_minstagib_health_drop) {
 			remove(self);
 			return;
@@ -30,11 +29,11 @@ void minstagib_items (float itemid)
 
 		if (g_minstagib_health_drop) {
 			self.health = 1;
-			item_start (sv_model_healthlarge,
+			item_start(sv_model_healthlarge, "models/items/g_h50.md3",
 				"misc/mediumhealth.wav", 45, 0,
 				"Health", IT_CELLS, 0, 0, item_generic_pickupevalfunc, 100);
 		} else {
-			item_start ("models/items/a_cells.md3",
+			item_start(sv_model_ammocells, "models/items/a_cells.md3",
 				"misc/itempickup.wav", 45, 0,
 				"Nex Ammo", IT_CELLS, 0, 0, item_generic_pickupevalfunc, 100);
 		}
@@ -45,7 +44,7 @@ void minstagib_items (float itemid)
 	if (itemid == IT_NAILS)
 	if (g_minstagib_extralives) {
 		self.max_health = 1;
-		item_start (sv_model_armorlarge,
+		item_start(sv_model_armorlarge, "models/items/g_a25.md3",
 			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Extralife", IT_NAILS, 0, FL_POWERUP, item_generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 
