@@ -88,7 +88,12 @@ void(void) modelselect_draw {
 		modelselect_current.frame = 8;
 		modelselect_list_pos_prev = modelselect_list_pos;
 	}
-	setorigin(modelselect_current, view_camera_origin + view_forward * 150);
+	if (view_fixangle) {
+		makevectors(view_fixed_angles);
+		setorigin(modelselect_current, view_camera_origin + v_forward * 150);
+	} else
+		setorigin(modelselect_current, view_camera_origin + view_forward * 150);
+
 	modelselect_current.angles_y = view_angles_y + (time * 90);
 	vector c = '1 0 0' * (CVAR(vid_conwidth) / 2);
 	drawfont = sbar_bigfont;
