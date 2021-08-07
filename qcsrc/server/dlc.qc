@@ -3,6 +3,7 @@ string dlc_list_send;
 entity dlc_wait;
 string dlc_sounds;
 string dlc_extra_pk3_list;
+string dlc_rexext_forcemodel;
 
 string(string s) dlc_trimspaces {
 	string c;
@@ -91,6 +92,19 @@ float(string s) dlc_load_settemps_from {
 			continue;
 		}
 		cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
+		if (cvar_name == "g_player_forcemodel" && cvar_value != "0") {
+			if (dlc_rexext_forcemodel != "") {
+				cvar_name = "g_player_allowed_models";
+				dlc_settemp("g_player_forcemodel", "0");
+				cvar_value = strcat(dlc_rexext_forcemodel, " ", cvar_value);
+				str_unzone_ifneeded(dlc_rexext_forcemodel);
+			}
+			dlc_rexext_forcemodel = str_zone_ifneeded(cvar_value);
+		} else if (cvar_name == "g_player_allowed_models") {
+			cvar_value = strcat(dlc_rexext_forcemodel, " ", cvar_value);
+			str_unzone_ifneeded(dlc_rexext_forcemodel);
+			dlc_rexext_forcemodel = str_zone_ifneeded(cvar_value);
+		}
 		dlc_settemp(cvar_name, cvar_value);
 	}
 	fclose(f);
