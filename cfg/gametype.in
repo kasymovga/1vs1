@@ -29,9 +29,9 @@ alias gametype_freeze gametype_ft
 alias gametype_freezetag gametype_ft
 alias gametype_ca "reset_gametype; _gametype clanarena; bprint_gtswitch ^3Clan Arena"
 alias gametype_clanarena gametype_ca
-alias gametype_surv "reset_gametype; _gametype survive; bprint_gtswitch ^3Survive"
+alias gametype_surv "reset_gametype; _gametype surv; bprint_gtswitch ^3Survive"
 alias gametype_lms "reset_gametype; _gametype lms; bprint_gtswitch ^3Last Man Standing"
-alias gametype_survivie gametype_surv
+alias gametype_survival gametype_surv
 alias gametype_coop "reset_gametype; _gametype coop; bprint_gtswitch ^3Cooperative"
 alias gametype "gametype_$1"
 alias cl_hook_gamestart_ca ""
