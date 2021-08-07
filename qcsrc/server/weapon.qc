@@ -439,11 +439,11 @@ void(void) weapon_frame {
 }
 
 void(float wpn) weapon_precache {
-	string s = weapon_info(wpn).mdl;
-	precache_model(strcat("models/weapons/g_", s, ".md3"));
-	precache_model(strcat("models/weapons/v_", s, ".md3"));
-	precache_model(strcat("models/weapons/h_", s, ".dpm"));
-	(weapon_info(wpn)).weapon_func(WR_PRECACHE);
+	entity e = weapon_info(wpn);
+	item_precache(e.model, e.lodmodel1);
+	precache_model(strcat("models/weapons/v_", e.mdl, ".md3"));
+	precache_model(strcat("models/weapons/h_", e.mdl, ".dpm"));
+	e.weapon_func(WR_PRECACHE);
 }
 
 float internalteam;

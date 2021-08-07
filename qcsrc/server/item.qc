@@ -988,6 +988,14 @@ voidfunc(string s) item_spawnfunc_for {
 	return NULL;
 }
 
+void(string _model, string defmodel) item_precache {
+	if (_model != "")
+		precache_model(_model);
+
+	if (defmodel != _model)
+		precache_model(defmodel);
+}
+
 void(void) item_init {
 	CVAR_CACHE(g_balance_pause_armor_rot);
 	CVAR_CACHE(g_balance_pause_fuel_rot);

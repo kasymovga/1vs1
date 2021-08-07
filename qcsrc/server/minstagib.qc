@@ -357,6 +357,8 @@ void minstagib_init() {
 	if (g_minstagib_ammo_drop)
 		minstagib_ammo = TRUE;
 
+	item_precache(sv_model_healthlarge, "models/items/g_h50.md3");
+	item_precache(sv_model_ammocells, "models/items/a_cells.md3");
 	weapon_precache(WEP_MINSTANEX);
 	g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 	if (g_minstagib_invis_alpha <= 0)
