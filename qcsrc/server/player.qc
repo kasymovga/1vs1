@@ -263,6 +263,7 @@ void(float finished, string samp) play_countdown {
 }
 
 void() player_effects {
+	self.body.body.effects = self.effects & EFFECT_TELEPORT_BIT; //for teleportation
 	if (!self.body.modelindex || PLAYER_REALLY_DEAD(self)) // don't apply the flags if the player is gibbed
 		return;
 
@@ -277,7 +278,6 @@ void() player_effects {
 		self.effects = self.effects | (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 
 	self.body.effects = self.effects;
-	self.body.body.effects = self.effects & EFFECT_TELEPORT_BIT; //for teleportation
 	self.body.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
 	self.body.body.modelflags = self.modelflags; //for MF_ROCKET effect
 	self.effects = 0;
