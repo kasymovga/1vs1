@@ -1280,7 +1280,13 @@ string(void) player_allowed_model_list {
 
 string(string _playermodel) player_allowed_model {
 	string allowed_models = player_allowed_model_list();
-	string first_allowed_model = str_car(allowed_models);
+	string first_allowed_model = "";
+	string tail = allowed_models;
+	while ((tail != "")) {
+		first_allowed_model = str_car(tail);
+		if (first_allowed_model != "") break;
+		tail = str_cdr(allowed_models);
+	}
 	if (first_allowed_model == "")
 		return _playermodel;
 
