@@ -1,4 +1,5 @@
 void(entity e, float docull, float dt, float(entity, float) sendfunc) net_link_entity;
-void net_write_int24(float dest, float val);
+void(float dest, float val) net_write_int24;
+void(float dest, vector v) net_write_vector;
 float net_compress_vec(vector vec);
 #define NET_BOUND_TO_BYTE(x) ((x < 251) ? x : ((x < 500) ? 251 : ((x < 1000) ? 252 : ((x < 2000) ? 253 : ((x < 5000) ? 254 : 255)))))

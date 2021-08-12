@@ -49,15 +49,19 @@ void(float isnew) physics_car_read {
 		physics_car_entity.solid = SOLID_BBOX;
 		physics_car_entity.movetype = MOVETYPE_QCWALK;
 		physics_car_entity.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
-		setsize(physics_car_entity, car_MIN, car_MAX);
 	}
 	if (f & 1) {
+		vector car_mins, car_maxs;
+		car_mins = net_read_vector();
+		car_maxs = net_read_vector();
+		setsize(physics_car_entity, car_mins, car_maxs);
 		g_vehicle_car_speed_stop = ReadCoord();
 		g_vehicle_car_speed = ReadCoord();
 		g_vehicle_car_turnspeed = ReadCoord();
 		g_vehicle_car_movement_inertia = ReadCoord();
 		g_vehicle_car_speed_drift = ReadCoord();
 		physics_player_ent = ReadShort();
+		g_vehicle_car_align = ReadByte();
 	}
 	if (f & 2) {
 		physics_car_start_angles_x = ReadCoord();

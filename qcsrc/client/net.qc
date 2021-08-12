@@ -39,3 +39,10 @@ float(void) net_read_int24 {
 	return v;
 }
 
+vector(void) net_read_vector {
+	vector v;
+	v_x = ReadCoord();
+	v_y = ReadCoord();
+	v_z = ReadCoord();
+	return v;
+}

@@ -1,28 +1,23 @@
 void(entity e, float docull, float dt, float(entity, float) sendfunc) net_link_entity {
-    vector mi, ma;
+	vector mi, ma;
+	if (e.classname == "")
+		e.classname = "net_linked";
 
-    if (e.classname == "")
-        e.classname = "net_linked";
+	if (e.model == "" || self.modelindex == 0) {
+		mi = e.mins;
+		ma = e.maxs;
+		setmodel(e, "null");
+		setsize(e, mi, ma);
+	}
+	e.SendEntity = sendfunc;
+	e.SendFlags = 0xFFFFFF;
+	if (!docull)
+		e.effects |= EFFECT_NODEPTHTEST;
 
-    if (e.model == "" || self.modelindex == 0)
-    {
-        mi = e.mins;
-        ma = e.maxs;
-        setmodel(e, "null");
-        setsize(e, mi, ma);
-    }
-
-    e.SendEntity = sendfunc;
-    e.SendFlags = 0xFFFFFF;
-
-    if (!docull)
-        e.effects |= EFFECT_NODEPTHTEST;
-
-    if (dt)
-    {
-        e.nextthink = time + dt;
-        e.think = stdproc_remove;
-    }
+	if (dt) {
+		e.nextthink = time + dt;
+		e.think = stdproc_remove;
+	}
 }
 
 void(float dest, float val) net_write_int24 {
@@ -98,4 +93,10 @@ float(vector vec) net_compress_vec {
 	//print("compressed: pitch ", ftos(pitch)); print("yaw ", ftos(yaw)); print("len ", ftos(len), "\n");
 
 	return (pitch * 0x1000) + (yaw * 0x80) + len;
+}
+
+void(float t, vector v) net_write_vector {
+	WriteCoord(t, v_x);
+	WriteCoord(t, v_y);
+	WriteCoord(t, v_z);
 }

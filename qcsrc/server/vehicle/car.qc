@@ -1,3 +1,5 @@
+#define car_MIN '-90 -90 5'
+#define car_MAX '90 90 105'
 float g_vehicle_car_pushfactor;
 
 float(entity to, float sf) vehicle_car_physics_send;
@@ -52,6 +54,7 @@ float vehicle_car_physics_hook() {
 	//anim_do();
 	vehicle_stdproc_regen();
 	player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
+	g_vehicle_car_align = 1;
 	physics_car();
 	makevectors(mycar.angles);
 	v1 = v_forward;
@@ -307,12 +310,15 @@ float(entity to, float sf) vehicle_car_physics_send {
 	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_CAR);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {
+		net_write_vector(MSG_ENTITY, car_MIN);
+		net_write_vector(MSG_ENTITY, car_MAX);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_speed_stop);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_speed);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_turnspeed);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_movement_inertia);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_speed_drift);
 		WriteShort(MSG_ENTITY, num_for_edict(self.vehicle));
+		WriteByte(MSG_ENTITY, 1);
 	}
 	if (sf & 2) {
 		WriteCoord(MSG_ENTITY, self.vehicle.angles_x);

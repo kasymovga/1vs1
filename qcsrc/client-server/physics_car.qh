@@ -1,5 +1,3 @@
-#define car_MIN '-90 -90 5'
-#define car_MAX '90 90 105'
 #define CAR_VIEW_BACK 400
 #define CAR_VIEW_UP 120
 #define CAR_VIEW_START_OFFSET 60
@@ -9,5 +7,6 @@ float g_vehicle_car_speed_stop;
 float g_vehicle_car_speed_drift;
 float g_vehicle_car_turnspeed;
 float g_vehicle_car_movement_inertia;
+float g_vehicle_car_align;
 
 float(void) physics_car;

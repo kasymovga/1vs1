@@ -51,7 +51,10 @@ float(void) physics_car {
 		}
 	}
 	self.angles_x = -self.angles_x;
-	movelib_groundalign4point(75, 75, 1);
+	if (g_vehicle_car_align) {
+		float as = self.mins_x * 0.75;
+		movelib_groundalign4point(as, as, 1);
+	}
 	physics_velocity = self.velocity;
 	physics_move();
 	self.velocity = physics_velocity;
