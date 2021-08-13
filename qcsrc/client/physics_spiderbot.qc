@@ -38,9 +38,6 @@ void(float isnew) physics_spiderbot_read {
 		physics_plug = physics_spiderbot_hook;
 		physics_plug_pre = physics_spiderbot_pre;
 		physics_plug_post = physics_spiderbot_post;
-		vehicle_adjust_view_up = SPIDERBOT_VIEW_UP;
-		vehicle_adjust_view_back = SPIDERBOT_VIEW_BACK;
-		vehicle_adjust_view_start_offs = SPIDERBOT_VIEW_START_OFFSET;
 		if not(physics_plug_adjust_view)
 			physics_plug_adjust_view = physics_vehicle_adjust_view;
 
@@ -49,9 +46,9 @@ void(float isnew) physics_spiderbot_read {
 		physics_spiderbot_entity.solid = SOLID_BBOX;
 		physics_spiderbot_entity.movetype = MOVETYPE_QCWALK;
 		physics_spiderbot_entity.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
-		setsize(physics_spiderbot_entity, spiderbot_MIN, spiderbot_MAX);
 	}
 	if (f & 1) {
+		physics_vehicle_read_common();
 		g_vehicle_spiderbot_jump_accel = ReadCoord();
 		g_vehicle_spiderbot_jump_up = ReadCoord();
 		g_vehicle_spiderbot_speed_stop = ReadCoord();

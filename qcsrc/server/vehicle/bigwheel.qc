@@ -1,3 +1,8 @@
+#define BIGWHEEL_VIEW_BACK 400
+#define BIGWHEEL_VIEW_UP 120
+#define BIGWHEEL_VIEW_START_OFFSET 60
+#define BIGWHEEL_MIN '-75 -75 5'
+#define BIGWHEEL_MAX '75 75 150'
 float g_vehicle_bigwheel_pushfactor;
 float g_vehicle_bigwheel_speed;
 float g_vehicle_bigwheel_speed_stop;
@@ -12,8 +17,6 @@ float g_vehicle_bigwheel_laser_force;
 float g_vehicle_bigwheel_laser_spread;
 float g_vehicle_bigwheel_laser_speed;
 float g_vehicle_bigwheel_laser_refire;
-#define bigwheel_MIN '-75 -75 5'
-#define bigwheel_MAX '75 75 150'
 
 float(entity to, float sf) vehicle_bigwheel_physics_send;
 void(float eject) vehicle_bigwheel_exit;
@@ -273,7 +276,7 @@ void(void) vehicle_bigwheel_dinit {
 	setmodel(self, self.message2);
 	setmodel(self.gun1, self.weaponmodel);
 	setattachment(self.gun1, self, "tag_head");
-	setsize(self, bigwheel_MIN, bigwheel_MAX);
+	setsize(self, BIGWHEEL_MIN, BIGWHEEL_MAX);
 	self.customizeentityforclient = vehicle_stdproc_customize;
 	vehicle_bigwheel_spawn();
 	self.vehicle_die = vehicle_bigwheel_die;
@@ -313,8 +316,7 @@ float(entity to, float sf) vehicle_bigwheel_physics_send {
 	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_CAR);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {
-		net_write_vector(MSG_ENTITY, bigwheel_MIN);
-		net_write_vector(MSG_ENTITY, bigwheel_MAX);
+		vehicle_write_common(BIGWHEEL_MIN, BIGWHEEL_MAX, BIGWHEEL_VIEW_START_OFFSET, BIGWHEEL_VIEW_BACK, BIGWHEEL_VIEW_UP);
 		WriteCoord(MSG_ENTITY, g_vehicle_bigwheel_speed_stop);
 		WriteCoord(MSG_ENTITY, g_vehicle_bigwheel_speed);
 		WriteCoord(MSG_ENTITY, g_vehicle_bigwheel_turnspeed);

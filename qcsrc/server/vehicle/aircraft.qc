@@ -1,3 +1,5 @@
+#define AIRCRAFT_MIN '-75 -75 -15'
+#define AIRCRAFT_MAX '75 75 105'
 float g_vehicle_aircraft_pushfactor;
 float g_vehicle_aircraft_laser_refire;
 float g_vehicle_aircraft_laser_damage;
@@ -239,7 +241,7 @@ void(void) vehicle_aircraft_spawn {
 	self.bot_attack = TRUE;
 	self.pushfactor = g_vehicle_aircraft_pushfactor;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	setsize(self,aircraft_MIN,aircraft_MAX);
+	setsize(self, AIRCRAFT_MIN, AIRCRAFT_MAX);
 	setorigin(self,self.enemy.origin);
 	self.angles = self.enemy.angles;
 	vehicle_stdproc_setcolormod();
@@ -339,6 +341,7 @@ float(entity to, float sf) vehicle_aircraft_physics_send {
 	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_AIRCRAFT);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {
+		vehicle_write_common(AIRCRAFT_MIN, AIRCRAFT_MAX, AIRCRAFT_VIEW_START_OFFSET, AIRCRAFT_VIEW_BACK, AIRCRAFT_VIEW_UP);
 		WriteCoord(MSG_ENTITY, g_vehicle_aircraft_accel_up);
 		WriteCoord(MSG_ENTITY, g_vehicle_aircraft_speed);
 		WriteCoord(MSG_ENTITY, g_vehicle_aircraft_speed_stop);

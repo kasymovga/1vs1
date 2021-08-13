@@ -1,3 +1,11 @@
+void(vector _mins, vector _maxs, float start_offs, float back, float up) vehicle_write_common {
+	WriteCoord(MSG_ENTITY, start_offs);
+	WriteCoord(MSG_ENTITY, back);
+	WriteCoord(MSG_ENTITY, up);
+	net_write_vector(MSG_ENTITY, _mins);
+	net_write_vector(MSG_ENTITY, _maxs);
+}
+
 void(entity plr, entity veh, float start_offs, float back, float up) vehicle_adjust_player_position {
 	makevectors(plr.v_angle);
 	vector v = veh.origin;
@@ -17,11 +25,11 @@ float(entity plr, float eject) vehicle_extract_player {
 	self = plr.vehicle;
 	self.vehicle_exit(eject);
 	self = e;
-    plr.PlayerPhysplug = NULL;
-    plr.vehicle        = world;
+	plr.PlayerPhysplug = NULL;
+	plr.vehicle        = world;
 	plr.view_ofs       = PL_VIEW_OFS;
 	plr.lastpushtime = time;
-    setsize(plr,PL_MIN,PL_MAX);
+	setsize(plr,PL_MIN,PL_MAX);
 	return 1;
 }
 
@@ -29,14 +37,14 @@ float player_can_use_vehicle(entity plr) {
 	if (plr.vehicle_exit_time >= time)
 		return FALSE;
 
-    if(plr.classname != "player")
-        return FALSE;
+	if (plr.classname != "player")
+		return FALSE;
 
 	if not(player_can_fire(plr, FALSE))
 		return FALSE;
 
-    if(plr.vehicle != world)
-        return FALSE;
+	if (plr.vehicle != world)
+		return FALSE;
 
 	return TRUE;
 }
@@ -48,88 +56,86 @@ void(void) vehicle_stdproc_setcolormod {
 }
 
 void(void) vehicle_stdproc_regen {
-    float smax,hmax;
-    smax = self.shield_max;
-    hmax = self.health_max;
-    if(self.vehicle_flags & VHF_HASSHIELD)
-    if(self.vehicle_flags & VHF_SHIELDREGEN)
-    if(self.vehicle_shield < smax)
-    if(self.dmg_time + self.shield_regen_dmgpause < time) {
-        self.vehicle_shield = min(self.vehicle_shield + self.shield_regen * sys_ticrate, smax);
-        if(self.owner)
-            self.owner.vehicle_shield = self.vehicle_shield / smax;
-    }
-    if(self.vehicle_flags & VHF_HEALTHREGEN)
-    if(self.dmg_time + self.health_regen_dmgpause < time)
-    if(self.health < hmax) {
-        self.health = min(self.health + self.health_regen * sys_ticrate, hmax);
-        if(self.owner)
-            self.owner.vehicle_health = self.health / hmax;
-    }
+	float smax,hmax;
+	smax = self.shield_max;
+	hmax = self.health_max;
+	if (self.vehicle_flags & VHF_HASSHIELD)
+	if (self.vehicle_flags & VHF_SHIELDREGEN)
+	if (self.vehicle_shield < smax)
+	if (self.dmg_time + self.shield_regen_dmgpause < time) {
+		self.vehicle_shield = min(self.vehicle_shield + self.shield_regen * sys_ticrate, smax);
+		if (self.owner)
+			self.owner.vehicle_shield = self.vehicle_shield / smax;
+	}
+	if (self.vehicle_flags & VHF_HEALTHREGEN)
+	if (self.dmg_time + self.health_regen_dmgpause < time)
+	if (self.health < hmax) {
+		self.health = min(self.health + self.health_regen * sys_ticrate, hmax);
+		if (self.owner)
+			self.owner.vehicle_health = self.health / hmax;
+	}
 }
 
 void(void) vehicle_shieldhit_think {
-    self.alpha = self.alpha - 0.125;
-    if not(self.alpha <= 0) {
-        self.nextthink = time;
-    } else {
-        setmodel(self,"");
-        self.alpha = -1;
-    }
-    //self.think = stdproc_remove;
+	self.alpha = self.alpha - 0.125;
+	if not(self.alpha <= 0) {
+		self.nextthink = time;
+	} else {
+		setmodel(self,"");
+		self.alpha = -1;
+	}
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) vehicle_stdproc_damage {
-    float ddmg_take;
-    self.dmg_time = time;
-    if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0)) {
-        if not (self.killindicator)
-            self.killindicator = spawn();
+	float ddmg_take;
+	self.dmg_time = time;
+	if ((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0)) {
+		if not (self.killindicator)
+			self.killindicator = spawn();
 
-        entity sh;
-        sh = self.killindicator;
-        sh.colormod = '1 1 1';
-        sh.alpha = 0.5;
-        sh.scale  = (128 / vlen(self.maxs - self.mins))*2;
-        //sh.scale = 1.25;
-        sh.effects = EFFECT_LOWPRECISION;
-        sh.angles = vectoangles(normalize(hitloc - self.origin)) - self.angles;
-        setmodel(sh,"models/vhshield.md3");
-        setattachment(sh,self,"");
-        sh.think = vehicle_shieldhit_think;
-        sh.nextthink = time;
-        self.vehicle_shield -= _damage;
-        if(self.vehicle_shield < 0) {
-            sh.colormod = '10 0 -1';
-            ddmg_take = fabs(self.vehicle_shield);
-            self.vehicle_shield = 0;
-            self.health -= ddmg_take;
-        }
-    } else
-        self.health -= _damage;
+		entity sh;
+		sh = self.killindicator;
+		sh.colormod = '1 1 1';
+		sh.alpha = 0.5;
+		sh.scale  = (128 / vlen(self.maxs - self.mins))*2;
+		sh.effects = EFFECT_LOWPRECISION;
+		sh.angles = vectoangles(normalize(hitloc - self.origin)) - self.angles;
+		setmodel(sh,"models/vhshield.md3");
+		setattachment(sh,self,"");
+		sh.think = vehicle_shieldhit_think;
+		sh.nextthink = time;
+		self.vehicle_shield -= _damage;
+		if (self.vehicle_shield < 0) {
+			sh.colormod = '10 0 -1';
+			ddmg_take = fabs(self.vehicle_shield);
+			self.vehicle_shield = 0;
+			self.health -= ddmg_take;
+		}
+	} else
+		self.health -= _damage;
 
 	if (random() < 0.5)
 		sound(self, CHAN_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);
 	else
 		sound(self, CHAN_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
 
-    if(self.owner) {
-        self.owner.vehicle_health = self.health / self.health_max;
+	if (self.owner) {
+		self.owner.vehicle_health = self.health / self.health_max;
 
-        if(self.vehicle_flags & VHF_HASSHIELD)
-            self.owner.vehicle_shield = self.vehicle_shield / cvar(strcat(self.cvar_basename,"_shield"));
+		if (self.vehicle_flags & VHF_HASSHIELD)
+			self.owner.vehicle_shield = self.vehicle_shield / cvar(strcat(self.cvar_basename,"_shield"));
 
-    }
-    if(self.health < 1) {
-        if(self.owner)
-            vehicle_extract_player(self.owner, TRUE);
+	}
+	if (self.health < 1) {
+		if (self.owner)
+			vehicle_extract_player(self.owner, TRUE);
 
-        self.vehicle_die();
-    }
+		self.vehicle_die();
+	}
 }
 
 void(void) vehicle_reset {
-	if(self.owner)
+	if (self.owner)
 		vehicle_extract_player(self.owner, TRUE);
 
 	self.vehicle_spawn();
@@ -190,10 +196,10 @@ void(void) vehicle_init {
 }
 
 float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_enter {
-    if (team_mode)
-    if (self.team)
-    if (self.team != other.team)
-        return FALSE;
+	if (team_mode)
+	if (self.team)
+	if (self.team != other.team)
+		return FALSE;
 
 	other.vehicle_health = (self.health / self.health_max);
 	if (self.vehicle_flags & VHF_HASSHIELD)
@@ -212,22 +218,22 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	} else {
 		other.rockets = -1;
 	}
-    self.owner = other;
-    self.switchweapon = other.switchweapon;
-    self.owner.angles         = self.angles;
-    self.owner.takedamage     = DAMAGE_NO;
-    self.owner.solid          = SOLID_NOT;
-    self.owner.PlayerPhysplug = phys_plug;
-    self.owner.vehicle        = self;
-    self.team                 = self.owner.team;
-    if(clienttype(other) == CLIENTTYPE_REAL) {
-        msg_entity = other;
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);  // 10 = SVC_SETVIEWANGLES
-        WriteAngle(MSG_ONE, ang_x);    // tilt
-        WriteAngle(MSG_ONE, ang_y);    // yaw
-        WriteAngle(MSG_ONE, 0);    // roll
+	self.owner = other;
+	self.switchweapon = other.switchweapon;
+	self.owner.angles         = self.angles;
+	self.owner.takedamage     = DAMAGE_NO;
+	self.owner.solid          = SOLID_NOT;
+	self.owner.PlayerPhysplug = phys_plug;
+	self.owner.vehicle        = self;
+	self.team                 = self.owner.team;
+	if (clienttype(other) == CLIENTTYPE_REAL) {
+		msg_entity = other;
+		WriteByte (MSG_ONE, SVC_SETANGLE);
+		WriteAngle(MSG_ONE, ang_x);    // tilt
+		WriteAngle(MSG_ONE, ang_y);    // yaw
+		WriteAngle(MSG_ONE, 0);    // roll
 		self.bot_nextthink = 0;
-    } else {
+	} else {
 		self.bot_nextthink = time + 5;
 	}
 	self.player_physic = spawn();
@@ -246,7 +252,7 @@ void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 	vector exit_origin;
 	makevectors(self.angles);
 	float exit_up = self.maxs_z - PL_MAX_z;
-	if(eject)
+	if (eject)
 		exit_origin = self.origin + '0 0 1' * eject_range;
 	else
 		exit_origin = self.origin + v_forward * range + '0 0 1' * exit_up;
@@ -269,27 +275,26 @@ void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 			exit_origin = self.origin + '0 0 1' * exit_up;
 	}
 	exit_origin = trace_endpos;
-    self.owner.switchweapon = self.switchweapon;
-    if(clienttype(self.owner) == CLIENTTYPE_REAL)
-    {
-        msg_entity = self.owner;
-        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        WriteEntity( MSG_ONE, self.owner);
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);  // 10 = SVC_SETVIEWANGLES
-        WriteAngle(MSG_ONE, 0);    // tilt
-        WriteAngle(MSG_ONE, self.angles_y);    // yaw
-        WriteAngle(MSG_ONE, 0);    // roll
-    }
-    self.owner.takedamage     = DAMAGE_AIM;
+	self.owner.switchweapon = self.switchweapon;
+	if (clienttype(self.owner) == CLIENTTYPE_REAL) {
+		msg_entity = self.owner;
+		WriteByte (MSG_ONE, SVC_SETVIEW);
+		WriteEntity( MSG_ONE, self.owner);
+		WriteByte (MSG_ONE, SVC_SETANGLE);
+		WriteAngle(MSG_ONE, 0);    // tilt
+		WriteAngle(MSG_ONE, self.angles_y);    // yaw
+		WriteAngle(MSG_ONE, 0);    // roll
+	}
+	self.owner.takedamage     = DAMAGE_AIM;
 	player_body_setup(self.owner);
-    if not(team_mode)
-        self.team = 0;
-    else
-        self.team = self.enemy.team ;
+	if not(team_mode)
+		self.team = 0;
+	else
+		self.team = self.enemy.team ;
 
 	setorigin(self.owner, exit_origin);
 	self.owner.velocity = self.velocity;
-	if(eject) {
+	if (eject) {
 	    self.owner.velocity = self.owner.velocity + (v_up + v_forward * 0.25) * 750;
 	}
 
@@ -307,10 +312,10 @@ void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 }
 
 float(void) vehicle_stdproc_customize {
-    if(self.deadflag == DEAD_DEAD)
-        return FALSE;
+	if (self.deadflag == DEAD_DEAD)
+		return FALSE;
 
-    return TRUE;
+	return TRUE;
 }
 
 void(string name, void() delayed_init) vehicle_stdproc_init {

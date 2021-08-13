@@ -38,9 +38,6 @@ void(float isnew) physics_aircraft_read {
 		physics_plug = physics_aircraft_hook;
 		physics_plug_pre = physics_aircraft_pre;
 		physics_plug_post = physics_aircraft_post;
-		vehicle_adjust_view_up = AIRCRAFT_VIEW_UP;
-		vehicle_adjust_view_back = AIRCRAFT_VIEW_BACK;
-		vehicle_adjust_view_start_offs = AIRCRAFT_VIEW_START_OFFSET;
 		if not(physics_plug_adjust_view)
 			physics_plug_adjust_view = physics_vehicle_adjust_view;
 
@@ -49,9 +46,9 @@ void(float isnew) physics_aircraft_read {
 		physics_aircraft_entity.solid = SOLID_BBOX;
 		physics_aircraft_entity.movetype = MOVETYPE_QCWALK;
 		physics_aircraft_entity.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
-		setsize(physics_aircraft_entity, aircraft_MIN, aircraft_MAX);
 	}
 	if (f & 1) {
+		physics_vehicle_read_common();
 		g_vehicle_aircraft_accel_up = ReadCoord();
 		g_vehicle_aircraft_speed = ReadCoord();
 		g_vehicle_aircraft_speed_stop = ReadCoord();

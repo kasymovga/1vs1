@@ -1,7 +1,3 @@
-#define CAR_VIEW_BACK 400
-#define CAR_VIEW_UP 120
-#define CAR_VIEW_START_OFFSET 60
-
 float g_vehicle_car_speed;
 float g_vehicle_car_speed_stop;
 float g_vehicle_car_speed_drift;

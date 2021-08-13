@@ -1,5 +1,8 @@
-#define car_MIN '-90 -90 5'
-#define car_MAX '90 90 105'
+#define CAR_VIEW_BACK 400
+#define CAR_VIEW_UP 120
+#define CAR_VIEW_START_OFFSET 60
+#define CAR_MIN '-90 -90 5'
+#define CAR_MAX '90 90 105'
 float g_vehicle_car_pushfactor;
 
 float(entity to, float sf) vehicle_car_physics_send;
@@ -271,7 +274,7 @@ void(void) vehicle_car_dinit {
 	setmodel(self.gun2, self.weaponmodel);
 	setmodel(self.gun1.gun1, self.weaponmodel);
 	setmodel(self.gun2.gun2, self.weaponmodel);
-	setsize(self, car_MIN, car_MAX);
+	setsize(self, CAR_MIN, CAR_MAX);
 	self.dlc_reset = car_dlc_reset;
 	self.dlc_reset();
 	self.customizeentityforclient = vehicle_stdproc_customize;
@@ -310,8 +313,7 @@ float(entity to, float sf) vehicle_car_physics_send {
 	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_CAR);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {
-		net_write_vector(MSG_ENTITY, car_MIN);
-		net_write_vector(MSG_ENTITY, car_MAX);
+		vehicle_write_common(CAR_MIN, CAR_MAX, CAR_VIEW_START_OFFSET, CAR_VIEW_BACK, CAR_VIEW_UP);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_speed_stop);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_speed);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_turnspeed);

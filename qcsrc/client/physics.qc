@@ -1,7 +1,3 @@
-#define PMF_JUMP_HELD 1
-#define PMF_DUCKED 4
-#define PMF_ONGROUND 8
-
 .float pmove_flags;
 float physics_button_crouch;
 float physics_maxspeedmod;
@@ -88,6 +84,16 @@ vector(void) physics_vehicle_adjust_view {
 	tracebox(v, '-8 -8 -8', '8 8 8', v  + v_up * vehicle_adjust_view_up, TRACE_MOVE_WORLDONLY, world);
 	v = trace_endpos;
 	return v;
+}
+
+void(void) physics_vehicle_read_common {
+	vehicle_adjust_view_up = ReadCoord();;
+	vehicle_adjust_view_back = ReadCoord();
+	vehicle_adjust_view_start_offs = ReadCoord();
+	vector _mins, _maxs;
+	_mins = net_read_vector();
+	_maxs = net_read_vector();
+	setsize(self, _mins, _maxs);
 }
 
 void(entity e) physics_vehicle_common_post {

@@ -1,19 +1,20 @@
+#define SPIDERBOT_VIEW_BACK 400
+#define SPIDERBOT_VIEW_UP 140
+#define SPIDERBOT_VIEW_START_OFFSET 70
+#define SPIDERBOT_MIN '-75 -75 5'
+#define SPIDERBOT_MAX '75 75 105'
 #define MODEL_SPIDERBOT_FORWARD_START 1
 #define MODEL_SPIDERBOT_FORWARD_END 31
 #define MODEL_SPIDERBOT_FORWARD_LENGTH 31
-
 #define MODEL_SPIDERBOT_BACKWARDS_START 32
 #define MODEL_SPIDERBOT_BACKWARDS_END 62
 #define MODEL_SPIDERBOT_BACKWARDS_LENGTH 31
-
 #define MODEL_SPIDERBOT_LEFT_START 63
 #define MODEL_SPIDERBOT_LEFT_END 93
 #define MODEL_SPIDERBOT_LEFT_LENGTH 31
-
 #define MODEL_SPIDERBOT_RIGHT_START 94
 #define MODEL_SPIDERBOT_RIGHT_END 124
 #define MODEL_SPIDERBOT_RIGHT_LENGTH 31
-
 #define MODEL_SPIDERBOT_JUMP_START 125
 #define MODEL_SPIDERBOT_JUMP_END 155
 #define MODEL_SPIDERBOT_JUMP_LENGTH 31
@@ -353,7 +354,7 @@ void(void) vehicle_spiderbot_spawn {
 	self.bot_attack = TRUE;
 	self.pushfactor = g_vehicle_spiderbot_pushfactor;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	setsize(self,spiderbot_MIN,spiderbot_MAX);
+	setsize(self,SPIDERBOT_MIN, SPIDERBOT_MAX);
 	setorigin(self,self.enemy.origin);
 	self.angles = self.enemy.angles;
 	vehicle_stdproc_setcolormod();
@@ -485,6 +486,7 @@ float(entity to, float sf) vehicle_spiderbot_physics_send {
 	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_SPIDERBOT);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {
+		vehicle_write_common(SPIDERBOT_MIN, SPIDERBOT_MAX, SPIDERBOT_VIEW_START_OFFSET, SPIDERBOT_VIEW_BACK, SPIDERBOT_VIEW_UP);
 		WriteCoord(MSG_ENTITY, g_vehicle_spiderbot_jump_accel);
 		WriteCoord(MSG_ENTITY, g_vehicle_spiderbot_jump_up);
 		WriteCoord(MSG_ENTITY, g_vehicle_spiderbot_speed_stop);

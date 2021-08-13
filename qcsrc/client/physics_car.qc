@@ -38,9 +38,6 @@ void(float isnew) physics_car_read {
 		physics_plug = physics_car_hook;
 		physics_plug_pre = physics_car_pre;
 		physics_plug_post = physics_car_post;
-		vehicle_adjust_view_up = CAR_VIEW_UP;
-		vehicle_adjust_view_back = CAR_VIEW_BACK;
-		vehicle_adjust_view_start_offs = CAR_VIEW_START_OFFSET;
 		if not(physics_plug_adjust_view)
 			physics_plug_adjust_view = physics_vehicle_adjust_view;
 
@@ -51,10 +48,7 @@ void(float isnew) physics_car_read {
 		physics_car_entity.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	}
 	if (f & 1) {
-		vector car_mins, car_maxs;
-		car_mins = net_read_vector();
-		car_maxs = net_read_vector();
-		setsize(physics_car_entity, car_mins, car_maxs);
+		physics_vehicle_read_common();
 		g_vehicle_car_speed_stop = ReadCoord();
 		g_vehicle_car_speed = ReadCoord();
 		g_vehicle_car_turnspeed = ReadCoord();
