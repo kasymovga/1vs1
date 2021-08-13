@@ -109,6 +109,7 @@ float vehicle_bigwheel_physics_hook() {
 	g_vehicle_car_speed_drift = s3;
 	g_vehicle_car_turnspeed = s4;
 	g_vehicle_car_movement_inertia = s5;
+	mybigwheel.movement = physics_movement;
 	if (physics_movement_x && (physics_flags & FL_ONGROUND)) {
 		makevectors(mybigwheel.angles);
 		if (mybigwheel.attack_finished_single < time) {
@@ -158,9 +159,9 @@ void(void) vehicle_bigwheel_think {
 	makevectors(self.angles);
 	float rotation_speed = v_forward * self.velocity;
 	float oldframe = self.frame;
-	if (rotation_speed > 400)
+	if (self.movement_x > 0 || rotation_speed > 400)
 		self.frame = 2;
-	else if (rotation_speed < -400)
+	else if (self.movement_x < 0 || rotation_speed < -400)
 		self.frame = 4;
 	else if (rotation_speed > 10)
 		self.frame = 1;
