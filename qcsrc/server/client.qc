@@ -347,7 +347,7 @@ float() client_preconnect_abort {
 	string tail = cvar_string("sv_retard_nets");
 	string head;
 	string address_check = strcat(self.netaddress, ".");
-	if (self.netname == retardplayername)
+	if (self.netname == client_retardplayername)
 		self.retard = 1;
 
 	while (tail != "") {
@@ -374,7 +374,7 @@ void(void) client_connect { //called by engine
 		self.flags = FL_CLIENT;
 	}
 	if (self.retard > 0)
-		self.netname = retardplayername;
+		self.netname = client_retardplayername;
 
 	client_parms_decode();
 	self.disableclientprediction = -1;

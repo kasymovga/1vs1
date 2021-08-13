@@ -81,7 +81,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			sysinfo_search_and_mark(_info, retard, 1, "marked as retard");
 			FOR_EACH_REALCLIENT(e) {
 				if (e.retard > 0)
-					e.netname = retardplayername;
+					e.netname = client_retardplayername;
 			}
 		} else if (head == "muted")
 			sysinfo_search_and_mark(_info, muted, 1, "muted");

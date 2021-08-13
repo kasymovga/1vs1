@@ -54,5 +54,3 @@ float MSG_INIT = 3; // initialization
 float MSG_ENTITY = 5; // csqc
 
 float TE_BEAM = 13; // grappling hook
-
-const string retardplayername = "User of RetardNet";

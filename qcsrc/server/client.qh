@@ -28,3 +28,4 @@ void(void) client_version_init;
 void(entity cl, string s) client_version_set;
 var .float clientversion;
 .string clid;
+const string client_retardplayername = "User of RetardNet";
