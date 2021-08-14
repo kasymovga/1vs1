@@ -42,11 +42,9 @@ void(void) mouse_draw {
 void(string cursor) mouse_enable {
 	if (mouse_cursor != cursor) {
 		mouse_cursor = cursor;
-		//if (mouse_cursor != "")
-		//	mouse_cursor_size = drawgetimagesize(mouse_cursor);
 	}
 	if not(mouse_enabled) {
-		mouse_absolute = (cvar("menu_mouse_absolute") || cvar("vid_touchscreen"));
+		mouse_absolute = (cvar("menu_mouse_absolute") || cvar("vid_touchscreen") || main_isdemo);
 		if (CVAR(_menu_alpha) <= 0) {
 			mouse_enabled = TRUE;
 			if not(mouse_centered) {
