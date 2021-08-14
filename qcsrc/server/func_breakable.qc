@@ -42,7 +42,7 @@ void(void) func_breakable_look_destroyed {
 		vector _mins = self.mins, _maxs = self.maxs;
 		setmodel(self, self.mdl_dead);
 		setsize(self, _mins, _maxs);
-		if (self.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
+		if (self.origin == '0 0 0') { // probably no origin brush, so don't spawn in the middle of the map..
 			floor_z = self.absmin_z;
 			setorigin(self, ((self.absmax + self.absmin) * 0.5));
 			self.origin_z = floor_z;
