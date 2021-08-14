@@ -47,7 +47,7 @@ void(string debrisname, vector force) debris_launch {
 	dbr.velocity_x = self.debrisvelocity_x + self.debrisvelocityjitter_x * random_2();
 	dbr.velocity_y = self.debrisvelocity_y + self.debrisvelocityjitter_y * random_2();
 	dbr.velocity_z = self.debrisvelocity_z + self.debrisvelocityjitter_z * random_2();
-	self.velocity = self.velocity + force * self.debrisdamageforcescale;
+	dbr.velocity = dbr.velocity + force * self.debrisdamageforcescale;
 	dbr.avelocity_x = random() * self.debrisavelocityjitter_x;
 	dbr.avelocity_y = random() * self.debrisavelocityjitter_y;
 	dbr.avelocity_z = random() * self.debrisavelocityjitter_z;
