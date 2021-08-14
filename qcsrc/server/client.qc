@@ -699,7 +699,8 @@ void() client_cvars_parse {
 		if (f < reqfps) {
 			stuffcmd(self, strcat("seta cl_netfps ", ftos(reqfps), "\n"));
 		}
-	} else if (s == "cl_netfps") {
+	} else if (s == "cl_showweaponspawns") {
+		self.cvar_cl_showweaponspawns = stof(val);
 	} else if (s == "_cl_rate") {
 		f = stof(val);
 		float reqrate = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout"))) * 125;
