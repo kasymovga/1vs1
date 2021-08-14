@@ -97,7 +97,7 @@ void drawButton(entity me)
 	if(me.disabled)
 		gui_draw_alpha *= me.disabledAlpha;
 
-	if(me.src)
+	if(me.src != "")
 	{
 		if(me.srcMulti)
 		{
@@ -134,7 +134,7 @@ void drawButton(entity me)
 				gui_draw_picture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, 1);
 		}
 	}
-	if(me.src2)
+	if(me.src2 != "")
 	{
 		bOrigin = me.keepspaceLeft * eX;
 		bSize = eY + eX * (1 - me.keepspaceLeft);
