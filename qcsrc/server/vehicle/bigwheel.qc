@@ -191,6 +191,7 @@ void(float eject) vehicle_bigwheel_exit {
 	self.think = vehicle_bigwheel_think;
 	self.nextthink = time;
 	self.colormap = 1024;
+	self.movement_x = 0;
 	sound_stop(self, CHAN_VOICE);
 	vehicle_stdproc_setcolormod();
 }
