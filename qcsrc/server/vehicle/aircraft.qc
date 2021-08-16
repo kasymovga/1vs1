@@ -1,3 +1,6 @@
+#define AIRCRAFT_VIEW_BACK 400
+#define AIRCRAFT_VIEW_UP 125
+#define AIRCRAFT_VIEW_START_OFFSET 25
 #define AIRCRAFT_MIN '-75 -75 -15'
 #define AIRCRAFT_MAX '75 75 105'
 float g_vehicle_aircraft_pushfactor;
@@ -18,7 +21,7 @@ void(void) vehicle_aircraft_enter;
 void(void) vehicle_aircraft_engine_on {
 	if not(self.cnt) {
 		self.modelflags |= MF_ROCKET;
-		sound_to_at(MSG_ALL, self, '0 0 0', CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, ATTN_NORM); 
+		sound_to_at(MSG_ALL, self, '0 0 0', CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, ATTN_NORM);
 		self.cnt = 1;
 	}
 }
@@ -160,7 +163,16 @@ float(void) vehicle_aircraft_physics_hook {
 	else
 		vehicle_aircraft_engine_off();
 
+	float az = aircraft.angles_z;
+	aircraft.angles_z = 0;
 	physics_aircraft();
+	if (physics_movement_y > 0)
+		aircraft.angles_z = approach(az, 15, frametime * 30);
+	else if (physics_movement_y < 0)
+		aircraft.angles_z = approach(az, -15, frametime * 30);
+	else
+		aircraft.angles_z = approach(az, 0, frametime * 30);
+
 	vehicle_adjust_player_position(player, aircraft, AIRCRAFT_VIEW_START_OFFSET, AIRCRAFT_VIEW_BACK, AIRCRAFT_VIEW_UP);
 	player.angles = aircraft.angles;
 	physics_velocity = player.velocity = '0 0 0';
