@@ -1,7 +1,7 @@
 void(vector _mins, vector _maxs, float start_offs, float back, float up) vehicle_write_common {
-	WriteCoord(MSG_ENTITY, start_offs);
-	WriteCoord(MSG_ENTITY, back);
 	WriteCoord(MSG_ENTITY, up);
+	WriteCoord(MSG_ENTITY, back);
+	WriteCoord(MSG_ENTITY, start_offs);
 	net_write_vector(MSG_ENTITY, _mins);
 	net_write_vector(MSG_ENTITY, _maxs);
 }
