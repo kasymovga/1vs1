@@ -229,9 +229,6 @@ void(void) vehicle_aircraft_touch {
 	if (self.owner || other.classname != "player")
 		return;
 
-	if not(player_can_use_vehicle(other))
-		return;
-
     vehicle_aircraft_enter();
 }
 

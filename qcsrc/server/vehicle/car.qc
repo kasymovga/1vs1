@@ -178,9 +178,6 @@ void(void) vehicle_car_touch {
 	if (self.owner || other.classname != "player")
 		return;
 
-	if not(player_can_use_vehicle(other))
-		return;
-
 	vehicle_car_enter();
 }
 

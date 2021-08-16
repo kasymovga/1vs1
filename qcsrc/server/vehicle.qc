@@ -33,22 +33,6 @@ float(entity plr, float eject) vehicle_extract_player {
 	return 1;
 }
 
-float player_can_use_vehicle(entity plr) {
-	if (plr.vehicle_exit_time >= time)
-		return FALSE;
-
-	if (plr.classname != "player")
-		return FALSE;
-
-	if not(player_can_fire(plr, FALSE))
-		return FALSE;
-
-	if (plr.vehicle != world)
-		return FALSE;
-
-	return TRUE;
-}
-
 void(void) vehicle_stdproc_setcolormod {
 	turret_stdproc_setcolormod();
 	if (self.vehicle)
@@ -196,6 +180,18 @@ void(void) vehicle_init {
 }
 
 float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_enter {
+	if (other.vehicle_exit_time >= time)
+		return FALSE;
+
+	if (other.classname != "player")
+		return FALSE;
+
+	if not(player_can_fire(other, FALSE))
+		return FALSE;
+
+	if (other.vehicle != world)
+		return FALSE;
+
 	if (team_mode)
 	if (self.team)
 	if (self.team != other.team)
