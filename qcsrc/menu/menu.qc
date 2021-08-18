@@ -351,7 +351,7 @@ void(void) menu_draw {
 		menu_not_the_first_frame = 1;
 		if (menu_active)
 		if (!cvar("menu_video_played")) {
-			localcmd("set menu_video_played 1; cd loop $menu_cdtrack; play sound/announcer/male/welcome.ogg\n");
+			localcmd("set menu_video_played 1; cd loop $menu_cdtrack\n");
 			menu_logo_alpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading
 		}
 	}
