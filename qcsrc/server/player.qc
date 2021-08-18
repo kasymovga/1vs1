@@ -119,11 +119,12 @@ void(void) player_corpse_think {
 	if (self.frame != self.dead_frame) {
 		anim_update(self);
 		if (time >= self.animstate_endtime) {
-			if (self.owner.maxs_z > 5) {
-				self.owner.maxs_z = 5;
-				setsize(self.owner, self.owner.mins, self.owner.maxs);
-			}
+			self.owner.stand_maxs_z = 5;
+			self.owner.crouch_maxs_z = 5;
+			self.owner.maxs_z = 5;
+			setsize(self.owner, self.owner.mins, self.owner.maxs);
 			self.frame = self.dead_frame;
+			physics_size_changed(self.owner);
 		}
 	} else if (time >= self.fade_time) {
 		if (self.owner.body == self)
@@ -546,7 +547,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		b.frame = 0;
 		b.dead_frame = 0;
 		// view just above the floor
-		o.view_ofs = '0 0 4';
+		o.crouch_view_ofs = o.stand_view_ofs = o.view_ofs = '0 0 4';
+		physics_size_changed(o);
 		violence_gib_splash(self, 1, 1, attacker);
 		b.modelindex = 0; // restore later
 		self.event_damage = world.event_damage;
@@ -922,7 +924,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		// don't spin
 		self.avelocity = '0 0 0';
 		// view from the floor
-		self.view_ofs = '0 0 -8';
+		self.stand_view_ofs = self.crouch_view_ofs = self.view_ofs = '0 0 -8';
+		physics_size_changed(self);
 		// shootable corpse
 		self.solid = SOLID_CORPSE;
 		// don't stick to the floor
@@ -2091,6 +2094,7 @@ void(entity spot) player_spawn {
 	self.stand_maxs = PL_MAX;
 	self.crouch_mins = PL_CROUCH_MIN;
 	self.crouch_maxs = PL_CROUCH_MAX;
+	physics_size_changed(self);
 	self.spawnorigin = spot.origin;
 	// don't reset back to last position, even if new position is stuck in solid
 	self.oldorigin = self.origin;

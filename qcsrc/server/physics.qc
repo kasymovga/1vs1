@@ -641,24 +641,24 @@ float(entity to, float sf) physics_send {
 	}
 	if (sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, PL_CROUCH_MIN_x);
-		WriteCoord(MSG_ENTITY, PL_CROUCH_MIN_y);
-		WriteCoord(MSG_ENTITY, PL_CROUCH_MIN_z);
-		WriteCoord(MSG_ENTITY, PL_CROUCH_MAX_x);
-		WriteCoord(MSG_ENTITY, PL_CROUCH_MAX_y);
-		WriteCoord(MSG_ENTITY, PL_CROUCH_MAX_z);
-		WriteCoord(MSG_ENTITY, PL_MIN_x);
-		WriteCoord(MSG_ENTITY, PL_MIN_y);
-		WriteCoord(MSG_ENTITY, PL_MIN_z);
-		WriteCoord(MSG_ENTITY, PL_MAX_x);
-		WriteCoord(MSG_ENTITY, PL_MAX_y);
-		WriteCoord(MSG_ENTITY, PL_MAX_z);
-		WriteCoord(MSG_ENTITY, PL_CROUCH_VIEW_OFS_x);
-		WriteCoord(MSG_ENTITY, PL_CROUCH_VIEW_OFS_y);
-		WriteCoord(MSG_ENTITY, PL_CROUCH_VIEW_OFS_z);
-		WriteCoord(MSG_ENTITY, PL_VIEW_OFS_x);
-		WriteCoord(MSG_ENTITY, PL_VIEW_OFS_y);
-		WriteCoord(MSG_ENTITY, PL_VIEW_OFS_z);
+		WriteCoord(MSG_ENTITY, self.crouch_mins_x);
+		WriteCoord(MSG_ENTITY, self.crouch_mins_y);
+		WriteCoord(MSG_ENTITY, self.crouch_mins_z);
+		WriteCoord(MSG_ENTITY, self.crouch_maxs_x);
+		WriteCoord(MSG_ENTITY, self.crouch_maxs_y);
+		WriteCoord(MSG_ENTITY, self.crouch_maxs_z);
+		WriteCoord(MSG_ENTITY, self.stand_mins_x);
+		WriteCoord(MSG_ENTITY, self.stand_mins_y);
+		WriteCoord(MSG_ENTITY, self.stand_mins_z);
+		WriteCoord(MSG_ENTITY, self.stand_maxs_x);
+		WriteCoord(MSG_ENTITY, self.stand_maxs_y);
+		WriteCoord(MSG_ENTITY, self.stand_maxs_z);
+		WriteCoord(MSG_ENTITY, self.crouch_view_ofs_x);
+		WriteCoord(MSG_ENTITY, self.crouch_view_ofs_y);
+		WriteCoord(MSG_ENTITY, self.crouch_view_ofs_z);
+		WriteCoord(MSG_ENTITY, self.stand_view_ofs_x);
+		WriteCoord(MSG_ENTITY, self.stand_view_ofs_y);
+		WriteCoord(MSG_ENTITY, self.stand_view_ofs_z);
 	}
 	if (sf & 4)
 	{
@@ -724,4 +724,9 @@ void(entity pl, float tptime) physics_mark_as_teleported {
 
 	if (tptime)
 		pl.teleport_time = time + tptime;
+}
+
+void(entity pl) physics_size_changed {
+	if (pl.player_physic)
+		pl.player_physic.SendFlags |= 2;
 }
