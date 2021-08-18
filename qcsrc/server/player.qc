@@ -817,32 +817,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
 	_damage = _damage * gamehook_chain_player_damage_mod;
-	if (DEATH_ISWEAPON(deathtype, WEP_TUBA)) {
-		// tuba causes blood to come out of the ears
-		vector ear1, ear2;
-		vector d;
-		float f;
-		ear1 = self.origin;
-		ear1_z += 0.125 * self.view_ofs_z + 0.875 * self.maxs_z; // 7/8
-		ear2 = ear1;
-		makevectors(self.angles);
-		ear1 += v_right * -10;
-		ear2 += v_right * +10;
-		d = inflictor.origin - self.origin;
-		f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
-		force = v_right * vlen(force);
-		violence_gib_splash_at(ear1, force * -1, 2, bound(0, _damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
-		violence_gib_splash_at(ear2, force,      2, bound(0, _damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
-		if (f > 0) {
-			hitloc = ear1;
-			force = force * -1;
-		} else {
-			hitloc = ear2;
-			// force is already good
-		}
-	} else
-		violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
-
+	violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
 	save = bound(0, _damage * gamehook_chain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
 	take = bound(0, _damage - save, _damage);
 	if (save > 10)
