@@ -279,8 +279,8 @@ void(void) physics_camera_setup {
 						physics_end_origin = physics_start_origin;
 				}
 			}
-			if (CVAR(chase_active) && !physics_plug_adjust_view) {
-				makevectors(view_angles);
+			if (CVAR(chase_active) && !physics_plug_adjust_view && !view_observer_status) {
+				makevectors(view_fixangle ? view_fixed_angles : view_angles);
 				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), TRACE_MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;
 				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), TRACE_MOVE_NORMAL, world);
