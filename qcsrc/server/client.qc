@@ -28,7 +28,6 @@ void(entity spot) client_put_to_spot{
 	self.angles_z = 0;
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
-	self.view_ofs = PL_VIEW_OFS;
 	setorigin (self, spot.origin);
 	client_set_view(self);
 }

@@ -726,7 +726,31 @@ void(entity pl, float tptime) physics_mark_as_teleported {
 		pl.teleport_time = time + tptime;
 }
 
-void(entity pl) physics_size_changed {
-	if (pl.player_physic)
-		pl.player_physic.SendFlags |= 2;
+
+void(entity pl, vector _stand_mins, vector _stand_maxs, vector _crouch_mins, vector _crouch_maxs) physics_set_sizes {
+	if (pl.stand_mins != _stand_mins || pl.crouch_mins != _crouch_mins || pl.stand_maxs != _stand_maxs || pl.crouch_maxs != _crouch_maxs) {
+		pl.stand_mins = _stand_mins;
+		pl.crouch_mins = _crouch_mins;
+		pl.stand_maxs = _stand_maxs;
+		pl.crouch_maxs = _crouch_maxs;
+		if (pl.player_physic)
+			pl.player_physic.SendFlags |= 2;
+	}
+	if (self.crouch)
+		setsize(pl, pl.crouch_mins, pl.crouch_maxs);
+	else
+		setsize(pl, pl.stand_mins, pl.stand_maxs);
+}
+
+void(entity pl, vector _stand_view_ofs, vector _crouch_view_ofs) physics_set_view_offsets {
+	if (pl.stand_view_ofs != _stand_view_ofs || pl.crouch_view_ofs != _crouch_view_ofs) {
+		pl.stand_view_ofs = _stand_view_ofs;
+		pl.crouch_view_ofs = _crouch_view_ofs;
+		if (pl.player_physic)
+			pl.player_physic.SendFlags |= 2;
+	}
+	if (self.crouch)
+		pl.view_ofs = pl.crouch_view_ofs;
+	else
+		pl.view_ofs = pl.stand_view_ofs;
 }

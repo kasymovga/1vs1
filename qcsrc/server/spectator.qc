@@ -224,6 +224,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	}
 	self.spectatortime = time;
 	self.classname = "observer";
+	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
 	self.iscreature = FALSE;
 	self.health = 1;
 	self.takedamage = DAMAGE_NO;
@@ -266,7 +267,6 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.fire_endtime = -1;
 	spectator_note.SendFlags = 1;
 	self.customizeentityforclient = NULL;
-
 	if not(frags_team_reset)
 		return;
 

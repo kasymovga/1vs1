@@ -119,12 +119,15 @@ void(void) player_corpse_think {
 	if (self.frame != self.dead_frame) {
 		anim_update(self);
 		if (time >= self.animstate_endtime) {
-			self.owner.stand_maxs_z = 5;
-			self.owner.crouch_maxs_z = 5;
-			self.owner.maxs_z = 5;
-			setsize(self.owner, self.owner.mins, self.owner.maxs);
+			if (self.modelindex) {
+				entity o = self.owner;
+				vector _stand_maxs = o.stand_maxs;
+				vector _crouch_maxs = o.crouch_maxs;
+				_stand_maxs_z = 5;
+				_crouch_maxs_z = 5;
+				physics_set_sizes(o, o.stand_mins, _stand_maxs, o.crouch_mins, _crouch_maxs);
+			}
 			self.frame = self.dead_frame;
-			physics_size_changed(self.owner);
 		}
 	} else if (time >= self.fade_time) {
 		if (self.owner.body == self)
@@ -187,6 +190,10 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 	e.oldvelocity = self.velocity;
 	//e.weapon = self.weapon;
 	setorigin(e, self.origin);
+	e.stand_maxs = self.stand_maxs;
+	e.stand_mins = self.stand_mins;
+	e.crouch_maxs = self.crouch_maxs;
+	e.crouch_mins = self.crouch_mins;
 	setsize(e, self.mins, self.maxs);
 	e.reset = stdproc_remove;
 	return e;
@@ -547,8 +554,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		b.frame = 0;
 		b.dead_frame = 0;
 		// view just above the floor
-		o.crouch_view_ofs = o.stand_view_ofs = o.view_ofs = '0 0 4';
-		physics_size_changed(o);
+		physics_set_view_offsets(o, '0 0 4', '0 0 4');
 		violence_gib_splash(self, 1, 1, attacker);
 		b.modelindex = 0; // restore later
 		self.event_damage = world.event_damage;
@@ -924,8 +930,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		// don't spin
 		self.avelocity = '0 0 0';
 		// view from the floor
-		self.stand_view_ofs = self.crouch_view_ofs = self.view_ofs = '0 0 -8';
-		physics_size_changed(self);
+		physics_set_view_offsets(self, '0 0 -8', '0 0 -8');
 		// shootable corpse
 		self.solid = SOLID_CORPSE;
 		// don't stick to the floor
@@ -2086,15 +2091,9 @@ void(entity spot) player_spawn {
 	self.fire_endtime = -1;
 	msg_entity = self;
 	self.customizeentityforclient = player_real_customize;
+	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
+	physics_set_sizes(self, PL_MIN, PL_MAX, PL_CROUCH_MIN, PL_CROUCH_MAX);
 	player_setup_model();
-	self.stand_view_ofs = PL_VIEW_OFS;
-	self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
-	setsize (self, PL_MIN, PL_MAX);
-	self.stand_mins = PL_MIN;
-	self.stand_maxs = PL_MAX;
-	self.crouch_mins = PL_CROUCH_MIN;
-	self.crouch_maxs = PL_CROUCH_MAX;
-	physics_size_changed(self);
 	self.spawnorigin = spot.origin;
 	// don't reset back to last position, even if new position is stuck in solid
 	self.oldorigin = self.origin;
