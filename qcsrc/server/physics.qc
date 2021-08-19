@@ -561,8 +561,7 @@ float(entity to, float sf) physics_send {
 	if (sf2)
 		WriteByte(MSG_ENTITY, sf2);
 
-	if (sf & 1)
-	{
+	if (sf & 1) {
 		WriteCoord(MSG_ENTITY, sv_stepheight);
 		WriteCoord(MSG_ENTITY, g_stepairslowdown);
 		WriteCoord(MSG_ENTITY, sv_gravity);
@@ -639,8 +638,7 @@ float(entity to, float sf) physics_send {
 			WriteShort(MSG_ENTITY, g_topview_angles_y);
 		}
 	}
-	if (sf & 2)
-	{
+	if (sf & 2) {
 		WriteCoord(MSG_ENTITY, self.crouch_mins_x);
 		WriteCoord(MSG_ENTITY, self.crouch_mins_y);
 		WriteCoord(MSG_ENTITY, self.crouch_mins_z);
@@ -660,33 +658,34 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, self.stand_view_ofs_y);
 		WriteCoord(MSG_ENTITY, self.stand_view_ofs_z);
 	}
-	if (sf & 4)
-	{
+	if (sf & 4) {
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
 		WriteCoord(MSG_ENTITY, self.origin_z);
 		WriteCoord(MSG_ENTITY, self.velocity_x);
 		WriteCoord(MSG_ENTITY, self.velocity_y);
 		WriteCoord(MSG_ENTITY, self.velocity_z);
-		if ((sf & 32) && (sf & 64))
-		{
+		if ((sf & 32) && (sf & 64)) {
 			WriteCoord(MSG_ENTITY, self.ladder_entity.speed);
 			WriteCoord(MSG_ENTITY, self.ladder_entity.watertype);
 			WriteCoord(MSG_ENTITY, self.ladder_entity.origin_z + self.ladder_entity.maxs_z);
 		}
-		if (sf & 512)
-		{
+		if (sf & 512) {
 			WriteCoord(MSG_ENTITY, self.last_maxspeedmod);
 			WriteCoord(MSG_ENTITY, physics_jump_velocity_mod());
 		}
 		if (sf & 1024)
 			WriteByte(MSG_ENTITY, self.movetype);
+
 		if (sf & 2048)
 			WriteCoord(MSG_ENTITY, self.gravity);
+
 		if (sf & 4096)
 			WriteCoord(MSG_ENTITY, self.teleport_time - time);
+
 		if (sf & 8192)
 			WriteCoord(MSG_ENTITY, self.lastwj);
+
 		if (sf2 & 4) {
 			WriteByte(MSG_ENTITY, dodging_flags);
 			if (dodging_flags & 1) WriteCoord(MSG_ENTITY, self.last_dodging_time);
