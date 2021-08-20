@@ -248,16 +248,16 @@ void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 	if (eject)
 		exit_origin = self.origin + '0 0 1' * eject_range;
 	else
-		exit_origin = self.origin + v_forward * range + '0 0 1' * exit_up;
+		exit_origin = self.origin - v_right * range + '0 0 1' * exit_up;
 
 	trace_box(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, TRACE_MOVE_NOMONSTERS, self.owner);
 	if not(eject) {
 		if (trace_fraction < 1) {
-			exit_origin = self.origin - v_right * range + '0 0 1' * exit_up;
+			exit_origin = self.origin + v_right * range + '0 0 1' * exit_up;
 			trace_box(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, TRACE_MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1) {
-			exit_origin = self.origin + v_right * range + '0 0 1' * exit_up;
+			exit_origin = self.origin + v_forward * range + '0 0 1' * exit_up;
 			trace_box(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, TRACE_MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1) {
