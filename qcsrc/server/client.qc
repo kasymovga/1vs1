@@ -28,7 +28,7 @@ void(entity spot) client_put_to_spot{
 	self.angles_z = 0;
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
-	setorigin (self, spot.origin);
+	player_teleport(self, spot.origin, 0);
 	client_set_view(self);
 }
 

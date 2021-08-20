@@ -61,6 +61,7 @@ entity(entity pl) player_entity;
 void(entity e, .vector anim, float looping, float override, float restart) player_anim_set;
 void(entity e, float chan, string s, float vol, float attn) player_sound;
 void(void) player_leave;
+void(entity pl, vector v, float t) player_teleport;
 #define PLAYER_ALIVE(x) (x.deadflag == 0 || x.deadflag > DEAD_RESPAWNING)
 #define PLAYER_DEAD(x) (x.deadflag)
 #define PLAYER_REALLY_DEAD(x) (x.deadflag > 0 && x.deadflag <= DEAD_RESPAWNING)

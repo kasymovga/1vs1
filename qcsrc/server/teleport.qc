@@ -59,14 +59,12 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	// assuming to allows PL_MIN to PL_MAX box and some more
 	from = player.origin;
 	setorigin (player, to);
+	player_teleport(player, to, 0.1);
 	player.oldorigin = to; // don't undo the teleport by unsticking
 	player.angles = to_angles;
 	player.fixangle = TRUE;
 	player.velocity = to_velocity;
-	BITXOR_ASSIGN(player.effects, EFFECT_TELEPORT_BIT);
-	antilag_teleported(player);
 	projectile_update_after_teleport(player);
-	physics_mark_as_teleported(player, 0.1);
 	if(player.classname == "player") {
 		if (g_telefrags)
 		if (player.takedamage)

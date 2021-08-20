@@ -285,7 +285,7 @@ void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 	else
 		self.team = self.enemy.team ;
 
-	setorigin(self.owner, exit_origin);
+	player_teleport(self.owner, exit_origin, 0);
 	self.owner.velocity = self.velocity;
 	if (eject) {
 	    self.owner.velocity = self.owner.velocity + (v_up + v_forward * 0.25) * 750;

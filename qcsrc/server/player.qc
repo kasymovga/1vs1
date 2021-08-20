@@ -86,6 +86,15 @@ float sv_clforceplayermodels;
 float(void) player_customize;
 float(void) player_body_customize;
 
+void(entity pl, vector v, float t) player_teleport {
+	setorigin(pl, v);
+	if (clienttype(pl) != CLIENTTYPE_NOTACLIENT) {
+		antilag_teleported(pl);
+		physics_mark_as_teleported(pl, t);
+	}
+	BITXOR_ASSIGN(pl.effects, EFFECT_TELEPORT_BIT);
+}
+
 void(entity bb) player_body_spawn {
 	self.body = spawn();
 	self.body.customizeentityforclient = player_body_customize;
@@ -2080,7 +2089,6 @@ void(entity spot) player_spawn {
 	self.nextthink = 0;
 	self.dmg_team = 0;
 	client_put_to_spot(spot);
-	physics_mark_as_teleported(self, 0);
 	self.velocity = '0 0 0';
 	self.avelocity = '0 0 0';
 	self.punchangle = '0 0 0';
@@ -2121,7 +2129,6 @@ void(entity spot) player_spawn {
 	other = oldother;
 	player_effects();
 	gamehook_chain_spawn(spot);
-	antilag_teleported(self);
 	self.wasplayer = TRUE;
 	entity e;
 	float n = 0;
