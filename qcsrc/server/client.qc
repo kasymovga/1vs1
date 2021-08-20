@@ -16,7 +16,7 @@ void(entity to) client_set_view {
 	msg_entity = self;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
 	WriteEntity(MSG_ONE, to);
-	WriteByte (MSG_ONE, SVC_SETANGLE); //sometimes fixangle not enough (in case of fast respawn)
+	WriteByte (MSG_ONE, SVC_SETANGLE);
 	WriteAngle(MSG_ONE, to.angles_x);
 	WriteAngle(MSG_ONE, to.angles_y);
 	WriteAngle(MSG_ONE, 0);
@@ -29,7 +29,6 @@ void(entity spot) client_put_to_spot{
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 	player_teleport(self, spot.origin, 0);
-	client_set_view(self);
 }
 
 .float just_connected;

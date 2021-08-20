@@ -982,14 +982,6 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.body.think = player_corpse_think;
 		self.body.fade_time = time + 15;
 		self.body.nextthink = time;
-		if (clienttype(self) == CLIENTTYPE_REAL) {
-			self.fixangle = TRUE;
-			//msg_entity = self;
-			//WriteByte (MSG_ONE, SVC_SETANGLE);
-			//WriteAngle (MSG_ONE, self.v_angle_x);
-			//WriteAngle (MSG_ONE, self.v_angle_y);
-			//WriteAngle (MSG_ONE, 80);
-		}
 		if (defer_client_kill_now_team_change)
 			client_kill_now_team_change(self, self.killindicator.team);
 	}
