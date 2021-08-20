@@ -2,3 +2,4 @@ void(void) teleport_setup;
 void(void) teleport_init;
 float teleport_death_hit;
 void(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float _damage) teleport;
+void(entity e, vector v, float t) teleport_origin_set;

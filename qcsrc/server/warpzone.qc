@@ -64,7 +64,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	vector from;
 	makevectors(to_angles);
 	from = player.origin;
-	player_teleport(player, to, 0);
+	teleport_origin_set(player, to, 0);
 	player.angles = to_angles;
 	player.v_angle = to_angles;
 	player.velocity = to_velocity;

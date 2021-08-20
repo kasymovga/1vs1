@@ -28,7 +28,7 @@ void(entity spot) client_put_to_spot{
 	self.angles_z = 0;
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
-	player_teleport(self, spot.origin, 0);
+	teleport_origin_set(self, spot.origin, 0);
 }
 
 .float just_connected;

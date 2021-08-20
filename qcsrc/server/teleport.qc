@@ -2,6 +2,16 @@ float g_teleport_projectiles;
 float g_teleport_keep_velocity;
 float g_telefrags;
 
+void(entity e, vector v, float t) teleport_origin_set {
+	setorigin(e, v);
+	// don't reset back to last position, even if new position is stuck in solid
+	e.oldorigin = e.origin;
+	antilag_teleported(e);
+	physics_mark_as_teleported(e, t);
+	BITXOR_ASSIGN(e.effects, EFFECT_TELEPORT_BIT);
+	projectile_update_after_teleport(e);
+}
+
 void(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float _damage) teleport_death {
 	entity head;
 	vector deathmin;
@@ -59,11 +69,10 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	// assuming to allows PL_MIN to PL_MAX box and some more
 	from = player.origin;
 	setorigin (player, to);
-	player_teleport(player, to, 0.1);
+	teleport_origin_set(player, to, 0.1);
 	player.angles = to_angles;
 	player.fixangle = TRUE;
 	player.velocity = to_velocity;
-	projectile_update_after_teleport(player);
 	if(player.classname == "player") {
 		if (g_telefrags)
 		if (player.takedamage)

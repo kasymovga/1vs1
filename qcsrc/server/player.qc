@@ -86,15 +86,6 @@ float sv_clforceplayermodels;
 float(void) player_customize;
 float(void) player_body_customize;
 
-void(entity pl, vector v, float t) player_teleport {
-	setorigin(pl, v);
-	// don't reset back to last position, even if new position is stuck in solid
-	pl.oldorigin = pl.origin;
-	antilag_teleported(pl);
-	physics_mark_as_teleported(pl, t);
-	BITXOR_ASSIGN(pl.effects, EFFECT_TELEPORT_BIT);
-}
-
 void(entity bb) player_body_spawn {
 	self.body = spawn();
 	self.body.customizeentityforclient = player_body_customize;
