@@ -130,13 +130,11 @@ void vehicle_PlayerClear(float killed) {
 	vehicle_PlayerClear_NextLink(killed);
 }
 
-var float(entity plr, entity viewer, float dalpha) vehicle_PlayerAlphaMod_NextLink;
-float vehicle_PlayerAlphaMod(entity plr, entity viewer, float dalpha) {
-	if (plr.vehicle)
-	if (plr.vehicle.vehicle_flags & VHF_HIDEPLAYER)
-		dalpha = -1;
-
-	return vehicle_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
+var void() vehicle_player_effects_next;
+void vehicle_player_effects() {
+	if (self.vehicle)
+	if (self.vehicle.vehicle_flags & VHF_HIDEPLAYER)
+		self.effects |= EFFECT_NODRAW;
 }
 
 var float(void) vehicle_ThrowWeaponHandle_NextLink;
@@ -165,8 +163,8 @@ void(void) vehicle_init {
 	vehicle_init_done = TRUE;
 	vehicle_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = vehicle_PlayerClear;
-	vehicle_PlayerAlphaMod_NextLink = gamehook_chain_player_alpha_mod;
-	gamehook_chain_player_alpha_mod = vehicle_PlayerAlphaMod;
+	vehicle_player_effects_next = gamehook_chain_player_effects;
+	gamehook_chain_player_effects = vehicle_player_effects;
 	vehicle_ThrowWeaponHandle_NextLink = gamehook_chain_ThrowWeaponHandle;
 	gamehook_chain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
 	vehicle_player_entity_next_link = gamehook_chain_player_entity;
