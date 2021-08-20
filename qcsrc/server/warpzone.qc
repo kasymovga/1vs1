@@ -660,7 +660,111 @@ void(entity targ, entity attacker, float deathtype) warpzone_damage_mods_set { /
 	warpzone_damage_mods_set_next(targ, attacker, deathtype);
 }
 
+.entity WarpZone_refsys;
+void() WarpZone_RefSys_GC {
+	// garbage collect unused reference systems
+	self.nextthink = time + 1;
+	if (self.owner.WarpZone_refsys != self)
+		remove(self);
+}
+
+void(entity me, entity wz) WarpZone_RefSys_Add {
+	if (me.WarpZone_refsys.owner != me) {
+		me.WarpZone_refsys = spawn();
+		me.WarpZone_refsys.classname = "warpzone_refsys";
+		me.WarpZone_refsys.owner = me;
+		me.WarpZone_refsys.think = WarpZone_RefSys_GC;
+		me.WarpZone_refsys.nextthink = time + 1;
+		WarpZone_Accumulator_Clear(me.WarpZone_refsys);
+	}
+	if (wz)
+		WarpZone_Accumulator_Add(me.WarpZone_refsys, wz);
+}
+
+vector(entity from, entity to, vector org) WarpZone_RefSys_TransformOrigin_real {
+	if (from.WarpZone_refsys)
+		org = WarpZone_UnTransformOrigin(from.WarpZone_refsys, org);
+
+	if (to.WarpZone_refsys)
+		org = WarpZone_TransformOrigin(to.WarpZone_refsys, org);
+
+	return org;
+}
+
+vector(entity from, entity to, vector vel) WarpZone_RefSys_TransformVelocity_real {
+	if (from.WarpZone_refsys)
+		vel = WarpZone_UnTransformVelocity(from.WarpZone_refsys, vel);
+
+	if (to.WarpZone_refsys)
+		vel = WarpZone_TransformVelocity(to.WarpZone_refsys, vel);
+
+	return vel;
+}
+
+vector(entity from, entity to, vector ang) WarpZone_RefSys_TransformAngles_real {
+	if (from.WarpZone_refsys)
+		ang = WarpZone_UnTransformAngles(from.WarpZone_refsys, ang);
+
+	if(to.WarpZone_refsys)
+		ang = WarpZone_TransformAngles(to.WarpZone_refsys, ang);
+
+	return ang;
+}
+
+vector(entity from, entity to, vector ang) WarpZone_RefSys_TransformVAngles {
+	if (from.WarpZone_refsys)
+		ang = WarpZone_UnTransformVAngles(from.WarpZone_refsys, ang);
+
+	if (to.WarpZone_refsys)
+		ang = WarpZone_TransformVAngles(to.WarpZone_refsys, ang);
+
+	return ang;
+}
+
+void(entity e, entity e_orig) warpzone_refsys_copy_stub {}
+
+void(entity e, entity e_orig) warpzone_refsys_copy_real {
+	if (e_orig.WarpZone_refsys) {
+		e.WarpZone_refsys = spawn();
+		e.WarpZone_refsys.classname = "warpzone_refsys";
+		e.WarpZone_refsys.owner = e;
+		e.WarpZone_refsys.think = WarpZone_RefSys_GC;
+		e.WarpZone_refsys.nextthink = time + 1;
+		e.WarpZone_refsys.warpzone_shift = e_orig.WarpZone_refsys.warpzone_shift;
+		e.WarpZone_refsys.warpzone_transform = e_orig.WarpZone_refsys.warpzone_transform;
+	} else
+		e.WarpZone_refsys = NULL;
+}
+
+entity(entity me) WarpZone_RefSys_SpawnSameRefSys_real {
+	entity e;
+	e = spawn();
+	warpzone_refsys_copy_real(e, me);
+	return e;
+}
+
+vector(entity from, entity to, vector org) WarpZone_RefSys_TransformOrigin_stub {
+	return org;
+}
+
+vector(entity from, entity to, vector vel) WarpZone_RefSys_TransformVelocity_stub {
+	return vel;
+}
+
+entity(entity e) WarpZone_RefSys_SpawnSameRefSys_stub {
+	return spawn();
+}
+
+vector(entity from, entity to, vector ang) WarpZone_RefSys_TransformAngles_stub {
+	return ang;
+}
+
 void WarpZone_EnableHook() {
+	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_real;
+	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_real;
+	WarpZone_RefSys_TransformOrigin = WarpZone_RefSys_TransformOrigin_real;
+	WarpZone_RefSys_TransformVelocity = WarpZone_RefSys_TransformVelocity_real;
+	warpzone_refsys_copy = warpzone_refsys_copy_real;
 	warpzone_trace_toss = warpzone_trace_toss_real;
 	warpzone_trace_toss_trough_zone = warpzone_trace_toss_trough_zone_real;
 	warpzone_damage_mods_set_next = gamehook_chain_damage_mods_set;
@@ -670,6 +774,11 @@ void WarpZone_EnableHook() {
 }
 
 void WarpZone_InitHook() {
+	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_stub;
+	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_stub;
+	WarpZone_RefSys_TransformOrigin = WarpZone_RefSys_TransformOrigin_stub;
+	WarpZone_RefSys_TransformVelocity = WarpZone_RefSys_TransformVelocity_stub;
+	warpzone_refsys_copy = warpzone_refsys_copy_stub;
 	warpzone_trace_toss = warpzone_trace_toss_stub;
 	warpzone_trace_toss_trough_zone = warpzone_trace_toss_trough_zone_stub;
 	warpzone_sound_transition = 0;
