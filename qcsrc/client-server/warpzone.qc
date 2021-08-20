@@ -449,35 +449,6 @@ void WarpZone_RefSys_Add(entity me, entity wz)
 	if(wz)
 		WarpZone_Accumulator_Add(me.WarpZone_refsys, wz);
 }
-.vector WarpZone_refsys_incremental_shift;
-.vector WarpZone_refsys_incremental_transform;
-void WarpZone_RefSys_AddIncrementally_real(entity me, entity ref)
-{
-	vector t, s;
-	if(me.WarpZone_refsys_incremental_transform == ref.WarpZone_refsys.warpzone_transform)
-	if(me.WarpZone_refsys_incremental_shift == ref.WarpZone_refsys.warpzone_shift)
-		return;
-	if(me.WarpZone_refsys.owner != me)
-	{
-		me.WarpZone_refsys = spawn();
-		me.WarpZone_refsys.classname = "warpzone_refsys";
-		me.WarpZone_refsys.owner = me;
-		me.WarpZone_refsys.think = WarpZone_RefSys_GC;
-		me.WarpZone_refsys.nextthink = time + 1;
-		WarpZone_Accumulator_Clear(me.WarpZone_refsys);
-	}
-	t = AnglesTransform_Invert(me.WarpZone_refsys_incremental_transform);
-	s = AnglesTransform_PrePostShift_GetPostShift(me.WarpZone_refsys_incremental_shift, t, '0 0 0');
-	WarpZone_Accumulator_AddTransform(me.WarpZone_refsys, t, s);
-	WarpZone_Accumulator_Add(me.WarpZone_refsys, ref);
-	me.WarpZone_refsys_incremental_shift = ref.WarpZone_refsys.warpzone_shift;
-	me.WarpZone_refsys_incremental_transform = ref.WarpZone_refsys.warpzone_transform;
-}
-void WarpZone_RefSys_BeginAddingIncrementally_real(entity me, entity ref)
-{
-	me.WarpZone_refsys_incremental_shift = ref.WarpZone_refsys.warpzone_shift;
-	me.WarpZone_refsys_incremental_transform = ref.WarpZone_refsys.warpzone_transform;
-}
 vector WarpZone_RefSys_TransformOrigin_real(entity from, entity to, vector org)
 {
 	if(from.WarpZone_refsys)
@@ -678,8 +649,6 @@ void WarpZone_DrawEffectTriangle_stub(vector org, vector org_visual, vector end,
 	cb(org_visual, end, end);
 }
 
-void WarpZone_RefSys_AddIncrementally_stub(entity me, entity ref) {}
-
 vector WarpZone_RefSys_TransformOrigin_stub(entity from, entity to, vector org)
 {
 	return org;
@@ -697,8 +666,6 @@ entity WarpZone_RefSys_SpawnSameRefSys_stub(entity e) {
 vector WarpZone_RefSys_TransformAngles_stub(entity from, entity to, vector ang) {
 	return ang;
 }
-
-void WarpZone_RefSys_BeginAddingIncrementally_stub(entity me, entity ref) {}
 
 vector WarpZone_FindNearestOrigin_stub(vector from, vector to, float trace_check) {
     if(trace_check > 1) {
@@ -718,9 +685,7 @@ void WarpZone_Init()
 {
 	WarpZone_FindNearestOrigin = WarpZone_FindNearestOrigin_stub;
 	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_stub;
-	WarpZone_RefSys_BeginAddingIncrementally = WarpZone_RefSys_BeginAddingIncrementally_stub;
 	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_stub;
-	WarpZone_RefSys_AddIncrementally = WarpZone_RefSys_AddIncrementally_stub;
 	WarpZone_RefSys_TransformOrigin = WarpZone_RefSys_TransformOrigin_stub;
 	WarpZone_RefSys_TransformVelocity = WarpZone_RefSys_TransformVelocity_stub;
 	WarpZone_FindRadius = WarpZone_FindRadius_stub;
@@ -740,9 +705,7 @@ void WarpZone_Enable()
 {
 	WarpZone_FindNearestOrigin = WarpZone_FindNearestOrigin_real;
 	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_real;
-	WarpZone_RefSys_BeginAddingIncrementally = WarpZone_RefSys_BeginAddingIncrementally_real;
 	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_real;
-	WarpZone_RefSys_AddIncrementally = WarpZone_RefSys_AddIncrementally_real;
 	WarpZone_RefSys_TransformOrigin = WarpZone_RefSys_TransformOrigin_real;
 	WarpZone_RefSys_TransformVelocity = WarpZone_RefSys_TransformVelocity_real;
 	WarpZone_FindRadius = WarpZone_FindRadius_real;

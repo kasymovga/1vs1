@@ -158,9 +158,6 @@ void() hook_think {
 		hook_remove(self.owner);
 		goto end;
 	}
-	if (self.aiment)
-		WarpZone_RefSys_AddIncrementally(self, self.aiment);
-
 	self.hook.nextthink = time;
 	if (self.owner.weapon == WEP_HOOK)
 		org = gettaginfo(self.owner.exteriorweaponentity, gettagindex(self.owner.exteriorweaponentity, "_")) + v_forward * 20 + v_up * 3;
@@ -237,7 +234,6 @@ void(void) hook_touch {
 	if(other)
 		if(other.movetype != MOVETYPE_NONE) {
 			hook_follow(self, other);
-            WarpZone_RefSys_BeginAddingIncrementally(self, self.aiment);
 		}
 
 	//self.owner.disableclientprediction = TRUE;
@@ -416,9 +412,6 @@ void(float killed) hook_PlayerClear {
 
 vector hook_physics_pre_origin_save;
 void(entity _hook, entity pl) hook_physics_pre {
-	if(_hook.aiment)
-		WarpZone_RefSys_AddIncrementally(_hook, _hook.aiment);
-
 	hook_physics_pre_origin_save = pl.origin;
 	pl.origin = WarpZone_RefSys_TransformOrigin(pl, _hook, pl.origin);
 	physics_velocity = WarpZone_RefSys_TransformVelocity(pl, _hook, physics_velocity);

@@ -57,10 +57,6 @@ vector WarpZone_UnTransformVAngles(entity wz, vector v);
 
 // reference systems (chained warpzone transforms)
 void WarpZone_RefSys_Add(entity me, entity wz);
-void WarpZone_RefSys_AddIncrementally_real(entity me, entity ref);
-var void(entity me, entity ref) WarpZone_RefSys_AddIncrementally;
-void WarpZone_RefSys_BeginAddingIncrementally_real(entity me, entity ref);
-var void(entity me, entity ref) WarpZone_RefSys_BeginAddingIncrementally;
 vector WarpZone_RefSys_TransformOrigin_real(entity from, entity to, vector org);
 var vector(entity from, entity to, vector org) WarpZone_RefSys_TransformOrigin;
 vector WarpZone_RefSys_TransformVelocity_real(entity from, entity to, vector vel);

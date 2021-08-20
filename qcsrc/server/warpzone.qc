@@ -137,6 +137,14 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 	}
 	// do the teleport
 	WarpZone_RefSys_Add(e, wz);
+	if not(e.flags & FL_PROJECTILE) {
+		entity h;
+		for (h = world; (h = findentity(h, aiment, e)); ) {
+			if (h.movetype == MOVETYPE_FOLLOW) {
+				WarpZone_RefSys_Add(h, wz);
+			}
+		}
+	}
 	warzpone_teleport_player(wz, e, o1 - e.view_ofs, a1, v1);
 	warpzone_projectile_store(e);
 	e.warpzone_teleport_time = time;
