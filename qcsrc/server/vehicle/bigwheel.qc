@@ -187,7 +187,7 @@ void(void) vehicle_bigwheel_enter {
 }
 
 void(float eject) vehicle_bigwheel_exit {
-	vehicle_stdproc_exit(eject, 160, 160);
+	vehicle_stdproc_exit(eject, 160, 130);
 	self.think = vehicle_bigwheel_think;
 	self.nextthink = time;
 	self.colormap = 1024;
