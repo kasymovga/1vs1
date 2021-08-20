@@ -90,10 +90,8 @@ void(entity pl, vector v, float t) player_teleport {
 	setorigin(pl, v);
 	// don't reset back to last position, even if new position is stuck in solid
 	pl.oldorigin = pl.origin;
-	if (clienttype(pl) != CLIENTTYPE_NOTACLIENT) {
-		antilag_teleported(pl);
-		physics_mark_as_teleported(pl, t);
-	}
+	antilag_teleported(pl);
+	physics_mark_as_teleported(pl, t);
 	BITXOR_ASSIGN(pl.effects, EFFECT_TELEPORT_BIT);
 }
 
