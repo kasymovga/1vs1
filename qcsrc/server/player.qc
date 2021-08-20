@@ -172,7 +172,6 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 	e.avelocity = self.avelocity;
 	e.classname = "body";
 	e.damageforcescale = self.damageforcescale;
-	e.effects = self.effects;
 	e.event_damage = self.event_damage;
 	e.pain_finished = self.pain_finished;
 	e.health = self.health;
