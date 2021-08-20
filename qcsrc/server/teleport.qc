@@ -60,7 +60,6 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	from = player.origin;
 	setorigin (player, to);
 	player_teleport(player, to, 0.1);
-	player.oldorigin = to; // don't undo the teleport by unsticking
 	player.angles = to_angles;
 	player.fixangle = TRUE;
 	player.velocity = to_velocity;

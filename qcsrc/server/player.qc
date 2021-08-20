@@ -88,6 +88,8 @@ float(void) player_body_customize;
 
 void(entity pl, vector v, float t) player_teleport {
 	setorigin(pl, v);
+	// don't reset back to last position, even if new position is stuck in solid
+	pl.oldorigin = pl.origin;
 	if (clienttype(pl) != CLIENTTYPE_NOTACLIENT) {
 		antilag_teleported(pl);
 		physics_mark_as_teleported(pl, t);
@@ -2102,8 +2104,6 @@ void(entity spot) player_spawn {
 	physics_set_sizes(self, PL_MIN, PL_MAX, PL_CROUCH_MIN, PL_CROUCH_MAX);
 	player_setup_model();
 	self.spawnorigin = spot.origin;
-	// don't reset back to last position, even if new position is stuck in solid
-	self.oldorigin = self.origin;
 	self.event_damage = player_damage;
 	self.bot_attack = TRUE;
 	self.statdraintime = time + 5;

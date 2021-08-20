@@ -64,22 +64,14 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	vector from;
 	makevectors(to_angles);
 	from = player.origin;
-	setorigin(player, to);
-	player.oldorigin = to; // for DP's unsticking
+	player_teleport(player, to, 0);
 	player.angles = to_angles;
 	player.v_angle = to_angles;
 	player.velocity = to_velocity;
-	if (player.effects & EFFECT_TELEPORT_BIT)
-		player.effects &= ~EFFECT_TELEPORT_BIT;
-	else
-		player.effects |= EFFECT_TELEPORT_BIT;
-
 	if (player.classname == "player")
 		player.flags &= ~FL_ONGROUND;
 
 	projectile_update_after_teleport(player);
-	physics_mark_as_teleported(player, 0);
-	antilag_teleported(player);
 }
 
 float(entity to, float sf) warpzone_teleported_send {
