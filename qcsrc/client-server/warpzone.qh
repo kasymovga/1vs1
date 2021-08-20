@@ -87,3 +87,4 @@ vector WarpZone_FindLineOfSight(vector fwd, vector viewer, vector viewee, float 
 void WarpZone_InitHook();
 void WarpZone_EnableHook();
 void WarpZone_ShutdownHook();
+var void(entity e, entity e_orign) warpzone_refsys_copy;

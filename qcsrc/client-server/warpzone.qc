@@ -481,20 +481,27 @@ vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang)
 		ang = WarpZone_TransformVAngles(to.WarpZone_refsys, ang);
 	return ang;
 }
-entity WarpZone_RefSys_SpawnSameRefSys_real(entity me)
-{
-	entity e;
-	e = spawn();
-	if(me.WarpZone_refsys)
-	{
+
+void(entity e, entity e_orig) warpzone_refsys_copy_stub {}
+
+void(entity e, entity e_orig) warpzone_refsys_copy_real {
+	if (e_orig.WarpZone_refsys) {
 		e.WarpZone_refsys = spawn();
 		e.WarpZone_refsys.classname = "warpzone_refsys";
 		e.WarpZone_refsys.owner = e;
 		e.WarpZone_refsys.think = WarpZone_RefSys_GC;
 		e.WarpZone_refsys.nextthink = time + 1;
-		e.WarpZone_refsys.warpzone_shift = me.WarpZone_refsys.warpzone_shift;
-		e.WarpZone_refsys.warpzone_transform = me.WarpZone_refsys.warpzone_transform;
-	}
+		e.WarpZone_refsys.warpzone_shift = e_orig.WarpZone_refsys.warpzone_shift;
+		e.WarpZone_refsys.warpzone_transform = e_orig.WarpZone_refsys.warpzone_transform;
+	} else
+		e.WarpZone_refsys = NULL;
+}
+
+entity WarpZone_RefSys_SpawnSameRefSys_real(entity me)
+{
+	entity e;
+	e = spawn();
+	warpzone_refsys_copy_real(e, me);
 	return e;
 }
 
@@ -697,6 +704,7 @@ void WarpZone_Init()
 	WarpZone_UnTransformOrigin = WarpZone_UnTransformOrigin_stub;
 	WarpZone_TransformOrigin = WarpZone_TransformOrigin_stub;
 	WarpZone_TransformVelocity = WarpZone_TransformVelocity_stub;
+	warpzone_refsys_copy = warpzone_refsys_copy_stub;
 	warpzone_chain_begin = world;
 	WarpZone_InitHook();
 }
@@ -717,6 +725,7 @@ void WarpZone_Enable()
 	WarpZone_UnTransformOrigin = WarpZone_UnTransformOrigin_real;
 	WarpZone_TransformOrigin = WarpZone_TransformOrigin_real;
 	WarpZone_TransformVelocity = WarpZone_TransformVelocity_real;
+	warpzone_refsys_copy = warpzone_refsys_copy_real;
 	WarpZone_EnableHook();
 }
 

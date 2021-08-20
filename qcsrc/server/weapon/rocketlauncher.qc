@@ -132,8 +132,8 @@ void weapon_rocketlauncher_think (void)
 
 			makevectors(self.owner.v_angle);
 			weapon_setup_shot(self.realowner, 0, "", 0);
-			desireddir = weapon_shotdir;
-			desiredorigin = weapon_shotorg;
+			desireddir = WarpZone_RefSys_TransformVelocity(self.owner, self, weapon_shotdir);
+			desiredorigin = WarpZone_RefSys_TransformOrigin(self.owner, self, weapon_shotorg);
 			olddir = normalize(self.velocity);
 			// now it gets tricky... we want to move like some curve to approximate the target direction
 			// but we are limiting the rate at which we can turn!
@@ -187,7 +187,7 @@ void weapon_rocketlauncher_attack (void)
 	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE, self); // because of fly sound
 	projectile_setup(missile, weapon_shotorg - v_forward * 3, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
 			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force, 0);
-
+	warpzone_refsys_copy(missile, missile.owner);
 	missile.classname = "rocket"; //for remote exploding
 	missile.realowner = self; //we neeed it without akimbo_owner for guiding
 	missile.lastrocket = self;
