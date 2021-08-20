@@ -246,7 +246,7 @@ void(void) vehicle_speed_keeper_think { //something reset velocity to 0 0 0, fix
 void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 	vector exit_origin;
 	makevectors(self.angles);
-	float exit_up = self.maxs_z - PL_MAX_z;
+	float exit_up = self.maxs_z - self.owner.maxs_z;
 	if (eject)
 		exit_origin = self.origin + '0 0 1' * eject_range;
 	else
@@ -267,7 +267,7 @@ void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 			trace_box(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, TRACE_MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1)
-			exit_origin = self.origin + '0 0 1' * exit_up;
+			trace_endpos = self.origin + '0 0 1' * exit_up;
 	}
 	exit_origin = trace_endpos;
 	self.owner.switchweapon = self.switchweapon;
@@ -292,7 +292,6 @@ void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 	if (eject) {
 	    self.owner.velocity = self.owner.velocity + (v_up + v_forward * 0.25) * 750;
 	}
-
 	entity e = spawn();
 	e.enemy = self.owner;
 	e.velocity = self.velocity;
