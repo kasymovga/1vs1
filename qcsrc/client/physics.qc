@@ -76,6 +76,9 @@ vector(void) physics_top_adjust_view {
 }
 
 vector(void) physics_vehicle_adjust_view {
+	if (main_isdemo)
+		return view_origin;
+
 	view_vehicle = TRUE;
 	makevectors(view_angles);
 	vector v = view_origin;
