@@ -711,16 +711,6 @@ vector(entity from, entity to, vector ang) WarpZone_RefSys_TransformAngles_real 
 	return ang;
 }
 
-vector(entity from, entity to, vector ang) WarpZone_RefSys_TransformVAngles {
-	if (from.WarpZone_refsys)
-		ang = WarpZone_UnTransformVAngles(from.WarpZone_refsys, ang);
-
-	if (to.WarpZone_refsys)
-		ang = WarpZone_TransformVAngles(to.WarpZone_refsys, ang);
-
-	return ang;
-}
-
 void(entity e, entity e_orig) warpzone_refsys_copy_stub {}
 
 void(entity e, entity e_orig) warpzone_refsys_copy_real {
