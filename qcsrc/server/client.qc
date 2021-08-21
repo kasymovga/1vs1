@@ -29,6 +29,9 @@ void(entity spot) client_put_to_spot{
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 	teleport_origin_set(self, spot.origin, 0);
+	msg_entity = self;
+	WriteByte(MSG_ONE, SVC_SETVIEW);
+	WriteEntity(MSG_ONE, self);
 }
 
 .float just_connected;
