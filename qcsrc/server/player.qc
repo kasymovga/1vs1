@@ -1403,6 +1403,7 @@ void(entity player) player_to_spec {
 		entity oldself = self;
 		self = player;
 		player_clear(FALSE);
+		player_body_remove();
 		player.classname = "observer";
 		if (spectator_block)
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
