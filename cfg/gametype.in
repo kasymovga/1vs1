@@ -27,7 +27,7 @@ alias gametype_cts "reset_gametype; _gametype cts; bprint_gtswitch ^3CTS"
 alias gametype_ft "reset_gametype; _gametype freeze; bprint_gtswitch ^3Freeze Tag"
 alias gametype_freeze gametype_ft
 alias gametype_freezetag gametype_ft
-alias gametype_ca "reset_gametype; _gametype clanarena; bprint_gtswitch ^3Clan Arena"
+alias gametype_ca "reset_gametype; _gametype ca; bprint_gtswitch ^3Clan Arena"
 alias gametype_clanarena gametype_ca
 alias gametype_surv "reset_gametype; _gametype surv; bprint_gtswitch ^3Survival"
 alias gametype_survival gametype_surv
