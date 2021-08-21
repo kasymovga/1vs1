@@ -167,6 +167,7 @@ void() spectator_observer_think {
 
 void() spectator_to_player {
 	if(client_join_allowed()) {
+		self.parm_idlesince = time;
 		if (gamehook_chain_spectator_to_player_handle())
 			return;
 
