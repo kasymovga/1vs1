@@ -582,12 +582,12 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, string s, float recurs
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
 	else if(matchacl(acl, t) <= 0)
 		print("Map ", pFilename, " contains a denied setting, ignored\n");
-	else
-	{
-		if(cvar("g_campaign"))
-			cvar_set(t, s); // this is a wrapper and is always temporary anyway; no need to backup old values then
-		else
-			cvar_settemp(t, s);
+	else {
+		cvar_settemp(t, s);
+#ifdef SVQC
+		if (g_campaign)
+			cvar_set(t, s);
+#endif
 	}
 }
 
