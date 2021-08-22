@@ -11,9 +11,6 @@ set akimbo_g_pinata_drop_all 1
 set akimbo_g_akimbo_weapons all
 set akimbo_g_balance_shotgun_primary_damage 9
 set akimbo_g_balance_shotgun_secondary_damage 9
-set akimbo_g_balance_uzi_first_damage $g_balance_uzi_first_damage
-set akimbo_g_balance_uzi_sustained_damage $g_balance_uzi_sustained_damage
-set akimbo_g_balance_electro_secondary_refire $g_balance_electro_secondary_refire
 set akimbo_g_weaponreplace_shotgun shotgun
 set akimbo_g_weaponreplace_supershotgun shotgun
 set akimbo_ca_g_pinata 1
