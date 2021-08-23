@@ -132,8 +132,8 @@ void weapon_rocketlauncher_think (void)
 
 			makevectors(self.owner.v_angle);
 			weapon_setup_shot(self.realowner, 0, "", 0);
-			desireddir = WarpZone_RefSys_TransformVelocity(self.owner, self, weapon_shotdir);
-			desiredorigin = WarpZone_RefSys_TransformOrigin(self.owner, self, weapon_shotorg);
+			desireddir = warpzone_refsys_transform_velocity(self.owner, self, weapon_shotdir);
+			desiredorigin = warpzone_refsys_transform_origin(self.owner, self, weapon_shotorg);
 			olddir = normalize(self.velocity);
 			// now it gets tricky... we want to move like some curve to approximate the target direction
 			// but we are limiting the rate at which we can turn!

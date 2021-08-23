@@ -47,7 +47,7 @@ void(void) weapon_crylink_touch {
 
 void(void) weapon_crylink_velocity_change {
 	if not(self.projectiledeathtype & HITTYPE_BOUNCE) {
-		self.velocity = WarpZone_RefSys_TransformVelocity(world, self, self.movedir);
+		self.velocity = warpzone_refsys_transform_velocity(world, self, self.movedir);
 		projectile_update(self);
 	}
 	self.nextthink = self.delay;

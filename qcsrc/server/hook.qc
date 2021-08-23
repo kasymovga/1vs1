@@ -184,8 +184,8 @@ void() hook_think {
 			}
 		}
 	}
-	myorg = WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin);
-	vector a = WarpZone_RefSys_TransformAngles(self, self.owner, self.angles);
+	myorg = warpzone_refsys_transform_origin(self, self.owner, self.origin);
+	vector a = warpzone_refsys_transform_angles(self, self.owner, self.angles);
 	makevectors(a_x * '-1 0 0' + a_y * '0 1 0');
 	myorg = myorg + v_forward * (-9);
 	if (myorg != self.pos1) {
@@ -277,7 +277,7 @@ void(void) hook_fire {
 		weapon_shotdir = v_forward;
 	}
 	pointparticles(particleeffectnum("grapple_muzzleflash"), weapon_shotorg_visual, '0 0 0', 1);
-	missile = WarpZone_RefSys_SpawnSameRefSys(self);
+	missile = warpzone_refsys_spawn_same_refsys(self);
 	missile.owner = self;
 	missile.hook = spawn();
 	missile.hook.owner = missile;
@@ -413,13 +413,13 @@ void(float killed) hook_PlayerClear {
 vector hook_physics_pre_origin_save;
 void(entity _hook, entity pl) hook_physics_pre {
 	hook_physics_pre_origin_save = pl.origin;
-	pl.origin = WarpZone_RefSys_TransformOrigin(pl, _hook, pl.origin);
-	physics_velocity = WarpZone_RefSys_TransformVelocity(pl, _hook, physics_velocity);
+	pl.origin = warpzone_refsys_transform_origin(pl, _hook, pl.origin);
+	physics_velocity = warpzone_refsys_transform_velocity(pl, _hook, physics_velocity);
 	physics_hook_old_length = _hook.hook_length;
 }
 
 void(entity _hook, entity pl) hook_physics_post {
-	physics_velocity = WarpZone_RefSys_TransformVelocity(_hook, pl, physics_velocity);
+	physics_velocity = warpzone_refsys_transform_velocity(_hook, pl, physics_velocity);
 	pl.origin = hook_physics_pre_origin_save;
 	_hook.hook_length = physics_hook_old_length;
 	_hook.hook.SendFlags |= 16;

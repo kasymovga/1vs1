@@ -8,9 +8,8 @@ void(void) warpzone_spawn;
 void(void) warpzone_position_spawn;
 
 // reference systems (chained warpzone transforms)
-void(entity me, entity wz) WarpZone_RefSys_Add;
-var vector(entity from, entity to, vector org) WarpZone_RefSys_TransformOrigin;
-var vector(entity from, entity to, vector vel) WarpZone_RefSys_TransformVelocity;
-var vector(entity from, entity to, vector ang) WarpZone_RefSys_TransformAngles;
-var entity(entity me) WarpZone_RefSys_SpawnSameRefSys;
+var vector(entity from, entity to, vector org) warpzone_refsys_transform_origin;
+var vector(entity from, entity to, vector vel) warpzone_refsys_transform_velocity;
+var vector(entity from, entity to, vector ang) warpzone_refsys_transform_angles;
+var entity(entity me) warpzone_refsys_spawn_same_refsys;
 var void(entity e, entity e_orign) warpzone_refsys_copy;

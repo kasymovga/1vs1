@@ -4,6 +4,7 @@
 .entity warpzone_teleport_zone;
 void(void) warpzone_init_delayed;
 float(entity e) warpzone_move_out_of_solid;
+void(entity me, entity wz) warpzone_refsys_add;
 
 float warpzone_trace_allsolid_saved;
 float warpzone_trace_startsolid_saved;
@@ -136,12 +137,12 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 		}
 	}
 	// do the teleport
-	WarpZone_RefSys_Add(e, wz);
+	warpzone_refsys_add(e, wz);
 	if not(e.flags & FL_PROJECTILE) {
 		entity h;
 		for (h = world; (h = findentity(h, aiment, e)); ) {
 			if (h.movetype == MOVETYPE_FOLLOW) {
-				WarpZone_RefSys_Add(h, wz);
+				warpzone_refsys_add(h, wz);
 			}
 		}
 	}
@@ -391,7 +392,7 @@ float(void) warpzone_projectile_impact_check {
 			return FALSE;
 		}
 	}
-	WarpZone_RefSys_Add(self, wz);
+	warpzone_refsys_add(self, wz);
 	warpzone_projectile_store(self);
 	self.warpzone_teleport_time = time;
 	return TRUE;
@@ -661,19 +662,19 @@ void(entity targ, entity attacker, float deathtype) warpzone_damage_mods_set { /
 }
 
 .entity WarpZone_refsys;
-void() WarpZone_RefSys_GC {
+void() warpzone_refsys_gc {
 	// garbage collect unused reference systems
 	self.nextthink = time + 1;
 	if (self.owner.WarpZone_refsys != self)
 		remove(self);
 }
 
-void(entity me, entity wz) WarpZone_RefSys_Add {
+void(entity me, entity wz) warpzone_refsys_add {
 	if (me.WarpZone_refsys.owner != me) {
 		me.WarpZone_refsys = spawn();
 		me.WarpZone_refsys.classname = "warpzone_refsys";
 		me.WarpZone_refsys.owner = me;
-		me.WarpZone_refsys.think = WarpZone_RefSys_GC;
+		me.WarpZone_refsys.think = warpzone_refsys_gc;
 		me.WarpZone_refsys.nextthink = time + 1;
 		WarpZone_Accumulator_Clear(me.WarpZone_refsys);
 	}
@@ -681,7 +682,7 @@ void(entity me, entity wz) WarpZone_RefSys_Add {
 		WarpZone_Accumulator_Add(me.WarpZone_refsys, wz);
 }
 
-vector(entity from, entity to, vector org) WarpZone_RefSys_TransformOrigin_real {
+vector(entity from, entity to, vector org) warpzone_refsys_transform_origin_real {
 	if (from.WarpZone_refsys)
 		org = WarpZone_UnTransformOrigin(from.WarpZone_refsys, org);
 
@@ -691,7 +692,7 @@ vector(entity from, entity to, vector org) WarpZone_RefSys_TransformOrigin_real 
 	return org;
 }
 
-vector(entity from, entity to, vector vel) WarpZone_RefSys_TransformVelocity_real {
+vector(entity from, entity to, vector vel) warpzone_refsys_transform_velocity_real {
 	if (from.WarpZone_refsys)
 		vel = WarpZone_UnTransformVelocity(from.WarpZone_refsys, vel);
 
@@ -701,7 +702,7 @@ vector(entity from, entity to, vector vel) WarpZone_RefSys_TransformVelocity_rea
 	return vel;
 }
 
-vector(entity from, entity to, vector ang) WarpZone_RefSys_TransformAngles_real {
+vector(entity from, entity to, vector ang) warpzone_refsys_transform_angles_real {
 	if (from.WarpZone_refsys)
 		ang = WarpZone_UnTransformAngles(from.WarpZone_refsys, ang);
 
@@ -718,7 +719,7 @@ void(entity e, entity e_orig) warpzone_refsys_copy_real {
 		e.WarpZone_refsys = spawn();
 		e.WarpZone_refsys.classname = "warpzone_refsys";
 		e.WarpZone_refsys.owner = e;
-		e.WarpZone_refsys.think = WarpZone_RefSys_GC;
+		e.WarpZone_refsys.think = warpzone_refsys_gc;
 		e.WarpZone_refsys.nextthink = time + 1;
 		e.WarpZone_refsys.warpzone_shift = e_orig.WarpZone_refsys.warpzone_shift;
 		e.WarpZone_refsys.warpzone_transform = e_orig.WarpZone_refsys.warpzone_transform;
@@ -726,34 +727,34 @@ void(entity e, entity e_orig) warpzone_refsys_copy_real {
 		e.WarpZone_refsys = NULL;
 }
 
-entity(entity me) WarpZone_RefSys_SpawnSameRefSys_real {
+entity(entity me) warpzone_refsys_spawn_same_refsys_real {
 	entity e;
 	e = spawn();
 	warpzone_refsys_copy_real(e, me);
 	return e;
 }
 
-vector(entity from, entity to, vector org) WarpZone_RefSys_TransformOrigin_stub {
+vector(entity from, entity to, vector org) warpzone_refsys_transform_origin_stub {
 	return org;
 }
 
-vector(entity from, entity to, vector vel) WarpZone_RefSys_TransformVelocity_stub {
+vector(entity from, entity to, vector vel) warpzone_refsys_transform_velocity_stub {
 	return vel;
 }
 
-entity(entity e) WarpZone_RefSys_SpawnSameRefSys_stub {
+entity(entity e) warpzone_refsys_spawn_same_refsys_stub {
 	return spawn();
 }
 
-vector(entity from, entity to, vector ang) WarpZone_RefSys_TransformAngles_stub {
+vector(entity from, entity to, vector ang) warpzone_refsys_transform_angles_stub {
 	return ang;
 }
 
 void WarpZone_EnableHook() {
-	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_real;
-	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_real;
-	WarpZone_RefSys_TransformOrigin = WarpZone_RefSys_TransformOrigin_real;
-	WarpZone_RefSys_TransformVelocity = WarpZone_RefSys_TransformVelocity_real;
+	warpzone_refsys_transform_angles = warpzone_refsys_transform_angles_real;
+	warpzone_refsys_spawn_same_refsys = warpzone_refsys_spawn_same_refsys_real;
+	warpzone_refsys_transform_origin = warpzone_refsys_transform_origin_real;
+	warpzone_refsys_transform_velocity = warpzone_refsys_transform_velocity_real;
 	warpzone_refsys_copy = warpzone_refsys_copy_real;
 	warpzone_trace_toss = warpzone_trace_toss_real;
 	warpzone_trace_toss_trough_zone = warpzone_trace_toss_trough_zone_real;
@@ -764,10 +765,10 @@ void WarpZone_EnableHook() {
 }
 
 void WarpZone_InitHook() {
-	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_stub;
-	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_stub;
-	WarpZone_RefSys_TransformOrigin = WarpZone_RefSys_TransformOrigin_stub;
-	WarpZone_RefSys_TransformVelocity = WarpZone_RefSys_TransformVelocity_stub;
+	warpzone_refsys_transform_angles = warpzone_refsys_transform_angles_stub;
+	warpzone_refsys_spawn_same_refsys = warpzone_refsys_spawn_same_refsys_stub;
+	warpzone_refsys_transform_origin = warpzone_refsys_transform_origin_stub;
+	warpzone_refsys_transform_velocity = warpzone_refsys_transform_velocity_stub;
 	warpzone_refsys_copy = warpzone_refsys_copy_stub;
 	warpzone_trace_toss = warpzone_trace_toss_stub;
 	warpzone_trace_toss_trough_zone = warpzone_trace_toss_trough_zone_stub;
