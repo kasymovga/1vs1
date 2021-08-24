@@ -293,7 +293,7 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 			damage_info(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, attacker);
 	}
 	float record_damage = attacker.flags & FL_CLIENT;
-	targ = WarpZone_FindRadius(blastorigin, rad, FALSE);
+	targ = warpzone_find_radius(blastorigin, rad, FALSE);
 	while (targ) {
 		if (targ != inflictor)
 		if (ignore != targ)
@@ -301,8 +301,8 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 		if (targ.takedamage) {
 			// LordHavoc: measure distance to nearest point on target (not origin)
 			// (this guarentees 100% damage on a touch impact)
-			nearest = targ.WarpZone_findradius_nearest;
-			diff = targ.WarpZone_findradius_dist;
+			nearest = targ.warpzone_findradius_nearest;
+			diff = targ.warpzone_findradius_dist;
 			// round up a little on the damage to ensure full damage on impacts
 			// and turn the distance into a fraction of the radius
 			power = 1 - ((vlen (diff) - 2) / rad);
@@ -318,7 +318,7 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 					else
 						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
 
-					force = normalize(center - WarpZone_TransformOrigin(targ, blastorigin));
+					force = normalize(center - warpzone_transform_origin(targ, blastorigin));
 					force = force * (coredamage ? (finaldmg / coredamage) : 1) * forceintensity;
 					// test line of sight to multiple positions on box,
 					// and do damage if any of them hit
@@ -331,7 +331,7 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 					hitloc = nearest;
 					c = 0;
 					while (c < total) {
-						WarpZone_TraceLine(blastorigin, WarpZone_UnTransformOrigin(targ, nearest), TRACE_MOVE_NOMONSTERS, inflictor); //targ have .warpzone_transform from WarpZone_FindRadius
+						warpzone_trace_line(blastorigin, warpzone_untransform_origin(targ, nearest), TRACE_MOVE_NOMONSTERS, inflictor); //targ have .warpzone_transform from warpzone_find_radius
 						if (trace_fraction == 1 || trace_ent == targ) {
 							hits = hits + 1;
 							if (hits > 1)

@@ -30,7 +30,7 @@ void(float isnew) warpzone_read {
 	self.avelocity_y = ReadCoord();
 	self.avelocity_z = ReadCoord();
 	// common stuff
-	WarpZone_SetUp(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
+	warpzone_setup(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
 	// engine currently wants this
 	self.avelocity = AnglesTransform_TurnDirectionFR(self.avelocity);
 	self.drawmask = MASK_NORMAL;
@@ -38,14 +38,14 @@ void(float isnew) warpzone_read {
 	//setmodel(self, self.model);
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);
-	WarpZone_ChainAdd(self);
-    if(!cvar("r_water"))
-        cvar_clientsettemp("r_water", "1");
+	warpzone_chain_add(self);
+	if (!cvar("r_water"))
+		cvar_clientsettemp("r_water", "1");
 
-    if(cvar("r_water_resolutionmultiplier") < 1)
-        cvar_clientsettemp("r_water_resolutionmultiplier", "1");
+	if(cvar("r_water_resolutionmultiplier") < 1)
+		cvar_clientsettemp("r_water_resolutionmultiplier", "1");
 
-	WarpZone_Enable();
+	warpzone_enable();
 }
 
 entity warpzone_passed;
@@ -103,18 +103,17 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	ma_y = max(o_y, max(c0_y, max(c1_y, max(c2_y, c3_y))));
 	mi_z = min(o_z, min(c0_z, min(c1_z, min(c2_z, c3_z))));
 	ma_z = max(o_z, max(c0_z, max(c1_z, max(c2_z, c3_z))));
-
-	e = WarpZone_Find(mi, ma);
+	e = warpzone_find(mi, ma);
 	if(e)
 	{
-		if(WarpZone_PlaneDist(e, o) < 0)
+		if(warpzone_plane_dist(e, o) < 0)
 			return '0 0 0';
 			// can't really be, though, but if it is, this is not my warpzone, but a random different one in the same mins/maxs
 		pd = min(
-				WarpZone_PlaneDist(e, c0), min(
-				WarpZone_PlaneDist(e, c1), min(
-				WarpZone_PlaneDist(e, c2), 
-				WarpZone_PlaneDist(e, c3)))
+				warpzone_plane_dist(e, c0), min(
+				warpzone_plane_dist(e, c1), min(
+				warpzone_plane_dist(e, c2),
+				warpzone_plane_dist(e, c3)))
 			);
 		if(pd < 0)
 			return e.warpzone_forward * -pd;
@@ -129,25 +128,23 @@ void(void) warpzone_view_fix_real {
 	vector org, nearclip, corner0, corner1, corner2, corner3;
 	float f;
 	org = view_origin;
-	e = WarpZone_Find(org, org);
-	if(e)
-	{
-		org = WarpZone_TransformOrigin(e, org);
+	e = warpzone_find(org, org);
+	if (e) {
+		org = warpzone_transform_origin(e, org);
 		if (warpzone_view != e) {
 			if (warpzone_view)
-				view_angles = WarpZone_UnTransformVAngles(warpzone_view, view_angles);
+				view_angles = warpzone_untransform_vangles(warpzone_view, view_angles);
 
-			view_angles = WarpZone_TransformVAngles(e, view_angles);
+			view_angles = warpzone_transform_vangles(e, view_angles);
 		}
 		WarpZone_Inside();
 		if not(warpzone_view)
 			warpzone_view_commandframe = physics_lastcommandframe;
-	}
-	else {
+	} else {
 		WarpZone_Outside();
 		if (warpzone_view) {
 			if not(warpzone_passed) {
-				view_angles = WarpZone_UnTransformVAngles(warpzone_view, view_angles);
+				view_angles = warpzone_untransform_vangles(warpzone_view, view_angles);
 				warpzone_fixangles = TRUE;
 			} else
 				view_angles = view_angles;
@@ -156,7 +153,7 @@ void(void) warpzone_view_fix_real {
 
 		if (warpzone_passed) {
 			if not(warpzone_view)
-				view_angles = WarpZone_TransformVAngles(warpzone_passed, view_angles);
+				view_angles = warpzone_transform_vangles(warpzone_passed, view_angles);
 
 			warpzone_fixangles = TRUE;
 			remove(warpzone_passed);
@@ -199,16 +196,16 @@ void(void) warpzone_view_fix_real {
 	view_origin = org;
 }
 
-void WarpZone_InitHook() {
+void() warpzone_init_hook {
 	warpzone_sound_transition = CVAR(cl_warpzone_sound_transition);
 	warpzone_newstyle = checkextension("DP_CSQC_ROTATEMOVES");
 }
 
-void WarpZone_ShutdownHook() {
+void() warpzone_shutdown_hook {
 	WarpZone_Outside();
 }
 
-void WarpZone_EnableHook() {
+void() warpzone_enable_hook {
 	warpzone_view_fix = warpzone_view_fix_real;
 	WarpZone_Outside();
 }

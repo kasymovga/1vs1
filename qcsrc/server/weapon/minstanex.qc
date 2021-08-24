@@ -81,12 +81,10 @@ void weapon_minstanex_attack (void)
                     weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3PINK");
                 break;
 	    }
-	}
-	else
-        weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3");
+	} else
+		weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3");
 
-	WarpZone_DrawEffectTriangle(weapon_shotorg, weapon_shotorg_visual,  WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), weapon_minstanex_draw_beam_particless);
-
+	warpzone_draw_effect_triangle(weapon_shotorg, weapon_shotorg_visual,  warpzone_untransform_origin(warpzone_trace_transform, trace_endpos), weapon_minstanex_draw_beam_particless);
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
 		if (g_balance_minstanex_explode) {
@@ -97,7 +95,7 @@ void weapon_minstanex_attack (void)
 			pointparticles(particleeffectnum("rocket_explode"), trace_endpos, '0 0 0', 1);
 			remove(e);
 		}
-		damage_info(trace_endpos, 10000, 0, 0, 800 * WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir), WEP_MINSTANEX, self);
+		damage_info(trace_endpos, 10000, 0, 0, 800 * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), WEP_MINSTANEX, self);
 	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)

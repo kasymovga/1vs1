@@ -98,7 +98,7 @@ void(void) world_static_init {
 	badass_init();
 	damageindicator_init();
 	monster_monsters_init();
-	WarpZone_Init();
+	warpzone_init();
 	weapon_selectable_init();
 	TwoWeapons_Init();
 	UDPChat_Init();

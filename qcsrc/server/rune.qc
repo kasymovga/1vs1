@@ -421,14 +421,14 @@ void(void) rune_defense_attack_think {
 	vector v;
 	entity e;
 	if (trace_fraction < 1) {
-		v = WarpZone_FindNearestOrigin(self.owner.origin, self.enemy.origin, 1);
+		v = warpzone_find_nearest_origin(self.owner.origin, self.enemy.origin, 1);
 		if (trace_fraction < 1)
 			goto finish;
 	} else
 		v = self.enemy.origin;
 
 	damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_HURTTRIGGER, self.enemy.origin, '0 0 0');
-	WarpZone_DrawEffectTriangle(self.owner.origin, self.owner.origin, v, rune_defense_attack_lightning);
+	warpzone_draw_effect_triangle(self.owner.origin, self.owner.origin, v, rune_defense_attack_lightning);
 :finish
 	if (self == rune_defense_attack_chain)
 		rune_defense_attack_chain = self.chain;

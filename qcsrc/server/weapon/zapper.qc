@@ -232,12 +232,12 @@ void(void) weapon_zapper_beam_think {
 	entity targ;
 	vector end = weapon_shotorg + weapon_shotdir * self.zapper_range;
 	trace_line(weapon_shotorg, end, FALSE, o);
-	WarpZone_TraceLine(weapon_shotorg, end, FALSE, o);
+	warpzone_trace_line(weapon_shotorg, end, FALSE, o);
 	antilag_end();
 	targ = trace_ent;
 	end = trace_endpos;
 	fract = trace_fraction;
-	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir);
+	vector forcedir = warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir);
 	for ( ;dt >= wantedTicrate; dt -= wantedTicrate) {
 		float _damage = g_balance_zapper_primary_damage;
 		float force  = g_balance_zapper_primary_force;
@@ -267,7 +267,7 @@ void(void) weapon_zapper_beam_think {
 		self.SendFlags |= 2;
 		self.pos1 = org;
 	}
-	vector nowarp_end = WarpZone_UnTransformOrigin(WarpZone_trace_transform, end);
+	vector nowarp_end = warpzone_untransform_origin(warpzone_trace_transform, end);
 	if (nowarp_end != self.pos2) {
 		self.SendFlags |= 4;
 		self.pos2 = nowarp_end;
@@ -319,12 +319,11 @@ void(vector from, vector to, vector end) weapon_zapper_attack2_effect_cb {
 
 void(float ateam, vector from, vector to) weapon_zapper_attack2_effect {
 	weapon_zapper_attack2_effect_team = ateam;
-	WarpZone_DrawEffectTriangle(from, from, to, weapon_zapper_attack2_effect_cb);
+	warpzone_draw_effect_triangle(from, from, to, weapon_zapper_attack2_effect_cb);
 }
 
 void weapon_zapper_attack2_arc(entity targ, entity attacker, float _damage) {
 	float arc = g_balance_zapper_secondary_arc;
-
 	if (arc <= 0)
 		return;
 
@@ -335,10 +334,10 @@ void weapon_zapper_attack2_arc(entity targ, entity attacker, float _damage) {
 }
 
 void(entity o, vector start, vector start_visual, vector end, float fraction, float range, float bounces, float _damage, float force) weapon_zapper_attack2_beam {
-	WarpZone_TraceLine(start, end, FALSE, (fraction ? world : o));
+	warpzone_trace_line(start, end, FALSE, (fraction ? world : o));
 	vector plane_normal = trace_plane_normal;
 	entity targ = trace_ent;
-	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
+	vector forcedir = warpzone_transform_velocity(warpzone_trace_transform, normalize(end - start));
 	end = trace_endpos;
 	fraction = fraction + (1 - fraction) * trace_fraction;
 	if (targ.takedamage) {
@@ -368,7 +367,7 @@ void(entity o, vector start, vector start_visual, vector end, float fraction, fl
 			weapon_zapper_attack2_beam(o, end, end, end + reflect_dir * range * (1 - fraction), fraction, range, bounces - 1, _damage, force);
 		}
 	}
-	WarpZone_DrawEffectTriangle(start, start_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), weapon_zapper_attack2_effect_cb);
+	warpzone_draw_effect_triangle(start, start_visual, warpzone_untransform_origin(warpzone_trace_transform, end), weapon_zapper_attack2_effect_cb);
 }
 
 void(void) weapon_zapper_attack2 {

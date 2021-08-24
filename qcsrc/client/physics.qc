@@ -31,7 +31,7 @@ vector(void) physics_side_adjust_view {
 		v2_z = 0;
 		vector v3 = o + v_forward * 200 - v_up * v2_y * 200 + v_right * v2_x * 200;
 		//pointparticles(particleeffectnum("laser_impact"), v3, '0 0 0', 0.01);
-		view_angles = vectoangles(WarpZone_PlaneAndLineCross(view_origin, v_forward, o, normalize(v3 - o)) - view_origin);
+		view_angles = vectoangles(warpzone_plane_and_line_cross(view_origin, v_forward, o, normalize(v3 - o)) - view_origin);
 		view_angles_z = 0;
 		view_angles_x = -view_angles_x;
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
@@ -60,7 +60,7 @@ vector(void) physics_top_adjust_view {
 		v2_y = tan(view_fovy * 0.5 * MATH_DEG2RAD) * (v_y - f) / f;
 		v2_z = 0;
 		vector v3 = o + v_forward * 200 - v_up * v2_y * 200 + v_right * v2_x * 200;
-		view_angles = vectoangles(WarpZone_PlaneAndLineCross(view_origin, '0 0 1', v3, v_forward) - view_origin);
+		view_angles = vectoangles(warpzone_plane_and_line_cross(view_origin, '0 0 1', v3, v_forward) - view_origin);
 		view_angles_x = 0;
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
@@ -215,7 +215,7 @@ vector(void) physics_view_origin {
 			if (warpzone_view)
 			if (i >= warpzone_view_commandframe) {
 				//print("warp input angles correction ", ftos(i), " ", vtos(input_angles));
-				input_angles = WarpZone_UnTransformAngles(warpzone_view, input_angles);
+				input_angles = warpzone_untransform_angles(warpzone_view, input_angles);
 				//print(" ", vtos(input_angles), "\n");
 			}
 			frametime = input_timelength;

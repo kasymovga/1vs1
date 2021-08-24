@@ -31,7 +31,7 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 	// non-solid so we can hit the next, while doing this we spawn effects and
 	// note down which entities were hit so we can damage them later
 	while (1) {
-		WarpZone_TraceLine(start, end, FALSE, self);
+		warpzone_trace_line(start, end, FALSE, self);
 		// if it is world we can't hurt it so stop now
 		if (trace_ent == world || trace_fraction == 1)
 			break;
@@ -39,7 +39,7 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 		// make the entity non-solid so we can hit the next one
 		trace_ent.railgunhit = TRUE;
 		trace_ent.railgunhitloc = end;
-		trace_ent.railgunhittransform = WarpZone_trace_transform;
+		trace_ent.railgunhittransform = warpzone_trace_transform;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		// stop if this is a wall
 		if (trace_ent.solid == SOLID_BSP)
@@ -67,8 +67,8 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 		ent.railgunhitsolidbackup = SOLID_NOT;
 		ent.railgunhit = FALSE;
 		//for stats so that team hit will count as a miss
-		bullet_from = WarpZone_TransformOrigin(ent.railgunhittransform, start);
-		bullet_to = WarpZone_TransformOrigin(ent.railgunhittransform, end);
+		bullet_from = warpzone_transform_origin(ent.railgunhittransform, start);
+		bullet_to = warpzone_transform_origin(ent.railgunhittransform, end);
 		f = bullet_exponential_falloff(mindist, maxdist, halflifedist, vlen(ent.origin - bullet_from));
 		ffs = bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, vlen(ent.origin - bullet_from));
 		// apply the damage
@@ -267,8 +267,8 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 				warpzone_trace_toss_trough_zone(self, oldself, 0.125 * 0.05, 200, world, bullet_trace_callback);
 				self.velocity = warpzone_trace_toss_velocity;
 			} else {
-				WarpZone_TraceLine_ThroughZone(self.origin, start + proj.velocity * 1.25, FALSE, self, world, bullet_trace_callback);
-				self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.velocity);
+				warpzone_trace_line_trough_zone(self.origin, start + proj.velocity * 1.25, FALSE, self, world, bullet_trace_callback);
+				self.velocity = warpzone_transform_velocity(warpzone_trace_transform, self.velocity);
 			}
 			if (trace_fraction == 1)
 				break; // won't hit anything anytime soon

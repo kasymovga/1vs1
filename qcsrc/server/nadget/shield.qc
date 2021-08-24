@@ -60,13 +60,12 @@ void nadget_Shield_Discharge_Think(void) {
     makevectors(self.owner.v_angle);
 	antilag_begin(self.owner);
     weapon_setup_shot(self.owner, 0, "weapons/nexfire.wav", -1);
-    WarpZone_TraceLine(weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self.owner);
+	warpzone_trace_line(weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self.owner);
 	antilag_end();
     targ = trace_ent;
     start = weapon_shotorg;
     end = trace_endpos;
-    end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-
+	end_visual = warpzone_untransform_origin(warpzone_trace_transform, trace_endpos);
     setorigin(self, end);
     damage_radius(self, self.owner, _damage, _damage * g_nadgets_shield_damage_store_edgefactor,
                  g_nadgets_shield_damage_store_radius, world,

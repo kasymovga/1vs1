@@ -79,10 +79,10 @@ void weapon_nex_attack (void)
 	
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		damage_info(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir), WEP_NEX, self);
+		damage_info(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), WEP_NEX, self);
 
 	//beam and muzzle flash done on client
-	WarpZone_DrawEffectTriangle(weapon_shotorg, weapon_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), weapon_nex_beam_particles);
+	warpzone_draw_effect_triangle(weapon_shotorg, weapon_shotorg_visual, warpzone_untransform_origin(warpzone_trace_transform, trace_endpos), weapon_nex_beam_particles);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_nex_ammo;

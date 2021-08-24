@@ -20,7 +20,7 @@ void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
     float t = self.cnt + time;
     float _alpha = self.alpha;
     rgb *= _alpha;
-	draw_cylindric_line(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE, WarpZone_FindNearestOrigin((from + to) * 0.5, view_camera_origin, FALSE));
+	draw_cylindric_line(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE, warpzone_find_nearest_origin((from + to) * 0.5, view_camera_origin, FALSE));
     zapper_particles_trace_callback_beamoffs += 0.03 * vlen(from - to) / zapper_beam_width;
 
 }
@@ -74,10 +74,10 @@ void(void) zapper_draw {
         zapper_particles_trace_callback(start - view_forward * zapper_shotorigin_x, start, start);
     }
     //R_AddDynamicLight(dynlight_org, 50 * self.alpha, zapper_beam_rgb(self.team));
-	WarpZone_DrawEffectTriangle(real_start, start, end, zapper_particles_trace_callback);
+	warpzone_draw_effect_triangle(real_start, start, end, zapper_particles_trace_callback);
 	//zapper_particles_trace_callback(self.zapper_start, end);
-	vector v = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
-	end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
+	vector v = warpzone_transform_velocity(warpzone_trace_transform, normalize(end - start));
+	end = warpzone_transform_origin(warpzone_trace_transform, end);
 	end = end - v;
     pointparticles(particles_rm_effectnum_team("RM_ZAPPER", self.team, 2), end, v, frametime * 300);
 	pointparticles(particles_rm_effectnum_team("RM_ZAPPER_MUZZLEFLASH", self.team, 2), start, '0 0 0', frametime * 300);

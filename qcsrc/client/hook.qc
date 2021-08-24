@@ -4,7 +4,7 @@ float hook_pull_length_readed;
 
 string hook_draw_cb_tex;
 void(vector start, vector end, vector to) hook_draw_cb {
-	draw_cylindric_line(start, end, 8, hook_draw_cb_tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, WarpZone_TransformOrigin(WarpZone_trace_transform, view_camera_origin));
+	draw_cylindric_line(start, end, 8, hook_draw_cb_tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, warpzone_transform_origin(warpzone_trace_transform, view_camera_origin));
 }
 
 void(void) hook_draw {
@@ -21,7 +21,7 @@ void(void) hook_draw {
 		vector hook_shotorigin = self.hook_shootorg;
 		a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
 		if (warpzone_view)
-			a = WarpZone_UnTransformOrigin(warpzone_view, a);
+			a = warpzone_untransform_origin(warpzone_view, a);
 	} else {
 		entity e = self;
 		self = self.enemy;
@@ -50,7 +50,7 @@ void(void) hook_draw {
 		hook_draw_cb_tex = "particles/hook_green";
 		rgb = '.3 1 .3';
 	}
-	WarpZone_DrawEffectTriangle(a, a, b, hook_draw_cb);
+	warpzone_draw_effect_triangle(a, a, b, hook_draw_cb);
 }
 
 void Remove_GrapplingHook() {

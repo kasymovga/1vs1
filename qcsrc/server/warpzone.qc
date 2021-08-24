@@ -96,12 +96,12 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 	o0 = e.origin + e.view_ofs;
 	v0 = e.velocity;
 	a0 = e.angles;
-	o10 = o1 = WarpZone_TransformOrigin(wz, o0);
-	v1 = WarpZone_TransformVelocity(wz, v0);
+	o10 = o1 = warpzone_transform_origin(wz, o0);
+	v1 = warpzone_transform_velocity(wz, v0);
 	if not(clienttype(e) == CLIENTTYPE_NOTACLIENT)
-		a1 = WarpZone_TransformVAngles(wz, e.v_angle);
+		a1 = warpzone_transform_vangles(wz, e.v_angle);
 	else
-		a1 = WarpZone_TransformAngles(wz, a0);
+		a1 = warpzone_transform_angles(wz, a0);
 
 	if (f0 != 0 || f1 != 0) {
 		// retry last move but behind the warpzone!
@@ -116,8 +116,8 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 		o1 = trace_endpos + e.view_ofs;
 		float d, dv, md;
 		md = max(vlen(e.mins), vlen(e.maxs));
-		d = WarpZone_TargetPlaneDist(wz, o1);
-		dv = WarpZone_TargetPlaneDist(wz, v1);
+		d = warpzone_target_plane_dist(wz, o1);
+		dv = warpzone_target_plane_dist(wz, v1);
 		if (d < 0)
 			o1 = o1 - v1 * (d / dv);
 	}
@@ -210,7 +210,7 @@ void(void) warpzone_shadow_think {
 	} else
 		b = o;
 
-	if (WarpZone_Find(o.origin + o.mins, o.origin + o.maxs) != self.enemy) {
+	if (warpzone_find(o.origin + o.mins, o.origin + o.maxs) != self.enemy) {
 		self.owner.wz_shadow = world;
 		remove_needed = TRUE;
 	}
@@ -229,17 +229,17 @@ void(void) warpzone_shadow_think {
 	self.frame = b.frame;
 	self.colormap = b.colormap;
 	self.color = b.color;
-	self.angles = WarpZone_TransformAngles(self.enemy, a);
+	self.angles = warpzone_transform_angles(self.enemy, a);
 	self.skin = b.skin;
 	self.solid = o.solid;
-	setorigin(self, WarpZone_TransformOrigin(self.enemy, o.origin));
+	setorigin(self, warpzone_transform_origin(self.enemy, o.origin));
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) warpzone_shadow_event_damage {
 	if (damage_radius_running) //No need proxy splash damage
 		return;
 
-	damage(self.owner, inflictor, attacker, _damage, deathtype, WarpZone_UnTransformOrigin(self.enemy, hitloc), WarpZone_UnTransformVelocity(self.enemy, force));
+	damage(self.owner, inflictor, attacker, _damage, deathtype, warpzone_untransform_origin(self.enemy, hitloc), warpzone_untransform_velocity(self.enemy, force));
 	self.velocity = '0 0 0';
 }
 
@@ -251,13 +251,13 @@ void(void) warpzone_touch {
 	if (time <= other.warpzone_teleport_finishtime) // already teleported this frame
 		return;
 
-	if (!WarpZone_BoxTouchesBrush(other.absmin, other.absmax, self, other))
+	if (!warpzone_box_touches_brush(other.absmin, other.absmax, self, other))
 		return;
 
 	if (other.movetype == MOVETYPE_FOLLOW || other.tag_entity)
 		return;
 
-	if (WarpZone_PlaneDist(self, other.origin + other.view_ofs) >= 0) {// wrong side of the trigger_warpzone (don't teleport yet)
+	if (warpzone_plane_dist(self, other.origin + other.view_ofs) >= 0) {// wrong side of the trigger_warpzone (don't teleport yet)
 		if (other.modelindex) {
 			entity e = other.wz_shadow;
 			if (!e || e.enemy != self) {
@@ -360,7 +360,7 @@ float(void) warpzone_projectile_impact_check {
 	float mpd, pd, dpd;
 	entity wz;
 	warpzone_save_trace_globals();
-	wz = WarpZone_Find(self.origin + self.mins, self.origin + self.maxs);
+	wz = warpzone_find(self.origin + self.mins, self.origin + self.maxs);
 	warpzone_restore_trace_globals();
 	if (!wz)
 		return FALSE;
@@ -372,16 +372,16 @@ float(void) warpzone_projectile_impact_check {
 	// not properly retain the projectile trail (but we can't retain it
 	// easily anyway without delaying the projectile by two frames, so who
 	// cares)
-	WarpZone_TraceBox_ThroughZone(self.warpzone_oldorigin, self.mins, self.maxs, self.warpzone_oldorigin + self.warpzone_oldvelocity * frametime, TRACE_MOVE_NORMAL, self, wz, NULL); // this will get us through the warpzone
+	warpzone_trace_box_trough_zone(self.warpzone_oldorigin, self.mins, self.maxs, self.warpzone_oldorigin + self.warpzone_oldvelocity * frametime, TRACE_MOVE_NORMAL, self, wz, NULL); // this will get us through the warpzone
 	setorigin(self, trace_endpos);
-	self.angles = WarpZone_TransformAngles(WarpZone_trace_transform, self.angles);
-	self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.velocity);
+	self.angles = warpzone_transform_angles(warpzone_trace_transform, self.angles);
+	self.velocity = warpzone_transform_velocity(warpzone_trace_transform, self.velocity);
 	if (trace_fraction < 1) //We hit something right behind warp
 		return FALSE;
 	
 	// in case we are in our warp zone post-teleport, shift the projectile forward a bit
 	mpd = max(vlen(self.mins), vlen(self.maxs));
-	pd = WarpZone_TargetPlaneDist(wz, self.origin);
+	pd = warpzone_target_plane_dist(wz, self.origin);
 	if (pd < mpd) {
 		dpd = normalize(self.velocity) * self.warpzone_targetforward;
 		setorigin(self, self.origin + normalize(self.velocity) * ((mpd - pd) / dpd));
@@ -535,7 +535,7 @@ void(void) warpzone_init_update_transform {
 }
 
 void(void) warpzone_init_finalize_transform {
-	WarpZone_SetUp(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
+	warpzone_setup(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = warpzone_touch;
 	entity w = waypoint_spawn(self.warpzone_origin, self.warpzone_origin, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
 	entity dw = waypoint_spawn(self.enemy.warpzone_origin, self.enemy.warpzone_origin, WAYPOINTFLAG_GENERATED);
@@ -566,7 +566,7 @@ void() warpzone_init_delayed {
 	self = e;
 }
 
-void warpzone_trace_toss_trough_zone_real(entity e, entity forent, float toss_frametime, float toss_count, entity zone, WarpZone_trace_callback_t cb) {
+void warpzone_trace_toss_trough_zone_real(entity e, entity forent, float toss_frametime, float toss_count, entity zone, warpzone_trace_callback_t cb) {
 	float g, dt;
 	vector vf, vr, vu, v0, o0;
 	entity wz;
@@ -575,10 +575,10 @@ void warpzone_trace_toss_trough_zone_real(entity e, entity forent, float toss_fr
 	vu = v_up;
 	o0 = e.origin;
 	v0 = e.velocity;
-	WarpZone_trace_warpcount = 0;
-	WarpZone_Trace_InitTransform();
+	warpzone_trace_warpcount = 0;
+	warpzone_trace_init_transform();
 	// if starting in warpzone, first transform
-	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
+	wz = warpzone_find(e.origin + e.mins, e.origin + e.maxs);
 	if (wz) {
 		if (zone && wz != zone) {
 			// we are in ANOTHER warpzone. This is bad. Make a zero length trace and return.
@@ -586,11 +586,11 @@ void warpzone_trace_toss_trough_zone_real(entity e, entity forent, float toss_fr
 			trace_endpos = o0;
 			goto fail;
 		}
-		WarpZone_Trace_AddTransform(wz);
-		setorigin(e, WarpZone_TransformOrigin(wz, e.origin));
-		e.velocity = WarpZone_TransformVelocity(wz, e.velocity);
+		warpzone_trace_add_transform(wz);
+		setorigin(e, warpzone_transform_origin(wz, e.origin));
+		e.velocity = warpzone_transform_velocity(wz, e.velocity);
 	}
-	WarpZone_MakeAllSolid();
+	warpzone_make_all_solid();
 	g = sv_gravity * e.gravity;
 	warpzone_trace_toss_time = 0;
 	for (;;) {
@@ -616,13 +616,13 @@ void warpzone_trace_toss_trough_zone_real(entity e, entity forent, float toss_fr
 		if (zone && wz != zone)
 			break;
 
-		WarpZone_Trace_AddTransform(wz);
+		warpzone_trace_add_transform(wz);
 		// we hit a warpzone... so, let's perform the trace after the warp again
-		e.origin = WarpZone_TransformOrigin(wz, e.origin);
-		e.velocity = WarpZone_TransformVelocity(wz, e.velocity);
-		++WarpZone_trace_warpcount;
+		e.origin = warpzone_transform_origin(wz, e.origin);
+		e.velocity = warpzone_transform_velocity(wz, e.velocity);
+		++warpzone_trace_warpcount;
 	}
-	WarpZone_MakeAllOther();
+	warpzone_make_all_other();
 :fail
 	warpzone_trace_toss_velocity = e.velocity;
 	v_forward = vf;
@@ -637,7 +637,7 @@ void warpzone_trace_toss_real(entity e, entity forent, float toss_frametime, flo
 	warpzone_trace_toss_trough_zone_real(e, forent, toss_frametime, toss_count, world, NULL);
 }
 
-void warpzone_trace_toss_trough_zone_stub(entity e, entity forent, float toss_frametime, float toss_count, entity zone, WarpZone_trace_callback_t cb) {
+void warpzone_trace_toss_trough_zone_stub(entity e, entity forent, float toss_frametime, float toss_count, entity zone, warpzone_trace_callback_t cb) {
 	trace_toss(e, forent, toss_frametime, toss_count);
 	if (cb)
 		cb(e.origin, trace_endpos, trace_endpos);
@@ -676,38 +676,38 @@ void(entity me, entity wz) warpzone_refsys_add {
 		me.WarpZone_refsys.owner = me;
 		me.WarpZone_refsys.think = warpzone_refsys_gc;
 		me.WarpZone_refsys.nextthink = time + 1;
-		WarpZone_Accumulator_Clear(me.WarpZone_refsys);
+		warpzone_accumulator_clear(me.WarpZone_refsys);
 	}
 	if (wz)
-		WarpZone_Accumulator_Add(me.WarpZone_refsys, wz);
+		warpzone_accumulator_add(me.WarpZone_refsys, wz);
 }
 
 vector(entity from, entity to, vector org) warpzone_refsys_transform_origin_real {
 	if (from.WarpZone_refsys)
-		org = WarpZone_UnTransformOrigin(from.WarpZone_refsys, org);
+		org = warpzone_untransform_origin(from.WarpZone_refsys, org);
 
 	if (to.WarpZone_refsys)
-		org = WarpZone_TransformOrigin(to.WarpZone_refsys, org);
+		org = warpzone_transform_origin(to.WarpZone_refsys, org);
 
 	return org;
 }
 
 vector(entity from, entity to, vector vel) warpzone_refsys_transform_velocity_real {
 	if (from.WarpZone_refsys)
-		vel = WarpZone_UnTransformVelocity(from.WarpZone_refsys, vel);
+		vel = warpzone_untransform_velocity(from.WarpZone_refsys, vel);
 
 	if (to.WarpZone_refsys)
-		vel = WarpZone_TransformVelocity(to.WarpZone_refsys, vel);
+		vel = warpzone_transform_velocity(to.WarpZone_refsys, vel);
 
 	return vel;
 }
 
 vector(entity from, entity to, vector ang) warpzone_refsys_transform_angles_real {
 	if (from.WarpZone_refsys)
-		ang = WarpZone_UnTransformAngles(from.WarpZone_refsys, ang);
+		ang = warpzone_untransform_angles(from.WarpZone_refsys, ang);
 
 	if(to.WarpZone_refsys)
-		ang = WarpZone_TransformAngles(to.WarpZone_refsys, ang);
+		ang = warpzone_transform_angles(to.WarpZone_refsys, ang);
 
 	return ang;
 }
@@ -750,7 +750,7 @@ vector(entity from, entity to, vector ang) warpzone_refsys_transform_angles_stub
 	return ang;
 }
 
-void WarpZone_EnableHook() {
+void() warpzone_enable_hook {
 	warpzone_refsys_transform_angles = warpzone_refsys_transform_angles_real;
 	warpzone_refsys_spawn_same_refsys = warpzone_refsys_spawn_same_refsys_real;
 	warpzone_refsys_transform_origin = warpzone_refsys_transform_origin_real;
@@ -764,7 +764,7 @@ void WarpZone_EnableHook() {
 	gamehook_chain_projectile_touch_handle = warpzone_projectile_touch_handle;
 }
 
-void WarpZone_InitHook() {
+void() warpzone_init_hook {
 	warpzone_refsys_transform_angles = warpzone_refsys_transform_angles_stub;
 	warpzone_refsys_spawn_same_refsys = warpzone_refsys_spawn_same_refsys_stub;
 	warpzone_refsys_transform_origin = warpzone_refsys_transform_origin_stub;
@@ -775,7 +775,7 @@ void WarpZone_InitHook() {
 	warpzone_sound_transition = 0;
 }
 
-void WarpZone_ShutdownHook() {
+void() warpzone_shutdown_hook {
 }
 
 void(entity e, vector by) warpzone_move_out_of_solid_expand {
@@ -871,13 +871,13 @@ void(void) warpzone_spawn {
 	self.effects |= EFFECT_NODEPTHTEST;
 	self.warpzone_next = warpzone_first;
 	if not(warpzone_first) {
-		WarpZone_Enable();
+		warpzone_enable();
 		entity e = spawn();
 		e.think = warpzone_init_delayed;
 		e.nextthink = time;
 	}
 	warpzone_first = self;
-	WarpZone_ChainAdd(self);
+	warpzone_chain_add(self);
 }
 
 void(void) warpzone_position_spawn {

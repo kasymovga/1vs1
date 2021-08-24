@@ -1,6 +1,3 @@
-// uncomment this if your mod uses the roll angle in fixangle
-// #define KEEP_ROLL
-
 .vector(vector, vector) camera_transform;
 .vector warpzone_shift;
 .vector warpzone_origin;
@@ -10,68 +7,58 @@
 .vector warpzone_targetangles;
 .vector warpzone_targetforward;
 .vector warpzone_transform;
-void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang);
+void(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang) warpzone_setup;
+float(vector mi, vector ma, entity e, entity ig) warpzone_box_touches_brush;
 
-float WarpZone_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig);
-vector WarpZone_NearestPointOnBox(vector mi, vector ma, vector org);
+entity(vector mi, vector ma) warpzone_find;
+void() warpzone_make_all_solid;
+void() warpzone_make_all_other;
 
-entity WarpZone_Find(vector mi, vector ma);
-void WarpZone_MakeAllSolid();
-void WarpZone_MakeAllOther();
+typedef void(vector start, vector hit, vector end) warpzone_trace_callback_t; // called on every elementary trace
+entity warpzone_trace_transform; // transform accumulator during a trace
+vector warpzone_trace_dir;
+float warpzone_trace_warpcount;
+var void(vector org, vector min, vector max, vector end, float nomonsters, entity forent) warpzone_trace_box;
+var void(vector org, vector min, vector max, vector end, float nomonsters, entity forent, entity zone, warpzone_trace_callback_t cb) warpzone_trace_box_trough_zone;
+var void(vector org, vector end, float nomonsters, entity forent) warpzone_trace_line;
+var void(vector org, vector end, float nomonsters, entity forent, entity zone, warpzone_trace_callback_t cb) warpzone_trace_line_trough_zone;
+void(entity own, float eff, vector org, vector org_visual, vector end) warpzone_trail_particles;
 
-typedef void(vector start, vector hit, vector end) WarpZone_trace_callback_t; // called on every elementary trace
-entity WarpZone_trace_transform; // transform accumulator during a trace
-vector WarpZone_trace_dir;
-float WarpZone_trace_warpcount;
-var void(vector org, vector min, vector max, vector end, float nomonsters, entity forent) WarpZone_TraceBox;
-void WarpZone_TraceBox_real(vector org, vector min, vector max, vector end, float nomonsters, entity forent);
-var void(vector org, vector min, vector max, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb) WarpZone_TraceBox_ThroughZone;
-void WarpZone_TraceBox_ThroughZone_real(vector org, vector min, vector max, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb);
-var void(vector org, vector end, float nomonsters, entity forent) WarpZone_TraceLine;
-void WarpZone_TraceLine_real(vector org, vector end, float nomonsters, entity forent);
-var void(vector org, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb) WarpZone_TraceLine_ThroughZone;
-void WarpZone_TraceLine_ThroughZone_real(vector org, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb);
-void WarpZone_TrailParticles(entity own, float eff, vector org, vector org_visual, vector end);
+.vector warpzone_findradius_dist;
+.vector warpzone_findradius_nearest;
+// also set: warpzone parameters, so warpzone_transform_origin can transform vectors from blast's to victim's system
+.vector warpzone_findradius_findorigin;
+.float warpzone_findradius_findradius;
+var entity(vector org, float radius, float needlineofsight) warpzone_find_radius;
 
-.vector WarpZone_findradius_dist;
-.vector WarpZone_findradius_nearest;
-// also set: warpzone parameters, so WarpZone_TransformOrigin can transform vectors from blast's to victim's system
-.vector WarpZone_findradius_findorigin;
-.float WarpZone_findradius_findradius;
-var entity(vector org, float radius, float needlineofsight) WarpZone_FindRadius;
-entity WarpZone_FindRadius_real(vector org, float radius, float needlineofsight);
+float(entity wz, vector v) warpzone_plane_dist;
+float(entity wz, vector v) warpzone_target_plane_dist;
+var vector(entity wz, vector v) warpzone_transform_origin;
+var vector(entity wz, vector v) warpzone_transform_velocity;
+vector(entity wz, vector v) warpzone_transform_angles;
+vector(entity wz, vector v) warpzone_transform_vangles;
+var vector(entity wz, vector v) warpzone_untransform_origin;
+vector(entity wz, vector v) warpzone_untransform_velocity;
+vector(entity wz, vector v) warpzone_untransform_angles;
+vector(entity wz, vector v) warpzone_untransform_vangles;
 
-float WarpZone_PlaneDist(entity wz, vector v);
-float WarpZone_TargetPlaneDist(entity wz, vector v);
-vector WarpZone_TransformOrigin_real(entity wz, vector v);
-var vector(entity wz, vector v) WarpZone_TransformOrigin;
-vector WarpZone_TransformVelocity_real(entity wz, vector v);
-var vector(entity wz, vector v) WarpZone_TransformVelocity;
-vector WarpZone_TransformAngles(entity wz, vector v);
-vector WarpZone_TransformVAngles(entity wz, vector v);
-vector WarpZone_UnTransformOrigin_real(entity wz, vector v);
-var vector(entity wz, vector v) WarpZone_UnTransformOrigin;
-vector WarpZone_UnTransformVelocity(entity wz, vector v);
-vector WarpZone_UnTransformAngles(entity wz, vector v);
-vector WarpZone_UnTransformVAngles(entity wz, vector v);
-
-vector WarpZone_PlaneAndLineCross(vector planep, vector planen, vector linep, vector linev);
-void WarpZone_TraceTriangle(vector org, vector org_visual, vector end, float nomonster, entity forent, WarpZone_trace_callback_t cb);
-float WarpZone_FindNearestOrigin_length;
-vector WarpZone_FindNearestOrigin_real(vector from, vector to, float trace_check);
-var vector(vector from, vector to, float trace_check) WarpZone_FindNearestOrigin;
-void WarpZone_Init();
-void WarpZone_Enable();
-void WarpZone_Shutdown();
-void WarpZone_ChainAdd(entity wz);
-var void(vector org, vector org_visual, vector end, WarpZone_trace_callback_t cb) WarpZone_DrawEffectTriangle;
-void WarpZone_DrawEffectTriangle_real(vector org, vector org_visual, vector end, WarpZone_trace_callback_t cb);
+vector(vector planep, vector planen, vector linep, vector linev) warpzone_plane_and_line_cross;
+void(vector org, vector org_visual, vector end, float nomonster, entity forent, warpzone_trace_callback_t cb) warpzone_trace_triangle;
+float warpzone_find_nearest_origin_length;
+var vector(vector from, vector to, float trace_check) warpzone_find_nearest_origin;
+void() warpzone_init;
+void() warpzone_enable;
+void() warpzone_shutdown;
+void(entity wz) warpzone_chain_add;
+var void(vector org, vector org_visual, vector end, warpzone_trace_callback_t cb) warpzone_draw_effect_triangle;
 
 .entity warpzone_chain;
 entity warpzone_chain_begin;
-void WarpZone_Sound(entity e, float chan, string sound_path, float vol, float attn);
-
-vector WarpZone_FindLineOfSight(vector fwd, vector viewer, vector viewee, float traceflag, entity traceent);
-void WarpZone_InitHook();
-void WarpZone_EnableHook();
-void WarpZone_ShutdownHook();
+#if 0
+//unused
+void(entity e, float chan, string sound_path, float vol, float attn) warpzone_sound;
+vector(vector fwd, vector viewer, vector viewee, float traceflag, entity traceent) warpzone_find_line_of_sight;
+#endif
+void() warpzone_init_hook;
+void() warpzone_enable_hook;
+void() warpzone_shutdown_hook;

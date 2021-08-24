@@ -2,8 +2,8 @@ float warpzone_trace_toss_time; // duration of toss (approximate)
 vector warpzone_trace_toss_velocity; // ending velocity of a tracetoss (post-transform)
 var void(entity e, entity forent, float toss_frametime, float toss_count) warpzone_trace_toss;
 void warpzone_trace_toss_real(entity e, entity forent, float toss_frametime, float toss_count);
-var void(entity e, entity forent, float toss_frametime, float toss_count, entity zone, WarpZone_trace_callback_t cb) warpzone_trace_toss_trough_zone;
-void warpzone_trace_toss_trough_zone_real(entity e, entity forent, float toss_frametime, float toss_count, entity zone, WarpZone_trace_callback_t cb);
+var void(entity e, entity forent, float toss_frametime, float toss_count, entity zone, warpzone_trace_callback_t cb) warpzone_trace_toss_trough_zone;
+void warpzone_trace_toss_trough_zone_real(entity e, entity forent, float toss_frametime, float toss_count, entity zone, warpzone_trace_callback_t cb);
 void(void) warpzone_spawn;
 void(void) warpzone_position_spawn;
 

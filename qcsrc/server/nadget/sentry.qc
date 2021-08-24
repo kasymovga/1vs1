@@ -66,9 +66,6 @@ entity nadget_Sentry_FindTarget(entity emitter) {
 
     entity targ = NULL, p;
     float mindist, dist;
-#if 0
-    float medic = Buffs_Present(sentry.realowner, BUFF_MEDIC), medicflag;
-#endif
 	float diffteam;
     vector t, o = sentry.origin + sentry.view_ofs;
 
@@ -79,46 +76,26 @@ entity nadget_Sentry_FindTarget(entity emitter) {
 
     FOR_EACH_PLAYER(p) if not(PLAYER_DEAD(p)) {
         diffteam = (p != sentry.realowner && team_is_different_teams(sentry, p));
-
-#if 0
-        if(diffteam) {
-            if(medicflag)
-                continue;
-        } else if(!medic)
-            continue;
-#endif
 		if not(diffteam)
 			continue;
 
         if(nadget_Sentry_TargetIsTaken(emitter, p))
             continue;
 
-        t = WarpZone_FindNearestOrigin(o, p.origin + p.view_ofs, FALSE);
-        dist = WarpZone_FindNearestOrigin_length;
-#if 0
-		t = p.origin;
-		dist = vlen(o - t);
-#endif
-
+		t = warpzone_find_nearest_origin(o, p.origin + p.view_ofs, FALSE);
+		dist = warpzone_find_nearest_origin_length;
         if(diffteam /* || (!diffteam && medicflag) */) {
             if(dist > mindist)
                 continue;
         } else if(dist > g_nadgets_sentry_beam_range)
             continue;
 
-        WarpZone_TraceLine(o, t, TRACE_MOVE_NORMAL, sentry);
-        //trace_line(o, t, TRACE_MOVE_NORMAL, sentry);
-
+		warpzone_trace_line(o, t, TRACE_MOVE_NORMAL, sentry);
         if(trace_ent != p)
             continue;
 
         mindist = dist;
         targ = p;
-
-#if 0
-        if(!diffteam)
-            medicflag = TRUE;
-#endif
     }
 
     return targ;
@@ -129,19 +106,11 @@ void nadget_Sentry_Beam_Think(void) {
     vector end = targ.origin + targ.view_ofs * (0.5 + 0.5 * sin(time * 5 + num_for_edict(self)));
     vector start = self.owner.origin + self.owner.view_ofs;
     vector end_transformed;
-
-    end = WarpZone_FindNearestOrigin(start, end, TRUE);
-    WarpZone_TraceLine(start, end, TRACE_MOVE_NORMAL, self);
-
+	end = warpzone_find_nearest_origin(start, end, TRUE);
+	warpzone_trace_line(start, end, TRACE_MOVE_NORMAL, self);
     targ = trace_ent;
     end_transformed = trace_endpos;
-    end = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-#if 0
-    trace_line(start, end, TRACE_MOVE_NORMAL, self);
-    targ = trace_ent;
-    end_transformed = trace_endpos;
-#endif
-
+	end = warpzone_untransform_origin(warpzone_trace_transform, trace_endpos);
     if(!self.origin)
         self.origin = end;
     else
@@ -150,7 +119,7 @@ void nadget_Sentry_Beam_Think(void) {
     end = self.origin;
 
     if(targ.takedamage == DAMAGE_AIM && time > self.cnt) {
-        damage(targ, self, self.owner.realowner, g_nadgets_sentry_beam_dps * 0.1, NADGET_SENTRY, end, g_nadgets_sentry_beam_force * normalize(end_transformed - WarpZone_TransformOrigin(WarpZone_trace_transform, start)));
+		damage(targ, self, self.owner.realowner, g_nadgets_sentry_beam_dps * 0.1, NADGET_SENTRY, end, g_nadgets_sentry_beam_force * normalize(end_transformed - warpzone_transform_origin(warpzone_trace_transform, start)));
         self.cnt = time + 0.1; // FIXME: this is inaccurate
     }
 
@@ -459,15 +428,14 @@ void nadget_Sentry_Trigger(void) {
 	antilag_begin(self);
     weapon_setup_shot(self, 0, "", -1);
     o = weapon_shotorg;
-    WarpZone_TraceLine(o, o + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self);
+	warpzone_trace_line(o, o + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self);
     while(trace_ent && trace_ent.classname == "hg_sentry" && !team_is_different_teams(trace_ent, self))
-        WarpZone_TraceLine(trace_endpos + weapon_shotdir, trace_endpos + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self);
+        warpzone_trace_line(trace_endpos + weapon_shotdir, trace_endpos + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self);
 
     aimloc = trace_endpos;
     aimtarg = trace_ent;
-    aimtransform = WarpZone_trace_transform;
-    aimloc_untransformed = WarpZone_UnTransformOrigin(aimtransform, aimloc);
-
+    aimtransform = warpzone_trace_transform;
+	aimloc_untransformed = warpzone_untransform_origin(aimtransform, aimloc);
     float c_dmg = g_nadgets_sentry_shock_damage;
     float c_frc = g_nadgets_sentry_shock_force;
     float c_cost;
@@ -484,29 +452,25 @@ void nadget_Sentry_Trigger(void) {
 
         #define IS_GOOD_HIT (vlen(trace_endpos - aimloc) < 1 || (aimtarg && aimtarg.takedamage && trace_ent == aimtarg))
 
-        WarpZone_TraceLine(o, aimloc + normalize(aimloc - o), TRACE_MOVE_NORMAL, self);
+		warpzone_trace_line(o, aimloc + normalize(aimloc - o), TRACE_MOVE_NORMAL, self);
 		entity targ = ((trace_fraction < 1) ? trace_ent : world);
-
         if(!IS_GOOD_HIT) {
             // Aiming through a warpzone, sentry can hit directly
-            WarpZone_TraceLine(o, aimloc, TRACE_MOVE_NORMAL, self);
+			warpzone_trace_line(o, aimloc, TRACE_MOVE_NORMAL, self);
         }
-
         entity wz = warpzone_chain_begin;
         while(!IS_GOOD_HIT && wz) {
             // Sentry can hit neither directly nor through the warpzone we aimed through (if any).
             // Let's see if we can hit through another warpzone.
-            WarpZone_TraceLine(o, WarpZone_UnTransformOrigin(wz, aimloc), TRACE_MOVE_NORMAL, self);
+			warpzone_trace_line(o, warpzone_untransform_origin(wz, aimloc), TRACE_MOVE_NORMAL, self);
             wz = wz.warpzone_chain;
         }
-
         if(IS_GOOD_HIT) {
-            vector end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+			vector end_visual = warpzone_untransform_origin(warpzone_trace_transform, trace_endpos);
             vector dir = normalize(end_visual - o);
             vector endpos = trace_endpos;
             float noimpact = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT);
             vector force = c_frc * dir;
-
 			if (targ)
 				damage(targ, self, self, c_dmg, NADGET_SENTRY | HITTYPE_SECONDARY, endpos, force);
 

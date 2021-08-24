@@ -45,7 +45,7 @@ void(void) weapon_melee_attack_think {
 	float damage_factor = (onehit ? 1 : (1 / self.count));
 	antilag_begin(self.owner);
 	weapon_setup_shot(self.owner, 0, "", (self.dmg ? 1 : 0));
-	WarpZone_TraceLine(weapon_shotorg - (weapon_shotdir * 20), weapon_shotorg + weapon_shotdir * g_balance_melee_distance, TRACE_MOVE_NORMAL, self);
+	warpzone_trace_line(weapon_shotorg - (weapon_shotdir * 20), weapon_shotorg + weapon_shotdir * g_balance_melee_distance, TRACE_MOVE_NORMAL, self);
 	antilag_end();
 	if (trace_fraction < 1)
 	if (trace_ent)
@@ -54,7 +54,7 @@ void(void) weapon_melee_attack_think {
 			damage_record_hits(self.owner, trace_ent, WEP_MELEE, 1, _damage * damage_factor);
 
 		damage(trace_ent, self.owner, self.owner, _damage * damage_factor,
-				WEP_MELEE, trace_endpos, WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir) * force * damage_factor + '0 0 1' * force_up * damage_factor);
+				WEP_MELEE, trace_endpos, warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir) * force * damage_factor + '0 0 1' * force_up * damage_factor);
 		if (onehit) {
 			remove(self);
 			return;
