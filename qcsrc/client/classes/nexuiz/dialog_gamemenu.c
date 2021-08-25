@@ -37,6 +37,7 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 	if (main_isdemo)
 		me.rows = me.rows - 4;
 	else {
+		if not(main_campaign)
 		if (team_mode)
 			me.rows = me.rows + 1;
 
@@ -52,7 +53,7 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 		if (main_campaign)
 			me.rows = me.rows - 1; //vote
 
-		if (gametype == GAMETYPE_SINGLE)
+		if (main_campaign)
 			me.rows = me.rows - 1; //mute
 	}
 	configureDialogNexuizDialog(me); //Parent method
@@ -76,10 +77,20 @@ void fillNexuizGameMenuDialog(entity me)
 			me.TR(me);
 				me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Join", '0 0 0', "cmd join;", COMMANDBUTTON_CLOSE));
 		}
+		if not(main_campaign)
 		if (team_mode) {
 			me.TR(me);
+				float at = cvar("_teams_available");
+				float tc = 0;
+				if (at & 1) tc++;
+				if (at & 2) tc++;
+				if (at & 4) tc++;
+				if (at & 8) tc++;
 				me.TD(me, 1, me.columns, e = makeNexuizButton("Switch team", '0 0 0'));
 				e.onClick = ShowSwitchTeam;
+				if (tc <= 1) {
+					e.disabled = TRUE;
+				}
 		}
 		float i;
 		for (i = 0; i < gamemenu_commands_count; i++) {
