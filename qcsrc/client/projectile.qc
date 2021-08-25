@@ -125,7 +125,7 @@ void(void) projectile_draw {
 		default:
 			break;
 		}
-		self.angles = AnglesTransform_Multiply(self.angles, rot * (t - self.spawntime));
+		self.angles = anglestransform_multiply(self.angles, rot * (t - self.spawntime));
 	}
 	makevectors(self.angles);
 	trailorigin = self.origin;

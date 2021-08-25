@@ -17,16 +17,16 @@ void(entity acc) warpzone_accumulator_clear {
 
 void(entity acc, vector t, vector s) warpzone_accumulator_add_transform {
 	vector tr, st;
-	tr = AnglesTransform_Multiply(t, acc.warpzone_transform);
-	st = AnglesTransform_Multiply_GetPostShift(t, s, acc.warpzone_transform, acc.warpzone_shift);
+	tr = anglestransform_multiply(t, acc.warpzone_transform);
+	st = anglestransform_multiply_get_post_shift(t, s, acc.warpzone_transform, acc.warpzone_shift);
 	acc.warpzone_transform = tr;
 	acc.warpzone_shift = st;
 }
 
 void(entity acc, entity wz) warpzone_accumulator_add {
 	vector t, st;
-	t = AnglesTransform_Multiply(wz.warpzone_transform, acc.warpzone_transform);
-	st = AnglesTransform_Multiply_GetPostShift(wz.warpzone_transform, wz.warpzone_shift, acc.warpzone_transform, acc.warpzone_shift);
+	t = anglestransform_multiply(wz.warpzone_transform, acc.warpzone_transform);
+	st = anglestransform_multiply_get_post_shift(wz.warpzone_transform, wz.warpzone_shift, acc.warpzone_transform, acc.warpzone_shift);
 	acc.warpzone_transform = t;
 	acc.warpzone_shift = st;
 }
@@ -53,8 +53,8 @@ vector(vector org, vector ang) warpzone_camera_transform {
 }
 
 void(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang) warpzone_setup {
-	e.warpzone_transform = AnglesTransform_RightDivide(other_ang, AnglesTransform_TurnDirectionFR(my_ang));
-	e.warpzone_shift = AnglesTransform_PrePostShift_GetPostShift(my_org, e.warpzone_transform, other_org);
+	e.warpzone_transform = anglestransform_right_divide(other_ang, anglestransform_turn_direction_fr(my_ang));
+	e.warpzone_shift = anglestransform_pre_post_shift_get_post_shift(my_org, e.warpzone_transform, other_org);
 	e.warpzone_origin = my_org;
 	e.warpzone_targetorigin = other_org;
 	e.warpzone_angles = my_ang;
@@ -243,20 +243,20 @@ float(entity wz, vector v) warpzone_target_plane_dist {
 }
 
 vector(entity wz, vector v) warpzone_transform_origin_real {
-	return wz.warpzone_shift + AnglesTransform_Apply(wz.warpzone_transform, v);
+	return wz.warpzone_shift + anglestransform_apply(wz.warpzone_transform, v);
 }
 
 vector(entity wz, vector v) warpzone_transform_velocity_real {
-	return AnglesTransform_Apply(wz.warpzone_transform, v);
+	return anglestransform_apply(wz.warpzone_transform, v);
 }
 
 vector(entity wz, vector v) warpzone_transform_angles {
-	return AnglesTransform_ApplyToAngles(wz.warpzone_transform, v);
+	return anglestransform_apply_to_angles(wz.warpzone_transform, v);
 }
 
 vector(entity wz, vector ang) warpzone_transform_vangles {
-	ang = AnglesTransform_ApplyToVAngles(wz.warpzone_transform, ang);
-	ang = AnglesTransform_Normalize(ang, FALSE);
+	ang = anglestransform_apply_to_vangles(wz.warpzone_transform, ang);
+	ang = anglestransform_normalize(ang, FALSE);
 	return ang;
 }
 
@@ -265,7 +265,7 @@ vector(entity wz, vector v) warpzone_untransform_origin_real {
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
-	v = AnglesTransform_Apply(AnglesTransform_Invert(wz.warpzone_transform), v - wz.warpzone_shift);
+	v = anglestransform_apply(anglestransform_invert(wz.warpzone_transform), v - wz.warpzone_shift);
 	v_forward = vf;
 	v_right = vr;
 	v_up = vu;
@@ -273,20 +273,20 @@ vector(entity wz, vector v) warpzone_untransform_origin_real {
 }
 
 vector(entity wz, vector v) warpzone_untransform_velocity {
-	return AnglesTransform_Apply(AnglesTransform_Invert(wz.warpzone_transform), v);
+	return anglestransform_apply(anglestransform_invert(wz.warpzone_transform), v);
 }
 
 vector(entity wz, vector v) warpzone_untransform_angles {
-	return AnglesTransform_ApplyToAngles(AnglesTransform_Invert(wz.warpzone_transform), v);
+	return anglestransform_apply_to_angles(anglestransform_invert(wz.warpzone_transform), v);
 }
 
 vector(entity wz, vector ang) warpzone_untransform_vangles {
 	float roll;
 	roll = ang_z;
 	ang_z = 0;
-	ang = AnglesTransform_ApplyToVAngles(AnglesTransform_Invert(wz.warpzone_transform), ang);
-	ang = AnglesTransform_Normalize(ang, TRUE);
-	ang = AnglesTransform_CancelRoll(ang);
+	ang = anglestransform_apply_to_vangles(anglestransform_invert(wz.warpzone_transform), ang);
+	ang = anglestransform_normalize(ang, TRUE);
+	ang = anglestransform_cancel_roll(ang);
 	ang_z = roll;
 	return ang;
 }
@@ -344,8 +344,8 @@ void(vector org, float rad, vector org0, vector transform, vector shift, float n
 		org0_new = warpzone_transform_origin(e, org);
 		trace_line(e.warpzone_targetorigin, org0_new, TRACE_MOVE_NOMONSTERS, e);
 		org_new = trace_endpos;
-		transform_new = AnglesTransform_Multiply(e.warpzone_transform, transform);
-		shift_new = AnglesTransform_Multiply_GetPostShift(e.warpzone_transform, e.warpzone_shift, transform, shift);
+		transform_new = anglestransform_multiply(e.warpzone_transform, transform);
+		shift_new = anglestransform_multiply_get_post_shift(e.warpzone_transform, e.warpzone_shift, transform, shift);
 		warpzone_find_radius_recurse(
 			org_new,
 			bound(0, rad - vlen(org_new - org0_new), rad - 8),

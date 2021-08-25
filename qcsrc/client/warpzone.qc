@@ -32,7 +32,7 @@ void(float isnew) warpzone_read {
 	// common stuff
 	warpzone_setup(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
 	// engine currently wants this
-	self.avelocity = AnglesTransform_TurnDirectionFR(self.avelocity);
+	self.avelocity = anglestransform_turn_direction_fr(self.avelocity);
 	self.drawmask = MASK_NORMAL;
 	// link me
 	//setmodel(self, self.model);

@@ -31,8 +31,8 @@ float(entity teleporter, entity player) portal_teleport_player {
 	from = teleporter.origin;
 	transform = teleporter.portal_transform;
 	to = teleporter.enemy.origin;
-	to = to + AnglesTransform_Apply(teleporter.portal_transform, player.origin - from);
-	newvel = AnglesTransform_Apply(transform, player.velocity);
+	to = to + anglestransform_apply(teleporter.portal_transform, player.origin - from);
+	newvel = anglestransform_apply(transform, player.velocity);
 	// this now is INSIDE the plane... can't use that
 	// shift it out
 	makevectors(teleporter.enemy.angles);
@@ -75,22 +75,17 @@ float(entity teleporter, entity player) portal_teleport_player {
 	// ang_x stuff works around weird quake angles
 	if (player.classname == "player") {
 		ang = player.v_angle;
-		/*
-		ang_x = bound(-89, mod(-ang_x + 180, 360) - 180, 89);
-		ang = AnglesTransform_Multiply(transform, ang);
-		*/
 		// PLAYERS use different math
 		ang_x = -ang_x;
-		//print("reference: ", vtos(AnglesTransform_Multiply(transform, ang)), "\n");
 		makevectors(ang);
 		old_forward = v_forward;
 		old_up = v_up;
 		makevectors(ang_y * '0 1 0');
 		old_yawforward = v_forward;
 		// their aiming directions are portalled...
-		new_forward = AnglesTransform_Apply(transform, old_forward);
-		new_up = AnglesTransform_Apply(transform, old_up);
-		new_yawforward = AnglesTransform_Apply(transform, old_yawforward);
+		new_forward = anglestransform_apply(transform, old_forward);
+		new_up = anglestransform_apply(transform, old_up);
+		new_yawforward = anglestransform_apply(transform, old_yawforward);
 		// but now find a new sense of direction
 		// this is NOT easy!
 		// assume new_forward points straight up.
@@ -114,10 +109,10 @@ float(entity teleporter, entity player) portal_teleport_player {
 		ang_z = player.angles_z;
 	} else {
 		ang = player.angles;
-		ang = AnglesTransform_Multiply(transform, ang);
+		ang = anglestransform_multiply(transform, ang);
 	}
 	// factor -1 allows chaining portals, but may be weird
-	player.right_vector = -1 * AnglesTransform_Apply(transform, player.right_vector);
+	player.right_vector = -1 * anglestransform_apply(transform, player.right_vector);
 	if (gamehook_player_is_carrier(player))
 		gamehook_player_drop_carried(player);
 
@@ -302,7 +297,7 @@ void(entity teleporter, entity destination) portal_disconnect {
 void(entity teleporter, entity destination) portal_connect {
 	vector a = destination.angles + '0 180 0';
 	teleporter.angles_x = -teleporter.angles_x;
-	teleporter.portal_transform = AnglesTransform_Multiply(a, AnglesTransform_Invert(teleporter.angles));
+	teleporter.portal_transform = anglestransform_multiply(a, anglestransform_invert(teleporter.angles));
 	teleporter.angles_x = -teleporter.angles_x;
 	teleporter.enemy = destination;
 	destination.enemy = teleporter;
