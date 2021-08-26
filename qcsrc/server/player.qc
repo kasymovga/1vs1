@@ -130,10 +130,15 @@ void(void) player_corpse_think {
 			self.frame = self.dead_frame;
 		}
 	} else if (time >= self.fade_time) {
-		if (self.owner.body == self)
-			self.owner.body = world;
-
-		remove(self);
+		if (self.owner == self) {
+			pointparticles(particleeffectnum("morphed_damage_dissolve"), self.origin + (self.mins + self.maxs) * 0.5, '0 0 0', 1);
+			remove(self);
+		} else {
+			pointparticles(particleeffectnum("morphed_damage_dissolve"), self.owner.origin + (self.owner.mins + self.maxs) * 0.5, '0 0 0', 1);
+			self = self.owner;
+			player_body_remove();
+			self = world;
+		}
 		return;
 	}
 	self.nextthink = time;
@@ -156,9 +161,12 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 
 entity(float keepvelocity, float _movetype) player_body_detach {
 	if (self.effects & EFFECT_NODRAW)
-		return world;
+		return NULL;
 
 	entity e = self.body;
+	if not(e)
+		return NULL;
+
 	fire_move(self, e);
 	e.owner = e;
 	e.skinindex = self.skinindex;
@@ -270,8 +278,10 @@ void(float finished, string samp) play_countdown {
 }
 
 void() player_effects {
-	self.body.body.effects = self.effects & EFFECT_TELEPORT_BIT; //for teleportation
-	if (!self.body.modelindex || PLAYER_REALLY_DEAD(self)) // don't apply the flags if the player is gibbed
+	entity b = self.body;
+	if (!b) return;
+	b.body.effects = self.effects & EFFECT_TELEPORT_BIT; //for teleportation
+	if (!b.modelindex || PLAYER_REALLY_DEAD(self)) // don't apply the flags if the player is gibbed
 		return;
 
 	fire_apply_effect(self);
@@ -284,9 +294,9 @@ void() player_effects {
 	if (time < self.spawnshieldtime)
 		self.effects = self.effects | (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 
-	self.body.effects = self.effects;
-	self.body.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
-	self.body.body.modelflags = self.modelflags; //for MF_ROCKET effect
+	b.effects = self.effects;
+	b.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
+	b.body.modelflags = self.modelflags; //for MF_ROCKET effect
 	self.effects = 0;
 }
 
@@ -479,16 +489,22 @@ void(entity e, .vector anim, float looping, float override, float restart) playe
 }
 
 void(void) player_anim {
-	if (self.body)
-		anim_update(self.body);
-
+	entity b = self.body;
 	if (self.weaponentity)
 		anim_update(self.weaponentity);
 
+	if (self.weaponentity)
+	if (!self.weaponentity.animstate_override)
+		anim_set(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
+
+	if (!b || !b.modelindex || b.frame == b.dead_frame) //dead or gibbed
+		return;
+
+	anim_update(b);
 	if (PLAYER_REALLY_DEAD(self)) {
 		return;
 	}
-	if (!self.body.animstate_override) {
+	if (!b.animstate_override) {
 		if (!(self.flags & FL_ONGROUND)) {
 			if (self.crouch)
 				player_anim_set(self, anim_duckjump, FALSE, TRUE, FALSE);
@@ -522,9 +538,6 @@ void(void) player_anim {
 		} else
 			player_anim_set(self, anim_idle, TRUE, FALSE, FALSE);
 	}
-	if (self.weaponentity)
-	if (!self.weaponentity.animstate_override)
-		anim_set(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_corpse_damage {
@@ -549,14 +562,16 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	self.dmg_take = self.dmg_take + _damage;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 	if (o.health <= -75 && b.modelindex != 0) {
-		// don't use any animations as a gib
-		b.frame = 0;
-		b.dead_frame = 0;
+		violence_gib_splash(self, 1, 1, attacker);
+		if (self == b) { //detached body
+			remove(self);
+			return;
+		} else { //player
+			player_body_remove();
+		}
 		// view just above the floor
 		physics_set_view_offsets(o, '0 0 4', '0 0 4');
-		violence_gib_splash(self, 1, 1, attacker);
-		b.modelindex = 0; // restore later
-		self.event_damage = world.event_damage;
+		self.event_damage = NULL;
 		self.solid = SOLID_NOT; // restore later
 	}
 }
@@ -970,9 +985,11 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.event_damage = player_corpse_damage;
 		// call the corpse damage function just in case it wants to gib
 		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
-		self.body.think = player_corpse_think;
-		self.body.fade_time = time + 15;
-		self.body.nextthink = time;
+		if (self.body) {
+			self.body.think = player_corpse_think;
+			self.body.fade_time = time + 15;
+			self.body.nextthink = time;
+		}
 		if (defer_client_kill_now_team_change)
 			client_kill_now_team_change(self, self.killindicator.team);
 	}
@@ -2063,7 +2080,7 @@ void(entity spot) player_spawn {
 	}
 	self.damageforcescale = 2;
 	self.death_time = 0;
-	self.dead_frame = 0;
+	self.dead_frame = -1;
 	self.alpha = 0;
 	self.fade_time = 0;
 	self.pain_frame = 0;
