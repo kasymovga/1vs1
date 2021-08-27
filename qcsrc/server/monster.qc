@@ -697,7 +697,7 @@ void monster_group_counter_use() {
 	self.cnt = self.cnt - 1;
 	if (self.cnt <= 0) {
 		trigger_use_targets();
-		self.use = world.use;
+		self.use = NULL;
 		self.think = monster_group_counter_remove;
 		self.nextthink = time;
 	}

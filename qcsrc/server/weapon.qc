@@ -707,7 +707,7 @@ void(void) weapon_model_think {
 
 			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
 			v_shot_idx = weapon_gettagindex(self, "shot"); // used later
-			self.dlc_reset = world.dlc_reset;
+			self.dlc_reset = NULL;
 			if (sv_qcweaponanimation) {
 				self.angles = '0 0 0';
 				makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
