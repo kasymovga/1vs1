@@ -1,7 +1,7 @@
 menu.dat
 ../common/qcc.qh
 sys.qh
-mbuiltin.qh
+builtin.qh
 ../common/progs.qh
 ../client-menu/progs.qh
 ../menu-server/progs.qh

@@ -1,0 +1,228 @@
+float(string ext) checkextension = #1;
+void(string err,...) error = #2;
+void(string err,...) objerror = #3;
+void(string text,...) print = #4;
+void(string text,...) bprint = #5;
+void(float clientnum, string text,...) sprint = #6;
+void(string text,...) centerprint = #7;
+vector(vector v) normalize = #8;
+float(vector v) vlen = #9;
+float(vector v) vectoyaw = #10;
+vector(vector v) vectoangles = #11;
+float(void) random = #12;
+void(string command, ...) localcmd = #13;
+var float(string name) cvar = #14;
+float(string name) builtin_cvar = #14;
+#define cvar builtin_cvar
+string(string name) builtin_cvar_string = #71;
+#define cvar_string builtin_cvar_string
+const string(string name) cvar_defstring = #89;
+void(string name, string value) builtin_cvar_set = #15;
+#define cvar_set builtin_cvar_set
+//void(string text,...) dprint = #16;
+string(float f) ftos = #17;
+float(float f) fabs = #18;
+string(vector v) vtos = #19;
+string(entity e) etos = #20;
+float(string val,...) stof = #21;
+entity(void) spawn = #22;
+void(entity e) remove = #23;
+entity(entity start, .string _field, string match) findstring = #24;
+entity(entity start, .float _field, float match) findfloat = #25;
+entity(entity start, .entity _field, entity match) findentity = #25;
+entity(.string _field, string match) findchainstring = #26;
+entity(.float _field, float match) findchainfloat = #27;
+entity(.entity _field, entity match) findchainentity = #27;
+entity(entity start, .float field, float match) findflags = #87;
+entity(.float field, float match) findchainflags = #88;
+string(string file) precache_file = #28;
+string(string sample) precache_sound = #29;
+void(void) crash = #72;
+void(void) coredump = #30;
+void(void) stackdump = #73;
+void(void) traceon = #31;
+void(void) traceoff = #32;
+void(entity e) eprint = #33;
+float(float f) rint = #34;
+float(float f) floor = #35;
+float(float f) ceil = #36;
+entity(entity e) nextent = #37;
+float(float f) sin = #38;
+float(float f) cos = #39;
+float(float f) sqrt = #40;
+vector(void) randomvec = #41;
+float(string name, string value, float flags) registercvar = #42; // returns 1 if success
+float(float f,...) min = #43;
+float(float a, float b, float c)  min3 = #43;
+float(float a, float b, float c, float d)  min4 = #43;
+float(float a, float b, float c, float d, float e)  min5 = #43;
+float(float a, float b, float c, float d, float e, float f)  min6 = #43;
+float(float a, float b, float c, float d, float e, float f, float g)  min7 = #43;
+float(float a, float b, float c, float d, float e, float f, float g, float h)  min8 = #43;
+float(float f,...) max = #44;
+float(float a, float b, float c)  max3 = #44;
+float(float a, float b, float c, float d)  max4 = #44;
+float(float a, float b, float c, float d, float e)  max5 = #44;
+float(float a, float b, float c, float d, float e, float f)  max6 = #44;
+float(float a, float b, float c, float d, float e, float f, float g)  max7 = #44;
+float(float a, float b, float c, float d, float e, float f, float g, float h)  max8 = #44;
+float(float min,float value, float max) bound = #45;
+float(float a, float b) pow = #46;
+void(entity src, entity dst) copyentity = #47;
+float(string filename, float mode) fopen = #48;
+void(float fhandle) fclose = #49;
+string(float fhandle) fgets = #50;
+void(float fhandle, string s) fputs = #51;
+float(string s) strlen = #52;
+string(string s1, ...) strcat = #53;
+string(string s, float start, float length) substring = #54;
+vector(string s) stov = #55;
+string(string s) strzone = #56;
+void(string s) strunzone = #57;
+float(string s) tokenize = #58;
+float(string s, string separator1, ...) tokenizebyseparator = #479;
+string(float n) argv = #59;
+float(void) isserver = #60;
+float(void) clientcount = #61;
+float(void) clientstate = #62;
+void(float client, string s) clientcommand = #63;
+void(string map) changelevel = #64;
+void(string sample) localsound = #65;
+vector(void) getmousepos = #66;
+float(void) gettime = #67;
+//void(string data) builtin_loadfromdata = #68;
+//void(string file) builtin_loadfromfile = #69;
+float(float val, float m) mod = #70;
+#define math_mod mod
+float(string pattern, float caseinsensitive, float quiet) search_begin = #74;
+void(float handle) search_end = #75;
+float(float handle) search_getsize = #76;
+string(float handle, float num) search_getfilename = #77;
+string(float ascii) chr = #78;
+float(entity ent) etof = #79;
+entity(float num) ftoe = #80;
+float(string str) validstring = #81;
+float(string str) altstr_count = #82;
+string(string str) altstr_prepare = #83;
+string(string str, float num) altstr_get = #84;
+string(string str, float num, string set) altstr_set = #85;
+string(string str, float num, string set) altstr_ins = #86;
+float() isdemo = #349;
+void(float data, float dest, float desto) builtin_WriteByte = #401;
+void(float data, float dest, float desto) builtin_WriteChar = #402;
+void(float data, float dest, float desto) builtin_WriteShort = #403;
+void(float data, float dest, float desto) builtin_WriteLong = #404;
+void(float data, float dest, float desto) builtin_WriteAngle = #405;
+void(float data, float dest, float desto) builtin_WriteCoord = #406;
+void(string data, float dest, float desto) builtin_WriteString= #407;
+void(entity data, float dest, float desto) builtin_WriteEntity = #408;
+float(string name) iscachedpic = #451;
+string(string name) precache_pic = #452;
+void(string name) freepic = #453;
+float(vector position, float character, vector scale, vector rgb, float alpha, float flag) drawcharacter = #454;
+float(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawstring = #455;
+float(vector position, string text, vector scale, float alpha, float flag) drawcolorcodedstring = #467;
+float(string text, float handleColors) stringwidth = #468;
+float(vector position, string pic, vector size, vector rgb, float alpha, float flag) drawpic = #456;
+float(vector position, vector size, string pic, vector srcPosition, vector srcSize, vector rgb, float alpha, float flag) drawsubpic = #469;
+float(vector position, vector size, vector rgb, float alpha, float flag) drawfill = #457;
+void(float x, float y, float width, float height) drawsetcliparea = #458;
+void(void) drawresetcliparea = #459;
+vector(string pic) drawgetimagesize = #460;
+float(string file, string name) cin_open = #461;
+void(string name) cin_close = #462;
+void(string name, float type) cin_setstate = #463;
+float(string name) cin_getstate = #464;
+void(float dest) setkeydest = #601;
+float(void) getkeydest = #602;
+void(float trg) setmousetarget = #603;
+float(void) getmousetarget = #604;
+float(string function_name) isfunction = #607;
+void(...) callfunction = #605;
+void(float fhandle, entity ent) writetofile = #606;
+vector(float number, ...) getresolution = #608; // optional argument "isfullscreen"
+string(float keynum) keynumtostring = #609;
+string(string command) findkeysforcommand = #610;
+float(float type) gethostcachevalue = #611;
+string(float type, float hostnr) gethostcachestring = #612;
+void(entity ent, string data) parseentitydata = #613;
+float(string key) stringtokeynum = #614;
+void(void) resethostcachemasks = #615;
+void(float mask, float fld, string str, float op) sethostcachemaskstring = #616;
+void(float mask, float fld, float num, float op) sethostcachemasknumber = #617;
+void(void) resorthostcache = #618;
+void(float fld, float descending) sethostcachesort = #619;
+void(void) refreshhostcache = #620;
+float(float fld, float hostnr) gethostcachenumber = #621;
+float(string key) gethostcacheindexforkey = #622;
+void(string key) addwantedhostcachekey = #623;
+string(void) getextresponse = #624;
+//FTE_STRINGS
+//idea: many
+//darkplaces implementation: KrimZon
+//description:
+//various string manipulation functions
+float(string str, string sub, float startpos) strstrofs = #221;
+float(string str, float ofs) str2chr = #222;
+string(float c, ...) chr2str = #223;
+string(float ccase, float calpha, float cnum, string s, ...) strconv = #224;
+string(float chars, string s, ...) strpad = #225;
+string(string info, string key, string value, ...) infoadd = #226;
+string(string info, string key) infoget = #227;
+float(string s1, string s2, float len) strncmp = #228;
+float(string s1, string s2) strcasecmp = #229;
+float(string s1, string s2, float len) strncasecmp = #230;
+string(string s) strdecolorize = #477;
+//DP_QC_STRINGBUFFERS
+//idea: ??
+//darkplaces implementation: LordHavoc
+//functions to manage string buffer objects - that is, arbitrary length string arrays that are handled by the engine
+float() buf_create = #440;
+void(float bufhandle) buf_del = #441;
+float(float bufhandle) buf_getsize = #442;
+void(float bufhandle_from, float bufhandle_to) buf_copy = #443;
+void(float bufhandle, float sortpower, float backward) buf_sort = #444;
+string(float bufhandle, string glue) buf_implode = #445;
+string(float bufhandle, float string_index) bufstr_get = #446;
+void(float bufhandle, float string_index, string str) bufstr_set = #447;
+float(float bufhandle, string str, float order) bufstr_add = #448;
+void(float bufhandle, float string_index) bufstr_free = #449;
+void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
+string(string name) cvar_description = #518;
+//DP_QC_CRC16
+//idea: div0
+//darkplaces implementation: div0
+//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
+//When caseinsensitive is set, the CRC is calculated of the lower cased string.
+float(float caseinsensitive, string s, ...) crc16 = #494;
+//DP_QC_CVAR_TYPE
+float(string name) cvar_type = #495;
+float CVAR_TYPEFLAG_EXISTS = 1;
+float CVAR_TYPEFLAG_SAVED = 2;
+float CVAR_TYPEFLAG_PRIVATE = 4;
+float CVAR_TYPEFLAG_ENGINE = 8;
+float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
+float CVAR_TYPEFLAG_READONLY = 32;
+//DP_QC_URI_ESCAPE
+//idea: div0
+//darkplaces implementation: div0
+//URI::Escape's functionality
+string(string in) uri_escape = #510;
+string(string in) uri_unescape = #511;
+string(string, float) netaddress_resolve = #625;
+string(string search, string replace, string subject) strreplace = #484;
+string(float uselocaltime, string format, ...) strftime = #478;
+float(string url, float id) uri_get = #513;
+float(string s) tokenize_console = #514;
+float(float i) argv_start_index = #515;
+float(float i) argv_end_index = #516;
+string(float, float) getgamedirinfo = #626;
+#define GETGAMEDIRINFO_NAME 0
+#define GETGAMEDIRINFO_DESCRIPTION 1
+//DP_RM_QCSENDPACKET
+//idea: Akari
+//darkplaces implementation: Akari
+//builtin definitions:
+float(string addr, string data) net_sendpacket = #801;
+//description:
+//A QC builtin equivalent of the "packet" command
