@@ -19,11 +19,11 @@ void(string hint) hint_add {
 void(float n, float p) hint_send {
 	msg_entity = self;
 	if (hint_count <= 0) {
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, NET_TE_CSQC_HINT);
-		WriteByte(MSG_ONE, p);
-		WriteByte(MSG_ONE, 0);
-		WriteString(MSG_ONE, "This game mode not have any hints.");
+		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+		net_write_byte(MSG_ONE, NET_TE_CSQC_HINT);
+		net_write_byte(MSG_ONE, p);
+		net_write_byte(MSG_ONE, 0);
+		net_write_string(MSG_ONE, "This game mode not have any hints.");
 		return;
 	}
 	if (n < 0)
@@ -33,11 +33,11 @@ void(float n, float p) hint_send {
 		n = 0;
 
 	string s = cvar_string(strcat("_hint", ftos(n)));
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, NET_TE_CSQC_HINT);
-	WriteByte(MSG_ONE, p);
-	WriteByte(MSG_ONE, n);
-	WriteString(MSG_ONE, s);
+	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+	net_write_byte(MSG_ONE, NET_TE_CSQC_HINT);
+	net_write_byte(MSG_ONE, p);
+	net_write_byte(MSG_ONE, n);
+	net_write_string(MSG_ONE, s);
 }
 
 var void(void(string item, string cmd) Add_Item) hint_gamemenu_send_next;

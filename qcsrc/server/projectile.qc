@@ -7,22 +7,18 @@ float() projectile_no_impact_check {
 	// mirror-impact of something hitting the projectile instead of the
 	// projectile hitting the something, or a touchareagrid one. Neither of
 	// these stop the projectile from moving, so...
-	if(trace_dphitcontents == 0)
-		checkclient();
+	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+		return 1;
 
-    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-        return 1;
-    if (other == world && self.size != '0 0 0')
-    {
-        vector tic;
-        tic = self.velocity * sys_ticrate;
-        tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
-        trace_line(self.origin - tic, self.origin + tic, TRACE_MOVE_NORMAL, self);
-        if (trace_fraction < 0 && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-            return 1;
-    }
-
-    return 0;
+	if (other == world && self.size != '0 0 0') {
+		vector tic;
+		tic = self.velocity * sys_ticrate;
+		tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
+		trace_line(self.origin - tic, self.origin + tic, TRACE_MOVE_NORMAL, self);
+		if (trace_fraction < 0 && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+			return 1;
+	}
+	return 0;
 }
 
 
@@ -48,34 +44,34 @@ float(entity to, float sf) projectile_send {
 		sf &= ~16;
 	}
 
-	WriteByte(MSG_ENTITY, NET_CSQC_PROJECTILE);
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, NET_CSQC_PROJECTILE);
+	net_write_byte(MSG_ENTITY, sf);
 
 	if(sf & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		net_write_coord(MSG_ENTITY, self.origin_x);
+		net_write_coord(MSG_ENTITY, self.origin_y);
+		net_write_coord(MSG_ENTITY, self.origin_z);
 
 		if(sf & 128)
 		{
-			WriteCoord(MSG_ENTITY, self.velocity_x);
-			WriteCoord(MSG_ENTITY, self.velocity_y);
-			WriteCoord(MSG_ENTITY, self.velocity_z);
-			WriteCoord(MSG_ENTITY, self.gravity);
+			net_write_coord(MSG_ENTITY, self.velocity_x);
+			net_write_coord(MSG_ENTITY, self.velocity_y);
+			net_write_coord(MSG_ENTITY, self.velocity_z);
+			net_write_coord(MSG_ENTITY, self.gravity);
 		}
 	}
 
 	if(sf & 2) {
-		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
+		net_write_byte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
 		if(sf & 16)
-			WriteChar(MSG_ENTITY, self.team);
+			net_write_char(MSG_ENTITY, self.team);
 	}
 
     if(sf & 4) {
-        WriteCoord(MSG_ENTITY, self.angles_x);
-        WriteCoord(MSG_ENTITY, self.angles_y);
-        WriteCoord(MSG_ENTITY, self.angles_z);
+        net_write_coord(MSG_ENTITY, self.angles_x);
+        net_write_coord(MSG_ENTITY, self.angles_y);
+        net_write_coord(MSG_ENTITY, self.angles_z);
     }
 
 	return 1;
@@ -241,12 +237,12 @@ void(void) projectile_touch_explode {
 
 void(void) projectile_info_send {
 	float i;
-	WriteByte(MSG_ENTITY, projectile_info_highest_registered);
+	net_write_byte(MSG_ENTITY, projectile_info_highest_registered);
 	for(i = 0; i < projectile_info_highest_registered; ++i) {
 		float type = projectile_info_type[i];
 		float _movetype = projectile_info_movetype[i];
-		WriteByte(MSG_ENTITY, type);
-		WriteByte(MSG_ENTITY, _movetype);
+		net_write_byte(MSG_ENTITY, type);
+		net_write_byte(MSG_ENTITY, _movetype);
 		switch(type) {
 		case PROJECTILE_INFO_TYPE_UNREGISTERED:
 		case PROJECTILE_INFO_TYPE_POINT_000:
@@ -255,7 +251,7 @@ void(void) projectile_info_send {
 		case PROJECTILE_INFO_TYPE_UNCENTERED:
 		case PROJECTILE_INFO_TYPE_POINT:
 		case PROJECTILE_INFO_TYPE_CENTERED:
-			WriteCoord(MSG_ENTITY, projectile_info_sizes[i]);
+			net_write_coord(MSG_ENTITY, projectile_info_sizes[i]);
 			break;
 		default:
 			error(strcat("Invalid projectile info type ", ftos(type)));

@@ -1,26 +1,26 @@
 float(entity to, float sendflags) func_camera_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_FUNC_CAMERA);
+	net_write_byte(MSG_ENTITY, NET_CSQC_FUNC_CAMERA);
 	// we need THESE to render the warpzone (and cull properly)...
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
-	WriteShort(MSG_ENTITY, self.modelindex);
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
-	WriteByte(MSG_ENTITY, bound(1, self.scale * 16, 255));
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
+	net_write_short(MSG_ENTITY, self.modelindex);
+	net_write_coord(MSG_ENTITY, self.mins_x);
+	net_write_coord(MSG_ENTITY, self.mins_y);
+	net_write_coord(MSG_ENTITY, self.mins_z);
+	net_write_coord(MSG_ENTITY, self.maxs_x);
+	net_write_coord(MSG_ENTITY, self.maxs_y);
+	net_write_coord(MSG_ENTITY, self.maxs_z);
+	net_write_byte(MSG_ENTITY, bound(1, self.scale * 16, 255));
 	// we need THESE to calculate the proper transform
-	WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-	WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-	WriteCoord(MSG_ENTITY, self.enemy.origin_z);
-	WriteCoord(MSG_ENTITY, self.enemy.mangle_x + self.enemy.angles_x + self.mangle_x);
-	WriteCoord(MSG_ENTITY, self.enemy.mangle_y + self.enemy.angles_y + self.mangle_y);
-	WriteCoord(MSG_ENTITY, self.enemy.mangle_z + self.enemy.angles_z + self.mangle_z);
-	WriteByte(MSG_ENTITY, self.spawnflags & 255);
-	WriteByte(MSG_ENTITY, self.solid);
+	net_write_coord(MSG_ENTITY, self.enemy.origin_x);
+	net_write_coord(MSG_ENTITY, self.enemy.origin_y);
+	net_write_coord(MSG_ENTITY, self.enemy.origin_z);
+	net_write_coord(MSG_ENTITY, self.enemy.mangle_x + self.enemy.angles_x + self.mangle_x);
+	net_write_coord(MSG_ENTITY, self.enemy.mangle_y + self.enemy.angles_y + self.mangle_y);
+	net_write_coord(MSG_ENTITY, self.enemy.mangle_z + self.enemy.angles_z + self.mangle_z);
+	net_write_byte(MSG_ENTITY, self.spawnflags & 255);
+	net_write_byte(MSG_ENTITY, self.solid);
 	return TRUE;
 }
 

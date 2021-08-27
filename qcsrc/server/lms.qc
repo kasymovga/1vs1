@@ -23,32 +23,32 @@ void(void) lms_sphere_update {
 }
 
 float(entity to, float sf) lms_sphere_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_LMS_SPHERE);
+	net_write_byte(MSG_ENTITY, NET_CSQC_LMS_SPHERE);
 	sf = sf & 63;
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1)
-		WriteShort(MSG_ENTITY, self.modelindex);
+		net_write_short(MSG_ENTITY, self.modelindex);
 
 	if (sf & 2)
-		WriteCoord(MSG_ENTITY, self.scale);
+		net_write_coord(MSG_ENTITY, self.scale);
 
 	if (sf & 4) {
-		WriteByte(MSG_ENTITY, self.colormod_x * 255);
-		WriteByte(MSG_ENTITY, self.colormod_y * 255);
-		WriteByte(MSG_ENTITY, self.colormod_z * 255);
+		net_write_byte(MSG_ENTITY, self.colormod_x * 255);
+		net_write_byte(MSG_ENTITY, self.colormod_y * 255);
+		net_write_byte(MSG_ENTITY, self.colormod_z * 255);
 	}
 	if (sf & 8)
-		WriteByte(MSG_ENTITY, self.alpha * 255);
+		net_write_byte(MSG_ENTITY, self.alpha * 255);
 
 	if (sf & 16) {
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		net_write_coord(MSG_ENTITY, self.origin_x);
+		net_write_coord(MSG_ENTITY, self.origin_y);
+		net_write_coord(MSG_ENTITY, self.origin_z);
 	}
 	if (sf & 32) {
-		WriteCoord(MSG_ENTITY, self.angles_x);
-		WriteCoord(MSG_ENTITY, self.angles_y);
-		WriteCoord(MSG_ENTITY, self.angles_z);
+		net_write_coord(MSG_ENTITY, self.angles_x);
+		net_write_coord(MSG_ENTITY, self.angles_y);
+		net_write_coord(MSG_ENTITY, self.angles_z);
 	}
 	return TRUE;
 }

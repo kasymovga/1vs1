@@ -1,9 +1,9 @@
 #define noteline_send NoteLine_SendEntity //compatibility with save files
 float noteline_send(entity to, float sf) {
-	WriteByte(MSG_ENTITY, NET_CSQC_NOTELINE);
+	net_write_byte(MSG_ENTITY, NET_CSQC_NOTELINE);
 	other = to;
 	self.touch();
-	WriteString(MSG_ENTITY, self.message);
+	net_write_string(MSG_ENTITY, self.message);
 	return TRUE;
 }
 

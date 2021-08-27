@@ -45,7 +45,7 @@ float() entcs_customize {
 }
 
 float(entity to, float sf) entcs_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_ENTCS);
+	net_write_byte(MSG_ENTITY, NET_CSQC_ENTCS);
 	sf = sf & 31;
 	entity o = self.owner;
 	if (self.effects & EFFECT_FULLBRIGHT)
@@ -60,28 +60,28 @@ float(entity to, float sf) entcs_send {
 	if (gamehook_chain_PlayerCanSeeHealthFor(to, o))
 		sf |= 128;
 
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
-		WriteByte(MSG_ENTITY, num_for_edict(o));
-		WriteShort(MSG_ENTITY, num_for_edict(self.enemy));
+		net_write_byte(MSG_ENTITY, num_for_edict(o));
+		net_write_short(MSG_ENTITY, num_for_edict(self.enemy));
 	}
 	if (sf & 64) {
 		if (sf & 2) {
-			WriteShort(MSG_ENTITY, self.origin_x);
-			WriteShort(MSG_ENTITY, self.origin_y);
+			net_write_short(MSG_ENTITY, self.origin_x);
+			net_write_short(MSG_ENTITY, self.origin_y);
 		}
 		if (sf & 4) {
-			WriteShort(MSG_ENTITY, self.origin_z);
-			WriteShort(MSG_ENTITY, self.angles_y);
+			net_write_short(MSG_ENTITY, self.origin_z);
+			net_write_short(MSG_ENTITY, self.angles_y);
 		}
 	}
 	if (sf & 8)
-		WriteShort(MSG_ENTITY, self.view_ofs_z);
+		net_write_short(MSG_ENTITY, self.view_ofs_z);
 
 	if (sf & 128)
 	if (sf & 16) {
-		WriteByte(MSG_ENTITY, NET_BOUND_TO_BYTE(self.health));
-		WriteByte(MSG_ENTITY, NET_BOUND_TO_BYTE(self.armorvalue));
+		net_write_byte(MSG_ENTITY, NET_BOUND_TO_BYTE(self.health));
+		net_write_byte(MSG_ENTITY, NET_BOUND_TO_BYTE(self.armorvalue));
 	}
 	return TRUE;
 }

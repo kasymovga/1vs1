@@ -14,24 +14,24 @@ float(void) menu_customize {
 }
 
 float(entity to, float sf) menu_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_MENU);
+	net_write_byte(MSG_ENTITY, NET_CSQC_MENU);
 	sf &= ~16;
 	sf |= self.flags;
-	WriteByte(MSG_ENTITY, sf & 255);
+	net_write_byte(MSG_ENTITY, sf & 255);
 	if (sf & 8)
-		WriteString(MSG_ENTITY, self.menu_id);
+		net_write_string(MSG_ENTITY, self.menu_id);
 
 	if (sf & 4)
-		WriteCoord(MSG_ENTITY, self.menu_timeout);
+		net_write_coord(MSG_ENTITY, self.menu_timeout);
 
 	if (sf & 2)
-		WriteString(MSG_ENTITY, self.menu_title);
+		net_write_string(MSG_ENTITY, self.menu_title);
 
 	if (sf & 1) {
-		WriteByte(MSG_ENTITY, self.cnt);
+		net_write_byte(MSG_ENTITY, self.cnt);
 		float i;
 		for (i = 0; i < self.cnt; i++)
-			WriteString(MSG_ENTITY, self.menu_items[i]);
+			net_write_string(MSG_ENTITY, self.menu_items[i]);
 	}
 	return TRUE;
 }

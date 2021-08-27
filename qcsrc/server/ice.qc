@@ -43,23 +43,23 @@ float(void) ice_customize {
 }
 
 float(entity to, float sf) ice_pov_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_ICE);
+	net_write_byte(MSG_ENTITY, NET_CSQC_ICE);
 	sf = sf & 3;
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, sf);
 	entity _ice = self.enemy;
 	if (sf & 1) {
-		WriteShort(MSG_ENTITY, _ice.modelindex);
-		WriteByte(MSG_ENTITY, _ice.colormod_x * 255);
-		WriteByte(MSG_ENTITY, _ice.colormod_y * 255);
-		WriteByte(MSG_ENTITY, _ice.colormod_z * 255);
-		WriteCoord(MSG_ENTITY, _ice.scale);
-		WriteCoord(MSG_ENTITY, _ice.origin_x);
-		WriteCoord(MSG_ENTITY, _ice.origin_y);
-		WriteCoord(MSG_ENTITY, _ice.origin_z);
-		WriteByte(MSG_ENTITY, _ice.skin);
+		net_write_short(MSG_ENTITY, _ice.modelindex);
+		net_write_byte(MSG_ENTITY, _ice.colormod_x * 255);
+		net_write_byte(MSG_ENTITY, _ice.colormod_y * 255);
+		net_write_byte(MSG_ENTITY, _ice.colormod_z * 255);
+		net_write_coord(MSG_ENTITY, _ice.scale);
+		net_write_coord(MSG_ENTITY, _ice.origin_x);
+		net_write_coord(MSG_ENTITY, _ice.origin_y);
+		net_write_coord(MSG_ENTITY, _ice.origin_z);
+		net_write_byte(MSG_ENTITY, _ice.skin);
 	}
 	if (sf & 2) {
-		WriteByte(MSG_ENTITY, _ice.alpha * 255);
+		net_write_byte(MSG_ENTITY, _ice.alpha * 255);
 	}
 	return TRUE;
 }

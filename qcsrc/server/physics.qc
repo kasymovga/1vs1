@@ -506,7 +506,7 @@ void(void) physics_init {
 }
 
 float(entity to, float sf) physics_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS);
+	net_write_byte(MSG_ENTITY, NET_CSQC_PHYSICS);
 	entity oldself = self;
 	self = self.owner;
 	float dodging_flags = 0, skimming = 0;
@@ -557,40 +557,40 @@ float(entity to, float sf) physics_send {
 	else
 		sf = sf & 7;
 
-	WriteShort(MSG_ENTITY, sf);
+	net_write_short(MSG_ENTITY, sf);
 	if (sf2)
-		WriteByte(MSG_ENTITY, sf2);
+		net_write_byte(MSG_ENTITY, sf2);
 
 	if (sf & 1) {
-		WriteCoord(MSG_ENTITY, sv_stepheight);
-		WriteCoord(MSG_ENTITY, g_stepairslowdown);
-		WriteCoord(MSG_ENTITY, sv_gravity);
-		WriteCoord(MSG_ENTITY, sv_maxairspeed);
-		WriteCoord(MSG_ENTITY, sv_maxspeed);
-		WriteCoord(MSG_ENTITY, sv_friction);
-		WriteCoord(MSG_ENTITY, sv_accelerate);
-		WriteCoord(MSG_ENTITY, sv_airaccelerate);
-		WriteCoord(MSG_ENTITY, sv_airaccel_sideways_friction);
-		WriteCoord(MSG_ENTITY, sv_airaccel_qw);
-		WriteCoord(MSG_ENTITY, sv_stopspeed);
-		WriteCoord(MSG_ENTITY, sv_airstopaccelerate);
-		WriteCoord(MSG_ENTITY, sv_airstrafeaccelerate);
-		WriteCoord(MSG_ENTITY, sv_maxairstrafespeed);
-		WriteCoord(MSG_ENTITY, sv_aircontrol);
-		WriteCoord(MSG_ENTITY, sv_warsowbunny_turnaccel);
-		WriteCoord(MSG_ENTITY, sv_warsowbunny_airforwardaccel);
-		WriteCoord(MSG_ENTITY, sv_warsowbunny_accel);
-		WriteCoord(MSG_ENTITY, sv_warsowbunny_topspeed);
-		WriteCoord(MSG_ENTITY, sv_warsowbunny_backtosideratio);
-		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
-		WriteCoord(MSG_ENTITY, sv_waterjumpvelocity);
-		WriteCoord(MSG_ENTITY, g_skimming_time);
-		WriteCoord(MSG_ENTITY, g_waterfriction);
-		WriteCoord(MSG_ENTITY, g_wateraccelerate);
-		WriteCoord(MSG_ENTITY, g_maxwaterspeed);
-		WriteCoord(MSG_ENTITY, g_climb_height);
+		net_write_coord(MSG_ENTITY, sv_stepheight);
+		net_write_coord(MSG_ENTITY, g_stepairslowdown);
+		net_write_coord(MSG_ENTITY, sv_gravity);
+		net_write_coord(MSG_ENTITY, sv_maxairspeed);
+		net_write_coord(MSG_ENTITY, sv_maxspeed);
+		net_write_coord(MSG_ENTITY, sv_friction);
+		net_write_coord(MSG_ENTITY, sv_accelerate);
+		net_write_coord(MSG_ENTITY, sv_airaccelerate);
+		net_write_coord(MSG_ENTITY, sv_airaccel_sideways_friction);
+		net_write_coord(MSG_ENTITY, sv_airaccel_qw);
+		net_write_coord(MSG_ENTITY, sv_stopspeed);
+		net_write_coord(MSG_ENTITY, sv_airstopaccelerate);
+		net_write_coord(MSG_ENTITY, sv_airstrafeaccelerate);
+		net_write_coord(MSG_ENTITY, sv_maxairstrafespeed);
+		net_write_coord(MSG_ENTITY, sv_aircontrol);
+		net_write_coord(MSG_ENTITY, sv_warsowbunny_turnaccel);
+		net_write_coord(MSG_ENTITY, sv_warsowbunny_airforwardaccel);
+		net_write_coord(MSG_ENTITY, sv_warsowbunny_accel);
+		net_write_coord(MSG_ENTITY, sv_warsowbunny_topspeed);
+		net_write_coord(MSG_ENTITY, sv_warsowbunny_backtosideratio);
+		net_write_coord(MSG_ENTITY, sv_jumpvelocity);
+		net_write_coord(MSG_ENTITY, sv_waterjumpvelocity);
+		net_write_coord(MSG_ENTITY, g_skimming_time);
+		net_write_coord(MSG_ENTITY, g_waterfriction);
+		net_write_coord(MSG_ENTITY, g_wateraccelerate);
+		net_write_coord(MSG_ENTITY, g_maxwaterspeed);
+		net_write_coord(MSG_ENTITY, g_climb_height);
 		if (g_climb_height)
-			WriteCoord(MSG_ENTITY, g_climb_speed);
+			net_write_coord(MSG_ENTITY, g_climb_speed);
 
 		float switches = (g_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
@@ -616,98 +616,98 @@ float(entity to, float sf) physics_send {
 				+ (g_topview ? 4194304 : 0)
 				+ (g_doublejump ? 8388608 : 0)
 				;
-		WriteCoord(MSG_ENTITY, switches);
+		net_write_coord(MSG_ENTITY, switches);
 		if (g_walljump) {
-			WriteCoord(MSG_ENTITY, g_walljump_delay);
-			WriteCoord(MSG_ENTITY, g_walljump_force);
-			WriteCoord(MSG_ENTITY, g_walljump_velocity_xy_factor);
-			WriteCoord(MSG_ENTITY, g_walljump_velocity_z_factor);
+			net_write_coord(MSG_ENTITY, g_walljump_delay);
+			net_write_coord(MSG_ENTITY, g_walljump_force);
+			net_write_coord(MSG_ENTITY, g_walljump_velocity_xy_factor);
+			net_write_coord(MSG_ENTITY, g_walljump_velocity_z_factor);
 		}
 		if (g_dodging || g_dodging_frozen) {
-			WriteCoord(MSG_ENTITY, g_dodging_horiz_speed);
-			WriteCoord(MSG_ENTITY, g_dodging_up_speed);
-			WriteCoord(MSG_ENTITY, g_dodging_delay);
-			WriteCoord(MSG_ENTITY, g_dodging_frozen_delay);
-			WriteCoord(MSG_ENTITY, g_dodging_frozen_factor);
+			net_write_coord(MSG_ENTITY, g_dodging_horiz_speed);
+			net_write_coord(MSG_ENTITY, g_dodging_up_speed);
+			net_write_coord(MSG_ENTITY, g_dodging_delay);
+			net_write_coord(MSG_ENTITY, g_dodging_frozen_delay);
+			net_write_coord(MSG_ENTITY, g_dodging_frozen_factor);
 		}
 		if (g_sideview) {
-			WriteShort(MSG_ENTITY, g_sideview_up);
+			net_write_short(MSG_ENTITY, g_sideview_up);
 		}
 		if (g_topview) {
-			WriteShort(MSG_ENTITY, g_topview_angles_x);
-			WriteShort(MSG_ENTITY, g_topview_angles_y);
+			net_write_short(MSG_ENTITY, g_topview_angles_x);
+			net_write_short(MSG_ENTITY, g_topview_angles_y);
 		}
 	}
 	if (sf & 2) {
-		WriteCoord(MSG_ENTITY, self.crouch_mins_x);
-		WriteCoord(MSG_ENTITY, self.crouch_mins_y);
-		WriteCoord(MSG_ENTITY, self.crouch_mins_z);
-		WriteCoord(MSG_ENTITY, self.crouch_maxs_x);
-		WriteCoord(MSG_ENTITY, self.crouch_maxs_y);
-		WriteCoord(MSG_ENTITY, self.crouch_maxs_z);
-		WriteCoord(MSG_ENTITY, self.stand_mins_x);
-		WriteCoord(MSG_ENTITY, self.stand_mins_y);
-		WriteCoord(MSG_ENTITY, self.stand_mins_z);
-		WriteCoord(MSG_ENTITY, self.stand_maxs_x);
-		WriteCoord(MSG_ENTITY, self.stand_maxs_y);
-		WriteCoord(MSG_ENTITY, self.stand_maxs_z);
-		WriteCoord(MSG_ENTITY, self.crouch_view_ofs_x);
-		WriteCoord(MSG_ENTITY, self.crouch_view_ofs_y);
-		WriteCoord(MSG_ENTITY, self.crouch_view_ofs_z);
-		WriteCoord(MSG_ENTITY, self.stand_view_ofs_x);
-		WriteCoord(MSG_ENTITY, self.stand_view_ofs_y);
-		WriteCoord(MSG_ENTITY, self.stand_view_ofs_z);
+		net_write_coord(MSG_ENTITY, self.crouch_mins_x);
+		net_write_coord(MSG_ENTITY, self.crouch_mins_y);
+		net_write_coord(MSG_ENTITY, self.crouch_mins_z);
+		net_write_coord(MSG_ENTITY, self.crouch_maxs_x);
+		net_write_coord(MSG_ENTITY, self.crouch_maxs_y);
+		net_write_coord(MSG_ENTITY, self.crouch_maxs_z);
+		net_write_coord(MSG_ENTITY, self.stand_mins_x);
+		net_write_coord(MSG_ENTITY, self.stand_mins_y);
+		net_write_coord(MSG_ENTITY, self.stand_mins_z);
+		net_write_coord(MSG_ENTITY, self.stand_maxs_x);
+		net_write_coord(MSG_ENTITY, self.stand_maxs_y);
+		net_write_coord(MSG_ENTITY, self.stand_maxs_z);
+		net_write_coord(MSG_ENTITY, self.crouch_view_ofs_x);
+		net_write_coord(MSG_ENTITY, self.crouch_view_ofs_y);
+		net_write_coord(MSG_ENTITY, self.crouch_view_ofs_z);
+		net_write_coord(MSG_ENTITY, self.stand_view_ofs_x);
+		net_write_coord(MSG_ENTITY, self.stand_view_ofs_y);
+		net_write_coord(MSG_ENTITY, self.stand_view_ofs_z);
 	}
 	if (sf & 4) {
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
-		WriteCoord(MSG_ENTITY, self.velocity_x);
-		WriteCoord(MSG_ENTITY, self.velocity_y);
-		WriteCoord(MSG_ENTITY, self.velocity_z);
+		net_write_coord(MSG_ENTITY, self.origin_x);
+		net_write_coord(MSG_ENTITY, self.origin_y);
+		net_write_coord(MSG_ENTITY, self.origin_z);
+		net_write_coord(MSG_ENTITY, self.velocity_x);
+		net_write_coord(MSG_ENTITY, self.velocity_y);
+		net_write_coord(MSG_ENTITY, self.velocity_z);
 		if ((sf & 32) && (sf & 64)) {
-			WriteCoord(MSG_ENTITY, self.ladder_entity.speed);
-			WriteCoord(MSG_ENTITY, self.ladder_entity.watertype);
-			WriteCoord(MSG_ENTITY, self.ladder_entity.origin_z + self.ladder_entity.maxs_z);
+			net_write_coord(MSG_ENTITY, self.ladder_entity.speed);
+			net_write_coord(MSG_ENTITY, self.ladder_entity.watertype);
+			net_write_coord(MSG_ENTITY, self.ladder_entity.origin_z + self.ladder_entity.maxs_z);
 		}
 		if (sf & 512) {
-			WriteCoord(MSG_ENTITY, self.last_maxspeedmod);
-			WriteCoord(MSG_ENTITY, physics_jump_velocity_mod());
+			net_write_coord(MSG_ENTITY, self.last_maxspeedmod);
+			net_write_coord(MSG_ENTITY, physics_jump_velocity_mod());
 		}
 		if (sf & 1024)
-			WriteByte(MSG_ENTITY, self.movetype);
+			net_write_byte(MSG_ENTITY, self.movetype);
 
 		if (sf & 2048)
-			WriteCoord(MSG_ENTITY, self.gravity);
+			net_write_coord(MSG_ENTITY, self.gravity);
 
 		if (sf & 4096)
-			WriteCoord(MSG_ENTITY, self.teleport_time - time);
+			net_write_coord(MSG_ENTITY, self.teleport_time - time);
 
 		if (sf & 8192)
-			WriteCoord(MSG_ENTITY, self.lastwj);
+			net_write_coord(MSG_ENTITY, self.lastwj);
 
 		if (sf2 & 4) {
-			WriteByte(MSG_ENTITY, dodging_flags);
-			if (dodging_flags & 1) WriteCoord(MSG_ENTITY, self.last_dodging_time);
-			if (dodging_flags & 2) WriteCoord(MSG_ENTITY, self.last_FORWARD_KEY_time);
-			if (dodging_flags & 4) WriteCoord(MSG_ENTITY, self.last_BACKWARD_KEY_time);
-			if (dodging_flags & 8) WriteCoord(MSG_ENTITY, self.last_LEFT_KEY_time);
-			if (dodging_flags & 16) WriteCoord(MSG_ENTITY, self.last_RIGHT_KEY_time);
+			net_write_byte(MSG_ENTITY, dodging_flags);
+			if (dodging_flags & 1) net_write_coord(MSG_ENTITY, self.last_dodging_time);
+			if (dodging_flags & 2) net_write_coord(MSG_ENTITY, self.last_FORWARD_KEY_time);
+			if (dodging_flags & 4) net_write_coord(MSG_ENTITY, self.last_BACKWARD_KEY_time);
+			if (dodging_flags & 8) net_write_coord(MSG_ENTITY, self.last_LEFT_KEY_time);
+			if (dodging_flags & 16) net_write_coord(MSG_ENTITY, self.last_RIGHT_KEY_time);
 		}
 		if (sf2 & 8) {
-			WriteCoord(MSG_ENTITY, self.frametime_accumulator);
+			net_write_coord(MSG_ENTITY, self.frametime_accumulator);
 		}
 		if (sf & 32768) {
-			WriteCoord(MSG_ENTITY, num_for_edict(self.groundentity));
-			WriteCoord(MSG_ENTITY, self.groundentity.origin_x);
-			WriteCoord(MSG_ENTITY, self.groundentity.origin_y);
-			WriteCoord(MSG_ENTITY, self.groundentity.origin_z);
+			net_write_coord(MSG_ENTITY, num_for_edict(self.groundentity));
+			net_write_coord(MSG_ENTITY, self.groundentity.origin_x);
+			net_write_coord(MSG_ENTITY, self.groundentity.origin_y);
+			net_write_coord(MSG_ENTITY, self.groundentity.origin_z);
 		}
 		if (sf2 & 1) {
-			WriteCoord(MSG_ENTITY, skimming);
+			net_write_coord(MSG_ENTITY, skimming);
 		}
 		if (sf2 & 2) {
-			WriteCoord(MSG_ENTITY, self.cpmdoublejump);
+			net_write_coord(MSG_ENTITY, self.cpmdoublejump);
 		}
 	}
 	self = oldself;

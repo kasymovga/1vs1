@@ -1,7 +1,6 @@
 progs.dat // output filename
-//../common/qcc.qh
 sys.qh
-builtins.qh
+builtin.qh
 extensions.qh
 ../client-server/progs.qh
 ../common/progs.qh
@@ -15,7 +14,7 @@ location_request.qh
 single.qh
 coop.qh
 map.qh
-defs.qh		// Should rename this, it has fields and globals
+defs.qh
 world.qh
 spawn.qh
 random.qh

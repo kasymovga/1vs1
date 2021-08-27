@@ -3,3 +3,11 @@ void(float dest, float val) net_write_int24;
 void(float dest, vector v) net_write_vector;
 float net_compress_vec(vector vec);
 #define NET_BOUND_TO_BYTE(x) ((x < 251) ? x : ((x < 500) ? 251 : ((x < 1000) ? 252 : ((x < 2000) ? 253 : ((x < 5000) ? 254 : 255)))))
+#define net_write_byte builtin_WriteByte
+#define net_write_char builtin_WriteChar
+#define net_write_short builtin_WriteShort
+#define net_write_coord builtin_WriteCoord
+#define net_write_string builtin_WriteString
+#define net_write_angle builtin_WriteAngle
+#define net_write_long builtin_WriteLong
+#define net_write_entity builtin_WriteEntity

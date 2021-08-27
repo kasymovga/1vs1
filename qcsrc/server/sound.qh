@@ -10,3 +10,4 @@ void(string samp) sound_play2all;
 string(string s, float n) sound_random;
 string(string s) sound_random_by_str;
 void(string s, float n) sound_random_precache;
+#define sound builtin_sound

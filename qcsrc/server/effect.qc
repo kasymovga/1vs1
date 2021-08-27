@@ -1,20 +1,20 @@
 void(vector from,vector to) effect_lightningarc {
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, NET_TE_CSQC_LIGHTNINGARC);
-	WriteCoord(MSG_BROADCAST, from_x);
-	WriteCoord(MSG_BROADCAST, from_y);
-	WriteCoord(MSG_BROADCAST, from_z);
-	WriteCoord(MSG_BROADCAST, to_x);
-	WriteCoord(MSG_BROADCAST, to_y);
-	WriteCoord(MSG_BROADCAST, to_z);
+	net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
+	net_write_byte(MSG_BROADCAST, NET_TE_CSQC_LIGHTNINGARC);
+	net_write_coord(MSG_BROADCAST, from_x);
+	net_write_coord(MSG_BROADCAST, from_y);
+	net_write_coord(MSG_BROADCAST, from_z);
+	net_write_coord(MSG_BROADCAST, to_x);
+	net_write_coord(MSG_BROADCAST, to_y);
+	net_write_coord(MSG_BROADCAST, to_z);
 }
 
 void(vector loc) effect_blast {
-    WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-    WriteByte(MSG_BROADCAST, NET_TE_CSQC_BLAST);
-    WriteCoord(MSG_BROADCAST, loc_x);
-    WriteCoord(MSG_BROADCAST, loc_y);
-    WriteCoord(MSG_BROADCAST, loc_z);
+    net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
+    net_write_byte(MSG_BROADCAST, NET_TE_CSQC_BLAST);
+    net_write_coord(MSG_BROADCAST, loc_x);
+    net_write_coord(MSG_BROADCAST, loc_y);
+    net_write_coord(MSG_BROADCAST, loc_z);
 }
 
 float effect_curveparticles_effectno;
@@ -23,7 +23,7 @@ float effect_curveparticles_spd;
 
 void() effect_curveparticles_end {
 	if (effect_curveparticles_effectno) // terminator
-		WriteShort(MSG_BROADCAST, effect_curveparticles_spd | 0x8000);
+		net_write_short(MSG_BROADCAST, effect_curveparticles_spd | 0x8000);
 
 	effect_curveparticles_effectno = 0;
 }
@@ -32,21 +32,21 @@ void(float effectno, vector start, vector end, float end_dz, float spd) effect_c
 	spd = bound(0, floor(spd / 16), 32767);
 	if (effectno != effect_curveparticles_effectno || start != effect_curveparticles_start) {
 		effect_curveparticles_end();
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, NET_TE_CSQC_ZCURVEPARTICLES);
-		WriteShort(MSG_BROADCAST, effectno);
-		WriteCoord(MSG_BROADCAST, start_x);
-		WriteCoord(MSG_BROADCAST, start_y);
-		WriteCoord(MSG_BROADCAST, start_z);
+		net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
+		net_write_byte(MSG_BROADCAST, NET_TE_CSQC_ZCURVEPARTICLES);
+		net_write_short(MSG_BROADCAST, effectno);
+		net_write_coord(MSG_BROADCAST, start_x);
+		net_write_coord(MSG_BROADCAST, start_y);
+		net_write_coord(MSG_BROADCAST, start_z);
 		effect_curveparticles_effectno = effectno;
 		effect_curveparticles_start = start;
 	} else
-		WriteShort(MSG_BROADCAST, effect_curveparticles_spd);
+		net_write_short(MSG_BROADCAST, effect_curveparticles_spd);
 
-	WriteCoord(MSG_BROADCAST, end_x);
-	WriteCoord(MSG_BROADCAST, end_y);
-	WriteCoord(MSG_BROADCAST, end_z);
-	WriteCoord(MSG_BROADCAST, end_dz);
+	net_write_coord(MSG_BROADCAST, end_x);
+	net_write_coord(MSG_BROADCAST, end_y);
+	net_write_coord(MSG_BROADCAST, end_z);
+	net_write_coord(MSG_BROADCAST, end_dz);
 	effect_curveparticles_spd = spd;
 }
 
@@ -67,7 +67,7 @@ void(float effectno, vector start, vector end, vector vel) effect_curveparticles
 
 float(entity to, float sf) effect_model_send {
 	float f;
-	WriteByte(MSG_ENTITY, NET_CSQC_MODELEFFECT);
+	net_write_byte(MSG_ENTITY, NET_CSQC_MODELEFFECT);
 	f = 0;
 	if (self.velocity != '0 0 0')
 		f |= 1;
@@ -78,33 +78,33 @@ float(entity to, float sf) effect_model_send {
 	if (self.avelocity != '0 0 0')
 		f |= 4;
 
-	WriteByte(MSG_ENTITY, f);
-	WriteShort(MSG_ENTITY, self.modelindex);
-	WriteByte(MSG_ENTITY, self.skin);
-	WriteByte(MSG_ENTITY, self.frame);
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	net_write_byte(MSG_ENTITY, f);
+	net_write_short(MSG_ENTITY, self.modelindex);
+	net_write_byte(MSG_ENTITY, self.skin);
+	net_write_byte(MSG_ENTITY, self.frame);
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
 	if (f & 1) {
-		WriteCoord(MSG_ENTITY, self.velocity_x);
-		WriteCoord(MSG_ENTITY, self.velocity_y);
-		WriteCoord(MSG_ENTITY, self.velocity_z);
+		net_write_coord(MSG_ENTITY, self.velocity_x);
+		net_write_coord(MSG_ENTITY, self.velocity_y);
+		net_write_coord(MSG_ENTITY, self.velocity_z);
 	}
 	if (f & 2) {
-		WriteCoord(MSG_ENTITY, self.angles_x);
-		WriteCoord(MSG_ENTITY, self.angles_y);
-		WriteCoord(MSG_ENTITY, self.angles_z);
+		net_write_coord(MSG_ENTITY, self.angles_x);
+		net_write_coord(MSG_ENTITY, self.angles_y);
+		net_write_coord(MSG_ENTITY, self.angles_z);
 	}
 	if (f & 4) {
-		WriteCoord(MSG_ENTITY, self.avelocity_x);
-		WriteCoord(MSG_ENTITY, self.avelocity_y);
-		WriteCoord(MSG_ENTITY, self.avelocity_z);
+		net_write_coord(MSG_ENTITY, self.avelocity_x);
+		net_write_coord(MSG_ENTITY, self.avelocity_y);
+		net_write_coord(MSG_ENTITY, self.avelocity_z);
 	}
-	WriteShort(MSG_ENTITY, self.scale * 256.0);
-	WriteShort(MSG_ENTITY, self.dmg * 256.0);
-	WriteByte(MSG_ENTITY, self.teleport_time * 100.0);
-	WriteByte(MSG_ENTITY, self.fade_time * 100.0);
-	WriteByte(MSG_ENTITY, self.alpha * 255.0);
+	net_write_short(MSG_ENTITY, self.scale * 256.0);
+	net_write_short(MSG_ENTITY, self.dmg * 256.0);
+	net_write_byte(MSG_ENTITY, self.teleport_time * 100.0);
+	net_write_byte(MSG_ENTITY, self.fade_time * 100.0);
+	net_write_byte(MSG_ENTITY, self.alpha * 255.0);
 	return TRUE;
 }
 

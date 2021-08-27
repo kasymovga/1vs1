@@ -53,8 +53,8 @@ vector(entity t1, entity t2, .float field, float fieldflags, vector previous) sc
 float(entity to, float sendflags) score_team_send {
 	float i, p, longflags;
 
-	WriteByte(MSG_ENTITY, NET_CSQC_TEAMSCORES);
-	WriteByte(MSG_ENTITY, self.team);
+	net_write_byte(MSG_ENTITY, NET_CSQC_TEAMSCORES);
+	net_write_byte(MSG_ENTITY, self.team);
 	longflags = 0;
 	float score;
 	for (i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2) {
@@ -63,11 +63,11 @@ float(entity to, float sendflags) score_team_send {
 			longflags |= p;
 	}
 #if SCORE_TEAM_FIELDS_MAX <= 8
-	WriteByte(MSG_ENTITY, sendflags);
-	WriteByte(MSG_ENTITY, longflags);
+	net_write_byte(MSG_ENTITY, sendflags);
+	net_write_byte(MSG_ENTITY, longflags);
 #else
-	WriteShort(MSG_ENTITY, sendflags);
-	WriteShort(MSG_ENTITY, longflags);
+	net_write_short(MSG_ENTITY, sendflags);
+	net_write_short(MSG_ENTITY, longflags);
 #endif
 	for (i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2)
 		if (sendflags & p) {
@@ -75,7 +75,7 @@ float(entity to, float sendflags) score_team_send {
 			if (longflags & p)
 				net_write_int24(MSG_ENTITY, score);
 			else
-				WriteChar(MSG_ENTITY, score);
+				net_write_char(MSG_ENTITY, score);
 		}
 	return TRUE;
 }
@@ -172,17 +172,17 @@ float (string label, float scoreflags) score_register_team_score {
 
 float(entity to, float sf) score_info_send {
 	float i;
-	WriteByte(MSG_ENTITY, NET_CSQC_SCORES_INFO);
-	WriteByte(MSG_ENTITY, gametype);
+	net_write_byte(MSG_ENTITY, NET_CSQC_SCORES_INFO);
+	net_write_byte(MSG_ENTITY, gametype);
 	for(i = 0; i < SCORE_FILEDS_MAX; ++i)
 	{
-		WriteString(MSG_ENTITY, score_label[i]);
-		WriteByte(MSG_ENTITY, score_flags[i]);
+		net_write_string(MSG_ENTITY, score_label[i]);
+		net_write_byte(MSG_ENTITY, score_flags[i]);
 	}
 	for(i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i)
 	{
-		WriteString(MSG_ENTITY, score_team_label[i]);
-		WriteByte(MSG_ENTITY, score_team_flags[i]);
+		net_write_string(MSG_ENTITY, score_team_label[i]);
+		net_write_byte(MSG_ENTITY, score_team_flags[i]);
 	}
 	return TRUE;
 }
@@ -206,8 +206,8 @@ void(entity e, float f) score_send_delayed {
 float(entity to, float sendflags) score_send_entity {
 	float i, p, longflags, n;
 
-	WriteByte(MSG_ENTITY, NET_CSQC_SCORES);
-	WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+	net_write_byte(MSG_ENTITY, NET_CSQC_SCORES);
+	net_write_byte(MSG_ENTITY, num_for_edict(self.owner));
 
 	longflags = 0;
 	for(i = 0, p = 1; i < SCORE_FILEDS_MAX; ++i, p *= 2)
@@ -215,20 +215,20 @@ float(entity to, float sendflags) score_send_entity {
 			longflags |= p;
 
 	if (sendflags & 0xF0000) {
-		WriteByte(MSG_ENTITY, 4);
+		net_write_byte(MSG_ENTITY, 4);
 		n = SCORE_FILEDS_MAX;
-		WriteCoord(MSG_ENTITY, sendflags);
-		WriteCoord(MSG_ENTITY, longflags);
+		net_write_coord(MSG_ENTITY, sendflags);
+		net_write_coord(MSG_ENTITY, longflags);
 	} else if (sendflags & 0xFF00) {
 		n = 16;
-		WriteByte(MSG_ENTITY, 2);
-		WriteShort(MSG_ENTITY, sendflags & 0xFFFF);
-		WriteShort(MSG_ENTITY, longflags & 0xFFFF);
+		net_write_byte(MSG_ENTITY, 2);
+		net_write_short(MSG_ENTITY, sendflags & 0xFFFF);
+		net_write_short(MSG_ENTITY, longflags & 0xFFFF);
 	} else {
 		n = 8;
-		WriteByte(MSG_ENTITY, 1);
-		WriteByte(MSG_ENTITY, sendflags & 0xFF);
-		WriteByte(MSG_ENTITY, longflags & 0xFF);
+		net_write_byte(MSG_ENTITY, 1);
+		net_write_byte(MSG_ENTITY, sendflags & 0xFF);
+		net_write_byte(MSG_ENTITY, longflags & 0xFF);
 	}
 	for(i = 0, p = 1; i < n; ++i, p *= 2)
 		if(sendflags & p)
@@ -236,7 +236,7 @@ float(entity to, float sendflags) score_send_entity {
 			if(longflags & p)
 				net_write_int24(MSG_ENTITY, self.scores[i]);
 			else
-				WriteChar(MSG_ENTITY, self.scores[i]);
+				net_write_char(MSG_ENTITY, self.scores[i]);
 		}
 
 	return TRUE;

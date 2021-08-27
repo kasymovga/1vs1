@@ -22,8 +22,8 @@ void(entity e, float docull, float dt, float(entity, float) sendfunc) net_link_e
 
 void(float dest, float val) net_write_int24 {
 	float v;
-	WriteShort(dest, (v = floor(val / 256)));
-	WriteByte(dest, val - v * 256); // 0..255
+	net_write_short(dest, (v = floor(val / 256)));
+	net_write_byte(dest, val - v * 256); // 0..255
 }
 
 // compressed vector format:
@@ -96,7 +96,7 @@ float(vector vec) net_compress_vec {
 }
 
 void(float t, vector v) net_write_vector {
-	WriteCoord(t, v_x);
-	WriteCoord(t, v_y);
-	WriteCoord(t, v_z);
+	net_write_coord(t, v_x);
+	net_write_coord(t, v_y);
+	net_write_coord(t, v_z);
 }

@@ -43,14 +43,14 @@ void weapon_nex_whoosh(vector start, vector end) {
 
 void weapon_nex_beam_particles(vector start, vector endpos, vector to) {
 	weapon_nex_whoosh(start, endpos);
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, NET_TE_CSQC_NEXGUNBEAMPARTICLE);
-	WriteCoord(MSG_BROADCAST, start_x);
-	WriteCoord(MSG_BROADCAST, start_y);
-	WriteCoord(MSG_BROADCAST, start_z);
-	WriteCoord(MSG_BROADCAST, endpos_x);
-	WriteCoord(MSG_BROADCAST, endpos_y);
-	WriteCoord(MSG_BROADCAST, endpos_z);
+	net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
+	net_write_byte(MSG_BROADCAST, NET_TE_CSQC_NEXGUNBEAMPARTICLE);
+	net_write_coord(MSG_BROADCAST, start_x);
+	net_write_coord(MSG_BROADCAST, start_y);
+	net_write_coord(MSG_BROADCAST, start_z);
+	net_write_coord(MSG_BROADCAST, endpos_x);
+	net_write_coord(MSG_BROADCAST, endpos_y);
+	net_write_coord(MSG_BROADCAST, endpos_z);
 }
 
 void weapon_nex_attack (void)

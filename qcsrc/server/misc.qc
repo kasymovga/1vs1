@@ -114,14 +114,14 @@ void(void) misc_lightning_spark {
 		return;
 	}
 	self.nextthink = time + 0.1;
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, NET_TE_CSQC_BIGLIGHTNINGARC);
-	WriteCoord(MSG_BROADCAST, self.origin_x);
-	WriteCoord(MSG_BROADCAST, self.origin_y);
-	WriteCoord(MSG_BROADCAST, self.origin_z);
-	WriteCoord(MSG_BROADCAST, self.enemy.origin_x);
-	WriteCoord(MSG_BROADCAST, self.enemy.origin_y);
-	WriteCoord(MSG_BROADCAST, self.enemy.origin_z);
+	net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
+	net_write_byte(MSG_BROADCAST, NET_TE_CSQC_BIGLIGHTNINGARC);
+	net_write_coord(MSG_BROADCAST, self.origin_x);
+	net_write_coord(MSG_BROADCAST, self.origin_y);
+	net_write_coord(MSG_BROADCAST, self.origin_z);
+	net_write_coord(MSG_BROADCAST, self.enemy.origin_x);
+	net_write_coord(MSG_BROADCAST, self.enemy.origin_y);
+	net_write_coord(MSG_BROADCAST, self.enemy.origin_z);
 }
 
 void(void) misc_lightning_use {
@@ -266,7 +266,7 @@ void(void) misc_laser_think {
 }
 
 float(entity to, float fl) misc_laser_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_LASER);
+	net_write_byte(MSG_ENTITY, NET_CSQC_LASER);
 	fl = fl - (fl & 0xE0); // use that bit to indicate finite length laser
 	if(self.spawnflags & 2)
 		fl |= 0x80;
@@ -274,43 +274,43 @@ float(entity to, float fl) misc_laser_send {
 		fl |= 0x40;
 	if(self.scale != 1 || self.modelscale != 1)
 		fl |= 0x20;
-	WriteByte(MSG_ENTITY, fl);
+	net_write_byte(MSG_ENTITY, fl);
 	if(fl & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		net_write_coord(MSG_ENTITY, self.origin_x);
+		net_write_coord(MSG_ENTITY, self.origin_y);
+		net_write_coord(MSG_ENTITY, self.origin_z);
 	}
 	if(fl & 8)
 	{
-		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
+		net_write_byte(MSG_ENTITY, self.colormod_x * 255.0);
+		net_write_byte(MSG_ENTITY, self.colormod_y * 255.0);
+		net_write_byte(MSG_ENTITY, self.colormod_z * 255.0);
 		if(fl & 0x40)
-			WriteByte(MSG_ENTITY, self.alpha * 255.0);
+			net_write_byte(MSG_ENTITY, self.alpha * 255.0);
 		if(fl & 0x20)
 		{
-			WriteByte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
-			WriteByte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
+			net_write_byte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
+			net_write_byte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
 		}
-		WriteShort(MSG_ENTITY, self.cnt + 1);
+		net_write_short(MSG_ENTITY, self.cnt + 1);
 	}
 	if(fl & 2)
 	{
 		if(fl & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_z);
+			net_write_coord(MSG_ENTITY, self.enemy.origin_x);
+			net_write_coord(MSG_ENTITY, self.enemy.origin_y);
+			net_write_coord(MSG_ENTITY, self.enemy.origin_z);
 		}
 		else
 		{
-			WriteAngle(MSG_ENTITY, self.mangle_x);
-			WriteAngle(MSG_ENTITY, self.mangle_y);
+			net_write_angle(MSG_ENTITY, self.mangle_x);
+			net_write_angle(MSG_ENTITY, self.mangle_y);
 		}
 	}
 	if(fl & 4)
-		WriteByte(MSG_ENTITY, self.state);
+		net_write_byte(MSG_ENTITY, self.state);
 	return 1;
 }
 

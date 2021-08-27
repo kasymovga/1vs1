@@ -69,8 +69,8 @@ void(void) weapon_reload {
 void(entity pl) weapon_show_list {
 	if (clienttype(pl) == CLIENTTYPE_REAL) {
 		msg_entity = pl;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, NET_TE_CSQC_WEAPONLIST);
+		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+		net_write_byte(MSG_ONE, NET_TE_CSQC_WEAPONLIST);
 	}
 }
 

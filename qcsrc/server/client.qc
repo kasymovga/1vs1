@@ -14,12 +14,12 @@ void(entity to) client_set_view {
 		return;
 
 	msg_entity = self;
-	WriteByte(MSG_ONE, SVC_SETVIEW);
-	WriteEntity(MSG_ONE, to);
-	WriteByte (MSG_ONE, SVC_SETANGLE);
-	WriteAngle(MSG_ONE, to.angles_x);
-	WriteAngle(MSG_ONE, to.angles_y);
-	WriteAngle(MSG_ONE, 0);
+	net_write_byte(MSG_ONE, SVC_SETVIEW);
+	net_write_entity(MSG_ONE, to);
+	net_write_byte (MSG_ONE, SVC_SETANGLE);
+	net_write_angle(MSG_ONE, to.angles_x);
+	net_write_angle(MSG_ONE, to.angles_y);
+	net_write_angle(MSG_ONE, 0);
 }
 
 void(entity spot) client_put_to_spot{
@@ -31,8 +31,8 @@ void(entity spot) client_put_to_spot{
 	teleport_origin_set(self, spot.origin, 0);
 	if (clienttype(self) == CLIENTTYPE_REAL) {
 		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self);
+		net_write_byte(MSG_ONE, SVC_SETVIEW);
+		net_write_entity(MSG_ONE, self);
 	}
 }
 
@@ -82,11 +82,11 @@ void(void) client_put {
 
 float(entity to, float sf) client_init_send {
 	float i, t;
-	WriteByte(MSG_ENTITY, NET_CSQC_INIT);
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, NET_CSQC_INIT);
+	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
 		for(i = 1; i <= 24; ++i)
-			WriteByte(MSG_ENTITY, (weapon_info(i)).impulse + 1);
+			net_write_byte(MSG_ENTITY, (weapon_info(i)).impulse + 1);
 	}
 	if (sf & 2) {
 		t = 0;
@@ -102,22 +102,22 @@ float(entity to, float sf) client_init_send {
 		if (client_button_atck2_busy)
 			t |= 16;
 
-		WriteByte(MSG_ENTITY, t);
+		net_write_byte(MSG_ENTITY, t);
 	}
 	if (sf & 4) {
 		if (sv_foginterval && client_fog != "")
-			WriteString(MSG_ENTITY, client_fog);
+			net_write_string(MSG_ENTITY, client_fog);
 		else
-			WriteString(MSG_ENTITY, "");
+			net_write_string(MSG_ENTITY, "");
 	}
 	if (sf & 8) {
-		WriteString(MSG_ENTITY, cvar_string("sv_vote_commands"));
+		net_write_string(MSG_ENTITY, cvar_string("sv_vote_commands"));
 	}
 	if (sf & 16)
 		gamemenu_send();
 
 	if (sf & 32) {
-		WriteByte(MSG_ENTITY, team_mode);
+		net_write_byte(MSG_ENTITY, team_mode);
 		t = 0;
 		if (team_mode) {
 			team_teams_allowed(self);
@@ -126,13 +126,13 @@ float(entity to, float sf) client_init_send {
 			if (team3 >= 0) t |= 4;
 			if (team4 >= 0) t |= 8;
 		}
-		WriteByte(MSG_ENTITY, t);
+		net_write_byte(MSG_ENTITY, t);
 	}
 	if (sf & 64) {
 		projectile_info_send();
 	}
 	if (sf & 128) {
-		WriteString(MSG_ENTITY, map_description);
+		net_write_string(MSG_ENTITY, map_description);
 		string s;
 		s = strcat("This is ^1Rexuiz^7 ", cvar_string("g_nexuizversion"));
 		string profile = cvar_string("g_profile");
@@ -146,7 +146,7 @@ float(entity to, float sf) client_init_send {
 			if (motd != "")
 				s = strcat(s, "\n\n^8MOTD:\n^7", strreplace("\\n", "\n", cvar_string("sv_motd")));
 		}
-		WriteString(MSG_ENTITY, s);
+		net_write_string(MSG_ENTITY, s);
 	}
 	return TRUE;
 }

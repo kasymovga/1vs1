@@ -9,8 +9,8 @@ vector(float side, float up, float up_min, float up_min_rand) random_spread_vect
 
 #define random_seed_send RandomSeed_Send
 float(entity to, float sf) random_seed_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_RANDOMSEED);
-	WriteShort(MSG_ENTITY, self.cnt);
+	net_write_byte(MSG_ENTITY, NET_CSQC_RANDOMSEED);
+	net_write_short(MSG_ENTITY, self.cnt);
 	return TRUE;
 }
 

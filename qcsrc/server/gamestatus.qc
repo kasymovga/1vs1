@@ -2,13 +2,13 @@ entity game_status;
 
 #define gamestatus_send GameStatus_SendEntity
 float(entity to, float sf) gamestatus_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_GAMESTATUS);
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, NET_CSQC_GAMESTATUS);
+	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1)
-		WriteString(MSG_ENTITY, self.message);
+		net_write_string(MSG_ENTITY, self.message);
 
 	if (sf & 2)
-		WriteByte(MSG_ENTITY, self.alpha * 100);
+		net_write_byte(MSG_ENTITY, self.alpha * 100);
 
 	return TRUE;
 }

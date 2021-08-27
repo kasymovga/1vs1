@@ -169,44 +169,44 @@ float(void) WaypointSprite_Customize {
 
 float(entity to, float sendflags) WaypointSprite_SendEntity {
 	float dt;
-	WriteByte(MSG_ENTITY, NET_CSQC_WAYPOINT);
+	net_write_byte(MSG_ENTITY, NET_CSQC_WAYPOINT);
 	sendflags = sendflags & 0x7F;
 	if (self.max_health || (self.pain_finished && (time < self.pain_finished + 0.25)))
 		sendflags |= 0x80;
 
-	WriteByte(MSG_ENTITY, sendflags);
+	net_write_byte(MSG_ENTITY, sendflags);
 	if (sendflags & 0x80) {
 		if (self.max_health) {
-			WriteByte(MSG_ENTITY, (self.health / self.max_health) * 191.0);
+			net_write_byte(MSG_ENTITY, (self.health / self.max_health) * 191.0);
 		} else {
 			dt = self.pain_finished - time;
 			dt = bound(0, dt * 32, 16383);
-			WriteByte(MSG_ENTITY, (dt & 0xFF00) / 256 + 192);
-			WriteByte(MSG_ENTITY, (dt & 0x00FF));
+			net_write_byte(MSG_ENTITY, (dt & 0xFF00) / 256 + 192);
+			net_write_byte(MSG_ENTITY, (dt & 0x00FF));
 		}
 	}
 	if (sendflags & 64) {
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		net_write_coord(MSG_ENTITY, self.origin_x);
+		net_write_coord(MSG_ENTITY, self.origin_y);
+		net_write_coord(MSG_ENTITY, self.origin_z);
 	}
 	if (sendflags & 1) {
-		WriteByte(MSG_ENTITY, self.team);
-		WriteByte(MSG_ENTITY, self.rule);
+		net_write_byte(MSG_ENTITY, self.team);
+		net_write_byte(MSG_ENTITY, self.rule);
 	}
 	if (sendflags & 2)
-		WriteString(MSG_ENTITY, self.model1);
+		net_write_string(MSG_ENTITY, self.model1);
 
 	if (sendflags & 4)
-		WriteString(MSG_ENTITY, self.model2);
+		net_write_string(MSG_ENTITY, self.model2);
 
 	if (sendflags & 8)
-		WriteString(MSG_ENTITY, self.model3);
+		net_write_string(MSG_ENTITY, self.model3);
 
 	if (sendflags & 16) {
-		WriteCoord(MSG_ENTITY, self.fade_time);
-		WriteCoord(MSG_ENTITY, self.teleport_time);
-		WriteShort(MSG_ENTITY, self.fade_rate); // maxdist
+		net_write_coord(MSG_ENTITY, self.fade_time);
+		net_write_coord(MSG_ENTITY, self.teleport_time);
+		net_write_short(MSG_ENTITY, self.fade_rate); // maxdist
 		float f;
 		f = 0;
 		if (self.currentammo)
@@ -215,13 +215,13 @@ float(entity to, float sendflags) WaypointSprite_SendEntity {
 		if (self.exteriormodeltoclient == to)
 			f |= 2; // my own
 
-		WriteByte(MSG_ENTITY, f);
+		net_write_byte(MSG_ENTITY, f);
 	}
 	if (sendflags & 32) {
-		WriteByte(MSG_ENTITY, self.cnt); // icon on radar
-		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
+		net_write_byte(MSG_ENTITY, self.cnt); // icon on radar
+		net_write_byte(MSG_ENTITY, self.colormod_x * 255.0);
+		net_write_byte(MSG_ENTITY, self.colormod_y * 255.0);
+		net_write_byte(MSG_ENTITY, self.colormod_z * 255.0);
 	}
 	return TRUE;
 }

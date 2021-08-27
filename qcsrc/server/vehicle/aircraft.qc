@@ -347,27 +347,27 @@ void(void) vehicle_aircraft_init {
 }
 
 float(entity to, float sf) vehicle_aircraft_physics_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_AIRCRAFT);
-	WriteShort(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, NET_CSQC_PHYSICS_AIRCRAFT);
+	net_write_short(MSG_ENTITY, sf);
 	if (sf & 1) {
 		vehicle_write_common(AIRCRAFT_MIN, AIRCRAFT_MAX, AIRCRAFT_VIEW_START_OFFSET, AIRCRAFT_VIEW_BACK, AIRCRAFT_VIEW_UP);
-		WriteCoord(MSG_ENTITY, g_vehicle_aircraft_accel_up);
-		WriteCoord(MSG_ENTITY, g_vehicle_aircraft_speed);
-		WriteCoord(MSG_ENTITY, g_vehicle_aircraft_speed_stop);
-		WriteCoord(MSG_ENTITY, g_vehicle_aircraft_turnspeed);
-		WriteCoord(MSG_ENTITY, g_vehicle_aircraft_movement_inertia);
-		WriteShort(MSG_ENTITY, num_for_edict(self.vehicle));
+		net_write_coord(MSG_ENTITY, g_vehicle_aircraft_accel_up);
+		net_write_coord(MSG_ENTITY, g_vehicle_aircraft_speed);
+		net_write_coord(MSG_ENTITY, g_vehicle_aircraft_speed_stop);
+		net_write_coord(MSG_ENTITY, g_vehicle_aircraft_turnspeed);
+		net_write_coord(MSG_ENTITY, g_vehicle_aircraft_movement_inertia);
+		net_write_short(MSG_ENTITY, num_for_edict(self.vehicle));
 	}
 	if (sf & 2) {
-		WriteCoord(MSG_ENTITY, self.vehicle.angles_x);
-		WriteCoord(MSG_ENTITY, self.vehicle.angles_y);
-		WriteCoord(MSG_ENTITY, self.vehicle.angles_z);
-		WriteCoord(MSG_ENTITY, self.vehicle.origin_x);
-		WriteCoord(MSG_ENTITY, self.vehicle.origin_y);
-		WriteCoord(MSG_ENTITY, self.vehicle.origin_z);
-		WriteCoord(MSG_ENTITY, self.vehicle.velocity_x);
-		WriteCoord(MSG_ENTITY, self.vehicle.velocity_y);
-		WriteCoord(MSG_ENTITY, self.vehicle.velocity_z);
+		net_write_coord(MSG_ENTITY, self.vehicle.angles_x);
+		net_write_coord(MSG_ENTITY, self.vehicle.angles_y);
+		net_write_coord(MSG_ENTITY, self.vehicle.angles_z);
+		net_write_coord(MSG_ENTITY, self.vehicle.origin_x);
+		net_write_coord(MSG_ENTITY, self.vehicle.origin_y);
+		net_write_coord(MSG_ENTITY, self.vehicle.origin_z);
+		net_write_coord(MSG_ENTITY, self.vehicle.velocity_x);
+		net_write_coord(MSG_ENTITY, self.vehicle.velocity_y);
+		net_write_coord(MSG_ENTITY, self.vehicle.velocity_z);
 	}
 	return TRUE;
 }

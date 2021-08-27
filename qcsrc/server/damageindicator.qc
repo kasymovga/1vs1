@@ -1,12 +1,12 @@
 float sv_damageindicator_accumulate_interval;
 
 float(entity to, float sf) damageindicator_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_DMG_INDICATOR);
+	net_write_byte(MSG_ENTITY, NET_CSQC_DMG_INDICATOR);
 	float _damage = self.dmg + 0.4;
-	WriteByte(MSG_ENTITY, NET_BOUND_TO_BYTE(_damage));
-	WriteShort(MSG_ENTITY, self.origin_x);
-	WriteShort(MSG_ENTITY, self.origin_y);
-	WriteShort(MSG_ENTITY, self.origin_z);
+	net_write_byte(MSG_ENTITY, NET_BOUND_TO_BYTE(_damage));
+	net_write_short(MSG_ENTITY, self.origin_x);
+	net_write_short(MSG_ENTITY, self.origin_y);
+	net_write_short(MSG_ENTITY, self.origin_z);
 	return TRUE;
 }
 

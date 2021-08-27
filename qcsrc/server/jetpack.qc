@@ -3,12 +3,12 @@ float g_jetpack_attenuation;
 float g_balance_pause_fuel_regen;
 
 float(entity to, float sf) jetpack_physics_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_JETPACK);
-	WriteCoord(MSG_ENTITY, g_jetpack_acceleration_side);
-	WriteCoord(MSG_ENTITY, g_jetpack_acceleration_up);
-	WriteCoord(MSG_ENTITY, g_jetpack_antigravity);
-	WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_side);
-	WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_up);
+	net_write_byte(MSG_ENTITY, NET_CSQC_PHYSICS_JETPACK);
+	net_write_coord(MSG_ENTITY, g_jetpack_acceleration_side);
+	net_write_coord(MSG_ENTITY, g_jetpack_acceleration_up);
+	net_write_coord(MSG_ENTITY, g_jetpack_antigravity);
+	net_write_coord(MSG_ENTITY, g_jetpack_maxspeed_side);
+	net_write_coord(MSG_ENTITY, g_jetpack_maxspeed_up);
 	return TRUE;
 }
 

@@ -81,15 +81,15 @@ void hook_stop() {
 
 float(entity to, float sf) hook_send {
 	entity _hook = self.owner;
-	WriteByte(MSG_ENTITY, NET_CSQC_HOOK);
+	net_write_byte(MSG_ENTITY, NET_CSQC_HOOK);
 	sf = sf & 15;
 	if (to == _hook.owner)
 	if (_hook.state == 1)
 		sf |= 16;
 
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1)
-		WriteByte(MSG_ENTITY, num_for_edict(_hook.owner));
+		net_write_byte(MSG_ENTITY, num_for_edict(_hook.owner));
 
 	vector v;
 	if (sf & 2) {
@@ -101,24 +101,24 @@ float(entity to, float sf) hook_send {
 		} else
 			v = '8 -8 -12';
 
-		WriteChar(MSG_ENTITY, v_x);
-		WriteChar(MSG_ENTITY, v_y);
-		WriteChar(MSG_ENTITY, v_z);
+		net_write_char(MSG_ENTITY, v_x);
+		net_write_char(MSG_ENTITY, v_y);
+		net_write_char(MSG_ENTITY, v_z);
 	}
 	if (sf & 4) {
 		v = _hook.pos1;
-		WriteCoord(MSG_ENTITY, v_x);
-		WriteCoord(MSG_ENTITY, v_y);
-		WriteCoord(MSG_ENTITY, v_z);
+		net_write_coord(MSG_ENTITY, v_x);
+		net_write_coord(MSG_ENTITY, v_y);
+		net_write_coord(MSG_ENTITY, v_z);
 	}
 	if (sf & 8) {
 		v = _hook.pos2;
-		WriteCoord(MSG_ENTITY, v_x);
-		WriteCoord(MSG_ENTITY, v_y);
-		WriteCoord(MSG_ENTITY, v_z);
+		net_write_coord(MSG_ENTITY, v_x);
+		net_write_coord(MSG_ENTITY, v_y);
+		net_write_coord(MSG_ENTITY, v_z);
 	}
 	if (sf & 16) {
-		WriteCoord(MSG_ENTITY, _hook.hook_length);
+		net_write_coord(MSG_ENTITY, _hook.hook_length);
 	}
 	return TRUE;
 }
@@ -426,15 +426,15 @@ void(entity _hook, entity pl) hook_physics_post {
 }
 
 float(entity to, float sf) hook_physics_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_HOOK);
-	WriteCoord(MSG_ENTITY, g_balance_grapplehook_airfriction);
-	WriteCoord(MSG_ENTITY, g_balance_grapplehook_dontpull);
-	WriteCoord(MSG_ENTITY, g_balance_grapplehook_force_rubber);
-	WriteCoord(MSG_ENTITY, g_balance_grapplehook_force_rubber_overstretch);
-	WriteCoord(MSG_ENTITY, g_balance_grapplehook_length_min);
-	WriteCoord(MSG_ENTITY, g_balance_grapplehook_speed_pull);
-	WriteCoord(MSG_ENTITY, g_balance_grapplehook_stretch);
-	WriteCoord(MSG_ENTITY, g_grappling_hook_tarzan);
+	net_write_byte(MSG_ENTITY, NET_CSQC_PHYSICS_HOOK);
+	net_write_coord(MSG_ENTITY, g_balance_grapplehook_airfriction);
+	net_write_coord(MSG_ENTITY, g_balance_grapplehook_dontpull);
+	net_write_coord(MSG_ENTITY, g_balance_grapplehook_force_rubber);
+	net_write_coord(MSG_ENTITY, g_balance_grapplehook_force_rubber_overstretch);
+	net_write_coord(MSG_ENTITY, g_balance_grapplehook_length_min);
+	net_write_coord(MSG_ENTITY, g_balance_grapplehook_speed_pull);
+	net_write_coord(MSG_ENTITY, g_balance_grapplehook_stretch);
+	net_write_coord(MSG_ENTITY, g_grappling_hook_tarzan);
 	return TRUE;
 }
 

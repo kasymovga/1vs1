@@ -6,12 +6,12 @@ float(void) progressbar_customize {
 }
 
 float(entity to, float sf) progressbar_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_PROGRESSBAR);
+	net_write_byte(MSG_ENTITY, NET_CSQC_PROGRESSBAR);
 	sf = sf & 127;
-	WriteByte(MSG_ENTITY, sf);
-	WriteByte(MSG_ENTITY, rint(self.cnt * 100));
+	net_write_byte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, rint(self.cnt * 100));
 	if (sf & 2) {
-		WriteString(MSG_ENTITY, self.netname);
+		net_write_string(MSG_ENTITY, self.netname);
 	}
 	return TRUE;
 }

@@ -122,9 +122,9 @@ void() mapvote_init {
 
 void mapvote_send_picture(float id) {
 	msg_entity = self;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, NET_TE_CSQC_PICTURE);
-	WriteByte(MSG_ONE, id);
+	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+	net_write_byte(MSG_ONE, NET_TE_CSQC_PICTURE);
+	net_write_byte(MSG_ONE, id);
 	WritePicture(MSG_ONE, mapvote_pictures[id], 3072);
 }
 
@@ -160,29 +160,29 @@ float(entity to, float sf) mapvote_send {
 	if(sf & 1)
 		sf &= ~2; // if we send 1, we don't need to also send 2
 
-	WriteByte(MSG_ENTITY, NET_CSQC_MAPVOTE);
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, NET_CSQC_MAPVOTE);
+	net_write_byte(MSG_ENTITY, sf);
 	if(sf & 1) {
 		// flag 1 == initialization
-		WriteString(MSG_ENTITY, MapInfo_HumanString_FromType(MapInfo_CurrentGametype()));
-		WriteByte(MSG_ENTITY, mapvote_count);
-		WriteByte(MSG_ENTITY, mapvote_abstain);
-		WriteByte(MSG_ENTITY, mapvote_detail);
-		WriteCoord(MSG_ENTITY, mapvote_timeout);
+		net_write_string(MSG_ENTITY, MapInfo_HumanString_FromType(MapInfo_CurrentGametype()));
+		net_write_byte(MSG_ENTITY, mapvote_count);
+		net_write_byte(MSG_ENTITY, mapvote_abstain);
+		net_write_byte(MSG_ENTITY, mapvote_detail);
+		net_write_coord(MSG_ENTITY, mapvote_timeout);
 		if(mapvote_count <= 8)
-			WriteByte(MSG_ENTITY, mapvote_mask());
+			net_write_byte(MSG_ENTITY, mapvote_mask());
 		else
-			WriteShort(MSG_ENTITY, mapvote_mask());
+			net_write_short(MSG_ENTITY, mapvote_mask());
 
 		for(i = 0; i < mapvote_count; ++i)
 			if(mapvote_maps[i] != "") {
 				if(mapvote_abstain && i == mapvote_count - 1) {
-					WriteString(MSG_ENTITY, ""); // abstain needs no text
-					WriteString(MSG_ENTITY, ""); // abstain needs no pack
+					net_write_string(MSG_ENTITY, ""); // abstain needs no text
+					net_write_string(MSG_ENTITY, ""); // abstain needs no pack
 				} else {
-					WriteString(MSG_ENTITY, mapvote_maps[i]);
+					net_write_string(MSG_ENTITY, mapvote_maps[i]);
 					picfile = mapvote_pictures[i];
-					WriteString(MSG_ENTITY, picfile);
+					net_write_string(MSG_ENTITY, picfile);
 					pakfile = whichpack(strcat(picfile, ".tga"));
 					if (pakfile == "")
 						pakfile = whichpack(strcat(picfile, ".jpg"));
@@ -193,24 +193,24 @@ float(entity to, float sf) mapvote_send {
 					for(o = strstrofs(pakfile, "/", 0)+1; o > 0; o = strstrofs(pakfile, "/", 0)+1)
 						pakfile = substring(pakfile, o, 999);
 
-					WriteString(MSG_ENTITY, pakfile);
+					net_write_string(MSG_ENTITY, pakfile);
 				}
 			}
 	}
 	if(sf & 2) {
 		// flag 2 == update of mask
 		if(mapvote_count <= 8)
-			WriteByte(MSG_ENTITY, mapvote_mask());
+			net_write_byte(MSG_ENTITY, mapvote_mask());
 		else
-			WriteShort(MSG_ENTITY, mapvote_mask());
+			net_write_short(MSG_ENTITY, mapvote_mask());
 	}
 	if(sf & 4) {
 		if(mapvote_detail)
 			for(i = 0; i < mapvote_count; ++i)
 				if(mapvote_maps[i] != "")
-					WriteByte(MSG_ENTITY, mapvote_votes[i]);
+					net_write_byte(MSG_ENTITY, mapvote_votes[i]);
 
-		WriteByte(MSG_ENTITY, to.mapvote);
+		net_write_byte(MSG_ENTITY, to.mapvote);
 	}
 	return TRUE;
 }

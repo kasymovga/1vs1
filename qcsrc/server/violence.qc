@@ -1,11 +1,11 @@
 float(entity to, float sf) violence_gib_splash_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_GIBSPLASH);
-	WriteByte(MSG_ENTITY, self.state); // actually type
-	WriteByte(MSG_ENTITY, bound(1, self.cnt * 16, 255)); // gibbage amount multiplier
-	WriteShort(MSG_ENTITY, floor(self.origin_x / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(MSG_ENTITY, floor(self.origin_y / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(MSG_ENTITY, floor(self.origin_z / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(MSG_ENTITY, self.oldorigin_x); // acrually compressed velocity
+	net_write_byte(MSG_ENTITY, NET_CSQC_GIBSPLASH);
+	net_write_byte(MSG_ENTITY, self.state); // actually type
+	net_write_byte(MSG_ENTITY, bound(1, self.cnt * 16, 255)); // gibbage amount multiplier
+	net_write_short(MSG_ENTITY, floor(self.origin_x / 4)); // not using a coord here, as gibs don't need this accuracy
+	net_write_short(MSG_ENTITY, floor(self.origin_y / 4)); // not using a coord here, as gibs don't need this accuracy
+	net_write_short(MSG_ENTITY, floor(self.origin_z / 4)); // not using a coord here, as gibs don't need this accuracy
+	net_write_short(MSG_ENTITY, self.oldorigin_x); // acrually compressed velocity
 	return TRUE;
 }
 

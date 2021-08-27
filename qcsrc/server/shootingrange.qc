@@ -34,13 +34,13 @@ void(void) shootingrange_target_hide {
 }
 
 float(entity to, float f) shootingrange_controller_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_SHOOTINGRANGE);
+	net_write_byte(MSG_ENTITY, NET_CSQC_SHOOTINGRANGE);
 	if (shootingrange_round_active) {
-		WriteCoord(MSG_ENTITY, shootingrange_round_start);
-		WriteShort(MSG_ENTITY, g_shootingrange_roundtime);
+		net_write_coord(MSG_ENTITY, shootingrange_round_start);
+		net_write_short(MSG_ENTITY, g_shootingrange_roundtime);
 	} else {
-		WriteCoord(MSG_ENTITY, 0);
-		WriteShort(MSG_ENTITY, 0);
+		net_write_coord(MSG_ENTITY, 0);
+		net_write_short(MSG_ENTITY, 0);
 	}
 	return TRUE;
 }

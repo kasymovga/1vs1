@@ -1,7 +1,7 @@
 void(vector _mins, vector _maxs, float start_offs, float back, float up) vehicle_write_common {
-	WriteCoord(MSG_ENTITY, up);
-	WriteCoord(MSG_ENTITY, back);
-	WriteCoord(MSG_ENTITY, start_offs);
+	net_write_coord(MSG_ENTITY, up);
+	net_write_coord(MSG_ENTITY, back);
+	net_write_coord(MSG_ENTITY, start_offs);
 	net_write_vector(MSG_ENTITY, _mins);
 	net_write_vector(MSG_ENTITY, _maxs);
 }
@@ -221,10 +221,10 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	self.team                 = self.owner.team;
 	if (clienttype(other) == CLIENTTYPE_REAL) {
 		msg_entity = other;
-		WriteByte (MSG_ONE, SVC_SETANGLE);
-		WriteAngle(MSG_ONE, ang_x);    // tilt
-		WriteAngle(MSG_ONE, ang_y);    // yaw
-		WriteAngle(MSG_ONE, 0);    // roll
+		net_write_byte (MSG_ONE, SVC_SETANGLE);
+		net_write_angle(MSG_ONE, ang_x);    // tilt
+		net_write_angle(MSG_ONE, ang_y);    // yaw
+		net_write_angle(MSG_ONE, 0);    // roll
 		self.bot_nextthink = 0;
 	} else {
 		self.bot_nextthink = time + 5;
@@ -271,12 +271,12 @@ void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 	self.owner.switchweapon = self.switchweapon;
 	if (clienttype(self.owner) == CLIENTTYPE_REAL) {
 		msg_entity = self.owner;
-		WriteByte (MSG_ONE, SVC_SETVIEW);
-		WriteEntity( MSG_ONE, self.owner);
-		WriteByte (MSG_ONE, SVC_SETANGLE);
-		WriteAngle(MSG_ONE, 0);    // tilt
-		WriteAngle(MSG_ONE, self.angles_y);    // yaw
-		WriteAngle(MSG_ONE, 0);    // roll
+		net_write_byte (MSG_ONE, SVC_SETVIEW);
+		net_write_entity( MSG_ONE, self.owner);
+		net_write_byte (MSG_ONE, SVC_SETANGLE);
+		net_write_angle(MSG_ONE, 0);    // tilt
+		net_write_angle(MSG_ONE, self.angles_y);    // yaw
+		net_write_angle(MSG_ONE, 0);    // roll
 	}
 	self.owner.takedamage     = DAMAGE_AIM;
 	player_body_setup(self.owner);

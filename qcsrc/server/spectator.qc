@@ -194,8 +194,8 @@ void() spectator_to_player {
 			return;
 		} else {
 			msg_entity = self;
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, NET_TE_CSQC_TEAMSELECT);
+			net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+			net_write_byte(MSG_ONE, NET_TE_CSQC_TEAMSELECT);
 			return;
 		}
 	}

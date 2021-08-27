@@ -1,15 +1,15 @@
 float g_casings;
 
 float(entity to, float sf) casing_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_CASING);
-	WriteByte(MSG_ENTITY, self.state); // actually type
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
-	WriteShort(MSG_ENTITY, self.oldorigin_x); // acrually compressed velocity
-	WriteByte(MSG_ENTITY, self.angles_x * 256 / 360);
-	WriteByte(MSG_ENTITY, self.angles_y * 256 / 360);
-	WriteByte(MSG_ENTITY, self.angles_z * 256 / 360);
+	net_write_byte(MSG_ENTITY, NET_CSQC_CASING);
+	net_write_byte(MSG_ENTITY, self.state); // actually type
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
+	net_write_short(MSG_ENTITY, self.oldorigin_x); // acrually compressed velocity
+	net_write_byte(MSG_ENTITY, self.angles_x * 256 / 360);
+	net_write_byte(MSG_ENTITY, self.angles_y * 256 / 360);
+	net_write_byte(MSG_ENTITY, self.angles_z * 256 / 360);
 	return TRUE;
 }
 

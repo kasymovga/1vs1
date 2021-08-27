@@ -12,13 +12,13 @@ float g_throughfloor_damage;
 float g_throughfloor_force;
 
 float(entity to, float sf) damage_info_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_DAMAGEINFO);
-	WriteShort(MSG_ENTITY, self.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(self.origin_x));
-	WriteCoord(MSG_ENTITY, floor(self.origin_y));
-	WriteCoord(MSG_ENTITY, floor(self.origin_z));
-	WriteShort(MSG_ENTITY, self.oldorigin_x);
-	WriteByte(MSG_ENTITY, self.team);
+	net_write_byte(MSG_ENTITY, NET_CSQC_DAMAGEINFO);
+	net_write_short(MSG_ENTITY, self.projectiledeathtype);
+	net_write_coord(MSG_ENTITY, floor(self.origin_x));
+	net_write_coord(MSG_ENTITY, floor(self.origin_y));
+	net_write_coord(MSG_ENTITY, floor(self.origin_z));
+	net_write_short(MSG_ENTITY, self.oldorigin_x);
+	net_write_byte(MSG_ENTITY, self.team);
 	return TRUE;
 }
 

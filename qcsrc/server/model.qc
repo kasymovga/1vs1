@@ -140,57 +140,57 @@ float(entity to, float sf) model_client_send {
 	if(self.colormap != 0)
 		sf |= 0x40;
 	
-	WriteByte(MSG_ENTITY, NET_CSQC_WALL);
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, NET_CSQC_WALL);
+	net_write_byte(MSG_ENTITY, sf);
 
 	if(sf & 1)
 	{
 		if(sf & 0x40)
-			WriteShort(MSG_ENTITY, self.colormap);
+			net_write_short(MSG_ENTITY, self.colormap);
 	}
 
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		net_write_coord(MSG_ENTITY, self.origin_x);
+		net_write_coord(MSG_ENTITY, self.origin_y);
+		net_write_coord(MSG_ENTITY, self.origin_z);
 	}
 
 	if(sf & 4)
 	{
 		if(sf & 0x10)
 		{
-			WriteAngle(MSG_ENTITY, self.angles_x);
-			WriteAngle(MSG_ENTITY, self.angles_y);
-			WriteAngle(MSG_ENTITY, self.angles_z);
+			net_write_angle(MSG_ENTITY, self.angles_x);
+			net_write_angle(MSG_ENTITY, self.angles_y);
+			net_write_angle(MSG_ENTITY, self.angles_z);
 		}
 	}
 
 	if(sf & 8)
 	{
-		WriteShort(MSG_ENTITY, self.modelindex);
-		WriteByte(MSG_ENTITY, self.solid);
-		WriteByte(MSG_ENTITY, floor(self.scale * 16));
+		net_write_short(MSG_ENTITY, self.modelindex);
+		net_write_byte(MSG_ENTITY, self.solid);
+		net_write_byte(MSG_ENTITY, floor(self.scale * 16));
 		if(sf & 0x20)
 		{
-			WriteCoord(MSG_ENTITY, self.mins_x);
-			WriteCoord(MSG_ENTITY, self.mins_y);
-			WriteCoord(MSG_ENTITY, self.mins_z);
-			WriteCoord(MSG_ENTITY, self.maxs_x);
-			WriteCoord(MSG_ENTITY, self.maxs_y);
-			WriteCoord(MSG_ENTITY, self.maxs_z);
+			net_write_coord(MSG_ENTITY, self.mins_x);
+			net_write_coord(MSG_ENTITY, self.mins_y);
+			net_write_coord(MSG_ENTITY, self.mins_z);
+			net_write_coord(MSG_ENTITY, self.maxs_x);
+			net_write_coord(MSG_ENTITY, self.maxs_y);
+			net_write_coord(MSG_ENTITY, self.maxs_z);
 		}
-		WriteString(MSG_ENTITY, self.bgmscript);
+		net_write_string(MSG_ENTITY, self.bgmscript);
 		if(self.bgmscript != "")
 		{
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptattack * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptdecay * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptsustain * 255));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptrelease * 64));
-			WriteCoord(MSG_ENTITY, self.movedir_x);
-			WriteCoord(MSG_ENTITY, self.movedir_y);
-			WriteCoord(MSG_ENTITY, self.movedir_z);
-			WriteByte(MSG_ENTITY, floor(self.lip * 255));
+			net_write_byte(MSG_ENTITY, floor(self.bgmscriptattack * 64));
+			net_write_byte(MSG_ENTITY, floor(self.bgmscriptdecay * 64));
+			net_write_byte(MSG_ENTITY, floor(self.bgmscriptsustain * 255));
+			net_write_byte(MSG_ENTITY, floor(self.bgmscriptrelease * 64));
+			net_write_coord(MSG_ENTITY, self.movedir_x);
+			net_write_coord(MSG_ENTITY, self.movedir_y);
+			net_write_coord(MSG_ENTITY, self.movedir_z);
+			net_write_byte(MSG_ENTITY, floor(self.lip * 255));
 		}
 	}
 

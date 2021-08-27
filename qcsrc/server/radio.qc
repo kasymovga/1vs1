@@ -76,10 +76,10 @@ void Radio_Init(void) {
 
 void Radio_SendPreload(entity e, string url) {
 	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, NET_TE_CSQC_RADIO);
-	WriteByte(MSG_ONE, TRUE);
-	WriteString(MSG_ONE, url);
+	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+	net_write_byte(MSG_ONE, NET_TE_CSQC_RADIO);
+	net_write_byte(MSG_ONE, TRUE);
+	net_write_string(MSG_ONE, url);
 }
 
 void Radio_Announce(entity e) {
@@ -111,14 +111,14 @@ void Radio_SendPlay(entity e, float force) {
 	Radio_Announce(e);
 
 	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, NET_TE_CSQC_RADIO);
-	WriteByte(MSG_ONE, FALSE); //preload
-	WriteString(MSG_ONE, radio_url);
-	WriteString(MSG_ONE, radio_filename);
-	WriteByte(MSG_ONE, (radio_looping ? 1 : 0) | (force ? 2 : 0));
+	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+	net_write_byte(MSG_ONE, NET_TE_CSQC_RADIO);
+	net_write_byte(MSG_ONE, FALSE); //preload
+	net_write_string(MSG_ONE, radio_url);
+	net_write_string(MSG_ONE, radio_filename);
+	net_write_byte(MSG_ONE, (radio_looping ? 1 : 0) | (force ? 2 : 0));
 	if(!radio_looping)
-		WriteCoord(MSG_ONE, radio_starttime);
+		net_write_coord(MSG_ONE, radio_starttime);
 }
 
 void Radio_Preload(string url) {

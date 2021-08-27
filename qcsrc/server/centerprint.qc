@@ -18,14 +18,14 @@ void(entity e, float prio, string s) centerprint_atprio {
 	if (prio >= e.centerprint_priority) {
 		e.centerprint_priority = prio;
 		e.centerprint_expires = time + (e.cvar_scr_centertime * max(slowmo, 0.0001));
-		centerprint_builtin(e, s);
+		builtin_centerprint(e, s);
 	}
 }
 
 void(entity e, float prio) centerprint_expire {
 	if (prio == e.centerprint_priority) {
 		e.centerprint_priority = 0;
-		centerprint_builtin(e, "");
+		builtin_centerprint(e, "");
 	}
 }
 

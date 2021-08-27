@@ -23,28 +23,28 @@ void(float dest, entity e, vector o, float chan, string samp, float vol, float a
     if (idx >= 256)
         sflags |= SND_LARGESOUND;
 
-    WriteByte(dest, SVC_SOUND);
-    WriteByte(dest, sflags);
+    net_write_byte(dest, SVC_SOUND);
+    net_write_byte(dest, sflags);
     if (sflags & SND_VOLUME)
-        WriteByte(dest, vol);
+        net_write_byte(dest, vol);
 
     if (sflags & SND_ATTENUATION)
-        WriteByte(dest, atten);
+        net_write_byte(dest, atten);
 
     if (sflags & SND_LARGEENTITY) {
-        WriteShort(dest, entno);
-        WriteByte(dest, chan);
+        net_write_short(dest, entno);
+        net_write_byte(dest, chan);
     } else {
-        WriteShort(dest, entno * 8 + chan);
+        net_write_short(dest, entno * 8 + chan);
     }
     if (sflags & SND_LARGESOUND)
-        WriteShort(dest, idx);
+        net_write_short(dest, idx);
     else
-        WriteByte(dest, idx);
+        net_write_byte(dest, idx);
 
-    WriteCoord(dest, o_x);
-    WriteCoord(dest, o_y);
-    WriteCoord(dest, o_z);
+    net_write_coord(dest, o_x);
+    net_write_coord(dest, o_y);
+    net_write_coord(dest, o_z);
 }
 
 void(float dest, entity e, float chan, string samp, float vol, float atten) sound_to {
@@ -67,21 +67,21 @@ void(float dest, entity e, float chan) sound_stop_to {
         if (idx >= 256)
             sflags |= SND_LARGESOUND;
 
-        WriteByte(dest, SVC_SOUND);
-        WriteByte(dest, sflags);
-        WriteShort(dest, entno);
-        WriteByte(dest, chan);
+        net_write_byte(dest, SVC_SOUND);
+        net_write_byte(dest, sflags);
+        net_write_short(dest, entno);
+        net_write_byte(dest, chan);
         if (sflags & SND_LARGESOUND)
-            WriteShort(dest, idx);
+            net_write_short(dest, idx);
         else
-            WriteByte(dest, idx);
+            net_write_byte(dest, idx);
 
-        WriteCoord(dest, e.origin_x);
-        WriteCoord(dest, e.origin_y);
-        WriteCoord(dest, e.origin_z);
+        net_write_coord(dest, e.origin_x);
+        net_write_coord(dest, e.origin_y);
+        net_write_coord(dest, e.origin_z);
     } else {
-        WriteByte(dest, SVC_STOPSOUND);
-        WriteShort(dest, entno * 8 + chan);
+        net_write_byte(dest, SVC_STOPSOUND);
+        net_write_short(dest, entno * 8 + chan);
     }
 }
 void(entity e, float chan) sound_stop {

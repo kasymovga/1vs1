@@ -617,16 +617,16 @@ void(void) world_frame_end {
 				sound_play2(self, "misc/typehit.wav");
 			else if (self.enemy.hitsound) {
 				msg_entity = self;
-				WriteByte(MSG_ONE, SVC_TEMPENTITY);
-				WriteByte(MSG_ONE, NET_TE_CSQC_HIT);
+				net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+				net_write_byte(MSG_ONE, NET_TE_CSQC_HIT);
 			}
 		} else {
 			if (self.typehitsound) {
 				sound_play2(self, "misc/typehit.wav");
 			} else if (self.hitsound) {
 				msg_entity = self;
-				WriteByte(MSG_ONE, SVC_TEMPENTITY);
-				WriteByte(MSG_ONE, NET_TE_CSQC_HIT);
+				net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+				net_write_byte(MSG_ONE, NET_TE_CSQC_HIT);
 			}
 		}
 	}

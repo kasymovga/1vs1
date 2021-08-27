@@ -970,20 +970,20 @@ void(void) spawnfunc_onslaught_controlpoint {
 }
 
 float(entity to, float sendflags) onslaught_link_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_RADARLINK);
-	WriteByte(MSG_ENTITY, sendflags);
+	net_write_byte(MSG_ENTITY, NET_CSQC_RADARLINK);
+	net_write_byte(MSG_ENTITY, sendflags);
 	if(sendflags & 1) {
-		WriteCoord(MSG_ENTITY, self.goalentity.origin_x);
-		WriteCoord(MSG_ENTITY, self.goalentity.origin_y);
-		WriteCoord(MSG_ENTITY, self.goalentity.origin_z);
+		net_write_coord(MSG_ENTITY, self.goalentity.origin_x);
+		net_write_coord(MSG_ENTITY, self.goalentity.origin_y);
+		net_write_coord(MSG_ENTITY, self.goalentity.origin_z);
 	}
 	if(sendflags & 2) {
-		WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-		WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-		WriteCoord(MSG_ENTITY, self.enemy.origin_z);
+		net_write_coord(MSG_ENTITY, self.enemy.origin_x);
+		net_write_coord(MSG_ENTITY, self.enemy.origin_y);
+		net_write_coord(MSG_ENTITY, self.enemy.origin_z);
 	}
 	if(sendflags & 4) {
-		WriteByte(MSG_ENTITY, self.clientcolors); // which is goalentity's color + enemy's color * 16
+		net_write_byte(MSG_ENTITY, self.clientcolors); // which is goalentity's color + enemy's color * 16
 	}
 	return TRUE;
 }

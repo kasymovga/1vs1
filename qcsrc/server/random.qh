@@ -1,3 +1,4 @@
+float(void) random = #7; //builtin
 void() random_seed_spawn;
 float random_selection_totalweight;
 float random_selection_best_priority;

@@ -865,13 +865,13 @@ string nadget_SelectableTypes(float issecondary) {
 
 void nadget_WriteNadgetSelect(void) {
     msg_entity = self;
-    WriteByte(MSG_ONE, SVC_TEMPENTITY);
-    WriteByte(MSG_ONE, NET_TE_CSQC_NADGETSELECT);
-    WriteByte(MSG_ONE, g_nadgets_double);
-    WriteString(MSG_ONE, nadget_SelectableTypes(FALSE));
+    net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+    net_write_byte(MSG_ONE, NET_TE_CSQC_NADGETSELECT);
+    net_write_byte(MSG_ONE, g_nadgets_double);
+    net_write_string(MSG_ONE, nadget_SelectableTypes(FALSE));
 
     if(g_nadgets_double)
-        WriteString(MSG_ONE, nadget_SelectableTypes(TRUE));
+        net_write_string(MSG_ONE, nadget_SelectableTypes(TRUE));
 }
 
 float nadget_ShowMenu(float always) {

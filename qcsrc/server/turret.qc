@@ -267,11 +267,11 @@ void turret_gib_boom()
         gib.avelocity          = randomvec() * 64;
     }
 
-    WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-    WriteByte (MSG_BROADCAST, 78);
-    WriteCoord (MSG_BROADCAST, self.origin_x);
-    WriteCoord (MSG_BROADCAST, self.origin_y);
-    WriteCoord (MSG_BROADCAST, self.origin_z);
+    net_write_byte (MSG_BROADCAST, SVC_TEMPENTITY);
+    net_write_byte (MSG_BROADCAST, 78);
+    net_write_coord (MSG_BROADCAST, self.origin_x);
+    net_write_coord (MSG_BROADCAST, self.origin_y);
+    net_write_coord (MSG_BROADCAST, self.origin_z);
 
     remove(self);
 }
@@ -321,11 +321,11 @@ void turret_stdproc_die()
     org2 = self.origin + '0 0 40';
 
 // Explotion grafix
-    WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-    WriteByte (MSG_BROADCAST, 78);
-    WriteCoord (MSG_BROADCAST, org2_x);
-    WriteCoord (MSG_BROADCAST, org2_y);
-    WriteCoord (MSG_BROADCAST, org2_z);
+    net_write_byte (MSG_BROADCAST, SVC_TEMPENTITY);
+    net_write_byte (MSG_BROADCAST, 78);
+    net_write_coord (MSG_BROADCAST, org2_x);
+    net_write_coord (MSG_BROADCAST, org2_y);
+    net_write_coord (MSG_BROADCAST, org2_z);
 
 // Unsolidify and hide real parts
     self.solid              = SOLID_NOT;
@@ -507,12 +507,12 @@ float turret_customizeentityforclient()
 float Turret_SendEntity(entity to, float sf)
 {
 
-	WriteByte(MSG_ENTITY, NET_CSQC_TURRET);
-	WriteCoord(MSG_ENTITY, self.tur_head.angles_x);
-	WriteCoord(MSG_ENTITY, self.tur_head.angles_y);
-    WriteByte(MSG_ENTITY, self.tur_head.frame);
+	net_write_byte(MSG_ENTITY, NET_CSQC_TURRET);
+	net_write_coord(MSG_ENTITY, self.tur_head.angles_x);
+	net_write_coord(MSG_ENTITY, self.tur_head.angles_y);
+    net_write_byte(MSG_ENTITY, self.tur_head.frame);
 
-	//WriteCoord(MSG_ENTITY, self.tur_head.angles_z);
+	//net_write_coord(MSG_ENTITY, self.tur_head.angles_z);
 
 	return TRUE;
 }

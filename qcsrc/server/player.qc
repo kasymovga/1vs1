@@ -2319,11 +2319,11 @@ float(string s, float i) player_cmd_client_handle {
 			centerprint(self, "Player model forced");
 		} else {
 			msg_entity = self;
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, NET_TE_CSQC_MODELSELECT);
-			WriteString(MSG_ONE, self.body.playermodel);
-			WriteByte(MSG_ONE, stof(self.body.playerskin));
-			WriteString(MSG_ONE, player_allowed_model_list());
+			net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+			net_write_byte(MSG_ONE, NET_TE_CSQC_MODELSELECT);
+			net_write_string(MSG_ONE, self.body.playermodel);
+			net_write_byte(MSG_ONE, stof(self.body.playerskin));
+			net_write_string(MSG_ONE, player_allowed_model_list());
 		}
 		return TRUE;
 	}

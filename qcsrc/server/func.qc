@@ -24,7 +24,7 @@ float(void) func_moving_brush_init {
 }
 
 float(entity to, float fl) func_pointparticles_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_POINTPARTICLES);
+	net_write_byte(MSG_ENTITY, NET_CSQC_POINTPARTICLES);
 	// optional features to save space
 	fl = fl & 0x0F;
 	if (self.spawnflags & 2)
@@ -39,57 +39,57 @@ float(entity to, float fl) func_pointparticles_send {
 	if (self.mins != '0 0 0' || self.maxs != '0 0 0')
 		fl |= 0x80; // 14 bytes - saves lots of space
 
-	WriteByte(MSG_ENTITY, fl);
+	net_write_byte(MSG_ENTITY, fl);
 	if (fl & 2) {
 		if (self.state)
-			WriteCoord(MSG_ENTITY, self.impulse);
+			net_write_coord(MSG_ENTITY, self.impulse);
 		else
-			WriteCoord(MSG_ENTITY, 0); // off
+			net_write_coord(MSG_ENTITY, 0); // off
 	}
 	if (fl & 4) {
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		net_write_coord(MSG_ENTITY, self.origin_x);
+		net_write_coord(MSG_ENTITY, self.origin_y);
+		net_write_coord(MSG_ENTITY, self.origin_z);
 	}
 	if (fl & 1) {
 		if (self.model != "null") {
-			WriteShort(MSG_ENTITY, self.modelindex);
+			net_write_short(MSG_ENTITY, self.modelindex);
 			if (fl & 0x80) {
-				WriteCoord(MSG_ENTITY, self.mins_x);
-				WriteCoord(MSG_ENTITY, self.mins_y);
-				WriteCoord(MSG_ENTITY, self.mins_z);
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				net_write_coord(MSG_ENTITY, self.mins_x);
+				net_write_coord(MSG_ENTITY, self.mins_y);
+				net_write_coord(MSG_ENTITY, self.mins_z);
+				net_write_coord(MSG_ENTITY, self.maxs_x);
+				net_write_coord(MSG_ENTITY, self.maxs_y);
+				net_write_coord(MSG_ENTITY, self.maxs_z);
 			}
 		} else {
-			WriteShort(MSG_ENTITY, 0);
+			net_write_short(MSG_ENTITY, 0);
 			if (fl & 0x80) {
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				net_write_coord(MSG_ENTITY, self.maxs_x);
+				net_write_coord(MSG_ENTITY, self.maxs_y);
+				net_write_coord(MSG_ENTITY, self.maxs_z);
 			}
 		}
-		WriteShort(MSG_ENTITY, self.cnt);
+		net_write_short(MSG_ENTITY, self.cnt);
 		if (fl & 0x20) {
-			WriteShort(MSG_ENTITY, net_compress_vec(self.velocity));
-			WriteShort(MSG_ENTITY, net_compress_vec(self.movedir));
+			net_write_short(MSG_ENTITY, net_compress_vec(self.velocity));
+			net_write_short(MSG_ENTITY, net_compress_vec(self.movedir));
 		}
 		if (fl & 0x40) {
-			WriteShort(MSG_ENTITY, self.waterlevel * 16.0);
-			WriteByte(MSG_ENTITY, self.count * 16.0);
+			net_write_short(MSG_ENTITY, self.waterlevel * 16.0);
+			net_write_byte(MSG_ENTITY, self.count * 16.0);
 		}
-		WriteString(MSG_ENTITY, self.noise);
+		net_write_string(MSG_ENTITY, self.noise);
 		if (self.noise != "") {
-			WriteByte(MSG_ENTITY, floor(self.atten * 64));
-			WriteByte(MSG_ENTITY, floor(self.volume * 255));
+			net_write_byte(MSG_ENTITY, floor(self.atten * 64));
+			net_write_byte(MSG_ENTITY, floor(self.volume * 255));
 		}
-		WriteString(MSG_ENTITY, self.bgmscript);
+		net_write_string(MSG_ENTITY, self.bgmscript);
 		if (self.bgmscript != "") {
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptattack * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptdecay * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptsustain * 255));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptrelease * 64));
+			net_write_byte(MSG_ENTITY, floor(self.bgmscriptattack * 64));
+			net_write_byte(MSG_ENTITY, floor(self.bgmscriptdecay * 64));
+			net_write_byte(MSG_ENTITY, floor(self.bgmscriptsustain * 255));
+			net_write_byte(MSG_ENTITY, floor(self.bgmscriptrelease * 64));
 		}
 	}
 	return 1;
@@ -182,17 +182,17 @@ void(void) spawnfunc_func_sparks {
 }
 
 float(entity to, float sf) func_rainsnow_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_RAINSNOW);
-	WriteByte(MSG_ENTITY, self.state);
-	WriteCoord(MSG_ENTITY, self.origin_x + self.mins_x);
-	WriteCoord(MSG_ENTITY, self.origin_y + self.mins_y);
-	WriteCoord(MSG_ENTITY, self.origin_z + self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x - self.mins_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y - self.mins_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z - self.mins_z);
-	WriteShort(MSG_ENTITY, net_compress_vec(self.dest));
-	WriteShort(MSG_ENTITY, self.count);
-	WriteByte(MSG_ENTITY, self.cnt);
+	net_write_byte(MSG_ENTITY, NET_CSQC_RAINSNOW);
+	net_write_byte(MSG_ENTITY, self.state);
+	net_write_coord(MSG_ENTITY, self.origin_x + self.mins_x);
+	net_write_coord(MSG_ENTITY, self.origin_y + self.mins_y);
+	net_write_coord(MSG_ENTITY, self.origin_z + self.mins_z);
+	net_write_coord(MSG_ENTITY, self.maxs_x - self.mins_x);
+	net_write_coord(MSG_ENTITY, self.maxs_y - self.mins_y);
+	net_write_coord(MSG_ENTITY, self.maxs_z - self.mins_z);
+	net_write_short(MSG_ENTITY, net_compress_vec(self.dest));
+	net_write_short(MSG_ENTITY, self.count);
+	net_write_byte(MSG_ENTITY, self.cnt);
 	return 1;
 }
 

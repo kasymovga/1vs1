@@ -134,35 +134,35 @@ float(entity to, float sf) weapon_zapper_beam_send {
 		sf |= 16;
 	}
 	if (self.classname == "zapper_shield_beam")
-		WriteByte(MSG_ENTITY, NET_CSQC_ZAPPER_SHIELD);
+		net_write_byte(MSG_ENTITY, NET_CSQC_ZAPPER_SHIELD);
 	else {
-		WriteByte(MSG_ENTITY, NET_CSQC_ZAPPER);
+		net_write_byte(MSG_ENTITY, NET_CSQC_ZAPPER);
 		if (akimbo_active(_owner)) {
 			sf |= 8;
 		}
 	}
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
 		if (o)
-			WriteByte(MSG_ENTITY, o);
+			net_write_byte(MSG_ENTITY, o);
 		else
-			WriteByte(MSG_ENTITY, self.team);
+			net_write_byte(MSG_ENTITY, self.team);
 	}
 	if (sf & 2) {
-		WriteCoord(MSG_ENTITY, self.pos1_x);
-		WriteCoord(MSG_ENTITY, self.pos1_y);
-		WriteCoord(MSG_ENTITY, self.pos1_z);
+		net_write_coord(MSG_ENTITY, self.pos1_x);
+		net_write_coord(MSG_ENTITY, self.pos1_y);
+		net_write_coord(MSG_ENTITY, self.pos1_z);
 	}
 	if (sf & 4) {
-		WriteCoord(MSG_ENTITY, self.pos2_x);
-		WriteCoord(MSG_ENTITY, self.pos2_y);
-		WriteCoord(MSG_ENTITY, self.pos2_z);
+		net_write_coord(MSG_ENTITY, self.pos2_x);
+		net_write_coord(MSG_ENTITY, self.pos2_y);
+		net_write_coord(MSG_ENTITY, self.pos2_z);
 	}
 	if (sf & 32) {
 		entity e = self.enemy.weaponentity;
-		WriteCoord(MSG_ENTITY, e.shotorg_visual_x);
-		WriteCoord(MSG_ENTITY, -e.shotorg_visual_y);
-		WriteCoord(MSG_ENTITY, e.shotorg_visual_z);
+		net_write_coord(MSG_ENTITY, e.shotorg_visual_x);
+		net_write_coord(MSG_ENTITY, -e.shotorg_visual_y);
+		net_write_coord(MSG_ENTITY, e.shotorg_visual_z);
 	}
 	return TRUE;
 }
@@ -306,15 +306,15 @@ void(void) weapon_zapper_attack1 {
 
 float weapon_zapper_attack2_effect_team;
 void(vector from, vector to, vector end) weapon_zapper_attack2_effect_cb {
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, NET_TE_CSQC_ZAPPERLIGHTNING);
-	WriteByte(MSG_BROADCAST, weapon_zapper_attack2_effect_team);
-	WriteCoord(MSG_BROADCAST, from_x);
-	WriteCoord(MSG_BROADCAST, from_y);
-	WriteCoord(MSG_BROADCAST, from_z);
-	WriteCoord(MSG_BROADCAST, to_x);
-	WriteCoord(MSG_BROADCAST, to_y);
-	WriteCoord(MSG_BROADCAST, to_z);
+	net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
+	net_write_byte(MSG_BROADCAST, NET_TE_CSQC_ZAPPERLIGHTNING);
+	net_write_byte(MSG_BROADCAST, weapon_zapper_attack2_effect_team);
+	net_write_coord(MSG_BROADCAST, from_x);
+	net_write_coord(MSG_BROADCAST, from_y);
+	net_write_coord(MSG_BROADCAST, from_z);
+	net_write_coord(MSG_BROADCAST, to_x);
+	net_write_coord(MSG_BROADCAST, to_y);
+	net_write_coord(MSG_BROADCAST, to_z);
 }
 
 void(float ateam, vector from, vector to) weapon_zapper_attack2_effect {

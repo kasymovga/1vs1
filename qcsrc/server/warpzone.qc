@@ -74,10 +74,10 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 }
 
 float(entity to, float sf) warpzone_teleported_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_WARPZONE_TELEPORTED);
-	WriteCoord(MSG_ENTITY, self.angles_x);
-	WriteCoord(MSG_ENTITY, self.angles_y);
-	WriteCoord(MSG_ENTITY, self.angles_z);
+	net_write_byte(MSG_ENTITY, NET_CSQC_WARPZONE_TELEPORTED);
+	net_write_coord(MSG_ENTITY, self.angles_x);
+	net_write_coord(MSG_ENTITY, self.angles_y);
+	net_write_coord(MSG_ENTITY, self.angles_z);
 	return TRUE;
 }
 
@@ -325,32 +325,32 @@ void(void) warpzone_touch {
 }
 
 float(entity to, float sendflags) warpzone_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_WARPZONE);
+	net_write_byte(MSG_ENTITY, NET_CSQC_WARPZONE);
 	// we need THESE to render the warpzone (and cull properly)...
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
-	WriteShort(MSG_ENTITY, self.modelindex);
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
-	WriteByte(MSG_ENTITY, bound(1, self.scale * 16, 255));
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
+	net_write_short(MSG_ENTITY, self.modelindex);
+	net_write_coord(MSG_ENTITY, self.mins_x);
+	net_write_coord(MSG_ENTITY, self.mins_y);
+	net_write_coord(MSG_ENTITY, self.mins_z);
+	net_write_coord(MSG_ENTITY, self.maxs_x);
+	net_write_coord(MSG_ENTITY, self.maxs_y);
+	net_write_coord(MSG_ENTITY, self.maxs_z);
+	net_write_byte(MSG_ENTITY, bound(1, self.scale * 16, 255));
 	// we need THESE to calculate the proper transform
-	WriteCoord(MSG_ENTITY, self.warpzone_origin_x);
-	WriteCoord(MSG_ENTITY, self.warpzone_origin_y);
-	WriteCoord(MSG_ENTITY, self.warpzone_origin_z);
-	WriteCoord(MSG_ENTITY, self.warpzone_angles_x);
-	WriteCoord(MSG_ENTITY, self.warpzone_angles_y);
-	WriteCoord(MSG_ENTITY, self.warpzone_angles_z);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetorigin_x);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetorigin_y);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetorigin_z);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetangles_x);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetangles_y);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetangles_z);
+	net_write_coord(MSG_ENTITY, self.warpzone_origin_x);
+	net_write_coord(MSG_ENTITY, self.warpzone_origin_y);
+	net_write_coord(MSG_ENTITY, self.warpzone_origin_z);
+	net_write_coord(MSG_ENTITY, self.warpzone_angles_x);
+	net_write_coord(MSG_ENTITY, self.warpzone_angles_y);
+	net_write_coord(MSG_ENTITY, self.warpzone_angles_z);
+	net_write_coord(MSG_ENTITY, self.warpzone_targetorigin_x);
+	net_write_coord(MSG_ENTITY, self.warpzone_targetorigin_y);
+	net_write_coord(MSG_ENTITY, self.warpzone_targetorigin_z);
+	net_write_coord(MSG_ENTITY, self.warpzone_targetangles_x);
+	net_write_coord(MSG_ENTITY, self.warpzone_targetangles_y);
+	net_write_coord(MSG_ENTITY, self.warpzone_targetangles_z);
 	return TRUE;
 }
 

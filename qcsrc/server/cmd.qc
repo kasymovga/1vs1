@@ -542,9 +542,9 @@ void(string s) cmd_client {
 		sprint(self, cmd_lsmaps_reply);
 	} else if (cmd == "lsmaps2") {
 		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, NET_TE_CSQC_MAPLIST);
-		WriteString(MSG_ONE, map_list);
+		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+		net_write_byte(MSG_ONE, NET_TE_CSQC_MAPLIST);
+		net_write_string(MSG_ONE, map_list);
 	} else if (cmd == "gameclient") {
 		s = argv(1);
 		print("Game client for ", self.netname, ": ", s, "\n");
@@ -599,15 +599,15 @@ void(string s) cmd_client {
 		float n1 = floor(stof(argv(1))), n2 = floor(stof(argv(2)));
 		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16 && !map_finished) {
 			msg_entity = self;
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, NET_TE_CSQC_RECORDLISTCHUNK);
-			WriteByte(MSG_ONE, n1);
-			WriteByte(MSG_ONE, n2);
+			net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+			net_write_byte(MSG_ONE, NET_TE_CSQC_RECORDLISTCHUNK);
+			net_write_byte(MSG_ONE, n1);
+			net_write_byte(MSG_ONE, n2);
 			if (n1 < CMD_RECORDS_REPLY_STRINGS_COUNT) {
 				string s2 = substring(cmd_records_reply[n1], 1024 * n2, 1024);
-				WriteString(MSG_ONE, s2);
+				net_write_string(MSG_ONE, s2);
 			} else {
-				WriteString(MSG_ONE, "");
+				net_write_string(MSG_ONE, "");
 			}
 		}
 

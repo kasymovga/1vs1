@@ -206,7 +206,7 @@ void(void) dlc_wait_think {
 
 #define dlc_send dlc_SendEntity //compatibility with old save files
 float(entity to, float sf) dlc_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_DLC_LIST);
+	net_write_byte(MSG_ENTITY, NET_CSQC_DLC_LIST);
 	sf &= ~12;
 	if (to.netaddress == "local") {
 		sf |= 4;
@@ -214,16 +214,16 @@ float(entity to, float sf) dlc_send {
 	if (dlc_sounds != "")
 		sf |= 8;
 
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
-		WriteString(MSG_ENTITY, cvar_string("sv_dlc_repository"));
+		net_write_string(MSG_ENTITY, cvar_string("sv_dlc_repository"));
 	}
 	if (sf & 2) {
-		WriteString(MSG_ENTITY, dlc_list_send);
-		WriteString(MSG_ENTITY, dlc_extra_pk3_list);
+		net_write_string(MSG_ENTITY, dlc_list_send);
+		net_write_string(MSG_ENTITY, dlc_extra_pk3_list);
 	}
 	if (sf & 8) {
-		WriteString(MSG_ENTITY, dlc_sounds);
+		net_write_string(MSG_ENTITY, dlc_sounds);
 	}
 	return TRUE;
 }
@@ -475,18 +475,18 @@ void(void) dlc_sound_think {
 
 #define dlc_sound_send dlc_sound_SendEntity //compatibility with old save files
 float(entity to, float sf) dlc_sound_send {
-	WriteByte(MSG_ENTITY, NET_CSQC_DLC_SOUND);
-	WriteByte(MSG_ENTITY, sf);
+	net_write_byte(MSG_ENTITY, NET_CSQC_DLC_SOUND);
+	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		net_write_coord(MSG_ENTITY, self.origin_x);
+		net_write_coord(MSG_ENTITY, self.origin_y);
+		net_write_coord(MSG_ENTITY, self.origin_z);
 	}
 	if (sf & 2) {
-		WriteString(MSG_ENTITY, self.message);
-		WriteByte(MSG_ENTITY, self.cnt);
-		WriteCoord(MSG_ENTITY, self.scale);
-		WriteCoord(MSG_ENTITY, self.health);
+		net_write_string(MSG_ENTITY, self.message);
+		net_write_byte(MSG_ENTITY, self.cnt);
+		net_write_coord(MSG_ENTITY, self.scale);
+		net_write_coord(MSG_ENTITY, self.health);
 	}
 	return TRUE;
 }

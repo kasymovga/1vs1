@@ -6,19 +6,19 @@ float ready_wait;
 float(entity to, float sendflags) ready_nagger_send {
 	float nags, i, f, b;
 	entity e;
-	WriteByte(MSG_ENTITY, NET_CSQC_NAGGER);
+	net_write_byte(MSG_ENTITY, NET_CSQC_NAGGER);
 	nags = 0;
 	if (ready_ready)
 		nags |= 1;
 
-	WriteByte(MSG_ENTITY, nags);
+	net_write_byte(MSG_ENTITY, nags);
 	if (nags & 1) {
 		for (i = 1; i <= client_max_count; i += 8) {
 			for (f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
 				if (clienttype(e) != CLIENTTYPE_REAL || e.ready)
 					f |= b;
 
-			WriteByte(MSG_ENTITY, f);
+			net_write_byte(MSG_ENTITY, f);
 		}
 	}
 	return TRUE;
