@@ -1,32 +1,32 @@
 void(vector from, vector to,float seglength,float drifts,float drifte,float branchfactor,float branchfactor_add) effect_lightningarc {
-    vector direction,dirnew, pos, pos_l;
-    float length, steps, steplength, i,drift;
-    length     = vlen(from - to);
-    if(length < 1)
-        return;
+	vector direction,dirnew, pos, pos_l;
+	float length, steps, steplength, i,drift;
+	length     = vlen(from - to);
+	if(length < 1)
+		return;
 
-    steps      = floor(length / seglength);
-    if (steps < 1) {
-        te_lightning1(world,from,to);
-        return;
-    }
-    steplength = length / steps;
-    direction  = normalize(to - from);
-    pos_l = from;
-    if (length > seglength) {
-        for (i = 1; i < steps; i += 1) {
-            drift = drifts * (1 - (i / steps)) + drifte * (i / steps);
-            dirnew = normalize(direction * (1 - drift) + randomvec() * drift);
-            pos = pos_l +  dirnew * steplength;
-            te_lightning1(world,pos_l,pos);
-            if (random() < branchfactor)
-                effect_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
+	steps      = floor(length / seglength);
+	if (steps < 1) {
+		builtin_te_lightning1(world,from,to);
+		return;
+	}
+	steplength = length / steps;
+	direction  = normalize(to - from);
+	pos_l = from;
+	if (length > seglength) {
+		for (i = 1; i < steps; i += 1) {
+			drift = drifts * (1 - (i / steps)) + drifte * (i / steps);
+			dirnew = normalize(direction * (1 - drift) + randomvec() * drift);
+			pos = pos_l +  dirnew * steplength;
+			builtin_te_lightning1(world,pos_l,pos);
+			if (random() < branchfactor)
+				effect_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
 
-            pos_l = pos;
-        }
-        te_lightning1(world,pos_l,to);
-    } else
-        te_lightning1(world,from,to);
+			pos_l = pos;
+		}
+		builtin_te_lightning1(world,pos_l,to);
+	} else
+		builtin_te_lightning1(world,from,to);
 }
 
 void(void) effect_lightningarc_read {
@@ -34,7 +34,7 @@ void(void) effect_lightningarc_read {
 	from_x = net_read_coord(); from_y = net_read_coord(); from_z = net_read_coord();
 	to_x   = net_read_coord(); to_y   = net_read_coord(); to_z   = net_read_coord();
 	if (CVAR(cl_effects_lightningarc_simple)) {
-		te_lightning1(world,from,to);
+		builtin_te_lightning1(world,from,to);
 	} else {
 		effect_lightningarc(from,to,
 				CVAR(cl_effects_lightningarc_segmentlength),

@@ -222,13 +222,13 @@ void(float d) particles_snow_or_rain_set_bbox {
 void(void) particles_rain_draw {
 	particles_snow_or_rain_set_bbox(CVAR(cl_particles_rain_distance));
 	if (particles_snow_or_rain_count)
-		te_particlerain(particles_snow_or_rain_mins, particles_snow_or_rain_maxs, self.velocity, particles_snow_or_rain_count, self.glow_color);
+		builtin_te_particlerain(particles_snow_or_rain_mins, particles_snow_or_rain_maxs, self.velocity, particles_snow_or_rain_count, self.glow_color);
 }
 
 void(void) particles_snor_draw {
 	particles_snow_or_rain_set_bbox(CVAR(cl_particles_snow_distance));
 	if (particles_snow_or_rain_count)
-		te_particlesnow(particles_snow_or_rain_mins, particles_snow_or_rain_maxs, self.velocity, particles_snow_or_rain_count, self.glow_color);
+		builtin_te_particlesnow(particles_snow_or_rain_mins, particles_snow_or_rain_maxs, self.velocity, particles_snow_or_rain_count, self.glow_color);
 }
 
 void(float ignore) particles_rain_or_snow_read {

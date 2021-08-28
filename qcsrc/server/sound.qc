@@ -90,7 +90,6 @@ void(entity e, float chan) sound_stop {
 }
 
 void (entity e, string filename) sound_play2 {
-    //stuffcmd(e, strcat("play2 ", filename, "\n"));
     msg_entity = e;
     sound_to_at(MSG_ONE, world, '0 0 0', CHAN_AUTO, filename, VOL_BASE, ATTN_NONE);
 }

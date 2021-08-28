@@ -7,7 +7,7 @@ defs.qh
 constants.qh
 ../client-server/progs.qh
 ../client-menu/progs.qh
-builtins.qh
+builtin.qh
 trace.qh
 cvar.qh
 modelselect.qh

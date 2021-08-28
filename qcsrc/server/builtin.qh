@@ -44,6 +44,26 @@ entity(entity e) nextent = #47;
 //void(vector v, vector d, float colour, float count) builtin_particle = #48;
 //void(void) builtin_ChangeYaw = #49;
 vector(vector v, ...) vectoangles = #51;
+//DP_SV_EFFECT
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+//void(vector org, string modelname, float startframe, float endframe, float framerate) builtin_effect = #404;
+//SVC definitions:
+//float svc_effect = #52; // [vector] org [byte] modelindex [byte] startframe [byte] framecount [byte] framerate
+//float svc_effect2 = #53; // [vector] org [short] modelindex [byte] startframe [byte] framecount [byte] framerate
+//description:
+//clientside playback of simple custom sprite effects (explosion sprites, etc).
+//
+//DP_QC_VECTOANGLES_WITH_ROLL
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+vector(vector forward, vector up) vectoangles2 = #51; // same number as vectoangles
+//description:
+//variant of vectoangles that takes an up vector to calculate roll angle (also uses this to calculate yaw correctly if the forward is straight up or straight down)
+//note: just like normal vectoangles you need to negate the pitch of the returned angles if you want to feed them to makevectors or assign to self.v_angle
+//
 void(float to, float f) builtin_WriteByte = #52;
 void(float to, float f) builtin_WriteChar = #53;
 void(float to, float f) builtin_WriteShort = #54;
@@ -52,6 +72,33 @@ void(float to, float f) builtin_WriteCoord = #56;
 void(float to, float f) builtin_WriteAngle = #57;
 void(float to, string s) builtin_WriteString = #58;
 void(float to, entity s) builtin_WriteEntity = #59;
+//DP_QC_SINCOSSQRTPOW
+//idea: id Software, LordHavoc
+//darkplaces implementation: id Software, LordHavoc
+//builtin definitions:
+float(float val) sin = #60;
+float(float val) cos = #61;
+float(float val) sqrt = #62;
+float(float a, float b) pow = #97;
+//description:
+//useful math functions, sine of val, cosine of val, square root of val, and raise a to power b, respectively.
+//
+//DP_QC_TRACETOSS
+//idea: id Software
+//darkplaces implementation: id Software
+//builtin definitions:
+void(entity ent, entity ignore) builtin_tracetoss = #64;
+//description:
+//simulates movement of the entity as if it is MOVETYPE_TOSS and starting with it's current state (location, velocity, etc), returns relevant trace_ variables (trace_fraction is always 0, all other values are supported - trace_ent, trace_endpos, trace_plane_normal), does not actually alter the entity.
+//
+//DP_QC_ETOS
+//idea: id Software
+//darkplaces implementation: id Software
+//builtin definitions:
+string(entity ent) etos = #65;
+//description:
+//prints "entity 1" or similar into a string. (this was a Q2 builtin)
+//
 void(float step) movetogoal = #67;
 string(string s) precache_file = #68;
 void(entity e) makestatic = #69;
@@ -63,8 +110,692 @@ void(vector pos, string samp, float vol, float atten) ambientsound = #74;
 //string(string s) builtin_precache_sound2 = #76;
 //string(string s) builtin_precache_file2 = #77;
 //void(entity e) builtin_setspawnparms = #78;
+//DP_QC_TRACEBOX
+//idea: id Software
+//darkplaces implementation: id Software
+//builtin definitions:
+void(vector v1, vector min, vector max, vector v2, float nomonsters, entity forent) builtin_tracebox = #90;
+//description:
+//similar to traceline but much more useful, traces a box of the size specified (technical note: in quake1 and halflife bsp maps the mins and maxs will be rounded up to one of the hull sizes, quake3 bsp does not have this problem, this is the case with normal moving entities as well).
+//
+//DP_QC_RANDOMVEC
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+vector() randomvec = #91;
+//description:
+//returns a vector of length < 1, much quicker version of this QC: do {v_x = random()*2-1;v_y = random()*2-1;v_z = random()*2-1;} while(vlen(v) > 1)
+//
+//DP_REGISTERCVAR
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(string name, string value) registercvar = #93;
+//description:
+//adds a new console cvar to the server console (in singleplayer this is the player's console), the cvar exists until the mod is unloaded or the game quits.
+//NOTE: DP_CON_SET is much better.
+//
+//DP_QC_MINMAXBOUND
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(float a, float b) min = #94;
+float(float a, float b, float c) min3 = #94;
+float(float a, float b, float c, float d) min4 = #94;
+float(float a, float b, float c, float d, float e) min5 = #94;
+float(float a, float b, float c, float d, float e, float f) min6 = #94;
+float(float a, float b, float c, float d, float e, float f, float g) min7 = #94;
+float(float a, float b, float c, float d, float e, float f, float g, float h) min8 = #94;
+float(float a, float b) max = #95;
+float(float a, float b, float c) max3 = #95;
+float(float a, float b, float c, float d) max4 = #95;
+float(float a, float b, float c, float d, float e) max5 = #95;
+float(float a, float b, float c, float d, float e, float f) max6 = #95;
+float(float a, float b, float c, float d, float e, float f, float g) max7 = #95;
+float(float a, float b, float c, float d, float e, float f, float g, float h) max8 = #95;
+float(float minimum, float val, float maximum) bound = #96;
+//description:
+//min returns the lowest of all the supplied numbers.
+//max returns the highest of all the supplied numbers.
+//bound clamps the value to the range and returns it.
+//
+//DP_QC_FINDFLOAT
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(entity start, .entity fld, entity match) findentity = #98;
+entity(entity start, .float fld, float match) findfloat = #98;
+//description:
+//finds an entity or float field value, similar to find(), but for entity and float fields.
+//
+//checkextension function
+//idea: expected by almost everyone
+//darkplaces implementation: LordHavoc
+float(string s) checkextension = #99;
+//description:
+//check if (cvar("pr_checkextension")) before calling this, this is the only
+//guaranteed extension to be present in the extension system, it allows you
+//to check if an extension is available, by name, to check for an extension
+//use code like this:
+//// (it is recommended this code be placed in worldspawn or a worldspawn called function somewhere)
+//if (cvar("pr_checkextension"))
+//if (checkextension("DP_SV_SETCOLOR"))
+//	ext_setcolor = TRUE;
+//from then on you can check ext_setcolor to know if that extension is available
+//
+//FRIK_FILE
+//idea: FrikaC
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(string s) stof = #81; // get numerical value from a string
+float(string filename, float mode) fopen = #110; // opens a file inside quake/gamedir/data/ (mode is FILE_READ, FILE_APPEND, or FILE_WRITE), returns fhandle >= 0 if successful, or fhandle < 0 if unable to open file for any reason
+void(float fhandle) fclose = #111; // closes a file
+string(float fhandle) fgets = #112; // reads a line of text from the file and returns as a tempstring
+void(float fhandle, string s, ...) fputs = #113; // writes a line of text to the end of the file
+float(string s) strlen = #114; // returns how many characters are in a string
+string(string s1, string s2, ...) strcat = #115; // concatenates two or more strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
+string strcat1(string s) = #115; // copies a string to a tempstring (so one can strunzone it) //FRIK_FILE
+string(string s, float start, float length) substring = #116; // returns a section of a string as a tempstring
+vector(string s) stov = #117; // returns vector value from a string
+string(string s, ...) strzone = #118; // makes a copy of a string into the string zone and returns it, this is often used to keep around a tempstring for longer periods of time (tempstrings are replaced often)
+void(string s) strunzone = #119; // removes a copy of a string from the string zone (you can not use that string again or it may crash!!!)
+//cvars:
+//pr_zone_min_strings : default 64 (64k), min 64 (64k), max 8192 (8mb)
+//description:
+//provides text file access functions and string manipulation functions, note that you may want to set pr_zone_min_strings in the worldspawn function if 64k is not enough string zone space.
+//
+//NOTE: strzone functionality is partially superseded by
+//DP_QC_UNLIMITEDTEMPSTRINGS when longterm storage is not needed
+//
+//EXT_BITSHIFT
+//idea: Spike
+//darkplaces implementation: [515]
+//builtin definitions:
+float(float number, float quantity) bitshift = #218;
+//description:
+//multiplies number by a power of 2 corresponding to quantity (0 = *1, 1 = *2, 2 = *4, 3 = *8, -1 = /2, -2 = /4x, etc), and rounds down (due to integer math) like other bit operations do (& and | and the like).
+//note: it is faster to use multiply if you are shifting by a constant, avoiding the quakec function call cost, however that does not do a floor for you.
+//
+//FTE_STRINGS
+//idea: many
+//darkplaces implementation: KrimZon
+//description:
+//various string manipulation functions
+float(string str, string sub, float startpos) strstrofs = #221;
+float(string str, float ofs) str2chr = #222;
+string(float c, ...) chr2str = #223;
+string(float ccase, float calpha, float cnum, string s, ...) strconv = #224;
+string(float chars, string s, ...) strpad = #225;
+string(string info, string key, string value, ...) infoadd = #226;
+string(string info, string key) infoget = #227;
+float(string s1, string s2, float len) strncmp = #228;
+float(string s1, string s2) strcasecmp = #229;
+float(string s1, string s2, float len) strncasecmp = #230;
+//
+//EXT_CSQC
+// #232 void(float index, float type, .void field) SV_AddStat (EXT_CSQC)
+void(float index, float type, ...) addstat = #232;
+//
+//FTE_QC_CHECKPVS
+//idea: Urre
+//darkplaces implementation: div0
+//builtin definitions:
+float checkpvs(vector viewpos, entity viewee) = #240;
+//description:
+//returns true if viewee can be seen from viewpos according to PVS data
+//
+//DP_SV_POINTPARTICLES
+//idea: Spike
+//darkplaces implementation: LordHavoc
+//function definitions:
+float(string effectname) particleeffectnum = #335; // same as in CSQC
+void(entity ent, float effectnum, vector start, vector end) trailparticles = #336; // same as in CSQC
+void(float effectnum, vector org, vector vel, float howmany) pointparticles = #337; // same as in CSQC
+//SVC definitions:
+//float svc_trailparticles = 60; // [short] entnum [short] effectnum [vector] start [vector] end
+//float svc_pointparticles = 61; // [short] effectnum [vector] start [vector] velocity [short] count
+//float svc_pointparticles1 = 62; // [short] effectnum [vector] start, same as svc_pointparticles except velocity is zero and count is 1
+//description:
+//provides the ability to spawn non-standard particle effects, typically these are defined in a particle effect information file such as effectinfo.txt in darkplaces.
+//this is a port of particle effect features from clientside QC (EXT_CSQC) to server QC, as these effects are potentially useful to all games even if they do not make use of EXT_CSQC.
+//warning: server must have same order of effects in effectinfo.txt as client does or the numbers would not match up, except for standard quake effects which are always the same numbers.
+//
+//DP_SV_PRINT
+//idea: id Software (QuakeWorld Server)
+//darkplaces implementation: Black, LordHavoc
+void(string s, ...) print = #339; // same number as in EXT_CSQC
+//description:
+//this is identical to dprint except that it always prints regardless of the developer cvar.
+//
+//DP_QC_COPYENTITY
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+void(entity from, entity to) copyentity = #400;
+//description:
+//copies all data in the entity to another entity.
+//
+//DP_SV_SETCOLOR
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+void(entity ent, float colors) setcolor = #401;
+//engine called QC functions (optional):
+//void(float color) SV_ChangeTeam;
+//description:
+//setcolor sets the color on a client and updates internal color information accordingly (equivilant to stuffing a "color" command but immediate)
+//SV_ChangeTeam is called by the engine whenever a "color" command is recieved, it may decide to do anything it pleases with the color passed by the client, including rejecting it (by doing nothing), or calling setcolor to apply it, preventing team changes is one use for this.
+//the color format is pants + shirt * 16 (0-255 potentially)
+//
+//DP_QC_FINDCHAIN
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(.string fld, string match) findchain = #402;
+//description:
+//similar to find() but returns a chain of entities like findradius.
+//
+//DP_QC_FINDCHAINFLOAT
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(.entity fld, entity match) findchainentity = #403;
+entity(.float fld, float match) findchainfloat = #403;
+//description:
+//similar to findentity()/findfloat() but returns a chain of entities like findradius.
+//
+//DP_TE_SPARK
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+void(vector org, vector vel, float howmany) te_spark = #411;
+//temp entity definitions:
+//float TE_SPARK = 51;
+//protocol:
+//vector origin
+//byte xvelocity (-128 to 127)
+//byte yvelocity (-128 to 127)
+//byte zvelocity (-128 to 127)
+//byte count (number of sparks)
+//description:
+//creates a shower of sparks and a smoke puff.
+//
+//DP_TE_SMALLFLASH
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+void(vector org) te_smallflash = #416;
+//temp entity definitions:
+//float TE_SMALLFLASH = 72;
+//protocol:
+//vector origin
+//description:
+//creates a small light flash (radius 200, time 0.2).
+//
+//DP_TE_CUSTOMFLASH
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+void(vector org, float radius, float lifetime, vector color) te_customflash = #417;
+//temp entity definitions:
+//float TE_CUSTOMFLASH = 73;
+//protocol:
+//vector origin
+//byte radius ((MSG_ReadByte() + 1) * 8, meaning 8-2048 unit radius)
+//byte lifetime ((MSG_ReadByte() + 1) / 256.0, meaning approximately 0-1 second lifetime)
+//byte red (0.0 to 1.0 converted to 0-255)
+//byte green (0.0 to 1.0 converted to 0-255)
+//byte blue (0.0 to 1.0 converted to 0-255)
+//description:
+//creates a customized light flash.
+//
+//DP_TE_STANDARDEFFECTBUILTINS
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+//void(vector org) builtin_te_gunshot = #418;
+//void(vector org) builtin_te_spike = #419;
+//void(vector org) builtin_te_superspike = #420;
+void(vector org) te_explosion = #421;
+void(vector org) te_tarexplosion = #422;
+//void(vector org) builtin_te_wizspike = #423;
+//void(vector org) builtin_te_knightspike = #424;
+//void(vector org) builtin_te_lavasplash = #425;
+//void(vector org) builtin_te_teleport = #426;
+//void(vector org, float color, float colorlength) builtin_te_explosion2 = #427;
+void(entity own, vector start, vector end) te_lightning1 = #428;
+void(entity own, vector start, vector end) te_lightning2 = #429;
+//void(entity own, vector start, vector end) builtin_te_lightning3 = #430;
+//void(entity own, vector start, vector end) builtin_te_beam = #431;
+//description:
+//to make life easier on mod coders.
+//
+//DP_QC_VECTORVECTORS
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+void(vector dir) vectorvectors = #432;
+//description:
+//creates v_forward, v_right, and v_up vectors given a forward vector, similar to makevectors except it takes a forward direction vector instead of angles.
+//
+//DP_QC_GETSURFACE
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(entity e, float s) getsurfacenumpoints = #434;
+vector(entity e, float s, float n) getsurfacepoint = #435;
+vector(entity e, float s) getsurfacenormal = #436;
+string(entity e, float s) getsurfacetexture = #437;
+float(entity e, vector p) getsurfacenearpoint = #438;
+vector(entity e, float s, vector p) getsurfaceclippedpoint = #439;
+//description:
+//functions to query surface information.
+//
+//DP_GFX_QUAKE3MODELTAGS
+//idea: id Software
+//darkplaces implementation: LordHavoc
+//field definitions:
+.entity tag_entity; // entity this is attached to (call setattachment to set this)
+.float tag_index; // which tag on that entity (0 is relative to the entity, > 0 is an index into the tags on the model if it has any) (call setattachment to set this)
+//builtin definitions:
+void(entity e, entity tagentity, string tagname) setattachment = #443; // attachs e to a tag on tagentity (note: use "" to attach to entity origin/angles instead of a tag)
+//description:
+//allows entities to be visually attached to model tags (which follow animations perfectly) on other entities, for example attaching a weapon to a player's hand, or upper body attached to lower body, allowing it to change angles and frame separately (note: origin and angles are relative to the tag, use '0 0 0' for both if you want it to follow exactly, this is similar to viewmodelforclient's behavior).
+//note 2: if the tag is not found, it defaults to "" (attach to origin/angles of entity)
+//note 3: attaching to world turns off attachment
+//note 4: the entity that this is attached to must be visible for this to work
+//note 5: if an entity is attached to the player entity it will not be drawn in first person.
+//
+//DP_QC_FS_SEARCH
+//idea: Black
+//darkplaces implementation: Black
+//builtin definitions:
+float(string pattern, float caseinsensitive, float quiet) search_begin = #444;
+void(float handle) search_end = #445;
+float(float handle) search_getsize = #446;
+string(float handle, float num) search_getfilename = #447;
+//description:
+//search_begin performs a filename search with the specified pattern (for example "maps/*.bsp") and stores the results in a search slot (minimum of 128 supported by any engine with this extension), the other functions take this returned search slot number, be sure to search_free when done (they are also freed on progs reload).
+//search_end frees a search slot (also done at progs reload).
+//search_getsize returns how many filenames were found.
+//search_getfilename returns a filename from the search.
+//
+//DP_QC_CVAR_STRING
+//idea: VorteX
+//DarkPlaces implementation: VorteX, LordHavoc
+//builtin definitions:
+string(string s) builtin_cvar_string = #448;
+//description:
+//returns the value of a cvar, as a tempstring.
+//
+//DP_QC_FINDFLAGS
+//idea: Sajt
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(entity start, .float fld, float match) findflags = #449;
+//description:
+//finds an entity with the specified flag set in the field, similar to find()
+//
+//DP_QC_FINDCHAINFLAGS
+//idea: Sajt
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(.float fld, float match) findchainflags = #450;
+//description:
+//similar to findflags() but returns a chain of entities like findradius.
+//
+//DP_QC_FINDCHAIN_TOFIELD
+//idea: div0
+//darkplaces implementation: div0
+//builtin definitions:
+//entity(.string fld, float match, .entity tofield) findradius_tofield = #22;
+//entity(.string fld, string match, .entity tofield) findchain_tofield = #402;
+//entity(.string fld, float match, .entity tofield) findchainflags_tofield = #450;
+//entity(.string fld, float match, .entity tofield) findchainfloat_tofield = #403;
+//description:
+//similar to findchain() etc, but stores the chain into .tofield instead of .chain
+//actually, the .entity tofield is an optional field of the the existing findchain* functions
+//
+//DP_QC_GETTAGINFO
+//idea: VorteX, LordHavoc (somebody else?)
+//DarkPlaces implementation: VorteX
+//builtin definitions:
+float(entity ent, string tagname) gettagindex = #451;
+vector(entity ent, float tagindex) gettaginfo = #452;
+//description:
+//gettagindex returns the number of a tag on an entity, this number is the same as set by setattachment (in the .tag_index field), allowing the qc to save a little cpu time by keeping the number around if it wishes (this could already be done by calling setattachment and saving off the tag_index).
+//gettaginfo returns the origin of the tag in worldspace and sets v_forward, v_right, and v_up to the current orientation of the tag in worldspace, this automatically resolves all dependencies (attachments, including viewmodelforclient), this means you could fire a shot from a tag on a gun entity attached to the view for example.
+//DP_QC_GETTAGINFO_BONEPROPERTIES
+//idea: daemon
+//DarkPlaces implementation: div0
+//global definitions:
+float gettaginfo_parent;
+//string gettaginfo_name;
+vector gettaginfo_offset;
+vector gettaginfo_forward;
+vector gettaginfo_right;
+vector gettaginfo_up;
+//description:
+//when this extension is present, gettaginfo fills in some globals with info about the bone that had been queried
+//gettaginfo_parent is set to the number of the parent bone, or 0 if it is a root bone
+//gettaginfo_name is set to the name of the bone whose index had been specified in gettaginfo
+//gettaginfo_offset, gettaginfo_forward, gettaginfo_right, gettaginfo_up contain the transformation matrix of the bone relative to its parent. Note that the matrix may contain a scaling component.
+//
+//DP_SV_DROPCLIENT
+//idea: FrikaC
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+void(entity clent) dropclient = #453;
+//description:
+//causes the server to immediately drop the client, more reliable than stuffcmd(clent, "disconnect\n"); which could be intentionally ignored by the client engine
+//
+//DP_SV_BOTCLIENT
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//constants:
+float CLIENTTYPE_DISCONNECTED = 0;
+float CLIENTTYPE_REAL = 1;
+float CLIENTTYPE_BOT = 2;
+float CLIENTTYPE_NOTACLIENT = 3;
+//builtin definitions:
+entity() spawnclient = #454; // like spawn but for client slots (also calls relevant connect/spawn functions), returns world if no clients available
+float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* constants
+//description:
+//spawns a client with no network connection, to allow bots to use client slots with no hacks.
+//How to use:
+/*
+	// to spawn a bot
+	local entity oldself;
+	oldself = self;
+	self = spawnclient();
+	if (!self)
+	{
+		bprint("Can not add bot, server full.\n");
+		self = oldself;
+		return;
+	}
+	self.netname = "Yoyobot";
+	self.clientcolors = 12 * 16 + 4; // yellow (12) shirt and red (4) pants
+	ClientConnect();
+	PutClientInServer();
+	self = oldself;
+
+	// to remove all bots
+	local entity head;
+	head = find(world, classname, "player");
+	while (head)
+	{
+		if (clienttype(head) == CLIENTTYPE_BOT)
+			dropclient(head);
+		head = find(head, classname, "player");
+	}
+
+	// to identify if a client is a bot (for example in PlayerPreThink)
+	if (clienttype(self) == CLIENTTYPE_BOT)
+		botthink();
+*/
+//see also DP_SV_CLIENTCOLORS DP_SV_CLIENTNAME DP_SV_DROPCLIENT
+//How it works:
+//creates a new client, calls SetNewParms and stores the parms, and returns the client.
+//this intentionally does not call SV_SendServerinfo to allow the QuakeC a chance to set the netname and clientcolors fields before actually spawning the bot by calling ClientConnect and PutClientInServer manually
+//on level change ClientConnect and PutClientInServer are called by the engine to spawn in the bot (this is why clienttype() exists to tell you on the next level what type of client this is).
+//parms work the same on bot clients as they do on real clients, and do carry from level to level
+//
+//DP_QC_CVAR_TYPE
+//idea: div0
+//DarkPlaces implementation: div0
+//builtin definitions:
+float(string name) cvar_type = #495;
+float CVAR_TYPEFLAG_EXISTS = 1;
+float CVAR_TYPEFLAG_SAVED = 2;
+float CVAR_TYPEFLAG_PRIVATE = 4;
+float CVAR_TYPEFLAG_ENGINE = 8;
+float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
+float CVAR_TYPEFLAG_READONLY = 32;
+//
+//DP_QC_EDICT_NUM
+//idea: 515
+//DarkPlaces implementation: LordHavoc
+//builtin definitions:
+entity(float entnum) edict_num = #459;
+float(entity ent) wasfreed = #353; // same as in EXT_CSQC extension
+//description:
+//edict_num returns the entity corresponding to a given number, this works even for freed entities, but you should call wasfreed(ent) to see if is currently active.
+//wasfreed returns whether an entity slot is currently free (entities that have never spawned are free, entities that have had remove called on them are also free).
+//
+//KRIMZON_SV_PARSECLIENTCOMMAND
+//idea: KrimZon
+//darkplaces implementation: KrimZon, LordHavoc
+//engine-called QC prototypes:
+//void(string s) SV_ParseClientCommand;
+//builtin definitions:
+void(entity e, string s) clientcommand = #440;
+float(string s) tokenize = #441;
+string(float n) argv = #442;
+//description:
+//provides QC the ability to completely control server interpretation of client commands ("say" and "color" for example, clientcommand is necessary for this and substring (FRIK_FILE) is useful) as well as adding new commands (tokenize, argv, and stof (FRIK_FILE) are useful for this)), whenever a clc_stringcmd is received the QC function is called, and it is up to the QC to decide what (if anything) to do with it
+//
+//DP_QC_STRINGBUFFERS
+//idea: ??
+//darkplaces implementation: LordHavoc
+//functions to manage string buffer objects - that is, arbitrary length string arrays that are handled by the engine
+float() buf_create = #460;
+void(float bufhandle) buf_del = #461;
+float(float bufhandle) buf_getsize = #462;
+void(float bufhandle_from, float bufhandle_to) buf_copy = #463;
+void(float bufhandle, float sortpower, float backward) buf_sort = #464;
+string(float bufhandle, string glue) buf_implode = #465;
+string(float bufhandle, float string_index) bufstr_get = #466;
+void(float bufhandle, float string_index, string str) bufstr_set = #467;
+float(float bufhandle, string str, float order) bufstr_add = #468;
+void(float bufhandle, float string_index) bufstr_free = #469;
+//
+//DP_QC_STRINGCOLORFUNCTIONS
+//idea: Dresk
+//darkplaces implementation: Dresk
+//builtin definitions:
+float(string s) strlennocol = #476; // returns how many characters are in a string, minus color codes
+string(string s) strdecolorize = #477; // returns a string minus the color codes of the string provided
+//description:
+//provides additional functionality to strings by supporting functions that isolate and identify strings with color codes
+//
+//DP_QC_STRFTIME
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+string(float uselocaltime, string format, ...) strftime = #478;
+//description:
+//provides the ability to get the local (in your timezone) or world (Universal Coordinated Time) time as a string using the formatting of your choice:
+//example: "%Y-%m-%d %H:%M:%S"   (result looks like: 2007-02-08 01:03:15)
+//note: "%F %T" gives the same result as "%Y-%m-%d %H:%M:%S" (ISO 8601 date format and 24-hour time)
+//for more format codes please do a web search for strftime 3 and you should find the man(3) pages for this standard C function.
+//practical uses:
+//changing day/night cycle (shops closing, monsters going on the prowl) in an RPG, for this you probably want to use s = strftime(TRUE, "%H");hour = stof(s);
+//printing current date/time for competitive multiplayer games, such as the beginning/end of each round in real world time.
+//activating eastereggs in singleplayer games on certain dates.
+//note: some codes such as %x and %X use your locale settings and thus may not make sense to international users, it is not advisable to use these as the server and clients may be in different countries.
+//note: if you display local time to a player, it would be a good idea to note whether it is local time using a string like "%F %T (local)", and otherwise use "%F %T (UTC)".
+//note: be aware that if the game is saved and reloaded a week later the date and time will be different, so if activating eastereggs in a singleplayer game or something you may want to only check when a level is loaded and then keep the same easteregg state throughout the level so that the easteregg does not deactivate when reloading from a savegame (also be aware that precaches should not depend on such date/time code because reloading a savegame often scrambles the precaches if so!).
+//note: this function can return a NULL string (you can check for it with if (!s)) if the localtime/gmtime functions returned NULL in the engine code, such as if those functions don't work on this platform (consoles perhaps?), so be aware that this may return nothing.
+//
+//DP_QC_TOKENIZEBYSEPARATOR
+//idea: Electro, SavageX, LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(string s, string separator1, ...) tokenizebyseparator = #479;
+//description:
+//this function returns tokens separated by any of the supplied separator strings, example:
+//numnumbers = tokenizebyseparator("10.2.3.4", ".");
+//returns 4 and the tokens are "10" "2" "3" "4"
+//possibly useful for parsing IPv4 addresses (such as "1.2.3.4") and IPv6 addresses (such as "[1234:5678:9abc:def0:1234:5678:9abc:def0]:26000")
+//
+//DP_QC_STRING_CASE_FUNCTIONS
+//idea: Dresk
+//darkplaces implementation: LordHavoc / Dresk
+//builtin definitions:
+string(string s) strtolower = #480; // returns the passed in string in pure lowercase form
+string(string s) strtoupper = #481; // returns the passed in string in pure uppercase form
+//description:
+//provides simple string uppercase and lowercase functions
+//
+//DP_QC_CVAR_DEFSTRING
+//idea: id Software (Doom3), LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+string(string s) cvar_defstring = #482;
+//description:
+//returns the default value of a cvar, as a tempstring.
+//
+//DP_QC_STRREPLACE
+//idea: Sajt
+//darkplaces implementation: Sajt
+//builtin definitions:
+string(string search, string replace, string subject) strreplace = #484;
+string(string search, string replace, string subject) strireplace = #485;
+//description:
+//strreplace replaces all occurrences of 'search' with 'replace' in the string 'subject', and returns the result as a tempstring.
+//strireplace does the same but uses case-insensitive matching of the 'search' term
+//
+//DP_QC_CRC16
+//idea: div0
+//darkplaces implementation: div0
+//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
+//When caseinsensitive is set, the CRC is calculated of the lower cased string.
+float(float caseinsensitive, string s, ...) crc16 = #494;
+//
+//DP_QC_ENTITYDATA
+//idea: KrimZon
+//darkplaces implementation: KrimZon
+//builtin definitions:
+float() numentityfields = #496;
+string(float fieldnum) entityfieldname = #497;
+float(float fieldnum) entityfieldtype = #498;
+string(float fieldnum, entity ent) getentityfieldstring = #499;
+float(float fieldnum, entity ent, string s) putentityfieldstring = #500;
+//constants:
+//Returned by entityfieldtype
+float FIELD_STRING   = 1;
+float FIELD_FLOAT    = 2;
+float FIELD_VECTOR   = 3;
+float FIELD_ENTITY   = 4;
+float FIELD_FUNCTION = 6;
+//description:
+//Versatile functions intended for storing data from specific entities between level changes, but can be customized for some kind of partial savegame.
+//WARNING: .entity fields cannot be saved and restored between map loads as they will leave dangling pointers.
+//numentityfields returns the number of entity fields. NOT offsets. Vectors comprise 4 fields: v, v_x, v_y and v_z.
+//entityfieldname returns the name as a string, eg. "origin" or "classname" or whatever.
+//entityfieldtype returns a value that the constants represent, but the field may be of another type in more exotic progs.dat formats or compilers.
+//getentityfieldstring returns data as would be written to a savegame, eg... "0.05" (float), "0 0 1" (vector), or "Hello World!" (string). Function names can also be returned.
+//putentityfieldstring puts the data returned by getentityfieldstring back into the entity.
+//
+//DP_SV_WRITEPICTURE
+//idea: div0
+//darkplaces implementation: div0
+//builtin definitions:
+void(float to, string s, float sz) WritePicture = #501;
+//description:
+//writes a picture to the data stream so CSQC can read it using ReadPicture, which has the definition
+//  string(void) ReadPicture = #501;
+//The picture data is sent as at most sz bytes, by compressing to low quality
+//JPEG. The data being sent will be equivalent to:
+//  WriteString(to, s);
+//  WriteShort(to, imagesize);
+//  for(i = 0; i < imagesize; ++i)
+//    WriteByte(to, [the i-th byte of the compressed JPEG image]);
+//
+//DP_QC_WHICHPACK
+//idea: div0
+//darkplaces implementation: div0
+//builtin definitions:
+string(string filename) whichpack = #503;
+//description:
+//returns the name of the pak/pk3/whatever containing the given file, in the same path space as FRIK_FILE functions use (that is, possibly with a path name prefix)
+//
+//DP_QC_URI_ESCAPE
+//idea: div0
+//darkplaces implementation: div0
+//URI::Escape's functionality
+string(string in) uri_escape = #510;
+string(string in) uri_unescape = #511;
+//
+//DP_QC_NUM_FOR_EDICT
+//idea: Blub\0
+//darkplaces implementation: Blub\0
+//Function to get the number of an entity - a clean way.
+float(entity num) num_for_edict = #512;
+//
+//DP_QC_URI_GET
+//idea: div0
+//darkplaces implementation: div0
+//loads text from an URL into a string
+//returns 1 on success of initiation, 0 if there are too many concurrent
+//connections already or if the URL is invalid
+//the following callback will receive the data and MUST exist!
+//  void(float id, float status, string data) URI_Get_Callback;
+//status is either
+//  negative for an internal error,
+//  0 for success, or
+//  the HTTP response code on server error (e.g. 404)
+//if 1 is returned by uri_get, the callback will be called in the future
+float(string url, float id) uri_get = #513;
+//
+//DP_QC_TOKENIZE_CONSOLE
+//idea: div0
+//darkplaces implementation: div0
+//builtin definitions:
+float(string s) tokenize_console = #514;
+float(float i) argv_start_index = #515;
+float(float i) argv_end_index = #516;
+//description:
+//this function returns tokens separated just like the console does
+//also, functions are provided to get the index of the first and last character of each token in the original string
+//Passing negative values to them, or to argv, will be treated as indexes from the LAST token (like lists work in Perl). So argv(-1) will return the LAST token.
+//
+//DP_QC_STRINGBUFFERS_CVARLIST
+//idea: div0
+//darkplaces implementation: div0
+//functions to list cvars and store their names into a stringbuffer
+//cvars that start with pattern but not with antipattern will be stored into the buffer
+void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
+//
+//DP_QC_CVAR_DESCRIPTION
+//idea: div0
+//DarkPlaces implementation: div0
+//builtin definitions:
+string(string name) cvar_description = #518;
+//description:
+//returns the description of a cvar
+//
+//DP_QC_GETTIME
+//idea: tZork
+//darkplaces implementation: tZork, div0
+//constant definitions:
+float GETTIME_FRAMESTART = 0; // time of start of frame
+float GETTIME_REALTIME = 1; // current time (may be OS specific)
+float GETTIME_HIRES = 2; // like REALTIME, but may reset between QC invocations and thus can be higher precision
+float GETTIME_UPTIME = 3; // time since start of the engine
+//builtin definitions:
+float(float tmr) gettime = #519;
+//description:
+//some timers to query...
+//DP_QC_GETTIME_CDTRACK
+//idea: div0
+//darkplaces implementation: div0
+//constant definitions:
+float GETTIME_CDTRACK = 4;
+//description:
+//returns the playing time of the current cdtrack when passed to gettime()
+//
 void(string s, ...) callfunction = #605;
 float(string s) isfunction = #607;
 string(void) getextresponse = #624;
 float(entity e, float s) getsurfacenumtriangles = #628;
 vector(entity e, float s, float n) getsurfacetriangle = #629;
+//DP_RM_QCSENDPACKET
+//idea: Akari
+//darkplaces implementation: Akari
+//builtin definitions:
+float(string addr, string data) net_sendpacket = #801;
+//description:
+//A QC builtin equivalent of the "packet" command
+//

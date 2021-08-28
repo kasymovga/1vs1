@@ -1,7 +1,6 @@
 progs.dat // output filename
 sys.qh
 builtin.qh
-extensions.qh
 ../client-server/progs.qh
 ../common/progs.qh
 constants.qh

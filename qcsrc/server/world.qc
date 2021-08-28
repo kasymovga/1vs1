@@ -675,6 +675,13 @@ float(void) world_redirection_think { // returns TRUE if redirecting
 	return TRUE;
 }
 
+//NEH_RESTOREGAME
+//idea: Nehahra
+//darkplaces implementation: LordHavoc
+//engine-called QC prototypes:
+//void() RestoreGame;
+//description:
+//when a savegame is loaded, this function is called
 #define world_restore RestoreGame
 void(void) world_restore {
 	// Loaded from a save game
