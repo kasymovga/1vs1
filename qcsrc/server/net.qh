@@ -11,3 +11,4 @@ float net_compress_vec(vector vec);
 #define net_write_angle builtin_WriteAngle
 #define net_write_long builtin_WriteLong
 #define net_write_entity builtin_WriteEntity
+#define net_write_picture builtin_WritePicture

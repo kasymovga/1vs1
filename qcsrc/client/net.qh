@@ -8,3 +8,4 @@ vector(void) net_read_vector;
 #define net_read_coord builtin_ReadCoord
 #define net_read_string builtin_ReadString
 #define net_read_angle builtin_ReadAngle
+#define net_read_picture builtin_ReadPicture

@@ -692,7 +692,7 @@ float FIELD_FUNCTION = 6;
 //idea: div0
 //darkplaces implementation: div0
 //builtin definitions:
-void(float to, string s, float sz) WritePicture = #501;
+void(float to, string s, float sz) builtin_WritePicture = #501;
 //description:
 //writes a picture to the data stream so CSQC can read it using ReadPicture, which has the definition
 //  string(void) ReadPicture = #501;

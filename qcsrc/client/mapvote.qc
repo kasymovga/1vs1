@@ -367,5 +367,5 @@ void(void) mapvote_picture_read {
 	float type;
 	type = net_read_byte();
 	mapvote_previews[type] = TRUE;
-	mapvote_pics[type] = strzone(ReadPicture());
+	mapvote_pics[type] = strzone(net_read_picture());
 }

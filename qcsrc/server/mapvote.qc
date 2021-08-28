@@ -125,7 +125,7 @@ void mapvote_send_picture(float id) {
 	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 	net_write_byte(MSG_ONE, NET_TE_CSQC_PICTURE);
 	net_write_byte(MSG_ONE, id);
-	WritePicture(MSG_ONE, mapvote_pictures[id], 3072);
+	net_write_picture(MSG_ONE, mapvote_pictures[id], 3072);
 }
 
 float mapvote_client_command(string cmd) {
