@@ -33,7 +33,7 @@ void(void) physics_car_remove {
 }
 
 void(float isnew) physics_car_read {
-	float f = ReadShort();
+	float f = net_read_short();
 	if (isnew) {
 		physics_plug = physics_car_hook;
 		physics_plug_pre = physics_car_pre;
@@ -49,24 +49,24 @@ void(float isnew) physics_car_read {
 	}
 	if (f & 1) {
 		physics_vehicle_read_common();
-		g_vehicle_car_speed_stop = ReadCoord();
-		g_vehicle_car_speed = ReadCoord();
-		g_vehicle_car_turnspeed = ReadCoord();
-		g_vehicle_car_movement_inertia = ReadCoord();
-		g_vehicle_car_speed_drift = ReadCoord();
-		physics_player_ent = ReadShort();
-		g_vehicle_car_align = ReadByte();
+		g_vehicle_car_speed_stop = net_read_coord();
+		g_vehicle_car_speed = net_read_coord();
+		g_vehicle_car_turnspeed = net_read_coord();
+		g_vehicle_car_movement_inertia = net_read_coord();
+		g_vehicle_car_speed_drift = net_read_coord();
+		physics_player_ent = net_read_short();
+		g_vehicle_car_align = net_read_byte();
 	}
 	if (f & 2) {
-		physics_car_start_angles_x = ReadCoord();
-		physics_car_start_angles_y = ReadCoord();
-		physics_car_start_angles_z = ReadCoord();
-		physics_car_start_origin_x = ReadCoord();
-		physics_car_start_origin_y = ReadCoord();
-		physics_car_start_origin_z = ReadCoord();
-		physics_car_start_velocity_x = ReadCoord();
-		physics_car_start_velocity_y = ReadCoord();
-		physics_car_start_velocity_z = ReadCoord();
+		physics_car_start_angles_x = net_read_coord();
+		physics_car_start_angles_y = net_read_coord();
+		physics_car_start_angles_z = net_read_coord();
+		physics_car_start_origin_x = net_read_coord();
+		physics_car_start_origin_y = net_read_coord();
+		physics_car_start_origin_z = net_read_coord();
+		physics_car_start_velocity_x = net_read_coord();
+		physics_car_start_velocity_y = net_read_coord();
+		physics_car_start_velocity_z = net_read_coord();
 	}
 }
 

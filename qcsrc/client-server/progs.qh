@@ -39,3 +39,4 @@
 #include "trace.qh"
 #include "warpzone.qh"
 #include "world.qh"
+#include "dpcontents.qh"

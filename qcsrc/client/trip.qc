@@ -40,7 +40,7 @@ void() trip_think {
 }
 
 void() trip_net_read {
-	float t = ReadByte();
+	float t = net_read_byte();
 	if not(trip) {
 		trip = spawn();
 		trip.think = trip_think;

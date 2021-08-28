@@ -4,14 +4,14 @@ void(float isNew) damage_info_read {
 	float hittype;
 	float issilent;
 	vector force, org;
-	hittype = ReadShort();
+	hittype = net_read_short();
 	issilent = (hittype & 0x8000);
 	hittype = (hittype & 0x7FFF);
-	org_x = ReadCoord();
-	org_y = ReadCoord();
-	org_z = ReadCoord();
-	force = net_decompress_vec(ReadShort());
-	self.team = ReadByte();
+	org_x = net_read_coord();
+	org_y = net_read_coord();
+	org_z = net_read_coord();
+	force = net_decompress_vec(net_read_short());
+	self.team = net_read_byte();
 	if not(isNew)
 		return;
 
@@ -256,10 +256,10 @@ void(void) damage_indicator_remove {
 }
 
 void(float bisnew) damage_indicator_read {
-	self.cnt = ReadByte();
-	self.origin_x = ReadShort();
-	self.origin_y = ReadShort();
-	self.origin_z = ReadShort();
+	self.cnt = net_read_byte();
+	self.origin_x = net_read_short();
+	self.origin_y = net_read_short();
+	self.origin_z = net_read_short();
 	if (CVAR(cl_damageindicator) > 0) {
 		self.alpha = 1;
 		self.draw2d = damage_indicator_draw;

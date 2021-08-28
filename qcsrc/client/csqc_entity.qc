@@ -26,7 +26,7 @@ void CSQC_Ent_Remove() { //called by engine
 void(float bIsNewEntity) CSQC_Ent_Update { //called by engine
 	float t;
 	float savetime;
-	t = ReadByte();
+	t = net_read_byte();
 	// set up the "time" global for received entities to be correct for interpolation purposes
 	savetime = time;
 	if (server_time) {
@@ -105,7 +105,7 @@ void(void) csqc_entity_init {
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
 float() CSQC_Parse_TempEntity { //called by engine
 	// Acquire TE ID
-	float nTEID = ReadByte();
+	float nTEID = net_read_byte();
 	switch(nTEID) {
 	case NET_TE_CSQC_HIT:
 		if (CVAR(cl_hitsound))
@@ -167,7 +167,7 @@ float() CSQC_Parse_TempEntity { //called by engine
 		return TRUE;
 	case NET_TE_CSQC_MAPLIST:
 		str_unzone_ifneeded(gui_available_maps);
-		gui_available_maps = str_zone_ifneeded(ReadString());
+		gui_available_maps = str_zone_ifneeded(net_read_string());
 		string s = gui_available_maps;
 		gui_available_maps_count = 0;
 		while (s != "") {

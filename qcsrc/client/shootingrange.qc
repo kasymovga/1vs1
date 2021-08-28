@@ -2,8 +2,8 @@ float shootingrange_round_start;
 float shootingrange_round_time;
 
 void(float _ignore) shootingrange_read {
-	shootingrange_round_start = ReadCoord();
-	shootingrange_round_time = ReadShort();
+	shootingrange_round_start = net_read_coord();
+	shootingrange_round_time = net_read_short();
 }
 
 void(void) shootingrange_hud {

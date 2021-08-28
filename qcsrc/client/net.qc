@@ -34,15 +34,15 @@ vector(float data) net_decompress_vec {
 
 float(void) net_read_int24 {
 	float v;
-	v = ReadShort() * 256; // note: this is signed
-	v += ReadByte(); // note: this is unsigned
+	v = net_read_short() * 256; // note: this is signed
+	v += net_read_byte(); // note: this is unsigned
 	return v;
 }
 
 vector(void) net_read_vector {
 	vector v;
-	v_x = ReadCoord();
-	v_y = ReadCoord();
-	v_z = ReadCoord();
+	v_x = net_read_coord();
+	v_y = net_read_coord();
+	v_z = net_read_coord();
 	return v;
 }

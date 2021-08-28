@@ -41,7 +41,7 @@ void(float ignore) laser_read {
 	float f;
 	InterpolateOrigin_Undo();
 	// 30 bytes, or 13 bytes for just moving
-	f = ReadByte();
+	f = net_read_byte();
 	self.count = (f & 0xE0);
 	if (self.count & 0x80)
 		self.iflags = IFLAG_VELOCITY;
@@ -49,39 +49,39 @@ void(float ignore) laser_read {
 		self.iflags = IFLAG_ANGLES;
 
 	if (f & 1) {
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin_x = net_read_coord();
+		self.origin_y = net_read_coord();
+		self.origin_z = net_read_coord();
 	}
 	if (f & 8) {
-		self.colormod_x = ReadByte() / 255.0;
-		self.colormod_y = ReadByte() / 255.0;
-		self.colormod_z = ReadByte() / 255.0;
+		self.colormod_x = net_read_byte() / 255.0;
+		self.colormod_y = net_read_byte() / 255.0;
+		self.colormod_z = net_read_byte() / 255.0;
 		if (f & 0x40)
-			self.alpha = ReadByte() / 255.0;
+			self.alpha = net_read_byte() / 255.0;
 		else
 			self.alpha = 0;
 
 		self.scale = 2;
 		self.modelscale = 50;
 		if (f & 0x20) {
-			self.scale *= ReadByte() / 16.0; // beam radius
-			self.modelscale *= ReadByte() / 16.0; // dlight radius
+			self.scale *= net_read_byte() / 16.0; // beam radius
+			self.modelscale *= net_read_byte() / 16.0; // dlight radius
 		}
-		self.cnt = ReadShort() - 1; // effect number
+		self.cnt = net_read_short() - 1; // effect number
 	}
 	if (f & 2) {
 		if (f & 0x80) {
-			self.velocity_x = ReadCoord();
-			self.velocity_y = ReadCoord();
-			self.velocity_z = ReadCoord();
+			self.velocity_x = net_read_coord();
+			self.velocity_y = net_read_coord();
+			self.velocity_z = net_read_coord();
 		} else {
-			self.angles_x = ReadAngle();
-			self.angles_y = ReadAngle();
+			self.angles_x = net_read_angle();
+			self.angles_y = net_read_angle();
 		}
 	}
 	if (f & 4)
-		self.state = ReadByte();
+		self.state = net_read_byte();
 
 	InterpolateOrigin_Note();
 	self.draw = laser_draw;

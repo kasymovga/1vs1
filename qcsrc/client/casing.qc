@@ -65,16 +65,16 @@ void(void) casing_touch {
 void(float isNew) casing_read {
 	entity casing = spawn();
 	casing.classname= "casing";
-	casing.state = ReadByte();
+	casing.state = net_read_byte();
 	casing.silent = (casing.state & 0x80);
 	casing.state = (casing.state & 0x7F);
-	casing.origin_x = ReadCoord();
-	casing.origin_y = ReadCoord();
-	casing.origin_z = ReadCoord();
-	casing.velocity = net_decompress_vec(ReadShort());
-	casing.angles_x = ReadByte() * 360 / 256;
-	casing.angles_y = ReadByte() * 360 / 256;
-	casing.angles_z = ReadByte() * 360 / 256;
+	casing.origin_x = net_read_coord();
+	casing.origin_y = net_read_coord();
+	casing.origin_z = net_read_coord();
+	casing.velocity = net_decompress_vec(net_read_short());
+	casing.angles_x = net_read_byte() * 360 / 256;
+	casing.angles_y = net_read_byte() * 360 / 256;
+	casing.angles_z = net_read_byte() * 360 / 256;
 	if (CVAR(cl_casings) && CVAR(cl_casings_maxcount)) {
 		if not(casing_oldest)
 			casing_oldest = casing;

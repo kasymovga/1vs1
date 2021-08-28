@@ -20,10 +20,10 @@ float(float fvel) jetpack_velocity_mod {
 
 void(float dummy) jetpack_read {
 	jetpack_physics = self;
-	g_jetpack_acceleration_side = ReadCoord();
-	g_jetpack_acceleration_up = ReadCoord();
-	g_jetpack_antigravity = ReadCoord();
-	g_jetpack_maxspeed_side = ReadCoord();
-	g_jetpack_maxspeed_up = ReadCoord();
+	g_jetpack_acceleration_side = net_read_coord();
+	g_jetpack_acceleration_up = net_read_coord();
+	g_jetpack_antigravity = net_read_coord();
+	g_jetpack_maxspeed_side = net_read_coord();
+	g_jetpack_maxspeed_up = net_read_coord();
 	physics_jetpack_enable();
 }

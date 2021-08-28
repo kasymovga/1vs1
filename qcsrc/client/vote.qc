@@ -1,5 +1,5 @@
 void(void) vote_commands_read {
-	string s = ReadString();
+	string s = net_read_string();
 	string head, tail;
 	float i;
 	for (i = 0; i < vote_commands_count; i++) {

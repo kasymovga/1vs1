@@ -77,22 +77,22 @@ void(entity _hook, entity pl) hook_physics_post {
 }
 
 void(float ignore) hook_physics_read {
-	g_balance_grapplehook_airfriction = ReadCoord();
-	g_balance_grapplehook_dontpull = ReadCoord();
-	g_balance_grapplehook_force_rubber = ReadCoord();
-	g_balance_grapplehook_force_rubber_overstretch = ReadCoord();
-	g_balance_grapplehook_length_min = ReadCoord();
-	g_balance_grapplehook_speed_pull = ReadCoord();
-	g_balance_grapplehook_stretch = ReadCoord();
-	g_grappling_hook_tarzan = ReadCoord();
+	g_balance_grapplehook_airfriction = net_read_coord();
+	g_balance_grapplehook_dontpull = net_read_coord();
+	g_balance_grapplehook_force_rubber = net_read_coord();
+	g_balance_grapplehook_force_rubber_overstretch = net_read_coord();
+	g_balance_grapplehook_length_min = net_read_coord();
+	g_balance_grapplehook_speed_pull = net_read_coord();
+	g_balance_grapplehook_stretch = net_read_coord();
+	g_grappling_hook_tarzan = net_read_coord();
 	physics_hook_enable();
 }
 
 void(float ignore) hook_read {
-	float f = ReadByte();
+	float f = net_read_byte();
 	float owner_num;
 	if (f & 1) {
-		owner_num = ReadByte();
+		owner_num = net_read_byte();
 		self.sv_entnum = owner_num;
 		self.draw = hook_draw;
 		self.entremove = Remove_GrapplingHook;
@@ -100,14 +100,14 @@ void(float ignore) hook_read {
 			self.enemy = spawn();
 	}
 	if (f & 2) {
-		self.hook_shootorg_x = ReadChar();
-		self.hook_shootorg_y = ReadChar();
-		self.hook_shootorg_z = ReadChar();
+		self.hook_shootorg_x = net_read_char();
+		self.hook_shootorg_y = net_read_char();
+		self.hook_shootorg_z = net_read_char();
 	}
 	if (f & 4) {
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin_x = net_read_coord();
+		self.origin_y = net_read_coord();
+		self.origin_z = net_read_coord();
 		InterpolateOrigin_Note();
 		if (f & 16)
 			InterpolateOrigin_Note();
@@ -118,9 +118,9 @@ void(float ignore) hook_read {
 			self.enemy = spawn();
 
 		self = self.enemy;
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin_x = net_read_coord();
+		self.origin_y = net_read_coord();
+		self.origin_z = net_read_coord();
 		InterpolateOrigin_Note();
 		if (f & 16)
 			InterpolateOrigin_Note();
@@ -129,7 +129,7 @@ void(float ignore) hook_read {
 	}
 	if (f & 16) {
 		hook_pull = self;
-		hook_pull_length_readed = ReadCoord();
+		hook_pull_length_readed = net_read_coord();
 	} else
 		hook_pull = world;
 }

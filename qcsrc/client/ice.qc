@@ -6,23 +6,23 @@ void(void) ice_draw {
 }
 
 void(float isnew) ice_read {
-	float f = ReadByte();
+	float f = net_read_byte();
 	if (isnew) {
 		self.draw = ice_draw;
 		self.effects = 32768 | EFFECT_FULLBRIGHT; //EFFECT_DOUBLESIDED;
 	}
 	if (f & 1) {
-		self.modelindex = ReadShort();
-		self.colormod_x = ReadByte() / 255;
-		self.colormod_y = ReadByte() / 255;
-		self.colormod_z = ReadByte() / 255;
-		self.scale = ReadCoord();
-		self.iorigin1_x = ReadCoord();
-		self.iorigin1_y = ReadCoord();
-		self.iorigin1_z = ReadCoord();
-		self.skin = ReadByte();
+		self.modelindex = net_read_short();
+		self.colormod_x = net_read_byte() / 255;
+		self.colormod_y = net_read_byte() / 255;
+		self.colormod_z = net_read_byte() / 255;
+		self.scale = net_read_coord();
+		self.iorigin1_x = net_read_coord();
+		self.iorigin1_y = net_read_coord();
+		self.iorigin1_z = net_read_coord();
+		self.skin = net_read_byte();
 	}
 	if (f & 2)
-		self.alpha = ReadByte() / 255;
+		self.alpha = net_read_byte() / 255;
 }
 

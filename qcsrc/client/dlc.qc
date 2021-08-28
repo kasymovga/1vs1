@@ -90,14 +90,14 @@ void(void) dlc_draw2d {
 }
 
 void(float new) dlc_read {
-	float f = ReadByte();
+	float f = net_read_byte();
 	if (f & 1) {
-		dlc_set_repos(ReadString());
+		dlc_set_repos(net_read_string());
 	}
 
 	float not_all_loaded = FALSE;
 	if (f & 2) {
-		string list = ReadString();
+		string list = net_read_string();
 		string s;
 		not_all_loaded = FALSE;
 		string l = list;
@@ -132,7 +132,7 @@ void(float new) dlc_read {
 				}
 			}
 		}
-		dlc_extra_pk3_list = strzone(ReadString());
+		dlc_extra_pk3_list = strzone(net_read_string());
 	}
 	if (f & 4)
 		localConnection = TRUE;
@@ -141,7 +141,7 @@ void(float new) dlc_read {
 
 	if (f & 8) {
 		str_unzone_ifneeded(dlc_sounds);
-		dlc_sounds = str_zone_ifneeded(ReadString());
+		dlc_sounds = str_zone_ifneeded(net_read_string());
 		if (not_all_loaded)
 			dlc_sounds_ready = FALSE;
 		else
@@ -173,19 +173,19 @@ void(float new) dlc_read {
 }
 
 void(float new) dlc_sound_read {
-	float sf = ReadByte();
+	float sf = net_read_byte();
 	if (sf & 1) {
 		vector v;
-		v_x = ReadCoord();
-		v_y = ReadCoord();
-		v_z = ReadCoord();
+		v_x = net_read_coord();
+		v_y = net_read_coord();
+		v_z = net_read_coord();
 		setorigin(self, v);
 	}
 	if (sf & 2) {
-		string s = ReadString();
-		self.cnt = ReadByte();
-		float vol = ReadCoord();
-		float attn = ReadCoord();
+		string s = net_read_string();
+		self.cnt = net_read_byte();
+		float vol = net_read_coord();
+		float attn = net_read_coord();
 		dlc_sound(self, self.cnt, s, vol, attn);
 	}
 }

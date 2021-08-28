@@ -1,9 +1,9 @@
 void(float ignore) ready_read {
 	float nags, i, j, b, f;
-	nags = ReadByte();
+	nags = net_read_byte();
 	if(nags & 1) {
 		for(i = 1; i <= maxclients; i += 8) {
-			f = ReadByte();
+			f = net_read_byte();
 			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
 				if(player_slots[j]) {
 					if (f & b)

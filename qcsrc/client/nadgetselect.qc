@@ -194,12 +194,12 @@ float(float bInputType, float nPrimary, float nSecondary) nadgetselect_input_eve
 
 void(void) nadgetselect_read {
 	string opts_pri, opts_sec = "";
-	if (ReadByte())
+	if (net_read_byte())
 		g_nadgets_double = 1;
 
-	opts_pri = ReadString();
+	opts_pri = net_read_string();
 	if (g_nadgets_double)
-		opts_sec = ReadString();
+		opts_sec = net_read_string();
 
 	if (main_isdemo)
 		return;

@@ -183,7 +183,7 @@ void(float ignore) projectile_read {
 	//   effects
 	//
 	// projectiles don't send angles, because they always follow the velocity
-	f = ReadByte();
+	f = net_read_byte();
 	self.count = (f & 0x80);
 	self.iflags = (self.iflags & IFLAG_INTERNALMASK);
     if (!self.use_server_angles)
@@ -211,14 +211,14 @@ void(float ignore) projectile_read {
 		InterpolateOrigin_Undo();
 
 	if (f & 1) {
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin_x = net_read_coord();
+		self.origin_y = net_read_coord();
+		self.origin_z = net_read_coord();
 		if (self.count & 0x80) {
-			self.velocity_x = ReadCoord();
-			self.velocity_y = ReadCoord();
-			self.velocity_z = ReadCoord();
-			self.gravity = ReadCoord();
+			self.velocity_x = net_read_coord();
+			self.velocity_y = net_read_coord();
+			self.velocity_z = net_read_coord();
+			self.gravity = net_read_coord();
 
 			self.move_origin = self.origin;
 			self.move_velocity = self.velocity;
@@ -234,9 +234,9 @@ void(float ignore) projectile_read {
 	}
 	if (f & 2) {
 		self.trail_effect = -1;
-		self.cnt = ReadByte();
+		self.cnt = net_read_byte();
 		if (f & 16) {
-			self.team = ReadChar();
+			self.team = net_read_char();
 		} else {
 			self.team = 0;
 		}
@@ -390,9 +390,9 @@ void(float ignore) projectile_read {
 		projectile_set_size(self, self.cnt);
 	}
 	if (f & 4) {
-		self.server_angles_x = ReadCoord();
-		self.server_angles_y = ReadCoord();
-		self.server_angles_z = ReadCoord();
+		self.server_angles_x = net_read_coord();
+		self.server_angles_y = net_read_coord();
+		self.server_angles_z = net_read_coord();
 		self.iflags &= ~(IFLAG_ANGLES | IFLAG_AUTOANGLES);
 		self.use_server_angles = TRUE;
 	}
@@ -431,11 +431,11 @@ void(void) projectile_precache {
 }
 
 void(void) projectile_info_read {
-	float phighest = ReadByte();
+	float phighest = net_read_byte();
 	float i;
 	for (i = 0; i < phighest; ++i) {
-		float type = ReadByte();
-		float _movetype = ReadByte();
+		float type = net_read_byte();
+		float _movetype = net_read_byte();
 		switch (type) {
 		case PROJECTILE_INFO_TYPE_UNREGISTERED:
 		case PROJECTILE_INFO_TYPE_POINT_000:
@@ -448,7 +448,7 @@ void(void) projectile_info_read {
 		case PROJECTILE_INFO_TYPE_CENTERED:
 		case PROJECTILE_INFO_TYPE_UNCENTERED:
 			projectile_info_type[i] = type;
-			projectile_info_sizes[i] = ReadCoord();
+			projectile_info_sizes[i] = net_read_coord();
 			projectile_info_movetype[i] = _movetype;
 			projectile_info_highest_registered = max(projectile_info_highest_registered, i + 1);
 			break;

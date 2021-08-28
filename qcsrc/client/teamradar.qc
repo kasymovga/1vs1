@@ -380,22 +380,22 @@ void(float big, string title) teamradar_view {
 
 void(float ignore) teamradar_link_read {
 	float sendflags;
-	sendflags = ReadByte();
+	sendflags = net_read_byte();
 	InterpolateOrigin_Undo();
 	self.iflags = IFLAG_VELOCITY;
 	self.classname = "radarlink";
 	if (sendflags & 1) {
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin_x = net_read_coord();
+		self.origin_y = net_read_coord();
+		self.origin_z = net_read_coord();
 	}
 	if (sendflags & 2) {
-		self.velocity_x = ReadCoord();
-		self.velocity_y = ReadCoord();
-		self.velocity_z = ReadCoord();
+		self.velocity_x = net_read_coord();
+		self.velocity_y = net_read_coord();
+		self.velocity_z = net_read_coord();
 	}
 	if (sendflags & 4) {
-		self.team = ReadByte();
+		self.team = net_read_byte();
 	}
 	InterpolateOrigin_Note();
 }

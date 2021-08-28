@@ -90,9 +90,9 @@ vector(void) physics_vehicle_adjust_view {
 }
 
 void(void) physics_vehicle_read_common {
-	vehicle_adjust_view_up = ReadCoord();;
-	vehicle_adjust_view_back = ReadCoord();
-	vehicle_adjust_view_start_offs = ReadCoord();
+	vehicle_adjust_view_up = net_read_coord();;
+	vehicle_adjust_view_back = net_read_coord();
+	vehicle_adjust_view_start_offs = net_read_coord();
 	vector _mins, _maxs;
 	_mins = net_read_vector();
 	_maxs = net_read_vector();
@@ -298,10 +298,10 @@ void(void) physics_camera_setup {
 
 float physics_player_content;
 void(float isnew) physics_read {
-	float f = ReadShort();
+	float f = net_read_short();
 	float f2;
 	if (f & 16384)
-		f2 = ReadByte();
+		f2 = net_read_byte();
 	else
 		f2 = 0;
 
@@ -310,37 +310,37 @@ void(float isnew) physics_read {
 		if (cvar("cl_movement_replay"))
 			cvar_clientsettemp("cl_movement_replay", "0");
 
-		sv_stepheight = ReadCoord();
-		g_stepairslowdown = ReadCoord();
-		sv_gravity = ReadCoord();
-		sv_maxairspeed = ReadCoord();
-		sv_maxspeed = ReadCoord();
-		sv_friction = ReadCoord();
-		sv_accelerate = ReadCoord();
-		sv_airaccelerate = ReadCoord();
-		sv_airaccel_sideways_friction = ReadCoord();
-		sv_airaccel_qw = ReadCoord();
-		sv_stopspeed = ReadCoord();
-		sv_airstopaccelerate = ReadCoord();
-		sv_airstrafeaccelerate = ReadCoord();
-		sv_maxairstrafespeed = ReadCoord();
-		sv_aircontrol = ReadCoord();
-		sv_warsowbunny_turnaccel = ReadCoord();
-		sv_warsowbunny_airforwardaccel = ReadCoord();
-		sv_warsowbunny_accel = ReadCoord();
-		sv_warsowbunny_topspeed = ReadCoord();
-		sv_warsowbunny_backtosideratio = ReadCoord();
-		sv_jumpvelocity = ReadCoord();
-		sv_waterjumpvelocity = ReadCoord();
-		g_skimming_time = ReadCoord();
-		g_waterfriction = ReadCoord();
-		g_wateraccelerate = ReadCoord();
-		g_maxwaterspeed = ReadCoord();
-		g_climb_height = ReadCoord();
+		sv_stepheight = net_read_coord();
+		g_stepairslowdown = net_read_coord();
+		sv_gravity = net_read_coord();
+		sv_maxairspeed = net_read_coord();
+		sv_maxspeed = net_read_coord();
+		sv_friction = net_read_coord();
+		sv_accelerate = net_read_coord();
+		sv_airaccelerate = net_read_coord();
+		sv_airaccel_sideways_friction = net_read_coord();
+		sv_airaccel_qw = net_read_coord();
+		sv_stopspeed = net_read_coord();
+		sv_airstopaccelerate = net_read_coord();
+		sv_airstrafeaccelerate = net_read_coord();
+		sv_maxairstrafespeed = net_read_coord();
+		sv_aircontrol = net_read_coord();
+		sv_warsowbunny_turnaccel = net_read_coord();
+		sv_warsowbunny_airforwardaccel = net_read_coord();
+		sv_warsowbunny_accel = net_read_coord();
+		sv_warsowbunny_topspeed = net_read_coord();
+		sv_warsowbunny_backtosideratio = net_read_coord();
+		sv_jumpvelocity = net_read_coord();
+		sv_waterjumpvelocity = net_read_coord();
+		g_skimming_time = net_read_coord();
+		g_waterfriction = net_read_coord();
+		g_wateraccelerate = net_read_coord();
+		g_maxwaterspeed = net_read_coord();
+		g_climb_height = net_read_coord();
 		if (g_climb_height)
-			g_climb_speed = ReadCoord();
+			g_climb_speed = net_read_coord();
 
-		float switches = ReadCoord();
+		float switches = net_read_coord();
 		g_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
 		sv_disable_crouch = switches & 8;
@@ -386,54 +386,54 @@ void(float isnew) physics_read {
 
 		physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 		if (g_walljump) {
-			g_walljump_delay = ReadCoord();
-			g_walljump_force = ReadCoord();
-			g_walljump_velocity_xy_factor = ReadCoord();
-			g_walljump_velocity_z_factor = ReadCoord();
+			g_walljump_delay = net_read_coord();
+			g_walljump_force = net_read_coord();
+			g_walljump_velocity_xy_factor = net_read_coord();
+			g_walljump_velocity_z_factor = net_read_coord();
 		}
 		if (g_dodging || g_dodging_frozen) {
-			g_dodging_horiz_speed = ReadCoord();
-			g_dodging_up_speed = ReadCoord();
-			g_dodging_delay = ReadCoord();
-			g_dodging_frozen_delay = ReadCoord();
-			g_dodging_frozen_factor = ReadCoord();
+			g_dodging_horiz_speed = net_read_coord();
+			g_dodging_up_speed = net_read_coord();
+			g_dodging_delay = net_read_coord();
+			g_dodging_frozen_delay = net_read_coord();
+			g_dodging_frozen_factor = net_read_coord();
 		}
 		if (g_sideview) {
-			g_sideview_up = ReadShort();
+			g_sideview_up = net_read_short();
 		}
 		if (g_topview) {
-			g_topview_angles_x = ReadShort();
-			g_topview_angles_y = ReadShort();
+			g_topview_angles_x = net_read_short();
+			g_topview_angles_y = net_read_short();
 		}
 	}
 	if (f & 2) {
-		self.crouch_mins_x = ReadCoord();
-		self.crouch_mins_y = ReadCoord();
-		self.crouch_mins_z = ReadCoord();
-		self.crouch_maxs_x = ReadCoord();
-		self.crouch_maxs_y = ReadCoord();
-		self.crouch_maxs_z = ReadCoord();
-		self.stand_mins_x = ReadCoord();
-		self.stand_mins_y = ReadCoord();
-		self.stand_mins_z = ReadCoord();
-		self.stand_maxs_x = ReadCoord();
-		self.stand_maxs_y = ReadCoord();
-		self.stand_maxs_z = ReadCoord();
-		self.crouch_view_ofs_x = ReadCoord();
-		self.crouch_view_ofs_y = ReadCoord();
-		self.crouch_view_ofs_z = ReadCoord();
-		self.stand_view_ofs_x = ReadCoord();
-		self.stand_view_ofs_y = ReadCoord();
-		self.stand_view_ofs_z = ReadCoord();
+		self.crouch_mins_x = net_read_coord();
+		self.crouch_mins_y = net_read_coord();
+		self.crouch_mins_z = net_read_coord();
+		self.crouch_maxs_x = net_read_coord();
+		self.crouch_maxs_y = net_read_coord();
+		self.crouch_maxs_z = net_read_coord();
+		self.stand_mins_x = net_read_coord();
+		self.stand_mins_y = net_read_coord();
+		self.stand_mins_z = net_read_coord();
+		self.stand_maxs_x = net_read_coord();
+		self.stand_maxs_y = net_read_coord();
+		self.stand_maxs_z = net_read_coord();
+		self.crouch_view_ofs_x = net_read_coord();
+		self.crouch_view_ofs_y = net_read_coord();
+		self.crouch_view_ofs_z = net_read_coord();
+		self.stand_view_ofs_x = net_read_coord();
+		self.stand_view_ofs_y = net_read_coord();
+		self.stand_view_ofs_z = net_read_coord();
 	}
 	if (f & 4) {
-		physics_start_origin_x = ReadCoord();
-		physics_start_origin_y = ReadCoord();
-		physics_start_origin_z = ReadCoord();
+		physics_start_origin_x = net_read_coord();
+		physics_start_origin_y = net_read_coord();
+		physics_start_origin_z = net_read_coord();
 		physics_velocity_frame_begin = self.pmove_velocity;
-		self.pmove_velocity_x = ReadCoord();
-		self.pmove_velocity_y = ReadCoord();
-		self.pmove_velocity_z = ReadCoord();
+		self.pmove_velocity_x = net_read_coord();
+		self.pmove_velocity_y = net_read_coord();
+		self.pmove_velocity_z = net_read_coord();
 		physics_velocity_frame_end = self.pmove_velocity;
 		physics_frametime = server_ticrate;
 		physics_is_player = f & 8;
@@ -443,19 +443,19 @@ void(float isnew) physics_read {
 		physics_start_flags_jumpreleased = f & 128;
 		physics_start_crouch = f & 256;
 		if (physics_ladder && physics_ladder_iswater) {
-			physics_ladder_speed = ReadCoord();
-			physics_ladder_watertype = ReadCoord();
-			physics_ladder_top = ReadCoord();
+			physics_ladder_speed = net_read_coord();
+			physics_ladder_watertype = net_read_coord();
+			physics_ladder_top = net_read_coord();
 		}
 		if (f & 512) {
-			physics_maxspeedmod = ReadCoord();
-			physics_jump_velocity_factor = ReadCoord();
+			physics_maxspeedmod = net_read_coord();
+			physics_jump_velocity_factor = net_read_coord();
 		} else {
 			physics_maxspeedmod = 1;
 			physics_jump_velocity_factor = 1;
 		}
 		if (f & 1024)
-			physics_movetype = ReadByte();
+			physics_movetype = net_read_byte();
 		else
 			physics_movetype = MOVETYPE_QCWALK;
 
@@ -465,18 +465,18 @@ void(float isnew) physics_read {
 			self.dphitcontentsmask = physics_player_content;
 
 		if (f & 2048)
-			physics_gravity_factor = ReadCoord();
+			physics_gravity_factor = net_read_coord();
 		else
 			physics_gravity_factor = 1;
 
 		if (f & 4096) {
-			physics_start_teleport_time = ReadCoord();
+			physics_start_teleport_time = net_read_coord();
 			was_teleported = TRUE;
 		} else
 			physics_start_teleport_time = -1;
 
 		if (f & 8192) {
-			physics_lastwj = ReadCoord();
+			physics_lastwj = net_read_coord();
 		} else
 			physics_lastwj = 0;
 
@@ -488,23 +488,23 @@ void(float isnew) physics_read {
 			physics_last_RIGHT_KEY_time = 0;
 		}
 		if (f2 & 4) {
-			float dodging_flags = ReadByte();
-			if (dodging_flags & 1) physics_last_dodging = ReadCoord();
-			if (dodging_flags & 2) physics_last_FORWARD_KEY_time = ReadCoord();
-			if (dodging_flags & 4) physics_last_BACKWARD_KEY_time = ReadCoord();
-			if (dodging_flags & 8) physics_last_LEFT_KEY_time = ReadCoord();
-			if (dodging_flags & 16) physics_last_RIGHT_KEY_time = ReadCoord();
+			float dodging_flags = net_read_byte();
+			if (dodging_flags & 1) physics_last_dodging = net_read_coord();
+			if (dodging_flags & 2) physics_last_FORWARD_KEY_time = net_read_coord();
+			if (dodging_flags & 4) physics_last_BACKWARD_KEY_time = net_read_coord();
+			if (dodging_flags & 8) physics_last_LEFT_KEY_time = net_read_coord();
+			if (dodging_flags & 16) physics_last_RIGHT_KEY_time = net_read_coord();
 		}
 		if (f2 & 8) {
-			physics_start_frametime_accumulator = ReadCoord();
+			physics_start_frametime_accumulator = net_read_coord();
 		}
 		if (f & 32768) {
 			physics_ground_oldorigin = physics_ground_origin;
 			physics_ground_curtime = physics_ground_oldtime = physics_ground_time;
-			float ground_ent = ReadCoord();
-			physics_ground_origin_x = ReadCoord();
-			physics_ground_origin_y = ReadCoord();
-			physics_ground_origin_z = ReadCoord();
+			float ground_ent = net_read_coord();
+			physics_ground_origin_x = net_read_coord();
+			physics_ground_origin_y = net_read_coord();
+			physics_ground_origin_z = net_read_coord();
 			physics_ground_time = time;
 			if (physics_ground_lastent != ground_ent) {
 				physics_ground_oldorigin = physics_ground_origin;
@@ -515,12 +515,12 @@ void(float isnew) physics_read {
 			physics_ground_lastent = 0;
 		}
 		if (f2 & 1) {
-			physics_skimming_start = ReadCoord();
+			physics_skimming_start = net_read_coord();
 		} else {
 			physics_skimming_start = 0;
 		}
 		if (f2 & 2) {
-			physics_cpmdoublejump_time_start = ReadCoord();
+			physics_cpmdoublejump_time_start = net_read_coord();
 		} else {
 			physics_cpmdoublejump_time_start = 0;
 		}

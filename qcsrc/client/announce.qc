@@ -17,7 +17,7 @@ void(void) announce_print {
 		announce.draw2d = announce_draw;
 		announce.draw2dflag = 1;
 	}
-	announce.message = str_zone_ifneeded(ReadString());
+	announce.message = str_zone_ifneeded(net_read_string());
 	if (announce.message == " ")
 		announce.alpha = -1;
 	else

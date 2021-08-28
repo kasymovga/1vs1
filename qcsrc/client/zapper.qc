@@ -118,7 +118,7 @@ void Zapper_Remove(void) {
 }
 
 void(float t) zapper_read {
-    float sf = ReadByte();
+    float sf = net_read_byte();
     if (sf & 1) {
         float vol, attn;
 		vol = VOL_BASE;
@@ -136,9 +136,9 @@ void(float t) zapper_read {
         self.entremove = Zapper_Remove;
         if (sf & 16) {
             self.sv_entnum = 0;
-            self.team = ReadByte();
+            self.team = net_read_byte();
         } else {
-            self.sv_entnum = ReadByte();
+            self.sv_entnum = net_read_byte();
             self.team = player_color(self.sv_entnum - 1);
         }
         self.alpha = 1;
@@ -150,9 +150,9 @@ void(float t) zapper_read {
 			self.enemy = spawn();
 
 		self = self.enemy;
-        self.origin_x = ReadCoord();
-        self.origin_y = ReadCoord();
-        self.origin_z = ReadCoord();
+        self.origin_x = net_read_coord();
+        self.origin_y = net_read_coord();
+        self.origin_z = net_read_coord();
         InterpolateOrigin_Note();
 		if (sf & 64)
 			InterpolateOrigin_Note();
@@ -160,9 +160,9 @@ void(float t) zapper_read {
 		self = e;
     }
     if (sf & 4) {
-        self.origin_x = ReadCoord();
-        self.origin_y = ReadCoord();
-        self.origin_z = ReadCoord();
+        self.origin_x = net_read_coord();
+        self.origin_y = net_read_coord();
+        self.origin_z = net_read_coord();
         InterpolateOrigin_Note();
 		if (sf & 64)
 			InterpolateOrigin_Note();
@@ -173,9 +173,9 @@ void(float t) zapper_read {
 		self.zapper_akimbo = 0;
 
 	if (sf & 32) {
-		self.zapper_shotorg_x = ReadCoord();
-		self.zapper_shotorg_y = ReadCoord();
-		self.zapper_shotorg_z = ReadCoord();
+		self.zapper_shotorg_x = net_read_coord();
+		self.zapper_shotorg_y = net_read_coord();
+		self.zapper_shotorg_z = net_read_coord();
 	}
 }
 
@@ -216,9 +216,9 @@ void zapper_lightning_arc_segment(vector start, vector end, float ateam) {
 
 void(void) zapper_lightning_read {
     vector from, to;
-    float zapper_lightning_ateam  = ReadByte();
-    from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
-    to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();
+    float zapper_lightning_ateam  = net_read_byte();
+    from_x = net_read_coord(); from_y = net_read_coord(); from_z = net_read_coord();
+    to_x   = net_read_coord(); to_y   = net_read_coord(); to_z   = net_read_coord();
     //if(!rm_teamlasers)
     //    zapper_lightning_ateam = COLOR_TEAM2;
 

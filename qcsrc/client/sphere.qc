@@ -3,33 +3,33 @@ void(void) sphere_draw {
 }
 
 void(float isnew) sphere_read {
-	float f = ReadByte();
+	float f = net_read_byte();
 	if (isnew)
 		self.draw = sphere_draw;
 
 	if (f & 1) {
-		self.modelindex = ReadShort();
+		self.modelindex = net_read_short();
 	}
 	if (f & 2)
-		self.scale = ReadCoord();
+		self.scale = net_read_coord();
 
 	if (f & 4) {
-		self.colormod_x = ReadByte() / 255;
-		self.colormod_y = ReadByte() / 255;
-		self.colormod_z = ReadByte() / 255;
+		self.colormod_x = net_read_byte() / 255;
+		self.colormod_y = net_read_byte() / 255;
+		self.colormod_z = net_read_byte() / 255;
 	}
 	if (f & 8)
-		self.alpha = ReadByte() / 255;
+		self.alpha = net_read_byte() / 255;
 
 	if (f & 16) {
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin_x = net_read_coord();
+		self.origin_y = net_read_coord();
+		self.origin_z = net_read_coord();
 		setorigin(self, self.origin);
 	}
 	if (f & 32) {
-		self.angles_x = ReadCoord();
-		self.angles_y = ReadCoord();
-		self.angles_z = ReadCoord();
+		self.angles_x = net_read_coord();
+		self.angles_y = net_read_coord();
+		self.angles_z = net_read_coord();
 	}
 }

@@ -2,12 +2,12 @@ void(float ignore) score_info_read {
 	float i, j, t;
 	entity o;
 	self.classname = "ent_client_scores_info";
-	gametype = ReadByte();
+	gametype = net_read_byte();
 	string s;
 	SP_CLIENTVERSION_FIELD = -1;
 	SP_COUNTRY_FIELD = -1;
 	for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
-		s = strzone(ReadString());
+		s = strzone(net_read_string());
 		if (s == "country")
 			SP_COUNTRY_FIELD = i;
 		else if (s == "kills")
@@ -36,11 +36,11 @@ void(float ignore) score_info_read {
 			SP_CLIENTVERSION_FIELD = i;
 
 		scores_label[i] = s;
-		scores_flags[i] = ReadByte();
+		scores_flags[i] = net_read_byte();
 	}
 	for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i) {
-		teamscores_label[i] = strzone(ReadString());
-		teamscores_flags[i] = ReadByte();
+		teamscores_label[i] = strzone(net_read_string());
+		teamscores_flags[i] = net_read_byte();
 	}
 	sbar_scores_init();
 	gametype_init();
@@ -66,7 +66,7 @@ void(void) score_player_remove {
 void(float ignore) score_player_read {
 	float i, n;
 	entity o;
-	n = ReadByte() - 1;
+	n = net_read_byte() - 1;
 	if (self.owner && n != self.sv_entnum) { // workaround for DP bug
 		//print("A CSQC entity changed its owner!\n");
 		csqc_entity_clean();
@@ -83,20 +83,20 @@ void(float ignore) score_player_read {
 		player_register(o);
 
 	float sf, lf;
-	float l = ReadByte();
+	float l = net_read_byte();
 	self.classname = "score_receiver";
 	if (l == 4) {
 		n = SCORE_FILEDS_MAX;
-		sf = ReadCoord();
-		lf = ReadCoord();
+		sf = net_read_coord();
+		lf = net_read_coord();
 	} else if (l == 2) {
 		n = 16;
-		sf = ReadShort();
-		lf = ReadShort();
+		sf = net_read_short();
+		lf = net_read_short();
 	} else {
 		n = 8;
-		sf = ReadByte();
-		lf = ReadByte();
+		sf = net_read_byte();
+		lf = net_read_byte();
 	}
 	float p;
 	for (i = 0, p = 1; i < n; ++i, p *= 2)
@@ -104,7 +104,7 @@ void(float ignore) score_player_read {
 			if (lf & p)
 				o.(scores[i]) = net_read_int24();
 			else
-				o.(scores[i]) = ReadChar();
+				o.(scores[i]) = net_read_char();
 		}
 	if (sf & SP_TEAM_BIT) {
 		float t = o.scores[SP_TEAM_FIELD];
@@ -122,15 +122,15 @@ void(float ignore) score_player_read {
 void(float ignore) score_team_read {
 	float i, t;
 	entity o;
-	self.team = ReadByte();
+	self.team = net_read_byte();
 	o = self.owner = team_get(self.team, TRUE); // these team numbers can always be trusted
 	float sf, lf;
 #if SCORE_TEAM_FIELDS_MAX <= 8
-	sf = ReadByte();
-	lf = ReadByte();
+	sf = net_read_byte();
+	lf = net_read_byte();
 #else
-	sf = ReadShort();
-	lf = ReadShort();
+	sf = net_read_short();
+	lf = net_read_short();
 #endif
 	float p;
 	for (i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2)
@@ -138,7 +138,7 @@ void(float ignore) score_team_read {
 			if (lf & p)
 				o.(teamscores[i]) = net_read_int24();
 			else
-				o.(teamscores[i]) = ReadChar();
+				o.(teamscores[i]) = net_read_char();
 		}
 	sbar_scores_team_position_update(o);
 	if (SP_TEAM_BIT)

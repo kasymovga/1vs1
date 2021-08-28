@@ -14,25 +14,25 @@ vector(vector org, vector ang) func_camera_transform {
 
 void(float isnew) func_camera_read {
 	self.classname = "func_camera";
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	self.modelindex = ReadShort();
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	self.scale = ReadByte() / 16;
-	self.oldorigin_x = ReadCoord();
-	self.oldorigin_y = ReadCoord();
-	self.oldorigin_z = ReadCoord();
-	self.avelocity_x = ReadCoord();
-	self.avelocity_y = ReadCoord();
-	self.avelocity_z = ReadCoord();
-	self.cnt = ReadByte();
-	self.solid = ReadByte();
+	self.origin_x = net_read_coord();
+	self.origin_y = net_read_coord();
+	self.origin_z = net_read_coord();
+	self.modelindex = net_read_short();
+	self.mins_x = net_read_coord();
+	self.mins_y = net_read_coord();
+	self.mins_z = net_read_coord();
+	self.maxs_x = net_read_coord();
+	self.maxs_y = net_read_coord();
+	self.maxs_z = net_read_coord();
+	self.scale = net_read_byte() / 16;
+	self.oldorigin_x = net_read_coord();
+	self.oldorigin_y = net_read_coord();
+	self.oldorigin_z = net_read_coord();
+	self.avelocity_x = net_read_coord();
+	self.avelocity_y = net_read_coord();
+	self.avelocity_z = net_read_coord();
+	self.cnt = net_read_byte();
+	self.solid = net_read_byte();
 	// engine currently wants this
 	self.drawmask = MASK_NORMAL;
 	self.camera_transform = func_camera_transform;

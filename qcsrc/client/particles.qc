@@ -106,47 +106,47 @@ void(void) particles_point_remove {
 void(float ignore) particles_point_read {
 	float f, i;
 	vector v;
-	f = ReadByte();
+	f = net_read_byte();
 	if (f & 2) {
-		i = ReadCoord(); // density (<0: point, >0: volume)
+		i = net_read_coord(); // density (<0: point, >0: volume)
 		if(i && !self.impulse && self.cnt) // self.cnt check is so it only happens if the ent already existed
 			self.just_toggled = 1;
 		self.impulse = i;
 	}
 	if (f & 4) {
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin_x = net_read_coord();
+		self.origin_y = net_read_coord();
+		self.origin_z = net_read_coord();
 	}
 	if (f & 1) {
-		self.modelindex = ReadShort();
+		self.modelindex = net_read_short();
 		if (f & 0x80) {
 			if(self.modelindex) {
-				self.mins_x = ReadCoord();
-				self.mins_y = ReadCoord();
-				self.mins_z = ReadCoord();
-				self.maxs_x = ReadCoord();
-				self.maxs_y = ReadCoord();
-				self.maxs_z = ReadCoord();
+				self.mins_x = net_read_coord();
+				self.mins_y = net_read_coord();
+				self.mins_z = net_read_coord();
+				self.maxs_x = net_read_coord();
+				self.maxs_y = net_read_coord();
+				self.maxs_z = net_read_coord();
 			} else {
 				self.mins    = '0 0 0';
-				self.maxs_x = ReadCoord();
-				self.maxs_y = ReadCoord();
-				self.maxs_z = ReadCoord();
+				self.maxs_x = net_read_coord();
+				self.maxs_y = net_read_coord();
+				self.maxs_z = net_read_coord();
 			}
 		} else {
 			self.mins = self.maxs = '0 0 0';
 		}
-		self.cnt = ReadShort(); // effect number
+		self.cnt = net_read_short(); // effect number
 		if (f & 0x20) {
-			self.velocity = net_decompress_vec(ReadShort());
-			self.movedir = net_decompress_vec(ReadShort());
+			self.velocity = net_decompress_vec(net_read_short());
+			self.movedir = net_decompress_vec(net_read_short());
 		} else {
 			self.velocity = self.movedir = '0 0 0';
 		}
 		if (f & 0x40) {
-			self.waterlevel = ReadShort() / 16.0;
-			self.count = ReadByte() / 16.0;
+			self.waterlevel = net_read_short() / 16.0;
+			self.count = net_read_byte() / 16.0;
 		} else {
 			self.waterlevel = 0;
 			self.count = 1;
@@ -157,17 +157,17 @@ void(float ignore) particles_point_read {
 		if (self.bgmscript)
 			strunzone(self.bgmscript);
 
-		self.noise = strzone(ReadString());
+		self.noise = strzone(net_read_string());
 		if (self.noise != "") {
-			self.atten = ReadByte() / 64.0;
-			self.volume = ReadByte() / 255.0;
+			self.atten = net_read_byte() / 64.0;
+			self.volume = net_read_byte() / 255.0;
 		}
-		self.bgmscript = strzone(ReadString());
+		self.bgmscript = strzone(net_read_string());
 		if (self.bgmscript != "") {
-			self.bgmscriptattack = ReadByte() / 64.0;
-			self.bgmscriptdecay = ReadByte() / 64.0;
-			self.bgmscriptsustain = ReadByte() / 255.0;
-			self.bgmscriptrelease = ReadByte() / 64.0;
+			self.bgmscriptattack = net_read_byte() / 64.0;
+			self.bgmscriptdecay = net_read_byte() / 64.0;
+			self.bgmscriptsustain = net_read_byte() / 255.0;
+			self.bgmscriptrelease = net_read_byte() / 64.0;
 		}
 		BGMScript_InitEntity(self);
 	}
@@ -232,16 +232,16 @@ void(void) particles_snor_draw {
 }
 
 void(float ignore) particles_rain_or_snow_read {
-	self.impulse = ReadByte(); // Rain, Snow, or Whatever
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	self.velocity = net_decompress_vec(ReadShort());
-	self.count = ReadShort() * 10;
-	self.glow_color = ReadByte(); // color
+	self.impulse = net_read_byte(); // Rain, Snow, or Whatever
+	self.origin_x = net_read_coord();
+	self.origin_y = net_read_coord();
+	self.origin_z = net_read_coord();
+	self.maxs_x = net_read_coord();
+	self.maxs_y = net_read_coord();
+	self.maxs_z = net_read_coord();
+	self.velocity = net_decompress_vec(net_read_short());
+	self.count = net_read_short() * 10;
+	self.glow_color = net_read_byte(); // color
 	self.mins    = -0.5 * self.maxs;
 	self.maxs    =  0.5 * self.maxs;
 	self.origin  = self.origin - self.mins;
@@ -284,24 +284,24 @@ void(void) particles_zcurve_read {
 		particles_zcurve_entity = spawn();
 		particles_zcurve_entity.classname = "zcurve";
 	}
-	effectnum = ReadShort();
-	start_x = ReadCoord();
-	start_y = ReadCoord();
-	start_z = ReadCoord();
+	effectnum = net_read_short();
+	start_x = net_read_coord();
+	start_y = net_read_coord();
+	start_z = net_read_coord();
 	do {
-		end_x = ReadCoord();
-		end_y = ReadCoord();
-		end_z = ReadCoord();
-		end_dz = ReadCoord();
-		speed = ReadShort();
+		end_x = net_read_coord();
+		end_y = net_read_coord();
+		end_z = net_read_coord();
+		end_dz = net_read_coord();
+		speed = net_read_short();
 		particles_zcurve(effectnum, start, end, end_dz, 16 * (speed & 0x7FFF), 5); // at most 32 segments
 	} while(!(speed & 0x8000));
 }
 
 void(void) particles_nex_beam_read {
 	vector shotorg, endpos;
-	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
-	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
+	shotorg_x = net_read_coord(); shotorg_y = net_read_coord(); shotorg_z = net_read_coord();
+	endpos_x = net_read_coord(); endpos_y = net_read_coord(); endpos_z = net_read_coord();
 	pointparticles(particleeffectnum("nex_muzzleflash"), shotorg, normalize(endpos - shotorg) * 1000, 1);
 	//draw either the old v2.3 beam or the new beam
 	if (CVAR(cl_particles_oldnexbeam))

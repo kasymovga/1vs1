@@ -195,13 +195,13 @@ void(string strMessage) CSQC_Parse_Print {
 void(float ignore) main_init_read {
 	float i;
 	self.classname = "ent_client_init";
-	float sf = ReadByte();
+	float sf = net_read_byte();
 	if (sf & 1) {
 		for(i = 0; i < 24; ++i)
-			weapon_impulses[i] = ReadByte() - 1;
+			weapon_impulses[i] = net_read_byte() - 1;
 	}
 	if (sf & 2) {
-		i = ReadByte();
+		i = net_read_byte();
 		main_campaign = i & 1;
 		main_localgame = i & 4;
 		input_hook_use_swapped = i & 8;
@@ -209,7 +209,7 @@ void(float ignore) main_init_read {
 	}
 	if (sf & 4) {
 		str_unzone_ifneeded(fog_settings);
-		fog_settings = str_zone_ifneeded(ReadString());
+		fog_settings = str_zone_ifneeded(net_read_string());
 	}
 	if (sf & 8)
 		vote_commands_read();
@@ -218,7 +218,7 @@ void(float ignore) main_init_read {
 		gamemenu_read();
 
 	if (sf & 32) {
-		team_mode = ReadByte();
+		team_mode = net_read_byte();
 		if not(team_mode) {
 			team_get(0, TRUE);
 		}
@@ -229,15 +229,15 @@ void(float ignore) main_init_read {
 					team_set(o, o.scores[SP_TEAM_FIELD]);
 
 		registercvar("_teams_available", "0");
-		cvar_set("_teams_available", ftos(ReadByte()));
+		cvar_set("_teams_available", ftos(net_read_byte()));
 	}
 	if (sf & 64) {
 		projectile_info_read();
 	}
 	if (sf & 128) {
 		str_unzone_ifneeded(map_description);
-		map_description = str_zone_ifneeded(ReadString());
+		map_description = str_zone_ifneeded(net_read_string());
 		str_unzone_ifneeded(server_motd);
-		server_motd = str_zone_ifneeded(ReadString());
+		server_motd = str_zone_ifneeded(net_read_string());
 	}
 }

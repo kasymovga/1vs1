@@ -42,10 +42,10 @@ void(void) locationrequest_draw {
 
 void(float bNew) locationrequest_read {
 	self.entremove = locationrequest_remove;
-	float f = ReadByte();
+	float f = net_read_byte();
 	if (f & 1) {
 		str_unzone_ifneeded(self.netname);
-		self.netname = str_zone_ifneeded(ReadString());
+		self.netname = str_zone_ifneeded(net_read_string());
 	}
 	self.draw2d = locationrequest_draw;
 	self.draw2dflag = 1;

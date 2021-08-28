@@ -40,44 +40,44 @@ void(float ignore) wall_read {
 	float f;
 	InterpolateOrigin_Undo();
 	self.iflags = IFLAG_ANGLES;
-	f = ReadByte();
+	f = net_read_byte();
 	if (f & 1) {
 		if (f & 0x40)
-			self.colormap = ReadShort();
+			self.colormap = net_read_short();
 		else
 			self.colormap = 0;
 	}
 	if (f & 2) {
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin_x = net_read_coord();
+		self.origin_y = net_read_coord();
+		self.origin_z = net_read_coord();
 	}
 	if (f & 4) {
 		if (f & 0x10) {
-			self.angles_x = ReadAngle();
-			self.angles_y = ReadAngle();
-			self.angles_z = ReadAngle();
+			self.angles_x = net_read_angle();
+			self.angles_y = net_read_angle();
+			self.angles_z = net_read_angle();
 		} else
 			self.angles = '0 0 0';
 	}
 	if (f & 8) {
-		self.modelindex = ReadShort();
-		self.solid = ReadByte();
-		self.scale = ReadByte() / 16.0;
+		self.modelindex = net_read_short();
+		self.solid = net_read_byte();
+		self.scale = net_read_byte() / 16.0;
 		if (f & 0x20) {
-			self.mins_x = ReadCoord();
-			self.mins_y = ReadCoord();
-			self.mins_z = ReadCoord();
-			self.maxs_x = ReadCoord();
-			self.maxs_y = ReadCoord();
-			self.maxs_z = ReadCoord();
+			self.mins_x = net_read_coord();
+			self.mins_y = net_read_coord();
+			self.mins_z = net_read_coord();
+			self.maxs_x = net_read_coord();
+			self.maxs_y = net_read_coord();
+			self.maxs_z = net_read_coord();
 		} else
 			self.mins = self.maxs = '0 0 0';
 
 		if (self.bgmscript)
 			strunzone(self.bgmscript);
 
-		self.bgmscript = ReadString();
+		self.bgmscript = net_read_string();
 		if (substring(self.bgmscript, 0, 1) == "<") {
 			self.bgmscript = strzone(substring(self.bgmscript, 1, -1));
 			self.bgmscriptangular = 1;
@@ -86,14 +86,14 @@ void(float ignore) wall_read {
 			self.bgmscriptangular = 0;
 		}
 		if (self.bgmscript != "") {
-			self.bgmscriptattack = ReadByte() / 64.0;
-			self.bgmscriptdecay = ReadByte() / 64.0;
-			self.bgmscriptsustain = ReadByte() / 255.0;
-			self.bgmscriptrelease = ReadByte() / 64.0;
-			self.movedir_x = ReadCoord();
-			self.movedir_y = ReadCoord();
-			self.movedir_z = ReadCoord();
-			self.lip = ReadByte() / 255.0;
+			self.bgmscriptattack = net_read_byte() / 64.0;
+			self.bgmscriptdecay = net_read_byte() / 64.0;
+			self.bgmscriptsustain = net_read_byte() / 255.0;
+			self.bgmscriptrelease = net_read_byte() / 64.0;
+			self.movedir_x = net_read_coord();
+			self.movedir_y = net_read_coord();
+			self.movedir_z = net_read_coord();
+			self.lip = net_read_byte() / 255.0;
 		}
 		BGMScript_InitEntity(self);
 	}

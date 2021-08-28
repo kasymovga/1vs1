@@ -37,10 +37,10 @@ void(void) progressbar_remove {
 }
 
 void(float bIsNewEntity) progressbar_read {
-	float f = ReadByte();
-	self.cnt = ReadByte();
+	float f = net_read_byte();
+	self.cnt = net_read_byte();
 	if (f & 2) {
-		self.netname = strzone(ReadString());
+		self.netname = strzone(net_read_string());
 	}
 	if (bIsNewEntity) {
 		entity e;

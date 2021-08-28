@@ -41,8 +41,8 @@ void(void) radio_think {
 }
 
 void(void) radio_read {
-	float preload = ReadByte();
-	string url = ReadString();
+	float preload = net_read_byte();
+	string url = net_read_string();
 	if (autocvar_bgmvolume < 0.1)
 		cvar_clientsettemp("bgmvolume", "0.1");
 
@@ -51,13 +51,13 @@ void(void) radio_read {
 			localcmd("curl --pak ", url, "\n");
 		return;
 	}
-	string fname = ReadString();
-	float f = ReadByte();
+	string fname = net_read_string();
+	float f = net_read_byte();
 	float loop = f & 1;
 	float force = f & 2;
 	float start = 0;
 	if (!loop)
-		start = ReadCoord();
+		start = net_read_coord();
 
 	if (!autocvar__radio) {
 		if (!force)

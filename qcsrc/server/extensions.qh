@@ -139,29 +139,6 @@ float(string s) checkextension = #99;
 //description:
 //this is a very special capability, attachs the entity to the view of the client specified, origin and angles become relative to the view of that client, all effects can be used (multiple skins on a weapon model etc)...  the entity is not visible to any other client.
 
-//DP_GECKO_SUPPORT
-//idea: Res2k, BlackHC
-//darkplaces implementation: Res2k, BlackHC
-//constant definitions:
-float GECKO_BUTTON_DOWN         = 0;
-float GECKO_BUTTON_UP           = 1;
-// either use down and up or just press but not all of them!
-float GECKO_BUTTON_PRESS        = 2;
-// use this for mouse events if needed?
-float GECKO_BUTTON_DOUBLECLICK  = 3;
-//builtin definitions:
-float(string name) gecko_create( string name ) = #487;
-void(string name) gecko_destroy( string name ) = #488;
-void(string name) gecko_navigate( string name, string URI ) = #489;
-float(string name) gecko_keyevent( string name, float key, float eventtype ) = #490;
-void gecko_mousemove( string name, float x, float y ) = #491;
-void gecko_resize( string name, float w, float h ) = #492;
-vector gecko_get_texture_extent( string name ) = #493;
-//engine-called QC prototypes:
-//string(string name, string query) Qecko_Query;
-//description:
-//provides an interface to the offscreengecko library and allows for internet browsing in games
-
 //DP_GFX_EXTERNALTEXTURES
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
@@ -1467,39 +1444,6 @@ void(entity own, vector start, vector end) te_beam = #431;
 //description:
 //to make life easier on mod coders.
 
-//DP_TRACE_HITCONTENTSMASK_SURFACEINFO
-//idea: LordHavoc
-//darkplaces implementation: LordHavoc
-//globals:
-.float dphitcontentsmask; // if non-zero on the entity passed to traceline/tracebox/tracetoss this will override the normal collidable contents rules and instead hit these contents values (for example AI can use tracelines that hit DONOTENTER if it wants to, by simply changing this field on the entity passed to traceline), this affects normal movement as well as trace calls
-float trace_dpstartcontents; // DPCONTENTS_ value at start position of trace
-float trace_dphitcontents; // DPCONTENTS_ value of impacted surface (not contents at impact point, just contents of the surface that was hit)
-float trace_dphitq3surfaceflags; // Q3SURFACEFLAG_ value of impacted surface
-//string trace_dphittexturename; // texture name of impacted surface
-//constants:
-float DPCONTENTS_SOLID = 1; // hit a bmodel, not a bounding box
-float DPCONTENTS_WATER = 2;
-float DPCONTENTS_SLIME = 4;
-float DPCONTENTS_LAVA = 8;
-float DPCONTENTS_SKY = 16;
-float DPCONTENTS_BODY = 32; // hit a bounding box, not a bmodel
-float DPCONTENTS_CORPSE = 64; // hit a SOLID_CORPSE entity
-float DPCONTENTS_NODROP = 128; // an area where backpacks should not spawn
-float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
-float DPCONTENTS_MONSTERCLIP = 512; // blocks monster movement
-float DPCONTENTS_DONOTENTER = 1024; // AI hint brush
-float DPCONTENTS_LIQUIDSMASK = 14; // WATER | SLIME | LAVA
-float DPCONTENTS_BOTCLIP = 2048; // AI hint brush
-float DPCONTENTS_OPAQUE = 4096; // only fully opaque brushes get this (may be useful for line of sight checks)
-//description:
-//adds additional information after a traceline/tracebox/tracetoss call.
-//also (very important) sets trace_* globals before calling .touch functions,
-//this allows them to inspect the nature of the collision (for example
-//determining if a projectile hit sky), clears trace_* variables for the other
-//object in a touch event (that is to say, a projectile moving will see the
-//trace results in its .touch function, but the player it hit will see very
-//little information in the trace_ variables as it was not moving at the time)
-
 //DP_VIEWZOOM
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
@@ -1718,13 +1662,6 @@ string(string search, string replace, string subject) strireplace = #485;
 //When caseinsensitive is set, the CRC is calculated of the lower cased string.
 float(float caseinsensitive, string s, ...) crc16 = #494;
 
-//DP_SV_SHUTDOWN
-//idea: div0
-//darkplaces implementation: div0
-//A function that gets called just before progs exit. To save persistent data from.
-//It is not called on a crash or error.
-//void SV_Shutdown();
-
 //EXT_CSQC
 // #232 void(float index, float type, .void field) SV_AddStat (EXT_CSQC)
 void(float index, float type, ...) addstat = #232;
@@ -1762,4 +1699,10 @@ float(string addr, string data) net_sendpacket = #801;
 //description
 //cull trace mode for entity
 
+//DP_RM_CLIPGROUP
+//idea: Akari
+//darkplaces implementation: Akari
+//field definitions:
 .float clipgroup;
+//description:
+//If two entities have this field set to the same non-zero integer value, they won't collide with each other.

@@ -223,7 +223,7 @@ void(void) waypointsprite_remove {
 
 void(float ignore) waypointsprite_read {
 	float sendflags, f, t;
-	sendflags = ReadByte();
+	sendflags = net_read_byte();
 	if not(self.spawntime)
 		self.spawntime = time;
 
@@ -231,12 +231,12 @@ void(float ignore) waypointsprite_read {
 	self.draw2dflag = 1;
 	InterpolateOrigin_Undo();
 	if (sendflags & 0x80) {
-		t = ReadByte();
+		t = net_read_byte();
 		if (t < 192) {
 			self.health = t / 191.0;
 			self.build_finished = 0;
 		} else {
-			t = (t - 192) * 256 + ReadByte();
+			t = (t - 192) * 256 + net_read_byte();
 			self.build_started = server_time;
 			if (self.build_finished)
 				self.build_starthealth = bound(0, self.health, 1);
@@ -252,26 +252,26 @@ void(float ignore) waypointsprite_read {
 	}
 	if (sendflags & 64) {
 		// unfortunately, this needs to be exact (for the 3D display)
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin_x = net_read_coord();
+		self.origin_y = net_read_coord();
+		self.origin_z = net_read_coord();
 	}
 	if (sendflags & 1) {
-		self.team = ReadByte();
-		self.rule = ReadByte();
+		self.team = net_read_byte();
+		self.rule = net_read_byte();
 	}
 	if (sendflags & 2) {
 		if (self.netname)
 			strunzone(self.netname);
 
-		self.netname = strzone(ReadString());
+		self.netname = strzone(net_read_string());
 		self.cnt = 0;
 	}
 	if (sendflags & 4) {
 		if (self.netname2)
 			strunzone(self.netname2);
 
-		self.netname2 = strzone(ReadString());
+		self.netname2 = strzone(net_read_string());
 		self.cnt = 0;
 	}
 
@@ -279,25 +279,25 @@ void(float ignore) waypointsprite_read {
 		if (self.netname3)
 			strunzone(self.netname3);
 
-		self.netname3 = strzone(ReadString());
+		self.netname3 = strzone(net_read_string());
 		self.cnt = 0;
 	}
 	if (sendflags & 16) {
-		self.lifetime = ReadCoord();
-		self.fadetime = ReadCoord();
-		self.maxdistance = ReadShort();
-		self.hideflags = ReadByte();
+		self.lifetime = net_read_coord();
+		self.fadetime = net_read_coord();
+		self.maxdistance = net_read_short();
+		self.hideflags = net_read_byte();
 	}
 	if (sendflags & 32) {
-		f = ReadByte();
+		f = net_read_byte();
 		self.teamradar_icon = (f & 0x7F);
 		if (f & 0x80) {
 			self.(teamradar_times[self.teamradar_time_index]) = time;
 			self.teamradar_time_index = math_mod(self.teamradar_time_index + 1, MAX_TEAMRADAR_TIMES);
 		}
-		self.teamradar_color_x = ReadByte() / 255.0;
-		self.teamradar_color_y = ReadByte() / 255.0;
-		self.teamradar_color_z = ReadByte() / 255.0;
+		self.teamradar_color_x = net_read_byte() / 255.0;
+		self.teamradar_color_y = net_read_byte() / 255.0;
+		self.teamradar_color_z = net_read_byte() / 255.0;
 	}
 	InterpolateOrigin_Note();
 	self.entremove = waypointsprite_remove;

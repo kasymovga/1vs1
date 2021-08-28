@@ -142,12 +142,12 @@ void(float isNew) gib_read {
 	float issilent;
 	string gentle_prefix = "";
 	float c, randomvalue;
-	type = ReadByte(); // gibbage type
-	amount = ReadByte() / 16.0; // gibbage amount
-	org_x = ReadShort() * 4 + 2;
-	org_y = ReadShort() * 4 + 2;
-	org_z = ReadShort() * 4 + 2;
-	vel = net_decompress_vec(ReadShort());
+	type = net_read_byte(); // gibbage type
+	amount = net_read_byte() / 16.0; // gibbage amount
+	org_x = net_read_short() * 4 + 2;
+	org_y = net_read_short() * 4 + 2;
+	org_z = net_read_short() * 4 + 2;
+	vel = net_decompress_vec(net_read_short());
 	if (CVAR(cl_gentle))
 		type |= 0x80; // set gentle bit
 

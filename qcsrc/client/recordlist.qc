@@ -55,9 +55,9 @@ string(float i) recordlist_get {
 }
 
 void() recordlist_read {
-	float n1 = ReadByte();
-	float n2 = ReadByte();
-	string s = ReadString();
+	float n1 = net_read_byte();
+	float n2 = net_read_byte();
+	string s = net_read_string();
 	if (n1 != recordlist_tail_offset)
 		return;
 

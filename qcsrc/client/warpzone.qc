@@ -6,29 +6,29 @@ void(float isnew) warpzone_read {
 		self.enemy.classname = "warpzone_from";
 	}
 	self.classname = "trigger_warpzone";
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	self.modelindex = ReadShort();
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	self.scale = ReadByte() / 16;
-	self.enemy.oldorigin_x = ReadCoord();
-	self.enemy.oldorigin_y = ReadCoord();
-	self.enemy.oldorigin_z = ReadCoord();
-	self.enemy.avelocity_x = ReadCoord();
-	self.enemy.avelocity_y = ReadCoord();
-	self.enemy.avelocity_z = ReadCoord();
-	self.oldorigin_x = ReadCoord();
-	self.oldorigin_y = ReadCoord();
-	self.oldorigin_z = ReadCoord();
-	self.avelocity_x = ReadCoord();
-	self.avelocity_y = ReadCoord();
-	self.avelocity_z = ReadCoord();
+	self.origin_x = net_read_coord();
+	self.origin_y = net_read_coord();
+	self.origin_z = net_read_coord();
+	self.modelindex = net_read_short();
+	self.mins_x = net_read_coord();
+	self.mins_y = net_read_coord();
+	self.mins_z = net_read_coord();
+	self.maxs_x = net_read_coord();
+	self.maxs_y = net_read_coord();
+	self.maxs_z = net_read_coord();
+	self.scale = net_read_byte() / 16;
+	self.enemy.oldorigin_x = net_read_coord();
+	self.enemy.oldorigin_y = net_read_coord();
+	self.enemy.oldorigin_z = net_read_coord();
+	self.enemy.avelocity_x = net_read_coord();
+	self.enemy.avelocity_y = net_read_coord();
+	self.enemy.avelocity_z = net_read_coord();
+	self.oldorigin_x = net_read_coord();
+	self.oldorigin_y = net_read_coord();
+	self.oldorigin_z = net_read_coord();
+	self.avelocity_x = net_read_coord();
+	self.avelocity_y = net_read_coord();
+	self.avelocity_z = net_read_coord();
 	// common stuff
 	warpzone_setup(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
 	// engine currently wants this
@@ -51,9 +51,9 @@ void(float isnew) warpzone_read {
 entity warpzone_passed;
 void(float isnew) warpzone_teleported_read {
 	vector v;
-	v_x = ReadCoord();
-	v_y = ReadCoord();
-	v_z = ReadCoord();
+	v_x = net_read_coord();
+	v_y = net_read_coord();
+	v_z = net_read_coord();
 	if(!isnew)
 		return;
 

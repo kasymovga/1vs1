@@ -29,17 +29,17 @@ string race_records_name[10];
 
 void(void) race_read {
 	float b;
-	b = ReadByte();
+	b = net_read_byte();
 	float i;
 	switch(b) {
 		case RACE_NET_CHECKPOINT_HIT_QUALIFYING:
-			race_checkpoint = ReadByte();
+			race_checkpoint = net_read_byte();
 			race_time = TIME_DECODE(net_read_int24());
 			race_previousbesttime = TIME_DECODE(net_read_int24());
 			if (race_previousbestname)
 				strunzone(race_previousbestname);
 
-			race_previousbestname = strzone(ReadString());
+			race_previousbestname = strzone(net_read_string());
 			race_checkpointtime = max(time, 0.001);
 			if (race_checkpoint == 0 || race_checkpoint == 254) {
 				race_penaltyaccumulator = 0;
@@ -51,66 +51,66 @@ void(void) race_read {
 			race_checkpointtime = 0;
 			break;
 		case RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING:
-			race_laptime = ReadCoord();
+			race_laptime = net_read_coord();
 			race_checkpointtime = -99999;
 			// fall through
 		case RACE_NET_CHECKPOINT_NEXT_QUALIFYING:
-			race_nextcheckpoint = ReadByte();
+			race_nextcheckpoint = net_read_byte();
 			race_nextbesttime = TIME_DECODE(net_read_int24());
 			if (race_nextbestname)
 				strunzone(race_nextbestname);
 
-			race_nextbestname = strzone(ReadString());
+			race_nextbestname = strzone(net_read_string());
 			break;
 		case RACE_NET_CHECKPOINT_HIT_RACE:
-			race_mycheckpoint = ReadByte();
+			race_mycheckpoint = net_read_byte();
 			race_mycheckpointtime = time;
 			race_mycheckpointdelta = TIME_DECODE(net_read_int24());
-			race_mycheckpointlapsdelta = ReadByte();
+			race_mycheckpointlapsdelta = net_read_byte();
 			if (race_mycheckpointlapsdelta >= 128)
 				race_mycheckpointlapsdelta -= 256;
 
 			if (race_mycheckpointenemy)
 				strunzone(race_mycheckpointenemy);
 
-			race_mycheckpointenemy = strzone(ReadString());
+			race_mycheckpointenemy = strzone(net_read_string());
 			break;
 		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
-			race_othercheckpoint = ReadByte();
+			race_othercheckpoint = net_read_byte();
 			race_othercheckpointtime = time;
 			race_othercheckpointdelta = TIME_DECODE(net_read_int24());
-			race_othercheckpointlapsdelta = ReadByte();
+			race_othercheckpointlapsdelta = net_read_byte();
 			if (race_othercheckpointlapsdelta >= 128)
 				race_othercheckpointlapsdelta -= 256;
 
 			if (race_othercheckpointenemy)
 				strunzone(race_othercheckpointenemy);
 
-			race_othercheckpointenemy = strzone(ReadString());
+			race_othercheckpointenemy = strzone(net_read_string());
 			break;
 		case RACE_NET_PENALTY_RACE:
 			race_penaltyeventtime = time;
-			race_penaltytime = TIME_DECODE(ReadShort());
+			race_penaltytime = TIME_DECODE(net_read_short());
 			//race_penaltyaccumulator += race_penaltytime;
 			if (race_penaltyreason)
 				strunzone(race_penaltyreason);
 
-			race_penaltyreason = strzone(ReadString());
+			race_penaltyreason = strzone(net_read_string());
 			break;
 		case RACE_NET_PENALTY_QUALIFYING:
 			race_penaltyeventtime = time;
-			race_penaltytime = TIME_DECODE(ReadShort());
+			race_penaltytime = TIME_DECODE(net_read_short());
 			race_penaltyaccumulator += race_penaltytime;
 			if (race_penaltyreason)
 				strunzone(race_penaltyreason);
 
-			race_penaltyreason = strzone(ReadString());
+			race_penaltyreason = strzone(net_read_string());
 			break;
 		case RACE_NET_RECORDS_TABLE:
 			for (i = 0; i < 10; i++) {
-				race_records_time[i] = ReadCoord();
-				race_records_speed[i] = ReadShort();
-				race_records_name[i] = str_zone_ifneeded(ReadString());
+				race_records_time[i] = net_read_coord();
+				race_records_speed[i] = net_read_short();
+				race_records_name[i] = str_zone_ifneeded(net_read_string());
 			}
 			break;
 	}

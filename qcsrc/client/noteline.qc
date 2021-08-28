@@ -88,7 +88,7 @@ void(float bIsNew) noteline_read {
 	if (self.message)
 		strunzone(self.message);
 
-	self.message = strzone(noteline_text_prepare(ReadString()));
+	self.message = strzone(noteline_text_prepare(net_read_string()));
 	entity e;
 	for (e = noteline; e; e = e.sort_next) {
 		if (e == self)

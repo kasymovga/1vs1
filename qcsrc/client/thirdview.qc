@@ -14,9 +14,9 @@ void(void) thirdview_restore_think {
 }
 
 void(float ignore) thirdview_read {
-	float back = ReadShort();
-	float up = ReadShort();
-	float t = ReadCoord();
+	float back = net_read_short();
+	float up = net_read_short();
+	float t = net_read_coord();
 	if not(thirdview_restore) {
 		thirdview_restore = spawn();
 		thirdview_save_back = CVAR(chase_back);

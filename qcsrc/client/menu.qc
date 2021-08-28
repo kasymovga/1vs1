@@ -63,26 +63,26 @@ void(float bIsNewEntity) menu_read {
 		self.menu_next = world;
 		self.entremove = menu_remove;
 	}
-	f = ReadByte();
+	f = net_read_byte();
 	self.flags |= f;
 	if (f & 8) {
 		str_unzone_ifneeded(self.menu_id);
-		self.menu_id = str_zone_ifneeded(ReadString());
+		self.menu_id = str_zone_ifneeded(net_read_string());
 	}
 	if (f & 4) {
-		self.menu_timeout = ReadCoord();
+		self.menu_timeout = net_read_coord();
 		if (self.menu_timeout)
 			self.menu_timeout += time;
 	}
 	if (f & 2) {
 		str_unzone_ifneeded(self.menu_title);
-		self.menu_title = str_zone_ifneeded(ReadString());
+		self.menu_title = str_zone_ifneeded(net_read_string());
 	}
 	if (f & 1) {
-		self.cnt = ReadByte();
+		self.cnt = net_read_byte();
 		for (i = 0; i < self.cnt; i++) {
 			str_unzone_ifneeded(self.menu_items[i]);
-			(self.menu_items[i]) = str_zone_ifneeded(ReadString());
+			(self.menu_items[i]) = str_zone_ifneeded(net_read_string());
 		}
 	}
 }

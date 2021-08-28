@@ -284,28 +284,28 @@ void(void) mapvote_init {
 	mapvote_active = 1;
 	mapvote_selection = -1;
 	str_unzone_ifneeded(mapvote_gametype);
-	mapvote_gametype = str_zone_ifneeded(ReadString());
-	mapvote_count = min(MAPVOTE_COUNT, ReadByte());
-	mapvote_abstain = ReadByte();
+	mapvote_gametype = str_zone_ifneeded(net_read_string());
+	mapvote_count = min(MAPVOTE_COUNT, net_read_byte());
+	mapvote_abstain = net_read_byte();
 	if (mapvote_abstain)
 		mapvote_abstain = 1; // must be 1 for bool-true, makes stuff easier
 
-	mapvote_detail = ReadByte();
+	mapvote_detail = net_read_byte();
 	mapvote_ownvote = -1;
-	mapvote_timeout = ReadCoord();
+	mapvote_timeout = net_read_coord();
 	if (mapvote_count <= 8)
-		mapvote_maps_mask = ReadByte();
+		mapvote_maps_mask = net_read_byte();
 	else
-		mapvote_maps_mask = ReadShort();
+		mapvote_maps_mask = net_read_short();
 	
 	// Assume mapvote_paklist is NULL, there should only be 1 mapvote per round
 	mapvote_paklist = NULL; // I'm still paranoid!
 	for (i = 0, power = 1; i < mapvote_count; ++i, power *= 2) {
 		mapvote_votes[i] = 0;
 		if (mapvote_maps_mask & power) {
-			map = strzone(ReadString());
-			map_pic = strzone(ReadString());
-			pk3 = strzone(ReadString());
+			map = strzone(net_read_string());
+			map_pic = strzone(net_read_string());
+			pk3 = strzone(net_read_string());
 			mapvote_maps[i] = map;
 			mapvote_paks[i] = pk3;
 			mapvote_pics[i] = map_pic;
@@ -326,9 +326,9 @@ void(void) mapvote_update_mask {
 	float oldmask;
 	oldmask = mapvote_maps_mask;
 	if (mapvote_count <= 8)
-		mapvote_maps_mask = ReadByte();
+		mapvote_maps_mask = net_read_byte();
 	else
-		mapvote_maps_mask = ReadShort();
+		mapvote_maps_mask = net_read_short();
 
 	// remove votes that no longer apply
 	for (i = 0, power = 1; i < mapvote_count; ++i, power *= 2)
@@ -341,18 +341,18 @@ void(void) mapvote_update_votes {
 	for (i = 0, power = 1; i < mapvote_count; ++i, power *= 2) {
 		if (mapvote_maps_mask & power) {
 			if (mapvote_detail)
-				mapvote_votes[i] = ReadByte();
+				mapvote_votes[i] = net_read_byte();
 			else
 				mapvote_votes[i] = 0;
 		} else
 			mapvote_votes[i] = -1;
 	}
-	mapvote_ownvote = ReadByte() - 1;
+	mapvote_ownvote = net_read_byte() - 1;
 }
 
 void(float ignore) mapvote_read {
 	float sf;
-	sf = ReadByte();
+	sf = net_read_byte();
 	if(sf & 1)
 		mapvote_init();
 
@@ -365,7 +365,7 @@ void(float ignore) mapvote_read {
 
 void(void) mapvote_picture_read {
 	float type;
-	type = ReadByte();
+	type = net_read_byte();
 	mapvote_previews[type] = TRUE;
 	mapvote_pics[type] = strzone(ReadPicture());
 }

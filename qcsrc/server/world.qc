@@ -689,6 +689,12 @@ void(void) world_restore {
 	MapInfo_SwitchGameType(MapInfo_Type_FromString("single"));
 }
 
+//DP_SV_SHUTDOWN
+//idea: div0
+//darkplaces implementation: div0
+//A function that gets called just before progs exit. To save persistent data from.
+//It is not called on a crash or error.
+//void SV_Shutdown();
 #define world_shutdown SV_Shutdown
 void(void) world_shutdown {
 	if (map_finished > 1) // shutting down already?

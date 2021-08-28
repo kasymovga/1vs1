@@ -170,10 +170,10 @@ void(void) modelselect_model_draw {
 }
 
 void(void) modelselect_read {
-	string currentmodel = ReadString();
-	float currentskin = ReadByte();
+	string currentmodel = net_read_string();
+	float currentskin = net_read_byte();
 	string head, tail;
-	tail = ReadString();
+	tail = net_read_string();
 	str_unzone_ifneeded(modelselect_list);
 	modelselect_list = "";
 	modelselect_list_len = 0;

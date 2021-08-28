@@ -1,12 +1,12 @@
 void(void) hint_net_read {
 	float u;
-	u = ReadByte();
+	u = net_read_byte();
 	if (GUI_currentWindow != GUI_HINT)
 		hint_user = u;
 
-	hint_num = ReadByte();
+	hint_num = net_read_byte();
 	str_unzone_ifneeded(hint);
-	hint = str_zone_ifneeded(ReadString());
+	hint = str_zone_ifneeded(net_read_string());
 	if (hint_text_label)
 		hint_text_label.setText(hint_text_label, hint);
 	if (!hint_user && CVAR(cl_hints_skip))

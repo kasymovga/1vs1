@@ -33,7 +33,7 @@ void(void) physics_aircraft_remove {
 }
 
 void(float isnew) physics_aircraft_read {
-	float f = ReadShort();
+	float f = net_read_short();
 	if (isnew) {
 		physics_plug = physics_aircraft_hook;
 		physics_plug_pre = physics_aircraft_pre;
@@ -49,22 +49,22 @@ void(float isnew) physics_aircraft_read {
 	}
 	if (f & 1) {
 		physics_vehicle_read_common();
-		g_vehicle_aircraft_accel_up = ReadCoord();
-		g_vehicle_aircraft_speed = ReadCoord();
-		g_vehicle_aircraft_speed_stop = ReadCoord();
-		g_vehicle_aircraft_turnspeed = ReadCoord();
-		g_vehicle_aircraft_movement_inertia = ReadCoord();
-		physics_player_ent = ReadShort();
+		g_vehicle_aircraft_accel_up = net_read_coord();
+		g_vehicle_aircraft_speed = net_read_coord();
+		g_vehicle_aircraft_speed_stop = net_read_coord();
+		g_vehicle_aircraft_turnspeed = net_read_coord();
+		g_vehicle_aircraft_movement_inertia = net_read_coord();
+		physics_player_ent = net_read_short();
 	}
 	if (f & 2) {
-		physics_aircraft_start_angles_x = ReadCoord();
-		physics_aircraft_start_angles_y = ReadCoord();
-		physics_aircraft_start_angles_z = ReadCoord();
-		physics_aircraft_start_origin_x = ReadCoord();
-		physics_aircraft_start_origin_y = ReadCoord();
-		physics_aircraft_start_origin_z = ReadCoord();
-		physics_aircraft_start_velocity_x = ReadCoord();
-		physics_aircraft_start_velocity_y = ReadCoord();
-		physics_aircraft_start_velocity_z = ReadCoord();
+		physics_aircraft_start_angles_x = net_read_coord();
+		physics_aircraft_start_angles_y = net_read_coord();
+		physics_aircraft_start_angles_z = net_read_coord();
+		physics_aircraft_start_origin_x = net_read_coord();
+		physics_aircraft_start_origin_y = net_read_coord();
+		physics_aircraft_start_origin_z = net_read_coord();
+		physics_aircraft_start_velocity_x = net_read_coord();
+		physics_aircraft_start_velocity_y = net_read_coord();
+		physics_aircraft_start_velocity_z = net_read_coord();
 	}
 }

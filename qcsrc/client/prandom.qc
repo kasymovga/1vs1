@@ -23,6 +23,6 @@ void(float seed) prandom_seed_set {
 }
 
 void(float ignore) prandom_seed_read {
-	prandom_seed_set(ReadShort());
+	prandom_seed_set(net_read_short());
 }
 

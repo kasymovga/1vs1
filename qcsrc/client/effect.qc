@@ -31,8 +31,8 @@ void(vector from, vector to,float seglength,float drifts,float drifte,float bran
 
 void(void) effect_lightningarc_read {
 	vector from, to;
-	from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
-	to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();
+	from_x = net_read_coord(); from_y = net_read_coord(); from_z = net_read_coord();
+	to_x   = net_read_coord(); to_y   = net_read_coord(); to_z   = net_read_coord();
 	if (CVAR(cl_effects_lightningarc_simple)) {
 		te_lightning1(world,from,to);
 	} else {
@@ -47,7 +47,7 @@ void(void) effect_lightningarc_read {
 
 void(void) effect_blast_read {
 	vector loc;
-	loc_x = ReadCoord(); loc_y = ReadCoord(); loc_z = ReadCoord();
+	loc_x = net_read_coord(); loc_y = net_read_coord(); loc_z = net_read_coord();
 	pointparticles(particleeffectnum("TE_TEI_BIGEXPLOSION"), loc, '0 0 0', 1);
 	entity e = spawn();
 	setorigin(e, loc);
@@ -57,8 +57,8 @@ void(void) effect_blast_read {
 
 void(void) effect_lightningarc_big_read {
 	vector from, to;
-	from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
-	to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();
+	from_x = net_read_coord(); from_y = net_read_coord(); from_z = net_read_coord();
+	to_x   = net_read_coord(); to_y   = net_read_coord(); to_z   = net_read_coord();
 	vector vd = to - from;
 	vector v1 = from;
 	vector v2;
@@ -97,38 +97,38 @@ void(float isNew) effect_model_read {
 	float f;
 	entity e;
 	self.classname = "modeleffect_spawner";
-	f = ReadByte();
+	f = net_read_byte();
 	e = spawn();
 	e.classname = "modeleffect";
 	e.model = "from network";
-	e.modelindex = ReadShort();
-	e.skin = ReadByte();
-	e.frame = ReadByte();
+	e.modelindex = net_read_short();
+	e.skin = net_read_byte();
+	e.frame = net_read_byte();
 	e.frame1time = time;
-	e.origin_x = ReadCoord();
-	e.origin_y = ReadCoord();
-	e.origin_z = ReadCoord();
+	e.origin_x = net_read_coord();
+	e.origin_y = net_read_coord();
+	e.origin_z = net_read_coord();
 	if (f & 1) {
-		e.velocity_x = ReadCoord();
-		e.velocity_y = ReadCoord();
-		e.velocity_z = ReadCoord();
+		e.velocity_x = net_read_coord();
+		e.velocity_y = net_read_coord();
+		e.velocity_z = net_read_coord();
 	}
 	if (f & 2) {
-		e.angles_x = ReadAngle();
-		e.angles_y = ReadAngle();
-		e.angles_z = ReadAngle();
+		e.angles_x = net_read_angle();
+		e.angles_y = net_read_angle();
+		e.angles_z = net_read_angle();
 	}
 	if (f & 4) {
-		e.avelocity_x = ReadAngle();
-		e.avelocity_y = ReadAngle();
-		e.avelocity_z = ReadAngle();
+		e.avelocity_x = net_read_angle();
+		e.avelocity_y = net_read_angle();
+		e.avelocity_z = net_read_angle();
 	}
-	e.scale1 = ReadShort() / 256.0;
-	e.scale2 = ReadShort() / 256.0;
-	e.lifetime = time + ReadByte() * 0.01;
-	e.fadetime = ReadByte() * 0.01;
+	e.scale1 = net_read_short() / 256.0;
+	e.scale2 = net_read_short() / 256.0;
+	e.lifetime = time + net_read_byte() * 0.01;
+	e.fadetime = net_read_byte() * 0.01;
 	e.teleport_time = time;
-	e.cnt = ReadByte() / 255.0; // actually alpha
+	e.cnt = net_read_byte() / 255.0; // actually alpha
 	e.draw = effect_model_draw;
 	if (!isNew)
 		remove(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then

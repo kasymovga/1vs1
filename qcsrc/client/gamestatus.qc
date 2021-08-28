@@ -29,11 +29,11 @@ void(float isnew) gamestatus_read {
 	self.origin_y = CVAR(vid_conheight) / 2 - sbar_fontsize_y * 8;
 	self.draw2d = gamestatus_draw;
 	self.draw2dflag = 1;
-	float f = ReadByte();
+	float f = net_read_byte();
 	self.entremove = gamestatus_remove;
 	if (f & 1)
-		self.message = str_zone_ifneeded(ReadString());
+		self.message = str_zone_ifneeded(net_read_string());
 
 	if (f & 2)
-		self.alpha = ReadByte() / 100;
+		self.alpha = net_read_byte() / 100;
 }
