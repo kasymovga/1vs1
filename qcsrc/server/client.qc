@@ -423,6 +423,8 @@ void(void) client_connect { //called by engine
 
 		gamehook_chain_client_connect_real();
 		vote_client_connect();
+	} else {
+		self.scorekeeper.clientversion = CLIENT_BOT;
 	}
 	gamehook_chain_client_connect();
 }

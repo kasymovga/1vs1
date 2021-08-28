@@ -1,1 +1,9 @@
 string(string s) cvar_string_zone_ifneeded;
+//DP_QC_CVAR_TYPE
+float CVAR_TYPEFLAG_EXISTS = 1;
+float CVAR_TYPEFLAG_SAVED = 2;
+float CVAR_TYPEFLAG_PRIVATE = 4;
+float CVAR_TYPEFLAG_ENGINE = 8;
+float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
+float CVAR_TYPEFLAG_READONLY = 32;
+#define cvar_type builtin_cvar_type

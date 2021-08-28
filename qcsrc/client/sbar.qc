@@ -679,6 +679,9 @@ string(entity pl, float field) sbar_field_get {
 		case CLIENT_OLDNEXUIZ:
 			sbar_field_rgb = '1 0.25 0.25';
 			return "N";
+		case CLIENT_BOT:
+			sbar_field_rgb = '0.5 0.5 1';
+			return "B";
 		default:
 			sbar_field_rgb = '0.5 0.5 0.5';
 			return "U";

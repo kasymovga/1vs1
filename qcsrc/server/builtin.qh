@@ -545,13 +545,7 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 //idea: div0
 //DarkPlaces implementation: div0
 //builtin definitions:
-float(string name) cvar_type = #495;
-float CVAR_TYPEFLAG_EXISTS = 1;
-float CVAR_TYPEFLAG_SAVED = 2;
-float CVAR_TYPEFLAG_PRIVATE = 4;
-float CVAR_TYPEFLAG_ENGINE = 8;
-float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
-float CVAR_TYPEFLAG_READONLY = 32;
+float(string name) builtin_cvar_type = #495;
 //
 //DP_QC_EDICT_NUM
 //idea: 515

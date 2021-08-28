@@ -83,7 +83,7 @@ void(void) weapon_zapper_spinner_think {
 }
 
 float(void) weapon_zapper_spinner_customize {
-	if (other.scorekeeper && other.scorekeeper.clientversion == CLIENT_OLDNEXUIZ)
+	if (other.scorekeeper && other.scorekeeper.clientversion < CLIENT_NEXUIZ)
 		return FALSE;
 
 	return weapon_model_customize();

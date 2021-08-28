@@ -1,8 +1,5 @@
 var void() read_cvars;
 
-float(string varname, float setflags, float unsetflags) cvar_altertype = #505;
-float(string varname) cvar_type = #495;
-
 var void(string varname, string val) cvar_register_save;
 string(vector v) cvar_vtos;
 
