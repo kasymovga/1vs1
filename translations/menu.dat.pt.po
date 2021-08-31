@@ -933,3 +933,9 @@ msgstr "Em espectador"
 
 msgid "Game"
 msgstr "Jogo"
+
+msgid "Congratulations!"
+msgstr "Parabéns!"
+
+msgid "You have successfully completed the Single Player Campaign!"
+msgstr "Você concluiu com sucesso a campanha para um jogador!"

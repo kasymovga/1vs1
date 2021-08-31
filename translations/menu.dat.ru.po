@@ -918,3 +918,9 @@ msgstr "При наблюдении"
 
 msgid "Game"
 msgstr "Игра"
+
+msgid "Congratulations!"
+msgstr "Поздравляем!"
+
+msgid "You have successfully completed the Single Player Campaign!"
+msgstr "Вы успешно завершили одиночную кампанию!"

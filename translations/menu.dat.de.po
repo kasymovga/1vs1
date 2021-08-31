@@ -930,3 +930,9 @@ msgstr "Beim zuschauen"
 
 msgid "Game"
 msgstr "Spiel"
+
+msgid "Congratulations!"
+msgstr "Glückwünsche!"
+
+msgid "You have successfully completed the Single Player Campaign!"
+msgstr "Sie haben die Einzelspieler-Kampagne erfolgreich abgeschlossen!"
