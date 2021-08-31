@@ -340,6 +340,7 @@ void(void) menu_draw {
 		if not(cvar("utf8_enable"))
 			cvar_set("utf8_enable", "1");
 
+		cvar_set("kex_compat", "0"); //Just in case
 		if (cvar("r_font_disable_freetype")) {
 			cvar_set("r_font_disable_freetype", "0");
 			localcmd("\nr_restart\n");
