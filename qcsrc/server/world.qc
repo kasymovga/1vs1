@@ -197,6 +197,8 @@ void(void) world_init {
 	float i, j, n;
 	string col;
 	cvar_preinit();
+	builtin_cvar_set("deathmatch", "1");
+	builtin_cvar_set("coop", "0");
 	world_already_spawned = TRUE;
 	net_compress_vector_init();
 	entity head;

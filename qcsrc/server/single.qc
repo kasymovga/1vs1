@@ -4,6 +4,7 @@ float single_secrets_found;
 float single_secrets_total;
 float single_monsters_killed;
 float single_monsters_total;
+float single_skill_save;
 entity single_secrets_controller;
 
 var void() single_shutdown_next;
@@ -70,6 +71,7 @@ void single_init_delayed(void) {
 	entity e;
 	string s;
 	entity map_target;
+	cvar_set("skill", ftos(single_skill_save));
 	for (e = nextent(world); e; e = nextent(e)) {
 		if (e.target != "")
 		if (substring(e.target, 0, 9) == "endlevel:") {
@@ -207,6 +209,14 @@ float(string cmd, float tokens) single_cmd_client_handle {
 
 void(void) single_init {
 	hint_add("You can save/load game at any moment.");
+	single_skill_save = builtin_cvar("skill");
+	builtin_cvar_set("skill", "2");
+	builtin_cvar_set("deathmatch", "0");
+	if (gametype == GAMETYPE_COOP)
+		builtin_cvar_set("coop", "1");
+	else
+		builtin_cvar_set("coop", "0");
+
 	gamehook_map_restart = single_map_restart;
 	gamehook_forbid_specatators = single_forbid_spectators;
 	single_player_equip_handle_next = gamehook_chain_player_equip_handle;
