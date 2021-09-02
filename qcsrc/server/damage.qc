@@ -294,6 +294,8 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 	}
 	float record_damage = attacker.flags & FL_CLIENT;
 	targ = warpzone_find_radius(blastorigin, rad, FALSE);
+	float restoremaxs;
+	vector restoremaxsvalue = '0 0 0';
 	while (targ) {
 		if (targ != inflictor)
 		if (ignore != targ)
@@ -312,10 +314,17 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 
 				finaldmg = coredamage * power + edgedamage * (1 - power);
 				if (finaldmg > 0 || forceintensity > 0) {
+					restoremaxs = 0;
 					// if it's a player, use the view origin as reference
-					if (targ.classname == "player" && attacker == targ)
+					if (targ.classname == "player" && attacker == targ) {
+						if (targ.view_ofs_z > targ.maxs_z) {
+							restoremaxsvalue = targ.maxs;
+							restoremaxs = TRUE;
+							targ.maxs_z = targ.view_ofs_z;
+							setsize(targ, targ.mins, targ.maxs);
+						}
 						center = targ.origin + targ.view_ofs;
-					else
+					} else
 						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
 
 					force = normalize(center - warpzone_transform_origin(targ, blastorigin));
@@ -344,6 +353,9 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 						nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
 						c = c + 1;
 					}
+					if (restoremaxs)
+						setsize(targ, targ.mins, restoremaxsvalue);
+
 					nearest = hitloc * (1 / max(1, hits));
 					hitratio = (hits / total);
 					a = bound(0, g_throughfloor_damage + (1-g_throughfloor_damage) * hitratio, 1);
