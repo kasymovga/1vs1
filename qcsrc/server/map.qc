@@ -387,7 +387,6 @@ void() map_finish {
 				e.weaponentity.weaponentity.effects = EFFECT_NODRAW;
 		}
 		if (clienttype(e) == CLIENTTYPE_REAL) {
-			stuffcmd(e, "\nscr_printspeed 1000000\n");
 			s = cvar_string("sv_intermission_cdtrack");
 			if (s != "")
 				stuffcmd(e, strcat("\ncd loop ", s, "\n"));
