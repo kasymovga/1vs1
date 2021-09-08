@@ -28,61 +28,51 @@ float(entity to, float sf) projectile_send {
 		sf |= 32;
 		self.teleport_time = 0;
 	}
-
-	if(self.csqcprojectile_clientanimate) {
-        sf &= ~4;
+	if (self.csqcprojectile_clientanimate) {
+		sf &= ~4;
 		sf |= 128; // client animated, not interpolated
-    } else if(!self.csqcprojectile_sendangles) {
-        sf &= ~4;
-    }
-
-	if(self.flags & FL_ONGROUND) {
+	} else if(!self.csqcprojectile_sendangles) {
+		sf &= ~4;
+	}
+	if (self.flags & FL_ONGROUND) {
 		sf |= 64;
 	}
-
-	if(self.team <= 0) {
+	if (self.team <= 0) {
 		sf &= ~16;
 	}
-
 	net_write_byte(MSG_ENTITY, NET_CSQC_PROJECTILE);
 	net_write_byte(MSG_ENTITY, sf);
-
-	if(sf & 1)
-	{
+	if (sf & 1) {
 		net_write_coord(MSG_ENTITY, self.origin_x);
 		net_write_coord(MSG_ENTITY, self.origin_y);
 		net_write_coord(MSG_ENTITY, self.origin_z);
-
-		if(sf & 128)
-		{
+		if(sf & 128) {
 			net_write_coord(MSG_ENTITY, self.velocity_x);
 			net_write_coord(MSG_ENTITY, self.velocity_y);
 			net_write_coord(MSG_ENTITY, self.velocity_z);
 			net_write_coord(MSG_ENTITY, self.gravity);
 		}
 	}
-
-	if(sf & 2) {
+	if (sf & 2) {
 		net_write_byte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
-		if(sf & 16)
+		if (sf & 16)
 			net_write_char(MSG_ENTITY, self.team);
 	}
-
-    if(sf & 4) {
-        net_write_coord(MSG_ENTITY, self.angles_x);
-        net_write_coord(MSG_ENTITY, self.angles_y);
-        net_write_coord(MSG_ENTITY, self.angles_z);
-    }
-
+	if(sf & 4) {
+		net_write_coord(MSG_ENTITY, self.angles_x);
+		net_write_coord(MSG_ENTITY, self.angles_y);
+		net_write_coord(MSG_ENTITY, self.angles_z);
+	}
 	return 1;
 }
 
 .vector csqcprojectile_oldorigin;
 void(entity e) projectile_check {
-	if(e.csqcprojectile_clientanimate)
-	if(e.flags & FL_ONGROUND)
-	if(e.origin != e.csqcprojectile_oldorigin)
+	if (e.csqcprojectile_clientanimate)
+	if (e.flags & FL_ONGROUND)
+	if (e.origin != e.csqcprojectile_oldorigin)
 		projectile_update(e);
+
 	e.csqcprojectile_oldorigin = e.origin;
 }
 
@@ -157,7 +147,8 @@ void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, flo
 		if (e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_BOUNCE)
 			e.gravity = 1;
 	}
-	setorigin(e, _origin);
+	trace_box((e.owner.absmax + e.owner.absmin) * 0.5 - (e.mins + e.maxs) * 0.5, e.mins, e.maxs, _origin, TRACE_MOVE_NOMONSTERS, world);
+	setorigin(e, trace_endpos);
 	e.dmg = _dmg;
 	e.dmg_force = _force;
 	e.dmg_radius = _dmg_radius;
@@ -167,25 +158,22 @@ void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, flo
 }
 
 void(entity e) projectile_update {
-	if(e.SendEntity == projectile_send)
-	{
+	if (e.SendEntity == projectile_send) {
 		// send new origin data
 		e.SendFlags |= 1;
 	}
 }
 
 void(entity e) projectile_update_angles {
-    if(e.SendEntity == projectile_send)
-    {
-        // send new angles data (does nothing in predictive mode)
-        e.SendFlags |= 4;
-        e.csqcprojectile_sendangles = TRUE;
-    }
+	if (e.SendEntity == projectile_send) {
+		// send new angles data (does nothing in predictive mode)
+		e.SendFlags |= 4;
+		e.csqcprojectile_sendangles = TRUE;
+	}
 }
 
 void(entity e) projectile_update_after_teleport {
-	if(e.SendEntity == projectile_send)
-	{
+	if (e.SendEntity == projectile_send) {
 		// send new origin data and mark as teleported
 		e.teleport_time = time;
 		e.SendFlags |= 0x1;
@@ -202,9 +190,8 @@ void() projectile_update_think {
 }
 
 void(entity e) projectile_update_next_frame {
-	if(e.SendEntity == projectile_send)
-	if(e.think != projectile_update_think)
-	{
+	if (e.SendEntity == projectile_send)
+	if (e.think != projectile_update_think) {
 		e.csqcprojectile_oldthink = e.think;
 		e.csqcprojectile_oldnextthink = e.nextthink;
 		e.think = projectile_update_think;
@@ -213,14 +200,14 @@ void(entity e) projectile_update_next_frame {
 }
 
 void(void) projectile_think2use {
-    entity o, a;
-    o = other;
-    a = activator;
-    activator = world;
-    other = world;
-    self.use();
-    other = o;
-    activator = a;
+	entity o, a;
+	o = other;
+	a = activator;
+	activator = world;
+	other = world;
+	self.use();
+	other = o;
+	activator = a;
 }
 
 void(void) projectile_explode {
