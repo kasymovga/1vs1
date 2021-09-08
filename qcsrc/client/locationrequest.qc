@@ -9,7 +9,7 @@ void(void) locationrequest_remove {
 }
 
 float locationrequest_input_event(float input_type, float primary, float secondary) {
-	if (input_type != 0)
+	if (input_type != 0 || main_isdemo)
 		return FALSE;
 
 	if (primary == K_MOUSE1) {

@@ -48,7 +48,7 @@ float(void) mapvote_select {
 
 float(float bInputType, float nPrimary, float nSecondary) mapvote_input_event {
 	float imp;
-	if (bInputType != 0)
+	if (bInputType != 0 || main_isdemo)
 		return FALSE;
 
 	if ('0' <= nPrimary && nPrimary <= '9') {

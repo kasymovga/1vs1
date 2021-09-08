@@ -146,7 +146,7 @@ void(void) menu_draw {
 float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 	float choice;
 	choice = -1;
-	if (bInputType != 0)
+	if (bInputType != 0 || main_isdemo)
 		return FALSE;
 
 	if (nPrimary == K_ESCAPE)

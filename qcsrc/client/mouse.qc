@@ -51,10 +51,10 @@ void(string cursor) mouse_enable {
 				mouse_pos = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.5 0' * CVAR(vid_conheight);
 				mouse_centered = TRUE;
 			}
+			if (mouse_absolute)
+				setcursormode(1);
 		}
-		if (mouse_absolute) {
-			setcursormode(1);
-		} else {
+		if (!mouse_absolute || main_isdemo) {
 			view_fixangle = TRUE;
 			if not(mouse_disabling)
 				view_fixed_angles = view_angles;
