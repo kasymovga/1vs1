@@ -135,6 +135,8 @@ void vehicle_player_effects() {
 	if (self.vehicle)
 	if (self.vehicle.vehicle_flags & VHF_HIDEPLAYER)
 		self.effects |= EFFECT_NODRAW;
+
+	vehicle_player_effects_next();
 }
 
 var float(void) vehicle_ThrowWeaponHandle_NextLink;
