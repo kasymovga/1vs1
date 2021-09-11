@@ -893,6 +893,18 @@ void(void) spawnfunc_item_invincible {
 	powerup_invincible_init();
 }
 
+float(void) item_glow_customize {
+	if (other.scorekeeper.clientversion < CLIENT_NEXUIZ)
+		self.glowmod = '0 0 0';
+	else
+		self.glowmod = self.colormod;
+
+	if (self.modelindex_lod0 != self.modelindex_lod1)
+		item_customize();
+
+	return TRUE;
+}
+
 void(void) spawnfunc_item_invisibility {
 	if (!g_powerup_invisibility) {
 		remove(self);
@@ -900,6 +912,9 @@ void(void) spawnfunc_item_invisibility {
 	}
 	self.invisibility_finished = g_balance_powerup_invisibility_time;
 	item_start(sv_model_powerupinvisibility, "models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Invisibility", IT_INVISIBILITY, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	self.colormod = '1 1.5 0.1';
+	self.glowmod = '1 1.5 0.1';
+	self.customizeentityforclient = item_glow_customize;
 	powerup_invisibility_init();
 }
 
@@ -910,6 +925,9 @@ void(void) spawnfunc_item_speed {
 	}
 	self.speed_finished = g_balance_powerup_speed_time;
 	item_start(sv_model_powerupspeed, "models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Speed", IT_SPEED, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	self.colormod = '1 1 0.1';
+	self.glowmod = '1 1 0.1';
+	self.customizeentityforclient = item_glow_customize;
 	powerup_speed_init();
 }
 

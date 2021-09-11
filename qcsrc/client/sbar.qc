@@ -1380,23 +1380,23 @@ void(void) sbar_timer {
 }
 
 vector sbar_powerup_pos;
-void sbar_powerup_timer_draw(float dt, string image) {
+void sbar_powerup_timer_draw(float dt, string image, vector color) {
 	vector picsize;
 	picsize = '22 22 0' * CVAR(sbar_powerups_scale);
 	float countdown_fontsize = 18;
 	if (dt > 0) {
 		if (dt < 5) {
-			draw_pic_expanding_two(sbar_powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+			draw_pic_expanding_two(sbar_powerup_pos, image, picsize, color, sbar_alpha_fg, DRAWFLAG_ADDITIVE,
 				bound(0, (ceil(dt) - dt) / 0.5, 1));
 		} else {
 			if (dt > 99)
 				dt = 99;
 
-			drawpic(sbar_powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			drawpic(sbar_powerup_pos, image, picsize, color, sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 		}
 		sbar_draw_num(sbar_powerup_pos - '40 -2 0' * CVAR(sbar_powerups_scale), ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else if (dt > -1) {
-		draw_pic_expanding(sbar_powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+		draw_pic_expanding(sbar_powerup_pos, image, picsize, color, sbar_alpha_fg, DRAWFLAG_ADDITIVE,
 			bound(0, -dt / 0.5, 1));
 	}
 	sbar_powerup_pos_y -= 40 * CVAR(sbar_powerups_scale);
@@ -1415,19 +1415,19 @@ void(void) sbar_powerups_draw {
 	invisibility_time = getstatf(STAT_INVISIBILITY_FINISHED);
 	jetpack_time = getstati(STAT_FUEL);
 	if (strength_time)
-		sbar_powerup_timer_draw(strength_time - time, "gfx/hud/sb_str");
+		sbar_powerup_timer_draw(strength_time - time, "gfx/hud/sb_str", '1 1 1');
 
 	if (invincibility_time)
-		sbar_powerup_timer_draw(invincibility_time - time, "gfx/hud/sb_invinc");
+		sbar_powerup_timer_draw(invincibility_time - time, "gfx/hud/sb_invinc", '1 1 1');
 
 	if (invisibility_time)
-		sbar_powerup_timer_draw(invisibility_time - time, "gfx/hud/sb_str");
+		sbar_powerup_timer_draw(invisibility_time - time, "gfx/hud/sb_str", '1 1 0.1');
 
 	if (speed_time)
-		sbar_powerup_timer_draw(speed_time - time, "gfx/hud/sb_invinc");
+		sbar_powerup_timer_draw(speed_time - time, "gfx/hud/sb_invinc", '1 1 0.1');
 
 	if (jetpack_time)
-		sbar_powerup_timer_draw(jetpack_time, "gfx/hud/sb_fuel");
+		sbar_powerup_timer_draw(jetpack_time, "gfx/hud/sb_fuel", '1 1 1');
 }
 
 void(void) sbar_pressedkeys_draw {
