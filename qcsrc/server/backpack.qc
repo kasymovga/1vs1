@@ -1,6 +1,5 @@
 float g_pickup_drop_backpack;
 string sv_model_backpack;
-string model_backpack;
 
 var float() backpack_player_death_weapon_throw_handle_NextLink;
 float() backpack_player_death_weapon_throw_handle {
@@ -27,7 +26,7 @@ float() backpack_player_death_weapon_throw_handle {
 	else
 		s = "Ammo Pack";
 
-	item_start(model_backpack, "models/items/g_jetpack.md3", "misc/itempickup.wav", 0, 0, s, IT_AMMO, weapon_bit(oldself.weapon), FL_WEAPON | FL_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
+	item_start(sv_model_backpack, "models/items/g_jetpack.md3", "misc/itempickup.wav", 0, 0, s, IT_AMMO, weapon_bit(oldself.weapon), FL_WEAPON | FL_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
 	self = oldself;
 	return TRUE;
 }
