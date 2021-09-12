@@ -793,4 +793,5 @@ void(void) waypoint_init {
 	while ((w = find(w, classname, "waypoint"))) {
 		waypoint_show(w);
 	}
+	precache_model("models/runematch/rune.mdl");
 }
