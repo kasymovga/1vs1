@@ -597,7 +597,6 @@ void(void) bot_init {
 	CVAR_CACHE(skill_auto_max);
 	bot_aim_init();
 	navigation_init();
-	waypoint_init();
 	bot_cmd_init();
 	havocbot_init();
 	bot_custom_weapon_priority_setup();

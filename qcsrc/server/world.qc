@@ -142,6 +142,7 @@ void(void) world_dynamic_init {
 	pinata_init();
 	chat_init();
 	announce_init();
+	waypoint_init();
 }
 
 void(void) world_getrecords {
