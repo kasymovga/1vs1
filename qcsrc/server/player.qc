@@ -1640,15 +1640,13 @@ void() player_think {
  */
 void(void) player_impulse {
 	float imp;
-	vector org;
 	float i;
 	float m;
-	entity e, e2;
 	imp = self.impulse;
 	if (!imp || map_finished)
 		return;
-	self.impulse = 0;
 
+	self.impulse = 0;
 	if (timeoutStatus == 2) //don't allow any impulses while the game is paused
 		return;
 
@@ -1713,193 +1711,9 @@ void(void) player_impulse {
 		} else
 			self.impulse = imp; // retry in next frame
 	} else if (imp >= 30 && imp <= 49) { // deploy waypoints
-		entity wp;
-		switch (imp) {
-		case 30:
-			wp = WaypointSprite_DeployPersonal("waypoint", self.origin);
-			if (wp) {
-				WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
-				WaypointSprite_Ping(wp);
-			}
-			sprint(self, "personal waypoint spawned at location\n");
-			break;
-		case 31:
-			wp = WaypointSprite_DeployPersonal("waypoint", self.cursor_trace_endpos);
-			if (wp) {
-				WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
-				WaypointSprite_Ping(wp);
-			}
-			break;
-		case 32:
-			if (vlen(self.death_origin)) {
-				wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin);
-				if (wp) {
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
-					WaypointSprite_Ping(wp);
-				}
-				sprint(self, "personal waypoint spawned at death location\n");
-			}
-			break;
-		case 33:
-			if (self.deadflag == DEAD_NO && team_mode) {
-				wp = WaypointSprite_Attach("helpme", TRUE);
-				if (wp)
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HELPME, '1 0.5 0'); // TODO choose better color
-
-				if (!wp)
-					wp = self.waypointsprite_attachedforcarrier; // flag sprite?
-
-				if (wp)
-					WaypointSprite_Ping(wp);
-
-				sprint(self, "HELP ME attached\n");
-			}
-			break;
-		case 34:
-			wp = WaypointSprite_DeployFixed("here", FALSE, self.origin);
-			if (wp) {
-				WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
-				WaypointSprite_Ping(wp);
-			}
-			sprint(self, "HERE spawned at location\n");
-			break;
-		case 35:
-			wp = WaypointSprite_DeployFixed("here", FALSE, self.cursor_trace_endpos);
-			if (wp) {
-				WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
-				WaypointSprite_Ping(wp);
-			}
-			break;
-		case 36:
-			if (vlen(self.death_origin)) {
-				wp = WaypointSprite_DeployFixed("here", FALSE, self.death_origin);
-				if (wp) {
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
-					WaypointSprite_Ping(wp);
-				}
-				sprint(self, "HERE spawned at death location\n");
-			}
-			break;
-		case 37:
-			wp = WaypointSprite_DeployFixed("danger", FALSE, self.origin);
-			if (wp) {
-				WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
-				WaypointSprite_Ping(wp);
-			}
-			sprint(self, "DANGER spawned at location\n");
-			break;
-		case 38:
-			wp = WaypointSprite_DeployFixed("danger", FALSE, self.cursor_trace_endpos);
-			if (wp) {
-				WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
-				WaypointSprite_Ping(wp);
-			}
-			break;
-		case 39:
-			if (vlen(self.death_origin)) {
-				wp = WaypointSprite_DeployFixed("danger", FALSE, self.death_origin);
-				if (wp) {
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
-					WaypointSprite_Ping(wp);
-				}
-				sprint(self, "DANGER spawned at death location\n");
-			}
-			break;
-		case 47:
-			WaypointSprite_ClearPersonal();
-			sprint(self, "personal waypoint cleared\n");
-			break;
-		case 48:
-			WaypointSprite_ClearOwned();
-			sprint(self, "all waypoints cleared\n");
-			break;
-		}
+		waypointsprite_impulse(imp);
 	} else if (imp >= 103 && imp <= 107) {
-		if (g_waypointeditor) {
-			switch (imp) {
-			case 103:
-				waypoint_schedulerelink(waypoint_spawn(self.origin, self.origin, 0));
-				bprint(strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
-				break;
-			case 104:
-				e = navigation_findnearestwaypoint(self, FALSE);
-				if (e)
-				if not(e.wpflags & WAYPOINTFLAG_GENERATED) {
-					bprint(strcat("Waypoint removed at ",vtos(e.origin),"\n"));
-					waypoint_remove(e);
-				}
-				break;
-			case 105:
-				waypoint_schedulerelinkall();
-				break;
-			case 106:
-				waypoint_saveall();
-				break;
-			case 107:
-				for (e = findchain(classname, "waypoint"); e; e = e.chain) {
-					e.colormod_x = 1;
-					e.effects &= ~(EFFECT_NODEPTHTEST | EFFECT_RED | EFFECT_BLUE);
-				}
-				e2 = navigation_findnearestwaypoint(self, FALSE);
-				navigation_markroutes(e2);
-				i = 0;
-				m = 0;
-				for (e = findchain(classname, "waypoint"); e; e = e.chain) {
-					if (e.wpcost >= 10000000) {
-						print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
-						e.colormod_x = 0.1;
-						e.effects |= EFFECT_NODEPTHTEST | EFFECT_BLUE;
-						++i;
-						++m;
-					}
-				}
-				if (i)
-					print(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
-
-				navigation_markroutes_inverted(e2);
-				i = 0;
-				for (e = findchain(classname, "waypoint"); e; e = e.chain) {
-					if (e.wpcost >= 10000000) {
-						print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
-						e.colormod_x = 0.1;
-						if not(e.effects & EFFECT_NODEPTHTEST) // not already reported before
-							++m;
-						e.effects |= EFFECT_NODEPTHTEST | EFFECT_RED;
-						++i;
-					}
-				}
-				if (i)
-					print(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
-
-				if (m)
-					print(ftos(m), " waypoints have been marked total\n");
-
-				i = 0;
-				for (e = findchain(classname, "info_player_deathmatch"); e; e = e.chain) {
-					org = e.origin;
-					trace_box(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', TRACE_MOVE_NOMONSTERS, world);
-					setorigin(e, trace_endpos);
-					if (navigation_findnearestwaypoint(e, FALSE)) {
-						setorigin(e, org);
-						e.effects &= ~EFFECT_NODEPTHTEST;
-						e.model = "";
-					} else {
-						setorigin(e, org);
-						print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-						e.effects |= EFFECT_NODEPTHTEST;
-						setmodel(e, self.body.model);
-						e.frame = self.body.frame;
-						e.skin = self.body.skin;
-						setsize(e, '0 0 0', '0 0 0');
-						++i;
-					}
-				}
-				if (i)
-					print(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
-
-				break;
-			}
-		}
+		waypoint_impulse(imp);
 	}
 }
 

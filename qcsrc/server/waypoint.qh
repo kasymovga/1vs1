@@ -42,3 +42,4 @@ float(void) waypoint_load_links;
 entity(vector m1, vector m2, float f) waypoint_spawn;
 entity(vector position) waypoint_spawnpersonal;
 vector(vector position) waypoint_fixorigin;
+void(float imp) waypoint_impulse;

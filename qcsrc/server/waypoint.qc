@@ -705,6 +705,97 @@ void(void) waypoint_show_links {
 	}
 }
 
+void(float imp) waypoint_impulse {
+	if (g_waypointeditor) {
+		entity e, e2;
+		float i, m;
+		vector org;
+		switch (imp) {
+		case 103:
+			waypoint_schedulerelink(waypoint_spawn(self.origin, self.origin, 0));
+			bprint(strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
+			break;
+		case 104:
+			e = navigation_findnearestwaypoint(self, FALSE);
+			if (e)
+			if not(e.wpflags & WAYPOINTFLAG_GENERATED) {
+				bprint(strcat("Waypoint removed at ",vtos(e.origin),"\n"));
+				waypoint_remove(e);
+			}
+			break;
+		case 105:
+			waypoint_schedulerelinkall();
+			break;
+		case 106:
+			waypoint_saveall();
+			break;
+		case 107:
+			for (e = findchain(classname, "waypoint"); e; e = e.chain) {
+				e.colormod_x = 1;
+				e.effects &= ~(EFFECT_NODEPTHTEST | EFFECT_RED | EFFECT_BLUE);
+			}
+			e2 = navigation_findnearestwaypoint(self, FALSE);
+			navigation_markroutes(e2);
+			i = 0;
+			m = 0;
+			for (e = findchain(classname, "waypoint"); e; e = e.chain) {
+				if (e.wpcost >= 10000000) {
+					print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
+					e.colormod_x = 0.1;
+					e.effects |= EFFECT_NODEPTHTEST | EFFECT_BLUE;
+					++i;
+					++m;
+				}
+			}
+			if (i)
+				print(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
+
+			navigation_markroutes_inverted(e2);
+			i = 0;
+			for (e = findchain(classname, "waypoint"); e; e = e.chain) {
+				if (e.wpcost >= 10000000) {
+					print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
+					e.colormod_x = 0.1;
+					if not(e.effects & EFFECT_NODEPTHTEST) // not already reported before
+						++m;
+					e.effects |= EFFECT_NODEPTHTEST | EFFECT_RED;
+					++i;
+				}
+			}
+			if (i)
+				print(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
+
+			if (m)
+				print(ftos(m), " waypoints have been marked total\n");
+
+			i = 0;
+			for (e = findchain(classname, "info_player_deathmatch"); e; e = e.chain) {
+				org = e.origin;
+				trace_box(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', TRACE_MOVE_NOMONSTERS, world);
+				setorigin(e, trace_endpos);
+				if (navigation_findnearestwaypoint(e, FALSE)) {
+					setorigin(e, org);
+					e.effects &= ~EFFECT_NODEPTHTEST;
+					e.model = "";
+				} else {
+					setorigin(e, org);
+					print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+					e.effects |= EFFECT_NODEPTHTEST;
+					setmodel(e, self.body.model);
+					e.frame = self.body.frame;
+					e.skin = self.body.skin;
+					setsize(e, '0 0 0', '0 0 0');
+					++i;
+				}
+			}
+			if (i)
+				print(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
+
+			break;
+		}
+	}
+}
+
 void(void) waypoint_init {
 	CVAR_CACHE(bot_navigation_ignoreplayers);
 	CVAR_CACHE(g_waypointeditor);

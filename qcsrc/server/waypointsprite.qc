@@ -370,3 +370,107 @@ void(void) WaypointSprite_PlayerGone {
 	WaypointSprite_Disown(self.waypointsprite_attached, waypointsprite_deadlifetime);
 	WaypointSprite_DetachCarrier(self);
 }
+
+void(float imp) waypointsprite_impulse {
+	entity wp;
+	switch (imp) {
+	case 30:
+		wp = WaypointSprite_DeployPersonal("waypoint", self.origin);
+		if (wp) {
+			WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
+			WaypointSprite_Ping(wp);
+		}
+		sprint(self, "personal waypoint spawned at location\n");
+		break;
+	case 31:
+		wp = WaypointSprite_DeployPersonal("waypoint", self.cursor_trace_endpos);
+		if (wp) {
+			WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
+			WaypointSprite_Ping(wp);
+		}
+		break;
+	case 32:
+		if (vlen(self.death_origin)) {
+			wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin);
+			if (wp) {
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
+				WaypointSprite_Ping(wp);
+			}
+			sprint(self, "personal waypoint spawned at death location\n");
+		}
+		break;
+	case 33:
+		if (self.deadflag == DEAD_NO && team_mode) {
+			wp = WaypointSprite_Attach("helpme", TRUE);
+			if (wp)
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_HELPME, '1 0.5 0'); // TODO choose better color
+
+			if (!wp)
+				wp = self.waypointsprite_attachedforcarrier; // flag sprite?
+
+			if (wp)
+				WaypointSprite_Ping(wp);
+
+			sprint(self, "HELP ME attached\n");
+		}
+		break;
+	case 34:
+		wp = WaypointSprite_DeployFixed("here", FALSE, self.origin);
+		if (wp) {
+			WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
+			WaypointSprite_Ping(wp);
+		}
+		sprint(self, "HERE spawned at location\n");
+		break;
+	case 35:
+		wp = WaypointSprite_DeployFixed("here", FALSE, self.cursor_trace_endpos);
+		if (wp) {
+			WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
+			WaypointSprite_Ping(wp);
+		}
+		break;
+	case 36:
+		if (vlen(self.death_origin)) {
+			wp = WaypointSprite_DeployFixed("here", FALSE, self.death_origin);
+			if (wp) {
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
+				WaypointSprite_Ping(wp);
+			}
+			sprint(self, "HERE spawned at death location\n");
+		}
+		break;
+	case 37:
+		wp = WaypointSprite_DeployFixed("danger", FALSE, self.origin);
+		if (wp) {
+			WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
+			WaypointSprite_Ping(wp);
+		}
+		sprint(self, "DANGER spawned at location\n");
+		break;
+	case 38:
+		wp = WaypointSprite_DeployFixed("danger", FALSE, self.cursor_trace_endpos);
+		if (wp) {
+			WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
+			WaypointSprite_Ping(wp);
+		}
+		break;
+	case 39:
+		if (vlen(self.death_origin)) {
+			wp = WaypointSprite_DeployFixed("danger", FALSE, self.death_origin);
+			if (wp) {
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
+				WaypointSprite_Ping(wp);
+			}
+			sprint(self, "DANGER spawned at death location\n");
+		}
+		break;
+	case 47:
+		WaypointSprite_ClearPersonal();
+		sprint(self, "personal waypoint cleared\n");
+		break;
+	case 48:
+		WaypointSprite_ClearOwned();
+		sprint(self, "all waypoints cleared\n");
+		break;
+	}
+}
