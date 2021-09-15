@@ -510,7 +510,6 @@ void(void) player_anim {
 				player_anim_set(self, anim_duckjump, FALSE, TRUE, FALSE);
 			else
 				player_anim_set(self, anim_jump, FALSE, TRUE, FALSE);
-
 		} else if (self.crouch) {
 			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
 				player_anim_set(self, anim_duckwalk, TRUE, FALSE, FALSE);
@@ -1216,6 +1215,8 @@ void(string modelname) player_setup_lod {
 		if (pl.body.playermodel == modelname) {
 			player_body_copy(self.body, pl.body, TRUE);
 			player_anim_copy(self, pl);
+			// reset animstate now
+			anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
 			player_copy_sounds(self, pl);
 			return;
 		}

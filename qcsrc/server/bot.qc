@@ -36,14 +36,14 @@ void(void) bot_think {
 		self.flags |= FL_GODMODE;
 
 	self.bot_nextthink = self.bot_nextthink + bot_ai_thinkinterval * pow(0.5, self.bot_aiskill);
-	if (time < map_starttime || ((g_campaign && !campaign_bots_may_start))) {
-		self.bot_nextthink = time + 0.5;
-		return;
-	}
 	if (self.fixangle) {
 		self.v_angle = self.angles;
 		self.v_angle_z = 0;
 		self.fixangle = FALSE;
+	}
+	if (time < map_starttime || ((g_campaign && !campaign_bots_may_start))) {
+		self.bot_nextthink = time + 0.5;
+		return;
 	}
 	self.dmg_take = 0;
 	self.dmg_save = 0;
