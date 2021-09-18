@@ -951,11 +951,7 @@ void(void) spawnfunc_item_key_silver {
 }
 
 void(void) spawnfunc_item_key_blood {
-	self.origin_z = self.origin_z + 48;
-	item_start("", "models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Blood Key", IT_KEY3, 0, 0, item_generic_pickupevalfunc, 100000);
-	self.colormod = '1 0 0';
-	self.effects = EFFECT_FULLBRIGHT | EFFECT_STARDUST;
-	self.mins_z = self.mins_z - 48;
+	item_key_spawn(IT_KEY3, "Blood Key", '1 0 0');
 }
 
 void(void) spawnfunc_item_jetpack {
