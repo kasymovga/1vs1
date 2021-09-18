@@ -931,19 +931,23 @@ void(void) spawnfunc_item_speed {
 	powerup_speed_init();
 }
 
-void(void) spawnfunc_item_key_gold {
-	self.origin_z = self.origin_z + 48;
-	item_start("", "models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Gold Key", IT_KEY2, 0, 0, item_generic_pickupevalfunc, 100000);
-	self.colormod = '1 1 0';
+void(float key, string name, vector _colormod) item_key_spawn {
+	setorigin(self, self.origin + '0 0 1' * 48);
+	string tn = self.targetname;
+	self.targetname = "";
+	item_start("", "models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), name, key, 0, 0, item_generic_pickupevalfunc, 100000);
+	self.targetname = tn;
+	self.colormod = _colormod;
 	self.effects = EFFECT_FULLBRIGHT | EFFECT_STARDUST;
-	self.mins_z = self.mins_z - 48;
+	setsize(self, self.mins - '0 0 1' * 48, self.maxs);
+}
+
+void(void) spawnfunc_item_key_gold {
+	item_key_spawn(IT_KEY2, "Gold Key", '1 1 0');
 }
 
 void(void) spawnfunc_item_key_silver {
-	self.origin_z = self.origin_z + 48;
-	item_start("", "models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Silver Key", IT_KEY1, 0, 0, item_generic_pickupevalfunc, 100000);
-	self.effects = EFFECT_FULLBRIGHT | EFFECT_STARDUST;
-	self.mins_z = self.mins_z - 48;
+	item_key_spawn(IT_KEY1, "Silver Key", '0 0 0');
 }
 
 void(void) spawnfunc_item_key_blood {
