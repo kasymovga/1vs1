@@ -46,6 +46,9 @@ void configureNexuizCharmapNexuizCharmap(entity me, entity theTextbox)
 	if not(file_exists_image(gui_image_path(me.image)))
 		me.image = "/gfx/menu/default/charmap";
 
+	if not(file_exists_image(gui_image_path(me.image2)))
+		me.image2 = "/gfx/menu/default/charmapbutton";
+
 	me.configureImage(me, me.image);
 }
 
