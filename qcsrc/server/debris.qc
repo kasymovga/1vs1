@@ -13,6 +13,7 @@ float sv_breakable_debris;
 
 void(void) debris_init {
 	float n, i;
+	entity e = NULL;
 	CVAR_CACHE(sv_breakable_debris);
 	if not(self.debrismovetype) self.debrismovetype = MOVETYPE_BOUNCE;
 	if not(self.debrissolid) self.debrissolid = SOLID_NOT;
@@ -32,6 +33,8 @@ void(void) debris_init {
 			self = spawn();
 			item_spawnfunc(); //for precache
 			remove(self);
+		} else if ((e = weapon_info_by_name(s))) {
+			e.weapon_func(WR_PRECACHE);
 		} else
 			precache_model(s);
 	}
@@ -40,14 +43,23 @@ void(void) debris_init {
 
 void(string debrisname, vector force) debris_launch {
 	entity dbr;
-	var void(void) item_spawnfunc = item_spawnfunc_for(debrisname);
+	var void(void) item_spawnfunc = NULL;
 	dbr = spawn();
-	if (item_spawnfunc) {
+	entity e = NULL;
+	float haveslash = (strstrofs(debrisname, "/", 0) >= 0);
+	if (!haveslash && (item_spawnfunc = item_spawnfunc_for(debrisname))) {
 		setorigin(dbr, (self.absmin + self.absmax) * 0.5);
 		entity oldself = self;
 		self = dbr;
 		self.classname = "droppeditem";
 		item_spawnfunc();
+		self = oldself;
+	} else if (!haveslash && (e = weapon_info_by_name(debrisname))) {
+		setorigin(dbr, (self.absmin + self.absmax) * 0.5);
+		entity oldself = self;
+		self = dbr;
+		self.classname = "droppedweapon";
+		weapon_defaultspawnfunc(e.weapon);
 		self = oldself;
 	} else if (sv_breakable_debris) {
 		setorigin(dbr, self.absmin

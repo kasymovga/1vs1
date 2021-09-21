@@ -82,3 +82,4 @@ void(void) weapon_ready;
 void(void) weapon_init;
 float weapon_spawned_list;
 #define WEAPON_VALID(w) ((w) >= WEP_FIRST && (w) <= WEP_LAST)
+entity(string s) weapon_info_by_name;

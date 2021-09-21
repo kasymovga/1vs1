@@ -469,17 +469,14 @@ void(float wpn) weapon_defaultspawnfunc {
 			oldself = self;
 			for (i = 1; i < t; ++i) {
 				s = argv(i);
-				for (j = WEP_FIRST; j <= WEP_LAST; ++j) {
-					e = weapon_info(j);
-					if (e.netname == s) {
-						self = spawn();
-						copyentity(oldself, self);
-						self.classname = "replacedweapon";
-						weapon_defaultspawnfunc(j);
-						break;
-					}
-				}
-				if (j > WEP_LAST) {
+				e = weapon_info_by_name(s);
+				if (e) {
+					self = spawn();
+					copyentity(oldself, self);
+					self.classname = "replacedweapon";
+					weapon_defaultspawnfunc(e.weapon);
+					break;
+				} else {
 					item_spawnfunc = item_spawnfunc_for(s);
 					if (item_spawnfunc) {
 						self = spawn();
@@ -493,14 +490,10 @@ void(float wpn) weapon_defaultspawnfunc {
 		if (t >= 1) {
 			s = argv(0);
 			wpn = 0;
-			for (j = WEP_FIRST; j <= WEP_LAST; ++j) {
-				e = weapon_info(j);
-				if (e.netname == s) {
-					wpn = j;
-					break;
-				}
-			}
-			if (j > WEP_LAST) {
+			e = weapon_info_by_name(s);
+			if (e) {
+				wpn = e.weapon;
+			} else {
 				item_spawnfunc = item_spawnfunc_for(s);
 				if (item_spawnfunc) {
 					item_spawnfunc();
@@ -1462,4 +1455,15 @@ void(void) weapon_init {
 	projectile_register_auto(PROJECTILE_BULLET, '0 0 0', MOVETYPE_TOSS);
 	projectile_register_auto(PROJECTILE_BULLET_GLOWING, '0 0 0', MOVETYPE_TOSS);
 	projectile_register_auto(PROJECTILE_BULLET_BIG, '0 0 0', MOVETYPE_FLY);
+}
+
+entity(string s) weapon_info_by_name {
+	float i;
+	entity e;
+	for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
+		e = weapon_info(i);
+		if (e.netname == s)
+			return e;
+	}
+	return NULL;
 }
