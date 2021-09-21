@@ -13,7 +13,7 @@ alias gametype_domination gametype_dom
 alias gametype_ctf "reset_gametype; _gametype ctf; bprint_gtswitch ^3Capture The Flag"
 alias gametype_catf "reset_gametype; _gametype catf; bprint_gtswitch ^3CTF with CA"
 alias gametype_ctft "reset_gametype; _gametype ctft; bprint_gtswitch ^3CTF with FT"
-alias gametype_conq "reset_gametype; _gametype conquest; bprint_gtswitch ^3Conquest"
+alias gametype_conq "reset_gametype; _gametype conq; bprint_gtswitch ^3Conquest"
 alias gametype_conquest gametype_conq
 alias gametype_kh "reset_gametype; _gametype kh; bprint_gtswitch ^3Key Hunt"
 alias gametype_keyhunt gametype_kh
