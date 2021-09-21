@@ -742,7 +742,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 
 		self.effects = self.effects | EFFECT_NODRAW; // marker for item team search
 		entity_initialize(self, item_find_team, INITPRIO_FINDTARGET);
-	} else if (self.flags & FL_POWERUP && self.respawntime > 0) // do not spawn powerups initially!
+	} else if ((self.flags & FL_POWERUP) && self.respawntime > 0 && substring(self.classname, 0, 7) != "dropped") // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);
 
 	return;
@@ -1002,6 +1002,10 @@ voidfunc(string s) item_spawnfunc_for {
 	RETURN_SPAWNFUNC_FOR(cells)
 	RETURN_SPAWNFUNC_FOR(rockets)
 	RETURN_SPAWNFUNC_FOR(shells)
+	RETURN_SPAWNFUNC_FOR(strength)
+	RETURN_SPAWNFUNC_FOR(invincible)
+	RETURN_SPAWNFUNC_FOR(invisibility)
+	RETURN_SPAWNFUNC_FOR(speed)
 #undef RETURN_SPAWNFUNC_FOR
 	return NULL;
 }
