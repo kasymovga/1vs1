@@ -5,7 +5,7 @@ set sv_gametypevote ""
 set sv_gametypevote_time 10
 set force_gametype ""
 alias reset_gametype "_gametype dm"
-alias gametype_sr "reset_gametype; _gametype sr; bprint_gtswitch ^3Deathmatch"
+alias gametype_sr "reset_gametype; _gametype sr; bprint_gtswitch ^3Shooting Range"
 alias gametype_dm "reset_gametype; _gametype dm; bprint_gtswitch ^3Deathmatch"
 alias gametype_tdm "reset_gametype; _gametype tdm; bprint_gtswitch ^3Team Deathmatch"
 alias gametype_dom "reset_gametype; _gametype domination; bprint_gtswitch ^3Domination"
