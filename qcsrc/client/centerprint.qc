@@ -44,6 +44,20 @@ void(string strMessage) centerprint {
 
 	n = tokenizebyseparator(strMessage, "\n");
 	hcount = 0;
+	if (centerprint_num) { //check for duplicates
+		float duplicates = 0;
+		for (i = 0; i < n; i++) {
+			s = argv(i);
+			for (j = 0; j < centerprint_num; j++) {
+				if (s == centerprint_messages[j]) {
+					duplicates++;
+					break;
+				}
+			}
+		}
+		if (duplicates == n) //this centerprint presents already
+			return;
+	}
 	i = centerprint_num;
 	for (j = 0; j < centerprint_num; j++) {
 		if (s == "")
