@@ -2,6 +2,7 @@
 #include "cmd.qc"
 #include "cvar.qc"
 #include "extresponse.qc"
+#include "gametype.qc"
 #include "mapinfo.qc"
 #include "shuffle.qc"
 #include "udppunchhole.qc"

@@ -455,41 +455,6 @@ void _MapInfo_Map_Reset()
 	cvar_set("_map_dlc", "");
 }
 
-float MapInfo_Type_FromString(string t)
-{
-	if     (t == "dm")         return GAMETYPE_DEATHMATCH;
-	else if(t == "tdm")        return GAMETYPE_TEAM_DEATHMATCH;
-	else if(t == "ft" ||
-	        t == "freeze" ||
-	        t == "frezetag")   return GAMETYPE_FREEZETAG;
-	else if(t == "ca" ||
-	        t == "clanarena")  return GAMETYPE_CLANARENA;
-	else if(t == "dom" ||
-	        t == "domination") return GAMETYPE_DOMINATION;
-	else if(t == "ctf")        return GAMETYPE_CTF;
-	else if(t == "catf")       return GAMETYPE_CATF;
-	else if(t == "ctft")       return GAMETYPE_CTFT;
-	else if(t == "conq" ||
-	        t == "conquest")   return GAMETYPE_CONQUEST;
-	else if(t == "kh" ||
-	        t == "keyhunt")    return GAMETYPE_KEYHUNT;
-	else if(t == "khca")       return GAMETYPE_KEYHUNT_CA;
-	else if(t == "khft")       return GAMETYPE_KEYHUNT_FT;
-	else if(t == "ons")        return GAMETYPE_ONSLAUGHT;
-	else if(t == "rc" ||
-	        t == "race")       return GAMETYPE_RACE;
-	else if(t == "nexball" ||
-	        t == "nb" )        return GAMETYPE_NEXBALL;
-	else if(t == "cts")        return GAMETYPE_CTS;
-	else if(t == "lms")        return GAMETYPE_LMS;
-	else if(t == "surv" ||
-	        t == "survive")    return GAMETYPE_SURVIVE;
-	else if(t == "single")     return GAMETYPE_SINGLE;
-	else if(t == "coop")       return GAMETYPE_COOP;
-	else if(t == "shootingrange" || t == "sr") return GAMETYPE_SHOOTINGRANGE;
-	else                       return 0;
-}
-
 string MapInfo_HumanString_FromType(float t) {
 	if (t == GAMETYPE_DEATHMATCH) {
 		return "Deathmatch";
@@ -738,7 +703,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 			MapInfo_Map_flags |= MAPINFO_FLAG_FRUSTRATING;
 		} else if(t == "type" || t == "gametype") {
 			t = str_car(s); s = str_cdr(s);
-			f = MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(t));
+			f = MapInfo_GameTypeToMapInfoType(gametype_from_name(t));
 			MapInfo_Map_supportedGametypes |= f;
 			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH)
 				if (cvar("g_tdm_use_dm_maps"))
@@ -791,7 +756,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		else if(t == "settemp_for_type")
 		{
 			t = str_car(s); s = str_cdr(s);
-			if((t == "all" && pGametypeToSet) || (MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(t)) & pGametypeToSet))
+			if((t == "all" && pGametypeToSet) || (MapInfo_GameTypeToMapInfoType(gametype_from_name(t)) & pGametypeToSet))
 			{
 				_MapInfo_Parse_Settemp(pFilename, acl, s, 1);
 			}
@@ -799,7 +764,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		else if(t == "clientsettemp_for_type")
 		{
 			t = str_car(s); s = str_cdr(s);
-			if((t == "all" && pGametypeToSet) || (MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(t)) & pGametypeToSet))
+			if((t == "all" && pGametypeToSet) || (MapInfo_GameTypeToMapInfoType(gametype_from_name(t)) & pGametypeToSet))
 			{
 				t = str_car(s); s = str_cdr(s);
 				if not(cvar_value_issafe(t))
@@ -910,12 +875,9 @@ string MapInfo_FixName(string s)
 float MapInfo_CurrentGametype()
 {
 	float f;
-	string s = cvar_string("_gametype");;
-	for (f = 1; f < GAMETYPE_END; f++) {
-		if (gametype_name(f) == s)
-			return f;
-	}
-	return GAMETYPE_DEATHMATCH;
+	f = gametype_from_name(cvar_string("_gametype"));
+	if (!f) f = GAMETYPE_DEATHMATCH;
+	return f;
 }
 
 float _MapInfo_CheckMap(string s) // returns 0 if the map can't be played with the current settings, 1 otherwise
