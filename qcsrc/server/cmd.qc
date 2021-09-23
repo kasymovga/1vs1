@@ -91,7 +91,7 @@ void(string command) cmd_game {
 	if (cmd == "gametype") if (argc == 2) {
 		float t, tsave;
 		s = argv(1);
-		t = MapInfo_Type_FromString(s);
+		t = gametype_from_name(s);
 		tsave = MapInfo_CurrentGametype();
 		if (t) {
 			MapInfo_SwitchGameType(t);

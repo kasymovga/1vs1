@@ -696,7 +696,7 @@ void(void) world_restore {
 	if not(dlc_ready_all())
 		dlc_reload();
 
-	MapInfo_SwitchGameType(MapInfo_Type_FromString("single"));
+	MapInfo_SwitchGameType(gametype_from_name("single"));
 }
 
 //DP_SV_SHUTDOWN

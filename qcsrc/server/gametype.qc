@@ -40,7 +40,7 @@ void() gametype_init {
 	string force_gametype = cvar_string("force_gametype");
 	if (force_gametype != "") {
 		force_gametype_restore = MapInfo_CurrentGametype();
-		MapInfo_SwitchGameType(MapInfo_Type_FromString(force_gametype));
+		MapInfo_SwitchGameType(gametype_from_name(force_gametype));
 	}
 	if not(cvar_value_issafe(world.fog)) {
 		print("The current map contains a potentially harmful fog setting, ignored\n");

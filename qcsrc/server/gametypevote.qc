@@ -70,7 +70,7 @@ float GameTypeVote_Think() {
 				type = head;
 				profile = " ";
 			}
-			t = MapInfo_Type_FromString(type);
+			t = gametype_from_name(type);
 			if (t <= 0) {
 				print("Unknown game type: ", type, "\n");
 				continue;
@@ -168,7 +168,7 @@ void GameTypeVote_Init() {
 
 		tail = str_cdr(tail);
 		if (head != "") {
-			gametypes_mapinfo_mask = gametypes_mapinfo_mask | MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(head));
+			gametypes_mapinfo_mask = gametypes_mapinfo_mask | MapInfo_GameTypeToMapInfoType(gametype_from_name(head));
 		}
 	}
 }
