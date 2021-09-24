@@ -1,7 +1,7 @@
 //Runes
 set g_runes 0
 set g_runes_count 6
-set g_runes_carried_runes_max 2
+set g_runes_carried_runes_max 1
 set g_runes_defense 1
 set g_runes_hacker 0
 set g_runes_ignite 1
