@@ -80,7 +80,7 @@ vector(void) physics_vehicle_adjust_view {
 		return view_origin;
 
 	view_vehicle = TRUE;
-	makevectors(view_angles);
+	makevectors(view_fixangle ? view_fixed_angles : view_angles);
 	vector v = view_origin;
 	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * vehicle_adjust_view_back, TRACE_MOVE_WORLDONLY, world);
 	v = trace_endpos;

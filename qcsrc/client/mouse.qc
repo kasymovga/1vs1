@@ -54,7 +54,7 @@ void(string cursor) mouse_enable {
 			if (mouse_absolute)
 				setcursormode(1);
 		}
-		if (!mouse_absolute || main_isdemo) {
+		if (!mouse_absolute && !view_spectatee_status) {
 			view_fixangle = TRUE;
 			if not(mouse_disabling)
 				view_fixed_angles = view_angles;
