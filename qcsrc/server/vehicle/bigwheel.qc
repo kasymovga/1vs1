@@ -149,7 +149,6 @@ void(void) vehicle_bigwheel_think {
 			self.angles_x *= -1;
 			makevectors(self.angles);
 			self.angles_x *= -1;
-			movelib_groundalign4point(75, 75, 1);
 			physics_velocity = self.velocity;
 		}
 		physics_move();
