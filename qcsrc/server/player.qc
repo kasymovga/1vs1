@@ -89,6 +89,7 @@ float(void) player_body_customize;
 void(entity bb) player_body_spawn {
 	self.body = spawn();
 	self.body.customizeentityforclient = player_body_customize;
+	self.body.colormod = '1 1 1' * g_player_brightness;
 	if not(bb) {
 		bb = spawn();
 		bb.owner = self;
@@ -1928,7 +1929,6 @@ void(entity spot) player_spawn {
 	}
 	weapon_model_spawn();
 	self.alpha = 1;
-	self.colormod = '1 1 1' * g_player_brightness;
 	if (g_spawnsound)
 		sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
