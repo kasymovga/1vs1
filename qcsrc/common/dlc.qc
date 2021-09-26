@@ -1,22 +1,22 @@
 float dlc_repo_finded;
 
-string dlc_pk3_name(string dlc_name) {
+string(string dlc_name) dlc_pk3_name {
 	return strcat("zzz-rexdlc_", dlc_name, ".pk3");
 }
 
-string dlc_serverpackage_name(string dlc_name) {
+string(string dlc_name) dlc_serverpackage_name {
 	return strcat("rexdlc_", dlc_name, ".serverpackage");
 }
-string dlc_url(string dlc_name) {
+string(string dlc_name) dlc_url {
 	return strcat(dlc_repo, dlc_pk3_name(dlc_name));
 }
 
-float dlc_ready(string dlc_name) {
+float(string dlc_name) dlc_ready {
 	return file_exists(dlc_serverpackage_name(dlc_name));
 }
 
 string dlc_load_queue;
-float dlc_load_queue_submit() {
+float(void) dlc_load_queue_submit {
 	string head, tail;
 	for (head = str_car(dlc_load_queue), tail = str_cdr(dlc_load_queue); ; head = str_car(tail), tail = str_cdr(tail)) {
 		if (head == "")
@@ -37,7 +37,7 @@ string dlc_repo_check_list;
 void dlc_find_working_repo();
 entity dlc_repo_checker;
 
-void dlc_find_working_repo_callback(float id, float status, string data) {
+void(float id, float status, string data) dlc_find_working_repo_callback {
 	if (dlc_repo_finded)
 		return;
 
@@ -58,7 +58,7 @@ void dlc_find_working_repo_callback(float id, float status, string data) {
 		dlc_find_working_repo();
 }
 
-void dlc_find_working_repo() {
+void(void) dlc_find_working_repo {
 	if not(URI_FIND_WORKING_REPO)
 		URI_FIND_WORKING_REPO = uri_register_handler(dlc_find_working_repo_callback);
 
@@ -82,7 +82,7 @@ void dlc_find_working_repo() {
 	}
 }
 
-float dlc_load(string dlc_name, float force_local) {
+float(string dlc_name, float force_local) dlc_load {
 	string list = dlc_list;
 	string s;
 	while (list != "") {
@@ -129,7 +129,7 @@ void(string l) dlc_load_local_list {
 	}
 }
 
-float dlc_ready_all() {
+float(void) dlc_ready_all {
 	string list = dlc_list;
 	string s;
 	while (list != "") {
@@ -147,7 +147,7 @@ float dlc_ready_all() {
 }
 
 
-void dlc_set_repos(string repos) {
+void(string repos) dlc_set_repos {
 	if (dlc_repo_finded)
 		return;
 
