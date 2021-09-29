@@ -256,16 +256,9 @@ float(void) vehicle_spiderbot_physics_hook {
 	spider.tur_head.angles_x = bound(g_vehicle_spiderbot_head_pitchlimit_down,spider.tur_head.angles_x,g_vehicle_spiderbot_head_pitchlimit_up);
 	spider.tur_head.angles_x *= -1;
 	spider.angles_x *= -1;
-	//player.angles_x *= -1;
 	vehicle_adjust_player_position(player, spider, SPIDERBOT_VIEW_START_OFFSET, SPIDERBOT_VIEW_BACK, SPIDERBOT_VIEW_UP);
-	player.angles = spider.angles;
-	//spider.vehicle.angles = spider.angles;
-	physics_velocity = '0 0 0';
-	player.velocity = spider.velocity;
+	physics_velocity = player.velocity = '0 0 0';
 	self = player;
-	//print("spider.angles_x=", ftos(spider.angles_x), "\n");
-	//print("spider.tur_head.angles_x=", ftos(spider.tur_head.angles_x), "\n");
-	//print("player.v_angle_x=", ftos(player.v_angle_x), "\n");
 	if (spider.player_physic)
 		spider.player_physic.SendFlags |= 2;
 

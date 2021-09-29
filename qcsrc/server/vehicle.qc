@@ -7,6 +7,9 @@ void(vector _mins, vector _maxs, float start_offs, float back, float up) vehicle
 }
 
 void(entity plr, entity veh, float start_offs, float back, float up) vehicle_adjust_player_position {
+	if (plr != veh.owner)
+		return;
+
 	makevectors(plr.v_angle);
 	vector v = veh.origin;
 	v_z += start_offs;

@@ -124,9 +124,7 @@ float vehicle_bigwheel_physics_hook() {
 		}
 	}
 	vehicle_adjust_player_position(player, mybigwheel, CAR_VIEW_START_OFFSET, CAR_VIEW_BACK, CAR_VIEW_UP);
-	player.angles = mybigwheel.angles;
-	physics_velocity = '0 0 0';
-	player.velocity = mybigwheel.velocity;
+	physics_velocity = player.velocity = '0 0 0';
 	self = player;
 	if (mybigwheel.player_physic)
 		mybigwheel.player_physic.SendFlags |= 2;
