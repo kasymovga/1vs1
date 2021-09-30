@@ -174,12 +174,7 @@ float(void) vehicle_aircraft_physics_hook {
 		aircraft.angles_z = approach(az, 0, frametime * 30);
 
 	vehicle_adjust_player_position(player, aircraft, AIRCRAFT_VIEW_START_OFFSET, AIRCRAFT_VIEW_BACK, AIRCRAFT_VIEW_UP);
-	physics_velocity = player.velocity = '0 0 0';
-    self = player;
-	if (aircraft.player_physic)
-		aircraft.player_physic.SendFlags |= 2;
-
-	physics_flags = player.flags;
+	self = player;
     return 1;
 }
 

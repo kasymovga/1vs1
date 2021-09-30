@@ -257,12 +257,7 @@ float(void) vehicle_spiderbot_physics_hook {
 	spider.tur_head.angles_x *= -1;
 	spider.angles_x *= -1;
 	vehicle_adjust_player_position(player, spider, SPIDERBOT_VIEW_START_OFFSET, SPIDERBOT_VIEW_BACK, SPIDERBOT_VIEW_UP);
-	physics_velocity = player.velocity = '0 0 0';
 	self = player;
-	if (spider.player_physic)
-		spider.player_physic.SendFlags |= 2;
-
-	physics_flags = player.flags;
 	return 1;
 }
 

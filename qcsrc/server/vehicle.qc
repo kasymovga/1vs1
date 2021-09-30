@@ -7,9 +7,11 @@ void(vector _mins, vector _maxs, float start_offs, float back, float up) vehicle
 }
 
 void(entity plr, entity veh, float start_offs, float back, float up) vehicle_adjust_player_position {
-	if (plr != veh.owner)
+	physics_flags = plr.flags;
+	if (plr != veh.owner) {
+		physics_velocity = plr.velocity;
 		return;
-
+	}
 	makevectors(plr.v_angle);
 	vector v = veh.origin;
 	v_z += start_offs;
@@ -17,6 +19,9 @@ void(entity plr, entity veh, float start_offs, float back, float up) vehicle_adj
 	v = trace_endpos;
 	trace_box(v, '-8 -8 -8', '8 8 8', v + v_up * up, TRACE_MOVE_WORLDONLY, world);
 	setorigin(plr, trace_endpos - plr.view_ofs);
+	physics_velocity = plr.velocity = veh.velocity;
+	if (veh.player_physic)
+		veh.player_physic.SendFlags |= 2;
 }
 
 float(entity plr, float eject) vehicle_extract_player {
@@ -296,6 +301,7 @@ void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 	if (eject) {
 	    o.velocity = o.velocity + (v_up + v_forward * 0.25) * 750;
 	}
+	physics_velocity = o.velocity;
 	entity e = spawn();
 	e.enemy = o;
 	e.velocity = self.velocity;
