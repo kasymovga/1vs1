@@ -107,27 +107,20 @@ void turret_phaser_beam_fire(vector start,vector end,vector smin,vector smax,
 
 void turret_phaser_beam_think()
 {
-    if ((time > self.cnt) || (self.owner.deadflag != DEAD_NO))
-    {
-        self.owner.attack_finished_single = time + self.owner.shot_refire;
-        self.owner.fireflag = 2;
-        self.owner.tur_head.frame = 10;
-        sound (self, CHAN_PROJECTILE, "", VOL_BASE, ATTN_NORM);
-        remove(self);
-        return;
-    }
-
-    turret_do_updates(self.owner);
-
-    if (time - self.shot_spread > 0)
-    {
-        self.shot_spread = time + 2;
-        sound (self, CHAN_VOICE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
-    }
-
-
+	if ((time > self.cnt) || (self.owner.deadflag != DEAD_NO)) {
+		self.owner.attack_finished_single = time + self.owner.shot_refire;
+		self.owner.fireflag = 2;
+		self.owner.tur_head.frame = 10;
+		sound_stop(self, CHAN_PROJECTILE);
+		remove(self);
+		return;
+	}
+	turret_do_updates(self.owner);
+	if (time - self.shot_spread > 0) {
+		self.shot_spread = time + 2;
+		sound(self, CHAN_PROJECTILE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
+	}
     self.nextthink = time + self.ticrate;
-
     self.owner.attack_finished_single = time + frametime;
     entity oldself;
     oldself = self;

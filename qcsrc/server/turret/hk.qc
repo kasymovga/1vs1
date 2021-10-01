@@ -256,27 +256,21 @@ void turret_hk_missile_think()
     if ((myspeed > hk_minspeed) && (self.cnt > time))
         myspeed = min(myspeed * hk_accel2,hk_maxspeed);
 
-    // Ranoutagazfish?
-    if (self.cnt < time)
-    {
-        self.cnt = time + 0.25;
-        self.nextthink = 0;
-        self.movetype         = MOVETYPE_BOUNCE;
-        sound    (self, CHAN_VOICE, "", 0.4 * VOL_BASE, ATTN_NORM);
-        return;
-    }
-
-    // Calculate new heading
-    olddir = normalize(self.velocity);
-    newdir = normalize(olddir + wishdir * cvar("g_turrets_unit_hk_std_shot_speed_turnrate"));
-
-    // Set heading & speed
-    self.velocity = newdir * myspeed;
-
-    // Align model with new heading
-    self.angles = vectoangles(self.velocity);
-
-
+	// Ranoutagazfish?
+	if (self.cnt < time) {
+		self.cnt = time + 0.25;
+		self.nextthink = 0;
+		self.movetype         = MOVETYPE_BOUNCE;
+		sound(self, CHAN_PROJECTILE, "", 0.4 * VOL_BASE, ATTN_NORM);
+		return;
+	}
+	// Calculate new heading
+	olddir = normalize(self.velocity);
+	newdir = normalize(olddir + wishdir * cvar("g_turrets_unit_hk_std_shot_speed_turnrate"));
+	// Set heading & speed
+	self.velocity = newdir * myspeed;
+	// Align model with new heading
+	self.angles = vectoangles(self.velocity);
 	projectile_update(self);
 }
 
