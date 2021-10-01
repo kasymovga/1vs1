@@ -35,7 +35,6 @@ void fillNexuizAudioSettingsTab(entity me)
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_staticvolume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Ambient:")));
-		gui_make_multi(s, "snd_entchannel2volume");
 		me.TD(me, 1, 2, s);
 		gui_set_dependent_not_equal(e, "volume", "0");
 		gui_set_dependent_not_equal(s, "volume", "0");
@@ -50,7 +49,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_entchannel3volume");
-		gui_make_multi(s, "snd_playerchannel0volume snd_playerchannel3volume");
+		gui_make_multi(s, "snd_entchannel0volume snd_playerchannel0volume snd_playerchannel3volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Items:")));
 		me.TD(me, 1, 2, s);
 		gui_set_dependent_not_equal(e, "volume", "0");
@@ -58,7 +57,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_playerchannel6volume");
-		gui_make_multi(s, "snd_csqcchannel6volume");
+		gui_make_multi(s, "snd_csqcchannel6volume snd_entchannel6volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Pain:")));
 		me.TD(me, 1, 2, s);
 		gui_set_dependent_not_equal(e, "volume", "0");
@@ -74,7 +73,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_entchannel4volume");
-		gui_make_multi(s, "snd_playerchannel4volume snd_entchannel6volume snd_csqcchannel4volume");
+		gui_make_multi(s, "snd_playerchannel4volume snd_csqcchannel4volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Shots:")));
 		me.TD(me, 1, 2, s);
 		gui_set_dependent_not_equal(e, "volume", "0");
@@ -82,6 +81,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_playerchannel2volume");
+		gui_make_multi(s, "snd_entchannel2volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Voice:")));
 		me.TD(me, 1, 2, s);
 		gui_set_dependent_not_equal(e, "volume", "0");
