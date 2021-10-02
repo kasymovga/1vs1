@@ -36,7 +36,7 @@ vector(void) physics_side_adjust_view {
 		view_angles_x = -view_angles_x;
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
-	view_fixangle = TRUE;
+	view_fixangle = -1;
 	view_fixed_angles = '0 90 0';
 	view_crosshair = FALSE;
 	if (view_width / view_height > 1.35)
@@ -64,7 +64,7 @@ vector(void) physics_top_adjust_view {
 		view_angles_x = 0;
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
-	view_fixangle = TRUE;
+	view_fixangle = -1;
 	view_fixed_angles = g_topview_angles;
 	view_crosshair = FALSE;
 	if (view_width / view_height > 1.35)

@@ -161,7 +161,10 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	physics_camera_setup();
 	if (view_fixangle) {
 		R_SetView(VF_ANGLES, view_fixed_angles);
-		view_fixangle = FALSE;
+		if (view_fixangle > 0)
+			R_SetView(VF_CL_VIEWANGLES, view_fixed_angles);
+
+		view_fixangle = 0;
 	} else {
 		if not(CVAR(cl_recoil))
 			R_SetView(VF_ANGLES, view_angles);
