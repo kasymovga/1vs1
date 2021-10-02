@@ -91,7 +91,7 @@ void(void) world_static_init {
 		map_starttime = cvar("g_start_delay");
 
 	rune_init();
-	WalkieTalkie_Init();
+	walkietalkie_init();
 	akimbo_init();
 	hat_init();
 	Radio_Init();
