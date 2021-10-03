@@ -1,2 +1,4 @@
 void(void) debris_init;
 void(vector force) debris_throw;
+.string debris; // space separated list of debris models
+void(void) debris_setup;

@@ -9,12 +9,8 @@ float sv_breakable_debris;
 .float debrisfadetime;
 .float debrisdamageforcescale;
 .float debrisskin;
-.string debris; // space separated list of debris models
 
-void(void) debris_init {
-	float n, i;
-	entity e = NULL;
-	CVAR_CACHE(sv_breakable_debris);
+void(void) debris_setup {
 	if not(self.debrismovetype) self.debrismovetype = MOVETYPE_BOUNCE;
 	if not(self.debrissolid) self.debrissolid = SOLID_NOT;
 	if (self.debrisvelocity == '0 0 0') self.debrisvelocity = '0 0 140';
@@ -23,6 +19,13 @@ void(void) debris_init {
 	if not(self.debristime) self.debristime = 3.5;
 	if not(self.debristimejitter) self.debristimejitter = 2.5;
 	if not(self.debrisfadetime) self.debrisfadetime = 1;
+}
+
+void(void) debris_init {
+	float n, i;
+	entity e = NULL;
+	CVAR_CACHE(sv_breakable_debris);
+	debris_setup();
 	n = tokenize_console(self.debris);
 	string s;
 	var void(void) item_spawnfunc;

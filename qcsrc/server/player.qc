@@ -21,6 +21,7 @@ string g_player_forcemodel_red;
 string g_player_forcemodel_blue;
 string g_player_forcemodel_yellow;
 string g_player_forcemodel_pink;
+string g_player_debris;
 float g_player_forcecolor;
 float g_player_forcecolor_red;
 float g_player_forcecolor_blue;
@@ -907,6 +908,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		float defer_client_kill_now_team_change;
 		defer_client_kill_now_team_change = FALSE;
 		float switchweapon_save = self.weapon;
+		debris_throw(force);
 		if (deathtype == DEATH_DROWN)
 			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_drown), VOL_BASE, ATTN_NORM);
 		else
@@ -1850,6 +1852,9 @@ float player_real_count;
 void(entity spot) player_spawn {
 	entity oldself, oldother;
 	player_clear(FALSE);
+	if ((self.debris = g_player_debris) != "")
+		debris_setup();
+
 	self.iscreature = TRUE;
 	player_body_setup(self);
 	self.flags = FL_CLIENT;
@@ -2178,6 +2183,15 @@ void() player_init {
 	CVAR_CACHE_STR(g_player_forcemodel_blue);
 	CVAR_CACHE_STR(g_player_forcemodel_yellow);
 	CVAR_CACHE_STR(g_player_forcemodel_pink);
+	if not(player_init_done) {
+		CVAR_CACHE_STR(g_player_debris);
+		entity oldself = self;
+		self = spawn();
+		self.debris = g_player_debris;
+		debris_init();
+		remove(self);
+		self = oldself;
+	}
 	CVAR_CACHE_CHECK_EMPTY(g_player_forcecolor, -2);
 	CVAR_CACHE_CHECK_EMPTY(g_player_forcecolor_red, -2);
 	CVAR_CACHE_CHECK_EMPTY(g_player_forcecolor_blue, -2);
