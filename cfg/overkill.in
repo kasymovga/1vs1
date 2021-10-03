@@ -48,3 +48,4 @@ set overkill_g_nadgets_normal_damage 300
 set overkill_g_nadgets_normal_regen_time 10
 set overkill_g_buttons_hookuse_swap 1
 set overkill_g_warmup_allguns 0
+set overkill_g_player_debris "armor_small"
