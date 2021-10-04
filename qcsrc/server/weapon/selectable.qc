@@ -1,22 +1,22 @@
 float g_start_weapon_selectable;
-float selectable_weapon_for_bots;
+float weapon_selectable_for_bots;
 
 .float w_secondary_picked;
 void(void) weapon_selectable_send {
-    msg_entity = self;
-    net_write_byte(MSG_ONE, SVC_TEMPENTITY);
-    net_write_byte(MSG_ONE, NET_TE_CSQC_WEAPONSELECT);
-    net_write_int24(MSG_ONE, g_start_weapon_selectable);
+	msg_entity = self;
+	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+	net_write_byte(MSG_ONE, NET_TE_CSQC_WEAPONSELECT);
+	net_write_int24(MSG_ONE, g_start_weapon_selectable);
 }
 
-var void(void(string item, string cmd) Add_Item) weapon_selectable_gamemenu_send_NextLink;
+var void(void(string item, string cmd) Add_Item) weapon_selectable_gamemenu_send_next;
 void(void(string item, string cmd) Add_Item) weapon_selectable_gamemenu_send {
 	Add_Item("Switch Weapon", "cmd pickweapon;");
-	weapon_selectable_gamemenu_send_NextLink(Add_Item);
+	weapon_selectable_gamemenu_send_next(Add_Item);
 }
 
-var float(string cmd, float tokens) weapon_selectable_ClientCommandHandle_NextLink;
-float(string cmd, float tokens) weapon_selectable_ClientCommandHandle {
+var float(string cmd, float tokens) weapon_selectable_cmd_client_handle_next;
+float(string cmd, float tokens) weapon_selectable_cmd_client_handle {
 	if (cmd == "pickweapon") {
 		if (tokens == 2) {
 			entity e;
@@ -37,29 +37,29 @@ float(string cmd, float tokens) weapon_selectable_ClientCommandHandle {
 		}
 		return TRUE;
 	}
-	return weapon_selectable_ClientCommandHandle_NextLink(cmd, tokens);
+	return weapon_selectable_cmd_client_handle_next(cmd, tokens);
 }
 
-var float(void) weapon_selectable_spectator_to_player_handle_NextLink;
+var float(void) weapon_selectable_spectator_to_player_handle_next;
 float(void) weapon_selectable_spectator_to_player_handle {
-    if(clienttype(self) != CLIENTTYPE_REAL)
-        return FALSE;
+	if (clienttype(self) != CLIENTTYPE_REAL)
+		return FALSE;
 
-    if(!self.w_secondary_picked) {
-        weapon_selectable_send();
-        return TRUE;
-    }
-	return weapon_selectable_spectator_to_player_handle_NextLink();
+	if (!self.w_secondary_picked) {
+		weapon_selectable_send();
+		return TRUE;
+	}
+	return weapon_selectable_spectator_to_player_handle_next();
 }
 
-var void(entity spot) weapon_selectable_Spawn_NextLink;
-void(entity spot) weapon_selectable_Spawn {
+var void(entity spot) weapon_selectable_spawn_next;
+void(entity spot) weapon_selectable_spawn {
 	if (self.w_secondary_picked)
 		self.weapons |= weapon_bit(self.w_secondary_picked);
 	else if (clienttype(self) == CLIENTTYPE_BOT)
-		self.weapons |= weapon_bit(selectable_weapon_for_bots);
+		self.weapons |= weapon_bit(weapon_selectable_for_bots);
 
-	weapon_selectable_Spawn_NextLink(spot);
+	weapon_selectable_spawn_next(spot);
 }
 
 void(void) weapon_selectable_init {
@@ -72,7 +72,7 @@ void(void) weapon_selectable_init {
 			e = weapon_info(i);
 			if (head == e.netname) {
 				g_start_weapon_selectable |= weapon_bit(i);
-				selectable_weapon_for_bots = i;
+				weapon_selectable_for_bots = i;
 				weapon_precache(e.weapon);
 			}
 		}
@@ -80,12 +80,12 @@ void(void) weapon_selectable_init {
 	if not(g_start_weapon_selectable)
 		return;
 
-	weapon_selectable_spectator_to_player_handle_NextLink = gamehook_chain_spectator_to_player_handle;
+	weapon_selectable_spectator_to_player_handle_next = gamehook_chain_spectator_to_player_handle;
 	gamehook_chain_spectator_to_player_handle = weapon_selectable_spectator_to_player_handle;
-	weapon_selectable_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = weapon_selectable_ClientCommandHandle;
-	weapon_selectable_Spawn_NextLink = gamehook_chain_spawn;
-	gamehook_chain_spawn = weapon_selectable_Spawn;
-	weapon_selectable_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
+	weapon_selectable_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
+	gamehook_chain_cmd_client_handle = weapon_selectable_cmd_client_handle;
+	weapon_selectable_spawn_next = gamehook_chain_spawn;
+	gamehook_chain_spawn = weapon_selectable_spawn;
+	weapon_selectable_gamemenu_send_next = gamehook_chain_gamemenu_send;
 	gamehook_chain_gamemenu_send = weapon_selectable_gamemenu_send;
 }

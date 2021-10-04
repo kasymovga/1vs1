@@ -4,7 +4,7 @@ float g_akimbo_weapons;
 float g_akimbo_throwable;
 float g_akimbo_weaponratefactor;
 float g_akimbo_weaponratefactor_for;
-float weapons_with_akimbo_support;
+float akimbo_supported_weapons;
 void(entity e) akimbo_clear;
 entity(entity e, float deep) akimbo_ghost_get;
 
@@ -140,7 +140,7 @@ float() akimbo_weapon_rate_factor {
 void(void) akimbo_init {
 	float i, j, n;
 	string s = cvar_string("g_akimbo_weapons");
-	weapons_with_akimbo_support =
+	akimbo_supported_weapons =
 			WEPBIT_LASER |
 			WEPBIT_SHOTGUN |
 			WEPBIT_UZI |
@@ -156,7 +156,7 @@ void(void) akimbo_init {
 			WEPBIT_ROCKET_LAUNCHER;
 
 	if (s == "all")
-		g_akimbo_weapons = weapons_with_akimbo_support;
+		g_akimbo_weapons = akimbo_supported_weapons;
 	else {
 		n = tokenize_console(s);
 		for (i = 0; i < n; i++)
@@ -166,14 +166,14 @@ void(void) akimbo_init {
 					break;
 				}
 	}
-	g_akimbo_weapons = g_akimbo_weapons & weapons_with_akimbo_support;
+	g_akimbo_weapons = g_akimbo_weapons & akimbo_supported_weapons;
 	if not(g_akimbo_weapons)
 	if not(g_powerup_strength_akimbo)
 		return;
 
 	s = cvar_string("g_akimbo_weaponratefactor_for");
 	if (s == "all")
-		g_akimbo_weaponratefactor_for = weapons_with_akimbo_support;
+		g_akimbo_weaponratefactor_for = akimbo_supported_weapons;
 	else {
 		n = tokenize_console(s);
 		for (i = 0; i < n; i++)
@@ -271,7 +271,7 @@ void(entity e) akimbo_clear {
 
 float(entity e, float wpn, float deep) akimbo_weapon_have {
 	float wpnbit = weapon_bit(wpn);
-	if not(wpnbit & weapons_with_akimbo_support)
+	if not(wpnbit & akimbo_supported_weapons)
 		return FALSE;
 
 	if (e.akimbo_weapons & wpnbit) {
