@@ -14,34 +14,31 @@ string sv_announcer_extra_twohits;
 
 .float nex_lasthit;
 
-void weapon_nex_whoosh(vector start, vector end) {
+void(vector start, vector end) weapon_nex_whoosh {
 	entity pseudoprojectile = NULL;
 	vector beampos;
 	vector dir = normalize(end - start);
 	string snd;
 	float length = vlen(start - end);
 	float f;
-	FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
-	{
+	FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) { // we use realclient, so spectators can hear the whoosh too
 		// nearest point on the beam
 		beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
-
 		f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
-		if(f <= 0)
+		if (f <= 0)
 			continue;
 
 		snd = strcat("weapons/nexwhoosh", ftos(floor(random() * 3) + 1), ".wav");
-
-		if(!pseudoprojectile)
+		if (!pseudoprojectile)
 			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+
 		sound_to_at(MSG_ONE, pseudoprojectile, beampos, CHAN_PROJECTILE, snd, VOL_BASE * f, ATTN_NONE);
 	}
-
-	if(pseudoprojectile)
+	if (pseudoprojectile)
 		remove(pseudoprojectile);
 }
 
-void weapon_nex_beam_particles(vector start, vector endpos, vector to) {
+void(vector start, vector endpos, vector to) weapon_nex_beam_particles {
 	weapon_nex_whoosh(start, endpos);
 	net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
 	net_write_byte(MSG_BROADCAST, NET_TE_CSQC_NEXGUNBEAMPARTICLE);
@@ -53,20 +50,16 @@ void weapon_nex_beam_particles(vector start, vector endpos, vector to) {
 	net_write_coord(MSG_BROADCAST, endpos_z);
 }
 
-void weapon_nex_attack (void)
-{
+void(void) weapon_nex_attack {
 	float flying;
 	flying = physics_is_flying(self); // do this BEFORE to make the trace values from bullet_railgun last
-
 	antilag_begin(akimbo_owner(self));
 	weapon_setup_shot (self, 5, "weapons/nexfire.wav", 1);
-
 	damage_yoda = 0;
 	damage_headshot = 0;
 	damage_goodhits = 0;
 	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
 	antilag_end();
-
 	if (damage_headshot)
 		announce(akimbo_owner(self), "announcer/male/headshot.wav", "^1Head^3Shot");
 	else if ((damage_yoda && flying) || damage_yoda > 1)
@@ -76,14 +69,12 @@ void weapon_nex_attack (void)
 		damage_goodhits = 0; // only every second time
 	}
 	self.nex_lasthit = damage_goodhits;
-	
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		damage_info(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), WEP_NEX, self);
 
 	//beam and muzzle flash done on client
 	warpzone_draw_effect_triangle(weapon_shotorg, weapon_shotorg_visual, warpzone_untransform_origin(warpzone_trace_transform, trace_endpos), weapon_nex_beam_particles);
-
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_nex_ammo;
 
@@ -102,8 +93,7 @@ void(void) weapon_nex_reload {
 			weapon_nex_reloadandready);
 }
 
-float weapon_nex(float req)
-{
+float(float req) weapon_nex {
 	if (req == WR_AIM)
 		self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 	else if (req == WR_THINK) {
@@ -123,17 +113,14 @@ float weapon_nex(float req)
 			self.ammoclip = self.nex_ammoclip;
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/nexflash.md3");
-		precache_sound ("weapons/nexfire.wav");
-		precache_sound ("weapons/nexwhoosh1.wav");
-		precache_sound ("weapons/nexwhoosh2.wav");
-		precache_sound ("weapons/nexwhoosh3.wav");
+	} else if (req == WR_PRECACHE) {
+		precache_model("models/nexflash.md3");
+		precache_sound("weapons/nexfire.wav");
+		precache_sound("weapons/nexwhoosh1.wav");
+		precache_sound("weapons/nexwhoosh2.wav");
+		precache_sound("weapons/nexwhoosh3.wav");
 		hint_add("Don't forget to customize your mouse sensitivity for better aim with nex.");
-	}
-	else if (req == WR_CHECKAMMO1)
+	} else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_nex_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;

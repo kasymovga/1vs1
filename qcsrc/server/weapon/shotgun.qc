@@ -26,18 +26,16 @@ var .float sg_buttonatck1 = BUTTON_ATCK;
 var .float sg_buttonatck2 = BUTTON_ATCK2;
 .float sg_ammoclip;
 
-void weapon_shotgun_attack (void)
-{
-	float	sc;
-	local entity flash;
-
+void(void) weapon_shotgun_attack {
+	float sc;
+	entity flash;
 	bullet_begin(g_balance_shotgun_primary_speed);
 	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
-
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
 		bullet(weapon_shotorg, weapon_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
 				g_balance_shotgun_primary_damage, 0, g_balance_shotgun_primary_force,
 				WEP_SHOTGUN, particleeffectnum("tr_bullet"), g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
+
 	bullet_end();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - g_balance_shotgun_primary_ammo;
@@ -46,7 +44,6 @@ void weapon_shotgun_attack (void)
 		self.sg_ammoclip -= 1;
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_shotgun_primary_ammo);
-
 	// casing code
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 	// muzzle flash for 1st person view
@@ -59,11 +56,9 @@ void weapon_shotgun_attack (void)
 
 }
 
-void weapon_shotgun_attack2 (void)
-{
-	float	sc;
-	local entity flash;
-
+void(void) weapon_shotgun_attack2 {
+	float sc;
+	entity flash;
 	bullet_begin(g_balance_shotgun_secondary_speed);
 	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
@@ -71,6 +66,7 @@ void weapon_shotgun_attack2 (void)
 				g_balance_shotgun_secondary_damage, 0, g_balance_shotgun_secondary_force,
 				WEP_SHOTGUN | HITTYPE_SECONDARY, particleeffectnum("tr_bullet"), g_balance_shotgun_secondary_gravityfactor,
 				g_balance_shotgun_secondary_bulletconstant);
+
 	bullet_end();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - g_balance_shotgun_secondary_ammo;
@@ -79,7 +75,6 @@ void weapon_shotgun_attack2 (void)
 		self.sg_ammoclip -= 1;
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_shotgun_secondary_ammo);
-
 	// casing code
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 	flash = spawn();
@@ -92,13 +87,12 @@ void weapon_shotgun_attack2 (void)
 }
 
 // weapon frames
-void weapon_shotgun_fire2_03()
-{
+void(void) weapon_shotgun_fire2_03 {
 	weapon_shotgun_attack2();
 	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_ready);
 }
-void weapon_shotgun_fire2_02()
-{
+
+void(void) weapon_shotgun_fire2_02 {
 	weapon_shotgun_attack2();
 	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_shotgun_fire2_03);
 }
@@ -127,13 +121,11 @@ void(void) weapon_shotgun_reload {
 	weapon_clip_reload(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo,
 			g_balance_shotgun_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_shotgun_reloadtime,
 			weapon_shotgun_reloadandready);
-
 	if (g_balance_shotgun_reloadtime_shell)
 		self.sg_ammoclip = clipsave; //shotgun not have ammo drop on reload in case of per shell reloading
 }
 
-float weapon_shotgun(float req)
-{
+float(float req) weapon_shotgun {
 	if (req == WR_AIM) {
 		if(vlen(self.origin-self.enemy.origin)>200 || !g_balance_shotgun_secondary)
 			self.sg_buttonatck1 = bot_aim(1000000, 0, 0.001, FALSE);
@@ -141,20 +133,18 @@ float weapon_shotgun(float req)
 			self.sg_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
 	} else if (req == WR_THINK) {
 		if (g_balance_shotgun_magazinecapacity && (self.sg_ammoclip < 0 || (!self.sg_ammoclip && (self.sg_buttonatck1 || self.sg_buttonatck2)))) { // forced reload (e.g. because interrupted)
-			if(self.switchweapon == self.weapon)
-			if(self.weaponentity.state == WS_READY)
+			if (self.switchweapon == self.weapon)
+			if (self.weaponentity.state == WS_READY)
 				weapon_shotgun_reload();
 		} else if (!g_balance_shotgun_magazinecapacity || self.sg_ammoclip > 0) {
 			if (self.sg_buttonatck1)
-			if (weapon_prepareattack(0, g_balance_shotgun_primary_refire))
-			{
+			if (weapon_prepareattack(0, g_balance_shotgun_primary_refire)) {
 				weapon_shotgun_attack();
 				weapon_thinkf(WFRAME_FIRE1, g_balance_shotgun_primary_animtime, weapon_ready);
 			}
 			if (self.sg_buttonatck2)
 			if (g_balance_shotgun_secondary)
-			if (weapon_prepareattack(1, g_balance_shotgun_secondary_refire))
-			{
+			if (weapon_prepareattack(1, g_balance_shotgun_secondary_refire)) {
 				weapon_shotgun_attack2();
 				weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_shotgun_fire2_02);
 			}
@@ -164,9 +154,9 @@ float weapon_shotgun(float req)
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
 	} else if (req == WR_PRECACHE) {
-		precache_model ("models/uziflash.md3");
-		precache_sound ("misc/itempickup.wav");
-		precache_sound ("weapons/shotgun_fire.wav");
+		precache_model("models/uziflash.md3");
+		precache_sound("misc/itempickup.wav");
+		precache_sound("weapons/shotgun_fire.wav");
 		precache_sound("weapons/campingrifle_reload.wav");
 	} else if (req == WR_CHECKAMMO1) {
 		return self.ammo_shells >= g_balance_shotgun_primary_ammo;

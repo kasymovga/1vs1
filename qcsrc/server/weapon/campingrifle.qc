@@ -166,11 +166,10 @@ float(float req) weapon_campingrifle {
 			if (self.ammoclip <= 0)
 				self.ammoclip = 0;
 		}
-
 	} else if (req == WR_PRECACHE) {
-		precache_sound ("weapons/campingrifle_reload.wav");
-		precache_sound ("weapons/campingrifle_fire.wav");
-		precache_sound ("weapons/campingrifle_fire2.wav");
+		precache_sound("weapons/campingrifle_reload.wav");
+		precache_sound("weapons/campingrifle_fire.wav");
+		precache_sound("weapons/campingrifle_fire2.wav");
 	} else if (req == WR_SETUP) {
 		weapon_setup(WEP_CAMPINGRIFLE);
 		full = weapon_campingrifle_checkmaxbullets();

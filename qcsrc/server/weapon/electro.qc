@@ -227,12 +227,12 @@ float(float req) weapon_electro {
 			self.electro_secondarytime = time + g_balance_electro_secondary_refire2;
 		}
 	} else if (req == WR_PRECACHE) {
-		precache_sound ("weapons/electro_bounce.wav");
-		precache_sound ("weapons/electro_fire.wav");
-		precache_sound ("weapons/electro_fire2.wav");
-		precache_sound ("weapons/electro_impact.wav");
-		precache_sound ("weapons/electro_impact_combo.wav");
-		precache_sound ("weapons/electro_fly.wav");
+		precache_sound("weapons/electro_bounce.wav");
+		precache_sound("weapons/electro_fire.wav");
+		precache_sound("weapons/electro_fire2.wav");
+		precache_sound("weapons/electro_impact.wav");
+		precache_sound("weapons/electro_impact_combo.wav");
+		precache_sound("weapons/electro_fly.wav");
 		hint_add("Spam secondary electro balls and explode them with primary fire to create a powerful explosion.");
 	} else if (req == WR_SETUP)
 		weapon_setup(WEP_ELECTRO);

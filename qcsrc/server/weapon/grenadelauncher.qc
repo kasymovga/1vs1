@@ -38,8 +38,7 @@ void(void) weapon_grenadelauncher_explode {
 	projectile_explode();
 }
 
-void weapon_grenadelauncher_touch1 (void)
-{
+void(void) weapon_grenadelauncher_touch1 {
 	PROJECTILE_TOUCH;
 	weapon_grenadelauncher_explode();
 }
@@ -67,13 +66,12 @@ void(void) weapon_grenadelauncher_touch2 {
 	}
 }
 
-void weapon_grenadelauncher_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
-{
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) weapon_grenadelauncher_damage {
 	if (self.health <= 0)
 		return;
+
 	self.health = self.health - _damage;
-	if (self.health <= 0)
-	{
+	if (self.health <= 0) {
 		damage_prepare_explosion(attacker, self.think);
 	}
 }
@@ -113,7 +111,6 @@ void(void) weapon_grenadelauncher_attack2 {
 	gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
 	projectile_setup(gren, weapon_shotorg, WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY, g_balance_grenadelauncher_secondary_damage,
 			g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, g_balance_grenadelauncher_secondary_force, 1);
-
 	gren.nextthink = time + g_balance_grenadelauncher_secondary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;
@@ -126,86 +123,66 @@ void(void) weapon_grenadelauncher_attack2 {
 	weapon_setup_projectile_velocity(gren);
 }
 
-void spawnfunc_weapon_grenadelauncher (void)
-{
+void(void) spawnfunc_weapon_grenadelauncher {
 	weapon_defaultspawnfunc(WEP_GRENADE_LAUNCHER);
 }
 
 .float bot_secondary_grenademooth;
-float weapon_grenadelauncher(float req)
-{
-	if (req == WR_AIM)
-	{
+float(float req) weapon_grenadelauncher {
+	if (req == WR_AIM) {
 		self.gl_buttonatck1 = FALSE;
 		self.gl_buttonatck2 = FALSE;
-		if (self.bot_secondary_grenademooth == 0 || !g_balance_grenadelauncher_secondary)
-		{
-			if(bot_aim(g_balance_grenadelauncher_primary_speed, g_balance_grenadelauncher_primary_speed_up, g_balance_grenadelauncher_primary_lifetime, TRUE))
-			{
+		if (self.bot_secondary_grenademooth == 0 || !g_balance_grenadelauncher_secondary) {
+			if (bot_aim(g_balance_grenadelauncher_primary_speed, g_balance_grenadelauncher_primary_speed_up, g_balance_grenadelauncher_primary_lifetime, TRUE)) {
 				self.gl_buttonatck1 = TRUE;
 				if(random() < 0.01) self.bot_secondary_grenademooth = 1;
 			}
-		}
-		else
-		{
-			if(bot_aim(g_balance_grenadelauncher_secondary_speed, g_balance_grenadelauncher_secondary_speed_up, g_balance_grenadelauncher_secondary_lifetime, TRUE))
-			{
+		} else {
+			if (bot_aim(g_balance_grenadelauncher_secondary_speed, g_balance_grenadelauncher_secondary_speed_up, g_balance_grenadelauncher_secondary_lifetime, TRUE)) {
 				self.gl_buttonatck2 = TRUE;
 				if(random() < 0.02) self.bot_secondary_grenademooth = 0;
 			}
 		}
-	}
-	else if (req == WR_THINK)
-	{
+	} else if (req == WR_THINK) {
 		if (self.gl_buttonatck1)
-		if (weapon_prepareattack(0, g_balance_grenadelauncher_primary_refire))
-		{
+		if (weapon_prepareattack(0, g_balance_grenadelauncher_primary_refire)) {
 			weapon_grenadelauncher_attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, weapon_ready);
 		}
 		if (self.gl_buttonatck2)
 		if (g_balance_grenadelauncher_secondary)
-		if (weapon_prepareattack(1, g_balance_grenadelauncher_secondary_refire))
-		{
+		if (weapon_prepareattack(1, g_balance_grenadelauncher_secondary_refire)) {
 			weapon_grenadelauncher_attack2();
 			weapon_thinkf(WFRAME_FIRE2, g_balance_grenadelauncher_secondary_animtime, weapon_ready);
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_sound ("weapons/grenade_bounce1.wav");
-		precache_sound ("weapons/grenade_bounce2.wav");
-		precache_sound ("weapons/grenade_bounce3.wav");
-		precache_sound ("weapons/grenade_bounce4.wav");
-		precache_sound ("weapons/grenade_bounce5.wav");
-		precache_sound ("weapons/grenade_bounce6.wav");
-		precache_sound ("weapons/grenade_fire.wav");
-	}
-	else if (req == WR_SETUP)
+	} else if (req == WR_PRECACHE) {
+		precache_sound("weapons/grenade_bounce1.wav");
+		precache_sound("weapons/grenade_bounce2.wav");
+		precache_sound("weapons/grenade_bounce3.wav");
+		precache_sound("weapons/grenade_bounce4.wav");
+		precache_sound("weapons/grenade_bounce5.wav");
+		precache_sound("weapons/grenade_bounce6.wav");
+		precache_sound("weapons/grenade_fire.wav");
+	} else if (req == WR_SETUP)
 		weapon_setup(WEP_GRENADE_LAUNCHER);
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_rockets >= g_balance_grenadelauncher_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_rockets >= g_balance_grenadelauncher_secondary_ammo;
-	else if (req == WR_SUICIDEMESSAGE)
-	{
+	else if (req == WR_SUICIDEMESSAGE) {
 		if(weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "tried out his own grenade";
 		else
 			weapon_deathtypestring = "detonated";
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(weapon_deathtype & HITTYPE_SPLASH)
-			if(weapon_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
+	} else if (req == WR_KILLMESSAGE) {
+		if (weapon_deathtype & HITTYPE_SPLASH)
+			if (weapon_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
 				weapon_deathtypestring = "didn't see #'s grenade";
 			else // unchecked: SECONDARY
 				weapon_deathtypestring = "almost dodged #'s grenade";
 		else // unchecked: SECONDARY, BOUNCE
 			weapon_deathtypestring = "ate #'s grenade";
-	}
-	else if (req == WR_CVAR_CACHE)
-	{
+	} else if (req == WR_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_grenadelauncher_primary_ammo);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_animtime);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_bounce);

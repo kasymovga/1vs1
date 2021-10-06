@@ -672,8 +672,7 @@ float(float req) weapon_zapper {
 		weapon_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE)
 		weapon_deathtypestring = "was zapped by";
-	else if (req == WR_CVAR_CACHE)
-	{
+	else if (req == WR_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_zapper_secondary_animtime);
 		CVAR_CACHE(g_balance_zapper_primary_ammo);
 		CVAR_CACHE(g_balance_zapper_primary_cooloff);

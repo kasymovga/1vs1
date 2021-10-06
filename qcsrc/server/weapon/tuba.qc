@@ -11,17 +11,15 @@ float g_balance_tuba_volume;
 
 .float tuba_notecount;
 
-float weapon_tuba_note(entity pl, float hittype)
-{
+float(entity pl, float hittype) weapon_tuba_note {
 	float note = 0;
 	float movestate;
 	movestate = 5;
-	if(pl.movement_x < 0) movestate -= 3;
-	if(pl.movement_x > 0) movestate += 3;
-	if(pl.movement_y < 0) movestate -= 1;
-	if(pl.movement_y > 0) movestate += 1;
-	switch(movestate)
-	{
+	if (pl.movement_x < 0) movestate -= 3;
+	if (pl.movement_x > 0) movestate += 3;
+	if (pl.movement_y < 0) movestate -= 1;
+	if (pl.movement_y > 0) movestate += 1;
+	switch (movestate) {
 	// layout: originally I wanted
 	//   eb e  e#=f
 	//   B  c  d
@@ -31,21 +29,23 @@ float weapon_tuba_note(entity pl, float hittype)
 	//   eb e  B
 	// f=e# c  d
 	//   Gb G  G#
-		case 1: note = -6; break; // Gb
-		case 2: note = -5; break; // G
-		case 3: note = -4; break; // G#
-		case 4: note = +5; break; // e#
-		case 5: note =  0; break; // c
-		case 6: note = +2; break; // d
-		case 7: note = +3; break; // eb
-		case 8: note = +4; break; // e
-		case 9: note = -1; break; // B
+	case 1: note = -6; break; // Gb
+	case 2: note = -5; break; // G
+	case 3: note = -4; break; // G#
+	case 4: note = +5; break; // e#
+	case 5: note =  0; break; // c
+	case 6: note = +2; break; // d
+	case 7: note = +3; break; // eb
+	case 8: note = +4; break; // e
+	case 9: note = -1; break; // B
 	}
-	if(pl.BUTTON_CROUCH)
+	if (pl.BUTTON_CROUCH)
 		note -= 12;
-	if(pl.BUTTON_JUMP)
+
+	if (pl.BUTTON_JUMP)
 		note += 12;
-	if(hittype & HITTYPE_SECONDARY)
+
+	if (hittype & HITTYPE_SECONDARY)
 		note += 7;
 	
 	// we support two kinds of tubas, those tuned in Eb and those tuned in C
@@ -53,15 +53,12 @@ float weapon_tuba_note(entity pl, float hittype)
 	// teamplay
 	// that way, holes in the range of notes are "plugged"
 	if (team_mode) {
-		if(pl.team == COLOR_TEAM2 || pl.team == COLOR_TEAM4)
+		if (pl.team == COLOR_TEAM2 || pl.team == COLOR_TEAM4)
+			note += 3;
+	} else {
+		if (pl.clientcolors & 1)
 			note += 3;
 	}
-	else
-	{
-		if(pl.clientcolors & 1)
-			note += 3;
-	}
-	
 	// total range of notes:
 	//                       0
 	//                 ***  ** ****
@@ -77,84 +74,63 @@ float weapon_tuba_note(entity pl, float hittype)
 	return note;
 }
 
-void weapon_tuba_attack(float hittype)
-{
+void(float hittype) weapon_tuba_attack {
 	vector o;
 	float c;
 	weapon_setup_shot(self, 2, "", 1);
-	if(self.tuba_notecount)
-	{
+	if (self.tuba_notecount) {
 		self.tuba_notecount = FALSE;
 		c = CHAN_WEAPON;
-	}
-	else
-	{
+	} else {
 		self.tuba_notecount = TRUE;
 		c = CHAN_WEAPON2;
 	}
 	sound(self, c, TUBA_NOTE(weapon_tuba_note(self, hittype)), bound(0, VOL_BASE * g_balance_tuba_volume, 1), g_balance_tuba_attenuation);
 	damage_radius(self, self, g_balance_tuba_damage, g_balance_tuba_edgedamage, g_balance_tuba_radius, world, g_balance_tuba_force, hittype | WEP_TUBA | HITTYPE_NOTEAMDAMAGE, world);
-
 	o = gettaginfo(self.exteriorweaponentity, 0);
 	pointparticles(particleeffectnum("smoke_ring"), o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
 }
 
-void spawnfunc_weapon_tuba (void)
-{
+void(void) spawnfunc_weapon_tuba {
 	weapon_defaultspawnfunc(WEP_TUBA);
 }
 
-float weapon_tuba(float req)
-{
-	if (req == WR_AIM)
-	{
+float(float req) weapon_tuba {
+	if (req == WR_AIM) {
 		// bots cannot play the Tuba well yet
 		// I think they should start with the recorder first
-		if(vlen(self.origin - self.enemy.origin) < g_balance_tuba_radius)
-		{
-			if(random() > 0.5)
+		if (vlen(self.origin - self.enemy.origin) < g_balance_tuba_radius) {
+			if (random() > 0.5)
 				self.BUTTON_ATCK = 1;
 			else
 				self.BUTTON_ATCK2 = 1;
 		}
-	}
-	else if (req == WR_THINK)
-	{
+	} else if (req == WR_THINK) {
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, g_balance_tuba_refire))
-		{
+		if (weapon_prepareattack(0, g_balance_tuba_refire)) {
 			weapon_tuba_attack(0);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_tuba_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
-		if (weapon_prepareattack(1, g_balance_tuba_refire))
-		{
+		if (weapon_prepareattack(1, g_balance_tuba_refire)) {
 			weapon_tuba_attack(HITTYPE_SECONDARY);
 			weapon_thinkf(WFRAME_FIRE2, g_balance_tuba_animtime, weapon_ready);
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
+	} else if (req == WR_PRECACHE) {
 		float i;
-		for(i = -18; i <= +27; ++i)
+		for (i = -18; i <= +27; ++i)
 			precache_sound(TUBA_NOTE(i));
-	}
-	else if (req == WR_SETUP)
+	} else if (req == WR_SETUP)
 		weapon_setup(WEP_TUBA);
 	else if (req == WR_CHECKAMMO1)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
-	else if (req == WR_SUICIDEMESSAGE)
-	{
+	else if (req == WR_SUICIDEMESSAGE) {
 		weapon_deathtypestring = "hurt his own ears with the @!#%'n Tuba";
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
+	} else if (req == WR_KILLMESSAGE) {
 		weapon_deathtypestring = "died of #'s great playing on the @!#%'n Tuba";
-	}
-	else if (req == WR_CVAR_CACHE)
-	{
+	} else if (req == WR_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_tuba_animtime);
 		CVAR_CACHE(g_balance_tuba_attenuation);
 		CVAR_CACHE(g_balance_tuba_damage);

@@ -41,51 +41,36 @@ void(float issecondary) weapon_laser_attack {
 				FALSE, TRUE, g_balance_laser_primary_lifetime);
 }
 
-void spawnfunc_weapon_laser (void)
-{
+void(void) spawnfunc_weapon_laser {
 	weapon_defaultspawnfunc(WEP_LASER);
 }
 
-float weapon_laser_precached;
-
-float weapon_laser(float req)
-{
+float(float req) weapon_laser {
 	if (req == WR_AIM)
 		self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
-	else if (req == WR_THINK)
-	{
-		if (self.BUTTON_ATCK)
-		{
-			if (weapon_prepareattack(0, g_balance_laser_primary_refire))
-			{
+	else if (req == WR_THINK) {
+		if (self.BUTTON_ATCK) {
+			if (weapon_prepareattack(0, g_balance_laser_primary_refire)) {
 				weapon_laser_attack(FALSE);
 				weapon_thinkf(WFRAME_FIRE1, g_balance_laser_primary_animtime, weapon_ready);
 			}
 		}
-		if (self.BUTTON_ATCK2)
-		{
-			if(g_balance_laser_secondary)
-			{
-				if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
-				{
+		if (self.BUTTON_ATCK2) {
+			if(g_balance_laser_secondary) {
+				if (weapon_prepareattack(0, g_balance_laser_secondary_refire)) {
 					weapon_laser_attack(TRUE);
 					weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, weapon_ready);
 				}
-			}
-			else
-			{
+			} else {
 				if(self.switchweapon == WEP_LASER) // don't do this if already switching
 					weapon_switch(self.cnt);
 			}
 		}
 	}
 	else if (req == WR_PRECACHE) {
-		if not(weapon_laser_precached) {
-			precache_sound ("weapons/lasergun_fire.wav");
-			weapon_laser_precached = 1;
-			if (cvar("g_balance_laser_primary_force") > 0)
-				hint_add("You can use Laser for high jumps or accelerating. Just shoot under your legs or near walls.");
-		}
+		precache_sound("weapons/lasergun_fire.wav");
+		if (cvar("g_balance_laser_primary_force") > 0)
+			hint_add("You can use Laser for high jumps or accelerating. Just shoot under your legs or near walls.");
 	} else if (req == WR_SETUP)
 		weapon_setup(WEP_LASER);
 	else if (req == WR_CHECKAMMO1)
@@ -96,8 +81,7 @@ float weapon_laser(float req)
 		weapon_deathtypestring = "lasered himself to hell";
 	else if (req == WR_KILLMESSAGE)
 		weapon_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
-	else if (req == WR_CVAR_CACHE)
-	{
+	else if (req == WR_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_laser_primary_animtime);
 		CVAR_CACHE(g_balance_laser_primary_damage);
 		CVAR_CACHE(g_balance_laser_primary_edgedamage);
@@ -120,4 +104,4 @@ float weapon_laser(float req)
 		projectile_init(PROJECTILE_LASER, MOVETYPE_FLY);
 	}
 	return TRUE;
-};
+}

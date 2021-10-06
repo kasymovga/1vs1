@@ -22,9 +22,9 @@ float g_balance_hagar_secondary;
 var .float hagar_buttonatck1 = BUTTON_ATCK;
 var .float hagar_buttonatck2 = BUTTON_ATCK2;
 
-void weapon_hagar_touch2 (void) {
+void(void) weapon_hagar_touch2 {
 	PROJECTILE_TOUCH;
-	if(self.cnt > 0 || other.takedamage == DAMAGE_AIM) {
+	if (self.cnt > 0 || other.takedamage == DAMAGE_AIM) {
 		projectile_explode();
 	} else {
 		self.cnt++;
@@ -44,7 +44,6 @@ void(void) weapon_hagar_attack {
 	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
 	projectile_setup(missile, weapon_shotorg, WEP_HAGAR, g_balance_hagar_primary_damage,
 			g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, g_balance_hagar_primary_force, 0);
-
 	missile.touch = projectile_touch_explode;
 	missile.use = projectile_explode;
 	missile.think = projectile_think2use;
@@ -64,7 +63,6 @@ void(void) weapon_hagar_attack2 {
 	missile = projectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE, self);
 	projectile_setup(missile, weapon_shotorg, WEP_HAGAR | HITTYPE_SECONDARY, g_balance_hagar_secondary_damage,
 			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force, 0);
-
 	missile.touch = weapon_hagar_touch2;
 	missile.cnt = 0;
 	missile.use = projectile_explode;
@@ -74,42 +72,33 @@ void(void) weapon_hagar_attack2 {
 	weapon_setup_projectile_velocity(missile);
 }
 
-void spawnfunc_weapon_hagar (void)
-{
+void(void) spawnfunc_weapon_hagar {
 	weapon_defaultspawnfunc(WEP_HAGAR);
 }
 
-float weapon_hagar(float req)
-{
-	if (req == WR_AIM)
+float(float req) weapon_hagar {
+	if (req == WR_AIM) {
 		if (!g_balance_hagar_secondary || random() > 0.15)
 			self.hagar_buttonatck1 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
-		else
-		{
+		else {
 			// not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
 			self.hagar_buttonatck2 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
 		}
-	else if (req == WR_THINK)
-	{
+	} else if (req == WR_THINK) {
 		if (self.hagar_buttonatck1)
-		if (weapon_prepareattack(0, g_balance_hagar_primary_refire))
-		{
+		if (weapon_prepareattack(0, g_balance_hagar_primary_refire)) {
 			weapon_hagar_attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_hagar_primary_refire, weapon_ready);
 		}
 		if (self.hagar_buttonatck2)
 		if (g_balance_hagar_secondary)
-		if (weapon_prepareattack(1, g_balance_hagar_secondary_refire))
-		{
+		if (weapon_prepareattack(1, g_balance_hagar_secondary_refire)) {
 			weapon_hagar_attack2();
 			weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, weapon_ready);
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_sound ("weapons/hagar_fire.wav");
-	}
-	else if (req == WR_SETUP)
+	} else if (req == WR_PRECACHE) {
+		precache_sound("weapons/hagar_fire.wav");
+	} else if (req == WR_SETUP)
 		weapon_setup(WEP_HAGAR);
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_rockets >= g_balance_hagar_primary_ammo;
@@ -117,15 +106,12 @@ float weapon_hagar(float req)
 		return self.ammo_rockets >= g_balance_hagar_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
 		weapon_deathtypestring = "played with tiny rockets";
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(weapon_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
+	else if (req == WR_KILLMESSAGE) {
+		if (weapon_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
 			weapon_deathtypestring = "hoped #'s missiles wouldn't bounce";
 		else // unchecked: SPLASH, SECONDARY
 			weapon_deathtypestring = "was pummeled by";
-	}
-	else if (req == WR_CVAR_CACHE)
-	{
+	} else if (req == WR_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_hagar_primary_ammo);
 		CVAR_CACHE(g_balance_hagar_primary_damage);
 		CVAR_CACHE(g_balance_hagar_primary_edgedamage);

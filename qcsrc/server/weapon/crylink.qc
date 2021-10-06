@@ -161,8 +161,8 @@ float(float req) weapon_crylink {
 			weapon_thinkf(WFRAME_FIRE2, g_balance_crylink_secondary_animtime, weapon_ready);
 		}
 	} else if (req == WR_PRECACHE) {
-		precache_sound ("weapons/crylink_fire.wav");
-		precache_sound ("weapons/crylink_fire2.wav");
+		precache_sound("weapons/crylink_fire.wav");
+		precache_sound("weapons/crylink_fire2.wav");
 	} else if (req == WR_SETUP)
 		weapon_setup(WEP_CRYLINK);
 	else if (req == WR_CHECKAMMO1)
