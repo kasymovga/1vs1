@@ -35,7 +35,6 @@ float(entity plr, float eject) vehicle_extract_player {
 	self = e;
 	plr.PlayerPhysplug = NULL;
 	plr.vehicle        = world;
-	plr.view_ofs       = PL_VIEW_OFS;
 	plr.lastpushtime = time;
 	return 1;
 }
