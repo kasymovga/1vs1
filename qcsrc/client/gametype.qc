@@ -7,6 +7,8 @@ void(void) gametype_init {
 
 		if (cvar("cl_cts_showspeed"))
 			cvar_clientsettemp("cl_showspeed", "1");
+
+		race_init();
 	}
 	if not(main_isdemo) {
 		localcmd("\n_cl_hook_gamestart ", gametype_name(gametype), ";");

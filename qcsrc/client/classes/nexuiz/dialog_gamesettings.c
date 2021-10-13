@@ -5,7 +5,7 @@ CLASS(NexuizGameSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizGameSettingsDialog, title, string, "Game Settings")
 	ATTRIB(NexuizGameSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizGameSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizGameSettingsDialog, rows, float, 19)
+	ATTRIB(NexuizGameSettingsDialog, rows, float, 20)
 	ATTRIB(NexuizGameSettingsDialog, columns, float, 6)
 	ATTRIB(NexuizGameSettingsDialog, name, string, "GameSettings")
 ENDCLASS(NexuizGameSettingsDialog)
@@ -125,6 +125,9 @@ void fillNexuizGameSettingsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_cts_strafe_helper", "Show strafe helper in CTS"));
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_cts_position_helper", "Show position helper in CTS"));
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showacceleration", "Show acceleration"));

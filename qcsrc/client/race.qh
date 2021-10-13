@@ -1,3 +1,4 @@
 void(void) race_read;
 void(void) race_sbar_draw;
+void(void) race_init;
 string(float posy) race_records_table_string;

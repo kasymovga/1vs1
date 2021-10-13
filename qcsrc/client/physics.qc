@@ -13,7 +13,6 @@ float physics_ground_oldtime;
 vector physics_ground_origin;
 vector physics_ground_oldorigin;
 float physics_ground_lastent;
-entity physics;
 float physics_skimming_start;
 float physics_cpmdoublejump_time_start;
 

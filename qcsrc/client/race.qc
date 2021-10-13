@@ -238,7 +238,6 @@ void(void) race_sbar_draw {
 	}
 	if (gametype == GAMETYPE_CTS)
 	if (CVAR(cl_cts_strafe_helper))
-	if (sv_airaccel_qw == 1)
 	if (race_velocity_x != 0 || race_velocity_y != 0)
 	if (race_movement_x != 0 || race_movement_y != 0) {
 		float wishangle = view_angles_y;
@@ -410,4 +409,74 @@ string(float posy) race_records_table_string {
 		table = strcat(table, "\n\n");
 	}
 	return table;
+}
+
+entity race_pad;
+
+void(void) race_pad_draw {
+	if (view_observer_status)
+		return;
+
+	if (view_angles_x < 45)
+		return;
+
+	if not(CVAR(cl_cts_position_helper))
+		return;
+
+	vector v = physics_end_origin;
+	trace_box(physics_end_origin, physics.mins, physics.maxs, physics_end_origin + physics.mins_z * '0 0 1' - ('0 0 1' * (physics.maxs_z - physics.mins_z)), TRACE_MOVE_NOMONSTERS, NULL);
+	if (trace_fraction == 1)
+		return;
+
+	float af = ((view_angles_x - 45) / 45);
+	float alpha = min(CVAR(cl_cts_position_helper_alpha), (1 - trace_fraction) * af);
+	if (alpha <= 0)
+		return;
+
+	v_z = trace_endpos_z + physics.mins_z + 0.01;
+	vector rgb = CVAR(cl_cts_position_helper_color);
+	vector a, b, c, d, a09, b09, c09, d09;
+	a = physics.mins_x * '1 0 0' + physics.mins_y * '0 1 0';
+	b = physics.mins_x * '1 0 0' + physics.maxs_y * '0 1 0';
+	c = physics.maxs_x * '1 0 0' + physics.maxs_y * '0 1 0';
+	d = physics.maxs_x * '1 0 0' + physics.mins_y * '0 1 0';
+	a09 = a * 0.9;
+	b09 = b * 0.9;
+	c09 = c * 0.9;
+	d09 = d * 0.9;
+	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_PolygonVertex(v + a, '0 0 0', rgb, alpha);
+	R_PolygonVertex(v + a09, '0 1 0', rgb, alpha);
+	R_PolygonVertex(v + b09, '1 1 0', rgb, alpha);
+	R_PolygonVertex(v + b, '1 0 0', rgb, alpha);
+	R_EndPolygon();
+	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_PolygonVertex(v + b, '0 0 0', rgb, alpha);
+	R_PolygonVertex(v + b09, '0 1 0', rgb, alpha);
+	R_PolygonVertex(v + c09, '1 1 0', rgb, alpha);
+	R_PolygonVertex(v + c, '1 0 0', rgb, alpha);
+	R_EndPolygon();
+	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_PolygonVertex(v + c, '0 0 0', rgb, alpha);
+	R_PolygonVertex(v + c09, '0 1 0', rgb, alpha);
+	R_PolygonVertex(v + d09, '1 1 0', rgb, alpha);
+	R_PolygonVertex(v + d, '1 0 0', rgb, alpha);
+	R_EndPolygon();
+	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_PolygonVertex(v + d, '0 0 0', rgb, alpha);
+	R_PolygonVertex(v + d09, '0 1 0', rgb, alpha);
+	R_PolygonVertex(v + a09, '1 1 0', rgb, alpha);
+	R_PolygonVertex(v + a, '1 0 0', rgb, alpha);
+	R_EndPolygon();
+	//R_BeginPolygon("textures/trak5/graypanel1", DRAWFLAG_NORMAL);
+	//R_PolygonVertex(v + a, '0 0 0', rgb, alpha);
+	//R_PolygonVertex(v + b, '0 1 0', rgb, alpha);
+	//R_PolygonVertex(v + c, '1 1 0', rgb, alpha);
+	//R_PolygonVertex(v + d, '1 0 0', rgb, 0.5);
+	//R_EndPolygon();
+}
+
+void(void) race_init {
+	race_pad = spawn();
+	race_pad.draw = race_pad_draw;
 }

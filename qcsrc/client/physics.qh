@@ -1,3 +1,4 @@
+entity physics;
 .vector view_ofs;
 var void() physics_plug_pre;
 var void() physics_plug_post;
