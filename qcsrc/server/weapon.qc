@@ -440,7 +440,7 @@ void(void) weapon_frame {
 
 void(float wpn) weapon_precache {
 	entity e = weapon_info(wpn);
-	item_precache(e.model, e.lodmodel1);
+	item_precache(e.model, e.lodmodel1, "weapons/weaponpickup.wav");
 	precache_model(strcat("models/weapons/v_", e.mdl, ".md3"));
 	precache_model(strcat("models/weapons/h_", e.mdl, ".dpm"));
 	e.weapon_func(WR_PRECACHE);

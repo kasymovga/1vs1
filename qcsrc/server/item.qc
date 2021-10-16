@@ -676,16 +676,14 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 		}
 		self.reset = item_reset;
 		weapon_spawned_list |= weaponid;
-		precache_model(itemmodel);
-		precache_model(defitemmodel);
-		precache_sound (pickupsound);
-		precache_sound ("misc/itemrespawn.wav");
-		precache_sound ("misc/itemrespawncountdown.wav");
+		item_precache(itemmodel, defitemmodel, pickupsound);
+		precache_sound("misc/itemrespawn.wav");
+		precache_sound("misc/itemrespawncountdown.wav");
 		if (itemid == IT_STRENGTH)
-			precache_sound ("misc/strength_respawn.wav");
+			precache_sound("misc/strength_respawn.wav");
 
 		if (itemid == IT_INVINCIBLE)
-			precache_sound ("misc/shield_respawn.wav");
+			precache_sound("misc/shield_respawn.wav");
 
 		if ((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (weaponid & WEPBIT_ALL))
 			self.message2 = "###item###"; // for finding the nearest item using find()
@@ -1010,12 +1008,15 @@ voidfunc(string s) item_spawnfunc_for {
 	return NULL;
 }
 
-void(string _model, string defmodel) item_precache {
+void(string _model, string defmodel, string snd) item_precache {
 	if (_model != "")
 		precache_model(_model);
 
 	if (defmodel != _model)
 		precache_model(defmodel);
+
+	if (snd != "")
+		precache_sound(snd);
 }
 
 void(void) item_init {
