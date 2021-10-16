@@ -66,6 +66,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	teleport_origin_set(player, to, 0);
 	player.angles = to_angles;
 	player.v_angle = to_angles;
+	player.v_angle_x = -player.v_angle_x;
 	player.velocity = to_velocity;
 	if (player.classname == "player")
 		player.flags &= ~FL_ONGROUND;

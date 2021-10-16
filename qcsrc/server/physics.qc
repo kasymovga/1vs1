@@ -222,11 +222,13 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 			frametime = 0;
 			setorigin(oldself, v2);
 			oldself.velocity = physics_velocity;
+			oldself.v_angle = physics_v_angle;
 			self.touch();
 			if (oldself.origin == v2)
 				setorigin(oldself, _oldorigin);
 
 			physics_velocity = oldself.velocity;
+			physics_v_angle = oldself.v_angle;
 			frametime = oldframetime;
 			break;
 		}
