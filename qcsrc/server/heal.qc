@@ -37,3 +37,7 @@ float(entity targ, entity inflictor, entity healer, float _heal, float aheal, fl
 	return _heal + aheal;
 }
 
+void(void) heal_init {
+	precache_sound("misc/mediumhealth.wav");
+	precache_sound("misc/armor10.wav");
+}

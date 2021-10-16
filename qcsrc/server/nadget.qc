@@ -303,6 +303,7 @@ void nadget_Init(void) {
 }
 
 void nadget_Precache(void) {
+	heal_init();
 	dlc_require("rm_effects_v2");
 	dlc_require("rm_laser");
 	dlc_require("rm_arc");

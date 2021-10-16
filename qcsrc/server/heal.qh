@@ -1,2 +1,3 @@
 float(entity targ, entity inflictor, entity healer, float heal, float aheal, float hlimit, float alimit,
 		float healtype, float pauserot, float pausearot, vector hitloc, vector force) heal;
+void(void) heal_init;
