@@ -65,15 +65,14 @@ void(entity spot) weapon_selectable_player_spawn {
 void(void) weapon_selectable_init {
 	string s = cvar_string("g_start_weapon_selectable");
 	string head, tail;
-	float i;
 	entity e;
-	for (head = str_car(s), tail = str_cdr(s); head != ""; head = str_car(tail), tail = str_cdr(tail)) {
-		for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
-			e = weapon_info(i);
-			if (head == e.netname) {
-				g_start_weapon_selectable |= weapon_bit(i);
-				weapon_selectable_for_bots = i;
+	for (head = str_car(s), tail = str_cdr(s); head != "" || tail != ""; head = str_car(tail), tail = str_cdr(tail)) {
+		if (head != "") {
+			e = weapon_info_by_name(head);
+			if (e) {
+				g_start_weapon_selectable |= weapon_bit(e.weapon);
 				weapon_precache(e.weapon);
+				weapon_selectable_for_bots = e.weapon;
 			}
 		}
 	}
