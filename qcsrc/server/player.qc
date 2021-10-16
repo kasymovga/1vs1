@@ -1934,9 +1934,6 @@ void(entity spot) player_spawn {
 	}
 	weapon_model_spawn();
 	self.alpha = 1;
-	if (g_spawnsound)
-		sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-
 	oldself = self;
 	oldother = other;
 	self = spot;
@@ -1947,8 +1944,13 @@ void(entity spot) player_spawn {
 	self = oldself;
 	other = oldother;
 	player_effects();
-	gamehook_chain_spawn(spot);
-	self.wasplayer = TRUE;
+	gamehook_chain_player_spawn(spot);
+	if (self.classname == "player") { //spawn can be aborted by game hook
+		if (g_spawnsound)
+			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
+
+		self.wasplayer = TRUE;
+	}
 	entity e;
 	float n = 0;
 	FOR_EACH_REALPLAYER(e) n++;

@@ -52,14 +52,14 @@ float(void) weapon_selectable_spectator_to_player_handle {
 	return weapon_selectable_spectator_to_player_handle_next();
 }
 
-var void(entity spot) weapon_selectable_spawn_next;
-void(entity spot) weapon_selectable_spawn {
+var void(entity spot) weapon_selectable_player_spawn_next;
+void(entity spot) weapon_selectable_player_spawn {
 	if (self.w_secondary_picked)
 		self.weapons |= weapon_bit(self.w_secondary_picked);
 	else if (clienttype(self) == CLIENTTYPE_BOT)
 		self.weapons |= weapon_bit(weapon_selectable_for_bots);
 
-	weapon_selectable_spawn_next(spot);
+	weapon_selectable_player_spawn_next(spot);
 }
 
 void(void) weapon_selectable_init {
@@ -84,8 +84,8 @@ void(void) weapon_selectable_init {
 	gamehook_chain_spectator_to_player_handle = weapon_selectable_spectator_to_player_handle;
 	weapon_selectable_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = weapon_selectable_cmd_client_handle;
-	weapon_selectable_spawn_next = gamehook_chain_spawn;
-	gamehook_chain_spawn = weapon_selectable_spawn;
+	weapon_selectable_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = weapon_selectable_player_spawn;
 	weapon_selectable_gamemenu_send_next = gamehook_chain_gamemenu_send;
 	gamehook_chain_gamemenu_send = weapon_selectable_gamemenu_send;
 }

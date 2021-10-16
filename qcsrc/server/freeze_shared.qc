@@ -1,9 +1,9 @@
 float FREEZE_SHARED_SCORE_REVIVE;
 
-var void(entity spot) freeze_shared_spawn_next;
-void(entity spot) freeze_shared_spawn {
+var void(entity spot) freeze_shared_player_spawn_next;
+void(entity spot) freeze_shared_player_spawn {
 	roundbased_check_teams();
-	freeze_shared_spawn_next(spot);
+	freeze_shared_player_spawn_next(spot);
 }
 
 float(void) freeze_shared_ice_skip_think {
@@ -42,8 +42,8 @@ void(string gt) freeze_shared_init {
 	ice_hook_unfroze = freeze_shared_ice_unfroze;
 	ice_hook_frozen_status = freeze_shared_ice_frozen_status;
 	ice_init();
-	freeze_shared_spawn_next = gamehook_chain_spawn;
-	gamehook_chain_spawn = freeze_shared_spawn;
+	freeze_shared_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = freeze_shared_player_spawn;
 	freeze_shared_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = freeze_shared_player_clear;
 	gamehook_score_give_frag_mod = freeze_shared_score_give_frag_mod;

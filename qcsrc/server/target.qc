@@ -79,10 +79,10 @@ void(void) target_voicescript_use {
 	}
 }
 
-var void(entity spot) target_voicescript_Spawn_NextLink;
-void(entity spot) target_voicescript_Spawn {
+var void(entity spot) target_voicescript_player_spawn_next;
+void(entity spot) target_voicescript_player_spawn {
 	self.voicescript_ctrl = world;
-	target_voicescript_Spawn_NextLink(spot);
+	target_voicescript_player_spawn_next(spot);
 }
 
 float spawnfunc_target_voicescript_initialized;
@@ -97,8 +97,8 @@ void(void) spawnfunc_target_voicescript {
 
 	float i, n;
 	if not(spawnfunc_target_voicescript_initialized) {
-		target_voicescript_Spawn_NextLink = gamehook_chain_spawn;
-		gamehook_chain_spawn = target_voicescript_Spawn;
+		target_voicescript_player_spawn_next = gamehook_chain_player_spawn;
+		gamehook_chain_player_spawn = target_voicescript_player_spawn;
 		spawnfunc_target_voicescript_initialized = TRUE;
 	}
 	if (self.message == "") {

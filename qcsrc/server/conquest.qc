@@ -360,9 +360,8 @@ void(void) conquest_init {
 	gamehook_score_give_frag_mod = conquest_score_give_frag_mod;
 	gamehook_client_put_spawn_point = conquest_client_put_spawn_point;
 	gamehook_player_death_handle = onslaught_DeathHandle;
-	onslaught_Spawn_NextLink = gamehook_chain_spawn;
-	gamehook_chain_spawn = onslaught_Spawn;
-
+	onslaught_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = onslaught_player_spawn;
 	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = onslaught_PlayerClear;
 	gamehook_world_reset = conquest_world_reset;

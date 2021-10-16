@@ -723,8 +723,8 @@ entity() race_client_put_spawn_point {
 	return spawn_select(FALSE);
 }
 
-var void(entity spot) race_spawn_next;
-void(entity spot) race_spawn {
+var void(entity spot) race_player_spawn_next;
+void(entity spot) race_player_spawn {
 	if (self.killcount != -666 && !g_race_qualifying) {
 		if (spot.target == "")
 			// let the player run without timing, if he did not spawn at a targetting spawnpoint
@@ -736,7 +736,7 @@ void(entity spot) race_spawn {
 		self.race_checkpoint = 0;
 
 	self.race_place = 0;
-	race_spawn_next(spot);
+	race_player_spawn_next(spot);
 }
 
 var void() race_observer_spawn_next;
@@ -1335,8 +1335,8 @@ void(void) race_init {
 	gamehook_chain_player_can_fire = race_player_can_fire;
 	gamehook_physics_frame_begin_hook = race_physics_frame_begin_hook;
 	gamehook_client_put_spawn_point = race_client_put_spawn_point;
-	race_spawn_next = gamehook_chain_spawn;
-	gamehook_chain_spawn = race_spawn;
+	race_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = race_player_spawn;
 	race_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = race_player_clear;
 	race_observer_spawn_next = gamehook_chain_observer_spawn;

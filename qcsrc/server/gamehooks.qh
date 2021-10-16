@@ -1,6 +1,6 @@
 var float(entity attacker, entity inflictor, float deathtype) gamehook_player_death_handle = { return FALSE; }
 var float() gamehook_chain_physics_max_speed_mod = { return 1; }
-var void(entity spot) gamehook_chain_spawn = {}
+var void(entity spot) gamehook_chain_player_spawn = {}
 var void(float killed) gamehook_chain_player_clear = {}
 var float(entity attacker, entity targ, float f) gamehook_score_give_frag_mod = { return f; }
 float gamehook_chain_player_damage_mod;

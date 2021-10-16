@@ -183,10 +183,10 @@ void() single_player_think {
 	single_player_think_next();
 }
 
-var void(entity) single_spawn_next;
-void(entity e) single_spawn {
+var void(entity) single_player_spawn_next;
+void(entity e) single_player_spawn {
 	self.default_equip = TRUE;
-	single_spawn_next(e);
+	single_player_spawn_next(e);
 }
 
 void(entity attacker) single_monster_killed {
@@ -230,8 +230,8 @@ void(void) single_init {
 	gamehook_monster_team_switchable = single_monster_team_switchable;
 	single_player_think_next = gamehook_chain_player_think;
 	gamehook_chain_player_think = single_player_think;
-	single_spawn_next = gamehook_chain_spawn;
-	gamehook_chain_spawn = single_spawn;
+	single_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = single_player_spawn;
 	single_shutdown_next = gamehook_chain_shutdown;
 	gamehook_chain_shutdown = single_shutdown;
 	gamehook_monster_killed = single_monster_killed;

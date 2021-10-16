@@ -31,9 +31,9 @@ float survive_has_players() {
 	return FALSE;
 }
 
-var void(entity spot) survive_Spawn_NextLink;
-void survive_Spawn(entity spot) {
-	survive_Spawn_NextLink(spot);
+var void(entity spot) survive_player_spawn_next;
+void survive_player_spawn(entity spot) {
+	survive_player_spawn_next(spot);
 	if not(survive_active) {
 		score_player_set(self, SP_STATUS, 0);
 		return;
@@ -272,8 +272,8 @@ void survive_init() {
 	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	gamehook_MonsterQuant = survive_MonsterQuant;
 	gamehook_monster_killed = survive_MonsterKilled;
-	survive_Spawn_NextLink = gamehook_chain_spawn;
-	gamehook_chain_spawn = survive_Spawn;
+	survive_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = survive_player_spawn;
 	score_basics(SCORE_FLAG_SORT_PRIO_PRIMARY, SCORE_FLAG_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	SP_STATUS = score_register("status", 0);
 	if (g_surv_freeze)

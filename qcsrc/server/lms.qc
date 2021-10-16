@@ -112,9 +112,9 @@ void(void) lms_sphere_setup {
 	net_link_entity(lms_sphere, FALSE, 0, lms_sphere_send);
 }
 
-var void(entity spot) lms_spawn_next;
-void lms_spawn(entity spot) {
-	lms_spawn_next(spot);
+var void(entity spot) lms_player_spawn_next;
+void lms_player_spawn(entity spot) {
+	lms_player_spawn_next(spot);
 	if (warmup_active)
 		return;
 
@@ -202,8 +202,8 @@ float(entity spot) lms_spawn_score_good {
 }
 
 void(void) lms_init {
-	lms_spawn_next = gamehook_chain_spawn;
-	gamehook_chain_spawn = lms_spawn;
+	lms_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = lms_player_spawn;
 	lms_client_connect_next = gamehook_chain_client_connect;
 	gamehook_chain_client_connect = lms_client_connect;
 	lms_spectator_to_player_handle_next = gamehook_chain_spectator_to_player_handle;

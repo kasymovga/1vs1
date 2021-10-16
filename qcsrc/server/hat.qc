@@ -14,8 +14,8 @@ void(float killed) hat_player_clear {
 	hat_player_clear_next(killed);
 }
 
-var void(entity spot) hat_Spawn_next;
-void(entity spot) hat_Spawn {
+var void(entity spot) hat_player_spawn_next;
+void(entity spot) hat_player_spawn {
 	self.hat = spawn();
 	setmodel(self.hat, sv_player_hat);
 	self.hat.owner = self;
@@ -24,7 +24,7 @@ void(entity spot) hat_Spawn {
 	self.hat.angles = sv_player_hat_angles;
 	setorigin(self.hat, sv_player_hat_origin);
 	self.hat.customizeentityforclient = weapon_model_exterior_customize;
-	hat_Spawn_next(spot);
+	hat_player_spawn_next(spot);
 }
 
 void(void) hat_init {
@@ -37,7 +37,7 @@ void(void) hat_init {
 		precache_model(sv_player_hat);
 		hat_player_clear_next = gamehook_chain_player_clear;
 		gamehook_chain_player_clear = hat_player_clear;
-		hat_Spawn_next = gamehook_chain_spawn;
-		gamehook_chain_spawn = hat_Spawn;
+		hat_player_spawn_next = gamehook_chain_player_spawn;
+		gamehook_chain_player_spawn = hat_player_spawn;
 	}
 }

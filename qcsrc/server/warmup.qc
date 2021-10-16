@@ -21,10 +21,10 @@ void(void) warmup_note_update {
 		warmup_note.SendFlags = 1;
 }
 
-var void(entity ignore) warmup_spawn_next;
-void(entity ignore) warmup_spawn {
+var void(entity ignore) warmup_player_spawn_next;
+void(entity ignore) warmup_player_spawn {
 	warmup_note_update();
-	warmup_spawn_next(ignore);
+	warmup_player_spawn_next(ignore);
 }
 
 var void(void) warmup_observer_spawn_next;
@@ -81,8 +81,8 @@ void(void) warmup_init {
 	if not(warmup_active)
 		return;
 
-	warmup_spawn_next = gamehook_chain_spawn;
-	gamehook_chain_spawn = warmup_spawn;
+	warmup_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = warmup_player_spawn;
 	warmup_observer_spawn_next = gamehook_chain_observer_spawn;
 	gamehook_chain_observer_spawn = warmup_observer_spawn;
 	warmup_server_frame_next = gamehook_chain_world_frame_start;

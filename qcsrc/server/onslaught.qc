@@ -1103,10 +1103,10 @@ float(entity attacker, entity inflictor, float deathtype) onslaught_DeathHandle 
 	return FALSE;
 }
 
-var void(entity spot) onslaught_Spawn_NextLink;
-void(entity spot) onslaught_Spawn {
+var void(entity spot) onslaught_player_spawn_next;
+void(entity spot) onslaught_player_spawn {
 	LocationRequest_Remove(self);
-	onslaught_Spawn_NextLink(spot);
+	onslaught_player_spawn_next(spot);
 }
 
 var void(float killed) onslaught_PlayerClear_NextLink;
@@ -1153,8 +1153,8 @@ float(float ignore, float ignore2) onslaught_WinningCondition {
 void(void) onslaught_init {
 	g_ons = 1;
 	gamehook_player_death_handle = onslaught_DeathHandle;
-	onslaught_Spawn_NextLink = gamehook_chain_spawn;
-	gamehook_chain_spawn = onslaught_Spawn;
+	onslaught_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = onslaught_player_spawn;
 	gamehook_client_put_spawn_point = onslaught_client_put_spawn_point;
 	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = onslaught_PlayerClear;

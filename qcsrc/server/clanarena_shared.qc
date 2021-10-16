@@ -1,6 +1,6 @@
-var void(entity spot) clanarena_shared_spawn_next;
-void clanarena_shared_spawn(entity spot) {
-	clanarena_shared_spawn_next(spot);
+var void(entity spot) clanarena_shared_player_spawn_next;
+void clanarena_shared_player_spawn(entity spot) {
+	clanarena_shared_player_spawn_next(spot);
 	roundbased_check_teams();
 	if not(roundbased_active)
 	if not(roundbased_restart_time) {
@@ -30,7 +30,7 @@ void(string gt) clanarena_shared_init {
 	gamehook_player_death_handle = clanarena_shared_death_handle;
 	clanarena_shared_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = clanarena_shared_player_clear;
-	clanarena_shared_spawn_next = gamehook_chain_spawn;
-	gamehook_chain_spawn = clanarena_shared_spawn;
+	clanarena_shared_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = clanarena_shared_player_spawn;
 	SP_STATUS = score_register("status", 0);
 }

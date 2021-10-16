@@ -233,9 +233,9 @@ void ice_player_clear(float killed) {
 	ice_player_clear_next(killed);
 }
 
-var void(entity spot) ice_spawn_next;
-void(entity spot) ice_spawn {
-	ice_spawn_next(spot);
+var void(entity spot) ice_player_spawn_next;
+void(entity spot) ice_player_spawn {
+	ice_player_spawn_next(spot);
 	ice_player_death_handle(world, world, 0);
 }
 
@@ -315,8 +315,8 @@ void(void) ice_init {
 	gamehook_chain_player_clear = ice_player_clear;
 	ice_physics_max_speed_mod_next = gamehook_chain_physics_max_speed_mod;
 	gamehook_chain_physics_max_speed_mod = ice_physics_max_speed_mod;
-	ice_spawn_next = gamehook_chain_spawn;
-	gamehook_chain_spawn = ice_spawn;
+	ice_player_spawn_next = gamehook_chain_player_spawn;
+	gamehook_chain_player_spawn = ice_player_spawn;
 	ice_player_damage_handle_next = gamehook_chain_player_damage_handle;
 	gamehook_chain_player_damage_handle = ice_player_damage_handle;
 	ice_spectator_copy_next = gamehook_chain_spectator_copy;
