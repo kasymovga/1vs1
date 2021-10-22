@@ -47,7 +47,6 @@ float(entity a) physics_is_flying {
 	return 1;
 }
 
-.float wasFlying;
 void(void) physics_check_ground_hook {
 	self.flags = physics_flags;
 	self.waterlevel = physics_waterlevel;

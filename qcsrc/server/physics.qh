@@ -5,4 +5,5 @@ float g_walljump_smokeparticle_num;
 float g_dodging_sound;
 .float lastground;
 .float ladder_time;
+.float wasFlying;
 .entity ladder_entity;

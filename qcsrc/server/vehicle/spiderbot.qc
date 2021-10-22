@@ -185,12 +185,6 @@ float(void) vehicle_spiderbot_physics_hook {
 	}
 	self = spider;
 	if(spider.flags & FL_ONGROUND) {
-		if (self.wasFlying || vlen(self.velocity) > 100)
-		if (self.nextstep <= time) {
-			sound(self, CHAN_PLAYER, sound_random("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
-			self.nextstep = time + 0.2;
-		}
-		spider.wasFlying = 0;
 		if(player.BUTTON_JUMP) {
 			player.BUTTON_JUMP = 0;
 			spider.anim_start = MODEL_SPIDERBOT_JUMP_START;
@@ -224,9 +218,7 @@ float(void) vehicle_spiderbot_physics_hook {
 
 			}
 		}
-	} else
-		spider.wasFlying = 1;
-
+	}
 	//anim_do();
 	vehicle_spiderbot_miniguns_do();
 	vehicle_spiderbot_rocket_do();
