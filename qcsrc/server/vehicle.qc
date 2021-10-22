@@ -8,7 +8,7 @@ void(vector _mins, vector _maxs, float start_offs, float back, float up) vehicle
 
 void(entity plr, entity veh, float start_offs, float back, float up) vehicle_adjust_player_position {
 	physics_flags = plr.flags;
-	if (plr != veh.owner) {
+	if (plr != veh.owner || plr.vehicle != veh) {
 		physics_velocity = plr.velocity;
 		return;
 	}
@@ -28,14 +28,65 @@ float(entity plr, float eject) vehicle_extract_player {
 	if not(plr.vehicle)
 		return 0;
 
-	entity e = self;
-	e.vehicle_exit_time = time;
+	entity oldself = self;
 	self = plr.vehicle;
-	self.vehicle_exit(eject);
-	self = e;
+	vector exit_origin;
+	makevectors(self.angles);
+	float exit_up = self.maxs_z - plr.maxs_z;
+	float eject_range = self.maxs_z - plr.mins_z;
+	float range = (self.maxs_x + plr.maxs_x) * 1.5;
+	if (eject)
+		exit_origin = self.origin + '0 0 1' * eject_range;
+	else
+		exit_origin = self.origin - v_right * range + '0 0 1' * exit_up;
+
+	trace_box(self.origin + '0 0 1' * exit_up, plr.mins, plr.maxs, exit_origin, TRACE_MOVE_NOMONSTERS, plr);
+	if not(eject) {
+		if (trace_fraction < 1) {
+			exit_origin = self.origin + v_right * range + '0 0 1' * exit_up;
+			trace_box(self.origin + '0 0 1' * exit_up, plr.mins, plr.maxs, exit_origin, TRACE_MOVE_NOMONSTERS, plr);
+		}
+		if (trace_fraction < 1) {
+			exit_origin = self.origin + v_forward * range + '0 0 1' * exit_up;
+			trace_box(self.origin + '0 0 1' * exit_up, plr.mins, plr.maxs, exit_origin, TRACE_MOVE_NOMONSTERS, plr);
+		}
+		if (trace_fraction < 1) {
+			exit_origin = self.origin - v_forward * range + '0 0 1' * exit_up;
+			trace_box(self.origin + '0 0 1' * exit_up, plr.mins, plr.maxs, exit_origin, TRACE_MOVE_NOMONSTERS, plr);
+		}
+		if (trace_fraction < 1)
+			trace_endpos = self.origin + '0 0 1' * exit_up;
+	}
+	exit_origin = trace_endpos;
+	plr.vehicle_exit_time = time;
 	plr.PlayerPhysplug = NULL;
-	plr.vehicle        = world;
+	self.owner = NULL;
+	plr.vehicle = NULL;
 	plr.lastpushtime = time;
+	plr.switchweapon = self.switchweapon;
+	plr.angles_x = 0;
+	plr.angles_y = self.angles_y;
+	plr.angles_z = 0;
+	plr.fixangle = TRUE;
+	plr.takedamage = DAMAGE_AIM;
+	if not(team_mode)
+		self.team = 0;
+	else
+		self.team = self.enemy.team;
+
+	teleport_origin_set(plr, exit_origin, 0);
+	player_body_setup(plr);
+	plr.velocity = self.velocity;
+	if (eject) {
+		plr.velocity = plr.velocity + (v_up + v_forward * 0.25) * 200;
+	}
+	physics_velocity = plr.velocity;
+	if (self.player_physic)
+		remove(self.player_physic);
+
+	self.player_physic = NULL;
+	self.vehicle_exit(eject);
+	self = oldself;
 	return 1;
 }
 
@@ -243,73 +294,6 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	self.player_physic.vehicle = self;
 	net_link_entity(self.player_physic, FALSE, 0, phys_send);
 	return TRUE;
-}
-
-void(void) vehicle_speed_keeper_think { //something reset velocity to 0 0 0, fix this
-	self.enemy.velocity = self.velocity;
-	remove(self);
-}
-
-void(float eject, float eject_range, float range) vehicle_stdproc_exit {
-	vector exit_origin;
-	makevectors(self.angles);
-	entity o = self.owner;
-	player_body_setup(o);
-	float exit_up = self.maxs_z - o.maxs_z;
-	if (eject)
-		exit_origin = self.origin + '0 0 1' * eject_range;
-	else
-		exit_origin = self.origin - v_right * range + '0 0 1' * exit_up;
-
-	trace_box(self.origin + '0 0 1' * exit_up, o.mins, o.maxs, exit_origin, TRACE_MOVE_NOMONSTERS, o);
-	if not(eject) {
-		if (trace_fraction < 1) {
-			exit_origin = self.origin + v_right * range + '0 0 1' * exit_up;
-			trace_box(self.origin + '0 0 1' * exit_up, o.mins, o.maxs, exit_origin, TRACE_MOVE_NOMONSTERS, o);
-		}
-		if (trace_fraction < 1) {
-			exit_origin = self.origin + v_forward * range + '0 0 1' * exit_up;
-			trace_box(self.origin + '0 0 1' * exit_up, o.mins, o.maxs, exit_origin, TRACE_MOVE_NOMONSTERS, o);
-		}
-		if (trace_fraction < 1) {
-			exit_origin = self.origin - v_forward * range + '0 0 1' * exit_up;
-			trace_box(self.origin + '0 0 1' * exit_up, o.mins, o.maxs, exit_origin, TRACE_MOVE_NOMONSTERS, o);
-		}
-		if (trace_fraction < 1)
-			trace_endpos = self.origin + '0 0 1' * exit_up;
-	}
-	exit_origin = trace_endpos;
-	o.switchweapon = self.switchweapon;
-	if (clienttype(o) == CLIENTTYPE_REAL) {
-		msg_entity = o;
-		net_write_byte (MSG_ONE, SVC_SETVIEW);
-		net_write_entity( MSG_ONE, o);
-		net_write_byte(MSG_ONE, SVC_SETANGLE);
-		net_write_angle(MSG_ONE, 0); // tilt
-		net_write_angle(MSG_ONE, self.angles_y); // yaw
-		net_write_angle(MSG_ONE, 0); // roll
-	}
-	o.takedamage = DAMAGE_AIM;
-	if not(team_mode)
-		self.team = 0;
-	else
-		self.team = self.enemy.team ;
-
-	teleport_origin_set(o, exit_origin, 0);
-	o.velocity = self.velocity;
-	if (eject) {
-	    o.velocity = o.velocity + (v_up + v_forward * 0.25) * 750;
-	}
-	physics_velocity = o.velocity;
-	entity e = spawn();
-	e.enemy = o;
-	e.velocity = self.velocity;
-	e.think = vehicle_speed_keeper_think;
-	e.nextthink = time;
-	if (self.player_physic)
-		remove(self.player_physic);
-
-    self.owner = world;
 }
 
 float(void) vehicle_stdproc_customize {

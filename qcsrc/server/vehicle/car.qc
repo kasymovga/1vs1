@@ -158,10 +158,9 @@ void(void) vehicle_car_enter {
 }
 
 void(float eject) vehicle_car_exit {
-	vehicle_stdproc_exit(eject, 160, 160);
 	self.think = vehicle_car_think;
 	self.nextthink = time;
-	self.colormap			= 1024;
+	self.colormap = 1024;
 	sound_stop(self, CHAN_VOICE);
 	vehicle_stdproc_setcolormod();
 }
@@ -210,10 +209,10 @@ void(void) vehicle_car_die {
 	self.health = 0;
 	self.event_damage = NULL;
 	self.iscreature = FALSE;
-	self.solid	  = SOLID_NOT;
+	self.solid = SOLID_NOT;
 	self.takedamage = DAMAGE_NO;
-	self.touch	  = stdproc_nothing;
-	self.deadflag	= DEAD_DEAD;
+	self.touch = stdproc_nothing;
+	self.deadflag = DEAD_DEAD;
 	self.think = vehicle_car_blowup;
 	self.nextthink = time;
 	float i, f;

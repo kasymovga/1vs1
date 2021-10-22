@@ -294,18 +294,17 @@ void(void) vehicle_spiderbot_enter {
 	if not(vehicle_enter(self.tur_head.angles + self.angles, vehicle_spiderbot_physics_hook, vehicle_spiderbot_physics_send))
 		return;
 
-	self.colormap			 = self.owner.colormap;
-	self.tur_head.colormap	= self.owner.colormap;
+	self.colormap = self.owner.colormap;
+	self.tur_head.colormap = self.owner.colormap;
 	vehicle_stdproc_setcolormod();
-	self.tur_head.colormap	= self.owner.colormap;
+	self.tur_head.colormap = self.owner.colormap;
 }
 
 void(float eject) vehicle_spiderbot_exit {
-	vehicle_stdproc_exit(eject, 160, 160);
 	self.think = vehicle_spiderbot_think;
 	self.nextthink = time;
-	self.colormap			= 1024;
-	self.tur_head.colormap   = 1024;
+	self.colormap = 1024;
+	self.tur_head.colormap = 1024;
 	vehicle_stdproc_setcolormod();
 	vehicle_spiderbot_stop(self);
 }
@@ -327,15 +326,15 @@ void(void) vehicle_spiderbot_spawn {
 	self.vehicle_shield = self.shield_max;
 	self.event_damage = vehicle_stdproc_damage;
 	self.iscreature = TRUE;
-	self.movetype   = MOVETYPE_QCWALK;
-	self.solid	  = SOLID_SLIDEBOX;
+	self.movetype = MOVETYPE_QCWALK;
+	self.solid = SOLID_SLIDEBOX;
 	self.takedamage = DAMAGE_AIM;
-	self.touch	  = vector_spiderbot_touch;
-	self.alpha	  = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
+	self.touch = vector_spiderbot_touch;
+	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
 	self.tur_head.angles = '0 0 0';
 	self.colormap = 1024;
 	self.tur_head.colormap = 1024;
-	self.deadflag	= DEAD_NO;
+	self.deadflag = DEAD_NO;
 	self.bot_attack = TRUE;
 	self.pushfactor = g_vehicle_spiderbot_pushfactor;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
@@ -349,8 +348,8 @@ void(void) vehicle_spiderbot_spawn {
 void(void) vehicle_spiderbot_blowup {
 	damage_radius (self, self, 100, 15, 250, world, 250, WEP_ROCKET_LAUNCHER, world);
 	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
-	self.nextthink  = time + 10;
-	self.think	  = vehicle_spiderbot_spawn;
+	self.nextthink = time + 10;
+	self.think = vehicle_spiderbot_spawn;
 	self.velocity = '0 0 0';
 	setorigin(self,self.tur_aimpos);
 }
@@ -359,10 +358,10 @@ void(void) vehicle_spiderbot_die {
 	self.health = 0;
 	self.event_damage = NULL;
 	self.iscreature = FALSE;
-	self.solid	  = SOLID_NOT;
+	self.solid = SOLID_NOT;
 	self.takedamage = DAMAGE_NO;
-	self.touch	  = NULL;
-	self.deadflag	= DEAD_DEAD;
+	self.touch = NULL;
+	self.deadflag = DEAD_DEAD;
 	self.frame = 0;
 	self.tur_head.frame = 0;
 	self.think = vehicle_spiderbot_blowup;
