@@ -10,6 +10,8 @@ void(entity e, vector v, float t) teleport_origin_set {
 	physics_mark_as_teleported(e, t);
 	BITXOR_ASSIGN(e.effects, EFFECT_TELEPORT_BIT);
 	projectile_update_after_teleport(e);
+	if(e.isbot)
+		e.lastteleporttime = time;
 }
 
 void(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float _damage) teleport_death {
@@ -90,8 +92,6 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 		} else {
 			player.pushltime = 0;
 		}
-		if(player.isbot)
-			player.lastteleporttime = time;
 	}
 }
 

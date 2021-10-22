@@ -539,9 +539,10 @@ void(void) navigation_poptouchedgoals {
 	m1 = org + self.mins;
 	m2 = org + self.maxs;
 	if (self.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT) {
-		if (self.lastteleporttime>0)
-		if (time-self.lastteleporttime<0.15) {
+		if (self.lastteleporttime)
+		if (time - self.lastteleporttime < 0.15) {
 			navigation_poproute();
+			self.lastteleporttime = 0;
 			return;
 		}
 	}

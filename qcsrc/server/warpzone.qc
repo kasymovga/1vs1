@@ -538,8 +538,12 @@ void(void) warpzone_init_update_transform {
 void(void) warpzone_init_finalize_transform {
 	warpzone_setup(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = warpzone_touch;
-	entity w = waypoint_spawn(self.warpzone_origin, self.warpzone_origin, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
-	entity dw = waypoint_spawn(self.enemy.warpzone_origin, self.enemy.warpzone_origin, WAYPOINTFLAG_GENERATED);
+	makevectors(self.warpzone_angles);
+	vector v = self.warpzone_origin - v_forward * 32 - v_up * 32;
+	entity w = waypoint_spawn(v, v, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
+	makevectors(self.enemy.warpzone_angles);
+	v = self.enemy.warpzone_origin + v_forward * 32 - v_up * 32;
+	entity dw = waypoint_spawn(v, v, WAYPOINTFLAG_GENERATED);
 	w.wp00 = dw;
 	w.wp00mincost = 0; // this is just for jump pads
 	self.nearestwaypoint = w;
