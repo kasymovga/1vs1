@@ -48,7 +48,6 @@ void(float isnew) warpzone_read {
 	warpzone_enable();
 }
 
-entity warpzone_passed;
 void(float isnew) warpzone_teleported_read {
 	vector v;
 	v_x = net_read_coord();
@@ -60,6 +59,7 @@ void(float isnew) warpzone_teleported_read {
 	if (warpzone_passed)
 		remove(warpzone_passed);
 
+	physics_was_teleported = TRUE;
 	warpzone_passed = spawn();
 	warpzone_passed.warpzone_transform = v;
 }
@@ -96,7 +96,6 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	vector mi, ma;
 	entity e;
 	float pd;
-
 	mi_x = min(o_x, min(c0_x, min(c1_x, min(c2_x, c3_x))));
 	ma_x = max(o_x, max(c0_x, max(c1_x, max(c2_x, c3_x))));
 	mi_y = min(o_y, min(c0_y, min(c1_y, min(c2_y, c3_y))));
@@ -104,21 +103,19 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	mi_z = min(o_z, min(c0_z, min(c1_z, min(c2_z, c3_z))));
 	ma_z = max(o_z, max(c0_z, max(c1_z, max(c2_z, c3_z))));
 	e = warpzone_find(mi, ma);
-	if(e)
-	{
-		if(warpzone_plane_dist(e, o) < 0)
-			return '0 0 0';
-			// can't really be, though, but if it is, this is not my warpzone, but a random different one in the same mins/maxs
+	if(e) {
+		if (warpzone_plane_dist(e, o) < 0)
+			return '0 0 0'; // can't really be, though, but if it is, this is not my warpzone, but a random different one in the same mins/maxs
+
 		pd = min(
 				warpzone_plane_dist(e, c0), min(
 				warpzone_plane_dist(e, c1), min(
 				warpzone_plane_dist(e, c2),
 				warpzone_plane_dist(e, c3)))
 			);
-		if(pd < 0)
+		if (pd < 0)
 			return e.warpzone_forward * -pd;
 	}
-
 	return '0 0 0';
 }
 
@@ -127,6 +124,7 @@ void(void) warpzone_view_fix_real {
 	entity e;
 	vector org, nearclip, corner0, corner1, corner2, corner3;
 	float f;
+	vector orig_angles = view_angles;
 	org = view_origin;
 	e = warpzone_find(org, org);
 	if (e) {
@@ -161,7 +159,7 @@ void(void) warpzone_view_fix_real {
 		}
 	}
 	warpzone_view = e;
-	if (warpzone_fixangles || e) {
+	if (warpzone_fixangles || orig_angles != view_angles) {
 		if not(e) {
 			f = max(0, (1 - frametime * 10));
 
@@ -179,21 +177,21 @@ void(void) warpzone_view_fix_real {
 		R_SetView(VF_ANGLES, view_angles);
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
-
-	if (e)
+	if (view_origin != org) { //This code MUST be duplicated for cs_unproject
 		R_SetView(VF_ORIGIN, org);
-
+		view_origin = org;
+	}
 	nearclip = '0 0 1' * (CVAR(r_nearclip) * 1.125);
 	corner0 = cs_unproject('0 0 0' + nearclip);
 	corner1 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + nearclip);
 	corner2 = cs_unproject('0 1 0' * CVAR(vid_conheight) + nearclip);
 	corner3 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + '0 1 0' * CVAR(vid_conheight) + nearclip);
 	vector v = WarpZone_FixNearClip(org, corner0, corner1, corner2, corner3);
-	org = org + v;
-	if (v != '0 0 0')
-		R_SetView(VF_ORIGIN, org);
-
-	view_origin = org;
+	if (v != '0 0 0') {
+		org = org + v;
+		R_SetView(VF_ORIGIN, org); //This code MUST be duplicated for cs_unproject
+		view_origin = org;
+	}
 }
 
 void() warpzone_init_hook {

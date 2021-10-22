@@ -2,4 +2,5 @@ void(float bisnewentity) warpzone_read;
 void(float isnew) warpzone_teleported_read;
 var void(void) warpzone_view_fix = {}; // this saves the previous values
 float warpzone_view_commandframe;
+entity warpzone_passed;
 entity warpzone_view;

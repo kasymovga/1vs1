@@ -142,9 +142,8 @@ void(void) physics_frame_end_hook {
 	physics_frametime = frametime;
 }
 
-float stairsmoothz;
 .vector pmove_velocity;
-float was_teleported;
+float physics_stair_smoothz;
 float physics_lastwj;
 float physics_last_dodging;
 float physics_last_FORWARD_KEY_time;
@@ -211,7 +210,7 @@ vector(void) physics_view_origin {
 			if not(RetrieveMovementFrame(i))
 				break;
 
-			if (warpzone_view)
+			if (warpzone_view && !warpzone_passed)
 			if (i >= warpzone_view_commandframe) {
 				//print("warp input angles correction ", ftos(i), " ", vtos(input_angles));
 				input_angles = warpzone_untransform_angles(warpzone_view, input_angles);
@@ -233,16 +232,16 @@ vector(void) physics_view_origin {
 		frametime = frametime_save;
 		v = physics.origin + physics.view_ofs;
 		if (CVAR(cl_stairsmoothspeed)) {
-			if (!(physics_flags & FL_ONGROUND) || physics_start_teleport_time > 0 || was_teleported || physics_ground_lastent) {
-				stairsmoothz = v_z;
-				was_teleported = FALSE;
+			if (!(physics_flags & FL_ONGROUND) || physics_start_teleport_time > 0 || physics_was_teleported || physics_ground_lastent) {
+				physics_stair_smoothz = v_z;
+				physics_was_teleported = FALSE;
 			} else {
-				if (v_z > stairsmoothz) {
-					v_z = bound(v_z - sv_stepheight, stairsmoothz + frametime * autocvar_cl_stairsmoothspeed, v_z);
+				if (v_z > physics_stair_smoothz) {
+					v_z = bound(v_z - sv_stepheight, physics_stair_smoothz + frametime * autocvar_cl_stairsmoothspeed, v_z);
 				} else {
-					v_z = bound(v_z, stairsmoothz - frametime * autocvar_cl_stairsmoothspeed, v_z + sv_stepheight);
+					v_z = bound(v_z, physics_stair_smoothz - frametime * autocvar_cl_stairsmoothspeed, v_z + sv_stepheight);
 				}
-				stairsmoothz = v_z;
+				physics_stair_smoothz = v_z;
 			}
 		}
 		if not(view_camera_active)
@@ -470,7 +469,7 @@ void(float isnew) physics_read {
 
 		if (f & 4096) {
 			physics_start_teleport_time = net_read_coord();
-			was_teleported = TRUE;
+			physics_was_teleported = TRUE;
 		} else
 			physics_start_teleport_time = -1;
 

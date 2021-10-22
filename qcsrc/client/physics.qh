@@ -21,3 +21,4 @@ vector physics_start_origin;
 vector physics_velocity_frame_begin;
 vector physics_velocity_frame_end;
 float physics_frametime;
+float physics_was_teleported;
