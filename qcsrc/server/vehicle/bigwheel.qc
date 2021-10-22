@@ -201,7 +201,7 @@ void(void) vehicle_bigwheel_spawn {
 	self.health = self.health_max;
 	self.event_damage = vehicle_stdproc_damage;
 	self.iscreature = TRUE;
-	self.movetype = MOVETYPE_QCWALK;
+	self.movetype = MOVETYPE_PHYSICS;
 	self.solid = SOLID_SLIDEBOX;
 	self.takedamage = DAMAGE_AIM;
 	self.touch = vehicle_bigwheel_touch;

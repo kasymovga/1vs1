@@ -123,4 +123,5 @@ const float MOVETYPE_FLYMISSILE = 9;
 const float MOVETYPE_BOUNCE = 10;
 const float MOVETYPE_BOUNCEMISSILE = 11; // Like bounce but doesn't lose speed on bouncing
 const float MOVETYPE_FOLLOW = 12; // 'Attaches' the entity to its aim_ent
+const float MOVETYPE_PHYSICS = 32;
 const float MOVETYPE_QCWALK = 128;
