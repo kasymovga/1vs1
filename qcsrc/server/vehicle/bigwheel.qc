@@ -179,7 +179,6 @@ void(void) vehicle_bigwheel_enter {
 }
 
 void(float eject) vehicle_bigwheel_exit {
-	self.think = vehicle_bigwheel_think;
 	self.nextthink = time;
 	self.colormap = 1024;
 	self.movement_x = 0;

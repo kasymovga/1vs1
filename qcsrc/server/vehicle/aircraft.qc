@@ -211,7 +211,6 @@ void(void) vehicle_aircraft_enter {
 void(float eject) vehicle_aircraft_exit {
 	vehicle_aircraft_pull_stop();
 	vehicle_aircraft_engine_off();
-	self.think = vehicle_aircraft_think;
 	self.nextthink = time;
 	self.colormap = 1024;
 	vehicle_stdproc_setcolormod();

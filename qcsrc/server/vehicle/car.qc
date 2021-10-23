@@ -158,7 +158,6 @@ void(void) vehicle_car_enter {
 }
 
 void(float eject) vehicle_car_exit {
-	self.think = vehicle_car_think;
 	self.nextthink = time;
 	self.colormap = 1024;
 	sound_stop(self, CHAN_VOICE);

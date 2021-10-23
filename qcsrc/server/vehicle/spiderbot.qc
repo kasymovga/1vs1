@@ -293,7 +293,6 @@ void(void) vehicle_spiderbot_enter {
 }
 
 void(float eject) vehicle_spiderbot_exit {
-	self.think = vehicle_spiderbot_think;
 	self.nextthink = time;
 	self.colormap = 1024;
 	self.tur_head.colormap = 1024;
