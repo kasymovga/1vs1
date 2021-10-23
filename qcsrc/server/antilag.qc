@@ -29,6 +29,8 @@ void(entity e) antilag_teleported {
 	float i;
 	for (i = 0; i < ANTILAG_MAX_ORIGINS; i++)
 		e.(antilag_origins[i]) = e.origin;
+
+	e.antilag_saved_origin = e.origin;
 }
 
 // finds the index BEFORE t
