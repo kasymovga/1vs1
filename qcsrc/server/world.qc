@@ -198,6 +198,14 @@ void(void) world_init {
 	float i, j, n;
 	string col;
 	cvar_preinit();
+	registercvar("date_day", "");
+	registercvar("date_day_of_week", "");
+	registercvar("date_month", "");
+	registercvar("date_year", "");
+	cvar_set("date_day", strftime(TRUE, "%d"));
+	cvar_set("date_day_of_week", strftime(TRUE, "%w"));
+	cvar_set("date_month", strftime(TRUE, "%m"));
+	cvar_set("date_year", strftime(TRUE, "%Y"));
 	builtin_cvar_set("deathmatch", "1");
 	builtin_cvar_set("coop", "0");
 	world_already_spawned = TRUE;
