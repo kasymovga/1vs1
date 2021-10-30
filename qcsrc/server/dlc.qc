@@ -72,22 +72,35 @@ float(string s) dlc_load_settemps_from {
 			continue;
 
 		cvar_name = substring(line, 0, separator);
-		if (cvar_name == "require") {
+		if (cvar_name == "require" || cvar_name == "require_ge" || cvar_name == "require_le") {
 			line = dlc_trimspaces(substring(line, separator + 1, -1));
 			separator = dlc_findspace(line);
 			if (separator < 0)
 				continue;
 
+			string req = cvar_name;
 			cvar_name = substring(line, 0, separator);
 			cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
-			if (cvar_name == "g_profile") {
-				if not(cvar_profile_presents(cvar_value)) {
+			if (req == "require") {
+				if (cvar_name == "g_profile") {
+					if not(cvar_profile_presents(cvar_value)) {
+						r = 0;
+						break;
+					}
+				} else if (cvar_string(cvar_name) != cvar_value) {
 					r = 0;
 					break;
 				}
-			} else if (cvar_string(cvar_name) != cvar_value) {
-				r = 0;
-				break;
+			} else if (req == "require_ge") {
+				if (cvar(cvar_name) < stof(cvar_value)) {
+					r = 0;
+					break;
+				}
+			} else if (req == "require_le") {
+				if (cvar(cvar_name) > stof(cvar_value)) {
+					r = 0;
+					break;
+				}
 			}
 			continue;
 		}
