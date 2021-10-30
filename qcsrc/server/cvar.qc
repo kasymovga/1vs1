@@ -35,6 +35,7 @@ void(void) cvar_changes_init {
 		// client
 		BADCVAR("fov");
 		BADPREFIX("bgm");
+		BADPREFIX("date_");
 		BADPREFIX("amb");
 		BADPREFIX("snd");
 		BADPREFIX("show");
