@@ -217,7 +217,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 			flood = 1;
 			msgstr = fullmsgstr;
 		}
-		if (timeoutStatus == 2) //when game is paused, no flood protection
+		if (timeout_status == 2) //when game is paused, no flood protection
 			source.flood_field = flood = 0;
 	}
 	if (flood == 2) {

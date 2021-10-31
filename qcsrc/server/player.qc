@@ -1130,7 +1130,7 @@ void(string type, string msg) player_voice_message {
 	else
 		flood = 1;
 
-	if (timeoutStatus == 2) //when game is paused, no flood protection
+	if (timeout_status == 2) //when game is paused, no flood protection
 		self.flood_field = flood = 0;
 
 	if (msg != "")
@@ -1528,7 +1528,7 @@ void() player_think {
 		self.effects = self.effects - (self.effects & EFFECT_NODRAW);
 	}
 	//don't allow the player to turn around while game is paused!
-	if (timeoutStatus == 2) {
+	if (timeout_status == 2) {
 		self.v_angle = self.lastV_angle;
 		self.angles = self.lastV_angle;
 		self.fixangle = TRUE;
@@ -1651,7 +1651,7 @@ void(void) player_impulse {
 		return;
 
 	self.impulse = 0;
-	if (timeoutStatus == 2) //don't allow any impulses while the game is paused
+	if (timeout_status == 2) //don't allow any impulses while the game is paused
 		return;
 
 	if (imp >= 1 && imp <= 9) {
@@ -2005,7 +2005,7 @@ float(entity plr, float wep) player_can_fire {
 	if (!map_restart_active)
 		return FALSE;
 
-	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
+	if (timeout_status == 2) //don't allow the player to shoot while game is paused
 		return FALSE;
 
 	return gamehook_chain_player_can_fire(plr, wep);

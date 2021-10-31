@@ -316,7 +316,7 @@ void() hook_PlayerPreThink {
 	if (PLAYER_DEAD(self))
 		return;
 
-	if(g_grappling_hook && timeoutStatus != 2 && self.weapon != WEP_HOOK)
+	if(g_grappling_hook && timeout_status != 2 && self.weapon != WEP_HOOK)
 	{
 		// offhand hook controls
 		if(button_hook)

@@ -12,7 +12,7 @@ float timeout_remaining_leadtime; // contains the number of seconds left of the 
  */
 string(float addOneSecond) timeout_text {
 	string retStr;
-	if (timeoutStatus == 1) {
+	if (timeout_status == 1) {
 		if (addOneSecond == 1) {
 			retStr = strcat("Timeout begins in ", ftos(timeout_remaining_leadtime + 1), " seconds!\n");
 		}
@@ -21,7 +21,7 @@ string(float addOneSecond) timeout_text {
 		}
 		return retStr;
 	}
-	else if (timeoutStatus == 2) {
+	else if (timeout_status == 2) {
 		if (addOneSecond) {
 			retStr = strcat("Timeout ends in ", ftos(timeout_remaining_time + 1), " seconds!\n");
 			//don't show messages like "Timeout ends in 0 seconds"...
@@ -50,20 +50,16 @@ string(float addOneSecond) timeout_text {
 void() timeout_handler_think {
 	string timeStr;
 	entity plr;
-	if (timeoutStatus == 1) {
+	if (timeout_status == 1) {
 		if (timeout_remaining_leadtime > 0) {
-			//centerprint the information to every player
 			timeStr = timeout_text(0);
-			FOR_EACH_REALCLIENT(plr) {
-				centerprint_atprio(plr, CENTERPRINT_PRIO_SPAM, timeStr);
-			}
+			gamestatus_set(timeStr, 2);
 			timeout_remaining_leadtime -= 1;
 			//think again in 1 second:
 			self.nextthink = time + 1;
-		}
-		else {
+		} else {
 			//now pause the game:
-			timeoutStatus = 2;
+			timeout_status = 2;
 			//reset all the flood variables
 			FOR_EACH_CLIENT(plr) {
 				plr.floodcontrol_chat = plr.floodcontrol_chatteam = plr.floodcontrol_chattell = plr.floodcontrol_voice = plr.floodcontrol_voiceteam = 0;
@@ -75,39 +71,29 @@ void() timeout_handler_think {
 			self.nextthink = time;
 			slowmo_update();
 		}
-	}
-	else if (timeoutStatus == 2) {
+	} else if (timeout_status == 2) {
 		if (timeout_remaining_time > 0) {
 			timeStr = timeout_text(0);
-			FOR_EACH_REALCLIENT(plr) {
-				centerprint_atprio(plr, CENTERPRINT_PRIO_SPAM, timeStr);
-			}
-			if(timeout_remaining_time == cvar("sv_timeout_resumetime")) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
+			gamestatus_set(timeStr, 2);
+			if (timeout_remaining_time == cvar("sv_timeout_resumetime")) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
 				sound_play2all("announcer/robotic/prepareforbattle.wav");
 			}
 			timeout_remaining_time -= 1;
 			self.nextthink = time + TIMEOUT_SLOWMO_VALUE;
-		}
-		else {
+		} else {
 			//unpause the game again
-			timeout_remaining_time = timeoutStatus = 0;
+			timeout_remaining_time = timeout_status = 0;
 			//and unlock the fixed view again once there is no timeout active anymore
 			FOR_EACH_REALPLAYER(plr) {
 				plr.fixangle = FALSE;
 			}
 			//get rid of the countdown message
-			FOR_EACH_REALCLIENT(plr) {
-				centerprint_atprio(plr, CENTERPRINT_PRIO_SPAM, "");
-			}
+			gamestatus_set("", 2);
 			remove(self);
 			return;
 		}
-
-	}
-	else if (timeoutStatus == 0) { //if a player called the resumegame command (which set timeoutStatus to 0 already)
-		FOR_EACH_REALCLIENT(plr) {
-			centerprint_atprio(plr, CENTERPRINT_PRIO_SPAM, "");
-		}
+	} else if (timeout_status == 0) { //if a player called the resumegame command (which set timeout_status to 0 already)
+		gamestatus_set("", 2);
 		remove(self);
 		return;
 	}
@@ -120,8 +106,8 @@ void() timeout_evaluate_timeout {
 	if (time < map_starttime )
 		return sprint(self, "\{1}^1You can not call a timeout while the map is being restarted!\n");
 
-	if (timeoutStatus != 2) {
-		if (timeoutStatus == 1)
+	if (timeout_status != 2) {
+		if (timeout_status == 1)
 			return;
 
 		float timelimit;
@@ -142,14 +128,13 @@ void() timeout_evaluate_timeout {
 	timeout_remaining_time = cvar("sv_timeout_length");
 	timeout_remaining_leadtime = cvar("sv_timeout_leadtime");
 	timeout_initiator = self;
-	if (timeoutStatus == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
-		timeoutStatus = 1;
+	if (timeout_status == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
+		timeout_status = 1;
 		//create the timeout indicator which centerprints the information to all players and takes care of pausing/unpausing
 		timeout = spawn();
 		timeout.think = timeout_handler_think;
 	}
 	timeout.nextthink = time; //always let the entity think asap
-
 	//inform all connected clients about the timeout call
 	sound_play2all("announcer/robotic/timeoutcalled.wav");
 }
@@ -158,11 +143,11 @@ void(entity plr) timeout_evaluate_timein {
 	if (plr && plr != timeout_initiator)
 		return sprint(plr, "\{1}^1You may not abort the active timeout. Only the player who called it can do that!\n");
 
-	if (timeoutStatus == 1) {
-		timeout_remaining_time = timeoutStatus = 0;
+	if (timeout_status == 1) {
+		timeout_remaining_time = timeout_status = 0;
 		timeout.nextthink = time; //timeout has to take care of it immediately
 		bprint(strcat("\{1}^2* ^7The timeout was aborted by ", plr.netname, " !\n"));
-	} else if (timeoutStatus == 2) {
+	} else if (timeout_status == 2) {
 		//only shorten the timeout_remaining_time if it makes sense
 		if (timeout_remaining_time > (cvar("sv_timeout_resumetime") + 1)) {
 			bprint(strcat("\{1}^2* ^1Attention: ^7", plr.netname, " resumed the game! Prepare for battle!\n"));
@@ -174,11 +159,11 @@ void(entity plr) timeout_evaluate_timein {
 
 var float(string cmd, float tokens) timeout_cmd_game_handle_NextLink;
 float(string cmd, float tokens) timeout_cmd_game_handle {
-	if (cmd == "timeout" || (cmd == "timeoutin" && timeoutStatus == 0)) {
+	if (cmd == "timeout" || (cmd == "timeoutin" && timeout_status == 0)) {
 		timeout_evaluate_timeout();
 		return TRUE;
 	}
-	if(cmd == "timein" || (cmd == "timeoutin" && timeoutStatus != 0)) {
+	if (cmd == "timein" || (cmd == "timeoutin" && timeout_status != 0)) {
 		timeout_evaluate_timein(world);
 		return TRUE;
 	}
@@ -188,19 +173,18 @@ float(string cmd, float tokens) timeout_cmd_game_handle {
 var float(string cmd, float tokens) timeout_ClientCommandHandle_NextLink;
 float(string cmd, float tokens) timeout_ClientCommandHandle {
 	if (self.flags & FL_CLIENT) {
-		if (cmd == "timeout" || (cmd == "timeoutin" && timeoutStatus == 0)) {
-			if(self.classname == "player") {
-				if(vote_called)
+		if (cmd == "timeout" || (cmd == "timeoutin" && timeout_status == 0)) {
+			if (self.classname == "player") {
+				if (vote_called)
 					sprint(self, "\{1}^1You can not call a timeout while a vote is active!\n");
 				else
 					timeout_evaluate_timeout();
-			}
-			else
+			} else
 				sprint(self, "\{1}^1Only players can call a timeout!\n");
 
 			return TRUE;
 		}
-		if(cmd == "timein" || (cmd == "timeoutin" && timeoutStatus != 0)) {
+		if (cmd == "timein" || (cmd == "timeoutin" && timeout_status != 0)) {
 			timeout_evaluate_timein(self);
 			return TRUE;
 		}
@@ -210,7 +194,7 @@ float(string cmd, float tokens) timeout_ClientCommandHandle {
 
 var float(float tempo) timeout_slowmo_update_mod_NextLink;
 float(float tempo) timeout_slowmo_update_mod {
-	if (timeoutStatus == 2)
+	if (timeout_status == 2)
 		return TIMEOUT_SLOWMO_VALUE;
 
 	return timeout_slowmo_update_mod_NextLink(tempo);

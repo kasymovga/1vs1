@@ -220,7 +220,7 @@ float(string s, entity e) vote_cmd {
 				if (cvar("sv_vote_nospectators") && e && e.classname != "player") {
 					cmd_print_to(e, "^1Error: Only players can call a vote."); // TODO invent a cvar name for allowing votes by spectators during warmup anyway
 				}
-				else if (timeoutStatus) { //don't allow a vote call during a timeout
+				else if (timeout_status) { //don't allow a vote call during a timeout
 					cmd_print_to(e, "^1Error: You can not call a vote while a timeout is active.");
 				}
 				else if (vote_called) {

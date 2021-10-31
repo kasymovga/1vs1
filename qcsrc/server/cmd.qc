@@ -421,7 +421,7 @@ void(string command) cmd_game {
 .float cmd_floodtime;
 .float cmd_floodcount;
 float(void) cmd_floodcheck {
-	if (timeoutStatus != 2) {
+	if (timeout_status != 2) {
 		if (time == self.cmd_floodtime) {
 			self.cmd_floodcount += 1;
 			if (self.cmd_floodcount > 8)
@@ -530,7 +530,7 @@ void(string s) cmd_client {
 				}
 				warmup_note_update();
 				// cannot reset the game while a timeout is active!
-				if (!timeoutStatus)
+				if (!timeout_status)
 					ready_count();
 			} else {
 				sprint(self, "^1Game has already been restarted\n");
