@@ -1389,9 +1389,6 @@ void(void) trigger_gravity_touch {
 }
 
 void(void) spawnfunc_trigger_gravity {
-	if (self.gravity == 1)
-		return;
-
 	trigger_solid_brush_init();
 	self.touch = trigger_gravity_touch;
 	if (self.noise != "")
