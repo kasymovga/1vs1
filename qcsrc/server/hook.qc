@@ -26,6 +26,7 @@ void(entity ent, entity e) hook_follow {
 	ent.aiment = e; // make the hole follow bmodel
 	if (ent.aiment.takedamage)
 		ent.hook_attack_time = time + g_balance_grapplehook_damage_interval;
+
 	ent.punchangle = e.angles; // the original angles of bmodel
 	ent.view_ofs = ent.origin - e.origin; // relative origin
 	ent.v_angle = ent.angles - e.angles; // relative angles
@@ -40,10 +41,11 @@ void(entity ent, entity e) hook_follow {
 }
 
 float(entity ent) hook_lost_follow {
-	if(ent.aiment) {
-		if(ent.aiment.classname != ent.aiment_classname)
+	if (ent.aiment) {
+		if (ent.aiment.classname != ent.aiment_classname)
 			return 1;
-		if(ent.aiment.deadflag != ent.aiment_deadflag)
+
+		if (ent.aiment.deadflag != ent.aiment_deadflag)
 			return 1;
 	}
 	return 0;
@@ -53,12 +55,13 @@ float(entity ent) hook_lost_follow {
 .float hook_switchweapon;
 
 void(entity pl) hook_remove {
-	if(pl.hook == world)
+	if (pl.hook == world)
 		return;
+
 	remove(pl.hook.hook);
 	remove(pl.hook);
 	pl.hook = world;
-	if(pl.movetype == MOVETYPE_FLY)
+	if (pl.movetype == MOVETYPE_FLY)
 		pl.movetype = MOVETYPE_WALK;
 
 	//pl.disableclientprediction = FALSE;
@@ -93,7 +96,7 @@ float(entity to, float sf) hook_send {
 
 	vector v;
 	if (sf & 2) {
-		if(_hook.owner.weapon == WEP_HOOK) {
+		if (_hook.owner.weapon == WEP_HOOK) {
 			entity oldself = self;
 			self = _hook;
 			v = weapon_shotorg_adjust('26 9 -16', TRUE, TRUE, FALSE);
@@ -124,7 +127,7 @@ float(entity to, float sf) hook_send {
 }
 
 void(entity _hook, vector v, vector v0, vector dir) hook_pull_aiment {
-	if(_hook.aiment.pushfactor) {
+	if (_hook.aiment.pushfactor) {
 		vector dv = ((v - v0) * dir) * dir;
 		float pullfactor = 0.5;
 		if (_hook.aiment.flags & FL_ONGROUND)
@@ -148,13 +151,13 @@ void() hook_think {
 	vector org, myorg;
 	entity oldself = self;
 	self = self.owner;
-	if(PLAYER_DEAD(self.owner) || self.owner.hook != self) {// how did that happen?
+	if (PLAYER_DEAD(self.owner) || self.owner.hook != self) {// how did that happen?
 		// well, better fix it anyway
 		remove(self.hook);
 		remove(self);
 		goto end;
 	}
-	if(hook_lost_follow(self)) {
+	if (hook_lost_follow(self)) {
 		hook_remove(self.owner);
 		goto end;
 	}
@@ -165,7 +168,7 @@ void() hook_think {
 		org = self.owner.origin + '0 0 12';
 
 	makevectors(self.owner.v_angle);
-	if(self.state == 1) {
+	if (self.state == 1) {
 		if (self.aiment) {
 			if not(player_can_fire(self.owner, FALSE)) {
 				hook_remove(self.owner);
@@ -220,7 +223,7 @@ void(void) hook_touch {
 		hook_remove(self.owner);
 		return;
 	}
-	if(other == world) {
+	if (other == world) {
 		vector tic;
 		tic = self.velocity * sys_ticrate;
 		tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
@@ -231,8 +234,8 @@ void(void) hook_touch {
 		}
 	}
 	hook_stop();
-	if(other)
-		if(other.movetype != MOVETYPE_NONE) {
+	if (other)
+		if (other.movetype != MOVETYPE_NONE) {
 			hook_follow(self, other);
 		}
 
@@ -240,8 +243,7 @@ void(void) hook_touch {
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) hook_damage {
-	if(self.health > 0)
-	{
+	if (self.health > 0) {
 		float f;
 		if (attacker == self.owner)
 			f = g_balance_selfdamagepercent;
@@ -249,10 +251,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			f = 1;
 
 		self.health = self.health - _damage * f;
-		if (self.health <= 0)
-		{
-			if(attacker != self.owner)
-			{
+		if (self.health <= 0) {
+			if (attacker != self.owner) {
 				self.owner.pusher = attacker;
 				self.owner.pushltime = time + g_maxpushtime;
 			}
@@ -309,66 +309,49 @@ void(void) hook_fire {
 	self = oldself;
 }
 
-var void() hook_PlayerPreThink_NextLink;
-void() hook_PlayerPreThink {
-	hook_PlayerPreThink_NextLink();
+var void() hook_player_think_next;
+void() hook_player_think {
+	hook_player_think_next();
 	float button_hook = self.BUTTON_HOOK;
 	if (PLAYER_DEAD(self))
 		return;
 
-	if(g_grappling_hook && timeout_status != 2 && self.weapon != WEP_HOOK)
-	{
+	if (g_grappling_hook && timeout_status != 2 && self.weapon != WEP_HOOK) {
 		// offhand hook controls
-		if(button_hook)
-		{
+		if (button_hook) {
 			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
-			if (time > map_starttime)
-			{
+			if (time > map_starttime) {
 				self.hook_state |= HOOK_FIRING;
 				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
 			}
-		}
-		else
-		{
+		} else {
 			self.hook_state |= HOOK_REMOVING;
 			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 		}
-
 		self.hook_state &= ~HOOK_RELEASING;
-		if(self.BUTTON_CROUCH)
-		{
+		if (self.BUTTON_CROUCH) {
 			self.hook_state &= ~HOOK_PULLING;
 			//self.hook_state |= HOOK_RELEASING;
-		}
-		else
-		{
+		} else {
 			self.hook_state |= HOOK_PULLING;
 			//self.hook_state &= ~HOOK_RELEASING;
 		}
-	}
-	else if(!(self.items & IT_JETPACK) && !g_grappling_hook && self.switchweapon != WEP_HOOK)
-	{
-		if(button_hook && !self.hook_switchweapon)
+	} else if (!g_grappling_hook && self.switchweapon != WEP_HOOK) {
+		if (button_hook && !self.hook_switchweapon)
 			weapon_switch(WEP_HOOK);
 	}
 	self.hook_switchweapon = button_hook;
-
-	if(!g_grappling_hook && self.weapon != WEP_HOOK)
-	{
+	if (!g_grappling_hook && self.weapon != WEP_HOOK) {
 		self.hook_state &= ~HOOK_FIRING;
 		self.hook_state |= HOOK_REMOVING;
 	}
-
-	if (self.hook_state & HOOK_FIRING)
-	{
+	if (self.hook_state & HOOK_FIRING) {
 		if (self.hook)
 			hook_remove(self);
 
 		hook_fire();
 		self.hook_state &= ~HOOK_FIRING;
-	}
-	else if(self.hook_state & HOOK_REMOVING)
-	{
+	} else if (self.hook_state & HOOK_REMOVING) {
 		if (self.hook)
 			hook_remove(self);
 
@@ -376,21 +359,21 @@ void() hook_PlayerPreThink {
 	}
 }
 
-var void() hook_client_connect_real_NextLink;
+var void() hook_client_connect_real_next;
 void hook_client_connect_real(void) {
 	// this function has been modified for Nexuiz
 	// don't remove these lines! old server or demos coud overwrite the new aliases
 	stuffcmd(self, "alias +hook +button6\n");
 	stuffcmd(self, "alias -hook -button6\n");
-	hook_client_connect_real_NextLink();
+	hook_client_connect_real_next();
 }
 
-var void(entity targ, entity attacker, float deathtype) hook_DamageForceModsSet_NextLink;
-void hook_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
-	if(targ.classname == "player")
-		if(targ.hook) {
-			if(targ.hook.aiment)
-				if(targ.hook.aiment == attacker)
+var void(entity targ, entity attacker, float deathtype) hook_damage_mods_set_next;
+void hook_damage_mods_set(entity targ, entity attacker, float deathtype) {
+	if (targ.classname == "player")
+		if (targ.hook) {
+			if (targ.hook.aiment)
+				if (targ.hook.aiment == attacker)
 					hook_remove(targ); // STOP THAT, you parasite!
 
 			if (targ.hook.state)
@@ -400,14 +383,13 @@ void hook_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
 				gamehook_chain_damage_mod_force = 0;
 			}
 		}
-
-	hook_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+	hook_damage_mods_set_next(targ, attacker, deathtype);
 }
 
-var void(float killed) hook_PlayerClear_NextLink;
-void(float killed) hook_PlayerClear {
+var void(float killed) hook_player_clear_next;
+void(float killed) hook_player_clear {
 	hook_remove(self);
-	hook_PlayerClear_NextLink(killed);
+	hook_player_clear_next(killed);
 }
 
 vector hook_physics_pre_origin_save;
@@ -485,14 +467,14 @@ void(float force) hook_init {
     precache_model("models/hook.md3");
 	precache_sound("weapons/hook_fire.wav");
 	precache_sound("weapons/hook_impact.wav");
-	hook_client_connect_real_NextLink = gamehook_chain_client_connect_real;
+	hook_client_connect_real_next = gamehook_chain_client_connect_real;
 	gamehook_chain_client_connect_real = hook_client_connect_real;
-	hook_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = hook_DamageForceModsSet;
-	hook_PlayerPreThink_NextLink = gamehook_chain_player_think;
-	gamehook_chain_player_think = hook_PlayerPreThink;
-	hook_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = hook_PlayerClear;
+	hook_damage_mods_set_next = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = hook_damage_mods_set;
+	hook_player_think_next = gamehook_chain_player_think;
+	gamehook_chain_player_think = hook_player_think;
+	hook_player_clear_next = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = hook_player_clear;
 	hook_entity_pre_spawn_next = gamehook_chain_entity_spawn_pre;
 	gamehook_chain_entity_spawn_pre = hook_entity_pre_spawn;
 }
