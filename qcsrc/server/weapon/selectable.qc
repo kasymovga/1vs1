@@ -54,10 +54,22 @@ float(void) weapon_selectable_spectator_to_player_handle {
 
 var void(entity spot) weapon_selectable_player_spawn_next;
 void(entity spot) weapon_selectable_player_spawn {
+	float w = 0;
 	if (self.w_secondary_picked)
-		self.weapons |= weapon_bit(self.w_secondary_picked);
+		w = self.w_secondary_picked;
 	else if (clienttype(self) == CLIENTTYPE_BOT)
-		self.weapons |= weapon_bit(weapon_selectable_for_bots);
+		w = weapon_selectable_for_bots;
+
+	self.weapons |= weapon_bit(w);
+	entity e = weapon_info(w);
+	float a = e.items & IT_AMMO;
+	if (a) {
+		var .float ammofield = item_counter_field(e.items & IT_AMMO);
+		if (!self.ammofield)
+			self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(a)));
+	}
+	if (!self.switchweapon)
+		self.switchweapon = w;
 
 	weapon_selectable_player_spawn_next(spot);
 }

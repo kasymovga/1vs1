@@ -8,3 +8,4 @@ floatfield(float it) item_counter_field;
 float(entity player, entity item) item_generic_pickupevalfunc;
 voidfunc(string s) item_spawnfunc_for;
 void(string _model, string defmodel, string snd) item_precache;
+string(float it) item_counter_field_name;
