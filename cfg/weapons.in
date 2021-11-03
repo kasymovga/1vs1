@@ -386,11 +386,13 @@ alias weapshotgun "impulse 231"
 
 //Uzi
 set g_balance_uzi_first_damage 35
+set g_balance_uzi_first_damage_headshot 0
 set g_balance_uzi_first_force 50
 set g_balance_uzi_first_spread 0.015
 set g_balance_uzi_first_refire 0.2
 set g_balance_uzi_first_ammo 1
 set g_balance_uzi_sustained_damage 20
+set g_balance_uzi_sustained_damage_headshot 0
 set g_balance_uzi_sustained_force 27
 set g_balance_uzi_sustained_spread 0.05
 set g_balance_uzi_sustained_refire 0.1

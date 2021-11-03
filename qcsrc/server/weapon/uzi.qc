@@ -17,6 +17,7 @@ float g_balance_uzi_bulletconstant;
 float g_balance_uzi_first;
 float g_balance_uzi_first_ammo;
 float g_balance_uzi_first_damage;
+float g_balance_uzi_first_damage_headshot;
 float g_balance_uzi_first_force;
 float g_balance_uzi_first_gravityfactor;
 float g_balance_uzi_first_refire;
@@ -24,6 +25,7 @@ float g_balance_uzi_first_spread;
 float g_balance_uzi_speed;
 float g_balance_uzi_sustained_ammo;
 float g_balance_uzi_sustained_damage;
+float g_balance_uzi_sustained_damage_headshot;
 float g_balance_uzi_sustained_force;
 float g_balance_uzi_sustained_gravityfactor;
 float g_balance_uzi_sustained_refire;
@@ -50,9 +52,14 @@ void(float deathtype) weapon_uzi_attack {
 	// this attack_finished just enforces a cooldown at the end of a burst
 	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
 	if (self.uzi_bulletcounter == 1)
-		bullet(weapon_shotorg, weapon_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
+		bullet(weapon_shotorg, weapon_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed,
+				5, g_balance_uzi_first_damage, g_balance_uzi_first_damage_headshot,
+				g_balance_uzi_first_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
 	else
-		bullet(weapon_shotorg, weapon_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
+		bullet(weapon_shotorg, weapon_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed,
+				5, g_balance_uzi_sustained_damage, g_balance_uzi_sustained_damage_headshot,
+				g_balance_uzi_sustained_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
+
 	bullet_end();
 	pointparticles(particleeffectnum("uzi_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	// muzzle flash for 1st person view
@@ -162,6 +169,7 @@ float(float req) weapon_uzi {
 		CVAR_CACHE(g_balance_uzi_first);
 		CVAR_CACHE(g_balance_uzi_first_ammo);
 		CVAR_CACHE(g_balance_uzi_first_damage);
+		CVAR_CACHE(g_balance_uzi_first_damage_headshot);
 		CVAR_CACHE(g_balance_uzi_first_force);
 		CVAR_CACHE(g_balance_uzi_first_gravityfactor);
 		CVAR_CACHE(g_balance_uzi_first_refire);
@@ -169,6 +177,7 @@ float(float req) weapon_uzi {
 		CVAR_CACHE(g_balance_uzi_speed);
 		CVAR_CACHE(g_balance_uzi_sustained_ammo);
 		CVAR_CACHE(g_balance_uzi_sustained_damage);
+		CVAR_CACHE(g_balance_uzi_sustained_damage_headshot);
 		CVAR_CACHE(g_balance_uzi_sustained_force);
 		CVAR_CACHE(g_balance_uzi_sustained_gravityfactor);
 		CVAR_CACHE(g_balance_uzi_sustained_refire);
