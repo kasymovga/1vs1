@@ -185,6 +185,7 @@ alias weapfireball "impulse 245"
 
 //Nex
 set g_balance_nex_damage 110
+set g_balance_nex_damage_headshot 0
 set g_balance_nex_force 600
 set g_balance_nex_refire 1.5
 set g_balance_nex_animtime 0.3

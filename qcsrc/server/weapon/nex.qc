@@ -9,6 +9,7 @@ float g_balance_nex_damagefalloff_maxdist;
 float g_balance_nex_damagefalloff_mindist;
 float g_balance_nex_force;
 float g_balance_nex_refire;
+float g_balance_nex_damage_headshot;
 string sv_announcer_extra_twohits;
 .float nex_ammoclip;
 
@@ -58,7 +59,9 @@ void(void) weapon_nex_attack {
 	damage_yoda = 0;
 	damage_headshot = 0;
 	damage_goodhits = 0;
-	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
+	damage_headshotbonus = g_balance_nex_damage_headshot;
+	bullet_railgun(weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
+	damage_headshotbonus = 0;
 	antilag_end();
 	if (damage_headshot)
 		announce(akimbo_owner(self), "announcer/male/headshot.wav", "^1Head^3Shot");
@@ -146,6 +149,7 @@ float(float req) weapon_nex {
 		CVAR_CACHE(g_balance_nex_ammo);
 		CVAR_CACHE(g_balance_nex_animtime);
 		CVAR_CACHE(g_balance_nex_damage);
+		CVAR_CACHE(g_balance_nex_damage_headshot);
 		CVAR_CACHE(g_balance_nex_damagefalloff_forcehalflife);
 		CVAR_CACHE(g_balance_nex_damagefalloff_halflife);
 		CVAR_CACHE(g_balance_nex_damagefalloff_maxdist);
