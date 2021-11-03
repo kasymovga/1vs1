@@ -1,5 +1,4 @@
 float g_start_weapon_selectable;
-float weapon_selectable_for_bots;
 
 .float w_secondary_picked;
 void(void) weapon_selectable_send {
@@ -42,10 +41,8 @@ float(string cmd, float tokens) weapon_selectable_cmd_client_handle {
 
 var float(void) weapon_selectable_spectator_to_player_handle_next;
 float(void) weapon_selectable_spectator_to_player_handle {
-	if (clienttype(self) != CLIENTTYPE_REAL)
-		return FALSE;
-
-	if (!self.w_secondary_picked) {
+	if not(self.w_secondary_picked)
+	if (clienttype(self) == CLIENTTYPE_REAL) {
 		weapon_selectable_send();
 		return TRUE;
 	}
@@ -54,23 +51,27 @@ float(void) weapon_selectable_spectator_to_player_handle {
 
 var void(entity spot) weapon_selectable_player_spawn_next;
 void(entity spot) weapon_selectable_player_spawn {
-	float w = 0;
-	if (self.w_secondary_picked)
-		w = self.w_secondary_picked;
-	else if (clienttype(self) == CLIENTTYPE_BOT)
-		w = weapon_selectable_for_bots;
-
-	self.weapons |= weapon_bit(w);
-	entity e = weapon_info(w);
-	float a = e.items & IT_AMMO;
-	if (a) {
-		var .float ammofield = item_counter_field(e.items & IT_AMMO);
-		if (!self.ammofield)
-			self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(a)));
+	if not(self.w_secondary_picked) {
+		random_selection_init();
+		for (float i = WEP_FIRST, j = 1; i <= WEP_LAST; i++, j *= 2) {
+			if ((j & g_start_weapon_selectable)) {
+				random_selection_add(NULL, i, "", 1, 1);
+			}
+		}
+		self.w_secondary_picked = random_selection_chosen_float;
 	}
-	if (!self.switchweapon)
-		self.switchweapon = w;
-
+	if (self.w_secondary_picked) {
+		self.weapons |= weapon_bit(self.w_secondary_picked);
+		entity e = weapon_info(self.w_secondary_picked);
+		float a = e.items & IT_AMMO;
+		if (a) {
+			var .float ammofield = item_counter_field(e.items & IT_AMMO);
+			if (!self.ammofield)
+				self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(a)));
+		}
+		if (!self.switchweapon)
+			self.switchweapon = self.w_secondary_picked;
+	}
 	weapon_selectable_player_spawn_next(spot);
 }
 
@@ -84,7 +85,6 @@ void(void) weapon_selectable_init {
 			if (e) {
 				g_start_weapon_selectable |= weapon_bit(e.weapon);
 				weapon_precache(e.weapon);
-				weapon_selectable_for_bots = e.weapon;
 			}
 		}
 	}
