@@ -23,9 +23,12 @@ float g_balance_grenadelauncher_secondary_refire;
 float g_balance_grenadelauncher_secondary_speed;
 float g_balance_grenadelauncher_secondary_speed_up;
 float g_balance_grenadelauncher_secondary;
+float g_balance_grenadelauncher_magazinecapacity;
+float g_balance_grenadelauncher_reloadtime;
 
 var .float gl_buttonatck1 = BUTTON_ATCK;
 var .float gl_buttonatck2 = BUTTON_ATCK2;
+.float gl_ammoclip;
 
 void(void) weapon_grenadelauncher_explode {
 	if(other.takedamage == DAMAGE_AIM)
@@ -82,6 +85,9 @@ void(void) weapon_grenadelauncher_attack {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_primary_ammo;
 
+	if (g_balance_grenadelauncher_magazinecapacity)
+		self.gl_ammoclip -= 1;
+
 	weapon_setup_shot(self, 4, "weapons/grenade_fire.wav", 1);
 	weapon_shotdir = v_forward; // no TrueAim for grenades please
 	if (g_balance_grenadelauncher_primary_up) {
@@ -105,6 +111,9 @@ void(void) weapon_grenadelauncher_attack2 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_secondary_ammo;
 
+	if (g_balance_grenadelauncher_magazinecapacity)
+		self.gl_ammoclip -= 1;
+
 	weapon_setup_shot(self, 4, "weapons/grenade_fire.wav", 1);
 	weapon_shotdir = v_forward; // no TrueAim for grenades please
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
@@ -127,6 +136,17 @@ void(void) spawnfunc_weapon_grenadelauncher {
 	weapon_defaultspawnfunc(WEP_GRENADE_LAUNCHER);
 }
 
+void(void) weapon_grenadelauncher_reloadandready {
+	weapon_clip_reloadandready(g_balance_grenadelauncher_magazinecapacity, ammo_rockets, gl_ammoclip,
+			g_balance_grenadelauncher_primary_ammo, g_balance_grenadelauncher_secondary_ammo, g_balance_grenadelauncher_reloadtime);
+}
+
+void(void) weapon_grenadelauncher_reload {
+	weapon_clip_reload(g_balance_grenadelauncher_magazinecapacity, ammo_rockets, gl_ammoclip, g_balance_grenadelauncher_primary_ammo,
+			g_balance_grenadelauncher_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_grenadelauncher_reloadtime,
+			weapon_grenadelauncher_reloadandready);
+}
+
 .float bot_secondary_grenademooth;
 float(float req) weapon_grenadelauncher {
 	if (req == WR_AIM) {
@@ -144,16 +164,26 @@ float(float req) weapon_grenadelauncher {
 			}
 		}
 	} else if (req == WR_THINK) {
-		if (self.gl_buttonatck1)
-		if (weapon_prepareattack(0, g_balance_grenadelauncher_primary_refire)) {
-			weapon_grenadelauncher_attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, weapon_ready);
+		if (g_balance_grenadelauncher_magazinecapacity && (self.gl_ammoclip < 0 || (!self.gl_ammoclip && (self.gl_buttonatck1 || self.gl_buttonatck2)))) { // forced reload (e.g. because interrupted)
+			if (self.switchweapon == self.weapon)
+			if (self.weaponentity.state == WS_READY)
+				weapon_grenadelauncher_reload();
+		} else if (!g_balance_grenadelauncher_magazinecapacity || self.gl_ammoclip > 0) {
+			if (self.gl_buttonatck1)
+			if (weapon_prepareattack(0, g_balance_grenadelauncher_primary_refire)) {
+				weapon_grenadelauncher_attack();
+				weapon_thinkf(WFRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, weapon_ready);
+			}
+			if (self.gl_buttonatck2)
+			if (g_balance_grenadelauncher_secondary)
+			if (weapon_prepareattack(1, g_balance_grenadelauncher_secondary_refire)) {
+				weapon_grenadelauncher_attack2();
+				weapon_thinkf(WFRAME_FIRE2, g_balance_grenadelauncher_secondary_animtime, weapon_ready);
+			}
 		}
-		if (self.gl_buttonatck2)
-		if (g_balance_grenadelauncher_secondary)
-		if (weapon_prepareattack(1, g_balance_grenadelauncher_secondary_refire)) {
-			weapon_grenadelauncher_attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_grenadelauncher_secondary_animtime, weapon_ready);
+		if (g_balance_grenadelauncher_magazinecapacity) {
+			self.ammoclip = self.gl_ammoclip;
+			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
 	} else if (req == WR_PRECACHE) {
 		precache_sound("weapons/grenade_bounce1.wav");
@@ -163,9 +193,14 @@ float(float req) weapon_grenadelauncher {
 		precache_sound("weapons/grenade_bounce5.wav");
 		precache_sound("weapons/grenade_bounce6.wav");
 		precache_sound("weapons/grenade_fire.wav");
-	} else if (req == WR_SETUP)
+	} else if (req == WR_SETUP) {
 		weapon_setup(WEP_GRENADE_LAUNCHER);
-	else if (req == WR_CHECKAMMO1)
+		if (g_balance_grenadelauncher_magazinecapacity) {
+			weapon_clip_checkmaxbullets(g_balance_grenadelauncher_magazinecapacity, ammo_rockets, gl_ammoclip, g_balance_grenadelauncher_primary_ammo, g_balance_grenadelauncher_secondary_ammo);
+			if not(self.gl_ammoclip)
+				self.gl_ammoclip = -1;
+		}
+	} else if (req == WR_CHECKAMMO1)
 		return self.ammo_rockets >= g_balance_grenadelauncher_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_rockets >= g_balance_grenadelauncher_secondary_ammo;
@@ -182,6 +217,11 @@ float(float req) weapon_grenadelauncher {
 				weapon_deathtypestring = "almost dodged #'s grenade";
 		else // unchecked: SECONDARY, BOUNCE
 			weapon_deathtypestring = "ate #'s grenade";
+	} else if (req == WR_RELOAD) {
+		weapon_grenadelauncher_reload();
+	} else if (req == WR_RESETPLAYER) {
+		if (g_balance_grenadelauncher_magazinecapacity)
+			self.gl_ammoclip = g_balance_grenadelauncher_magazinecapacity;
 	} else if (req == WR_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_grenadelauncher_primary_ammo);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_animtime);
@@ -208,6 +248,8 @@ float(float req) weapon_grenadelauncher {
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_speed);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_speed_up);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary);
+		CVAR_CACHE(g_balance_grenadelauncher_magazinecapacity);
+		CVAR_CACHE(g_balance_grenadelauncher_reloadtime);
 		projectile_init(PROJECTILE_GRENADE, MOVETYPE_TOSS);
 		projectile_init(PROJECTILE_GRENADE_BOUNCING, MOVETYPE_BOUNCE);
 		if (cvar("g_balance_grenadelauncher_swap_buttons")) {

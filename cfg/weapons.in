@@ -297,6 +297,8 @@ set g_balance_grenadelauncher_secondary_damageforcescale 4
 set g_balance_grenadelauncher_secondary 1
 set g_balance_grenadelauncher_primary_bounce 0
 set g_balance_grenadelauncher_swap_buttons 0
+set g_balance_grenadelauncher_magazinecapacity 0
+set g_balance_grenadelauncher_reloadtime 2
 alias weapgrenadelauncher "impulse 233"
 
 //Hagar
