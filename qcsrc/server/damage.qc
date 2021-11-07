@@ -179,8 +179,10 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	if (self.damageforcescale)
 	if (vlen(force)) {
 		self.velocity = self.velocity + self.damageforcescale * force;
-		self.flags &= ~FL_ONGROUND;
-		projectile_update(self);
+		if (self.flags & FL_PROJECTILE) {
+			self.flags &= ~FL_ONGROUND;
+			projectile_update(self);
+		}
 	}
 	// apply damage
 	if (_damage != 0 || (self.damageforcescale && vlen(force)))
