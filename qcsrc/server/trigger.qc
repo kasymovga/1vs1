@@ -243,8 +243,8 @@ void(void) trigger_multiple_fire {
 	if (self.nextthink > time) {
 		return; // allready been triggered
 	}
-	if (self.noise)
-		sound (self.enemy, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+	if (self.noise != "")
+		sound(self.enemy, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 
 	// don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
@@ -336,18 +336,21 @@ set "message" to text string
 */
 void(void) spawnfunc_trigger_multiple {
 	self.reset = trigger_multiple_reset;
-	if (self.sounds == 1) {
-		self.noise = "misc/secret.wav";
-	} else if (self.sounds == 2) {
-		self.noise = "misc/talk.wav";
-	} else if (self.sounds == 3) {
-		self.noise = "misc/trigger1.wav";
+	if (self.noise == "") {
+		if (self.sounds == 1) {
+			self.noise = "misc/strength_respawn.wav";
+		} else if (self.sounds == 2) {
+			self.noise = "misc/talk.wav";
+		} else if (self.sounds == 3) {
+			self.noise = "misc/menu1.wav";
+		}
 	}
 	if (self.noise != "")
 		precache_sound(self.noise);
 
 	if (!self.wait)
 		self.wait = 0.2;
+
 	self.use = trigger_multiple_use;
 	trigger_solid_brush_init();
 	self.team_saved = self.team;
