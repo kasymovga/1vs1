@@ -15,7 +15,6 @@ vector sv_qcanimation_melee2_morph1origin;
 vector sv_qcanimation_melee2_morph2origin;
 vector sv_qcanimation_melee_exterior;
 float sv_qcweaponanimation;
-float g_akimbo_use_left_hand;
 float g_shootfromcenter;
 float g_shootfromeye;
 float g_norecoil;
@@ -1434,7 +1433,6 @@ void(void) weapon_init {
 	CVAR_CACHE(sv_qcweaponanimation);
 	CVAR_CACHE(g_weaponspeedfactor);
 	CVAR_CACHE(g_weaponratefactor);
-	CVAR_CACHE(g_akimbo_use_left_hand);
 	CVAR_CACHE(g_shootfromcenter);
 	CVAR_CACHE(g_shootfromeye);
 	CVAR_CACHE(g_projectiles_newton_style);
