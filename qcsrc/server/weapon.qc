@@ -5,6 +5,7 @@ float g_projectiles_newton_style;
 float g_projectiles_newton_style_2_maxfactor;
 float g_projectiles_newton_style_2_minfactor;
 float g_weaponratefactor;
+float g_weapon_throw_mode;
 vector sv_qcanimation_melee_morph1angles;
 vector sv_qcanimation_melee_morph2angles;
 vector sv_qcanimation_melee_morph1origin;
@@ -241,7 +242,7 @@ void(void) weapon_thrown_think {
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
 string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_throw_new {
 	entity oldself, wep;
-	float wa, thisammo, i, j;
+	float wa, thisammo, i;
 	string s;
 	var .float ammofield;
 	wep = spawn();
@@ -272,16 +273,15 @@ string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_th
 		if (item_start_failed)
 			return NULL;
 
-		if (doreduce) {
-			for (i = 0, j = 1; i < 24; ++i, j *= 2) {
-				if (wa & j) {
-					ammofield = item_counter_field(j);
-					thisammo = min(own.ammofield, wep.ammofield);
-					wep.ammofield = thisammo;
-					own.ammofield -= thisammo;
-					s = strcat(s, " and ", ftos(thisammo), " ", item_counter_field_name(j));
-				}
-			}
+		if (doreduce || g_weapon_throw_mode) {
+			ammofield = item_counter_field(wa);
+			thisammo = min(own.ammofield, wep.ammofield);
+			if (thisammo <= 0)
+				thisammo = own.ammofield;
+
+			wep.ammofield = thisammo;
+			own.ammofield -= thisammo;
+			s = strcat(s, " and ", ftos(thisammo), " ", item_counter_field_name(wa));
 			s = substring(s, 5, -1);
 		}
 		wep.think = weapon_thrown_think;
@@ -325,7 +325,7 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 	if (g_pickup_nodrop)
 		return;
 
-	if (doreduce && g_weapon_stay == 1)
+	if (doreduce && g_weapon_stay == 1) //prevent ammo multiplication
 		return;
 
 	wb = weapon_bit(w);
@@ -340,7 +340,7 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 		if (!weapon_throwable(w))
 			return;
 	}
-	if (self.weapons & wb != wb)
+	if not(self.weapons & wb)
 		return;
 
 	if not(akimbo_throw) {
@@ -1437,6 +1437,7 @@ void(void) weapon_init {
 	CVAR_CACHE(g_shootfromeye);
 	CVAR_CACHE(g_projectiles_newton_style);
 	CVAR_CACHE(g_norecoil);
+	CVAR_CACHE(g_weapon_throw_mode);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
