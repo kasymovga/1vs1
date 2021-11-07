@@ -96,6 +96,10 @@ set g_start_weapon_campingrifle 0 "0 = never provide the weapon, 1 = always prov
 set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the weapon"
 set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
 set g_start_weapon_selectable ""
+set g_start_weapon_selectable_nails 0
+set g_start_weapon_selectable_shells 0
+set g_start_weapon_selectable_rockets 0
+set g_start_weapon_selectable_cells 0
 set g_twoweapons ""
 set g_twoweapons_invert_buttons 0
 set sv_qcweaponanimation 0

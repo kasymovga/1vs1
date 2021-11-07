@@ -62,12 +62,17 @@ void(entity spot) weapon_selectable_player_spawn {
 	}
 	if (self.w_secondary_picked) {
 		self.weapons |= weapon_bit(self.w_secondary_picked);
-		entity e = weapon_info(self.w_secondary_picked);
-		float a = e.items & IT_AMMO;
-		if (a) {
-			var .float ammofield = item_counter_field(e.items & IT_AMMO);
-			if (!self.ammofield)
-				self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(a)));
+		if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
+			entity e = weapon_info(self.w_secondary_picked);
+			float a = e.items & IT_AMMO;
+			if (a) {
+				var .float ammofield = item_counter_field(e.items & IT_AMMO);
+				if (self.ammofield <= 0)
+					self.ammofield = cvar(strcat("g_start_weapon_selectable_", item_counter_field_name(a)));
+
+				if (self.ammofield <= 0)
+					self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(a)));
+			}
 		}
 		if (!self.switchweapon)
 			self.switchweapon = self.w_secondary_picked;
