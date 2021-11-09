@@ -1,3 +1,6 @@
+float BOT_PICKUP_RATING_LOW = 2500;
+float BOT_PICKUP_RATING_MID = 5000;
+float BOT_PICKUP_RATING_HIGH = 10000;
 float AI_STATUS_ROAMING = 1; // Bot is just crawling the map. No enemies at sight
 float AI_STATUS_ATTACKING = 2; // There are enemies at sight
 float AI_STATUS_RUNNING = 4; // Bot is bunny hopping
@@ -12,6 +15,7 @@ float AI_STATUS_JETPACK_LANDING = 1024;
 
 .float isbot; // true if this client is actually a bot
 .float aistatus;
+.float bot_pickupbasevalue; // bot weapon priority
 
 float bot_count;
 float bot_would_leave;

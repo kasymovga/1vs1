@@ -10,6 +10,7 @@
 #include "gametype.qh"
 #include "hittype.qh"
 #include "hook.qh"
+#include "item.qh"
 #include "jetpack.qh"
 #include "key.qh"
 #include "mapvote.qh"

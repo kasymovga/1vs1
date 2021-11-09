@@ -7,6 +7,10 @@ float WFRAME_RELOAD = 3;
 float WFRAME_MELEE = 4;
 float WFRAME_MELEE2 = 5;
 
+#define WEPSPAWNFLAG_NORMAL 1
+#define WEPSPAWNFLAG_CANCLIMB 2
+#define WEPSPAWNFLAG_HIDDEN 4
+
 float g_weaponspeedfactor;
 
 vector weapon_shotorg;
