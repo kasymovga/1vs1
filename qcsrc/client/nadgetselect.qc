@@ -32,6 +32,7 @@ void(void) nadgetselect_draw {
 	if (nadgetselect_active) {
 		nadgetselect_alpha = approach(nadgetselect_alpha, 1, frametime * 5);
 		input_event_callback = nadgetselect_input_event;
+		mouse_enable("");
 	} else
 		nadgetselect_alpha = approach(nadgetselect_alpha, 0, frametime * 7);
 
@@ -39,7 +40,6 @@ void(void) nadgetselect_draw {
 		remove(self);
 		return;
 	}
-	mouse_enable("");
 	sbar_hidescores = TRUE;
 	float a = nadgetselect_alpha;
 	drawfont = sbar_bigfont;

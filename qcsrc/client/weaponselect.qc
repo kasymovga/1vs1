@@ -34,6 +34,7 @@ void(void) weaponselect_draw {
 	if (weaponselect_active) {
 		weaponselect_alpha = approach(weaponselect_alpha, 1, frametime * 5);
 		input_event_callback = weaponselect_input_event;
+		mouse_enable("");
 	} else
 		weaponselect_alpha = approach(weaponselect_alpha, 0, frametime * 7);
 
@@ -41,7 +42,6 @@ void(void) weaponselect_draw {
 		remove(self);
 		return;
 	}
-	mouse_enable("");
 	sbar_hidescores = TRUE;
 	float a = weaponselect_alpha;
 	drawfont = sbar_bigfont;
