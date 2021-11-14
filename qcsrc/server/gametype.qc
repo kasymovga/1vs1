@@ -104,6 +104,7 @@ void() gametype_init {
 	if (force_gametype_restore)
 		MapInfo_SwitchGameType(force_gametype_restore);
 
+	print("--- Game started ---\n   Map: ", mapname, "\n  Mode: ", MapInfo_HumanString_FromType(gametype), "\n");
 	gametype_writecvars();
 	cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
 	cvar_set("timelimit", ftos(gametype_value("timelimit")));
