@@ -102,6 +102,7 @@ vector(vector org, entity tgt, float ht) trigger_push_calculatevelocity {
 	return sdir * vs + '0 0 1' * vz;
 }
 
+float trigger_push_recursive;
 void(void) trigger_push_touch {
 	// FIXME: add a .float for whether an entity should be tossed by jumppads
 	if not(other.iscreature)
@@ -140,13 +141,15 @@ void(void) trigger_push_touch {
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		other.pushltime = 0;
 	}
-	if (self.enemy.target) {
+	if (self.enemy.target && !trigger_push_recursive) {
+		trigger_push_recursive = 1;
 		entity oldself;
 		oldself = self;
 		activator = other;
 		self = self.enemy;
 		trigger_use_targets();
 		self = oldself;
+		trigger_push_recursive = 0;
 	}
 	if (other.flags & FL_PROJECTILE) {
 		other.angles = vectoangles (other.velocity);

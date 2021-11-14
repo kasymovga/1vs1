@@ -214,8 +214,29 @@ void(float preventReuse) trigger_use_targets_ex {
 	other = otemp;
 }
 
+float trigger_use_targets_depth;
 void(void) trigger_use_targets {
+	if (trigger_use_targets_depth > 32) {
+		print("------------------------------------------------------\n");
+		print("trigger_use_targets: too much recursive calls, aborted\n");
+		print("    self.classname=", self.classname ,"\n");
+		print("    self.netname=", self.netname ,"\n");
+		print("    self.targetname=", self.targetname ,"\n");
+		print("    self.target=", self.target ,"\n");
+		print("    other.classname=", other.classname ,"\n");
+		print("    other.netname=", other.netname ,"\n");
+		print("    other.targetname=", other.targetname ,"\n");
+		print("    other.target=", other.target ,"\n");
+		print("    activator.classname=", other.classname ,"\n");
+		print("    activator.netname=", other.netname ,"\n");
+		print("    activator.targetname=", other.targetname ,"\n");
+		print("    activator.target=", other.target ,"\n");
+		print("------------------------------------------------------\n");
+		return;
+	}
+	trigger_use_targets_depth++;
 	trigger_use_targets_ex(FALSE);
+	trigger_use_targets_depth--;
 }
 
 void trigger_use_targets_prevent_reuse() {
