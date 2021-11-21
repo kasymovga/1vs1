@@ -14,7 +14,7 @@ void(void) spawnfunc_target_push {
 	if (!self.speed)
 		self.speed = 1000;
 
-	self.movedir = self.movedir * self.speed * 10;
+	self.movedir = self.movedir * self.speed;
 	precache_sound (self.noise);
 	entity_initialize(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }
