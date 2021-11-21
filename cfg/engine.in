@@ -98,6 +98,7 @@ con_chatsize 10
 con_chatwidth 0.6
 con_notifysize 10
 con_notifyalign 0
+con_textsize 10
 cl_movement_track_canjump 0
 
 sbar_info_pos 50
