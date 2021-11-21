@@ -285,7 +285,7 @@ void(void) target_speed_use {
 		if (self.spawnflags & 128)
 			v += '0 0 -1';
 
-		activator.velocity = activator.velocity + normalize(v) * s;
+		activator.velocity = activator.velocity + v * s;
 	} else {
 		if (activator.velocity == '0 0 0')
 			return;
