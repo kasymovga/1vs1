@@ -108,3 +108,4 @@ set g_maxplayers 0 "maximum number of players allowed to play at the same time, 
 set g_trigger_collisions_exact 1 "exact collisions with trigger brushes"
 set g_reset_on_join 0 "automatic reset game when this amount of player join"
 set g_endmatch_on_leave 0 "automatic end game when this amount of player left (0 - disabled)"
+set g_target_push_speed_factor 10

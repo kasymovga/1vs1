@@ -143,6 +143,7 @@ set _defrag_g_slicksurfaces_levitation 0
 set _defrag_g_button_nowaitforever 1
 set _defrag_g_skimming_time 0.25
 set _defrag_g_projectiles_newton_style 0
+set _defrag_g_target_push_speed_factor 1
 set defragcpm_inherit _defrag
 set defragcpm_g_q2doublejump 0
 set defragcpm_g_cpmdoublejump 1
