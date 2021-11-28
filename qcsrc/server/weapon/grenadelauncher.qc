@@ -22,6 +22,7 @@ float g_balance_grenadelauncher_secondary_radius;
 float g_balance_grenadelauncher_secondary_refire;
 float g_balance_grenadelauncher_secondary_speed;
 float g_balance_grenadelauncher_secondary_speed_up;
+float g_balance_grenadelauncher_secondary_trigger_type;
 float g_balance_grenadelauncher_secondary;
 float g_balance_grenadelauncher_magazinecapacity;
 float g_balance_grenadelauncher_reloadtime;
@@ -48,7 +49,7 @@ void(void) weapon_grenadelauncher_touch1 {
 
 void(void) weapon_grenadelauncher_touch2 {
 	PROJECTILE_TOUCH;
-	if (other.takedamage == DAMAGE_AIM) {
+	if (other && (other.takedamage == DAMAGE_AIM || (other.takedamage == DAMAGE_YES && g_balance_grenadelauncher_secondary_trigger_type))) {
 		projectile_explode();
 	} else {
 		float r;
@@ -65,6 +66,7 @@ void(void) weapon_grenadelauncher_touch2 {
 			sound_spam (self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
 		else
 			sound_spam (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
@@ -248,6 +250,7 @@ float(float req) weapon_grenadelauncher {
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_speed);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_speed_up);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_trigger_type);
 		CVAR_CACHE(g_balance_grenadelauncher_magazinecapacity);
 		CVAR_CACHE(g_balance_grenadelauncher_reloadtime);
 		projectile_init(PROJECTILE_GRENADE, MOVETYPE_TOSS);

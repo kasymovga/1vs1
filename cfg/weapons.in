@@ -301,6 +301,7 @@ set g_balance_grenadelauncher_secondary_ammo 4
 set g_balance_grenadelauncher_secondary_health 10
 set g_balance_grenadelauncher_secondary_damageforcescale 4
 set g_balance_grenadelauncher_secondary 1
+set g_balance_grenadelauncher_secondary_trigger_type 0 "1 for extra explode triggers: doors, buttons"
 set g_balance_grenadelauncher_primary_bounce 0
 set g_balance_grenadelauncher_swap_buttons 0
 set g_balance_grenadelauncher_magazinecapacity 0
