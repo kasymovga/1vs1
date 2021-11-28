@@ -1074,7 +1074,7 @@ void(void) func_door_blocked {
 	if ((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
 		damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 	} else {
-		if ((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
+		if ((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
 			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 
 		//Dont chamge direction for dead or dying stuff
