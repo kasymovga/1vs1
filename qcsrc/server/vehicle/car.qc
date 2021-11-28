@@ -137,7 +137,8 @@ void(void) vehicle_car_think {
 			self.angles_x *= -1;
 			makevectors(self.angles);
 			self.angles_x *= -1;
-			movelib_groundalign4point(75, 75, 1);
+			float as = self.maxs_x * 0.75;
+			movelib_groundalign4point(as, as, 1);
 			physics_velocity = self.velocity;
 		}
 		physics_move();

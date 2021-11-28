@@ -17,7 +17,7 @@ void(float spring_length,float spring_up,float blendrate) movelib_groundalign4po
 	vector v, vx, vy, vz, v1, mn, vcross1, vcross2;
 	float f;
 	v = self.origin;
-	//v_z += self.mins_z * 0.5;
+	v_z += (self.mins_z + 1);
 	vx = '1 0 0' * spring_length;
 	vy = '0 1 0' * spring_length;
 	vz = '0 0 1' * spring_up;
