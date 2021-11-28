@@ -109,3 +109,5 @@ set g_trigger_collisions_exact 1 "exact collisions with trigger brushes"
 set g_reset_on_join 0 "automatic reset game when this amount of player join"
 set g_endmatch_on_leave 0 "automatic end game when this amount of player left (0 - disabled)"
 set g_target_push_speed_factor 10
+set g_trigger_push_speed_factor 10
+set g_trigger_push_skip_projectiles 0 "0 - jumppads affect projectiles, 1 - jumpads ignore projectiles"

@@ -7,6 +7,8 @@ void() trigger_use_targets;
 
 float trigger_push_calculatevelocity_flighttime;
 float g_trigger_push_use_trigger_origin;
+float g_trigger_push_speed_factor;
+float g_trigger_push_skip_projectiles;
 
 void(void) trigger_push_use {
 	if(team_mode)
@@ -106,9 +108,8 @@ float trigger_push_recursive;
 void(void) trigger_push_touch {
 	// FIXME: add a .float for whether an entity should be tossed by jumppads
 	if not(other.iscreature)
-	if (other.classname != "body")
 	if (other.classname != "droppedweapon")
-	if (!(other.flags & FL_PROJECTILE) || other.classname == "bullet")
+	if (!(other.flags & FL_PROJECTILE) || g_trigger_push_skip_projectiles)
 		return;
 
 	if (other.deadflag && other.deadflag != DEAD_FREEZE && other.iscreature)
@@ -223,6 +224,8 @@ float trigger_push_init_done;
 void(void) spawnfunc_trigger_push {
 	if not(trigger_push_init_done) {
 		CVAR_CACHE(g_trigger_push_use_trigger_origin);
+		CVAR_CACHE(g_trigger_push_speed_factor);
+		CVAR_CACHE(g_trigger_push_skip_projectiles);
 		trigger_push_init_done = 1;
 	}
 	if (self.speed)
@@ -235,7 +238,7 @@ void(void) spawnfunc_trigger_push {
 	if (!self.speed)
 		self.speed = 1000;
 
-	self.movedir = self.movedir * self.speed * 10;
+	self.movedir = self.movedir * self.speed * g_trigger_push_speed_factor;
 	if not(self.noise)
 		self.noise = "misc/jumppad.wav";
 
