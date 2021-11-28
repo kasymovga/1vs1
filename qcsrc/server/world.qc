@@ -186,9 +186,10 @@ void(void) world_end_of_time {
 
 float world_already_spawned;
 void(void) world_init {
-	if (world_already_spawned)
-		error("world already spawned - you may have EXACTLY ONE worldspawn!");
-
+	if (world_already_spawned) {
+		print("WARNING: world already spawned - you may have EXACTLY ONE worldspawn!");
+		return;
+	}
 	gettaginfo_parent = 0;
 	gettaginfo_offset = '0 0 0';
 	gettaginfo_forward = '0 0 0';
