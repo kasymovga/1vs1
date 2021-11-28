@@ -1,3 +1,4 @@
+float g_trigger_collisions_exact;
 vector trigger_exact_hit_mins;
 vector trigger_exact_hit_maxs;
 float(void) trigger_exact_hit_recurse {
@@ -28,12 +29,24 @@ float(void) trigger_exact_hit {
 	self.solid = SOLID_BSP;
 	trigger_exact_hit_mins = other.absmin;
 	trigger_exact_hit_maxs = other.absmax;
-	f = trigger_exact_hit_recurse();
+	if (g_trigger_collisions_exact > 1) {
+		string dir = cvar_string("collision_triangle_directional");
+		cvar_set("collision_triangle_directional", "0");
+		f = trigger_exact_hit_recurse();
+		cvar_set("collision_triangle_directional", dir);
+	} else
+		f = trigger_exact_hit_recurse();
+
 	self.solid = s;
 	return f;
 }
 
+float trigger_solid_brush_init_done;
 void(void) trigger_solid_brush_init {
+	if not(trigger_solid_brush_init_done) {
+		trigger_solid_brush_init_done = TRUE;
+		CVAR_CACHE(g_trigger_collisions_exact);
+	}
 	// trigger angles are used for one-way touches.  An angle of 0 is assumed
 	// to mean no restrictions, so use a yaw of 360 instead.
 	if (self.movedir == '0 0 0')
@@ -42,7 +55,7 @@ void(void) trigger_solid_brush_init {
 
 	model_setup();
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
-	if (!cvar("g_trigger_collisions_exact") || self.solid < 0)
+	if (!g_trigger_collisions_exact || self.solid < 0)
 		self.modelindex = 0;
 
 	self.model = "";
