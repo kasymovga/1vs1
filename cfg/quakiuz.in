@@ -66,8 +66,10 @@ set quakiuz_g_balance_tuba_damage 15
 set quakiuz_g_balance_tuba_attenuation 0.5
 set quakiuz_g_balance_uzi_sustained_damage 7
 set quakiuz_g_balance_uzi_sustained_refire 0.1
+set quakiuz_g_balance_uzi_sustained_spread 0.02
 set quakiuz_g_balance_uzi_first 0
 set quakiuz_g_balance_uzi_first_damage 7
+set quakiuz_g_balance_uzi_first_spread 0.02
 set quakiuz_g_balance_shotgun_primary_ammo 1
 set quakiuz_g_balance_shotgun_primary_force 20
 set quakiuz_g_balance_shotgun_primary_spread 0.1
