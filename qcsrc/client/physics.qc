@@ -522,6 +522,7 @@ void(float isnew) physics_read {
 		} else {
 			physics_cpmdoublejump_time_start = 0;
 		}
+		if (view_spectatee_status) physics_flags = ((f & 16) ? FL_ONGROUND : 0);
 		physics_start_flags_doublejump = f2 & 16;
 	}
 }

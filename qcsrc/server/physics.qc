@@ -514,6 +514,7 @@ float(entity to, float sf) physics_send {
 	float sf2 = 0;
 	if not(sf & 3) {
 		if (self.classname == "player") sf |= 8;
+		else if (self.classname == "spectator" && (self.enemy.flags & FL_ONGROUND)) sf |= 16;
 		if (self.last_physics_ladder) sf |= 32;
 		if (self.ladder_entity.classname == "func_water") sf |= 64;
 		if (self.flags & FL_JUMPRELEASED) sf |= 128;
