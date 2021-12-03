@@ -26,7 +26,7 @@ void(void) physics_on_jump_hook {
 }
 
 void(void) physics_check_water_jump_hook {
-	self.teleport_time = time + 2;	// safety net
+	self.teleport_time = time + 2; // safety net
 }
 
 float(void) physics_jump_velocity_mod {
@@ -177,6 +177,7 @@ void(void) physics_frame_begin_hook {
 	}
 }
 
+.entity physics_chain;
 void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 	if (self.mins_x == self.maxs_x ||
 			self.mins_y == self.maxs_y ||
@@ -208,10 +209,14 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 	entity e = findradius((v2_absmins + v2_absmaxs) * 0.5, r);
 	entity oldself = self;
 	entity oldother = other;
-	for (; e; e = e.chain) {
+	entity e1 = e;
+	for (; e1; e1 = e1.chain) {
+		e1.physics_chain = e1.chain;
+	}
+	for (; e; e = e.physics_chain) {
 		if (e == oldself) continue;
 		if (e.solid != SOLID_TRIGGER && (e.solid != SOLID_CORPSE || oldself.solid == SOLID_TRIGGER)) continue; //projectiles use SOLID_CORPSE
-		if (e.owner == oldself) continue; //don't touch own projectiles
+		if (e.owner == oldself && (e.flags & FL_PROJECTILE)) continue; //don't touch own projectiles
 		if not(math_boxes_overlap(e.origin + e.mins, e.origin + e.maxs, v2_absmins, v2_absmaxs)) continue;
 		if (e.touch) {
 			other = oldself;
@@ -229,7 +234,6 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 			physics_velocity = oldself.velocity;
 			physics_v_angle = oldself.v_angle;
 			frametime = oldframetime;
-			break;
 		}
 	}
 	self = oldself;
