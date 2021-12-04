@@ -30,18 +30,18 @@ void(void) trigger_push_use {
  */
 
 vector(vector org, entity tgt, float ht) trigger_push_calculatevelocity {
-	float sdist, zdist, vs, vz, jumpheight;
+	float sdist, zdist, vs, vz;
 	vector sdir, torg;
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
-	zdist = torg_z - org_z;
-	sdist = vlen(torg - org - zdist * '0 0 1');
+	zdist = torg_z - org_z + ht;
+	sdist = vlen(torg - org - fabs(zdist) * '0 0 1');
 	sdir = normalize(torg - org - zdist * '0 0 1');
-	jumpheight = fabs(ht);
-	if (zdist > 0)
-		jumpheight = jumpheight + zdist;
-
 	float t = sqrt(zdist / (0.5 * sv_gravity));
-	vz = t * sv_gravity;
+	if (zdist > 0)
+		vz = t * sv_gravity;
+	else
+		vz = 0;
+
 	trigger_push_calculatevelocity_flighttime = t;
 	vs = sdist / t;
 	return sdir * vs + '0 0 1' * vz;
@@ -63,9 +63,10 @@ void(void) trigger_push_touch {
 			return;
 
 	TRIGGER_EXACT_TOUCH;
-	if(self.target)
+	if (self.target)
 		self.movedir = trigger_push_calculatevelocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), self.enemy, self.height);
 
+	if (self.movedir == '0 0 0') return;
 	other.flags &= ~FL_ONGROUND;
 	other.velocity = self.movedir;
 	if (other.iscreature) {
