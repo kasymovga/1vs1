@@ -55,6 +55,7 @@ vector g_topview_angles;
 float g_climb_height;
 float g_climb_speed;
 float g_doublejump;
+float g_gravity_hack;
 
 float physics_deadflag;
 float physics_cantjump;

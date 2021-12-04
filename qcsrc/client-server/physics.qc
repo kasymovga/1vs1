@@ -974,6 +974,7 @@ void(void) physics_player_frame {
 }
 
 void(void) physics_player {
+	physics_gravity_factor *= g_gravity_hack;
 	if (g_physics_fixed) {
 		float oldframetime = frametime;
 		float f = frametime + physics_frametime_accumulator;

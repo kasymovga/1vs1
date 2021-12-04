@@ -349,6 +349,7 @@ float(string s, entity e) vote_cmd {
 			} else if (e.vote_vote == 0
 				  || cvar("sv_vote_change")) {
 				cmd_print_to(e, "^1You accepted the vote.");
+				print(e.netname, "^7 accepted the vote.\n");
 				e.vote_vote = 1;
 				if (!cvar("sv_vote_singlecount")) {
 					vote_count();
@@ -364,6 +365,7 @@ float(string s, entity e) vote_cmd {
 			} else if (e.vote_vote == 0
 				  || cvar("sv_vote_change")) {
 				cmd_print_to(e, "^1You rejected the vote.");
+				print(e.netname, "^7 rejected the vote.\n");
 				e.vote_vote = -1;
 				if (!cvar("sv_vote_singlecount")) {
 					vote_count();
@@ -379,6 +381,7 @@ float(string s, entity e) vote_cmd {
 			} else if (e.vote_vote == 0
 				  || cvar("sv_vote_change")) {
 				cmd_print_to(e, "^1You abstained from your vote.");
+				print(e.netname, "^7 abstained from the vote.\n");
 				e.vote_vote = -2;
 				if (!cvar("sv_vote_singlecount")) {
 					vote_count();
