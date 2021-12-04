@@ -101,10 +101,6 @@ void(void) physics_update_status {
 		}
 	}
 	if (physics_waterlevel < WATERLEVEL_SWIMMING) {
-		if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
-			physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
-
-		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', TRACE_MOVE_NORMAL, self);
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
 		if (trace_startsolid)
 		if (self.solid != SOLID_NOT) {
@@ -194,8 +190,9 @@ void(void) physics_move {
 	float trace2_fraction = 0;
 	vector trace1_plane_normal = '0 0 0';
 	vector trace2_plane_normal = '0 0 0';
-	vector primalvelocity = physics_velocity;
 	float skipskimming = 0;
+	physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime * 0.5;
+	vector primalvelocity = physics_velocity;
 	for (bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++) {
 		neworigin = self.origin + t * physics_velocity;
 		trace_box(self.origin, self.mins, self.maxs, neworigin, TRACE_MOVE_NORMAL, self);
@@ -297,6 +294,7 @@ void(void) physics_move {
 		if (physics_skimming < 0)
 			physics_skimming = 0;
 	}
+	physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime * 0.5;
 }
 
 void(vector wishdir, float wishspeed) physics_aircontrol {
@@ -834,6 +832,7 @@ void(void) physics_player_frame {
 		else
 			makevectors(physics_v_angle);
 
+		physics_gravity_factor = 0;
 		//wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + v_up * physics_movement_z;
 		if (physics_button_jump)
 			physics_movement_z = sv_maxspeed;
@@ -869,11 +868,7 @@ void(void) physics_player_frame {
 		if (physics_button_jump)
 			wishvel_z = wishvel_z + sv_jumpvelocity;
 
-		if (physics_gravity_factor) //antigravity
-			physics_velocity_z = physics_velocity_z + physics_gravity_factor * sv_gravity * frametime;
-		else
-			physics_velocity_z = physics_velocity_z + sv_gravity * frametime;
-
+		physics_gravity_factor = 0;
 		physics_velocity = physics_velocity * max(0, 1 - frametime * sv_friction);
 		if (physics_ladder_iswater) {
 			f = vlen(wishvel);
