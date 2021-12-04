@@ -30,77 +30,20 @@ void(void) trigger_push_use {
  */
 
 vector(vector org, entity tgt, float ht) trigger_push_calculatevelocity {
-	float grav, sdist, zdist, vs, vz, jumpheight;
+	float sdist, zdist, vs, vz, jumpheight;
 	vector sdir, torg;
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
-	grav = sv_gravity;
 	zdist = torg_z - org_z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
 	sdir = normalize(torg - org - zdist * '0 0 1');
-	// how high do we need to push the player?
 	jumpheight = fabs(ht);
 	if (zdist > 0)
 		jumpheight = jumpheight + zdist;
 
-	/*
-		STOP.
-		You will not understand the following equations anyway...
-		But here is what I did to get them.
-		I used the functions
-		  s(t) = t * vs
-		  z(t) = t * vz - 1/2 grav t^2
-		and solved for:
-		  s(ti) = sdist
-		  z(ti) = zdist
-		  max(z, ti) = jumpheight
-		From these three equations, you will find the three parameters vs, vz
-		and ti.
-	 */
-	// push him so high...
-	vz = sqrt(2 * grav * jumpheight); // NOTE: sqrt(positive)!
-	// we start with downwards velocity only if it's a downjump and the jump apex should be outside the jump!
-	if (ht < 0)
-		if (zdist < 0)
-			vz = -vz;
-
-	vector solution;
-	solution = math_solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
-	// ALWAYS solvable because jumpheight >= zdist
-	if (!solution_z)
-		solution_y = solution_x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
-
-	if (zdist == 0)
-		solution_x = solution_y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
-
-	if (zdist < 0) {
-		// down-jump
-		if (ht < 0) {
-			// almost straight line type
-			// jump apex is before the jump
-			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution_y;
-		} else {
-			// regular jump
-			// jump apex is during the jump
-			// we must take the larger one too
-			trigger_push_calculatevelocity_flighttime = solution_y;
-		}
-	} else {
-		// up-jump
-		if(ht < 0) {
-			// almost straight line type
-			// jump apex is after the jump
-			// we must take the smaller one
-			trigger_push_calculatevelocity_flighttime = solution_x;
-		} else {
-			// regular jump
-			// jump apex is during the jump
-			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution_y;
-		}
-	}
-	vs = sdist / trigger_push_calculatevelocity_flighttime;
-	// finally calculate the velocity
+	float t = sqrt(zdist / (0.5 * sv_gravity));
+	vz = t * sv_gravity;
+	trigger_push_calculatevelocity_flighttime = t;
+	vs = sdist / t;
 	return sdir * vs + '0 0 1' * vz;
 }
 
