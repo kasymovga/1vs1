@@ -215,7 +215,8 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 	}
 	for (; e; e = e.physics_chain) {
 		if (e == oldself) continue;
-		if (e.solid != SOLID_TRIGGER && (e.solid != SOLID_CORPSE || oldself.solid == SOLID_TRIGGER)) continue; //projectiles use SOLID_CORPSE
+		if (e.clipgroup && oldself.clipgroup == e.clipgroup) continue;
+		if (e.solid != SOLID_TRIGGER && e.solid != SOLID_CORPSE) continue; //projectiles use SOLID_CORPSE
 		if (e.owner == oldself && (e.flags & FL_PROJECTILE)) continue; //don't touch own projectiles
 		if not(math_boxes_overlap(e.origin + e.mins, e.origin + e.maxs, v2_absmins, v2_absmaxs)) continue;
 		if (e.touch) {
