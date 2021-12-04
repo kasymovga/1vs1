@@ -624,8 +624,9 @@ void(void) physics_player_jump {
 		float f = sv_jumpvelocity * physics_jump_velocity_mod();
 		if (g_jumpvelocity_noincrease)
 			physics_velocity_z = f;
-		else
-			physics_velocity_z = max(f, physics_velocity_z + f);
+		else {
+			physics_velocity_z = max(f, ((physics_groundvelocity_dotproduct <= 0) ? physics_velocity_z + f : physics_velocity_z));
+		}
 	} else
 		physics_velocity_z = physics_velocity_z + sv_jumpvelocity * physics_jump_velocity_mod();
 
@@ -767,7 +768,7 @@ void(void) physics_player_frame {
 			physics_flags &= ~FL_WATERJUMP;
 			physics_teleport_time = 0;
 		}
-	} else if (physics_flags & FL_ONGROUND) {
+	} else if ((physics_flags & FL_ONGROUND) && physics_groundvelocity_dotproduct <= 0) {
 		// walking
 		makevectors(physics_v_angle_y * '0 1 0');
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
