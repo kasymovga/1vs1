@@ -432,7 +432,6 @@ void(void) physics_init {
 	PHYSICS_CVAR_CACHE(sv_warsowbunny_turnaccel);
 	PHYSICS_CVAR_CACHE(sv_warsowbunny_backtosideratio);
 	PHYSICS_CVAR_CACHE(sv_jumpvelocity);
-	CVAR_CACHE(g_gravity_hack);
 	CVAR_CACHE(g_jumpvelocity_nodecrease);
 	CVAR_CACHE(g_jumpvelocity_noincrease);
 	sv_waterjumpvelocity = cvar("g_waterjumpvelocity");
@@ -573,7 +572,6 @@ float(entity to, float sf) physics_send {
 		net_write_coord(MSG_ENTITY, sv_stepheight);
 		net_write_coord(MSG_ENTITY, g_stepairslowdown);
 		net_write_coord(MSG_ENTITY, sv_gravity);
-		net_write_coord(MSG_ENTITY, g_gravity_hack);
 		net_write_coord(MSG_ENTITY, sv_maxairspeed);
 		net_write_coord(MSG_ENTITY, sv_maxspeed);
 		net_write_coord(MSG_ENTITY, sv_friction);

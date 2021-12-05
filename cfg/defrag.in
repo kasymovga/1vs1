@@ -149,7 +149,6 @@ set _defrag_g_target_push_speed_factor 1
 set _defrag_g_balance_grenadelauncher_secondary_trigger_type 1
 set _defrag_g_trigger_push_speed_factor 1
 set _defrag_g_trigger_push_skip_projectiles 1
-set _defrag_g_gravity_hack 0.96
 set defragcpm_inherit _defrag
 set defragcpm_g_q2doublejump 0
 set defragcpm_g_cpmdoublejump 1

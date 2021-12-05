@@ -311,7 +311,6 @@ void(float isnew) physics_read {
 		sv_stepheight = net_read_coord();
 		g_stepairslowdown = net_read_coord();
 		sv_gravity = net_read_coord();
-		g_gravity_hack = net_read_coord();
 		sv_maxairspeed = net_read_coord();
 		sv_maxspeed = net_read_coord();
 		sv_friction = net_read_coord();
