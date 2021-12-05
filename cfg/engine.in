@@ -20,6 +20,7 @@ set cl_curl_enabled 1
 set cl_curl_maxdownloads 5
 set cl_curl_maxspeed 1500
 set cl_curl_timeout 10
+cl_decals_max 192
 seta r_picmipworld 1
 seta r_ambient 4
 sv_cullentities_trace 1
