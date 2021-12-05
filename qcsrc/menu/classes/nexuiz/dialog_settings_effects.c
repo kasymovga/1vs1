@@ -128,7 +128,9 @@ void fillNexuizEffectsSettingsTab(entity me)
 		gui_make_callback(e, NULL, casingsCountUpdate);
 		casingsCountUpdate(NULL, e);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_decals", _("Decals")));
+		me.TD(me, 1, 1.5, e = makeNexuizCheckBox(0, "cl_decals", _("Decals")));
+		me.TD(me, 1, 2, e = makeNexuizSlider(64, 1024, 64, "cl_decals_max"));
+			gui_set_dependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.3, e = makeNexuizTextLabel(0, _("Distance:")));
@@ -137,10 +139,10 @@ void fillNexuizEffectsSettingsTab(entity me)
 			gui_set_dependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-	    me.TD(me, 1, 1.3, e = makeNexuizTextLabel(0, _("Time:")));
-	        gui_set_dependent(e, "cl_decals", 1, 1);
-	    me.TD(me, 1, 2, e = makeNexuizSlider(1, 20, 1, "cl_decals_time"));
-	        gui_set_dependent(e, "cl_decals", 1, 1);
+		me.TD(me, 1, 1.3, e = makeNexuizTextLabel(0, _("Time:")));
+			gui_set_dependent(e, "cl_decals", 1, 1);
+		me.TD(me, 1, 2, e = makeNexuizSlider(1, 20, 1, "cl_decals_time"));
+			gui_set_dependent(e, "cl_decals", 1, 1);
 
 	me.gotoRC(me, 2, 3.5); me.setFirstColumn(me, me.currentColumn);
 	me.TD(me, 1, 1, e = makeNexuizCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
