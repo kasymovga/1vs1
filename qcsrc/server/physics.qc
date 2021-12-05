@@ -432,6 +432,7 @@ void(void) physics_init {
 	PHYSICS_CVAR_CACHE(sv_warsowbunny_turnaccel);
 	PHYSICS_CVAR_CACHE(sv_warsowbunny_backtosideratio);
 	PHYSICS_CVAR_CACHE(sv_jumpvelocity);
+	CVAR_CACHE(g_velocity_rounding);
 	CVAR_CACHE(g_jumpvelocity_nodecrease);
 	CVAR_CACHE(g_jumpvelocity_noincrease);
 	sv_waterjumpvelocity = cvar("g_waterjumpvelocity");
@@ -599,7 +600,9 @@ float(entity to, float sf) physics_send {
 		if (g_climb_height)
 			net_write_coord(MSG_ENTITY, g_climb_speed);
 
-		float switches = (g_slicksurfaces_allowjump ? 2 : 0)
+		float switches =
+				(g_velocity_rounding ? 1 : 0)
+				+ (g_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)
 				+ (sv_gameplayfix_q2airaccelerate ? 16 : 0)

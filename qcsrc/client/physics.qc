@@ -339,6 +339,7 @@ void(float isnew) physics_read {
 			g_climb_speed = net_read_coord();
 
 		float switches = net_read_coord();
+		g_velocity_rounding = switches & 1;
 		g_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
 		sv_disable_crouch = switches & 8;
