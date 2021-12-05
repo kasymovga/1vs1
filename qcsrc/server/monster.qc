@@ -423,6 +423,7 @@ void monster_spawn_think() {
 	if (self.dmg < quant)
 		return;
 
+	self.lastteleporttime = time;
 	entity oldself = self;
 	self = spawn();
 	self.angles = oldself.angles;
@@ -466,7 +467,10 @@ void monster_spawn_use() {
 	if (gamehook_monster_team_switchable())
 		self.team = activator.team;
 
-	self.think();
+	if (self.lastteleporttime && self.lastteleporttime + self.respawntime > time)
+		self.nextthink = self.lastteleporttime + self.respawntime;
+	else
+		self.think();
 }
 
 void monster_prepare(void() hunt, void() walk, void() idle) {
