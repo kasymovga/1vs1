@@ -116,6 +116,7 @@ float() coop_monster_quant {
 	if (coop_monster_quant_cache_time && coop_monster_quant_cache_time == time) {
 		return coop_monster_quant_cache;
 	}
+	coop_monster_quant_cache_time = time;
 	coop_monster_quant_cache = (1 - g_coop_monster_factor);
 	entity e;
 	FOR_EACH_CLIENT(e) {
