@@ -1,3 +1,5 @@
+float g_coop_monster_factor;
+
 void(void) coop_teleporter_think {
 	if (self.solid == SOLID_TRIGGER) {
 		self.alpha = approach(self.alpha, 1, 1);
@@ -105,12 +107,33 @@ void(void) coop_init_delayed {
 	ice_init();
 }
 
+float coop_monster_quant_cache;
+float coop_monster_quant_cache_time;
+float() coop_monster_quant {
+	if (self.spawnflags & MONSTER_SPAWN_STAYSTILL)
+		return 1;
+
+	if (coop_monster_quant_cache_time && coop_monster_quant_cache_time == time) {
+		return coop_monster_quant_cache;
+	}
+	coop_monster_quant_cache = (1 - g_coop_monster_factor);
+	entity e;
+	FOR_EACH_CLIENT(e) {
+		if (e.classname == "player" && e.deadflag == DEAD_NO) {
+			coop_monster_quant_cache += g_coop_monster_factor;
+		}
+	}
+	return max(coop_monster_quant_cache, 1);
+}
+
 void(void) coop_init {
 	single_init();
+	CVAR_CACHE(g_coop_monster_factor);
 	coop_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = coop_player_clear;
 	coop_observer_spawn_next = gamehook_chain_observer_spawn;
 	gamehook_chain_observer_spawn = coop_observer_spawn;
+	gamehook_monster_quant = coop_monster_quant;
 	team_play_activate();
 	team_teams_set_count(1);
 	entity_initialize(world, coop_init_delayed, INITPRIO_GAMETYPE);

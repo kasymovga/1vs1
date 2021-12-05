@@ -4,7 +4,7 @@ float survive_active;
 float g_surv_wave_pause;
 float g_surv_freeze;
 float g_surv_monster_factor;
-float survive_monster_quant;
+float _survive_monster_quant;
 entity survive_plan_entity;
 string survive_map_finished_message;
 string survive_wave_prefix;
@@ -48,7 +48,7 @@ void survive_trigger() {
 		return;
 	}
 	entity oldself = self;
-	survive_monster_quant = (1 - g_surv_monster_factor);
+	_survive_monster_quant = (1 - g_surv_monster_factor);
 	survive_active = FALSE;
 	FOR_EACH_CLIENT(self) {
 		if (self.team >= 0) {
@@ -56,14 +56,14 @@ void survive_trigger() {
 				self.classname = "player";
 				client_put();
 			}
-			survive_monster_quant += g_surv_monster_factor;
+			_survive_monster_quant += g_surv_monster_factor;
 		}
 	}
 	self = oldself;
-	if (survive_monster_quant)
-		survive_monster_quant = 1 / (survive_monster_quant + 0.001);
+	if (_survive_monster_quant)
+		_survive_monster_quant = 1 / (_survive_monster_quant + 0.001);
 	else
-		survive_monster_quant = 1;
+		_survive_monster_quant = 1;
 
 	for (self = world; (self = find(self, targetname, wave_string())); ) {
 		activator = survive_plan_entity;
@@ -211,8 +211,8 @@ void survive_MonsterKilled(entity attacker) {
 	}
 }
 
-float survive_MonsterQuant() {
-	return survive_monster_quant;
+float survive_monster_quant() {
+	return _survive_monster_quant;
 }
 
 void spawnfunc_survive_wave() {
@@ -266,11 +266,11 @@ void survive_init() {
 	precache_sound("announcer/robotic/1.wav");
 	CVAR_CACHE(g_surv_freeze);
 	entity_initialize(world, survive_init_delayed, INITPRIO_GAMETYPE);
-	survive_monster_quant = 1;
+	_survive_monster_quant = 1;
 	gamehook_winning_condition = survive_WinningCondition;
 	gamehook_map_finish_message_mod = survive_GameOverMessageMod;
 	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
-	gamehook_MonsterQuant = survive_MonsterQuant;
+	gamehook_monster_quant = survive_monster_quant;
 	gamehook_monster_killed = survive_MonsterKilled;
 	survive_player_spawn_next = gamehook_chain_player_spawn;
 	gamehook_chain_player_spawn = survive_player_spawn;
