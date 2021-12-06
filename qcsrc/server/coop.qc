@@ -124,7 +124,8 @@ float() coop_monster_quant {
 			coop_monster_quant_cache += g_coop_monster_factor;
 		}
 	}
-	return max(coop_monster_quant_cache, 1);
+	coop_monster_quant_cache = 1 / max(coop_monster_quant_cache, 1);
+	return coop_monster_quant_cache;
 }
 
 void(void) coop_init {
