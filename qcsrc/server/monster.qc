@@ -223,9 +223,9 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 			o.nextthink = time + o.respawntime;
 			o.dmg = o.dmg + quant;
 		}
-		o.frags = o.frags - quant;
-		if (o.frags < quant)
-		if (o.dmg < quant) {
+		o.frags = o.frags - 1;
+		o.dmg_inflictor = attacker;
+		if (o.frags < 1 && !o.nextthink) {
 			activator = attacker;
 			entity oldself = self;
 			self = o;
@@ -245,7 +245,6 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 			else
 				return;
 		}
-
 		self.enemy = attacker;
 		self.think = self.weapon_think;
 	}
@@ -420,9 +419,13 @@ void monster_spawn_think() {
 	if not(self.team)
 		return;
 
-	if (self.dmg < quant)
+	if (self.dmg < quant) {
+		if (self.frags < 1) {
+			activator = self.dmg_inflictor;
+			trigger_use_targets();
+		}
 		return;
-
+	}
 	self.lastteleporttime = time;
 	entity oldself = self;
 	self = spawn();
@@ -455,7 +458,7 @@ void monster_spawn_think() {
 
 	self = oldself;
 	self.dmg = self.dmg - quant;
-	self.frags = self.frags + quant;
+	self.frags = self.frags + 1;
 	self.nextthink = time + self.respawntime;
 }
 
