@@ -378,6 +378,8 @@ void(float isnew) physics_read {
 		g_sideview = switches & 2097152;
 		g_topview = switches & 4194304;
 		g_doublejump = switches & 8388608;
+		switches = net_read_byte();
+		g_overbounce = switches & 1;
 		if (g_sideview)
 			physics_plug_adjust_view = physics_side_adjust_view;
 		else if (g_topview)

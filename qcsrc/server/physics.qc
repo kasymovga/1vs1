@@ -480,6 +480,7 @@ void(void) physics_init {
 
 	CVAR_CACHE(g_climb_speed);
 	CVAR_CACHE(g_doublejump);
+	CVAR_CACHE(g_overbounce);
 	if not(g_sideview) {
 		CVAR_CACHE(g_sideview);
 		if (g_sideview) {
@@ -627,6 +628,8 @@ float(entity to, float sf) physics_send {
 				+ (g_doublejump ? 8388608 : 0)
 				;
 		net_write_coord(MSG_ENTITY, switches);
+		switches = (g_overbounce ? 1 : 0);
+		net_write_byte(MSG_ENTITY, switches);
 		if (g_walljump) {
 			net_write_coord(MSG_ENTITY, g_walljump_delay);
 			net_write_coord(MSG_ENTITY, g_walljump_force);

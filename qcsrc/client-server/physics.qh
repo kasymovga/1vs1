@@ -56,6 +56,7 @@ float g_climb_height;
 float g_climb_speed;
 float g_doublejump;
 float g_velocity_rounding;
+float g_overbounce;
 
 float physics_deadflag;
 float physics_cantjump;

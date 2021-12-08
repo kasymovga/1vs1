@@ -302,6 +302,16 @@ void(void) physics_move {
 			physics_skimming = 0;
 	}
 	physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime * 0.5;
+	if (g_overbounce)
+	if not(physics_flags & FL_ONGROUND_OR_SLICK)
+	if not(physics_button_jump) {
+		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.25', TRACE_MOVE_NORMAL, self);
+		if (trace_fraction < 1 && trace_fraction > 0 && physics_velocity * trace_plane_normal < 0 && trace_plane_normal_z > 0.7) {
+			f = physics_velocity * trace_plane_normal;
+			vector v = physics_velocity - trace_plane_normal * f * 1.001;
+			physics_velocity = vlen(physics_velocity) * normalize(v);
+		}
+	}
 }
 
 void(vector wishdir, float wishspeed) physics_aircontrol {
