@@ -227,7 +227,7 @@ void(void) physics_move {
 				trace2_fraction = trace_fraction;
 				trace2_plane_normal = trace_plane_normal;
 				if not(trace_startsolid) {
-					if (trace_fraction > 0) {
+					if (trace_fraction > trace1_fraction && trace1_endpos_x != trace_endpos_x && trace1_endpos_y != trace_endpos_y) {
 						// then move down from there
 						currentorigin2 = trace_endpos;
 						neworigin2 = trace_endpos;
