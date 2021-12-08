@@ -217,21 +217,23 @@ void(void) physics_move {
 				}
 			}
 			if (trace1_plane_normal_z < 0.01 && trace1_plane_normal_z > -0.01) {
+				t -= t * trace1_fraction;
+				trace1_fraction = 0;
 				// may be a step or wall, try stepping up
 				// first move forward at a higher level
-				currentorigin2 = self.origin;
+				currentorigin2 = trace1_endpos;
 				currentorigin2_z += sv_stepheight;
-				neworigin2 = neworigin;
+				neworigin2 = trace1_endpos + t * physics_velocity;
 				neworigin2_z = currentorigin2_z;
 				trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
 				trace2_fraction = trace_fraction;
 				trace2_plane_normal = trace_plane_normal;
 				if not(trace_startsolid) {
-					if (trace_fraction > trace1_fraction && trace1_endpos_x != trace_endpos_x && trace1_endpos_y != trace_endpos_y) {
+					if (trace2_fraction > 0) {
 						// then move down from there
 						currentorigin2 = trace_endpos;
 						neworigin2 = trace_endpos;
-						neworigin2_z = self.origin_z;
+						neworigin2_z = trace1_endpos_z;
 						trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
 						if (trace_plane_normal_z > 0.7 || trace_plane_normal == '0 0 0') { //continue if step on ground, trace_plane_normal is 0-vector sometimes, engine bug?
 							trace1_fraction = trace2_fraction;
@@ -244,16 +246,16 @@ void(void) physics_move {
 						makevectors(self.angles);
 						if (trace1_plane_normal * v_forward < -0.5)
 						if (trace1_plane_normal * physics_velocity < 0) {
-							currentorigin2 = self.origin;
+							currentorigin2 = trace1_endpos;
 							currentorigin2_z += g_climb_height;
-							trace_box(currentorigin2, self.mins, self.maxs, self.origin, TRACE_MOVE_NORMAL, self);
+							trace_box(currentorigin2, self.mins, self.maxs, trace1_endpos, TRACE_MOVE_NORMAL, self);
 							if (trace_fraction == 1) {
 								neworigin2 = currentorigin2 - trace1_plane_normal * self.maxs_x * 0.5;
 								trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
 								if (trace_fraction == 1)
 								if not(trace_startsolid) {
 									currentorigin2 = trace_endpos;
-									neworigin2_z = self.origin_z;
+									neworigin2_z = trace1_endpos_z;
 									trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
 									if (trace_plane_normal_z > 0.7) { //continue if step on ground
 										physics_velocity_z = max(physics_velocity_z, g_climb_speed);
