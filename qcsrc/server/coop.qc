@@ -1,4 +1,5 @@
 float g_coop_monster_factor;
+float g_coop_monster_base;
 
 void(void) coop_teleporter_think {
 	if (self.solid == SOLID_TRIGGER) {
@@ -117,7 +118,7 @@ float() coop_monster_quant {
 		return coop_monster_quant_cache;
 	}
 	coop_monster_quant_cache_time = time;
-	coop_monster_quant_cache = (1 - g_coop_monster_factor);
+	coop_monster_quant_cache = (g_coop_monster_base - g_coop_monster_factor);
 	entity e;
 	FOR_EACH_CLIENT(e) {
 		if (e.classname == "player" && e.deadflag == DEAD_NO) {
@@ -131,6 +132,7 @@ float() coop_monster_quant {
 void(void) coop_init {
 	single_init();
 	CVAR_CACHE(g_coop_monster_factor);
+	CVAR_CACHE(g_coop_monster_base);
 	coop_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = coop_player_clear;
 	coop_observer_spawn_next = gamehook_chain_observer_spawn;
