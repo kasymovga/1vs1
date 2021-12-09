@@ -426,6 +426,12 @@ void monster_spawn_think() {
 		}
 		return;
 	}
+	entity e = findradius(self.origin, 1);
+	for ( ; e; e = e.chain) {
+		if (e.classname == "monster") {
+			e.velocity += randomvec() * 100 + '0 0 100';
+		}
+	}
 	self.lastteleporttime = time;
 	entity oldself = self;
 	self = spawn();
