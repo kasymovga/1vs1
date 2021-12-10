@@ -1,60 +1,61 @@
 float g_spawn_furthest;
+float g_spawn_znudge;
 #define SPAWNPOINT_SCORE frags
 
 void() spawnpoint_use;
 
 float spawn_relocate_claim_once;
 void() spawn_relocate {
-    // nudge off the floor
-    setorigin(self, self.origin + '0 0 1');
-    trace_box(self.origin, PL_MIN, PL_MAX, self.origin, TRUE, self);
-    if (trace_startsolid) {
-        vector o;
-        o = self.origin;
-        self.mins = PL_MIN;
-        self.maxs = PL_MAX;
-        if (!entity_move_out_of_solid(self))
-            entity_abort("could not get out of solid at all!");
-        print("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
-        print(" needs to be moved out of solid, e.g. by '", ftos(self.origin_x - o_x));
-        print(" ", ftos(self.origin_y - o_y));
-        print(" ", ftos(self.origin_z - o_z), "'\n");
-        if (cvar("g_spawnpoints_auto_move_out_of_solid")) {
-            if (!spawn_relocate_claim_once) {
-                print("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)\n");
+	// nudge off the floor
+	setorigin(self, self.origin + '0 0 1' * g_spawn_znudge);
+	trace_box(self.origin, PL_MIN, PL_MAX, self.origin, TRUE, self);
+	if (trace_startsolid) {
+		vector o;
+		o = self.origin;
+		self.mins = PL_MIN;
+		self.maxs = PL_MAX;
+		if (!entity_move_out_of_solid(self))
+			entity_abort("could not get out of solid at all!");
+
+		print("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
+		print(" needs to be moved out of solid, e.g. by '", ftos(self.origin_x - o_x));
+		print(" ", ftos(self.origin_y - o_y));
+		print(" ", ftos(self.origin_z - o_z), "'\n");
+		if (cvar("g_spawnpoints_auto_move_out_of_solid")) {
+			if (!spawn_relocate_claim_once) {
+				print("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)\n");
 				spawn_relocate_claim_once = 1;
 			}
-        } else {
-            setorigin(self, o);
-            self.mins = self.maxs = '0 0 0';
-            entity_abort("player spawn point in solid, mapper sucks!\n");
-            return;
-        }
-    }
-    if (cvar("g_spawnpoints_autodrop"))
-    {
-        setsize(self, PL_MIN, PL_MAX);
-        entity_droptofloor();
-    }
-    self.use = spawnpoint_use;
-    self.team_saved = self.team;
-    if (!self.cnt)
-        self.cnt = 1;
+		} else {
+			setorigin(self, o);
+			self.mins = self.maxs = '0 0 0';
+			entity_abort("player spawn point in solid, mapper sucks!\n");
+			return;
+		}
+	}
+	if (cvar("g_spawnpoints_autodrop")) {
+		setsize(self, PL_MIN, PL_MAX);
+		entity_droptofloor();
+	}
+	self.use = spawnpoint_use;
+	self.team_saved = self.team;
+	if (!self.cnt)
+		self.cnt = 1;
 
-    if (team_mode)
-        if (self.team)
-            spawn_have_team_spawns = 1;
+	if (team_mode)
+		if (self.team)
+			spawn_have_team_spawns = 1;
 
-    if (cvar("r_showbboxes")) {
-        // show where spawnpoints point at too
-        makevectors(self.angles);
-        entity e;
-        e = spawn();
-        e.classname = "info_player_foo";
-        setorigin(e, self.origin + v_forward * 24);
-        setsize(e, '-8 -8 -8', '8 8 8');
-        e.solid = SOLID_TRIGGER;
-    }
+	if (cvar("r_showbboxes")) {
+		// show where spawnpoints point at too
+		makevectors(self.angles);
+		entity e;
+		e = spawn();
+		e.classname = "info_player_foo";
+		setorigin(e, self.origin + v_forward * 24);
+		setsize(e, '-8 -8 -8', '8 8 8');
+		e.solid = SOLID_TRIGGER;
+	}
 }
 
 void() spawnpoint_use {
@@ -213,4 +214,5 @@ entity (float anypoint) spawn_select {
 
 void() spawn_init {
 	CVAR_CACHE(g_spawn_furthest);
+	CVAR_CACHE(g_spawn_znudge);
 }

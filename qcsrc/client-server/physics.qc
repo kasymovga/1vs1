@@ -305,6 +305,16 @@ void(void) physics_move {
 			f = physics_velocity * trace_plane_normal;
 			vector v = physics_velocity - trace_plane_normal * f * 1.001;
 			physics_velocity = vlen(physics_velocity) * normalize(v);
+			#ifdef SVQC
+			print("OB\n");
+			#endif
+		} else {
+			#ifdef SVQC
+			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 10', TRACE_MOVE_NORMAL, self);
+			if (trace_fraction < 1) {
+				print("Distance: ", ftos(self.origin_z - trace_endpos_z), "\n");
+			}
+			#endif
 		}
 	}
 	if (g_velocity_rounding) {
