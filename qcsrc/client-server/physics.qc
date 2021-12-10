@@ -191,11 +191,6 @@ void(void) physics_move {
 	vector trace1_plane_normal = '0 0 0';
 	vector trace2_plane_normal = '0 0 0';
 	float skipskimming = 0;
-	if (g_velocity_rounding) {
-		physics_velocity_x = floor(physics_velocity_x + 0.5);
-		physics_velocity_y = floor(physics_velocity_y + 0.5);
-		physics_velocity_z = floor(physics_velocity_z + 0.5);
-	}
 	physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime * 0.5;
 	vector primalvelocity = physics_velocity;
 	for (bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++) {
@@ -311,6 +306,11 @@ void(void) physics_move {
 			vector v = physics_velocity - trace_plane_normal * f * 1.001;
 			physics_velocity = vlen(physics_velocity) * normalize(v);
 		}
+	}
+	if (g_velocity_rounding) {
+		physics_velocity_x = floor(physics_velocity_x + 0.5);
+		physics_velocity_y = floor(physics_velocity_y + 0.5);
+		physics_velocity_z = floor(physics_velocity_z + 0.5);
 	}
 }
 
