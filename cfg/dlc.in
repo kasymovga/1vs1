@@ -1,4 +1,4 @@
-set sv_dlc_repository "https://kasymovga.github.io/rexdlc-web/ http://rexuiz.trafflow.com/maps/rexdlc/ http://nexuiz.mooo.com/rexdlc/"
+set sv_dlc_repository "https://kasymovga.github.io/rexdlc-web/ http://rexuiz.com/maps/rexdlc/ http://nexuiz.mooo.com/rexdlc/"
 set sv_dlc_extra ""
 set sv_dlc_server_only ""
 set menu_dlc_extra ""
