@@ -297,6 +297,11 @@ void(void) physics_move {
 			physics_skimming = 0;
 	}
 	physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime * 0.5;
+	if (g_velocity_rounding) {
+		physics_velocity_x = floor(physics_velocity_x + 0.5);
+		physics_velocity_y = floor(physics_velocity_y + 0.5);
+		physics_velocity_z = floor(physics_velocity_z + 0.5);
+	}
 	if (g_overbounce)
 	if not(physics_flags & FL_ONGROUND_OR_SLICK)
 	if not(physics_button_jump) {
@@ -306,11 +311,6 @@ void(void) physics_move {
 			vector v = physics_velocity - trace_plane_normal * f * 1.001;
 			physics_velocity = vlen(physics_velocity) * normalize(v);
 		}
-	}
-	if (g_velocity_rounding) {
-		physics_velocity_x = floor(physics_velocity_x + 0.5);
-		physics_velocity_y = floor(physics_velocity_y + 0.5);
-		physics_velocity_z = floor(physics_velocity_z + 0.5);
 	}
 }
 
