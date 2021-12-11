@@ -305,13 +305,12 @@ void(void) physics_move {
 	if (g_overbounce)
 	if not(physics_flags & FL_ONGROUND_OR_SLICK)
 	if not(physics_button_jump) {
-		float s = vlen(physics_velocity);
-		if (s > sv_jumpvelocity) {
+		if (physics_velocity_z < -sv_jumpvelocity) {
 			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.25', TRACE_MOVE_NORMAL, self);
 			if (trace_fraction < 1 && trace_fraction > 0 && physics_velocity * trace_plane_normal < 0 && trace_plane_normal_z > 0.7) {
 				f = physics_velocity * trace_plane_normal;
 				vector v = physics_velocity - trace_plane_normal * f * 1.001;
-				physics_velocity = s * normalize(v);
+				physics_velocity = vlen(physics_velocity) * normalize(v);
 				#ifdef SVQC
 				if (sv_overbounce_sound != "")
 					player_sound(self, CHAN_PLAYER, sv_overbounce_sound, VOL_BASE, ATTN_NORM);
