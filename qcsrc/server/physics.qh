@@ -3,6 +3,7 @@ void(entity pl, float tptime) physics_mark_as_teleported;
 void(void) physics_step_on_sky;
 float g_walljump_smokeparticle_num;
 float g_dodging_sound;
+string sv_overbounce_sound;
 .float lastground;
 .float ladder_time;
 .float wasFlying;

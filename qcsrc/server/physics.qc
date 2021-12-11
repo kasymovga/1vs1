@@ -489,6 +489,10 @@ void(void) physics_init {
 		}
 	}
 	CVAR_CACHE(g_sideview_up);
+	CVAR_CACHE_STR(sv_overbounce_sound);
+	if (sv_overbounce_sound != "")
+		precache_sound(sv_overbounce_sound);
+
 	string s = cvar_string("g_topview");
 	if (s != "") {
 		g_topview = 1;
