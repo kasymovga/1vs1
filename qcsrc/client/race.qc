@@ -263,17 +263,15 @@ void(void) race_sbar_draw {
 		float strafeangle = race_angle_norm(race_strafe_angle(diffangle));
 		vector v1, v2;
 		v1_x = race_angle_to_con_x(diffangle + strafeangle);
-		v1_y = CVAR(vid_conheight) * 0.5 - 10;
+		v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_strafe_helper_position);
 		v1_z = 0;
 		v2_x = max(0, race_angle_to_con_x(diffangle + 90) - v1_x);
-		v2_y = 20;
+		v2_y = CVAR(cl_cts_strafe_helper_height);
 		v2_z = 0;
-		drawfill(v1, v2, '0 1 0', 0.25, DRAWFLAG_NORMAL);
+		drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
 		v1_x = race_angle_to_con_x(diffangle - 90);
-		v1_y = CVAR(vid_conheight) * 0.5 - 10;
 		v2_x = max(0, race_angle_to_con_x(diffangle - strafeangle) - v1_x);
-		v2_y = 20;
-		drawfill(v1, v2, '0 1 0', 0.25, DRAWFLAG_NORMAL);
+		drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
 	}
 	m = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.25 0' * CVAR(vid_conheight);
 	if (race_checkpointtime) {
