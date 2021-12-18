@@ -131,11 +131,15 @@ void(float fade) sbar_draw_weapons {
 	if (CVAR(sbar_weapons_position_z) & 1) { //horizontal bar
 		w_shift2_x = w_size_x;
 		if (CVAR(sbar_weapons_position_z) & 8) { //down
-			weapon_position = sbar_position(CVAR(sbar_weapons_position), '498 48 0' * CVAR(sbar_weapons_scale) - '0 24 0' * CVAR(sbar_weapons_scale));
+			weapon_position = sbar_position(CVAR(sbar_weapons_position), '480 48 0' * CVAR(sbar_weapons_scale)) + '0 24 0' * CVAR(sbar_weapons_scale);
 			w_shift_y = -w_size_y;
 		} else {
-			weapon_position = sbar_position(CVAR(sbar_weapons_position), '498 48 0' * CVAR(sbar_weapons_scale));
+			weapon_position = sbar_position(CVAR(sbar_weapons_position), '480 48 0' * CVAR(sbar_weapons_scale));
 			w_shift_y = w_size_y;
+		}
+		if (CVAR(sbar_weapons_order)) {
+			w_shift2_x = -w_shift2_x;
+			weapon_position_x += 432;
 		}
 	} else { //vertical bar
 		w_shift2_y = -w_size_y;
@@ -145,6 +149,10 @@ void(float fade) sbar_draw_weapons {
 		} else { //left
 			weapon_position = sbar_position(CVAR(sbar_weapons_position), '98 240 0' * CVAR(sbar_weapons_scale)) + '0 216 0' * CVAR(sbar_weapons_scale);
 			w_shift_x = w_size_x;
+		}
+		if (CVAR(sbar_weapons_order)) {
+			w_shift2_y = -w_shift2_y;
+			weapon_position_y -= 216;
 		}
 	}
 	pos_z = 0;
@@ -175,9 +183,7 @@ void(float fade) sbar_draw_weapons {
 		drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr - 1)), w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 		if (CVAR(sbar_weapons_show_ammo)) {
 			a = 0;
-			if (sp == 0)
-				pos_x += w_space;
-
+			pos_x += w_space;
 			e = weapon_info(nr);
 			if (e.items) {
 				if (e.items & IT_SHELLS)
