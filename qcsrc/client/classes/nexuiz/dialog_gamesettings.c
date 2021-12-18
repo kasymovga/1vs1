@@ -156,7 +156,7 @@ void fillNexuizGameSettingsDialog(entity me)
 	}
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_increment_maptime", "Increment timer"));
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_increment_maptime", "Incremental timer"));
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_showcurrentammo", "Show only current ammo"));
