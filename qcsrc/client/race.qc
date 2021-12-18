@@ -174,7 +174,7 @@ float(float diffangle) race_strafe_angle {
 	vector vel = race_velocity;
 	vel_z = 0;
 	float speed = vlen(vel);
-	float maxspeed = sv_maxspeed;
+	float maxspeed = sv_maxspeed * physics_maxspeedmod;
 	if not(physics_flags & FL_ONGROUND)
 	if (race_movement_y)
 	if not(race_movement_x)

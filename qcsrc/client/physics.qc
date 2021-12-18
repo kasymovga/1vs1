@@ -1,6 +1,5 @@
 .float pmove_flags;
 float physics_button_crouch;
-float physics_maxspeedmod;
 float physics_jump_velocity_factor;
 float physics_start_teleport_time;
 float physics_start_crouch;
