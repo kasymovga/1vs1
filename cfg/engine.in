@@ -151,3 +151,4 @@ gameversion 20000
 gameversion_min 20000
 gameversion_max 20699
 seta r_deformvertexes 1
+r_water_hideplayer 1
