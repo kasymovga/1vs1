@@ -149,6 +149,8 @@ void(float fade) sbar_draw_weapons {
 	}
 	pos_z = 0;
 	float wbit = 1;
+	entity e;
+	float a;
 	for (nr = WEP_FIRST; nr <= WEP_LAST; ++nr, wbit *= 2) {
 		if not(stat_weapons & wbit) continue;
 		imp = weapon_impulses[nr - 1];
@@ -171,7 +173,28 @@ void(float fade) sbar_draw_weapons {
 			drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr - 1)), w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
-		if (sp == 0) {
+		if (CVAR(sbar_weapons_show_ammo)) {
+			a = 0;
+			if (sp == 0)
+				pos_x += w_space;
+
+			e = weapon_info(nr);
+			if (e.items) {
+				if (e.items & IT_SHELLS)
+					a = getstati(STAT_SHELLS);
+				else if (e.items & IT_NAILS)
+					a = getstati(STAT_NAILS);
+				else if (e.items & IT_ROCKETS)
+					a = getstati(STAT_ROCKETS);
+				else if (e.items & IT_CELLS)
+					a = getstati(STAT_CELLS);
+
+				if (a)
+					drawstring(pos, ftos(a), font_size, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
+				else
+					drawstring(pos, "X", font_size, '1 0 0', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
+			}
+		} else if (sp == 0) {
 			pos_x += w_space;
 			drawstring(pos, ftos(imp), font_size, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
 		}

@@ -195,5 +195,6 @@ READ_CVARS_SECTION(38, 39)
 READ_CVARS_SECTION(39, 0)
 	CACHE_CVAR_VEC_DEF(cl_cts_position_helper_color, '0.5 0.5 0.5')
 	CACHE_CVAR_DEF(cl_cts_position_helper_alpha, 0.5)
+	CACHE_CVAR_DEF(sbar_weapons_show_ammo, 0)
 READ_CVARS_END(0)
 
