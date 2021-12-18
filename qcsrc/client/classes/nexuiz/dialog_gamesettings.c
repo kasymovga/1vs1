@@ -5,7 +5,7 @@ CLASS(NexuizGameSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizGameSettingsDialog, title, string, "Game Settings")
 	ATTRIB(NexuizGameSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizGameSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizGameSettingsDialog, rows, float, 20)
+	ATTRIB(NexuizGameSettingsDialog, rows, float, 24)
 	ATTRIB(NexuizGameSettingsDialog, columns, float, 6)
 	ATTRIB(NexuizGameSettingsDialog, name, string, "GameSettings")
 ENDCLASS(NexuizGameSettingsDialog)
@@ -112,6 +112,12 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_weapons_show_ammo", "Show ammo in weapon bar"));
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_weapons_order", "Reverse weapon order"));
+	me.TR(me);
+		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, "Weapon bar fade speed:"));
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("sbar_weapons_fadespeed"));
 			e.addValue(e, "Fast", "4");
@@ -148,6 +154,12 @@ void fillNexuizGameSettingsDialog(entity me)
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "http://rexuiz.com"));
 			e.colorL = SKINCOLOR_TEXT_LINK;
 	}
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_increment_maptime", "Increment timer"));
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_showcurrentammo", "Show only current ammo"));
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizButton("HUD Selection...", '0 0 0'));
