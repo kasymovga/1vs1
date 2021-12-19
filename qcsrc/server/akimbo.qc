@@ -250,10 +250,10 @@ float(entity p, float wpn, string name) akimbo_weapon_drop {
 float(entity e) akimbo_active {
 	entity e2 = (e.owner ? e.owner.akimbo_ghost : e.akimbo_ghost);
 	if not(e2)
-		return FALSE;
+		return 0;
 
 	if not(e2.weaponentity)
-		return FALSE;
+		return 0;
 
 	float n = 2;
 	for ( ; e2; e2 = e2.akimbo_ghost) {
@@ -262,7 +262,7 @@ float(entity e) akimbo_active {
 
 		n++;
 	}
-	return TRUE;
+	return 1;
 }
 
 void(entity e) akimbo_clear {
