@@ -1,5 +1,3 @@
-#define PORTALS_ARE_NOT_SOLID
-
 #define SAFENUDGE '1 1 1'
 #define SAFERNUDGE '8 8 8'
 
@@ -169,30 +167,11 @@ float(vector eorg, vector emins, vector emaxs, vector evel, vector porg, vector 
 	if(dist < -1) // other side?
 		return 0;
 
-#ifdef PORTALS_ARE_NOT_SOLID
-	distpersec = evel * pnorm;
-	if(distpersec >= 0) // going away from the portal?
-		return 0;
-	// we don't need this check with solid portals, them being SOLID_BSP should suffice
-	delta = dist / distpersec;
-	v = eorg - evel * delta - porg;
-	v = v - pnorm * (pnorm * v);
-	return vlen(v) < psize;
-#else
 	return 1;
-#endif
 }
 
 void(void) portal_touch {
 	vector g;
-#ifdef PORTALS_ARE_NOT_SOLID
-	// portal is being removed?
-	if (self.solid != SOLID_TRIGGER)
-		return; // possibly engine bug
-
-	if (other.classname == "player")
-		return; // handled by think
-#endif
 	if (gamehook_portal_forbidden_for(other))
 		return; // never portal these
 
@@ -202,13 +181,6 @@ void(void) portal_touch {
 	if (!self.enemy)
 		error("portal_touch called for a broken portal\n");
 
-#ifdef PORTALS_ARE_NOT_SOLID
-	if (trace_fraction < 1)
-		return; // only handle TouchAreaGrid ones (only these can teleport)
-#else
-	if (trace_fraction >= 1)
-		return; // only handle impacts
-#endif
 	if (other.classname == "porto") {
 		if(other.portal_id == self.portal_id)
 			return;
@@ -235,14 +207,6 @@ void(void) portal_touch {
 	if (!portal_will_hit_plane(other.origin, other.mins, other.maxs, other.velocity + g, self.origin, v_forward, self.maxs_x))
 		return;
 
-	/*
-	if(other.mins_x < PL_MIN_x || other.mins_y < PL_MIN_y || other.mins_z < PL_MIN_z
-	|| other.maxs_x > PL_MAX_x || other.maxs_y > PL_MAX_y || other.maxs_z > PL_MAX_z)
-	{
-		// can't teleport this
-		return;
-	}
-	*/
 	portal_teleport_player(self, other);
 }
 
@@ -308,11 +272,7 @@ void(entity teleporter, entity destination) portal_connect {
 	teleporter.portal_wants_to_vanish = 0;
 	destination.portal_wants_to_vanish = 0;
 	teleporter.teleport_time = time;
-#ifdef PORTALS_ARE_NOT_SOLID
 	teleporter.solid = SOLID_TRIGGER;
-#else
-	teleporter.solid = SOLID_BSP;
-#endif
 }
 
 void(entity portal, float killed) portal_remove {
@@ -355,49 +315,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		portal_remove(self, 1);
 }
 
-void(entity e, vector g) portal_think_try_teleport_player {
-	if (!portal_will_hit_plane(e.origin, e.mins, e.maxs, e.velocity + g, self.origin, v_forward, self.maxs_x))
-		return;
-
-	// if e would hit the portal in a frame...
-	// already teleport him
-	trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * 2 * frametime, TRACE_MOVE_NORMAL, e);
-	if (trace_ent == self)
-		portal_teleport_player(self, e);
-}
-
 void(void) portal_think {
 	entity e, o;
 	vector g;
-#ifdef PORTALS_ARE_NOT_SOLID
-	// portal is being removed?
-	if (self.solid != SOLID_TRIGGER)
-		return; // possibly engine bug
-
-	if (!self.enemy)
-		error("portal_think called for a broken portal\n");
-
-	o = self.aiment;
-	self.solid = SOLID_BBOX;
-	self.aiment = world;
-	g = frametime * '0 0 -1' * cvar("sv_gravity");
-	self.angles_x = -self.angles_x;
-	makevectors(self.angles);
-	self.angles_x = -self.angles_x;
-	FOR_EACH_PLAYER(e) {
-		if (e != o)
-			if (PLAYER_IS_INDEPENDENT(e) || PLAYER_IS_INDEPENDENT(o))
-				continue; // cannot go through someone else's portal
-
-		if (e != o || time >= self.portal_activatetime)
-			portal_think_try_teleport_player(e, g);
-
-		if (e.hook)
-			portal_think_try_teleport_player(e.hook, g);
-	}
-	self.solid = SOLID_TRIGGER;
-	self.aiment = o;
-#endif
 	self.nextthink = time;
 	if(time > self.fade_time)
 		portal_remove(self, 0);
