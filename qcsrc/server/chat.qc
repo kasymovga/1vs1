@@ -100,6 +100,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 			s1 = str_car(s2);
 			if (s1 == "") continue;
 			if (strstrofs(strtolower(strdecolorize(msgin)), s1, 0) >= 0) {
+				print(source.netname, "^7 said forbidden word ", s1, "^7\n");
 				if (g_chat_forbidden_words_set_retard)
 					source.retard = 1;
 				else
