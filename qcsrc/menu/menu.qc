@@ -28,6 +28,7 @@ string menu_serverlist_uris[MENU_SERVERLIST_URIS_COUNT] = {
 	"http://rexuiz.com/maps/serverlist.txt",
 	"http://nexuiz.mooo.com/serverlist.txt",
 };
+float menu_dlc_mandatory;
 
 void(float id, float status, string data) menu_server_list_callback {
 	float f;
@@ -106,6 +107,12 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 		else
 			s = strcat(s, " simpleitems");
 	}
+	if not(file_exists("maps/soylent.bsp")) { //check presence of data.pk3
+		menu_dlc_mandatory = TRUE;
+		s = strcat(s, " base-maps base-textures base-models base-sounds base-gfx");
+	} else
+		menu_dlc_mandatory = FALSE;
+
 	string head = "", tail = s;
 	while (tail != "") {
 		head = str_car(tail);
@@ -159,7 +166,7 @@ void() menu_init_delayed {
 	if (dlc_ready_all()) {
 		//print("dlc loading finished\n");
 		//print("dlc_wait_frame=", ftos(dlc_wait_frame), "\n");
-	} else if (dlc_wait_frame < 10) {
+	} else if (dlc_wait_frame < 10 || menu_dlc_mandatory) {
 		dlc_wait_frame++;
 		menu_init_pre();
 		return;
