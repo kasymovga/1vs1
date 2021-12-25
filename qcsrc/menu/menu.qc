@@ -93,6 +93,12 @@ void(void) menu_dlc_reload_wait_think {
 void(float nodownload, float renderrestart) menu_dlc_reload {
 	string s = strcat(DLC_BASE_LIST " ", cvar_defstring("menu_dlc_extra"));
 	dlc_list = "";
+	if not(file_exists("maps/soylent.bsp")) { //check presence of data.pk3
+		menu_dlc_mandatory = TRUE;
+		s = strcat(s, " base-maps base-textures base-models base-sounds base-gfx");
+	} else
+		menu_dlc_mandatory = FALSE;
+
 	if (cvar("cl_brightskins")) {
 		s = strcat(s, " brightskins");
 	}
@@ -107,12 +113,6 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 		else
 			s = strcat(s, " simpleitems");
 	}
-	if not(file_exists("maps/soylent.bsp")) { //check presence of data.pk3
-		menu_dlc_mandatory = TRUE;
-		s = strcat(s, " base-maps base-textures base-models base-sounds base-gfx");
-	} else
-		menu_dlc_mandatory = FALSE;
-
 	string head = "", tail = s;
 	while (tail != "") {
 		head = str_car(tail);
@@ -160,19 +160,54 @@ void(void) menu_update_width_height {
 	}
 }
 
-float dlc_wait_frame;
+void(void) menu_time_process {
+	float t = gettime();
+	menu_frametime_real = frametime = min(0.2, t - menu_time_previous);
+	menu_time_previous = t;
+	if (menu_active) {
+		entity e, oldself;
+		oldself = self;
+		time += frametime;
+		if (time > 20000) localcmd("menu_restart\n");
+		for(e = findflags(NULL, nextthink, 0xFFFFFFFF); e; e = findflags(e, nextthink, 0xFFFFFFFF)) { //hack, findflags works only with integer part of float value
+			if (e.nextthink < time) {
+				self = e;
+				self.nextthink = 0;
+				self.think();
+			}
+		}
+		self = oldself;
+	}
+}
+
+float menu_dlc_wait_frame;
+float menu_dlc_downloading;
 void() menu_init_delayed {
 	menu_initialized = 0;
 	if (dlc_ready_all()) {
 		//print("dlc loading finished\n");
-		//print("dlc_wait_frame=", ftos(dlc_wait_frame), "\n");
-	} else if (dlc_wait_frame < 10 || menu_dlc_mandatory) {
-		dlc_wait_frame++;
-		menu_init_pre();
+		//print("menu_dlc_wait_frame=", ftos(menu_dlc_wait_frame), "\n");
+	} else if (menu_dlc_wait_frame < 10) {
+		menu_dlc_wait_frame++;
 		return;
 	} else {
-		dlc_set_repos(cvar_string("sv_dlc_repository"));
-		menu_dlc_reload(FALSE, FALSE);
+		if not(menu_dlc_downloading) {
+			menu_dlc_downloading = 1;
+			dlc_set_repos(cvar_string("sv_dlc_repository"));
+			menu_dlc_reload(FALSE, FALSE);
+		}
+		if (menu_dlc_mandatory) {
+			//drawpic('0.5 0 0' * cvar("vid_conwidth") + '0 0.5 0' * cvar("vid_conheight"), "gfx/loading.tga", picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+			vector sz = drawgetimagesize("gfx/loading.tga");
+			if (sz != '0 0 0') {
+				vector v = cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0';
+				float scl = min(v_x / sz_x, v_y / sz_y);
+				sz *= scl;
+				drawpic((v - sz) * 0.5, "gfx/loading.tga", sz, '1 1 1', 1, DRAWFLAG_NORMAL);
+			}
+			menu_time_process();
+			return;
+		}
 	}
 	if (!menu_init_pre())
 		return;
@@ -337,7 +372,6 @@ void() menu_draw_pre {
 }
 
 void(void) menu_draw {
-	float t;
 	menu_mouse_mode = (cvar("menu_mouse_absolute") || cvar("vid_touchscreen"));
 	if (main)
 		menu_update_width_height();
@@ -364,22 +398,8 @@ void(void) menu_draw {
 		}
 	}
 	extresponse_update();
-	t = gettime();
-	menu_frametime_real = frametime = min(0.2, t - menu_time_previous);
-	menu_time_previous = t;
+	menu_time_process();
 	if (menu_active) {
-		entity e, oldself;
-		oldself = self;
-		time += frametime;
-		if (time > 20000) localcmd("menu_restart\n");
-		for(e = findflags(NULL, nextthink, 0xFFFFFFFF); e; e = findflags(e, nextthink, 0xFFFFFFFF)) { //hack, findflags works only with integer part of float value
-			if (e.nextthink < time) {
-				self = e;
-				self.nextthink = 0;
-				self.think();
-			}
-		}
-		self = oldself;
 		if (getmousetarget() == (menu_mouse_mode ? MT_CLIENT : MT_MENU) && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
 			setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
 		else
