@@ -388,7 +388,7 @@ void(void) dlc_init {
 		map_pk3 = substring(map_pk3, 8, -1);
 
 	if (map_pk3 != "")
-	if (substring(map_pk3, 0, 11) == "zzz-rexdlc_") {
+	if (substring(map_pk3, 0, 11) == "zzz-rexdlc_" && substring(map_pk3, 0, 15) != "zzz-rexdlc_base") {
 		s = substring(map_pk3, 11, strlen(map_pk3) - 15);
 		if (s != "") {
 			if (file_exists(dlc_serverpackage_name(s))) {
