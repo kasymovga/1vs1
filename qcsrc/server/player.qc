@@ -81,6 +81,7 @@ float sv_loddistance2;
 #ifdef ALLOW_FORCEMODELS
 float sv_clforceplayermodels;
 #endif
+.string playermodel_save;
 
 .entity pusher;
 
@@ -1397,11 +1398,15 @@ void() player_setup_model {
 				setsize(self, m1, m2);
 				chmdl = TRUE;
 			}
-			self.playermodel = "";
+			if (self.playermodel != "") {
+				str_unzone_ifneeded(self.playermodel_save);
+				self.playermodel_save = strzone(self.playermodel);
+				self.playermodel = "";
+			}
 		}
 		oldskin = self.skinindex;
 		if (self.playerskin != "") {
-			self.skinindex = player_allowed_skin(self.playermodel, stof(self.playerskin));
+			self.skinindex = player_allowed_skin(self.playermodel_save, stof(self.playerskin));
 			self.playerskin = "";
 		}
 		self.skinindex = (team_mode ? ((self.skinindex == 6) ? 6 : math_mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
@@ -1922,6 +1927,9 @@ void(entity spot) player_spawn {
 	self.customizeentityforclient = player_real_customize;
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
 	physics_set_sizes(self, PL_MIN, PL_MAX, PL_CROUCH_MIN, PL_CROUCH_MAX);
+	if (self.playermodel == "" && self.playermodel_save != "") {
+		self.playermodel = strcat1(self.playermodel_save); //temp string here, will be cleand by player_setup_model()
+	}
 	player_setup_model();
 	self.spawnorigin = spot.origin;
 	self.event_damage = player_damage;
