@@ -174,12 +174,15 @@ float(float diffangle) race_strafe_angle {
 	vector vel = race_velocity;
 	vel_z = 0;
 	float speed = vlen(vel);
-	float maxspeed = sv_maxspeed * physics_maxspeedmod;
-	if not(physics_flags & FL_ONGROUND)
-	if (race_movement_y)
-	if not(race_movement_x)
-	if (sv_maxairstrafespeed) {
-		maxspeed = sv_maxairstrafespeed;
+	float maxspeed = sv_maxspeed;
+	if (physics_flags & FL_ONGROUND) {
+		maxspeed *= physics_maxspeedmod;
+	} else {
+		if (race_movement_y)
+		if not(race_movement_x)
+		if (sv_maxairstrafespeed) {
+			maxspeed = sv_maxairstrafespeed;
+		}
 	}
 	float cos_angle = min(1, maxspeed / speed); //cos of optimal angle
 	if (diffangle > 90 || diffangle < -90)
