@@ -1931,6 +1931,7 @@ void(entity spot) player_spawn {
 		self.playermodel = strcat1(self.playermodel_save); //temp string here, will be cleand by player_setup_model()
 	}
 	player_setup_model();
+	self.playermodel = ""; //just in case
 	self.spawnorigin = spot.origin;
 	self.event_damage = player_damage;
 	self.bot_attack = TRUE;
