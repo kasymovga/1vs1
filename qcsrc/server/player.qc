@@ -1932,6 +1932,7 @@ void(entity spot) player_spawn {
 	}
 	player_setup_model();
 	self.playermodel = ""; //just in case
+	anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
 	self.spawnorigin = spot.origin;
 	self.event_damage = player_damage;
 	self.bot_attack = TRUE;
