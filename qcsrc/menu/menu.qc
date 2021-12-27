@@ -227,6 +227,9 @@ void() menu_init_delayed {
 	if (!menu_init_pre())
 		return;
 
+	if (menu_dlc_mandatory) {
+		localcmd("r_restart\n");
+	}
 	menu_initialized = 1;
 	localcmd("alias qc_cmd \"menu_cmd $*\"\n");
 	weapon_register_weapons();
