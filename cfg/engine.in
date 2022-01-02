@@ -153,3 +153,4 @@ gameversion_max 20699
 seta r_deformvertexes 1
 r_water_hideplayer 1
 scr_infobar_height 16
+r_transparent_surfacebynearest 0
