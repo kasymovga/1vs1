@@ -11,6 +11,7 @@ void() init_dedicated_think {
 		return;
 	}
 	if (cvar("_sv_init")) {
+		print("Dedicated server initialization done.\n");
 		MapInfo_Enumerate();
 		MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 		if (!map_do_next_override())
