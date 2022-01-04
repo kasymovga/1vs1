@@ -126,6 +126,7 @@ void fillNexuizServerInfoDialog(entity me)
 		me.TD(me, 1, 5.5, e = makeNexuizTextLabel(0, _("Players:")));
 	me.TR(me);
 		me.TD(me, me.rows - 4, 6, e = makeNexuizPlayerList());
+			e.nexuizFont = TRUE;
 			me.rawPlayerList = e;
 
 	me.gotoRC(me, 1, 6.25); me.setFirstColumn(me, me.currentColumn);
