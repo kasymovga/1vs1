@@ -272,16 +272,25 @@ void drawListBox(entity me)
 	oldshift = gui_draw_shift;
 	oldscale = gui_draw_scale;
 	absSize = gui_box_to_global_size(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
+	float odf = drawfont;
+	float nf = FALSE;
+	if (me.nexuizFont)
+	if (cvar("utf8_oldfont_for_oldchars"))
+	if (cvar("font3_is_unicode_compat"))
+		drawfont = FONT_USER + 0;
+
 	for(i = floor(me.scrollPos / me.itemHeight); i < me.nItems; ++i)
 	{
 		float y;
 		y = i * me.itemHeight - me.scrollPos;
 		if(y >= 1)
 			break;
+
 		gui_draw_shift = gui_box_to_global(eY * y, oldshift, oldscale);
 		gui_draw_scale = gui_box_to_global_size(eY * me.itemHeight + eX * (1 - me.controlWidth), oldscale);
 		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
 	}
+	drawfont = odf;
 	gui_draw_clip_clear();
 }
 
