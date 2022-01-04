@@ -632,7 +632,9 @@ float(entity to, float sf) physics_send {
 				+ (g_doublejump ? 8388608 : 0)
 				;
 		net_write_coord(MSG_ENTITY, switches);
-		switches = (g_overbounce ? 1 : 0);
+		switches = (g_overbounce ? 1 : 0)
+				+ (cvar("collision_surfaceflagsmerge") ? 2 : 0)
+				;
 		net_write_byte(MSG_ENTITY, switches);
 		if (g_walljump) {
 			net_write_coord(MSG_ENTITY, g_walljump_delay);

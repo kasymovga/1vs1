@@ -12,7 +12,7 @@ void(void) CSQC_Init {
 	main_ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
 	read_cvars_init();
 	if (file_exists("rexuiz.cfg")) {
-		if (main_ext_DP_CSQC_QUERYRENDERENTITY && main_ext_DP_RM_SETRENDERENTITY && (cvar_type("collision_triangle_directional") & CVAR_TYPEFLAG_ENGINE) && (cvar_type("r_drawparticles_ticrate_min") & CVAR_TYPEFLAG_ENGINE))
+		if (main_ext_DP_CSQC_QUERYRENDERENTITY && main_ext_DP_RM_SETRENDERENTITY && (cvar_type("collision_triangle_directional") & CVAR_TYPEFLAG_ENGINE) && (cvar_type("collision_surfaceflagsmerge") & CVAR_TYPEFLAG_ENGINE))
 			localcmd("\ncmd gameclient newrexuiz\n");
 		else
 			localcmd("\ncmd gameclient rexuiz\n");

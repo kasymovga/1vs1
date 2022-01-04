@@ -379,6 +379,11 @@ void(float isnew) physics_read {
 		g_doublejump = switches & 8388608;
 		switches = net_read_byte();
 		g_overbounce = switches & 1;
+		if (switches & 2)
+			cvar_clientsettemp("collision_surfaceflagsmerge", "1");
+		else
+			cvar_clientsettemp("collision_surfaceflagsmerge", "0");
+
 		if (g_sideview)
 			physics_plug_adjust_view = physics_side_adjust_view;
 		else if (g_topview)
