@@ -187,6 +187,10 @@ void() projectile_update_think {
 	projectile_update(self);
 	self.think = self.csqcprojectile_oldthink;
 	self.nextthink = max(time, self.csqcprojectile_oldnextthink);
+	if (self.nextthink < time) {
+		self.nextthink = 0;
+		self.think();
+	}
 }
 
 void(entity e) projectile_update_next_frame {
