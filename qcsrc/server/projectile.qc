@@ -186,11 +186,12 @@ void(entity e) projectile_update_after_teleport {
 void() projectile_update_think {
 	projectile_update(self);
 	self.think = self.csqcprojectile_oldthink;
-	self.nextthink = max(time, self.csqcprojectile_oldnextthink);
-	if (self.nextthink < time) {
+	if (self.csqcprojectile_oldnextthink && self.csqcprojectile_oldnextthink < time) {
 		self.nextthink = 0;
 		self.think();
+		return;
 	}
+	self.nextthink = max(time, self.csqcprojectile_oldnextthink);
 }
 
 void(entity e) projectile_update_next_frame {
