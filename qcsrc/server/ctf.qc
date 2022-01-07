@@ -871,6 +871,11 @@ void() ctf_delayedinit {
 
 	float sp_score, sp_caps;
 	sp_score = sp_caps = 0;
+	if (gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT)
+		g_ctf_win_mode = 0;
+	else
+		g_ctf_win_mode = cvar("g_ctf_win_mode");
+
 	switch(g_ctf_win_mode) {
 	case 0: // caps only
 		sp_caps = SCORE_FLAG_SORT_PRIO_PRIMARY;
@@ -993,11 +998,6 @@ void() ctf_player_think {
 void() ctf_init {
 	CVAR_CACHE(g_ctf_reverse);
 	g_ctf = 1;
-	if (gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT)
-		g_ctf_win_mode = 0;
-	else
-		g_ctf_win_mode = cvar("g_ctf_win_mode");
-
 	entity_initialize(world, ctf_delayedinit, INITPRIO_GAMETYPE);
 	flagcaptimerecord = stof(db_get(db_server, strcat(mapname, "/captimerecord/time")));
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");

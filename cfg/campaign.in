@@ -1,4 +1,5 @@
 seta menu_campaign_skill 1
+set campaign_g_ctf_win_mode "2"
 set campaign_g_player_forcemodel "0"
 set campaign_g_player_forceskin "-1"
 set campaign_g_player_forcecolor "-2"
