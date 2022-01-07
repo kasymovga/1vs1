@@ -106,7 +106,7 @@ void() gametype_init {
 
 	print("--- Game started ---\n   Map: ", mapname, "\n  Mode: ", MapInfo_HumanString_FromType(gametype), "\n");
 	gametype_writecvars();
-	cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
+	cvar_init(g_campaign ? strcat("campaign+", cvar_string("g_profile")) : cvar_string("g_profile"));
 	cvar_set("timelimit", ftos(gametype_value("timelimit")));
 	cvar_set("fraglimit", ftos(gametype_value("scorelimit")));
 	cvar_set("leadlimit", ftos(gametype_value("leadlimit")));
