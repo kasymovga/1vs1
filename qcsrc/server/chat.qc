@@ -90,39 +90,46 @@ string(entity pl, string msg) chat_formatmessage {
 	return msg;
 }
 
-void(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol) chat_say {
-	string msgstr, colorstr = "", namestr, fullmsgstr, sourcemsgstr, privatemsgprefix = "";
-	float flood, privatemsgprefixlen = 0;
-	entity head;
+float(entity source, string m) chat_message_forbidden {
 	if (g_chat_forbidden_words != "") {
 		string s1, s2 = g_chat_forbidden_words;
 		for (; s2 != ""; s2 = str_cdr(s2)) {
 			s1 = str_car(s2);
 			if (s1 == "") continue;
-			if (strstrofs(strtolower(strdecolorize(msgin)), s1, 0) >= 0) {
+			if (strstrofs(strtolower(strdecolorize(m)), s1, 0) >= 0) {
 				print(source.netname, "^7 said forbidden word ", s1, "^7\n");
-				if (g_chat_forbidden_words_set_retard)
-					source.retard = 1;
-				else
-					source.muted = 1;
-
-				break;
+				return TRUE;
 			}
 		}
 	}
-	if (source)
-	if (source.retard > 0) {
-		if (source.retard_last_say)
-		if (time - source.retard_last_say < 60)
-			return;
+	return FALSE;
+}
 
-		source.retard_last_say = time;
-		float n = tokenizebyseparator(cvar_string("sv_retard_say"), "|");
-		if (n <= 0)
-			return;
+void(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol) chat_say {
+	string msgstr, colorstr = "", namestr, fullmsgstr, sourcemsgstr, privatemsgprefix = "";
+	float flood, privatemsgprefixlen = 0;
+	entity head;
+	if (source) {
+		if (source.retard > 0) {
+			if (source.retard_last_say)
+			if (time - source.retard_last_say < 60)
+				return;
 
-		n = floor(n * random());
-		msgin = argv(n);
+			source.retard_last_say = time;
+			float n = tokenizebyseparator(cvar_string("sv_retard_say"), "|");
+			if (n <= 0)
+				return;
+
+			n = floor(n * random());
+			msgin = argv(n);
+		}
+		if not(self.muted)
+		if (chat_message_forbidden(source, msgin)) {
+			if (g_chat_forbidden_words_set_retard)
+				source.retard = 1;
+			else
+				source.muted = 1;
+		}
 	}
 	if (!teamsay && !privatesay)
 		if(substring(msgin, 0, 1) == " ")

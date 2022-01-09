@@ -647,6 +647,11 @@ void(string s) cmd_client {
 			if (self.retard > 0)
 				return;
 
+			if (chat_message_forbidden(self, name)) {
+				self.netname = "Empty Name";
+				self.muted = 1;
+				return;
+			}
 			client_mute_ifneeded(name);
 			IRC_Announce_Name(self, name);
 			if (strlen(strdecolorize(name)) > 48) {
