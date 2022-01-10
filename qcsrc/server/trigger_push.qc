@@ -227,20 +227,25 @@ void(void) trigger_push_velocity_touch {
 	}
 	v2_z = v1_z;
 	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_ADD_XY) {
-		other.velocity_x = other.velocity_x + v2_x * (frametime / sys_ticrate);
-		other.velocity_y = other.velocity_y + v2_y * (frametime / sys_ticrate);
+		other.velocity_x = other.velocity_x + v2_x * frametime;
+		other.velocity_y = other.velocity_y + v2_y * frametime;
 	} else {
 		other.velocity_x = v2_x;
 		other.velocity_y = v2_y;
 	}
 	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_ADD_Z) {
-		other.velocity_z = other.velocity_z + v2_z * (frametime / sys_ticrate);
+		other.velocity_z = other.velocity_z + v2_z * frametime;
 	} else {
 		other.velocity_z = v2_z;
 	}
 }
 
+float trigger_push_velocity_init_done;
 void(void) spawnfunc_trigger_push_velocity {
+	if not(trigger_push_velocity_init_done) {
+		CVAR_CACHE(g_trigger_push_use_trigger_origin);
+		trigger_push_velocity_init_done = 1;
+	}
 	trigger_solid_brush_init();
 	self.touch = trigger_push_velocity_touch;
 	entity_initialize(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
