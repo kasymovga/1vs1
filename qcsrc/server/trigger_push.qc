@@ -8,6 +8,7 @@ void() trigger_use_targets;
 float trigger_push_calculatevelocity_flighttime;
 float g_trigger_push_use_trigger_origin;
 float g_trigger_push_speed_factor;
+float g_trigger_push_speed_nodecrease;
 float g_trigger_push_skip_projectiles;
 
 void(void) trigger_push_use {
@@ -68,7 +69,11 @@ void(void) trigger_push_touch {
 
 	if (self.movedir == '0 0 0') return;
 	other.flags &= ~FL_ONGROUND;
-	other.velocity = self.movedir;
+	if (g_trigger_push_speed_nodecrease) {
+		other.velocity += self.movedir * frametime;
+	} else
+		other.velocity = self.movedir;
+
 	if (other.iscreature) {
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		other.oldvelocity = other.velocity;
@@ -169,6 +174,7 @@ void(void) spawnfunc_trigger_push {
 	if not(trigger_push_init_done) {
 		CVAR_CACHE(g_trigger_push_use_trigger_origin);
 		CVAR_CACHE(g_trigger_push_speed_factor);
+		CVAR_CACHE(g_trigger_push_speed_nodecrease);
 		CVAR_CACHE(g_trigger_push_skip_projectiles);
 		trigger_push_init_done = 1;
 	}
@@ -184,6 +190,7 @@ void(void) spawnfunc_trigger_push {
 
 	self.movedir = self.movedir * self.speed * g_trigger_push_speed_factor;
 	if not(self.noise)
+	if not(g_trigger_push_speed_nodecrease)
 		self.noise = "misc/jumppad.wav";
 
 	precache_sound (self.noise);
