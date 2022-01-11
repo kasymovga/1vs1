@@ -34,17 +34,19 @@ vector(vector org, entity tgt, float ht) trigger_push_calculatevelocity {
 	float sdist, zdist, vs, vz;
 	vector sdir, torg;
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
+	ht = max(ht, org_z - torg_z + sv_gravity * 0.05);
 	zdist = torg_z - org_z + ht;
 	sdist = vlen(torg - org - fabs(zdist) * '0 0 1');
 	sdir = normalize(torg - org - zdist * '0 0 1');
-	float t = sqrt(zdist / (0.5 * sv_gravity));
-	if (zdist > 0)
-		vz = t * sv_gravity;
+	float t1 = sqrt(zdist / (0.5 * sv_gravity));
+	float t2 = sqrt(ht / (0.5 * sv_gravity));
+	if (torg_z > org_z)
+		vz = t1 * sv_gravity;
 	else
-		vz = 0;
+		vz = t2 * sv_gravity;
 
-	trigger_push_calculatevelocity_flighttime = t;
-	vs = sdist / t;
+	trigger_push_calculatevelocity_flighttime = t1 + t2;
+	vs = sdist / trigger_push_calculatevelocity_flighttime;
 	return sdir * vs + '0 0 1' * vz;
 }
 
