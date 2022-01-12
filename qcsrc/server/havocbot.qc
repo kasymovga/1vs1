@@ -297,6 +297,10 @@ void(void) havocbot_movetogoal {
 	if (self.bot_dontmove >= time)
 		return;
 
+	if (self.goalcurrent)
+	if (wasfreed(self.goalcurrent))
+		self.goalcurrent = NULL;
+
 	// Jetpack navigation
 	if (self.navigation_jetpack_goal)
 	if (self.goalcurrent==self.navigation_jetpack_goal)
