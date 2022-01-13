@@ -7,9 +7,14 @@ float mouse_enabled;
 float mouse_absolute;
 
 void(void) mouse_relative {
-	mouse_pos = mouse_pos + getmousepos();
-	mouse_pos_x = bound(0, mouse_pos_x, CVAR(vid_conwidth));
-	mouse_pos_y = bound(0, mouse_pos_y, CVAR(vid_conheight));
+	vector v = getmousepos();
+	if (v != '0 0 0') {
+		v_x *= (CVAR(vid_conwidth) / view_width); //engine do it for menu, but not for client
+		v_y *= (CVAR(vid_conheight) / view_height);
+		mouse_pos = mouse_pos + v * bound(0.1, CVAR(menu_mouse_speed), 10);
+		mouse_pos_x = bound(0, mouse_pos_x, CVAR(vid_conwidth));
+		mouse_pos_y = bound(0, mouse_pos_y, CVAR(vid_conheight));
+	}
 }
 
 vector(void) mouse_position {

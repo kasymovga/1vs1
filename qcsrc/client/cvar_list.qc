@@ -201,5 +201,6 @@ READ_CVARS_SECTION(40, 0)
 	CACHE_CVAR_VEC_DEF(cl_cts_strafe_helper_color, '0 1 0')
 	CACHE_CVAR_DEF(cl_cts_strafe_helper_position, 10)
 	CACHE_CVAR_DEF(cl_cts_strafe_helper_height, 20)
+	CACHE_CVAR(menu_mouse_speed)
 READ_CVARS_END(0)
 
