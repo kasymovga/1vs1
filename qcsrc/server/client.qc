@@ -176,9 +176,10 @@ void(void) client_parms_decode {
 	if (self.parm_idlesince == -(86400 * 366))
 		self.parm_idlesince = time;
 
-	if (parm2)
+	if (parm2) {
+		print("Client #", ftos(num_for_edict(self)), " muted by parm2\n");
 		self.muted = TRUE;
-
+	}
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
 	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
 	gamehook_client_parms_decode();
