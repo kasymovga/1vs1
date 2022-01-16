@@ -3,7 +3,7 @@ set surf_g_airaccel_sideways_friction 0
 set surf_g_maxairstrafespeed 70
 set surf_g_airstrafeaccelerate 100
 set surf_g_airaccelerate 1
-set surf_g_airstopaccelerate 1
+set surf_g_airstopaccelerate 100
 set surf_g_airaccel_qw 1
 set surf_g_maxspeed 250
 set surf_g_maxairspeed 250
