@@ -136,3 +136,6 @@ set sv_spawnreplace_soldier_spawn monster_soldier_spawn
 set sv_spawnreplace_spearguy_spawn monster_spearguy_spawn
 set sv_spawnreplace_spider_spawn monster_spider_spawn
 set sv_spawnreplace_walker_spawn monster_walker_spawn
+
+//Half-live
+set sv_spawnreplace_info_target target_position
