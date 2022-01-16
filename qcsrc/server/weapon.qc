@@ -1237,7 +1237,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 		weapon_shotdir = normalize(weapon_shotpoint - weapon_shotorg);
 	}
 	if (!g_norecoil)
-		ent.punchangle_x = recoil * -1;
+		ent.punchangle_x = min(ent.punchangle_x, recoil * -1);
 
 	if (ent.lastshot_time < time) {
 		if (snd != "")
