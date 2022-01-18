@@ -400,7 +400,8 @@ void turret_stdproc_respawn()
     self.tur_head.team = self.team;
 
 	turret_stdproc_setcolormod();
-
+	self.flags = (self.flags & ~FL_ONGROUND);
+	self.movetype = MOVETYPE_TOSS;
     self.deadflag           = DEAD_NO;
     self.effects            = 0;
     self.tur_head.effects   = self.effects;
