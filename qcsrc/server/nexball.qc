@@ -655,9 +655,12 @@ void(void) nexball_spawn_ball {
 	}
 	if (!self.model) {
 		self.model = "models/nexball/ball.md3";
-		self.dmg = self.scale = 1.3;
-	}
+		self.scale = 1.3;
+	} else if (!self.scale)
+		self.scale = 1;
+
 	self.scale *= g_nexball_ball_scale;
+	self.dmg = self.scale;
 	precache_model (self.model);
 	setmodel (self, self.model);
 	self.mdl = self.model;
