@@ -1289,17 +1289,18 @@ void(void) turret_precache {
 		return;
 
 	turret_precash_done = TRUE;
-    precache_model ("models/turrets/base-gib1.md3");
-    precache_model ("models/turrets/base-gib2.md3");
-    precache_model ("models/turrets/base-gib3.md3");
-    precache_model ("models/turrets/base-gib4.md3");
-    precache_model ("models/turrets/head-gib1.md3");
-    precache_model ("models/turrets/head-gib2.md3");
-    precache_model ("models/turrets/head-gib3.md3");
-    precache_model ("models/turrets/head-gib4.md3");
-    precache_model ("models/turrets/terrainbase.md3");
-    precache_model ("models/turrets/c512.md3");
-    precache_model ("models/marker.md3");
+	precache_sound("weapons/rocket_impact.wav");
+	precache_model("models/turrets/base-gib1.md3");
+	precache_model("models/turrets/base-gib2.md3");
+	precache_model("models/turrets/base-gib3.md3");
+	precache_model("models/turrets/base-gib4.md3");
+	precache_model("models/turrets/head-gib1.md3");
+	precache_model("models/turrets/head-gib2.md3");
+	precache_model("models/turrets/head-gib3.md3");
+	precache_model("models/turrets/head-gib4.md3");
+	precache_model("models/turrets/terrainbase.md3");
+	precache_model("models/turrets/c512.md3");
+	precache_model("models/marker.md3");
 }
 
 float turret_count;

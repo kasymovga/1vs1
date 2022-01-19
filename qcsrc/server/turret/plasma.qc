@@ -74,7 +74,6 @@ void(void) spawnfunc_turret_plasma {
 	precache_model("models/turrets/plasma.md3");
 	precache_model("models/turrets/base.md3");
 	precache_sound("weapons/hagar_fire.wav");
-	precache_sound("weapons/rocket_impact.wav");
 	if (self.netname == "")
 		self.netname = "Plasma Cannon";
 
