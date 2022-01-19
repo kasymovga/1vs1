@@ -4,7 +4,7 @@
 void spawnfunc_turret_hellion();
 void turret_hellion_attack();
 void turret_hellion_missile_think();
-void turret_hellion_missile_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce);
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce) turret_hellion_missile_damage;
 
 void turret_hellion_postthink()
 {
@@ -52,11 +52,13 @@ void turret_hellion_attack()
 
 }
 
-void turret_hellion_missile_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce)
-{
-    self.health = self.health - _damage;
-    self.velocity = self.velocity + vforce;
-    if (self.health <= 0) turret_projectile_think_explode();
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce) turret_hellion_missile_damage  {
+	self.health = self.health - _damage;
+	self.velocity = self.velocity + vforce;
+	if (self.health <= 0) {
+		self.nextthink = time;
+		self.think = turret_projectile_think_explode;
+	}
 }
 
 void turret_hellion_missile_think()
