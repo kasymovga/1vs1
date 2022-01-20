@@ -928,29 +928,23 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
             return -10.5;
 
     // Team check
-    if (validate_flags & TFL_TARGETSELECT_TEAMCHECK)
-    {
-        if (validate_flags & TFL_TARGETSELECT_OWNTEAM)
-        {
-            if (e_target.team != e_turret.team)
-                return -11;
+	if ((validate_flags & TFL_TARGETSELECT_TEAMCHECK) && team_mode) {
+		if (validate_flags & TFL_TARGETSELECT_OWNTEAM) {
+			if (e_target.team != e_turret.team)
+				return -11;
 
 			if (e_target.owner)
-            if (e_turret.team != e_target.owner.team)
-                return -12;
-
-        }
-        else
-        {
-            if (e_target.team == e_turret.team || (team_mode && !e_target.team))
-                return -13;
+			if (e_turret.team != e_target.owner.team)
+				return -12;
+		} else {
+			if (e_target.team == e_turret.team || !e_target.team)
+				return -13;
 
 			if (e_target.owner)
-            if (e_turret.team == e_target.owner.team || (team_mode && !e_target.owner.team))
-                return -14;
-        }
-    }
-
+			if (e_turret.team == e_target.owner.team || !e_target.owner.team)
+				return -14;
+		}
+	}
     // Range limits?
     tvt_dist = vlen(e_turret.origin - turret_real_origin(e_target));
     if (validate_flags & TFL_TARGETSELECT_RANGELIMTS)
@@ -1063,7 +1057,6 @@ entity turret_select_target()
 void turret_think()
 {
     entity e;
-
     self.nextthink = time + self.ticrate;
 	if (time < map_starttime)
 		return;
