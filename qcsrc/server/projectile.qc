@@ -124,6 +124,7 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 
 	e.clipgroup = _owner.clipgroup;
 	e.realowner = e.owner = akimbo_owner(_owner);
+	e.team = e.owner.team;
 	projectile_set_size(e, type);
 	net_link_entity(e, docull, 0, projectile_send);
 	e.csqcprojectile_clientanimate = clientanimate;
