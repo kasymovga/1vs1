@@ -386,6 +386,8 @@ void(entity e, string s) player_anim_parseline {
 	READFIELD(backleft)
 	READFIELD(melee)
 	READFIELD(melee2)
+	READFIELD(dead1)
+	READFIELD(dead2)
 #undef READFIELD
 	player_anim_parseline_error = TRUE;
 	print("Unknown field name: ", field_name, "\n");
