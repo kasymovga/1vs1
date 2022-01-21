@@ -955,8 +955,7 @@ void(void) weapon_model_exterior_dlc_reset {
 	if (akimbo_weapon < 2) akimbo_weapon = 0;
 	self.angles = '0 0 0';
 	if ((tag_found = gettagindex(ao.body, "tag_weapon"))) {
-		self.tag_index = tag_found;
-		self.tag_entity = ao;
+		setattachment(self, ao.body, "tag_weapon");
 		if (akimbo_weapon)
 			setorigin(self, '0 20 0');
 	} else if (akimbo_weapon == 2 && ao.akimbo_use_left_hand != '0 0 0') {
