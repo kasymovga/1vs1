@@ -258,11 +258,11 @@ void(entity plyr, entity ball) nexball_give_ball {
 		WaypointSprite_Kill(ball.waypointsprite_attachedforcarrier);
 	}
 	float tag_found;
-	if((tag_found = gettagindex(plyr, "tag_weapon"))) {
-		ball.tag_index = tag_found;
-		ball.tag_entity = self.owner;
+	entity _body = plyr.body;
+	if((tag_found = gettagindex(_body, "tag_weapon"))) {
+		setattachment(ball, _body, "tag_weapon");
 	} else
-		setattachment(ball, plyr, "bip01 r hand");
+		setattachment(ball, _body, "bip01 r hand");
 
 	setorigin(ball, BALL_ATTACHORG);
 	plyr.pov_ball = spawn();
