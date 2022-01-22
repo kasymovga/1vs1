@@ -356,6 +356,7 @@ void(entity e, string s) player_anim_parseline {
 		return;
 	}
 	if (c < 4) {
+		print("line ", s, " have not enough arguments\n");
 		player_anim_parseline_error = TRUE;
 		return;
 	}
@@ -571,7 +572,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			remove(self);
 			return;
 		} else { //player
-			player_body_remove();
+			b.effects |= EFFECT_NODRAW;
 		}
 		// view just above the floor
 		physics_set_view_offsets(o, '0 0 4', '0 0 4');
@@ -1391,14 +1392,14 @@ void() player_setup_model {
 		if (forceskin >= 0)
 			self.skinindex = forceskin;
 	} else {
-		if (self.playermodel != "" || self.body.playermodel == "") {
-			string s = player_check_model(self.playermodel);
-			if (s != self.body.playermodel) {
+		if ((self.playermodel != "" && self.body.playermodel != self.playermodel) || self.body.playermodel == "") {
+			self.playermodel = player_check_model(self.playermodel);
+			if (self.playermodel != self.body.playermodel) {
 				m1 = self.mins;
 				m2 = self.maxs;
-				player_setup_lod(player_check_model(self.playermodel));
+				player_setup_lod(self.playermodel);
 				setsize(self, m1, m2);
-				chmdl = TRUE;
+				chmdl = (self.playermodel_save != self.playermodel);
 			}
 			if (self.playermodel != "") {
 				str_unzone_ifneeded(self.playermodel_save);
@@ -1873,6 +1874,8 @@ void(entity spot) player_spawn {
 	self.pushfactor = g_player_pushfactor;
 	if not(self.body)
 		player_body_spawn(world);
+	else
+		self.body.effects &= ~EFFECT_NODRAW;
 
 	self.body.nextthink = 0;
 	setmodel(self, "null");
@@ -2128,6 +2131,10 @@ void(entity pl, float t, float s, float noprint) player_set_team {
 		bprint(pl.netname, "^7 has changed from ", team_name_by_no(s), " to ", team_name_by_no(t), "\n");
 	}
 	score_touch(pl);
+	if (pl.body) {
+		str_unzone_ifneeded(pl.body.playermodel);
+		pl.body.playermodel = "";
+	}
 }
 
 entity(entity pl) player_entity {
