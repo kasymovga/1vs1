@@ -727,8 +727,10 @@ void(void) func_train_next {
 	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
-	if (!self.target)
-		entity_abort("func_train_next: no next target");
+	if (self.target == "") {
+		print("func_train_next: no next target");
+		return;
+	}
 	self.wait = targ.wait;
 	if (!self.wait)
 		self.wait = 0.1;
@@ -749,10 +751,16 @@ void(void) func_train_next {
 void(void) func_train_find {
 	entity targ;
 	targ = find(world, targetname, self.target);
+	if (!targ || self.target == "") {
+		print("func_train_find: no init target\n");
+		return;
+	}
 	self.target = targ.target;
-	if (!self.target)
-		entity_abort("func_train_find: no next target");
 	setorigin(self, targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins));
+	if (self.target == "") {
+		print("func_train_find: no next target\n");
+		return;
+	}
 	if (self.targetname != "" && find(world, target, self.targetname) && !sv_gameplayfix_trainnowait) {
 		self.use = func_train_next;
 	} else {
