@@ -74,7 +74,7 @@ void(void) jetpack_enable {
 	CVAR_CACHE(g_jetpack_fuel);
 	CVAR_CACHE(g_jetpack_attenuation);
 	CVAR_CACHE(g_balance_pause_fuel_regen);
-	physics_player_plug = physics_jetpack;
+	physics_jetpack_enable();
 	jetpack_player_effects_next_link = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = jetpack_player_effects;
 }
