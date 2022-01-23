@@ -402,6 +402,8 @@ void(void) dlc_init {
 	gamehook_chain_cmd_game_handle = dlc_cmd_game_handle;
 	dlc_slowmo_update_mod_NextLink = gamehook_chain_slowmo_update_mod;
 	gamehook_chain_slowmo_update_mod = dlc_slowmo_update_mod;
+	dlc = spawn();
+	net_link_entity(dlc, FALSE, 0, dlc_send);
 }
 
 void(void) dlc_finish {
