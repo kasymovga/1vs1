@@ -82,6 +82,7 @@ float sv_loddistance2;
 float sv_clforceplayermodels;
 #endif
 .string playermodel_save;
+.vector anim_stand;
 
 .entity pusher;
 
@@ -113,6 +114,8 @@ void(void) player_body_remove {
 		sound_stop(self.body.body, CHAN_VOICE);
 		sound_stop(self.body.body, CHAN_PAIN);
 		remove(self.body.body);
+		if (self.body.exteriorweaponentity) remove(self.body.exteriorweaponentity);
+		if (self.body.weaponentity) remove(self.body.weaponentity);
 		remove(self.body);
 		self.body = world;
 	}
@@ -121,6 +124,7 @@ void(void) player_body_remove {
 void(void) player_corpse_think {
 	if (self.frame != self.dead_frame) {
 		anim_update(self);
+		if (self.weaponentity) anim_update(self.weaponentity);
 		if (time >= self.animstate_endtime) {
 			if (self.modelindex) {
 				entity o = self.owner;
@@ -131,10 +135,14 @@ void(void) player_corpse_think {
 				physics_set_sizes(o, o.stand_mins, _stand_maxs, o.crouch_mins, _crouch_maxs);
 			}
 			self.frame = self.dead_frame;
+			if (self.weaponentity)
+				self.weaponentity.frame = self.dead_frame;
 		}
 	} else if (time >= self.fade_time) {
 		if (self.owner == self) {
 			pointparticles(particleeffectnum("morphed_damage_dissolve"), self.origin + (self.mins + self.maxs) * 0.5, '0 0 0', 1);
+			if (self.weaponentity) remove(self.weaponentity);
+			if (self.exteriorweaponentity) remove(self.exteriorweaponentity);
 			remove(self);
 		} else {
 			pointparticles(particleeffectnum("morphed_damage_dissolve"), self.owner.origin + (self.owner.mins + self.maxs) * 0.5, '0 0 0', 1);
@@ -160,6 +168,24 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 		body_from.playermodel = "";
 	}
 	setmodel(body_to, body_from.model);
+	if (body_from.weaponentity) {
+		if not(body_to.weaponentity) body_to.weaponentity = spawn();
+		setmodel(body_to.weaponentity, body_from.weaponentity.model);
+		body_to.weaponentity.tag_entity = body_to;
+		body_to.weaponentity.tag_index = body_from.weaponentity.tag_index;
+	} else if (body_to.weaponentity) {
+		remove(body_to.weaponentity);
+		body_to.weaponentity = NULL;
+	}
+	if (body_from.exteriorweaponentity) {
+		if not(body_to.exteriorweaponentity) body_to.exteriorweaponentity = spawn();
+		setmodel(body_to.exteriorweaponentity, body_from.exteriorweaponentity.model);
+		body_to.exteriorweaponentity.tag_entity = body_to.weaponentity;
+		body_to.exteriorweaponentity.tag_index = body_from.exteriorweaponentity.tag_index;
+	} else if (body_to.exteriorweaponentity) {
+		remove(body_to.exteriorweaponentity);
+		body_to.exteriorweaponentity = NULL;
+	}
 }
 
 entity(float keepvelocity, float _movetype) player_body_detach {
@@ -332,6 +358,7 @@ void(entity to, entity from) player_anim_copy {
 	PLAYERANIMCOPY(to, from, melee2)
 	PLAYERANIMCOPY(to, from, dead1)
 	PLAYERANIMCOPY(to, from, dead2)
+	PLAYERANIMCOPY(to, from, stand)
 #undef PLAYERANIMCOPY
 }
 
@@ -389,6 +416,7 @@ void(entity e, string s) player_anim_parseline {
 	READFIELD(melee2)
 	READFIELD(dead1)
 	READFIELD(dead2)
+	READFIELD(stand)
 #undef READFIELD
 	player_anim_parseline_error = TRUE;
 	print("Unknown field name: ", field_name, "\n");
@@ -434,11 +462,15 @@ void(entity e, string _model) player_anim_load {
 	animfile = fopen(animfilename, FILE_READ);
 	if (animfile >= 0) {
 		while ((s = fgets(animfile)) != "") {
+			if (substring(s, 0, 1) == "/") continue;
 			player_anim_parseline(e, s);
 		}
 		fclose(animfile);
 		if (player_anim_parseline_error)
 			print("Parse error in ", animfilename, ", some player animations are broken\n");
+
+		self.anim_dead1 = '0 1 1' + '1 0 0' * (self.anim_die1_x + self.anim_die1_y - 1);
+		self.anim_dead2 = '0 1 1' + '1 0 0' * (self.anim_die2_x + self.anim_die2_y - 1);
 	}
 }
 
@@ -479,10 +511,12 @@ void() player_anim_setup {
 		self.anim_melee2 = '0 1 2';
 
 	// reset animstate now
-	anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
+	player_anim_set(self, anim_idle, TRUE, FALSE, TRUE, 2);
+	if (self.body.weaponentity)
+		player_anim_set(self, anim_stand, TRUE, FALSE, TRUE, 1);
 }
 
-void(entity e, .vector anim, float looping, float override, float restart) player_anim_set {
+void(entity e, .vector anim, float looping, float override, float restart, float torsolegs) player_anim_set {
 	if not(e.body)
 		return;
 
@@ -491,14 +525,27 @@ void(entity e, .vector anim, float looping, float override, float restart) playe
 	if (akimbo_active(e))
 			animv_x = animv_x + e.akimbo_animation_shift;
 
-	anim_set(e.body, animv, looping, override, restart);
+	if (e.body.weaponentity) {
+		if (torsolegs & 1) { //Torso
+			anim_set(e.body.weaponentity, animv, looping, override, restart);
+			if (torsolegs & 2) //Legs with torso
+				anim_set(e.body, animv, looping, override, restart);
+		} else if (torsolegs & 2) //Legs only
+			anim_set(e.body, animv - '1 0 0' * (e.anim_duckwalk_x - e.anim_taunt_x), looping, override, restart);
+	} else {
+		anim_set(e.body, animv, looping, override, restart);
+	}
+
 }
 
 void(void) player_anim {
 	entity b = self.body;
-	if (self.weaponentity)
-		anim_update(self.weaponentity);
+	if (self.weaponentity) {
+		if (!self.weaponentity.animstate_override)
+			player_anim_set(self, anim_stand, TRUE, FALSE, FALSE, 1);
 
+		anim_update(self.weaponentity);
+	}
 	if (self.weaponentity)
 	if (!self.weaponentity.animstate_override)
 		anim_set(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
@@ -507,41 +554,44 @@ void(void) player_anim {
 		return;
 
 	anim_update(b);
+	if (b.weaponentity) {
+		anim_update(b.weaponentity);
+	}
 	if (PLAYER_REALLY_DEAD(self)) {
 		return;
 	}
 	if (!b.animstate_override) {
 		if (!(self.flags & FL_ONGROUND)) {
 			if (self.crouch)
-				player_anim_set(self, anim_duckjump, FALSE, TRUE, FALSE);
+				player_anim_set(self, anim_duckjump, FALSE, TRUE, FALSE, 2);
 			else
-				player_anim_set(self, anim_jump, FALSE, TRUE, FALSE);
+				player_anim_set(self, anim_jump, FALSE, TRUE, FALSE, 2);
 		} else if (self.crouch) {
 			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
-				player_anim_set(self, anim_duckwalk, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_duckwalk, TRUE, FALSE, FALSE, 2);
 			else
-				player_anim_set(self, anim_duckidle, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_duckidle, TRUE, FALSE, FALSE, 2);
 		} else if ((self.movement_x * self.movement_x + self.movement_y * self.movement_y) > 20) {
 			if (self.movement_x > 0 && self.movement_y == 0)
-				player_anim_set(self, anim_run, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_run, TRUE, FALSE, FALSE, 2);
 			else if (self.movement_x < 0 && self.movement_y == 0)
-				player_anim_set(self, anim_runbackwards, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_runbackwards, TRUE, FALSE, FALSE, 2);
 			else if (self.movement_x == 0 && self.movement_y > 0)
-				player_anim_set(self, anim_straferight, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_straferight, TRUE, FALSE, FALSE, 2);
 			else if (self.movement_x == 0 && self.movement_y < 0)
-				player_anim_set(self, anim_strafeleft, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_strafeleft, TRUE, FALSE, FALSE, 2);
 			else if (self.movement_x > 0 && self.movement_y > 0)
-				player_anim_set(self, anim_forwardright, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_forwardright, TRUE, FALSE, FALSE, 2);
 			else if (self.movement_x > 0 && self.movement_y < 0)
-				player_anim_set(self, anim_forwardleft, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_forwardleft, TRUE, FALSE, FALSE, 2);
 			else if (self.movement_x < 0 && self.movement_y > 0)
-				player_anim_set(self, anim_backright, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_backright, TRUE, FALSE, FALSE, 2);
 			else if (self.movement_x < 0 && self.movement_y < 0)
-				player_anim_set(self, anim_backleft, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_backleft, TRUE, FALSE, FALSE, 2);
 			else
-				player_anim_set(self, anim_run, TRUE, FALSE, FALSE);
+				player_anim_set(self, anim_run, TRUE, FALSE, FALSE, 2);
 		} else
-			player_anim_set(self, anim_idle, TRUE, FALSE, FALSE);
+			player_anim_set(self, anim_idle, TRUE, FALSE, FALSE, 2);
 	}
 }
 
@@ -569,6 +619,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (o.health <= -75 && b.modelindex != 0) {
 		violence_gib_splash(self, 1, 1, attacker);
 		if (self == b) { //detached body
+			if (self.weaponentity) remove(self.weaponentity);
+			if (self.exteriorweaponentity) remove(self.exteriorweaponentity);
 			remove(self);
 			return;
 		} else { //player
@@ -981,11 +1033,17 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			self.respawn_countdown = -1; // do not count down
 
 		if (random() < 0.5) {
-			anim_set(self.body, self.anim_die1, FALSE, TRUE, TRUE);
-			self.body.dead_frame = self.anim_dead1_x;
+			player_anim_set(self, anim_die1, FALSE, TRUE, TRUE, 3);
+			if (self.body.weaponentity) {
+				self.body.dead_frame = self.anim_dead1_x/* + 1*/;
+			} else
+				self.body.dead_frame = self.anim_dead1_x;
 		} else {
-			anim_set(self.body, self.anim_die2, FALSE, TRUE, TRUE);
-			self.body.dead_frame = self.anim_dead2_x;
+			player_anim_set(self, anim_die2, FALSE, TRUE, TRUE, 3);
+			if (self.body.weaponentity) {
+				self.body.dead_frame = self.anim_dead2_x/* + 1*/;
+			} else
+				self.body.dead_frame = self.anim_dead2_x;
 		}
 		// set damage function to corpse damage
 		self.event_damage = player_corpse_damage;
@@ -1147,7 +1205,7 @@ void(string type, string msg) player_voice_message {
 	if (type == "taunt") {
 		if (self.classname == "player")
 			if (self.deadflag == DEAD_NO)
-				anim_set(self.body, self.anim_taunt, FALSE, TRUE, TRUE);
+				player_anim_set(self, anim_taunt, FALSE, TRUE, TRUE, 1);
 		if (!sv_taunt)
 			return;
 
@@ -1223,7 +1281,7 @@ void(string modelname) player_setup_lod {
 			player_body_copy(self.body, pl.body, TRUE);
 			player_anim_copy(self, pl);
 			// reset animstate now
-			anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
+			player_anim_set(self, anim_idle, TRUE, FALSE, TRUE, 2);
 			player_copy_sounds(self, pl);
 			return;
 		}
@@ -1249,6 +1307,28 @@ void(string modelname) player_setup_lod {
 	if (self.body.modelindex_lod2 < 0)
 		self.body.modelindex_lod2 = self.body.modelindex;
 
+	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_torso", substring(modelname, -4, 4));
+	if (file_exists(s)) {
+		if not(self.body.weaponentity) self.body.weaponentity = spawn();
+		setmodel(self.body.weaponentity, s);
+		setattachment(self.body.weaponentity, self.body, "tag_torso");
+		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_head", substring(modelname, -4, 4));
+		if (file_exists(s)) {
+			if not(self.body.exteriorweaponentity) self.body.exteriorweaponentity = spawn();
+			setmodel(self.body.exteriorweaponentity, s);
+			setattachment(self.body.exteriorweaponentity, self.body.weaponentity, "tag_head");
+		} else if (self.body.exteriorweaponentity) {
+			remove(self.body.exteriorweaponentity);
+			self.body.exteriorweaponentity = NULL;
+		}
+	} else {
+		if (self.body.exteriorweaponentity) {
+			remove(self.body.exteriorweaponentity);
+			self.body.exteriorweaponentity = NULL;
+		}
+		remove(self.body.weaponentity);
+		self.body.weaponentity = NULL;
+	}
 	s = whichpack(self.body.model);
 	str_unzone_ifneeded(self.body.playermodel);
 	self.body.playermodel = str_zone_ifneeded(modelname); //need independent copy here
@@ -1339,6 +1419,13 @@ string(string _playermodel) player_check_model {
 			return fallback;
 
 		if (substring(_playermodel, -9,5) == "_lod2")
+			return fallback;
+
+		// forbid the torso/head models
+		if (substring(_playermodel, -10,6) == "_torso")
+			return fallback;
+
+		if (substring(_playermodel, -9,5) == "_head")
 			return fallback;
 
 		if (_playermodel != strtolower(_playermodel))
@@ -1878,6 +1965,7 @@ void(entity spot) player_spawn {
 		self.body.effects &= ~EFFECT_NODRAW;
 
 	self.body.nextthink = 0;
+	self.body.dead_frame = -1;
 	setmodel(self, "null");
 	if not(gamehook_chain_player_equip_handle()) {
 		self.ammo_shells = player_start_ammo_shells;
@@ -1911,7 +1999,6 @@ void(entity spot) player_spawn {
 	}
 	self.damageforcescale = 2;
 	self.death_time = 0;
-	self.dead_frame = -1;
 	self.alpha = 0;
 	self.fade_time = 0;
 	self.pain_frame = 0;
@@ -1937,7 +2024,7 @@ void(entity spot) player_spawn {
 	}
 	player_setup_model();
 	self.playermodel = ""; //just in case
-	anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
+	player_anim_set(self, anim_idle, TRUE, FALSE, TRUE, 2);
 	self.spawnorigin = spot.origin;
 	self.event_damage = player_damage;
 	self.bot_attack = TRUE;

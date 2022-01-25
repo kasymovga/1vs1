@@ -389,7 +389,7 @@ void(void) weapon_frame {
 			weapon_action(_switchweapon, WR_SETUP);
 			weapon_thinkf(WFRAME_IDLE, 0, weapon_ready);
 		} else if (self.weaponentity.state == WS_CLEAR) {
-			player_anim_set(self, anim_draw, FALSE, TRUE, TRUE);
+			player_anim_set(self, anim_draw, FALSE, TRUE, TRUE, 1);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_CLEAR);
 			weapon_action(_switchweapon, WR_SETUP);
@@ -943,8 +943,29 @@ void(void) weapon_model_think {
 	}
 }
 
+void(entity w, entity p, float a) weapon_attach_to_player {
+	entity b = (p.body.weaponentity ? p.body.weaponentity : p.body);
+	if (gettagindex(b, "tag_weapon")) {
+		setattachment(w, b, "tag_weapon");
+		if (a)
+			setorigin(w, '0 20 0');
+	} else if (a == 2 && p.akimbo_use_left_hand != '0 0 0') {
+		if (a)
+			setattachment(w, b, "bip01 l hand");
+
+		w.angles = p.akimbo_use_left_hand;
+	} else {
+		setattachment(w, b, "bip01 r hand");
+		if (a) {
+			if (a == 2)
+				setorigin(w, '0 20 0');
+			else
+				setorigin(w, '0 10 0');
+		}
+	}
+}
+
 void(void) weapon_model_exterior_dlc_reset {
-	float tag_found;
 	if (self.owner.weaponname != "")
 		setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
 	else
@@ -954,24 +975,7 @@ void(void) weapon_model_exterior_dlc_reset {
 	float akimbo_weapon = akimbo_active(self.owner);
 	if (akimbo_weapon < 2) akimbo_weapon = 0;
 	self.angles = '0 0 0';
-	if ((tag_found = gettagindex(ao.body, "tag_weapon"))) {
-		setattachment(self, ao.body, "tag_weapon");
-		if (akimbo_weapon)
-			setorigin(self, '0 20 0');
-	} else if (akimbo_weapon == 2 && ao.akimbo_use_left_hand != '0 0 0') {
-		if (akimbo_weapon)
-			setattachment(self, ao.body, "bip01 l hand");
-
-		self.angles = ao.akimbo_use_left_hand;
-	} else {
-		setattachment(self, ao.body, "bip01 r hand");
-		if (akimbo_weapon) {
-			if (akimbo_weapon == 2)
-				setorigin(self, '0 20 0');
-			else
-				setorigin(self, '0 10 0');
-		}
-	}
+	weapon_attach_to_player(self, ao, akimbo_weapon);
 	self.oldorigin = self.angles;
 	// if that didn't find a tag, hide the exterior weapon model
 	if (!self.tag_index)
@@ -1164,11 +1168,11 @@ void(float fr, float t, void() func) weapon_thinkf {
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 	if (restartanim)
 	if (t)
-	if (!self.crouch) { // shoot anim stands up, this looks bad
+	if (!self.crouch || self.body.weaponentity) { // shoot anim stands up, this looks bad
 		if (fr == WFRAME_MELEE2)
-			player_anim_set(self, anim_melee2, FALSE, TRUE, TRUE);
+			player_anim_set(self, anim_melee2, FALSE, TRUE, TRUE, 2);
 		else if (fr == WFRAME_MELEE || self.weapon == WEP_MELEE) {
-			player_anim_set(self, anim_melee, FALSE, TRUE, TRUE);
+			player_anim_set(self, anim_melee, FALSE, TRUE, TRUE, 1);
 			if (self.body)
 				self.body.animstate_endtime = time + t;
 
@@ -1178,7 +1182,11 @@ void(float fr, float t, void() func) weapon_thinkf {
 				self.weapon_morph2time = time + t * 0.65;
 			}
 		} else
-			player_anim_set(self, anim_shoot, FALSE, TRUE, TRUE);
+			player_anim_set(self, anim_shoot, FALSE, TRUE, TRUE, 1);
+
+		if (self.body.weaponentity)
+		if (self.crouch)
+			player_anim_set(self, anim_duckidle, FALSE, TRUE, TRUE, 2);
 	}
 }
 

@@ -58,7 +58,7 @@ string(entity p) player_name; // decolorizes and team colors the player name whe
 void(entity pl, float _color) player_set_colors;
 void(entity pl, float t, float s, float noprint) player_set_team;
 entity(entity pl) player_entity;
-void(entity e, .vector anim, float looping, float override, float restart) player_anim_set;
+void(entity e, .vector anim, float looping, float override, float restart, float torsolegs) player_anim_set;
 void(entity e, float chan, string s, float vol, float attn) player_sound;
 void(void) player_leave;
 #define PLAYER_ALIVE(x) (x.deadflag == 0 || x.deadflag > DEAD_RESPAWNING)

@@ -17,9 +17,9 @@ float physics_send(entity to, float sf);
 
 void(void) physics_on_jump_hook {
 	if (physics_crouch)
-		anim_set(self.body, self.anim_duckjump, FALSE, TRUE, TRUE);
+		player_anim_set(self, anim_duckjump, FALSE, TRUE, TRUE, 2);
 	else
-		anim_set(self.body, self.anim_jump, FALSE, TRUE, TRUE);
+		player_anim_set(self, anim_jump, FALSE, TRUE, TRUE, 2);
 
 	if (g_jump_grunt)
 		player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
@@ -81,7 +81,7 @@ void(void) physics_check_ground_hook {
 }
 
 void(void) physics_on_crouch_hook {
-	player_anim_set(self, anim_duck, FALSE, TRUE, TRUE);
+	player_anim_set(self, anim_duck, FALSE, TRUE, TRUE, 2);
 }
 
 .string lastclassname;
