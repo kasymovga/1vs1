@@ -441,12 +441,6 @@ void(entity e, string _model) player_anim_q3_load {
 			continue;
 		}
 		arg0 = argv(0);
-		if (arg0 == "headoffset" && c >= 4) {
-			headoffset_x = stof(argv(1));
-			headoffset_y = stof(argv(2));
-			headoffset_z = stof(argv(3));
-			setorigin(e.body.exteriorweaponentity, headoffset);
-		}
 		if (c < 4)
 			continue;
 
@@ -1622,7 +1616,11 @@ void() player_setup_model {
 		if (self.clientcolors != colors)
 			player_set_colors(self, colors);
 	}
-	self.body.colormap = self.colormap;
+	if (self.body.colormap != self.colormap) {
+		self.body.colormap = self.colormap;
+		if (self.body.weaponentity)
+			self.body.weaponentity.colormap = self.colormap;
+	}
 }
 
 void(entity player) player_to_spec {
