@@ -422,6 +422,123 @@ void(entity e, string s) player_anim_parseline {
 	print("Unknown field name: ", field_name, "\n");
 }
 
+void(entity e, string _model) player_anim_q3_load {
+	string s;
+	float animinfo = fopen(strcat(_model, ".q3animations"), FILE_READ);
+	float c;
+	string arg0;
+	vector headoffset, a;
+	float animline = 0;
+	float legshift = 0;
+	if (animinfo < 0) return;
+	while ((s = fgets(animinfo))) {
+		c = strstrofs(s, "//", 0);
+		if (c >= 0)
+			s = substring(s, 0, c);
+
+		c = tokenize_console(s);
+		if (c <= 0) {
+			continue;
+		}
+		arg0 = argv(0);
+		if (arg0 == "headoffset" && c >= 4) {
+			headoffset_x = stof(argv(1));
+			headoffset_y = stof(argv(2));
+			headoffset_z = stof(argv(3));
+			setorigin(e.body.exteriorweaponentity, headoffset);
+		}
+		if (c < 4)
+			continue;
+
+		if (strstrofs("0123456789", substring(arg0, 0, 1), 0) < 0) {
+			continue;
+		}
+		a_x = stof(arg0) - legshift;
+		a_y = stof(argv(1));
+		a_z = stof(argv(3));
+		switch (animline) {
+		case 0: //DEATH1
+			e.anim_die1 = a;
+			break;
+		case 1: //DEAD1
+			e.anim_dead1 = a;
+			break;
+		case 2: //DEATH2
+			e.anim_die2 = a;
+			break;
+		case 3: //DEAD2
+			e.anim_dead2 = a;
+			break;
+		case 4: case 5: //DEATH3 DEAD3
+			break;
+		case 6: //GESTURE
+			e.anim_taunt = a;
+			break;
+		case 7: //ATTACK
+			e.anim_shoot = a;
+			break;
+		case 8: //ATTACK2
+			e.anim_melee = a;
+			break;
+		case 9: //DROP
+			e.anim_draw = a;
+			break;
+		case 10: //RAISE
+			e.anim_draw_y += a_y;
+			break;
+		case 11: //STAND
+			e.anim_stand = a;
+			break;
+		case 12: //STAND2
+			break;
+		case 13: //WALKCR
+			legshift = a_x - e.anim_taunt_x;
+			a_x -= legshift;
+			e.anim_duckwalk = a;
+			break;
+		case 14: //WALK
+			e.anim_strafeleft = a;
+			e.anim_straferight = a;
+			e.anim_forwardright = a;
+			e.anim_forwardleft = a;
+			break;
+		case 15: //RUN
+			e.anim_run = a;
+			break;
+		case 16: //BACK
+			e.anim_runbackwards = a;
+			e.anim_backleft = a;
+			e.anim_backright = a;
+			e.anim_pain1 = a;
+			e.anim_pain2 = a;
+			break;
+		case 17: //SWIM
+			break;
+		case 18: //JUMP
+			e.anim_jump = a;
+			break;
+		case 19: //LAND
+			break;
+		case 20: //JUMPB
+			e.anim_melee2 = a;
+			break;
+		case 21: //LANDB
+			break;
+		case 22: //IDLE
+			e.anim_idle = a;
+			break;
+		case 23: //IDLECR
+			e.anim_duckidle = a;
+			e.anim_duckjump = a;
+			break;
+		case 24: //TURN
+			break;
+		}
+		animline++;
+	}
+	fclose(animinfo);
+}
+
 void(entity e, string _model) player_anim_load {
 	float animfile;
 	string animfilename, s;
@@ -472,6 +589,8 @@ void(entity e, string _model) player_anim_load {
 		self.anim_dead1 = '0 1 1' + '1 0 0' * (self.anim_die1_x + self.anim_die1_y - 1);
 		self.anim_dead2 = '0 1 1' + '1 0 0' * (self.anim_die2_x + self.anim_die2_y - 1);
 	}
+	if (self.body.weaponentity)
+		player_anim_q3_load(self, _model);
 }
 
 void() player_anim_setup {
@@ -511,9 +630,9 @@ void() player_anim_setup {
 		self.anim_melee2 = '0 1 2';
 
 	// reset animstate now
-	player_anim_set(self, anim_idle, TRUE, FALSE, TRUE, 2);
+	anim_set(self.body, self.anim_idle, TRUE, FALSE, FALSE);
 	if (self.body.weaponentity)
-		player_anim_set(self, anim_stand, TRUE, FALSE, TRUE, 1);
+		anim_set(self.body.weaponentity, self.anim_stand, TRUE, FALSE, FALSE);
 }
 
 void(entity e, .vector anim, float looping, float override, float restart, float torsolegs) player_anim_set {
@@ -531,7 +650,7 @@ void(entity e, .vector anim, float looping, float override, float restart, float
 			if (torsolegs & 2) //Legs with torso
 				anim_set(e.body, animv, looping, override, restart);
 		} else if (torsolegs & 2) //Legs only
-			anim_set(e.body, animv - '1 0 0' * (e.anim_duckwalk_x - e.anim_taunt_x), looping, override, restart);
+			anim_set(e.body, animv, looping, override, restart);
 	} else {
 		anim_set(e.body, animv, looping, override, restart);
 	}
@@ -540,11 +659,11 @@ void(entity e, .vector anim, float looping, float override, float restart, float
 
 void(void) player_anim {
 	entity b = self.body;
-	if (self.weaponentity) {
-		if (!self.weaponentity.animstate_override)
-			player_anim_set(self, anim_stand, TRUE, FALSE, FALSE, 1);
+	if (b.weaponentity) {
+		if (!b.weaponentity.animstate_override)
+			anim_set(b.weaponentity, self.anim_stand, TRUE, FALSE, FALSE);
 
-		anim_update(self.weaponentity);
+		anim_update(b.weaponentity);
 	}
 	if (self.weaponentity)
 	if (!self.weaponentity.animstate_override)
@@ -563,35 +682,35 @@ void(void) player_anim {
 	if (!b.animstate_override) {
 		if (!(self.flags & FL_ONGROUND)) {
 			if (self.crouch)
-				player_anim_set(self, anim_duckjump, FALSE, TRUE, FALSE, 2);
+				anim_set(self.body, self.anim_duckjump, FALSE, TRUE, FALSE);
 			else
-				player_anim_set(self, anim_jump, FALSE, TRUE, FALSE, 2);
+				anim_set(self.body, self.anim_jump, FALSE, TRUE, FALSE);
 		} else if (self.crouch) {
 			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
-				player_anim_set(self, anim_duckwalk, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_duckwalk, TRUE, FALSE, FALSE);
 			else
-				player_anim_set(self, anim_duckidle, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_duckidle, TRUE, FALSE, FALSE);
 		} else if ((self.movement_x * self.movement_x + self.movement_y * self.movement_y) > 20) {
 			if (self.movement_x > 0 && self.movement_y == 0)
-				player_anim_set(self, anim_run, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_run, TRUE, FALSE, FALSE);
 			else if (self.movement_x < 0 && self.movement_y == 0)
-				player_anim_set(self, anim_runbackwards, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_runbackwards, TRUE, FALSE, FALSE);
 			else if (self.movement_x == 0 && self.movement_y > 0)
-				player_anim_set(self, anim_straferight, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_straferight, TRUE, FALSE, FALSE);
 			else if (self.movement_x == 0 && self.movement_y < 0)
-				player_anim_set(self, anim_strafeleft, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_strafeleft, TRUE, FALSE, FALSE);
 			else if (self.movement_x > 0 && self.movement_y > 0)
-				player_anim_set(self, anim_forwardright, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_forwardright, TRUE, FALSE, FALSE);
 			else if (self.movement_x > 0 && self.movement_y < 0)
-				player_anim_set(self, anim_forwardleft, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_forwardleft, TRUE, FALSE, FALSE);
 			else if (self.movement_x < 0 && self.movement_y > 0)
-				player_anim_set(self, anim_backright, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_backright, TRUE, FALSE, FALSE);
 			else if (self.movement_x < 0 && self.movement_y < 0)
-				player_anim_set(self, anim_backleft, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_backleft, TRUE, FALSE, FALSE);
 			else
-				player_anim_set(self, anim_run, TRUE, FALSE, FALSE, 2);
+				anim_set(self.body, self.anim_run, TRUE, FALSE, FALSE);
 		} else
-			player_anim_set(self, anim_idle, TRUE, FALSE, FALSE, 2);
+			anim_set(self.body, self.anim_idle, TRUE, FALSE, FALSE);
 	}
 }
 
@@ -1034,16 +1153,10 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 		if (random() < 0.5) {
 			player_anim_set(self, anim_die1, FALSE, TRUE, TRUE, 3);
-			if (self.body.weaponentity) {
-				self.body.dead_frame = self.anim_dead1_x/* + 1*/;
-			} else
-				self.body.dead_frame = self.anim_dead1_x;
+			self.body.dead_frame = self.anim_dead1_x;
 		} else {
 			player_anim_set(self, anim_die2, FALSE, TRUE, TRUE, 3);
-			if (self.body.weaponentity) {
-				self.body.dead_frame = self.anim_dead2_x/* + 1*/;
-			} else
-				self.body.dead_frame = self.anim_dead2_x;
+			self.body.dead_frame = self.anim_dead2_x;
 		}
 		// set damage function to corpse damage
 		self.event_damage = player_corpse_damage;
