@@ -324,7 +324,11 @@ void() player_effects {
 		self.effects = self.effects | (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 
 	b.effects = self.effects;
-	b.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
+	if (b.weaponentity)
+		b.weaponentity.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
+	else
+		b.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
+
 	b.body.modelflags = self.modelflags; //for MF_ROCKET effect
 	self.effects = 0;
 }
