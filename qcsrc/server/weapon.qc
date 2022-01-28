@@ -1170,7 +1170,7 @@ void(float fr, float t, void() func) weapon_thinkf {
 	if (t)
 	if (!self.crouch || self.body.weaponentity) { // shoot anim stands up, this looks bad
 		if (fr == WFRAME_MELEE2)
-			player_anim_set(self, anim_melee2, FALSE, TRUE, TRUE, 2);
+			anim_set(self.body, self.anim_melee2, FALSE, TRUE, TRUE);
 		else if (fr == WFRAME_MELEE || self.weapon == WEP_MELEE) {
 			player_anim_set(self, anim_melee, FALSE, TRUE, TRUE, 1);
 			if (self.body)
