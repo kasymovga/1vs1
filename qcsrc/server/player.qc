@@ -170,7 +170,7 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 	setmodel(body_to, body_from.model);
 	if (body_from.weaponentity) {
 		if not(body_to.weaponentity) body_to.weaponentity = spawn();
-		self.body.weaponentity.colormap = self.body.colormap;
+		body_to.weaponentity.colormap = body_to.colormap;
 		setmodel(body_to.weaponentity, body_from.weaponentity.model);
 		body_to.weaponentity.tag_entity = body_to;
 		body_to.weaponentity.tag_index = body_from.weaponentity.tag_index;
