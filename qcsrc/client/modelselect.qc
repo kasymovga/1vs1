@@ -1,5 +1,7 @@
 entity modelselect;
 entity modelselect_current;
+entity modelselect_torso;
+entity modelselect_head;
 string modelselect_list;
 float modelselect_list_len;
 float modelselect_list_pos;
@@ -34,12 +36,13 @@ void(void) modelselect_remove {
 	modelselect = world;
 	remove(modelselect_current);
 	modelselect_current = world;
+	remove(modelselect_head);
+	modelselect_head = NULL;
+	remove(modelselect_torso);
+	modelselect_torso = NULL;
 }
 
 float(float bInputType, float nPrimary, float nSecondary) modelselect_input_event {
-	//if (bInputType == 2) //Prevent mouse look
-	//	return TRUE;
-
 	if (bInputType == 0) {
 		if (nPrimary == K_ESCAPE) {
 			modelselect_remove();
@@ -63,6 +66,70 @@ float(float bInputType, float nPrimary, float nSecondary) modelselect_input_even
 	return FALSE;
 }
 
+void(string _model) modelselect_get_idle_animinfo {
+	float f = fopen(strcat(_model, ".animinfo"), FILE_READ);
+	if (f < 0) return;
+	float i;
+	for (i = 0; i < 8; i++) fgets(f);
+	string s = fgets(f);
+	fclose(f);
+	float c = tokenize_console(s);
+	if (c > 2) {
+		modelselect_current.frame = stof(argv(0));
+		modelselect_torso.frame = stof(argv(0));
+	}
+}
+
+void(string _model) modelselect_get_idle_animinfo2 {
+	float f = fopen(strcat(_model, ".animinfo2"), FILE_READ);
+	if (f < 0) return;
+	float i;
+	string s;
+	float c;
+	modelselect_current.frame = 7; //default
+	while ((s = fgets(f))) {
+		c = tokenize_console(s);
+		if (c > 3) {
+			if (argv(0) == "idle") {
+				modelselect_current.frame = stof(argv(1));
+			} else if (argv(0) == "stand") {
+				modelselect_torso.frame = stof(argv(1));
+			}
+		}
+	}
+	fclose(f);
+}
+
+void(string _model) modelselect_get_idle_q3animations {
+	float f = fopen(strcat(_model, ".q3animations"), FILE_READ);
+	if (f < 0) return;
+	float i;
+	string s;
+	float c;
+	float animline = 0;
+	float gestureframe = 0;
+	float walkcrframe = 0;
+	while ((s = fgets(f))) {
+		c = tokenize_console(s);
+		if (c > 3) {
+			if (strstrofs("0123456789", substring(argv(0), 0, 1), 0) >= 0) {
+				animline++;
+				if (animline == 7) { //GESTURE
+					gestureframe = stof(argv(0));
+				} else if (animline == 12) { //STAND
+					modelselect_torso.frame = stof(argv(0));
+				} else if (animline == 14) { //WALKCR
+					walkcrframe = stof(argv(0));
+				} else if (animline == 23) { //IDLE
+					modelselect_current.frame = stof(argv(0)) - walkcrframe + gestureframe;
+					break;
+				}
+			}
+		}
+	}
+	fclose(f);
+}
+
 void(void) modelselect_draw {
 	input_event_callback = modelselect_input_event;
 	mouse_enable("");
@@ -84,15 +151,40 @@ void(void) modelselect_draw {
 		float _skin = stof(substring(s, colon + 1, -1));
 		precache_model(_model);
 		setmodel(modelselect_current, _model);
+		string s = strcat(substring(_model, 0, strlen(_model) - 4), "_torso", substring(_model, -4, 4));
+		if (file_exists(s)) {
+			precache_model(s);
+			setmodel(modelselect_torso, s);
+			setattachment(modelselect_torso, modelselect_current, "tag_torso");
+			string s = strcat(substring(_model, 0, strlen(_model) - 4), "_head", substring(_model, -4, 4));
+			if (file_exists(s)) {
+				precache_model(s);
+				setmodel(modelselect_head, s);
+				setattachment(modelselect_head, modelselect_torso, "tag_head");
+			} else
+				setmodel(modelselect_head, "null");
+		} else {
+			setmodel(modelselect_torso, "null");
+			setmodel(modelselect_head, "null");
+		}
 		modelselect_current.skin = _skin;
-		modelselect_current.frame = 8;
+		modelselect_torso.frame = 0;
+		if (file_exists(strcat(_model, ".animinfo"))) {
+			modelselect_get_idle_animinfo(_model);
+		} else if (file_exists(strcat(_model, ".animinfo2"))) {
+			modelselect_get_idle_animinfo2(_model);
+		} else if (file_exists(strcat(_model, ".q3animations"))) {
+			modelselect_get_idle_q3animations(_model);
+		} else {
+			modelselect_current.frame = 7;
+		}
 		modelselect_list_pos_prev = modelselect_list_pos;
 	}
 	if (view_fixangle) {
 		makevectors(view_fixed_angles);
-		setorigin(modelselect_current, view_camera_origin + v_forward * 150);
+		setorigin(modelselect_current, view_camera_origin + v_forward * 15);
 	} else
-		setorigin(modelselect_current, view_camera_origin + view_forward * 150);
+		setorigin(modelselect_current, view_camera_origin + view_forward * 15);
 
 	modelselect_current.angles_y = view_angles_y + (time * 90);
 	vector c = '1 0 0' * (CVAR(vid_conwidth) / 2);
@@ -204,12 +296,20 @@ void(void) modelselect_read {
 
 	modelselect.draw2d = modelselect_draw;
 	modelselect.draw2dflag = 1;
-	if not(modelselect_current)
+	if not(modelselect_current) {
 		modelselect_current = spawn();
-
-	modelselect_current.effects = EFFECT_NODEPTHTEST | EFFECT_FULLBRIGHT;
+		modelselect_head = spawn();
+		modelselect_torso = spawn();
+	}
+	modelselect_current.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
+	modelselect_torso.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
+	modelselect_head.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
 	modelselect_current.draw = modelselect_model_draw;
+	modelselect_head.draw = modelselect_model_draw;
+	modelselect_torso.draw = modelselect_model_draw;
+	modelselect_current.scale = 0.1;
 	modelselect_current.colormap = 1023;
+	modelselect_torso.colormap = 1023;
 	if not(modelselect_list_len)
 		modelselect_remove();
 }

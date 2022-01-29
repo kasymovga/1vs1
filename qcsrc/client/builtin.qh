@@ -193,6 +193,7 @@ float(entity e, vector p) getsurfacenearpoint = #438;
 vector (entity e, float s, vector p) getsurfaceclippedpoint = #439;
 float(string s) tokenize = #441;
 string(float argnum) argv = #442;
+void(entity e, entity to, string tag) setattachment = #443;
 float(string pattern, float caseinsensitive, float quiet) search_begin = #444;
 void(float handle) search_end = #445;
 float(float handle) search_getsize = #446;
