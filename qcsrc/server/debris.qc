@@ -65,6 +65,10 @@ void(string debrisname, vector force) debris_launch {
 		weapon_defaultspawnfunc(e.weapon);
 		self = oldself;
 	} else if (sv_breakable_debris) {
+		if (!haveslash && strstrofs(debrisname, ".", 0) < 0) { //not a model name
+			remove(dbr);
+			return;
+		}
 		setorigin(dbr, self.absmin
 				+ '1 0 0' * random() * (self.absmax_x - self.absmin_x)
 				+ '0 1 0' * random() * (self.absmax_y - self.absmin_y)

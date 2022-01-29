@@ -13,8 +13,7 @@ float minstagib_ammo;
  * IT_NAILS	 = extra lives
  * IT_INVINCIBLE = speed
  */
-void minstagib_items (float itemid)
-{
+void(float itemid) minstagib_items {
 	if not(self.classname == "droppedweapon")
 		self.classname = "minstagib";
 
@@ -39,7 +38,6 @@ void minstagib_items (float itemid)
 		}
 		return;
 	}
-
 	// replace with extra lives
 	if (itemid == IT_NAILS)
 	if (g_minstagib_extralives) {
@@ -47,93 +45,71 @@ void minstagib_items (float itemid)
 		item_start(sv_model_armorlarge, "models/items/g_a25.md3",
 			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Extralife", IT_NAILS, 0, FL_POWERUP, item_generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
-
+		return;
 	}
+	remove(self);
 }
 
 float minst_no_auto_cells;
-void minst_remove_item (void) {
-	if(minst_no_auto_cells)
+void(void) minst_remove_item {
+	if (minst_no_auto_cells)
 		remove(self);
 }
 
 .float minstagib_nextthink;
 var void() minstagib_PlayerPreThink_NextLink;
-void minstagib_PlayerPreThink() {
+void() minstagib_PlayerPreThink {
 	minstagib_PlayerPreThink_NextLink();
 	if (time < self.minstagib_nextthink || self.deadflag || map_finished)
 		return;
 
 	if not(self.items & IT_UNLIMITED_AMMO)
-	if (self.ammo_cells <= 0)
-	{
-		if (self.health <= 5)
-		{
+	if (self.ammo_cells <= 0) {
+		if (self.health <= 5) {
 			centerprint(self, "you're dead now...\n");
 			damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/terminated.wav", "^1Terminated");
-		}
-		else if (self.health <= 10)
-		{
+		} else if (self.health <= 10) {
 			centerprint(self, "^11^7 second left to find some ammo\n");
 			damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/1.wav", "^11");
-		}
-		else if (self.health <= 20)
-		{
+		} else if (self.health <= 20) {
 			centerprint(self, "^12^7 seconds left to find some ammo\n");
 			damage(self, self, self, self.health - 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/2.wav", "^12");
-		}
-		else if (self.health <= 30)
-		{
+		} else if (self.health <= 30) {
 			centerprint(self, "^13^7 seconds left to find some ammo\n");
 			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/3.wav", "^13");
-		}
-		else if (self.health <= 40)
-		{
+		} else if (self.health <= 40) {
 			centerprint(self, "^14^7 seconds left to find some ammo\n");
 			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/4.wav", "4");
-		}
-		else if (self.health <= 50)
-		{
+		} else if (self.health <= 50) {
 			centerprint(self, "^15^7 seconds left to find some ammo\n");
 			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/5.wav", "5");
-		}
-		else if (self.health <= 60)
-		{
+		} else if (self.health <= 60) {
 			centerprint(self, "^36^7 seconds left to find some ammo\n");
 			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/6.wav", "");
-		}
-		else if (self.health <= 70)
-		{
+		} else if (self.health <= 70) {
 			centerprint(self, "^37^7 seconds left to find some ammo\n");
 			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/7.wav", "");
-		}
-		else if (self.health <= 80)
-		{
+		} else if (self.health <= 80) {
 			centerprint(self, "^38^7 seconds left to find some ammo\n");
 			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/8.wav", "");
-		}
-		else if (self.health <= 90)
-		{
+		} else if (self.health <= 90) {
 			centerprint(self, "^39^7 seconds left to find some ammo\n");
 			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/9.wav", "");
-		}
-		else if (self.health <= 100)
-		{
+		} else if (self.health <= 100) {
 			centerprint(self, "get some ammo or\nyou'll be dead in ^310^7 seconds...");
 			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/10.wav", "");
-		}
-		else {
+		} else {
 			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 		}
 	}
@@ -147,34 +123,28 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		return TRUE;
 
 	if (item.ammo_fuel)
-	if (player.ammo_fuel < g_pickup_fuel_max)
-	{
+	if (player.ammo_fuel < g_pickup_fuel_max) {
 		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
 		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 	}
-	if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
-	{
+	if ((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK)) {
 		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.items |= it;
 		sprint (player, strcat("You got the ^2", item.netname, "\n"));
 	}
-
 	gamehook_chain_ItemGiveToHandle_SwitchWeapon = TRUE;
-	if (item.health)
-	{
+	if (item.health) {
 		player.health = min(max(100, player.health + g_minstagib_health_drop), g_minstagib_health_max);
 		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 	}
-	if (item.ammo_cells)
-	{
+	if (item.ammo_cells) {
 		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		// play some cool sounds ;)
-		if (clienttype(player) == CLIENTTYPE_REAL)
-		{
-			if(player.health <= 5)
+		if (clienttype(player) == CLIENTTYPE_REAL) {
+			if (player.health <= 5)
 				sound_play2(player, "announcer/robotic/lastsecond.wav");
-			else if(player.health < 50)
+			else if (player.health < 50)
 				sound_play2(player, "announcer/robotic/narrowly.wav");
 		}
 		// sound not available
@@ -186,8 +156,7 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		player.health = max(100, player.health);
 	}
 	// extralife powerup
-	if (item.max_health)
-	{
+	if (item.max_health) {
 		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		// sound not available
 		// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
@@ -195,8 +164,7 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		sprint(player, "^3You picked up some extra lives\n");
 	}
 	if (item.ammo_fuel)
-	if (player.ammo_fuel < g_pickup_fuel_max)
-	{
+	if (player.ammo_fuel < g_pickup_fuel_max) {
 		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
 		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
@@ -210,7 +178,7 @@ void minstagib_player_health_armor_fuel_mods_set() {
 	gamehook_player_health_armor_rot_regen = FALSE;
 }
 
-float minstagib_WeaponSpawnHandle(float wpn) {
+float(float wpn) minstagib_WeaponSpawnHandle {
 	if (wpn == WEP_MINSTANEX ||wpn == WEP_NEX || wpn == WEP_ROCKET_LAUNCHER) {
 		minstagib_items(IT_CELLS);
 		self.think = minst_remove_item;
@@ -222,7 +190,7 @@ float minstagib_WeaponSpawnHandle(float wpn) {
 }
 
 var float(float doreduce) minstagib_ThrowWeaponAllowed_NextLink;
-float minstagib_ThrowWeaponAllowed(float doreduce) {
+float(float doreduce) minstagib_ThrowWeaponAllowed {
 	if (self.ammo_cells <= 0 || doreduce)
 		return FALSE;
 
@@ -232,7 +200,7 @@ float minstagib_ThrowWeaponAllowed(float doreduce) {
 void spawnfunc_minstagib_extra_lives() { minstagib_items(IT_NAILS); }
 
 var void() minstagib_entity_spawn_pre_NextLink;
-void minstagib_entity_spawn_pre() {
+void() minstagib_entity_spawn_pre {
 	if (self.classname == "item_health_mega")
 		self.classname = "minstagib_extra_lives";
 	else if (self.classname == "item_strength")
@@ -243,26 +211,25 @@ void minstagib_entity_spawn_pre() {
 	minstagib_entity_spawn_pre_NextLink();
 }
 
-var float() minstagib_ItemForbidden_NextLink;
-float minstagib_ItemForbidden() {
-	if (self.classname != "minstagib")
-	if (self.classname != "item_speed")
-	if (self.classname != "item_invisibility")
+var float(string s) minstagib_ItemForbidden_NextLink;
+float(string s) minstagib_ItemForbidden {
+	if (s != "minstagib")
+	if (s != "item_speed")
+	if (s != "item_invisibility")
 		return TRUE;
 
-	return minstagib_ItemForbidden_NextLink();
+	return minstagib_ItemForbidden_NextLink(s);
 }
 
 var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) minstagib_player_damage_handle_NextLink;
-float minstagib_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) minstagib_player_damage_handle {
 	if ((deathtype == DEATH_FALL)  ||
 		(deathtype == DEATH_DROWN) ||
 		(deathtype == DEATH_SLIME) ||
 		(deathtype == DEATH_LAVA))
 		return TRUE;
 
-	if (self.armorvalue >= 1  && (deathtype != DEATH_HURTTRIGGER) && _damage)
-	{
+	if (self.armorvalue >= 1  && (deathtype != DEATH_HURTTRIGGER) && _damage) {
 		self.armorvalue -= min(_damage, min(self.armorvalue, 100));
 		gamehook_chain_player_damage_mod = 0;
 		self.hitsound += 1;
@@ -272,15 +239,13 @@ float minstagib_player_damage_handle(entity inflictor, entity attacker, float _d
 }
 
 var void(entity targ, entity attacker, float deathtype) minstagib_DamageForceModsSet_NextLink;
-void minstagib_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
+void(entity targ, entity attacker, float deathtype) minstagib_DamageForceModsSet {
 	if (targ.classname == "player") {
 		if (attacker.classname == "player")
 		if (DEATH_ISWEAPON(deathtype, WEP_LASER))
-		if (g_minstagib_nolaserdamage || !player_can_fire(attacker, FALSE))
-		{
+		if (g_minstagib_nolaserdamage || !player_can_fire(attacker, FALSE)) {
 			gamehook_chain_damage_mod = 0;
-			if (targ != attacker)
-			{
+			if (targ != attacker) {
 				if (g_minstagib_nolaserdamage)
 					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
 
@@ -304,9 +269,9 @@ void minstagib_DamageForceModsSet(entity targ, entity attacker, float deathtype)
 }
 
 
-float minstagib_MirrorDamageHandle(entity attacker, entity inflictor, float mirrordamage, vector force) {
-	if(mirrordamage > 0)
-	if(attacker.armorvalue > 0) {// just lose extra LIVES, don't kill the player for mirror damage
+float(entity attacker, entity inflictor, float mirrordamage, vector force) minstagib_MirrorDamageHandle {
+	if (mirrordamage > 0)
+	if (attacker.armorvalue > 0) {// just lose extra LIVES, don't kill the player for mirror damage
 		attacker.armorvalue = attacker.armorvalue - 1;
 		centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
 		attacker.hitsound += 1;
@@ -332,7 +297,7 @@ float(void) minstagib_player_equip_handle {
 }
 
 var void() minstagib_ItemRespawnCountDown_NextLink;
-void minstagib_ItemRespawnCountDown() {
+void() minstagib_ItemRespawnCountDown {
 	if (self.items == IT_NAILS) {
 		gamehook_ItemName = "item-extralife";
 		gamehook_ItemColor = '1 0 0';
@@ -342,7 +307,7 @@ void minstagib_ItemRespawnCountDown() {
 
 float minstagib_ArmorBlockPercentMod() { return 0; }
 
-void minstagib_init() {
+void(void) minstagib_init {
 	CVAR_CACHE(g_minstagib);
 	if not(g_minstagib)
 		return;
@@ -391,12 +356,10 @@ void minstagib_init() {
 	gamehook_chain_ArmorBlockPercentMod = minstagib_ArmorBlockPercentMod;
 }
 
-void spawnfunc_item_minst_cells (void) {
-	if (g_minstagib)
-	{
+void(void) spawnfunc_item_minst_cells {
+	if (g_minstagib) {
 		minst_no_auto_cells = 1;
 		minstagib_items(IT_CELLS);
-	}
-	else
+	} else
 		remove(self);
 }

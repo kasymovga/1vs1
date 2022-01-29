@@ -1,1 +1,1 @@
-void minstagib_init();
+void(void) minstagib_init;

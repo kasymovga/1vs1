@@ -639,7 +639,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 			goto item_start_fail;
 	} else {
 		// it's a level item
-		if (!g_pickup_items || gamehook_chain_ItemForbidden())
+		if (!g_pickup_items || gamehook_chain_ItemForbidden(self.classname))
 			goto item_start_fail;
 
 		if (team_mode) {
@@ -987,6 +987,9 @@ void(void) spawnfunc_item_mushroom {
 }
 
 voidfunc(string s) item_spawnfunc_for {
+	if (gamehook_chain_ItemForbidden(strcat("item_", s)))
+		return NULL;
+
 #define RETURN_SPAWNFUNC_FOR(x) if (s == #x) return spawnfunc_item_##x;
 	RETURN_SPAWNFUNC_FOR(health_small)
 	RETURN_SPAWNFUNC_FOR(health_medium)
