@@ -584,9 +584,6 @@ void(entity e, string _model) player_anim_load {
 		fclose(animfile);
 		if (player_anim_parseline_error)
 			print("Parse error in ", animfilename, ", some player animations are broken\n");
-
-		self.anim_dead1 = '0 1 1' + '1 0 0' * (self.anim_die1_x + self.anim_die1_y - 1);
-		self.anim_dead2 = '0 1 1' + '1 0 0' * (self.anim_die2_x + self.anim_die2_y - 1);
 	}
 	if (self.body.weaponentity)
 		player_anim_q3_load(self, _model);
