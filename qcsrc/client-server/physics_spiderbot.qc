@@ -13,6 +13,10 @@ float(void) physics_spiderbot {
 			sound(self, CHAN_PLAYER, sound_random("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
 			self.nextstep = time + 0.2;
 			self.wasFlying = 0;
+		} else if (self.nextstep < time) {
+			sound(self, CHAN_PLAYER, sound_random("misc/metalfootstep0", 6), VOL_BASE, ATTN_NORM);
+			self.nextstep = time + 0.25;
+			self.wasFlying = 0;
 		}
 		#endif
 		if (physics_button_jump) {

@@ -445,16 +445,18 @@ void(void) vehicle_spiderbot_init {
 	CVAR_CACHE(g_vehicle_spiderbot_speed_walk);
 	CVAR_CACHE(g_vehicle_spiderbot_turnspeed);
 	CVAR_CACHE(g_vehicle_spiderbot_pushfactor);
-	precache_model ( "models/vhshield.md3");
-	precache_model ( "models/spiderbot/cp.md3");
-	precache_model ( "models/spiderbot/spiderbot.dpm");
-	precache_model ( "models/spiderbot/spiderbot_top.dpm");
-	precache_model ( "models/spiderbot/spiderbot_barrels.dpm");
-	precache_model ( "models/onslaught/gen_gib1.md3");
-	precache_model ( "models/onslaught/gen_gib2.md3");
-	precache_model ( "models/onslaught/gen_gib3.md3");
-	precache_model ( "models/turrets/rocket.md3");
-	precache_sound ( "weapons/uzi_fire.wav" );
+	precache_model("models/vhshield.md3");
+	precache_model("models/spiderbot/cp.md3");
+	precache_model("models/spiderbot/spiderbot.dpm");
+	precache_model("models/spiderbot/spiderbot_top.dpm");
+	precache_model("models/spiderbot/spiderbot_barrels.dpm");
+	precache_model("models/onslaught/gen_gib1.md3");
+	precache_model("models/onslaught/gen_gib2.md3");
+	precache_model("models/onslaught/gen_gib3.md3");
+	precache_model("models/turrets/rocket.md3");
+	precache_sound("weapons/uzi_fire.wav");
+	sound_random_precache("misc/metalfootstep0", 6);
+	sound_random_precache("misc/metalhitground", 4);
 }
 
 float(entity to, float sf) vehicle_spiderbot_physics_send {
