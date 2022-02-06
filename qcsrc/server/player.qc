@@ -2476,31 +2476,6 @@ void() player_init {
 #ifdef ALLOW_FORCEMODELS
 	CVAR_CACHE(sv_clforceplayermodels);
 #endif
-	if (cvar("sv_defaultcharacter")) { //compatibility with old cvars
-		string s;
-		if ((s = cvar_string("sv_defaultplayermodel")) != "") {
-			str_unzone_ifneeded(g_player_forcemodel);
-			g_player_forcemodel = str_zone_ifneeded(s);
-		}
-		if ((s = cvar_string("sv_defaultplayermodel_blue")) != "") {
-			str_unzone_ifneeded(g_player_forcemodel_blue);
-			g_player_forcemodel_blue = str_zone_ifneeded(s);
-		}
-		if ((s = cvar_string("sv_defaultplayermodel_red")) != "") {
-			str_unzone_ifneeded(g_player_forcemodel_red);
-			g_player_forcemodel_red = str_zone_ifneeded(s);
-		}
-		if ((s = cvar_string("sv_defaultplayermodel_yellow")) != "") {
-			str_unzone_ifneeded(g_player_forcemodel_yellow);
-			g_player_forcemodel_yellow = str_zone_ifneeded(s);
-		}
-		if ((s = cvar_string("sv_defaultplayermodel_pink")) != "") {
-			str_unzone_ifneeded(g_player_forcemodel_pink);
-			g_player_forcemodel_pink = str_zone_ifneeded(s);
-		}
-		g_player_forcecolor = ((cvar_string("sv_defaultplayercolors") == "") ? g_player_forcecolor : cvar("sv_defaultplayercolors"));
-		g_player_forceskin = ((cvar_string("sv_defaultplayerskin") == "") ? g_player_forceskin : cvar("sv_defaultplayerskin"));
-	}
 	if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
 		str_unzone_ifneeded(g_player_forcemodel_blue);
 		g_player_forcemodel_blue = str_zone_ifneeded(g_player_forcemodel);
