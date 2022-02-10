@@ -5,7 +5,7 @@ CLASS(NexuizGameSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizGameSettingsDialog, title, string, "Game Settings")
 	ATTRIB(NexuizGameSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizGameSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizGameSettingsDialog, rows, float, 24)
+	ATTRIB(NexuizGameSettingsDialog, rows, float, 25)
 	ATTRIB(NexuizGameSettingsDialog, columns, float, 6)
 	ATTRIB(NexuizGameSettingsDialog, name, string, "GameSettings")
 ENDCLASS(NexuizGameSettingsDialog)
@@ -58,6 +58,9 @@ void fillNexuizGameSettingsDialog(entity me)
 			me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
 			e.colorL = SKINCOLOR_TEXT_WARNING;
 		}
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_voice", "Player voices"));
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, "Weapon opacity:"));
@@ -166,6 +169,6 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.onClick = showHudDialogGameSettingsDialog;
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_voice;sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;", COMMANDBUTTON_CLOSE));
 }
 #endif

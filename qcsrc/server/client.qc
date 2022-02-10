@@ -640,8 +640,7 @@ void client_cvars_request() {
 			"sendcvar cl_weaponpriority8\n"
 			"sendcvar cl_weaponpriority9\n"
 			"sendcvar cl_autotaunt\n"
-			"sendcvar cl_voice_directional\n"
-			"sendcvar cl_voice_directional_taunt_attenuation\n"
+			"sendcvar cl_voice\n"
 			"sendcvar cl_netfps\n"
 			"sendcvar cl_simpleitems\n"
 			"sendcvar _cl_rate\n"
@@ -679,9 +678,20 @@ void() client_cvars_parse {
 		(self.cvar_cl_weaponpriorities[ind]) = str_zone_ifneeded(weapon_fix_order_allow_incomplete(val));
 	} else if (s == "cl_autotaunt")
 		self.cvar_cl_autotaunt = stof(val);
-	else if (s == "cl_voice_directional")
-		self.cvar_cl_voice_directional = stof(val);
-	else if (s == "cl_voice_directional_taunt_attenuation")
+	else if (s == "cl_voice") {
+		f = stof(val);
+		if (f <= 0) {
+			self.cvar_cl_voice_directional = -1;
+		} else {
+			stuffcmd(self,
+					"sendcvar cl_voice_directional\n"
+					"sendcvar cl_voice_directional_taunt_attenuation\n");
+			self.cvar_cl_voice_directional = 0;
+		}
+	} else if (s == "cl_voice_directional") {
+		if (self.cvar_cl_voice_directional >= 0)
+			self.cvar_cl_voice_directional = stof(val);
+	} else if (s == "cl_voice_directional_taunt_attenuation")
 		self.cvar_cl_voice_directional_taunt_attenuation = stof(val);
 #ifdef ALLOW_FORCEMODELS
 	else if (s == "cl_forceplayermodels")
