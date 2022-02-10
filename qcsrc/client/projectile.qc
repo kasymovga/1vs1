@@ -78,10 +78,12 @@ void(void) projectile_draw {
 	float t;
 	f = self.move_flags;
 	if (self.count & 0x80) {
-		//self.move_flags &~= FL_ONGROUND;
+		self.move_angles = self.angles;
 		Movetype_Physics_MatchServer();
-		if (!(self.move_flags & FL_ONGROUND))
+		if not(self.move_flags & FL_ONGROUND)
+		if (self.velocity != '0 0 0') {
 			self.angles = vectoangles(self.velocity);
+		}
 	} else {
 		InterpolateOrigin_Do();
 		if (self.use_server_angles) {
@@ -91,12 +93,11 @@ void(void) projectile_draw {
 		}
 	}
 	if (self.count & 0x80) {
-		drawn = (time >= self.spawntime - 0.02);
-		t = max(time, self.spawntime);
+		drawn = (time >= self.spawntime);
 	} else {
 		drawn = (self.iflags & IFLAG_VALID);
-		t = time;
 	}
+	t = time;
 	if ((!(f & FL_ONGROUND) || self.cnt == PROJECTILE_HG_RAZE) && !self.use_server_angles) {
 		rot = '0 0 0';
 		switch (self.cnt) {
