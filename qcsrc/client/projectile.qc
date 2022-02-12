@@ -79,7 +79,7 @@ void(void) projectile_draw {
 	f = self.move_flags;
 	if (self.count & 0x80) {
 		self.move_angles = self.angles;
-		Movetype_Physics_MatchServer();
+		physics_move_match_server();
 		if not(self.move_flags & FL_ONGROUND)
 		if (self.velocity != '0 0 0') {
 			self.angles = vectoangles(self.velocity);

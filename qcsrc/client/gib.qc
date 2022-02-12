@@ -84,7 +84,7 @@ void(void) gib_touch {
 void(void) gib_draw {
 	vector oldorg;
 	oldorg = self.origin;
-	Movetype_Physics_NoMatchServer();
+	physics_move_no_match_server();
 	if (wasfreed(self))
 		return;
 

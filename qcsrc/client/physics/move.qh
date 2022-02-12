@@ -12,5 +12,5 @@
 .float move_bounce_stopspeed;
 .float move_nomonsters; // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
 
-void Movetype_Physics_MatchServer();
-void Movetype_Physics_NoMatchServer();
+void() physics_move_match_server;
+void() physics_move_no_match_server;

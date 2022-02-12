@@ -26,7 +26,7 @@ void(void) casing_draw {
 		self.move_angles_z = 0;
 		self.flags &= ~FL_ONGROUND;
 	}
-	Movetype_Physics_NoMatchServer();
+	physics_move_no_match_server();
 	self.renderflags = 0;
 	self.alpha = bound(0, self.cnt - time, 1);
 	if (self.alpha < EFFECT_ALPHA_MIN_VISIBLE)
