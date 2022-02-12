@@ -130,7 +130,7 @@ float(entity to, float sf) model_client_send {
 	if (self.colormap != 0)
 		sf |= 0x40;
 	
-	net_write_byte(MSG_ENTITY, NET_CSQC_WALL);
+	net_write_byte(MSG_ENTITY, NET_CSQC_MODEL);
 	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
 		if (sf & 0x40)

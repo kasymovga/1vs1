@@ -1,7 +1,7 @@
 .float lip;
 .float bgmscriptangular;
 
-void(void) wall_draw {
+void(void) model_draw {
 	float f;
 	vector save;
 	var .vector fld;
@@ -29,14 +29,14 @@ void(void) wall_draw {
 	self.fld = save;
 }
 
-void(void) wall_remove {
+void(void) model_remove {
 	if (self.bgmscript)
 		strunzone(self.bgmscript);
 
 	self.bgmscript = NULL;
 }
 
-void(float ignore) wall_read {
+void(float ignore) model_read {
 	float f;
 	interpolate_undo();
 	self.iflags = IFLAG_ANGLES;
@@ -99,6 +99,6 @@ void(float ignore) wall_read {
 	}
 	interpolate_note();
 	setorigin(self, self.origin);
-	self.entremove = wall_remove;
-	self.draw = wall_draw;
+	self.entremove = model_remove;
+	self.draw = model_draw;
 }

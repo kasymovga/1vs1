@@ -86,7 +86,7 @@ gib.qc
 damage.qc
 casing.qc
 effect.qc
-wall.qc
+model.qc
 zapper.qc
 //vehicles/spiderbot.qc
 nadgetselect.qc
