@@ -259,6 +259,13 @@ void(float dt) physics_move_toss { // SV_Physics_Toss
 void(float movedt) physics_move_frame {
 	self.move_didgravity = FALSE;
 	switch (self.move_movetype) {
+	case MOVETYPE_TOSS:
+	case MOVETYPE_BOUNCE:
+	case MOVETYPE_BOUNCEMISSILE:
+	case MOVETYPE_FLYMISSILE:
+	case MOVETYPE_FLY:
+		physics_move_toss(movedt);
+		break;
 	case MOVETYPE_PUSH:
 		error("SV_Physics_Pusher not implemented");
 		break;
@@ -278,13 +285,6 @@ void(float movedt) physics_move_frame {
 		break;
 	case MOVETYPE_WALK:
 		error("SV_Physics_Walk not implemented");
-		break;
-	case MOVETYPE_TOSS:
-	case MOVETYPE_BOUNCE:
-	case MOVETYPE_BOUNCEMISSILE:
-	case MOVETYPE_FLYMISSILE:
-	case MOVETYPE_FLY:
-		physics_move_toss(movedt);
 		break;
 	}
 }
