@@ -46,11 +46,15 @@ float(entity to, float sf) projectile_send {
 		net_write_coord(MSG_ENTITY, self.origin_x);
 		net_write_coord(MSG_ENTITY, self.origin_y);
 		net_write_coord(MSG_ENTITY, self.origin_z);
-		if(sf & 128) {
+		if (sf & 128) {
 			net_write_coord(MSG_ENTITY, self.velocity_x);
 			net_write_coord(MSG_ENTITY, self.velocity_y);
 			net_write_coord(MSG_ENTITY, self.velocity_z);
 			net_write_coord(MSG_ENTITY, self.gravity);
+		} else if (sf & 32) {
+			net_write_short(MSG_ENTITY, self.velocity_x);
+			net_write_short(MSG_ENTITY, self.velocity_y);
+			net_write_short(MSG_ENTITY, self.velocity_z);
 		}
 	}
 	if (sf & 2) {

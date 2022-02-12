@@ -77,7 +77,7 @@ void(void) projectile_draw {
 	float drawn;
 	float t;
 	f = self.move_flags;
-	if (self.count & 0x80) {
+	if (self.count & 128) {
 		self.move_angles = self.angles;
 		physics_move_match_server();
 		if not(self.move_flags & FL_ONGROUND)
@@ -85,14 +85,14 @@ void(void) projectile_draw {
 			self.angles = vectoangles(self.velocity);
 		}
 	} else {
-		InterpolateOrigin_Do();
+		interpolate_do();
 		if (self.use_server_angles) {
 			self.angles = self.server_angles;
 		} else if (self.cnt == PROJECTILE_HG_RAZE) {
 			self.angles_x = -90;
 		}
 	}
-	if (self.count & 0x80) {
+	if (self.count & 128) {
 		drawn = (time >= self.spawntime);
 	} else {
 		drawn = (self.iflags & IFLAG_VALID);
@@ -163,7 +163,7 @@ void(void) projectile_remove {
 	if (self.snd_looping)
 		sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 
-	if (self.count & 0x80) {
+	if (self.count & 128) {
 		tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, TRACE_MOVE_NORMAL, self);
 		projectile_trail_draw(trace_endpos);
 	}
@@ -185,17 +185,17 @@ void(float ignore) projectile_read {
 	//
 	// projectiles don't send angles, because they always follow the velocity
 	f = net_read_byte();
-	self.count = (f & 0x80);
+	self.count = (f & 128);
 	self.iflags = (self.iflags & IFLAG_INTERNALMASK);
     if (!self.use_server_angles)
-        self.iflags |= IFLAG_ANGLES | IFLAG_AUTOANGLES;
+        self.iflags |= IFLAG_AUTOANGLES;
 
 	self.solid = SOLID_TRIGGER;
 	//self.effects = EFFECT_NOMODELFLAGS;
 	// this should make collisions with bmodels more exact, but it leads to
 	// projectiles no longer being able to lie on a bmodel
 	self.move_nomonsters = TRACE_MOVE_WORLDONLY;
-	if (f & 0x40)
+	if (f & 64)
 		self.move_flags |= FL_ONGROUND;
 	else
 		self.move_flags &= ~FL_ONGROUND;
@@ -208,29 +208,35 @@ void(float ignore) projectile_read {
 	} else
 		self.move_time = max(self.move_time, time);
 
-	if (!(self.count & 0x80))
-		InterpolateOrigin_Undo();
+	//if (!(self.count & 128))
+	//	interpolate_undo();
 
 	if (f & 1) {
 		self.origin_x = net_read_coord();
 		self.origin_y = net_read_coord();
 		self.origin_z = net_read_coord();
-		if (self.count & 0x80) {
+		if (self.count & 128) {
 			self.velocity_x = net_read_coord();
 			self.velocity_y = net_read_coord();
 			self.velocity_z = net_read_coord();
 			self.gravity = net_read_coord();
-
 			self.move_origin = self.origin;
 			self.move_velocity = self.velocity;
 		}
-		if (time == self.spawntime || (self.count & 0x80)) {
+		if (time == self.spawntime || (self.count & 128)) {
 			self.trail_oldorigin = self.origin;
 		}
-		if (f & 0x20)
-		if not(f & 0x80) {
+		if (f & 32) //teleported
+		if not(f & 128) {
+			vector o = self.origin;
+			self.velocity_x = net_read_short();
+			self.velocity_y = net_read_short();
+			self.velocity_z = net_read_short();
+			self.origin = o - normalize(self.velocity);
 			self.trail_oldorigin = self.origin;
-			InterpolateOrigin_Note();
+			self.velocity = '0 0 0';
+			interpolate_note();
+			self.origin = o;
 		}
 	}
 	if (f & 2) {
@@ -241,7 +247,7 @@ void(float ignore) projectile_read {
 		} else {
 			self.team = 0;
 		}
-		self.silent = (self.cnt & 0x80);
+		self.silent = (self.cnt & 128);
 		self.cnt = (self.cnt & 0x7F);
 		self.scale = 1;
 		switch (self.cnt) {
@@ -394,7 +400,7 @@ void(float ignore) projectile_read {
 		self.server_angles_x = net_read_coord();
 		self.server_angles_y = net_read_coord();
 		self.server_angles_z = net_read_coord();
-		self.iflags &= ~(IFLAG_ANGLES | IFLAG_AUTOANGLES);
+		self.iflags &= ~IFLAG_AUTOANGLES;
 		self.use_server_angles = TRUE;
 	}
 	if (self.gravity) {
@@ -408,8 +414,8 @@ void(float ignore) projectile_read {
 		else if (self.move_movetype == MOVETYPE_BOUNCE)
 			self.move_movetype = MOVETYPE_BOUNCEMISSILE;
 	}
-	if (!(self.count & 0x80))
-		InterpolateOrigin_Note();
+	if (!(self.count & 128))
+		interpolate_note();
 
 	self.draw = projectile_draw;
 	self.entremove = projectile_remove;

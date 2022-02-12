@@ -26,13 +26,13 @@ void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
 }
 
 void(void) zapper_interpolate {
-	InterpolateOrigin_Do();
+	interpolate_do();
 	if (CVAR(chase_active) && !view_spectatee_status && self.sv_entnum == player_localentnum)
 		self.enemy.origin = self.enemy.iorigin2 + (physics_end_origin - physics_start_origin);
 	else {
 		entity e = self;
 		self = self.enemy;
-		InterpolateOrigin_Do();
+		interpolate_do();
 		self = e;
 	}
 }
@@ -153,9 +153,9 @@ void(float t) zapper_read {
         self.origin_x = net_read_coord();
         self.origin_y = net_read_coord();
         self.origin_z = net_read_coord();
-        InterpolateOrigin_Note();
+        interpolate_note();
 		if (sf & 64)
-			InterpolateOrigin_Note();
+			interpolate_note();
 
 		self = e;
     }
@@ -163,9 +163,9 @@ void(float t) zapper_read {
         self.origin_x = net_read_coord();
         self.origin_y = net_read_coord();
         self.origin_z = net_read_coord();
-        InterpolateOrigin_Note();
+        interpolate_note();
 		if (sf & 64)
-			InterpolateOrigin_Note();
+			interpolate_note();
     }
 	if (sf & 8) {
 		self.zapper_akimbo = 1;

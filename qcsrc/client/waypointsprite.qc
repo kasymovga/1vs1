@@ -70,7 +70,7 @@ void(void) waypointsprite_draw {
 		if (CVAR(cl_hidewaypoints))
 			return; // fixed waypoint
 
-	InterpolateOrigin_Do();
+	interpolate_do();
 	t = player_color(player_localentnum - 1);
 	spriteimage = "";
 	// choose the sprite
@@ -229,7 +229,7 @@ void(float ignore) waypointsprite_read {
 
 	self.draw2d = waypointsprite_draw;
 	self.draw2dflag = 1;
-	InterpolateOrigin_Undo();
+	interpolate_undo();
 	if (sendflags & 0x80) {
 		t = net_read_byte();
 		if (t < 192) {
@@ -299,7 +299,7 @@ void(float ignore) waypointsprite_read {
 		self.teamradar_color_y = net_read_byte() / 255.0;
 		self.teamradar_color_z = net_read_byte() / 255.0;
 	}
-	InterpolateOrigin_Note();
+	interpolate_note();
 	self.entremove = waypointsprite_remove;
 }
 

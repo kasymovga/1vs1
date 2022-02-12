@@ -5,7 +5,7 @@ void(void) wall_draw {
 	float f;
 	vector save;
 	var .vector fld;
-	InterpolateOrigin_Do();
+	interpolate_do();
 	if (self.bgmscriptangular)
 		fld = angles;
 	else
@@ -38,7 +38,7 @@ void(void) wall_remove {
 
 void(float ignore) wall_read {
 	float f;
-	InterpolateOrigin_Undo();
+	interpolate_undo();
 	self.iflags = IFLAG_ANGLES;
 	f = net_read_byte();
 	if (f & 1) {
@@ -97,7 +97,7 @@ void(float ignore) wall_read {
 		}
 		BGMScript_InitEntity(self);
 	}
-	InterpolateOrigin_Note();
+	interpolate_note();
 	setorigin(self, self.origin);
 	self.entremove = wall_remove;
 	self.draw = wall_draw;

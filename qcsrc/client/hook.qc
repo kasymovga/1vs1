@@ -11,7 +11,7 @@ void(void) hook_draw {
 	vector a = '0 0 0', b;
 	vector rgb;
 	float t;
-	InterpolateOrigin_Do();
+	interpolate_do();
 	float owner_entnum = self.sv_entnum;
 	if (hook_pull == self) {
 		physics_hook_old_length = hook_pull_length_readed;
@@ -28,7 +28,7 @@ void(void) hook_draw {
 		if (CVAR(chase_active) && !view_spectatee_status && owner_entnum == player_localentnum) {
 			a = self.iorigin2 + (physics_end_origin - physics_start_origin);
 		} else if (self) {
-			InterpolateOrigin_Do();
+			interpolate_do();
 			a = self.origin;
 		}
 		self = e;
@@ -108,9 +108,9 @@ void(float ignore) hook_read {
 		self.origin_x = net_read_coord();
 		self.origin_y = net_read_coord();
 		self.origin_z = net_read_coord();
-		InterpolateOrigin_Note();
+		interpolate_note();
 		if (f & 16)
-			InterpolateOrigin_Note();
+			interpolate_note();
 	}
 	if (f & 8) {
 		entity e = self;
@@ -121,9 +121,9 @@ void(float ignore) hook_read {
 		self.origin_x = net_read_coord();
 		self.origin_y = net_read_coord();
 		self.origin_z = net_read_coord();
-		InterpolateOrigin_Note();
+		interpolate_note();
 		if (f & 16)
-			InterpolateOrigin_Note();
+			interpolate_note();
 
 		self = e;
 	}

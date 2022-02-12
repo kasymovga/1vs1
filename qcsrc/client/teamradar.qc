@@ -381,7 +381,7 @@ void(float big, string title) teamradar_view {
 void(float ignore) teamradar_link_read {
 	float sendflags;
 	sendflags = net_read_byte();
-	InterpolateOrigin_Undo();
+	interpolate_undo();
 	self.iflags = IFLAG_VELOCITY;
 	self.classname = "radarlink";
 	if (sendflags & 1) {
@@ -397,5 +397,5 @@ void(float ignore) teamradar_link_read {
 	if (sendflags & 4) {
 		self.team = net_read_byte();
 	}
-	InterpolateOrigin_Note();
+	interpolate_note();
 }

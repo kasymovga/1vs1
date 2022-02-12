@@ -9,10 +9,10 @@
 #define IFLAG_INTERNALMASK (IFLAG_VALID | IFLAG_PREVALID)
 
 // call this BEFORE reading an entity update
-void InterpolateOrigin_Undo();
+void() interpolate_undo;
 
 // call this AFTER receiving an entity update
-void InterpolateOrigin_Note();
+void() interpolate_note;
 
 // call this BEFORE drawing
-void InterpolateOrigin_Do();
+void() interpolate_do;

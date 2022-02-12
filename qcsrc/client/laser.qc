@@ -13,7 +13,7 @@ void(void) laser_draw {
 	if (!self.state)
 		return;
 
-	InterpolateOrigin_Do();
+	interpolate_do();
 	if (self.count & 0x80) {
 		traceline(self.origin, self.velocity, 0, self);
 	} else {
@@ -39,7 +39,7 @@ void(void) laser_draw {
 
 void(float ignore) laser_read {
 	float f;
-	InterpolateOrigin_Undo();
+	interpolate_undo();
 	// 30 bytes, or 13 bytes for just moving
 	f = net_read_byte();
 	self.count = (f & 0xE0);
@@ -83,6 +83,6 @@ void(float ignore) laser_read {
 	if (f & 4)
 		self.state = net_read_byte();
 
-	InterpolateOrigin_Note();
+	interpolate_note();
 	self.draw = laser_draw;
 }
