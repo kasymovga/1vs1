@@ -388,10 +388,16 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 }
 
 vector monster_move_fly(float _speed, float blend_factor) {
+	float save_g_jetpack_maxspeed_up = g_jetpack_maxspeed_up;
+	float save_g_jetpack_maxspeed_side = g_jetpack_maxspeed_side;
+	g_jetpack_maxspeed_up = _speed;
+	g_jetpack_maxspeed_side = _speed;
 	if (self.bot_strategytime < time) {
 		self.bot_strategytime = time + 1 + random() * 1;
 		monster_set_route();
 	}
+	g_jetpack_maxspeed_up = save_g_jetpack_maxspeed_up;
+	g_jetpack_maxspeed_side = save_g_jetpack_maxspeed_side;
 	vector v;
 	v = monster_get_direction();
 	v_z = v_z + 0.5;
