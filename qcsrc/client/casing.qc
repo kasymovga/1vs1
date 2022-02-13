@@ -37,7 +37,7 @@ void(void) casing_draw {
 
 void(void) casing_touch {
 	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) {
-		casing_delete();
+		self.cnt = time;
 		return;
 	}
 	if (!self.silent)
