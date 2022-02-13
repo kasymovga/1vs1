@@ -107,13 +107,13 @@ void(void) CSQC_Init {
 	team_get(TEAM_COLOR_SPECTATOR, TRUE); // add specs first
 	cvar_clientsettemp("_supports_weaponpriority", "1");
 	weapon_register_weapons();
+	world_get_min_max(1); // try the CLEVER way first
 	waypointsprite_init();
 	projectile_precache();
 	gib_precache();
 	casing_precache();
 	damage_info_precache();
 	warpzone_init();
-	world_get_min_max(1); // try the CLEVER way first
 	map_shortname = mapname;
 	if (!strcasecmp(substring(map_shortname, 0, 5), "maps/"))
 		map_shortname = substring(map_shortname, 5, strlen(map_shortname) - 5);
