@@ -23,13 +23,17 @@ void monster_sound(entity m, string s, float force) {
 }
 
 void monster_set_route() {
-	float f1 = 0, f2 = 0;
+	float f1 = 0, f2 = 0, f3 = 0, f4 = 0;
 	entity p;
 	if (self.items & IT_JETPACK) {
 		f1 = bot_ai_navigation_jetpack;
 		f2 = bot_ai_navigation_jetpack_mindistance;
+		f3 = g_jetpack_maxspeed_up;
+		f4 = g_jetpack_maxspeed_side;
 		bot_ai_navigation_jetpack = TRUE;
 		bot_ai_navigation_jetpack_mindistance = 100;
+		g_jetpack_maxspeed_up = 100; //dummy non-zero values
+		g_jetpack_maxspeed_side = 100;
 	}
 	bot_navigation_movemode = TRACE_MOVE_NORMAL;
 	navigation_clearroute();
@@ -46,6 +50,8 @@ void monster_set_route() {
 	if (self.items & IT_JETPACK) {
 		bot_ai_navigation_jetpack = f1;
 		bot_ai_navigation_jetpack_mindistance = f2;
+		g_jetpack_maxspeed_up = f3;
+		g_jetpack_maxspeed_side = f4;
 	}
 }
 
