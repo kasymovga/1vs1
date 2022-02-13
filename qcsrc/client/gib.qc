@@ -65,29 +65,26 @@ void(float ef, vector org, float explosionspeed, float howmany) gib_blood {
 
 void(void) gib_remove_on_noimpact {
 	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-		gib_remove();
+		self.nextthink = time;
 }
 
 void(void) gib_touch {
 	// TODO maybe bounce of walls, make more gibs, etc.
 	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) {
-		gib_remove();
+		self.nextthink = time;
 		return;
 	}
 	if (!self.silent)
 		sound(self, CHAN_PAIN, strcat("misc/gib_splat0", ftos(floor(prandom() * 4 + 1)), ".wav"), VOL_BASE, ATTN_NORM);
 
 	pointparticles(particleeffectnum(strcat(gib_species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
-	gib_remove();
+	self.nextthink = time;
 }
 
 void(void) gib_draw {
 	vector oldorg;
 	oldorg = self.origin;
 	physics_move_no_match_server();
-	if (wasfreed(self))
-		return;
-
 	self.renderflags = 0;
 	self.alpha = bound(0, self.nextthink - time, 1);
 	if (self.alpha < EFFECT_ALPHA_MIN_VISIBLE)
