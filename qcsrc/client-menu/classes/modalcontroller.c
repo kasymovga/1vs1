@@ -62,6 +62,7 @@ void DialogCloseButton_Click(entity button, entity tab); // assumes a button has
 
 void initializeDialogModalController(entity me, entity root)
 {
+	me.ModalController_initialAlpha = 1;
 	me.hideAll(me, 1);
 	me.showChild(me, root, '0 0 0', '0 0 0', 1); // someone else animates for us
 }
