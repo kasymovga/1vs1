@@ -87,6 +87,15 @@ float(string s) dlc_load_settemps_from {
 						r = 0;
 						break;
 					}
+				} else if (substring(cvar_name, 0, 5) == "date_") {
+					string s1 = cvar_string(cvar_name);
+					string s2 = cvar_value;
+					if (substring(s1, 0, 1) == "0") s1 = substring(s1, 1, -1);
+					if (substring(s2, 0, 1) == "0") s2 = substring(s2, 1, -1);
+					if (s1 != s2) {
+						r = 0;
+						break;
+					}
 				} else if (cvar_string(cvar_name) != cvar_value) {
 					r = 0;
 					break;
