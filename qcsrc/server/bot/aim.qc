@@ -198,7 +198,7 @@ float(vector v, float maxfiredeviation) bot_aim_dir {
 		diffang_y = diffang_y - 360;
 
 	self.bot_olddesiredang = desiredang;
-	delta_t = time-self.bot_prevaimtime;
+	delta_t = max(0.1, time-self.bot_prevaimtime);
 	self.bot_prevaimtime = time;
 	// Here we will try to anticipate the comming aiming direction
 	self.bot_1st_order_aimfilter = self.bot_1st_order_aimfilter + (diffang * (1 / delta_t) - self.bot_1st_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_1st, 1);
