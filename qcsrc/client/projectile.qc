@@ -225,13 +225,15 @@ void(float ignore) projectile_read {
 			self.move_velocity = self.velocity;
 		} else if (f & 32) { //teleported
 			vector o = self.origin;
-			self.velocity_x = net_read_short();
-			self.velocity_y = net_read_short();
-			self.velocity_z = net_read_short();
-			self.origin = o - normalize(self.velocity);
-			self.trail_oldorigin = self.origin;
-			self.velocity = '0 0 0';
-			interpolate_note();
+			float tt = net_read_coord();
+			self.origin_x = net_read_coord();
+			self.origin_y = net_read_coord();
+			self.origin_z = net_read_coord();
+			if (tt != self.teleport_time) {
+				self.trail_oldorigin = self.origin;
+				interpolate_note();
+				self.teleport_time = tt;
+			}
 			self.origin = o;
 		} else if (time == self.spawntime) {
 			self.trail_oldorigin = self.origin;

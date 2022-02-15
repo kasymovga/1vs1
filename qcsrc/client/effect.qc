@@ -75,7 +75,6 @@ void(void) effect_lightningarc_big_read {
 
 .float frame1time;
 .float lifetime, fadetime;
-.float teleport_time;
 .float scale1, scale2;
 
 void(void) effect_model_draw {

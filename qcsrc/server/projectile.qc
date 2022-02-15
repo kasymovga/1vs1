@@ -21,12 +21,13 @@ float() projectile_no_impact_check {
 	return 0;
 }
 
-
 float(entity to, float sf) projectile_send {
 	sf = sf & 31;
 	if (self.teleport_time) {
-		sf |= 32;
-		self.teleport_time = 0;
+		if (self.teleport_time >= time - sys_ticrate * 2)
+			sf |= 32;
+		else
+			self.teleport_time = 0;
 	}
 	if (self.csqcprojectile_clientanimate) {
 		sf &= ~4;
@@ -52,9 +53,10 @@ float(entity to, float sf) projectile_send {
 			net_write_coord(MSG_ENTITY, self.velocity_z);
 			net_write_coord(MSG_ENTITY, self.gravity);
 		} else if (sf & 32) {
-			net_write_short(MSG_ENTITY, self.velocity_x);
-			net_write_short(MSG_ENTITY, self.velocity_y);
-			net_write_short(MSG_ENTITY, self.velocity_z);
+			net_write_coord(MSG_ENTITY, self.teleport_time);
+			net_write_coord(MSG_ENTITY, self.oldorigin_x);
+			net_write_coord(MSG_ENTITY, self.oldorigin_y);
+			net_write_coord(MSG_ENTITY, self.oldorigin_z);
 		}
 	}
 	if (sf & 2) {
@@ -180,8 +182,9 @@ void(entity e) projectile_update_angles {
 void(entity e) projectile_update_after_teleport {
 	if (e.SendEntity == projectile_send) {
 		// send new origin data and mark as teleported
+		e.SendFlags |= 1;
 		e.teleport_time = time;
-		e.SendFlags |= 0x1;
+		e.oldorigin = e.origin - normalize(e.velocity);
 	}
 }
 

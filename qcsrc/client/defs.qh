@@ -10,3 +10,4 @@
 .float armorvalue;
 .vector movedir;
 .vector colormod;
+.float teleport_time;
