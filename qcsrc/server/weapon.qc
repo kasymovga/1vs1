@@ -235,7 +235,7 @@ float(float wpn) weapon_ammo_item_code {
 
 void(void) weapon_thrown_think {
 	self.solid = SOLID_TRIGGER;
-	self.owner = world;
+	self.owner = NULL;
 	entity_fade_setup(self, time + 20, 1);
 }
 
@@ -729,12 +729,12 @@ void(void) weapon_model_think {
 					if (self.weaponentity)
 						remove(self.weaponentity);
 
-					self.weaponentity = world;
+					self.weaponentity = NULL;
 				}
 				setorigin(self,'0 0 0');
 				self.angles = '0 0 0';
 				self.frame = 0;
-				self.viewmodelforclient = world;
+				self.viewmodelforclient = NULL;
 				float idx;
 				idx = weapon_gettagindex(self, "shot");
 				if (idx) {
@@ -772,7 +772,7 @@ void(void) weapon_model_think {
 			if (self.weaponentity)
 				remove(self.weaponentity);
 
-			self.weaponentity = world;
+			self.weaponentity = NULL;
 			self.movedir = '0 0 0';
 			self.spawnorigin = '0 0 0';
 			self.oldorigin = '0 0 0';
@@ -1383,7 +1383,7 @@ vector(vector vecs, float y_is_right, float visual, float _akimbo_active) weapon
 }
 
 void(entity missile) weapon_setup_projectile_velocity {
-	if (missile.owner == world)
+	if not(missile.owner)
 		error("Unowned missile");
 
 	missile.velocity = weapon_calculate_projectile_velocity(missile.owner.velocity, missile.velocity);
