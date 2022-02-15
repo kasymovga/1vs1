@@ -1432,8 +1432,10 @@ void(string modelname) player_setup_lod {
 			remove(self.body.exteriorweaponentity);
 			self.body.exteriorweaponentity = NULL;
 		}
-		remove(self.body.weaponentity);
-		self.body.weaponentity = NULL;
+		if (self.body.weaponentity) {
+			remove(self.body.weaponentity);
+			self.body.weaponentity = NULL;
+		}
 	}
 	s = whichpack(self.body.model);
 	str_unzone_ifneeded(self.body.playermodel);
