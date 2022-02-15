@@ -694,7 +694,7 @@ void(void) weapon_model_think {
 	if (self.cnt != self.owner.weapon || self.deadflag != self.owner.deadflag) {
 		self.cnt = self.owner.weapon;
 		self.deadflag = self.owner.deadflag;
-		if (self.owner.weaponname != "") {
+		if (self.owner.weaponname != "" && self.owner.weapon) {
 			// if there is a child entity, hide it until we're sure we use it
 			if (self.weaponentity)
 				self.weaponentity.model = "";
@@ -798,16 +798,16 @@ void(void) weapon_model_think {
 				makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
 				setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
 			}
-		} else
+		} else {
 			setorigin(self, self.view_ofs);
-
+			anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
+		}
 		// reset animstate now
 		self.weapon_morph0time = 0;
 		self.weapon_morph1time = 0;
 		self.weapon_morph2time = 0;
 		self.weapon_morph3time = 0;
 		self.weapon_morph4time = 0;
-		anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
 	}
 	self.effects = self.realowner.body.effects & (EFFECT_ADDITIVE | EFFECT_RED | EFFECT_BLUE);
 	self.colormap = self.owner.colormap;
