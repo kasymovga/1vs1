@@ -15,8 +15,12 @@ void(entity e) akimbo_ghost_hide {
 	if (self.weaponentity.weaponentity)
 		remove(self.weaponentity.weaponentity);
 
-	remove(self.weaponentity);
-	remove(self.exteriorweaponentity);
+	if (self.weaponentity)
+		remove(self.weaponentity);
+
+	if (self.exteriorweaponentity)
+		remove(self.exteriorweaponentity);
+
 	self.weaponentity = world;
 	self.exteriorweaponentity = world;
 	self = oldself;
@@ -252,9 +256,6 @@ float(entity e) akimbo_active {
 	if not(e2)
 		return 0;
 
-	if not(e2.weaponentity)
-		return 0;
-
 	float n = 2;
 	for ( ; e2; e2 = e2.akimbo_ghost) {
 		if (e2 == e)
@@ -262,6 +263,9 @@ float(entity e) akimbo_active {
 
 		n++;
 	}
+	if not(e2.weaponentity)
+		return 0;
+
 	return 1;
 }
 
