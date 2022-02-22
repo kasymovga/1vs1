@@ -37,7 +37,9 @@ void spectator_copy(entity spectatee) {
 	self.ammo_fuel = spectatee.ammo_fuel;
 	self.effects = spectatee.effects & EFFECT_MASK_CHEAP; // eat performance
 	self.health = spectatee.health;
-	self.impulse = 0;
+	if (self.impulse && !map_finished)
+		self.impulse = 0;
+
 	self.items = spectatee.items;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;

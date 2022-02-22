@@ -84,7 +84,6 @@ void(void) physics_on_crouch_hook {
 	anim_set(self.body, self.anim_duck, FALSE, TRUE, TRUE);
 }
 
-.string lastclassname;
 .float last_maxspeedmod;
 float(void) physics_max_speed_mod {
 	float maxspd_mod, spd;
@@ -95,17 +94,16 @@ float(void) physics_max_speed_mod {
 		if (!self.spectatorspeed)
 			self.spectatorspeed = maxspd_mod;
 
-		if (self.impulse && self.impulse <= 19) {
-			if (self.lastclassname != "player") {
-				if (self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
-					self.spectatorspeed = bound(1, self.spectatorspeed + 0.5, 5);
-				else if (self.impulse == 11)
-					self.spectatorspeed = maxspd_mod;
-				else if (self.impulse == 12 || self.impulse == 16  || self.impulse == 19)
-					self.spectatorspeed = bound(1, self.spectatorspeed - 0.5, 5);
-				else if (self.impulse >= 1 && self.impulse <= 9)
-					self.spectatorspeed = 1 + 0.5 * (self.impulse - 1);
-			} // otherwise just clear
+		if (self.impulse && self.impulse <= 19 && !map_finished) {
+			if (self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
+				self.spectatorspeed = bound(1, self.spectatorspeed + 0.5, 5);
+			else if (self.impulse == 11)
+				self.spectatorspeed = maxspd_mod;
+			else if (self.impulse == 12 || self.impulse == 16  || self.impulse == 19)
+				self.spectatorspeed = bound(1, self.spectatorspeed - 0.5, 5);
+			else if (self.impulse >= 1 && self.impulse <= 9)
+				self.spectatorspeed = 1 + 0.5 * (self.impulse - 1);
+
 			self.impulse = 0;
 		}
 		maxspd_mod = self.spectatorspeed;

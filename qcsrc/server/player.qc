@@ -1938,11 +1938,11 @@ void() player_post_think {
 		bb.armorvalue = self.armorvalue; //for entcs
 		setsize(bb, self.mins, self.maxs);
 	}
+	if (map_intermission_running)
+		return; // intermission or finale
+
 	if (self.impulse)
 		player_impulse();
-
-	if (map_intermission_running)
-		return;		// intermission or finale
 
 	self.pressedkeys = 0;
 	if (self.movement_x > 0)
