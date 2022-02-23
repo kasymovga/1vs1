@@ -217,7 +217,6 @@ void(void) single_init {
 	else
 		builtin_cvar_set("coop", "0");
 
-	player_visual_damage = TRUE;
 	gamehook_map_restart = single_map_restart;
 	gamehook_forbid_specatators = single_forbid_spectators;
 	single_player_equip_handle_next = gamehook_chain_player_equip_handle;

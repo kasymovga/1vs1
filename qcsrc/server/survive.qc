@@ -257,7 +257,6 @@ void survive_init_delayed() {
 }
 
 void survive_init() {
-	player_visual_damage = TRUE;
 	team_teams_set_count(1);
 	survive_map_finished_message = "^3No time left, game finished";
 	precache_sound("domination/claim.wav");

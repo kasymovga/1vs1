@@ -10,6 +10,11 @@ void(void) gametype_init {
 
 		race_init();
 	}
+	if (gametype == GAMETYPE_SINGLE || gametype == GAMETYPE_COOP || gametype == GAMETYPE_SURVIVE) {
+		view_kickangles = TRUE;
+	} else
+		view_kickangles = FALSE;
+
 	if not(main_isdemo) {
 		localcmd("\n_cl_hook_gamestart ", gametype_name(gametype), ";");
 		main_calledhooks |= MAIN_HOOK_START;

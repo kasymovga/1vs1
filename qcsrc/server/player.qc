@@ -1053,14 +1053,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
 		}
 	}
-	if (player_visual_damage) {
-		self.dmg_save = self.dmg_save + save;
-		self.dmg_take = self.dmg_take + _damage;
-		self.dmg_inflictor = spawn(); //inflictor can be removed, so we use temporary entity
-		self.dmg_inflictor.think = stdproc_remove;
-		self.dmg_inflictor.nextthink = time + sys_ticrate * 2;
-		setorigin(self.dmg_inflictor, inflictor.origin);
-	}
+	self.dmg_save = self.dmg_save + save;
+	self.dmg_take = self.dmg_take + _damage;
+	setorigin(self.dmg_inflictor, 0.5 * (inflictor.absmin + inflictor.absmax));
 	if (attacker == self) {
 		// don't reset pushltime for self damage as it may be an attempt to
 		// escape a lava pit or similar
@@ -1636,6 +1631,8 @@ void(entity player) player_to_spec {
 		player_clear(FALSE);
 		player_body_remove();
 		player.classname = "observer";
+		remove(player.dmg_inflictor);
+		player.dmg_inflictor = NULL;
 		if (spectator_block)
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 
@@ -2126,6 +2123,9 @@ void(entity spot) player_spawn {
 	self.oldvelocity = self.velocity;
 	self.waterlevel = 0; //prevent wrong waterlevel handing in server frame for bots
 	self.fire_endtime = -1;
+	if not(self.dmg_inflictor)
+		self.dmg_inflictor = spawn();
+
 	msg_entity = self;
 	self.customizeentityforclient = player_real_customize;
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);

@@ -173,21 +173,24 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		view_fixangle = 0;
 	} else {
 		if (CVAR(cl_recoil)) {
-			if (dmg_take || dmg_save) {
-				float f = (dmg_take + dmg_save) * 0.5;
-				vector v = normalize(view_origin - dmg_origin);
-				if (v != '0 0 0') {
-					view_damage_roll = CVAR(v_kickroll) * (v * view_right) * f;
-					view_damage_pitch = CVAR(v_kickpitch) * (v * view_forward) * f;
-					view_damage_time = CVAR(v_kicktime);
+			if (view_kickangles) {
+				if (dmg_take || dmg_save) {
+					float f = (dmg_take + dmg_save) * 0.5;
+					vector v = normalize(view_origin - dmg_origin);
+					if (v != '0 0 0') {
+						view_damage_roll = CVAR(v_kickroll) * (v * view_right) * f;
+						view_damage_pitch = CVAR(v_kickpitch) * (v * view_forward) * f;
+						view_damage_time = CVAR(v_kicktime);
+					}
+					dmg_take = 0;
+					dmg_save = 0;
 				}
-				dmg_take = 0;
-				dmg_save = 0;
-			}
-			if (view_damage_time && CVAR(v_kicktime)) {
-				float f = view_damage_time / CVAR(v_kicktime);
-				R_SetView(VF_ANGLES, view_angles + view_punchangle + view_damage_pitch * '1 0 0' * f + view_damage_roll * '0 0 1' * f);
-				view_damage_time = max(0, view_damage_time - view_drawframetime);
+				if (view_damage_time && CVAR(v_kicktime)) {
+					float f = view_damage_time / CVAR(v_kicktime);
+					R_SetView(VF_ANGLES, view_angles + view_punchangle + view_damage_pitch * '1 0 0' * f + view_damage_roll * '0 0 1' * f);
+					view_damage_time = max(0, view_damage_time - view_drawframetime);
+				} else
+					R_SetView(VF_ANGLES, view_angles + view_punchangle);
 			} else
 				R_SetView(VF_ANGLES, view_angles + view_punchangle);
 		} else
