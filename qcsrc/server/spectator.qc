@@ -1,13 +1,15 @@
 entity spectator_note;
 
-float Spectator_Note_Customize() {
+#define spectator_note_customize Spectator_Note_Customize //compatibility with old save files
+float(void) spectator_note_customize {
 	if (other.classname == "player")
 		return FALSE;
 
 	return TRUE;
 }
 
-void Spectator_Note_Message() {
+#define spectator_note_message Spectator_Note_Message //compatibility with old save files
+void(void) spectator_note_message {
 	string s = "";
 	if (other.classname == "spectator") {
 		s = strcat("^1Spectating ^7", strreplace("{", "{}", other.enemy.netname), "\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe");
@@ -21,12 +23,7 @@ void Spectator_Note_Message() {
 	self.message = s;
 }
 
-/*
-======================
-spectate mode routines
-======================
-*/
-void spectator_copy(entity spectatee) {
+void(entity spectatee) spectator_copy {
 	gamehook_chain_spectator_copy(spectatee);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
@@ -58,14 +55,14 @@ void spectator_copy(entity spectatee) {
 	setsize(self, spectatee.mins, spectatee.maxs);
 }
 
-float SpectateUpdate() {
-	if(!self.enemy)
+float(void) spectator_update {
+	if not(self.enemy)
 		return 0;
 
 	if (self == self.enemy)
 		return 0;
 
-	if(self.enemy.classname != "player")
+	if (self.enemy.classname != "player")
 		return 0;
 
 	spectator_copy(self.enemy);
@@ -77,7 +74,7 @@ float() spectator_spectate_next {
 	do
 		other = find(other, classname, "player");
 	while (other && self.team > 0 && other.team != self.team);
-	if (!other) {
+	if not(other) {
 		do
 			if (other == self.enemy)
 				break;
@@ -88,7 +85,7 @@ float() spectator_spectate_next {
 	if (other) {
 		self.enemy = other;
 	}
-	if(self.enemy.classname == "player") {
+	if (self.enemy.classname == "player") {
 		client_set_view(self.enemy);
 		self.movetype = MOVETYPE_NONE;
 		spectator_copy(self.enemy);
@@ -104,9 +101,9 @@ void() spectator_think {
 		if (self.BUTTON_JUMP && self.team <= 0) {
 			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
-		} else if(self.BUTTON_ATCK) {
+		} else if (self.BUTTON_ATCK) {
 			self.flags &= ~FL_JUMPRELEASED;
-			if(spectator_spectate_next() == 1) {
+			if (spectator_spectate_next() == 1) {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
@@ -115,15 +112,14 @@ void() spectator_think {
 		} else if (self.BUTTON_ATCK2 && self.team <= 0) {
 			spectator_observer_spawn(FALSE);
 		} else {
-			if(!SpectateUpdate())
+			if not(spectator_update())
 				spectator_observer_spawn(FALSE);
 		}
 	} else {
-		if (!(self.BUTTON_ATCK || self.BUTTON_ATCK2)) {
+		if not(self.BUTTON_ATCK || self.BUTTON_ATCK2) {
 			self.flags |= FL_JUMPRELEASED;
 			if (self.team <= 0)
-			if (self.flags & FL_SPAWNING)
-			{
+			if (self.flags & FL_SPAWNING) {
 				self.flags &= ~FL_SPAWNING;
 				spectator_to_player();
 				return;
@@ -148,17 +144,16 @@ void() spectator_observer_think {
 		if (self.BUTTON_JUMP) {
 			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
-		} else if(self.BUTTON_ATCK) {
+		} else if (self.BUTTON_ATCK) {
 			self.flags &= ~FL_JUMPRELEASED;
-			if(spectator_spectate_next() == 1) {
+			if (spectator_spectate_next() == 1) {
 				self.classname = "spectator";
 			}
 		}
 	} else {
 		if (!(self.BUTTON_ATCK || self.BUTTON_JUMP)) {
 			self.flags |= FL_JUMPRELEASED;
-			if(self.flags & FL_SPAWNING)
-			{
+			if (self.flags & FL_SPAWNING) {
 				self.flags &= ~FL_SPAWNING;
 				spectator_to_player();
 				return;
@@ -168,7 +163,7 @@ void() spectator_observer_think {
 }
 
 void() spectator_to_player {
-	if(client_join_allowed()) {
+	if (client_join_allowed()) {
 		self.parm_idlesince = time;
 		if (gamehook_chain_spectator_to_player_handle())
 			return;
@@ -178,19 +173,19 @@ void() spectator_to_player {
 		if (team1 + team2 + team3 + team4 == -3) {
 			skip_team_select = TRUE;
 		}
-		if ( skip_team_select || !team_mode || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
+		if (skip_team_select || !team_mode || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
 			self.classname = "player";
-			if(g_campaign || g_balance_teams || g_balance_teams_force)
+			if (g_campaign || g_balance_teams || g_balance_teams_force)
 				team_join_best(self, TRUE);
 
-			if(g_campaign)
+			if (g_campaign)
 				campaign_bots_may_start = 1;
 
 			client_put();
-			if(self.classname == "player")
+			if (self.classname == "player")
 				bprint ("^4", self.netname, "^4 is playing now\n");
 
-			if(!g_campaign)
+			if not(g_campaign)
 				centerprint(self,""); // clear MOTD
 
 			return;
@@ -215,7 +210,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	if not(spot)
 		spot = spawn_select(TRUE);
 
-	if(!spot)
+	if not(spot)
 		error("No spawnpoints for observers?!?\n");
 
 	if (frags_team_reset || self.team <= 0)
@@ -281,7 +276,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 
 void() spectator_init {
 	if not(spectator_note) {
-		spectator_note = noteline_new(Spectator_Note_Message);
-		spectator_note.customizeentityforclient = Spectator_Note_Customize;
+		spectator_note = noteline_new(spectator_note_message);
+		spectator_note.customizeentityforclient = spectator_note_customize;
 	}
 }
