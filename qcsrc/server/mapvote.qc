@@ -323,7 +323,6 @@ void() mapvote_tick {
 	float keeptwo;
 	float totalvotes;
 	keeptwo = mapvote_keeptwotime;
-	mapvote_check_rules1(); // count
 	if (mapvote_check_rules2()) // decide
 		return;
 
@@ -344,6 +343,7 @@ void(void) mapvote_impulse {
 	if (mapvote_run && self.impulse >= 1 && self.impulse <= mapvote_count)
 		if (mapvote_maps[self.impulse - 1] != "") {
 			self.mapvote = self.impulse;
+			mapvote_check_rules1(); // just count
 			mapvote_touch_votes(self);
 		}
 }
