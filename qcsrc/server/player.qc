@@ -1941,9 +1941,6 @@ void() player_post_think {
 	if (map_intermission_running)
 		return; // intermission or finale
 
-	if (self.impulse)
-		player_impulse();
-
 	self.pressedkeys = 0;
 	if (self.movement_x > 0)
 		self.pressedkeys |= KEY_FORWARD;

@@ -595,6 +595,16 @@ void(void) client_post_think { //called by engine
 			self.idlekick_lasttimeleft = timeleft;
 		}
 	}
+	if (self.impulse) {
+		if (map_finished) {
+			mapvote_impulse();
+		} else if (self.classname == "player")
+			player_impulse();
+		else if (self.classname == "observer") {
+			spectator_impulse();
+		}
+		self.impulse = 0;
+	}
 	if (self.classname == "player")
 		player_post_think();
 }

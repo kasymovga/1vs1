@@ -89,25 +89,9 @@ float(void) physics_max_speed_mod {
 	float maxspd_mod, spd;
 	string temps;
 	maxspd_mod = gamehook_chain_physics_max_speed_mod();
-	if (self.classname != "player") {
-		maxspd_mod = sv_spectator_speed_multiplier;
-		if (!self.spectatorspeed)
-			self.spectatorspeed = maxspd_mod;
+	if (self.classname != "player")
+		maxspd_mod = self.spectatorspeed * sv_spectator_speed_multiplier;
 
-		if (self.impulse && self.impulse <= 19 && !map_finished) {
-			if (self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
-				self.spectatorspeed = bound(1, self.spectatorspeed + 0.5, 5);
-			else if (self.impulse == 11)
-				self.spectatorspeed = maxspd_mod;
-			else if (self.impulse == 12 || self.impulse == 16  || self.impulse == 19)
-				self.spectatorspeed = bound(1, self.spectatorspeed - 0.5, 5);
-			else if (self.impulse >= 1 && self.impulse <= 9)
-				self.spectatorspeed = 1 + 0.5 * (self.impulse - 1);
-
-			self.impulse = 0;
-		}
-		maxspd_mod = self.spectatorspeed;
-	}
 	spd = max(sv_maxspeed, sv_maxairspeed) * maxspd_mod;
 	if (self.speed != spd) {
 		self.speed = spd;

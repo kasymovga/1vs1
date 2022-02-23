@@ -34,9 +34,6 @@ void(entity spectatee) spectator_copy {
 	self.ammo_fuel = spectatee.ammo_fuel;
 	self.effects = spectatee.effects & EFFECT_MASK_CHEAP; // eat performance
 	self.health = spectatee.health;
-	if (self.impulse && !map_finished)
-		self.impulse = 0;
-
 	self.items = spectatee.items;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
@@ -53,6 +50,19 @@ void(entity spectatee) spectator_copy {
 	self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
+}
+
+void(void) spectator_impulse {
+	if (self.impulse && self.impulse <= 19) {
+		if (self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
+			self.spectatorspeed = bound(1, self.spectatorspeed + 0.5, 5);
+		else if (self.impulse == 11)
+			self.spectatorspeed = 1;
+		else if (self.impulse == 12 || self.impulse == 16  || self.impulse == 19)
+			self.spectatorspeed = bound(1, self.spectatorspeed - 0.5, 5);
+		else if (self.impulse >= 1 && self.impulse <= 9)
+			self.spectatorspeed = 1 + 0.5 * (self.impulse - 1);
+	}
 }
 
 float(void) spectator_update {
@@ -223,6 +233,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.spectatortime = time;
 	self.classname = "observer";
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
+	self.spectatorspeed = 1;
 	self.iscreature = FALSE;
 	self.health = 1;
 	self.takedamage = DAMAGE_NO;
