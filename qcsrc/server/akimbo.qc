@@ -257,8 +257,9 @@ float(entity e) akimbo_active {
 		return 0;
 
 	float n = 2;
-	for ( ; e2; e2 = e2.akimbo_ghost) {
-		if (e2 == e)
+	entity e3 = e2;
+	for ( ; e3; e3 = e3.akimbo_ghost) {
+		if (e3 == e)
 			return n;
 
 		n++;
