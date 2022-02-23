@@ -138,3 +138,5 @@ void		end_sys_fields;			// flag for structure dumping
 //================================================
 noref float pmove_onground;
 noref float intermission;
+float dmg_take, dmg_save;
+vector dmg_origin;

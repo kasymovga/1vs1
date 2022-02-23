@@ -91,3 +91,4 @@ float player_start_ammo_nails;
 float player_start_ammo_rockets;
 float player_start_ammo_cells;
 float player_start_ammo_fuel;
+float player_visual_damage;

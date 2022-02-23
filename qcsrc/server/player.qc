@@ -726,8 +726,6 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
 	o.health = o.health - _damage;
-	self.dmg_take = self.dmg_take + _damage;//max(take - 10, 0);
-	self.dmg_inflictor = inflictor;
 	if (o.health <= -75 && b.modelindex != 0) {
 		violence_gib_splash(self, 1, 1, attacker);
 		if (self == b) { //detached body
@@ -1055,9 +1053,14 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
 		}
 	}
-	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
-	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
-	self.dmg_inflictor = inflictor;
+	if (player_visual_damage) {
+		self.dmg_save = self.dmg_save + save;
+		self.dmg_take = self.dmg_take + _damage;
+		self.dmg_inflictor = spawn(); //inflictor can be removed, so we use temporary entity
+		self.dmg_inflictor.think = stdproc_remove;
+		self.dmg_inflictor.nextthink = time + sys_ticrate * 2;
+		setorigin(self.dmg_inflictor, inflictor.origin);
+	}
 	if (attacker == self) {
 		// don't reset pushltime for self damage as it may be an attempt to
 		// escape a lava pit or similar

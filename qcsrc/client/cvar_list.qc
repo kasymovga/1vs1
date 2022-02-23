@@ -204,5 +204,8 @@ READ_CVARS_SECTION(40, 41)
 	CACHE_CVAR(menu_mouse_speed)
 READ_CVARS_SECTION(41, 0)
 	CACHE_CVAR_DEF(cl_voice, 1)
+	CACHE_CVAR(v_kickroll)
+	CACHE_CVAR(v_kickpitch)
+	CACHE_CVAR(v_kicktime)
 READ_CVARS_END(0)
 
