@@ -160,6 +160,7 @@ void() client_init_spawn {
 void(void) client_parms_new { //called by engine
 	// initialize parms for a new player
 	parm1 = -(86400 * 366);
+	parm2 = 0;
 	gamehook_client_parms_new();
 }
 
@@ -408,7 +409,7 @@ void(void) client_connect { //called by engine
 	}
 	self.playerid = (client_playerid_last = client_playerid_last + 1);
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
-	bprint ("^4", self.netname, "^4 connected\n");
+	bprint ("^4", self.netname, "^4#", ftos(num_for_edict(self)) , " connected\n");
 	stuffcmd(self, strcat(client_stuff, "\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n");
 	client_fix_cvars(self);

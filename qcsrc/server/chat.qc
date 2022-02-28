@@ -255,6 +255,8 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	if (source.muted && source) {
 		// always fake the message
 		sprint(source, sourcemsgstr);
+		if (source.flood_field <= time)
+			print(source.netname, "#", ftos(num_for_edict(self)), " attempted to chat\n");
 	} else if(flood == 1) {
 		if (g_chat_flood_notify_flooder)
 			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
