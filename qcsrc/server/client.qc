@@ -161,6 +161,8 @@ void(void) client_parms_new { //called by engine
 	// initialize parms for a new player
 	parm1 = -(86400 * 366);
 	parm2 = 0;
+	parm3 = 0;
+	parm4 = 0;
 	gamehook_client_parms_new();
 }
 
