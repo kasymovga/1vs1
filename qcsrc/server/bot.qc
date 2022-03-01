@@ -45,9 +45,6 @@ void(void) bot_think {
 		self.bot_nextthink = time + 0.5;
 		return;
 	}
-	self.dmg_take = 0;
-	self.dmg_save = 0;
-	self.dmg_inflictor = world;
 	// calculate an aiming latency based on the skill setting
 	// (simulated network latency + naturally delayed reflexes)
 	// minimum ping 20+10 random
