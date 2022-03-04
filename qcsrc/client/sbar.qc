@@ -1746,13 +1746,8 @@ void(void) sbar_draw {
 		// armor
 		if (armor > 0) {
 			pos = sbar_position(CVAR(sbar_armor_position), '110 32 0' * CVAR(sbar_armor_scale));
-			if (armor > 45) {
-				drawpic(pos + '78 0 0' * CVAR(sbar_armor_scale), "gfx/hud/sb_armor", '32 32 0' * CVAR(sbar_armor_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-				sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_armor_scale), armor, 24 * CVAR(sbar_armor_scale), sbar_alpha_fg);
-			} else {
-				drawpic(pos + '78 0 0' * CVAR(sbar_armor_scale), "gfx/hud/sb_armor", '32 32 0' * CVAR(sbar_armor_scale), '1 1 1', (x+10)/55 * sbar_alpha_fg, DRAWFLAG_NORMAL);
-				sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_armor_scale), armor, 24 * CVAR(sbar_armor_scale), (x+10)/55 * sbar_alpha_fg);
-			}
+			drawpic(pos + '78 0 0' * CVAR(sbar_armor_scale), "gfx/hud/sb_armor", '32 32 0' * CVAR(sbar_armor_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_armor_scale), armor, 24 * CVAR(sbar_armor_scale), sbar_alpha_fg);
 		}
 		// health
 		pos = sbar_position(CVAR(sbar_health_position), '110 32 0' * CVAR(sbar_health_scale));
