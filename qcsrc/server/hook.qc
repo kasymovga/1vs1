@@ -15,6 +15,7 @@ float g_balance_grapplehook_speed_fly;
 float g_balance_grapplehook_onground_pullfactor;
 float g_balance_grapplehook_team_friendly;
 string sv_announcer_extra_hooked;
+float HOOK_ABILITY;
 
 .string aiment_classname;
 .float aiment_deadflag;
@@ -316,7 +317,8 @@ void() hook_player_think {
 	if (PLAYER_DEAD(self))
 		return;
 
-	if (g_grappling_hook && timeout_status != 2 && self.weapon != WEP_HOOK) {
+	float grappling_hook = (g_grappling_hook || (self.abilities & HOOK_ABILITY));
+	if (grappling_hook && timeout_status != 2 && self.weapon != WEP_HOOK) {
 		// offhand hook controls
 		if (button_hook) {
 			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
@@ -336,12 +338,12 @@ void() hook_player_think {
 			self.hook_state |= HOOK_PULLING;
 			//self.hook_state &= ~HOOK_RELEASING;
 		}
-	} else if (!g_grappling_hook && self.switchweapon != WEP_HOOK) {
+	} else if (!grappling_hook && self.switchweapon != WEP_HOOK) {
 		if (button_hook && !self.hook_switchweapon)
 			weapon_switch(WEP_HOOK);
 	}
 	self.hook_switchweapon = button_hook;
-	if (!g_grappling_hook && self.weapon != WEP_HOOK) {
+	if (!grappling_hook && self.weapon != WEP_HOOK) {
 		self.hook_state &= ~HOOK_FIRING;
 		self.hook_state |= HOOK_REMOVING;
 	}
@@ -430,8 +432,35 @@ void(void) hook_entity_pre_spawn {
 	hook_entity_pre_spawn_next();
 }
 
-float hook_init_done;
 entity hook_physics_sender;
+float hook_init_done;
+void(void) hook_init_common {
+	if (hook_init_done)
+		return;
+
+	physics_hook_enable();
+	net_link_entity((hook_physics_sender = spawn()), FALSE, 0, hook_physics_send);
+	hook_init_done = TRUE;
+    precache_model("models/hook.md3");
+	precache_sound("weapons/hook_fire.wav");
+	precache_sound("weapons/hook_impact.wav");
+	hook_client_connect_real_next = gamehook_chain_client_connect_real;
+	gamehook_chain_client_connect_real = hook_client_connect_real;
+	hook_damage_mods_set_next = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = hook_damage_mods_set;
+	hook_player_think_next = gamehook_chain_player_think;
+	gamehook_chain_player_think = hook_player_think;
+	hook_player_clear_next = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = hook_player_clear;
+	hook_entity_pre_spawn_next = gamehook_chain_entity_spawn_pre;
+	gamehook_chain_entity_spawn_pre = hook_entity_pre_spawn;
+}
+
+void(entity e, string args) hook_ability_init {
+	if not(e)
+		hook_init_common();
+}
+
 void(float force) hook_init {
 	CVAR_CACHE(g_balance_grapplehook_airfriction);
 	CVAR_CACHE(g_balance_grapplehook_break_damage);
@@ -454,27 +483,10 @@ void(float force) hook_init {
 	if (sv_announcer_extra_hooked != "")
 		precache_sound(sv_announcer_extra_hooked);
 
-	if not(g_grappling_hook)
-	if not(force)
-		return;
-
-	if (hook_init_done)
-		return;
-
-	physics_hook_enable();
-	net_link_entity((hook_physics_sender = spawn()), FALSE, 0, hook_physics_send);
-	hook_init_done = TRUE;
-    precache_model("models/hook.md3");
-	precache_sound("weapons/hook_fire.wav");
-	precache_sound("weapons/hook_impact.wav");
-	hook_client_connect_real_next = gamehook_chain_client_connect_real;
-	gamehook_chain_client_connect_real = hook_client_connect_real;
-	hook_damage_mods_set_next = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = hook_damage_mods_set;
-	hook_player_think_next = gamehook_chain_player_think;
-	gamehook_chain_player_think = hook_player_think;
-	hook_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = hook_player_clear;
-	hook_entity_pre_spawn_next = gamehook_chain_entity_spawn_pre;
-	gamehook_chain_entity_spawn_pre = hook_entity_pre_spawn;
+	if not(g_grappling_hook) {
+		HOOK_ABILITY = ability_register("hook", hook_ability_init);
+		if not(force)
+			return;
+	}
+	hook_init_common();
 }

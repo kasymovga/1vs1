@@ -139,6 +139,7 @@ casing.qh
 hint.qh
 debris.qh
 thirdview.qh
+ability.qh
 centerprint.qc
 sound.qc
 announce.qc
@@ -350,3 +351,4 @@ rank.qc
 waypoint.qc
 thirdview.qc
 shootingrange.qc
+ability.qc

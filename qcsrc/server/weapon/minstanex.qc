@@ -1,3 +1,4 @@
+float g_balance_minstanex_damage;
 float g_balance_minstanex_animtime;
 float g_balance_minstanex_refire;
 float g_balance_minstanex_explode;
@@ -37,7 +38,7 @@ void(void) weapon_minstanex_attack {
 	damage_yoda = 0;
 	damage_goodhits = 0;
 	damage_headshot = 0;
-	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
+	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, g_balance_minstanex_damage, 800, 0, 0, 0, 0, WEP_MINSTANEX);
 	antilag_end();
 	if (damage_yoda > 1)
 		announce(self, "announcer/male/yoda.wav", "^5Awesome");
@@ -201,6 +202,7 @@ float(float req) weapon_minstanex {
 	} else if (req == WR_RESETPLAYER) {
 		self.minstanex_lasthit = 0;
 	} else if (req == WR_CVAR_CACHE) {
+		CVAR_CACHE(g_balance_minstanex_damage);
 		CVAR_CACHE(g_balance_minstanex_animtime);
 		CVAR_CACHE(g_balance_minstanex_refire);
 		CVAR_CACHE(g_balance_minstanex_explode);

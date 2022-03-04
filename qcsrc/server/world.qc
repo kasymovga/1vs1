@@ -113,6 +113,7 @@ void(void) world_static_init {
 	warfog_init();
 	hint_init();
 	report_init();
+	ability_init();
 }
 
 void(void) world_dynamic_init {
@@ -261,7 +262,7 @@ void(void) world_init {
 	GameTypeVote_Init();
 	world_static_init();
 	world_dynamic_init();
-	nadget_Init();
+	nadget_init();
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");
 	if (bot_waypoints_for_items == 1)

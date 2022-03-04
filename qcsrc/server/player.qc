@@ -2090,13 +2090,6 @@ void(entity spot) player_spawn {
 		self.weapons = player_start_weapons;
 	}
 	self.items = player_start_items;
-	if (!self.switchweapon || !player_hasweapon(self, self.switchweapon, TRUE, FALSE))
-		self.switchweapon = weapon_best(self);
-
-	if (!self.cnt || self.cnt == self.switchweapon || !player_hasweapon(self, self.cnt, TRUE, FALSE)) {
-		self.cnt = weaypon_cycle_get(self, self.cvar_cl_weaponpriority, -1, -1, 0);
-	}
-	self.weapon = 0;
 	self.spawnshieldtime = time + g_spawnshieldtime;
 	self.pauserotarmor_finished = time + g_balance_pause_armor_rot_spawn;
 	self.pauserothealth_finished = time + g_balance_pause_health_rot_spawn;
@@ -2144,7 +2137,6 @@ void(entity spot) player_spawn {
 	self.spawnorigin = spot.origin;
 	self.event_damage = player_damage;
 	self.bot_attack = TRUE;
-	self.statdraintime = time + 5;
 	self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
 	if (self.killcount == -666) {
 		score_clear(self);
@@ -2168,6 +2160,13 @@ void(entity spot) player_spawn {
 			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
 		self.wasplayer = TRUE;
+		if (!self.switchweapon || !player_hasweapon(self, self.switchweapon, TRUE, FALSE))
+			self.switchweapon = weapon_best(self);
+
+		if (!self.cnt || self.cnt == self.switchweapon || !player_hasweapon(self, self.cnt, TRUE, FALSE)) {
+			self.cnt = weaypon_cycle_get(self, self.cvar_cl_weaponpriority, -1, -1, 0);
+		}
+		self.weapon = 0;
 	}
 	entity e;
 	float n = 0;

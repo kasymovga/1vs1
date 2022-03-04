@@ -13,6 +13,13 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers;
 vector physics_frame_begin_origin;
 entity physics_current_player;
 
+float PHYSICS_ABILITIES;
+enum: flag {
+	PHYSICS_ABILITY_WALLJUMP,
+	PHYSICS_ABILITY_DODGING,
+	PHYSICS_ABILITY_DOUBLEJUMP,
+};
+
 float physics_send(entity to, float sf);
 
 void(void) physics_on_jump_hook {
@@ -223,6 +230,32 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 	other = oldother;
 }
 
+float physics_abilities_dodging_save;
+float physics_abilities_walljump_save;
+float physics_abilities_doublejump_save;
+float physics_abilities_saved;
+void(void) physics_abilities_start {
+	float a = self.player_physic.abilities;
+	if (a) {
+		physics_abilities_dodging_save = g_dodging;
+		physics_abilities_walljump_save = g_walljump;
+		physics_abilities_doublejump_save = g_doublejump;
+		g_dodging = (a & PHYSICS_ABILITY_DODGING);
+		g_walljump = (a & PHYSICS_ABILITY_WALLJUMP);
+		g_doublejump = (a & PHYSICS_ABILITY_DOUBLEJUMP);
+		physics_abilities_saved = TRUE;
+	}
+}
+
+void(void) physics_abilities_end {
+	if (physics_abilities_saved) {
+		physics_abilities_saved = FALSE;
+		g_dodging = physics_abilities_dodging_save;
+		g_walljump = physics_abilities_walljump_save;
+		g_doublejump = physics_abilities_doublejump_save;
+	}
+}
+
 void(void) physics_player_pre { //called by engine
 	if (self.player_physic)
 		self.player_physic.SendFlags |= 4;
@@ -302,7 +335,9 @@ void(void) physics_player_pre { //called by engine
 		physics_skimming = max(0, g_skimming_time + self.lastground - time);
 
 	physics_cpmdoublejump_time = self.cpmdoublejump;
+	physics_abilities_start();
 	physics_player();
+	physics_abilities_end();
 	self.frametime_accumulator = physics_frametime_accumulator;
 	if (physics_flags & FL_ONGROUND_OR_SLICK)
 		self.lastground = time;
@@ -388,6 +423,24 @@ void(void) physics_climb_init {
 	physics_climb_init_done = 1;
 	physics_weapon_switch_mod_next = gamehook_chain_weapon_frame_switch_mod;
 	gamehook_chain_weapon_frame_switch_mod = physics_weapon_switch_mod;
+}
+
+void(entity e, string args) physics_ability_init {
+	if (e)
+	if (e.player_physic) {
+		args = strcat(" ", strreplace(",", " ", args), " ");
+		e.player_physic.abilities = 0;
+		if (strstrofs(args, " dodging ", 0) >= 0)
+			e.player_physic.abilities |= PHYSICS_ABILITY_DODGING;
+
+		if (strstrofs(args, " walljump ", 0) >= 0)
+			e.player_physic.abilities |= PHYSICS_ABILITY_WALLJUMP;
+
+		if (strstrofs(args, " doublejump ", 0) >= 0)
+			e.player_physic.abilities |= PHYSICS_ABILITY_DOUBLEJUMP;
+
+		e.player_physic.SendFlags |= 1;
+	}
 }
 
 float physics_initiated;
@@ -495,6 +548,7 @@ void(void) physics_init {
 		gamehook_chain_client_connect_real = physics_client_connect_real;
 		physics_client_disconnect_real_next = gamehook_chain_client_disconnect_real;
 		gamehook_chain_client_disconnect_real = physics_client_disconnect_real;
+		PHYSICS_ABILITIES = ability_register("physics", physics_ability_init);
 		physics_initiated = TRUE;
 	}
 }
@@ -505,6 +559,7 @@ float(entity to, float sf) physics_send {
 	self = self.owner;
 	float dodging_flags = 0, skimming = 0;
 	float sf2 = 0;
+	physics_abilities_start();
 	if not(sf & 3) {
 		if (self.classname == "player") sf |= 8;
 		else if (self.classname == "spectator" && (self.enemy.flags & FL_ONGROUND)) sf |= 16;
@@ -711,6 +766,7 @@ float(entity to, float sf) physics_send {
 			net_write_coord(MSG_ENTITY, self.cpmdoublejump);
 		}
 	}
+	physics_abilities_end();
 	self = oldself;
 	return TRUE;
 }

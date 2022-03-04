@@ -1,3 +1,5 @@
+float NADGET_ABILITY;
+float g_nadgets;
 float g_nadgets_detonate_on_death;
 float g_nadgets_sentry_disown_on_death;
 float g_nadgets_regen_compensate;
@@ -96,9 +98,10 @@ void nadget_ObserverSpawn(void) {
 
 var float() nadget_spectator_to_player_handle_NextLink;
 float nadget_spectator_to_player_handle() {
-	if (nadget_ShowMenu(FALSE))
-		return TRUE;
-
+	if (g_nadgets || (self.abilities & NADGET_ABILITY)) {
+		if (nadget_ShowMenu(FALSE))
+			return TRUE;
+	}
 	return nadget_spectator_to_player_handle_NextLink();
 }
 
@@ -215,11 +218,13 @@ float(float deathtype, entity targ, entity inflictor, entity attacker) nadget_pl
 	return nadget_player_obituary_frag_next(deathtype, targ, inflictor, attacker);
 }
 
-void nadget_Init(void) {
-	if not(cvar("g_nadgets"))
+float nadget_init_done;
+void(void) nadget_init_common {
+	if (nadget_init_done)
 		return;
 
-    CVAR_CACHE(g_nadgets_double);
+	nadget_init_done = TRUE;
+	CVAR_CACHE(g_nadgets_double);
 	CVAR_CACHE(g_nadgets_detonate_on_death);
 	CVAR_CACHE(g_nadgets_sentry_disown_on_death);
 	CVAR_CACHE(g_nadgets_regen_compensate);
@@ -231,20 +236,18 @@ void nadget_Init(void) {
 	CVAR_CACHE(g_nadgets_ammo);
 	CVAR_CACHE(g_nadgets_initial_regen);
 	CVAR_CACHE(g_nadgets_drop_on_death);
-
-    addstat(STAT_HGFORCE, STAT_FLOAT, hg_power);
-    addstat(STAT_HGAMMO, STAT_INT, hg_ammo1);
-    addstat(STAT_HGREGEN, STAT_FLOAT, hg_regentime1);
-    addstat(STAT_HGREGENMAX, STAT_FLOAT, hg_maxregentime1);
-    addstat(STAT_HGREGENPAUSED, STAT_INT, hg_regenpaused1);
-    addstat(STAT_HGREGENRATE, STAT_FLOAT, hg_regenrate1);
-    addstat(STAT_HGDETONABLES, STAT_INT, hg_detonables);
-    addstat(STAT_HGLAUNCH, STAT_FLOAT, hg_launchspeed);
-    addstat(STAT_HGTYPE, STAT_INT, hg_type1);
-    addstat(STAT_HGBONUS, STAT_INT, hg_bonus);
-    addstat(STAT_HGBONUSTYPE, STAT_INT, hg_bonustype);
-    addstat(STAT_HGREFIRE, STAT_FLOAT, hg_next1);
-
+	addstat(STAT_HGFORCE, STAT_FLOAT, hg_power);
+	addstat(STAT_HGAMMO, STAT_INT, hg_ammo1);
+	addstat(STAT_HGREGEN, STAT_FLOAT, hg_regentime1);
+	addstat(STAT_HGREGENMAX, STAT_FLOAT, hg_maxregentime1);
+	addstat(STAT_HGREGENPAUSED, STAT_INT, hg_regenpaused1);
+	addstat(STAT_HGREGENRATE, STAT_FLOAT, hg_regenrate1);
+	addstat(STAT_HGDETONABLES, STAT_INT, hg_detonables);
+	addstat(STAT_HGLAUNCH, STAT_FLOAT, hg_launchspeed);
+	addstat(STAT_HGTYPE, STAT_INT, hg_type1);
+	addstat(STAT_HGBONUS, STAT_INT, hg_bonus);
+	addstat(STAT_HGBONUSTYPE, STAT_INT, hg_bonustype);
+	addstat(STAT_HGREFIRE, STAT_FLOAT, hg_next1);
 	nadget_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = nadget_PlayerClear;
 	nadget_player_can_fire_NextLink = gamehook_chain_player_can_fire;
@@ -265,70 +268,99 @@ void nadget_Init(void) {
 	gamehook_chain_bot_aim = nadget_bot_aim;
 	nadget_player_obituary_frag_next = gamehook_chain_player_obituary_frag;
 	gamehook_chain_player_obituary_frag = nadget_player_obituary_frag;
-    if(g_nadgets_double) {
-        addstat(STAT_HGTYPE2, STAT_INT, hg_type2);
-        addstat(STAT_HGREFIRE2, STAT_FLOAT, hg_next2);
-        addstat(STAT_HGAMMO2, STAT_INT, hg_ammo2);
-        addstat(STAT_HGREGEN2, STAT_FLOAT, hg_regentime2);
-        addstat(STAT_HGREGENMAX2, STAT_FLOAT, hg_maxregentime2);
-        addstat(STAT_HGREGENPAUSED2, STAT_INT, hg_regenpaused2);
-        addstat(STAT_HGREGENRATE2, STAT_FLOAT, hg_regenrate2);
-    }
-
+	if (g_nadgets_double) {
+		addstat(STAT_HGTYPE2, STAT_INT, hg_type2);
+		addstat(STAT_HGREFIRE2, STAT_FLOAT, hg_next2);
+		addstat(STAT_HGAMMO2, STAT_INT, hg_ammo2);
+		addstat(STAT_HGREGEN2, STAT_FLOAT, hg_regentime2);
+		addstat(STAT_HGREGENMAX2, STAT_FLOAT, hg_maxregentime2);
+		addstat(STAT_HGREGENPAUSED2, STAT_INT, hg_regenpaused2);
+		addstat(STAT_HGREGENRATE2, STAT_FLOAT, hg_regenrate2);
+	}
 	CVAR_CACHE(g_nadgets_detonatelaunches);
-
-    #define NADGETDEF(id,shortname,longname,color) nadget_Hook_Init_##shortname();
-    NADGETDEFS
-    #undef NADGETDEF
-	nadget_Precache();
+	#define NADGETDEF(id,shortname,longname,color) nadget_Hook_Init_##shortname();
+	NADGETDEFS
+	#undef NADGETDEF
+	nadget_precache();
 	projectile_register_auto(PROJECTILE_HG_GENERIC, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_NORMAL, "movetype"));
 	projectile_register_auto(PROJECTILE_HG_LASER, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_LASER, "movetype"));
 	projectile_register_auto(PROJECTILE_HG_NAPALM, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_NAPALM, "movetype"));
 	projectile_register_auto(PROJECTILE_HG_PLASMA, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_PLASMA, "movetype"));
 	projectile_register_auto(PROJECTILE_HG_REMOTE, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_REMOTE, "movetype"));
 	projectile_register_auto(PROJECTILE_HG_TRANSLOC, NADGET_SIZE_TRANSLOC * '1 -1 1', GRENVAR(NADGET_TRANSLOC, "movetype"));
-    projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3', GRENVAR(NADGET_RAZE, "movetype"));
-    projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3', MOVETYPE_BOUNCE);
-    nadget_ObserverSpawn_Next = gamehook_chain_observer_spawn;
-    gamehook_chain_observer_spawn = nadget_ObserverSpawn;
+	projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3', GRENVAR(NADGET_RAZE, "movetype"));
+	projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3', MOVETYPE_BOUNCE);
+	nadget_ObserverSpawn_Next = gamehook_chain_observer_spawn;
+	gamehook_chain_observer_spawn = nadget_ObserverSpawn;
 	nadget_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = nadget_PlayerPreThink;
 	nadget_ThrowWeaponHandle_NextLink = gamehook_chain_ThrowWeaponHandle;
 	gamehook_chain_ThrowWeaponHandle = nadget_ThrowWeaponHandle;
-    Napalm_Init();
+	Napalm_Init();
 	hint_add("You can detonate FireTrap of enemy shooting on it");
 	hint_add("Translocator nadget can be used as teleporting or killing enemy shooting directly on enemy");
 	hint_add("You can increase speed using laser nadget, you can jump higher with laser nadget aiming to ground or wall with laser nadget");
 	hint_add("When enemy stand close to FireTrap you will see red indicator indicating");
 }
 
-void nadget_Precache(void) {
+void(entity e, string args) nadget_ability_init {
+	if (e) {
+		if (e.abilities & NADGET_ABILITY) {
+			if not(e.hg_type1) {
+				entity oldself = self;;
+				self = e;
+				if not(nadget_ShowMenu(0))
+					nadget_ResetAmmo(self, FALSE);
+
+				self = oldself;
+			}
+		} else {
+			nadget_RemoveAll(e);
+			e.hg_type1 = 0;
+			e.hg_type2 = 0;
+		}
+	} else
+		nadget_init_common();
+}
+
+void(void) nadget_init {
+	CVAR_CACHE(g_nadgets);
+	if (!g_nadgets)
+		NADGET_ABILITY = ability_register("nadget", nadget_ability_init);
+
+	if not(g_nadgets)
+		return;
+
+	nadget_init_common();
+}
+
+void nadget_precache(void) {
 	heal_init();
 	dlc_require("rm_effects_v2");
 	dlc_require("rm_laser");
 	dlc_require("rm_arc");
 	dlc_require("pryaxe_balls");
 	dlc_require("nadgets");
-    precache_model("models/ctf/shield.md3");
-    precache_model("models/rtzsentry.iqm");
+	precache_model("models/ctf/shield.md3");
+	precache_model("models/rtzsentry.iqm");
 	precache_model("models/ebomb.mdl");
-    precache_sound("kh/alarm.wav");
-    precache_sound("weapons/grenade_bounce1.wav");
-    precache_sound("weapons/grenade_bounce2.wav");
-    precache_sound("weapons/grenade_bounce3.wav");
-    precache_sound("weapons/grenade_bounce4.wav");
-    precache_sound("weapons/grenade_bounce5.wav");
-    precache_sound("weapons/grenade_bounce6.wav");
-    precache_sound("weapons/grenade_fire.wav");
-    precache_sound("weapons/electro_bounce.wav");
-    precache_sound("weapons/rocket_mode.wav");
-    precache_sound("weapons/nexfire.wav");
-    precache_sound("weapons/electro_fire2.wav");
-    precache_sound("weapons/electro_fly.wav");
-    precache_sound("porto/expire.wav");
-    precache_sound("porto/bounce.wav");
-    precache_sound("misc/powerup_shield.wav");
-    precache_sound("misc/powerup.wav");
+	precache_sound("kh/alarm.wav");
+	precache_sound("weapons/grenade_bounce1.wav");
+	precache_sound("weapons/grenade_bounce2.wav");
+	precache_sound("weapons/grenade_bounce3.wav");
+	precache_sound("weapons/grenade_bounce4.wav");
+	precache_sound("weapons/grenade_bounce5.wav");
+	precache_sound("weapons/grenade_bounce6.wav");
+	precache_sound("weapons/grenade_fire.wav");
+	precache_sound("weapons/electro_bounce.wav");
+	precache_sound("weapons/rocket_mode.wav");
+	precache_sound("weapons/nexfire.wav");
+	precache_sound("weapons/electro_fire2.wav");
+	precache_sound("weapons/electro_fly.wav");
+	precache_sound("porto/expire.wav");
+	precache_sound("porto/bounce.wav");
+	precache_sound("misc/powerup_shield.wav");
+	precache_sound("misc/powerup.wav");
 	precache_sound("kh/capture.wav");
 	dlc_precache_sound("misc/gg.wav");
 	dlc_precache_sound("misc/stealth.wav");
@@ -696,6 +728,9 @@ void nadget_PlayerPreThink(void) {
     if(time < map_starttime)
         return;
 
+	if not(g_nadgets || ((self.abilities & NADGET_ABILITY) && self.hg_type1))
+		return;
+
     nadget_Shield_PlayerFrame();
     nadget_Cloak_PlayerFrame();
 	float mayfire = player_can_fire(self, FALSE);
@@ -809,6 +844,9 @@ void nadget_CopyAmmoState(entity src, entity dst) {
 }
 
 void nadget_ResetAmmo(entity p, float clearammo) {
+	if not(g_nadgets || (p.abilities & NADGET_ABILITY)) {
+		return;
+	}
     p.hg_ctx_ammo = (clearammo ? 0 : g_nadgets_ammo);
 
     nadget_SetNadgetType(p, nadget_PlayerNadgetType(p));
@@ -912,9 +950,7 @@ void nadget_Pick(float tokens) {
 	}
 
 	float isplayer = self.classname != "spectator" && self.classname != "observer";
-	//float gamestarted = roundstate == ROUNDSTATE_GAME;
-	//float term = (self.term_authed && !self.term_used);
-	float nr = isplayer && (/*gamestarted || */(self.hg_nadesused && !warmup_active)) /* && !term */;
+	float nr = (self.hg_type1 && isplayer && self.hg_nadesused && !warmup_active);
 
 	float t1 = nadget_NameToType(argv(1));
 	float t2 = nadget_NameToType(argv(2));

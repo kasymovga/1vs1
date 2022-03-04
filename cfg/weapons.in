@@ -108,6 +108,7 @@ set sv_qcweaponanimation 0
 set g_weapon_stay 0 "if set to 1 or 2, weapons stay after they were picked up (1: weapons you don't have yet give you ammo of their type, 2: weapons don't give ammo, but instead players start with one pickup-load of ammo by default, 3: weapons give ammo, weapons only stay as ammo-less ghosts)"
 
 //Minstanex
+set g_balance_minstanex_damage 10000
 set g_balance_minstanex_refire 1
 set g_balance_minstanex_animtime 0.3
 set g_balance_minstanex_ammo 10

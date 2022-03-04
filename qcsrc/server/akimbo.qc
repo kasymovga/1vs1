@@ -141,8 +141,53 @@ float() akimbo_weapon_rate_factor {
 	return f * akimbo_weapon_rate_factor_next();
 }
 
+float akimbo_init_done;
+void(void) akimbo_init_common {
+	float i, j;
+	string s = cvar_string("g_akimbo_weaponratefactor_for");
+	if (s == "all")
+		g_akimbo_weaponratefactor_for = akimbo_supported_weapons;
+	else {
+		float n = tokenize_console(s);
+		for (i = 0; i < n; i++)
+			for (j = WEP_FIRST; j <= WEP_LAST; j++)
+				if (argv(i) == weapon_info(j).netname) {
+					g_akimbo_weaponratefactor_for |= weapon_bit(j);
+					break;
+				}
+	}
+	if (akimbo_init_done)
+		return;
+
+	akimbo_init_done = TRUE;
+	CVAR_CACHE(g_akimbo_animation_shift);
+	CVAR_CACHE(g_akimbo_throwable);
+	CVAR_CACHE(g_akimbo_weaponratefactor);
+	akimbo_player_clear_next = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = akimbo_player_clear;
+	akimbo_weapon_rate_factor_next = gamehook_chain_weapon_rate_factor;
+	gamehook_chain_weapon_rate_factor = akimbo_weapon_rate_factor;
+}
+
+void(entity e, string args) akimbo_ability_init {
+	if (e) {
+		e.akimbo_weapons = 0;
+		args = strreplace(",", " ", args);
+		string wn;
+		entity we;
+		while ((wn = str_car(args)) != "") {
+			args = str_cdr(args);
+			we = weapon_info_by_name(wn);
+			if (we.weapons & akimbo_supported_weapons)
+				e.akimbo_weapons |= we.weapons;
+		}
+	} else
+		akimbo_init_common();
+}
+
 void(void) akimbo_init {
 	float i, j, n;
+	ability_register("akimbo", akimbo_ability_init);
 	string s = cvar_string("g_akimbo_weapons");
 	akimbo_supported_weapons =
 			WEPBIT_LASER |
@@ -175,25 +220,7 @@ void(void) akimbo_init {
 	if not(g_powerup_strength_akimbo)
 		return;
 
-	s = cvar_string("g_akimbo_weaponratefactor_for");
-	if (s == "all")
-		g_akimbo_weaponratefactor_for = akimbo_supported_weapons;
-	else {
-		n = tokenize_console(s);
-		for (i = 0; i < n; i++)
-			for (j = WEP_FIRST; j <= WEP_LAST; j++)
-				if (argv(i) == weapon_info(j).netname) {
-					g_akimbo_weaponratefactor_for |= weapon_bit(j);
-					break;
-				}
-	}
-	CVAR_CACHE(g_akimbo_animation_shift);
-	CVAR_CACHE(g_akimbo_throwable);
-	CVAR_CACHE(g_akimbo_weaponratefactor);
-	akimbo_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = akimbo_player_clear;
-	akimbo_weapon_rate_factor_next = gamehook_chain_weapon_rate_factor;
-	gamehook_chain_weapon_rate_factor = akimbo_weapon_rate_factor;
+	akimbo_init_common();
 }
 
 entity(entity e) akimbo_owner {

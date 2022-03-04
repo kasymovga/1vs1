@@ -1,5 +1,5 @@
-void nadget_Init(void);
-void nadget_Precache(void);
+void nadget_init(void);
+void nadget_precache(void);
 void nadget_SetContext(float isalt);
 void nadget_Attack(void);
 void nadget_ResetState(entity, float);

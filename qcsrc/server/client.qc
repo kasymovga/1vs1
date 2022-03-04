@@ -8,6 +8,8 @@ float sv_maxconnects_per_address;
 float sv_foginterval;
 float g_buttons_hookuse_swap;
 float SP_CLIENTVERSION;
+float CLIENT_ABILITY_HOOKUSESWAP;
+float client_ability_hookuseswap;
 
 void(entity to) client_set_view {
 	if not(clienttype(self) == CLIENTTYPE_REAL)
@@ -524,6 +526,15 @@ void(void) client_check_spectator_block {
 }
 
 void(void) client_pre_think { //called by engine
+	if (client_ability_hookuseswap) {
+		if ((self.abilities & CLIENT_ABILITY_HOOKUSESWAP) || g_buttons_hookuse_swap) {
+			BUTTON_HOOK = buttonuse;
+			BUTTON_USE = button6;
+		} else {
+			BUTTON_HOOK = button6;
+			BUTTON_USE = buttonuse;
+		}
+	}
 	if (frametime) {
 		if (warmup_active)
 			self.stat_map_starttime = time;
@@ -612,6 +623,11 @@ void(void) client_post_think { //called by engine
 		player_post_think();
 }
 
+void(entity e, string args) client_ability_hookuseswap_init {
+	if not(e)
+		client_ability_hookuseswap = TRUE;
+}
+
 void() client_initialize {
 	CVAR_CACHE(g_balance_kill_delay);
 	CVAR_CACHE(g_changeteam_banned);
@@ -633,6 +649,7 @@ void() client_initialize {
 		BUTTON_HOOK = button6;
 		BUTTON_USE = buttonuse;
 	}
+	CLIENT_ABILITY_HOOKUSESWAP = ability_register("hookuseswap", client_ability_hookuseswap_init);
 }
 
 void client_cvars_request() {
