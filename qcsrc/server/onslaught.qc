@@ -623,9 +623,10 @@ void(void) spawnfunc_onslaught_generator {
 		return;
 	}
 	entity e;
-	if (!self.team)
+	if (!self.team) {
 		entity_abort("team must be set");
-
+		return;
+	}
 	team_teams_set_allowed(self.team);
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
@@ -1028,12 +1029,14 @@ void(void) onslaught_link_checkupdate {
 void(void) onslaught_link_delayed {
 	self.goalentity = find(world, targetname, self.target);
 	self.enemy = find(world, targetname, self.target2);
-	if (!self.goalentity)
+	if (!self.goalentity) {
 		entity_abort("can not find target\n");
-
-	if (!self.enemy)
+		return;
+	}
+	if (!self.enemy) {
 		entity_abort("can not find target2\n");
-
+		return;
+	}
 	self.SendFlags |= 3;
 	self.think = onslaught_link_checkupdate;
 	self.nextthink = time;
@@ -1053,9 +1056,10 @@ void(void) spawnfunc_onslaught_link {
 		remove(self);
 		return;
 	}
-	if (self.target == "" || self.target2 == "")
+	if (self.target == "" || self.target2 == "") {
 		entity_abort("target and target2 must be set\n");
-
+		return;
+	}
 	entity_initialize(self, onslaught_link_delayed, INITPRIO_FINDTARGET);
 	net_link_entity(self, FALSE, 0, onslaught_link_send);
 }

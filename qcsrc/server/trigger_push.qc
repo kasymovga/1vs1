@@ -138,7 +138,6 @@ void(void) trigger_push_findtarget {
 		self.enemy = find(world, targetname, self.target);
 		if not(self.enemy) {
 			entity_abort("trigger_push: target not found\n");
-			remove(self);
 			return;
 		}
 		self.enemy.origin = self.enemy.origin + '0 0 1' * cvar("sv_jumppads_target_adjust_height");

@@ -389,9 +389,10 @@ void(void) spawnfunc_trigger_multiple {
 	trigger_solid_brush_init();
 	self.team_saved = self.team;
 	if (self.health) {
-		if (self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH)
+		if (self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH) {
 			entity_abort("health and notouch don't make sense\n");
-
+			return;
+		}
 		self.max_health = self.health;
 		self.event_damage = trigger_multiple_eventdamage;
 		self.takedamage = DAMAGE_YES;
@@ -623,7 +624,6 @@ void(void) trigger_impulse_touch1 {
 	targ = find(world, targetname, self.target);
 	if (!targ) {
 		entity_abort("trigger_force without a (valid) .target!\n");
-		remove(self);
 		return;
 	}
 	if (self.falloff == 1)
@@ -1321,8 +1321,10 @@ void(void) trigger_relay_ifstate_init {
 			break;
 		}
 	}
-	if (!self.enemy)
+	if (!self.enemy) {
 		entity_abort("trigger_relay_ifstate does not point to a valid state entity");
+		return;
+	}
 }
 
 void(void) spawnfunc_trigger_relay_ifstate {

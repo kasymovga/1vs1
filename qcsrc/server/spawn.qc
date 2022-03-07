@@ -14,9 +14,10 @@ void() spawn_relocate {
 		o = self.origin;
 		self.mins = PL_MIN;
 		self.maxs = PL_MAX;
-		if (!entity_move_out_of_solid(self))
+		if (!entity_move_out_of_solid(self)) {
 			entity_abort("could not get out of solid at all!");
-
+			return;
+		}
 		print("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
 		print(" needs to be moved out of solid, e.g. by '", ftos(self.origin_x - o_x));
 		print(" ", ftos(self.origin_y - o_y));
