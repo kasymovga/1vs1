@@ -447,9 +447,10 @@ void(void) func_calc_move_done {
 void(vector tdest, float tspeed, void() func) func_calc_move {
 	vector delta;
 	float traveltime;
-	if (!tspeed)
+	if (!tspeed) {
 		entity_abort("No speed is defined!");
-
+		return;
+	}
 	self.think1 = func;
 	self.finaldest = tdest;
 	self.think = func_calc_move_done;
@@ -483,9 +484,10 @@ void(vector destangle, float tspeed, void() func) func_calc_angle_move {
 	vector delta;
 	float traveltime;
 
-	if (!tspeed)
+	if (!tspeed) {
 		entity_abort("No speed is defined!");
-
+		return;
+	}
 	// take the shortest distance for the angles
 	self.angles_x -= 360 * floor((self.angles_x - destangle_x) / 360 + 0.5);
 	self.angles_y -= 360 * floor((self.angles_y - destangle_y) / 360 + 0.5);
@@ -612,16 +614,19 @@ void(void) func_plat_crush {
 			func_plat_go_down ();
 		else if (self.state == 3)
 			func_plat_go_up ();
-		else
-			entity_abort("func_plat_crush: bad self.state\n");
+		else {
+			backtrace("func_plat_crush: bad self.state\n");
+			return;
+		}
 	}
 }
 
 void(void) func_plat_use {
 	self.use = stdproc_nothing;
-	if (self.state != 4)
-		entity_abort("func_plat_use: not in up state");
-
+	if (self.state != 4) {
+		backtrace("func_plat_use: not in up state");
+		return;
+	}
 	func_plat_go_down();
 }
 
@@ -785,16 +790,17 @@ void(void) spawnfunc_func_train {
 	if (self.noise != "")
 		precache_sound(self.noise);
 
-	if (!self.target)
+	if (!self.target) {
 		entity_abort("func_train without a target");
-
+		return;
+	}
 	if (!self.speed)
 		self.speed = 100;
 
 	if not(func_moving_brush_init())
 		return;
-	self.effects |= EFFECT_LOWPRECISION;
 
+	self.effects |= EFFECT_LOWPRECISION;
 	// wait for targets to spawn
 	entity_initialize(self, func_train_find, INITPRIO_SETLOCATION);
 	self.blocked = func_generic_plat_blocked;
@@ -1166,9 +1172,10 @@ void(void) func_door_go_up {
 void(void) func_door_fire {
 	entity oself;
 	entity starte;
-	if (self.owner != self)
-		entity_abort("func_door_fire: self.owner != self");
-
+	if (self.owner != self) {
+		backtrace("func_door_fire: self.owner != self");
+		return;
+	}
 	oself = self;
 	if (self.spawnflags & DOOR_TOGGLE) {
 		if (self.state == FUNC_STATE_UP || self.state == FUNC_STATE_TOP) {
@@ -2008,9 +2015,10 @@ void(void) func_vectormamamam_findtarget {
 	if (self.target4 != "")
 		self.wp03 = find(world, targetname, self.target4);
 
-	if (!self.wp00 && !self.wp01 && !self.wp02 && !self.wp03)
+	if (!self.wp00 && !self.wp01 && !self.wp02 && !self.wp03) {
 		entity_abort("No reference entity found, so there is nothing to move. Aborting.");
-
+		return;
+	}
 	self.destvec = self.origin - func_vectormamamam_origin(self.owner, 0);
 	entity controller;
 	controller = spawn();
