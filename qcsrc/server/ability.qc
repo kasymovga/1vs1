@@ -104,8 +104,6 @@ float(void) ability_spectator_to_player_handle {
 		if (clienttype(self) == CLIENTTYPE_REAL) {
 			ability_class_menu(self);
 			return TRUE;
-		} else {
-			self.ability_class = 1;
 		}
 	}
 	return ability_spectator_to_player_handle_next();
@@ -113,6 +111,9 @@ float(void) ability_spectator_to_player_handle {
 
 var void(entity spot) ability_player_spawn_next;
 void(entity spot) ability_player_spawn {
+	if (!self.ability_class)
+		self.ability_class = floor(random() * ability_classes_count) + 1;
+
 	ability_class_init(self, ability_class_values[self.ability_class - 1]);
 	ability_player_spawn_next(spot);
 }
