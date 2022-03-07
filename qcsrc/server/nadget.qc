@@ -905,14 +905,17 @@ string nadget_SelectableTypes(float issecondary) {
 }
 
 void nadget_WriteNadgetSelect(void) {
-    msg_entity = self;
-    net_write_byte(MSG_ONE, SVC_TEMPENTITY);
-    net_write_byte(MSG_ONE, NET_TE_CSQC_NADGETSELECT);
-    net_write_byte(MSG_ONE, g_nadgets_double);
-    net_write_string(MSG_ONE, nadget_SelectableTypes(FALSE));
-
-    if(g_nadgets_double)
-        net_write_string(MSG_ONE, nadget_SelectableTypes(TRUE));
+	if (!g_nadgets && !(self.abilities & NADGET_ABILITY)) {
+		centerprint(self, "You don't have nadget ability\n");
+		return;
+	}
+	msg_entity = self;
+	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+	net_write_byte(MSG_ONE, NET_TE_CSQC_NADGETSELECT);
+	net_write_byte(MSG_ONE, g_nadgets_double);
+	net_write_string(MSG_ONE, nadget_SelectableTypes(FALSE));
+	if (g_nadgets_double)
+		net_write_string(MSG_ONE, nadget_SelectableTypes(TRUE));
 }
 
 float nadget_ShowMenu(float always) {
