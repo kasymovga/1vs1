@@ -146,6 +146,7 @@ void(void) vehicle_bigwheel_think {
 		}
 		physics_move();
 		self.velocity = physics_velocity;
+		self.waterlevel = physics_waterlevel;
 	}
 	self.nextthink = time;
 	makevectors(self.angles);

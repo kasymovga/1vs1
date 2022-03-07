@@ -58,5 +58,6 @@ float(void) physics_car {
 	physics_velocity = self.velocity;
 	physics_move();
 	self.velocity = physics_velocity;
-    return 1;
+	self.waterlevel = physics_waterlevel;
+	return 1;
 }

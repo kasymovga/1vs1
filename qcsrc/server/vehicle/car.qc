@@ -143,6 +143,7 @@ void(void) vehicle_car_think {
 		}
 		physics_move();
 		self.velocity = physics_velocity;
+		self.waterlevel = physics_waterlevel;
 	}
 	self.nextthink = time;
 }
