@@ -801,6 +801,10 @@ void(void) spawnfunc_item_armor_medium {
 		remove(self);
 		return;
 	}
+	if (g_pickup_armormedium <= g_pickup_armorsmall) {
+		spawnfunc_item_armor_small();
+		return;
+	}
 	hint_add("Collect armor to stay alive longer.");
 	self.armorvalue = g_pickup_armormedium;
 	self.max_armorvalue = g_pickup_armormedium_max;
@@ -812,6 +816,10 @@ void(void) spawnfunc_item_armor_big {
 		remove(self);
 		return;
 	}
+	if (g_pickup_armorbig <= g_pickup_armormedium) {
+		spawnfunc_item_armor_medium();
+		return;
+	}
 	hint_add("Collect armor to stay alive longer.");
 	self.armorvalue = g_pickup_armorbig;
 	self.max_armorvalue = g_pickup_armorbig_max;
@@ -821,6 +829,10 @@ void(void) spawnfunc_item_armor_big {
 void(void) spawnfunc_item_armor_large {
 	if (g_pickup_armorlarge <= 0) {
 		remove(self);
+		return;
+	}
+	if (g_pickup_armorlarge <= g_pickup_armorbig) {
+		spawnfunc_item_armor_big();
 		return;
 	}
 	hint_add("Collect armor to stay alive longer.");
@@ -844,6 +856,10 @@ void(void) spawnfunc_item_health_medium {
 		remove(self);
 		return;
 	}
+	if (g_pickup_healthlarge <= g_pickup_healthsmall) {
+		spawnfunc_item_health_small();
+		return;
+	}
 	self.max_health = g_pickup_healthmedium_max;
 	self.health = g_pickup_healthmedium;
 	item_start(sv_model_healthmedium, "models/items/g_h25.md3", "misc/mediumhealth.wav", g_pickup_respawntime_healthmedium, g_pickup_respawntimejitter_healthmedium, "25 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
@@ -854,6 +870,10 @@ void(void) spawnfunc_item_health_large {
 		remove(self);
 		return;
 	}
+	if (g_pickup_healthlarge <= g_pickup_healthmedium) {
+		spawnfunc_item_health_medium();
+		return;
+	}
 	self.max_health = g_pickup_healthlarge_max;
 	self.health = g_pickup_healthlarge;
 	item_start(sv_model_healthlarge, "models/items/g_h50.md3", "misc/mediumhealth.wav", g_pickup_respawntime_healthlarge, g_pickup_respawntimejitter_healthlarge, "50 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
@@ -862,6 +882,10 @@ void(void) spawnfunc_item_health_large {
 void(void) spawnfunc_item_health_mega {
 	if (g_pickup_healthmega <= 0) {
 		remove(self);
+		return;
+	}
+	if (g_pickup_healthmega <= g_pickup_healthlarge) {
+		spawnfunc_item_health_large();
 		return;
 	}
 	hint_add("Collect extra health to stay alive longer.");
