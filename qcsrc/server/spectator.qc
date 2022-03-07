@@ -184,6 +184,7 @@ void() spectator_to_player {
 			skip_team_select = TRUE;
 		}
 		if (skip_team_select || !team_mode || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
+			self.dmg_inflictor = NULL;
 			self.classname = "player";
 			if (g_campaign || g_balance_teams || g_balance_teams_force)
 				team_join_best(self, TRUE);
