@@ -536,20 +536,22 @@ void nadget_SetNadgetType(entity p, float t) {
 }
 
 void nadget_FadeOut_Think(void) {
-    self.alpha = approach(self.alpha, 0, frametime);
-    if(self.classname == "hg_linker")
-        self.enemy.alpha = self.alpha * 0.5;
+	self.alpha = approach(self.alpha, 0, frametime);
+	if (self.classname == "hg_linker")
+		self.enemy.alpha = self.alpha * 0.5;
 
-    if(!self.alpha) {
-        if(self.classname == "hg_linker") {
-            remove(self.enemy);
-            remove(self);
-        } else
-            nadget_GenericProjectile_Remove();
-        return;
-    }
+	if (!self.alpha) {
+		if (self.classname == "hg_linker") {
+			if (self.enemy);
+				remove(self.enemy);
 
-    self.nextthink = time;
+			remove(self);
+		} else
+			nadget_GenericProjectile_Remove();
+
+		return;
+	}
+	self.nextthink = time;
 }
 
 void nadget_FadeOut(entity n) {
