@@ -1,0 +1,17 @@
+set mixed_arts_g_ability_class0_name "Rifle warrior"
+set mixed_arts_g_ability_class0_value "physics=dodging,walljump armor=50 weapons=campingrifle nadget=normal hookuseswap"
+set mixed_arts_g_ability_class1_name "Weapon master"
+set mixed_arts_g_ability_class1_value "armor=100 weapons=laser,shotgun,rocketlauncher,grenadelauncher,nex,uzi,crylink,electro,hagar"
+set mixed_arts_g_ability_class2_name "Minstagiber"
+set mixed_arts_g_ability_class2_value "health=100 weapons=minstanex hook"
+set mixed_arts_g_ability_class3_name "Double-rocket"
+set mixed_arts_g_ability_class3_value "health=100 weapons=rocketlauncher akimbo=rocketlauncher"
+set mixed_arts_g_ability_class3_name "Double-laser"
+set mixed_arts_g_ability_class3_value "health=100 armor=50 weapons=laser akimbo=laser"
+set mixed_arts_g_use_ammunition 0
+set mixed_arts_g_pickup_items 0
+set mixed_arts_g_pickup_weapons 0
+set mixed_arts_g_pickup_nodrop 1
+set mixed_arts_g_balance_minstanex_damage 80
+set mixed_arts_g_balance_minstanex_refire 0.6
+set mixed_arts_g_balance_minstanex_laser_damage 0
