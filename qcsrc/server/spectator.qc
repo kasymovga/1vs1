@@ -117,6 +117,7 @@ void() spectator_think {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
+				self.dmg_inflictor = NULL;
 				client_put();
 			}
 		} else if (self.BUTTON_ATCK2 && self.team <= 0) {
