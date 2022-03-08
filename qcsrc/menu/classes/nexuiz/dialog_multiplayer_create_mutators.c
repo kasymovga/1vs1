@@ -6,7 +6,7 @@ CLASS(NexuizMutatorsDialog) EXTENDS(NexuizDialog)
 	METHOD(NexuizMutatorsDialog, close, void(entity))
 	ATTRIB(NexuizMutatorsDialog, title, string, _("Mutators"))
 	ATTRIB(NexuizMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
-	ATTRIB(NexuizMutatorsDialog, intendedWidth, float, 0.4)
+	ATTRIB(NexuizMutatorsDialog, intendedWidth, float, 0.3)
 	ATTRIB(NexuizMutatorsDialog, rows, float, 10)
 	ATTRIB(NexuizMutatorsDialog, columns, float, 4)
 	ATTRIB(NexuizMutatorsDialog, refilterEntity, entity, NULL)
@@ -25,6 +25,8 @@ string profileDescriptionNexuizMutatorsDialog(string profile_name) {
 	if (profile_name == "cra") return "Camping Rifle Arena";
 	if (profile_name == "explosive_minsta") return "Explosive Minsta+Hook";
 	if (profile_name == "defragcpm") return "Defrag CPM";
+	if (profile_name == "overkill") return "OverKill";
+	if (profile_name == "mixed_arts") return "Mixed Arts";
 	return "Unknown";
 }
 
@@ -46,6 +48,10 @@ void fillNexuizMutatorsDialog(entity me) {
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "explosive_minsta", profileDescriptionNexuizMutatorsDialog("explosive_minsta")));
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "cra", profileDescriptionNexuizMutatorsDialog("cra")));
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "overkill", profileDescriptionNexuizMutatorsDialog("overkill")));
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "mixed_arts", profileDescriptionNexuizMutatorsDialog("mixed_arts")));
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "defragcpm", profileDescriptionNexuizMutatorsDialog("defragcpm")));
 
