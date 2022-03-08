@@ -108,8 +108,11 @@ void(entity bb) player_body_spawn {
 	self.body.owner = self;
 	chat_bubble_spawn();
 	if not(self.dmg_inflictor)
-	if (clienttype(self) == CLIENTTYPE_REAL)
+	if (clienttype(self) == CLIENTTYPE_REAL) {
 		self.dmg_inflictor = spawn();
+		self.dmg_inflictor.classname = "dmg_inflictor";
+		self.dmg_inflictor.owner = self;
+	}
 
 }
 
@@ -123,8 +126,12 @@ void(void) player_body_remove {
 		remove(self.body);
 		self.body = world;
 	}
-	if (self.dmg_inflictor){
-		remove(self.dmg_inflictor);
+	if (self.dmg_inflictor) {
+		if (self.dmg_inflictor.classname == "dmg_inflictor") {
+			remove(self.dmg_inflictor);
+		} else {
+			print("wrong dmg_inflictor for ", self.netname, "\n");
+		}
 		self.dmg_inflictor = NULL;
 	}
 }
@@ -1064,7 +1071,11 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (self.dmg_inflictor) {
 		self.dmg_save = self.dmg_save + save;
 		self.dmg_take = self.dmg_take + _damage;
-		setorigin(self.dmg_inflictor, 0.5 * (inflictor.absmin + inflictor.absmax));
+		if (self.dmg_inflictor.classname == "dmg_inflictor") {
+			setorigin(self.dmg_inflictor, 0.5 * (inflictor.absmin + inflictor.absmax));
+		} else {
+			print("wrong dmg_inflictor for ", self.netname, "\n");
+		}
 	}
 	if (attacker == self) {
 		// don't reset pushltime for self damage as it may be an attempt to
