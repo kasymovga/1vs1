@@ -89,6 +89,22 @@ float sv_clforceplayermodels;
 float(void) player_customize;
 float(void) player_body_customize;
 
+void(void) player_dmg_inflictor_fix {
+	entity e;
+	for (e = find(NULL, classname, "dmg_inflictor"); (e = find(e, classname, "dmg_inflictor")); ) {
+		if (e.owner.dmg_inflictor != e) {
+			print("wrong dmg_inflictor removed\n");
+			remove(e);
+		}
+	}
+	FOR_EACH_PLAYER(e)
+		if (e.dmg_inflictor && e.dmg_inflictor.classname != "dmg_inflictor") {
+			e.dmg_inflictor = spawn();
+			e.dmg_inflictor.classname = "dmg_inflictor";
+			e.dmg_inflictor.owner = e;
+		}
+}
+
 void(entity bb) player_body_spawn {
 	self.body = spawn();
 	self.body.customizeentityforclient = player_body_customize;
@@ -129,10 +145,11 @@ void(void) player_body_remove {
 	if (self.dmg_inflictor) {
 		if (self.dmg_inflictor.classname == "dmg_inflictor") {
 			remove(self.dmg_inflictor);
+			self.dmg_inflictor = NULL;
 		} else {
-			print("wrong dmg_inflictor for ", self.netname, "\n");
+			self.dmg_inflictor = NULL;
+			player_dmg_inflictor_fix();
 		}
-		self.dmg_inflictor = NULL;
 	}
 }
 
@@ -1074,7 +1091,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		if (self.dmg_inflictor.classname == "dmg_inflictor") {
 			setorigin(self.dmg_inflictor, 0.5 * (inflictor.absmin + inflictor.absmax));
 		} else {
-			print("wrong dmg_inflictor for ", self.netname, "\n");
+			print("player_damage: wrong dmg_inflictor\n");
+			player_dmg_inflictor_fix();
 		}
 	}
 	if (attacker == self) {
