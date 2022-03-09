@@ -98,7 +98,7 @@ void(void) player_dmg_inflictor_fix {
 		}
 	}
 	FOR_EACH_PLAYER(e)
-		if (e.dmg_inflictor && e.dmg_inflictor.classname != "dmg_inflictor") {
+		if (e.dmg_inflictor && (e.dmg_inflictor.classname != "dmg_inflictor" || e.dmg_inflictor.owner != e || wasfreed(e.dmg_inflictor))) {
 			e.dmg_inflictor = spawn();
 			e.dmg_inflictor.classname = "dmg_inflictor";
 			e.dmg_inflictor.owner = e;
@@ -123,7 +123,7 @@ void(entity bb) player_body_spawn {
 	setattachment(self.body, bb, "");
 	self.body.owner = self;
 	chat_bubble_spawn();
-	if (!self.dmg_inflictor || self.dmg_inflictor.classname != "dmg_inflictor" || self.dmg_inflictor.owner != self)
+	if (!self.dmg_inflictor || self.dmg_inflictor.classname != "dmg_inflictor" || self.dmg_inflictor.owner != self || wasfreed(self.dmg_inflictor))
 	if (clienttype(self) == CLIENTTYPE_REAL) {
 		self.dmg_inflictor = spawn();
 		self.dmg_inflictor.classname = "dmg_inflictor";
@@ -143,7 +143,7 @@ void(void) player_body_remove {
 		self.body = world;
 	}
 	if (self.dmg_inflictor) {
-		if (self.dmg_inflictor.classname == "dmg_inflictor" && !wasfreed(self.dmg_inflictor)) {
+		if (self.dmg_inflictor.classname == "dmg_inflictor" && self.dmg_inflictor.owner == self && !wasfreed(self.dmg_inflictor)) {
 			remove(self.dmg_inflictor);
 			self.dmg_inflictor = NULL;
 		} else {
@@ -1091,7 +1091,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		if (self.dmg_inflictor.classname == "dmg_inflictor") {
 			setorigin(self.dmg_inflictor, 0.5 * (inflictor.absmin + inflictor.absmax));
 		} else {
-			print("player_damage: wrong dmg_inflictor\n");
+			print("player_damage:", self.netname," have wrong dmg_inflictor\n");
 			player_dmg_inflictor_fix();
 		}
 	}
