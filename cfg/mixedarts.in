@@ -39,3 +39,4 @@ set mixed_arts_g_weaponreplace_tuba armor_small
 set mixed_arts_g_weaponreplace_laser armor_small
 set mixed_arts_g_weaponreplace_porto armor_small
 set mixed_arts_g_weaponreplace_hook armor_small
+set mixed_arts_g_balance_grapplehook_damage_interval 0.1
