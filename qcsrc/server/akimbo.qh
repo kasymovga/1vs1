@@ -3,7 +3,6 @@ void(void) akimbo_weapon_frame;
 void(void) akimbo_init;
 entity(entity e) akimbo_owner;
 float g_powerup_strength_akimbo;
-float g_akimbo_animation_shift;
 float(entity p, float wpn, string name) akimbo_weapon_give;
 float(entity e, float wpn, float deep) akimbo_weapon_have;
 float(entity e) akimbo_active;

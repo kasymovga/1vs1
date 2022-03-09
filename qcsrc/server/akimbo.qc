@@ -160,7 +160,6 @@ void(void) akimbo_init_common {
 		return;
 
 	akimbo_init_done = TRUE;
-	CVAR_CACHE(g_akimbo_animation_shift);
 	CVAR_CACHE(g_akimbo_throwable);
 	CVAR_CACHE(g_akimbo_weaponratefactor);
 	akimbo_player_clear_next = gamehook_chain_player_clear;
