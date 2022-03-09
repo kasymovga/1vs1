@@ -123,7 +123,7 @@ void(entity bb) player_body_spawn {
 	setattachment(self.body, bb, "");
 	self.body.owner = self;
 	chat_bubble_spawn();
-	if not(self.dmg_inflictor)
+	if (!self.dmg_inflictor || self.dmg_inflictor.classname != "dmg_inflictor" || self.dmg_inflictor.owner != self)
 	if (clienttype(self) == CLIENTTYPE_REAL) {
 		self.dmg_inflictor = spawn();
 		self.dmg_inflictor.classname = "dmg_inflictor";
@@ -143,7 +143,7 @@ void(void) player_body_remove {
 		self.body = world;
 	}
 	if (self.dmg_inflictor) {
-		if (self.dmg_inflictor.classname == "dmg_inflictor") {
+		if (self.dmg_inflictor.classname == "dmg_inflictor" && !wasfreed(self.dmg_inflictor)) {
 			remove(self.dmg_inflictor);
 			self.dmg_inflictor = NULL;
 		} else {
