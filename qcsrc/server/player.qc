@@ -123,11 +123,13 @@ void(entity bb) player_body_spawn {
 	setattachment(self.body, bb, "");
 	self.body.owner = self;
 	chat_bubble_spawn();
-	if (!self.dmg_inflictor || self.dmg_inflictor.classname != "dmg_inflictor" || self.dmg_inflictor.owner != self || wasfreed(self.dmg_inflictor))
-	if (clienttype(self) == CLIENTTYPE_REAL) {
-		self.dmg_inflictor = spawn();
-		self.dmg_inflictor.classname = "dmg_inflictor";
-		self.dmg_inflictor.owner = self;
+	if (!self.dmg_inflictor || self.dmg_inflictor.classname != "dmg_inflictor" || self.dmg_inflictor.owner != self || wasfreed(self.dmg_inflictor)) { //spectator copy dmg_inflictor, so we need extra checks here
+		if (clienttype(self) == CLIENTTYPE_REAL) {
+			self.dmg_inflictor = spawn();
+			self.dmg_inflictor.classname = "dmg_inflictor";
+			self.dmg_inflictor.owner = self;
+		} else
+			self.dmg_inflictor = NULL;
 	}
 
 }
