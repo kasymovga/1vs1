@@ -340,7 +340,7 @@ void nadget_precache(void) {
 	dlc_require("rm_laser");
 	dlc_require("rm_arc");
 	dlc_require("pryaxe_balls");
-	dlc_require("nadgets");
+	dlc_require("nadgets_v3");
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/rtzsentry.iqm");
 	precache_model("models/ebomb.mdl");
