@@ -14,7 +14,7 @@ set fraglimit_max 50
 set fraglimit_min 5
 set fraglimit_increment 5
 set fraglimit_decrement 5
-set g_profile "" "Config profile prefix, currently available: akimbo, cra, minsta, explosive_minsta, duel"
+set g_profile "" "Config profile prefix, currently available: akimbo, bestakimbo, bestdef, cra, minsta, explosive_minsta, overkill, duel, mixed_arts"
 set g_voice_flood_spv 20
 set skill_auto_min 10
 set skill_auto_max 30
