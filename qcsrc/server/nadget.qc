@@ -847,6 +847,8 @@ void nadget_CopyAmmoState(entity src, entity dst) {
 
 void nadget_ResetAmmo(entity p, float clearammo) {
 	if not(g_nadgets || (p.abilities & NADGET_ABILITY)) {
+		p.hg_type1 = 0;
+		p.hg_type2 = 0;
 		return;
 	}
     p.hg_ctx_ammo = (clearammo ? 0 : g_nadgets_ammo);
