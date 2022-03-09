@@ -23,7 +23,7 @@ void nadget_Waypoint_Update(string wpname) {
         float t = (teamwp ? o.team : 0);
         o = (teamwp ? world : o);
 
-        WaypointSprite_Spawn(wpname, 0, 0, self, '0 0 32' * (1 + 1 * ownerhack + 1.5 * (self.hg_type == NADGET_SENTRY)),
+        WaypointSprite_Spawn(wpname, 0, 0, self, '0 0 16',
             o, t, self, hg_waypoint, 1);
 
         if(self.hg_type == NADGET_SENTRY) {
