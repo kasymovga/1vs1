@@ -42,18 +42,20 @@ void(entity e, string al) ability_class_init {
 					weapon_precache(we.weapon);
 			}
 		} else if (an == "armor") {
-			e.armorvalue = stof(args);
+			if (e) e.armorvalue = stof(args);
 		} else if (an == "health") {
-			e.health = stof(args);
-		} else if (substring(an, 0, 4) == "ammo") {
-			if (an == "ammo_nails")
-				e.ammo_nails = stof(args);
-			else if (an == "ammo_shells")
-				e.ammo_shells = stof(args);
-			else if (an == "ammo_rockets")
-				e.ammo_rockets = stof(args);
-			else if (an == "ammo_cells")
-				e.ammo_cells = stof(args);
+			if (e) e.health = stof(args);
+		} else if (substring(an, 0, 4) == "ammo_") {
+			if (e) {
+				if (an == "ammo_nails")
+					e.ammo_nails = stof(args);
+				else if (an == "ammo_shells")
+					e.ammo_shells = stof(args);
+				else if (an == "ammo_rockets")
+					e.ammo_rockets = stof(args);
+				else if (an == "ammo_cells")
+					e.ammo_cells = stof(args);
+			}
 		} else {
 			for (i = 0, j = 1; i < ability_count; i++, j *= 2) {
 				if (ability_names[i] == an) {
