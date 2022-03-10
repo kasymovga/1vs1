@@ -480,10 +480,13 @@ void(float wpn) weapon_defaultspawnfunc {
 				} else {
 					item_spawnfunc = item_spawnfunc_for(s);
 					if (item_spawnfunc) {
+						print("weapon ", oldself.classname, " replaced with ", s, "\n");
 						self = spawn();
+						copyentity(oldself, self);
+						self.classname = "replaceditem";
 						item_spawnfunc();
 					} else
-						print("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+						print("The weapon replace list for ", oldself.classname, " contains an unknown item ", s, ". Skipped.\n");
 				}
 			}
 			self = oldself;
@@ -497,6 +500,8 @@ void(float wpn) weapon_defaultspawnfunc {
 			} else {
 				item_spawnfunc = item_spawnfunc_for(s);
 				if (item_spawnfunc) {
+					print("weapon ", self.classname, " replaced with ", s, "\n");
+					self.classname = "replaceditem";
 					item_spawnfunc();
 					return;
 				}
@@ -692,9 +697,9 @@ void(void) weapon_model_think {
 		return;
 	}
 	if (self.cnt != self.owner.weapon || self.deadflag != self.owner.deadflag) {
-		self.cnt = self.owner.weapon;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "" && self.owner.weapon) {
+			self.cnt = self.owner.weapon;
 			// if there is a child entity, hide it until we're sure we use it
 			if (self.weaponentity)
 				self.weaponentity.model = "";
@@ -769,6 +774,7 @@ void(void) weapon_model_think {
 			}
 		} else {
 			self.model = "";
+			self.cnt = 0;
 			if (self.weaponentity)
 				remove(self.weaponentity);
 
