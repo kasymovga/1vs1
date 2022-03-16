@@ -1,6 +1,7 @@
 entity jetpack_physics;
 float g_jetpack_attenuation;
 float g_balance_pause_fuel_regen;
+float JETPACK_ABILITY;
 
 float(entity to, float sf) jetpack_physics_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_PHYSICS_JETPACK);
@@ -79,8 +80,19 @@ void(void) jetpack_enable {
 	gamehook_chain_player_effects = jetpack_player_effects;
 }
 
+void(entity e, string args) jetpack_ability_init {
+	if (e) {
+		if (e.abilities & JETPACK_ABILITY) {
+			e.items |= (IT_JETPACK | IT_FUEL_REGEN);
+			e.ammo_fuel = max(0, cvar("g_balance_fuel_rotstable"));
+		}
+	} else
+		jetpack_enable();
+}
+
 void(void) jetpack_init {
 	CVAR_CACHE(g_jetpack);
+	JETPACK_ABILITY = ability_register("jetpack", jetpack_ability_init);
 	if not(g_jetpack)
 		return;
 
