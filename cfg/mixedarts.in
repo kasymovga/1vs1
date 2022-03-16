@@ -2,11 +2,11 @@ set mixed_arts_g_rank_type "mixed"
 set mixed_arts_g_ability_class0_name "Rifle warrior"
 set mixed_arts_g_ability_class0_value "health=100 armor=50 physics=dodging,walljump weapons=campingrifle nadget=normal hookuseswap"
 set mixed_arts_g_ability_class1_name "Weapon master"
-set mixed_arts_g_ability_class1_value "health=100 armor=100 weapons=laser,shotgun,rocketlauncher,grenadelauncher,nex,uzi,crylink,electro,hagar"
+set mixed_arts_g_ability_class1_value "health=100 armor=75 weapons=laser,shotgun,rocketlauncher,grenadelauncher,nex,uzi,crylink,electro,hagar"
 set mixed_arts_g_ability_class2_name "Minstagiber"
 set mixed_arts_g_ability_class2_value "health=100 armor=25 weapons=minstanex hook"
 set mixed_arts_g_ability_class3_name "Double-rocket"
-set mixed_arts_g_ability_class3_value "health=100 armor=25 weapons=rocketlauncher akimbo=rocketlauncher"
+set mixed_arts_g_ability_class3_value "health=100 armor=0 weapons=rocketlauncher akimbo=rocketlauncher"
 set mixed_arts_g_ability_class4_name "Double-laser"
 set mixed_arts_g_ability_class4_value "health=100 armor=50 weapons=laser akimbo=laser"
 set mixed_arts_g_use_ammunition 0
@@ -41,3 +41,4 @@ set mixed_arts_g_weaponreplace_laser armor_small
 set mixed_arts_g_weaponreplace_porto armor_small
 set mixed_arts_g_weaponreplace_hook armor_small
 set mixed_arts_g_balance_grapplehook_damage_interval 0.1
+set mixed_arts_g_balance_melee 1
