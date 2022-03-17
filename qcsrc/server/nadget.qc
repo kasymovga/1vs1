@@ -1015,6 +1015,6 @@ void nadget_Pick(float tokens) {
 }
 
 float nadget_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
-	gamehook_chain_player_damage_mod = nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
+	gamehook_chain_player_damage_mod *= nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
 	return nadget_player_damage_handle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
