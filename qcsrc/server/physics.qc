@@ -13,7 +13,6 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers;
 vector physics_frame_begin_origin;
 entity physics_current_player;
 
-float PHYSICS_ABILITIES;
 enum: flag {
 	PHYSICS_ABILITY_WALLJUMP,
 	PHYSICS_ABILITY_DODGING,
@@ -425,20 +424,21 @@ void(void) physics_climb_init {
 	gamehook_chain_weapon_frame_switch_mod = physics_weapon_switch_mod;
 }
 
-void(entity e, string args) physics_ability_init {
+void(entity e, string args, float set) physics_ability_init {
 	if (e)
 	if (e.player_physic) {
-		args = strcat(" ", strreplace(",", " ", args), " ");
 		e.player_physic.abilities = 0;
-		if (strstrofs(args, " dodging ", 0) >= 0)
-			e.player_physic.abilities |= PHYSICS_ABILITY_DODGING;
+		if (set) {
+			args = strcat(" ", args, " ");
+			if (strstrofs(args, " dodging ", 0) >= 0)
+				e.player_physic.abilities |= PHYSICS_ABILITY_DODGING;
 
-		if (strstrofs(args, " walljump ", 0) >= 0)
-			e.player_physic.abilities |= PHYSICS_ABILITY_WALLJUMP;
+			if (strstrofs(args, " walljump ", 0) >= 0)
+				e.player_physic.abilities |= PHYSICS_ABILITY_WALLJUMP;
 
-		if (strstrofs(args, " doublejump ", 0) >= 0)
-			e.player_physic.abilities |= PHYSICS_ABILITY_DOUBLEJUMP;
-
+			if (strstrofs(args, " doublejump ", 0) >= 0)
+				e.player_physic.abilities |= PHYSICS_ABILITY_DOUBLEJUMP;
+		}
 		e.player_physic.SendFlags |= 1;
 	}
 }
@@ -548,7 +548,7 @@ void(void) physics_init {
 		gamehook_chain_client_connect_real = physics_client_connect_real;
 		physics_client_disconnect_real_next = gamehook_chain_client_disconnect_real;
 		gamehook_chain_client_disconnect_real = physics_client_disconnect_real;
-		PHYSICS_ABILITIES = ability_register("physics", physics_ability_init);
+		ability_register("physics", physics_ability_init);
 		physics_initiated = TRUE;
 	}
 }

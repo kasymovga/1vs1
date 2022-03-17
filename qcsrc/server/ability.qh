@@ -1,3 +1,3 @@
 .float abilities;
 void(void) ability_init;
-float(string n, void(entity e, string args) init_func) ability_register;
+float(string n, void(entity e, string args, float set) init_func) ability_register;

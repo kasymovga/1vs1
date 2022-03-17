@@ -168,17 +168,18 @@ void(void) akimbo_init_common {
 	gamehook_chain_weapon_rate_factor = akimbo_weapon_rate_factor;
 }
 
-void(entity e, string args) akimbo_ability_init {
+void(entity e, string args, float set) akimbo_ability_init {
 	if (e) {
 		e.akimbo_weapons = 0;
-		args = strreplace(",", " ", args);
-		string wn;
-		entity we;
-		while ((wn = str_car(args)) != "") {
-			args = str_cdr(args);
-			we = weapon_info_by_name(wn);
-			if (we.weapons & akimbo_supported_weapons)
-				e.akimbo_weapons |= we.weapons;
+		if (set) {
+			string wn;
+			entity we;
+			while ((wn = str_car(args)) != "") {
+				args = str_cdr(args);
+				we = weapon_info_by_name(wn);
+				if (we.weapons & akimbo_supported_weapons)
+					e.akimbo_weapons |= we.weapons;
+			}
 		}
 	} else
 		akimbo_init_common();

@@ -303,9 +303,9 @@ void(void) nadget_init_common {
 	hint_add("When enemy stand close to FireTrap you will see red indicator indicating");
 }
 
-void(entity e, string args) nadget_ability_init {
+void(entity e, string args, float set) nadget_ability_init {
 	if (e) {
-		if (e.abilities & NADGET_ABILITY) {
+		if (set) {
 			if not(e.hg_type1) {
 				entity oldself = self;;
 				self = e;

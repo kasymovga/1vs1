@@ -572,13 +572,12 @@ float(entity plr, entity targ) rune_PlayerCanSeeHealthFor {
 	return rune_PlayerCanSeeHealthFor_NextLink(plr, targ);
 }
 
-void(void) rune_init {
-	CVAR_CACHE(g_runes);
-	if not(g_runes)
+float rune_init_done;
+void(void) rune_init_common {
+	if (rune_init_done)
 		return;
 
-	precache_model ("models/runematch/curse.mdl");
-	precache_model ("models/runematch/rune.mdl");
+	rune_init_done = TRUE;
 	precache_model("models/teamfx/electricityarcs_player.md3");
 	precache_sound("misc/minihealth.wav");
 	precache_sound("misc/mediumhealth.wav");
@@ -651,9 +650,52 @@ void(void) rune_init {
 	gamehook_chain_PlayerCanSeeHealthFor = rune_PlayerCanSeeHealthFor;
 	rune_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = rune_DamageForceModsSet;
-	entity e;
-	e = spawn();
-	e.think = rune_spawn_all;
-	e.nextthink = time + 0.1;
+	if (g_runes) {
+		entity e;
+		e = spawn();
+		e.think = rune_spawn_all;
+		e.nextthink = time + 0.1;
+	}
 	addstat(STAT_RUNES, STAT_INT, runes);
+}
+
+void(entity e, string args, float set) rune_ability_init {
+	if (e) {
+		e.runes = 0;
+		if (set) {
+			string arg;
+			while (args != "") {
+				arg = str_car(args);
+				args = str_cdr(args);
+				if (arg == "ignite") {
+					e.runes |= RUNE_IGNITE;
+				} else if (arg == "vitality") {
+					e.runes |= RUNE_REGEN;
+				} else if (arg == "vampire") {
+					e.runes |= RUNE_VAMPIRE;
+				} else if (arg == "defense") {
+					e.runes |= RUNE_DEFENSE;
+				} else if (arg == "hacker") {
+					e.runes |= RUNE_HACKER;
+				} else if (arg == "stun") {
+					e.runes |= RUNE_STUN;
+				} else if (arg == "speed") {
+					e.runes |= RUNE_SPEED;
+				}
+			}
+		}
+	} else {
+		rune_init_common();
+	}
+}
+
+void(void) rune_init {
+	ability_register("runes", rune_ability_init);
+	CVAR_CACHE(g_runes);
+	if not(g_runes)
+		return;
+
+	precache_model("models/runematch/curse.mdl");
+	precache_model("models/runematch/rune.mdl");
+	rune_init_common();
 }

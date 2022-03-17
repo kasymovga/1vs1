@@ -623,7 +623,7 @@ void(void) client_post_think { //called by engine
 		player_post_think();
 }
 
-void(entity e, string args) client_ability_hookuseswap_init {
+void(entity e, string args, float set) client_ability_hookuseswap_init {
 	if not(e)
 		client_ability_hookuseswap = TRUE;
 }

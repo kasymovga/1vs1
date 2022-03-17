@@ -1,7 +1,7 @@
 #define ABILITY_COUNT_MAX 20
 string ability_names[ABILITY_COUNT_MAX];
 float ability_count;
-var void(entity e, string args) ability_initiators[ABILITY_COUNT_MAX];
+var void(entity e, string args, float set) ability_initiators[ABILITY_COUNT_MAX];
 float ability_classes_count;
 string ability_class_names[MENU_ITEMS_MAXCOUNT];
 string ability_class_values[MENU_ITEMS_MAXCOUNT];
@@ -62,7 +62,7 @@ void(entity e, string al) ability_class_init {
 					if (e) {
 						e.abilities |= j;
 					}
-					ability_initiators[i](e, args);
+					ability_initiators[i](e, strreplace(",", " ", args), TRUE);
 					break;
 				}
 			}
@@ -76,7 +76,7 @@ void(entity e, string al) ability_class_init {
 		for (i = 0, j = 1; i < ability_count; i++, j *= 2)
 			if (oldabilities & j)
 			if not(e.abilities & j)
-				ability_initiators[i](e, "");
+				ability_initiators[i](e, "", FALSE);
 }
 
 void(float s) ability_class_select {
@@ -173,7 +173,7 @@ float(string n) ability_flag {
 	return 0;
 }
 
-float(string n, void(entity e, string args) init_func) ability_register {
+float(string n, void(entity e, string args, float set) init_func) ability_register {
 	if (ability_count >= ABILITY_COUNT_MAX)
 		error("Too much abilitities");
 

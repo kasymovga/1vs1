@@ -456,7 +456,7 @@ void(void) hook_init_common {
 	gamehook_chain_entity_spawn_pre = hook_entity_pre_spawn;
 }
 
-void(entity e, string args) hook_ability_init {
+void(entity e, string args, float set) hook_ability_init {
 	if not(e)
 		hook_init_common();
 }
