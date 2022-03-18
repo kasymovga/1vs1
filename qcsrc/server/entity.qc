@@ -415,6 +415,15 @@ void(void) entity_spawn_pre {
 		} else
 			self.classname = strzone(repl);
 	}
+	repl = cvar_string(strcat("g_spawnreplace_", self.classname));
+	if(repl != "") {
+		entity e;
+		print("Entity ", self.classname, " replaced with ", repl, "\n");
+		if ((e = find(world, classname, repl))) {
+			self.classname = e.classname;
+		} else
+			self.classname = strzone(repl);
+	}
 	gamehook_chain_entity_spawn_pre();
 }
 #define gametype _gametype //workaround for gametype field

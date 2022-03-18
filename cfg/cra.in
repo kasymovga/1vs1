@@ -32,8 +32,8 @@ set cra_g_runes_carried_runes_max 2
 set cra_g_weaponreplace_nex armor_medium
 set cra_g_weaponreplace_rocketlauncher health_medium
 set cra_g_weaponreplace_uzi health_small
-set cra_g_weaponreplace_fireball health_large
-set cra_g_weaponreplace_minstanex armor_large
+set cra_g_weaponreplace_fireball health_medium
+set cra_g_weaponreplace_minstanex armor_medium
 set cra_g_weaponreplace_porto armor_medium
 set cra_g_weaponreplace_hook armor_medium
 set cra_g_weaponreplace_shotgun health_small
@@ -46,3 +46,9 @@ set cra_g_weaponreplace_grenadelauncher health_small
 set cra_g_weaponreplace_hagar health_small
 set cra_g_warmup_allguns 0
 set cra_g_announcer_print 1
+set cra_g_spawnreplace_item_armor_medium item_armor_small
+set cra_g_spawnreplace_item_armor_big item_armor_medium
+set cra_g_spawnreplace_item_armor_large item_armor_medium
+set cra_g_spawnreplace_item_health_medium item_health_small
+set cra_g_spawnreplace_item_health_large item_health_medium
+set cra_g_spawnreplace_item_health_mega item_health_medium
