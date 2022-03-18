@@ -333,10 +333,6 @@ void(float isnew) physics_read {
 		g_waterfriction = net_read_coord();
 		g_wateraccelerate = net_read_coord();
 		g_maxwaterspeed = net_read_coord();
-		g_climb_height = net_read_coord();
-		if (g_climb_height)
-			g_climb_speed = net_read_coord();
-
 		float switches = net_read_coord();
 		g_velocity_rounding = switches & 1;
 		g_slicksurfaces_allowjump = switches & 2;
@@ -384,6 +380,7 @@ void(float isnew) physics_read {
 		else
 			cvar_clientsettemp("collision_surfaceflagsmerge", "0");
 
+		g_climb = switches & 4;
 		if (g_sideview)
 			physics_plug_adjust_view = physics_side_adjust_view;
 		else if (g_topview)
@@ -409,6 +406,10 @@ void(float isnew) physics_read {
 		if (g_topview) {
 			g_topview_angles_x = net_read_short();
 			g_topview_angles_y = net_read_short();
+		}
+		if (g_climb) {
+			g_climb_height = net_read_coord();
+			g_climb_speed = net_read_coord();
 		}
 	}
 	if (f & 2) {

@@ -237,7 +237,7 @@ void(void) physics_move {
 							if not(physics_flags & FL_ONGROUND)
 								physics_velocity = physics_velocity * (1 - (trace_fraction * g_stepairslowdown));
 						}
-					} else if (g_climb_height > 0 && !(physics_flags & FL_ONGROUND) && physics_velocity_z < g_climb_speed && !physics_crouch) {
+					} else if (g_climb && !(physics_flags & FL_ONGROUND) && physics_velocity_z < g_climb_speed && !physics_crouch) {
 						makevectors(self.angles);
 						if (trace1_plane_normal * v_forward < -0.5)
 						if (trace1_plane_normal * physics_velocity < 0) {

@@ -52,6 +52,7 @@ float g_sideview;
 float g_sideview_up;
 float g_topview;
 vector g_topview_angles;
+float g_climb;
 float g_climb_height;
 float g_climb_speed;
 float g_doublejump;

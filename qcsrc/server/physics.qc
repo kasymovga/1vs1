@@ -17,6 +17,7 @@ enum: flag {
 	PHYSICS_ABILITY_WALLJUMP,
 	PHYSICS_ABILITY_DODGING,
 	PHYSICS_ABILITY_DOUBLEJUMP,
+	PHYSICS_ABILITY_CLIMB,
 };
 
 float physics_send(entity to, float sf);
@@ -232,6 +233,7 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 float physics_abilities_dodging_save;
 float physics_abilities_walljump_save;
 float physics_abilities_doublejump_save;
+float physics_abilities_climb_save;
 float physics_abilities_saved;
 void(void) physics_abilities_start {
 	float a = self.player_physic.abilities;
@@ -239,9 +241,11 @@ void(void) physics_abilities_start {
 		physics_abilities_dodging_save = g_dodging;
 		physics_abilities_walljump_save = g_walljump;
 		physics_abilities_doublejump_save = g_doublejump;
+		physics_abilities_climb_save = g_climb;
 		g_dodging = (a & PHYSICS_ABILITY_DODGING);
 		g_walljump = (a & PHYSICS_ABILITY_WALLJUMP);
 		g_doublejump = (a & PHYSICS_ABILITY_DOUBLEJUMP);
+		g_climb = (a & PHYSICS_ABILITY_DOUBLEJUMP);
 		physics_abilities_saved = TRUE;
 	}
 }
@@ -252,6 +256,7 @@ void(void) physics_abilities_end {
 		g_dodging = physics_abilities_dodging_save;
 		g_walljump = physics_abilities_walljump_save;
 		g_doublejump = physics_abilities_doublejump_save;
+		g_climb = physics_abilities_climb_save;
 	}
 }
 
@@ -425,21 +430,31 @@ void(void) physics_climb_init {
 }
 
 void(entity e, string args, float set) physics_ability_init {
-	if (e)
-	if (e.player_physic) {
-		e.player_physic.abilities = 0;
-		if (set) {
-			args = strcat(" ", args, " ");
-			if (strstrofs(args, " dodging ", 0) >= 0)
-				e.player_physic.abilities |= PHYSICS_ABILITY_DODGING;
+	if (e) {
+		if (e.player_physic) {
+			float olda = e.player_physic.abilities;
+			e.player_physic.abilities = 0;
+			if (set) {
+				args = strcat(" ", args, " ");
+				if (strstrofs(args, " dodging ", 0) >= 0)
+					e.player_physic.abilities |= PHYSICS_ABILITY_DODGING;
 
-			if (strstrofs(args, " walljump ", 0) >= 0)
-				e.player_physic.abilities |= PHYSICS_ABILITY_WALLJUMP;
+				if (strstrofs(args, " walljump ", 0) >= 0)
+					e.player_physic.abilities |= PHYSICS_ABILITY_WALLJUMP;
 
-			if (strstrofs(args, " doublejump ", 0) >= 0)
-				e.player_physic.abilities |= PHYSICS_ABILITY_DOUBLEJUMP;
+				if (strstrofs(args, " doublejump ", 0) >= 0)
+					e.player_physic.abilities |= PHYSICS_ABILITY_DOUBLEJUMP;
+
+				if (strstrofs(args, " climb ", 0) >= 0)
+					e.player_physic.abilities |= PHYSICS_ABILITY_CLIMB;
+			}
+			if (olda != e.player_physic.abilities)
+				e.player_physic.SendFlags |= 1;
 		}
-		e.player_physic.SendFlags |= 1;
+	} else {
+		args = strcat(" ", args, " ");
+		if (strstrofs(args, " climb ", 0) >= 0)
+			physics_climb_init();
 	}
 }
 
@@ -509,8 +524,9 @@ void(void) physics_init {
 	CVAR_CACHE(g_skimming_time);
 	CVAR_CACHE(g_cpmdoublejump);
 	CVAR_CACHE(g_doublejump_nopogostick);
+	CVAR_CACHE(g_climb);
 	CVAR_CACHE(g_climb_height);
-	if (g_climb_height)
+	if (g_climb)
 		physics_climb_init();
 
 	CVAR_CACHE(g_climb_speed);
@@ -638,10 +654,6 @@ float(entity to, float sf) physics_send {
 		net_write_coord(MSG_ENTITY, g_waterfriction);
 		net_write_coord(MSG_ENTITY, g_wateraccelerate);
 		net_write_coord(MSG_ENTITY, g_maxwaterspeed);
-		net_write_coord(MSG_ENTITY, g_climb_height);
-		if (g_climb_height)
-			net_write_coord(MSG_ENTITY, g_climb_speed);
-
 		float switches =
 				(g_velocity_rounding ? 1 : 0)
 				+ (g_slicksurfaces_allowjump ? 2 : 0)
@@ -671,6 +683,7 @@ float(entity to, float sf) physics_send {
 		net_write_coord(MSG_ENTITY, switches);
 		switches = (g_overbounce ? 1 : 0)
 				+ (cvar("collision_surfaceflagsmerge") ? 2 : 0)
+				+ (g_climb ? 4 : 0)
 				;
 		net_write_byte(MSG_ENTITY, switches);
 		if (g_walljump) {
@@ -692,6 +705,10 @@ float(entity to, float sf) physics_send {
 		if (g_topview) {
 			net_write_short(MSG_ENTITY, g_topview_angles_x);
 			net_write_short(MSG_ENTITY, g_topview_angles_y);
+		}
+		if (g_climb) {
+			net_write_coord(MSG_ENTITY, g_climb_height);
+			net_write_coord(MSG_ENTITY, g_climb_speed);
 		}
 	}
 	if (sf & 2) {
