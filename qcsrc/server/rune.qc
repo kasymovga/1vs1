@@ -486,7 +486,7 @@ var void(entity targ, entity attacker, float deathtype) rune_DamageForceModsSet_
 void(entity targ, entity attacker, float deathtype) rune_DamageForceModsSet {
 	rune_targ_prev_runes = targ.runes;
 	rune_targ_prev_deadflag = targ.deadflag;
-	rune_DamageForceModsSet_NextLink(attacker, targ, deathtype);
+	rune_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
 var void(entity targ, entity attacker, float _damage, vector force) rune_DamageForceDone_NextLink;
