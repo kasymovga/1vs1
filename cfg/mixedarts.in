@@ -6,7 +6,7 @@ set mixed_arts_g_ability_class1_value "health=100 armor=75 weapons=laser,shotgun
 set mixed_arts_g_ability_class2_name "Minstagiber"
 set mixed_arts_g_ability_class2_value "health=100 armor=25 weapons=minstanex hook"
 set mixed_arts_g_ability_class3_name "Double-rocket"
-set mixed_arts_g_ability_class3_value "health=100 armor=0 weapons=rocketlauncher akimbo=rocketlauncher"
+set mixed_arts_g_ability_class3_value "health=75 armor=0 weapons=rocketlauncher akimbo=rocketlauncher"
 set mixed_arts_g_ability_class4_name "Double-laser"
 set mixed_arts_g_ability_class4_value "health=100 armor=50 weapons=laser akimbo=laser runes=stun"
 set mixed_arts_g_ability_class5_name "Jet Fighter"
