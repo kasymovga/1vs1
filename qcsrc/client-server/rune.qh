@@ -1,12 +1,14 @@
-float RUNE_FIRST = 1;
-float RUNE_IGNITE = 1;
-float RUNE_DEFENSE = 2;
-float RUNE_REGEN = 4;
-float RUNE_SPEED = 8;
-float RUNE_VAMPIRE = 16;
-float RUNE_HACKER = 32;
-float RUNE_STUN = 64;
-float RUNE_LAST = 64;
-float RUNE_COUNT = 7;
+enum: flag {
+	RUNE_IGNITE,
+	RUNE_DEFENSE,
+	RUNE_REGEN,
+	RUNE_SPEED,
+	RUNE_VAMPIRE,
+	RUNE_HACKER,
+	RUNE_STUN,
+};
 
-string rune_name(float r);
+float RUNE_FIRST = RUNE_IGNITE;
+float RUNE_LAST = RUNE_STUN;
+
+string(float r) rune_name;
