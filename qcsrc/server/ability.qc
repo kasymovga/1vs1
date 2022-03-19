@@ -173,11 +173,17 @@ float(string n) ability_flag {
 	return 0;
 }
 
+void(entity e, string args, float set) ability_dummy_init {
+}
+
 float(string n, void(entity e, string args, float set) init_func) ability_register {
 	if (ability_count >= ABILITY_COUNT_MAX)
 		error("Too much abilitities");
 
 	float f = ability_flag(n);
+	if not(init_func) {
+		init_func = ability_dummy_init;
+	}
 	if (f) return f;
 	f = 1 << ability_count;
 	ability_names[ability_count] = strzone(n);

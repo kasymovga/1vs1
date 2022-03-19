@@ -14,8 +14,8 @@ float g_balance_melee_kick_onehit;
 float g_balance_melee_onehit;
 float g_balance_melee_refire;
 string sv_sound_melee;
-
 float bot_melee_love;
+float WEAPON_MELEE_ABILITY;
 
 void(void) weapon_melee_attack_think {
 	if (self.cnt < 0 || self.owner.playerid != self.playerid) {
@@ -83,8 +83,9 @@ void(float melee_type, float axe) weapon_melee_attack  {
 }
 
 float(void) weapon_melee_possible {
-	if not(akimbo_owner(self).crouch && !g_balance_melee_allow_crouched)
-	if (g_balance_melee)
+	entity ao = akimbo_owner(self);
+	if not(ao.crouch && !g_balance_melee_allow_crouched)
+	if (g_balance_melee || (ao.abilities & WEAPON_MELEE_ABILITY))
 		return TRUE;
 
 	return FALSE;
@@ -140,6 +141,7 @@ void(void) weapon_melee_init {
 	CVAR_CACHE(g_balance_melee_refire);
 	bot_melee_love = cvar("bot_melee");
 	if not(weapon_melee_init_done) {
+		WEAPON_MELEE_ABILITY = ability_register("melee", NULL);
 		weapon_melee_init_done = 1;
 		weapon_melee_bot_aim_next = gamehook_chain_bot_aim;
 		gamehook_chain_bot_aim = weapon_melee_bot_aim;
