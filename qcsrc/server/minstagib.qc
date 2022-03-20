@@ -189,12 +189,12 @@ float(float wpn) minstagib_WeaponSpawnHandle {
 	return TRUE;
 }
 
-var float(float doreduce) minstagib_ThrowWeaponAllowed_NextLink;
-float(float doreduce) minstagib_ThrowWeaponAllowed {
+var float(float doreduce) minstagib_weapon_throw_allowed_NextLink;
+float(float doreduce) minstagib_weapon_throw_allowed {
 	if (self.ammo_cells <= 0 || doreduce)
 		return FALSE;
 
-	return minstagib_ThrowWeaponAllowed_NextLink(doreduce);
+	return minstagib_weapon_throw_allowed_NextLink(doreduce);
 }
 
 void spawnfunc_minstagib_extra_lives() { minstagib_items(IT_NAILS); }
@@ -338,8 +338,8 @@ void(void) minstagib_init {
 	minstagib_player_health_armor_fuel_mods_set_NextLink = gamehook_chain_player_health_armor_fuel_mods_set;
 	gamehook_chain_player_health_armor_fuel_mods_set = minstagib_player_health_armor_fuel_mods_set;
 	gamehook_chain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
-	minstagib_ThrowWeaponAllowed_NextLink = gamehook_chain_ThrowWeaponAllowed;
-	gamehook_chain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;
+	minstagib_weapon_throw_allowed_NextLink = gamehook_chain_weapon_throw_allowed;
+	gamehook_chain_weapon_throw_allowed = minstagib_weapon_throw_allowed;
 	minstagib_entity_spawn_pre_NextLink = gamehook_chain_entity_spawn_pre;
 	gamehook_chain_entity_spawn_pre = minstagib_entity_spawn_pre;
 	minstagib_ItemForbidden_NextLink = gamehook_chain_ItemForbidden;

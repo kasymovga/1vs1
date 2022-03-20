@@ -313,13 +313,16 @@ float(float w) weapon_throwable {
 
 // toss current weapon
 void(vector velo, vector delta, float doreduce) weapon_throw {
+	if (gamehook_chain_weapon_throw_handle())
+		return;
+
 	float w, wb;
 	string a;
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
 
-	if not(gamehook_chain_ThrowWeaponAllowed(doreduce))
+	if not(gamehook_chain_weapon_throw_allowed(doreduce))
 		return;
 
 	if (g_pickup_nodrop)

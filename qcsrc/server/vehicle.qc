@@ -197,12 +197,12 @@ void vehicle_player_effects() {
 	vehicle_player_effects_next();
 }
 
-var float(void) vehicle_ThrowWeaponHandle_NextLink;
-float(void) vehicle_ThrowWeaponHandle {
+var float(void) vehicle_weapon_throw_handle_NextLink;
+float(void) vehicle_weapon_throw_handle {
 	if (vehicle_extract_player(self, FALSE))
 		return TRUE;
 
-	return vehicle_ThrowWeaponHandle_NextLink();
+	return vehicle_weapon_throw_handle_NextLink();
 }
 
 var entity(entity) vehicle_player_entity_next_link;
@@ -225,8 +225,8 @@ void(void) vehicle_init {
 	gamehook_chain_player_clear = vehicle_PlayerClear;
 	vehicle_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = vehicle_player_effects;
-	vehicle_ThrowWeaponHandle_NextLink = gamehook_chain_ThrowWeaponHandle;
-	gamehook_chain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
+	vehicle_weapon_throw_handle_NextLink = gamehook_chain_weapon_throw_handle;
+	gamehook_chain_weapon_throw_handle = vehicle_weapon_throw_handle;
 	vehicle_player_entity_next_link = gamehook_chain_player_entity;
 	gamehook_chain_player_entity = vehicle_player_entity;
 	addstat(STAT_SPIDERBOT_ROCKETS, STAT_INT,   rockets);

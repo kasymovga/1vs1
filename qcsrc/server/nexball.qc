@@ -98,12 +98,12 @@ float() nexball_ReloadAllowed {
 	return TRUE;
 }
 
-var float(float ignore) nexball_ThrowWeaponAllowed_NextLink;
-float(float ignore) nexball_ThrowWeaponAllowed {
+var float(float ignore) nexball_weapon_throw_allowed_NextLink;
+float(float ignore) nexball_weapon_throw_allowed {
 	if (self.ballcarried)
 		return FALSE;
 
-	return nexball_ThrowWeaponAllowed_NextLink(ignore);
+	return nexball_weapon_throw_allowed_NextLink(ignore);
 }
 
 float() nexball_RadarShowEnemiesAllowed {
@@ -173,8 +173,8 @@ void() nexball_init {
 	nexball_weapon_frame_handle_next = gamehook_chain_weapon_frame_handle;
 	gamehook_chain_weapon_frame_handle = nexball_weapon_frame_handle;
 	gamehook_ReloadAllowed = nexball_ReloadAllowed;
-	nexball_ThrowWeaponAllowed_NextLink = gamehook_chain_ThrowWeaponAllowed;
-	gamehook_chain_ThrowWeaponAllowed = nexball_ThrowWeaponAllowed;
+	nexball_weapon_throw_allowed_NextLink = gamehook_chain_weapon_throw_allowed;
+	gamehook_chain_weapon_throw_allowed = nexball_weapon_throw_allowed;
 	nexball_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
 	gamehook_chain_spectator_copy = nexball_SpectateCopy;
 	gamehook_player_is_carrier = nexball_player_is_carrier;

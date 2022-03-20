@@ -681,6 +681,8 @@ void(entity e, string args, float set) rune_ability_init {
 					e.runes |= RUNE_STUN;
 				} else if (arg == "speed") {
 					e.runes |= RUNE_SPEED;
+				} else {
+					print("Unknown rune name: ", arg, "\n");
 				}
 			}
 		}

@@ -49,7 +49,7 @@ var string(string bspname) gamehook_world_record_for_map = { return ""; }
 var float() gamehook_ready_restart_hard = { return FALSE; }
 var float() gamehook_chain_weapon_frame_handle = { return FALSE; }
 var float() gamehook_ReloadAllowed = { return TRUE; }
-var float(float dropped) gamehook_chain_ThrowWeaponAllowed = { return TRUE; }
+var float(float dropped) gamehook_chain_weapon_throw_allowed = { return TRUE; }
 var void(entity e) gamehook_chain_spectator_copy = {}
 float gamehook_chain_damage_mod;
 float gamehook_chain_damage_mod_force;
@@ -96,7 +96,7 @@ var void() gamehook_chain_ItemRespawnCountDown {}
 var float() gamehook_chain_ArmorBlockPercentMod { return 1; }
 var float(entity plr, entity targ) gamehook_chain_PlayerCanSeeHealthFor { return FALSE; }
 var float(entity plr, entity targ) gamehook_chain_PlayerVisibleThroughWallFor { return FALSE; }
-var float() gamehook_chain_ThrowWeaponHandle { return FALSE; }
+var float() gamehook_chain_weapon_throw_handle { return FALSE; }
 var void(entity source, string msg) gamehook_chain_PublicPlayerChat = {}
 var void() gamehook_havocbot_role_choose = { havocbot_role_choose_dm(); }
 var void() gamehook_client_parms_new = {}

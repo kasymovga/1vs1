@@ -15,49 +15,49 @@ float g_nadgets_drop_on_death;
 void nadget_UpdateDetonables(void);
 void nadget_ForceDetonateAll(void);
 
-var void() nadget_PlayerPreThink_NextLink;
+var void() nadget_PlayerPreThink_next;
 void nadget_PlayerPreThink();
-var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) nadget_player_damage_handle_NextLink;
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) nadget_player_damage_handle_next;
 float nadget_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force);
 
 // Nadgets mutator
 // Intended for the Camping Rifle Arena mode
 
-var float(string cmd, float tokens) nadget_ClientCommandHandle_NextLink;
-float nadget_ClientCommandHandle(string cmd, float tokens) {
+var float(string cmd, float tokens) nadget_cmd_client_handle_next;
+float(string cmd, float tokens) nadget_cmd_client_handle {
 	if(cmd == "picknade") {
 		nadget_Pick(tokens);
 		return TRUE;
 	}
-	return nadget_ClientCommandHandle_NextLink(cmd, tokens);
+	return nadget_cmd_client_handle_next(cmd, tokens);
 }
 
-var float(entity plr, float wep) nadget_player_can_fire_NextLink;
-float nadget_player_can_fire(entity plr, float wep) {
+var float(entity plr, float wep) nadget_player_can_fire_next;
+float(entity plr, float wep) nadget_player_can_fire {
 	if (self.hg_stealth)
 		return FALSE;
 
-	return nadget_player_can_fire_NextLink(plr, wep);
+	return nadget_player_can_fire_next(plr, wep);
 }
 
-var void(void(string item, string cmd) Add_Item) nadget_gamemenu_send_NextLink;
-void nadget_gamemenu_send(void(string item, string cmd) Add_Item) {
+var void(void(string item, string cmd) Add_Item) nadget_gamemenu_send_next;
+void(void(string item, string cmd) Add_Item) nadget_gamemenu_send {
 	Add_Item("Switch Nadget", "cmd picknade;");
-	nadget_gamemenu_send_NextLink(Add_Item);
+	nadget_gamemenu_send_next(Add_Item);
 }
 
-var void(float killed) nadget_PlayerClear_NextLink;
-void nadget_PlayerClear(float killed) {
+var void(float killed) nadget_player_clear_next;
+void(float killed) nadget_player_clear {
 	if (killed) {
-		if(g_nadgets_remove_on_death > 1)
+		if (g_nadgets_remove_on_death > 1)
 			nadget_RemoveAll(self);
 
-		if(self.hg_power > 0 && g_nadgets_drop_on_death) {
+		if (self.hg_power > 0 && g_nadgets_drop_on_death) {
 			nadget_SetContext(self.hg_altstate);
 			self.hg_power = 0;
 			nadget_Attack();
 		}
-		if(g_nadgets_detonate_on_death > 1)
+		if (g_nadgets_detonate_on_death > 1)
 			nadget_ForceDetonateAll();
 	} else {
 		if ((self.classname != "player" && self.team <= 0) || self.classname == "disconnecting") {
@@ -66,56 +66,55 @@ void nadget_PlayerClear(float killed) {
 		}
 	}
 	NADGET_DO_IN_ALL_CONTEXTS({
-		if(self.hg_ctx_type_picked_nextround >= 0)
+		if (self.hg_ctx_type_picked_nextround >= 0)
 			self.hg_ctx_type_picked = self.hg_ctx_type_picked_nextround;
+
 		self.hg_ctx_type_picked_nextround = -1;
 	})
-    self.hg_power = 0;
-    self.hg_bonus = 0;
-    self.hg_bonustype = NADGET_NORMAL;
-    self.hg_shield = 0;
+	self.hg_power = 0;
+	self.hg_bonus = 0;
+	self.hg_bonustype = NADGET_NORMAL;
+	self.hg_shield = 0;
 	self.hg_linker = world;
 	if (self.classname == "player")
 		NADGET_DO_IN_ALL_CONTEXTS(nadget_ResetAmmo(self, FALSE);)
 
-    self.hg_shield = 0;
+	self.hg_shield = 0;
 	self.hg_stealth = 0;
 	self.hg_stealthalpha = 0;
-    nadget_UpdateDetonables();
-	nadget_PlayerClear_NextLink(killed);
+	nadget_UpdateDetonables();
+	nadget_player_clear_next(killed);
 }
 
-var void() nadget_ObserverSpawn_Next;
-
-void nadget_ObserverSpawn(void) {
-    //self.hg_type1_picked = 0;
-    //self.hg_type2_picked = 0;
-    self.hg_next1 = 0;
-    self.hg_next2 = 0;
-
-    nadget_ObserverSpawn_Next();
+var void() nadget_observer_spawn_next;
+void(void) nadget_observer_spawn {
+	//self.hg_type1_picked = 0;
+	//self.hg_type2_picked = 0;
+	self.hg_next1 = 0;
+	self.hg_next2 = 0;
+	nadget_observer_spawn_next();
 }
 
-var float() nadget_spectator_to_player_handle_NextLink;
+var float() nadget_spectator_to_player_handle_next;
 float nadget_spectator_to_player_handle() {
 	if (g_nadgets || (self.abilities & NADGET_ABILITY)) {
 		if (nadget_ShowMenu(FALSE))
 			return TRUE;
 	}
-	return nadget_spectator_to_player_handle_NextLink();
+	return nadget_spectator_to_player_handle_next();
 }
 
-var float(entity plr) nadget_PlayerCanBeCarrier_NextLink;
+var float(entity plr) nadget_PlayerCanBeCarrier_next;
 float(entity plr) nadget_PlayerCanBeCarrier {
-	if (nadget_PlayerCanBeCarrier_NextLink(plr))
+	if (nadget_PlayerCanBeCarrier_next(plr))
 	if not(plr.hg_stealth)
 		return TRUE;
 
 	return FALSE;
 }
 
-var void(entity plr) nadget_SpectateCopy_NextLink;
-void(entity plr) nadget_SpectateCopy {
+var void(entity plr) nadget_spectator_copy_next;
+void(entity plr) nadget_spectator_copy {
 	self.hg_power = plr.hg_power;
 	self.hg_type1 = plr.hg_type1;
 	self.hg_type2 = plr.hg_type2;
@@ -135,12 +134,12 @@ void(entity plr) nadget_SpectateCopy {
 	self.hg_bonustype = plr.hg_bonustype;
 	self.hg_detonables = plr.hg_detonables;
 	self.hg_launchspeed = plr.hg_launchspeed;
-	nadget_SpectateCopy_NextLink(plr);
+	nadget_spectator_copy_next(plr);
 }
 
-var float() nadget_ThrowWeaponHandle_NextLink;
-float nadget_ThrowWeaponHandle() {
-	nadget_ThrowWeaponHandle_NextLink();
+var float() nadget_weapon_throw_handle_next;
+float() nadget_weapon_throw_handle {
+	nadget_weapon_throw_handle_next();
 	nadget_Trigger();
 	return TRUE;
 }
@@ -248,22 +247,22 @@ void(void) nadget_init_common {
 	addstat(STAT_HGBONUS, STAT_INT, hg_bonus);
 	addstat(STAT_HGBONUSTYPE, STAT_INT, hg_bonustype);
 	addstat(STAT_HGREFIRE, STAT_FLOAT, hg_next1);
-	nadget_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = nadget_PlayerClear;
-	nadget_player_can_fire_NextLink = gamehook_chain_player_can_fire;
+	nadget_player_clear_next = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = nadget_player_clear;
+	nadget_player_can_fire_next = gamehook_chain_player_can_fire;
 	gamehook_chain_player_can_fire = nadget_player_can_fire;
-	nadget_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
+	nadget_gamemenu_send_next = gamehook_chain_gamemenu_send;
 	gamehook_chain_gamemenu_send = nadget_gamemenu_send;
-	nadget_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = nadget_ClientCommandHandle;
-	nadget_player_damage_handle_NextLink = gamehook_chain_player_damage_handle;
+	nadget_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
+	gamehook_chain_cmd_client_handle = nadget_cmd_client_handle;
+	nadget_player_damage_handle_next = gamehook_chain_player_damage_handle;
 	gamehook_chain_player_damage_handle = nadget_player_damage_handle;
-	nadget_spectator_to_player_handle_NextLink = gamehook_chain_spectator_to_player_handle;
+	nadget_spectator_to_player_handle_next = gamehook_chain_spectator_to_player_handle;
 	gamehook_chain_spectator_to_player_handle = nadget_spectator_to_player_handle;
-	nadget_PlayerCanBeCarrier_NextLink = gamehook_chain_PlayerCanBeCarrier;
+	nadget_PlayerCanBeCarrier_next = gamehook_chain_PlayerCanBeCarrier;
 	gamehook_chain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
-	nadget_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
-	gamehook_chain_spectator_copy = nadget_SpectateCopy;
+	nadget_spectator_copy_next = gamehook_chain_spectator_copy;
+	gamehook_chain_spectator_copy = nadget_spectator_copy;
 	nadget_bot_aim_next = gamehook_chain_bot_aim;
 	gamehook_chain_bot_aim = nadget_bot_aim;
 	nadget_player_obituary_frag_next = gamehook_chain_player_obituary_frag;
@@ -290,12 +289,12 @@ void(void) nadget_init_common {
 	projectile_register_auto(PROJECTILE_HG_TRANSLOC, NADGET_SIZE_TRANSLOC * '1 -1 1', GRENVAR(NADGET_TRANSLOC, "movetype"));
 	projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3', GRENVAR(NADGET_RAZE, "movetype"));
 	projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3', MOVETYPE_BOUNCE);
-	nadget_ObserverSpawn_Next = gamehook_chain_observer_spawn;
-	gamehook_chain_observer_spawn = nadget_ObserverSpawn;
-	nadget_PlayerPreThink_NextLink = gamehook_chain_player_think;
+	nadget_observer_spawn_next = gamehook_chain_observer_spawn;
+	gamehook_chain_observer_spawn = nadget_observer_spawn;
+	nadget_PlayerPreThink_next = gamehook_chain_player_think;
 	gamehook_chain_player_think = nadget_PlayerPreThink;
-	nadget_ThrowWeaponHandle_NextLink = gamehook_chain_ThrowWeaponHandle;
-	gamehook_chain_ThrowWeaponHandle = nadget_ThrowWeaponHandle;
+	nadget_weapon_throw_handle_next = gamehook_chain_weapon_throw_handle;
+	gamehook_chain_weapon_throw_handle = nadget_weapon_throw_handle;
 	Napalm_Init();
 	hint_add("You can detonate FireTrap of enemy shooting on it");
 	hint_add("Translocator nadget can be used as teleporting or killing enemy shooting directly on enemy");
@@ -726,7 +725,7 @@ void nadget_AdvanceRegen(entity plr, float delta, float limit) {
 }
 
 void nadget_PlayerPreThink(void) {
-	nadget_PlayerPreThink_NextLink();
+	nadget_PlayerPreThink_next();
     if(time < map_starttime)
         return;
 
@@ -1016,5 +1015,5 @@ void nadget_Pick(float tokens) {
 
 float nadget_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
 	gamehook_chain_player_damage_mod *= nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
-	return nadget_player_damage_handle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
+	return nadget_player_damage_handle_next(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
