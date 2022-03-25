@@ -271,7 +271,7 @@ void(void) physics_move {
 		}
 		// check if it moved at all
 		if (trace1_endpos == self.origin) {
-			if (blocked_prev && prev_plane_normal * trace1_plane_normal < 0 && blocked_prev) {
+			if (blocked_prev && prev_plane_normal * trace1_plane_normal < 0) {
 				trace1_plane_normal = physics_bbox_nearest_normal(prev_plane_normal, trace1_plane_normal);
 			} else {
 				blocked_prev = 1;
