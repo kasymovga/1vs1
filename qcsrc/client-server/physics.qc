@@ -172,7 +172,10 @@ vector(vector v1, vector v2) physics_bbox_nearest_normal {
 		nearest = '0 0 -1';
 		_max = check;
 	}
-	return nearest;
+	if (physics_velocity * nearest <= 0)
+		return nearest;
+	else
+		return v2;
 }
 
 void(void) physics_move {
@@ -268,13 +271,11 @@ void(void) physics_move {
 		}
 		// check if it moved at all
 		if (trace1_endpos == self.origin) {
-			if (blocked_prev && prev_plane_normal * trace1_plane_normal < 0) {
-				prev_plane_normal = physics_bbox_nearest_normal(prev_plane_normal, trace1_plane_normal);
-				f = (physics_velocity * prev_plane_normal);
-				physics_velocity = physics_velocity - f * prev_plane_normal;
-			} else
+			if (blocked_prev && prev_plane_normal * trace1_plane_normal < 0 && blocked_prev) {
+				trace1_plane_normal = physics_bbox_nearest_normal(prev_plane_normal, trace1_plane_normal);
+			} else {
 				blocked_prev = 1;
-
+			}
 			prev_plane_normal = trace1_plane_normal;
 		} else {
 			setorigin(self, trace1_endpos);
