@@ -1,6 +1,6 @@
 set mixed_arts_g_rank_type "mixed"
 set mixed_arts_g_ability_class0_name "Rifle warrior"
-set mixed_arts_g_ability_class0_value "health=100 armor=100 physics=dodging,walljump weapons=campingrifle nadget=normal hookuseswap"
+set mixed_arts_g_ability_class0_value "health=100 armor=100 physics=dodging,walljump weapons=campingrifle nadget hookuseswap"
 set mixed_arts_g_ability_class1_name "Weapon master"
 set mixed_arts_g_ability_class1_value "health=100 armor=75 weapons=laser,shotgun,rocketlauncher,grenadelauncher,nex,uzi,crylink,electro,hagar"
 set mixed_arts_g_ability_class2_name "Minstagiber"

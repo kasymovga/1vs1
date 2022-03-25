@@ -305,14 +305,15 @@ void(void) nadget_init_common {
 void(entity e, string args, float set) nadget_ability_init {
 	if (e) {
 		if (set) {
-			if not(e.hg_type1) {
-				entity oldself = self;;
-				self = e;
-				if not(nadget_ShowMenu(0))
-					nadget_ResetAmmo(self, FALSE);
+			entity oldself = self;;
+			self = e;
+			if (args != "") {
+				self.hg_type1 = self.hg_type1_picked = nadget_NameToType(args);
+				nadget_ResetAmmo(self, FALSE);
+			} else if not(nadget_ShowMenu(0))
+				nadget_ResetAmmo(self, FALSE);
 
-				self = oldself;
-			}
+			self = oldself;
 		} else {
 			nadget_RemoveAll(e);
 			e.hg_type1 = 0;
