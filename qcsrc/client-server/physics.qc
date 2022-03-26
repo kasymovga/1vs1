@@ -744,8 +744,11 @@ void(void) physics_player_frame {
 		}
 	} else {
 		if (physics_crouch) {
-			trace_box(self.origin, self.stand_mins, self.stand_maxs, self.origin, FALSE, self);
-			if (!trace_startsolid) {
+			vector v;
+			v_x = v_y = 0;
+			v_z = self.stand_maxs_z - self.crouch_mins_z;
+			trace_box(self.origin, self.stand_mins, self.stand_maxs - v, self.origin + v, FALSE, self);
+			if (!trace_startsolid && trace_fraction == 1) {
 				physics_crouch = FALSE;
 				self.view_ofs = self.stand_view_ofs;
 				setsize (self, self.stand_mins, self.stand_maxs);
