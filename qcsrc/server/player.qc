@@ -1930,6 +1930,9 @@ void(void) player_impulse {
 				weapon_previous(2);
 				break;
 			case 17:
+				if (gamehook_chain_weapon_throw_handle())
+					return;
+
 				weapon_throw(weapon_calculate_projectile_velocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
 				break;
 			case 18:
