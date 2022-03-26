@@ -142,35 +142,14 @@ void(void) physics_update_status {
 }
 
 vector(vector v1, vector v2) physics_bbox_nearest_normal {
-	vector v = v1 + v2;
-	vector nearest;
-	float _max, check;
-	_max = v * '1 0 0';
-	nearest = '1 0 0';
-	check = v * '-1 0 0';
-	if (check > _max) {
-		nearest = '-1 0 0';
-		_max = check;
-	}
-	check = v * '0 1 0';
-	if (check > _max) {
-		nearest = '0 1 0';
-		_max = check;
-	}
-	check = v * '0 -1 0';
-	if (check > _max) {
-		nearest = '0 -1 0';
-		_max = check;
-	}
-	check = v * '0 0 1';
-	if (check > _max) {
+	vector nearest = normalize(v1 + v2);
+	if (nearest_z > 0.7)
 		nearest = '0 0 1';
-		_max = check;
-	}
-	check = v * '0 0 -1';
-	if (check > _max) {
+	else if (nearest_z < -0.7)
 		nearest = '0 0 -1';
-		_max = check;
+	else {
+		nearest_z = 0;
+		nearest = normalize(nearest);
 	}
 	if (physics_velocity * nearest <= 0)
 		return nearest;
