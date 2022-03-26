@@ -10,7 +10,7 @@ set mixed_arts_g_ability_class3_value "health=75 armor=0 weapons=rocketlauncher 
 set mixed_arts_g_ability_class4_name "Double-laser"
 set mixed_arts_g_ability_class4_value "health=100 armor=50 weapons=laser akimbo=laser runes=stun"
 set mixed_arts_g_ability_class5_name "Jet Fighter"
-set mixed_arts_g_ability_class5_value "health=100 armor=100 weapons=hlac jetpack runes=ignite,defense"
+set mixed_arts_g_ability_class5_value "health=100 armor=100 weapons=hlac jetpack runes=ignite"
 set mixed_arts_g_ability_class6_name "Boomsticker"
 set mixed_arts_g_ability_class6_value "health=100 armor=100 weapons=supershotgun physics=doublejump,climb runes=vitality"
 set mixed_arts_g_use_ammunition 0
