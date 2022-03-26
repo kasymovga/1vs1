@@ -88,7 +88,8 @@ void(void) physics_check_ground_hook {
 }
 
 void(void) physics_on_crouch_hook {
-	anim_set(self.body, self.anim_duck, FALSE, TRUE, TRUE);
+	if (physics_is_player)
+		anim_set(self.body, self.anim_duck, FALSE, TRUE, TRUE);
 }
 
 .float last_maxspeedmod;
