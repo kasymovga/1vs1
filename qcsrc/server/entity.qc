@@ -224,6 +224,20 @@ float(entity e, float t) entity_move_out_of_solid_with_type {
 	return 1;
 }
 
+float(string repl) entity_spawn_replace {
+	if (repl == "")
+		return FALSE;
+
+	entity e;
+	print("Entity ", self.classname, " replaced with ", repl, "\n");
+	if ((e = find(world, classname, repl))) {
+		self.classname = e.classname;
+	} else
+		self.classname = strzone(repl);
+
+	return TRUE;
+}
+
 .vector originjitter;
 .vector anglesjitter;
 .float anglejitter;
@@ -406,23 +420,9 @@ void(void) entity_spawn_pre {
 	if(self.anglejitter != 0)
 		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglejitter;
 
-	string repl = cvar_string(strcat("sv_spawnreplace_", self.classname));
-	if(repl != "") {
-		entity e;
-		print("Entity ", self.classname, " replaced with ", repl, "\n");
-		if ((e = find(world, classname, repl))) {
-			self.classname = e.classname;
-		} else
-			self.classname = strzone(repl);
-	}
-	repl = cvar_string(strcat("g_spawnreplace_", self.classname));
-	if(repl != "") {
-		entity e;
-		print("Entity ", self.classname, " replaced with ", repl, "\n");
-		if ((e = find(world, classname, repl))) {
-			self.classname = e.classname;
-		} else
-			self.classname = strzone(repl);
+	if (!entity_spawn_replace(cvar_string(strcat("g_spawnreplace_", self.classname)))) {
+		if (entity_spawn_replace(cvar_string(strcat("sv_spawnreplace_", self.classname))))
+			entity_spawn_replace(cvar_string(strcat("g_spawnreplace_", self.classname)));
 	}
 	gamehook_chain_entity_spawn_pre();
 }
