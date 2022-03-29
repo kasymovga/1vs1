@@ -48,7 +48,7 @@ void fireguy_hunt() {
 		vector _shotorg = self.origin + v_forward * 12;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 		entity proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
-		projectile_setup(proj, _shotorg, WEP_FIREBALL, self.dmg_edge, self.dmg_edge, self.dmg_radius, self.dmg_force, 1);
+		projectile_setup(proj, _shotorg, WEP_FIREBALL, self.dmg_edge, self.dmg_edge, self.dmg_radius, self.dmg_force, 1, MOVETYPE_BOUNCE);
 		proj.touch = fireguy_mine_touch;
 		proj.think = fireguy_mine_think;
 		proj.nextthink = time;

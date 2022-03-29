@@ -164,7 +164,7 @@ void(void) weapon_rocketlauncher_attack {
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE, self); // because of fly sound
 	projectile_setup(missile, weapon_shotorg - v_forward * 3, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
-			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force, 0);
+			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force, 0, MOVETYPE_FLY);
 	warpzone_refsys_copy(missile, missile.owner);
 	missile.classname = "rocket"; //for remote exploding
 	missile.realowner = self; //we neeed it without akimbo_owner for guiding
@@ -358,7 +358,7 @@ float(float req) weapon_rocketlauncher {
 		CVAR_CACHE(g_balance_rocketlauncher_speed);
 		CVAR_CACHE(g_balance_rocketlauncher_speedaccel);
 		CVAR_CACHE(g_balance_rocketlauncher_speedstart);
-		projectile_init(PROJECTILE_ROCKET, MOVETYPE_FLY);
+		projectile_init(PROJECTILE_ROCKET);
 		if (cvar("g_balance_rocketlauncher_swap_buttons")) {
 			rl_buttonatck1 = BUTTON_ATCK2;
 			rl_buttonatck2 = BUTTON_ATCK;

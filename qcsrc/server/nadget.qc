@@ -281,14 +281,14 @@ void(void) nadget_init_common {
 	NADGETDEFS
 	#undef NADGETDEF
 	nadget_precache();
-	projectile_register_auto(PROJECTILE_HG_GENERIC, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_NORMAL, "movetype"));
-	projectile_register_auto(PROJECTILE_HG_LASER, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_LASER, "movetype"));
-	projectile_register_auto(PROJECTILE_HG_NAPALM, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_NAPALM, "movetype"));
-	projectile_register_auto(PROJECTILE_HG_PLASMA, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_PLASMA, "movetype"));
-	projectile_register_auto(PROJECTILE_HG_REMOTE, NADGET_SIZE_DEFAULT * '1 -1 1', GRENVAR(NADGET_REMOTE, "movetype"));
-	projectile_register_auto(PROJECTILE_HG_TRANSLOC, NADGET_SIZE_TRANSLOC * '1 -1 1', GRENVAR(NADGET_TRANSLOC, "movetype"));
-	projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3', GRENVAR(NADGET_RAZE, "movetype"));
-	projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3', MOVETYPE_BOUNCE);
+	projectile_register_auto(PROJECTILE_HG_GENERIC, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_LASER, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_NAPALM, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_PLASMA, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_REMOTE, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_TRANSLOC, NADGET_SIZE_TRANSLOC * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3');
+	projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
 	nadget_observer_spawn_next = gamehook_chain_observer_spawn;
 	gamehook_chain_observer_spawn = nadget_observer_spawn;
 	nadget_PlayerPreThink_next = gamehook_chain_player_think;

@@ -27,7 +27,7 @@ void boss2_pellet_touch()
 void(vector start, vector dir) boss2_pellet {
 	entity proj;
 	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
-	projectile_setup(proj, start, PROJECTILE_BULLET_BIG, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0);
+	projectile_setup(proj, start, PROJECTILE_BULLET_BIG, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 	proj.movetype = MOVETYPE_BOUNCEMISSILE;
 	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;

@@ -134,7 +134,7 @@ void(void) weapon_fireball_attack2 {
 	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, WEP_FIREBALL | HITTYPE_SECONDARY, g_balance_fireball_secondary_damage,
-			g_balance_fireball_secondary_edgedamage, g_balance_fireball_secondary_radius, g_balance_fireball_secondary_force, 0);
+			g_balance_fireball_secondary_edgedamage, g_balance_fireball_secondary_radius, g_balance_fireball_secondary_force, 0, MOVETYPE_BOUNCE);
 	proj.pushltime = time + g_balance_fireball_secondary_lifetime;
 	proj.use = weapon_fireball_explode;
 	proj.think = weapon_fireball_think;
@@ -247,7 +247,7 @@ void(void) weapon_fireball_attack1 {
 	weapon_shotorg = trace_endpos;
 	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
-	projectile_setup(proj, weapon_shotorg, WEP_FIREBALL, g_balance_fireball_primary_damage, 0, 0, 0, 1);
+	projectile_setup(proj, weapon_shotorg, WEP_FIREBALL, g_balance_fireball_primary_damage, 0, 0, 0, 1, MOVETYPE_FLY);
 	proj.touch = weapon_fireball_mine_touch;
 	proj.think = weapon_fireball_mine_think;
 	proj.nextthink = time;
@@ -357,8 +357,8 @@ float(float req) weapon_fireball {
 		CVAR_CACHE(g_balance_fireball_secondary_refire);
 		CVAR_CACHE(g_balance_fireball_secondary_refire2);
 		CVAR_CACHE(g_balance_fireball_secondary_speed);
-		projectile_init(PROJECTILE_FIREMINE, MOVETYPE_BOUNCE);
-		projectile_init(PROJECTILE_FIREBALL, MOVETYPE_FLY);
+		projectile_init(PROJECTILE_FIREMINE);
+		projectile_init(PROJECTILE_FIREBALL);
 		if (cvar("g_balance_fireball_swap_buttons")) {
 			fireball_buttonatck1 = BUTTON_ATCK2;
 			fireball_buttonatck2 = BUTTON_ATCK;

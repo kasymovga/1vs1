@@ -43,7 +43,7 @@ void(void) weapon_hagar_attack {
 	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
 	projectile_setup(missile, weapon_shotorg, WEP_HAGAR, g_balance_hagar_primary_damage,
-			g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, g_balance_hagar_primary_force, 0);
+			g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, g_balance_hagar_primary_force, 0, MOVETYPE_FLY);
 	missile.touch = projectile_touch_explode;
 	missile.use = projectile_explode;
 	missile.think = projectile_think2use;
@@ -60,9 +60,9 @@ void(void) weapon_hagar_attack2 {
 	weapon_setup_shot (self, 2, "weapons/hagar_fire.wav", 1);
 	//weapon_setup_shot (self, FALSE, 2, "weapons/hagar_fire.wav"); // TODO: move model a little to the right
 	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
-	missile = projectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE, self);
+	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
 	projectile_setup(missile, weapon_shotorg, WEP_HAGAR | HITTYPE_SECONDARY, g_balance_hagar_secondary_damage,
-			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force, 0);
+			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force, 0, MOVETYPE_BOUNCEMISSILE);
 	missile.touch = weapon_hagar_touch2;
 	missile.cnt = 0;
 	missile.use = projectile_explode;
@@ -132,8 +132,7 @@ float(float req) weapon_hagar {
 		CVAR_CACHE(g_balance_hagar_secondary_refire);
 		CVAR_CACHE(g_balance_hagar_secondary_speed);
 		CVAR_CACHE(g_balance_hagar_secondary_spread);
-		projectile_init(PROJECTILE_HAGAR, MOVETYPE_FLY);
-		projectile_init(PROJECTILE_HAGAR_BOUNCING, MOVETYPE_BOUNCEMISSILE);
+		projectile_init(PROJECTILE_HAGAR);
 		if (cvar("g_balance_hagar_swap_buttons")) {
 			hagar_buttonatck1 = BUTTON_ATCK2;
 			hagar_buttonatck2 = BUTTON_ATCK;

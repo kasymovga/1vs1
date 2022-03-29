@@ -117,7 +117,8 @@ void(float out) weapon_porto_attack {
 	// always shoot from the eye
 	weapon_shotdir = v_forward;
 	weapon_shotorg = self.origin + self.view_ofs + ((weapon_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
-	gren = projectile(TRUE, PROJECTILE_PORTO_RED, TRUE, self);
+	gren = projectile(TRUE, (out ? PROJECTILE_PORTO_BLUE : PROJECTILE_PORTO_RED), TRUE, self);
+	gren.movetype = MOVETYPE_FLY;
 	gren.playerid = self.playerid;
 	gren.classname = "porto";
 	gren.bot_dodge = TRUE;
@@ -196,8 +197,8 @@ float(float req) weapon_porto {
 		CVAR_CACHE(g_balance_porto_primary_refire);
 		CVAR_CACHE(g_balance_porto_primary_speed);
 		CVAR_CACHE(g_balance_powerup_strength_force);
-		projectile_init(PROJECTILE_PORTO_RED, MOVETYPE_FLY);
-		projectile_init(PROJECTILE_PORTO_BLUE, MOVETYPE_FLY);
+		projectile_init(PROJECTILE_PORTO_RED);
+		projectile_init(PROJECTILE_PORTO_BLUE);
 	}
 	return TRUE;
 }

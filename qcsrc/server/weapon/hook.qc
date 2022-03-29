@@ -61,7 +61,7 @@ void(void) weapon_hook_attack2 {
 	weapon_setup_shot (self, 4, "weapons/hookbomb_fire.wav", 0);
 	gren = projectile(TRUE, PROJECTILE_HOOKBOMB, TRUE, self);
 	projectile_setup(gren, weapon_shotorg, WEP_HOOK | HITTYPE_SECONDARY, g_balance_hook_secondary_damage,
-			g_balance_hook_secondary_edgedamage, g_balance_hook_secondary_radius, g_balance_hook_secondary_force, g_balance_hook_secondary_gravity);
+			g_balance_hook_secondary_edgedamage, g_balance_hook_secondary_radius, g_balance_hook_secondary_force, g_balance_hook_secondary_gravity, MOVETYPE_TOSS);
 	gren.nextthink = time + g_balance_hook_secondary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_hook_explode2;
@@ -187,7 +187,7 @@ float(float req) weapon_hook {
 		CVAR_CACHE(g_balance_hook_secondary_radius);
 		CVAR_CACHE(g_balance_hook_secondary_refire);
 		CVAR_CACHE(g_balance_hook_secondary_speed);
-		projectile_init(PROJECTILE_HOOKBOMB, MOVETYPE_TOSS);
+		projectile_init(PROJECTILE_HOOKBOMB);
 	}
 	return TRUE;
 }

@@ -98,7 +98,7 @@ void(void) weapon_grenadelauncher_attack {
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
 	projectile_setup(gren, weapon_shotorg, WEP_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
-			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force, 1);
+			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force, 1, (bounce ? MOVETYPE_BOUNCE : MOVETYPE_TOSS));
 
 	gren.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
 	gren.think = projectile_think2use;
@@ -121,7 +121,7 @@ void(void) weapon_grenadelauncher_attack2 {
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
 	projectile_setup(gren, weapon_shotorg, WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY, g_balance_grenadelauncher_secondary_damage,
-			g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, g_balance_grenadelauncher_secondary_force, 1);
+			g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, g_balance_grenadelauncher_secondary_force, 1, MOVETYPE_BOUNCE);
 	gren.nextthink = time + g_balance_grenadelauncher_secondary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;
@@ -253,8 +253,8 @@ float(float req) weapon_grenadelauncher {
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_trigger_type);
 		CVAR_CACHE(g_balance_grenadelauncher_magazinecapacity);
 		CVAR_CACHE(g_balance_grenadelauncher_reloadtime);
-		projectile_init(PROJECTILE_GRENADE, MOVETYPE_TOSS);
-		projectile_init(PROJECTILE_GRENADE_BOUNCING, MOVETYPE_BOUNCE);
+		projectile_init(PROJECTILE_GRENADE);
+		projectile_init(PROJECTILE_GRENADE_BOUNCING);
 		if (cvar("g_balance_grenadelauncher_swap_buttons")) {
 			gl_buttonatck1 = BUTTON_ATCK2;
 			gl_buttonatck2 = BUTTON_ATCK;

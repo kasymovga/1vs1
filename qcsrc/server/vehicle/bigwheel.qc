@@ -56,7 +56,7 @@ void(void) vehicle_bigwheel_attack_laser {
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
 	entity proj = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, WEP_HLAC, g_vehicle_bigwheel_laser_damage,
-			g_vehicle_bigwheel_laser_edgedamage, g_vehicle_bigwheel_laser_radius, g_vehicle_bigwheel_laser_force, 0);
+			g_vehicle_bigwheel_laser_edgedamage, g_vehicle_bigwheel_laser_radius, g_vehicle_bigwheel_laser_force, 0, MOVETYPE_FLY);
 	proj.realowner = self.owner;
 	proj.velocity = (v_forward + randomvec() * g_vehicle_bigwheel_laser_spread) * g_vehicle_bigwheel_laser_speed;
 	weapon_setup_projectile_velocity(proj);

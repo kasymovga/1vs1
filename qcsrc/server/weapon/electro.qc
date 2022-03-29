@@ -130,7 +130,7 @@ void(void) weapon_electro_attack {
 	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, WEP_ELECTRO, g_balance_electro_primary_damage,
-			g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, g_balance_electro_primary_force, 0);
+			g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, g_balance_electro_primary_force, 0, MOVETYPE_FLY);
 	proj.classname = "plasma_prim";
 	proj.use = weapon_electro_explode;
 	proj.think = projectile_think2use;
@@ -150,7 +150,7 @@ void(void) weapon_electro_attack2 {
 	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE, self); // no culling, it has sound
 	projectile_setup(proj, weapon_shotorg, WEP_ELECTRO | HITTYPE_SECONDARY, g_balance_electro_secondary_damage,
-			g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, g_balance_electro_secondary_force, 1);
+			g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, g_balance_electro_secondary_force, 1, MOVETYPE_BOUNCE);
 	proj.classname = "plasma";
 	proj.use = weapon_electro_explode;
 	proj.think = projectile_think2use;
@@ -296,8 +296,8 @@ float(float req) weapon_electro {
 		CVAR_CACHE(g_balance_electro_secondary_speed);
 		CVAR_CACHE(g_balance_electro_secondary_speed_up);
 		CVAR_CACHE(g_balance_electro_secondary_spread);
-		projectile_init(PROJECTILE_ELECTRO, MOVETYPE_BOUNCE);
-		projectile_init(PROJECTILE_ELECTRO_BEAM, MOVETYPE_FLY);
+		projectile_init(PROJECTILE_ELECTRO);
+		projectile_init(PROJECTILE_ELECTRO_BEAM);
 		if (cvar("g_balance_electro_swap_buttons")) {
 			electro_buttonatck1 = BUTTON_ATCK2;
 			electro_buttonatck2 = BUTTON_ATCK;

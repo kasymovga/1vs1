@@ -483,6 +483,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     makevectors(a + ang);
     weapon_shotdir = v_forward;
     entity gren = projectile(hgtype != NADGET_RAZE, nadget_GenericProjectile_CSQCProjType(hgtype), TRUE, self);
+	gren.movetype = GV("movetype");
     gren.classname = "hg_generic_projectile";
     gren.bot_dodge = TRUE;
     gren.bot_dodgerating = GV("damage") + 300;

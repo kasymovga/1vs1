@@ -223,6 +223,13 @@ void(float ignore) projectile_read {
 			self.gravity = net_read_coord();
 			self.move_origin = self.origin;
 			self.move_velocity = self.velocity;
+			if (f & 8) {
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = NULL;
+			} else {
+				self.move_movetype = MOVETYPE_TOSS;
+				self.move_touch = projectile_touch_stop;
+			}
 		} else if (f & 32) { //teleported
 			vector o = self.origin;
 			float tt = net_read_coord();
@@ -250,6 +257,7 @@ void(float ignore) projectile_read {
 		self.silent = (self.cnt & 128);
 		self.cnt = (self.cnt & 0x7F);
 		self.scale = 1;
+		self.colormod = '0 0 0';
 		switch (self.cnt) {
 		case PROJECTILE_ELECTRO:
 			setmodel(self, "models/ebomb.mdl");
@@ -272,7 +280,6 @@ void(float ignore) projectile_read {
 			setmodel(self, "models/tracer.mdl");
 			break;
 		case PROJECTILE_CRYLINK:
-		case PROJECTILE_CRYLINK_BOUNCING:
 			self.trail_effect = particleeffectnum("TR_CRYLINKPLASMA");
 			setmodel(self, "models/plasmatrail.mdl");
 			break;
@@ -282,8 +289,12 @@ void(float ignore) projectile_read {
 			self.trail_effect = particleeffectnum("TR_KNIGHTSPIKE");
 			setmodel(self, "models/grenademodel.md3");
 			break;
-		case PROJECTILE_LASER: setmodel(self, "models/laser.mdl"); break;
-		case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3"); break;
+		case PROJECTILE_LASER:
+			setmodel(self, "models/laser.mdl");
+			break;
+		case PROJECTILE_HLAC:
+			setmodel(self, "models/hlac_bullet.md3");
+			break;
 		case PROJECTILE_PORTO_RED:
 		case PROJECTILE_PORTO_BLUE:
 			setmodel(self, "models/grenademodel.md3");
@@ -293,7 +304,6 @@ void(float ignore) projectile_read {
 			self.colormod = ((self.cnt == PROJECTILE_PORTO_RED) ? '2 1 1' : '1 1 2');
 			break;
 		case PROJECTILE_HAGAR:
-		case PROJECTILE_HAGAR_BOUNCING:
 			setmodel(self, "models/hagarmissile.mdl");
 			self.scale = 0.4;
 			self.trail_effect = particleeffectnum("TR_GRENADE");
@@ -315,7 +325,6 @@ void(float ignore) projectile_read {
 			}
 			break; // particle effect is good enough
 		case PROJECTILE_BULLET_BIG:
-		case PROJECTILE_BULLET_BIG_BOUNCING:
 			setmodel(self, "models/tracer.mdl");
 			self.scale = 3;
 			break;
@@ -387,13 +396,6 @@ void(float ignore) projectile_read {
 			error("Received invalid CSQC projectile, can't work with this!");
 			break;
 		}
-		self.colormod = '0 0 0';
-		self.move_movetype = PROJECTILE_INFO_PROPERTY(self.cnt, movetype);
-		if (self.move_movetype == MOVETYPE_BOUNCEMISSILE || self.move_movetype == MOVETYPE_BOUNCE)
-			self.move_touch = NULL;
-		else
-			self.move_touch = projectile_touch_stop;
-
 		projectile_set_size(self, self.cnt);
 	}
 	if (f & 4) {
@@ -403,18 +405,19 @@ void(float ignore) projectile_read {
 		self.iflags &= ~IFLAG_AUTOANGLES;
 		self.use_server_angles = TRUE;
 	}
-	if (self.gravity) {
-		if (self.move_movetype == MOVETYPE_FLY)
-			self.move_movetype = MOVETYPE_TOSS;
-		else if (self.move_movetype == MOVETYPE_BOUNCEMISSILE)
-			self.move_movetype = MOVETYPE_BOUNCE;
-	} else {
-		if (self.move_movetype == MOVETYPE_TOSS)
-			self.move_movetype = MOVETYPE_FLY;
-		else if (self.move_movetype == MOVETYPE_BOUNCE)
-			self.move_movetype = MOVETYPE_BOUNCEMISSILE;
-	}
-	if (!(self.count & 128))
+	if (self.count & 128) {
+		if (self.gravity) {
+			if (self.move_movetype == MOVETYPE_FLY)
+				self.move_movetype = MOVETYPE_TOSS;
+			else if (self.move_movetype == MOVETYPE_BOUNCEMISSILE)
+				self.move_movetype = MOVETYPE_BOUNCE;
+		} else {
+			if (self.move_movetype == MOVETYPE_TOSS)
+				self.move_movetype = MOVETYPE_FLY;
+			else if (self.move_movetype == MOVETYPE_BOUNCE)
+				self.move_movetype = MOVETYPE_BOUNCEMISSILE;
+		}
+	} else
 		interpolate_note();
 
 	self.draw = projectile_draw;
@@ -442,21 +445,19 @@ void(void) projectile_info_read {
 	float i;
 	for (i = 0; i < phighest; ++i) {
 		float type = net_read_byte();
-		float _movetype = net_read_byte();
 		switch (type) {
 		case PROJECTILE_INFO_TYPE_UNREGISTERED:
 		case PROJECTILE_INFO_TYPE_POINT_000:
-			projectile_register(i + 1, type, '0 0 0', _movetype);
+			projectile_register(i + 1, type, '0 0 0');
 			break;
 		case PROJECTILE_INFO_TYPE_POINT_00n3:
-			projectile_register(i + 1, type, '0 -3 -3', _movetype);
+			projectile_register(i + 1, type, '0 -3 -3');
 			break;
 		case PROJECTILE_INFO_TYPE_POINT:
 		case PROJECTILE_INFO_TYPE_CENTERED:
 		case PROJECTILE_INFO_TYPE_UNCENTERED:
 			projectile_info_type[i] = type;
 			projectile_info_sizes[i] = net_read_coord();
-			projectile_info_movetype[i] = _movetype;
 			projectile_info_highest_registered = max(projectile_info_highest_registered, i + 1);
 			break;
 		default:

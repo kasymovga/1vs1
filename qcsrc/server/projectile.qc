@@ -22,7 +22,7 @@ float() projectile_no_impact_check {
 }
 
 float(entity to, float sf) projectile_send {
-	sf = sf & 31;
+	sf = sf & 23; //1, 2, 4, 16
 	if (self.teleport_time) {
 		if (self.teleport_time >= time - sys_ticrate * 2)
 			sf |= 32;
@@ -32,6 +32,8 @@ float(entity to, float sf) projectile_send {
 	if (self.csqcprojectile_clientanimate) {
 		sf &= ~4;
 		sf |= 128; // client animated, not interpolated
+		if (self.movetype == MOVETYPE_BOUNCEMISSILE || self.movetype == MOVETYPE_BOUNCE)
+			sf |= 8;
 	} else if(!self.csqcprojectile_sendangles) {
 		sf &= ~4;
 	}
@@ -82,7 +84,7 @@ void(entity e) projectile_check {
 	e.csqcprojectile_oldorigin = e.origin;
 }
 
-void(float csqcid, vector sizes, float _movetype) projectile_register_auto {
+void(float csqcid, vector sizes) projectile_register_auto {
 	float type;
 	if (sizes_x == 0 && sizes_y == sizes_z) {
 		if (sizes == '0 0 0') {
@@ -97,10 +99,10 @@ void(float csqcid, vector sizes, float _movetype) projectile_register_auto {
 	} else {
 		type = PROJECTILE_INFO_TYPE_UNCENTERED;
 	}
-	projectile_register(csqcid, type, sizes, _movetype);
+	projectile_register(csqcid, type, sizes);
 }
 
-void(float type, float _movetype) projectile_init {
+void(float type) projectile_init {
 	vector sizes;
 	CVAR_CACHE(sv_projectile_tracecull);
 	sizes = '0 0 0';
@@ -120,7 +122,7 @@ void(float type, float _movetype) projectile_init {
 		sizes = '0 -3 -3';
 		break;
 	}
-	projectile_register_auto(type, sizes, _movetype);
+	projectile_register_auto(type, sizes);
 }
 
 entity(float clientanimate, float type, float docull, entity _owner) projectile {
@@ -137,11 +139,10 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 	e.csqcprojectile_type = type;
 	e.flags = FL_PROJECTILE;
 	e.classname = "projectile";
-	e.movetype = PROJECTILE_INFO_PROPERTY(type, movetype);
 	return e;
 }
 
-void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float _gravity) projectile_setup {
+void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float _gravity, float _movetype) projectile_setup {
 	e.projectiledeathtype = deathtype;
 	PROJECTILE_MAKETRIGGER(e);
 	if (_gravity) {
@@ -162,6 +163,7 @@ void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, flo
 	e.dmg_edge = _dmg_edge;
 	e.bot_dodge = TRUE;
 	e.bot_dodgerating = _dmg;
+	e.movetype = _movetype;
 }
 
 void(entity e) projectile_update {
@@ -240,10 +242,8 @@ void(void) projectile_info_send {
 	net_write_byte(MSG_ENTITY, projectile_info_highest_registered);
 	for(i = 0; i < projectile_info_highest_registered; ++i) {
 		float type = projectile_info_type[i];
-		float _movetype = projectile_info_movetype[i];
 		net_write_byte(MSG_ENTITY, type);
-		net_write_byte(MSG_ENTITY, _movetype);
-		switch(type) {
+		switch (type) {
 		case PROJECTILE_INFO_TYPE_UNREGISTERED:
 		case PROJECTILE_INFO_TYPE_POINT_000:
 		case PROJECTILE_INFO_TYPE_POINT_00n3:

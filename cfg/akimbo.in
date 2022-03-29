@@ -55,3 +55,4 @@ set akimbo_lms_g_pickup_bullets 10
 set akimbo_lms_g_pickup_shells 5
 set akimbo_g_spawnreplace_ammo_shells "item_shells"
 set akimbo_g_spawnreplace_ammo_bullets "item_bullets"
+set akimbo_g_spawnreplace_weapon_shotgun "weapon_shotgun"

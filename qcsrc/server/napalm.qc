@@ -73,6 +73,7 @@ void Napalm_Think(void) {
 entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_randfactor, float deathtype,
                     float burnradius, float burndamage, float burnedgedamage, float burntime) {
     entity proj = projectile(TRUE, PROJECTILE_HG_NAPALMSHARD, TRUE, powner);
+	proj.movetype = MOVETYPE_BOUNCE;
 	proj.gravity = 1;
     proj.classname = "napalm";
     proj.realowner = proj.owner;
@@ -107,7 +108,7 @@ void Napalm_Init(void) {
     if(napalm_init_done) {
         return;
     }
-	projectile_init(PROJECTILE_HG_NAPALMSHARD, MOVETYPE_BOUNCE);
+	projectile_init(PROJECTILE_HG_NAPALMSHARD);
 	dlc_require("rm_effects_v2");
     napalm_init_done = TRUE;
 }

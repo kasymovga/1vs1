@@ -91,7 +91,7 @@ void(void) vehicle_spiderbot_rocket_do {
 	missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
 	projectile_setup(missile, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire")), WEP_ROCKET_LAUNCHER,
 			g_vehicle_spiderbot_rocket_damage, g_vehicle_spiderbot_rocket_edgedamage, g_vehicle_spiderbot_rocket_radius,
-			g_vehicle_spiderbot_rocket_force, 0);
+			g_vehicle_spiderbot_rocket_force, 0, MOVETYPE_FLY);
 	te_explosion (missile.origin);
 	missile.realowner = self.owner;
 	missile.nextthink = time;// 0.2;
