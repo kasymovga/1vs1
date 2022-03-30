@@ -1,7 +1,3 @@
-void spawnfunc_turret_flac();
-void turret_flac_attack();
-void turret_flac_projectile_explode();
-
 void(void) turret_flac_attack {
 	entity proj;
 	turret_tag_fire_update();

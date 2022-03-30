@@ -1,10 +1,3 @@
-void(void) spawnfunc_turret_hk;
-void(void) turret_hk_attack;
-void(void) turret_hk_missile_think;
-void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) turret_hk_missile_damage;
-float(entity e_target,entity e_sender) turret_hk_addtarget;
-//void turret_hk_missile_touch();
-
 float hk_maxspeed;
 float hk_minspeed;
 float hk_accel;
@@ -62,34 +55,6 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.nextthink = time;
 		self.think = turret_projectile_think_explode;
 	}
-}
-
-void(void) turret_hk_attack {
-	entity missile;
-	//entity flash2;
-	sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-	missile                  = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, fly sound
-	projectile_setup(missile, self.tur_shotorg, WEP_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
-	missile.solid            = SOLID_BBOX;
-	setorigin(missile, self.tur_shotorg);
-	missile.scale            = 1;
-	missile.classname        = "hk_missile";
-	missile.takedamage       = DAMAGE_YES;
-	missile.damageforcescale = 4;
-	missile.health           = 10;
-	missile.think            = turret_hk_missile_think;
-	missile.event_damage     = turret_hk_missile_damage;
-	missile.nextthink        = time + 0.25;
-	missile.velocity         = self.tur_shotdir_updated * (self.shot_speed * 0.75);
-	missile.angles           = vectoangles(missile.velocity);
-	missile.touch            = turret_projectile_touch_explode; //turret_hk_missile_touch;
-	missile.enemy            = self.enemy;
-	missile.team             = self.team;
-	missile.cnt              = time + 30;
-	missile.ticrate          = max(cvar("sys_ticrate"),0.05);
-	te_explosion (missile.origin);
-	if (self.tur_head.frame == 0)
-		self.tur_head.frame = self.tur_head.frame + 1;
 }
 
 void(void) turret_hk_missile_think {
@@ -225,6 +190,34 @@ void(void) turret_hk_missile_think {
 	// Align model with new heading
 	self.angles = vectoangles(self.velocity);
 	projectile_update(self);
+}
+
+void(void) turret_hk_attack {
+	entity missile;
+	//entity flash2;
+	sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
+	missile                  = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, fly sound
+	projectile_setup(missile, self.tur_shotorg, WEP_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
+	missile.solid            = SOLID_BBOX;
+	setorigin(missile, self.tur_shotorg);
+	missile.scale            = 1;
+	missile.classname        = "hk_missile";
+	missile.takedamage       = DAMAGE_YES;
+	missile.damageforcescale = 4;
+	missile.health           = 10;
+	missile.think            = turret_hk_missile_think;
+	missile.event_damage     = turret_hk_missile_damage;
+	missile.nextthink        = time + 0.25;
+	missile.velocity         = self.tur_shotdir_updated * (self.shot_speed * 0.75);
+	missile.angles           = vectoangles(missile.velocity);
+	missile.touch            = turret_projectile_touch_explode; //turret_hk_missile_touch;
+	missile.enemy            = self.enemy;
+	missile.team             = self.team;
+	missile.cnt              = time + 30;
+	missile.ticrate          = max(cvar("sys_ticrate"),0.05);
+	te_explosion (missile.origin);
+	if (self.tur_head.frame == 0)
+		self.tur_head.frame = self.tur_head.frame + 1;
 }
 
 void(void) turret_hk_postthink {

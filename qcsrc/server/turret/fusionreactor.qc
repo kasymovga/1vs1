@@ -1,33 +1,23 @@
-void spawnfunc_turret_fusionreactor();
-void turret_fusionreactor_fire();
-
-float turret_fusionreactor_firecheck()
-{
-    if (self.enemy == world) return 0;
-
-    if (!(self.enemy.ammo_flags & TFL_AMMO_RECIVE)) return 0;
-    if (!(self.enemy.ammo_flags & TFL_AMMO_ENERGY)) return 0;
-
-    if (self.ammo < self.shot_dmg) return 0;
-    if (self.enemy.ammo >= self.enemy.ammo_max) return 0;
-    if (self.tur_dist_aimpos > self.target_range) return 0;
-    if (self.tur_dist_aimpos < self.target_range_min) return 0;
-
-    return 1;
+float(void) turret_fusionreactor_firecheck {
+	if (self.enemy == world) return 0;
+	if (!(self.enemy.ammo_flags & TFL_AMMO_RECIVE)) return 0;
+	if (!(self.enemy.ammo_flags & TFL_AMMO_ENERGY)) return 0;
+	if (self.ammo < self.shot_dmg) return 0;
+	if (self.enemy.ammo >= self.enemy.ammo_max) return 0;
+	if (self.tur_dist_aimpos > self.target_range) return 0;
+	if (self.tur_dist_aimpos < self.target_range_min) return 0;
+	return 1;
 }
 
-void turret_fusionreactor_fire()
-{
+void(void) turret_fusionreactor_fire {
     self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
     //te_lightning1(world,self.origin,self.enemy.origin);
 }
 
-void turret_fusionreactor_postthink()
-{
+void(void) turret_fusionreactor_postthink {
 }
 
-void turret_fusionreactor_respawnhook()
-{
+void(void) turret_fusionreactor_respawnhook {
     self.tur_head.avelocity = '0 50 0';
 }
 

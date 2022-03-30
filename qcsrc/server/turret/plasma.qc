@@ -1,65 +1,53 @@
-void spawnfunc_turret_plasma();
-void spawnfunc_turret_plasma_dual();
+void(void) turret_plasma_postthink {
+	if (self.tur_head.frame != 0)
+		self.tur_head.frame = self.tur_head.frame + 1;
 
-void turret_plasma_attack();
-
-void turret_plasma_postthink()
-{
-    if (self.tur_head.frame != 0)
-        self.tur_head.frame = self.tur_head.frame + 1;
-
-    if (self.tur_head.frame > 5)
-        self.tur_head.frame = 0;
+	if (self.tur_head.frame > 5)
+		self.tur_head.frame = 0;
 }
 
-void turret_plasma_dual_postthink()
-{
-    if ((self.tur_head.frame != 0) && (self.tur_head.frame != 3))
-        self.tur_head.frame = self.tur_head.frame + 1;
+void(void) turret_plasma_dual_postthink {
+	if ((self.tur_head.frame != 0) && (self.tur_head.frame != 3))
+		self.tur_head.frame = self.tur_head.frame + 1;
 
-    if (self.tur_head.frame > 6)
-        self.tur_head.frame = 0;
+	if (self.tur_head.frame > 6)
+		self.tur_head.frame = 0;
 }
 
-void turret_plasma_attack()
-{
-    entity proj;
-
-    sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
-
-    proj                    = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
+void(void) turret_plasma_attack {
+	entity proj;
+	sound(self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
+	pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
 	projectile_setup(proj, self.tur_shotorg, WEP_ELECTRO, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
-    proj.classname       = "plasmabomb";
-    proj.think           = turret_projectile_think_explode;
-    proj.nextthink       = time + 9;
-    proj.solid           = SOLID_BBOX;
-    proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    proj.touch           = turret_projectile_touch_explode;
-    proj.flags           = FL_PROJECTILE;
-    proj.enemy           = self.enemy;
-    proj.flags           |= FL_NOTARGET;
-    if (self.tur_head.frame == 0)
-        self.tur_head.frame = 1;
+	proj.classname = "plasmabomb";
+	proj.think = turret_projectile_think_explode;
+	proj.nextthink = time + 9;
+	proj.solid = SOLID_BBOX;
+	proj.velocity = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
+	proj.touch = turret_projectile_touch_explode;
+	proj.flags = FL_PROJECTILE;
+	proj.enemy = self.enemy;
+	proj.flags |= FL_NOTARGET;
+	if (self.tur_head.frame == 0)
+		self.tur_head.frame = 1;
 }
 
-void turret_plasma_dual_attack()
-{
-    entity proj;
-
-    sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-    proj                    = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
+void(void) turret_plasma_dual_attack {
+	entity proj;
+	sound(self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
+	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
 	projectile_setup(proj, self.tur_shotorg, WEP_ELECTRO, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
-    proj.classname       = "plasmabomb";
-    proj.think           = turret_projectile_think_explode;
-    proj.nextthink       = time + 9;
-    proj.solid           = SOLID_BBOX;
-    proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    proj.touch           = turret_projectile_touch_explode;
-    proj.flags           = FL_PROJECTILE;
-    proj.enemy           = self.enemy;
-    proj.flags           |= FL_NOTARGET;
-    self.tur_head.frame += 1;
+	proj.classname = "plasmabomb";
+	proj.think = turret_projectile_think_explode;
+	proj.nextthink = time + 9;
+	proj.solid = SOLID_BBOX;
+	proj.velocity = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
+	proj.touch = turret_projectile_touch_explode;
+	proj.flags = FL_PROJECTILE;
+	proj.enemy = self.enemy;
+	proj.flags |= FL_NOTARGET;
+	self.tur_head.frame += 1;
 }
 
 /*
