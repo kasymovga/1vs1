@@ -17,3 +17,4 @@ set bestakimbo_g_weaponreplace_supershotgun "shotgun"
 set bestakimbo_tdm_g_runes 1
 set bestakimbo_tdm_g_runes_carried_runes_max 1
 set bestakimbo_g_spawnshieldtime 2
+set bestakimbo_ctf_g_akimbo_weapons "laser shotgun uzi grenadelauncher electro crylink hlac hagar zapper rocketlauncher"
