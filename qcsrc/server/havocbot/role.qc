@@ -106,6 +106,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_item
 void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enemyplayers {
 	entity head;
 	float t, noteam, distance;
+	entity e;
 	noteam = ((self.team == 0) || !team_mode); // fteqcc sucks
 	if (bot_nofire)
 		return;
@@ -119,26 +120,27 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 		if (self != head)
 		if (head.health > 0)
 		if ((noteam && (!bot_ignore_bots || clienttype(head) == CLIENTTYPE_REAL)) || head.team != self.team) {
-			distance = vlen(head.origin - org);
+			e = player_entity(head);
+			distance = vlen(e.origin - org);
 			if (distance < 100 || distance > sradius)
 				continue;
 
-			if (head.flags & FL_INWATER || head.flags & FL_PARTIALGROUND)
+			if ((e.flags & FL_INWATER) || (e.flags & FL_PARTIALGROUND))
 				continue;
 
 			// not falling
-			if (head.flags & FL_ONGROUND == 0) {
-				trace_line(head.origin, head.origin + '0 0 -1500', TRUE, world);
+			if not(e.flags & FL_ONGROUND) {
+				trace_line(e.origin, e.origin + '0 0 -1500', TRUE, world);
 				t = pointcontents(trace_endpos + '0 0 1');
 				if (t != CONTENT_SOLID)
 				if (t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)
 					continue;
 
-				if (trigger_tracebox_hits_hurt(head.origin, head.mins, head.maxs, trace_endpos))
+				if (trigger_tracebox_hits_hurt(e.origin, e.mins, e.maxs, trace_endpos))
 					continue;
 			}
 			t = (self.health + self.armorvalue ) / (head.health + head.armorvalue );
-			navigation_routerating(head, t * ratingscale, 2000);
+			navigation_routerating(e, t * ratingscale, 2000);
 		}
 	}
 }
