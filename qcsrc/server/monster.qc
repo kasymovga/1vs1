@@ -189,13 +189,12 @@ void monster_die_animated() {
 
 void monster_event_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
 	if (self.spawnflags & MONSTER_SPAWN_SHIELDED) {
-        entity sh = spawn();
-        sh.alpha = 0.5;
-        sh.scale  = (128 / vlen(self.maxs - self.mins))*2;
+		entity sh = spawn();
+		sh.alpha = 0.5;
+		sh.scale  = (128 / vlen(self.maxs - self.mins))*2;
 		setmodel(sh, "models/vhshield.md3");
-        //sh.scale = 1.25;
-        sh.effects = EFFECT_LOWPRECISION;
-        sh.angles = vectoangles(normalize(-force));
+		sh.effects = EFFECT_LOWPRECISION;
+		sh.angles = vectoangles(normalize(-force));
 		sh.nextthink = time + 0.2;
 		sh.think = stdproc_remove;
 		setorigin(sh, hitloc + normalize(force) * sh.scale * 100);
@@ -600,6 +599,7 @@ void monster_init(void() init_func) {
 		monster_common_init();
 		monster_common_init_done = TRUE;
 	}
+	entity_move_out_of_solid(self);
 	if (find(world, classname, self.classname) != self)
 		return;
 
@@ -676,7 +676,6 @@ void(void) monster_monsters_init {
 			monster_name = head;
 			monster_count = 1;
 		}
-
 		_monster_classname = strzone(strcat("monster_", monster_name, "_spawn"));
 		monster_func = strcat("spawnfunc_monster_", monster_name, "_spawn");
 		if (isfunction(monster_func)) {
