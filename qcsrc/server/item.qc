@@ -1006,7 +1006,7 @@ void(void) item_mushroom_touch {
 void(void) spawnfunc_item_mushroom {
 	self.max_health = cvar("g_pickup_healthmushroom_max");
 	self.health = cvar("g_pickup_healthmushroom");
-	self.cnt = cvar("g_pickup_healthmusroom_time");
+	self.cnt = cvar("g_pickup_healthmushroom_time");
 	item_start(sv_model_mushroom, "models/items/g_h100.md3", "misc/megahealth.wav", g_pickup_respawntime_mushroom, g_pickup_respawntimejitter_mushroom, "Mushroom", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 	self.touch = item_mushroom_touch;
 }
