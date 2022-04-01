@@ -30,6 +30,7 @@ float(entity plr, float eject) vehicle_extract_player {
 
 	entity oldself = self;
 	self = plr.vehicle;
+	self.bot_attack = (self.team && team_mode);
 	vector exit_origin;
 	makevectors(self.angles);
 	float exit_up = self.maxs_z - plr.maxs_z;
@@ -292,6 +293,7 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	self.player_physic = spawn();
 	self.player_physic.viewmodelforclient = self.owner;
 	self.player_physic.vehicle = self;
+	self.bot_attack = TRUE;
 	net_link_entity(self.player_physic, FALSE, 0, phys_send);
 	return TRUE;
 }
@@ -310,5 +312,6 @@ void(string name, void() delayed_init) vehicle_stdproc_init {
 	self.shield_max = cvar(strcat("g_vehicle_", name, "_shield"));
 	self.shield_regen = cvar(strcat("g_vehicle_", name, "_shield_regen"));
 	self.shield_regen_dmgpause = cvar(strcat("g_vehicle_", name, "_shield_regen_dmgpause"));
+	self.bot_attack = (self.team && team_mode);
 	entity_initialize(self, delayed_init, INITPRIO_DROPTOFLOOR);
 }

@@ -208,7 +208,6 @@ void(void) vehicle_bigwheel_spawn {
 	self.alpha = 1;
 	self.colormap = 1024;
 	self.deadflag = DEAD_NO;
-	self.bot_attack = TRUE;
 	self.pushfactor = g_vehicle_bigwheel_pushfactor;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setorigin(self,self.enemy.origin);

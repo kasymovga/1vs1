@@ -326,7 +326,6 @@ void(void) vehicle_spiderbot_spawn {
 	self.colormap = 1024;
 	self.tur_head.colormap = 1024;
 	self.deadflag = DEAD_NO;
-	self.bot_attack = TRUE;
 	self.pushfactor = g_vehicle_spiderbot_pushfactor;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setsize(self,SPIDERBOT_MIN, SPIDERBOT_MAX);
