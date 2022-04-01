@@ -1,11 +1,11 @@
-void ugandaknuckles_idle();
-void ugandaknuckles_guard();
-void ugandaknuckles_walk();
+void(void) monster_ugandaknuckles_idle;
+void(void) monster_ugandaknuckles_guard;
+void(void) monster_ugandaknuckles_walk;
 
-void ugandaknuckles_hunt() {
+void(void) monster_ugandaknuckles_hunt {
 	float dofire = FALSE;
 	self.nextthink = time;
-	if (monster_check_target(ugandaknuckles_walk, ugandaknuckles_guard))
+	if (monster_check_target(monster_ugandaknuckles_walk, monster_ugandaknuckles_guard))
 		return;
 
 	if (self.attack_finished_single < time)
@@ -51,7 +51,7 @@ void ugandaknuckles_hunt() {
 	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 }
 
-void ugandaknuckles_idle() {
+void(void) monster_ugandaknuckles_idle {
 	self.nextthink = time;
 	if (monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
@@ -60,18 +60,18 @@ void ugandaknuckles_idle() {
 	self.frame = 1;
 }
 
-void ugandaknuckles_guard() {
+void(void) monster_ugandaknuckles_guard {
 	self.angles_y = self.angles_y + frametime * 15;
-	ugandaknuckles_idle();
+	monster_ugandaknuckles_idle();
 	self.frame = 1;
 }
 
-void ugandaknuckles_walk() {
+void(void) monster_ugandaknuckles_walk {
 	self.nextthink = time;
 	if(monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
 
-	if (monster_walk_finished(ugandaknuckles_idle, 100))
+	if (monster_walk_finished(monster_ugandaknuckles_idle, 100))
 		return;
 
 	anim_set(self, '1 6 12', TRUE, TRUE, FALSE);
@@ -82,8 +82,8 @@ void ugandaknuckles_walk() {
 
 }
 
-void ugandaknuckles_spawn() {
-	monster_prepare(ugandaknuckles_hunt, ugandaknuckles_walk, ugandaknuckles_idle);
+void(void) monster_ugandaknuckles_spawn {
+	monster_prepare(monster_ugandaknuckles_hunt, monster_ugandaknuckles_walk, monster_ugandaknuckles_idle);
 	setmodel(self, "models/knuckles.md3");
 	self.movetype = MOVETYPE_WALK;
 	self.takedamage = DAMAGE_AIM;
@@ -92,7 +92,7 @@ void ugandaknuckles_spawn() {
 	self.netname = "Uganda Knuckles";
 }
 
-void ugandaknuckles_init() {
+void(void) monster_ugandaknuckles_init {
 	precache_model("models/knuckles.md3");
 	dlc_require("uganda");
 	dlc_precache_sound("douknowdawae.ogg");
@@ -102,8 +102,8 @@ void ugandaknuckles_init() {
 	dlc_precache_sound("youdunnodawae.ogg");
 }
 
-void spawnfunc_monster_ugandaknuckles_spawn() {
+void(void) spawnfunc_monster_ugandaknuckles_spawn {
 	setsize(self, '-16 -16 0', '16 16 40');
-	monster_init(ugandaknuckles_init);
-	monster_prepare_spawn(ugandaknuckles_spawn, spawnfunc_monster_ugandaknuckles_spawn);
+	monster_init(monster_ugandaknuckles_init);
+	monster_prepare_spawn(monster_ugandaknuckles_spawn, spawnfunc_monster_ugandaknuckles_spawn);
 }
