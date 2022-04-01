@@ -323,12 +323,11 @@ void(float ateam, vector from, vector to) weapon_zapper_attack2_effect {
 }
 
 void weapon_zapper_attack2_arc(entity targ, entity attacker, float _damage) {
-	float arc = g_balance_zapper_secondary_arc;
-	if (arc <= 0)
+	if (g_balance_zapper_secondary_arc <= 0)
 		return;
 
 	arc_damage(targ, attacker, _damage, WEP_ZAPPER | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
-		g_balance_zapper_secondary_arc_range, arc,
+		g_balance_zapper_secondary_arc_range, g_balance_zapper_secondary_arc,
 		g_balance_zapper_secondary_arc_force, COLOR_TEAM2, zapper_arc_hit
 	);
 }
