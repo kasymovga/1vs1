@@ -42,6 +42,7 @@ set g_pickup_respawntime_key 60
 set g_pickup_respawntime_weapon 15
 set g_pickup_healthmushroom_max 999
 set g_pickup_healthmushroom 100
+set g_pickup_healthmushroom_time 15
 set g_pickup_weapons 1
 set g_pickup_shells 15
 set g_pickup_shells_max 999
