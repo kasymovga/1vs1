@@ -12,13 +12,16 @@ void spearguy_hunt() {
 	if (vlen(v - self.origin) > self.dmg_radius) {
 		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 		v = monster_move_walk(600, 5, 500);
+		sound_stop(self, CHAN_WEAPON);
 	} else {
 		movelib_beak_simple(100 * frametime);
-		anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
+		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
 		trace_line(self.origin, v, TRACE_MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
-			makevectors(self.angles);
-			te_lightning1(world, self.origin + normalize(v_forward) * 20 + v_right * 10, self.enemy.origin);
+			sound(self, CHAN_WEAPON, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+			vector o = gettaginfo(self.exteriorweaponentity, gettagindex(self.exteriorweaponentity, ""));
+			//te_lightning1(world, o + v_forward * 20, self.enemy.origin);
+			pointparticles(particleeffectnum("sparks"), o + v_forward * 50, v_forward, 1);
 			damage(self.enemy, self, self, self.dmg_edge * frametime, WEP_MELEE, self.enemy.origin, v_forward);
 		}
 		v = self.enemy.origin - self.origin;
@@ -60,6 +63,7 @@ void spearguy_walk() {
 
 void spearguy_remove() {
 	remove(self.exteriorweaponentity);
+	sound_stop(self, CHAN_WEAPON);
 }
 
 void spearguy_spawn() {
@@ -82,6 +86,7 @@ void spearguy_init() {
 	dlc_require("rspear");
 	precache_model("models/player/lurk.zym");
 	precache_model("models/weapons/v_rspear.md3");
+	precache_sound("weapons/electro_fly.wav");
 }
 
 void spawnfunc_monster_spearguy_spawn() {
