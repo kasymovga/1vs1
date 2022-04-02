@@ -26,6 +26,13 @@ void monster_set_route() {
 	float f1 = 0, f2 = 0, f3 = 0, f4 = 0;
 	entity p;
 	if (self.items & IT_JETPACK) {
+		if (self.enemy) {
+			trace_line(ENTITY_CENTER(self), ENTITY_CENTER(self.enemy), TRACE_MOVE_NOMONSTERS, self);
+			if (trace_fraction == 1) {
+				self.goalcurrent = self.enemy;
+				return;
+			}
+		}
 		f1 = bot_ai_navigation_jetpack;
 		f2 = bot_ai_navigation_jetpack_mindistance;
 		f3 = g_jetpack_maxspeed_up;
@@ -310,7 +317,6 @@ void monster_move_fly_idle(float _speed, float blend_factor) {
 }
 
 vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
-	float dir_z_save;
 	float vel_z_save;
 	vector v;
 	if (self.waterlevel == WATERLEVEL_SUBMERGED) {
@@ -328,10 +334,9 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 		trace_line(self.origin, self.enemy.origin, TRACE_MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
 			v = normalize(self.enemy.origin - self.origin);
-			dir_z_save = v_z;
+			v_z = 0;
 			vel_z_save = self.velocity_z;
 			movelib_move_simple(v, _speed, blend_factor * frametime);
-			v_z = dir_z_save;
 			self.velocity_z = vel_z_save;
 			return v;
 		}
@@ -350,16 +355,32 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 			trace_box(o, self.mins, self.maxs, o - '0 0 1000', TRACE_MOVE_NOMONSTERS, self);
 			if (trace_startsolid) {
 				//Check for wall
-				trace_box(self.origin, self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
-				float trace_fraction_first = trace_fraction;
+				vector step = '0 0 1' * sv_stepheight;
+				trace_box(self.origin, self.mins + step, self.maxs + step, o, TRACE_MOVE_NOMONSTERS, self);
+				if not(trace_startsolid)
 				if (trace_fraction < 1)
 				if (trace_plane_normal_z < 0.1)
 				if (trace_plane_normal_z > -0.1) {
-					vector step = '0 0 1' * sv_stepheight;
-					vector steptop = '0 0 1' * max(sv_stepheight + self.mins_z - self.maxs_z, 0);
-					trace_box(self.origin, self.mins + step, self.maxs + steptop, o, TRACE_MOVE_NOMONSTERS, self);
-					if (trace_fraction <= trace_fraction_first)
-						v = -v;
+					v -= (trace_plane_normal * (v * trace_plane_normal) * 2);
+					v_z = 0;
+					v = normalize(v);
+					vector o = self.origin + v * _speed * t * 1.5;
+					trace_box(o, self.mins, self.maxs, o - '0 0 1000', TRACE_MOVE_NOMONSTERS, self);
+					if not(trace_startsolid) {
+						if (trace_fraction == 1) //too deep
+							v = -v;
+						else if (trace_fraction > 0.01) {
+							o = trace_endpos;
+							trace_box(o, self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+							if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
+								if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+									v = -v;
+								else if (pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
+									v = -v;
+								}
+							}
+						}
+					}
 				}
 			} else {
 				if (trace_fraction == 1) //too deep
@@ -381,13 +402,11 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	} else
 		v = self.movedir;
 
-	dir_z_save = v_z;
 	vel_z_save = self.velocity_z;
 	if not(self.flags & FL_ONGROUND)
 		_speed = _speed * 0.5;
 
 	movelib_move_simple(v, _speed, blend_factor * frametime);
-	v_z = dir_z_save;
 	self.velocity_z = vel_z_save;
 	return v;
 }
@@ -397,13 +416,13 @@ vector monster_move_fly(float _speed, float blend_factor) {
 	float save_g_jetpack_maxspeed_side = g_jetpack_maxspeed_side;
 	g_jetpack_maxspeed_up = _speed;
 	g_jetpack_maxspeed_side = _speed;
+	vector v;
 	if (self.bot_strategytime < time) {
 		self.bot_strategytime = time + 1 + random() * 1;
 		monster_set_route();
 	}
 	g_jetpack_maxspeed_up = save_g_jetpack_maxspeed_up;
 	g_jetpack_maxspeed_side = save_g_jetpack_maxspeed_side;
-	vector v;
 	v = monster_get_direction();
 	v_z = v_z + 0.5;
 	movelib_move_simple(normalize(v), _speed, blend_factor * frametime);

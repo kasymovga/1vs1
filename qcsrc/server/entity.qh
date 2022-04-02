@@ -22,3 +22,4 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
 void() entity_movedir_setup;
 void(entity ent, float when, float fadetime) entity_fade_setup;
 void(string s) entity_abort;
+#define ENTITY_CENTER(e) (e.origin + (e.mins + e.maxs) * .5)
