@@ -1,14 +1,14 @@
 enum: flag {
-	FL_FLY, //engine
-	FL_SWIM, //engine
-	FL_CONVEYOR, //unused
-	FL_CLIENT,
-	FL_INWATER,
-	FL_MONSTER, //unused
-	FL_GODMODE, //engine
-	FL_NOTARGET, //engine
-	FL_ITEM, //engine
-	FL_ONGROUND, //engine
+	FL_FLY = 0,
+	FL_SWIM, //engine 2
+	FL_CONVEYOR, //unused 4
+	FL_CLIENT, //8
+	FL_INWATER, //16
+	FL_MONSTER, //unused 32
+	FL_GODMODE, //engine 64
+	FL_NOTARGET, //engine 128
+	FL_ITEM, //engine 256
+	FL_ONGROUND, //engine 512
 	FL_PARTIALGROUND, //engine
 	FL_WATERJUMP, //engine
 	FL_JUMPRELEASED, //engine
