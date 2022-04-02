@@ -1,3 +1,5 @@
+float FL_ONGROUND_OR_SLICK = (FL_ONGROUND | FL_SLICK);
+float FL_ONGROUND_OR_SLICK_OR_CLIMB = (FL_ONGROUND | FL_SLICK | FL_CLIMB);
 float physics_lastflags;
 float physics_groundvelocity_dotproduct;
 

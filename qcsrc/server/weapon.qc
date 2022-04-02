@@ -250,7 +250,6 @@ string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_th
 	wep.classname = "droppedweapon";
 	wep.velocity = velo;
 	wep.owner = wep.enemy = own;
-	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
 	wa = weapon_ammo_item_code(wpn);
 	if (wa == IT_SUPERWEAPON || wa == 0) {
