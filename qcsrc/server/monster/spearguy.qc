@@ -4,21 +4,29 @@ void spearguy_walk();
 
 void spearguy_hunt() {
 	self.nextthink = time;
-	if (monster_check_target(spearguy_walk, spearguy_guard))
+	if (monster_check_target(spearguy_walk, spearguy_guard)) {
+		sound_stop(self, CHAN_WEAPON);
+		self.lip = FALSE;
 		return;
-
+	}
 	vector v;
 	v = entity_nearest_point_on_box(self.enemy, self.origin);
 	if (vlen(v - self.origin) > self.dmg_radius) {
 		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 		v = monster_move_walk(600, 5, 500);
-		sound_stop(self, CHAN_WEAPON);
+		if (self.lip) {
+			sound_stop(self, CHAN_WEAPON);
+			self.lip = FALSE;
+		}
 	} else {
 		movelib_beak_simple(100 * frametime);
 		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
 		trace_line(self.origin, v, TRACE_MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
-			sound(self, CHAN_WEAPON, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+			if not(self.lip) {
+				sound(self, CHAN_WEAPON, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+				self.lip = TRUE;
+			}
 			vector o = gettaginfo(self.exteriorweaponentity, gettagindex(self.exteriorweaponentity, ""));
 			//te_lightning1(world, o + v_forward * 20, self.enemy.origin);
 			pointparticles(particleeffectnum("sparks"), o + v_forward * 50, v_forward, 1);
@@ -64,6 +72,7 @@ void spearguy_walk() {
 void spearguy_remove() {
 	remove(self.exteriorweaponentity);
 	sound_stop(self, CHAN_WEAPON);
+	self.lip = FALSE;
 }
 
 void spearguy_spawn() {
