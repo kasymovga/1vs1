@@ -4,14 +4,14 @@ void walker_walk();
 void walker_idle();
 
 void walker_bullet() {
-    entity flash;
+	entity flash;
 	weapon_shotdir = normalize(self.enemy.origin - weapon_shotorg);
 	weapon_shotdir_x = v_forward_x;
 	weapon_shotdir_y = v_forward_y;
-    sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 	bullet_begin(5000);
-    bullet(weapon_shotorg, weapon_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, DEATH_TURRET, particleeffectnum("tr_bullet"), 1, 0);
-    bullet_end();
+	bullet(weapon_shotorg, weapon_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, DEATH_TURRET, particleeffectnum("tr_bullet"), 1, 100);
+	bullet_end();
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3");
 	setattachment(flash, self.weaponentity, "tag_fire");
@@ -25,10 +25,10 @@ void walker_bullet() {
 }
 
 void walker_rocket_event_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce) {
-    self.health = self.health - _damage;
-    self.velocity = self.velocity + vforce;
-    if (self.health <= 0) {
-        self.think = projectile_explode;
+	self.health = self.health - _damage;
+	self.velocity = self.velocity + vforce;
+	if (self.health <= 0) {
+		self.think = projectile_explode;
 		self.nextthink = time;
 	}
 }
@@ -68,19 +68,18 @@ void walker_hunt() {
 	if (self.attack_finished_single < time)
 		dofire = monster_look_to(self.enemy);
 
-	if (dofire) {
+	makevectors(self.angles);
+	if (dofire && v_forward * (self.enemy.origin - self.origin) > 0.5) {
 		self.cnt = random();
-		self.attack_finished_single = time + 5;
+		self.attack_finished_single = time + 4;
 		self.count = ((self.cnt < 0.5) ? 20 : 4);
 		self.bulletcounter = time;
 	}
-	while (self.cnt && time >= self.bulletcounter) {
-		makevectors(self.angles);
-		v_forward = normalize(v_forward);
-		if (self.cnt < 0.5 && v_forward * normalize(self.enemy.origin - self.origin) > 0.75) {
+	if (self.cnt && time >= self.bulletcounter) {
+		if (self.cnt < 0.5) {
 			self.bulletcounter = self.bulletcounter + 0.1;
 			//Minigun
-			weapon_shotorg = self.origin + v_forward * 32;
+			weapon_shotorg = self.origin + v_forward * 32 + '0 0 16';
 			anim_set(self.weaponentity, '0 12 12', TRUE, TRUE, FALSE);
 			anim_update(self.weaponentity);
 			walker_bullet();
@@ -101,27 +100,28 @@ void walker_hunt() {
 			missile.health = 10;
 			missile.event_damage = walker_rocket_event_damage;
 			missile.enemy = self.enemy;
-			missile.velocity = normalize(v_forward + v_up * 0.5) * 600;
-			weapon_setup_projectile_velocity(missile);
+			missile.velocity = normalize(v_forward + '0 0 0.5') * 600;
 			missile.touch = projectile_touch_explode;
 			missile.think = walker_rocket_think;
 			missile.nextthink = time;
 			missile.cnt = time + 30;
+			missile.angles = vectoangles(missile.velocity);
+			missile.angles_x = missile.angles_x;
 		}
 		self.count = self.count - 1;
 		if not(self.count)
 			self.cnt = 0;
 	}
-	if (self.flags & FL_ONGROUND) {
-		anim_set(self, '5 20 25', TRUE, TRUE, FALSE);
-		anim_update(self);
-		vector v = monster_move_walk(400, 25, 0);
+	float onground = (self.flags & FL_ONGROUND);
+	anim_set(self, (onground ? '5 20 25' : '95 5 25'), TRUE, FALSE, FALSE);
+	anim_update(self);
+	vector v = monster_move_walk((onground ? 400 : 100), (onground ? 25 : 5), 0);
+	if (dofire || self.cnt) {
+		v = vectoangles(self.enemy.origin - self.origin);
+	} else
 		v = vectoangles(v);
-		self.angles_y = approach_angle(self.angles_y, v_y, 180 * frametime);
-	} else {
-		anim_set(self, '95 5 25', TRUE, TRUE, FALSE);
-		anim_update(self);
-	}
+
+	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 }
 
 void walker_walk() {
@@ -132,13 +132,12 @@ void walker_walk() {
 	if (monster_walk_finished(walker_idle, 100))
 		return;
 
-	anim_set(self, '5 20 25', TRUE, TRUE, FALSE);
+	float onground = (self.flags & FL_ONGROUND);
+	anim_set(self, (onground ? '5 20 25' : '95 5 25'), TRUE, FALSE, FALSE);
 	anim_update(self);
-	if (self.flags & FL_ONGROUND) {
-		vector v = monster_move_walk(400, 25, 0);
-		v = vectoangles(v);
-		self.angles_y = approach_angle(self.angles_y, v_y, 180 * frametime);
-	}
+	vector v = monster_move_walk((onground ? 400 : 100), (onground ? 25 : 5), 0);
+	v = vectoangles(v);
+	self.angles_y = approach_angle(self.angles_y, v_y, 180 * frametime);
 }
 
 void walker_remove() {
@@ -164,7 +163,7 @@ void walker_spawn() {
 	setmodel(self, "models/turrets/walker_body.md3");
 	self.weaponentity = spawn();
 	setmodel(self.weaponentity, "models/turrets/walker_head_minigun.md3");
-    setattachment(self.weaponentity, self, "tag_head");
+	setattachment(self.weaponentity, self, "tag_head");
 	self.species = SPECIES_ROBOT_SOLID;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 0.1;

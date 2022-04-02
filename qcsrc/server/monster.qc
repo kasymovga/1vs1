@@ -789,7 +789,7 @@ void spawnfunc_monster_group() {
 vector monster_look_to_end;
 float(entity _enemy) monster_look_to {
 	monster_look_to_end = monster_checkpoint(self.enemy);
-	trace_line(self.origin, monster_look_to_end, TRACE_MOVE_WORLDONLY, world);
+	trace_line(ENTITY_CENTER(self), monster_look_to_end, TRACE_MOVE_WORLDONLY, world);
 	if (trace_fraction == 1)
 		return TRUE;
 
