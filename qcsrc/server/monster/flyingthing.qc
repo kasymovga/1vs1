@@ -22,7 +22,6 @@ void flyingthing_hunt() {
 		dofire = monster_look_to(self.enemy);
 
 	if (dofire) {
-		movelib_beak_simple(100 * frametime);
 		v = vectoangles(monster_look_to_end - self.origin);
 		self.angles_y = v_y;
 		self.angles_x = v_x;

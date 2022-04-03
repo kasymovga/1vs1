@@ -43,7 +43,6 @@ void boss4_hunt() {
 
 	float stay = self.owner.spawnflags & MONSTER_SPAWN_STAYSTILL;
 	if (dofire) {
-		movelib_beak_simple(100 * frametime);
 		v = vectoangles(monster_look_to_end - self.origin);
 		self.angles_y = v_y;
 		makevectors(self.angles);
@@ -61,21 +60,23 @@ void boss4_hunt() {
 		self.attack_finished_single = time + 1 + random();
 		self.bulletcounter = time + 0.5;
 	} else if (stay) {
-		movelib_beak_simple(1000 * frametime);
 		v = vectoangles(normalize(self.enemy.origin - self.origin));
-		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
-	} else {
-		v = monster_move_walk(750, 5, 0);
-		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
 	if (time > self.bulletcounter) {
-		if (stay)
+		if (stay) {
+			movelib_beak_simple(100 * frametime);
 			anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
-		else
+		} else {
+			v = monster_move_walk(750, 5, 0);
+			v = vectoangles(v);
+			self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 			anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
-	} else
+		}
+	} else {
+		movelib_beak_simple(100 * frametime);
 		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
+	}
 }
 
 void boss4_idle() {

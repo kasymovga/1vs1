@@ -41,21 +41,23 @@ void marine_hunt() {
 
 		self.bulletcounter = time + 1;
 	} else if (stay) {
-		movelib_beak_simple(1000 * frametime);
 		v = vectoangles(normalize(self.enemy.origin - self.origin));
-		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
-	} else {
-		v = monster_move_walk(300, 25, 0);
-		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
 	if (time > self.bulletcounter) {
-		if (stay)
+		if (stay) {
+			movelib_beak_simple(100 * frametime);
 			anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
-		else
+		} else {
+			v = monster_move_walk(300, 25, 0);
+			v = vectoangles(v);
+			self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 			anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
-	} else
+		}
+	} else {
+		movelib_beak_simple(100 * frametime);
 		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
+	}
 }
 
 void marine_idle() {

@@ -14,7 +14,6 @@ void heavysoldier_hunt() {
 		dofire = monster_look_to(self.enemy);
 
 	if (dofire) {
-		movelib_beak_simple(100 * frametime);
 		v = vectoangles(monster_look_to_end - self.origin);
 		self.angles_y = v_y;
 		makevectors(self.angles);
@@ -32,15 +31,16 @@ void heavysoldier_hunt() {
 		weapon_setup_projectile_velocity(gren);
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
-	} else {
+	}
+	if (time > self.bulletcounter) {
 		v = monster_move_walk(250, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
-	}
-	if (time > self.bulletcounter)
 		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
-	else
+	} else {
+		movelib_beak_simple(100 * frametime);
 		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
+	}
 }
 
 void heavysoldier_idle() {
