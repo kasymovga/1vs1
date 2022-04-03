@@ -14,31 +14,47 @@ void arachna_hunt() {
 		dofire = monster_look_to(self.enemy);
 
 	if (dofire) {
-		movelib_beak_simple(100 * frametime);
 		v = vectoangles(monster_look_to_end - self.origin);
 		self.angles_y = v_y;
 		makevectors(self.angles);
-		vector _shotdir = monster_look_to_end - self.origin;
-		vector _shotorg = self.origin + v_forward * 16;
-		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
-
-		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
-		projectile_setup(proj,_shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
-		proj.touch = projectile_touch_explode;
-		proj.velocity = normalize(_shotdir) * 1600;
-		proj.pushltime = time + 10;
-		weapon_setup_projectile_velocity(proj);
-		self.attack_finished_single = time + 3 + random();
-		self.bulletcounter = time + 0.5;
-	} else {
+		if (vlen(monster_look_to_end - self.origin) < 80) {
+			self.bulletcounter = time + 1;
+			self.lip = TRUE;
+			trace_box(self.origin, '-8 -8 -8', '8 8 8', self.origin + v_forward * 80, TRACE_MOVE_NORMAL, self);
+			pointparticles(particleeffectnum("laser_impact"), self.origin + v_forward * 40, v_forward, 1);
+			if (trace_ent)
+			if (trace_ent.takedamage) {
+				damage(trace_ent, self, self, self.dmg_edge, WEP_MELEE, trace_endpos, v_forward * 300 + v_up * 50);
+			}
+			self.attack_finished_single = time + 0.5 + random();
+			self.bulletcounter = time + 0.5;
+			sound(self, CHAN_WEAPON, "player/pyria-skadi/player/jump.wav", VOL_BASE, ATTN_NORM);
+		} else {
+			self.lip = FALSE;
+			vector _shotdir = monster_look_to_end - self.origin;
+			vector _shotorg = self.origin + v_forward * 16;
+			sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
+			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
+			projectile_setup(proj,_shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+			proj.touch = projectile_touch_explode;
+			proj.velocity = normalize(_shotdir) * 1600;
+			proj.pushltime = time + 10;
+			self.attack_finished_single = time + 2 + random();
+			self.bulletcounter = time + 0.5;
+		}
+	}
+	if (time > self.bulletcounter) {
 		v = monster_move_walk(500, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
-	}
-	if (time > self.bulletcounter)
 		anim_set(self, '16 1 1', TRUE, TRUE, FALSE);
-	else
-		anim_set(self, '8 1 1', TRUE, TRUE, FALSE);
+	} else {
+		movelib_beak_simple(100 * frametime);
+		if (self.lip)
+			anim_set(self, '9 1 1', TRUE, TRUE, FALSE);
+		else
+			anim_set(self, '8 1 1', TRUE, TRUE, FALSE);
+	}
 }
 
 void arachna_idle() {
@@ -113,6 +129,7 @@ void arachna_init() {
 	precache_model("models/arachna/arachna.md3");
 	precache_model("models/weapons/v_electro.md3");
 	precache_sound("weapons/electro_fire.wav");
+	precache_sound("player/pyria-skadi/player/jump.wav");
 	dlc_require("arachna");
 }
 
