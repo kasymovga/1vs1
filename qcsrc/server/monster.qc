@@ -355,12 +355,19 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 			trace_box(o, self.mins, self.maxs, o - '0 0 1000', TRACE_MOVE_NOMONSTERS, self);
 			if (trace_startsolid) {
 				//Check for wall
+				trace_box(self.origin, self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+				float trace_fraction_nostep;
+				if (trace_plane_normal_z < 0.1 && trace_plane_normal_z > -0.1)
+					trace_fraction_nostep = trace_fraction;
+				else
+					trace_fraction_nostep = 1;
+
 				vector step = '0 0 1' * sv_stepheight;
 				vector step2 = step;
 				step2_z = max(step_z + self.mins_z + 1, self.maxs_z) - self.maxs_z;
 				trace_box(self.origin, self.mins + step, self.maxs + step2, o, TRACE_MOVE_NOMONSTERS, self);
 				if not(trace_startsolid)
-				if (trace_fraction < 1)
+				if (trace_fraction <= trace_fraction_nostep)
 				if (trace_plane_normal_z < 0.1)
 				if (trace_plane_normal_z > -0.1) {
 					v -= (trace_plane_normal * (v * trace_plane_normal) * 2);
