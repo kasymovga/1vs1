@@ -39,7 +39,7 @@ void soldier_hunt() {
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 	} else {
-		movelib_beak_simple(100 * frametime);
+		movelib_beak_simple(2000 * frametime);
 		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
 	}
 }

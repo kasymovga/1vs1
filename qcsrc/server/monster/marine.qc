@@ -46,7 +46,7 @@ void marine_hunt() {
 	}
 	if (time > self.bulletcounter) {
 		if (stay) {
-			movelib_beak_simple(100 * frametime);
+			movelib_beak_simple(2000 * frametime);
 			anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 		} else {
 			v = monster_move_walk(300, 25, 0);
@@ -55,7 +55,7 @@ void marine_hunt() {
 			anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 		}
 	} else {
-		movelib_beak_simple(100 * frametime);
+		movelib_beak_simple(2000 * frametime);
 		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
 	}
 }
