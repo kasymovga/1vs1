@@ -54,3 +54,5 @@ set mixed_arts_g_weaponreplace_hook armor_small
 set mixed_arts_g_balance_grapplehook_damage_interval 0.1
 set mixed_arts_g_balance_melee 1
 set mixed_arts_g_shootfromeye 1
+set mixed_arts_g_balance_pause_health_regen_spawn 5
+set mixed_arts_g_balance_pause_armor_rot_spawn 5
