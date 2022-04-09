@@ -76,8 +76,9 @@ void(float id, float status, string data) menu_server_list_callback {
 }
 
 entity menu_dlc_reload_wait;
+float menu_dlc_downloading;
 void(void) menu_dlc_reload_wait_think {
-	if (dlc_ready_all()) {
+	if (dlc_ready_all() && menu_dlc_reload(!menu_dlc_downloading, TRUE)) {
 		if (clientstate() != CS_CONNECTED)
 			localcmd("r_restart\n");
 
@@ -134,6 +135,7 @@ float(float nodownload, float renderrestart) menu_dlc_reload {
 		head = str_car(tail);
 		tail = str_cdr(tail);
 		if (head != "") {
+			if (head == "classiccampaign-p3" && (!dlc_ready("classiccampaign") || dlc_ready("classiccampaign-p1") || dlc_ready("classiccampaign-p2"))) continue; //hack for classic campaign dlc order
 			if not(dlc_load(head, nodownload)) {
 				if not(nodownload)
 					print("Downloading missing pack: ", head, "\n");
@@ -201,7 +203,6 @@ void(void) menu_time_process {
 }
 
 float menu_dlc_stage;
-float menu_dlc_downloading;
 void(void) menu_draw_loading {
 	vector sz = drawgetimagesize("gfx/loading.tga");
 	if (sz != '0 0 0') {
@@ -231,7 +232,7 @@ void() menu_init_delayed {
 		menu_dlc_stage++;
 		print("Menu DLC stage ", ftos(menu_dlc_stage), " done\n");
 		if (!menu_dlc_reload(!menu_dlc_downloading, FALSE)) {
-			menu_dlc_wait_frame = 10;
+			menu_dlc_wait_frame = 0;
 			menu_draw_loading();
 			return;
 		}
