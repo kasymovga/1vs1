@@ -90,7 +90,7 @@ void(void) menu_dlc_reload_wait_think {
 	menu_dlc_reload_wait = NULL;
 }
 
-void(float nodownload, float renderrestart) menu_dlc_reload {
+float(float nodownload, float renderrestart) menu_dlc_reload {
 	string s = strcat(DLC_BASE_LIST " ", cvar_defstring("menu_dlc_extra"));
 	dlc_list = "";
 	menu_dlc_mandatory = FALSE;
@@ -114,19 +114,21 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 		menu_dlc_mandatory = TRUE;
 		s = strcat(s, " base-gfx");
 	}
-	if (cvar("cl_brightskins")) {
+	if (cvar("cl_brightskins") && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
 		s = strcat(s, " brightskins");
 	}
-	if not(cvar("cl_oldnexmodel")) {
+	if not(cvar("cl_oldnexmodel") && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
 		s = strcat(s, " newnex");
 	}
 	float n;
-	if ((n = cvar("cl_simpleitems"))) {
+	if ((n = cvar("cl_simpleitems")) && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
 		s = strcat(s, " axe_v2 zapper_v2 supershotgun"); //need load them first, to override their g_* models
-		if (n == 2)
-			s = strcat(s, " simpleitems-luma");
-		else
-			s = strcat(s, " simpleitems");
+		if (dlc_ready("axe_v2") && dlc_ready("zapper_v2") && dlc_ready("supershotgun")) {
+			if (n == 2)
+				s = strcat(s, " simpleitems-luma");
+			else
+				s = strcat(s, " simpleitems");
+		}
 	}
 	string head = "", tail = s;
 	while (tail != "") {
@@ -139,6 +141,9 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 			}
 		}
 	}
+	if (dlc_ready_all())
+		return TRUE;
+
 	if (renderrestart)
 	if not(menu_dlc_reload_wait) {
 		menu_dlc_reload_wait = spawn();
@@ -146,6 +151,7 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 		menu_dlc_reload_wait.nextthink = time + 0.5;
 		menu_dlc_reload_wait.cnt = 10;
 	}
+	return FALSE;
 }
 
 void() menu_init {
@@ -195,15 +201,44 @@ void(void) menu_time_process {
 	}
 }
 
-float menu_dlc_wait_frame;
+float menu_dlc_stage;
 float menu_dlc_downloading;
+void(void) menu_draw_loading {
+	vector sz = drawgetimagesize("gfx/loading.tga");
+	if (sz != '0 0 0') {
+		vector v = cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0';
+		float scl = min(v_x / sz_x, v_y / sz_y);
+		sz *= scl;
+		drawpic((v - sz) * 0.5, "gfx/loading.tga", sz, '1 1 1', 1, DRAWFLAG_NORMAL);
+	}
+	if (menu_dlc_downloading) {
+		vector pos;
+		pos_y = 100;
+		string s = strcat("Downloading missing data, stage ", ftos(menu_dlc_stage));
+		pos_x = (cvar("vid_conwidth") / 2) - stringwidth(s, FALSE) * 6;
+		pos_z = 0;
+		drawstring(pos, s, '12 12 0', '0 1 1', 1, DRAWFLAG_NORMAL);
+		s = "Press ESC to cancel";
+		pos_y += 20;
+		pos_x = (cvar("vid_conwidth") / 2) - stringwidth(s, FALSE) * 6;
+		drawstring(pos, s, '12 12 0', '0 1 1', 1, DRAWFLAG_NORMAL);
+	}
+}
+
+float menu_dlc_wait_frame;
 void() menu_init_delayed {
 	menu_initialized = 0;
 	if (dlc_ready_all()) {
-		//print("dlc loading finished\n");
-		//print("menu_dlc_wait_frame=", ftos(menu_dlc_wait_frame), "\n");
+		menu_dlc_stage++;
+		print("Menu DLC stage ", ftos(menu_dlc_stage), " done\n");
+		if (!menu_dlc_reload(menu_dlc_downloading, FALSE)) {
+			menu_dlc_wait_frame = 10;
+			menu_draw_loading();
+			return;
+		}
 	} else if (menu_dlc_wait_frame < 10) {
 		menu_dlc_wait_frame++;
+		menu_draw_loading();
 		return;
 	} else {
 		if not(menu_dlc_downloading) {
@@ -212,14 +247,7 @@ void() menu_init_delayed {
 			menu_dlc_reload(FALSE, FALSE);
 		}
 		if (menu_dlc_mandatory) {
-			//drawpic('0.5 0 0' * cvar("vid_conwidth") + '0 0.5 0' * cvar("vid_conheight"), "gfx/loading.tga", picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-			vector sz = drawgetimagesize("gfx/loading.tga");
-			if (sz != '0 0 0') {
-				vector v = cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0';
-				float scl = min(v_x / sz_x, v_y / sz_y);
-				sz *= scl;
-				drawpic((v - sz) * 0.5, "gfx/loading.tga", sz, '1 1 1', 1, DRAWFLAG_NORMAL);
-			}
+			menu_draw_loading();
 			menu_time_process();
 			return;
 		}
