@@ -117,7 +117,7 @@ float(float nodownload, float renderrestart) menu_dlc_reload {
 	if (cvar("cl_brightskins") && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
 		s = strcat(s, " brightskins");
 	}
-	if not(cvar("cl_oldnexmodel") && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
+	if (!cvar("cl_oldnexmodel") && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
 		s = strcat(s, " newnex");
 	}
 	float n;
