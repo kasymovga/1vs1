@@ -231,7 +231,7 @@ void() menu_init_delayed {
 	if (dlc_ready_all()) {
 		menu_dlc_stage++;
 		print("Menu DLC stage ", ftos(menu_dlc_stage), " done\n");
-		if (!menu_dlc_reload(menu_dlc_downloading, FALSE)) {
+		if (!menu_dlc_reload(!menu_dlc_downloading, FALSE)) {
 			menu_dlc_wait_frame = 10;
 			menu_draw_loading();
 			return;
