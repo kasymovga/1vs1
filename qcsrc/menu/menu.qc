@@ -93,7 +93,6 @@ void(void) menu_dlc_reload_wait_think {
 float(float nodownload, float renderrestart) menu_dlc_reload {
 	string s = strcat(DLC_BASE_LIST " ", cvar_defstring("menu_dlc_extra"));
 	dlc_list = "";
-	menu_dlc_mandatory = FALSE;
 	if not(file_exists("maps/soylent.bsp")) { //check presence of data.pk3
 		menu_dlc_mandatory = TRUE;
 		s = strcat(s, " base-maps");
