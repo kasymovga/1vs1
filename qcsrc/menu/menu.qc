@@ -135,7 +135,7 @@ float(float nodownload, float renderrestart) menu_dlc_reload {
 		head = str_car(tail);
 		tail = str_cdr(tail);
 		if (head != "") {
-			if (head == "classiccampaign-p3" && (!dlc_ready("classiccampaign") || dlc_ready("classiccampaign-p1") || dlc_ready("classiccampaign-p2"))) continue; //hack for classic campaign dlc order
+			if (head == "classiccampaign-p3" && (!dlc_ready("classiccampaign") || !dlc_ready("classiccampaign-p1") || !dlc_ready("classiccampaign-p2"))) continue; //hack for classic campaign dlc order
 			if not(dlc_load(head, nodownload)) {
 				if not(nodownload)
 					print("Downloading missing pack: ", head, "\n");
