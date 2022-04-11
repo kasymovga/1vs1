@@ -155,8 +155,12 @@ void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, flo
 		if (e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_BOUNCE)
 			e.gravity = 1;
 	}
-	trace_box((e.owner.absmax + e.owner.absmin) * 0.5 - (e.mins + e.maxs) * 0.5, e.mins, e.maxs, _origin, TRACE_MOVE_NOMONSTERS, world);
-	setorigin(e, trace_endpos);
+	if (e.owner && e.owner.solid != SOLID_BSP) {
+		trace_box((e.owner.absmax + e.owner.absmin) * 0.5 - (e.mins + e.maxs) * 0.5, e.mins, e.maxs, _origin, TRACE_MOVE_NOMONSTERS, world);
+		setorigin(e, trace_endpos);
+	} else
+		setorigin(e, _origin);
+
 	e.dmg = _dmg;
 	e.dmg_force = _force;
 	e.dmg_radius = _dmg_radius;

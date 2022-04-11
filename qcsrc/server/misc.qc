@@ -91,8 +91,8 @@ void misc_spikeshooter_spike_touch(void) {
 
 void misc_spikeshooter_use(void) {
 	entity spike = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, world);
-	setorigin(spike, self.origin);
-	PROJECTILE_MAKETRIGGER(spike);
+	projectile_setup(spike, self.origin, DEATH_TURRET, 20,
+			20, 0, 20, 0, MOVETYPE_FLY);
 	spike.velocity = self.movedir * 800;
 	spike.think = stdproc_remove;
 	spike.nextthink = time + 10;
