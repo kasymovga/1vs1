@@ -22,7 +22,7 @@ void(entity targ, entity attacker, float _damage, float deathtype,
 	vector targ_origin = targ.origin + (targ.mins + targ.maxs) * 0.5;
 	vector plr_origin;
 	plr = findradius(targ_origin, range);
-	while (plr = plr.chain)
+	while ((plr = plr.chain))
 	if (plr.takedamage)
 	if (plr != attacker)
 	if (plr != targ)
