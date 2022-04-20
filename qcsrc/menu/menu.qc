@@ -97,10 +97,14 @@ float(float nodownload, float renderrestart) menu_dlc_reload {
 	if not(file_exists("maps/soylent.bsp")) { //check presence of data.pk3
 		menu_dlc_mandatory = TRUE;
 		s = strcat(s, " base-maps");
+		if (file_exists("dlcache/zzz-rexdlc_base-maps-lightmaps.pk3"))
+			s = strcat(s, " base-maps-lightmaps");
 	}
 	if not(file_exists("textures/evil_metal/walltek3.jpg")) { //check presence of data.pk3
 		menu_dlc_mandatory = TRUE;
 		s = strcat(s, " base-textures");
+		if (file_exists("dlcache/zzz-rexdlc_base-textures-extra.pk3"))
+			s = strcat(s, " base-textures-extra");
 	}
 	if not(file_exists("models/ebomb.mdl")) { //check presence of data.pk3
 		menu_dlc_mandatory = TRUE;
