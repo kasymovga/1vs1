@@ -93,13 +93,9 @@ void(void) particles_point_draw {
 }
 
 void(void) particles_point_remove {
-	if(self.noise)
-		strunzone(self.noise);
-
+	str_unzone_ifneeded(self.noise);
 	self.noise = NULL;
-	if(self.bgmscript)
-		strunzone(self.bgmscript);
-
+	str_unzone_ifneeded(self.bgmscript);
 	self.bgmscript = NULL;
 }
 
@@ -151,18 +147,14 @@ void(float ignore) particles_point_read {
 			self.waterlevel = 0;
 			self.count = 1;
 		}
-		if (self.noise)
-			strunzone(self.noise);
-
-		if (self.bgmscript)
-			strunzone(self.bgmscript);
-
-		self.noise = strzone(net_read_string());
+		str_unzone_ifneeded(self.noise);
+		str_unzone_ifneeded(self.bgmscript);
+		self.noise = str_zone_ifneeded(net_read_string());
 		if (self.noise != "") {
 			self.atten = net_read_byte() / 64.0;
 			self.volume = net_read_byte() / 255.0;
 		}
-		self.bgmscript = strzone(net_read_string());
+		self.bgmscript = str_zone_ifneeded(net_read_string());
 		if (self.bgmscript != "") {
 			self.bgmscriptattack = net_read_byte() / 64.0;
 			self.bgmscriptdecay = net_read_byte() / 64.0;
