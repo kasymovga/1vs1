@@ -413,6 +413,23 @@ void(void) dlc_init {
 	gamehook_chain_slowmo_update_mod = dlc_slowmo_update_mod;
 	dlc = spawn();
 	net_link_entity(dlc, FALSE, 0, dlc_send);
+	if not(file_exists("maps/soylent.bsp")) { //check presence of data.pk3
+		dlc_require_server_only("base-maps");
+	} else if not(file_exists("rexdlc_base-maps.serverpackage"))
+		dlc_require_server_only("datapatches");
+
+	if not(file_exists("textures/evil_metal/walltek3.jpg")) { //check presence of data.pk3
+		dlc_require_server_only("base-textures"); //only for shaders
+	}
+	if not(file_exists("models/ebomb.mdl")) { //check presence of data.pk3
+		dlc_require_server_only("base-models");
+	}
+	//if not(file_exists("sound/plats/medplat1.ogg")) { //check presence of data.pk3
+	//	dlc_require_server_only("base-sounds");
+	//}
+	if not(file_exists("effectinfo.txt")) { //check presence of data.pk3
+		dlc_require_server_only("base-gfx");
+	}
 }
 
 void(void) dlc_finish {

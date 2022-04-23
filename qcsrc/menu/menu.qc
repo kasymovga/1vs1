@@ -81,7 +81,6 @@ void(void) menu_dlc_reload_wait_think {
 	if (dlc_ready_all() && menu_dlc_reload(!menu_dlc_downloading, TRUE)) {
 		if (clientstate() != CS_CONNECTED)
 			localcmd("r_restart\n");
-
 	} else if (self.cnt) {
 		self.cnt = self.cnt - 1;
 		self.nextthink = time + 5;
@@ -113,6 +112,9 @@ float(float nodownload, float renderrestart) menu_dlc_reload {
 	if not(file_exists("sound/plats/medplat1.ogg")) { //check presence of data.pk3
 		menu_dlc_mandatory = TRUE;
 		s = strcat(s, " base-sounds");
+	}
+	if not(menu_dlc_mandatory) {
+		s = strcat(s, " datapatches");
 	}
 	if not(file_exists("gfx/num_0.tga")) { //check presence of data.pk3
 		menu_dlc_mandatory = TRUE;
