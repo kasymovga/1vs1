@@ -1,15 +1,16 @@
 alias alltospec "sv_cmd alltospec"
-set sv_sound_frag ""
+alias decreasefraglimit "sv_cmd decreasefraglimit"
+alias endmatch "timelimit -1"
+alias endround "sv_cmd endround"
+alias extendmatchtime "sv_cmd extendmatchtime"
+alias g_tourney "g_tourney_$1"
+alias g_tourney_1 "g_warmup 1; g_chat_nospectators 2; sv_vote_nospectators 1"
+alias g_tourney_0 "g_warmup 0; g_chat_nospectators 0; sv_vote_nospectators 0"
+alias increasefraglimit "sv_cmd increasefraglimit"
+alias reducematchtime "sv_cmd reducematchtime"
 set g_forced_respawn 1 "if set to 1 and a player died, that player gets automatically respawned once <g_respawn_delay> seconds are over"
-set sv_gameplayfix_useheightforplat 0 "Use height attribute for elevators"
-set sv_gameplayfix_trainnomins 0 "Ignore mins/maxs for func_train"
-set sv_gameplayfix_trainnowait 0 "Old behaviour for func_train"
 set g_gametype_patterns "" "For compatibility with Q3/QL maps. Patterns to filter items by gametype, separated by '|'. Possible values: ffa, team, duel"
 set g_buttons_hookuse_swap 0
-alias extendmatchtime "sv_cmd extendmatchtime"
-alias reducematchtime "sv_cmd reducematchtime"
-alias increasefraglimit "sv_cmd increasefraglimit"
-alias decreasefraglimit "sv_cmd decreasefraglimit"
 set fraglimit_max 50
 set fraglimit_min 5
 set fraglimit_increment 5
@@ -18,27 +19,15 @@ set g_profile "" "Config profile prefix, currently available: akimbo, bestakimbo
 set g_voice_flood_spv 20
 set skill_auto_min 10
 set skill_auto_max 30
-alias endround "sv_cmd endround"
-set sv_jumppads_target_adjust_height 0
-set sv_breakable_debris 1
 set g_door_shootable 1
-set sv_door_trigger_field "60 60 8"
-set sv_door_default_speed 100
 set cl_shownames_cos 0.99 "cosinus of show names field angle"
 set g_timelimit 20
-set g_timelimit_suddendeath 5
-set g_timelimit_overtime 2
-set g_timelimit_overtimes 0
+set g_timelimit_suddendeath 5 "number of minutes suddendeath mode lasts after all overtimes were added and still no winner was found"
+set g_timelimit_overtime 2 "duration in minutes of one added overtime, added to the timelimit"
+set g_timelimit_overtimes 0 "how many overtimes to add at max"
 set g_scorelimit 30
 set g_leadlimit 0
-alias timelimit_suddendeath "cvardeprecated timelimit_suddendeath g_timelimit_suddendeath; g_timelimit_suddendeath $1"
-alias timelimit_overtime "cvardeprecated timelimit_overtime g_timelimit_overtime; g_timelimit_overtime $1"
-alias timelimit_overtimes "cvardeprecated timelimit_overtimes g_timelimit_overtimes; g_timelimit_overtimes $1"
-alias timelimit_override "cvardeprecated timelimit_override g_timelimit; g_timelimit $1"
-alias fraglimit_override "cvardeprecated fraglimit_override g_scorelimit; g_scorelimit $1"
 set g_telefrags 1
-set sv_spectator_speed_multiplier 1.5
-set sv_autoscreenshot 0 "if set to 1, the server forces all clients to create a local screenshot once the map ended"
 set g_antilag 1 "AntiLag (0 = no AntiLag, 1 = server side hit scan in the past)"
 set g_antilag_bullets 1 "Bullets AntiLag (0 = no AntiLag, 1 = server side hit scan in the past) - DO NOT TOUCH (severely changes weapon balance)"
 set g_shootfromeye 0 "shots are fired from your eye/crosshair; visual gun position can still be influenced by cl_gunalign 1 and 2"
@@ -60,22 +49,14 @@ set g_spawn_furthest 0.5 "50% of the spawns shall be far away from any players"
 set g_respawn_delay 2 "number of seconds you have to wait before you can respawn again"
 set g_respawn_waves 0
 set g_respawn_mapsettings 1
-seta timelimit_overtime 2 "duration in minutes of one added overtime, added to the timelimit"
-seta timelimit_overtimes 0 "how many overtimes to add at max"
-seta timelimit_suddendeath 5 "number of minutes suddendeath mode lasts after all overtimes were added and still no winner was found"
-alias g_tourney "g_tourney_$1"
-alias g_tourney_1 "g_warmup 1; g_chat_nospectators 2; sv_vote_nospectators 1"
-alias g_tourney_0 "g_warmup 0; g_chat_nospectators 0; sv_vote_nospectators 0"
 set timelimit_increment 5
 set timelimit_decrement 5
 set timelimit_min 5
 set timelimit_max 60
-alias endmatch "timelimit -1"
 set g_balance_kill_delay 5
 set leadlimit 0
 set g_teleport_keep_velocity -1 "Keep velocity up this value after teleportation. Negative value mean keep all velocity."
 set g_trigger_hurt_interval 1
-set sv_dumprecords 0
 set g_button_nowaitforever 0
 set g_start_delay 15 "delay before the game starts, so everyone can join; recommended to set this to like 15 on a public server"
 set g_trigger_push_use_trigger_origin 0
