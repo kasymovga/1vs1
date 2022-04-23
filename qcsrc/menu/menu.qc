@@ -113,12 +113,12 @@ float(float nodownload, float renderrestart) menu_dlc_reload {
 		menu_dlc_mandatory = TRUE;
 		s = strcat(s, " base-sounds");
 	}
-	if not(menu_dlc_mandatory) {
-		s = strcat(s, " datapatches");
-	}
 	if not(file_exists("gfx/num_0.tga")) { //check presence of data.pk3
 		menu_dlc_mandatory = TRUE;
 		s = strcat(s, " base-gfx");
+	}
+	if not(menu_dlc_mandatory) {
+		s = strcat(s, " datapatches");
 	}
 	if (cvar("cl_brightskins") && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
 		s = strcat(s, " brightskins");
