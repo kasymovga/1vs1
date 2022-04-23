@@ -1,0 +1,12 @@
+set sv_autoscreenshot 0 "if set to 1, the server forces all clients to create a local screenshot once the map ended"
+set sv_breakable_debris 1
+set sv_door_default_speed 100
+set sv_door_trigger_field "60 60 8"
+set sv_dumprecords 0
+set sv_gameplayfix_useheightforplat 0 "Use height attribute for elevators"
+set sv_gameplayfix_trainnomins 0 "Ignore mins/maxs for func_train"
+set sv_gameplayfix_trainnowait 0 "Old behaviour for func_train"
+set sv_jumppads_target_adjust_height 0
+set sv_retardplayername "User of RetardNet"
+set sv_sound_frag ""
+set sv_spectator_speed_multiplier 1.5

@@ -629,6 +629,9 @@ void(entity e, string args, float set) client_ability_hookuseswap_init {
 }
 
 void() client_initialize {
+	if not(client_retardplayername)
+		client_retardplayername = strzone(cvar_string("sv_retardplayername"));
+
 	CVAR_CACHE(g_balance_kill_delay);
 	CVAR_CACHE(g_changeteam_banned);
 	CVAR_CACHE(g_maxplayers);
