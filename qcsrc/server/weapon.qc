@@ -1282,39 +1282,11 @@ vector(vector pvelocity, vector mvelocity) weapon_calculate_projectile_velocity 
 		// true Newtonian projectiles
 		outvelocity = pvelocity + mvelocity;
 	} else if (g_projectiles_newton_style == 2) {
-		// true Newtonian projectiles with automatic aim adjustment
-		// solve: |outspeed * mdirection - pvelocity| = mspeed
-		// outspeed^2 - 2 * outspeed * (mdirection * pvelocity) + pvelocity^2 - mspeed^2 = 0
-		// outspeed = (mdirection * pvelocity) +- sqrt((mdirection * pvelocity)^2 - pvelocity^2 + mspeed^2)
-		// PLUS SIGN!
-		// not defined?
-		// then...
-		// pvelocity^2 - (mdirection * pvelocity)^2 > mspeed^2
-		// velocity without mdirection component > mspeed
-		// fire at smallest possible mspeed that works?
-		// |(mdirection * pvelocity) * pvelocity - pvelocity| = mspeed
-		vector solution;
-		solution = math_solve_quadratic(1, -2 * (mdirection * pvelocity), pvelocity * pvelocity - mspeed * mspeed);
-		if (solution_z)
-			outspeed = solution_y; // the larger one
-		else {
-			//outspeed = 0; // slowest possible shot
-			outspeed = solution_x; // the real part (that is, the average!)
-			//dprint("impossible shot, adjusting\n");
-		}
+		outspeed = mspeed + mdirection * pvelocity;
 		outspeed = bound(mspeed * g_projectiles_newton_style_2_minfactor, outspeed, mspeed * g_projectiles_newton_style_2_maxfactor);
 		outvelocity = mdirection * outspeed;
-	} else if (g_projectiles_newton_style == 3) {
-		// pseudo-Newtonian:
-		outspeed = mspeed + mdirection * pvelocity;
-		outspeed = bound(mspeed * 0.7, outspeed, mspeed * 5.0);
-		outvelocity = mdirection * outspeed;
-	} else if (g_projectiles_newton_style == 4) {
-		// tZorkian:
-		outspeed = mspeed + vlen(pvelocity);
-		outvelocity = mdirection * outspeed;
 	} else
-		error("g_projectiles_newton_style must be 0 (absolute), 1 (Newtonian), 2 (Newtonian + aimfix), 3 (pseudo Newtonian) or 4 (tZorkian)!");
+		outvelocity = mvelocity;
 
 	return outvelocity;
 }
