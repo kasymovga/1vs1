@@ -1282,6 +1282,12 @@ vector(vector pvelocity, vector mvelocity) weapon_calculate_projectile_velocity 
 		// true Newtonian projectiles
 		outvelocity = pvelocity + mvelocity;
 	} else if (g_projectiles_newton_style == 2) {
+		float pcos = pvelocity * mdirection;
+		float pspeed = vlen(pvelocity);
+		outspeed = pcos + sqrt(max(0, mspeed * mspeed - pspeed * pspeed + pcos * pcos));
+		outspeed = bound(mspeed * g_projectiles_newton_style_2_minfactor, outspeed, mspeed * g_projectiles_newton_style_2_maxfactor);
+		outvelocity = mdirection * outspeed;
+	} else if (g_projectiles_newton_style == 3) {
 		outspeed = mspeed + mdirection * pvelocity;
 		outspeed = bound(mspeed * g_projectiles_newton_style_2_minfactor, outspeed, mspeed * g_projectiles_newton_style_2_maxfactor);
 		outvelocity = mdirection * outspeed;
