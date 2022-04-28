@@ -47,6 +47,7 @@ void(entity spectatee) spectator_copy {
 	self.dmg_save = spectatee.dmg_save;
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.angles = spectatee.v_angle;
+	//client_view_angles_set(self, spectatee.v_angle); // cause broken interpolation
 	self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
@@ -75,7 +76,9 @@ float(void) spectator_update {
 	if (self.enemy.classname != "player")
 		return 0;
 
-	spectator_copy(self.enemy);
+	if (frametime)
+		spectator_copy(self.enemy);
+
 	return 1;
 }
 

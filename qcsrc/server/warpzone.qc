@@ -159,7 +159,6 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 
 	if (e.classname == "player" || e.classname == "observer") {
 		// instead of fixangle, send the transform to the client for smoother operation
-		e.fixangle = FALSE;
 		entity ts = spawn();
 		setmodel(ts, "null");
 		ts.SendEntity = warpzone_teleported_send;

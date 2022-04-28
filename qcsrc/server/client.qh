@@ -29,3 +29,4 @@ void(entity cl, string s) client_version_set;
 var .float clientversion;
 .string clid;
 string client_retardplayername;
+void(entity cl, vector a) client_view_angles_set;

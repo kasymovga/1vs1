@@ -11,31 +11,36 @@ float SP_CLIENTVERSION;
 float CLIENT_ABILITY_HOOKUSESWAP;
 float client_ability_hookuseswap;
 
+void(entity cl, vector a) client_view_angles_set {
+	cl.v_angle = a;
+	if (clienttype(cl) == CLIENTTYPE_REAL) {
+		msg_entity = cl;
+		net_write_byte(MSG_ONE, SVC_SETANGLE);
+		net_write_angle(MSG_ONE, a_x);
+		net_write_angle(MSG_ONE, a_y);
+		net_write_angle(MSG_ONE, a_z);
+	}
+}
+
 void(entity to) client_set_view {
+	vector a = to.angles;
+	a_z = 0;
 	if not(clienttype(self) == CLIENTTYPE_REAL)
 		return;
 
 	msg_entity = self;
 	net_write_byte(MSG_ONE, SVC_SETVIEW);
 	net_write_entity(MSG_ONE, to);
-	net_write_byte (MSG_ONE, SVC_SETANGLE);
-	net_write_angle(MSG_ONE, to.angles_x);
-	net_write_angle(MSG_ONE, to.angles_y);
-	net_write_angle(MSG_ONE, 0);
 }
 
 void(entity spot) client_put_to_spot{
 	self.deadflag = DEAD_NO;
 	self.angles = spot.angles;
 	self.angles_z = 0;
-	self.fixangle = TRUE;
 	self.crouch = FALSE;
 	teleport_origin_set(self, spot.origin, 0);
-	if (clienttype(self) == CLIENTTYPE_REAL) {
-		msg_entity = self;
-		net_write_byte(MSG_ONE, SVC_SETVIEW);
-		net_write_entity(MSG_ONE, self);
-	}
+	client_view_angles_set(self, self.angles);
+	client_set_view(self);
 }
 
 .float just_connected;

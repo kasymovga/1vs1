@@ -156,7 +156,6 @@ void(void) physics_frame_begin_hook {
 		else
 			self.punchvector = '0 0 0';
 	}
-	if not(self.fixangle)
 	if not(PLAYER_REALLY_DEAD(self)) {
 		self.angles_x = 0;
 		self.angles_y = physics_v_angle_y;

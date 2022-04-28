@@ -68,7 +68,7 @@ float(entity plr, float eject) vehicle_extract_player {
 	plr.angles_x = 0;
 	plr.angles_y = self.angles_y;
 	plr.angles_z = 0;
-	plr.fixangle = TRUE;
+	client_view_angles_set(plr, plr.angles);
 	plr.takedamage = DAMAGE_AIM;
 	if not(team_mode)
 		self.team = 0;
@@ -281,11 +281,9 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	self.owner.vehicle        = self;
 	self.team                 = self.owner.team;
 	if (clienttype(other) == CLIENTTYPE_REAL) {
-		msg_entity = other;
-		net_write_byte (MSG_ONE, SVC_SETANGLE);
-		net_write_angle(MSG_ONE, ang_x);    // tilt
-		net_write_angle(MSG_ONE, ang_y);    // yaw
-		net_write_angle(MSG_ONE, 0);    // roll
+		ang_z = 0;
+		ang_x = -ang_x;
+		client_view_angles_set(other, ang);
 		self.bot_nextthink = 0;
 	} else {
 		self.bot_nextthink = time + 5;

@@ -73,7 +73,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	setorigin (player, to);
 	teleport_origin_set(player, to, 0.1);
 	player.angles = to_angles;
-	player.fixangle = TRUE;
+	client_view_angles_set(player, to_angles);
 	player.velocity = to_velocity;
 	if(player.classname == "player") {
 		if (g_telefrags)
