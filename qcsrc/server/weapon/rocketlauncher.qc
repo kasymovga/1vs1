@@ -65,26 +65,19 @@ void(void) weapon_rocketlauncher_remote_explode {
 	}
 }
 
-vector(vector thisdir, vector goaldir, float maxturn_cos) weapon_rocketlauncher_rocket_steerto {
+vector(vector thisdir, vector goaldir, float maxturn_angle) weapon_rocketlauncher_rocket_steerto {
+	maxturn_angle *= MATH_DEG2RAD;
+	float maxturn_cos = cos(maxturn_angle);
 	if (thisdir * goaldir > maxturn_cos)
 		return goaldir;
 
-	float f, m2;
-	vector v;
-	// solve:
-	//   g = normalize(thisdir + goaldir * X)
-	//   thisdir * g = maxturn
-	//
-	//   gg = thisdir + goaldir * X
-	//   (thisdir * gg)^2 = maxturn^2 * (gg * gg)
-	//
-	//   (1 + (thisdir * goaldir) * X)^2 = maxturn^2 * (1 + X*X + 2 * X * thisdir * goaldir)
-	f = thisdir * goaldir;
-	//   (1 + f * X)^2 = maxturn^2 * (1 + X*X + 2 * X * f)
-	//   0 = (m^2 - f^2) * x^2 + (2 * f * (m^2 - 1)) * x + (m^2 - 1)
-	m2 = maxturn_cos * maxturn_cos;
-	v = math_solve_quadratic(m2 - f * f, 2 * f * (m2 - 1), m2 - 1);
-	return normalize(thisdir + goaldir * v_y); // the larger solution!
+	while (maxturn_angle > 45 * MATH_DEG2RAD) {
+		thisdir = weapon_rocketlauncher_rocket_steerto(thisdir, goaldir, 45);
+		maxturn_angle -= 45 * MATH_DEG2RAD;
+	}
+	vector v = goaldir - thisdir;
+	vector steerdir = normalize(v + (v * goaldir) * thisdir);
+	return normalize(steerdir * tan(maxturn_angle) + thisdir);
 }
 
 void(void) weapon_rocketlauncher_think {
@@ -124,7 +117,7 @@ void(void) weapon_rocketlauncher_think {
 			// now it gets tricky... we want to move like some curve to approximate the target direction
 			// but we are limiting the rate at which we can turn!
 			goal = desiredorigin + ((self.origin - desiredorigin) * desireddir + g_balance_rocketlauncher_guidegoal) * desireddir;
-			newdir = weapon_rocketlauncher_rocket_steerto(olddir, normalize(goal - self.origin), cos(g_balance_rocketlauncher_guiderate * f * frametime * MATH_DEG2RAD));
+			newdir = weapon_rocketlauncher_rocket_steerto(olddir, normalize(goal - self.origin), min(180, g_balance_rocketlauncher_guiderate * f * frametime));
 			self.velocity = newdir * velspeed;
 			if (!self.count) {
 				pointparticles(particleeffectnum("rocket_guide"), self.origin, self.velocity, 1);
