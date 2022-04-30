@@ -844,7 +844,11 @@ void() turret_think {
 	vector tag_origin_restore = '0 0 0';
 	float tag_index_restore = 0;
 	vector tag_angles_restore = '0 0 0';
+	float tag_modelindex = 0;
+	string tag_classname = NULL;
 	if (tag_entity_restore) {
+		tag_classname = tag_entity_restore.classname;
+		tag_modelindex = tag_entity_restore.modelindex;
 		tag_index_restore = self.tag_index;
 		tag_origin_restore = self.origin;
 		tag_angles_restore = self.angles;
@@ -967,7 +971,9 @@ void() turret_think {
 	if (self.turret_postthink)
 		self.turret_postthink();
 :finish
-	if (tag_entity_restore) {
+	if (tag_entity_restore)
+	if not(wasfreed(tag_entity_restore))
+	if (tag_classname == tag_entity_restore.classname && tag_modelindex == tag_entity_restore.modelindex) {
 		self.tag_entity = tag_entity_restore;
 		self.tag_index = tag_index_restore;
 		setorigin(self, tag_origin_restore);
