@@ -162,7 +162,6 @@ void monster_die() {
 		}
 	}
 	self.think = stdproc_remove;
-
 	if (self.ammo_shells)
 		monster_drop_item(IT_SHELLS, "models/items/a_shells.md3", "misc/itempickup.wav", "Shells", ammo_shells, self.ammo_shells);
 
@@ -657,7 +656,6 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	if (!self.respawntime)
 		self.respawntime = 1;
 
-	if (team_mode)
 	if not(self.team)
 		self.team = -1;
 
@@ -796,7 +794,7 @@ void spawnfunc_monster_group() {
 vector monster_look_to_end;
 float(entity _enemy) monster_look_to {
 	monster_look_to_end = monster_checkpoint(self.enemy);
-	trace_line(ENTITY_CENTER(self), monster_look_to_end, TRACE_MOVE_WORLDONLY, world);
+	trace_line(self.origin + self.view_ofs, monster_look_to_end, TRACE_MOVE_WORLDONLY, world);
 	if (trace_fraction == 1)
 		return TRUE;
 

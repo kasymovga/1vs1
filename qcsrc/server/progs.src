@@ -325,6 +325,7 @@ monster/arachna.qc
 monster/boss4.qc
 monster/fish.qc
 monster/butcher.qc
+monster/turret.qc
 survive.qc
 minstagib.qc
 radio.qc

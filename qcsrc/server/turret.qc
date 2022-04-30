@@ -148,9 +148,8 @@ void(vector v_from, vector v_to, vector v_colormod,
 	setmodel(gib,smodel);
 	setorigin(gib,v_from);
 	entity_fade_setup(gib,time + f_lifetime,2);
-	gib.solid = SOLID_BBOX;
+	gib.solid = SOLID_NOT;
 	gib.movetype = MOVETYPE_BOUNCE;
-	gib.takedamage = DAMAGE_YES;
 	gib.event_damage = turret_gib_damage;
 	gib.health = -1;
 	gib.effects = EFFECT_LOWPRECISION;
@@ -179,11 +178,10 @@ void() turret_gib_boom {
 		setmodel(gib,s);
 		setorigin(gib,self.origin);
 		entity_fade_setup(gib,time + 5,2);
-		gib.solid = SOLID_BBOX;
+		gib.solid = SOLID_NOT;
 		gib.movetype = MOVETYPE_BOUNCE;
 		gib.gravity = 0.5;
 		gib.damageforcescale = 2;
-		gib.takedamage = DAMAGE_YES;
 		gib.event_damage = turret_gib_damage;
 		gib.health = -1;
 		gib.effects = EFFECT_LOWPRECISION;
@@ -706,7 +704,7 @@ float(entity e_turret,entity e_target,float validate_flags) turret_validate_targ
 			return -10.5;
 
 	// Team check
-	if ((validate_flags & TFL_TARGETSELECT_TEAMCHECK) && team_mode) {
+	if ((validate_flags & TFL_TARGETSELECT_TEAMCHECK)) {
 		if (validate_flags & TFL_TARGETSELECT_OWNTEAM) {
 			if (e_target.team != e_turret.team)
 				return -11;
@@ -715,11 +713,11 @@ float(entity e_turret,entity e_target,float validate_flags) turret_validate_targ
 			if (e_turret.team != e_target.owner.team)
 				return -12;
 		} else {
-			if (e_target.team == e_turret.team || !e_target.team)
+			if (e_target.team == e_turret.team || (team_mode && !e_target.team))
 				return -13;
 
 			if (e_target.owner)
-			if (e_turret.team == e_target.owner.team || !e_target.owner.team)
+			if (e_turret.team == e_target.owner.team || (team_mode && !e_target.owner.team))
 				return -14;
 		}
 	}
@@ -832,16 +830,28 @@ void() turret_think {
 	if (self.ammo < self.ammo_max)
 		self.ammo = min(self.ammo + self.ammo_recharge,self.ammo_max);
 
+	entity tag_entity_restore = self.tag_entity;
+	vector tag_origin_restore = '0 0 0';
+	float tag_index_restore = 0;
+	vector tag_angles_restore = '0 0 0';
+	if (tag_entity_restore) {
+		tag_index_restore = self.tag_index;
+		tag_origin_restore = self.origin;
+		tag_angles_restore = self.angles;
+		setorigin(self, gettaginfo(self.tag_entity, self.tag_index) + self.origin);
+		setattachment(self, world, "");
+		self.angles = vectoangles(v_forward);
+	}
 	// Inactive turrets needs to run the think loop,
 	// So they can handle animation and wake up if need be.
 	if not(self.tur_active) {
 		turret_stdproc_track();
-		return;
+		goto finish;
 	}
 	//This is just wrong :| and unlikely to ever happen.
 	/*
 	if (self.deadflag != DEAD_NO) {
-		return;
+		goto finish;
 	}
 	*/
 	// This is typicaly used for zaping every target in range
@@ -895,7 +905,7 @@ void() turret_think {
 				if (self.turret_postthink)
 					self.turret_postthink();
 
-				return;
+				goto finish;
 			}
 		// Check if we have a vailid enemy, and try to find one if we dont.
 		// g_turrets_targetscan_maxdelay forces a target re-scan this often
@@ -926,7 +936,7 @@ void() turret_think {
 				self.turret_postthink();
 
 			// And bail.
-			return;
+			goto finish;
 		} else
 			self.lip = time + g_turrets_aimidle_delay; // Keep track of the last time we had a target.
 
@@ -946,6 +956,13 @@ void() turret_think {
 	// do any per-turret stuff
 	if (self.turret_postthink)
 		self.turret_postthink();
+:finish
+	if (tag_entity_restore) {
+		self.tag_entity = tag_entity_restore;
+		self.tag_index = tag_index_restore;
+		setorigin(self, tag_origin_restore);
+		self.angles = tag_angles_restore;
+	}
 }
 
 void() turret_fire {
@@ -1011,7 +1028,7 @@ float turret_count;
 void(void) turret_stdproc_init_delayed {
 	entity e;
 	if not(team_mode)
-		self.team = WORLD_MAX_SHOT_DISTANCE; // Group all turrets into the same team iso they dont kill eachother.
+		self.team = -1; // Group all turrets into the same team iso they dont kill eachother.
 	else {
 		if (self.targetname != "") {
 			e = find(world, target, self.targetname);
@@ -1401,7 +1418,7 @@ void(void) turret_projectile_think_explode {
 }
 
 void(void) turret_projectile_touch_explode {
-	if ((other == self.owner) || (other == self.owner.tur_head))
+	if ((other == self.owner) || (other == self.owner.tur_head) || (other == self.owner.tag_entity))
 		return;
 
 	turret_projectile_explode();
