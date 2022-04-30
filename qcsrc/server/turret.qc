@@ -1418,6 +1418,7 @@ void(void) turret_projectile_think_explode {
 }
 
 void(void) turret_projectile_touch_explode {
+	if (other)
 	if ((other == self.owner) || (other == self.owner.tur_head) || (other == self.owner.tag_entity))
 		return;
 
