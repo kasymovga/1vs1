@@ -148,14 +148,17 @@ void(vector v_from, vector v_to, vector v_colormod,
 	setmodel(gib,smodel);
 	setorigin(gib,v_from);
 	entity_fade_setup(gib,time + f_lifetime,2);
-	gib.solid = SOLID_NOT;
+	gib.solid = SOLID_CORPSE;
 	gib.movetype = MOVETYPE_BOUNCE;
 	gib.event_damage = turret_gib_damage;
+	gib.takedamage = DAMAGE_YES;
 	gib.health = -1;
 	gib.effects = EFFECT_LOWPRECISION;
 	gib.flags = FL_NOTARGET;
 	gib.colormod = v_colormod;
 	gib.velocity = v_to;
+	gib.scale = self.scale;
+	setsize(gib, gib.mins * gib.scale, gib.maxs * gib.scale);
 	if (b_burn) {
 		burn = spawn();
 		burn.effects = EFFECT_LOWPRECISION;//|EFFECT_FLAME;
@@ -178,16 +181,19 @@ void() turret_gib_boom {
 		setmodel(gib,s);
 		setorigin(gib,self.origin);
 		entity_fade_setup(gib,time + 5,2);
-		gib.solid = SOLID_NOT;
+		gib.solid = SOLID_CORPSE;
 		gib.movetype = MOVETYPE_BOUNCE;
 		gib.gravity = 0.5;
 		gib.damageforcescale = 2;
 		gib.event_damage = turret_gib_damage;
+		gib.takedamage = DAMAGE_YES;
 		gib.health = -1;
 		gib.effects = EFFECT_LOWPRECISION;
 		gib.flags = FL_NOTARGET;
 		gib.velocity = self.velocity + (randomvec() * 700);
 		gib.avelocity = randomvec() * 64;
+		gib.scale = self.scale;
+		setsize(gib, gib.mins * gib.scale, gib.maxs * gib.scale);
 	}
 	net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
 	net_write_byte(MSG_BROADCAST, 78);
@@ -218,6 +224,8 @@ void(vector v_from, vector v_to, vector v_colormod,
 	gib.avelocity = randomvec() * 32;
 	gib.think = turret_gib_boom;
 	gib.nextthink = boomtime;
+	gib.scale = self.scale;
+	setsize(gib, gib.mins * gib.scale, gib.maxs * gib.scale);
 	//gib.effects = EFFECT_FLAME;
 }
 
@@ -286,9 +294,11 @@ void() turret_stdproc_die {
 
 void() turret_stdproc_setcolormod {
 	vector cmod = team_colormod(self.team);
-	self.colormod = cmod;
-	if (self.tur_head)
-		self.tur_head.colormod = cmod;
+	if (cmod != '0 0 0') {
+		self.colormod = cmod;
+		if (self.tur_head)
+			self.tur_head.colormod = cmod;
+	}
 }
 
 void() turret_stdproc_respawn {
@@ -1063,6 +1073,7 @@ float(string cvar_base_name, string base, string head) turret_stdproc_init {
 		return 0;
 
 	turret_precache();
+	if not(self.scale) self.scale = 1;
 	// Better more then once then never.
 	// turret_gibs_precash();
 	// Terrainbase spawnflag. This puts a enlongated model
@@ -1071,9 +1082,10 @@ float(string cvar_base_name, string base, string head) turret_stdproc_init {
 		entity tb;
 		//precache_model("models/turrets/terrainbase.md3");
 		tb = spawn();
+		tb.scale = self.scale;
 		setmodel(tb,"models/turrets/terrainbase.md3");
 		tb.maxs_z = -1;
-		setsize(tb, tb.mins, tb.maxs);
+		setsize(tb, tb.mins * self.scale, tb.maxs * self.scale);
 		setorigin(tb, self.origin);
 		tb.solid = SOLID_BBOX;
 		//makestatic(tb);
@@ -1275,7 +1287,7 @@ float(string cvar_base_name, string base, string head) turret_stdproc_init {
 	vector extra_maxs = gettaginfo(self, gettagindex(self,"tag_head")) - self.origin;
 	extra_maxs_x = 0;
 	extra_maxs_y = 0;
-	setsize(self, '-32 -32 0', '32 32 32' + extra_maxs);
+	setsize(self, '-32 -32 0' * self.scale, '32 32 32' * self.scale + extra_maxs);
 	self.pos1 = self.origin;
 	// Put pices in place
 	if (self.tur_defend)
@@ -1288,6 +1300,7 @@ float(string cvar_base_name, string base, string head) turret_stdproc_init {
 
 	self.tur_health = self.health;
 	self.tur_head.health = self.health;
+	self.tur_head.scale = self.scale;
 	self.solid = SOLID_BBOX;
 	self.takedamage = DAMAGE_AIM;
 	self.movetype = MOVETYPE_TOSS;

@@ -5,12 +5,12 @@ void() monster_turret_hunt {
 	if (self.flags & FL_ONGROUND) {
 		vector v = self.enemy.origin - self.origin;
 		float d = vlen(v);
-		if (d < 200) {
+		if (d < 400) {
 			v = monster_move_walk(-600, 5, 0);
 			self.frame = 1;
 			v = vectoangles(v);
 			self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
-		} else if (d > 400) {
+		} else if (d > 500) {
 			vector v = monster_move_walk(600, 5, 0);
 			self.frame = 0;
 			v = vectoangles(v);
@@ -65,15 +65,18 @@ void(void) monster_turret_remove {
 	setattachment(self.weaponentity, world, "");
 	setorigin(self.weaponentity, self.origin + '0 0 50');
 	self.weaponentity.movetype = MOVETYPE_TOSS;
+	self.weaponentity.angles_y += self.angles_y;
 }
 
 void() monster_turret_spawn {
 	monster_prepare(monster_turret_hunt, monster_turret_walk, monster_turret_idle);
 	setmodel(self, "models/spiderbot/spiderbot.dpm");
+	self.colormap = 1024;
+	self.colormod = '0.75 1 0.75';
 	self.species = SPECIES_ROBOT_SOLID;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 0.1;
-	self.weaponname = "Walking Turret";
+	self.netname = "Walking Turret";
 	self.movetype = MOVETYPE_WALK;
 	self.entremove = monster_turret_remove;
 	self.takedamage = DAMAGE_AIM;
@@ -88,7 +91,6 @@ void() monster_turret_spawn {
 	print("turret team: ", ftos(self.team), "\n");
 	self.spawnflags = TSL_NO_RESPAWN;
 	callfunction(strcat("spawnfunc_turret_", oldself.owner.weaponname));
-	self.tur_head.scale = self.scale;
 	self = oldself;
 	setattachment(self.weaponentity, self, "tag_head");
 	self.weaponentity.movetype = MOVETYPE_NONE;
