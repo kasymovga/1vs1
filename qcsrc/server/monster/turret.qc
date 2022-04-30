@@ -88,7 +88,6 @@ void() monster_turret_spawn {
 	self.scale = 0.75;
 	setorigin(self, oldself.origin);
 	self.team = oldself.team;
-	print("turret team: ", ftos(self.team), "\n");
 	self.spawnflags = TSL_NO_RESPAWN;
 	callfunction(strcat("spawnfunc_turret_", oldself.owner.weaponname));
 	self = oldself;
