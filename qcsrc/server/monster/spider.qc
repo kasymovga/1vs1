@@ -37,13 +37,9 @@ void spider_hunt() {
 		}
 	}
 	if (time > self.bulletcounter) {
-		self.anim_start = MODEL_SPIDERBOT_FORWARD_START;
-		self.anim_end   = MODEL_SPIDERBOT_FORWARD_END;
-		self.frame      = 0;
+		self.frame = 0; //walk forward
 	} else {
-		self.anim_start = MODEL_SPIDERBOT_JUMP_START;
-		self.anim_end   = MODEL_SPIDERBOT_JUMP_END;
-		self.frame      = 4;
+		self.frame = 4; //jump
 	}
 }
 
@@ -53,8 +49,6 @@ void spider_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	self.anim_start = 0;
-	self.anim_end = 0;
 	self.frame = 5;
 }
 
@@ -73,9 +67,7 @@ void spider_walk() {
 	if (monster_walk_finished(spider_idle, 100))
 		return;
 
-	self.anim_start = MODEL_SPIDERBOT_FORWARD_START;
-	self.anim_end   = MODEL_SPIDERBOT_FORWARD_END;
-	self.frame      = 0;
+	self.frame = 0; //walk forward
 	if (self.flags & FL_ONGROUND) {
 		vector v = monster_move_walk(400, 5, 0);
 		//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);

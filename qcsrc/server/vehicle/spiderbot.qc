@@ -3,21 +3,6 @@
 #define SPIDERBOT_VIEW_START_OFFSET 70
 #define SPIDERBOT_MIN '-75 -75 5'
 #define SPIDERBOT_MAX '75 75 105'
-#define MODEL_SPIDERBOT_FORWARD_START 1
-#define MODEL_SPIDERBOT_FORWARD_END 31
-#define MODEL_SPIDERBOT_FORWARD_LENGTH 31
-#define MODEL_SPIDERBOT_BACKWARDS_START 32
-#define MODEL_SPIDERBOT_BACKWARDS_END 62
-#define MODEL_SPIDERBOT_BACKWARDS_LENGTH 31
-#define MODEL_SPIDERBOT_LEFT_START 63
-#define MODEL_SPIDERBOT_LEFT_END 93
-#define MODEL_SPIDERBOT_LEFT_LENGTH 31
-#define MODEL_SPIDERBOT_RIGHT_START 94
-#define MODEL_SPIDERBOT_RIGHT_END 124
-#define MODEL_SPIDERBOT_RIGHT_LENGTH 31
-#define MODEL_SPIDERBOT_JUMP_START 125
-#define MODEL_SPIDERBOT_JUMP_END 155
-#define MODEL_SPIDERBOT_JUMP_LENGTH 31
 
 float g_vehicle_spiderbot_head_pitchlimit_down;
 float g_vehicle_spiderbot_head_pitchlimit_up;
@@ -47,9 +32,7 @@ void(float eject) vehicle_spiderbot_exit;
 void() vehicle_spiderbot_enter;
 
 void(entity spider) vehicle_spiderbot_stop {
-	spider.anim_start = 0;
-	spider.anim_end = 0;
-	spider.frame = 5;
+	spider.frame = 5; //stay
 }
 
 void(void) vehicle_spiderbot_rocket_think {
@@ -187,39 +170,28 @@ float(void) vehicle_spiderbot_physics_hook {
 	if(spider.flags & FL_ONGROUND) {
 		if(player.BUTTON_JUMP) {
 			player.BUTTON_JUMP = 0;
-			spider.anim_start = MODEL_SPIDERBOT_JUMP_START;
-			spider.anim_end   = MODEL_SPIDERBOT_JUMP_END;
-			spider.frame = 4;
+			spider.frame = 4; //jump
 		} else {
 			if(vlen(player.movement) == 0) {
 				vehicle_spiderbot_stop(spider);
 			} else {
 				if(player.movement_x != 0) {
 					if(player.movement_x > 0) {
-						spider.anim_start = MODEL_SPIDERBOT_FORWARD_START;
-						spider.anim_end   = MODEL_SPIDERBOT_FORWARD_END;
-						spider.frame = 0;
+						spider.frame = 0; //walk forward
 					} else if(player.movement_x < 0) {
-						spider.anim_start = MODEL_SPIDERBOT_BACKWARDS_START;
-						spider.anim_end   = MODEL_SPIDERBOT_BACKWARDS_END;
-						spider.frame = 1;
+						spider.frame = 1; //walk backward
 					}
 				} else if(player.movement_y != 0) {
 					if(player.movement_y < 0) {
-						spider.anim_start = MODEL_SPIDERBOT_LEFT_START;
-						spider.anim_end   = MODEL_SPIDERBOT_LEFT_END;
-						spider.frame = 2;
+						spider.frame = 2; //walk left
 					} else if(player.movement_y > 0) {
-						spider.anim_start = MODEL_SPIDERBOT_RIGHT_START;
-						spider.anim_end   = MODEL_SPIDERBOT_RIGHT_END;
-						spider.frame = 3;
+						spider.frame = 3; //walk right
 					}
 				}
 
 			}
 		}
 	}
-	//anim_do();
 	vehicle_spiderbot_miniguns_do();
 	vehicle_spiderbot_rocket_do();
 	vehicle_stdproc_regen();
