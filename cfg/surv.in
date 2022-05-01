@@ -5,4 +5,3 @@ set g_surv_wave_pause 20
 set g_surv_wave_skip 0
 set g_surv_monster_factor 0.25
 set g_surv_freeze 1
-set surv_g_monster_turret_drop 0
