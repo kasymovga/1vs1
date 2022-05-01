@@ -806,9 +806,11 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 	s = targ.netname;
 	a = attacker.netname;
 	weapon_fragprefix = "";
+	float attacker_is_player = (attacker.classname == "player" || (team_mode && attacker.classname == "spectator" && attacker.team > 0));
 	if (targ == attacker) {
-		if not(clienttype(attacker) == CLIENTTYPE_REAL)
+		if (clienttype(attacker) == CLIENTTYPE_BOT)
 			bot_say(attacker, FALSE, world, cvar_string("bot_messages_suicide"), "");
+
 		if (deathtype == DEATH_TEAMCHANGE) {
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", team_colored_name(targ.team)));
 		} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
@@ -847,8 +849,8 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		}
 		if (targ.killcount > 2)
 			bprint ("^1",s,"^1 ended it all after a ",ftos(targ.killcount)," kill spree\n");
-	} else if (attacker.classname == "player") {
-		if not(clienttype(attacker) == CLIENTTYPE_REAL) {
+	} else if (attacker_is_player || attacker.netname != "") {
+		if (clienttype(attacker) == CLIENTTYPE_BOT) {
 			if (bot_talk)
 			if (random() < bot_talk) {
 				if (team_mode && attacker.team == targ.team)
@@ -865,7 +867,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				self = oldself;
 			}
 		}
-		if not(clienttype(targ) == CLIENTTYPE_REAL)
+		if (clienttype(targ) == CLIENTTYPE_BOT)
 		if (bot_talk)
 		if (random() <= bot_talk) {
 			if (team_mode && attacker.team == targ.team) {
@@ -877,10 +879,9 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					bot_say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
 			}
 		}
-		if (team_mode && attacker.team == targ.team && !targ.saboteur) {
+		if (team_mode && attacker.team == targ.team && !targ.saboteur && attacker_is_player) {
 			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s, ", a team mate!"));
 			bprint ("^1", a, "^1 mows down a team mate\n");
-			score_give_frag(attacker, targ, -1);
 			if (targ.killcount > 2) {
 				bprint ("^1",s,"'s ^1",ftos(targ.killcount)," kill spree was ended by a team mate!\n");
 			}
@@ -941,59 +942,57 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			else if not(gamehook_chain_player_obituary_frag(deathtype, targ, inflictor, attacker))
 				bprint ("^1",s, "^1 was ", weapon_fragprefix, "^1fragged by ", a, "\n");
 
-			if (g_spawnfrags && (targ.spawnshieldtime > time || attacker.spawnshieldtime > time)) {
-				weapon_fragprefix = strcat("^3SPAWN", weapon_fragprefix);
-			} else {
-				score_give_frag(attacker, targ, 1);
+			if (attacker_is_player) {
+				if (g_spawnfrags && (targ.spawnshieldtime > time || attacker.spawnshieldtime > time)) {
+					weapon_fragprefix = strcat("^3SPAWN", weapon_fragprefix);
+				} else {
+					score_give_frag(attacker, targ, 1);
+				}
+				if (targ.killcount > 2) {
+					bprint ("^1",s,"'s ^1", ftos(targ.killcount), " kill spree was ended by ", a, "\n");
+				}
+				attacker.killcount = attacker.killcount + 1;
+				if (attacker.killcount > 2) {
+					bprint ("^1",a,"^1 has ",ftos(attacker.killcount)," frags in a row\n");
+				}
+				float fragtime = time;
+				if (attacker.killcount == 3) {
+					bprint (a,"^7 made a ^1TRIPLE FRAG\n");
+					announce(attacker, "announcer/male/03kills.wav", "^1Triple Kill");
+				} else if (attacker.killcount == 5) {
+					bprint (a,"^7 unleashes ^1RAGE\n");
+					announce(attacker, "announcer/male/05kills.wav", "^1Rage");
+				} else if (attacker.killcount == 10) {
+					bprint (a,"^7 starts the ^1MASSACRE!\n");
+					announce(attacker, "announcer/male/10kills.wav", "^1MASSACRE");
+				} else if (attacker.killcount == 15) {
+					bprint (a,"^7 executes ^1MAYHEM!\n");
+					announce(attacker, "announcer/male/15kills.wav", "^1MAYHEM!");
+				} else if (attacker.killcount == 20) {
+					bprint (a,"^7 is a ^1BERSERKER!\n");
+					announce(attacker, "announcer/male/20kills.wav", "^1BERSERKER!");
+				} else if (attacker.killcount == 25) {
+					bprint (a,"^7 inflicts ^1CARNAGE!\n");
+					announce(attacker, "announcer/male/25kills.wav", "^1CARNAGE!");
+				} else if (attacker.killcount == 30) {
+					bprint (a,"^7 unleashes ^1ARMAGEDDON!\n");
+					announce(attacker, "announcer/male/30kills.wav", "^1ARMAGEDDON!!!");
+				} else if (time - attacker.lastfrag < sv_announcer_extra_doublekill_interval && attacker.lastfrag && sv_announcer_extra_doublekill != "") {
+						announce(attacker, sv_announcer_extra_doublekill, "^3Excellent");
+						fragtime = 0;
+				}
+				attacker.taunt_soundtime = time + 1;
+				attacker.lastfrag = fragtime;
+				if (DEATH_ISWEAPON(deathtype, WEP_MELEE) && sv_announcer_extra_meleefrag != "") {
+						announce(targ, sv_announcer_extra_meleefrag, "");
+						announce(attacker, sv_announcer_extra_meleefrag, "");
+				}
+				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You ", weapon_fragprefix, "^4fragged ^7", s));
 			}
-			if (targ.killcount > 2) {
-				bprint ("^1",s,"'s ^1", ftos(targ.killcount), " kill spree was ended by ", a, "\n");
-			}
-			attacker.killcount = attacker.killcount + 1;
-			if (attacker.killcount > 2) {
-				bprint ("^1",a,"^1 has ",ftos(attacker.killcount)," frags in a row\n");
-			}
-			float fragtime = time;
-
-			if (attacker.killcount == 3) {
-				bprint (a,"^7 made a ^1TRIPLE FRAG\n");
-				announce(attacker, "announcer/male/03kills.wav", "^1Triple Kill");
-			} else if (attacker.killcount == 5) {
-				bprint (a,"^7 unleashes ^1RAGE\n");
-				announce(attacker, "announcer/male/05kills.wav", "^1Rage");
-			} else if (attacker.killcount == 10) {
-				bprint (a,"^7 starts the ^1MASSACRE!\n");
-				announce(attacker, "announcer/male/10kills.wav", "^1MASSACRE");
-			} else if (attacker.killcount == 15) {
-				bprint (a,"^7 executes ^1MAYHEM!\n");
-				announce(attacker, "announcer/male/15kills.wav", "^1MAYHEM!");
-			} else if (attacker.killcount == 20) {
-				bprint (a,"^7 is a ^1BERSERKER!\n");
-				announce(attacker, "announcer/male/20kills.wav", "^1BERSERKER!");
-			} else if (attacker.killcount == 25) {
-				bprint (a,"^7 inflicts ^1CARNAGE!\n");
-				announce(attacker, "announcer/male/25kills.wav", "^1CARNAGE!");
-			} else if (attacker.killcount == 30) {
-				bprint (a,"^7 unleashes ^1ARMAGEDDON!\n");
-				announce(attacker, "announcer/male/30kills.wav", "^1ARMAGEDDON!!!");
-			} else if (time - attacker.lastfrag < sv_announcer_extra_doublekill_interval && attacker.lastfrag && sv_announcer_extra_doublekill != "") {
-					announce(attacker, sv_announcer_extra_doublekill, "^3Excellent");
-					fragtime = 0;
-			}
-			if (DEATH_ISWEAPON(deathtype, WEP_MELEE) && sv_announcer_extra_meleefrag != "") {
-					announce(targ, sv_announcer_extra_meleefrag, "");
-					announce(attacker, sv_announcer_extra_meleefrag, "");
-			}
-			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You ", weapon_fragprefix, "^4fragged ^7", s));
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were ", weapon_fragprefix, "^1fragged by ^7", a));
-			attacker.taunt_soundtime = time + 1;
-			attacker.lastfrag = fragtime;
 		}
-	} else if (attacker.classname == "monster") {
-		centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were fragged by ^7", attacker.netname));
-		bprint ("^1",s, "^1 was killed by ", attacker.netname, "\n");
 	} else {
-		if not(clienttype(targ) == CLIENTTYPE_REAL)
+		if (clienttype(targ) == CLIENTTYPE_BOT)
 		if (bot_talk)
 		if (random() <= bot_talk)
 			bot_say(targ, FALSE, world, cvar_string("bot_messages_suicide"), "");
@@ -1018,9 +1017,11 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		else
 			bprint ("^1",s, "^1 died\n");
 
-		score_give_frag(targ, targ, -1);
-		if (score_player_add(targ, SP_SCORE, 0) == -5) {
-			announce(targ, "announcer/male/botlike.wav", "");
+		if (targ.classname == "player") {
+			score_give_frag(targ, targ, -1);
+			if (score_player_add(targ, SP_SCORE, 0) == -5) {
+				announce(targ, "announcer/male/botlike.wav", "");
+			}
 		}
 		if (targ.killcount > 2)
 			bprint ("^1",s,"^1 died with a ",ftos(targ.killcount)," kill spree\n");
