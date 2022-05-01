@@ -66,6 +66,10 @@ void(void) monster_turret_remove {
 	setorigin(self.weaponentity, self.origin + '0 0 50');
 	self.weaponentity.movetype = MOVETYPE_TOSS;
 	self.weaponentity.angles_y += self.angles_y;
+	self.weaponentity.takedamage = DAMAGE_YES;
+	if not(cvar("g_monster_turret_drop")) {
+		damage(self.weaponentity, world, world, max(0, self.weaponentity.health), DEATH_HURTTRIGGER, ENTITY_CENTER(self.weaponentity), '0 0 0');
+	}
 }
 
 void() monster_turret_spawn {
@@ -93,6 +97,7 @@ void() monster_turret_spawn {
 	self = oldself;
 	setattachment(self.weaponentity, self, "tag_head");
 	self.weaponentity.movetype = MOVETYPE_NONE;
+	self.weaponentity.takedamage = FALSE;
 	setorigin(self.weaponentity, self.weaponentity.mins_z * '0 0 -1' + '0 0 10');
 }
 

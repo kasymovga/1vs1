@@ -158,14 +158,15 @@ void(vector v_from, vector v_to, vector v_colormod,
 	gib.colormod = v_colormod;
 	gib.velocity = v_to;
 	gib.scale = self.scale;
+	gib.damageforcescale = 0.2;
 	setsize(gib, gib.mins * gib.scale, gib.maxs * gib.scale);
-	if (b_burn) {
-		burn = spawn();
-		burn.effects = EFFECT_LOWPRECISION;//|EFFECT_FLAME;
-		setattachment(burn,gib,"");
-		setorigin(burn,(gib.mins + gib.maxs) * 0.5);
-		entity_fade_setup(burn,time + (f_lifetime * 0.5) ,2);
-	}
+	//if (b_burn) {
+	//	burn = spawn();
+	//	burn.effects = EFFECT_LOWPRECISION | EFFECT_FLAME;
+	//	setattachment(burn,gib,"");
+	//	setorigin(burn,(gib.mins + gib.maxs) * 0.5);
+	//	entity_fade_setup(burn,time + (f_lifetime * 0.5) ,2);
+	//}
 }
 
 void() turret_gib_boom {
@@ -821,6 +822,13 @@ entity() turret_select_target {
 	return e_enemy;
 }
 
+entity tag_entity_restore;
+vector tag_origin_restore;
+float tag_index_restore;
+vector tag_angles_restore;
+float tag_modelindex;
+string tag_classname;
+float tag_solid;
 void() turret_think {
 	entity e;
 	self.nextthink = time + self.ticrate;
@@ -840,21 +848,17 @@ void() turret_think {
 	if (self.ammo < self.ammo_max)
 		self.ammo = min(self.ammo + self.ammo_recharge,self.ammo_max);
 
-	entity tag_entity_restore = self.tag_entity;
-	vector tag_origin_restore = '0 0 0';
-	float tag_index_restore = 0;
-	vector tag_angles_restore = '0 0 0';
-	float tag_modelindex = 0;
-	string tag_classname = NULL;
-	if (tag_entity_restore) {
+	if ((tag_entity_restore = self.tag_entity)) {
 		tag_classname = tag_entity_restore.classname;
 		tag_modelindex = tag_entity_restore.modelindex;
 		tag_index_restore = self.tag_index;
+		tag_solid = self.tag_entity.solid;
 		tag_origin_restore = self.origin;
 		tag_angles_restore = self.angles;
 		setorigin(self, gettaginfo(self.tag_entity, self.tag_index) + self.origin);
 		setattachment(self, world, "");
 		self.angles = vectoangles(v_forward);
+		tag_entity_restore.solid = SOLID_NOT;
 	}
 	// Inactive turrets needs to run the think loop,
 	// So they can handle animation and wake up if need be.
@@ -974,6 +978,7 @@ void() turret_think {
 	if (tag_entity_restore)
 	if not(wasfreed(tag_entity_restore))
 	if (tag_classname == tag_entity_restore.classname && tag_modelindex == tag_entity_restore.modelindex) {
+		tag_entity_restore.solid = tag_solid;
 		self.tag_entity = tag_entity_restore;
 		self.tag_index = tag_index_restore;
 		setorigin(self, tag_origin_restore);

@@ -75,4 +75,5 @@ set g_monster_ugandaknuckles_radius 150
 set g_monster_ugandaknuckles_damage 5
 set g_monster_ugandaknuckles_force 5
 set g_monster_turret_health 300
+set g_monster_turret_drop 1
 set g_monsters_spawn ""
