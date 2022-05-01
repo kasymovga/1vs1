@@ -191,17 +191,18 @@ void(void) spawnfunc_conquest_cp {
 	WaypointSprite_SpawnFixed(NULL, self.origin + '0 0 64', self, sprite);
 	WaypointSprite_UpdateRule(self.sprite, 0, SPRITERULE_DEFAULT);
 	conquest_update_waypoint();
+	self.maxs_z += 16;
+	self.mins_z += 16;
+	entity_droptofloor();
 }
 
 void(void) spawnfunc_conquest_cp_fromredflag {
 	self.team = COLOR_TEAM1;
-	setorigin(self, self.origin - '0 0 40');
 	spawnfunc_conquest_cp();
 }
 
 void(void) spawnfunc_conquest_cp_fromblueflag {
 	self.team = COLOR_TEAM2;
-	setorigin(self, self.origin - '0 0 40');
 	spawnfunc_conquest_cp();
 }
 
@@ -331,9 +332,9 @@ void conquest_ons_entity_spawn_pre() {
 
 var void() conquest_ctf_and_dom_entity_spawn_pre_NextLink;
 void() conquest_ctf_and_dom_entity_spawn_pre {
-	if (self.classname == "item_flag_team1") {
+	if (self.classname == "ctf_flag_team1") {
 		self.classname = "conquest_cp_fromredflag";
-	} else if (self.classname == "item_flag_team2") {
+	} else if (self.classname == "ctf_flag_team2") {
 		self.classname = "conquest_cp_fromblueflag";
 	} else if (self.classname == "dom_controlpoint") {
 		self.classname = "conquest_cp";
