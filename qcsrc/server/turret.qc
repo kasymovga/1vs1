@@ -265,9 +265,9 @@ void() turret_stdproc_die {
 		if (random() > 0.5) {
 			turret_trowgib(self.origin, '0 0 0','1 1 1',"models/turrets/base-gib2.md3",min(self.respawntime,20),1,1);
 			t_dir = (v_up * 700) + (randomvec() * 300);
-			turret_trowgib(self.origin, t_dir,'1 1 1',"models/turrets/base-gib3.md3",min(self.respawntime,10),1,1);
+			turret_trowgib(self.origin + '0 0 20' * self.scale, t_dir,'1 1 1',"models/turrets/base-gib3.md3",min(self.respawntime,10),1,1);
 			t_dir = (v_up * 700) + (randomvec() * 300);
-			turret_trowgib(self.origin, t_dir,'1 1 1',"models/turrets/base-gib4.md3",min(self.respawntime,10),1,1);
+			turret_trowgib(self.origin + '0 0 20' * self.scale, t_dir,'1 1 1',"models/turrets/base-gib4.md3",min(self.respawntime,10),1,1);
 		} else {
 			turret_trowgib(self.origin, '0 0 0','1 1 1',"models/turrets/base-gib1.md3",min(self.respawntime,20),1,1);
 		}
