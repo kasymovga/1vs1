@@ -143,6 +143,7 @@ void() monster_marine_spawn {
 	self.netname = "Marine";
 	self.ammo_nails = 20;
 	self.view_ofs = '0 0 35';
+	self.flags |= MONSTER_IGNOREDROWN;
 }
 
 void() monster_marine_init {

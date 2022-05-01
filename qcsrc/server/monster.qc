@@ -216,8 +216,10 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 		if (self.flags & MONSTER_IGNORESLIME)
 			return;
 	} else if (deathtype == DEATH_DROWN) {
-		if (self.flags & MONSTER_IGNOREDROWN)
+		if (self.flags & MONSTER_IGNOREDROWN) {
+			self.air_finished = time + 10;
 			return;
+		}
 	}
 	if (attacker.classname != "monster")
 		self.health = self.health - _damage;
