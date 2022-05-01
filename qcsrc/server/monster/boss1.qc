@@ -38,7 +38,7 @@ void boss1_hunt() {
 		self.bulletcounter = time + 0.5;
 	} else if (stay) {
 		v = vectoangles(normalize(self.enemy.origin - self.origin));
-		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
+		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 	}
 	if (time > self.bulletcounter) {
 		if (stay) {
@@ -47,7 +47,7 @@ void boss1_hunt() {
 		} else {
 			v = monster_move_walk(450, 5, 0);
 			v = vectoangles(v);
-			self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
+			self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 			anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 		}
 	} else {
@@ -88,7 +88,7 @@ void boss1_walk() {
 	vector v = monster_move_walk(350, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 
 }
 

@@ -48,7 +48,7 @@ void(void) monster_ugandaknuckles_hunt {
 		v = monster_move_walk(500, 5, 0);
 	}
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 }
 
 void(void) monster_ugandaknuckles_idle {
@@ -78,7 +78,7 @@ void(void) monster_ugandaknuckles_walk {
 	anim_update(self);
 	vector v = monster_move_walk(300, 5, 0);
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 
 }
 

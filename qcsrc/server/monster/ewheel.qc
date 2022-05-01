@@ -45,7 +45,7 @@ void ewheel_hunt() {
 	}
 	v = monster_move_walk(500, 1, 0);
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 	self.frame = 2;
 }
 
@@ -61,7 +61,7 @@ void ewheel_walk() {
 	if (self.flags & FL_ONGROUND) {
 		vector v = monster_move_walk(400, 1, 0);
 		v = vectoangles(v);
-		self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 	}
 }
 

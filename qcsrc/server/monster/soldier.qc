@@ -36,7 +36,7 @@ void soldier_hunt() {
 	if (time > self.bulletcounter) {
 		v = monster_move_walk(300, 25, 0);
 		v = vectoangles(v);
-		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
+		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 	} else {
 		movelib_beak_simple(2000 * frametime);
@@ -72,7 +72,7 @@ void soldier_walk() {
 	vector v = monster_move_walk(200, 25, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 
 }
 

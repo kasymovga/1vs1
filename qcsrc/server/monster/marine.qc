@@ -1,10 +1,20 @@
-void marine_idle();
-void marine_guard();
-void marine_walk();
+//compatibility with old save files
+#define monster_marine_init marine_init
+#define monster_marine_idle marine_idle
+#define monster_marine_guard marine_guard
+#define monster_marine_walk marine_walk
+#define monster_marine_hunt marine_hunt
+#define monster_marine_remove marine_remove
+#define monster_marine_spawn marine_spawn
 
-void marine_hunt() {
+void() monster_marine_idle;
+void() monster_marine_guard;
+void() monster_marine_walk;
+
+void() monster_marine_hunt {
+	if (self.body) anim_update(self.body);
 	self.nextthink = time;
-	if (monster_check_target(marine_walk, marine_guard))
+	if (monster_check_target(monster_marine_walk, monster_marine_guard))
 		return;
 
 	vector v;
@@ -42,73 +52,91 @@ void marine_hunt() {
 		self.bulletcounter = time + 1;
 	} else if (stay) {
 		v = vectoangles(normalize(self.enemy.origin - self.origin));
-		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
+		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 	}
 	if (time > self.bulletcounter) {
 		if (stay) {
 			movelib_beak_simple(2000 * frametime);
-			anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
+			if (self.body)
+				anim_set(self.body, '1 8 20', TRUE, TRUE, FALSE);
+			else
+				anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 		} else {
 			v = monster_move_walk(300, 25, 0);
 			v = vectoangles(v);
-			self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
-			anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+			self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+			if (self.body)
+				anim_set(self.body, '74 8 20', TRUE, TRUE, FALSE);
+			else
+				anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 		}
 	} else {
 		movelib_beak_simple(2000 * frametime);
-		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
+		if (self.body)
+			anim_set(self.body, '82 9 20', FALSE, TRUE, FALSE);
+		else
+			anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
 	}
 }
 
-void marine_idle() {
+void() monster_marine_idle {
+	if (self.body) anim_update(self.body);
 	self.nextthink = time;
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
+	if (self.body)
+		anim_set(self.body, '1 8 20', TRUE, TRUE, FALSE);
+	else
+		anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
-void marine_guard() {
+void() monster_marine_guard {
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	marine_idle();
+
+	monster_marine_idle();
 }
 
-void marine_walk() {
+void() monster_marine_walk {
+	if (self.body) anim_update(self.body);
 	self.nextthink = time;
 	if (monster_look_for_player(1500, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(marine_idle, 40))
+	if (monster_walk_finished(monster_marine_idle, 40))
 		return;
 
-	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+	if (self.body)
+		anim_set(self.body, '91 24 20', TRUE, TRUE, FALSE);
+	else
+		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+
 	vector v = monster_move_walk(200, 25, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 
 }
 
-void marine_remove() {
-	remove(self.exteriorweaponentity);
+void() monster_marine_remove {
+	if (self.body) remove(self.body);
+	if (self.weaponentity) remove(self.weaponentity);
 }
 
-void marine_spawn() {
-	monster_prepare(marine_hunt, marine_walk, marine_idle);
-	setmodel(self, "models/player/marine.zym");
+void() monster_marine_spawn {
+	monster_prepare(monster_marine_hunt, monster_marine_walk, monster_marine_idle);
+	self.body = spawn();
+	self.body.scale = 1.25;
+	self.body.colormod = self.colormod;
+	setmodel(self, "null");
+	setmodel(self.body, "models/oq/soldier.mdl");
+	setattachment(self.body, self, "");
+	setorigin(self.body, '0 0 8');
 	self.movetype = MOVETYPE_WALK;
-	self.entremove = marine_remove;
-	if (self.team > 0)
-		self.colormap = 1024;
-	else
-		self.colormap = 1024 + 17;
-
-	self.exteriorweaponentity = spawn();
-	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
-	setmodel(self.exteriorweaponentity, "models/weapons/v_uzi.md3");
+	self.entremove = monster_marine_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
@@ -117,16 +145,16 @@ void marine_spawn() {
 	self.view_ofs = '0 0 35';
 }
 
-void marine_init() {
-	precache_model("models/player/marine.zym");
-	precache_model("models/weapons/v_uzi.md3");
+void() monster_marine_init {
+	dlc_require("oqmodels");
+	precache_model("models/oq/soldier.mdl");
 	precache_sound("weapons/uzi_fire.wav");
 }
 
-void spawnfunc_monster_marine_spawn() {
+void(void) spawnfunc_monster_marine_spawn {
 	setsize(self, '-16 -16 -24', '16 16 45');
-	monster_init(marine_init);
+	monster_init(monster_marine_init);
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
-	monster_prepare_spawn(marine_spawn, spawnfunc_monster_marine_spawn);
+	monster_prepare_spawn(monster_marine_spawn, spawnfunc_monster_marine_spawn);
 }
