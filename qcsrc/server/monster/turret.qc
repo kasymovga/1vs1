@@ -1,7 +1,11 @@
 void() monster_turret_idle;
+void() monster_turret_walk;
 
 void() monster_turret_hunt {
 	self.nextthink = time;
+	if (monster_check_target(monster_turret_walk, monster_turret_idle))
+		return;
+
 	if (self.flags & FL_ONGROUND) {
 		vector v = self.enemy.origin - self.origin;
 		float d = vlen(v);
