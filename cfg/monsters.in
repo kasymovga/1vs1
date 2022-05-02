@@ -77,5 +77,6 @@ set g_monster_ugandaknuckles_force 5
 set g_monster_turret_health 300
 set g_monster_turret_drop 1
 set surv_g_monster_turret_drop 0
+set coop_g_monster_turret_drop 1
 set tdm_g_monster_turret_drop 0
 set g_monsters_spawn ""
