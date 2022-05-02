@@ -26,6 +26,7 @@ void(void) turret_mlrs_attack {
 void(void) spawnfunc_turret_mlrs {
 	precache_model("models/turrets/mlrs.md3");
 	precache_model("models/turrets/base.md3");
+	precache_sound("weapons/rocket_fire.wav");
 	if (self.netname == "")
 		self.netname  = "MLRS turret";
 

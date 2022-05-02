@@ -74,7 +74,7 @@ void(void) spawnfunc_turret_plasma {
 		remove(self);
 		return;
 	}
-	self.damage_flags	|= TFL_DMG_HEADSHAKE;
+	self.damage_flags |= TFL_DMG_HEADSHAKE;
 	self.firecheck_flags |= TFL_FIRECHECK_AFF;
 	if (!turret_tag_setup())
 		print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
@@ -91,6 +91,7 @@ void(void) spawnfunc_turret_plasma {
 void(void) spawnfunc_turret_plasma_dual {
 	precache_model("models/turrets/plasmad.md3");
 	precache_model("models/turrets/base.md3");
+	precache_sound("weapons/hagar_fire.wav");
 	if (self.netname == "")
 		self.netname = "Dual Plasma Cannon";
 
