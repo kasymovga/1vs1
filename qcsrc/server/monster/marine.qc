@@ -110,7 +110,7 @@ void() monster_marine_walk {
 		return;
 
 	if (self.body)
-		anim_set(self.body, '91 24 20', TRUE, TRUE, FALSE);
+		anim_set(self.body, '91 24 30', TRUE, TRUE, FALSE);
 	else
 		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 
