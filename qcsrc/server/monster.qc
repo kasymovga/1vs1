@@ -675,11 +675,8 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 }
 
 void spawnfunc_monster_walk_path() {
-#if 0
-	setmodel(self, "models/ebomb.mdl");
-	self.scale = 4;
-	self.solid = SOLID_NOT;
-#endif
+	vector org = waypoint_fixorigin(self.origin);
+	waypoint_spawn(org, org, WAYPOINTFLAG_GENERATED);
 }
 
 void(void) monster_monsters_init {

@@ -8,8 +8,9 @@ void(void) spawnfunc_info_null {
 
 void(void) spawnfunc_info_player_deathmatch {
 	self.classname = "info_player_deathmatch";
-	waypoint_spawnforitem(self);
 	spawn_relocate();
+	vector org = waypoint_fixorigin(self.origin);
+	waypoint_spawn(org, org, WAYPOINTFLAG_GENERATED);
 }
 
 /*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
