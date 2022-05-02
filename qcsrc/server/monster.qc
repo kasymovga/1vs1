@@ -221,7 +221,8 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 			return;
 		}
 	}
-	if (attacker.classname != "monster")
+	float isenemy = (attacker.team != self.team || (!team_mode && attacker.classname != "monster"));
+	if (!attacker || isenemy)
 		self.health = self.health - _damage;
 
 	violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
@@ -250,7 +251,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 			monster_die_animated();
 		else
 			monster_die();
-	} else if (attacker.classname == "player") {
+	} else if (attacker && isenemy) {
 		monster_sound(self, self.noise3, FALSE);
 		if (self.enemy) {
 			if (self.enemy.classname == "monster_walk_path" || self.enemy.classname == "path_corner")
