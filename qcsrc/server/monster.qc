@@ -151,6 +151,8 @@ void monster_die() {
 	self.solid = SOLID_NOT;
 	self.alpha = -1;
 	self.nextthink = time;
+	self.event_damage = NULL;
+	self.takedamage = FALSE;
 	if (self.spawnflags & MONSTER_SPAWN_SHIELDED) {
 		entity e;
 		e = world;
