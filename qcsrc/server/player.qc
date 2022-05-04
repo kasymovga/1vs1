@@ -2422,6 +2422,7 @@ void() player_init {
 	player_precache_all_models("models/player/*.dpm");
 	player_precache_all_models("models/player/*.md3");
 	player_precache_all_models("models/player/*.psk");
+	player_precache_all_models("models/player/*.iqm");
 	CVAR_CACHE(g_respawn_delay);
 	CVAR_CACHE(g_respawn_mapsettings);
 	CVAR_CACHE(g_respawn_mapsettings_delay);

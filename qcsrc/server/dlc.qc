@@ -56,6 +56,7 @@ void dlc_settemp(string name, string value) {
 	cvar_set("_dlc_settemps_count", ftos(n + 1));
 }
 
+float dlc_load_player_model_not_forced;
 float(string s) dlc_load_settemps_from {
 	float f;
 	string line, c;
@@ -64,6 +65,13 @@ float(string s) dlc_load_settemps_from {
 	f = fopen(s, FILE_READ);
 	if (f < 0) return FALSE;
 	float r = 1;
+	if not(dlc_load_player_model_not_forced) {
+		string s = cvar_string("g_player_forcemodel");
+		if ((s == "" || s == "0") && cvar_string("g_player_allowed_models") == "")
+			dlc_load_player_model_not_forced = 1;
+		else
+			dlc_load_player_model_not_forced = -1;
+	}
 	while ((line = dlc_trimspaces(fgets(f)))) {
 		c = substring(line, 0, 1);
 		if (c == "#" || c == "/") continue;
@@ -115,6 +123,7 @@ float(string s) dlc_load_settemps_from {
 		}
 		cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
 		if (cvar_name == "g_player_forcemodel" && cvar_value != "0") {
+			if (dlc_load_player_model_not_forced > 0) continue;
 			if (dlc_rexext_forcemodel != "") {
 				cvar_name = "g_player_allowed_models";
 				dlc_settemp("g_player_forcemodel", "0");
@@ -123,6 +132,8 @@ float(string s) dlc_load_settemps_from {
 			}
 			dlc_rexext_forcemodel = str_zone_ifneeded(cvar_value);
 		} else if (cvar_name == "g_player_allowed_models") {
+			if (dlc_load_player_model_not_forced > 0) continue;
+			dlc_settemp("g_player_forcemodel", "0");
 			cvar_value = strcat(dlc_rexext_forcemodel, " ", cvar_value);
 			str_unzone_ifneeded(dlc_rexext_forcemodel);
 			dlc_rexext_forcemodel = str_zone_ifneeded(cvar_value);

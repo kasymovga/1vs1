@@ -289,6 +289,8 @@ void(void) modelselect_read {
 		modelselect_search_by_path("models/player/*.zym", currentmodel, currentskin);
 		modelselect_search_by_path("models/player/*.dpm", currentmodel, currentskin);
 		modelselect_search_by_path("models/player/*.md3", currentmodel, currentskin);
+		modelselect_search_by_path("models/player/*.psk", currentmodel, currentskin);
+		modelselect_search_by_path("models/player/*.iqm", currentmodel, currentskin);
 	}
 	modelselect_list = str_zone_ifneeded(modelselect_list);
 	if not(modelselect)
