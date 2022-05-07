@@ -88,6 +88,7 @@ float sv_clforceplayermodels;
 
 float(void) player_customize;
 float(void) player_body_customize;
+void(entity to, entity from) player_copy_sounds;
 
 void(void) player_dmg_inflictor_fix {
 	entity e;
@@ -285,6 +286,7 @@ void(void) player_species_setup {
 		if (pl.body.playermodel == self.body.playermodel)
 		if (pl.body.skinindex == self.body.skinindex) {
 			self.species = pl.species;
+			player_copy_sounds(self, pl);
 			return;
 		}
 	self.species = SPECIES_HUMAN;
@@ -332,6 +334,7 @@ void(void) player_species_setup {
 		fclose(fh);
 
 	search_end(glob);
+	player_update_sounds();
 }
 
 void(float finished, string samp) play_countdown {
@@ -1300,15 +1303,11 @@ void(string f, float first) player_load_sounds {
 	fclose(fh);
 }
 
-.float modelindex_for_playersound;
 void() player_update_sounds {
-	if (self.body.modelindex_lod0 == self.body.modelindex_for_playersound)
-		return;
-
-	self.body.modelindex_for_playersound = self.body.modelindex_lod0;
 	player_clear_sounds();
 	player_load_sounds("sound/player/default.sounds", 1);
 	player_load_sounds(strcat(self.body.model, ".sounds"), 0);
+	player_load_sounds(strcat(self.body.model, "_", ftos(self.skinindex), ".sounds"), 0);
 }
 
 void(string type, string msg) player_voice_message {
@@ -1428,7 +1427,6 @@ void(string modelname) player_setup_lod {
 			player_anim_copy(self, pl);
 			// reset animstate now
 			player_anim_set(self, anim_idle, TRUE, FALSE, TRUE, 2);
-			player_copy_sounds(self, pl);
 			return;
 		}
 	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
@@ -1483,7 +1481,6 @@ void(string modelname) player_setup_lod {
 	self.body.playermodel = str_zone_ifneeded(modelname); //need independent copy here
 	self.body.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
 	player_anim_setup();
-	player_update_sounds();
 }
 
 string(void) player_allowed_model_list {
@@ -2230,7 +2227,7 @@ void(void) player_leave {
 }
 
 void(string pattern) player_precache_all_models {
-	float globhandle, i, n;
+	float globhandle, globhandle2, i, n, n2, j;
 	string s, f;
 	globhandle = search_begin(pattern, TRUE, FALSE);
 	if (globhandle < 0)
@@ -2242,8 +2239,17 @@ void(string pattern) player_precache_all_models {
 		precache_model(f);
 		s = substring(f, -9,5);
 		if (s != "_lod1")
-		if (s != "_lod2")
+		if (s != "_lod2") {
 			player_precache_sounds(strcat(f, ".sounds"));
+			globhandle2 = search_begin(strcat(f, "_*.sounds"), TRUE, FALSE);
+			if (globhandle2 >= 0) {
+				n2 = search_getsize(globhandle2);
+				for (j = 0; j < n2; j++) {
+					player_precache_sounds(search_getfilename(globhandle2, j));
+				}
+				search_end(globhandle2);
+			}
+		}
 	}
 	search_end(globhandle);
 }
