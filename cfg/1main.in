@@ -1,6 +1,7 @@
 alias rereadcvars "sv_cmd rereadcvars"
 alias _fs_rescan_alias_disable "unalias fs_rescan"
-alias _fs_rescan_alias_enable "alias fs_rescan \"_fs_rescan_alias_disable; fs_rescan; menu_cmd dlc_reload; sv_cmd dlc_reload; _g_maplist_source 0; _fs_rescan_alias_enable\""
+alias dlc_reload_sv "sv_cmd dlc_reload"
+alias _fs_rescan_alias_enable "alias fs_rescan \"_fs_rescan_alias_disable; fs_rescan; menu_cmd dlc_reload; defer 2 dlc_reload_sv; _g_maplist_source 0; _fs_rescan_alias_enable\""
 _fs_rescan_alias_enable
 alias cvardeprecated "echo \"$1 is deprecated, use $2 instead!\""
 alias cvarremoved "unset $1; alias $1 \"echo \\\"$1 was removed\\\"\""
