@@ -223,8 +223,14 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 			return;
 		}
 	}
-	float isenemy = (attacker.team != self.team || (!team_mode && attacker.classname != "monster"));
-	if (!attacker || isenemy)
+	float isenemy = (!attacker || attacker.team != self.team || (!team_mode && attacker.classname != "monster"));
+	if (!isenemy) {
+		if (g_friendlyfire)
+			_damage = _damage * g_friendlyfire;
+		else
+			return;
+	}
+	if (isenemy)
 		self.health = self.health - _damage;
 
 	violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
@@ -253,16 +259,18 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 			monster_die_animated();
 		else
 			monster_die();
-	} else if (attacker && isenemy) {
+	} else {
 		monster_sound(self, self.noise3, FALSE);
-		if (self.enemy) {
-			if (self.enemy.classname == "monster_walk_path" || self.enemy.classname == "path_corner")
-				self.message2 = self.enemy.targetname;
-			else
-				return;
+		if (attacker && isenemy) {
+			if (self.enemy) {
+				if (self.enemy.classname == "monster_walk_path" || self.enemy.classname == "path_corner")
+					self.message2 = self.enemy.targetname;
+				else
+					return;
+			}
+			self.enemy = attacker;
+			self.think = self.weapon_think;
 		}
-		self.enemy = attacker;
-		self.think = self.weapon_think;
 	}
 }
 

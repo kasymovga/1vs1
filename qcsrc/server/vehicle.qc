@@ -130,6 +130,12 @@ void(void) vehicle_shieldhit_think {
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) vehicle_stdproc_damage {
 	float ddmg_take;
+	if (team_mode && self.team == attacker.team && self != attacker) {
+		if (g_friendlyfire)
+			_damage = _damage * g_friendlyfire;
+		else
+			return;
+	}
 	self.dmg_time = time;
 	if ((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0)) {
 		if not (self.killindicator)
