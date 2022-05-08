@@ -1575,6 +1575,12 @@ string(string _playermodel) player_check_model {
 		if (substring(_playermodel, -9,5) == "_head")
 			return fallback;
 
+		if (substring(_playermodel, -15,5) == "_decompiled")
+			return fallback;
+
+		if (substring(_playermodel, -13,5) == "_compiled")
+			return fallback;
+
 		if (_playermodel != strtolower(_playermodel))
 			return fallback;
 
@@ -2237,6 +2243,12 @@ void(string pattern) player_precache_all_models {
 	n = search_getsize(globhandle);
 	for (i = 0; i < n; ++i) {
 		f = search_getfilename(globhandle, i);
+		if (substring(f, -15,5) == "_decompiled")
+			continue;
+
+		if (substring(f, -13,5) == "_compiled")
+			continue;
+
 		precache_model(f);
 		s = substring(f, -9,5);
 		if (s != "_lod1")
