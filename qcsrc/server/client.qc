@@ -141,7 +141,7 @@ float(entity to, float sf) client_init_send {
 	if (sf & 128) {
 		net_write_string(MSG_ENTITY, map_description);
 		string s;
-		s = strcat("This is ^1Rexuiz^7 ", cvar_string("g_nexuizversion"));
+		s = strcat("This is ^1Rexuiz^7 ", cvar_string("rexuizversion"));
 		string profile = cvar_string("g_profile");
 		if (profile != "")
 			s = strcat(s, "\n^8g_profile ^3", profile, "^8");
