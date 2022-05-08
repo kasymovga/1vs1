@@ -42,13 +42,6 @@ void damageindicator_damage_force_done(entity targ, entity attacker, float _dama
 	if (targ == attacker)
 		return;
 
-	if not(targ.event_damage)
-		return;
-
-	if not(targ.modelindex)
-	if not(targ.body.modelindex)
-		return;
-
 	if (targ.flags & FL_PROJECTILE)
 		return;
 

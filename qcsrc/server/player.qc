@@ -768,13 +768,14 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		if (self == b) { //detached body
 			if (self.weaponentity) remove(self.weaponentity);
 			if (self.exteriorweaponentity) remove(self.exteriorweaponentity);
-			remove(self);
-			return;
+			self.nextthink = time;
+			self.think = stdproc_remove;
 		} else { //player
 			b.effects |= EFFECT_NODRAW;
+			// view just above the floor
+			physics_set_view_offsets(o, '0 0 4', '0 0 4');
 		}
-		// view just above the floor
-		physics_set_view_offsets(o, '0 0 4', '0 0 4');
+		self.takedamage = FALSE;
 		self.event_damage = NULL;
 		self.solid = SOLID_NOT; // restore later
 	}
