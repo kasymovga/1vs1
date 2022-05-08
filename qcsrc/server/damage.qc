@@ -378,7 +378,8 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 		}
 		targ = targ.chain;
 	}
-	if (directhitentity) {
+	if (directhitentity)
+	if (directhitentity.takedamage) {
 		damage(directhitentity, inflictor, attacker, coredamage, deathtype, entity_nearest_point_on_box(directhitentity, blastorigin), forceintensity * normalize(directhitentity.origin - blastorigin + (directhitentity.mins + directhitentity.maxs) * 0.5));
 		damage_record_hits(attacker, directhitentity, deathtype, 1, coredamage);
 	}

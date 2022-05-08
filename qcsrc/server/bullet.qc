@@ -95,7 +95,7 @@ void(void) bullet_hit {
 	if (other.solid == SOLID_BSP)
 		damage_info(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, self);
 
-	if (other && other != self.enemy) {
+	if (other && other != self.enemy && other.takedamage) {
 		effect_curveparticles_end();
 		damage_headshot = 0;
 		damage_yoda = 0;
