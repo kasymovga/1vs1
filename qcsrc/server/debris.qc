@@ -74,17 +74,30 @@ void(string debrisname, vector force) debris_launch {
 				+ '0 1 0' * random() * (self.absmax_y - self.absmin_y)
 				+ '0 0 1' * random() * (self.absmax_z - self.absmin_z));
 		setmodel(dbr, debrisname );
+		if not(entity_move_out_of_solid(dbr)) {
+			setorigin(dbr, dbr.origin - '0 0 1' * dbr.mins_z + '0 0 1' * self.maxs_z);
+			if not(entity_move_out_of_solid(dbr)) {
+				remove(dbr);
+				return;
+			}
+		}
+		dbr.movetype = self.debrismovetype;
+		dbr.solid = self.debrissolid;
 		dbr.skin = self.debrisskin;
 		dbr.colormap = self.colormap; // inherit team colors
 		dbr.owner = self; // do not be affected by our own explosion
-		dbr.movetype = self.debrismovetype;
-		dbr.solid = self.debrissolid;
-		if (dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
-			setsize(dbr, '0 0 0', '0 0 0'); // needed for performance, until engine can deal better with it
-
 		dbr.avelocity_x = random() * self.debrisavelocityjitter_x;
 		dbr.avelocity_y = random() * self.debrisavelocityjitter_y;
 		dbr.avelocity_z = random() * self.debrisavelocityjitter_z;
+		vector v;
+		if (dbr.avelocity_x || dbr.avelocity_y) {
+			v = (dbr.mins + dbr.maxs) * 0.5;
+		} else {
+			v_x = (dbr.mins_x + dbr.maxs_x) * 0.5;
+			v_y = (dbr.mins_y + dbr.maxs_y) * 0.5;
+			v_z = dbr.mins_z;
+		}
+		setsize(dbr, v, v); // needed for performance, until engine can deal better with it
 		dbr.damageforcescale = self.debrisdamageforcescale;
 		dbr.reset = stdproc_remove;
 		entity_fade_setup(dbr, time + self.debristime + random_2() * self.debristimejitter, self.debrisfadetime);
