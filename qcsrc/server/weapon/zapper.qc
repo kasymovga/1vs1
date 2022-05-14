@@ -639,13 +639,10 @@ float(float req) weapon_zapper {
 		dlc_require("pryaxe_balls");
 		dlc_require("rm_arc");
 		dlc_require("zapper_v2");
-		if (dlc_ready("rm_arc"))
-		if (dlc_ready("zapper_v2")) {
-			dlc_precache_sound("weapons/zapper_fire.wav");
-			dlc_precache_sound("weapons/zapper_fly.wav");
-			dlc_precache_sound("misc/arc1.wav");
-			dlc_precache_sound("misc/arc2.wav");
-		}
+		dlc_precache_sound("weapons/zapper_fire.wav");
+		dlc_precache_sound("weapons/zapper_fly.wav");
+		dlc_precache_sound("misc/arc1.wav");
+		dlc_precache_sound("misc/arc2.wav");
 	} else if (req == WR_RESETPLAYER){
 		if (g_balance_zapper_primary_heatup || (g_balance_zapper_secondary_shield && g_balance_zapper_secondary_shield_heatup))
 			self.zapper_heat = 0;

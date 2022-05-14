@@ -1,7 +1,6 @@
 entity dlc_wait;
 float localConnection;
 string dlc_sounds;
-float dlc_sounds_ready;
 string dlc_extra_pk3_list;
 entity dlc_extra_pk3_list_wait;
 
@@ -15,7 +14,6 @@ void(void) dlc_precache_sounds {
 			precache_sound(s);
 		}
 	}
-	dlc_sounds_ready = TRUE;
 }
 
 void(void) dlc_extra_pk3_list_wait_think {
@@ -134,10 +132,7 @@ void(float new) dlc_read {
 	if (f & 8) {
 		str_unzone_ifneeded(dlc_sounds);
 		dlc_sounds = str_zone_ifneeded(net_read_string());
-		if (not_all_loaded)
-			dlc_sounds_ready = FALSE;
-		else
-			dlc_precache_sounds();
+		dlc_precache_sounds();
 	}
 	string tail, head, pk3, pk3_file;
 	registercvar("cl_curl_fallback", "http://rexuiz.com/maps/");
