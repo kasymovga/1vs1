@@ -246,8 +246,6 @@ typedef .float floatfield;
 .float spectatee_status;
 .float restriction;
 
-.entity clientdata;
-
 .float retard;
 
 .float keys;
