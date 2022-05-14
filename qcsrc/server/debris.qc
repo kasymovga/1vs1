@@ -106,6 +106,7 @@ void(string debrisname, vector force) debris_launch {
 	dbr.velocity_y = self.debrisvelocity_y + self.debrisvelocityjitter_y * random_2();
 	dbr.velocity_z = self.debrisvelocity_z + self.debrisvelocityjitter_z * random_2();
 	dbr.velocity = dbr.velocity + force * self.debrisdamageforcescale;
+	dbr.culltracemode = CULLTRACEMODE_NONE;
 }
 
 void(vector force) debris_throw {
