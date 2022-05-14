@@ -77,6 +77,9 @@ void(void) model_setup {
 		setsize(self, self.mins * self.scale, self.maxs * self.scale);
 	else
 		setsize(self, self.mins, self.maxs);
+
+	if (self.movetype == MOVETYPE_NONE)
+		self.culltracemode = CULLTRACEMODE_NONE;
 }
 
 void(void) model_setup_no_lod {
