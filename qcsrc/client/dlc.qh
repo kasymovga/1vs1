@@ -1,3 +1,1 @@
 void(float new) dlc_read;
-void(float new) dlc_sound_read;
-void(entity e, float c, string s, float v, float a) dlc_sound;

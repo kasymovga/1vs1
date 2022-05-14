@@ -125,10 +125,10 @@ void(float t) zapper_read {
 		attn = ATTN_NORM;
         if (t == NET_CSQC_ZAPPER_SHIELD) {
             self.draw = zapper_draw_shield;
-            dlc_sound(self, CHAN_PROJECTILE, "weapons/zapper_shield_loop.wav", 1, attn);
+            sound(self, CHAN_PROJECTILE, "weapons/zapper_shield_loop.wav", 1, attn);
         } else {
             self.draw = zapper_draw;
-            dlc_sound(self, CHAN_PROJECTILE, "weapons/zapper_fly.wav", vol, attn);
+            sound(self, CHAN_PROJECTILE, "weapons/zapper_fly.wav", vol, attn);
         }
 		if not(self.enemy)
 			self.enemy = spawn();

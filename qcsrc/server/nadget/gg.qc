@@ -30,7 +30,7 @@ NADGET_HOOKFUNCTION(gg, Attack) {
     }
 
     if(pwned) {
-        dlc_sound(self, CHAN_AUTO, "misc/gg.wav", 1, ATTN_NORM);
+        sound(self, CHAN_AUTO, "misc/gg.wav", 1, ATTN_NORM);
         return NADGET_ATTACK_OK;
     } else {
         //bigprint_spec(self, "Nobody to win against!", "", 1);

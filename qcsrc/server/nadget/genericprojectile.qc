@@ -201,7 +201,7 @@ void nadget_GenericProjectile_Touch(void) {
         }
 
         if(self.hg_type == NADGET_LASER) {
-			dlc_sound_spam(self, CHAN_PROJECTILE, RM_SOUND_LASER_SECONDARY, VOL_BASE, ATTN_NORM);
+			sound_spam(self, CHAN_PROJECTILE, RM_SOUND_LASER_SECONDARY, VOL_BASE, ATTN_NORM);
         } else {
             float r;
             r = random() * 6;
@@ -249,7 +249,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
 
 	if (self.movetype != MOVETYPE_NONE)
 	if (self.movetype != MOVETYPE_FOLLOW) { //not already sticked
-		dlc_sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
+		sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
 		float lt_override = GRENVAR(e.hg_type, "stick_lifetime_override");
 		if(lt_override > 0)
 			e.hg_deathtime = time + lt_override;
@@ -394,7 +394,7 @@ void nadget_GenericProjectile_Think(void) {
 			self.use();
 			return;
         } else if(time >= self.hg_nextsnd) {
-			dlc_sound(self, CHAN_PROJECTILE, "weapons/rm_nadebeep.wav", VOL_BASE * 0.5, ATTN_NORM * 2);
+			sound(self, CHAN_PROJECTILE, "weapons/rm_nadebeep.wav", VOL_BASE * 0.5, ATTN_NORM * 2);
             self.hg_sndcount += 1;
             self.hg_nextsnd = time + max((self.hg_detonatedelay * 0.3) / (pow(self.hg_sndcount, 1.2)), 0.1);
         }
@@ -471,7 +471,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
 
     makevectors(self.((GV("noverticalvelocity")) ? angles : v_angle));
 	if (hgtype == NADGET_LASER)
-		dlc_sound(self, CHAN_WEAPON, RM_SOUND_LASER_PRIMARY, VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_WEAPON, RM_SOUND_LASER_PRIMARY, VOL_BASE, ATTN_NORM);
 	else
 		sound(self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 

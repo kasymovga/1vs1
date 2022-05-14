@@ -92,7 +92,6 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_NOTELINE] = noteline_read;
 	csqc_entity_parsers[NET_CSQC_HOOK] = hook_read;
 	csqc_entity_parsers[NET_CSQC_PHYSICS_HOOK] = hook_physics_read;
-	csqc_entity_parsers[NET_CSQC_DLC_SOUND] = dlc_sound_read;
 	csqc_entity_parsers[NET_CSQC_PHYSICS_JETPACK] = jetpack_read;
 	csqc_entity_parsers[NET_CSQC_LMS_SPHERE] = sphere_read;
 	csqc_entity_parsers[NET_CSQC_ICE] = ice_read;

@@ -64,19 +64,19 @@ void(void) weapon_melee_attack_think {
 	self.nextthink = self.delay;
 }
 
-void(float melee_type, float axe) weapon_melee_attack  {
+void(float melee_type, float extradmg, string snd) weapon_melee_attack {
 	if (melee_type == 2)
 	if (akimbo_active(self) > 1) //g_balance_melee 2 suppose that weapon not used, so not duplicate attack for akimbo
 		return;
 
-	sound(akimbo_owner(self), CHAN_WEAPON, sv_sound_melee, VOL_BASE, ATTN_NORM);
+	sound(akimbo_owner(self), CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
 	entity melee = spawn();
 	melee.owner = akimbo_owner(self);
 	melee.think = weapon_melee_attack_think;
 	melee.delay = melee.nextthink = time + g_balance_melee_delay;
 	melee.cnt = melee.count = max(1, 1 + ceil(g_balance_melee_time / g_balance_melee_ticrate));
 	melee.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	melee.dmg = axe;
+	melee.dmg = extradmg;
 	melee.playerid = melee.owner.playerid;
 	if (melee_type == 2)
 		thirdview_set(self, g_balance_melee_animtime, 100, 10);
@@ -99,7 +99,7 @@ void(void) weapon_melee_attack_check {
 	self.switchweapon = self.weapon = WEP_MELEE;
 	if (self.weapon_think == weapon_ready)
 	if (weapon_prepareattack(0, g_balance_melee_refire)) {
-		weapon_melee_attack(g_balance_melee, 0);
+		weapon_melee_attack(g_balance_melee, 0, sv_sound_melee);
 		weapon_thinkf(((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE), g_balance_melee_animtime, weapon_ready);
 	}
 	self.weapon = w_save;

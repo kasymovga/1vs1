@@ -185,7 +185,7 @@ model.qc
 bullet.qc
 weapon/melee.qc
 weapon/clip.qc
-weapon/axe.qc
+weapon/chainsaw.qc
 weapon/laser.qc
 weapon/shotgun.qc
 weapon/uzi.qc

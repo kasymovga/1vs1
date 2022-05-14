@@ -5,6 +5,3 @@ void(void) dlc_reload;
 void(void) dlc_reset_all;
 void(void) dlc_finish;
 void(string s) dlc_precache_sound;
-entity(entity e, float chan, string s, float vol, float attn) dlc_sound;
-void(entity e, float chan, string s, float vol, float attn) dlc_sound_follow;
-float(entity e, float chan, string s, float vol, float attn) dlc_sound_spam;

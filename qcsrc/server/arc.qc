@@ -56,7 +56,7 @@ void(entity targ, entity attacker, float _damage, float deathtype,
 		if (targetTeamMates)
 			sound(newtarget, CHAN_PROJECTILE, "kh/capture.wav", 0.4, ATTN_NORM);
 		else
-			dlc_sound(newtarget, CHAN_PROJECTILE, ((random() > 0.5) ? "misc/arc1.wav" : "misc/arc2.wav"),
+			sound(newtarget, CHAN_PROJECTILE, ((random() > 0.5) ? "misc/arc1.wav" : "misc/arc2.wav"),
 				  VOL_BASE, ATTN_NORM * 0.3);
 	}
 	self = oldself;

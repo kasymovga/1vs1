@@ -22,15 +22,15 @@ void(void) monster_ugandaknuckles_hunt {
 		self.attack_finished_single = time + 3 + 2 * random();
 		float f = random() * 5;
 		if (f > 4)
-			dlc_sound(self, CHAN_WEAPON, "myqueenyoulook.ogg", VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_WEAPON, "myqueenyoulook.ogg", VOL_BASE, ATTN_NORM);
 		else if (f > 3)
-			dlc_sound(self, CHAN_WEAPON, "quenisok.ogg", VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_WEAPON, "quenisok.ogg", VOL_BASE, ATTN_NORM);
 		else if (f > 2)
-			dlc_sound(self, CHAN_WEAPON, "douknowdawae.ogg", VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_WEAPON, "douknowdawae.ogg", VOL_BASE, ATTN_NORM);
 		else if (f > 1)
-			dlc_sound(self, CHAN_WEAPON, "isthisdawae.ogg", VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_WEAPON, "isthisdawae.ogg", VOL_BASE, ATTN_NORM);
 		else
-			dlc_sound(self, CHAN_WEAPON, "youdunnodawae.ogg", VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_WEAPON, "youdunnodawae.ogg", VOL_BASE, ATTN_NORM);
 	}
 	if (self.attack_finished_single >= time) {
 		movelib_beak_simple(500 * frametime);

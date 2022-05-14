@@ -285,7 +285,7 @@ void(void) weapon_zapper_attack1 {
 	if (!weapon_zapper_attack1_check_ammo(self))
 		return;
 
-	dlc_sound(self, CHAN_WEAPON, "weapons/zapper_fire.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CHAN_WEAPON, "weapons/zapper_fire.wav", VOL_BASE, ATTN_NORM);
 	entity e = spawn();
 	e.classname = "zapper_beam";
 	e.think = weapon_zapper_beam_think;
@@ -386,9 +386,8 @@ void(void) weapon_zapper_attack2 {
 	makevectors(self.v_angle);
 	entity ao = akimbo_owner(self);
 	antilag_begin(ao);
-	dlc_sound(ao, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
+	sound(ao, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
 	weapon_setup_shot(self, 5, "", 1);
-
 	vector end = weapon_shotorg + weapon_shotdir * range;
 	entity o = akimbo_owner(self);
 	weapon_zapper_attack2_beam(o, weapon_shotorg, weapon_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, _damage, force);
@@ -499,7 +498,7 @@ void(void) weapon_zapper_attack3 {
 	// needs to be done AFTER weapon_attach_to_shotorg
 	//e.customizeentityforclient = W_Zapper_Shield_CustomizeEntityForClient;
 	self.zapper_shield = e;
-	dlc_sound(self, CHAN_WEAPON, "weapons/zapper_fire.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CHAN_WEAPON, "weapons/zapper_fire.wav", VOL_BASE, ATTN_NORM);
 	entity b = spawn();
 	b.classname = "zapper_shield_beam";
 	b.think = weapon_zapper_shield_beam_think;

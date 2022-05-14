@@ -41,14 +41,6 @@ void(void) dlc_extra_pk3_list_wait_think {
 	localcmd("\nr_restart;cl_cmd r_restart\n");
 }
 
-void(entity e, float c, string s, float v, float a) dlc_sound {
-	if not(dlc_sounds_ready) {
-		print("dlc_sound: not ready\n");
-		return;
-	}
-	sound(e, c, s, v, a);
-}
-
 void(void) dlc_wait_think {
 	if not(dlc_ready_all()) {
 		self.nextthink = time + 1;
@@ -169,23 +161,5 @@ void(float new) dlc_read {
 			dlc_extra_pk3_list_wait.think = dlc_extra_pk3_list_wait_think;
 			dlc_extra_pk3_list_wait.nextthink = time + 10;
 		}
-	}
-}
-
-void(float new) dlc_sound_read {
-	float sf = net_read_byte();
-	if (sf & 1) {
-		vector v;
-		v_x = net_read_coord();
-		v_y = net_read_coord();
-		v_z = net_read_coord();
-		setorigin(self, v);
-	}
-	if (sf & 2) {
-		string s = net_read_string();
-		self.cnt = net_read_byte();
-		float vol = net_read_coord();
-		float attn = net_read_coord();
-		dlc_sound(self, self.cnt, s, vol, attn);
 	}
 }

@@ -11,7 +11,7 @@ void vehicle_car_enter();
 
 void vehicle_car_dorifto_effect_sound(entity mycar) {
 	if (mycar.dmg < time ) {
-		dlc_sound_follow(mycar, CHAN_WEAPON, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(mycar, CHAN_WEAPON, self.noise3, VOL_BASE, ATTN_NORM);
 		mycar.dmg = time + 2;
 	}
 }
@@ -109,7 +109,7 @@ float vehicle_car_physics_hook() {
 	if (physics_movement_x) {
 		if (mycar.attack_finished_single < time) {
 			mycar.attack_finished_single = time + 3;
-			dlc_sound_follow(mycar, CHAN_PROJECTILE, self.noise2, VOL_BASE, ATTN_NORM);
+			sound(mycar, CHAN_PROJECTILE, self.noise2, VOL_BASE, ATTN_NORM);
 		}
 	}
 	mycar.gun1.gun1.angles_x = mycar.gun1.gun1.angles_x - rotate_factor_b * frametime;

@@ -474,7 +474,7 @@ void nadget_Sentry_Trigger(void) {
 			if (targ)
 				damage(targ, self, self, c_dmg, NADGET_SENTRY | HITTYPE_SECONDARY, endpos, force);
 
-            dlc_sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
+            sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
             weapon_zapper_attack2_effect((team_mode ? self.team : COLOR_TEAM3), o, end_visual);
             if(targ.solid == SOLID_BSP && !noimpact)
                 damage_info(endpos, c_dmg, 0, 0, force, WEP_ZAPPER | HITTYPE_SECONDARY, self);
@@ -544,7 +544,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     c.color = '0.3 0.3 0.3' + 0.7 * team_color(((self.team > 0) ? self.team : COLOR_TEAM3));
     c.owner = self;
     c.effects |= EFFECT_DOUBLESIDED;
-    dlc_sound(c, CHAN_PROJECTILE, "weapons/electro_fly.wav", 0.5, 2);
+    sound(c, CHAN_PROJECTILE, "weapons/electro_fly.wav", 0.5, 2);
 
     e.aiment = c;
 
@@ -556,7 +556,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     }
 
     // TODO: a better sound?
-    dlc_sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
+    sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
     return NADGET_ATTACK_OK;
 }
 
