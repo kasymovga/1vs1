@@ -86,9 +86,6 @@ void(string debrisname, vector force) debris_launch {
 		dbr.avelocity_y = random() * self.debrisavelocityjitter_y;
 		dbr.avelocity_z = random() * self.debrisavelocityjitter_z;
 		dbr.damageforcescale = self.debrisdamageforcescale;
-		if (dbr.damageforcescale)
-			dbr.takedamage = DAMAGE_YES;
-
 		dbr.reset = stdproc_remove;
 		entity_fade_setup(dbr, time + self.debristime + random_2() * self.debristimejitter, self.debrisfadetime);
 	}
