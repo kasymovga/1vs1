@@ -198,6 +198,7 @@ void(void) map_list_reset {
 		list = strcat(list, h, " ");
 	}
 	cvar_set("_g_maplist", list);
+	print("Map list size: ", ftos(strlen(list)), "\n");
 	map_list_filter();
 	if (cvar("g_maplist_shuffle"))
 		map_list_shuffle();

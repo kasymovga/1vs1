@@ -478,8 +478,12 @@ set g_balance_laser_secondary_lifetime 30
 set g_balance_laser_secondary_shotangle 0
 alias weaplaser "impulse 230"
 
-//Axe
-set g_balance_chainsaw_damage 300
+//Chainsaw
+set g_balance_chainsaw_primary_force 100
+set g_balance_chainsaw_primary_damage 100
+set g_balance_chainsaw_primary_refire 0.5
+set g_balance_chainsaw_secondary 1
+set g_balance_chainsaw_secondary_damage 300
 set g_start_weapon_chainsaw 0
 alias weapchainsaw "impulse 248"
 

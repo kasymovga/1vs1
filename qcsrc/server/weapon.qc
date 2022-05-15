@@ -1008,7 +1008,7 @@ void(void) weapon_model_exterior_think {
 	self.colormap = self.owner.colormap;
 	entity we = self.owner.weaponentity;
 	entity o = self.owner;
-	if (we.wframe == WFRAME_MELEE || (o.weapon == WEP_MELEE && (we.frame == WFRAME_FIRE1 || we.frame == WFRAME_FIRE2))) {
+	if (we.wframe == WFRAME_MELEE || (o.weapon == WEP_MELEE && we.frame == WFRAME_FIRE2)) {
 		entity ao = akimbo_owner(o);
 		if (ao.anim_melee == ao.anim_shoot) {
 			float f;
@@ -1176,7 +1176,7 @@ void(float fr, float t, void() func) weapon_thinkf {
 	if (!self.crouch || self.body.weaponentity) { // shoot anim stands up, this looks bad
 		if (fr == WFRAME_MELEE2)
 			anim_set(self.body, self.anim_melee2, FALSE, TRUE, TRUE);
-		else if (fr == WFRAME_MELEE || self.weapon == WEP_MELEE) {
+		else if (fr == WFRAME_MELEE || (self.weapon == WEP_MELEE && fr == WFRAME_FIRE2)) {
 			player_anim_set(self, anim_melee, FALSE, TRUE, TRUE, 1);
 			if (self.body)
 				self.body.animstate_endtime = time + t;
