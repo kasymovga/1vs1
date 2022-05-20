@@ -1,4 +1,4 @@
-set physicsq3_inhetir physicsq2
+set physicsq3_inherit physicsq2
 set physicsq3_g_skimming_time 0.3
 set physicsq3_g_jumpvelocity_nodecrease 1
 set physicsq3_g_jumpvelocity_noincrease 1
