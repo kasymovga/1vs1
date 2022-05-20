@@ -48,9 +48,9 @@ float(float req) weapon_chainsaw {
 		if (self.BUTTON_ATCK) {
 			if (weapon_prepareattack(0, 0)) {
 				sound(self, CHAN_WEAPON, "weapons/chainsaw_active_1.wav", VOL_BASE, ATTN_NORM);
-				weapon_thinkf(WFRAME_FIRE1, 0.05, weapon_chainsaw_attack);
+				weapon_chainsaw_attack();
 			}
-		} else if (self.BUTTON_ATCK2) {
+		} else if (self.BUTTON_ATCK2 && g_balance_chainsaw_secondary) {
 			if (weapon_prepareattack(0, g_balance_melee_refire)) {
 				sound(self, CHAN_WEAPON, "weapons/chainsaw_active_1.wav", VOL_BASE, ATTN_NORM);
 				weapon_melee_attack(1, g_balance_chainsaw_secondary_damage, "");
@@ -58,6 +58,7 @@ float(float req) weapon_chainsaw {
 			}
 		}
 	} else if (req == WR_RELOAD) { //same as attack2
+		if (g_balance_chainsaw_secondary)
 		if (g_balance_melee != 2)
 		if (weapon_prepareattack(0, g_balance_melee_refire)) {
 			sound(self, CHAN_WEAPON, "weapons/chainsaw_active_1.wav", VOL_BASE, ATTN_NORM);

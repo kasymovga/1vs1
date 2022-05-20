@@ -5,10 +5,11 @@ set quakiuz_g_throughfloor_damage 0
 set quakiuz_g_throughfloor_force 0
 set quakiuz_g_start_ammo_nails 100
 set quakiuz_g_start_ammo_shells 0
+set quakiuz_g_start_weapon_chainsaw 1
 set quakiuz_g_start_weapon_uzi 1
-set quakiuz_g_start_weapon_tuba 1
 set quakiuz_g_start_weapon_laser 0
 set quakiuz_g_start_weapon_shotgun 0
+set quakiuz_g_start_weapon_tuba 0
 set quakiuz_g_balance_health_start 125
 set quakiuz_g_balance_health_regen 0
 set quakiuz_g_balance_health_regenlinear 0
@@ -61,9 +62,6 @@ set quakiuz_g_weaponreplace_electro "zapper"
 set quakiuz_g_weaponreplace_crylink "hlac"
 set quakiuz_g_weaponreplace_fireball "rocketlauncher"
 set quakiuz_g_weaponreplace_minstanex "nex"
-set quakiuz_g_balance_tuba_edgedamage 0
-set quakiuz_g_balance_tuba_damage 15
-set quakiuz_g_balance_tuba_attenuation 0.5
 set quakiuz_g_balance_uzi_sustained_damage 7
 set quakiuz_g_balance_uzi_sustained_refire 0.1
 set quakiuz_g_balance_uzi_sustained_spread 0.02
@@ -128,3 +126,7 @@ set quakiuz_g_balance_nex_force 400
 set quakiuz_g_balance_nex_refire 1.5
 set quakiuz_g_balance_nex_animtime 1.5
 set quakiuz_duel_inherit "duel quakiuz"
+set quakiuz_g_spawnreplace_ammo_bullets item_bullets
+set quakiuz_g_spawnreplace_ammo_shells item_shells
+set quakiuz_g_balance_chainsaw_primary_damage 50
+set quakiuz_g_balance_chainsaw_secondary 0

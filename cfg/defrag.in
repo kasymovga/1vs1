@@ -14,6 +14,8 @@ set _defrag_g_player_maxsxy 14.96875
 set _defrag_g_adjust_view_offset 1
 set _defrag_g_player_crouch_maxsz 15.93750
 set _defrag_g_physics_fixed 1
+set _defrag_g_balance_chainsaw_primary_damage 50
+set _defrag_g_balance_chainsaw_secondary 0
 set _defrag_g_balance_nex_ammo 10
 set _defrag_g_balance_nex_damage 100
 set _defrag_g_balance_nex_force 400
@@ -31,6 +33,7 @@ set _defrag_g_balance_powerup_invincible_takedamage 0
 set _defrag_g_start_ammo_shells 0
 set _defrag_g_start_ammo_nails 300
 set _defrag_g_start_weapon_uzi 1
+set _defrag_g_start_weapon_chainsaw 0
 set _defrag_g_start_weapon_laser 0
 set _defrag_g_start_weapon_shotgun 0
 set _defrag_g_shootfromeye 1
