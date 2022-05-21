@@ -23,7 +23,9 @@ void(void) CSQC_Init {
 		}
 	} else {
 		localcmd("\ncmd gameclient oldnexuiz\n");
-		update_message("^3You play with really old Nexuiz client", 20);
+		entity e = noteline_new("^1WARNING: ^3Your client is outdated!\n^3Updated client available here: ^2http://rexuiz.com^7");
+		e.think = stdproc_remove;
+		e.nextthink = time + 30;
 	}
 	if (cvar("cl_maxfps_alwayssleep")) {
 		localcmd("\nseta cl_maxfps_alwayssleep 0\n");

@@ -83,25 +83,34 @@ string(string s) noteline_text_prepare {
 	return s;
 }
 
+void(entity e_add) noteline_add {
+	entity e;
+	for (e = noteline; e; e = e.sort_next) {
+		if (e == e_add)
+			return;
+	}
+	if (noteline) {
+		e_add.sort_next = noteline;
+		noteline.draw2dflag = 0;
+		noteline.draw2d = NULL;
+	}
+	noteline = e_add;
+	noteline.draw2dflag = 1;
+	noteline.draw2d = noteline_draw;
+}
+
+entity(string m) noteline_new {
+	entity e = spawn();
+	e.message = strzone(m);
+	noteline_add(e);
+	return e;
+}
+
 void(float bIsNew) noteline_read {
 	self.entremove = noteline_remove;
 	if (self.message)
 		strunzone(self.message);
 
 	self.message = strzone(noteline_text_prepare(net_read_string()));
-	entity e;
-	for (e = noteline; e; e = e.sort_next) {
-		if (e == self)
-			goto skip;
-	}
-	if (noteline) {
-		self.sort_next = noteline;
-		noteline.draw2dflag = 0;
-		noteline.draw2d = NULL;
-	}
-	noteline = self;
-	noteline.draw2dflag = 1;
-	noteline.draw2d = noteline_draw;
-:skip
-	return;
+	noteline_add(self);
 }

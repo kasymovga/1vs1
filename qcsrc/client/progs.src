@@ -96,7 +96,6 @@ announce.qc
 vote.qh
 gamemenu.qh
 entcs.qh
-update.qc
 main.qc
 mute.qc
 input.qc
