@@ -5,6 +5,7 @@ float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 float g_steponskydamage;
 float g_jump_nofalldamage;
+float g_punchangle_speed;
 
 .float spectatorspeed;
 .float cpmdoublejump;
@@ -143,7 +144,7 @@ void(void) physics_frame_begin_hook {
 	physics_frame_begin_origin = self.origin;
 	physics_current_player = self;
 	if (self.punchangle != '0 0 0') {
-		f = vlen(self.punchangle) - 90 * frametime;
+		f = vlen(self.punchangle) - g_punchangle_speed * frametime;
 		if (f > 0)
 			self.punchangle = normalize(self.punchangle) * f;
 		else
@@ -521,6 +522,7 @@ void(void) physics_init {
 	CVAR_CACHE(g_walljump_smokeparticle_num);
 	CVAR_CACHE(g_steponskydamage);
 	CVAR_CACHE(g_jump_nofalldamage);
+	CVAR_CACHE(g_punchangle_speed);
 	CVAR_CACHE(g_skimming_time);
 	CVAR_CACHE(g_cpmdoublejump);
 	CVAR_CACHE(g_doublejump_nopogostick);
