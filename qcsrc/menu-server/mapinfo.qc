@@ -591,7 +591,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		if not(file_exists_image(MapInfo_Map_image)) {
 			MapInfo_Map_image = strcat("gfx/", MapInfo_Map_bspname, "_mini");
 			if not(file_exists_image(MapInfo_Map_image))
-				MapInfo_Map_image = "gfx/sb_str";
+				MapInfo_Map_image = "gfx/m_nomap";
 		}
 	}
 	// default all generic fields so they have "good" values in case something fails

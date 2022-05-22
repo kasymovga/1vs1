@@ -81,7 +81,7 @@ void(string nextMap, float isSuggestion) mapvote_add_votable {
 	MapInfo_Get_ByName(nextMap, 0, 0);
 	string picture = MapInfo_Map_image;
 	if (picture == "")
-		picture = "gfx/menu/silver/background_ingame";
+		picture = "gfx/m_nomap";
 
 	mapvote_pictures[mapvote_count] = strzone(picture);
 	mapvote_maps_suggested[mapvote_count] = isSuggestion;
