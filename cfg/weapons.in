@@ -194,6 +194,7 @@ alias weapfireball "impulse 245"
 set g_balance_nex_damage 110
 set g_balance_nex_damage_headshot 0
 set g_balance_nex_force 600
+set g_balance_nex_recoil 5
 set g_balance_nex_refire 1.5
 set g_balance_nex_animtime 0.3
 set g_balance_nex_ammo 10
@@ -503,6 +504,7 @@ set g_balance_supershotgun_primary_bullets 12
 set g_balance_supershotgun_primary_damage 18
 set g_balance_supershotgun_primary_force 60
 set g_balance_supershotgun_primary_gravityfactor 0
+set g_balance_supershotgun_primary_recoil 5
 set g_balance_supershotgun_primary_refire 0.8
 set g_balance_supershotgun_primary_speed 2500
 set g_balance_supershotgun_primary_spread 0.15
@@ -516,6 +518,7 @@ set g_balance_supershotgun_secondary_bullets 6
 set g_balance_supershotgun_secondary_damage 18
 set g_balance_supershotgun_secondary_force 60
 set g_balance_supershotgun_secondary_gravityfactor 0
+set g_balance_supershotgun_secondary_recoil 5
 set g_balance_supershotgun_secondary_refire 0.6
 set g_balance_supershotgun_secondary_speed 1500
 set g_balance_supershotgun_secondary_spread 0.15

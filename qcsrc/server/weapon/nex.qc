@@ -9,6 +9,7 @@ float g_balance_nex_damagefalloff_maxdist;
 float g_balance_nex_damagefalloff_mindist;
 float g_balance_nex_force;
 float g_balance_nex_refire;
+float g_balance_nex_recoil;
 float g_balance_nex_damage_headshot;
 string sv_announcer_extra_twohits;
 .float nex_ammoclip;
@@ -55,7 +56,7 @@ void(void) weapon_nex_attack {
 	float flying;
 	flying = physics_is_flying(self); // do this BEFORE to make the trace values from bullet_railgun last
 	antilag_begin(akimbo_owner(self));
-	weapon_setup_shot (self, 5, "weapons/nexfire.wav", 1);
+	weapon_setup_shot (self, g_balance_nex_recoil, "weapons/nexfire.wav", 1);
 	damage_yoda = 0;
 	damage_headshot = 0;
 	damage_goodhits = 0;
@@ -155,6 +156,7 @@ float(float req) weapon_nex {
 		CVAR_CACHE(g_balance_nex_damagefalloff_maxdist);
 		CVAR_CACHE(g_balance_nex_damagefalloff_mindist);
 		CVAR_CACHE(g_balance_nex_force);
+		CVAR_CACHE(g_balance_nex_recoil);
 		CVAR_CACHE(g_balance_nex_refire);
 		CVAR_CACHE_STR(sv_announcer_extra_twohits);
 		if (sv_announcer_extra_twohits != "")

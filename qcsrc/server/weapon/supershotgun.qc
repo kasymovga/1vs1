@@ -7,6 +7,7 @@ float g_balance_supershotgun_primary_bullets;
 float g_balance_supershotgun_primary_damage;
 float g_balance_supershotgun_primary_force;
 float g_balance_supershotgun_primary_gravityfactor;
+float g_balance_supershotgun_primary_recoil;
 float g_balance_supershotgun_primary_refire;
 float g_balance_supershotgun_primary_speed;
 float g_balance_supershotgun_primary_spread;
@@ -20,6 +21,7 @@ float g_balance_supershotgun_secondary_bullets;
 float g_balance_supershotgun_secondary_damage;
 float g_balance_supershotgun_secondary_force;
 float g_balance_supershotgun_secondary_gravityfactor;
+float g_balance_supershotgun_secondary_recoil;
 float g_balance_supershotgun_secondary_refire;
 float g_balance_supershotgun_secondary_speed;
 float g_balance_supershotgun_secondary_spread;
@@ -90,7 +92,7 @@ void(float secondary, float barrels, float ballistic) weapon_supershotgun_attack
 	if (ballistic)
 		bullet_begin(s);
 
-	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", b);
+	weapon_setup_shot (self, (secondary ? g_balance_supershotgun_secondary_recoil : g_balance_supershotgun_primary_recoil), "weapons/shotgun_fire.wav", b);
 	if (barrels == 3) {
 		hor_spread = spread * 1.5;
 		hor_shift = 0;
@@ -182,6 +184,7 @@ float(float req) weapon_supershotgun {
 		CVAR_CACHE(g_balance_supershotgun_primary_damage);
 		CVAR_CACHE(g_balance_supershotgun_primary_force);
 		CVAR_CACHE(g_balance_supershotgun_primary_gravityfactor);
+		CVAR_CACHE(g_balance_supershotgun_primary_recoil);
 		CVAR_CACHE(g_balance_supershotgun_primary_refire);
 		CVAR_CACHE(g_balance_supershotgun_primary_speed);
 		CVAR_CACHE(g_balance_supershotgun_primary_spread);
@@ -195,6 +198,7 @@ float(float req) weapon_supershotgun {
 		CVAR_CACHE(g_balance_supershotgun_secondary_damage);
 		CVAR_CACHE(g_balance_supershotgun_secondary_force);
 		CVAR_CACHE(g_balance_supershotgun_secondary_gravityfactor);
+		CVAR_CACHE(g_balance_supershotgun_secondary_recoil);
 		CVAR_CACHE(g_balance_supershotgun_secondary_refire);
 		CVAR_CACHE(g_balance_supershotgun_secondary_speed);
 		CVAR_CACHE(g_balance_supershotgun_secondary_spread);
