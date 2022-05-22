@@ -110,7 +110,9 @@ void(void) weapon_rocketlauncher_think {
 
 			velspeed = vlen(self.velocity);
 			makevectors(self.owner.v_angle);
+			vector v = self.realowner.punchangle;
 			weapon_setup_shot(self.realowner, 0, "", 0);
+			self.realowner.punchangle = v;
 			desireddir = warpzone_refsys_transform_velocity(self.owner, self, weapon_shotdir);
 			desiredorigin = warpzone_refsys_transform_origin(self.owner, self, weapon_shotorg);
 			olddir = normalize(self.velocity);
