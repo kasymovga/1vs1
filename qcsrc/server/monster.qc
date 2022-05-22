@@ -267,7 +267,9 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 					self.message2 = self.enemy.targetname;
 				else
 					return;
-			}
+			} else if (self.attack_finished_single < time)
+				self.attack_finished_single = time + 0.5 * random();
+
 			self.enemy = attacker;
 			self.think = self.weapon_think;
 		}
