@@ -19,6 +19,8 @@ float sv_qcweaponanimation;
 float g_shootfromcenter;
 float g_shootfromeye;
 float g_norecoil;
+float g_recoil_extra;
+float g_recoil_extra_spread;
 
 vector weapon_offset = '0 -10 0';
 vector weapon_adjust = '10 0 -15';
@@ -1238,6 +1240,17 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	weapon_shotorg_visual = weapon_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 48;
 	weapon_shotorg = weapon_shotorg + dv;
 	// calculate the shotdir from the chosen shotorg
+	if (!g_norecoil) {
+		if (g_recoil_extra) {
+			s_forward = normalize(s_forward);
+			s_forward_z -= tan(bound(-45, ent.punchangle_x, 45) * MATH_DEG2RAD);
+			s_forward += randomvec() * ent.punchangle_x * g_recoil_extra_spread;
+			s_forward = normalize(s_forward);
+			float f = 1 + ent.punchangle_x / 90;
+			ent.punchangle_x -= recoil * f;
+		} else
+			ent.punchangle_x = min(ent.punchangle_x, recoil * -1);
+	}
 	if (akimbo_active(ent))
 		weapon_shotdir = s_forward;
 	else {
@@ -1248,9 +1261,6 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 		weapon_shotpoint = warpzone_untransform_origin(warpzone_trace_transform, trace_endpos);
 		weapon_shotdir = normalize(weapon_shotpoint - weapon_shotorg);
 	}
-	if (!g_norecoil)
-		ent.punchangle_x = min(ent.punchangle_x, recoil * -1);
-
 	if (ent.lastshot_time < time) {
 		if (snd != "")
 			sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
@@ -1427,6 +1437,8 @@ void(void) weapon_init {
 	CVAR_CACHE(g_shootfromeye);
 	CVAR_CACHE(g_projectiles_newton_style);
 	CVAR_CACHE(g_norecoil);
+	CVAR_CACHE(g_recoil_extra);
+	CVAR_CACHE(g_recoil_extra_spread);
 	CVAR_CACHE(g_weapon_throw_mode);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));

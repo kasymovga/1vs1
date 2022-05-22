@@ -143,7 +143,7 @@ void(void) physics_frame_begin_hook {
 	physics_frame_begin_origin = self.origin;
 	physics_current_player = self;
 	if (self.punchangle != '0 0 0') {
-		f = vlen(self.punchangle) - 10 * frametime;
+		f = vlen(self.punchangle) - 90 * frametime;
 		if (f > 0)
 			self.punchangle = normalize(self.punchangle) * f;
 		else

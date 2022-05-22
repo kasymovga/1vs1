@@ -12,6 +12,7 @@ float g_balance_shotgun_primary_gravityfactor;
 float g_balance_shotgun_primary_refire;
 float g_balance_shotgun_primary_speed;
 float g_balance_shotgun_primary_spread;
+float g_balance_shotgun_recoil;
 float g_balance_shotgun_secondary;
 float g_balance_shotgun_secondary_ammo;
 float g_balance_shotgun_secondary_animtime;
@@ -32,7 +33,7 @@ void(void) weapon_shotgun_attack {
 	float sc;
 	entity flash;
 	bullet_begin(g_balance_shotgun_primary_speed);
-	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
+	weapon_setup_shot(self, g_balance_shotgun_recoil, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
 		bullet(weapon_shotorg, weapon_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
 				g_balance_shotgun_primary_damage, g_balance_shotgun_primary_damage_headshot, g_balance_shotgun_primary_force,
@@ -62,7 +63,7 @@ void(void) weapon_shotgun_attack2 {
 	float sc;
 	entity flash;
 	bullet_begin(g_balance_shotgun_secondary_speed);
-	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
+	weapon_setup_shot (self, g_balance_shotgun_recoil, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
 		bullet(weapon_shotorg, weapon_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
 				g_balance_shotgun_secondary_damage, g_balance_shotgun_secondary_damage_headshot, g_balance_shotgun_secondary_force,
@@ -195,6 +196,7 @@ float(float req) weapon_shotgun {
 		CVAR_CACHE(g_balance_shotgun_primary_refire);
 		CVAR_CACHE(g_balance_shotgun_primary_speed);
 		CVAR_CACHE(g_balance_shotgun_primary_spread);
+		CVAR_CACHE(g_balance_shotgun_recoil);
 		CVAR_CACHE(g_balance_shotgun_secondary);
 		CVAR_CACHE(g_balance_shotgun_secondary_ammo);
 		CVAR_CACHE(g_balance_shotgun_secondary_animtime);

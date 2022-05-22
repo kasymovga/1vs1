@@ -7,6 +7,7 @@ float g_balance_hagar_primary_radius;
 float g_balance_hagar_primary_refire;
 float g_balance_hagar_primary_speed;
 float g_balance_hagar_primary_spread;
+float g_balance_hagar_recoil;
 float g_balance_hagar_secondary_ammo;
 float g_balance_hagar_secondary_damage;
 float g_balance_hagar_secondary_edgedamage;
@@ -39,7 +40,7 @@ void(void) weapon_hagar_attack {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_hagar_primary_ammo;
 
-	weapon_setup_shot (self, 2, "weapons/hagar_fire.wav", 1);
+	weapon_setup_shot (self, g_balance_hagar_recoil, "weapons/hagar_fire.wav", 1);
 	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
 	projectile_setup(missile, weapon_shotorg, WEP_HAGAR, g_balance_hagar_primary_damage,
@@ -57,7 +58,7 @@ void(void) weapon_hagar_attack2 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_hagar_secondary_ammo;
 
-	weapon_setup_shot (self, 2, "weapons/hagar_fire.wav", 1);
+	weapon_setup_shot (self, g_balance_hagar_recoil, "weapons/hagar_fire.wav", 1);
 	//weapon_setup_shot (self, FALSE, 2, "weapons/hagar_fire.wav"); // TODO: move model a little to the right
 	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
@@ -121,6 +122,7 @@ float(float req) weapon_hagar {
 		CVAR_CACHE(g_balance_hagar_primary_refire);
 		CVAR_CACHE(g_balance_hagar_primary_speed);
 		CVAR_CACHE(g_balance_hagar_primary_spread);
+		CVAR_CACHE(g_balance_hagar_recoil);
 		CVAR_CACHE(g_balance_hagar_secondary);
 		CVAR_CACHE(g_balance_hagar_secondary_ammo);
 		CVAR_CACHE(g_balance_hagar_secondary_damage);

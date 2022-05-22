@@ -320,6 +320,7 @@ set g_balance_hagar_primary_speed 4500
 set g_balance_hagar_primary_lifetime 30
 set g_balance_hagar_primary_refire 0.125
 set g_balance_hagar_primary_ammo 1
+set g_balance_hagar_recoil 2
 set g_balance_hagar_secondary 1
 set g_balance_hagar_secondary_damage 37
 set g_balance_hagar_secondary_edgedamage 15
@@ -343,9 +344,10 @@ set g_balance_hlac_primary_damage 23
 set g_balance_hlac_primary_edgedamage 10
 set g_balance_hlac_primary_force 100
 set g_balance_hlac_primary_radius 70
+set g_balance_hlac_primary_recoil 3
+set g_balance_hlac_primary_refire 0.1
 set g_balance_hlac_primary_speed 9000
 set g_balance_hlac_primary_lifetime 5
-set g_balance_hlac_primary_refire 0.1
 set g_balance_hlac_primary_animtime 0.4
 set g_balance_hlac_primary_ammo 1
 set g_balance_hlac_secondary_spread 0.15
@@ -354,9 +356,10 @@ set g_balance_hlac_secondary_damage 23
 set g_balance_hlac_secondary_edgedamage 10
 set g_balance_hlac_secondary_force 100
 set g_balance_hlac_secondary_radius 70
+set g_balance_hlac_secondary_recoil 3
+set g_balance_hlac_secondary_refire 1
 set g_balance_hlac_secondary_speed 9000
 set g_balance_hlac_secondary_lifetime 5
-set g_balance_hlac_secondary_refire 1
 set g_balance_hlac_secondary_animtime 0.3
 set g_balance_hlac_secondary_ammo 6
 set g_balance_hlac_secondary_shots 6
@@ -381,6 +384,7 @@ set g_balance_shotgun_primary_animtime 0.2
 set g_balance_shotgun_primary_ammo 1
 set g_balance_shotgun_primary_speed 12000
 set g_balance_shotgun_primary_bulletconstant 75 // 3.8qu
+set g_balance_shotgun_recoil 5
 set g_balance_shotgun_secondary_bullets 6
 set g_balance_shotgun_secondary_damage 10
 set g_balance_shotgun_secondary_force 60
@@ -400,6 +404,7 @@ set g_balance_uzi_first_force 50
 set g_balance_uzi_first_spread 0.015
 set g_balance_uzi_first_refire 0.2
 set g_balance_uzi_first_ammo 1
+set g_balance_uzi_recoil 0
 set g_balance_uzi_sustained_damage 20
 set g_balance_uzi_sustained_damage_headshot 0
 set g_balance_uzi_sustained_force 27
@@ -529,6 +534,7 @@ set g_balance_campingrifle_primary_force 2
 set g_balance_campingrifle_primary_speed 35000
 set g_balance_campingrifle_primary_lifetime 5
 set g_balance_campingrifle_primary_refire 0.7
+set g_balance_campingrifle_primary_recoil 2
 set g_balance_campingrifle_primary_animtime 0.3
 set g_balance_campingrifle_primary_ammo 5
 set g_balance_campingrifle_primary_bulletconstant 130 // 56.3qu
@@ -539,6 +545,7 @@ set g_balance_campingrifle_secondary_spread 0.008
 set g_balance_campingrifle_secondary_force 1
 set g_balance_campingrifle_secondary_speed 20000
 set g_balance_campingrifle_secondary_lifetime 5
+set g_balance_campingrifle_secondary_recoil 2
 set g_balance_campingrifle_secondary_refire 0.12
 set g_balance_campingrifle_secondary_animtime 0.1
 set g_balance_campingrifle_secondary_ammo 5

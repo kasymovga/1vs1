@@ -5,6 +5,7 @@ float g_balance_hlac_primary_edgedamage;
 float g_balance_hlac_primary_force;
 float g_balance_hlac_primary_lifetime;
 float g_balance_hlac_primary_radius;
+float g_balance_hlac_primary_recoil;
 float g_balance_hlac_primary_refire;
 float g_balance_hlac_primary_speed;
 float g_balance_hlac_primary_spread_add;
@@ -19,6 +20,7 @@ float g_balance_hlac_secondary_edgedamage;
 float g_balance_hlac_secondary_force;
 float g_balance_hlac_secondary_lifetime;
 float g_balance_hlac_secondary_radius;
+float g_balance_hlac_secondary_recoil;
 float g_balance_hlac_secondary_refire;
 float g_balance_hlac_secondary_shots;
 float g_balance_hlac_secondary_speed;
@@ -41,7 +43,7 @@ void(void) weapon_hlac_attack {
 	if(self.crouch)
 		spread = spread * g_balance_hlac_primary_spread_crouchmod;
 
-	weapon_setup_shot (self, 3, "weapons/lasergun_fire.wav", 1);
+	weapon_setup_shot (self, g_balance_hlac_primary_recoil, "weapons/lasergun_fire.wav", 1);
 	weapon_shake(1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
@@ -76,7 +78,7 @@ void(void) weapon_hlac_attack2 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
 		self.ammo_cells = self.ammo_cells - g_balance_hlac_secondary_ammo;
 	}
-	weapon_setup_shot(self, 3, "weapons/lasergun_fire.wav", 1);
+	weapon_setup_shot(self, g_balance_hlac_secondary_recoil, "weapons/lasergun_fire.wav", 1);
 	weapon_shake(1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	for (i = g_balance_hlac_secondary_shots; i > 0; --i)
@@ -145,6 +147,7 @@ float(float req) weapon_hlac {
 		CVAR_CACHE(g_balance_hlac_primary_force);
 		CVAR_CACHE(g_balance_hlac_primary_lifetime);
 		CVAR_CACHE(g_balance_hlac_primary_radius);
+		CVAR_CACHE(g_balance_hlac_primary_recoil);
 		CVAR_CACHE(g_balance_hlac_primary_refire);
 		CVAR_CACHE(g_balance_hlac_primary_speed);
 		CVAR_CACHE(g_balance_hlac_primary_spread_add);
@@ -159,6 +162,7 @@ float(float req) weapon_hlac {
 		CVAR_CACHE(g_balance_hlac_secondary_force);
 		CVAR_CACHE(g_balance_hlac_secondary_lifetime);
 		CVAR_CACHE(g_balance_hlac_secondary_radius);
+		CVAR_CACHE(g_balance_hlac_secondary_recoil);
 		CVAR_CACHE(g_balance_hlac_secondary_refire);
 		CVAR_CACHE(g_balance_hlac_secondary_shots);
 		CVAR_CACHE(g_balance_hlac_secondary_speed);

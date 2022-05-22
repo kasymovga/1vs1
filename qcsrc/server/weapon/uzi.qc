@@ -30,6 +30,7 @@ float g_balance_uzi_sustained_force;
 float g_balance_uzi_sustained_gravityfactor;
 float g_balance_uzi_sustained_refire;
 float g_balance_uzi_sustained_spread;
+float g_balance_uzi_recoil;
 
 var .float uzi_buttonatck1 = BUTTON_ATCK;
 var .float uzi_buttonatck2 = BUTTON_ATCK2;
@@ -47,7 +48,7 @@ void(float deathtype) weapon_uzi_attack {
 		self.uzi_ammoclip -= 1;
 
 	bullet_begin(g_balance_uzi_speed);
-	weapon_setup_shot (self, 0, "weapons/uzi_fire.wav", 1);
+	weapon_setup_shot(self, g_balance_uzi_recoil, "weapons/uzi_fire.wav", 1);
 	weapon_shake(1);
 	// this attack_finished just enforces a cooldown at the end of a burst
 	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
@@ -174,6 +175,7 @@ float(float req) weapon_uzi {
 		CVAR_CACHE(g_balance_uzi_first_gravityfactor);
 		CVAR_CACHE(g_balance_uzi_first_refire);
 		CVAR_CACHE(g_balance_uzi_first_spread);
+		CVAR_CACHE(g_balance_uzi_recoil);
 		CVAR_CACHE(g_balance_uzi_speed);
 		CVAR_CACHE(g_balance_uzi_sustained_ammo);
 		CVAR_CACHE(g_balance_uzi_sustained_damage);

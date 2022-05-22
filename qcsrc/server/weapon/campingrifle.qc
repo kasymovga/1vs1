@@ -14,6 +14,7 @@ float g_balance_campingrifle_primary_force;
 float g_balance_campingrifle_primary_gravityfactor;
 float g_balance_campingrifle_primary_headshotaddeddamage;
 float g_balance_campingrifle_primary_lifetime;
+float g_balance_campingrifle_primary_recoil;
 float g_balance_campingrifle_primary_refire;
 float g_balance_campingrifle_primary_speed;
 float g_balance_campingrifle_primary_spread;
@@ -26,6 +27,7 @@ float g_balance_campingrifle_secondary_force;
 float g_balance_campingrifle_secondary_gravityfactor;
 float g_balance_campingrifle_secondary_headshotaddeddamage;
 float g_balance_campingrifle_secondary_lifetime;
+float g_balance_campingrifle_secondary_recoil;
 float g_balance_campingrifle_secondary_refire;
 float g_balance_campingrifle_secondary_speed;
 float g_balance_campingrifle_secondary_spread;
@@ -88,9 +90,9 @@ void(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, flo
 
 	bullet_begin(pSpeed);
 	if (deathtype & HITTYPE_SECONDARY)
-		weapon_setup_shot (self, 2, "weapons/campingrifle_fire2.wav", 1);
+		weapon_setup_shot (self, g_balance_campingrifle_secondary_recoil, "weapons/campingrifle_fire2.wav", 1);
 	else
-		weapon_setup_shot (self, 2, "weapons/campingrifle_fire.wav", 1);
+		weapon_setup_shot (self, g_balance_campingrifle_primary_recoil, "weapons/campingrifle_fire.wav", 1);
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 2000, 1);
 	if (self.BUTTON_ZOOM) { // if zoomed, shoot from the eye
@@ -229,6 +231,7 @@ float(float req) weapon_campingrifle {
 		CVAR_CACHE(g_balance_campingrifle_primary_gravityfactor);
 		CVAR_CACHE(g_balance_campingrifle_primary_headshotaddeddamage);
 		CVAR_CACHE(g_balance_campingrifle_primary_lifetime);
+		CVAR_CACHE(g_balance_campingrifle_primary_recoil);
 		CVAR_CACHE(g_balance_campingrifle_primary_refire);
 		CVAR_CACHE(g_balance_campingrifle_primary_speed);
 		CVAR_CACHE(g_balance_campingrifle_primary_spread);
@@ -242,6 +245,7 @@ float(float req) weapon_campingrifle {
 		CVAR_CACHE(g_balance_campingrifle_secondary_gravityfactor);
 		CVAR_CACHE(g_balance_campingrifle_secondary_headshotaddeddamage);
 		CVAR_CACHE(g_balance_campingrifle_secondary_lifetime);
+		CVAR_CACHE(g_balance_campingrifle_secondary_recoil);
 		CVAR_CACHE(g_balance_campingrifle_secondary_refire);
 		CVAR_CACHE(g_balance_campingrifle_secondary_speed);
 		CVAR_CACHE(g_balance_campingrifle_secondary_spread);
