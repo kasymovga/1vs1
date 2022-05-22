@@ -42,7 +42,7 @@ string findImageNexuizPlayerModelSelector(string s) {
 	if not(file_exists(strcat(s, ".jpg")))
 	if not(file_exists(strcat(s, ".png")))
 	if not(file_exists(strcat(s, ".tga"))) {
-		s = "gfx/sb_str";
+		s = "gfx/sbar_overlay";
 	}
 	return s;
 }
