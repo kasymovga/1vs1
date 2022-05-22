@@ -7,6 +7,7 @@ float g_balance_laser_primary_radius;
 float g_balance_laser_primary_refire;
 float g_balance_laser_primary_shotangle;
 float g_balance_laser_primary_speed;
+float g_balance_laser_recoil;
 float g_balance_laser_secondary;
 float g_balance_laser_secondary_animtime;
 float g_balance_laser_secondary_damage;
@@ -27,7 +28,7 @@ void(float issecondary) weapon_laser_attack {
 		a = g_balance_laser_primary_shotangle;
 
 	s_forward = v_forward * cos(a * MATH_DEG2RAD) + v_up * sin(a * MATH_DEG2RAD);
-	weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
+	weapon_setup_shotdir (self, s_forward, g_balance_laser_recoil, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	if (issecondary)
 		laser_projectile(weapon_shotdir, g_balance_laser_secondary_speed,
@@ -91,6 +92,7 @@ float(float req) weapon_laser {
 		CVAR_CACHE(g_balance_laser_primary_refire);
 		CVAR_CACHE(g_balance_laser_primary_shotangle);
 		CVAR_CACHE(g_balance_laser_primary_speed);
+		CVAR_CACHE(g_balance_laser_recoil);
 		CVAR_CACHE(g_balance_laser_secondary);
 		CVAR_CACHE(g_balance_laser_secondary_animtime);
 		CVAR_CACHE(g_balance_laser_secondary_damage);

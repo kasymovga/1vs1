@@ -15,6 +15,7 @@ float g_balance_electro_primary_lightning;
 float g_balance_electro_primary_lightning_length;
 float g_balance_electro_primary_radius;
 float g_balance_electro_primary_refire;
+float g_balance_electro_primary_recoil;
 float g_balance_electro_primary_speed;
 float g_balance_electro_secondary;
 float g_balance_electro_secondary_ammo;
@@ -27,6 +28,7 @@ float g_balance_electro_secondary_force;
 float g_balance_electro_secondary_health;
 float g_balance_electro_secondary_lifetime;
 float g_balance_electro_secondary_radius;
+float g_balance_electro_secondary_recoil;
 float g_balance_electro_secondary_refire;
 float g_balance_electro_secondary_refire2;
 float g_balance_electro_secondary_speed;
@@ -126,7 +128,7 @@ void(void) weapon_electro_attack {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_electro_primary_ammo;
 
-	weapon_setup_shot(self, 2, "weapons/electro_fire.wav", 1);
+	weapon_setup_shot(self, g_balance_electro_primary_recoil, "weapons/electro_fire.wav", 1);
 	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, WEP_ELECTRO, g_balance_electro_primary_damage,
@@ -145,7 +147,7 @@ void(void) weapon_electro_attack2 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_electro_secondary_ammo;
 
-	weapon_setup_shot(self, 2, "weapons/electro_fire2.wav", 1);
+	weapon_setup_shot(self, g_balance_electro_secondary_recoil, "weapons/electro_fire2.wav", 1);
 	weapon_shotdir = v_forward; // no TrueAim for grenades please
 	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE, self); // no culling, it has sound
@@ -278,6 +280,7 @@ float(float req) weapon_electro {
 		CVAR_CACHE(g_balance_electro_primary_lightning);
 		CVAR_CACHE(g_balance_electro_primary_lightning_length);
 		CVAR_CACHE(g_balance_electro_primary_radius);
+		CVAR_CACHE(g_balance_electro_primary_recoil);
 		CVAR_CACHE(g_balance_electro_primary_refire);
 		CVAR_CACHE(g_balance_electro_primary_speed);
 		CVAR_CACHE(g_balance_electro_secondary);
@@ -291,6 +294,7 @@ float(float req) weapon_electro {
 		CVAR_CACHE(g_balance_electro_secondary_health);
 		CVAR_CACHE(g_balance_electro_secondary_lifetime);
 		CVAR_CACHE(g_balance_electro_secondary_radius);
+		CVAR_CACHE(g_balance_electro_secondary_recoil);
 		CVAR_CACHE(g_balance_electro_secondary_refire);
 		CVAR_CACHE(g_balance_electro_secondary_refire2);
 		CVAR_CACHE(g_balance_electro_secondary_speed);

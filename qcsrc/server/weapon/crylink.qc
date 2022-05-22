@@ -7,6 +7,7 @@ float g_balance_crylink_primary_edgedamage;
 float g_balance_crylink_primary_force;
 float g_balance_crylink_primary_middle_lifetime;
 float g_balance_crylink_primary_radius;
+float g_balance_crylink_primary_recoil;
 float g_balance_crylink_primary_refire;
 float g_balance_crylink_primary_shots;
 float g_balance_crylink_primary_speed;
@@ -23,6 +24,7 @@ float g_balance_crylink_secondary_force;
 float g_balance_crylink_secondary_line_lifetime;
 float g_balance_crylink_secondary_middle_lifetime;
 float g_balance_crylink_secondary_radius;
+float g_balance_crylink_secondary_recoil;
 float g_balance_crylink_secondary_refire;
 float g_balance_crylink_secondary_shots;
 float g_balance_crylink_secondary_speed;
@@ -62,7 +64,7 @@ void(void) weapon_crylink_attack {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_primary_ammo;
 
-	weapon_setup_shot (self, 2, "weapons/crylink_fire.wav", g_balance_crylink_primary_shots);
+	weapon_setup_shot (self, g_balance_crylink_primary_recoil, "weapons/crylink_fire.wav", g_balance_crylink_primary_shots);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -108,7 +110,7 @@ void(void) weapon_crylink_attack2 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_secondary_ammo;
 
-	weapon_setup_shot (self, 2, "weapons/crylink_fire2.wav", g_balance_crylink_secondary_shots);
+	weapon_setup_shot (self, g_balance_crylink_secondary_recoil, "weapons/crylink_fire2.wav", g_balance_crylink_secondary_shots);
 	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_secondary_shots);
 	while (counter < g_balance_crylink_secondary_shots) {
 		proj = projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
@@ -188,6 +190,7 @@ float(float req) weapon_crylink {
 		CVAR_CACHE(g_balance_crylink_primary_force);
 		CVAR_CACHE(g_balance_crylink_primary_middle_lifetime);
 		CVAR_CACHE(g_balance_crylink_primary_radius);
+		CVAR_CACHE(g_balance_crylink_primary_recoil);
 		CVAR_CACHE(g_balance_crylink_primary_refire);
 		CVAR_CACHE(g_balance_crylink_primary_shots);
 		CVAR_CACHE(g_balance_crylink_primary_speed);
@@ -204,6 +207,7 @@ float(float req) weapon_crylink {
 		CVAR_CACHE(g_balance_crylink_secondary_line_lifetime);
 		CVAR_CACHE(g_balance_crylink_secondary_middle_lifetime);
 		CVAR_CACHE(g_balance_crylink_secondary_radius);
+		CVAR_CACHE(g_balance_crylink_secondary_recoil);
 		CVAR_CACHE(g_balance_crylink_secondary_refire);
 		CVAR_CACHE(g_balance_crylink_secondary_shots);
 		CVAR_CACHE(g_balance_crylink_secondary_speed);

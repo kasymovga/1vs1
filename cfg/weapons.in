@@ -136,11 +136,13 @@ set g_balance_rocketlauncher_damage 105
 set g_balance_rocketlauncher_edgedamage 40
 set g_balance_rocketlauncher_force 600
 set g_balance_rocketlauncher_radius 150
+set g_balance_rocketlauncher_recoil 4
 set g_balance_rocketlauncher_speed 850
 set g_balance_rocketlauncher_speedaccel 0
 set g_balance_rocketlauncher_speedstart 850
 set g_balance_rocketlauncher_lifetime 30
 set g_balance_rocketlauncher_refire 1
+set g_balance_rocketlauncher_recoil 5
 set g_balance_rocketlauncher_animtime 0.3
 set g_balance_rocketlauncher_ammo 5
 set g_balance_rocketlauncher_health 40
@@ -216,6 +218,7 @@ set g_balance_crylink_primary_spread 0.03
 set g_balance_crylink_primary_spread_time 0
 set g_balance_crylink_primary_shots 5
 set g_balance_crylink_primary_bounces 1
+set g_balance_crylink_primary_recoil 2
 set g_balance_crylink_primary_refire 0.4
 set g_balance_crylink_primary_animtime 0.3
 set g_balance_crylink_primary_ammo 3
@@ -231,6 +234,7 @@ set g_balance_crylink_secondary_spread 0.08
 set g_balance_crylink_secondary_spread_time 0
 set g_balance_crylink_secondary_shots 7
 set g_balance_crylink_secondary_bounces 0
+set g_balance_crylink_secondary_recoil 2
 set g_balance_crylink_secondary_refire 0.5
 set g_balance_crylink_secondary_animtime 0.3
 set g_balance_crylink_secondary_ammo 4
@@ -250,6 +254,7 @@ set g_balance_electro_primary_radius 150
 set g_balance_electro_primary_comboradius 0
 set g_balance_electro_primary_speed 2000
 set g_balance_electro_primary_lifetime 30
+set g_balance_electro_primary_recoil 2
 set g_balance_electro_primary_refire 0.6
 set g_balance_electro_primary_animtime 0.3
 set g_balance_electro_primary_ammo 3
@@ -261,6 +266,7 @@ set g_balance_electro_secondary_radius 150
 set g_balance_electro_secondary_speed 900
 set g_balance_electro_secondary_speed_up 200
 set g_balance_electro_secondary_lifetime 5
+set g_balance_electro_secondary_recoil 2
 set g_balance_electro_secondary_refire 0.25
 set g_balance_electro_secondary_refire2 0
 set g_balance_electro_secondary_animtime 0.25
@@ -472,6 +478,7 @@ set g_balance_laser_primary_refire 0.7
 set g_balance_laser_primary_animtime 0.3
 set g_balance_laser_primary_lifetime 30
 set g_balance_laser_primary_shotangle 0
+set g_balance_laser_recoil 3
 set g_balance_laser_secondary 0 // when 1, a secondary laser mode exists
 set g_balance_laser_secondary_damage 35
 set g_balance_laser_secondary_edgedamage 10

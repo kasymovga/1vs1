@@ -13,6 +13,7 @@ float g_balance_rocketlauncher_guidestop;
 float g_balance_rocketlauncher_health;
 float g_balance_rocketlauncher_lifetime;
 float g_balance_rocketlauncher_radius;
+float g_balance_rocketlauncher_recoil;
 float g_balance_rocketlauncher_refire;
 float g_balance_rocketlauncher_speed;
 float g_balance_rocketlauncher_speedaccel;
@@ -155,7 +156,7 @@ void(void) weapon_rocketlauncher_attack {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_rocketlauncher_ammo;
 
-	weapon_setup_shot(self, 5, "weapons/rocket_fire.wav", 1);
+	weapon_setup_shot(self, g_balance_rocketlauncher_recoil, "weapons/rocket_fire.wav", 1);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE, self); // because of fly sound
 	projectile_setup(missile, weapon_shotorg - v_forward * 3, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
@@ -349,6 +350,7 @@ float(float req) weapon_rocketlauncher {
 		CVAR_CACHE(g_balance_rocketlauncher_health);
 		CVAR_CACHE(g_balance_rocketlauncher_lifetime);
 		CVAR_CACHE(g_balance_rocketlauncher_radius);
+		CVAR_CACHE(g_balance_rocketlauncher_recoil);
 		CVAR_CACHE(g_balance_rocketlauncher_refire);
 		CVAR_CACHE(g_balance_rocketlauncher_speed);
 		CVAR_CACHE(g_balance_rocketlauncher_speedaccel);
