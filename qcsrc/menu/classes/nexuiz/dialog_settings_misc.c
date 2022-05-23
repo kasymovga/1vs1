@@ -11,35 +11,10 @@ entity makeNexuizMiscSettingsTab();
 
 #ifdef IMPLEMENTATION
 void (entity btn, entity me) apply_misc_settings {
-	float fs_rescan_needed = FALSE;
-	if (cvar_string("menu_cl_simpleitems") != cvar_string("cl_simpleitems")) {
-		registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
-		cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
-		fs_rescan_needed = TRUE;
-	}
-	if (cvar_string("menu_cl_oldnexmodel") != cvar_string("cl_oldnexmodel")) {
-		registercvar("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"), 0);
-		cvar_set("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"));
-		fs_rescan_needed = TRUE;
-	}
-	if (cvar_string("menu_cl_brightskins") != cvar_string("cl_brightskins")) {
-		registercvar("menu_cl_brightskins", cvar_string("cl_brightskins"), 0);
-		cvar_set("menu_cl_brightskins", cvar_string("cl_brightskins"));
-		fs_rescan_needed = TRUE;
-	}
-	if (fs_rescan_needed)
-		localcmd("fs_rescan\n");
-
 	SetSkin_Click(btn, me);
 }
 
 entity() makeNexuizMiscSettingsTab {
-	registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
-	cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
-	registercvar("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"), 0);
-	cvar_set("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"));
-	registercvar("menu_cl_brightskins", cvar_string("cl_brightskins"), 0);
-	cvar_set("menu_cl_brightskins", cvar_string("cl_brightskins"));
 	entity me;
 	me = spawnNexuizMiscSettingsTab();
 	me.configureDialog(me);
@@ -89,17 +64,6 @@ void(entity me) fillNexuizMiscSettingsTab {
 			gui_set_dependent(e, "cl_showacceleration", 1, 1);
 		me.TD(me, 1, 2.8/2, e = makeNexuizSlider(1, 10, 0.5, "cl_showacceleration_scale"));
 			gui_set_dependent(e, "cl_showacceleration", 1, 1);
-	me.TR(me);
-		me.TD(me, 1, 2.8/2, e = makeNexuizTextLabel(0, _("Simple items:")));
-		me.TD(me, 1, 2.8/2, e = makeNexuizTextSlider("cl_simpleitems"));
-			e.addValue(e, _("None"), "0");
-			e.addValue(e, _("Simple"), "1");
-			e.addValue(e, _("Luma"), "2");
-			e.configureNexuizTextSliderValues(e);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_oldnexmodel", _("Old nex model")));
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_brightskins", _("Bright player skins")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "integration_discord_enable", _("Discord status")));
 	me.TR(me);

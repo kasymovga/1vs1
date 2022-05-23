@@ -288,7 +288,8 @@ seta cl_vehicle_spiderbot_cross_size 1
 seta cl_nogibs 0
 seta cl_sound_maptime_warning "1" "play announcer sound telling you the remaining maptime - 0: do not play at all, 1: play at one minute, 2: play at five minutes, 3: play both"
 seta cl_simpleitems 0 "Simple items"
-seta cl_oldnexmodel 0 "Old nex model"
+seta cl_oldnexmodel 0 "Old nex model: -1 - Xon, 0 - Default, 1 - Classic"
+seta cl_lasermodel 0 "Laser model: 0 - Default, 1 - Xon"
 seta cl_brightskins 0 "Bright skins for player models"
 
 alias +attack2 +button3

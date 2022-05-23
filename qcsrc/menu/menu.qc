@@ -28,8 +28,6 @@ string menu_serverlist_uris[MENU_SERVERLIST_URIS_COUNT] = {
 	"http://rexuiz.com/maps/serverlist.txt",
 	"http://nexuiz.mooo.com/serverlist.txt",
 };
-float menu_dlc_mandatory;
-
 void(float id, float status, string data) menu_server_list_callback {
 	float f;
 	float d;
@@ -75,92 +73,6 @@ void(float id, float status, string data) menu_server_list_callback {
 	}
 }
 
-entity menu_dlc_reload_wait;
-float menu_dlc_downloading;
-void(void) menu_dlc_reload_wait_think {
-	if (dlc_ready_all() && menu_dlc_reload(!menu_dlc_downloading, TRUE)) {
-		if (clientstate() != CS_CONNECTED)
-			localcmd("r_restart\n");
-	} else if (self.cnt) {
-		self.cnt = self.cnt - 1;
-		self.nextthink = time + 5;
-		return;
-	}
-	remove(menu_dlc_reload_wait);
-	menu_dlc_reload_wait = NULL;
-}
-
-float(float nodownload, float renderrestart) menu_dlc_reload {
-	string s = strcat(DLC_BASE_LIST " ", cvar_defstring("menu_dlc_extra"));
-	dlc_list = "";
-	if not(file_exists("maps/soylent.bsp")) { //check presence of data.pk3
-		menu_dlc_mandatory = TRUE;
-		s = strcat(s, " base-maps");
-		if (file_exists("dlcache/zzz-rexdlc_base-maps-lightmaps.pk3"))
-			s = strcat(s, " base-maps-lightmaps");
-	}
-	if not(file_exists("textures/evil_metal/walltek3.jpg")) { //check presence of data.pk3
-		menu_dlc_mandatory = TRUE;
-		s = strcat(s, " base-textures");
-		if (file_exists("dlcache/zzz-rexdlc_base-textures-extra.pk3"))
-			s = strcat(s, " base-textures-extra");
-	}
-	if not(file_exists("models/ebomb.mdl")) { //check presence of data.pk3
-		menu_dlc_mandatory = TRUE;
-		s = strcat(s, " base-models");
-	}
-	if not(file_exists("sound/plats/medplat1.ogg")) { //check presence of data.pk3
-		menu_dlc_mandatory = TRUE;
-		s = strcat(s, " base-sounds");
-	}
-	if not(file_exists("gfx/num_0.tga")) { //check presence of data.pk3
-		menu_dlc_mandatory = TRUE;
-		s = strcat(s, " base-gfx");
-	}
-	if not(menu_dlc_mandatory) {
-		s = strcat(s, " datapatches");
-	}
-	if (cvar("cl_brightskins") && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
-		s = strcat(s, " brightskins");
-	}
-	if (!cvar("cl_oldnexmodel") && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
-		s = strcat(s, " newnex");
-	}
-	float n;
-	if ((n = cvar("cl_simpleitems")) && (!menu_dlc_mandatory || dlc_ready("base-models"))) {
-		s = strcat(s, " axe_v2 zapper_v2 supershotgun"); //need load them first, to override their g_* models
-		if (dlc_ready("axe_v2") && dlc_ready("zapper_v2") && dlc_ready("supershotgun")) {
-			if (n == 2)
-				s = strcat(s, " simpleitems-luma");
-			else
-				s = strcat(s, " simpleitems");
-		}
-	}
-	string head = "", tail = s;
-	while (tail != "") {
-		head = str_car(tail);
-		tail = str_cdr(tail);
-		if (head != "") {
-			if (head == "classiccampaign-p3" && (!dlc_ready("classiccampaign") || !dlc_ready("classiccampaign-p1") || !dlc_ready("classiccampaign-p2"))) continue; //hack for classic campaign dlc order
-			if not(dlc_load(head, nodownload)) {
-				if not(nodownload)
-					print("Downloading missing pack: ", head, "\n");
-			}
-		}
-	}
-	if (dlc_ready_all())
-		return TRUE;
-
-	if (renderrestart)
-	if not(menu_dlc_reload_wait) {
-		menu_dlc_reload_wait = spawn();
-		menu_dlc_reload_wait.think = menu_dlc_reload_wait_think;
-		menu_dlc_reload_wait.nextthink = time + 0.5;
-		menu_dlc_reload_wait.cnt = 10;
-	}
-	return FALSE;
-}
-
 void() menu_init {
 	cvar_set("_menu_alpha", "0");
 	if (cvar("sys_first_run"))
@@ -168,7 +80,7 @@ void() menu_init {
 
 	MENU_URI_GET_SERVERLIST = uri_register_handler(menu_server_list_callback);
 	uri_get(menu_serverlist_uris[0], MENU_URI_GET_SERVERLIST);
-	menu_dlc_reload(TRUE, FALSE);
+	dlc_reload(TRUE, FALSE);
 	udppunchhole_extresponse_handler_register();
 	ui_con_width_height_set();
 	time = 1;
@@ -208,60 +120,44 @@ void(void) menu_time_process {
 	}
 }
 
-float menu_dlc_stage;
-void(void) menu_draw_loading {
+void(string m1, string m2) menu_draw_loading {
 	vector sz = drawgetimagesize("gfx/loading.tga");
 	if (sz != '0 0 0') {
 		vector v = cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0';
 		float scl = min(v_x / sz_x, v_y / sz_y);
 		sz *= scl;
 		drawpic((v - sz) * 0.5, "gfx/loading.tga", sz, '1 1 1', 1, DRAWFLAG_NORMAL);
-	}
-	if (menu_dlc_downloading) {
 		vector pos;
 		pos_y = 100;
-		string s = strcat("Downloading missing data, stage ", ftos(menu_dlc_stage));
-		pos_x = (cvar("vid_conwidth") / 2) - stringwidth(s, FALSE) * 6;
+		pos_x = (cvar("vid_conwidth") / 2) - stringwidth(m1, FALSE) * 6;
 		pos_z = 0;
-		drawstring(pos, s, '12 12 0', '0 1 1', 1, DRAWFLAG_NORMAL);
-		s = "Press ESC to cancel";
+		drawstring(pos, m1, '12 12 0', '0 1 1', 1, DRAWFLAG_NORMAL);
 		pos_y += 20;
-		pos_x = (cvar("vid_conwidth") / 2) - stringwidth(s, FALSE) * 6;
-		drawstring(pos, s, '12 12 0', '0 1 1', 1, DRAWFLAG_NORMAL);
+		pos_x = (cvar("vid_conwidth") / 2) - stringwidth(m2, FALSE) * 6;
+		drawstring(pos, m2, '12 12 0', '0 1 1', 1, DRAWFLAG_NORMAL);
 	}
 }
 
-float menu_dlc_wait_frame;
 void() menu_init_delayed {
 	menu_initialized = 0;
-	if (dlc_ready_all()) {
-		menu_dlc_stage++;
-		print("Menu DLC stage ", ftos(menu_dlc_stage), " done\n");
-		if (!menu_dlc_reload(!menu_dlc_downloading, FALSE)) {
-			menu_dlc_wait_frame = 0;
-			menu_draw_loading();
-			return;
+	if (!dlc_reloaded) {
+		if (dlc_downloading) {
+			menu_draw_loading("Downloading missing data, please keep game open", "Press ESC to cancel");
+		} else {
+			menu_draw_loading("Loading data, please wait", "");
 		}
-	} else if (menu_dlc_wait_frame < 10) {
-		menu_dlc_wait_frame++;
-		menu_draw_loading();
+		menu_time_process();
 		return;
-	} else {
-		if not(menu_dlc_downloading) {
-			menu_dlc_downloading = 1;
-			dlc_set_repos(cvar_string("sv_dlc_repository"));
-			menu_dlc_reload(FALSE, FALSE);
-		}
-		if (menu_dlc_mandatory) {
-			menu_draw_loading();
-			menu_time_process();
-			return;
-		}
+	}
+	if (dlc_failed && dlc_mandatory) {
+		menu_draw_loading("Data missing and cannot be fetched", "Press ESC to exit");
+		menu_time_process();
+		return;
 	}
 	if (!menu_init_pre())
 		return;
 
-	if (menu_dlc_mandatory) {
+	if (dlc_mandatory) {
 		localcmd("r_restart\n");
 	}
 	menu_initialized = 1;
@@ -335,7 +231,7 @@ void(float key, float ascii) menu_keyup {
 
 void(float key, float ascii) menu_keydown {
 	if (!menu_initialized) {
-		if (menu_dlc_mandatory) {
+		if (dlc_failed || dlc_downloading) {
 			if (key == K_ESCAPE)
 				localcmd("quit\n");
 		}

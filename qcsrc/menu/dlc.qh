@@ -1,0 +1,5 @@
+float dlc_mandatory;
+float dlc_downloading;
+float dlc_reloaded;
+float(float nodownload, float renderrestart) dlc_reload;
+float dlc_failed;

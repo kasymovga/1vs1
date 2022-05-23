@@ -10,7 +10,6 @@ CLASS(NexuizWeaponsList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizWeaponsList, realFontSize, vector, '0 0 0')
 	ATTRIB(NexuizWeaponsList, realUpperMargin, float, 0)
 	METHOD(NexuizWeaponsList, mouseDrag, float(entity, vector))
-	ATTRIB(NexuizWeaponsList, scrollbarWidth, float, 0)
 ENDCLASS(NexuizWeaponsList)
 entity makeNexuizWeaponsList();
 void WeaponsList_MoveUp_Click(entity btn, entity me);

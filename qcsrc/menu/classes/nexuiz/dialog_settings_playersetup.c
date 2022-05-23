@@ -13,8 +13,42 @@ entity makeNexuizPlayerSettingsTab();
 #endif
 
 #ifdef IMPLEMENTATION
+void(entity me, entity btn) applyNexuizPlayerSettingsTab {
+	localcmd("color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_gunalpha\n");
+	float fs_rescan_needed = FALSE;
+	if (cvar_string("menu_cl_simpleitems") != cvar_string("cl_simpleitems")) {
+		registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
+		cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
+		fs_rescan_needed = TRUE;
+	}
+	if (cvar_string("menu_cl_oldnexmodel") != cvar_string("cl_oldnexmodel")) {
+		registercvar("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"), 0);
+		cvar_set("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"));
+		fs_rescan_needed = TRUE;
+	}
+	if (cvar_string("menu_cl_lasermodel") != cvar_string("cl_lasermodel")) {
+		registercvar("menu_cl_lasermodel", cvar_string("cl_lasermodel"), 0);
+		cvar_set("menu_cl_lasermodel", cvar_string("cl_lasermodel"));
+		fs_rescan_needed = TRUE;
+	}
+	if (cvar_string("menu_cl_brightskins") != cvar_string("cl_brightskins")) {
+		registercvar("menu_cl_brightskins", cvar_string("cl_brightskins"), 0);
+		cvar_set("menu_cl_brightskins", cvar_string("cl_brightskins"));
+		fs_rescan_needed = TRUE;
+	}
+	if (fs_rescan_needed)
+		localcmd("fs_rescan\n");
+}
 entity makeNexuizPlayerSettingsTab()
 {
+	registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
+	cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
+	registercvar("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"), 0);
+	cvar_set("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"));
+	registercvar("menu_cl_lasermodel", cvar_string("cl_lasermodel"), 0);
+	cvar_set("menu_cl_lasermodel", cvar_string("cl_lasermodel"));
+	registercvar("menu_cl_brightskins", cvar_string("cl_brightskins"), 0);
+	cvar_set("menu_cl_brightskins", cvar_string("cl_brightskins"));
 	entity me;
 	me = spawnNexuizPlayerSettingsTab();
 	me.configureDialog(me);
@@ -88,8 +122,6 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Damage kick:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 0.5, 0.05, "v_kicktime"));
-	
-	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Zoom Factor:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(2, 16, 0.5, "cl_zoomfactor"));
@@ -163,8 +195,17 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3.25, e = makeNexuizCheckBox(0, "cl_gentle", _("Disable gore effects")));
 	me.TR(me);
-
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_brightskins", _("Bright player skins")));
+	me.TR(me);
+		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Simple items:")));
+		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_simpleitems"));
+			e.addValue(e, _("None"), "0");
+			e.addValue(e, _("Simple"), "1");
+			e.addValue(e, _("Luma"), "2");
+			e.configureNexuizTextSliderValues(e);
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromnexuiz;sendcvar cl_forceplayermodels;sendcvar cl_gunalpha", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Apply immediately"), '0 0 0'));
+			e.onClick = applyNexuizPlayerSettingsTab;
+			e.onClickEntity = me;
 }
 #endif

@@ -1,0 +1,3 @@
+float curl_downloads_left;
+float curl_error;
+string curl_file_name;

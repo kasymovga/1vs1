@@ -68,6 +68,9 @@ void(void) dlc_find_working_repo {
 	if (dlc_repo_check != "") {//have active check
 		return;
 	}
+	string s = strcat(dlc_repo_check_list, "");
+	str_unzone_ifneeded(dlc_repo_check_list);
+	dlc_repo_check_list = s;
 	for (;;) {
 		dlc_repo_check = str_car(dlc_repo_check_list);
 		dlc_repo_check_list = str_cdr(dlc_repo_check_list);
@@ -115,20 +118,6 @@ float(string dlc_name, float force_local) dlc_load {
 	return FALSE;
 }
 
-void(string l) dlc_load_local_list {
-	string s;
-	while (l != "") {
-		s = str_car(l);
-		l = str_cdr(l);
-		if (s != "") {
-			if not(dlc_ready(s)) {
-				print("Loading dlc: ", s, "\n");
-				localcmd("\ncurl --pak ", dlc_pk3_name(s), "\n");
-			}
-		}
-	}
-}
-
 float(void) dlc_ready_all {
 	string list = dlc_list;
 	string s;
@@ -151,7 +140,7 @@ void(string repos) dlc_set_repos {
 	if (dlc_repo_finded)
 		return;
 
-	string s = strcat(repos, " ", dlc_repo_check_list);
+	string s = strcat(dlc_repo_check_list, " ", repos);
 	str_unzone_ifneeded(dlc_repo_check_list);
 	dlc_repo_check_list = s;
 	dlc_repo_check_list = str_zone_ifneeded(dlc_repo_check_list);

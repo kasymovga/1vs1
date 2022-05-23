@@ -25,7 +25,7 @@ void(entity me) fillNexuizWeaponsDialog {
 	entity e;
 	float h0, h;
 
-	h = me.rows - 10;
+	h = 8;
 	
 	me.TR(me);
 		me.TD(me, 1, 4, makeNexuizTextLabel(0, _("Weapon priority list:")));
@@ -64,6 +64,20 @@ void(entity me) fillNexuizWeaponsDialog {
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_gunalign_force_center", _("Force center position")));
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeNexuizCheckBox(0, "cl_showweaponspawns", _("Weapon location hint")));
+	me.TR(me);
+		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Nex/Minstanex models:")));
+		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_oldnexmodel"));
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Classic"), "1");
+			e.addValue(e, _("Xon"), "-1");
+			e.configureNexuizTextSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Laser model:")));
+		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_lasermodel"));
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Xon"), "1");
+			e.configureNexuizTextSliderValues(e);
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;

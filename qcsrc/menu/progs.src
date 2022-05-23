@@ -5,6 +5,8 @@ builtin.qh
 ../common/progs.qh
 ../client-menu/progs.qh
 ../menu-server/progs.qh
+curl.qh
+dlc.qh
 cmd.qh
 menu.qh
 gui.qh
@@ -16,3 +18,5 @@ classes.qc
 cmd.qc
 menu.qc
 gui.qc
+dlc.qc
+curl.qc
