@@ -103,7 +103,7 @@ void loadCvarsNexuizPlayerModelSelector(entity me)
 		fclose(fh);
 	}
 	if not(me.currentModelImage)
-		me.currentModelImage = strzone("/gfx/sb_str");
+		me.currentModelImage = strzone("/gfx/sbar_overlay");
 
 	search_end(glob);
 }
