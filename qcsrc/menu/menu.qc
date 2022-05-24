@@ -104,6 +104,10 @@ void(void) menu_time_process {
 	float t = gettime();
 	menu_frametime_real = frametime = min(0.2, t - menu_time_previous);
 	menu_time_previous = t;
+	if not(dlc_reloaded)
+	if (!menu_initialized || menu_active)
+		dlc_think();
+
 	if (menu_active) {
 		entity e, oldself;
 		oldself = self;
@@ -140,9 +144,9 @@ void(string m1, string m2) menu_draw_loading {
 
 void() menu_init_delayed {
 	menu_initialized = 0;
-	if (!dlc_reloaded) {
+	if (!dlc_reloaded && !dlc_failed) {
 		if (dlc_downloading) {
-			menu_draw_loading("Downloading missing data, please keep game open", "Press ESC to cancel");
+			menu_draw_loading("Downloading missing data", "Press ESC to cancel");
 		} else {
 			menu_draw_loading("Loading data, please wait", "");
 		}
@@ -322,7 +326,6 @@ void() menu_draw_pre {
 }
 
 void(void) menu_draw {
-	menu_mouse_mode = (cvar("menu_mouse_absolute") || cvar("vid_touchscreen"));
 	if (main)
 		menu_update_width_height();
 
@@ -350,14 +353,15 @@ void(void) menu_draw {
 	extresponse_update();
 	menu_time_process();
 	if (menu_active) {
+		menu_mouse_mode = (cvar("menu_mouse_absolute") || cvar("vid_touchscreen"));
 		if (getmousetarget() == (menu_mouse_mode ? MT_CLIENT : MT_MENU) && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
 			setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
 		else
 			menu_hide();
-	}
-	if (cvar("cl_capturevideo"))
-		frametime = 1 / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
 
+		if (cvar("cl_capturevideo"))
+			frametime = 1 / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
+	}
 	menu_gamestatus = 0;
 	if (isserver())
 		menu_gamestatus = menu_gamestatus | GAME_ISSERVER;

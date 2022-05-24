@@ -1,6 +1,15 @@
 entity dlc_curl_event_listener;
 float dlc_downloading;
 string dlc_expected;
+float dlc_think_frames;
+
+void(void) dlc_restart_render {
+	print("Render restart requested\n");
+	if (clientstate() != CS_CONNECTED)
+		localcmd("r_restart\n");
+	else if (!isserver())
+		localcmd("disconnect;wait;r_restart;wait;reconnect\n");
+}
 
 void(void) dlc_curl_event_listener_think {
 	if (dlc_expected == "") return;
@@ -14,21 +23,21 @@ void(void) dlc_curl_event_listener_think {
 		str_unzone_ifneeded(dlc_expected);
 		dlc_expected = str_zone_ifneeded(s);
 		if (curl_error)
-			print("Expected DLC ", n, " failed\n");
+			print("DLC ", n, " failed\n");
 		else
-			print("Expected DLC ", n, " fetched\n");
+			print("DLC ", n, " fetched\n");
 	}
 	if (dlc_expected == " ") {
 		if (dlc_ready_all()) {
-			if (dlc_reload(!dlc_downloading, TRUE)) {
-				if (self.cnt) {
-					if (clientstate() != CS_CONNECTED)
-						localcmd("r_restart\n");
-					else if (!isserver())
-						localcmd("disconnect;wait;r_restart;wait;reconnect\n");
+			float rr = dlc_curl_event_listener.cnt;
+			if (dlc_reload(!dlc_downloading, dlc_curl_event_listener.cnt)) {
+				if (rr)
+					dlc_restart_render();
+
+				if (dlc_curl_event_listener) {
+					remove(dlc_curl_event_listener);
+					dlc_curl_event_listener = NULL;
 				}
-				remove(dlc_curl_event_listener);
-				dlc_curl_event_listener = NULL;
 				dlc_downloading = 0;
 				dlc_reloaded = TRUE;
 				str_unzone_ifneeded(dlc_expected);
@@ -39,7 +48,7 @@ void(void) dlc_curl_event_listener_think {
 				print("Some DLC failed\n");
 				dlc_failed = TRUE; //Downloading failed
 			} else {
-				dlc_reload(FALSE, self.cnt); //Request downloading
+				dlc_reload(FALSE, dlc_curl_event_listener.cnt); //Request downloading
 			}
 		}
 	}
@@ -119,7 +128,12 @@ float(float nodownload, float renderrestart) dlc_reload {
 		}
 	}
 	if (dlc_ready_all()) {
+		dlc_reloaded = TRUE;
 		dlc_expected = "";
+		if (dlc_curl_event_listener) {
+			remove(dlc_curl_event_listener);
+			dlc_curl_event_listener = NULL;
+		}
 		return TRUE;
 	}
 	dlc_expected = str_zone_ifneeded(dlc_expected);
@@ -128,9 +142,27 @@ float(float nodownload, float renderrestart) dlc_reload {
 		dlc_curl_event_listener.classname = "curl_event_listener";
 		dlc_curl_event_listener.think = dlc_curl_event_listener_think;
 	}
-	if (renderrestart)
-		dlc_curl_event_listener.cnt = 1;
+	dlc_curl_event_listener.cnt = (renderrestart || dlc_mandatory);
+	if (dlc_curl_event_listener.cnt)
+		print("Render restart will be requried\n");
 
 	dlc_reloaded = FALSE;
 	return FALSE;
+}
+
+void(void) dlc_think {
+	if (dlc_think_frames > 10) {
+		dlc_think_frames = 0;
+		if not(dlc_reloaded) {
+			float rr = dlc_curl_event_listener.cnt;
+			if (dlc_ready_all()) {
+				if (dlc_reload(TRUE, rr))
+					dlc_restart_render();
+			} else {
+				if not(dlc_downloading)
+					dlc_reload(FALSE, rr);
+			}
+		}
+	}
+	dlc_think_frames++;
 }
