@@ -8,6 +8,7 @@ float g_balance_fireball_primary_laserdamage;
 float g_balance_fireball_primary_laseredgedamage;
 float g_balance_fireball_primary_laserradius;
 float g_balance_fireball_primary_lifetime;
+float g_balance_fireball_primary_recoil;
 float g_balance_fireball_primary_refire;
 float g_balance_fireball_primary_speed;
 float g_balance_fireball_primary_speed_up;
@@ -27,6 +28,7 @@ float g_balance_fireball_secondary_laseredgedamage;
 float g_balance_fireball_secondary_laserradius;
 float g_balance_fireball_secondary_lifetime;
 float g_balance_fireball_secondary_radius;
+float g_balance_fireball_secondary_recoil;
 float g_balance_fireball_secondary_refire;
 float g_balance_fireball_secondary_refire2;
 float g_balance_fireball_secondary_speed;
@@ -130,7 +132,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 void(void) weapon_fireball_attack2 {
 	entity proj;
-	weapon_setup_shot(self, 2, "weapons/fireball_fire2.wav", 1);
+	weapon_setup_shot(self, g_balance_fireball_secondary_recoil, "weapons/fireball_fire2.wav", 1);
 	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, WEP_FIREBALL | HITTYPE_SECONDARY, g_balance_fireball_secondary_damage,
@@ -242,7 +244,7 @@ void(void) weapon_fireball_attack1 {
 		f_diff = '+1.25 +3.75 0';
 		break;
 	}
-	weapon_setup_shot(self, 2, "weapons/fireball_fire.wav", 1);
+	weapon_setup_shot(self, g_balance_fireball_primary_recoil, "weapons/fireball_fire.wav", 1);
 	trace_line(weapon_shotorg, weapon_shotorg + f_diff_x * v_up + f_diff_y * v_right, TRACE_MOVE_NORMAL, self);
 	weapon_shotorg = trace_endpos;
 	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
@@ -335,6 +337,7 @@ float(float req) weapon_fireball {
 		CVAR_CACHE(g_balance_fireball_primary_laseredgedamage);
 		CVAR_CACHE(g_balance_fireball_primary_laserradius);
 		CVAR_CACHE(g_balance_fireball_primary_lifetime);
+		CVAR_CACHE(g_balance_fireball_primary_recoil);
 		CVAR_CACHE(g_balance_fireball_primary_refire);
 		CVAR_CACHE(g_balance_fireball_primary_speed);
 		CVAR_CACHE(g_balance_fireball_primary_speed_up);
@@ -354,6 +357,7 @@ float(float req) weapon_fireball {
 		CVAR_CACHE(g_balance_fireball_secondary_laserradius);
 		CVAR_CACHE(g_balance_fireball_secondary_lifetime);
 		CVAR_CACHE(g_balance_fireball_secondary_radius);
+		CVAR_CACHE(g_balance_fireball_secondary_recoil);
 		CVAR_CACHE(g_balance_fireball_secondary_refire);
 		CVAR_CACHE(g_balance_fireball_secondary_refire2);
 		CVAR_CACHE(g_balance_fireball_secondary_speed);

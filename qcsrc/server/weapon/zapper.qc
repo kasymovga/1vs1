@@ -31,6 +31,7 @@ float g_balance_zapper_secondary_shield_heatup;
 float g_balance_zapper_secondary_shield_lifetime;
 float g_balance_zapper_secondary_shield_refire;
 float g_balance_zapper_secondary_range;
+float g_balance_zapper_secondary_recoil;
 float g_balance_zapper_secondary_refire;
 var .float zapper_buttonatck1 = BUTTON_ATCK;
 var .float zapper_buttonatck2 = BUTTON_ATCK2;
@@ -387,7 +388,7 @@ void(void) weapon_zapper_attack2 {
 	entity ao = akimbo_owner(self);
 	antilag_begin(ao);
 	sound(ao, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
-	weapon_setup_shot(self, 5, "", 1);
+	weapon_setup_shot(self, g_balance_zapper_secondary_recoil, "", 1);
 	vector end = weapon_shotorg + weapon_shotdir * range;
 	entity o = akimbo_owner(self);
 	weapon_zapper_attack2_beam(o, weapon_shotorg, weapon_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, _damage, force);
@@ -701,6 +702,7 @@ float(float req) weapon_zapper {
 		CVAR_CACHE(g_balance_zapper_secondary_shield_lifetime);
 		CVAR_CACHE(g_balance_zapper_secondary_shield_refire);
 		CVAR_CACHE(g_balance_zapper_secondary_range);
+		CVAR_CACHE(g_balance_zapper_secondary_recoil);
 		CVAR_CACHE(g_balance_zapper_secondary_refire);
 		if (cvar("g_balance_zapper_swap_buttons")) {
 			zapper_buttonatck1 = BUTTON_ATCK2;

@@ -168,6 +168,7 @@ set g_balance_fireball_primary_laserdamage 80
 set g_balance_fireball_primary_laseredgedamage 20
 set g_balance_fireball_primary_laserradius 128
 set g_balance_fireball_primary_lifetime 7
+set g_balance_fireball_primary_recoil 2
 set g_balance_fireball_primary_refire 0.5
 set g_balance_fireball_primary_speed 1000
 set g_balance_fireball_primary_speed_up 100
@@ -187,6 +188,7 @@ set g_balance_fireball_secondary_laseredgedamage 20
 set g_balance_fireball_secondary_laserradius 256
 set g_balance_fireball_secondary_lifetime 15
 set g_balance_fireball_secondary_radius 200
+set g_balance_fireball_secondary_recoil 2
 set g_balance_fireball_secondary_refire 2
 set g_balance_fireball_secondary_refire2 0
 set g_balance_fireball_secondary_speed 650
@@ -460,6 +462,7 @@ set g_balance_zapper_secondary_shield_heatup 0
 set g_balance_zapper_secondary_shield_lifetime 0
 set g_balance_zapper_secondary_shield_refire 1
 set g_balance_zapper_secondary_range 2000
+set g_balance_zapper_secondary_recoil 5
 set g_balance_zapper_secondary_refire 1
 set g_balance_zapper_secondary_arc 0
 set g_balance_zapper_secondary_arc_force 200
