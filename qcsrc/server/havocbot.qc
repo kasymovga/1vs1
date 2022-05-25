@@ -263,6 +263,7 @@ void(vector dir) havocbot_bunnyhop {
 	// Release jump button
 	if (self.flags & FL_ONGROUND == 0) {
 		if (self.velocity_z < 0 || vlen(self.velocity)<sv_maxspeed)
+		if not(self.aistatus & AI_STATUS_JETPACK_FLYING)
 			self.BUTTON_JUMP = FALSE;
 
 		// Strafe
@@ -280,6 +281,13 @@ void(vector dir) havocbot_bunnyhop {
 				self.movement_y = sv_maxspeed;
 		}
 	}
+}
+
+void(void) havocbot_use_jetpack {
+	if (self.flags & FL_JUMPRELEASED)
+		self.BUTTON_JUMP = TRUE;
+	else
+		self.BUTTON_JUMP = FALSE;
 }
 
 void(void) havocbot_movetogoal {
@@ -308,7 +316,7 @@ void(void) havocbot_movetogoal {
 		// Take off
 		if not(self.aistatus & AI_STATUS_JETPACK_FLYING) {
 			// Brake almost completely so it can get a good direction
-			if (vlen(self.velocity)>10)
+			if (vlen(self.velocity - self.velocity_z * '0 0 1')>10)
 				return;
 
 			self.aistatus |= AI_STATUS_JETPACK_FLYING;
@@ -343,7 +351,7 @@ void(void) havocbot_movetogoal {
 			return;
 		}
 		// Flying
-		self.BUTTON_HOOK = TRUE;
+		havocbot_use_jetpack();
 		if (self.navigation_jetpack_point_z - PL_MAX_z + PL_MIN_z < self.origin_z) {
 			self.movement_x = dir * v_forward * sv_maxspeed;
 			self.movement_y = dir * v_right * sv_maxspeed;
@@ -359,10 +367,10 @@ void(void) havocbot_movetogoal {
 			trace_box(self.origin, self.mins, self.maxs, self.origin + '0 0 65536', TRACE_MOVE_NOMONSTERS, self);
 			if (trigger_tracebox_hits_hurt(self.origin, self.mins, self.maxs, trace_endpos + '0 0 1' )) {
 				if (self.velocity_z<0) {
-					self.BUTTON_HOOK = TRUE;
+					havocbot_use_jetpack();
 				}
 			} else
-				self.BUTTON_HOOK = TRUE;
+				havocbot_use_jetpack();
 
 			// If there is no goal try to move forward
 			if (self.goalcurrent==world)
