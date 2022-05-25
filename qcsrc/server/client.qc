@@ -109,6 +109,9 @@ float(entity to, float sf) client_init_send {
 		if (client_button_atck2_busy)
 			t |= 16;
 
+		if (g_recoil_extra)
+			t |= 32;
+
 		net_write_byte(MSG_ENTITY, t);
 	}
 	if (sf & 4) {
