@@ -59,8 +59,8 @@ set bot_ai_bunnyhop_startdistance 250 "Run to goals located further than this di
 set bot_ai_bunnyhop_stopdistance 220 "Stop jumping after reaching this distance to the goal"
 set bot_ai_bunnyhop_firstjumpdelay 0.5 "Start running to the goal only if it was seen for more than N seconds"
 set bot_god 0 "god mode for bots"
-set bot_ai_navigation_jetpack 0 "Enable bots to navigat maps using the jetpack"
-set bot_ai_navigation_jetpack_mindistance 3500 "Bots will try fly to objects located farther than this distance"
+set bot_ai_navigation_jetpack 1 "Enable bots to navigat maps using the jetpack"
+set bot_ai_navigation_jetpack_mindistance 400 "Bots will try fly to objects located farther than this distance"
 // Better don't touch these, there are hard to tweak!
 set bot_ignore_bots 0	"When set, bots don't shoot at other bots"
 set bot_join_empty 0	"When set, bots also play if no player has joined the server"
