@@ -1242,12 +1242,20 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	// calculate the shotdir from the chosen shotorg
 	if (!g_norecoil) {
 		if (g_recoil_extra) {
-			s_forward = normalize(s_forward);
-			s_forward_z -= tan(bound(-45, ent.punchangle_x, 45) * MATH_DEG2RAD);
-			s_forward += randomvec() * ent.punchangle_x * g_recoil_extra_spread;
-			s_forward = normalize(s_forward);
-			float f = 1 + ent.punchangle_x / 90;
-			ent.punchangle_x -= recoil * f;
+			//s_forward = normalize(s_forward);
+			vector a = vectoangles(s_forward);
+			a_x = -a_x;
+			float f = max(0, 1 - fabs(a_x) / 90);
+			vector v1 = v_forward;
+			vector v2 = v_right;
+			vector v3 = v_up;
+			makevectors(a + ent.punchangle_x * '1 0 0' * f);
+			s_forward = v_forward;
+			f = 1 + ent.punchangle_x / 90;
+			ent.punchangle_x -= recoil * f * g_recoil_extra;
+			v_forward = v1;
+			v_right = v2;
+			v_up = v3;
 		} else
 			ent.punchangle_x = min(ent.punchangle_x, recoil * -1);
 	}
