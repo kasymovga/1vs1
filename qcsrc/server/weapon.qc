@@ -1153,6 +1153,8 @@ void(float fr, float t, void() func) weapon_thinkf {
 			a_z *= g_weaponratefactor;
 			anim_set(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
 		}
+		if (self.weaponentity.weaponentity)
+			self.weaponentity.weaponentity.frame = self.weaponentity.frame;
 	}
 	v_forward = of;
 	v_right = or;
