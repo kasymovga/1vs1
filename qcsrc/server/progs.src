@@ -186,6 +186,7 @@ bullet.qc
 weapon/melee.qc
 weapon/clip.qc
 weapon/chainsaw.qc
+weapon/axe.qc
 weapon/laser.qc
 weapon/shotgun.qc
 weapon/uzi.qc
