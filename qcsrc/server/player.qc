@@ -2399,6 +2399,15 @@ entity(entity pl) player_entity {
 	return pl;
 }
 
+void(entity e, float chan) player_sound_stop {
+	FOR_EACH_REALCLIENT(msg_entity) {
+		if (msg_entity == e)
+			sound_stop_to(MSG_ONE, e, chan);
+		else
+			sound_stop_to(MSG_ONE, e.body.body, chan);
+	}
+}
+
 void(entity e, float chan, string s, float vol, float attn) player_sound {
 	FOR_EACH_REALCLIENT(msg_entity) {
 		if (msg_entity == e)
