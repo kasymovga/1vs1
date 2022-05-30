@@ -19,6 +19,7 @@ float g_pickup_fuel;
 float g_ghost_items;
 float g_pickup_items;
 float g_pickup_nodrop;
+float g_pickup_weapons_max;
 float g_pickup_weapons;
 float g_pickup_respawntime_weapon;
 float g_pickup_respawntime_ammo;
@@ -290,22 +291,23 @@ float(entity item, entity player) item_give_to {
 						pickedup = TRUE;
 						sound (player, CHAN_AUTO, item.noise, VOL_BASE, ATTN_NORM);
 					}
-			if not(pickedup)
-			if (player.weapons & item.weapons) {
-				if (g_weapon_stay == 2 && g_use_ammunition && substring(item.classname, 0, 7) != "dropped")
-				if (player.ammo_shells < item.ammo_shells
-						|| player.ammo_nails < item.ammo_nails
-						|| player.ammo_rockets < item.ammo_rockets
-						|| player.ammo_cells < item.ammo_cells) {
-					player.ammo_shells = max(player.ammo_shells, item.ammo_shells);
-					player.ammo_nails = max(player.ammo_nails, item.ammo_nails);
-					player.ammo_rockets = max(player.ammo_rockets, item.ammo_rockets);
-					player.ammo_cells = max(player.ammo_cells, item.ammo_cells);
-					pickedup = TRUE;
-					goto skip;
-				}
-				if (g_weapon_stay != 1 || substring(item.classname, 0, 7) != "dropped") {
-					goto skip;
+			if not(pickedup) {
+				if (player.weapons & item.weapons) {
+					if (g_weapon_stay == 2 && g_use_ammunition && substring(item.classname, 0, 7) != "dropped")
+					if (player.ammo_shells < item.ammo_shells
+							|| player.ammo_nails < item.ammo_nails
+							|| player.ammo_rockets < item.ammo_rockets
+							|| player.ammo_cells < item.ammo_cells) {
+						player.ammo_shells = max(player.ammo_shells, item.ammo_shells);
+						player.ammo_nails = max(player.ammo_nails, item.ammo_nails);
+						player.ammo_rockets = max(player.ammo_rockets, item.ammo_rockets);
+						player.ammo_cells = max(player.ammo_cells, item.ammo_cells);
+						pickedup = TRUE;
+						goto skip;
+					}
+					if (g_weapon_stay != 1 || substring(item.classname, 0, 7) != "dropped") {
+						goto skip;
+					}
 				}
 			}
 		}
@@ -320,6 +322,20 @@ float(entity item, entity player) item_give_to {
 		if not(player.weapons & weapon_bit(player.switchweapon))
 			_switchweapon = TRUE;
 
+		if (g_pickup_weapons_max) {
+			if (item.flags & FL_WEAPON) {
+				float weapons_count = 0;
+				for (i = WEP_FIRST, it = 1; i <= WEP_LAST; i++, it *= 2) {
+					if (player.weapons & it) {
+						weapons_count++;
+						if (weapons_count >= g_pickup_weapons_max) {
+							centerprint(player, strcat("You can cary only ", ftos(g_pickup_weapons_max), " weapons.\nDrop extra weapons to take this one."));
+							goto skip;
+						}
+					}
+				}
+			}
+		}
 		if (item.spawnshieldtime)
 		if (g_use_ammunition) {
 			if (item.ammo_shells)
@@ -1086,6 +1102,7 @@ void(void) item_init {
 	CVAR_CACHE(g_pickup_items);
 	CVAR_CACHE(g_pickup_nodrop);
 	CVAR_CACHE(g_pickup_weapons);
+	CVAR_CACHE(g_pickup_weapons_max);
 	CVAR_CACHE(g_pickup_shells);
 	CVAR_CACHE(g_pickup_nails);
 	CVAR_CACHE(g_pickup_rockets);
