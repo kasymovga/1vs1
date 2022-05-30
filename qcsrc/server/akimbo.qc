@@ -94,10 +94,10 @@ void(void) akimbo_weapon_frame {
 				weapon_model_spawn();
 				self.weaponentity.state = WS_RAISE;
 				weapon_action(self.weapon, WR_SETUP);
-				weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
 				self = self.weaponentity;
 				self.think();
 				self = prevself.akimbo_ghost;
+				weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
 				prevself.weaponentity.cnt = 0;
 			}
 			weapon_frame();
