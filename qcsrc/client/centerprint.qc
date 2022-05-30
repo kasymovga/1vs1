@@ -55,8 +55,10 @@ void(string strMessage) centerprint {
 				}
 			}
 		}
-		if (duplicates == n) //this centerprint presents already
+		if (duplicates == n) { //this centerprint presents already
+			centerprint_expire = time + CVAR(scr_centertime);
 			return;
+		}
 	}
 	i = centerprint_num;
 	for (j = 0; j < centerprint_num; j++) {
