@@ -21,6 +21,7 @@ float g_shootfromeye;
 float g_norecoil;
 float g_recoil_extra;
 float g_recoil_extra_spread;
+float sv_debug_weapon_tags;
 
 vector weapon_offset = '0 -10 0';
 vector weapon_adjust = '10 0 -15';
@@ -687,6 +688,12 @@ void(void) weapon_model_think {
 		if (self.weaponentity)
 			remove(self.weaponentity);
 
+		if (self.exteriorweaponentity) {
+			if (self.exteriorweaponentity.exteriorweaponentity)
+				remove(self.exteriorweaponentity.exteriorweaponentity);
+
+			remove(self.exteriorweaponentity);
+		}
 		remove(self);
 		return;
 	}
@@ -745,6 +752,14 @@ void(void) weapon_model_think {
 				idx = weapon_gettagindex(self, "shot");
 				if (idx) {
 					self.movedir = gettaginfo(self, idx);
+					if (sv_debug_weapon_tags) {
+						if not(self.exteriorweaponentity)
+							self.exteriorweaponentity = spawn();
+
+						setmodel(self.exteriorweaponentity, "models/ebomb.mdl");
+						self.exteriorweaponentity.colormod = '1 0 0';
+						setattachment(self.exteriorweaponentity, self, "shot");
+					}
 				} else {
 					print("WARNING: weapon model ", self.model, " does not support the 'shot' tag, will display shots TOTALLY wrong\n");
 					self.movedir = '0 0 0';
@@ -752,6 +767,14 @@ void(void) weapon_model_think {
 				idx = weapon_gettagindex(self, "shell");
 				if (idx) {
 					self.spawnorigin = gettaginfo(self, idx);
+					if (sv_debug_weapon_tags) {
+						if not(self.exteriorweaponentity.exteriorweaponentity)
+							self.exteriorweaponentity.exteriorweaponentity = spawn();
+
+						setmodel(self.exteriorweaponentity.exteriorweaponentity, "models/ebomb.mdl");
+						self.exteriorweaponentity.exteriorweaponentity.colormod = '1 1 0';
+						setattachment(self.exteriorweaponentity.exteriorweaponentity, self, "shell");
+					}
 				} else {
 					print("WARNING: weapon model ", self.model, " does not support the 'shell' tag, will display casings wrong\n");
 					self.spawnorigin = self.movedir;
@@ -1442,6 +1465,7 @@ void(void) weapon_init {
 	CVAR_CACHE(g_recoil_extra);
 	CVAR_CACHE(g_recoil_extra_spread);
 	CVAR_CACHE(g_weapon_throw_mode);
+	CVAR_CACHE(sv_debug_weapon_tags);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
