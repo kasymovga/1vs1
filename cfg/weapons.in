@@ -106,7 +106,7 @@ set g_twoweapons ""
 set g_twoweapons_invert_buttons 0
 set sv_qcweaponanimation 0
 set g_weapon_stay 0 "if set to 1 or 2, weapons stay after they were picked up (1: weapons you don't have yet give you ammo of their type, 2: weapons don't give ammo, but instead players start with one pickup-load of ammo by default, 3: weapons give ammo, weapons only stay as ammo-less ghosts)"
-set sv_weapon_tag_prefix 0
+set sv_debug_weapon_tags 0
 
 //Minstanex
 set g_balance_minstanex_damage 10000
