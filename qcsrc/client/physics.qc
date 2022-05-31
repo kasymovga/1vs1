@@ -280,6 +280,7 @@ void(void) physics_camera_setup {
 				}
 			}
 			if (CVAR(chase_active) && !physics_plug_adjust_view && !view_observer_status) {
+				view_angles += '0 1 0' * CVAR(chase_angle);
 				makevectors(view_fixangle ? view_fixed_angles : view_angles);
 				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), TRACE_MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;

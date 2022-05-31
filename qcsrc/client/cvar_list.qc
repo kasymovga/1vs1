@@ -207,5 +207,6 @@ READ_CVARS_SECTION(41, 0)
 	CACHE_CVAR(v_kickroll)
 	CACHE_CVAR(v_kickpitch)
 	CACHE_CVAR(v_kicktime)
+	CACHE_CVAR_DEF(chase_angle, 0)
 READ_CVARS_END(0)
 
