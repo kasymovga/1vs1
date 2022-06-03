@@ -183,7 +183,7 @@ void fillNexuizPlayerSettingsTab(entity me)
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 2.2, e = makeNexuizButton(_("HUD & Waypoints..."), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.radarDialog;
+			e.onClickEntity = main.hudDialog;
 		me.TDempty(me, 0.5);
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS

@@ -44,7 +44,7 @@
 #include "classes/nexuiz/credits.c"
 #include "classes/nexuiz/dialog_settings_playersetup_weapons.c"
 #include "classes/nexuiz/weaponslist.c"
-#include "classes/nexuiz/dialog_settings_playersetup_radar.c"
+#include "classes/nexuiz/dialog_settings_playersetup_hud.c"
 #include "classes/nexuiz/dialog_multiplayer_demo.c"
 #include "classes/nexuiz/demolist.c"
 #include "classes/nexuiz/colorpicker.c"
