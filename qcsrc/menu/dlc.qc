@@ -100,10 +100,43 @@ float(float nodownload, float renderrestart) dlc_reload {
 		else
 			s = strcat(s, " newnex");
 	}
-	if (cvar("cl_lasermodel") && (!dlc_mandatory || dlc_ready("base-models"))) {
-		s = strcat(s, " xonlaser");
-	}
 	float n;
+	if ((n = cvar("cl_lasermodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
+		if (n == 1)
+			s = strcat(s, " xonlaser");
+	}
+	if ((n = cvar("cl_glmodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
+		if (n == 1)
+			s = strcat(s, " xongl");
+		else if (n == -1)
+			s = strcat(s, " n23gl");
+	}
+	if ((n = cvar("cl_rlmodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
+		if (n == 2)
+			s = strcat(s, " qanrl");
+		else if (n == 1)
+			s = strcat(s, " xonrl");
+		else if (n == -1)
+			s = strcat(s, " n23rl");
+	}
+	if ((n = cvar("cl_hagarmodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
+		if (n == 1)
+			s = strcat(s, " xonhagar");
+		else if (n == -1)
+			s = strcat(s, " n23hagar");
+	}
+	if ((n = cvar("cl_sgmodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
+		if (n == -1)
+			s = strcat(s, " n23shotgun");
+	}
+	if ((n = cvar("cl_uzimodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
+		if (n == -1)
+			s = strcat(s, " n23uzi");
+	}
+	if ((n = cvar("cl_electromodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
+		if (n == -1)
+			s = strcat(s, " n23electro");
+	}
 	if ((n = cvar("cl_simpleitems")) && (!dlc_mandatory || dlc_ready("base-models"))) {
 		s = strcat(s, " chainsaw_v2 zapper_v2 supershotgun"); //need load them first, to override their g_* models
 		if (dlc_ready("chainsaw_v2") && dlc_ready("zapper_v2") && dlc_ready("supershotgun")) {

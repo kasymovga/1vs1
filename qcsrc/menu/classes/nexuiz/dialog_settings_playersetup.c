@@ -31,6 +31,36 @@ void(entity me, entity btn) applyNexuizPlayerSettingsTab {
 		cvar_set("menu_cl_lasermodel", cvar_string("cl_lasermodel"));
 		fs_rescan_needed = TRUE;
 	}
+	if (cvar_string("menu_cl_glmodel") != cvar_string("cl_glmodel")) {
+		registercvar("menu_cl_glmodel", cvar_string("cl_glmodel"), 0);
+		cvar_set("menu_cl_glmodel", cvar_string("cl_glmodel"));
+		fs_rescan_needed = TRUE;
+	}
+	if (cvar_string("menu_cl_rlmodel") != cvar_string("cl_rlmodel")) {
+		registercvar("menu_cl_rlmodel", cvar_string("cl_rlmodel"), 0);
+		cvar_set("menu_cl_rlmodel", cvar_string("cl_rlmodel"));
+		fs_rescan_needed = TRUE;
+	}
+	if (cvar_string("menu_cl_hagarmodel") != cvar_string("cl_hagarmodel")) {
+		registercvar("menu_cl_hagarmodel", cvar_string("cl_hagarmodel"), 0);
+		cvar_set("menu_cl_hagarmodel", cvar_string("cl_hagarmodel"));
+		fs_rescan_needed = TRUE;
+	}
+	if (cvar_string("menu_cl_sgmodel") != cvar_string("cl_sgmodel")) {
+		registercvar("menu_cl_sgmodel", cvar_string("cl_sgmodel"), 0);
+		cvar_set("menu_cl_sgmodel", cvar_string("cl_sgmodel"));
+		fs_rescan_needed = TRUE;
+	}
+	if (cvar_string("menu_cl_uzimodel") != cvar_string("cl_uzimodel")) {
+		registercvar("menu_cl_uzimodel", cvar_string("cl_uzimodel"), 0);
+		cvar_set("menu_cl_uzimodel", cvar_string("cl_uzimodel"));
+		fs_rescan_needed = TRUE;
+	}
+	if (cvar_string("menu_cl_electromodel") != cvar_string("cl_electromodel")) {
+		registercvar("menu_cl_electromodel", cvar_string("cl_electromodel"), 0);
+		cvar_set("menu_cl_electromodel", cvar_string("cl_electromodel"));
+		fs_rescan_needed = TRUE;
+	}
 	if (cvar_string("menu_cl_brightskins") != cvar_string("cl_brightskins")) {
 		registercvar("menu_cl_brightskins", cvar_string("cl_brightskins"), 0);
 		cvar_set("menu_cl_brightskins", cvar_string("cl_brightskins"));
@@ -47,6 +77,18 @@ entity makeNexuizPlayerSettingsTab()
 	cvar_set("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"));
 	registercvar("menu_cl_lasermodel", cvar_string("cl_lasermodel"), 0);
 	cvar_set("menu_cl_lasermodel", cvar_string("cl_lasermodel"));
+	registercvar("menu_cl_glmodel", cvar_string("cl_glmodel"), 0);
+	cvar_set("menu_cl_glmodel", cvar_string("cl_glmodel"));
+	registercvar("menu_cl_rlmodel", cvar_string("cl_rlmodel"), 0);
+	cvar_set("menu_cl_rlmodel", cvar_string("cl_rlmodel"));
+	registercvar("menu_cl_hagarmodel", cvar_string("cl_hagarmodel"), 0);
+	cvar_set("menu_cl_hagarmodel", cvar_string("cl_hagarmodel"));
+	registercvar("menu_cl_electromodel", cvar_string("cl_electromodel"), 0);
+	cvar_set("menu_cl_electromodel", cvar_string("cl_electromodel"));
+	registercvar("menu_cl_sgmodel", cvar_string("cl_sgmodel"), 0);
+	cvar_set("menu_cl_sgmodel", cvar_string("cl_sgmodel"));
+	registercvar("menu_uzi_sgmodel", cvar_string("cl_uzimodel"), 0);
+	cvar_set("menu_cl_uzimodel", cvar_string("cl_uzimodel"));
 	registercvar("menu_cl_brightskins", cvar_string("cl_brightskins"), 0);
 	cvar_set("menu_cl_brightskins", cvar_string("cl_brightskins"));
 	entity me;

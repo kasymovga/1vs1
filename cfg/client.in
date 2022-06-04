@@ -290,6 +290,12 @@ seta cl_sound_maptime_warning "1" "play announcer sound telling you the remainin
 seta cl_simpleitems 0 "Simple items"
 seta cl_oldnexmodel 0 "Old nex model: -1 - Xon, 0 - Default, 1 - Classic"
 seta cl_lasermodel 0 "Laser model: 0 - Default, 1 - Xon"
+seta cl_hagarmodel 0 "Hagar model: 0 - Default, 1 - Xon, -1 - Nex23"
+seta cl_glmodel 0 "Grenade launcher model: 0 - Default, 1 - Xon, -1 - Nex23"
+seta cl_rlmodel 0 "Rocket launcher model: 0 - Default, 1 - Xon, 2 - QuanRL, -1 - Nex23"
+seta cl_electromodel 0 "Electro model: 0 - Default, 1 - Xon, -1 - Nex23"
+seta cl_sgmodel 0 "Shotgun model: 0 - Default, -1 - Nex23"
+seta cl_uzimodel 0 "Uzi model: 0 - Default, -1 - Nex23"
 seta cl_brightskins 0 "Bright skins for player models"
 
 alias +attack2 +button3
