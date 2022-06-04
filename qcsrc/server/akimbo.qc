@@ -12,17 +12,14 @@ void(entity e) akimbo_ghost_hide {
 	entity oldself = self;
 	self = e.akimbo_ghost;
 	weapon_action(self.weapon, WR_CLEAR);
-	if (self.weaponentity.weaponentity)
-		remove(self.weaponentity.weaponentity);
-
 	if (self.weaponentity)
-		remove(self.weaponentity);
+		weapon_model_remove(self.weaponentity);
 
 	if (self.exteriorweaponentity)
 		remove(self.exteriorweaponentity);
 
-	self.weaponentity = world;
-	self.exteriorweaponentity = world;
+	self.weaponentity = NULL;
+	self.exteriorweaponentity = NULL;
 	self = oldself;
 	if (self.weaponentity)
 		self.weaponentity.cnt = 0;

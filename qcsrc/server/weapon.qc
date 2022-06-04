@@ -678,6 +678,19 @@ void(void) weapon_model_dlc_reset {
 	setattachment(self.weaponentity, self, "weapon");
 }
 
+void(entity e) weapon_model_remove {
+	if (e.weaponentity)
+		remove(e.weaponentity);
+
+	if (e.exteriorweaponentity) {
+		if (e.exteriorweaponentity.exteriorweaponentity)
+			remove(e.exteriorweaponentity.exteriorweaponentity);
+
+		remove(e.exteriorweaponentity);
+	}
+	remove(e);
+}
+
 void(void) weapon_model_think {
 	float v_shot_idx;
 	self.nextthink = time;
@@ -685,16 +698,7 @@ void(void) weapon_model_think {
 		self.frame = self.anim_idle_x;
 
 	if (self.owner.weaponentity != self) {
-		if (self.weaponentity)
-			remove(self.weaponentity);
-
-		if (self.exteriorweaponentity) {
-			if (self.exteriorweaponentity.exteriorweaponentity)
-				remove(self.exteriorweaponentity.exteriorweaponentity);
-
-			remove(self.exteriorweaponentity);
-		}
-		remove(self);
+		weapon_model_remove(self);
 		return;
 	}
 	if (PLAYER_REALLY_DEAD(self.owner)) {
