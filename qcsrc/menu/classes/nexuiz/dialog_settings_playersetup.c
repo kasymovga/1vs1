@@ -87,7 +87,7 @@ entity makeNexuizPlayerSettingsTab()
 	cvar_set("menu_cl_electromodel", cvar_string("cl_electromodel"));
 	registercvar("menu_cl_sgmodel", cvar_string("cl_sgmodel"), 0);
 	cvar_set("menu_cl_sgmodel", cvar_string("cl_sgmodel"));
-	registercvar("menu_uzi_sgmodel", cvar_string("cl_uzimodel"), 0);
+	registercvar("menu_cl_uzimodel", cvar_string("cl_uzimodel"), 0);
 	cvar_set("menu_cl_uzimodel", cvar_string("cl_uzimodel"));
 	registercvar("menu_cl_brightskins", cvar_string("cl_brightskins"), 0);
 	cvar_set("menu_cl_brightskins", cvar_string("cl_brightskins"));
