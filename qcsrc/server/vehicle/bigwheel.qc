@@ -72,7 +72,6 @@ float vehicle_bigwheel_physics_hook() {
 	mybigwheel = self.vehicle;
 	player.BUTTON_ZOOM = 0;
 	player.BUTTON_CROUCH = 0;
-	player.switchweapon = 0;
 	if(player.BUTTON_HOOK || player.BUTTON_USE || (mybigwheel.bot_nextthink && mybigwheel.bot_nextthink < time)) {
 		vehicle_extract_player(player, FALSE);
 		return 1;

@@ -64,7 +64,6 @@ float(entity plr, float eject) vehicle_extract_player {
 	self.owner = NULL;
 	plr.vehicle = NULL;
 	plr.lastpushtime = time;
-	plr.switchweapon = self.switchweapon;
 	plr.angles_x = 0;
 	plr.angles_y = self.angles_y;
 	plr.angles_z = 0;
@@ -220,6 +219,14 @@ entity(entity pl) vehicle_player_entity {
 	return vehicle_player_entity_next_link(pl);
 }
 
+var float(float f) vehicle_weapon_frame_switch_mod_next;
+float(float f) vehicle_weapon_frame_switch_mod {
+	if (akimbo_owner(self).vehicle) {
+		return 0;
+	}
+	return f;
+}
+
 float vehicle_init_done;
 void(void) vehicle_init {
 	if (vehicle_init_done)
@@ -236,6 +243,8 @@ void(void) vehicle_init {
 	gamehook_chain_weapon_throw_handle = vehicle_weapon_throw_handle;
 	vehicle_player_entity_next_link = gamehook_chain_player_entity;
 	gamehook_chain_player_entity = vehicle_player_entity;
+	vehicle_weapon_frame_switch_mod_next = gamehook_chain_weapon_frame_switch_mod;
+	gamehook_chain_weapon_frame_switch_mod = vehicle_weapon_frame_switch_mod;
 	addstat(STAT_SPIDERBOT_ROCKETS, STAT_INT,   rockets);
 	addstat(STAT_SPIDERBOT_RELOAD,  STAT_FLOAT, rockets_reload);
 	addstat(STAT_SPIDERBOT_HEAT,    STAT_FLOAT, vehicle_heat);
@@ -279,7 +288,6 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 		other.rockets = -1;
 	}
 	self.owner = other;
-	self.switchweapon = other.switchweapon;
 	self.owner.angles         = self.angles;
 	self.owner.takedamage     = DAMAGE_NO;
 	self.owner.solid          = SOLID_NOT;

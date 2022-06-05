@@ -137,7 +137,6 @@ float(void) vehicle_aircraft_physics_hook {
     aircraft = self.vehicle;
     player.BUTTON_ZOOM = 0;
     player.BUTTON_CROUCH = 0;
-    player.switchweapon = 0;
     if (player.BUTTON_HOOK || player.BUTTON_USE || (aircraft.bot_nextthink && aircraft.bot_nextthink < time)) {
 		vehicle_extract_player(player, FALSE);
 		return 1;

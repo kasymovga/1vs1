@@ -39,7 +39,6 @@ float vehicle_car_physics_hook() {
 	mycar = self.vehicle;
 	player.BUTTON_ZOOM = 0;
 	player.BUTTON_CROUCH = 0;
-	player.switchweapon = 0;
 	if(player.BUTTON_HOOK || player.BUTTON_USE || (mycar.bot_nextthink && mycar.bot_nextthink < time)) {
 		vehicle_extract_player(player, FALSE);
 		return 1;
