@@ -91,9 +91,9 @@ float(entity plr, float eject) vehicle_extract_player {
 }
 
 void(void) vehicle_stdproc_setcolormod {
+	self.colormod = '0 0 0';
+	if (self.tur_head) self.tur_head.colormod = '0 0 0';
 	turret_stdproc_setcolormod();
-	if (self.vehicle)
-		self.vehicle.colormod = self.colormod;
 }
 
 void(void) vehicle_stdproc_regen {
