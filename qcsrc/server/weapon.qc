@@ -1303,6 +1303,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 
 void(float r) weapon_shake {
 	if not(g_norecoil)
+	if not(g_recoil_extra)
 		self.punchangle = self.punchangle + '1 0 0' * r * (random() - 0.5) + '0 1 0' * r * (random() - 0.5);
 }
 
