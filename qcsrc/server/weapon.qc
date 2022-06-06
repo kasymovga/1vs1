@@ -1247,7 +1247,6 @@ void(void) weapon_ready {
 // this function calculates weapon_shotorg and weapon_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put weapon_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-.float lastshot_time;
 void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weapon_setup_shotdir {
 	vector vecs, vecs_visual, dv;
 	entity ent_orig = ent;

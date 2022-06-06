@@ -7,4 +7,5 @@ set g_surv_monster_factor 0.25
 set g_surv_freeze 1
 set surv_g_recoil_extra 2
 set surv_g_balance_uzi_recoil 2
-set surv_g_punchangle_speed 20
+set surv_g_punchangle_decrease_speed 180
+set surv_g_punchangle_decrease_delay 0.5

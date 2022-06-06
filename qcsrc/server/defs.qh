@@ -271,3 +271,4 @@ typedef .float floatfield;
 .float pushltime;
 
 typedef .string stringfield;
+.float lastshot_time;
