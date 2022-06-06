@@ -97,4 +97,4 @@ set g_trigger_push_speed_nodecrease 0
 set g_trigger_push_skip_projectiles 0 "0 - jumppads affect projectiles, 1 - jumpads ignore projectiles"
 set g_spawn_znudge 1
 set g_punchangle_decrease_speed 10
-set g_punchangle_decrease_delay 0.3
+set g_punchangle_decrease_delay 0

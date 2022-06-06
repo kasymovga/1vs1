@@ -145,7 +145,8 @@ void(void) physics_frame_begin_hook {
 	physics_frame_begin_origin = self.origin;
 	physics_current_player = self;
 	if (self.punchangle != '0 0 0') {
-		f = vlen(self.punchangle) - g_punchangle_decrease_speed * min(1, (time - self.lastshot_time) / g_punchangle_decrease_delay) * frametime;
+		f = (g_punchangle_decrease_delay ? min(1, (time - self.lastshot_time) / g_punchangle_decrease_delay) : 1);
+		f = vlen(self.punchangle) - g_punchangle_decrease_speed * f * frametime;
 		if (f > 0)
 			self.punchangle = normalize(self.punchangle) * f;
 		else
