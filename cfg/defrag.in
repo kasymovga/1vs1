@@ -3,8 +3,12 @@ set sv_spawnreplace_target_stopTimer race_target_stop_timer
 set sv_spawnreplace_target_checkpoint race_target_checkpoint
 set sv_spawnreplace_target_init race_target_init
 set sv_spawnreplace_target_fragsFilter trigger_relay
-//set _defrag_g_player_view_ofs 26
-//set _defrag_g_player_crouch_view_ofs 14
+set _defrag_g_ability_message "Select eye position"
+set _defrag_g_ability_switch_title "Change eye position"
+set _defrag_g_ability_class0_name "Default"
+set _defrag_g_ability_class0_value "viewoffsets=35,15"
+set _defrag_g_ability_class1_name "Q3Defrag"
+set _defrag_g_ability_class1_value "viewoffsets=26,14"
 set _defrag_g_pickup_fuel_max 100
 set _defrag_g_jetpack_fuel 1
 set _defrag_g_pickup_fuel_jetpack 100

@@ -56,6 +56,13 @@ void(entity e, string al) ability_class_init {
 				else if (an == "ammo_cells")
 					e.ammo_cells = stof(args);
 			}
+		} else if (an == "viewoffsets") {
+			if (e) {
+				args = strreplace(",", " ", args);
+				float ofs_stand = stof(str_car(args));
+				float ofs_crouch = stof(str_cdr(args));
+				physics_set_view_offsets(e, ofs_stand * '0 0 1', ofs_crouch * '0 0 1');
+			}
 		} else {
 			for (i = 0, j = 1; i < ability_count; i++, j *= 2) {
 				if (ability_names[i] == an) {
