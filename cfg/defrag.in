@@ -3,6 +3,7 @@ set sv_spawnreplace_target_stopTimer race_target_stop_timer
 set sv_spawnreplace_target_checkpoint race_target_checkpoint
 set sv_spawnreplace_target_init race_target_init
 set sv_spawnreplace_target_fragsFilter trigger_relay
+set _defrag_g_ability_class_default 0
 set _defrag_g_ability_message "Select eye position"
 set _defrag_g_ability_switch_title "Change eye position"
 set _defrag_g_ability_class0_name "Default"

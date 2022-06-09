@@ -6,6 +6,7 @@ float ability_classes_count;
 string ability_class_names[MENU_ITEMS_MAXCOUNT];
 string ability_class_values[MENU_ITEMS_MAXCOUNT];
 .float ability_class;
+float g_ability_class_default;
 
 void(entity e, string al) ability_class_init {
 	string an, tail, args;
@@ -110,7 +111,9 @@ var float(void) ability_spectator_to_player_handle_next;
 float(void) ability_spectator_to_player_handle {
 	if not(self.ability_class) {
 		self.abilities = 0;
-		if (clienttype(self) == CLIENTTYPE_REAL) {
+		if (g_ability_class_default >= 0)
+			self.ability_class = g_ability_class_default;
+		else if (clienttype(self) == CLIENTTYPE_REAL) {
 			ability_class_menu(self);
 			return TRUE;
 		}
@@ -169,6 +172,7 @@ void(void) ability_init_delayed {
 
 void(void) ability_init {
 	entity_initialize(NULL, ability_init_delayed, INITPRIO_GAMETYPE);
+	CVAR_CACHE(g_ability_class_default);
 }
 
 float(string n) ability_flag {

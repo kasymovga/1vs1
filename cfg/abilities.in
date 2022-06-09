@@ -1,3 +1,4 @@
+set g_ability_class_default -1
 set g_ability_class0_name ""
 set g_ability_class0_value ""
 set g_ability_class1_name ""
