@@ -48,7 +48,7 @@ entity(entity plr, string _menu_id, string _menu_title, float timeout, void(floa
 	e = spawn();
 	e.classname = "menu";
 	e.menu_id = _menu_id;
-	e.menu_title = _menu_title;
+	e.menu_title = str_zone_ifneeded(_menu_title);
 	e.menu_timeout = timeout;
 	e.menu_handler = _menu_handler;
 	e.owner = plr;
@@ -91,7 +91,8 @@ void(entity menu, string title) menu_set_title {
 	if not(menu)
 		backtrace("menu_set_title get world entity");
 
-	menu.menu_title = title;
+	str_unzone_ifneeded(menu.menu_title);
+	menu.menu_title = str_zone_ifneeded(title);
 	menu.SendFlags |= 2;
 }
 
@@ -105,6 +106,7 @@ void(entity menu) menu_remove {
 				e.menu_chain = e.menu_chain.menu_chain;
 				break;
 			}
+	str_unzone_ifneeded(menu.menu_title);
 	remove(menu);
 }
 

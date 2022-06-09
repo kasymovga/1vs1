@@ -93,7 +93,7 @@ void(float s) ability_class_select {
 
 void(entity e) ability_class_menu {
 	menu_remove_for(e, "ability");
-	entity m = menu_prepare(e, "ability", "Please select your ability class:", 0, ability_class_select);
+	entity m = menu_prepare(e, "ability", cvar_string("g_ability_message"), 0, ability_class_select);
 	for (float i = 0; i < ability_classes_count; i++) {
 		menu_add_item(m, ability_class_names[i]);
 	}
@@ -122,7 +122,7 @@ void(entity spot) ability_player_spawn {
 
 var void(void(string item, string cmd) Add_Item) ability_gamemenu_send_next;
 void(void(string item, string cmd) Add_Item) ability_gamemenu_send {
-	Add_Item("Switch Ability Class", "cmd pickabilityclass;");
+	Add_Item(cvar_string("g_ability_switch_title"), "cmd pickabilityclass;");
 	ability_gamemenu_send_next(Add_Item);
 }
 
