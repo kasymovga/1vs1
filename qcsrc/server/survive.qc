@@ -189,14 +189,19 @@ float(float ignore, float ignore2) survive_winning_condition {
 			wave_not_found = TRUE;
 	}
 	if (survive_plan_entity) {
-		float countdown = ceil(survive_plan_entity.nextthink - time);
-		if (countdown > 0)
-		if (survive_last_countdown != countdown) {
-			gamestatus_set(strcat(survive_wave_prefix, "\n^3New wave starts in ", ftos(countdown), " seconds"), 1);
-			if (countdown <= 3)
-				sound_play2all(strcat("announcer/robotic/", ftos(countdown), ".wav"));
+		if not(survive_has_players()) {
+			gamestatus_set(strcat(survive_wave_prefix, "\n^2Awaiting players..."), 1);
+			survive_plan_entity.nextthink = time + g_surv_wave_pause;
+		} else {
+			float countdown = ceil(survive_plan_entity.nextthink - time);
+			if (countdown > 0)
+			if (survive_last_countdown != countdown) {
+				gamestatus_set(strcat(survive_wave_prefix, "\n^3New wave starts in ", ftos(countdown), " seconds"), 1);
+				if (countdown <= 3)
+					sound_play2all(strcat("announcer/robotic/", ftos(countdown), ".wav"));
 
-			survive_last_countdown = countdown;
+				survive_last_countdown = countdown;
+			}
 		}
 	}
 	return FALSE;
