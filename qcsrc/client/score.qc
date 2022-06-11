@@ -6,6 +6,7 @@ void(float ignore) score_info_read {
 	string s;
 	SP_CLIENTVERSION_FIELD = -1;
 	SP_COUNTRY_FIELD = -1;
+	SP_STATUS_FIELD = -1;
 	for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
 		s = strzone(net_read_string());
 		if (s == "country")

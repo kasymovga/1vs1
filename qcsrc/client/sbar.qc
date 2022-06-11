@@ -545,7 +545,7 @@ void(float argc) sbar_field_set {
 		} else if (str == "name" || str == "nick") {
 			sbar_field[sbar_num_fields] = SP_NAME;
 			have_name = 1;
-		} else if (str == "status") {
+		} else if (str == "status" && SP_STATUS_FIELD >= 0) {
 			sbar_field[sbar_num_fields] = SP_STATUS;
 		} else if (str == "|") {
 			sbar_field[sbar_num_fields] = SP_SEPARATOR;
