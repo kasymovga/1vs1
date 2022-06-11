@@ -151,13 +151,11 @@ float(float ignore, float ignore2) survive_winning_condition {
 		}
 		return TRUE;
 	}
-
 	if (survive_active)
 	if not(survive_has_alive_players()) {
 		survive_map_finished_message = "^1No alive players left!\n^1Nobody survived\n";
 		return TRUE;
 	}
-
 	monster = find(world, classname, "monster");
 	if not(monster)
 	for (e = world; (e = find(e, targetname, survive_wave_string()));) {

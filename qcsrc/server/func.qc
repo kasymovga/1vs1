@@ -1015,6 +1015,15 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	}
 }
 
+void(void) func_button_pos_setup {
+	self.pos1 = self.origin;
+	self.pos2 = self.pos1 +
+			self.movedir * (self.size_x * '1 0 0') * '1 0 0' +
+			self.movedir * (self.size_y * '0 1 0') * '0 1 0' +
+			self.movedir * (self.size_z * '0 0 1') * '0 0 1' -
+			self.lip * self.movedir;
+}
+
 /*QUAKED spawnfunc_func_button (0 .5 .8) ?
 When a button is touched, it moves some distance in the direction of it's angle, triggers all of it's targets, waits some time, then returns to it's original position where it can be triggered again.
 
@@ -1065,8 +1074,7 @@ void(void) spawnfunc_func_button {
 	if (self.noise != "")
 		precache_sound(self.noise);
 
-	self.pos1 = self.origin;
-	self.pos2 = self.pos1 + self.movedir * (fabs(self.movedir * self.size) - self.lip);
+	func_button_pos_setup();
 	self.flags |= FL_NOTARGET;
 	func_button_reset();
 }
@@ -1561,8 +1569,7 @@ void(void) spawnfunc_func_door {
 	if (!self.lip)
 		self.lip = 8;
 
-	self.pos1 = self.origin;
-	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
+	func_button_pos_setup();
 	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 	// but spawn in the open position
 	if (self.spawnflags & DOOR_START_OPEN)
