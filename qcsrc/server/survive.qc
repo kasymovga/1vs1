@@ -9,11 +9,11 @@ entity survive_plan_entity;
 string survive_map_finished_message;
 string survive_wave_prefix;
 
-string wave_string() {
+string() survive_wave_string {
 	return strcat("wave", ftos(wave_number));
 }
 
-float survive_has_alive_players() {
+float() survive_has_alive_players {
 	entity e;
 	FOR_EACH_PLAYER(e)
 		if (PLAYER_REALLY_ALIVE(e))
@@ -22,7 +22,7 @@ float survive_has_alive_players() {
 	return FALSE;
 }
 
-float survive_has_players() {
+float() survive_has_players {
 	entity e;
 	FOR_EACH_CLIENT(e)
 		if (e.team >= 0 || e.classname == "player")
@@ -32,7 +32,7 @@ float survive_has_players() {
 }
 
 var void(entity spot) survive_player_spawn_next;
-void survive_player_spawn(entity spot) {
+void(entity spot) survive_player_spawn {
 	survive_player_spawn_next(spot);
 	if not(survive_active) {
 		score_player_set(self, SP_STATUS, 0);
@@ -42,7 +42,7 @@ void survive_player_spawn(entity spot) {
 	score_player_set(self, SP_STATUS, 1);
 }
 
-void survive_trigger() {
+void() survive_trigger {
 	if not(survive_has_players()) {
 		self.nextthink = time + g_surv_wave_pause;
 		return;
@@ -65,7 +65,7 @@ void survive_trigger() {
 	else
 		_survive_monster_quant = 1;
 
-	for (self = world; (self = find(self, targetname, wave_string())); ) {
+	for (self = world; (self = find(self, targetname, survive_wave_string())); ) {
 		activator = survive_plan_entity;
 		if (self.use)
 			self.use();
@@ -92,7 +92,7 @@ void survive_trigger() {
 	survive_plan_entity = world;
 }
 
-void survive_plan() {
+void() survive_plan {
 	wave_number++;
 	survive_plan_entity = spawn();
 	survive_plan_entity.classname = "monster";
@@ -116,7 +116,7 @@ void survive_plan() {
 	self = oldself;
 }
 
-float survive_checkNextWave() {
+float() survive_check_next_wave {
 	string wave_ind_str = ftos(wave_number + 1);
 	if (find(world, targetname, strcat("wave", wave_ind_str)))
 		return TRUE;
@@ -128,7 +128,7 @@ float survive_checkNextWave() {
 }
 
 float survive_last_countdown;
-float survive_WinningCondition(float ignore, float ignore2) {
+float(float ignore, float ignore2) survive_winning_condition {
 	if (time < map_starttime)
 		return FALSE;
 
@@ -160,7 +160,7 @@ float survive_WinningCondition(float ignore, float ignore2) {
 
 	monster = find(world, classname, "monster");
 	if not(monster)
-	for (e = world; (e = find(e, targetname, wave_string()));) {
+	for (e = world; (e = find(e, targetname, survive_wave_string()));) {
 		if (strstrofs(e.classname, "_spawn", 0) > 0)
 		if (e.nextthink) {
 			monster = e;
@@ -185,7 +185,7 @@ float survive_WinningCondition(float ignore, float ignore2) {
 		}
 	}
 	if not(monster) {
-		if (survive_checkNextWave())
+		if (survive_check_next_wave())
 			survive_plan();
 		else
 			wave_not_found = TRUE;
@@ -204,26 +204,26 @@ float survive_WinningCondition(float ignore, float ignore2) {
 	return FALSE;
 }
 
-void survive_MonsterKilled(entity attacker) {
+void(entity attacker) survive_monster_killed {
 	if (attacker.classname == "player") {
 		score_player_add(attacker, SP_SCORE, self.frags);
 		score_team_add_to(attacker.team, ST_SCORE, self.frags);
 	}
 }
 
-float survive_monster_quant() {
+float() survive_monster_quant {
 	return _survive_monster_quant;
 }
 
-void spawnfunc_survive_wave() {
+void(void) spawnfunc_survive_wave {
 	self.use = stdproc_nothing;
 }
 
-float survive_IceSkipThink() {
+float() survive_ice_skip_think {
 	return !survive_active;
 }
 
-void survive_IceUnfroze(entity unfrozer) {
+void(entity unfrozer) survive_ice_unfroze {
 	score_player_set(self.owner, SP_STATUS, 0);
 	if (unfrozer.classname == "player") {
 		score_player_add(unfrozer, SP_SCORE, 1);
@@ -231,28 +231,28 @@ void survive_IceUnfroze(entity unfrozer) {
 	}
 }
 
-void survive_IceFrozenStatus() {
+void() survive_ice_frozen_status {
 	score_player_set(self, SP_STATUS, 1);
 }
 
-float survive_DeathHandle(entity attacker, entity inflictor, float deathtype) {
-	survive_IceFrozenStatus();
+float(entity attacker, entity inflictor, float deathtype) survive_death_handle {
+	survive_ice_frozen_status();
 	return FALSE;
 }
 
-string survive_GameOverMessageMod(string s) {
+string(string s) survive_map_finish_message_mod {
 	return survive_map_finished_message;
 }
 
 void survive_init_delayed() {
 	if (g_surv_freeze) {
-		ice_hook_skip_think = survive_IceSkipThink;
-		ice_hook_skip_death_handle = survive_IceSkipThink;
-		ice_hook_unfroze = survive_IceUnfroze;
-		ice_hook_frozen_status = survive_IceFrozenStatus;
+		ice_hook_skip_think = survive_ice_skip_think;
+		ice_hook_skip_death_handle = survive_ice_skip_think;
+		ice_hook_unfroze = survive_ice_unfroze;
+		ice_hook_frozen_status = survive_ice_frozen_status;
 		ice_init();
 	} else {
-		gamehook_player_death_handle = survive_DeathHandle;
+		gamehook_player_death_handle = survive_death_handle;
 	}
 }
 
@@ -267,11 +267,11 @@ void survive_init() {
 	CVAR_CACHE(g_surv_freeze);
 	entity_initialize(world, survive_init_delayed, INITPRIO_GAMETYPE);
 	_survive_monster_quant = 1;
-	gamehook_winning_condition = survive_WinningCondition;
-	gamehook_map_finish_message_mod = survive_GameOverMessageMod;
+	gamehook_winning_condition = survive_winning_condition;
+	gamehook_map_finish_message_mod = survive_map_finish_message_mod;
 	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	gamehook_monster_quant = survive_monster_quant;
-	gamehook_monster_killed = survive_MonsterKilled;
+	gamehook_monster_killed = survive_monster_killed;
 	survive_player_spawn_next = gamehook_chain_player_spawn;
 	gamehook_chain_player_spawn = survive_player_spawn;
 	score_basics(SCORE_FLAG_SORT_PRIO_PRIMARY, SCORE_FLAG_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
