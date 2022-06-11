@@ -12,6 +12,11 @@ set _defrag_g_ability_class1_name "Q3Defrag"
 set _defrag_g_ability_class1_value "viewoffsets=26,14"
 set _defrag_g_pickup_fuel_max 100
 set _defrag_g_jetpack_fuel 1
+set _defrag_g_jetpack_maxspeed_side 640
+set _defrag_g_jetpack_maxspeed_up 320
+set _defrag_g_jetpack_maxspeed_side 640
+set _defrag_g_jetpack_acceleration_up 640
+set _defrag_g_jetpack_acceleration_side 320
 set _defrag_g_pickup_fuel_jetpack 100
 set _defrag_g_trigger_push_use_trigger_origin 1
 set _defrag_g_player_maxsz 31.93750
