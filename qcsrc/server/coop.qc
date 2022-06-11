@@ -19,6 +19,9 @@ void(void) coop_teleporter_think {
 var void(float) coop_player_clear_next;
 void(float killed) coop_player_clear {
 	coop_player_clear_next(killed);
+	if not(killed)
+		score_player_set(self, SP_STATUS, 0);
+
 	if (self.classname != "disconnecting")
 		return;
 
@@ -87,11 +90,12 @@ float() coop_ice_skip_death_handle {
 }
 
 void(entity ignore) coop_ice_unfroze {
+	score_player_set(self.owner, SP_STATUS, 0);
 	return;
 }
 
-
 void() coop_ice_frozen_status {
+	score_player_set(self, SP_STATUS, 1);
 	entity e;
 	FOR_EACH_PLAYER(e) {
 		if (e.deadflag == DEAD_NO)
@@ -131,6 +135,8 @@ float() coop_monster_quant {
 
 void(void) coop_init {
 	single_init();
+	score_generic();
+	SP_STATUS = score_register("status", 0);
 	CVAR_CACHE(g_coop_monster_factor);
 	CVAR_CACHE(g_coop_monster_base);
 	coop_player_clear_next = gamehook_chain_player_clear;
@@ -138,6 +144,7 @@ void(void) coop_init {
 	coop_observer_spawn_next = gamehook_chain_observer_spawn;
 	gamehook_chain_observer_spawn = coop_observer_spawn;
 	gamehook_monster_quant = coop_monster_quant;
+	gamehook_monster_killed = survive_monster_killed;
 	team_play_activate();
 	team_teams_set_count(1);
 	entity_initialize(world, coop_init_delayed, INITPRIO_GAMETYPE);
