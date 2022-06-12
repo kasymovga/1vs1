@@ -5,8 +5,8 @@ var void(entity e, string args, float set) ability_initiators[ABILITY_COUNT_MAX]
 float ability_classes_count;
 string ability_class_names[MENU_ITEMS_MAXCOUNT];
 string ability_class_values[MENU_ITEMS_MAXCOUNT];
-.float ability_class;
 float g_ability_class_default;
+float g_ability_kill_on_change;
 
 void(entity e, string al) ability_class_init {
 	string an, tail, args;
@@ -94,8 +94,10 @@ void(float s) ability_class_select {
 		if (self.classname != "player" && self.team <= 0) {
 			ability_class_init(self, ability_class_values[self.ability_class - 1]); //early call to workaround some issues with delayed ability flags
 			spectator_to_player();
+		} else if (g_ability_kill_on_change) {
+			client_kill_now(self, 0);
 		} else
-			centerprint(self, "^7Your ability class will be changed at next spawn\n");
+			centerprint(self, cvar_string("g_ability_switch_message"));
 	}
 }
 
@@ -173,6 +175,7 @@ void(void) ability_init_delayed {
 void(void) ability_init {
 	entity_initialize(NULL, ability_init_delayed, INITPRIO_GAMETYPE);
 	CVAR_CACHE(g_ability_class_default);
+	CVAR_CACHE(g_ability_kill_on_change);
 }
 
 float(string n) ability_flag {

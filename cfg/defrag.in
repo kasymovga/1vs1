@@ -10,6 +10,8 @@ set _defrag_g_ability_class0_name "Default"
 set _defrag_g_ability_class0_value "viewoffsets=35,15"
 set _defrag_g_ability_class1_name "Q3Defrag"
 set _defrag_g_ability_class1_value "viewoffsets=26,14"
+set _defrag_g_ability_switch_message "^7Your eye position will be changed at next spawn"
+set _defrag_g_ability_kill_on_change 1
 set _defrag_g_pickup_fuel_max 100
 set _defrag_g_jetpack_fuel 1
 set _defrag_g_jetpack_maxspeed_side 640

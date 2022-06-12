@@ -1,3 +1,4 @@
 .float abilities;
+.float ability_class;
 void(void) ability_init;
 float(string n, void(entity e, string args, float set) init_func) ability_register;

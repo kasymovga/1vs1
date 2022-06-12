@@ -180,6 +180,7 @@ void(void) client_parms_change { //called by engine
 	// save parms for level change
 	parm1 = self.parm_idlesince - time;
 	parm2 = self.muted;
+	parm3 = self.ability_class;
 	gamehook_client_parms_change();
 }
 
@@ -193,6 +194,7 @@ void(void) client_parms_decode {
 		print("Client #", ftos(num_for_edict(self)), " muted by parm2\n");
 		self.muted = TRUE;
 	}
+	self.ability_class = parm3;
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
 	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
 	gamehook_client_parms_decode();
