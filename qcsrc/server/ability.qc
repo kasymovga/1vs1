@@ -89,8 +89,11 @@ void(entity e, string al) ability_class_init {
 
 void(float s) ability_class_select {
 	if (s >= 0 && s < ability_classes_count) {
-		self.ability_class = s + 1;
 		menu_remove_for(self, "ability");
+		if (self.ability_class == s + 1)
+			return;
+
+		self.ability_class = s + 1;
 		if (self.classname != "player" && self.team <= 0) {
 			ability_class_init(self, ability_class_values[self.ability_class - 1]); //early call to workaround some issues with delayed ability flags
 			spectator_to_player();
@@ -104,8 +107,12 @@ void(float s) ability_class_select {
 void(entity e) ability_class_menu {
 	menu_remove_for(e, "ability");
 	entity m = menu_prepare(e, "ability", cvar_string("g_ability_message"), 0, ability_class_select);
+	string s;
+	float ac = e.ability_class - 1;
 	for (float i = 0; i < ability_classes_count; i++) {
-		menu_add_item(m, ability_class_names[i]);
+		s = ability_class_names[i];
+		if (ac == i) s = strcat(s, " (*)");
+		menu_add_item(m, s);
 	}
 }
 

@@ -75,7 +75,7 @@ void(entity menu, string name) menu_add_item {
 	if (menu.cnt >= MENU_ITEMS_MAXCOUNT)
 		return;
 
-	(menu.menu_items[menu.cnt]) = name;
+	(menu.menu_items[menu.cnt]) = str_zone_ifneeded(name);
 	menu.cnt++;
 }
 
@@ -107,6 +107,10 @@ void(entity menu) menu_remove {
 				break;
 			}
 	str_unzone_ifneeded(menu.menu_title);
+	float i;
+	for (i = 0; i < MENU_ITEMS_MAXCOUNT; i++) {
+		str_unzone_ifneeded(menu.menu_items[i]);
+	}
 	remove(menu);
 }
 
