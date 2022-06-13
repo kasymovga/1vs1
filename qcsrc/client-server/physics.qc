@@ -2,6 +2,7 @@ float FL_ONGROUND_OR_SLICK = (FL_ONGROUND | FL_SLICK);
 float FL_ONGROUND_OR_SLICK_OR_CLIMB = (FL_ONGROUND | FL_SLICK | FL_CLIMB);
 float physics_lastflags;
 float physics_groundvelocity_dotproduct;
+vector physics_ground_normal;
 
 void(void) physics_impact {
 	if not(trace_ent)
@@ -110,6 +111,7 @@ void(void) physics_update_status {
 			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
 		}
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
+			physics_ground_normal = trace_plane_normal;
 			physics_flags &= ~FL_DOUBLEJUMP;
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
 				if (g_slicksurfaces_levitation)
@@ -815,6 +817,12 @@ void(void) physics_player_frame {
 
 		if (physics_teleport_time <= 0)
 			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
+
+		if (g_walk_align_to_ground && physics_ground_normal != '0 0 1') {
+			f = vlen(physics_velocity);
+			physics_velocity -= physics_ground_normal * (physics_velocity * physics_ground_normal);
+			physics_velocity = normalize(physics_velocity) * f;
+		}
 	} else if (physics_movetype == MOVETYPE_NOCLIP || physics_movetype == MOVETYPE_FLY) {
 		// noclipping or flying
 		physics_flags &= ~FL_ONGROUND;

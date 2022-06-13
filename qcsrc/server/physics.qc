@@ -537,6 +537,7 @@ void(void) physics_init {
 	CVAR_CACHE(g_climb_speed);
 	CVAR_CACHE(g_doublejump);
 	CVAR_CACHE(g_overbounce);
+	CVAR_CACHE(g_walk_align_to_ground);
 	if not(g_sideview) {
 		CVAR_CACHE(g_sideview);
 		if (g_sideview) {
@@ -689,6 +690,7 @@ float(entity to, float sf) physics_send {
 		switches = (g_overbounce ? 1 : 0)
 				+ (cvar("collision_surfaceflagsmerge") ? 2 : 0)
 				+ (g_climb ? 4 : 0)
+				+ (g_walk_align_to_ground ? 8 : 0)
 				;
 		net_write_byte(MSG_ENTITY, switches);
 		if (g_walljump) {

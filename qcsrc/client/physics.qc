@@ -382,6 +382,7 @@ void(float isnew) physics_read {
 			cvar_clientsettemp("collision_surfaceflagsmerge", "0");
 
 		g_climb = switches & 4;
+		g_walk_align_to_ground = switches & 8;
 		if (g_sideview)
 			physics_plug_adjust_view = physics_side_adjust_view;
 		else if (g_topview)

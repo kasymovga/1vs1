@@ -64,3 +64,4 @@ set g_doublejump 0 "Double jump"
 set g_velocity_rounding 0
 set g_overbounce 0
 set sv_overbounce_sound "sound/nexball/bounce.wav"
+set g_walk_align_to_ground 0

@@ -166,6 +166,7 @@ set _defrag_g_trigger_push_speed_factor 1
 set _defrag_g_trigger_push_skip_projectiles 1
 set _defrag_g_velocity_rounding 1
 set _defrag_g_overbounce 1
+set _defrag_g_walk_align_to_ground 1
 set _defrag_g_weaponreplace_shotgun shotgun
 set _defrag_g_spawnreplace_ammo_bullets item_bullets
 set _defrag_g_spawnreplace_ammo_shells item_shells
