@@ -9,6 +9,8 @@ float g_balance_hagar_primary_speed;
 float g_balance_hagar_primary_spread;
 float g_balance_hagar_recoil;
 float g_balance_hagar_secondary_ammo;
+float g_balance_hagar_secondary_animtime;
+float g_balance_hagar_secondary_burst;
 float g_balance_hagar_secondary_damage;
 float g_balance_hagar_secondary_edgedamage;
 float g_balance_hagar_secondary_force;
@@ -18,6 +20,7 @@ float g_balance_hagar_secondary_radius;
 float g_balance_hagar_secondary_refire;
 float g_balance_hagar_secondary_speed;
 float g_balance_hagar_secondary_spread;
+float g_balance_hagar_secondary_mode;
 float g_balance_hagar_secondary;
 
 var .float hagar_buttonatck1 = BUTTON_ATCK;
@@ -32,6 +35,16 @@ void(void) weapon_hagar_touch2 {
 		pointparticles(particleeffectnum("hagar_bounce"), self.origin, self.velocity, 1);
 		self.owner = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
+	}
+}
+
+void(void) weapon_hagar_touch_stick {
+	PROJECTILE_TOUCH;
+	if (other.takedamage == DAMAGE_AIM)
+		projectile_explode();
+	else {
+		self.velocity = '0 0 0';
+		self.movetype = MOVETYPE_NONE;
 	}
 }
 
@@ -59,12 +72,15 @@ void(void) weapon_hagar_attack2 {
 		self.ammo_rockets = self.ammo_rockets - g_balance_hagar_secondary_ammo;
 
 	weapon_setup_shot (self, g_balance_hagar_recoil, "weapons/hagar_fire.wav", 1);
+	if (g_balance_hagar_secondary_mode)
+		weapon_shotdir = v_forward; // no TrueAim for grenades please
+
 	//weapon_setup_shot (self, FALSE, 2, "weapons/hagar_fire.wav"); // TODO: move model a little to the right
 	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
-	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
+	missile = projectile(TRUE, (g_balance_hagar_secondary_mode ? PROJECTILE_HAGAR_STICK : PROJECTILE_HAGAR), TRUE, self);
 	projectile_setup(missile, weapon_shotorg, WEP_HAGAR | HITTYPE_SECONDARY, g_balance_hagar_secondary_damage,
-			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force, 0, MOVETYPE_BOUNCEMISSILE);
-	missile.touch = weapon_hagar_touch2;
+			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force, 0, (g_balance_hagar_secondary_mode ? MOVETYPE_TOSS : MOVETYPE_BOUNCEMISSILE));
+	missile.touch = (g_balance_hagar_secondary_mode ? weapon_hagar_touch_stick : weapon_hagar_touch2);
 	missile.cnt = 0;
 	missile.use = projectile_explode;
 	missile.think = projectile_think2use;
@@ -77,13 +93,31 @@ void(void) spawnfunc_weapon_hagar {
 	weapon_defaultspawnfunc(WEP_HAGAR);
 }
 
+void(void) weapon_hagar_burst_3 {
+	if not(self.ammo_rockets >= g_balance_hagar_secondary_ammo || (self.items & IT_UNLIMITED_WEAPON_AMMO)) {
+		weapon_ready();
+		return;
+	}
+	weapon_hagar_attack2();
+	weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, weapon_ready);
+}
+
+void(void) weapon_hagar_burst_2 {
+	if not(self.ammo_rockets >= g_balance_hagar_secondary_ammo || (self.items & IT_UNLIMITED_WEAPON_AMMO)) {
+		weapon_ready();
+		return;
+	}
+	weapon_hagar_attack2();
+	weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, (g_balance_hagar_secondary_burst ? weapon_hagar_burst_3 : weapon_ready));
+}
+
 float(float req) weapon_hagar {
 	if (req == WR_AIM) {
 		if (!g_balance_hagar_secondary || random() > 0.15)
 			self.hagar_buttonatck1 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
 		else {
 			// not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
-			self.hagar_buttonatck2 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
+			self.hagar_buttonatck2 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, g_balance_hagar_secondary_mode);
 		}
 	} else if (req == WR_THINK) {
 		if (self.hagar_buttonatck1)
@@ -93,9 +127,9 @@ float(float req) weapon_hagar {
 		}
 		if (self.hagar_buttonatck2)
 		if (g_balance_hagar_secondary)
-		if (weapon_prepareattack(1, g_balance_hagar_secondary_refire)) {
+		if (weapon_prepareattack(1, g_balance_hagar_secondary_animtime)) {
 			weapon_hagar_attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, weapon_ready);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, (g_balance_hagar_secondary_burst ? weapon_hagar_burst_2 : weapon_ready));
 		}
 	} else if (req == WR_PRECACHE) {
 		precache_sound("weapons/hagar_fire.wav");
@@ -125,6 +159,8 @@ float(float req) weapon_hagar {
 		CVAR_CACHE(g_balance_hagar_recoil);
 		CVAR_CACHE(g_balance_hagar_secondary);
 		CVAR_CACHE(g_balance_hagar_secondary_ammo);
+		CVAR_CACHE(g_balance_hagar_secondary_animtime);
+		CVAR_CACHE(g_balance_hagar_secondary_burst);
 		CVAR_CACHE(g_balance_hagar_secondary_damage);
 		CVAR_CACHE(g_balance_hagar_secondary_edgedamage);
 		CVAR_CACHE(g_balance_hagar_secondary_force);
@@ -134,6 +170,7 @@ float(float req) weapon_hagar {
 		CVAR_CACHE(g_balance_hagar_secondary_refire);
 		CVAR_CACHE(g_balance_hagar_secondary_speed);
 		CVAR_CACHE(g_balance_hagar_secondary_spread);
+		CVAR_CACHE(g_balance_hagar_secondary_mode);
 		projectile_init(PROJECTILE_HAGAR);
 		if (cvar("g_balance_hagar_swap_buttons")) {
 			hagar_buttonatck1 = BUTTON_ATCK2;

@@ -308,6 +308,11 @@ void(float ignore) projectile_read {
 			self.scale = 0.4;
 			self.trail_effect = particleeffectnum("TR_GRENADE");
 			break;
+		case PROJECTILE_HAGAR_STICK:
+			setmodel(self, "models/hagarmissile.mdl");
+			self.scale = 1;
+			self.trail_effect = particleeffectnum("TR_GRENADE");
+			break;
 		case PROJECTILE_FIREBALL:
 		case PROJECTILE_HG_NAPALMSHARD:
 		case PROJECTILE_FIREMINE:
