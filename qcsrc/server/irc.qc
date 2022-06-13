@@ -443,11 +443,6 @@ void IRC_Announce_GameEvent(string estr) { if(!irc) return;
 		IRC_Announce(irc.cnt, irc.target, estr);
 }
 
-void IRC_Announce_Vote(string vstr) { if(!irc) return;
-    if(sv_ircbot_announce_votes)
-        IRC_Announce(irc.cnt, irc.target, vstr);
-}
-
 void IRC_Announce_Ban(string bstr) { if(!irc) return;
     if(sv_ircbot_announce_bans)
         IRC_Announce(irc.cnt, irc.target, bstr);

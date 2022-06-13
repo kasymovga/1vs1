@@ -6,7 +6,6 @@ void IRC_Init(void);
 void IRC_Announce_GameStart(void);
 void IRC_Announce_GameOver(void);
 void IRC_Announce_GameEvent(string estr);
-void IRC_Announce_Vote(string vstr);
 void IRC_Announce_Ban(string bstr);
 void IRC_Announce_Name(entity plr, string name);
 void IRC_Announce_Radio(string rstr);

@@ -253,9 +253,8 @@ float(string s, entity e) vote_cmd {
 							e.vote_vote = 1; // of course you vote yes
 							e.vote_next = time + cvar("sv_vote_wait");
 						}
-						tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2 calls a vote for ", vote_called_vote_display);
-						bprint("\{1}", tmp, "\n");
-						IRC_Announce_Vote(tmp);
+						tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2 calls a vote for ", vote_called_vote_display, "\n");
+						chat_print(tmp);
 						vote_count(); // needed if you are the only one
 					} else {
 						cmd_print_to(e, "^1This vote is not ok. See 'vhelp' for more info.");
@@ -295,9 +294,8 @@ float(string s, entity e) vote_cmd {
 						e.vote_vote = 1; // of course you vote yes
 						e.vote_next = time + cvar("sv_vote_wait");
 					}
-					tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2 calls a vote to become ^3master^2");
-					bprint("\{1}", tmp, "\n");
-					IRC_Announce_Vote(tmp);
+					tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2 calls a vote to become ^3master^2\n");
+					chat_print(tmp);
 					vote_count(); // needed if you are the only one
 				}
 			} else {
@@ -312,9 +310,8 @@ float(string s, entity e) vote_cmd {
 				} else if (vote_check_nasty(dovote)) {
 					cmd_print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 				} else if (vote_remap(dovote, "vdo", e)) { // strcat seems to be necessary
-					tmp = strcat("^2* ^3", vote_netname(e), "^2 used his ^3master^2 status to do ^2", vote_remap_display, "^2");
-					bprint("\{1}", tmp, "\n");
-					IRC_Announce_Vote(tmp);
+					tmp = strcat("^2* ^3", vote_netname(e), "^2 used his ^3master^2 status to do ^2", vote_remap_display, "^2\n");
+					chat_print(tmp);
 					localcmd(strcat(vote_remap_vote, "\n"));
 				} else {
 					cmd_print_to(e, "^1This command is not ok. See 'vhelp' for more info.");
@@ -332,9 +329,8 @@ float(string s, entity e) vote_cmd {
 					e.vote_master = granted;
 				if (granted) {
 					print("Accepted master login from ", vote_netname(e), "\n");
-					tmp = strcat("^2* ^3", vote_netname(e), "^2 logged in as ^3master^2");
-					bprint("\{1}", tmp, "\n");
-					IRC_Announce_Vote(tmp);
+					tmp = strcat("^2* ^3", vote_netname(e), "^2 logged in as ^3master^2\n");
+					chat_print(tmp);
 				}
 				else
 					print("REJECTED master login from ", vote_netname(e), "\n");
@@ -525,9 +521,8 @@ void(void) vote_reset {
 }
 
 void(void) vote_accept {
-	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ^1", vote_called_vote_display, "^2 was accepted");
-	bprint("\{1}", tmp, "\n");
-	IRC_Announce_Vote(tmp);
+	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ^1", vote_called_vote_display, "^2 was accepted\n");
+	chat_print(tmp);
 	if (vote_called_master) {
 		if (vote_caller) {
 			vote_caller.vote_master = 1;
@@ -545,9 +540,8 @@ void(void) vote_accept {
 }
 
 void(void) vote_reject {
-	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ", vote_called_vote_display, "^2 was rejected");
-	bprint("\{1}", tmp, "\n");
-	IRC_Announce_Vote(tmp);
+	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ", vote_called_vote_display, "^2 was rejected\n");
+	chat_print(tmp);
 	vote_was_rejected = TRUE;
 	vote_reset();
 	if (sv_announcer_extra_vote_passed)
@@ -555,18 +549,16 @@ void(void) vote_reject {
 }
 
 void(void) vote_timeout {
-	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ", vote_called_vote_display, "^2 timed out");
-	bprint("\{1}", tmp, "\n");
-	IRC_Announce_Vote(tmp);
+	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ", vote_called_vote_display, "^2 timed out\n");
+	chat_print(tmp);
 	vote_reset();
 	if (sv_announcer_extra_vote_passed)
 		sound_play2all(sv_announcer_extra_vote_failed);
 }
 
 void(entity stopper) vote_stop {
-	string tmp = strcat("^2* ^3", vote_netname(stopper), "^2 stopped ^3", vote_netname(vote_caller), "^2's vote");
-	bprint("\{1}", tmp, "\n");
-	IRC_Announce_Vote(tmp);
+	string tmp = strcat("^2* ^3", vote_netname(stopper), "^2 stopped ^3", vote_netname(vote_caller), "^2's vote\n");
+	chat_print(tmp);
 	if (stopper == vote_caller) {
 		// no wait for next vote so you can correct your vote
 		if (vote_caller) {
@@ -580,7 +572,7 @@ void(float abstaincount, float notvoters, float mincount, string result) vote_sp
 	string s;
 	if (mincount >= 0)
 	{
-		s = strcat("\{1}^2* vote results: ^1", ftos(yescount), "^2:^1");
+		s = strcat("^2* vote results: ^1", ftos(yescount), "^2:^1");
 		s = strcat(s, ftos(nocount), "^2 (^1");
 		s = strcat(s, ftos(ceil(mincount)), "^2 needed), ^1");
 		s = strcat(s, ftos(floor(abstaincount)), "^2 didn't care, ^1");
@@ -588,13 +580,12 @@ void(float abstaincount, float notvoters, float mincount, string result) vote_sp
 	}
 	else
 	{
-		s = strcat("\{1}^2* vote results: ^1", ftos(yescount), "^2:^1");
+		s = strcat("^2* vote results: ^1", ftos(yescount), "^2:^1");
 		s = strcat(s, ftos(nocount), "^2, ^1");
 		s = strcat(s, ftos(floor(abstaincount)), "^2 didn't care, ^1");
 		s = strcat(s, ftos(ceil(notvoters)), "^2 didn't have to vote\n");
 	}
-	bprint(s);
-	IRC_Announce_Vote(substring(s, 1, strlen(s) - 2));
+	chat_print(s);
 }
 
 float(entity pl, float allowed_dups) vote_check_dup_ip {

@@ -335,3 +335,8 @@ void(void) chat_init {
 	CVAR_CACHE_STR(g_chat_forbidden_words);
 	CVAR_CACHE(g_chat_forbidden_words_set_retard);
 }
+
+void(string s) chat_print {
+	bprint(strcat("\{1}", s));
+	gamehook_chain_PublicPlayerChat(world, s);
+}

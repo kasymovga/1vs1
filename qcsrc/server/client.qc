@@ -458,6 +458,10 @@ void(void) client_disconnect { //called by engine
 	entcs_detach();
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
+	if (clienttype(self) == CLIENTTYPE_REAL)
+	if (self.classname == "player") { //rage quit
+		chat_print(strcat("^3* ", self.netname, " ^3RAGE QUIT\n"));
+	}
 	self.classname = "disconnecting";
 	player_clear(FALSE);
 	self.flags &= ~FL_CLIENT;

@@ -1,3 +1,4 @@
+void(string s) chat_print;
 void(void) chat_bubble_spawn;
 void(void) chat_init;
 void(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol) chat_say;
