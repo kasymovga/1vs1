@@ -460,7 +460,8 @@ void(void) client_disconnect { //called by engine
 	bprint ("^4 disconnected\n");
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	if (!team_mode || team_teams > 1)
-	if (self.classname == "player") { //rage quit
+	if (!map_finished)
+	if (self.classname == "player") {
 		entity e;
 		FOR_EACH_REALPLAYER(e) {
 			if (e != self) {
