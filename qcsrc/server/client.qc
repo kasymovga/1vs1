@@ -460,7 +460,13 @@ void(void) client_disconnect { //called by engine
 	bprint ("^4 disconnected\n");
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	if (self.classname == "player") { //rage quit
-		chat_print(strcat("^3* ", self.netname, " ^3RAGE QUIT\n"));
+		entity e;
+		FOR_EACH_REALPLAYER(e) {
+			if (e != self) {
+				chat_print(strcat("^3* ", self.netname, " ^3RAGE QUIT\n"));
+				break;
+			}
+		}
 	}
 	self.classname = "disconnecting";
 	player_clear(FALSE);
