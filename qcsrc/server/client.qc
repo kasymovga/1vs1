@@ -458,14 +458,17 @@ void(void) client_disconnect { //called by engine
 	entcs_detach();
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
+	string s;
+	if ((s = cvar_string("g_ragequit_message")) != "")
 	if (clienttype(self) == CLIENTTYPE_REAL)
+	if (time > map_starttime)
 	if (!team_mode || team_teams > 1)
 	if (!map_finished)
 	if (self.classname == "player") {
 		entity e;
 		FOR_EACH_REALPLAYER(e) {
 			if (e != self) {
-				chat_print(strcat("^3* ", self.netname, " ^3RAGE QUIT\n"));
+				chat_print(strcat("^3* ", self.netname, " ", s, "\n"));
 				break;
 			}
 		}

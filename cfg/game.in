@@ -98,3 +98,4 @@ set g_trigger_push_skip_projectiles 0 "0 - jumppads affect projectiles, 1 - jump
 set g_spawn_znudge 1
 set g_punchangle_decrease_speed 10
 set g_punchangle_decrease_delay 0
+set g_ragequit_message "^3RAGE QUIT"
