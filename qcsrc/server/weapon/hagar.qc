@@ -14,13 +14,15 @@ float g_balance_hagar_secondary_burst;
 float g_balance_hagar_secondary_damage;
 float g_balance_hagar_secondary_edgedamage;
 float g_balance_hagar_secondary_force;
+float g_balance_hagar_secondary_gravity;
 float g_balance_hagar_secondary_lifetime_min;
 float g_balance_hagar_secondary_lifetime_rand;
+float g_balance_hagar_secondary_mode;
 float g_balance_hagar_secondary_radius;
 float g_balance_hagar_secondary_refire;
 float g_balance_hagar_secondary_speed;
 float g_balance_hagar_secondary_spread;
-float g_balance_hagar_secondary_mode;
+float g_balance_hagar_secondary_up;
 float g_balance_hagar_secondary;
 
 var .float hagar_buttonatck1 = BUTTON_ATCK;
@@ -79,13 +81,13 @@ void(void) weapon_hagar_attack2 {
 	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, (g_balance_hagar_secondary_mode ? PROJECTILE_HAGAR_STICK : PROJECTILE_HAGAR), TRUE, self);
 	projectile_setup(missile, weapon_shotorg, WEP_HAGAR | HITTYPE_SECONDARY, g_balance_hagar_secondary_damage,
-			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force, 0, (g_balance_hagar_secondary_mode ? MOVETYPE_TOSS : MOVETYPE_BOUNCEMISSILE));
+			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force, g_balance_hagar_secondary_gravity, (g_balance_hagar_secondary_mode ? MOVETYPE_FLY : MOVETYPE_BOUNCEMISSILE));
 	missile.touch = (g_balance_hagar_secondary_mode ? weapon_hagar_touch_stick : weapon_hagar_touch2);
 	missile.cnt = 0;
 	missile.use = projectile_explode;
 	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_secondary_lifetime_min + random() * g_balance_hagar_secondary_lifetime_rand;
-	missile.velocity = (weapon_shotdir + randomvec() * g_balance_hagar_secondary_spread) * g_balance_hagar_secondary_speed;
+	missile.velocity = (weapon_shotdir + randomvec() * g_balance_hagar_secondary_spread) * g_balance_hagar_secondary_speed + '0 0 1' * g_balance_hagar_secondary_up;
 	weapon_setup_projectile_velocity(missile);
 }
 
@@ -164,13 +166,15 @@ float(float req) weapon_hagar {
 		CVAR_CACHE(g_balance_hagar_secondary_damage);
 		CVAR_CACHE(g_balance_hagar_secondary_edgedamage);
 		CVAR_CACHE(g_balance_hagar_secondary_force);
+		CVAR_CACHE(g_balance_hagar_secondary_gravity);
 		CVAR_CACHE(g_balance_hagar_secondary_lifetime_min);
 		CVAR_CACHE(g_balance_hagar_secondary_lifetime_rand);
+		CVAR_CACHE(g_balance_hagar_secondary_mode);
 		CVAR_CACHE(g_balance_hagar_secondary_radius);
 		CVAR_CACHE(g_balance_hagar_secondary_refire);
 		CVAR_CACHE(g_balance_hagar_secondary_speed);
 		CVAR_CACHE(g_balance_hagar_secondary_spread);
-		CVAR_CACHE(g_balance_hagar_secondary_mode);
+		CVAR_CACHE(g_balance_hagar_secondary_up);
 		projectile_init(PROJECTILE_HAGAR);
 		if (cvar("g_balance_hagar_swap_buttons")) {
 			hagar_buttonatck1 = BUTTON_ATCK2;
