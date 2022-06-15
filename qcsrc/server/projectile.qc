@@ -145,6 +145,7 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float _gravity, float _movetype) projectile_setup {
 	e.projectiledeathtype = deathtype;
 	PROJECTILE_MAKETRIGGER(e);
+	e.movetype = _movetype;
 	if (_gravity) {
 		e.gravity = _gravity;
 		if (e.movetype == MOVETYPE_FLY)
@@ -167,7 +168,6 @@ void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, flo
 	e.dmg_edge = _dmg_edge;
 	e.bot_dodge = TRUE;
 	e.bot_dodgerating = _dmg;
-	e.movetype = _movetype;
 }
 
 void(entity e) projectile_update {
