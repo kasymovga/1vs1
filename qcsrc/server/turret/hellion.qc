@@ -42,7 +42,6 @@ void(void) turret_hellion_missile_think {
 
 		// Accelerate
 		self.velocity = olddir * min(vlen(self.velocity) * self.owner.shot_speed_gain,self.owner.shot_speed_max);
-		projectile_update(self);
 		return;
 	}
 	// Enemy in range?
@@ -63,8 +62,6 @@ void(void) turret_hellion_missile_think {
 	self.velocity = newdir * min(vlen(self.velocity) * self.owner.shot_speed_gain,self.owner.shot_speed_max);
 	if (itime < 0.05)
 		self.think = turret_projectile_think_explode;
-
-	projectile_update(self);
 }
 
 void(void) turret_hellion_attack {

@@ -75,12 +75,23 @@ float(entity to, float sf) projectile_send {
 }
 
 .vector csqcprojectile_oldorigin;
+.vector csqcprojectile_oldangles;
 void(entity e) projectile_check {
-	if (e.csqcprojectile_clientanimate)
-	if (e.flags & FL_ONGROUND)
-	if (e.origin != e.csqcprojectile_oldorigin)
-		projectile_update(e);
-
+	if (!e.csqcprojectile_clientanimate || (e.flags & FL_ONGROUND)) {
+		if (e.origin != e.csqcprojectile_oldorigin)
+			projectile_update(e);
+	} else if (e.movetype == MOVETYPE_FOLLOW) {
+		if (e.angles != e.csqcprojectile_oldangles) {
+			projectile_update_angles(e);
+			e.csqcprojectile_oldangles = e.angles;
+		}
+		if (!e.aiment || wasfreed(e.aiment)) {
+			e.aiment = world;
+			e.movetype = MOVETYPE_TOSS;
+			setorigin(e, e.csqcprojectile_oldorigin);
+			projectile_update(e);
+		}
+	}
 	e.csqcprojectile_oldorigin = e.origin;
 }
 
@@ -162,6 +173,7 @@ void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, flo
 	} else
 		setorigin(e, _origin);
 
+	e.csqcprojectile_oldorigin = e.origin;
 	e.dmg = _dmg;
 	e.dmg_force = _force;
 	e.dmg_radius = _dmg_radius;
@@ -239,6 +251,28 @@ void(void) projectile_explode {
 void(void) projectile_touch_explode {
 	PROJECTILE_TOUCH;
 	projectile_explode();
+}
+
+void(entity e, entity to, vector a) projectile_stick {
+	if (to.solid == SOLID_TRIGGER || e.movetype == MOVETYPE_FOLLOW || e.movetype == MOVETYPE_NONE)
+		return;
+
+	e.angles = a;
+	if (to) {
+		e.aiment = to;
+		e.movetype = MOVETYPE_FOLLOW;
+		e.v_angle = e.angles;
+		e.v_angle_y -= to.angles_y;
+		e.punchangle = -to.angles;
+		e.punchangle_y *= -1;
+		e.view_ofs = e.origin - to.origin;
+	} else
+		e.movetype = MOVETYPE_NONE;
+
+	e.velocity = '0 0 0';
+	e.csqcprojectile_clientanimate = FALSE;
+	projectile_update(e);
+	projectile_update_angles(e);
 }
 
 void(void) projectile_info_send {

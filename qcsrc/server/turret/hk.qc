@@ -189,7 +189,6 @@ void(void) turret_hk_missile_think {
 	self.velocity = newdir * myspeed;
 	// Align model with new heading
 	self.angles = vectoangles(self.velocity);
-	projectile_update(self);
 }
 
 void(void) turret_hk_attack {

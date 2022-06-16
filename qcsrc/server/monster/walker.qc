@@ -55,7 +55,6 @@ void walker_rocket_think() {
 		self.velocity = v_forward * 600;
 		self.velocity_z = -self.velocity_z;
 	}
-	projectile_update(self);
 }
 
 void walker_hunt() {

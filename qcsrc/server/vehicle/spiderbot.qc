@@ -48,7 +48,6 @@ void(void) vehicle_spiderbot_rocket_think {
 		newdir += randomvec() * g_vehicle_spiderbot_rocket_noise;
 		self.velocity = normalize(olddir + newdir * g_vehicle_spiderbot_rocket_turnrate) * g_vehicle_spiderbot_rocket_speed;
 	}
-	projectile_update(self);
 }
 
 void(void) vehicle_spiderbot_rocket_do {

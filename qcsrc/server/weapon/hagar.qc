@@ -45,8 +45,7 @@ void(void) weapon_hagar_touch_stick {
 	if (other.takedamage == DAMAGE_AIM)
 		projectile_explode();
 	else {
-		self.velocity = '0 0 0';
-		self.movetype = MOVETYPE_NONE;
+		projectile_stick(self, other, vectoangles(self.velocity));
 	}
 }
 

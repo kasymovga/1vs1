@@ -254,18 +254,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
 		if(lt_override > 0)
 			e.hg_deathtime = time + lt_override;
 	}
-    if(targ) {
-        e.movetype = MOVETYPE_FOLLOW;
-        e.view_ofs = e.origin - targ.origin;
-        e.aiment = targ;
-        e.v_angle = e.angles;
-        e.v_angle_y -= targ.angles_y;
-        e.punchangle = -targ.angles;
-        e.punchangle_y *= -1;
-    } else {
-        e.movetype = MOVETYPE_NONE;
-    }
-
+	projectile_stick(e, targ, e.angles);
     float sz;
 	switch(e.hg_type) {
 	case NADGET_TRANSLOC: sz = NADGET_SIZE_TRANSLOC; break;
@@ -293,42 +282,12 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
     e.meodp_point_angleoffs = '90 180 0';
 #endif
 
-    e.csqcprojectile_clientanimate = FALSE;
-    projectile_update(e);
-    e.SendFlags = 0xFFFFFF;
-    projectile_update_angles(e);
     e.effects |= EFFECT_NODEPTHTEST; // no culling please
     entity_move_out_of_solid(e);
 }
 
-.vector hg_oldangles;
-
 void nadget_GenericProjectile_Think(void) {
     #define GV(v) (GRENVAR(self.hg_type, v))
-
-    if(!self.csqcprojectile_clientanimate) {
-        vector o = self.oldorigin;
-
-        if(self.origin != self.oldorigin) {
-            projectile_update(self);
-            self.oldorigin = self.origin;
-        }
-
-        if(self.movetype == MOVETYPE_FOLLOW) {
-            if(self.angles != self.hg_oldangles) {
-                projectile_update_angles(self);
-                self.hg_oldangles = self.angles;
-            }
-
-            if(!self.aiment || wasfreed(self.aiment)) {
-                self.aiment = world;
-                self.movetype = MOVETYPE_TOSS;
-                setorigin(self, o);
-                projectile_update(self);
-            }
-        }
-    }
-
     if(self.velocity != '0 0 0')
         self.hg_lastvel = self.velocity;
 

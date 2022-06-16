@@ -132,8 +132,6 @@ void(void) weapon_rocketlauncher_think {
 		if (self.rl_detonate_later)
 			weapon_rocketlauncher_remote_explode();
 	}
-	if (self.csqcprojectile_clientanimate == 0)
-		projectile_update(self);
 }
 
 void(void) weapon_rocketlauncher_touch {

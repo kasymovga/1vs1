@@ -819,7 +819,7 @@ void(void) world_frame_start { //called by engine
 	extresponse_update();
 	slowmo_update();
 	entity e;
-	for (e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
+	for (e = world; (e = findflags(e, flags, FL_PROJECTILE)); )
 		projectile_check(e);
 
 	entity oldself = e;
