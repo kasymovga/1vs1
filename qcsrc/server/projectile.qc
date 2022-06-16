@@ -266,6 +266,7 @@ void(entity e, entity to, vector a) projectile_stick {
 		e.punchangle = -to.angles;
 		e.punchangle_y *= -1;
 		e.view_ofs = e.origin - to.origin;
+		e.flags &= ~FL_ONGROUND;
 	} else
 		e.movetype = MOVETYPE_NONE;
 
