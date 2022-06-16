@@ -9,7 +9,7 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile;
 void(entity e) projectile_update;
 void(entity e) projectile_update_after_teleport;
 void(entity e) projectile_update_next_frame;
-void(entity e) projectile_check;
+void(void) projectile_check;
 float() projectile_no_impact_check;
 void(float type) projectile_init;
 

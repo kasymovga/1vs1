@@ -818,11 +818,9 @@ float world_redirection_think();
 void(void) world_frame_start { //called by engine
 	extresponse_update();
 	slowmo_update();
+	projectile_check();
 	entity e;
-	for (e = world; (e = findflags(e, flags, FL_PROJECTILE)); )
-		projectile_check(e);
-
-	entity oldself = e;
+	entity oldself = self;
 	for (e = world; (e = findfloat(e, movetype, MOVETYPE_QCWALK)); ) {
 		if (e.think)
 		if (e.nextthink)

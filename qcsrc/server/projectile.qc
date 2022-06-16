@@ -76,23 +76,26 @@ float(entity to, float sf) projectile_send {
 
 .vector csqcprojectile_oldorigin;
 .vector csqcprojectile_oldangles;
-void(entity e) projectile_check {
-	if (!e.csqcprojectile_clientanimate || (e.flags & FL_ONGROUND)) {
-		if (e.origin != e.csqcprojectile_oldorigin)
-			projectile_update(e);
-	} else if (e.movetype == MOVETYPE_FOLLOW) {
-		if (e.angles != e.csqcprojectile_oldangles) {
-			projectile_update_angles(e);
-			e.csqcprojectile_oldangles = e.angles;
+void(void) projectile_check {
+	entity e;
+	for (e = world; (e = findflags(e, flags, FL_PROJECTILE)); ) {
+		if (!e.csqcprojectile_clientanimate || (e.flags & FL_ONGROUND)) {
+			if (e.origin != e.csqcprojectile_oldorigin)
+				projectile_update(e);
+		} else if (e.movetype == MOVETYPE_FOLLOW) {
+			if (e.angles != e.csqcprojectile_oldangles) {
+				projectile_update_angles(e);
+				e.csqcprojectile_oldangles = e.angles;
+			}
+			if (!e.aiment || wasfreed(e.aiment)) {
+				e.aiment = world;
+				e.movetype = MOVETYPE_TOSS;
+				setorigin(e, e.csqcprojectile_oldorigin);
+				projectile_update(e);
+			}
 		}
-		if (!e.aiment || wasfreed(e.aiment)) {
-			e.aiment = world;
-			e.movetype = MOVETYPE_TOSS;
-			setorigin(e, e.csqcprojectile_oldorigin);
-			projectile_update(e);
-		}
+		e.csqcprojectile_oldorigin = e.origin;
 	}
-	e.csqcprojectile_oldorigin = e.origin;
 }
 
 void(float csqcid, vector sizes) projectile_register_auto {
