@@ -30,3 +30,4 @@ var .float clientversion;
 .string clid;
 string client_retardplayername;
 void(entity cl, vector a) client_view_angles_set;
+void(entity pl) client_voip_setup;

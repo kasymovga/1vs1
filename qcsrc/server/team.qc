@@ -444,6 +444,7 @@ void(entity pl, float dteam, float nobalance) team_change {
 		spectator_to_player();
 		self = oldself;
 	}
+	client_voip_setup(pl);
 	entity e;
 	if not(nobalance) {
 		if (teamchange)

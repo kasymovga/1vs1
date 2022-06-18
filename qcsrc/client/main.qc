@@ -42,6 +42,7 @@ void(void) CSQC_Init {
 		cvar_set("cl_effects_lightningarc_branchfactor_start", "0.25");
 		cvar_set("cl_effects_lightningarc_branchfactor_add", "0.1");
 	}
+	if (checkextension("DP_RM_VOIP")) localcmd("\ncmd sentcvar voip 1\n");
 	float i;
 	db_binds = db_create();
 	db_temp = db_create();

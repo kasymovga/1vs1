@@ -714,6 +714,21 @@ void client_cvars_request() {
 	stuffcmd(self, "sendcvar _cl_id\n");
 }
 
+void(entity pl) client_voip_setup {
+	if not(pl.voipgroup) return;
+	float vg = pl.voipgroup;
+	if (team_mode) {
+		pl.voipgroup = pl.team;
+	} else {
+		if (pl.team < 0)
+			pl.voipgroup = -1;
+		else
+			pl.voipgroup = 1;
+	}
+	if (vg != pl.voipgroup)
+		print(player_name(pl), " switched to VOIP channel #", ftos(pl.voipgroup), "\n");
+}
+
 void() client_cvars_parse {
 	string s = strcat1(argv(1));
 	string val = strcat1(argv(2));
@@ -798,6 +813,9 @@ void() client_cvars_parse {
 		if (self.scorekeeper) {
 			rank_load();
 		}
+	} else if (s == "voip") {
+		self.voipgroup = -2;
+		client_voip_setup(self);
 	}
 }
 

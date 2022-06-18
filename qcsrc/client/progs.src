@@ -145,3 +145,4 @@ thirdview.qc
 csqc_entity.qc
 recordlist.qc
 shootingrange.qc
+voip.qc

@@ -1,2 +1,3 @@
 .void() entremove;
 void(void) stdproc_remove; //remove self
+void(entity e) stdproc_remove_entity; //call stdproc_remove for entity

@@ -123,6 +123,7 @@ monster.qh
 warpzone.qh
 rank.qh
 shootingrange.qh
+voip.qh
 ../client-server/progs.qc
 ../menu-server/progs.qc
 twoweapons.qh

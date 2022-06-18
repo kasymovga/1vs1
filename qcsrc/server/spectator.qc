@@ -197,9 +197,10 @@ void() spectator_to_player {
 				campaign_bots_may_start = 1;
 
 			client_put();
-			if (self.classname == "player")
+			client_voip_setup(self);
+			if (self.classname == "player") {
 				bprint ("^4", self.netname, "^4 is playing now\n");
-
+			}
 			if not(g_campaign)
 				centerprint(self,""); // clear MOTD
 

@@ -102,6 +102,7 @@ void(entity e_add) noteline_add {
 entity(string m) noteline_new {
 	entity e = spawn();
 	e.message = strzone(m);
+	e.entremove = noteline_remove;
 	noteline_add(e);
 	return e;
 }
