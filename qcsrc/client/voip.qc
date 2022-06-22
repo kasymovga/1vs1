@@ -54,12 +54,13 @@ void(void) voip_draw {
 		voip_note_update();
 }
 
-void(float client) voip_event { //called by engine
+float(float client) voip_event { //called by engine
+	if (mute_listed(client + 1)) return FALSE;
 	entity e;
 	for (e = voip_speaker_chain; e; e = e.enemy) {
 		if (e.cnt == client) {
 			e.health = time + 0.5;
-			return;
+			return TRUE;
 		}
 	}
 	e = spawn();
@@ -73,6 +74,7 @@ void(float client) voip_event { //called by engine
 	}
 	voip_speaker_chain = e;
 	voip_note_update();
+	return TRUE;
 }
 
 void(float on) voip_talk { //called by engine
