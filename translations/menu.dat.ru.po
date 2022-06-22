@@ -924,3 +924,27 @@ msgstr "Поздравляем!"
 
 msgid "You have successfully completed the Single Player Campaign!"
 msgstr "Вы успешно завершили одиночную кампанию!"
+
+msgid "Microphone:"
+msgstr "Микрофон:"
+
+msgid "Effects:"
+msgstr "Эффекты:"
+
+msgid "Deprecated channel control"
+msgstr "Устаревшие канальные настройки"
+
+msgid "Volume boost:"
+msgstr "Усиление:"
+
+msgid "Automatic volume boost"
+msgstr "Автоматическое усиление"
+
+msgid "Microphone test:"
+msgstr "Тест микрофона:"
+
+msgid "Start"
+msgstr "Начать"
+
+msgid "Stop"
+msgstr "Остановить"
