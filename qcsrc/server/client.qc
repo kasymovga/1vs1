@@ -730,17 +730,14 @@ void(entity pl) client_voip_setup {
 		else
 			pl.voipgroup = 1;
 	}
-	if (vg != pl.voipgroup)
-		print(player_name(pl), " switched to VOIP channel #", ftos(pl.voipgroup), "\n");
-
 	if (pl.muted) {
 		pl.voipgroup = -256 - num_for_edict(pl);
-		return;
 	}
 	if (pl.retard > 0) {
 		pl.voipgroup = -512 - num_for_edict(pl);
-		return;
 	}
+	if (vg != pl.voipgroup)
+		print(player_name(pl), "^7 switched to VOIP channel #", ftos(pl.voipgroup), "\n");
 }
 
 void(void) client_voip_setup_all {
