@@ -928,6 +928,9 @@ msgstr "Вы успешно завершили одиночную кампани
 msgid "Microphone:"
 msgstr "Микрофон:"
 
+msgid "Voice chat:"
+msgstr "Голосовй чат:"
+
 msgid "Effects:"
 msgstr "Эффекты:"
 
