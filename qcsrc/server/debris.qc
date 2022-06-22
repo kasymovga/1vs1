@@ -109,6 +109,10 @@ void(string debrisname, vector force) debris_launch {
 	dbr.culltracemode = CULLTRACEMODE_NONE;
 }
 
+void(void) debris_disable {
+	sv_breakable_debris = FALSE;
+}
+
 void(vector force) debris_throw {
 	float i, n;
 	n = tokenize_console(self.debris);
