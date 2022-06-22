@@ -20,3 +20,4 @@ menu.qc
 gui.qc
 dlc.qc
 curl.qc
+voip.qc
