@@ -85,7 +85,7 @@ string valueToTextNexuizDecibelsSlider(entity me, float v)
 {
 	if(v < -33)
 		return _("OFF");
-	else if(v >= -0.1)
+	else if(v >= -0.1 && !me.valueMax)
 		return _("MAX");
 	return strcat(valueToTextSlider(me, v), _(" dB"));
 }

@@ -108,6 +108,7 @@ void fillNexuizAudioSettingsTab(entity me)
 		gui_set_dependent_and(e, "volume", 0.01, 100, "snd_perchannelvolumecontrol", 0.01, 100);
 		gui_set_dependent_and(s, "volume", 0.01, 100, "snd_perchannelvolumecontrol", 0.01, 100);
 	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 1.3, e = makeNexuizTextLabel(0, _("Microphone:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -115,7 +116,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeNexuizTextLabel(0, _("Volume boost:")));
-		me.TD(me, 1, 2, e = makeNexuizSlider(0.5, 10, 0.1, "snd_input_boost"));
+		me.TD(me, 1, 2, e = makeNexuizDecibelsSlider(-5, 10, 1, "snd_input_boost"));
 		gui_set_dependent(e, "snd_input_boost_auto", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
