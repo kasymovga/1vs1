@@ -7,6 +7,7 @@ set minsta_g_balance_selfdamagepercent 0
 set minsta_g_score_damage 0
 set minsta_g_shootfromeye 1
 set minsta_duel_inherit minsta
+set minsta_duel_g_voice_chat_public 0
 set minsta_duel_g_minstagib_extralives 0
 set minsta_duel_g_powerup_speed 0
 set minsta_duel_g_powerup_invisibility 0

@@ -113,5 +113,6 @@ void(void) warmup_finish {
 		warmup_active = 0; //once the game is restarted the game is in match stage
 		remove(warmup_note);
 		sound_play2all("announcer/robotic/prepareforbattle.wav");
+		client_voip_setup_all();
 	}
 }

@@ -129,6 +129,8 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 				source.retard = 1;
 			else
 				source.muted = 1;
+
+			client_voip_setup(self);
 		}
 	}
 	if (!teamsay && !privatesay)

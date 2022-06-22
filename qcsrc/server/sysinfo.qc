@@ -35,6 +35,7 @@ void(string _info, .float field, float val, string s) sysinfo_search_and_mark {
 	for (e = find(world, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
 		print(e.netname, " ", s, "\n");
 		e.field = val;
+		client_voip_setup(e);
 	}
 }
 
