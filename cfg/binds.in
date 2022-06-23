@@ -36,6 +36,7 @@ bind g dropweapon
 bind f +use
 
 // misc
+bind BACKSLASH +snd_voice_talk
 bind e +hook
 bind ` toggleconsole
 bind ~ toggleconsole
