@@ -1,4 +1,5 @@
 set sv_rank 0 "Enable rank tracking"
+set sv_rank_hide 0 "Hide rank in score board"
 set sv_rank_external_database "" "http/https address of external database"
 set sv_rank_external_database_key "" "query key parameter for access to external database"
 set g_rank_type ""

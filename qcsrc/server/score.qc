@@ -153,12 +153,18 @@ float (string label, float scoreflags) score_register_team_score {
 }
 
 float(entity to, float sf) score_info_send {
-	float i;
+	float i, f;
 	net_write_byte(MSG_ENTITY, NET_CSQC_SCORES_INFO);
 	net_write_byte(MSG_ENTITY, gametype);
 	for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
-		net_write_string(MSG_ENTITY, score_label[i]);
-		net_write_byte(MSG_ENTITY, score_flags[i]);
+		f = score_flags[i];
+		if (f & SCORE_FLAG_HIDDEN) {
+			net_write_string(MSG_ENTITY, "");
+			net_write_byte(MSG_ENTITY, 0);
+		} else {
+			net_write_string(MSG_ENTITY, score_label[i]);
+			net_write_byte(MSG_ENTITY, f);
+		}
 	}
 	for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i) {
 		net_write_string(MSG_ENTITY, score_team_label[i]);
@@ -174,6 +180,7 @@ void() score_send_delayed_think {
 }
 
 void(entity e, float f) score_send_delayed {
+	if (score_flags[f] & SCORE_FLAG_HIDDEN) return;
 	e.flags |= f;
 	if not(e.nextthink)
 		e.nextthink = max(e.lastshot_time, time);

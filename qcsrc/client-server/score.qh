@@ -13,15 +13,13 @@ string(float pFlags, float pValue) score_string;
 #define SCORE_FLAG_HIDE_ZERO 2
 
 /**
- * Allow a column to be hidden (do not automatically add it even if it is a sorting key)
+ * Scoring priority (NOTE: PRIMARY is used for fraglimit)
  */
-#define SCORE_FLAG_ALLOW_HIDE 16
-
-/**
- * Display as a rank (with st, nd, rd, th suffix)
- */
-#define SCORE_FLAG_RANK 32
-
+#define SCORE_FLAG_SORT_PRIO_SECONDARY 4
+#define SCORE_FLAG_SORT_PRIO_PRIMARY 8
+#define SCORE_FLAG_SORT_PRIO_MASK 12
+#define SCORE_FLAG_NOCLEAR 16
+#define SCORE_FLAG_HIDDEN 32
 /**
  * Display as mm:ss.s, value is stored as 10ths of a second (AND 0 is the worst possible value!)
  */
@@ -31,9 +29,6 @@ string(float pFlags, float pValue) score_string;
 #define SCORE_FLAG_ZERO_IS_WORST SCORE_FLAG_TIME
 
 /**
- * Scoring priority (NOTE: PRIMARY is used for fraglimit)
+ * Display as a rank (with st, nd, rd, th suffix)
  */
-#define SCORE_FLAG_SORT_PRIO_SECONDARY 4
-#define SCORE_FLAG_SORT_PRIO_PRIMARY 8
-#define SCORE_FLAG_SORT_PRIO_MASK 12
-#define SCORE_FLAG_NOCLEAR 16
+#define SCORE_FLAG_RANK 128

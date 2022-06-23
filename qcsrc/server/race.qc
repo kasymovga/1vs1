@@ -206,7 +206,7 @@ void(void) race_score_setup {
 		SP_RACE_LAPS = score_register("laps", SCORE_FLAG_SORT_PRIO_PRIMARY);
 		SP_RACE_TIME = score_register("time", SCORE_FLAG_SORT_PRIO_SECONDARY | SCORE_FLAG_LOWER_IS_BETTER | SCORE_FLAG_TIME);
 	} else if (g_race_qualifying) {
-		SP_RACE_FASTEST = score_register("fastest",   SCORE_FLAG_SORT_PRIO_PRIMARY | SCORE_FLAG_LOWER_IS_BETTER | SCORE_FLAG_TIME);
+		SP_RACE_FASTEST = score_register("fastest",   SCORE_FLAG_SORT_PRIO_PRIMARY | SCORE_FLAG_LOWER_IS_BETTER | SCORE_FLAG_TIME | SCORE_FLAG_ZERO_IS_WORST);
 		SP_RACE_MAXSPEED = score_register("maxspeed",   SCORE_FLAG_SORT_PRIO_SECONDARY);
 		race_maxspeed = scores[SP_RACE_MAXSPEED];
 	} else {

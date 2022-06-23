@@ -579,12 +579,6 @@ void(float argc) sbar_field_set {
 		if (sbar_num_fields >= SBAR_FIELDS_MAX)
 			break;
 	}
-	if (scores_flags[ps_primary] & SCORE_FLAG_ALLOW_HIDE)
-		have_primary = 1;
-
-	if (scores_flags[ps_secondary] & SCORE_FLAG_ALLOW_HIDE)
-		have_secondary = 1;
-
 	if (ps_primary == ps_secondary)
 		have_secondary = 1;
 
