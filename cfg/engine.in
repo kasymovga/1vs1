@@ -155,3 +155,4 @@ r_water_hideplayer 1
 scr_infobar_height 16
 r_transparent_sortsurfacesbynearest 0
 snd_streaming_length 3
+snd_perchannelvolumecontrol 0
