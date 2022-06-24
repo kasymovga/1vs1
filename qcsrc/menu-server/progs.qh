@@ -2,6 +2,7 @@
 #include "cvar.qh"
 #include "extresponse.qh"
 #include "gametype.qh"
+#include "masterlist.qh"
 #include "mapinfo.qh"
 #include "shuffle.qh"
 #include "udppunchhole.qh"

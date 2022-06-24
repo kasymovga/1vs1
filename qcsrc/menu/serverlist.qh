@@ -1,1 +1,1 @@
-void(void) menu_serverlist_init;
+void(void) serverlist_init;

@@ -27,7 +27,8 @@ void() menu_init {
 	if (cvar("sys_first_run"))
 		cvar_set("vid_desktopfullscreen", "1");
 
-	menu_serverlist_init();
+	serverlist_init();
+	masterlist_init();
 	dlc_reload(TRUE, FALSE);
 	udppunchhole_extresponse_handler_register();
 	ui_con_width_height_set();

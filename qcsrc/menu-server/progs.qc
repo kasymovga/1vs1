@@ -4,6 +4,7 @@
 #include "extresponse.qc"
 #include "gametype.qc"
 #include "mapinfo.qc"
+#include "masterlist.qc"
 #include "shuffle.qc"
 #include "udppunchhole.qc"
 #include "weapon.qc"

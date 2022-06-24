@@ -200,6 +200,11 @@ void(void) world_init {
 	float i, j, n;
 	string col;
 	cvar_preinit();
+	registercvar("_masterlist_init_done", "0");
+	if not(cvar("_masterlist_init_done")) {
+		masterlist_init();
+		cvar_set("_masterlist_init_done", "1");
+	}
 	registercvar("date_day", "");
 	registercvar("date_day_of_week", "");
 	registercvar("date_month", "");
