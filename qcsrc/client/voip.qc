@@ -68,6 +68,7 @@ float(float client) voip_event { //called by engine
 	e.draw2d = voip_draw;
 	e.enemy = voip_speaker_chain;
 	e.cnt = client;
+	e.health = time + 0.5;
 	if (voip_speaker_chain) {
 		voip_speaker_chain.draw2d = NULL;
 		voip_speaker_chain.draw2dflag = 0;
