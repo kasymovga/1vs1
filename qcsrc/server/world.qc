@@ -201,6 +201,7 @@ void(void) world_init {
 	string col;
 	cvar_preinit();
 	registercvar("_masterlist_init_done", "0");
+	if (cvar("sv_master_list_sync"))
 	if not(cvar("_masterlist_init_done")) {
 		masterlist_init();
 		cvar_set("_masterlist_init_done", "1");
