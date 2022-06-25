@@ -2,9 +2,9 @@ float SERVERLIST_URI_HANDLER;
 #define SERVERLIST_URIS_COUNT 3
 var float serverlist_uri_index = 0;
 string serverlist_uris[SERVERLIST_URIS_COUNT] = {
-	"http://kasymovga.github.io/rexdlc-web/serverlist.txt",
 	"http://rexuiz.com/maps/serverlist.txt",
 	"http://nexuiz.mooo.com/serverlist.txt",
+	"http://kasymovga.github.io/rexdlc-web/serverlist.txt",
 };
 
 void(float id, float status, string data) serverlist_callback {

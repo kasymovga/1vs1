@@ -2,9 +2,9 @@ float MASTERLIST_URI_HANDLER;
 #define MASTERLIST_URIS_COUNT 3
 var float masterlist_uri_index = 0;
 string masterlist_uris[MASTERLIST_URIS_COUNT] = {
-	"http://kasymovga.github.io/rexdlc-web/masterlist.txt",
 	"http://rexuiz.com/maps/masterlist.txt",
 	"http://nexuiz.mooo.com/masterlist.txt",
+	"http://kasymovga.github.io/rexdlc-web/masterlist.txt",
 };
 
 void(float id, float status, string data) masterlist_callback {
