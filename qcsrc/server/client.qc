@@ -722,7 +722,7 @@ void client_cvars_request() {
 void(entity pl) client_voip_setup {
 	if not(pl.voipgroup) return;
 	float vg = pl.voipgroup;
-	if (team_mode && g_voice_chat_public < 2) {
+	if (team_mode && g_voice_chat_public < 2 && team_teams > 1) {
 		pl.voipgroup = pl.team;
 	} else {
 		if (pl.team < 0 || g_voice_chat_public)
