@@ -121,7 +121,7 @@ float(void) ability_spectator_to_player_handle {
 	if not(self.ability_class) {
 		self.abilities = 0;
 		if (g_ability_class_default >= 0)
-			self.ability_class = g_ability_class_default;
+			self.ability_class = g_ability_class_default + 1;
 		else if (clienttype(self) == CLIENTTYPE_REAL) {
 			ability_class_menu(self);
 			return TRUE;
