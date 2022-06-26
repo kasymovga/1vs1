@@ -111,6 +111,7 @@ void() menu_init_delayed {
 		return;
 
 	menu_initialized = 1;
+	print("Menu initialized\n");
 	localcmd("alias qc_cmd \"menu_cmd $*\"\n");
 	weapon_register_weapons();
 	skin_init();
@@ -123,8 +124,7 @@ void() menu_init_delayed {
 	main.focused = 1;
 	menu_modkeys_state = 0;
 	menu_mouse_pos = '0.5 0.5 0';
-	if (!menu_active)
-		menu_display(); // delayed menu display
+	menu_display(); // delayed menu display
 }
 
 float(void) menu_mouse_update {
@@ -370,6 +370,7 @@ void(void) menu_draw {
 
 void(void) menu_display {
 	menu_active = TRUE;
+	menu_mouse_mode = (cvar("menu_mouse_absolute") || cvar("vid_touchscreen"));
 	setkeydest(KEY_MENU);
 	setmousetarget((menu_mouse_mode ? MT_CLIENT : MT_MENU));
 	if (!menu_initialized)
