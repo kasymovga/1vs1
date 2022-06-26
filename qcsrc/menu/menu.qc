@@ -123,7 +123,7 @@ void() menu_init_delayed {
 	main.focused = 1;
 	menu_modkeys_state = 0;
 	menu_mouse_pos = '0.5 0.5 0';
-	if(menu_active)
+	if (!menu_active)
 		menu_display(); // delayed menu display
 }
 
