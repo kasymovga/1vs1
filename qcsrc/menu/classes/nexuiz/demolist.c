@@ -74,7 +74,8 @@ void getDemosNexuizDemoList(entity me)
 
 void destroyNexuizDemoList(entity me)
 {
-    search_end(me.listDemo);
+	if (me.listDemo >= 0)
+		search_end(me.listDemo);
 }
 
 void resizeNotifyNexuizDemoList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
