@@ -1,0 +1,1 @@
+set g_voice_chat_public 1 "1 - Allow voice chat between spectators and players in teamless modes. 2 - Allow voice chat between spectators and players and between players in different teams."
