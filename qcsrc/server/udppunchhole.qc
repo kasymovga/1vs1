@@ -38,6 +38,13 @@ void(float argc, string response) udppunchhole_extresponse_handler_extra_sv {
 			remove(udppunchhole_porttest);
 			udppunchhole_porttest = world;
 		}
+		if (argc >= 4) {
+			registercvar("_net_http_server_host_auto", "0");
+			if (cvar_string("net_http_server_host") == "" || cvar("_net_http_server_host_auto")) {
+				cvar_set("_net_http_server_host_auto", "1");
+				cvar_set("net_http_server_host", argv(3));
+			}
+		}
 	} else {
 		if (sv_udppunchhole_verbose)
 			print("udppunchhole: unknown command: ", s, "\n");
