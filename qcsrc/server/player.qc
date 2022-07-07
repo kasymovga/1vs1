@@ -32,6 +32,7 @@ float g_player_forceskin_red;
 float g_player_forceskin_blue;
 float g_player_forceskin_yellow;
 float g_player_forceskin_pink;
+float g_player_death_sound;
 float g_balance_armor_blockpercent;
 float g_balance_armor_regen;
 float g_balance_armor_regenlinear;
@@ -1122,11 +1123,12 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		defer_client_kill_now_team_change = FALSE;
 		float switchweapon_save = self.weapon;
 		debris_throw(force);
-		if (deathtype == DEATH_DROWN)
-			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_drown), VOL_BASE, ATTN_NORM);
-		else
-			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_death), VOL_BASE, ATTN_NORM);
-
+		if (g_player_death_sound) {
+			if (deathtype == DEATH_DROWN)
+				sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_drown), VOL_BASE, ATTN_NORM);
+			else
+				sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_death), VOL_BASE, ATTN_NORM);
+		}
 		// get rid of kill indicator
 		if (self.killindicator) {
 			if (self.killindicator.team)
@@ -2489,6 +2491,7 @@ void() player_init {
 	CVAR_CACHE(g_player_forceskin_blue);
 	CVAR_CACHE(g_player_forceskin_yellow);
 	CVAR_CACHE(g_player_forceskin_pink);
+	CVAR_CACHE(g_player_death_sound);
 	CVAR_CACHE(g_balance_armor_blockpercent);
 	CVAR_CACHE(g_balance_armor_regen);
 	CVAR_CACHE(g_balance_armor_regenlinear);
