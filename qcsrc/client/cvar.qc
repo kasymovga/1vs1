@@ -78,7 +78,7 @@ void read_cvars_init() {
 	autocvar_autocvar_check = 0;
 	cvar_set("autocvar_check", "1");
 	if (autocvar_autocvar_check) {
-		if (checkextension("DP_RM_CVAR_ALTERTYPE"))
+		if (extension_DP_RM_CVAR_ALTERTYPE)
 			cvar_register_save = cvar_register_save_rm;
 		else
 			cvar_register_save = cvar_register_save_awful;

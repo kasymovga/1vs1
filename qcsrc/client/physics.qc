@@ -98,7 +98,7 @@ void(void) physics_vehicle_read_common {
 }
 
 void(entity e) physics_vehicle_common_post {
-	if (main_ext_DP_RM_SETRENDERENTITY)
+	if (extension_DP_RM_SETRENDERENTITY)
 		setentityvec(physics_player_ent, E_ORIGIN, e.origin);
 
 	physics_flags = self.flags;
@@ -271,7 +271,7 @@ void(void) physics_camera_setup {
 		if not(view_camera_active) {
 			if not(view_spectatee_status)
 			if not(physics_player_ent) {
-				if (main_ext_DP_RM_SETRENDERENTITY) {
+				if (extension_DP_RM_SETRENDERENTITY) {
 					if not(main_isdemo)
 						setentityvec(player_localentnum, E_ORIGIN, physics.origin);
 				} else {

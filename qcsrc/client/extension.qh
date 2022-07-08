@@ -1,0 +1,7 @@
+float extension_DP_CSQC_QUERYRENDERENTITY;
+float extension_DP_RM_SETRENDERENTITY;
+float extension_DP_RM_CVAR_ALTERTYPE;
+float extension_DP_RM_VOIP;
+float extension_ALL;
+//float extension_DP_CSQC_ROTATEMOVES;
+void(void) extension_init;

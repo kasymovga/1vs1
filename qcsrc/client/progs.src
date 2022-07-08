@@ -56,6 +56,7 @@ db.qh
 map.qh
 server.qh
 shootingrange.qh
+extension.qh
 ../client-server/progs.qc
 cvar.qc
 str.qc
@@ -146,3 +147,4 @@ csqc_entity.qc
 recordlist.qc
 shootingrange.qc
 voip.qc
+extension.qc
