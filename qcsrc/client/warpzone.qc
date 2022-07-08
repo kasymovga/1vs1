@@ -1,5 +1,3 @@
-float warpzone_newstyle;
-
 void(float isnew) warpzone_read {
 	if not(self.enemy) {
 		self.enemy = spawn();
@@ -70,7 +68,7 @@ float warpzone_fixingview_drawexteriormodel;
 //float warpzone_fixingview_forwardspeed;
 void WarpZone_Inside()
 {
-	if(warpzone_fixingview || !warpzone_newstyle)
+	if(warpzone_fixingview)
 		return;
 	warpzone_fixingview = 1;
 	warpzone_fixingview_drawexteriormodel = cvar("r_drawexteriormodel");
@@ -83,7 +81,7 @@ void WarpZone_Inside()
 
 void WarpZone_Outside()
 {
-	if(!warpzone_fixingview || !warpzone_newstyle)
+	if(!warpzone_fixingview)
 		return;
 	warpzone_fixingview = 0;
 	cvar_set("r_drawexteriormodel", ftos(warpzone_fixingview_drawexteriormodel));
@@ -196,7 +194,6 @@ void(void) warpzone_view_fix_real {
 
 void() warpzone_init_hook {
 	warpzone_sound_transition = CVAR(cl_warpzone_sound_transition);
-	warpzone_newstyle = checkextension("DP_CSQC_ROTATEMOVES");
 }
 
 void() warpzone_shutdown_hook {
