@@ -333,6 +333,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			}
 		}
 		if (race_defrag) {
+			e.race_completed = TRUE;
 			entity e2 = spawn();
 			e2.think = race_respawn_delayed;
 			e2.nextthink = time + 1;
@@ -477,6 +478,7 @@ void(void) race_checkpoint_passed {
 	if(other.classname != "player")
 		return;
 
+	if (race_defrag && other.race_completed) return; //defrag required respawn
 	if (other.race_checkpoint == -1 || other.race_checkpoint == self.race_checkpoint || (race_defrag && other.race_checkpoint < self.race_checkpoint && other.race_checkpoint)) {
 		if(self.race_penalty) {
 			if(other.race_lastpenalty != self) {
@@ -735,6 +737,7 @@ void(entity spot) race_player_spawn {
 	if (spot.target != "" && self.race_checkpoint == -1)
 		self.race_checkpoint = 0;
 
+	if (race_defrag) self.race_completed = FALSE;
 	self.race_place = 0;
 	race_player_spawn_next(spot);
 }
