@@ -13,7 +13,7 @@ alias bsp "ls maps/*.bsp"
 alias chmap "changelevel $*"
 alias gotomap "sv_cmd gotomap \"$1\""
 // server settings
-hostname "Rexuiz $g_rexuizversion Server"
+hostname "Rexuiz $rexuizversion Server"
 set sv_mapchange_delay 5
 // restart server if all players hit "ready"-button
 set sv_ready_restart 0 "if set to 1 allow a map to be restarted once all players pressed the \"ready\" button'"
