@@ -383,7 +383,7 @@ void(void) spawnfunc_trigger_multiple {
 		precache_sound(self.noise);
 
 	if (!self.wait)
-		self.wait = 0.2;
+		self.wait = cvar("g_trigger_wait_default");
 
 	self.use = trigger_multiple_use;
 	trigger_solid_brush_init();
