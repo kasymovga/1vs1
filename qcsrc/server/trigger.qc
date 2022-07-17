@@ -353,6 +353,7 @@ void(void) trigger_multiple_reset {
 	self.think = stdproc_nothing;
 	self.use = trigger_multiple_use;
 	self.team = self.team_saved;
+	self.nextthink = 0;
 }
 
 /*QUAKED spawnfunc_trigger_multiple (.5 .5 .5) ? notouch
