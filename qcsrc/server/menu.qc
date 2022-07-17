@@ -83,7 +83,8 @@ void(entity menu, float item, string name) menu_set_item {
 	if (item < 0 || item >= menu.cnt)
 		return;
 
-	(menu.menu_items[item]) = name;
+	str_unzone_ifneeded(menu.menu_items[item]);
+	(menu.menu_items[item]) = str_zone_ifneeded(name);
 	menu.SendFlags |= 1;
 }
 

@@ -42,8 +42,8 @@ float GameTypeVote_Think() {
 			gametypevote = world;
 			for (i = 0; i < gametypes_count; i++) {
 				print(gametypes_descr[i], "\n");
-				if (gametypes_descr[i] != "")
-					strunzone(gametypes_descr[i]);
+				str_unzone_ifneeded(gametypes_descr[i]);
+				gametypes_descr[i] = "";
 			}
 		}
 		return FALSE;
