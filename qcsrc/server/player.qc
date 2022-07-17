@@ -2179,10 +2179,9 @@ void(entity spot) player_spawn {
 	self.event_damage = player_damage;
 	self.bot_attack = TRUE;
 	self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
-	if (self.killcount == -666) {
-		score_clear(self);
+	if (self.killcount == -666)
 		self.killcount = 0;
-	}
+
 	weapon_model_spawn();
 	self.alpha = 1;
 	oldself = self;
@@ -2234,6 +2233,10 @@ void(void) player_leave {
 		cvar_set("timelimit", "-1");
 	}
 	player_real_count = n;
+	if (self.scorekeeper)
+		score_clear(self);
+
+	self.winning = FALSE;
 }
 
 void(string pattern) player_precache_all_models {
