@@ -134,8 +134,10 @@ float() coop_monster_quant {
 }
 
 void(entity attacker) coop_monster_killed {
-	survive_monster_killed(attacker);
 	single_monster_killed(attacker);
+	if (attacker.classname == "player") {
+		score_team_add_to(attacker.team, ST_SCORE, self.frags);
+	}
 }
 
 void(void) coop_init {
