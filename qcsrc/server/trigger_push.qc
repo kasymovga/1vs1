@@ -172,6 +172,7 @@ void(void) trigger_push_findtarget {
 
 float trigger_push_init_done;
 void(void) spawnfunc_trigger_push {
+	ENTITY_NOT_PER_PLAYER();
 	if not(trigger_push_init_done) {
 		CVAR_CACHE(g_trigger_push_use_trigger_origin);
 		CVAR_CACHE(g_trigger_push_speed_factor);
@@ -243,6 +244,7 @@ void(void) trigger_push_velocity_touch {
 
 float trigger_push_velocity_init_done;
 void(void) spawnfunc_trigger_push_velocity {
+	ENTITY_NOT_PER_PLAYER();
 	if not(trigger_push_velocity_init_done) {
 		CVAR_CACHE(g_trigger_push_use_trigger_origin);
 		trigger_push_velocity_init_done = 1;

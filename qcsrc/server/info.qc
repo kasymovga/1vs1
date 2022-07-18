@@ -1,4 +1,4 @@
-void(void) spawnfunc_info_notnull {};
+void(void) spawnfunc_info_notnull { };
 
 void(void) spawnfunc_info_null {
 	remove(self);

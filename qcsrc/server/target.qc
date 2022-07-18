@@ -1,4 +1,4 @@
-void spawnfunc_target_position() {};
+void spawnfunc_target_position() { ENTITY_NOT_PER_PLAYER(); };
 
 // TODO add a way to do looped sounds with sound(); then complete this entity
 .float volume, atten;
@@ -7,6 +7,7 @@ void(void) target_speaker_use {
 }
 
 void(void) spawnfunc_target_speaker {
+	ENTITY_NOT_PER_PLAYER();
 	if(self.noise)
 		precache_sound (self.noise);
 	IFTARGETED
@@ -218,6 +219,7 @@ string(vector p) target_location_nearest {
 }
 
 void(void) spawnfunc_target_location {
+	ENTITY_NOT_PER_PLAYER();
     self.classname = "target_location";
     // location name in netname
     // eventually support: count, teamgame selectors, line of sight?
@@ -230,6 +232,7 @@ void(void) target_kill_use {
 }
 
 void(void) spawnfunc_target_kill {
+	ENTITY_NOT_PER_PLAYER();
 	self.use = target_kill_use;
 }
 
@@ -241,6 +244,7 @@ void(void) target_teleporter_use {
 }
 
 void(void) spawnfunc_target_teleporter {
+	ENTITY_NOT_PER_PLAYER();
 	if (self.target != "") {
 		teleport_setup();
 		self.solid = SOLID_NOT;
@@ -295,6 +299,7 @@ void(void) target_speed_use {
 }
 
 void(void) spawnfunc_target_speed {
+	ENTITY_NOT_PER_PLAYER();
 	self.use = target_speed_use;
 }
 

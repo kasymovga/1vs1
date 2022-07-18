@@ -180,6 +180,7 @@ void		end_sys_fields;
 // SV_OnEntityPreSpawnFunction is called before even looking for the spawn function, so you can even change its classname in there. If it remove()s the entity, the spawn function will not be looked for.
 // SV_OnEntityPostSpawnFunction is called ONLY after its spawn function or SV_OnEntityNoSpawnFunction was called, and skipped if the entity got removed by either.
 #define entity_spawn_pre SV_OnEntityPreSpawnFunction
+#define entity_spawn_post SV_OnEntityPostSpawnFunction
 //things that don't have extensions yet:
 .float disableclientprediction;
 
@@ -878,3 +879,6 @@ float PFLAGS_FULLDYNAMIC = 128; // light enable (without this set no light is pr
 .float clipgroup;
 //description:
 //If two entities have this field set to the same non-zero integer value, they won't collide with each other.
+
+//DP_RM_EXISTSONLYFOR
+.entity existsonlyfor;
