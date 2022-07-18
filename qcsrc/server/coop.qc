@@ -133,6 +133,11 @@ float() coop_monster_quant {
 	return coop_monster_quant_cache;
 }
 
+void(entity attacker) coop_monster_killed {
+	survive_monster_killed(attacker);
+	single_monster_killed(attacker);
+}
+
 void(void) coop_init {
 	single_init();
 	score_generic();
