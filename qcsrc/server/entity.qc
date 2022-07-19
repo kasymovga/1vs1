@@ -420,6 +420,8 @@ void(void) entity_spawn_pre {
 	if(self.anglejitter != 0)
 		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglejitter;
 
+	float count_multi = cvar(strcat("g_spawncountmultiply_", self.classname));
+	if (count_multi) self.count *= count_multi;
 	if (!entity_spawn_replace(cvar_string(strcat("g_spawnreplace_", self.classname)))) {
 		if (entity_spawn_replace(cvar_string(strcat("sv_spawnreplace_", self.classname))))
 			entity_spawn_replace(cvar_string(strcat("g_spawnreplace_", self.classname)));
