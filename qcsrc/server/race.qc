@@ -1111,17 +1111,43 @@ void(void) race_qualifying_limits {
 	cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
 }
 
+void(void) race_target_init_use {
+	//1 keep armor
+	//2 keep health
+	//4 keep weapons
+	//8 keep powerups
+	//16 keep holdable?
+	//32 remove machine gun
+	if not(self.spawnflags & 1)
+		other.armorvalue = player_start_armorvalue;
+
+	if not(self.spawnflags & 2)
+		other.health = player_start_health;
+
+	if not(self.spawnflags & 4) {
+		other.weapons = WEPBIT_UZI | WEPBIT_MELEE;
+		other.switchweapon = WEP_UZI;
+		other.ammo_shells = player_start_ammo_shells;
+		other.ammo_nails = player_start_ammo_nails;
+		other.ammo_rockets = player_start_ammo_rockets;
+		other.ammo_cells = player_start_ammo_cells;
+		if (self.spawnflags & 32) {
+			other.weapons = WEPBIT_MELEE;
+			other.switchweapon = WEP_MELEE;
+		}
+	}
+	if not(self.spawnflags & 8) {
+		other.items &= ~IT_JETPACK;
+		other.ammo_fuel = 0;
+		other.strength_finished = 0;
+		other.invincible_finished = 0;
+		other.invisibility_finished = 0;
+		other.speed_finished = 0;
+	}
+}
+
 void(void) spawnfunc_race_target_init {
-	self.weapons = player_start_weapons;
-	self.health = player_start_health;
-	self.armorvalue = player_start_armorvalue;
-	self.ammo_shells = player_start_ammo_shells;
-	self.ammo_nails = player_start_ammo_nails;
-	self.ammo_rockets = player_start_ammo_rockets;
-	self.ammo_cells = player_start_ammo_cells;
-	self.ammo_fuel = player_start_ammo_fuel;
-	self.items = player_start_items;
-	spawnfunc_target_items();
+	self.use = race_target_init_use;
 }
 
 void(void) spawnfunc_race_target_start_timer {
