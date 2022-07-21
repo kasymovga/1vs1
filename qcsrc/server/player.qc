@@ -2186,13 +2186,6 @@ void(entity spot) player_spawn {
 	self.alpha = 1;
 	oldself = self;
 	oldother = other;
-	self = spot;
-	other = spot;
-	activator = oldself;
-	trigger_use_targets();
-	activator = world;
-	self = oldself;
-	other = oldother;
 	player_effects();
 	gamehook_chain_player_spawn(spot);
 	if (self.classname == "player") { //spawn can be aborted by game hook
@@ -2219,6 +2212,13 @@ void(entity spot) player_spawn {
 		ready_restart();
 	}
 	player_real_count = n;
+	self = spot;
+	other = spot;
+	activator = oldself;
+	trigger_use_targets();
+	activator = world;
+	self = oldself;
+	other = oldother;
 }
 
 void(void) player_leave {

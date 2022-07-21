@@ -1119,30 +1119,31 @@ void(void) race_target_init_use {
 	//16 keep holdable?
 	//32 remove machine gun
 	if not(self.spawnflags & 1)
-		other.armorvalue = player_start_armorvalue;
+		activator.armorvalue = player_start_armorvalue;
 
 	if not(self.spawnflags & 2)
-		other.health = player_start_health;
+		activator.health = player_start_health;
 
 	if not(self.spawnflags & 4) {
-		other.weapons = WEPBIT_UZI | WEPBIT_MELEE;
-		other.switchweapon = WEP_UZI;
-		other.ammo_shells = player_start_ammo_shells;
-		other.ammo_nails = player_start_ammo_nails;
-		other.ammo_rockets = player_start_ammo_rockets;
-		other.ammo_cells = player_start_ammo_cells;
-		if (self.spawnflags & 32) {
-			other.weapons = WEPBIT_MELEE;
-			other.switchweapon = WEP_MELEE;
-		}
+		activator.weapons = WEPBIT_UZI | WEPBIT_MELEE;
+		activator.switchweapon = WEP_UZI;
+		activator.ammo_shells = player_start_ammo_shells;
+		activator.ammo_nails = player_start_ammo_nails;
+		activator.ammo_rockets = player_start_ammo_rockets;
+		activator.ammo_cells = player_start_ammo_cells;
+	}
+	if (self.spawnflags & 32) {
+		activator.weapons &= ~WEPBIT_UZI;
+		if (activator.switchweapon == WEPBIT_UZI || activator.weapon == WEPBIT_UZI)
+			activator.switchweapon = weapon_best(activator);
 	}
 	if not(self.spawnflags & 8) {
-		other.items &= ~IT_JETPACK;
-		other.ammo_fuel = 0;
-		other.strength_finished = 0;
-		other.invincible_finished = 0;
-		other.invisibility_finished = 0;
-		other.speed_finished = 0;
+		activator.items &= ~IT_JETPACK;
+		activator.ammo_fuel = 0;
+		activator.strength_finished = 0;
+		activator.invincible_finished = 0;
+		activator.invisibility_finished = 0;
+		activator.speed_finished = 0;
 	}
 }
 
