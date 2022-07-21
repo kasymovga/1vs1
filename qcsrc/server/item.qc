@@ -72,6 +72,7 @@ float g_balance_powerup_strength_time;
 float g_balance_powerup_invisibility_time;
 float g_balance_powerup_invincible_time;
 float g_balance_powerup_speed_time;
+float g_pickup_weapon_ammo_limit;
 string sv_model_powerupstrength;
 string sv_model_powerupinvincible;
 string sv_model_powerupinvisibility;
@@ -338,26 +339,23 @@ float(entity item, entity player) item_give_to {
 		}
 		if (item.spawnshieldtime)
 		if (g_use_ammunition) {
-			if (item.ammo_shells)
-			if (player.ammo_shells < g_pickup_shells_max) {
-				pickedup = TRUE;
-				player.ammo_shells = min (player.ammo_shells + item.ammo_shells, g_pickup_shells_max);
+			#define PICK_AMMO(x, max) \
+			if (item.x) \
+			if (player.x < max) { \
+				if ((item.flags & FL_WEAPON) && g_pickup_weapon_ammo_limit) { \
+					if (player.x < item.x) { \
+						player.x = item.x; \
+						pickedup = TRUE; \
+					} \
+				} else { \
+					player.x = min(player.x + item.x, max); \
+					pickedup = TRUE; \
+				} \
 			}
-			if (item.ammo_nails)
-			if (player.ammo_nails < g_pickup_nails_max) {
-				pickedup = TRUE;
-				player.ammo_nails = min (player.ammo_nails + item.ammo_nails, g_pickup_nails_max);
-			}
-			if (item.ammo_rockets)
-			if (player.ammo_rockets < g_pickup_rockets_max) {
-				pickedup = TRUE;
-				player.ammo_rockets = min (player.ammo_rockets + item.ammo_rockets, g_pickup_rockets_max);
-			}
-			if (item.ammo_cells)
-			if (player.ammo_cells < g_pickup_cells_max) {
-				pickedup = TRUE;
-				player.ammo_cells = min (player.ammo_cells + item.ammo_cells, g_pickup_cells_max);
-			}
+			PICK_AMMO(ammo_shells, g_pickup_shells_max)
+			PICK_AMMO(ammo_nails, g_pickup_nails_max)
+			PICK_AMMO(ammo_rockets, g_pickup_rockets_max)
+			PICK_AMMO(ammo_cells, g_pickup_cells_max)
 			if (item.ammo_fuel)
 			if (player.ammo_fuel < g_pickup_fuel_max) {
 				pickedup = TRUE;
@@ -713,6 +711,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 	self.mdl = itemmodel;
 	self.noise = pickupsound;
 	// let mappers override respawntime
+	if (self.wait) self.respawntime = self.wait;
 	if (!self.respawntime) { // both set
 		self.respawntime = defaultrespawntime;
 		self.respawntimejitter = defaultrespawntimejitter;
@@ -771,7 +770,7 @@ void(void) spawnfunc_item_rockets {
 		remove(self);
 		return;
 	}
-	self.ammo_rockets = g_pickup_rockets;
+	self.ammo_rockets = (self.count ? self.count : g_pickup_rockets);
 	item_start(sv_model_ammorockets, "models/items/a_rockets.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "rockets", IT_ROCKETS, 0, 0, commodity_pickupevalfunc, 3000);
 }
 
@@ -780,7 +779,7 @@ void(void) spawnfunc_item_bullets {
 		remove(self);
 		return;
 	}
-	self.ammo_nails = g_pickup_nails;
+	self.ammo_nails = (self.count ? self.count : g_pickup_nails);
 	item_start(sv_model_ammobullets, "models/items/a_bullets.mdl", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "bullets", IT_NAILS, 0, 0, commodity_pickupevalfunc, 2000);
 }
 
@@ -789,7 +788,7 @@ void(void) spawnfunc_item_cells {
 		remove(self);
 		return;
 	}
-	self.ammo_cells = g_pickup_cells;
+	self.ammo_cells = (self.count ? self.count : g_pickup_cells);
 	item_start(sv_model_ammocells, "models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "cells", IT_CELLS, 0, 0, commodity_pickupevalfunc, 2000);
 }
 
@@ -798,7 +797,7 @@ void(void) spawnfunc_item_shells {
 		remove(self);
 		return;
 	}
-	self.ammo_shells = g_pickup_shells;
+	self.ammo_shells = (self.count ? self.count : g_pickup_shells);
 	item_start(sv_model_ammoshells, "models/items/a_shells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "shells", IT_SHELLS, 0, 0, commodity_pickupevalfunc, 500);
 }
 
@@ -916,7 +915,7 @@ void(void) spawnfunc_item_strength {
 		return;
 	}
 	precache_sound("weapons/strength_fire.wav");
-	self.strength_finished = g_balance_powerup_strength_time;
+	self.strength_finished = (self.count ? self.count : g_balance_powerup_strength_time);
 	item_start(sv_model_powerupstrength, "models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 	powerup_strength_init();
 }
@@ -926,7 +925,7 @@ void(void) spawnfunc_item_invincible {
 		remove(self);
 		return;
 	}
-	self.invincible_finished = g_balance_powerup_invincible_time;
+	self.invincible_finished = (self.count ? self.count : g_balance_powerup_invincible_time);
 	item_start(sv_model_powerupinvincible, "models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 	powerup_invincible_init();
 }
@@ -948,7 +947,7 @@ void(void) spawnfunc_item_invisibility {
 		remove(self);
 		return;
 	}
-	self.invisibility_finished = g_balance_powerup_invisibility_time;
+	self.invisibility_finished = (self.count ? self.count : g_balance_powerup_invisibility_time);
 	item_start(sv_model_powerupinvisibility, "models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Invisibility", IT_INVISIBILITY, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 	self.colormod = '1 1.5 0.1';
 	self.glowmod = '1 1.5 0.1';
@@ -961,7 +960,7 @@ void(void) spawnfunc_item_speed {
 		remove(self);
 		return;
 	}
-	self.speed_finished = g_balance_powerup_speed_time;
+	self.speed_finished = (self.count ? self.count : g_balance_powerup_speed_time);
 	item_start(sv_model_powerupspeed, "models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Speed", IT_SPEED, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 	self.colormod = '1 1 0.1';
 	self.glowmod = '1 1 0.1';
@@ -997,7 +996,7 @@ void(void) spawnfunc_item_jetpack {
 		remove(self);
 		return;
 	}
-	self.ammo_fuel = g_pickup_fuel_jetpack;
+	self.ammo_fuel = (self.count ? self.count : g_pickup_fuel_jetpack);
 	item_start("", "models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 	jetpack_enable();
 }
@@ -1134,6 +1133,7 @@ void(void) item_init {
 	CVAR_CACHE(g_balance_powerup_invisibility_time);
 	CVAR_CACHE(g_balance_powerup_invincible_time);
 	CVAR_CACHE(g_balance_powerup_speed_time);
+	CVAR_CACHE(g_pickup_weapon_ammo_limit);
 	CVAR_CACHE(sv_item_tracecull);
 	CVAR_CACHE_STR(sv_model_powerupstrength);
 	CVAR_CACHE_STR(sv_model_powerupinvincible);

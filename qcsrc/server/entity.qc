@@ -420,10 +420,43 @@ void(void) entity_spawn_pre {
 	if(self.anglejitter != 0)
 		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglejitter;
 
+	float count_multi = cvar(strcat("g_spawncountmultiply_", self.classname));
+	if (count_multi) self.count *= count_multi;
 	if (!entity_spawn_replace(cvar_string(strcat("g_spawnreplace_", self.classname)))) {
 		if (entity_spawn_replace(cvar_string(strcat("sv_spawnreplace_", self.classname))))
 			entity_spawn_replace(cvar_string(strcat("g_spawnreplace_", self.classname)));
 	}
 	gamehook_chain_entity_spawn_pre();
+	entity_not_per_player = FALSE;
 }
 #define gametype _gametype //workaround for gametype field
+
+void(void) entity_spawn_post {
+	if not(self) return;
+	if (entity_not_per_player) return;
+	if (self.solid != SOLID_NOT)
+	if (cvar("g_per_player_entities")) {
+		entity oldself = self;
+		entity slot;
+		entity initializer = NULL;
+		entity e;
+		for (e = NULL; (e = find(e, classname, "initialize_entity")); ) {
+			if (e.enemy == self) {
+				e.aiment = initializer;
+				initializer = e;
+			}
+		}
+		slot = nextent(NULL);
+		self.existsonlyfor = slot;
+		for (slot = nextent(slot); num_for_edict(slot) <= client_max_count; slot = nextent(slot)) {
+			self = spawn();
+			copyentity(oldself, self);
+			self.existsonlyfor = slot;
+			while (initializer) {
+				entity_initialize(self, initializer.think, initializer.cnt);
+				initializer = initializer.aiment;
+			}
+		}
+		self = oldself;
+	}
+}

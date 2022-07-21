@@ -209,15 +209,20 @@ void(float preventReuse) trigger_use_targets_ex {
 		case 3: s = stemp.target4; break;
 		}
 		if (s != "") {
-			for (t = world; (t = find(t, targetname, s)); )
-			if (t.use && (t.sub_target_used != time || !preventReuse)) {
-				//print(stemp.classname, " ", stemp.targetname, " -> ", t.classname, " ", t.targetname, "\n");
-				self = t;
-				other = otemp;
-				activator = act;
-				self.use();
-				if (preventReuse) {
-					self.sub_target_used = time;
+			for (t = world; (t = find(t, targetname, s)); ) {
+				if (t.existsonlyfor) {
+					if (stemp.existsonlyfor && t.existsonlyfor != stemp.existsonlyfor) continue;
+					if (act != t.existsonlyfor) continue;
+				}
+				if (t.use && (t.sub_target_used != time || !preventReuse)) {
+					//print(stemp.classname, " ", stemp.targetname, " -> ", t.classname, " ", t.targetname, "\n");
+					self = t;
+					other = otemp;
+					activator = act;
+					self.use();
+					if (preventReuse) {
+						self.sub_target_used = time;
+					}
 				}
 			}
 		}
@@ -386,6 +391,9 @@ void(void) spawnfunc_trigger_multiple {
 	if (!self.wait)
 		self.wait = cvar("g_trigger_wait_default");
 
+	if (self.wait < 0 && cvar("g_trigger_negative_wait_is_never"))
+		self.wait = 999999;
+
 	self.use = trigger_multiple_use;
 	trigger_solid_brush_init();
 	self.team_saved = self.team;
@@ -533,6 +541,7 @@ defalt dmg = 5
 entity trigger_hurt_last;
 entity trigger_hurt_first;
 void(void) spawnfunc_trigger_hurt {
+	ENTITY_NOT_PER_PLAYER();
 	trigger_solid_brush_init();
 	self.touch = trigger_hurt_touch;
 	if (!self.dmg)

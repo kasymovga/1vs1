@@ -101,3 +101,6 @@ set g_punchangle_decrease_delay 0
 set g_ragequit_message "^3RAGE QUIT"
 set g_player_death_sound 1
 set g_trigger_wait_default 0.2
+set g_per_player_entities 0
+set g_trigger_negative_wait_is_never 0
+set g_pickup_weapon_ammo_limit 0 "Don't allow get extra ammo from weapon"

@@ -3,6 +3,7 @@ float g_balance_chainsaw_primary_force;
 float g_balance_chainsaw_primary_refire;
 float g_balance_chainsaw_secondary;
 float g_balance_chainsaw_secondary_damage;
+float g_balance_chainsaw_noise;
 
 void(void) spawnfunc_weapon_chainsaw {
 	if (g_balance_melee && g_balance_melee != 2)
@@ -12,7 +13,11 @@ void(void) spawnfunc_weapon_chainsaw {
 }
 
 void(void) weapon_chainsaw_ready {
-	player_sound(self, CHAN_WEAPON, "weapons/chainsaw_idle_1.wav", VOL_BASE, ATTN_NORM);
+	if (g_balance_chainsaw_noise)
+		player_sound(self, CHAN_WEAPON, "weapons/chainsaw_idle_1.wav", VOL_BASE, ATTN_NORM);
+	else
+		player_sound(self, CHAN_WEAPON, "misc/null.wav", VOL_BASE, ATTN_NORM);
+
 	weapon_ready();
 }
 
@@ -71,7 +76,8 @@ float(float req) weapon_chainsaw {
 		dlc_precache_sound("weapons/chainsaw_active_1.wav");
 	} else if (req == WR_SETUP) {
 		weapon_setup(WEP_MELEE);
-		player_sound(self, CHAN_WEAPON, "weapons/chainsaw_idle_1.wav", VOL_BASE, ATTN_NORM);
+		if (g_balance_chainsaw_noise)
+			player_sound(self, CHAN_WEAPON, "weapons/chainsaw_idle_1.wav", VOL_BASE, ATTN_NORM);
 	} else if (req == WR_CLEAR) {
 		player_sound_stop(self, CHAN_WEAPON);
 	} else if (req == WR_CHECKAMMO1)
@@ -89,6 +95,7 @@ float(float req) weapon_chainsaw {
 		CVAR_CACHE(g_balance_chainsaw_primary_refire);
 		CVAR_CACHE(g_balance_chainsaw_secondary);
 		CVAR_CACHE(g_balance_chainsaw_secondary_damage);
+		CVAR_CACHE(g_balance_chainsaw_noise);
 		weapon_melee_init();
 	}
 	return TRUE;

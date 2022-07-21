@@ -1230,7 +1230,8 @@ void(void) func_door_use {
 		self = self.owner;
 		func_door_fire();
 		self = oself;
-	}
+	} else
+		print("door without owner\n");
 }
 
 
@@ -1385,6 +1386,12 @@ float(entity e1, entity e2) func_doors_touching {
 		return FALSE;
 
 	if (e1.absmax_z < e2.absmin_z)
+		return FALSE;
+
+	if (e1.existsonlyfor && e1.existsonlyfor != e2.existsonlyfor)
+		return FALSE;
+
+	if (e2.existsonlyfor && e2.existsonlyfor != e1.existsonlyfor)
 		return FALSE;
 
 	return TRUE;
