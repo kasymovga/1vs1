@@ -1419,8 +1419,26 @@ void(void) spawnfunc_race_target_score {
 }
 
 void(void) race_target_frags_filter_use {
-	if (activator.frags == self.frags)
+	//remover
+	//runonce
+	//silent
+	//reset
+	//match
+	if ((!(self.spawnflags & 16) && activator.frags >= self.frags) || activator.frags == self.frags) {
 		trigger_use_targets();
+		if (self.spawnflags & 9) {
+			if (self.spawnflags & 1)
+				activator.frags -= self.frags;
+
+			if (self.spawnflags & 8)
+				activator.frags = 0;
+
+			centerprint(activator, strcat("Score count: ", ftos(activator.frags), "\n"));
+		}
+	} else if not(self.spawnflags & 4) {
+		if (self.frags > activator.frags)
+			centerprint(activator, strcat(ftos(self.frags - activator.frags), " more score points needed"));
+	}
 }
 
 void(void) spawnfunc_race_target_frags_filter {
