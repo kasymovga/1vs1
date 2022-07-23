@@ -862,6 +862,10 @@ void(void) race_trigger_penalty_use {
 }
 
 void(void) spawnfunc_race_trigger_penalty {
+	if (!g_race && !g_cts) {
+		remove(self);
+		return;
+	}
 	trigger_solid_brush_init();
 	self.use = race_trigger_penalty_use;
 	if not(self.spawnflags & 1)
@@ -1125,17 +1129,17 @@ void(void) race_target_init_use {
 		activator.health = player_start_health;
 
 	if not(self.spawnflags & 4) {
-		activator.weapons = WEPBIT_UZI | WEPBIT_MELEE;
-		activator.switchweapon = WEP_UZI;
 		activator.ammo_shells = player_start_ammo_shells;
 		activator.ammo_nails = player_start_ammo_nails;
 		activator.ammo_rockets = player_start_ammo_rockets;
 		activator.ammo_cells = player_start_ammo_cells;
-	}
-	if (self.spawnflags & 32) {
-		activator.weapons &= ~WEPBIT_UZI;
-		if (activator.switchweapon == WEPBIT_UZI || activator.weapon == WEPBIT_UZI)
-			activator.switchweapon = weapon_best(activator);
+		if (self.spawnflags & 32) {
+			activator.weapons &= WEPBIT_MELEE;
+			activator.switchweapon = WEP_MELEE;
+		} else {
+			activator.weapons = WEPBIT_UZI | WEPBIT_MELEE;
+			activator.switchweapon = WEP_UZI;
+		}
 	}
 	if not(self.spawnflags & 8) {
 		activator.items &= ~IT_JETPACK;
@@ -1148,6 +1152,12 @@ void(void) race_target_init_use {
 }
 
 void(void) spawnfunc_race_target_init {
+	if (gametype != GAMETYPE_CTS) {
+		remove(self);
+		return;
+	}
+	weapon_precache(WEP_MELEE);
+	weapon_precache(WEP_UZI);
 	self.use = race_target_init_use;
 }
 
@@ -1412,7 +1422,7 @@ void(void) race_init {
 entity race_target_frags_filter_global;
 float race_frags_max;
 void(void) race_target_score_use {
-	activator.frags += 1;
+	activator.frags += self.count;
 	centerprint(activator, strcat("Score count: ", ftos(activator.frags), "/", ftos(race_frags_max), "\n"));
 	entity oldself = self;
 	entity oa = activator;
@@ -1435,6 +1445,10 @@ void(void) race_target_frags_filter_use {
 	//silent
 	//reset
 	//match
+	if (gametype != GAMETYPE_CTS) {
+		remove(self);
+		return;
+	}
 	if ((!(self.spawnflags & 16) && activator.frags >= self.frags) || activator.frags == self.frags) {
 		trigger_use_targets();
 		if (self.spawnflags & 9) {
@@ -1454,6 +1468,11 @@ void(void) race_target_frags_filter_use {
 
 void(void) spawnfunc_race_target_frags_filter {
 	ENTITY_NOT_PER_PLAYER();
+	if (gametype != GAMETYPE_CTS) {
+		remove(self);
+		return;
+	}
+	if (!self.frags) self.frags = 1;
 	self.use = race_target_frags_filter_use;
 	race_frags_max = max(self.frags, race_frags_max);
 	if (self.targetname == "") {
