@@ -311,16 +311,9 @@ void(void) target_give_use {
 		return;
 
 	entity e;
-	entity oldself;
-	entity oldactivator;
 	for (e = find(world, targetname, self.target); e; e = find(e, targetname, self.target)) {
 		if not(e.flags & (FL_ITEM | FL_WEAPON)) {
-			oldself = self;
-			oldactivator = activator;
-			self = e;
-			e.use();
-			self = oldself;
-			activator = oldactivator;
+			print("Target ", self.target, " is not item\n");
 			continue;
 		}
 		item_give_to(e, activator);

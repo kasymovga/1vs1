@@ -1436,6 +1436,7 @@ void(void) race_target_score_use {
 }
 
 void(void) spawnfunc_race_target_score {
+	if (!self.count) self.count = 1;
 	self.use = race_target_score_use;
 }
 
