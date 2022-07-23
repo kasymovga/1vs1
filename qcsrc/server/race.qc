@@ -1409,9 +1409,10 @@ void(void) race_init {
 	gamehook_chain_cmd_game_handle = race_cmd_game_handle;
 }
 
+float race_frags_max;
 void(void) race_target_score_use {
 	activator.frags += 1;
-	centerprint(activator, strcat("Score count: ", ftos(activator.frags), "\n"));
+	centerprint(activator, strcat("Score count: ", ftos(activator.frags), "/", ftos(race_frags_max), "\n"));
 }
 
 void(void) spawnfunc_race_target_score {
@@ -1433,7 +1434,7 @@ void(void) race_target_frags_filter_use {
 			if (self.spawnflags & 8)
 				activator.frags = 0;
 
-			centerprint(activator, strcat("Score count: ", ftos(activator.frags), "\n"));
+			centerprint(activator, strcat("Score count: ", ftos(activator.frags), "/", ftos(race_frags_max), "\n"));
 		}
 	} else if not(self.spawnflags & 4) {
 		if (self.frags > activator.frags)
@@ -1444,4 +1445,5 @@ void(void) race_target_frags_filter_use {
 void(void) spawnfunc_race_target_frags_filter {
 	ENTITY_NOT_PER_PLAYER();
 	self.use = race_target_frags_filter_use;
+	race_frags_max = max(self.frags, race_frags_max);
 }
