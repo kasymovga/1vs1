@@ -1168,6 +1168,7 @@ void(void) spawnfunc_race_target_start_timer {
 	self.classname = "race_trigger_checkpoint";
 	self.target = ""; //workaround for some broken defrag maps
 	spawnfunc_race_trigger_checkpoint();
+	self.solid = SOLID_NOT;
 }
 
 void(void) spawnfunc_race_target_stop_timer {
@@ -1183,6 +1184,7 @@ void(void) spawnfunc_race_target_stop_timer {
 	race_timed_checkpoint = 1;
 	race_highest_checkpoint = 1;
 	spawnfunc_race_trigger_checkpoint();
+	self.solid = SOLID_NOT;
 }
 
 void(void) spawnfunc_race_target_checkpoint {
@@ -1196,6 +1198,7 @@ void(void) spawnfunc_race_target_checkpoint {
 	self.classname = "race_trigger_checkpoint";
 	self.target = ""; //workaround for some broken defrag maps
 	spawnfunc_race_trigger_checkpoint();
+	self.solid = SOLID_NOT;
 }
 
 var void(void) race_shutdown_next;
