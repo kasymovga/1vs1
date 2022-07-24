@@ -153,6 +153,12 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 	e.csqcprojectile_type = type;
 	e.flags = FL_PROJECTILE;
 	e.classname = "projectile";
+	if (entity_per_player_entities) {
+		if (_owner.classname == "player")
+			e.existsonlyfor = _owner;
+		else
+			e.existsonlyfor = _owner.existsonlyfor;
+	}
 	return e;
 }
 
