@@ -456,14 +456,14 @@ void(vector tdest, float tspeed, void() func) func_calc_move {
 	self.think = func_calc_move_done;
 	if (tdest == self.origin) {
 		self.velocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
+		self.nextthink = self.ltime + sys_ticrate;
 		return;
 	}
 	delta = tdest - self.origin;
 	traveltime = vlen (delta) / tspeed;
-	if (traveltime < 0.1) {
+	if (traveltime < sys_ticrate) {
 		self.velocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
+		self.nextthink = self.ltime + sys_ticrate;
 		return;
 	}
 	self.velocity = delta * (1/traveltime); // QuakeC doesn't allow vector/float division
@@ -497,9 +497,9 @@ void(vector destangle, float tspeed, void() func) func_calc_angle_move {
 	self.think1 = func;
 	self.finalangle = destangle;
 	self.think = func_calc_angle_move_done;
-	if (traveltime < 0.1) {
+	if (traveltime < sys_ticrate) {
 		self.avelocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
+		self.nextthink = self.ltime + sys_ticrate;
 		return;
 	}
 	self.avelocity = delta * (1 / traveltime);
@@ -1726,7 +1726,7 @@ void(void) func_door_secret_use {
 	if (self.noise1 != "")
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
-	self.nextthink = self.ltime + 0.1;
+	self.nextthink = self.ltime + sys_ticrate;
 	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT); // 1 or -1
 	makevectors(self.mangle);
 	if (!self.t_width) {
