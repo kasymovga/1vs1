@@ -21,7 +21,10 @@ void(void) shooter_plasma_use {
 	missile.realowner = activator;
 	projectile_setup(missile, self.origin, WEP_HLAC, g_balance_hlac_primary_damage,
 			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force, 0, MOVETYPE_FLY);
-	missile.existsonlyfor = activator.existsonlyfor;
+	if (entity_per_player_entities)
+	if (activator.classname == "player")
+		missile.existsonlyfor = activator;
+
     missile.velocity = v * g_balance_hlac_primary_speed;
 	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
@@ -35,7 +38,10 @@ void(void) shooter_rocket_use {
 	missile.realowner = activator;
 	projectile_setup(missile, self.origin, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage,
 			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force, 0, MOVETYPE_FLY);
-	missile.existsonlyfor = activator.existsonlyfor;
+	if (entity_per_player_entities)
+	if (activator.classname == "player")
+		missile.existsonlyfor = activator;
+
     missile.velocity = v * g_balance_rocketlauncher_speed;
 	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
