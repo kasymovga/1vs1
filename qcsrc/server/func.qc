@@ -2122,3 +2122,27 @@ void(void) spawnfunc_func_moveentity {
 	self.use = func_moveentity_use;
 	self.think = func_moveentity_think;
 }
+
+void(void) func_timer_think {
+	activator = self.enemy;
+	trigger_use_targets();
+	self.nextthink = time + self.wait;
+}
+
+void(void) func_timer_use {
+	self.enemy = activator;
+	if (self.nextthink) {
+		self.nextthink = 0;
+		return;
+	}
+	func_timer_think();
+}
+
+void(void) spawnfunc_func_timer {
+	self.think = func_timer_think;
+	self.use = func_timer_use;
+	if (self.spawnflags & 1) {
+		self.nextthink = time + sys_ticrate;
+		self.enemy = self;
+	}
+}
