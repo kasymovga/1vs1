@@ -174,6 +174,7 @@ void(float preventReuse) trigger_use_targets_ex {
 		t.target2 = self.target2;
 		t.target3 = self.target3;
 		t.target4 = self.target4;
+		t.existsonlyfor = self.existsonlyfor;
 		return;
 	}
 	//
@@ -441,24 +442,15 @@ This fixed size trigger cannot be touched, it can only be fired by other events.
 */
 void(void) spawnfunc_trigger_relay {
 	self.use = trigger_use_targets;
-	self.reset = spawnfunc_trigger_relay; // this spawnfunc resets fully
-}
-
-void(void) trigger_delay_use {
-	self.think = trigger_use_targets;
-	self.nextthink = time + self.wait;
-}
-
-void(void) trigger_delay_reset {
-	self.think = stdproc_nothing;
 }
 
 void(void) spawnfunc_trigger_delay {
 	if (!self.wait)
 		self.wait = 1;
 
-	self.use = trigger_delay_use;
-	self.reset = trigger_delay_reset;
+	self.delay = self.wait;
+	self.wait = 0;
+	self.use = trigger_use_targets;
 }
 
 void(void) trigger_counter_use {
