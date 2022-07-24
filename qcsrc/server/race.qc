@@ -635,6 +635,7 @@ void(void) race_trigger_checkpoint_verify {
 }
 
 void(void) spawnfunc_race_trigger_checkpoint {
+	ENTITY_NOT_PER_PLAYER();
 	vector o;
 	if (!g_race && !g_cts) {
 		remove(self);
@@ -1463,7 +1464,6 @@ void(void) race_target_frags_filter_use {
 }
 
 void(void) spawnfunc_race_target_frags_filter {
-	ENTITY_NOT_PER_PLAYER();
 	if (gametype != GAMETYPE_CTS) {
 		remove(self);
 		return;
