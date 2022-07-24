@@ -24,4 +24,7 @@ void(entity ent, float when, float fadetime) entity_fade_setup;
 void(string s) entity_abort;
 #define ENTITY_CENTER(e) (e.origin + (e.mins + e.maxs) * .5)
 float entity_not_per_player;
+float entity_per_player_force;
 #define ENTITY_NOT_PER_PLAYER() do { entity_not_per_player = TRUE; } while (0)
+#define ENTITY_PER_PLAYER_FORCE() do { entity_per_player_force = TRUE; } while (0)
+float entity_per_player_entities;

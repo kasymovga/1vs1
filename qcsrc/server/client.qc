@@ -449,6 +449,10 @@ void(void) client_connect { //called by engine
 		self.scorekeeper.clientversion = CLIENT_BOT;
 	}
 	gamehook_chain_client_connect();
+	if (entity_per_player_entities)
+		self.existsonlyfor = self;
+	else
+		self.existsonlyfor = NULL;
 }
 
 void(void) client_disconnect { //called by engine

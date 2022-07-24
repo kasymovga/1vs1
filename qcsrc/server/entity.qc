@@ -428,14 +428,18 @@ void(void) entity_spawn_pre {
 	}
 	gamehook_chain_entity_spawn_pre();
 	entity_not_per_player = FALSE;
+	entity_per_player_force = FALSE;
 }
 #define gametype _gametype //workaround for gametype field
 
 void(void) entity_spawn_post {
-	if not(self) return;
+	if not(self) {
+		entity_per_player_entities = cvar("g_per_player_entities");
+		return;
+	}
+	if not(entity_per_player_entities) return;
 	if (entity_not_per_player) return;
-	if (self.solid != SOLID_NOT)
-	if (cvar("g_per_player_entities")) {
+	if (self.solid != SOLID_NOT || entity_per_player_force) {
 		entity oldself = self;
 		entity slot;
 		entity initializer = NULL;

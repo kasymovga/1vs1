@@ -67,6 +67,10 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	entity oldself;
 	oldself = self;
 	self = targ;
+	if (targ.existsonlyfor) {
+		if (inflictor.existsonlyfor && targ.existsonlyfor != inflictor.existsonlyfor) return;
+		if (attacker && attacker != targ.existsonlyfor);
+	}
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if (deathtype & HITTYPE_NOTEAMDAMAGE) {
 		if (targ.classname == "player")

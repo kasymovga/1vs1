@@ -308,6 +308,10 @@ void(void) target_give_use {
 
 	entity e;
 	for (e = find(world, targetname, self.target); e; e = find(e, targetname, self.target)) {
+		if (e.existsonlyfor) {
+			if (self.existsonlyfor && e.existsonlyfor != self.existsonlyfor) continue;
+			if (e.existsonlyfor != activator) continue;
+		}
 		if not(e.flags & (FL_ITEM | FL_WEAPON)) {
 			print("Target ", self.target, " is not item\n");
 			continue;

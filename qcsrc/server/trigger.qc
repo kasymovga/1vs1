@@ -454,6 +454,7 @@ void(void) spawnfunc_trigger_delay {
 }
 
 void(void) trigger_counter_use {
+	ENTITY_PER_PLAYER_FORCE();
 	self.count = self.count - 1;
 	if (self.count < 0)
 		return;
