@@ -121,11 +121,6 @@ void(void) spawnfunc_target_voicescript {
 	}
 }
 
-void(void) target_delay_use {
-	self.nextthink = time + self.wait;
-	self.think = trigger_use_targets;
-}
-
 void(void) target_delay_init {
 	IFTARGETED
 		return;
@@ -133,7 +128,8 @@ void(void) target_delay_init {
 }
 
 void(void) spawnfunc_target_delay {
-	self.use = target_delay_use;
+	self.delay = self.wait;
+	self.use = trigger_use_targets;
 	self.reset = target_delay_init;
 	entity_initialize(self, target_delay_init, INITPRIO_SETLOCATION);
 }
