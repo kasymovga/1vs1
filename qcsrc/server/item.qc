@@ -1,6 +1,3 @@
-.float speed_finished;
-.float invincible_finished;
-.float invisibility_finished;
 float g_balance_pause_armor_rot;
 float g_balance_pause_fuel_rot;
 float g_balance_pause_health_regen;

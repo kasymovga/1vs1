@@ -1142,12 +1142,7 @@ void(void) race_target_init_use {
 		}
 	}
 	if not(self.spawnflags & 8) {
-		activator.items &= ~IT_JETPACK;
-		activator.ammo_fuel = 0;
-		activator.strength_finished = 0;
-		activator.invincible_finished = 0;
-		activator.invisibility_finished = 0;
-		activator.speed_finished = 0;
+		target_remove_powerups_use();
 	}
 }
 

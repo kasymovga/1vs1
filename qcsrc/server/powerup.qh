@@ -1,3 +1,7 @@
+.float strength_finished;
+.float speed_finished;
+.float invincible_finished;
+.float invisibility_finished;
 void() powerup_strength_init;
 void() powerup_invincible_init;
 void() powerup_speed_init;

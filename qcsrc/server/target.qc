@@ -323,3 +323,18 @@ void(void) target_give_use {
 void(void) spawnfunc_target_give {
 	self.use = target_give_use;
 }
+
+void(void) target_remove_powerups_use {
+	if not(player_start_items & IT_JETPACK) {
+		activator.items &= ~IT_JETPACK;
+		activator.ammo_fuel = 0;
+	}
+	activator.strength_finished = 0;
+	activator.invincible_finished = 0;
+	activator.invisibility_finished = 0;
+	activator.speed_finished = 0;
+}
+
+void(void) spawnfunc_target_remove_powerups {
+	self.use = target_remove_powerups_use;
+}
