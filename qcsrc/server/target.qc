@@ -338,3 +338,19 @@ void(void) target_remove_powerups_use {
 void(void) spawnfunc_target_remove_powerups {
 	self.use = target_remove_powerups_use;
 }
+
+void(void) target_print_use {
+	entity e;
+	if (!activator || (self.spawnflags & 8)) { //BROADCAST
+		FOR_EACH_REALPLAYER(e)
+			if (clienttype(e) == CLIENTTYPE_REAL)
+				centerprint(e, self.message);
+	} else {
+		if (clienttype(activator) == CLIENTTYPE_REAL)
+			centerprint(activator, self.message);
+	}
+}
+
+void(void) spawnfunc_target_print {
+	self.use = target_print_use;
+}
