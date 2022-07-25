@@ -175,6 +175,9 @@ float(float diffangle) race_strafe_angle {
 	vel_z = 0;
 	float speed = vlen(vel);
 	float maxspeed = sv_maxspeed;
+	if (physics_crouch)
+		maxspeed *= 0.5;
+
 	if (physics_flags & FL_ONGROUND) {
 		maxspeed *= physics_maxspeedmod;
 	} else {
