@@ -2143,6 +2143,7 @@ void(void) spawnfunc_func_timer {
 	self.use = func_timer_use;
 	if (self.spawnflags & 1) {
 		self.nextthink = time + sys_ticrate;
-		self.enemy = self;
 	}
+	if (self.targetname != "")
+		ENTITY_PER_PLAYER_FORCE();
 }
