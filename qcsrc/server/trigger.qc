@@ -216,10 +216,11 @@ void(float preventReuse) trigger_use_targets_ex {
 					if (act != t.existsonlyfor) continue;
 				}
 				if (t.use && (t.sub_target_used != time || !preventReuse)) {
-					//print(stemp.classname, " ", stemp.targetname, " -> ", t.classname, " ", t.targetname, "\n");
 					self = t;
 					other = otemp;
 					activator = act;
+					//print(act.classname, "#", ftos(num_for_edict(act)), ": ");
+					//print(stemp.classname, "/", stemp.targetname, " -> ", t.classname, "/", t.targetname, "\n");
 					self.use();
 					if (preventReuse) {
 						self.sub_target_used = time;
