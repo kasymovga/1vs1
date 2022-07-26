@@ -2135,9 +2135,18 @@ void(void) func_timer_use {
 	func_timer_think();
 }
 
+void(void) func_timer_reset {
+	self.enemy = NULL;
+	if (self.spawnflags & 1) {
+		self.nextthink = time + sys_ticrate;
+	} else
+		self.nextthink = 0;
+}
+
 void(void) spawnfunc_func_timer {
 	self.think = func_timer_think;
 	self.use = func_timer_use;
+	self.reset = func_timer_reset;
 	if (self.spawnflags & 1) {
 		self.nextthink = time + sys_ticrate;
 	}
