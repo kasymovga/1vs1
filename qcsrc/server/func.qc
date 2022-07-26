@@ -1403,7 +1403,7 @@ void(void) func_doors_link {
 	if (self.enemy)
 		return; // already linked by another door
 
-	if (self.spawnflags & DOOR_DONT_LINK) {
+	if ((self.spawnflags & DOOR_DONT_LINK) || cvar("sv_gameplayfix_dontlinkdoors")) {
 		self.owner = self.enemy = self;
 		IFTARGETED
 			return;
