@@ -175,6 +175,7 @@ void(float preventReuse) trigger_use_targets_ex {
 		t.target3 = self.target3;
 		t.target4 = self.target4;
 		t.existsonlyfor = self.existsonlyfor;
+		t.reset = stdproc_remove;
 		return;
 	}
 	//
