@@ -1388,10 +1388,7 @@ float(entity e1, entity e2) func_doors_touching {
 	if (e1.absmax_z < e2.absmin_z)
 		return FALSE;
 
-	if (e1.existsonlyfor && e1.existsonlyfor != e2.existsonlyfor)
-		return FALSE;
-
-	if (e2.existsonlyfor && e2.existsonlyfor != e1.existsonlyfor)
+	if (e1.existsonlyfor != e2.existsonlyfor)
 		return FALSE;
 
 	return TRUE;
