@@ -307,7 +307,7 @@ void(void) race_sbar_draw {
 			//12.43
 			//35.86
 			//45
-			if (!(physics_flags & FL_ONGROUND) && sv_airaccelerate * min(1, physics_maxspeedmod) == 1) {
+			if (sv_airaccelerate * min(1, physics_maxspeedmod) == 1) {
 				race_sbar_draw_snap_zone(11.27, 12.43);
 				race_sbar_draw_snap_zone(35.86, 45);
 			}
