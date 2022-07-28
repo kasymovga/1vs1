@@ -356,6 +356,7 @@ void(vector wishdir, float wishspeed, float wishspeed0, float accel, float accel
 	} else
 		vel_perpend = vel_perpend * (1 - frametime * wishspeed * sidefric);
 
+	vector oldvel = physics_velocity;
 	physics_velocity = vel_straight * wishdir + vel_z * '0 0 1' + vel_perpend;
 }
 

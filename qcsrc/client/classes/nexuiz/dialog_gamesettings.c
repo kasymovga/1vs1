@@ -133,7 +133,9 @@ void fillNexuizGameSettingsDialog(entity me)
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_autoswitch", "Auto switch weapons on pickup"));
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_cts_strafe_helper", "Show strafe helper in CTS"));
+		me.TD(me, 1, (g_velocity_rounding ? 2.5 : 5), e = makeNexuizCheckBox(0, "cl_cts_strafe_helper", "Show strafe helper in CTS"));
+		if (g_velocity_rounding)
+			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_snap_helper", "and snap zones"));
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_cts_position_helper", "Show position helper in CTS"));

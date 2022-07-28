@@ -1,2 +1,3 @@
 float slowmo;
+float slowmo_factor;
 void(void) slowmo_update;

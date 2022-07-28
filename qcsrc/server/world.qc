@@ -144,6 +144,7 @@ void(void) world_dynamic_init {
 	chat_init();
 	announce_init();
 	waypoint_init();
+	slowmo_factor = cvar("g_slowmo");
 }
 
 void(void) world_getrecords {

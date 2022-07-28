@@ -216,6 +216,26 @@ float(float f) race_angle_to_con_x {
 	return v_x;
 }
 
+void(float a1, float a2) race_sbar_draw_snap_zone {
+	float a;
+	vector v1, v2;
+	v1_z = 0;
+	v2_z = 0;
+	for (float i = 0; i < 4; i++) {
+		a = 90 * i + view_angles_y;
+		v1_x = race_angle_to_con_x(45 - a2 + a);
+		v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_snap_zone_helper_position);
+		v2_x = max(0, race_angle_to_con_x(45 - a1 + a) - v1_x);
+		v2_y = CVAR(cl_cts_snap_zone_helper_height);
+		drawfill(v1, v2, CVAR(cl_cts_snap_zone_helper_color), 0.5, DRAWFLAG_NORMAL);
+		v1_x = race_angle_to_con_x(45 + a1 + a);
+		v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_snap_zone_helper_position);
+		v2_x = max(0, race_angle_to_con_x(45 + a2 + a) - v1_x);
+		v2_y = CVAR(cl_cts_snap_zone_helper_height);
+		drawfill(v1, v2, CVAR(cl_cts_snap_zone_helper_color), 0.5, DRAWFLAG_NORMAL);
+	}
+}
+
 void(void) race_sbar_draw {
 	drawfont = sbar_bigfont;
 	float a, t;
@@ -242,42 +262,56 @@ void(void) race_sbar_draw {
 		race_velocity = physics_velocity_frame_end;
 		race_movement = input_movevalues;
 	}
-	if (gametype == GAMETYPE_CTS)
-	if (CVAR(cl_cts_strafe_helper))
-	if (race_velocity_x != 0 || race_velocity_y != 0)
-	if (race_movement_x != 0 || race_movement_y != 0) {
-		float wishangle = view_angles_y;
-		vector v = vectoangles(race_velocity);
-		float moveangle = v_y;
-		if (race_movement_x > 0) {
-			if (race_movement_y > 0)
-				wishangle -= 45;
-			else if (race_movement_y < 0)
-				wishangle += 45;
-		} else if (race_movement_x < 0) {
-			if (race_movement_y > 0)
-				wishangle -= 135;
-			else if (race_movement_y < 0)
-				wishangle += 135;
-		} else {
-			if (race_movement_y > 0)
-				wishangle -= 90;
-			else if (race_movement_y < 0)
-				wishangle += 90;
+	if (gametype == GAMETYPE_CTS) {
+		if (CVAR(cl_cts_strafe_helper))
+		if (race_velocity_x != 0 || race_velocity_y != 0)
+		if (race_movement_x != 0 || race_movement_y != 0) {
+			float wishangle = view_angles_y;
+			vector v = vectoangles(race_velocity);
+			float moveangle = v_y;
+			if (race_movement_x > 0) {
+				if (race_movement_y > 0)
+					wishangle -= 45;
+				else if (race_movement_y < 0)
+					wishangle += 45;
+			} else if (race_movement_x < 0) {
+				if (race_movement_y > 0)
+					wishangle -= 135;
+				else if (race_movement_y < 0)
+					wishangle += 135;
+			} else {
+				if (race_movement_y > 0)
+					wishangle -= 90;
+				else if (race_movement_y < 0)
+					wishangle += 90;
+			}
+			float diffangle = race_angle_norm(wishangle - moveangle);
+			float strafeangle = race_angle_norm(race_strafe_angle(diffangle));
+			vector v1, v2;
+			v1_x = race_angle_to_con_x(diffangle + strafeangle);
+			v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_strafe_helper_position);
+			v1_z = 0;
+			v2_x = max(0, race_angle_to_con_x(diffangle + 90) - v1_x);
+			v2_y = CVAR(cl_cts_strafe_helper_height);
+			v2_z = 0;
+			drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
+			v1_x = race_angle_to_con_x(diffangle - 90);
+			v2_x = max(0, race_angle_to_con_x(diffangle - strafeangle) - v1_x);
+			drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
 		}
-		float diffangle = race_angle_norm(wishangle - moveangle);
-		float strafeangle = race_angle_norm(race_strafe_angle(diffangle));
-		vector v1, v2;
-		v1_x = race_angle_to_con_x(diffangle + strafeangle);
-		v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_strafe_helper_position);
-		v1_z = 0;
-		v2_x = max(0, race_angle_to_con_x(diffangle + 90) - v1_x);
-		v2_y = CVAR(cl_cts_strafe_helper_height);
-		v2_z = 0;
-		drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
-		v1_x = race_angle_to_con_x(diffangle - 90);
-		v2_x = max(0, race_angle_to_con_x(diffangle - strafeangle) - v1_x);
-		drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
+		if (CVAR(cl_cts_snap_helper))
+		if (g_velocity_rounding)
+		if (race_movement_x != 0 || race_movement_y != 0) {
+			//0
+			//11.27
+			//12.43
+			//35.86
+			//45
+			if (!(physics_flags & FL_ONGROUND) && sv_airaccelerate * min(1, physics_maxspeedmod) == 1) {
+				race_sbar_draw_snap_zone(11.27, 12.43);
+				race_sbar_draw_snap_zone(35.86, 45);
+			}
+		}
 	}
 	m = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.25 0' * CVAR(vid_conheight);
 	if (race_checkpointtime) {
