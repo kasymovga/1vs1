@@ -216,21 +216,21 @@ float(float f) race_angle_to_con_x {
 	return v_x;
 }
 
-void(float a1, float a2) race_sbar_draw_snap_zone {
+void(float a1, float a2, float base_angle) race_sbar_draw_snap_zone {
 	float a;
 	vector v1, v2;
 	v1_z = 0;
 	v2_z = 0;
 	for (float i = 0; i < 4; i++) {
 		a = 90 * i + view_angles_y;
-		v1_x = race_angle_to_con_x(45 - a2 + a);
+		v1_x = race_angle_to_con_x(base_angle - a2 + a);
 		v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_snap_zone_helper_position);
-		v2_x = max(0, race_angle_to_con_x(45 - a1 + a) - v1_x);
+		v2_x = max(0, race_angle_to_con_x(base_angle - a1 + a) - v1_x);
 		v2_y = CVAR(cl_cts_snap_zone_helper_height);
 		drawfill(v1, v2, CVAR(cl_cts_snap_zone_helper_color), 0.5, DRAWFLAG_NORMAL);
-		v1_x = race_angle_to_con_x(45 + a1 + a);
+		v1_x = race_angle_to_con_x(base_angle + a1 + a);
 		v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_snap_zone_helper_position);
-		v2_x = max(0, race_angle_to_con_x(45 + a2 + a) - v1_x);
+		v2_x = max(0, race_angle_to_con_x(base_angle + a2 + a) - v1_x);
 		v2_y = CVAR(cl_cts_snap_zone_helper_height);
 		drawfill(v1, v2, CVAR(cl_cts_snap_zone_helper_color), 0.5, DRAWFLAG_NORMAL);
 	}
@@ -308,8 +308,10 @@ void(void) race_sbar_draw {
 			//35.86
 			//45
 			if (sv_airaccelerate * min(1, physics_maxspeedmod) == 1) {
-				race_sbar_draw_snap_zone(11.27, 12.43);
-				race_sbar_draw_snap_zone(35.86, 45);
+				float ba = 0;
+				if (sv_airstrafeaccelerate || race_movement_x) ba = 45;
+				race_sbar_draw_snap_zone(11.27, 12.43, ba);
+				race_sbar_draw_snap_zone(35.86, 45, ba);
 			}
 		}
 	}
