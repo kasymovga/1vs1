@@ -58,6 +58,8 @@ set sv_spawnreplace_info_player_intermission info_intermission
 set sv_spawnreplace_func_static func_wall
 set sv_spawnreplace_func_illusionary func_clientillusionary
 set sv_spawnreplace_holdable_medkit item_armor_large
+set g_spawncountmultiply_ammo_slugs 10
+set g_spawncountmultiply_weapon_railgun 10
 
 set sv_spawnreplace_ammo_shells "item_bullets"
 set sv_spawnreplace_ammo_bullets "item_shells"
