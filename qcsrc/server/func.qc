@@ -1391,6 +1391,9 @@ float(entity e1, entity e2) func_doors_touching {
 	if (e1.existsonlyfor != e2.existsonlyfor)
 		return FALSE;
 
+	if (e1.targetname != "" && e2.targetname != "" && e1.targetname != e2.targetname)
+		return FALSE;
+
 	return TRUE;
 }
 
