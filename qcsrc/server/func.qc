@@ -1019,13 +1019,21 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	}
 }
 
-void(void) func_button_pos_setup {
+void(void) func_pos_setup {
 	self.pos1 = self.origin;
-	self.pos2 = self.pos1 +
-			self.movedir * (self.size_x * '1 0 0') * '1 0 0' +
-			self.movedir * (self.size_y * '0 1 0') * '0 1 0' +
-			self.movedir * (self.size_z * '0 0 1') * '0 0 1' -
-			self.lip * self.movedir;
+	if (cvar("sv_gameplayfix_doorpositionq3")) {
+		vector v;
+		v_x = fabs(self.movedir_x);
+		v_y = fabs(self.movedir_y);
+		v_z = fabs(self.movedir_z);
+		self.pos2 = self.pos1 + self.movedir * (v * self.size - self.lip);
+	} else {
+		self.pos2 = self.pos1 +
+				self.movedir * (self.size_x * '1 0 0') * '1 0 0' +
+				self.movedir * (self.size_y * '0 1 0') * '0 1 0' +
+				self.movedir * (self.size_z * '0 0 1') * '0 0 1' -
+				self.lip * self.movedir;
+	}
 }
 
 /*QUAKED spawnfunc_func_button (0 .5 .8) ?
@@ -1078,7 +1086,7 @@ void(void) spawnfunc_func_button {
 	if (self.noise != "")
 		precache_sound(self.noise);
 
-	func_button_pos_setup();
+	func_pos_setup();
 	self.flags |= FL_NOTARGET;
 	func_button_reset();
 }
@@ -1580,7 +1588,7 @@ void(void) spawnfunc_func_door {
 	if (!self.lip)
 		self.lip = 8;
 
-	func_button_pos_setup();
+	func_pos_setup();
 	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 	// but spawn in the open position
 	if (self.spawnflags & DOOR_START_OPEN)
