@@ -966,9 +966,13 @@ void(void) func_button_fire {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;    // will be reset upon return
 
-	if (self.state == FUNC_STATE_UP || self.state == FUNC_STATE_TOP)
+	if (self.state == FUNC_STATE_UP)
 		return;
 
+	if (self.state == FUNC_STATE_TOP) {
+		if (self.wait > 0) self.nextthink = self.ltime + self.wait;
+		return;
+	}
 	if (self.noise != "")
 		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
@@ -1162,7 +1166,7 @@ void(void) func_door_go_up {
 		return; // already going up
 
 	if (self.state == FUNC_STATE_TOP) { // reset top wait time
-		self.nextthink = self.ltime + self.wait;
+		if (self.wait > 0) self.nextthink = self.ltime + self.wait;
 		return;
 	}
 	if (self.noise2 != "")
