@@ -303,15 +303,15 @@ void(void) race_sbar_draw {
 		if (g_velocity_rounding)
 		if (race_movement_x != 0 || race_movement_y != 0) {
 			//0
-			//11.27
-			//12.43
-			//35.86
+			//11.263
+			//12.429
+			//35.869
 			//45
 			if (sv_airaccelerate * min(1, physics_maxspeedmod) == 1) {
 				float ba = 0;
 				if (sv_airstrafeaccelerate || race_movement_x) ba = 45;
-				race_sbar_draw_snap_zone(11.27, 12.43, ba);
-				race_sbar_draw_snap_zone(35.86, 45, ba);
+				race_sbar_draw_snap_zone(11.263, 12.429, ba);
+				race_sbar_draw_snap_zone(35.869, 45, ba);
 			}
 		}
 	}
