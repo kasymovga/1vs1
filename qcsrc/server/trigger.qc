@@ -174,7 +174,12 @@ void(float preventReuse) trigger_use_targets_ex {
 		t.target2 = self.target2;
 		t.target3 = self.target3;
 		t.target4 = self.target4;
-		t.existsonlyfor = self.existsonlyfor;
+		if (entity_per_player_entities) {
+			if (clienttype(activator) != CLIENTTYPE_NOTACLIENT) {
+				t.existsonlyfor = activator;
+			} else
+				t.existsonlyfor = self.existsonlyfor;
+		}
 		t.reset = stdproc_remove;
 		return;
 	}
@@ -1058,8 +1063,10 @@ void trigger_always_init() {
 }
 
 void spawnfunc_trigger_always() {
+	ENTITY_PER_PLAYER_FORCE();
 	self.reset = trigger_always_init;
-	entity_initialize(self, trigger_always_init, INITPRIO_LAST);
+	if not(entity_per_player_entities)
+		entity_initialize(self, trigger_always_init, INITPRIO_LAST);
 }
 
 .string chaintarget;
