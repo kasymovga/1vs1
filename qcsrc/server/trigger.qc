@@ -1121,7 +1121,7 @@ void(void) trigger_killcredit_touch {
 	other.pusher = self.enemy;
 }
 
-void spawnfunc_trigger_killcredit(void) {
+void(void) spawnfunc_trigger_killcredit {
 	trigger_solid_brush_init();
 	if (self.wait <= 0)
 		self.wait = 3;
@@ -1130,12 +1130,6 @@ void spawnfunc_trigger_killcredit(void) {
 	self.reset = trigger_killcredit_reset;
 	self.touch = trigger_killcredit_touch;
 	self.reset();
-}
-
-void spawnfunc_func_killcredit(void) {
-	print("^1FIXME: ^7map has a misnamed killcredit entity 'func_killcredit', the correct name is 'trigger_killcredit'! Please fix this.\n");
-	self.classname = "trigger_killcredit";
-	spawnfunc_trigger_killcredit();
 }
 
 void(void) trigger_relay_chance_use {

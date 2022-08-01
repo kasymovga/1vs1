@@ -142,3 +142,6 @@ set sv_spawnreplace_walker_spawn monster_walker_spawn
 
 //Half-live
 set sv_spawnreplace_info_target target_position
+
+//Old hacks
+sv_spawnreaplce_func_killcredit trigger_killcredit
