@@ -801,7 +801,7 @@ void(entity to) score_nice_print {
 	}
 }
 
-float leaderfrags;
+float score_leaderfrags;
 float(float limit, float _leadlimit) score_winning_condition {
 	if (team_mode) {
 		score_team1 = score_team_comparable_value(COLOR_TEAM1);
@@ -825,9 +825,9 @@ float(float limit, float _leadlimit) score_winning_condition {
 		_leadlimit = 0; // not supported in this mode
 
 	if (limit)
-	if (leaderfrags != score_winning_condition_helper_topscore) {
-		leaderfrags = score_winning_condition_helper_topscore;
-		gamehook_score_winning_condition_countdown(limit - leaderfrags);
+	if (score_leaderfrags != score_winning_condition_helper_topscore) {
+		score_leaderfrags = score_winning_condition_helper_topscore;
+		gamehook_score_winning_condition_countdown(limit - score_leaderfrags);
 	}
 	if (score_winning_condition_helper_equality)
 		return FALSE;
