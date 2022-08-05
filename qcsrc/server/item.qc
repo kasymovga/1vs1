@@ -526,7 +526,7 @@ void(void) item_reset {
 float(entity player, entity item) weapon_pickupevalfunc {
 	float c, i, j, position;
 	// See if I have it already
-	if (player.weapons & item.weapons == item.weapons) {
+	if ((player.weapons & item.weapons) == item.weapons) {
 		// If I can pick it up
 		if (g_weapon_stay || !item.spawnshieldtime)
 			c = 0;
@@ -543,7 +543,7 @@ float(entity player, entity item) weapon_pickupevalfunc {
 	if (bot_custom_weapon && c) {
 		for (i = WEP_FIRST; i < WEP_LAST ; ++i) {
 			// Find weapon
-			if ((weapon_info(i)).weapons & item.weapons  != item.weapons)
+			if (((weapon_info(i)).weapons & item.weapons)  != item.weapons)
 				continue;
 
 			// Find the highest position on any range
