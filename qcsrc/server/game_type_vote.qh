@@ -1,0 +1,4 @@
+float game_type_vote_mapinfo_mask;
+
+float(void) game_type_vote_think;
+void(void) game_type_vote_init;

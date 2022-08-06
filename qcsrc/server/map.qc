@@ -336,7 +336,7 @@ void() map_goto_next {
 }
 
 string(string m) map_goto {
-	if not(map_info_get_game_types(m) & (map_info_type_from_game_type(game_type_current()) | GameTypeVote_Mask()))
+	if not(map_info_get_game_types(m) & (map_info_type_from_game_type(game_type_current()) | game_type_vote_mapinfo_mask))
 		return "The map you chose is not available on this server.";
 
 	cvar_set("nextmap", m);
@@ -369,7 +369,7 @@ void(void) map_intermission_screenshot {
 
 void(void) map_intermission_think {
 	self.nextthink = time + frametime;
-	if (GameTypeVote_Think()) {
+	if (game_type_vote_think()) {
 		return;
 	}
 	mapvote_start();

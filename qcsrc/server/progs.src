@@ -87,7 +87,7 @@ client.qh
 player.qh
 spectator.qh
 push.qh
-gametypevote.qh
+game_type_vote.qh
 gamestatus.qh
 warfog.qh
 menu.qh
@@ -281,7 +281,7 @@ clanarena.qc
 entity.qc
 menu.qc
 math.qc
-gametypevote.qc
+game_type_vote.qc
 progressbar.qc
 cvar.qc
 location_request.qc

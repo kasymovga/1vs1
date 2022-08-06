@@ -266,7 +266,7 @@ void(void) world_init {
 	dlc_init();
 	// needs to be done so early as they would still spawn
 	weapon_register_weapons();
-	GameTypeVote_Init();
+	game_type_vote_init();
 	world_static_init();
 	world_dynamic_init();
 	nadget_init();
@@ -281,7 +281,7 @@ void(void) world_init {
 	campaign_postinit();
 	Ban_Init();
 	map_info_enumerate();
-	map_info_filter_game_type(map_info_type_from_game_type(game_type_current()) | GameTypeVote_Mask(), map_info_required_flags(), map_info_forbidden_flags(), 1);
+	map_info_filter_game_type(map_info_type_from_game_type(game_type_current()) | game_type_vote_mapinfo_mask, map_info_required_flags(), map_info_forbidden_flags(), 1);
 	addstat(STAT_WEAPONS, STAT_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, STAT_INT, switchweapon);
 	addstat(STAT_GAMESTARTTIME, STAT_FLOAT, stat_map_starttime);

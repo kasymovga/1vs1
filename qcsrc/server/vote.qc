@@ -444,7 +444,7 @@ string(string m, entity e) vote_validate_map {
 			cmd_print_to(e, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
 			return NULL;
 		}
-	if not(map_info_get_game_types(m) & (map_info_type_from_game_type(game_type_current()) | GameTypeVote_Mask())) {
+	if not(map_info_get_game_types(m) & (map_info_type_from_game_type(game_type_current()) | game_type_vote_mapinfo_mask)) {
 		cmd_print_to(e, strcat("^1Invalid mapname, \"^3", m, "^1\" does not support the current game mode."));
 		return NULL;
 	}

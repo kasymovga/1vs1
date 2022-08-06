@@ -1,3 +1,0 @@
-float GameTypeVote_Think();
-float GameTypeVote_Mask();
-void GameTypeVote_Init();
