@@ -226,6 +226,7 @@ void(void) map_list_init {
 	registercvar("_g_maplist_source_exclude", "");
 	registercvar("_g_maplist", "");
 	if (s != cvar_string("_g_maplist_source") || se != cvar_string("_g_maplist_source_exclude") || gt != cvar_string("_g_maplist_gametype")) {
+		print("Map list refiltering required...\n");
 		cvar_set("_g_maplist_gametype", gt);
 		cvar_set("_g_maplist", s);
 		map_list_filter();
