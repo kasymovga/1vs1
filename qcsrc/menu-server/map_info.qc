@@ -774,7 +774,7 @@ void(string s) map_info_load_map {
 
 void(string s) map_info_load_map_settings { // to be called from worldspawn
 	float t;
-	if (map_info_check_map_keep_temps(s)) { // with underscore, it keeps temps
+	if (!map_info_check_map_keep_temps(s)) { // with underscore, it keeps temps
 		if (map_info_map_supported_game_types <= 0)
 			error("Mapinfo system is not functional at all. BAILED OUT.\n");
 
