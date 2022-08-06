@@ -68,7 +68,7 @@ math.qc
 draw.qc
 team.qc
 centerprint.qc
-gametype.qh
+game_type.qh
 ready.qh
 race.qh
 flag.qc
@@ -103,7 +103,7 @@ input.qc
 cmd.qc
 entcs.qc
 score.qc
-gametype.qc
+game_type.qc
 ready.qc
 vote.qc
 gamemenu.qc

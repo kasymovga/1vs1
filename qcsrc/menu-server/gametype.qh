@@ -1,3 +1,0 @@
-float(string t) gametype_from_name;
-float(void) gametype_current;
-string(float t) gametype_name_long;

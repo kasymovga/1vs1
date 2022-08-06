@@ -153,7 +153,7 @@ float(void) single_player_equip_handle {
 		return single_player_equip_handle_next();
 
 	registercvar("_autosave_skip", "0");
-	if (gametype == GAMETYPE_SINGLE)
+	if (game_type == GAME_TYPE_SINGLE)
 	if (self.netaddress == "local")
 	if not(builtin_cvar("_autosave_skip")) {
 		defer(0.5, single_autosave);
@@ -163,7 +163,7 @@ float(void) single_player_equip_handle {
 }
 
 float(void) single_map_restart {
-	if (gametype == GAMETYPE_COOP) {
+	if (game_type == GAME_TYPE_COOP) {
 		if (single_level_finished)
 			return !campaign_won;
 		else
@@ -212,7 +212,7 @@ void(void) single_init {
 	single_skill_save = builtin_cvar("skill");
 	builtin_cvar_set("skill", "2");
 	builtin_cvar_set("deathmatch", "0");
-	if (gametype == GAMETYPE_COOP)
+	if (game_type == GAME_TYPE_COOP)
 		builtin_cvar_set("coop", "1");
 	else
 		builtin_cvar_set("coop", "0");
@@ -235,7 +235,7 @@ void(void) single_init {
 	single_shutdown_next = gamehook_chain_shutdown;
 	gamehook_chain_shutdown = single_shutdown;
 	gamehook_monster_killed = single_monster_killed;
-	if (gametype == GAMETYPE_SINGLE) {
+	if (game_type == GAME_TYPE_SINGLE) {
 		single_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
 		gamehook_chain_cmd_client_handle = single_cmd_client_handle;
 	}

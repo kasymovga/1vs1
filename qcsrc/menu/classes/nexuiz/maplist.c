@@ -189,7 +189,7 @@ void refilterNexuizMapList(entity me)
 	float i, j, n;
 	string s;
 	float gt;
-	gt = gametype_current();
+	gt = game_type_current();
 	map_info_filter_game_type(map_info_type_from_game_type(gt), map_info_required_flags(), map_info_forbidden_flags(), 0);
 	me.nItems = map_info_count;
 	if(me.g_maplistCache)

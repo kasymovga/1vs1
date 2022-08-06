@@ -242,7 +242,6 @@ float(string repl) entity_spawn_replace {
 .vector anglesjitter;
 .float anglejitter;
 .string gametypefilter;
-#undef gametype
 .string gametype;
 .string not_gametype;
 .string cvarfilter;
@@ -265,7 +264,7 @@ void(void) entity_spawn_pre {
 	string s;
 	float i, n;
 	if(self.gametypefilter != "")
-	if not(gametype_filter(_gametype, team_mode, self.gametypefilter)) {
+	if not(game_type_filter(game_type, team_mode, self.gametypefilter)) {
 		remove(self);
 		return;
 	}
@@ -430,7 +429,6 @@ void(void) entity_spawn_pre {
 	entity_not_per_player = FALSE;
 	entity_per_player_force = FALSE;
 }
-#define gametype _gametype //workaround for gametype field
 
 void(void) entity_spawn_post {
 	if not(self) {

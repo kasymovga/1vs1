@@ -580,7 +580,7 @@ float(string pFilename, float pAllowGenerate, float pGametypeToSet) map_info_get
 			map_info_map_flags |= MAP_INFO_FLAG_FRUSTRATING;
 		} else if (t == "type" || t == "gametype") {
 			t = str_car(s); s = str_cdr(s);
-			f = map_info_type_from_game_type(gametype_from_name(t));
+			f = map_info_type_from_game_type(game_type_from_name(t));
 			map_info_map_supported_game_types |= f;
 			if (map_info_map_supported_game_types & MAP_INFO_TYPE_DEATHMATCH)
 				if (cvar("g_tdm_use_dm_maps"))
@@ -626,12 +626,12 @@ float(string pFilename, float pAllowGenerate, float pGametypeToSet) map_info_get
 			}
 		} else if (t == "settemp_for_type") {
 			t = str_car(s); s = str_cdr(s);
-			if ((t == "all" && pGametypeToSet) || (map_info_type_from_game_type(gametype_from_name(t)) & pGametypeToSet)) {
+			if ((t == "all" && pGametypeToSet) || (map_info_type_from_game_type(game_type_from_name(t)) & pGametypeToSet)) {
 				map_info_parse_set_temp(pFilename, acl, s, 1);
 			}
 		} else if (t == "clientsettemp_for_type") {
 			t = str_car(s); s = str_cdr(s);
-			if ((t == "all" && pGametypeToSet) || (map_info_type_from_game_type(gametype_from_name(t)) & pGametypeToSet)) {
+			if ((t == "all" && pGametypeToSet) || (map_info_type_from_game_type(game_type_from_name(t)) & pGametypeToSet)) {
 				t = str_car(s); s = str_cdr(s);
 				if not(cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful client setting, ignored\n");
@@ -723,7 +723,7 @@ float(string s) map_info_check_map_keep_temps { // returns 0 if the map can't be
 	if (!map_info_get_by_name(s, 1, 0))
 		return 0;
 
-	if ((map_info_map_supported_game_types & map_info_type_from_game_type(gametype_current())) == 0)
+	if ((map_info_map_supported_game_types & map_info_type_from_game_type(game_type_current())) == 0)
 		return 0;
 
 	return 1;
@@ -738,27 +738,27 @@ float(string s) map_info_check_map { // returns 0 if the map can't be played wit
 
 float(float t) map_info_type_from_game_type {
 	switch (t) {
-	case GAMETYPE_DEATHMATCH:      return MAP_INFO_TYPE_DEATHMATCH;
-	case GAMETYPE_TEAM_DEATHMATCH: return MAP_INFO_TYPE_TEAM_DEATHMATCH;
-	case GAMETYPE_FREEZETAG:       return MAP_INFO_TYPE_TEAM_DEATHMATCH;
-	case GAMETYPE_CLANARENA:       return MAP_INFO_TYPE_TEAM_DEATHMATCH;
-	case GAMETYPE_DOMINATION:      return MAP_INFO_TYPE_DOMINATION;
-	case GAMETYPE_CTF:             return MAP_INFO_TYPE_CTF;
-	case GAMETYPE_CATF:            return MAP_INFO_TYPE_CTF;
-	case GAMETYPE_CTFT:            return MAP_INFO_TYPE_CTF;
-	case GAMETYPE_CONQUEST:        return MAP_INFO_TYPE_CONQUEST;
-	case GAMETYPE_KEYHUNT:         return MAP_INFO_TYPE_KEYHUNT;
-	case GAMETYPE_KEYHUNT_CA:      return MAP_INFO_TYPE_KEYHUNT;
-	case GAMETYPE_KEYHUNT_FT:      return MAP_INFO_TYPE_KEYHUNT;
-	case GAMETYPE_ONSLAUGHT:       return MAP_INFO_TYPE_ONSLAUGHT;
-	case GAMETYPE_RACE:            return MAP_INFO_TYPE_RACE;
-	case GAMETYPE_CTS:             return MAP_INFO_TYPE_CTS;
-	case GAMETYPE_SURVIVE:         return MAP_INFO_TYPE_SURVIVE;
-	case GAMETYPE_LMS:             return MAP_INFO_TYPE_DEATHMATCH;
-	case GAMETYPE_COOP:            return MAP_INFO_TYPE_SINGLE;
-	case GAMETYPE_SINGLE:          return MAP_INFO_TYPE_SINGLE;
-	case GAMETYPE_NEXBALL:         return MAP_INFO_TYPE_NEXBALL;
-	case GAMETYPE_SHOOTINGRANGE:   return MAP_INFO_TYPE_SHOOTINGRANGE;
+	case GAME_TYPE_DEATHMATCH:      return MAP_INFO_TYPE_DEATHMATCH;
+	case GAME_TYPE_TEAM_DEATHMATCH: return MAP_INFO_TYPE_TEAM_DEATHMATCH;
+	case GAME_TYPE_FREEZETAG:       return MAP_INFO_TYPE_TEAM_DEATHMATCH;
+	case GAME_TYPE_CLANARENA:       return MAP_INFO_TYPE_TEAM_DEATHMATCH;
+	case GAME_TYPE_DOMINATION:      return MAP_INFO_TYPE_DOMINATION;
+	case GAME_TYPE_CTF:             return MAP_INFO_TYPE_CTF;
+	case GAME_TYPE_CATF:            return MAP_INFO_TYPE_CTF;
+	case GAME_TYPE_CTFT:            return MAP_INFO_TYPE_CTF;
+	case GAME_TYPE_CONQUEST:        return MAP_INFO_TYPE_CONQUEST;
+	case GAME_TYPE_KEYHUNT:         return MAP_INFO_TYPE_KEYHUNT;
+	case GAME_TYPE_KEYHUNT_CA:      return MAP_INFO_TYPE_KEYHUNT;
+	case GAME_TYPE_KEYHUNT_FT:      return MAP_INFO_TYPE_KEYHUNT;
+	case GAME_TYPE_ONSLAUGHT:       return MAP_INFO_TYPE_ONSLAUGHT;
+	case GAME_TYPE_RACE:            return MAP_INFO_TYPE_RACE;
+	case GAME_TYPE_CTS:             return MAP_INFO_TYPE_CTS;
+	case GAME_TYPE_SURVIVE:         return MAP_INFO_TYPE_SURVIVE;
+	case GAME_TYPE_LMS:             return MAP_INFO_TYPE_DEATHMATCH;
+	case GAME_TYPE_COOP:            return MAP_INFO_TYPE_SINGLE;
+	case GAME_TYPE_SINGLE:          return MAP_INFO_TYPE_SINGLE;
+	case GAME_TYPE_NEXBALL:         return MAP_INFO_TYPE_NEXBALL;
+	case GAME_TYPE_SHOOTINGRANGE:   return MAP_INFO_TYPE_SHOOTINGRANGE;
 	}
 	return 0;
 }
@@ -767,7 +767,7 @@ void(string s) map_info_load_map {
 	map_info_map_supported_game_types = 0;
 	if (!map_info_check_map(s)) {
 		print("EMERGENCY: can't play the selected map in the given game mode. Falling back to DM.\n");
-		gametype_switch(GAMETYPE_DEATHMATCH);
+		game_type_switch(GAME_TYPE_DEATHMATCH);
 	}
 	localcmd(strcat("\nsettemp_restore\nchangelevel ", s, "\n"));
 }
@@ -779,17 +779,17 @@ void(string s) map_info_load_map_settings { // to be called from worldspawn
 			error("Mapinfo system is not functional at all. BAILED OUT.\n");
 
 		print("EMERGENCY: can't play the selected map in the given game mode. Falling back to a supported mode.\n");
-		for (t = GAMETYPE_DEATHMATCH; t < GAMETYPE_END; t++) {
+		for (t = GAME_TYPE_DEATHMATCH; t < GAME_TYPE_END; t++) {
 			if (map_info_type_from_game_type(t) & map_info_map_supported_game_types) {
-				gametype_switch(t);
+				game_type_switch(t);
 				break;
 			}
 		}
-		if (t == GAMETYPE_END)
+		if (t == GAME_TYPE_END)
 			print("No supported game mode for map!!! How can this possible?\n");
 	}
 	cvar_settemp_restore();
-	map_info_get_by_name(s, 1, map_info_type_from_game_type(gametype_current()));
+	map_info_get_by_name(s, 1, map_info_type_from_game_type(game_type_current()));
 }
 
 void(void) map_info_clear_temps {
@@ -842,5 +842,5 @@ void(void) map_info_on_restore {
 	map_info_globopen = FALSE;
 	map_info_cache_active = FALSE;
 	map_info_enumerate();
-	map_info_filter_game_type(map_info_type_from_game_type(gametype_current()), map_info_required_flags(), map_info_forbidden_flags(), 1);
+	map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), map_info_required_flags(), map_info_forbidden_flags(), 1);
 }

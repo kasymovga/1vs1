@@ -7,7 +7,7 @@
 #include "deathtype.qh"
 #include "effect.qh"
 #include "flag.qh"
-#include "gametype.qh"
+#include "game_type.qh"
 #include "hittype.qh"
 #include "hook.qh"
 #include "item.qh"

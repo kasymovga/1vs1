@@ -1,7 +1,7 @@
 #include "anglestransform.qc"
 #include "approach.qc"
 #include "db.qc"
-#include "gametype.qc"
+#include "game_type.qc"
 #include "math.qc"
 #include "movelib.qc"
 #include "nadget.qc"

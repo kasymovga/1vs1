@@ -93,9 +93,9 @@ void UDPChat_client_connect_real() {
 	if not(udpchat_game_announced) {
 		string s = strtoupper(cvar_string("g_profile"));
 		if (s != "")
-			s = strcat(s, " ", gametype_title);
+			s = strcat(s, " ", game_type_title);
 		else
-			s = gametype_title;
+			s = game_type_title;
 
 		UDPChat_SendPacket(strcat(" * server ", sv_udpchat_id, " playing ", s, " on ", mapname));
 		udpchat_game_announced = TRUE;

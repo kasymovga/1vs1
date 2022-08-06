@@ -1,7 +1,7 @@
 #include "campaign.qh"
 #include "cvar.qh"
 #include "extresponse.qh"
-#include "gametype.qh"
+#include "game_type.qh"
 #include "masterlist.qh"
 #include "map_info.qh"
 #include "shuffle.qh"

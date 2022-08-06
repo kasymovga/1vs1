@@ -4,7 +4,7 @@
 #include "db.qc"
 #include "dlc.qc"
 #include "file.qc"
-#include "gametype.qc"
+#include "game_type.qc"
 #include "stdproc.qc"
 #include "str.qc"
 #include "uri.qc"

@@ -1,12 +1,12 @@
-float(float gt, float tp, string pattern) gametype_filter {
+float(float gt, float tp, string pattern) game_type_filter {
 	string subpattern, subpattern2, subpattern3;
-	subpattern = strcat(",", gametype_name(gt), ",");
+	subpattern = strcat(",", game_type_name(gt), ",");
 	if(tp)
 		subpattern2 = ",teams,";
 	else
 		subpattern2 = ",noteams,";
 
-	if(gt == GAMETYPE_RACE || gt == GAMETYPE_CTS)
+	if(gt == GAME_TYPE_RACE || gt == GAME_TYPE_CTS)
 		subpattern3 = ",race,";
 	else
 		subpattern3 = NULL;

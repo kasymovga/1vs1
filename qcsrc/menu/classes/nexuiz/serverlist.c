@@ -348,21 +348,21 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 
 	for(i = 1; ; ++i) // 20 modes ought to be enough for anyone
 	{
-		t = gametype_name(i);
+		t = game_type_name(i);
 		if(i > 1)
-			if(t == gametype_name(0)) // it repeats (default case)
+			if(t == game_type_name(0)) // it repeats (default case)
 			{
 				// no type was found
 				// choose the first one
 				s = t;
 				break;
 			}
-		if(s == gametype_name(i))
+		if(s == game_type_name(i))
 		{
 			// the type was found
 			// choose the next one
-			s = gametype_name(i + 1);
-			if(s == gametype_name(0))
+			s = game_type_name(i + 1);
+			if(s == game_type_name(0))
 				s = "";
 			break;
 		}

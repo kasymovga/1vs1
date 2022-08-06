@@ -188,7 +188,7 @@ string(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
 	float i;
 	// to make absolutely sure:
 	map_info_enumerate();
-	map_info_filter_game_type(map_info_type_from_game_type(gametype_current()), pRequiredFlags, pForbiddenFlags, 0);
+	map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), pRequiredFlags, pForbiddenFlags, 0);
 	out = "";
 	for (i = 0; i < map_info_count; ++i)
 		out = strcat(out, " ", map_info_glob_item(map_info_filter_list_lookup(i)));
@@ -220,7 +220,7 @@ void(void) map_list_reset {
 void(void) map_list_init {
 	string s = cvar_string("g_maplist");
 	string se = cvar_string("g_maplist_exclude");
-	string gt = gametype_name(gametype_current());
+	string gt = game_type_name(game_type_current());
 	registercvar("_g_maplist_gametype", "");
 	registercvar("_g_maplist_source", "");
 	registercvar("_g_maplist_source_exclude", "");
@@ -336,7 +336,7 @@ void() map_goto_next {
 }
 
 string(string m) map_goto {
-	if not(map_info_get_game_types(m) & (map_info_type_from_game_type(gametype_current()) | GameTypeVote_Mask()))
+	if not(map_info_get_game_types(m) & (map_info_type_from_game_type(game_type_current()) | GameTypeVote_Mask()))
 		return "The map you chose is not available on this server.";
 
 	cvar_set("nextmap", m);

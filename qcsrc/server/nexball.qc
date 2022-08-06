@@ -598,7 +598,7 @@ void(void) nexball_goal_touch {
 }
 
 void(void) spawnfunc_nexball_team {
-	if (gametype != GAMETYPE_NEXBALL) {
+	if (game_type != GAME_TYPE_NEXBALL) {
 		remove(self);
 		return;
 	}
@@ -650,7 +650,7 @@ void(void) nexball_delayedinit {
 //=======================//
 
 void(void) nexball_spawn_ball {
-	if (gametype != GAMETYPE_NEXBALL) {
+	if (game_type != GAME_TYPE_NEXBALL) {
 		remove(self);
 		return;
 	}
@@ -764,7 +764,7 @@ void(void) spawnfunc_nexball_hockey {
 }
 
 void(void) nexball_spawn_goal {
-	if (gametype != GAMETYPE_NEXBALL) {
+	if (game_type != GAME_TYPE_NEXBALL) {
 		remove(self);
 		return;
 	}
@@ -863,14 +863,14 @@ float nexball_carrier_think() {
 }
 
 void() spawnfunc_nexball_redbase {
-	if (gametype == GAMETYPE_NEXBALL)
+	if (game_type == GAME_TYPE_NEXBALL)
 		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
 	else
 		remove(self);
 }
 
 void() spawnfunc_nexball_bluebase {
-	if (gametype == GAMETYPE_NEXBALL)
+	if (game_type == GAME_TYPE_NEXBALL)
 		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
 	else
 		remove(self);

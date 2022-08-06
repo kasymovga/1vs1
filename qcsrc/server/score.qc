@@ -155,7 +155,7 @@ float (string label, float scoreflags) score_register_team_score {
 float(entity to, float sf) score_info_send {
 	float i, f;
 	net_write_byte(MSG_ENTITY, NET_CSQC_SCORES_INFO);
-	net_write_byte(MSG_ENTITY, gametype);
+	net_write_byte(MSG_ENTITY, game_type);
 	for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
 		f = score_flags[i];
 		if (f & SCORE_FLAG_HIDDEN) {
@@ -384,7 +384,7 @@ void() score_winning_condition_helper {
 	entity winnerscorekeeper;
 	entity secondscorekeeper;
 	entity sk;
-	s = gametype_name(gametype);
+	s = game_type_name(game_type);
 	s = strcat(s, ":", cvar_string("rexuizversion"));
 	s = strcat(s, "::", score_player_string(world, 2)); // make this 1 once we can
 	fullstatus = builtin_cvar("g_full_getstatus_responses");

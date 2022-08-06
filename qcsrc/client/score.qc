@@ -2,7 +2,7 @@ void(float ignore) score_info_read {
 	float i, j, t;
 	entity o;
 	self.classname = "ent_client_scores_info";
-	gametype = net_read_byte();
+	game_type = net_read_byte();
 	string s;
 	SP_CLIENTVERSION_FIELD = -1;
 	SP_COUNTRY_FIELD = -1;
@@ -44,7 +44,7 @@ void(float ignore) score_info_read {
 		teamscores_flags[i] = net_read_byte();
 	}
 	sbar_scores_init();
-	gametype_init();
+	game_type_init();
 }
 
 void(void) score_player_remove {

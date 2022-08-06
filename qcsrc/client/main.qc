@@ -96,7 +96,7 @@ void(void) CSQC_Init {
 	registercvar("sbar_columns", "default", CVAR_SAVE);
 	localcmd("alias +nadget2 +button9\n");
 	localcmd("alias -nadget2 -button9\n");
-	gametype = 0;
+	game_type = 0;
 	sbar_gametype_init();
 	// sbar_fields uses strunzone on the titles!
 	for(i = 0; i < SBAR_FIELDS_MAX; ++i)

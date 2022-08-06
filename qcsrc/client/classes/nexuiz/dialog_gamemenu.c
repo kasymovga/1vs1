@@ -47,7 +47,7 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 
 		if (main_localgame)
 		if (main_campaign)
-		if (gametype == GAMETYPE_SINGLE) {
+		if (game_type == GAME_TYPE_SINGLE) {
 			me.rows = me.rows + 1; //save/load
 		}
 		if (main_campaign)
@@ -103,7 +103,7 @@ void fillNexuizGameMenuDialog(entity me)
 		}
 		if (main_localgame)
 		if (main_campaign)
-		if (gametype == GAMETYPE_SINGLE) {
+		if (game_type == GAME_TYPE_SINGLE) {
 			me.TR(me);
 				me.TD(me, 1, me.columns, e = makeNexuizButton("Save/Load", '0 0 0'));
 				e.onClick = ShowSaveLoad;
@@ -114,7 +114,7 @@ void fillNexuizGameMenuDialog(entity me)
 				me.TD(me, 1, me.columns, e = makeNexuizButton("Call a vote", '0 0 0'));
 				e.onClick = ShowVcall;
 			}
-			if (gametype != GAMETYPE_SINGLE) {
+			if (game_type != GAME_TYPE_SINGLE) {
 				me.TR(me);
 					me.TD(me, 1, me.columns, e = makeNexuizButton("Mute list...", '0 0 0'));
 					e.onClick = showMuteListGameMenuDialog;

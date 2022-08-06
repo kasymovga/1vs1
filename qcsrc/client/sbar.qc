@@ -525,7 +525,7 @@ void(float argc) sbar_field_set {
 		if (slash >= 0) {
 			pattern = substring(str, 0, slash);
 			str = substring(str, slash + 1, strlen(str) - (slash + 1));
-			if not(gametype_filter(gametype, team_mode, pattern))
+			if not(game_type_filter(game_type, team_mode, pattern))
 				continue;
 		}
 		strunzone(sbar_title[sbar_num_fields]);
@@ -1111,7 +1111,7 @@ void sbar_scoreboard_draw() {
 	// Print info string
 	string str;
 	float tl, fl, ll;
-	str = strcat("^7Playing ^3", strtoupper(gametype_name(gametype)), "^7 on ^2", map_shortname);
+	str = strcat("^7Playing ^3", strtoupper(game_type_name(game_type)), "^7 on ^2", map_shortname);
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbar_width - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
 	pos_y += sbar_fontsize_y;
 	if (map_description != "") {
@@ -1223,7 +1223,7 @@ void sbar_scoreboard_draw() {
 	if (centerprint_num < 1) {
 		string tail = server_motd;
 		pos_y = max(CVAR(vid_conheight) * 0.5 + sbar_fontsize_y, pos_y);
-		if (gametype == GAMETYPE_CTS || gametype == GAMETYPE_RACE)
+		if (game_type == GAME_TYPE_CTS || game_type == GAME_TYPE_RACE)
 			tail = strcat(race_records_table_string(pos_y), tail);
 
 		float n;
@@ -1620,9 +1620,9 @@ void(void) sbar_accuracy_draw {
 
 void(void) sbar_reset {
 	// reset gametype specific icons
-	if (gametype == GAMETYPE_KEYHUNT || gametype == GAMETYPE_KEYHUNT_CA || gametype == GAMETYPE_KEYHUNT_FT)
+	if (game_type == GAME_TYPE_KEYHUNT || game_type == GAME_TYPE_KEYHUNT_CA || game_type == GAME_TYPE_KEYHUNT_FT)
 		kh_hud_reset();
-	else if (gametype == GAMETYPE_CTF || gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT)
+	else if (game_type == GAME_TYPE_CTF || game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT)
 		ctf_hud_reset();
 }
 
@@ -1633,19 +1633,19 @@ float(float stat_type, float stat_regen, float stat_maxregen) sbar_nadget_regen 
 var void(void) sbar_gametype_hud;
 void(void) sbar_gametype_init {
 	sbar_score_draw = sbar_score_draw_default;
-	if (gametype == GAMETYPE_KEYHUNT || gametype == GAMETYPE_KEYHUNT_CA || gametype == GAMETYPE_KEYHUNT_FT)
+	if (game_type == GAME_TYPE_KEYHUNT || game_type == GAME_TYPE_KEYHUNT_CA || game_type == GAME_TYPE_KEYHUNT_FT)
 		sbar_gametype_hud = kh_hud;
-	else if (gametype == GAMETYPE_CTF || gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT)
+	else if (game_type == GAME_TYPE_CTF || game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT)
 		sbar_gametype_hud = ctf_hud;
-	else if (gametype == GAMETYPE_NEXBALL)
+	else if (game_type == GAME_TYPE_NEXBALL)
 		sbar_gametype_hud = nb_hud;
-	else if (gametype == GAMETYPE_SINGLE || gametype == GAMETYPE_COOP) {
+	else if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP) {
 		sbar_gametype_hud = single_hud;
 		sbar_score_draw = stdproc_nothing;
-	} else if (gametype == GAMETYPE_RACE || gametype == GAMETYPE_CTS) {
+	} else if (game_type == GAME_TYPE_RACE || game_type == GAME_TYPE_CTS) {
 		sbar_gametype_hud = stdproc_nothing;
 		sbar_score_draw = sbar_score_draw_race;
-	} else if (gametype == GAMETYPE_SHOOTINGRANGE) {
+	} else if (game_type == GAME_TYPE_SHOOTINGRANGE) {
 		sbar_gametype_hud = shootingrange_hud;
 	} else {
 		sbar_gametype_hud = stdproc_nothing;

@@ -171,7 +171,7 @@ float(entity to, float sf) mapvote_send {
 	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
 		// flag 1 == initialization
-		net_write_string(MSG_ENTITY, gametype_name_long(gametype_current()));
+		net_write_string(MSG_ENTITY, game_type_name_long(game_type_current()));
 		net_write_byte(MSG_ENTITY, mapvote_count);
 		net_write_byte(MSG_ENTITY, mapvote_abstain);
 		net_write_byte(MSG_ENTITY, mapvote_detail);
@@ -353,7 +353,7 @@ void() mapvote_start {
 		return;
 
 	map_info_enumerate();
-	if (map_info_filter_game_type(map_info_type_from_game_type(gametype_current()), map_info_required_flags(), map_info_forbidden_flags(), 1))
+	if (map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), map_info_required_flags(), map_info_forbidden_flags(), 1))
 		mapvote_run = TRUE;
 }
 

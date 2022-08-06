@@ -1,0 +1,3 @@
+float(string t) game_type_from_name;
+float(void) game_type_current;
+string(float t) game_type_name_long;

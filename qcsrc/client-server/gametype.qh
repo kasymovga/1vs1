@@ -1,3 +1,0 @@
-float(float gt, float tp, string pattern) gametype_filter;
-float _gametype;
-#define gametype _gametype //workaround for gametype field

@@ -1,0 +1,2 @@
+void() game_type_init;
+string game_type_title;

@@ -939,7 +939,7 @@ void kh_init_delayed()  // sets up th KH environment
 	kh_controller.think = kh_Controller_Think;
 	kh_controller.reset2 = kh_Reset;
 	addstat(STAT_KH_KEYS, STAT_INT, kh_state);
-	if (gametype == GAMETYPE_KEYHUNT_CA || gametype == GAMETYPE_KEYHUNT_FT)
+	if (game_type == GAME_TYPE_KEYHUNT_CA || game_type == GAME_TYPE_KEYHUNT_FT)
 		kh_roundbased = TRUE;
 
 	if (kh_roundbased)
@@ -956,9 +956,9 @@ void kh_init_delayed()  // sets up th KH environment
 	SP_KH_KCKILLS = score_register("kckills", 0);
 	SP_KH_LOSSES = score_register("losses", SCORE_FLAG_LOWER_IS_BETTER);
 	if (kh_roundbased) {
-		if (gametype == GAMETYPE_KEYHUNT_CA)
+		if (game_type == GAME_TYPE_KEYHUNT_CA)
 			clanarena_shared_init("khca");
-		else if (gametype == GAMETYPE_KEYHUNT_FT)
+		else if (game_type == GAME_TYPE_KEYHUNT_FT)
 			freeze_shared_init("khft");
 
 		roundbased_score_field_set(ST_KH_CAPS);

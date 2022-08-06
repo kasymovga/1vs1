@@ -156,7 +156,7 @@ void(void) world_getrecords {
 	}
 	cmd_records_reply_extra = 0;
 	if (cvar("sv_dumprecords")) {
-		f = fopen(strcat("records-", gametype_name(gametype), ".txt"), FILE_WRITE);
+		f = fopen(strcat("records-", game_type_name(game_type), ".txt"), FILE_WRITE);
 	}
 	for (i = 0; i < map_info_count; ++i)
 		if (map_info_get_by_id(i)) {
@@ -256,12 +256,12 @@ void(void) world_init {
 	lightstyle(63, "a");
 	cvar_changes_init();
 	campaign_preinit();
-	precache_model("null"); // we need this one before gametype_init. or maybe not
+	precache_model("null"); // we need this one before game_type_init. or maybe not
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	world_get_min_max(1);
 	world.mins = world_min;
 	world.maxs = world_max;
-	gametype_init();
+	game_type_init();
 	map_mark_as_recent(mapname);
 	dlc_init();
 	// needs to be done so early as they would still spawn
@@ -281,7 +281,7 @@ void(void) world_init {
 	campaign_postinit();
 	Ban_Init();
 	map_info_enumerate();
-	map_info_filter_game_type(map_info_type_from_game_type(gametype_current()) | GameTypeVote_Mask(), map_info_required_flags(), map_info_forbidden_flags(), 1);
+	map_info_filter_game_type(map_info_type_from_game_type(game_type_current()) | GameTypeVote_Mask(), map_info_required_flags(), map_info_forbidden_flags(), 1);
 	addstat(STAT_WEAPONS, STAT_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, STAT_INT, switchweapon);
 	addstat(STAT_GAMESTARTTIME, STAT_FLOAT, stat_map_starttime);
@@ -329,7 +329,7 @@ void(void) world_init {
 	world_getrecords();
 	client_init_spawn();
 	random_seed_spawn();
-	localcmd("\n_sv_hook_gamestart ", gametype_name(gametype), ";");
+	localcmd("\n_sv_hook_gamestart ", game_type_name(game_type), ";");
 	world_initialized = 1;
 	IRC_Init();
 	infomessages_init();
@@ -352,7 +352,7 @@ void(float final) world_dump_stats {
 	else
 		s = ":status:";
 
-	s = strcat(s, gametype_name(gametype), "_", mapname, ":", ftos(rint(time)));
+	s = strcat(s, game_type_name(game_type), "_", mapname, ":", ftos(rint(time)));
 	if (to_console)
 		print(s, "\n");
 
@@ -713,7 +713,7 @@ void(void) world_restore {
 	if not(dlc_ready_all())
 		dlc_reload();
 
-	gametype_switch(gametype_from_name("single"));
+	game_type_switch(game_type_from_name("single"));
 }
 
 //DP_SV_SHUTDOWN

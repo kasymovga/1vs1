@@ -16,7 +16,7 @@ void GameTypeVote_Select(float select);
 
 string GameTypeVote_GetDescr(float n) {
 	str_unzone_ifneeded(gametypes_descr[n]);
-	string s = gametype_name_long(gametypes[n]);
+	string s = game_type_name_long(gametypes[n]);
 	string p = gametypes_profiles[n];
 	if (p == "")
 		p = "default";
@@ -70,7 +70,7 @@ float GameTypeVote_Think() {
 				type = head;
 				profile = " ";
 			}
-			t = gametype_from_name(type);
+			t = game_type_from_name(type);
 			if (t <= 0) {
 				print("Unknown game type: ", type, "\n");
 				continue;
@@ -92,13 +92,13 @@ float GameTypeVote_Think() {
 		return TRUE;
 	}
 	if (gametypes_count == 1) {
-		gametype_switch(gametypes[0]);
+		game_type_switch(gametypes[0]);
 		gametypevote_finished = TRUE;
 		return TRUE;
 	}
 	for (i = 0; i < gametypes_count; i++) {
 		if (gametypes_votes[i] > (player_count - bot_count) / 2) {
-			gametype_switch(gametypes[i]);
+			game_type_switch(gametypes[i]);
 			string p = gametypes_profiles[i];
 			if (p != " ")
 				cvar_set("g_profile", p);
@@ -118,7 +118,7 @@ float GameTypeVote_Think() {
 			}
 		}
 		if (gametype_max_votes >= 0) {
-			gametype_switch(gametypes[gametype_max_votes]);
+			game_type_switch(gametypes[gametype_max_votes]);
 			string p = gametypes_profiles[gametype_max_votes];
 			if (p != " ")
 				cvar_set("g_profile", p);
@@ -168,7 +168,7 @@ void GameTypeVote_Init() {
 
 		tail = str_cdr(tail);
 		if (head != "") {
-			gametypes_mapinfo_mask = gametypes_mapinfo_mask | map_info_type_from_game_type(gametype_from_name(head));
+			gametypes_mapinfo_mask = gametypes_mapinfo_mask | map_info_type_from_game_type(game_type_from_name(head));
 		}
 	}
 }

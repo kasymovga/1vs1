@@ -131,7 +131,7 @@ noteline.qh
 warmup.qh
 weapon.qh
 weapon/selectable.qh
-gametype.qh
+game_type.qh
 chat.qh
 team.qh
 tdm.qh
@@ -162,7 +162,7 @@ fire.qc
 arc.qc
 team.qc
 tdm.qc
-gametype.qc
+game_type.qc
 rune.qc
 physics.qc
 jetpack.qc

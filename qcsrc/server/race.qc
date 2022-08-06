@@ -1148,7 +1148,7 @@ void(void) race_target_init_use {
 }
 
 void(void) spawnfunc_race_target_init {
-	if (gametype != GAMETYPE_CTS) {
+	if (game_type != GAME_TYPE_CTS) {
 		remove(self);
 		return;
 	}
@@ -1158,7 +1158,7 @@ void(void) spawnfunc_race_target_init {
 }
 
 void(void) spawnfunc_race_target_start_timer {
-	if (gametype != GAMETYPE_CTS) {
+	if (game_type != GAME_TYPE_CTS) {
 		remove(self);
 		return;
 	}
@@ -1172,7 +1172,7 @@ void(void) spawnfunc_race_target_start_timer {
 }
 
 void(void) spawnfunc_race_target_stop_timer {
-	if (gametype != GAMETYPE_CTS) {
+	if (game_type != GAME_TYPE_CTS) {
 		remove(self);
 		return;
 	}
@@ -1188,7 +1188,7 @@ void(void) spawnfunc_race_target_stop_timer {
 }
 
 void(void) spawnfunc_race_target_checkpoint {
-	if (gametype != GAMETYPE_CTS) {
+	if (game_type != GAME_TYPE_CTS) {
 		remove(self);
 		return;
 	}
@@ -1341,7 +1341,7 @@ void race_gamemenu_send(void(string item, string cmd) send_item) {
 }
 
 void(void) race_init {
-	if (gametype == GAMETYPE_RACE) {
+	if (game_type == GAME_TYPE_RACE) {
 		float qualifying_override = cvar("g_race_qualifying_timelimit_override");
 		g_race = 1;
 		if (cvar("g_race_teams")) {
@@ -1368,7 +1368,7 @@ void(void) race_init {
 		}
 		race_records_path = RACE_RECORD;
 	}
-	if (gametype == GAMETYPE_CTS) {
+	if (game_type == GAME_TYPE_CTS) {
 		g_cts = 1;
 		g_race_qualifying = 1;
 		race_records_path = CTS_RECORD;
@@ -1445,7 +1445,7 @@ void(void) race_target_frags_filter_use {
 	//silent
 	//reset
 	//match
-	if (gametype != GAMETYPE_CTS) {
+	if (game_type != GAME_TYPE_CTS) {
 		remove(self);
 		return;
 	}
@@ -1467,7 +1467,7 @@ void(void) race_target_frags_filter_use {
 }
 
 void(void) spawnfunc_race_target_frags_filter {
-	if (gametype != GAMETYPE_CTS) {
+	if (game_type != GAME_TYPE_CTS) {
 		remove(self);
 		return;
 	}

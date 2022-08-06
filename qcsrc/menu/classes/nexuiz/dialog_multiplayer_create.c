@@ -33,11 +33,11 @@ void fillNexuizServerCreateTab(entity me)
 	float i;
 	n = 6;
 	selected = NULL;
-	for (i = GAMETYPE_DEATHMATCH; i < GAMETYPE_SINGLE; i++) {
+	for (i = GAME_TYPE_DEATHMATCH; i < GAME_TYPE_SINGLE; i++) {
 		if (mod(i - 1, n) == 0)
 			me.TR(me);
 
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, gametype_name(i), gametype_name_long(i)));
+		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, game_type_name(i), game_type_name_long(i)));
 			if not(selected)
 				selected = e;
 			else if(e.checked)
@@ -174,27 +174,27 @@ void gameTypeChangeNotifyNexuizServerCreateTab(entity me)
 	// tell the map list to update
 	float gt;
 	entity e, l;
-	gt = gametype_current();
+	gt = game_type_current();
 	e = me.sliderFraglimit;
 	l = me.checkboxFraglimit;
 	switch(gt)
 	{
-		case GAMETYPE_CATF:            GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   20,  1, "g_catf_scorelimit");    break;
-		case GAMETYPE_CTFT:            GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   20,  1, "g_ctft_scorelimit");    break;
-		case GAMETYPE_CTF:             GameType_ConfigureSliders(e, l, _("Capture limit:"),   1,   20,  1, "c_ctf_scorelimit");     break;
-		case GAMETYPE_DOMINATION:      GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "g_dom_scorelimit");     break;
-		case GAMETYPE_KEYHUNT:         GameType_ConfigureSliders(e, l, _("Point limit:"),   200, 1500, 50, "g_kh_scorelimit");      break;
-		case GAMETYPE_KEYHUNT_CA:      GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   30,  1, "g_khca_scorelimit");    break;
-		case GAMETYPE_KEYHUNT_FT:      GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   30,  1, "g_khft_scorelimit");    break;
-		case GAMETYPE_RACE:            GameType_ConfigureSliders(e, l, _("Laps:"),            1,   25,  1, "g_race_scorelimit");    break;
-		case GAMETYPE_NEXBALL:         GameType_ConfigureSliders(e, l, _("Goals:"),           1,   50,  1, "g_nexball_scorelimit"); break;
-		case GAMETYPE_ONSLAUGHT:       GameType_ConfigureSliders(e, l, _("Point limit:"),     1,   50,  1, "");                     break;
-		case GAMETYPE_CTS:             GameType_ConfigureSliders(e, l, _("Point limit:"),     1,   50,  1, "");                     break;
-		case GAMETYPE_FREEZETAG:       GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   50,  1, "g_ft_scorelimit");      break;
-		case GAMETYPE_CLANARENA:       GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   50,  1, "g_ca_scorelimit");      break;
-		case GAMETYPE_SURVIVE:         GameType_ConfigureSliders(e, l, _("Point limit:"),     1,   50,  1, "");                     break;
-		case GAMETYPE_COOP:            GameType_ConfigureSliders(e, l, _("Point limit:"),     1,   50,  1, "");                     break;
-		case GAMETYPE_TEAM_DEATHMATCH: GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  200,  5, "g_tdm_scorelimit");     break;
+		case GAME_TYPE_CATF:            GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   20,  1, "g_catf_scorelimit");    break;
+		case GAME_TYPE_CTFT:            GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   20,  1, "g_ctft_scorelimit");    break;
+		case GAME_TYPE_CTF:             GameType_ConfigureSliders(e, l, _("Capture limit:"),   1,   20,  1, "c_ctf_scorelimit");     break;
+		case GAME_TYPE_DOMINATION:      GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "g_dom_scorelimit");     break;
+		case GAME_TYPE_KEYHUNT:         GameType_ConfigureSliders(e, l, _("Point limit:"),   200, 1500, 50, "g_kh_scorelimit");      break;
+		case GAME_TYPE_KEYHUNT_CA:      GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   30,  1, "g_khca_scorelimit");    break;
+		case GAME_TYPE_KEYHUNT_FT:      GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   30,  1, "g_khft_scorelimit");    break;
+		case GAME_TYPE_RACE:            GameType_ConfigureSliders(e, l, _("Laps:"),            1,   25,  1, "g_race_scorelimit");    break;
+		case GAME_TYPE_NEXBALL:         GameType_ConfigureSliders(e, l, _("Goals:"),           1,   50,  1, "g_nexball_scorelimit"); break;
+		case GAME_TYPE_ONSLAUGHT:       GameType_ConfigureSliders(e, l, _("Point limit:"),     1,   50,  1, "");                     break;
+		case GAME_TYPE_CTS:             GameType_ConfigureSliders(e, l, _("Point limit:"),     1,   50,  1, "");                     break;
+		case GAME_TYPE_FREEZETAG:       GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   50,  1, "g_ft_scorelimit");      break;
+		case GAME_TYPE_CLANARENA:       GameType_ConfigureSliders(e, l, _("Win limit:"),       1,   50,  1, "g_ca_scorelimit");      break;
+		case GAME_TYPE_SURVIVE:         GameType_ConfigureSliders(e, l, _("Point limit:"),     1,   50,  1, "");                     break;
+		case GAME_TYPE_COOP:            GameType_ConfigureSliders(e, l, _("Point limit:"),     1,   50,  1, "");                     break;
+		case GAME_TYPE_TEAM_DEATHMATCH: GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  200,  5, "g_tdm_scorelimit");     break;
 		default:                   GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  100,  5, "g_scorelimit");         break;
 	}
 	me.mapListBox.refilter(me.mapListBox);

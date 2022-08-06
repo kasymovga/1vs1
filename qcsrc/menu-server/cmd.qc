@@ -42,7 +42,7 @@ float(string command) cmd_generic {
 			return TRUE;
 		} else if (argv(1) == "cleanup") {
 			map_info_enumerate();
-			map_info_filter_game_type(map_info_type_from_game_type(gametype_current()), map_info_required_flags(), map_info_forbidden_flags(), 0);
+			map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), map_info_required_flags(), map_info_forbidden_flags(), 0);
 			n = tokenizebyseparator(cvar_string("g_maplist"), " ");
 			s2 = "";
 			for(i = 0; i < n; ++i)

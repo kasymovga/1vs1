@@ -262,7 +262,7 @@ void(void) race_sbar_draw {
 		race_velocity = physics_velocity_frame_end;
 		race_movement = input_movevalues;
 	}
-	if (gametype == GAMETYPE_CTS) {
+	if (game_type == GAME_TYPE_CTS) {
 		if (CVAR(cl_cts_strafe_helper))
 		if (race_velocity_x != 0 || race_velocity_y != 0)
 		if (race_movement_x != 0 || race_movement_y != 0) {

@@ -242,7 +242,7 @@ void(string profile) cvar_init {
 	cvar_orig = cvar;
 	cvar_string_orig = cvar_string;
 	profile = strreplace("+", " ", profile);
-	cvar_game_add(gametype_name(gametype_current()));
+	cvar_game_add(game_type_name(game_type_current()));
 	while (profile != "") {
 		s = str_car(profile);
 		profile = str_cdr(profile);
