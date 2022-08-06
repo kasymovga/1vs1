@@ -1,0 +1,3 @@
+void() map_vote_start;
+void() map_vote_think;
+float map_vote_initialized;

@@ -638,7 +638,7 @@ void(void) client_post_think { //called by engine
 	}
 	if (self.impulse) {
 		if (map_finished) {
-			mapvote_impulse();
+			map_vote_impulse();
 		} else if (self.classname == "player")
 			player_impulse();
 		else if (self.classname == "observer") {

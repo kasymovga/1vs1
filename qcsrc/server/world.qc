@@ -544,10 +544,10 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 	float timelimit;
 	float fraglimit;
 	vote_think();
-	mapvote_think();
+	map_vote_think();
 	if (map_finished) { // someone else quit the game already
 		if (player_count == 0) // Nobody there? Then let's go to the next map
-			mapvote_start();
+			map_vote_start();
 			// this will actually check the player count in the next frame
 			// again, but this shouldn't hurt
 		return;

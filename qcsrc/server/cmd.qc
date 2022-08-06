@@ -466,7 +466,7 @@ void(string s) cmd_client {
 
 	if (vote_cmd(s, self)) {
 		return;
-	} else if (mapvote_client_command(argv(0))) {
+	} else if (map_vote_client_command(argv(0))) {
 		return;
 	} else if (cmd == "autoswitch") {
 		// be backwards compatible with older clients (enabled)

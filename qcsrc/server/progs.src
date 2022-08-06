@@ -135,7 +135,7 @@ game_type.qh
 chat.qh
 team.qh
 tdm.qh
-mapvote.qh
+map_vote.qh
 casing.qh
 hint.qh
 map_info.qh
@@ -174,7 +174,7 @@ world.qc
 worldspawn.qc
 light.qc
 map.qc
-mapvote.qc
+map_vote.qc
 casing.qc
 target.qc
 info.qc

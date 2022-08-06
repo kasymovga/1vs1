@@ -1,19 +1,19 @@
-string getmapname_stored;
+string map_name_stored;
 
-float Map_Count, Map_Current;
+float map_count, map_current;
 
-// NOTE: this now expects the map list to be already tokenize()d and the count in Map_Count
+// NOTE: this now expects the map list to be already tokenize()d and the count in map_count
 float() map_list_get_position {
 	float pos, idx;
 	string map;
 	map = mapname;
 	idx = cvar("_g_maplist_index");
 	if (idx >= 0)
-		if (idx < Map_Count)
+		if (idx < map_count)
 			if (map == argv(idx))
 				return idx;
 
-	for (pos = 0; pos < Map_Count; ++pos)
+	for (pos = 0; pos < map_count; ++pos)
 		if (map == argv(pos))
 			return pos;
 
@@ -93,12 +93,8 @@ float(float position, float pass) map_check {
 }
 
 void(string nextmapname) map_next_set {
-	if (getmapname_stored != "")
-		strunzone(getmapname_stored);
-	if (nextmapname == "")
-		getmapname_stored = "";
-	else
-		getmapname_stored = strzone(nextmapname);
+	str_unzone_ifneeded(map_name_stored);
+	map_name_stored = str_zone_ifneeded(nextmapname);
 }
 
 void(float position) map_goto_set_index {
@@ -109,8 +105,8 @@ void(float position) map_goto_set_index {
 
 void() map_change {
 	localcmd("\nsettemp_restore\n");
-	print("Loading map: ", getmapname_stored, "\n");
-	map_info_load_map(getmapname_stored);
+	print("Loading map: ", map_name_stored, "\n");
+	map_info_load_map(map_name_stored);
 }
 
 // return codes of map selectors:
@@ -119,9 +115,9 @@ void() map_change {
 float() map_list_method_iterate { // usual method
 	float pass, i;
 	for (pass = 1; pass <= 2; ++pass) {
-		for (i = 1; i < Map_Count; ++i) {
+		for (i = 1; i < map_count; ++i) {
 			float mapindex;
-			mapindex = math_mod(i + Map_Current, Map_Count);
+			mapindex = math_mod(i + map_current, map_count);
 			if (map_check(mapindex, pass))
 				return mapindex;
 		}
@@ -134,7 +130,7 @@ float() map_list_method_random { // random map selection
 	imax = 42;
 	for (i = 0; i <= imax; ++i) {
 		float mapindex;
-		mapindex = math_mod(Map_Current + floor(random() * (Map_Count - 1) + 1), Map_Count); // any OTHER map
+		mapindex = math_mod(map_current + floor(random() * (map_count - 1) + 1), map_count); // any OTHER map
 		if (map_check(mapindex, 1))
 			return mapindex;
 	}
@@ -150,24 +146,24 @@ float(float exponent) map_list_method_shuffle { // more clever shuffling
 		string newlist;
 		// now reinsert this at another position
 		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
-		insertpos = insertpos * (Map_Count - 1);       // ]0, Map_Count - 1]
-		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., Map_Count}
+		insertpos = insertpos * (map_count - 1);       // ]0, map_count - 1]
+		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., map_count}
 		// insert the current map there
 		newlist = "";
 		for (j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
 			newlist = strcat(newlist, " ", argv(j));
 
 		newlist = strcat(newlist, " ", argv(0));       // now insert the just selected map
-		for (j = insertpos; j < Map_Count; ++j)         // i == Map_Count: no loop, has just been inserted as last
+		for (j = insertpos; j < map_count; ++j)         // i == map_count: no loop, has just been inserted as last
 			newlist = strcat(newlist, " ", argv(j));
 
 		newlist = substring(newlist, 1, strlen(newlist) - 1);
 		cvar_set("_g_maplist", newlist);
-		Map_Count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
+		map_count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 		// NOTE: the selected map has just been inserted at (insertpos-1)th position
-		Map_Current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
-		if (map_check(Map_Current, 1))
-			return Map_Current;
+		map_current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
+		if (map_check(map_current, 1))
+			return map_current;
 	}
 	return -1;
 }
@@ -235,15 +231,15 @@ void(void) map_list_init {
 		if (cvar("g_maplist_shuffle"))
 			map_list_shuffle();
 	}
-	Map_Count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
-	if (Map_Count == 0) {
+	map_count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
+	if (map_count == 0) {
 		map_list_reset();
-		Map_Count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
+		map_count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 	}
-	if (Map_Count == 0)
+	if (map_count == 0)
 		error("empty maplist, cannot select a new map");
 
-	Map_Current = bound(0, map_list_get_position(), Map_Count - 1);
+	map_current = bound(0, map_list_get_position(), map_count - 1);
 }
 
 string() map_list_next_get {
@@ -261,12 +257,12 @@ string() map_list_next_get {
 		nextMap = map_list_method_iterate();
 
 	if (nextMap == -1)
-	if (map_check(Map_Current, 2))
-		nextMap = Map_Current;
+	if (map_check(map_current, 2))
+		nextMap = map_current;
 
 	if (nextMap >= 0) {
 		map_goto_set_index(nextMap);
-		return getmapname_stored;
+		return map_name_stored;
 	}
 	return "";
 }
@@ -342,7 +338,7 @@ string(string m) map_goto {
 
 	cvar_set("nextmap", m);
 	cvar_set("timelimit", "-1");
-	if (mapvote_initialized || map_already_changed) {
+	if (map_vote_initialized || map_already_changed) {
 		if (map_do_next_override())
 			return "Map switch initiated.";
 		else
@@ -373,7 +369,7 @@ void(void) map_intermission_think {
 	if (game_type_vote_think()) {
 		return;
 	}
-	mapvote_start();
+	map_vote_start();
 }
 
 void() map_finish {
