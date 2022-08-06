@@ -37,7 +37,7 @@ void fillNexuizServerCreateTab(entity me)
 		if (mod(i - 1, n) == 0)
 			me.TR(me);
 
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, gametype_name(i), MapInfo_HumanString_FromType(i)));
+		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, gametype_name(i), gametype_name_long(i)));
 			if not(selected)
 				selected = e;
 			else if(e.checked)
@@ -174,7 +174,7 @@ void gameTypeChangeNotifyNexuizServerCreateTab(entity me)
 	// tell the map list to update
 	float gt;
 	entity e, l;
-	gt = MapInfo_CurrentGametype();
+	gt = gametype_current();
 	e = me.sliderFraglimit;
 	l = me.checkboxFraglimit;
 	switch(gt)

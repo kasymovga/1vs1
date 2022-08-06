@@ -38,7 +38,7 @@ string(string m) mapvote_suggest {
 	if (mapvote_initialized)
 		return "Can't suggest - voting is already in progress!";
 
-	m = MapInfo_FixName(m);
+	m = map_info_fix_name(m);
 	if (!m)
 		return "The map you suggested is not available on this server.";
 
@@ -46,7 +46,7 @@ string(string m) mapvote_suggest {
 		if (map_is_recent(m))
 			return "This server does not allow for recent maps to be played again. Please be patient for some rounds.";
 
-	if (!MapInfo_CheckMap(m))
+	if (!map_info_check_map(m))
 		return "The map you suggested does not support the current game mode.";
 
 	for (i = 0; i < mapvote_suggestion_ptr; ++i)
@@ -78,8 +78,8 @@ void(string nextMap, float isSuggestion) mapvote_add_votable {
 		mapvote_maxlen = strlen(nextMap);
 
 	mapvote_maps[mapvote_count] = strzone(nextMap);
-	MapInfo_Get_ByName(nextMap, 0, 0);
-	string picture = MapInfo_Map_image;
+	map_info_get_by_name(nextMap, 0, 0);
+	string picture = map_info_map_image;
 	if (picture == "")
 		picture = "gfx/m_nomap";
 
@@ -171,7 +171,7 @@ float(entity to, float sf) mapvote_send {
 	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
 		// flag 1 == initialization
-		net_write_string(MSG_ENTITY, MapInfo_HumanString_FromType(MapInfo_CurrentGametype()));
+		net_write_string(MSG_ENTITY, gametype_name_long(gametype_current()));
 		net_write_byte(MSG_ENTITY, mapvote_count);
 		net_write_byte(MSG_ENTITY, mapvote_abstain);
 		net_write_byte(MSG_ENTITY, mapvote_detail);
@@ -352,8 +352,8 @@ void() mapvote_start {
 	if (mapvote_run)
 		return;
 
-	MapInfo_Enumerate();
-	if (MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1))
+	map_info_enumerate();
+	if (map_info_filter_game_type(map_info_type_from_game_type(gametype_current()), map_info_required_flags(), map_info_forbidden_flags(), 1))
 		mapvote_run = TRUE;
 }
 

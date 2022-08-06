@@ -138,6 +138,7 @@ tdm.qh
 mapvote.qh
 casing.qh
 hint.qh
+map_info.qh
 debris.qh
 thirdview.qh
 ability.qh
@@ -356,3 +357,4 @@ thirdview.qc
 shootingrange.qc
 ability.qc
 perf.qc
+map_info.qc

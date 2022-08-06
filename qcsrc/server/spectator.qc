@@ -16,7 +16,7 @@ void(void) spectator_note_message {
 	} else if (other.classname == "observer")
 		s = "^1Observing\n^1Press ^3{+attack}^1 to spectate";
 
-	s = strcat(s, "\n^1Game type is ^3", MapInfo_HumanString_FromType(gametype));
+	s = strcat(s, "\n^1Game type is ^3", gametype_title);
 	if (other.team <= 0)
 		s = strcat(s, "\n^1Press ^3{+jump}^1 to join");
 

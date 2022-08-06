@@ -21,9 +21,9 @@ string campaign_title; // filled upon loading
 // NOTE: there MUST be a corresponding campaign_file_unload() to unzone the
 // strings.
 string campaign_name; // set that to the campaign you want to load before calling campaign_file_load
-float campaign_file_load(float offset, float entries);
-void campaign_file_unload();
+float(float offset, float entries) campaign_file_load;
+void() campaign_file_unload;
 // Sets up the campaign for the n-th array item (meaning: campaign_offset+nth
 // level) using localcmd()
-void campaign_setup_cvars_only(float n);
-void campaign_setup(float n);
+void(float n) campaign_setup_cvars_only;
+void(float n) campaign_setup;

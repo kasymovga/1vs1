@@ -3,7 +3,7 @@
 #include "cvar.qc"
 #include "extresponse.qc"
 #include "gametype.qc"
-#include "mapinfo.qc"
+#include "map_info.qc"
 #include "masterlist.qc"
 #include "shuffle.qc"
 #include "udppunchhole.qc"

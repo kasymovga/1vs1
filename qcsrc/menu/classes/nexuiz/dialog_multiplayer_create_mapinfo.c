@@ -32,10 +32,8 @@ void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
 {
 	me.currentMapIndex = i;
 	me.startButton.onClickEntity = mlb;
-	MapInfo_Get_ByID(i);
-
-	if(me.currentMapBSPName)
-	{
+	map_info_get_by_id(i);
+	if (me.currentMapBSPName) {
 		strunzone(me.currentMapBSPName);
 		strunzone(me.currentMapTitle);
 		strunzone(me.currentMapAuthor);
@@ -43,12 +41,12 @@ void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
 		strunzone(me.currentMapPreviewImage);
 		strunzone(me.currentMapFeaturesText);
 	}
-	me.currentMapBSPName = strzone(MapInfo_Map_bspname);
-	me.currentMapTitle = strzone(MapInfo_Map_title);
-	me.currentMapAuthor = strzone(MapInfo_Map_author);
-	me.currentMapDescription = strzone(MapInfo_Map_description);
-	me.currentMapFeaturesText = strzone((MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_WEAPONS) ? _("Full item placement") : _("MinstaGib only"));
-	me.currentMapPreviewImage = strzone(strcat("/", MapInfo_Map_image));
+	me.currentMapBSPName = strzone(map_info_map_bspname);
+	me.currentMapTitle = strzone(map_info_map_title);
+	me.currentMapAuthor = strzone(map_info_map_author);
+	me.currentMapDescription = strzone(map_info_map_description);
+	me.currentMapFeaturesText = strzone((map_info_map_supported_features & MAP_INFO_FEATURE_WEAPONS) ? _("Full item placement") : _("MinstaGib only"));
+	me.currentMapPreviewImage = strzone(strcat("/", map_info_map_image));
 
 	me.frame.setText(me.frame, me.currentMapBSPName);
 	me.titleLabel.setText(me.titleLabel, me.currentMapTitle);
@@ -61,10 +59,10 @@ void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
 	float t;
 	t = GAMETYPE_DEATHMATCH;
 	for (e = me.typeLabelNext; e; e = e.typeLabelNext) {
-		e.disabled = !(MapInfo_Map_supportedGametypes & MapInfo_GameTypeToMapInfoType(t));
+		e.disabled = !(map_info_map_supported_game_types & map_info_type_from_game_type(t));
 		t++;
 	}
-	MapInfo_ClearTemps();
+	map_info_clear_temps();
 }
 void fillNexuizMapInfoDialog(entity me)
 {
@@ -97,7 +95,7 @@ void fillNexuizMapInfoDialog(entity me)
 		float i;
 		e = me;
 		for (i = GAMETYPE_DEATHMATCH; i < GAMETYPE_SINGLE; i++) {
-			me.TD(me, 1, 2, e.typeLabelNext = makeNexuizTextLabel(0, MapInfo_HumanString_FromType(i)));
+			me.TD(me, 1, 2, e.typeLabelNext = makeNexuizTextLabel(0, gametype_name_long(i)));
 			e = e.typeLabelNext;
 			if not(mod(i, 2)) {
 				me.TR(me);

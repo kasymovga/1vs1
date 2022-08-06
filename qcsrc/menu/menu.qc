@@ -230,9 +230,8 @@ void(float key, float ascii) menu_keydown {
 float() menu_init_pre {
 	vector sz;
 	vector boxA, boxB;
-	MapInfo_Cache_Create();
-	MapInfo_Enumerate();
-	if (!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 1)) {
+	map_info_enumerate();
+	if (!map_info_filter_game_type(MAP_INFO_TYPE_ALL, 0, 0, 1)) {
 		gui_draw_reset();
 		sz = eX * 0.025 + eY * 0.025 * (gui_draw_scale_x / gui_draw_scale_y);
 		gui_draw_text_center('0.5 0.5 0' - 1.25 * sz_y * eY, "Autogenerating mapinfo for newly added maps...", sz, '1 1 1', 1, 0);
@@ -242,7 +241,7 @@ float() menu_init_pre {
 		boxA += sz * 0.1;
 		boxB -= sz * 0.1;
 		gui_draw_fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
-		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
+		boxB_x = boxA_x * (1 - map_info_progress) + boxB_x * map_info_progress;
 		gui_draw_fill(boxA, boxB - boxA, '0 0 1', 1);
 		return FALSE;
 	}

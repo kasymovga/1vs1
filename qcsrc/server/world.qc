@@ -158,9 +158,9 @@ void(void) world_getrecords {
 	if (cvar("sv_dumprecords")) {
 		f = fopen(strcat("records-", gametype_name(gametype), ".txt"), FILE_WRITE);
 	}
-	for (i = 0; i < MapInfo_count; ++i)
-		if (MapInfo_Get_ByID(i)) {
-			s1 = gamehook_world_record_for_map(MapInfo_Map_bspname);
+	for (i = 0; i < map_info_count; ++i)
+		if (map_info_get_by_id(i)) {
+			s1 = gamehook_world_record_for_map(map_info_map_bspname);
 			if (strlen(s) + strlen(s1) > 4095) {
 				if (cmd_records_reply_extra >= CMD_RECORDS_REPLY_STRINGS_COUNT - 1)
 					break;
@@ -178,7 +178,7 @@ void(void) world_getrecords {
 	if (f >= 0)
 		fclose(f);
 
-	MapInfo_ClearTemps();
+	map_info_clear_temps();
 }
 
 void(void) world_end_of_time {
@@ -280,8 +280,8 @@ void(void) world_init {
 	cvar_set("nextmap", "");
 	campaign_postinit();
 	Ban_Init();
-	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()) | GameTypeVote_Mask(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
+	map_info_enumerate();
+	map_info_filter_game_type(map_info_type_from_game_type(gametype_current()) | GameTypeVote_Mask(), map_info_required_flags(), map_info_forbidden_flags(), 1);
 	addstat(STAT_WEAPONS, STAT_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, STAT_INT, switchweapon);
 	addstat(STAT_GAMESTARTTIME, STAT_FLOAT, stat_map_starttime);
@@ -296,17 +296,17 @@ void(void) world_init {
 	addstat(STAT_SPECSTATUS, STAT_INT, spectatee_status);
 	cmd_lsmaps_reply = "^7Maps available: ";
 	map_list = "";
-	for (i = 0, j = 0; i < MapInfo_count; ++i) {
-		if (MapInfo_Get_ByID(i))
-			if not(MapInfo_Map_flags & (MAPINFO_FLAG_HIDDEN | MAPINFO_FLAG_FORBIDDEN)) {
+	for (i = 0, j = 0; i < map_info_count; ++i) {
+		if (map_info_get_by_id(i))
+			if not(map_info_map_flags & (MAP_INFO_FLAG_HIDDEN | MAP_INFO_FLAG_FORBIDDEN)) {
 				if (math_mod(i, 2))
 					col = "^2";
 				else
 					col = "^3";
 
 				++j;
-				cmd_lsmaps_reply = strcat(cmd_lsmaps_reply, col, MapInfo_Map_bspname, " ");
-				map_list = strcat(map_list, MapInfo_Map_bspname, " ");
+				cmd_lsmaps_reply = strcat(cmd_lsmaps_reply, col, map_info_map_bspname, " ");
+				map_list = strcat(map_list, map_info_map_bspname, " ");
 			}
 	}
 	cmd_lsmaps_reply = strzone(strcat(cmd_lsmaps_reply, "\n"));
@@ -314,7 +314,7 @@ void(void) world_init {
 	cmd_maplist_reply = "^7Maps in list: ";
 	n = tokenize_console(cvar_string("_g_maplist"));
 	for (i = 0, j = 0; i < n; ++i) {
-		if (MapInfo_CheckMap(argv(i))) {
+		if (map_info_check_map(argv(i))) {
 			if (math_mod(j, 2))
 				col = "^2";
 			else
@@ -325,7 +325,7 @@ void(void) world_init {
 		}
 	}
 	cmd_maplist_reply = strzone(strcat(cmd_maplist_reply, "\n"));
-	MapInfo_ClearTemps();
+	map_info_clear_temps();
 	world_getrecords();
 	client_init_spawn();
 	random_seed_spawn();
@@ -708,12 +708,12 @@ void(void) world_restore {
 	// some things then break, so let's work around them...
 	db_init();
 	// Mapinfo
-	MapInfo_OnRestore();
+	map_info_on_restore();
 	world_dynamic_init();
 	if not(dlc_ready_all())
 		dlc_reload();
 
-	MapInfo_SwitchGameType(gametype_from_name("single"));
+	gametype_switch(gametype_from_name("single"));
 }
 
 //DP_SV_SHUTDOWN
@@ -736,7 +736,7 @@ void(void) world_shutdown {
 		print("done!\n");
 		// tell the bot system the game is ending now
 		bot_endgame();
-		MapInfo_Shutdown();
+		map_info_shutdown();
 		infomessages_shutdown();
 		gamehook_chain_shutdown();
 		db_shutdown();

@@ -51,7 +51,7 @@ void(string theCvar, string theValue) campaign_cvar_set {
 
 float(void) campaign_invalid {
 	string s = campaign_gametype[0];
-	if (MapInfo_CurrentGametype() != gametype_from_name(s))
+	if (gametype_current() != gametype_from_name(s))
 		return campaign_bailout("wrong game type!");
 
 	return 0;
@@ -68,7 +68,7 @@ void(void) campaign_preinit {
 		cvar_string = campaign_cvar_string;
 		cvar_set = campaign_cvar_set;
 		cvar_set("g_campaign", "1");
-		MapInfo_SwitchGameType(gametype_from_name("single"));
+		gametype_switch(gametype_from_name("single"));
 		return;
 	}
 	CVAR_CACHE(g_campaign);
@@ -99,7 +99,7 @@ void(void) campaign_preinit {
 	cvar_set("g_campaign", "1");
 	cvar_set("skill", ftos(baseskill));
 	cvar_set("bot_number", ftos(campaign_bots[0]));
-	MapInfo_SwitchGameType(gametype_from_name(campaign_gametype[0]));
+	gametype_switch(gametype_from_name(campaign_gametype[0]));
 	if (campaign_invalid())
 		return;
 

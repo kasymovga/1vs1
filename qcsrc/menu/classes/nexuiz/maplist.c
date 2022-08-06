@@ -46,7 +46,7 @@ void MapList_LoadMap(entity btn, entity me);
 #ifdef IMPLEMENTATION
 void destroyNexuizMapList(entity me)
 {
-	MapInfo_Shutdown();
+	map_info_shutdown();
 }
 
 entity makeNexuizMapList()
@@ -91,7 +91,7 @@ void g_maplistCacheToggleNexuizMapList(entity me, float i)
 	strunzone(s);
 	me.g_maplistCache = strzone(strcat(a, b, c));
 	// TODO also update the actual cvar
-	if not((bspname = MapInfo_BSPName_ByID(i)))
+	if not((bspname = map_info_bsp_name_by_id(i)))
 		return;
 	if(b == "1")
 		cvar_set("g_maplist", strcat(bspname, " ", cvar_string("g_maplist")));
@@ -158,8 +158,7 @@ void drawListBoxItemNexuizMapList(entity me, float i, vector absSize, float isSe
 	float p = 0;
 	float theAlpha;
 	float included;
-
-	if(!MapInfo_Get_ByID(i))
+	if (!map_info_get_by_id(i))
 		return;
 
 	included = me.g_maplistCacheQuery(me, i);
@@ -174,15 +173,15 @@ void drawListBoxItemNexuizMapList(entity me, float i, vector absSize, float isSe
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
 
 	s = ftos(p);
-	gui_draw_picture(me.columnPreviewOrigin * eX, strcat("/", MapInfo_Map_image), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	gui_draw_picture(me.columnPreviewOrigin * eX, strcat("/", map_info_map_image), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 	if(included)
 		gui_draw_picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
 
-	s = gui_draw_text_shorten_to_width(strcat(MapInfo_Map_bspname, ": ", MapInfo_Map_title), me.columnNameSize / me.realFontSize_x, 0);
+	s = gui_draw_text_shorten_to_width(strcat(map_info_map_bspname, ": ", map_info_map_title), me.columnNameSize / me.realFontSize_x, 0);
 	gui_draw_text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - gui_text_width(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_MAPLIST_TITLE, theAlpha, 0);
-	s = gui_draw_text_shorten_to_width(MapInfo_Map_author, me.columnNameSize / me.realFontSize_x, 0);
+	s = gui_draw_text_shorten_to_width(map_info_map_author, me.columnNameSize / me.realFontSize_x, 0);
 	gui_draw_text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - gui_text_width(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_MAPLIST_AUTHOR, theAlpha, 0);
-	MapInfo_ClearTemps();
+	map_info_clear_temps();
 }
 
 void refilterNexuizMapList(entity me)
@@ -190,23 +189,23 @@ void refilterNexuizMapList(entity me)
 	float i, j, n;
 	string s;
 	float gt;
-	gt = MapInfo_CurrentGametype();
-	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(gt), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-	me.nItems = MapInfo_count;
+	gt = gametype_current();
+	map_info_filter_game_type(map_info_type_from_game_type(gt), map_info_required_flags(), map_info_forbidden_flags(), 0);
+	me.nItems = map_info_count;
 	if(me.g_maplistCache)
 		strunzone(me.g_maplistCache);
 	s = "0";
-	for(i = 1; i < MapInfo_count; i *= 2)
+	for(i = 1; i < map_info_count; i *= 2)
 		s = strcat(s, s);
 	n = tokenize_console(cvar_string("g_maplist"));
 	for(i = 0; i < n; ++i)
 	{
-		j = MapInfo_FindName(argv(i));
+		j = map_info_find_name(argv(i));
 		if(j >= 0)
 			s = strcat(
 				substring(s, 0, j),
 				"1",
-				substring(s, j+1, MapInfo_count - (j+1))
+				substring(s, j+1, map_info_count - (j+1))
 			);
 	}
 	me.g_maplistCache = strzone(s);
@@ -226,10 +225,10 @@ void MapList_All(entity btn, entity me)
 {
 	float i;
 	string s;
-	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, MAPINFO_FLAG_FORBIDDEN, 0); // all
+	map_info_filter_game_type(MAP_INFO_TYPE_ALL, 0, MAP_INFO_FLAG_FORBIDDEN, 0); // all
 	s = "";
-	for(i = 0; i < MapInfo_count; ++i)
-		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
+	for(i = 0; i < map_info_count; ++i)
+		s = strcat(s, " ", map_info_bsp_name_by_id(i));
 	cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
 	me.refilter(me);
 }
@@ -256,18 +255,18 @@ void MapList_LoadMap(entity btn, entity me)
 	if(i >= me.nItems || i < 0)
 		return;
 
-	m = MapInfo_BSPName_ByID(i);
+	m = map_info_bsp_name_by_id(i);
 	if not(m)
 	{
 		print("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n");
 		return;
 	}
-	if(MapInfo_CheckMap(m))
+	if(map_info_check_map(m))
 	{
 		localcmd("\ndisconnect; wait; g_campaign 0; maxplayers ", ftos(max(max(cvar("bot_number") + 1, cvar("minplayers")), cvar("menu_maxplayers"))), "; g_maplist_shufflenow\n");
 		if(cvar("menu_use_default_hostname"))
 			localcmd("hostname \"", strdecolorize(cvar_string("_cl_name")), "'s Rexuiz server\"\n");
-		MapInfo_LoadMap(m);
+		map_info_load_map(m);
 	}
 	else
 	{
@@ -310,9 +309,9 @@ float keyDownNexuizMapList(entity me, float scan, float ascii, float shift)
 			me.typeToSearchTime = time + 0.5;
 			if(strlen(me.typeToSearchString))
 			{
-				MapInfo_FindName(me.typeToSearchString);
-				if(MapInfo_FindName_firstResult >= 0)
-					me.setSelected(me, MapInfo_FindName_firstResult);
+				map_info_find_name(me.typeToSearchString);
+				if(map_info_find_name_first_result >= 0)
+					me.setSelected(me, map_info_find_name_first_result);
 			}
 		}
 	}
@@ -327,9 +326,9 @@ float keyDownNexuizMapList(entity me, float scan, float ascii, float shift)
 			strunzone(me.typeToSearchString);
 		me.typeToSearchString = strzone(save);
 		me.typeToSearchTime = time + 0.5;
-		MapInfo_FindName(me.typeToSearchString);
-		if(MapInfo_FindName_firstResult >= 0)
-			me.setSelected(me, MapInfo_FindName_firstResult);
+		map_info_find_name(me.typeToSearchString);
+		if(map_info_find_name_first_result >= 0)
+			me.setSelected(me, map_info_find_name_first_result);
 	}
 	else
 		return keyDownListBox(me, scan, ascii, shift);

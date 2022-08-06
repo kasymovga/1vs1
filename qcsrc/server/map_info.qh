@@ -1,0 +1,2 @@
+string(string s) map_info_fix_name;
+float(string s) map_info_get_game_types; // returns 0 if the map can't be played with the current settings, map_info_map_supported_game_types otherwise

@@ -32,3 +32,59 @@ float(string t) gametype_from_name {
 	if (t == "shootingrange" || t == "sr") return GAMETYPE_SHOOTINGRANGE;
 	return 0;
 }
+
+string(float t) gametype_name_long {
+	if (t == GAMETYPE_DEATHMATCH) {
+		return "Deathmatch";
+	} else if (t == GAMETYPE_DOMINATION) {
+		return "Domination";
+	} else if (t == GAMETYPE_TEAM_DEATHMATCH) {
+		return "Team Deathmatch";
+	} else if (t == GAMETYPE_CTF) {
+		return "Capture The Flag";
+	} else if (t == GAMETYPE_CATF) {
+		return "CTF with CA";
+	} else if (t == GAMETYPE_CTFT) {
+		return "CTF with FT";
+	} else if (t == GAMETYPE_CONQUEST) {
+		return "Conquest";
+	} else if (t == GAMETYPE_NEXBALL) {
+		return "Nexball";
+	} else if (t == GAMETYPE_ONSLAUGHT) {
+		return "Onslaught";
+	} else if (t == GAMETYPE_KEYHUNT) {
+		return "Key Hunt";
+	} else if (t == GAMETYPE_KEYHUNT_CA) {
+		return "Key Hunt with CA";
+	} else if (t == GAMETYPE_KEYHUNT_FT) {
+		return "Key Hunt with FT";
+	} else if (t == GAMETYPE_CTS) {
+		return "CTS";
+	} else if (t == GAMETYPE_RACE) {
+		return "Race";
+	} else if (t == GAMETYPE_FREEZETAG) {
+		return "Freeze Tag";
+	} else if (t == GAMETYPE_CLANARENA) {
+		return "Clan Arena";
+	} else if (t == GAMETYPE_SURVIVE) {
+		return "Survival";
+	} else if (t == GAMETYPE_LMS) {
+		return "Last Man Standing";
+	} else if (t == GAMETYPE_SINGLE) {
+		return "Single Player";
+	} else if (t == GAMETYPE_COOP) {
+		return "Cooperative";
+	} else if (t == GAMETYPE_SHOOTINGRANGE) {
+		return "Shooting Range";
+	}
+	return "WTF";
+}
+
+float(void) gametype_current {
+	float f = gametype_from_name(cvar_string("_gametype"));
+	return (f ? f : GAMETYPE_DEATHMATCH);
+}
+
+void(float t) gametype_switch {
+	cvar_set("_gametype", gametype_name(t));
+}

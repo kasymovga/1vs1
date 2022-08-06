@@ -6,9 +6,9 @@ void(entity e, string s) cmd_print_to {
 }
 
 void(void) cmd_make_mapinfo_think {
-	if (MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 1)) {
+	if (map_info_filter_game_type(MAP_INFO_TYPE_ALL, 0, 0, 1)) {
 		print("Done rebuiling mapinfos.\n");
-		MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+		map_info_filter_game_type(map_info_type_from_game_type(gametype_current()), map_info_required_flags(), map_info_forbidden_flags(), 0);
 		remove(self);
 	} else {
 		self.nextthink = time;
@@ -81,7 +81,7 @@ void(string command) cmd_game {
 		e.classname = "make_mapinfo";
 		e.think = cmd_make_mapinfo_think;
 		e.nextthink = time;
-		MapInfo_Enumerate();
+		map_info_enumerate();
 		return;
 	}
 	if (cmd == "gotomap") if (argc == 2) {
@@ -92,16 +92,16 @@ void(string command) cmd_game {
 		float t, tsave;
 		s = argv(1);
 		t = gametype_from_name(s);
-		tsave = MapInfo_CurrentGametype();
+		tsave = gametype_current();
 		if (t) {
-			MapInfo_SwitchGameType(t);
-			MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-			if (MapInfo_count > 0) {
+			gametype_switch(t);
+			map_info_filter_game_type(map_info_type_from_game_type(gametype_current()), map_info_required_flags(), map_info_forbidden_flags(), 0);
+			if (map_info_count > 0) {
 				bprint("Game type successfully switched to ", s, "\n");
 			} else {
 				bprint("Cannot use this game type: no map for it found\n");
-				MapInfo_SwitchGameType(tsave);
-				MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+				gametype_switch(tsave);
+				map_info_filter_game_type(map_info_type_from_game_type(gametype_current()), map_info_required_flags(), map_info_forbidden_flags(), 0);
 			}
 		} else
 			bprint("Game type switch to ", s, " failed: this type does not exist!\n");

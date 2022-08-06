@@ -3,7 +3,7 @@
 #include "extresponse.qh"
 #include "gametype.qh"
 #include "masterlist.qh"
-#include "mapinfo.qh"
+#include "map_info.qh"
 #include "shuffle.qh"
 #include "udppunchhole.qh"
 #include "weapon.qh"

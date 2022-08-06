@@ -80,7 +80,7 @@ float(float position, float pass) map_check {
 		if (map_is_recent(map_next))
 			return 0;
 	}
-	if (MapInfo_CheckMap(map_next)) {
+	if (map_info_check_map(map_next)) {
 		if (pass == 2)
 			return 1;
 
@@ -110,7 +110,7 @@ void(float position) map_goto_set_index {
 void() map_change {
 	localcmd("\nsettemp_restore\n");
 	print("Loading map: ", getmapname_stored, "\n");
-	MapInfo_LoadMap(getmapname_stored);
+	map_info_load_map(getmapname_stored);
 }
 
 // return codes of map selectors:
@@ -183,11 +183,24 @@ void(void) map_list_filter {
 	cvar_set("_g_maplist", sf);
 }
 
+string(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
+	string out;
+	float i;
+	// to make absolutely sure:
+	map_info_enumerate();
+	map_info_filter_game_type(map_info_type_from_game_type(gametype_current()), pRequiredFlags, pForbiddenFlags, 0);
+	out = "";
+	for (i = 0; i < map_info_count; ++i)
+		out = strcat(out, " ", map_info_glob_item(map_info_filter_list_lookup(i)));
+
+	return substring(out, 1, strlen(out) - 1);
+}
+
 void(void) map_list_reset {
 	print("Building map list...\n");
 	string exclude = strcat(" ", cvar_string("g_maplist_exclude"), " ");
 	string list = "";
-	string h, t = MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags());
+	string h, t = map_list_allowed_maps(map_info_required_flags(), map_info_forbidden_flags());
 	while (t != "") {
 		h = str_car(t);
 		t = str_cdr(t);
@@ -207,7 +220,7 @@ void(void) map_list_reset {
 void(void) map_list_init {
 	string s = cvar_string("g_maplist");
 	string se = cvar_string("g_maplist_exclude");
-	string gt = gametype_name(MapInfo_CurrentGametype());
+	string gt = gametype_name(gametype_current());
 	registercvar("_g_maplist_gametype", "");
 	registercvar("_g_maplist_source", "");
 	registercvar("_g_maplist_source_exclude", "");
@@ -284,7 +297,7 @@ float() map_do_next_override {
 	}
 	if (cvar_string("nextmap") != "") {
 		print("Have nextmap override (", cvar_string("nextmap"), ")\n");
-		if (MapInfo_CheckMap(cvar_string("nextmap"))) {
+		if (map_info_check_map(cvar_string("nextmap"))) {
 			print("nextmap override successful\n");
 			map_next_set(cvar_string("nextmap"));
 			map_change();
@@ -323,7 +336,7 @@ void() map_goto_next {
 }
 
 string(string m) map_goto {
-	if not(MapInfo_GetGameTypes(m) & (MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()) | GameTypeVote_Mask()))
+	if not(map_info_get_game_types(m) & (map_info_type_from_game_type(gametype_current()) | GameTypeVote_Mask()))
 		return "The map you chose is not available on this server.";
 
 	cvar_set("nextmap", m);
