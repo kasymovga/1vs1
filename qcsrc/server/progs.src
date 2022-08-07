@@ -91,7 +91,7 @@ game_type_vote.qh
 gamestatus.qh
 warfog.qh
 menu.qh
-gamemenu.qh
+game_menu.qh
 walkietalkie.qh
 hat.qh
 score_damage.qh
@@ -305,7 +305,7 @@ nadget/shield.qc
 nadget/transloc.qc
 nadget/waypoint.qc
 napalm.qc
-gamemenu.qc
+game_menu.qc
 walkietalkie.qc
 hat.qc
 monster.qc

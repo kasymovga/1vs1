@@ -125,7 +125,7 @@ float(entity to, float sf) client_init_send {
 		net_write_string(MSG_ENTITY, cvar_string("sv_vote_commands"));
 	}
 	if (sf & 16)
-		gamemenu_send();
+		game_menu_send();
 
 	if (sf & 32) {
 		net_write_byte(MSG_ENTITY, team_mode);

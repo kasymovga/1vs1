@@ -217,7 +217,7 @@ void(float ignore) main_init_read {
 		vote_commands_read();
 
 	if (sf & 16)
-		gamemenu_read();
+		game_menu_read();
 
 	if (sf & 32) {
 		team_mode = net_read_byte();

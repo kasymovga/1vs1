@@ -95,7 +95,7 @@ trip.qc
 func_camera.qc
 announce.qc
 vote.qh
-gamemenu.qh
+game_menu.qh
 entcs.qh
 main.qc
 mute.qc
@@ -106,7 +106,7 @@ score.qc
 game_type.qc
 ready.qc
 vote.qc
-gamemenu.qc
+game_menu.qc
 race.qc
 view.qc
 weapon.qc

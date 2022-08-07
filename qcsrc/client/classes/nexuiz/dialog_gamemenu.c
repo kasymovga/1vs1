@@ -41,7 +41,7 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 		if (team_mode)
 			me.rows = me.rows + 1;
 
-		me.rows = me.rows + gamemenu_commands_count;
+		me.rows = me.rows + game_menu_commands_count;
 		if not(main_campaign)
 			me.rows = me.rows + 2; //join and spectate
 
@@ -93,9 +93,9 @@ void fillNexuizGameMenuDialog(entity me)
 				}
 		}
 		float i;
-		for (i = 0; i < gamemenu_commands_count; i++) {
+		for (i = 0; i < game_menu_commands_count; i++) {
 			me.TR(me);
-				me.TD(me, 1, me.columns, e = makeNexuizCommandButton(gamemenu_items[i], '0 0 0', gamemenu_commands[i], COMMANDBUTTON_CLOSE));
+				me.TD(me, 1, me.columns, e = makeNexuizCommandButton(game_menu_items[i], '0 0 0', game_menu_commands[i], COMMANDBUTTON_CLOSE));
 		}
 		if not(main_campaign) {
 			me.TR(me);
