@@ -181,6 +181,7 @@ set _defrag_g_walk_align_to_ground 1
 set _defrag_g_weaponreplace_shotgun shotgun
 set _defrag_g_spawnreplace_ammo_bullets item_bullets
 set _defrag_g_spawnreplace_ammo_shells item_shells
+set _defrag_g_pickup_use_wait 1
 //set _defrag_g_spawn_znudge -8
 set defragcpm_inherit _defrag
 set defragcpm_g_q2doublejump 0

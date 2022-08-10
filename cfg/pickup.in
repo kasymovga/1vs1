@@ -80,3 +80,4 @@ set g_pickup_respawntimejitter_powerup 10
 set g_pickup_nodrop 0
 set g_pickup_weapons_max 0
 set sv_item_tracecull 0
+set g_pickup_use_wait 0

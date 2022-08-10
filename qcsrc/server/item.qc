@@ -60,6 +60,7 @@ float g_pickup_healthlarge_max;
 float g_pickup_healthmega;
 float g_pickup_healthmega_max;
 float g_pickup_fuel_jetpack;
+float g_pickup_use_wait;
 float g_powerup_strength;
 float g_powerup_speed;
 float g_powerup_invisibility;
@@ -708,7 +709,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 	self.mdl = itemmodel;
 	self.noise = pickupsound;
 	// let mappers override respawntime
-	if (self.wait) self.respawntime = self.wait;
+	if (g_pickup_use_wait && self.wait) self.respawntime = self.wait;
 	if (!self.respawntime) { // both set
 		self.respawntime = defaultrespawntime;
 		self.respawntimejitter = defaultrespawntimejitter;
@@ -1121,6 +1122,7 @@ void(void) item_init {
 	CVAR_CACHE(g_pickup_healthmega);
 	CVAR_CACHE(g_pickup_healthmega_max);
 	CVAR_CACHE(g_pickup_fuel_jetpack);
+	CVAR_CACHE(g_pickup_use_wait);
 	CVAR_CACHE(g_powerup_strength);
 	CVAR_CACHE(g_powerup_speed);
 	CVAR_CACHE(g_powerup_invisibility);
