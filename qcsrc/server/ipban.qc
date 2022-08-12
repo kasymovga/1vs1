@@ -220,11 +220,6 @@ string ban_ip[BAN_MAX];
 float ban_expire[BAN_MAX];
 float ban_count;
 
-string ban_ip1;
-string ban_ip2;
-string ban_ip3;
-string ban_ip4;
-
 void Ban_SaveBans()
 {
 	string out;
@@ -307,41 +302,12 @@ void Ban_View()
 	}
 }
 
-float Ban_GetClientIP(entity client)
-{
-	// we can't use tokenizing here, as this is called during ban list parsing
-	float i1, i2, i3, i4;
-	string s;
-
-	s = client.netaddress;
-	
-	i1 = strstrofs(s, ".", 0);
-	if(i1 < 0)
-		return FALSE;
-	i2 = strstrofs(s, ".", i1 + 1);
-	if(i2 < 0)
-		return FALSE;
-	i3 = strstrofs(s, ".", i2 + 1);
-	if(i3 < 0)
-		return FALSE;
-	i4 = strstrofs(s, ".", i3 + 1);
-	if(i4 >= 0)
-		return FALSE;
-	
-	ban_ip1 = substring(s, 0, i1);
-	ban_ip2 = substring(s, 0, i2);
-	ban_ip3 = substring(s, 0, i3);
-	ban_ip4 = strcat1(s);
-
-	return TRUE;
-}
-
 float Ban_IsClientBanned(entity client, float idx)
 {
 	float i, b, e;
 	if(!ban_loaded)
 		Ban_LoadBans();
-	if(!Ban_GetClientIP(client))
+	if(!net_ip_parse(client.netname))
 		return FALSE;
 	if(idx < 0)
 	{
@@ -359,11 +325,12 @@ float Ban_IsClientBanned(entity client, float idx)
 		if(time > ban_expire[i])
 			continue;
 		s = ban_ip[i];
-		if(ban_ip1 == s) return TRUE;
-		if(ban_ip2 == s) return TRUE;
-		if(ban_ip3 == s) return TRUE;
-		if(ban_ip4 == s) return TRUE;
+		if(net_ip_pref1 == s) return TRUE;
+		if(net_ip_pref2 == s) return TRUE;
+		if(net_ip_pref3 == s) return TRUE;
+		if(net_ip_pref4 == s) return TRUE;
 	}
+	net_ip_clean();
 	return FALSE;
 }
 
@@ -481,7 +448,7 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 
 void Ban_KickBanClient(entity client, float bantime, float masksize, string reason)
 {
-	if(!Ban_GetClientIP(client))
+	if(!net_ip_parse(client.netaddress))
 	{
 		sprint(client, strcat("Kickbanned: ", reason, "\n"));
 		dropclient(client);
@@ -491,18 +458,19 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 	switch(masksize)
 	{
 		case 1:
-			Ban_Insert(ban_ip1, bantime, reason, 1);
+			Ban_Insert(net_ip_pref1, bantime, reason, 1);
 			break;
 		case 2:
-			Ban_Insert(ban_ip2, bantime, reason, 1);
+			Ban_Insert(net_ip_pref2, bantime, reason, 1);
 			break;
 		case 3:
-			Ban_Insert(ban_ip3, bantime, reason, 1);
+			Ban_Insert(net_ip_pref3, bantime, reason, 1);
 			break;
 		default:
-			Ban_Insert(ban_ip4, bantime, reason, 1);
+			Ban_Insert(net_ip_pref4, bantime, reason, 1);
 			break;
 	}
+	net_ip_clean();
 	/*
 	 * not needed, as we enforce the ban in Ban_Insert anyway
 	// and kick him

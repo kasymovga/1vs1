@@ -100,3 +100,69 @@ void(float t, vector v) net_write_vector {
 	net_write_coord(t, v_y);
 	net_write_coord(t, v_z);
 }
+
+float(string s) net_ip_parse_v4 {
+	float dot1, dot2, dot3;
+	dot1 = strstrofs(s, ".", 0);
+	if (dot1 <= 0) return FALSE;
+	dot2 = strstrofs(s, ".", dot1 + 1);
+	if (dot2 < 0) return FALSE;
+	dot3 = strstrofs(s, ".", dot2 + 1);
+	if (dot3 < 0) return FALSE;
+	net_ip_pref1 = substring(s, 0, dot1);
+	net_ip_pref2 = substring(s, 0, dot2);
+	net_ip_pref3 = substring(s, 0, dot3);
+	net_ip_pref4 = s;
+	return TRUE;
+}
+
+float(string s) net_ip_parse_v6 {
+	float colon_count = 0;
+	float colon_pos = -1;
+	float double_colon_pos;
+	while ((colon_pos = strstrofs(s, ":", colon_pos + 1)) >= 0) colon_count++;
+	if (colon_count <= 1) return FALSE;
+	if (colon_count > 7) return FALSE;
+	double_colon_pos = strstrofs(s, "::", 0);
+	string s1, s2;
+	if (double_colon_pos < 0 && colon_count < 7) {
+		return FALSE;
+	} else {
+		s1 = substring(s, 0, double_colon_pos);
+		s2 = substring(s, double_colon_pos + 1, -1);
+		for (float i = colon_count - 1; i < 7; i++) {
+			s1 = strcat(s1, ":0");
+		}
+		s1 = strcat(s1, s2);
+	}
+	if (substring(s1, 0, 1) == ":") s1 = strcat("0", s1);
+	if (substring(s1, -1, 1) == ":") s1 = strcat(s1, "0");
+	net_ip_pref4 = s1;
+	colon_pos = -1;
+	colon_count = 0;
+	while ((colon_pos = strstrofs(s1, ":", colon_pos + 1)) >= 0) {
+		colon_count++;
+		if (colon_count == 2) { //32
+			net_ip_pref1 = substring(s1, 0, colon_pos);
+		} else if (colon_count == 3) { //48
+			net_ip_pref2 = substring(s1, 0, colon_pos);
+		} else if (colon_count == 4) { //64
+			net_ip_pref3 = substring(s1, 0, colon_pos);
+			break;
+		}
+	}
+	return TRUE;
+}
+
+float(string s) net_ip_parse {
+	if (strstrofs(s, ".", 0) >= 0) return net_ip_parse_v4(s);
+	if (strstrofs(s, ":", 0) >= 0) return net_ip_parse_v6(s);
+	return FALSE;
+}
+
+void(void) net_ip_clean {
+	net_ip_pref1 = NULL;
+	net_ip_pref2 = NULL;
+	net_ip_pref3 = NULL;
+	net_ip_pref4 = NULL;
+}

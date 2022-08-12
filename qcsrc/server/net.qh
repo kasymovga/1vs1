@@ -12,3 +12,9 @@ float net_compress_vec(vector vec);
 #define net_write_long builtin_WriteLong
 #define net_write_entity builtin_WriteEntity
 #define net_write_picture builtin_WritePicture
+string net_ip_pref4; //32 for ipv4, //128 for ipv6
+string net_ip_pref3; //24 for ipv4, //64 for ipv6
+string net_ip_pref2; //16 for ipv4, //56 for ipv6
+string net_ip_pref1; //8 for ipv4, //48 for ipv6
+float(string s) net_ip_parse;
+void(void) net_ip_clean;
