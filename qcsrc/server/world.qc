@@ -279,7 +279,7 @@ void(void) world_init {
 	world_precache();
 	cvar_set("nextmap", "");
 	campaign_postinit();
-	Ban_Init();
+	ban_init();
 	map_info_enumerate();
 	map_info_filter_game_type(map_info_type_from_game_type(game_type_current()) | game_type_vote_mapinfo_mask, map_info_required_flags(), map_info_forbidden_flags(), 1);
 	addstat(STAT_WEAPONS, STAT_INT, weapons);
@@ -732,7 +732,7 @@ void(void) world_shutdown {
 	if (world_initialized > 0) {
 		world_initialized = 0;
 		print("Saving persistent data...\n");
-		Ban_SaveBans();
+		ban_save();
 		print("done!\n");
 		// tell the bot system the game is ending now
 		bot_endgame();

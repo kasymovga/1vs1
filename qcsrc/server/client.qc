@@ -349,7 +349,7 @@ float() client_preconnect_abort {
 	if (self.just_connected)
 		return FALSE;
 
-	if (Ban_MaybeEnforceBan(self))
+	if (ban_maybe_enforce(self))
 		return TRUE;
 
 	entity e;

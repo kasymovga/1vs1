@@ -34,7 +34,7 @@ portal.qh
 hook.qh
 score.qh
 sysinfo.qh
-ipban.qh
+ban.qh
 trigger.qh
 func.qh
 race.qh
@@ -244,7 +244,7 @@ kh_role.qc
 kh.qc
 conquest_role.qc
 conquest.qc
-ipban.qc
+ban.qc
 race_role.qc
 race.qc
 turret.qc

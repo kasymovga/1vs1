@@ -55,7 +55,7 @@ void(string command) cmd_game {
 		print("  find classname\n");
 		print("  records\n");
 		vote_cmd("help", world);
-		GameCommand_Ban("help");
+		ban_cmd("help");
 		cmd_generic("help");
 		IP2C_GameCommand("help", argc);
 		return;
@@ -63,7 +63,7 @@ void(string command) cmd_game {
 	if (vote_cmd(command, world))
 		return;
 
-	if (GameCommand_Ban(command))
+	if (ban_cmd(command))
 		return;
 
 	if (cmd_generic(command))

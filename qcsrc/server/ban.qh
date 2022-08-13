@@ -1,0 +1,4 @@
+void() ban_save;
+void(void) ban_init;
+float(entity client) ban_maybe_enforce;
+float(string command) ban_cmd;
