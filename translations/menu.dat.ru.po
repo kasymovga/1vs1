@@ -951,3 +951,24 @@ msgstr "Начать"
 
 msgid "Stop"
 msgstr "Остановить"
+
+msgid "Server mode:"
+msgstr "Режим сервера:"
+
+msgid "Server mode:"
+msgstr "Режим сервера:"
+
+msgid "Minimal amount of human and bots:"
+msgstr "Минимально количество игроков и ботов:"
+
+msgid "Additional number of bots:"
+msgstr "Дополнительно количество ботов:"
+
+msgid "Public"
+msgstr "Публичный"
+
+msgid "Private"
+msgstr "Частный"
+
+msgid "Single player"
+msgstr "Одиночная игра"
