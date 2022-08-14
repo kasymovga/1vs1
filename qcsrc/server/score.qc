@@ -242,7 +242,8 @@ void(entity player) score_clear {
 			if (score_label[i] != "")
 				score_send_delayed(sk, pow(2, i));
 
-		sk.(scores[i]) = 0;
+		if (i != SP_TEAM)
+			sk.(scores[i]) = 0;
 	}
 }
 
