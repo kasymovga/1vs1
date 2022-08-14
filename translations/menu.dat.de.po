@@ -195,6 +195,9 @@ msgstr "Einfache Mehrheit gewinnt vcall"
 msgid "Advanced settings..."
 msgstr "Erweiterte Einstellungen..."
 
+msgid "Advanced settings"
+msgstr "Erweiterte Einstellungen"
+
 msgid "Mutators..."
 msgstr "Mutatoren..."
 
@@ -417,13 +420,13 @@ msgstr "HUD-Einstellungen:"
 msgid "Background:"
 msgstr "Hintergrund:"
 
-msgid "Default Red:"
+msgid "Default red:"
 msgstr "Standard Rot:"
 
-msgid "Default Green:"
+msgid "Default green:"
 msgstr "Standard Grün:"
 
-msgid "Default Blue:"
+msgid "Default blue:"
 msgstr "Standard Blau:"
 
 msgid "Team color:"
@@ -936,3 +939,48 @@ msgstr "Glückwünsche!"
 
 msgid "You have successfully completed the Single Player Campaign!"
 msgstr "Sie haben die Einzelspieler-Kampagne erfolgreich abgeschlossen!"
+
+msgid "Microphone:"
+msgstr "Mikrofon:"
+
+msgid "Voice chat:"
+msgstr "Sprachchat:"
+
+msgid "Effects:"
+msgstr "Auswirkungen:"
+
+msgid "Deprecated channel control"
+msgstr "Veraltete Kanalsteuerung"
+
+msgid "Volume boost:"
+msgstr "Lautstärke erhöhen:"
+
+msgid "Automatic volume boost"
+msgstr "Automatische Lautstärkeanhebung"
+
+msgid "Microphone test:"
+msgstr "Mikrofontest:"
+
+msgid "Start"
+msgstr "Anfang"
+
+msgid "Stop"
+msgstr "Halt"
+
+msgid "Server mode:"
+msgstr "Servermodus:"
+
+msgid "Minimal amount of human and bots:"
+msgstr "Minimale Menge an Menschen und Bots:"
+
+msgid "Additional number of bots:"
+msgstr "Zusätzliche Anzahl von Bots:"
+
+msgid "Public"
+msgstr "Öffentlichkeit"
+
+msgid "Private"
+msgstr "Privatgelände"
+
+msgid "Single player"
+msgstr "Einzelspieler"
