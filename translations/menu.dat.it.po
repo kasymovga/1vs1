@@ -1,3 +1,16 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0.1\n"
+
 msgid "Singleplayer"
 msgstr "Giocatore Singolo"
 
@@ -188,7 +201,7 @@ msgid "Mutators..."
 msgstr "Mutatori..."
 
 msgid "No voting"
-msgstr "Niente votazioni."
+msgstr "Niente votazioni"
 
 msgid "2 choices"
 msgstr "2 scelte"
@@ -236,7 +249,7 @@ msgid "Advanced server settings"
 msgstr "Impostazioni avanzate del giocatore"
 
 msgid "Game settings:"
-msgstr "Impostazioni di gioco"
+msgstr "Impostazioni di gioco:"
 
 msgid "Allow spectating"
 msgstr "Abilita spettatori"
@@ -425,10 +438,10 @@ msgid "Show base waypoints"
 msgstr "Mostra i waypoint base"
 
 msgid "Waypoint scale:"
-msgstr "Scala i waypoint"
+msgstr "Scala i waypoint:"
 
 msgid "Waypoint alpha:"
-msgstr "Alpha waypoint"
+msgstr "Alpha waypoint:"
 
 msgid "Key bindings:"
 msgstr "Tasti rapidi:"
@@ -483,9 +496,6 @@ msgstr "Profondità colore:"
 
 msgid "Texture compression"
 msgstr "Compressione delle texture"
-
-msgid "None"
-msgstr "Nessuno"
 
 msgid "Fast"
 msgstr "Veloce"
@@ -901,8 +911,12 @@ msgstr "Lingua / Language"
 msgid "Disable Nexuiz-compatible symbols"
 msgstr "Disabilita i caratteri compatibili con Nexuiz"
 
-msgid "* Needed for some european characters, player names might be displayed incorrectly"
-msgstr "* Necessario per alcuni caratteri europei, i nomi dei giocatori potrebbero essere visualizzati incorrettamente"
+msgid ""
+"* Needed for some european characters, player names might be displayed "
+"incorrectly"
+msgstr ""
+"* Necessario per alcuni caratteri europei, i nomi dei giocatori potrebbero "
+"essere visualizzati incorrettamente"
 
 msgid "Acceleration:"
 msgstr "Accelerazione:"
@@ -924,3 +938,48 @@ msgstr "Congratulazioni!"
 
 msgid "You have successfully completed the Single Player Campaign!"
 msgstr "Hai completato con successo la campagna per giocatore singolo!"
+
+msgid "Microphone:"
+msgstr "Microfono:"
+
+msgid "Voice chat:"
+msgstr "Chat vocale:"
+
+msgid "Effects:"
+msgstr "Effetti:"
+
+msgid "Deprecated channel control"
+msgstr "Controllo del canale deprecato"
+
+msgid "Volume boost:"
+msgstr "Aumento del volume:"
+
+msgid "Automatic volume boost"
+msgstr "Aumento automatico del volume"
+
+msgid "Microphone test:"
+msgstr "Prova del microfono:"
+
+msgid "Start"
+msgstr "Inizio"
+
+msgid "Stop"
+msgstr "Fermare"
+
+msgid "Server mode:"
+msgstr "Modalità server:"
+
+msgid "Minimal amount of human and bots:"
+msgstr "Quantità minima di umani e bot:"
+
+msgid "Additional number of bots:"
+msgstr "Numero aggiuntivo di bot:"
+
+msgid "Public"
+msgstr "Pubblico"
+
+msgid "Private"
+msgstr "Privato"
+
+msgid "Single player"
+msgstr "Giocatore Singolo"
