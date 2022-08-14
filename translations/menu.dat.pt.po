@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
+"Last-Translator: Gustavo Zamboni\n"
 "Language-Team: \n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
-"Last-Translator: Gustavo Zamboni\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: pt_BR\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "Singleplayer"
 msgstr "Um jogador"
@@ -673,10 +673,10 @@ msgid "Deform vertexes"
 msgstr "Deformar vértices"
 
 msgid "Motion blur:"
-msgstr "blur movimento:"
+msgstr "Blur movimento:"
 
 msgid "Damage blur:"
-msgstr "blur: danos"
+msgstr "Blur danos:"
 
 msgid "Music:"
 msgstr "Musica:"
@@ -916,9 +916,6 @@ msgstr ""
 "* Necessario para alguns caracteres europeus, os nomes dos jogadores podem "
 "ser exibidos incorrecatmente"
 
-msgid "* Needed for some european characters, player names might be displayed incorrectly"
-msgstr "* "
-
 msgid "Acceleration:"
 msgstr "Aceleração:"
 
@@ -939,3 +936,48 @@ msgstr "Parabens!"
 
 msgid "You have successfully completed the Single Player Campaign!"
 msgstr "Você concluiu com sucesso a campanha para um jogador!"
+
+msgid "Microphone:"
+msgstr "Microfone:"
+
+msgid "Voice chat:"
+msgstr "Chat de voz:"
+
+msgid "Effects:"
+msgstr "Efeitos:"
+
+msgid "Deprecated channel control"
+msgstr "Controle de canal obsoleto"
+
+msgid "Volume boost:"
+msgstr "Aumento de volume:"
+
+msgid "Automatic volume boost"
+msgstr "Aumento de volume automático"
+
+msgid "Microphone test:"
+msgstr "Teste de microfone:"
+
+msgid "Start"
+msgstr "Começar"
+
+msgid "Stop"
+msgstr "Pare"
+
+msgid "Server mode:"
+msgstr "Modo de servidor:"
+
+msgid "Minimal amount of human and bots:"
+msgstr "Quantidade mínima de humanos e bots:"
+
+msgid "Additional number of bots:"
+msgstr "Número adicional de bots:"
+
+msgid "Public"
+msgstr "Público"
+
+msgid "Private"
+msgstr "Privado"
+
+msgid "Single player"
+msgstr "Um Jogador"
