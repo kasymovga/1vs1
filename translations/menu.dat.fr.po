@@ -195,6 +195,9 @@ msgstr "La majorité simple gagne le vcall"
 msgid "Advanced settings..."
 msgstr "Paramètres avancés..."
 
+msgid "Advanced settings"
+msgstr "Paramètres avancés"
+
 msgid "Mutators..."
 msgstr "Mutateurs..."
 
@@ -766,7 +769,7 @@ msgid "Unlimited"
 msgstr "Illimité"
 
 msgid "OFF"
-msgstr "éteint"
+msgstr "ÉTEINT"
 
 msgid "Menu skins:"
 msgstr "Skins de menu:"
@@ -936,3 +939,48 @@ msgstr "Glückwünsche!"
 
 msgid "You have successfully completed the Single Player Campaign!"
 msgstr "Vous avez terminé avec succès la campagne solo!"
+
+msgid "Microphone:"
+msgstr "Microphone:"
+
+msgid "Voice chat:"
+msgstr "Chat vocal:"
+
+msgid "Effects:"
+msgstr "Effets:"
+
+msgid "Deprecated channel control"
+msgstr "Contrôle de canal obsolète"
+
+msgid "Volume boost:"
+msgstr "Augmentation du volume:"
+
+msgid "Automatic volume boost"
+msgstr "Augmentation automatique du volume"
+
+msgid "Microphone test:"
+msgstr "Essai de micro:"
+
+msgid "Start"
+msgstr "Commencer"
+
+msgid "Stop"
+msgstr "Arrêt"
+
+msgid "Server mode:"
+msgstr "Mode serveur:"
+
+msgid "Minimal amount of human and bots:"
+msgstr "Quantité minimale d'humains et de Bots:"
+
+msgid "Additional number of bots:"
+msgstr "Nombre supplémentaire de bots:"
+
+msgid "Public"
+msgstr "Publique"
+
+msgid "Private"
+msgstr "Privé"
+
+msgid "Single player"
+msgstr "Un joueur"
