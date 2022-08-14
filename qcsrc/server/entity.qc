@@ -454,9 +454,9 @@ void(void) entity_spawn_post {
 			self = spawn();
 			copyentity(oldself, self);
 			self.existsonlyfor = slot;
-			while (initializer) {
-				entity_initialize(self, initializer.think, initializer.cnt);
-				initializer = initializer.aiment;
+			setorigin(self, self.origin);
+			for (e = initializer; e; e = e.aiment) {
+				entity_initialize(self, e.think, e.cnt);
 			}
 		}
 		self = oldself;

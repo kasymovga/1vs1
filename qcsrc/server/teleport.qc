@@ -220,9 +220,9 @@ void(void) teleport_setup {
 	trigger_solid_brush_init();
 	self.use = teleport_use;
 	// this must be called to spawn the teleport waypoints for bots
-	entity_initialize(self, teleport_findtarget, INITPRIO_FINDTARGET);
-	if (!self.target) {
+	if (self.target == "") {
 		entity_abort("Teleporter with no target");
 		return;
 	}
+	entity_initialize(self, teleport_findtarget, INITPRIO_FINDTARGET);
 }
