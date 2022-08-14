@@ -297,6 +297,7 @@ float(entity client, float idx) ban_client_banned {
 }
 
 float(entity client) ban_maybe_enforce {
+	if (g_campaign) return FALSE;
 	if (ban_client_banned(client, -1)) {
 		string s;
 		s = strcat("^1NOTE:^7 banned client ", client.netaddress, " just tried to enter\n");
@@ -428,6 +429,7 @@ float(string command) ban_cmd {
 	float masksize = 0;
 	string reason;
 	float reasonarg;
+	if (g_campaign) return FALSE;
 	argc = tokenize_console(command);
 	if (argv(0) == "help") {
 		print("  kickban # n m p reason - kickban player n for m seconds, using mask size p (1 to 4)\n");
@@ -482,6 +484,7 @@ float(string command) ban_cmd {
 }
 
 void(void) ban_init {
+	if (g_campaign) return;
 	ban_load();
 	BAN_URI_GET = uri_register_handler(ban_online_list_uri_callback);
 	float i;
