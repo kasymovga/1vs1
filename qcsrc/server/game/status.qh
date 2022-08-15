@@ -1,0 +1,1 @@
+void(string status, float time) game_status_set;

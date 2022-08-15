@@ -553,10 +553,10 @@ void(void) nexball_goal_touch {
 	sound (ball, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 	if(ball.team && pscore) {
 		if (nexball_teams == 2 && pscore < 0) {
-			gamestatus_set(strcat(team_color_code(otherteam), team_color_name(otherteam), " Team^7 scores"), 1);
+			game_status_set(strcat(team_color_code(otherteam), team_color_name(otherteam), " Team^7 scores"), 1);
 			score_team_add_to(otherteam, ST_NEXBALL_GOALS, -pscore);
 		} else {
-			gamestatus_set(strcat(team_color_code(ball.team), team_color_name(ball.team), " Team^7 scores"), 1);
+			game_status_set(strcat(team_color_code(ball.team), team_color_name(ball.team), " Team^7 scores"), 1);
 			score_team_add_to(ball.team, ST_NEXBALL_GOALS, pscore);
 		}
 	}

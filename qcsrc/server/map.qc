@@ -386,7 +386,7 @@ void() map_finish {
 		if (score_winning_condition_helper_winner)
 			map_finished_message = strcat(map_finished_message, "\nThe winner is ", score_winning_condition_helper_winner.netname);
 	}
-	gamestatus_set(gamehook_map_finish_message_mod(map_finished_message), 30);
+	game_status_set(gamehook_map_finish_message_mod(map_finished_message), 30);
 	sound_play2all("misc/menu2.wav");
 	map_intermission_running = 1;
 	FOR_EACH_CLIENT(e) {

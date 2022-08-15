@@ -87,11 +87,11 @@ client.qh
 player.qh
 spectator.qh
 push.qh
-game_type_vote.qh
-gamestatus.qh
+game/type_vote.qh
+game/status.qh
 warfog.qh
 menu.qh
-game_menu.qh
+game/menu.qh
 walkietalkie.qh
 hat.qh
 score_damage.qh
@@ -131,7 +131,7 @@ noteline.qh
 warmup.qh
 weapon.qh
 weapon/selectable.qh
-game_type.qh
+game/type.qh
 chat.qh
 team.qh
 tdm.qh
@@ -162,7 +162,7 @@ fire.qc
 arc.qc
 team.qc
 tdm.qc
-game_type.qc
+game/type.qc
 rune.qc
 physics.qc
 jetpack.qc
@@ -281,7 +281,7 @@ clanarena.qc
 entity.qc
 menu.qc
 math.qc
-game_type_vote.qc
+game/type_vote.qc
 progressbar.qc
 cvar.qc
 location_request.qc
@@ -305,7 +305,7 @@ nadget/shield.qc
 nadget/transloc.qc
 nadget/waypoint.qc
 napalm.qc
-game_menu.qc
+game/menu.qc
 walkietalkie.qc
 hat.qc
 monster.qc
@@ -333,7 +333,7 @@ survive.qc
 minstagib.qc
 radio.qc
 badass.qc
-gamestatus.qc
+game/status.qc
 damageindicator.qc
 warpzone.qc
 twoweapons.qc

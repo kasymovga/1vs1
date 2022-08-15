@@ -53,7 +53,7 @@ void() timeout_handler_think {
 	if (timeout_status == 1) {
 		if (timeout_remaining_leadtime > 0) {
 			timeStr = timeout_text(0);
-			gamestatus_set(timeStr, 2);
+			game_status_set(timeStr, 2);
 			timeout_remaining_leadtime -= 1;
 			//think again in 1 second:
 			self.nextthink = time + 1;
@@ -74,7 +74,7 @@ void() timeout_handler_think {
 	} else if (timeout_status == 2) {
 		if (timeout_remaining_time > 0) {
 			timeStr = timeout_text(0);
-			gamestatus_set(timeStr, 2);
+			game_status_set(timeStr, 2);
 			if (timeout_remaining_time == cvar("sv_timeout_resumetime")) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
 				sound_play2all("announcer/robotic/prepareforbattle.wav");
 			}
@@ -88,12 +88,12 @@ void() timeout_handler_think {
 				plr.fixangle = FALSE;
 			}
 			//get rid of the countdown message
-			gamestatus_set("", 2);
+			game_status_set("", 2);
 			remove(self);
 			return;
 		}
 	} else if (timeout_status == 0) { //if a player called the resumegame command (which set timeout_status to 0 already)
-		gamestatus_set("", 2);
+		game_status_set("", 2);
 		remove(self);
 		return;
 	}

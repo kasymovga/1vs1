@@ -85,7 +85,7 @@ void() survive_trigger {
 			self.use();
 	}
 	survive_active = TRUE;
-	gamestatus_set("^1New wave incoming!\n^1Try to survive", 2);
+	game_status_set("^1New wave incoming!\n^1Try to survive", 2);
 	sound_play2all("announcer/robotic/begin.wav");
 	self = oldself;
 	remove(self);
@@ -190,13 +190,13 @@ float(float ignore, float ignore2) survive_winning_condition {
 	}
 	if (survive_plan_entity) {
 		if not(survive_has_players()) {
-			gamestatus_set(strcat(survive_wave_prefix, "\n^2Awaiting players..."), 1);
+			game_status_set(strcat(survive_wave_prefix, "\n^2Awaiting players..."), 1);
 			survive_plan_entity.nextthink = time + g_surv_wave_pause;
 		} else {
 			float countdown = ceil(survive_plan_entity.nextthink - time);
 			if (countdown > 0)
 			if (survive_last_countdown != countdown) {
-				gamestatus_set(strcat(survive_wave_prefix, "\n^3New wave starts in ", ftos(countdown), " seconds"), 1);
+				game_status_set(strcat(survive_wave_prefix, "\n^3New wave starts in ", ftos(countdown), " seconds"), 1);
 				if (countdown <= 3)
 					sound_play2all(strcat("announcer/robotic/", ftos(countdown), ".wav"));
 

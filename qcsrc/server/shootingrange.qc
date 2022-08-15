@@ -84,12 +84,12 @@ void(void) shootingrange_controller_think {
 
 	if (time >= shootingrange_round_start) {
 		if not(shootingrange_round_active) {
-			gamestatus_set("^3Begin!", 2);
+			game_status_set("^3Begin!", 2);
 			sound_play2all("announcer/robotic/begin.wav");
 			shootingrange_countdown_last = 0;
 			shootingrange_activate(TRUE);
 		} else if (time - shootingrange_round_start > g_shootingrange_roundtime) {
-			gamestatus_set("^3Round over", 5);
+			game_status_set("^3Round over", 5);
 			sound_play2all("domination/claim.wav");
 			shootingrange_activate(FALSE);
 			shootingrange_round_start = time + g_shootingrange_rounddelay;
@@ -97,7 +97,7 @@ void(void) shootingrange_controller_think {
 	} else {
 		float countdown = ceil(shootingrange_round_start - time);
 		if (countdown <= 5) {
-			gamestatus_set(strcat("^3Starting in ", ftos(countdown)), 1);
+			game_status_set(strcat("^3Starting in ", ftos(countdown)), 1);
 			if (countdown <= 3)
 			if (shootingrange_countdown_last != countdown) {
 				sound_play2all(strcat("announcer/robotic/", ftos(countdown), ".wav"));

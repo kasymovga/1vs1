@@ -492,7 +492,7 @@ void(void) world_overtime {
 		else
 			minutesPlural = " ^3minutes";
 
-		gamestatus_set(strcat("^3Now playing ^1OVERTIME^3!\n\n^3Added ^1", ftos(cvar("g_timelimit_overtime")), minutesPlural, " to the game!"), 1);
+		game_status_set(strcat("^3Now playing ^1OVERTIME^3!\n\n^3Added ^1", ftos(cvar("g_timelimit_overtime")), minutesPlural, " to the game!"), 1);
 	} else if (!world_check_rules_suddendeathend) {
 		tl = cvar("timelimit");
 		tl += cvar("g_timelimit_suddendeath");
@@ -584,11 +584,11 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 					if (f < 4)
 						sound_play2all(strcat("announcer/robotic/", ftos(floor(f)), ".wav"));
 
-					gamestatus_set(strcat("^1Game starts in ", ftos(floor(f)), " seconds"), 2);
+					game_status_set(strcat("^1Game starts in ", ftos(floor(f)), " seconds"), 2);
 				}
 			}
 			if (time >= map_starttime) {
-				gamestatus_set("^1Begin!", 1);
+				game_status_set("^1Begin!", 1);
 				sound_play2all("announcer/robotic/begin.wav");
 				world_check_time_remaining = world_check_5min_remaining;
 			}
@@ -600,7 +600,7 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 		cvar_set("timelimit", ftos((world_check_rules_suddendeathend - map_starttime) / 60));
 		if (!world_check_rules_suddendeathwarning) {
 			world_check_rules_suddendeathwarning = TRUE;
-			gamestatus_set(gamehook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"), 1);
+			game_status_set(gamehook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"), 1);
 		}
 	} else {
 		if (timelimit)
