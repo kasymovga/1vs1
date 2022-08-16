@@ -1,4 +1,4 @@
-void(void) udppunchhole_ping_think {
+void(void) udp_punch_hole_ping_think {
 	if (self.cnt <= 0) {
 		strunzone(self.message);
 		remove(self);
@@ -9,7 +9,8 @@ void(void) udppunchhole_ping_think {
 	self.cnt = self.cnt - 1;
 }
 
-void(float argc, string response) udppunchhole_extresponse_handler {
+#define udp_punch_hole_extresponse_handler udppunchhole_extresponse_handler //compatibility with old save files
+void(float argc, string response) udp_punch_hole_extresponse_handler {
 	string s = argv(2);
 	entity e;
 	if (s == "ping") {
@@ -20,18 +21,18 @@ void(float argc, string response) udppunchhole_extresponse_handler {
 			e = spawn();
 			e.cnt = 3;
 			e.message = strzone(s2);
-			e.think = udppunchhole_ping_think;
+			e.think = udp_punch_hole_ping_think;
 			e.nextthink = time;
 		}
 	} else if (s == "pong") {
 		//ignore
-	} else if (udppunchhole_extresponse_handler_extra) {
-		udppunchhole_extresponse_handler_extra(argc, response);
+	} else if (udp_punch_hole_extresponse_handler_extra) {
+		udp_punch_hole_extresponse_handler_extra(argc, response);
 	} else {
 		print("udppunchhole: unknown command: ", s, "\n");
 	}
 }
 
-void(void) udppunchhole_extresponse_handler_register {
-	extresponse_register_handler("udppunchhole", udppunchhole_extresponse_handler, NULL);
+void(void) udp_punch_hole_extresponse_handler_register {
+	extresponse_register_handler("udppunchhole", udp_punch_hole_extresponse_handler, NULL);
 }

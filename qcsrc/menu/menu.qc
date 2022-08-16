@@ -30,7 +30,7 @@ void() menu_init {
 	serverlist_init();
 	masterlist_init();
 	dlc_reload(TRUE, FALSE);
-	udppunchhole_extresponse_handler_register();
+	udp_punch_hole_extresponse_handler_register();
 	ui_con_width_height_set();
 	time = 1;
 }

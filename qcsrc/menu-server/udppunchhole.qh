@@ -1,2 +1,0 @@
-void(void) udppunchhole_extresponse_handler_register;
-var void(float argc, string response) udppunchhole_extresponse_handler_extra;

@@ -6,5 +6,5 @@
 #include "map_info.qc"
 #include "masterlist.qc"
 #include "shuffle.qc"
-#include "udppunchhole.qc"
+#include "udp_punch_hole.qc"
 #include "weapon.qc"

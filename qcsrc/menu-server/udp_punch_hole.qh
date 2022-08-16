@@ -1,0 +1,2 @@
+void(void) udp_punch_hole_extresponse_handler_register;
+var void(float argc, string response) udp_punch_hole_extresponse_handler_extra;

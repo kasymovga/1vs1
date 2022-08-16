@@ -48,7 +48,7 @@ net.qh
 weapon/melee.qh
 trace.qh
 irc.qh
-udpchat.qh
+udp_chat.qh
 defer.qh
 akimbo.qh
 target.qh
@@ -57,7 +57,7 @@ ice.qh
 radio.qh
 ready.qh
 clanarena.qh
-udppunchhole.qh
+udp_punch_hole.qh
 conquest.qh
 survive.qh
 ctf.qh
@@ -269,7 +269,7 @@ func_camera.qc
 misc.qc
 projectile.qc
 irc.qc
-udppunchhole.qc
+udp_punch_hole.qc
 akimbo.qc
 ready.qc
 infomessages.qc
@@ -339,7 +339,7 @@ warpzone.qc
 twoweapons.qc
 noteline.qc
 warmup.qc
-udpchat.qc
+udp_chat.qc
 score_damage.qc
 ice.qc
 single.qc

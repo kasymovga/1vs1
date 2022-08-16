@@ -101,11 +101,11 @@ void(void) world_static_init {
 	warpzone_init();
 	weapon_selectable_init();
 	TwoWeapons_Init();
-	UDPChat_Init();
+	udp_chat_init();
 	timeout_init();
 	sysinfo_init();
 	footsteps_init();
-	udppunchhole_init();
+	udp_punch_hole_init();
 	jetpack_init();
 	laser_init();
 	teleport_init();

@@ -1,15 +1,16 @@
 string sv_udppunchhole_server;
 float sv_udppunchhole_verbose;
 string sv_udppunchhole_key;
-entity udppunchhole_keepalive;
-entity udppunchhole_porttest;
+entity udp_punch_hole_keepalive;
+entity udp_punch_hole_port_test;
 
-void(void) udppunchhole_keepalive_think {
+void(void) udp_punch_hole_keepalive_think {
 	extresponse_query(sv_udppunchhole_server, strcat("extResponse udppunchhole serverkeepalive ", sv_udppunchhole_key));
 	self.nextthink = time + 15;
 }
 
-void(void) udppunchhole_porttest_think {
+#define udp_punch_hole_port_test_think udppunchhole_porttest_think //compatibility with old save files
+void(void) udp_punch_hole_port_test_think {
 	self.cnt = self.cnt - 1;
 	if (self.cnt >= 0) {
 		extresponse_query(sv_udppunchhole_server, "extResponse udppunchhole porttest");
@@ -18,25 +19,25 @@ void(void) udppunchhole_porttest_think {
 		if (sv_udppunchhole_verbose)
 			print("Port test failed, will try udp punch hole\n");
 
-		remove(udppunchhole_porttest);
-		udppunchhole_porttest = world;
-		udppunchhole_keepalive = spawn();
-		udppunchhole_keepalive.think = udppunchhole_keepalive_think;
-		udppunchhole_keepalive.nextthink = time;
+		remove(udp_punch_hole_port_test);
+		udp_punch_hole_port_test = world;
+		udp_punch_hole_keepalive = spawn();
+		udp_punch_hole_keepalive.think = udp_punch_hole_keepalive_think;
+		udp_punch_hole_keepalive.nextthink = time;
 		return;
 	}
 	self.nextthink = time + 0.5;
 }
 
-void(float argc, string response) udppunchhole_extresponse_handler_extra_sv {
+void(float argc, string response) udp_punch_hole_extresponse_handler_extra_sv {
 	string s = argv(2);
 	if (s == "porttest") {
 		if (sv_udppunchhole_verbose)
 			print("Port test success\n");
 
-		if (udppunchhole_porttest) {
-			remove(udppunchhole_porttest);
-			udppunchhole_porttest = world;
+		if (udp_punch_hole_port_test) {
+			remove(udp_punch_hole_port_test);
+			udp_punch_hole_port_test = world;
 		}
 		if (argc >= 4) {
 			registercvar("_net_http_server_host_auto", "0");
@@ -47,21 +48,21 @@ void(float argc, string response) udppunchhole_extresponse_handler_extra_sv {
 		}
 	} else {
 		if (sv_udppunchhole_verbose)
-			print("udppunchhole: unknown command: ", s, "\n");
+			print("udp_punch_hole: unknown command: ", s, "\n");
 	}
 }
 
-void(void) udppunchhole_init {
+void(void) udp_punch_hole_init {
 	if not(cvar("sv_udppunchhole"))
 		return;
 
-	udppunchhole_extresponse_handler_extra = udppunchhole_extresponse_handler_extra_sv;
+	udp_punch_hole_extresponse_handler_extra = udp_punch_hole_extresponse_handler_extra_sv;
 	CVAR_CACHE_STR(sv_udppunchhole_server);
 	CVAR_CACHE_STR(sv_udppunchhole_key);
 	CVAR_CACHE(sv_udppunchhole_verbose);
-	udppunchhole_extresponse_handler_register();
-	udppunchhole_porttest = spawn();
-	udppunchhole_porttest.think = udppunchhole_porttest_think;
-	udppunchhole_porttest.nextthink = time;
-	udppunchhole_porttest.cnt = 3;
+	udp_punch_hole_extresponse_handler_register();
+	udp_punch_hole_port_test = spawn();
+	udp_punch_hole_port_test.think = udp_punch_hole_port_test_think;
+	udp_punch_hole_port_test.nextthink = time;
+	udp_punch_hole_port_test.cnt = 3;
 }
