@@ -117,7 +117,6 @@ void() sysinfo_client_disconnect_real {
 }
 
 void() sysinfo_init {
-	if (g_campaign) return;
 	CVAR_CACHE_STR(sv_sysinfo_checker);
 	sysinfo_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = sysinfo_ClientCommandHandle;

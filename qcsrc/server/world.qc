@@ -101,18 +101,21 @@ void(void) world_static_init {
 	warpzone_init();
 	weapon_selectable_init();
 	TwoWeapons_Init();
-	udp_chat_init();
-	timeout_init();
-	sysinfo_init();
+	if not(g_campaign) {
+		game_type_vote_init();
+		udp_chat_init();
+		udp_punch_hole_init();
+		report_init();
+		timeout_init();
+		sysinfo_init();
+	}
 	footsteps_init();
-	udp_punch_hole_init();
 	jetpack_init();
 	laser_init();
 	teleport_init();
 	casing_init();
 	warfog_init();
 	hint_init();
-	report_init();
 	ability_init();
 }
 
@@ -266,7 +269,6 @@ void(void) world_init {
 	dlc_init();
 	// needs to be done so early as they would still spawn
 	weapon_register_weapons();
-	game_type_vote_init();
 	world_static_init();
 	world_dynamic_init();
 	nadget_init();
