@@ -126,7 +126,7 @@ shootingrange.qh
 voip.qh
 ../client-server/progs.qc
 ../menu-server/progs.qc
-twoweapons.qh
+weapon/two_weapons.qh
 noteline.qh
 warmup.qh
 weapon.qh
@@ -336,7 +336,7 @@ badass.qc
 game/status.qc
 damageindicator.qc
 warpzone.qc
-twoweapons.qc
+weapon/two_weapons.qc
 noteline.qc
 warmup.qc
 udp_chat.qc

@@ -2,8 +2,8 @@ float g_twoweapons;
 var .float twoweapons_buttonatck1 = BUTTON_ATCK;
 var .float twoweapons_buttonatck2 = BUTTON_ATCK2;
 
-var void() TwoWeapons_PlayerPreThink_NextLink;
-void TwoWeapons_PlayerPreThink() {
+var void() weapon_two_weapons_player_think_next;
+void() weapon_two_weapons_player_think {
 	if (self.twoweapons_buttonatck1)
 		weapon_switch(g_twoweapons);
 	else if (self.twoweapons_buttonatck2) {
@@ -17,9 +17,10 @@ void TwoWeapons_PlayerPreThink() {
 				weapon_next(0);
 		}
 	}
+	weapon_two_weapons_player_think_next();
 }
 
-void TwoWeapons_Init() {
+void() weapon_two_weapons_init {
 	string s = cvar_string("g_twoweapons");
 	float i;
 	entity e;
@@ -36,6 +37,6 @@ void TwoWeapons_Init() {
 		twoweapons_buttonatck1 = BUTTON_ATCK2;
 		twoweapons_buttonatck2 = BUTTON_ATCK;
 	}
-	TwoWeapons_PlayerPreThink_NextLink = gamehook_chain_player_think;
-	gamehook_chain_player_think = TwoWeapons_PlayerPreThink;
+	weapon_two_weapons_player_think_next = gamehook_chain_player_think;
+	gamehook_chain_player_think = weapon_two_weapons_player_think;
 }

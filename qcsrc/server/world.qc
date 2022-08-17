@@ -100,7 +100,7 @@ void(void) world_static_init {
 	monster_monsters_init();
 	warpzone_init();
 	weapon_selectable_init();
-	TwoWeapons_Init();
+	weapon_two_weapons_init();
 	if not(g_campaign) {
 		game_type_vote_init();
 		udp_chat_init();
