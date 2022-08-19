@@ -525,22 +525,22 @@ string score_player_string(entity pl, float shortString) {
 	if (!pl) {
 		// label
 		for (i = 0; i < SCORE_FILEDS_MAX; ++i)
-			if (score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK == SCORE_FLAG_SORT_PRIO_PRIMARY) {
+			if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) == SCORE_FLAG_SORT_PRIO_PRIMARY) {
 				f = score_flags[i];
 				l = score_label[i];
 				out = strcat(out, score_log_label(l, f), ",");
 			}
 		if (shortString < 2)
 			for (i = 0; i < SCORE_FILEDS_MAX; ++i)
-				if (score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK == SCORE_FLAG_SORT_PRIO_SECONDARY) {
+				if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) == SCORE_FLAG_SORT_PRIO_SECONDARY) {
 					f = score_flags[i];
 					l = score_label[i];
 					out = strcat(out, score_log_label(l, f), ",");
 				}
 		if (shortString < 1)
 			for (i = 0; i < SCORE_FILEDS_MAX; ++i)
-				if (score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK != SCORE_FLAG_SORT_PRIO_PRIMARY)
-				if (score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK != SCORE_FLAG_SORT_PRIO_SECONDARY) {
+				if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) != SCORE_FLAG_SORT_PRIO_PRIMARY)
+				if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) != SCORE_FLAG_SORT_PRIO_SECONDARY) {
 					f = score_flags[i];
 					l = score_label[i];
 					out = strcat(out, score_log_label(l, f), ",");
@@ -548,18 +548,18 @@ string score_player_string(entity pl, float shortString) {
 		out = substring(out, 0, strlen(out) - 1);
 	} else if ((sk = pl.scorekeeper)) {
 		for (i = 0; i < SCORE_FILEDS_MAX; ++i)
-			if (score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK == SCORE_FLAG_SORT_PRIO_PRIMARY)
+			if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) == SCORE_FLAG_SORT_PRIO_PRIMARY)
 				out = strcat(out, ftos(sk.(scores[i])), ",");
 
 		if (shortString < 2)
 			for (i = 0; i < SCORE_FILEDS_MAX; ++i)
-				if (score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK == SCORE_FLAG_SORT_PRIO_SECONDARY)
+				if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) == SCORE_FLAG_SORT_PRIO_SECONDARY)
 					out = strcat(out, ftos(sk.(scores[i])), ",");
 
 		if (shortString < 1)
 			for (i = 0; i < SCORE_FILEDS_MAX; ++i)
-				if (score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK != SCORE_FLAG_SORT_PRIO_PRIMARY)
-				if (score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK != SCORE_FLAG_SORT_PRIO_SECONDARY)
+				if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) != SCORE_FLAG_SORT_PRIO_PRIMARY)
+				if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) != SCORE_FLAG_SORT_PRIO_SECONDARY)
 					out = strcat(out, ftos(sk.(scores[i])), ",");
 
 		out = substring(out, 0, strlen(out) - 1);
