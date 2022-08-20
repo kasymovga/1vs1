@@ -1,0 +1,52 @@
+# Heimen Stoffels <vistausss@fastmail.com>, 2022.
+msgid ""
+msgstr ""
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"PO-Revision-Date: 2022-08-19 20:16+0200\n"
+"Project-Id-Version: \n"
+"Language-Team: Dutch\n"
+"Language: nl\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 22.04.3\n"
+
+msgid "Quit"
+msgstr "Afsluiten"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nee"
+
+msgid "Are you sure you want to quit?"
+msgstr "Weet je zeker dat je wilt afsluiten?"
+
+msgid "Load"
+msgstr "Laden"
+
+msgid "Save"
+msgstr "Opslaan"
+
+msgid "Autosave"
+msgstr "Automatisch opslaan"
+
+msgid "Quicksave"
+msgstr "Snel opslaan"
+
+msgid "Autosave:"
+msgstr "Automatisch opslaan:"
+
+msgid "Quicksave:"
+msgstr "Snel opslaan:"
+
+msgid "Load Game"
+msgstr "Game laden"
+
+msgid "Save/Load Game"
+msgstr "Game opslaan/laden"
+
+msgid "custom"
+msgstr "aangepast"

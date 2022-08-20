@@ -1,0 +1,986 @@
+# Heimen Stoffels <vistausss@fastmail.com>, 2022.
+msgid ""
+msgstr ""
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"PO-Revision-Date: 2022-08-20 20:26+0200\n"
+"Project-Id-Version: \n"
+"Language-Team: Dutch\n"
+"Language: nl\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 22.04.3\n"
+
+msgid "Singleplayer"
+msgstr "Eén speler"
+
+msgid "Classic Campaign"
+msgstr "Klassieke modus"
+
+msgid "Survival Campaign"
+msgstr "Overlevingsmodus"
+
+msgid "Arena Training"
+msgstr "Arenatraining"
+
+msgid "Single Player (Demo)"
+msgstr "Eén speler (demomodus)"
+
+msgid "Difficulty:"
+msgstr "Moeilijkheidsgraad:"
+
+msgid "Load Game..."
+msgstr "Game laden…"
+
+msgid "Start Game!"
+msgstr "Game starten!"
+
+msgid "Easy"
+msgstr "Makkelijk"
+
+msgid "Medium"
+msgstr "Gemiddeld"
+
+msgid "Hard"
+msgstr "Moeilijk"
+
+msgid "Insane"
+msgstr "Gestoord"
+
+msgid "Multiplayer"
+msgstr "Meerdere spelers"
+
+msgid "Servers"
+msgstr "Servers"
+
+msgid "Create"
+msgstr "Server opzetten"
+
+msgid "Demos"
+msgstr "Demo's"
+
+msgid "Player Setup"
+msgstr "Spelerinstellingen"
+
+msgid "Credits"
+msgstr "Met dank aan"
+
+msgid "Ok"
+msgstr "Oké"
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Input"
+msgstr "Invoer"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Effects"
+msgstr "Effecten"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "Network"
+msgstr "Netwerk"
+
+msgid "Misc"
+msgstr "Overig"
+
+msgid "Show netgraph"
+msgstr "Netwerkgrafiek tonen"
+
+msgid "Network speed:"
+msgstr "Netwerksnelheid:"
+
+msgid "Input packets/s:"
+msgstr "Aantal binnenkomende pakketten/sec.:"
+
+msgid "HTTP downloads:"
+msgstr "Aantal gelijktijdige downloads:"
+
+msgid "Downloads:"
+msgstr "Downloads:"
+
+msgid "Speed (kB/s):"
+msgstr "Snelheid (in kB/sec.):"
+
+msgid "Client UDP port:"
+msgstr "UDP-poort van client:"
+
+msgid "Map list:"
+msgstr "Kaartenlijst:"
+
+msgid "All"
+msgstr "Alles"
+
+msgid "None"
+msgstr "Geen"
+
+msgid "Match settings:"
+msgstr "Toernooi-instellingen:"
+
+msgid "Clear"
+msgstr "Wissen"
+
+msgid "Bookmark"
+msgstr "Toev. aan bladwijzers"
+
+msgid "Address:"
+msgstr "Adres:"
+
+msgid "Join!"
+msgstr "Deelnemen!"
+
+msgid "Ping"
+msgstr "Ping"
+
+msgid "Host name"
+msgstr "Hostnaam"
+
+msgid "Map"
+msgstr "Kaart"
+
+msgid "Type"
+msgstr "Spelvorm"
+
+msgid "Players"
+msgstr "Aantal spelers"
+
+msgid "Filter:"
+msgstr "Filter:"
+
+msgid "Empty"
+msgstr "Leeg"
+
+msgid "Pause"
+msgstr "Onderbreken"
+
+msgid "Full"
+msgstr "Vol"
+
+msgid "Start Multiplayer!"
+msgstr "Meerspelermodus starten!"
+
+msgid "Time limit:"
+msgstr "Tijdslimiet:"
+
+msgid "Frag limit:"
+msgstr "Slachtingslimiet:"
+
+msgid "Win limit:"
+msgstr "Winlimiet:"
+
+msgid "Player slots:"
+msgstr "Aantal spelersplekken:"
+
+msgid "Number of bots:"
+msgstr "Aantal computers (bots):"
+
+msgid "Bot skill:"
+msgstr "Niveau van computers:"
+
+msgid "Bot names:"
+msgstr "Namen van computers:"
+
+msgid "Map voting:"
+msgstr "Kaartstemmingsmethode:"
+
+msgid "Simple majority wins vcall"
+msgstr "Meeste stemmen"
+
+msgid "Advanced settings..."
+msgstr "Geavanceerde instellingen…"
+
+msgid "Advanced settings"
+msgstr "Geavanceerde instellingen"
+
+msgid "Mutators..."
+msgstr "Mutatoren…"
+
+msgid "No voting"
+msgstr "Stemmen uitschakelen"
+
+msgid "2 choices"
+msgstr "2 keuzes"
+
+msgid "3 choices"
+msgstr "3 keuzes"
+
+msgid "4 choices"
+msgstr "4 keuzes"
+
+msgid "5 choices"
+msgstr "5 keuzes"
+
+msgid "6 choices"
+msgstr "6 keuzes"
+
+msgid "7 choices"
+msgstr "7 keuzes"
+
+msgid "8 choices"
+msgstr "8 keuzes"
+
+msgid "9 choices"
+msgstr "9 keuzes"
+
+msgid "Point limit:"
+msgstr "Puntenlimiet:"
+
+msgid "Capture limit:"
+msgstr "Vastleglimiet:"
+
+msgid "Goals:"
+msgstr "Aantal doelpunten:"
+
+msgid "Laps:"
+msgstr "Aantal ronden:"
+
+msgid "Mutators"
+msgstr "Mutatoren"
+
+msgid "OK"
+msgstr "Oké"
+
+msgid "Advanced server settings"
+msgstr "Geavanceerde serverinstellingen"
+
+msgid "Game settings:"
+msgstr "Game-instellingen:"
+
+msgid "Allow spectating"
+msgstr "Toeschouwers toestaan"
+
+msgid "Spawn shield:"
+msgstr "Schild na herstellen:"
+
+msgid "Start delay:"
+msgstr "Startvertraging:"
+
+msgid "AntiLag"
+msgstr "Anti-lag"
+
+msgid "Friendly fire scale:"
+msgstr "Omvang van vuren op teamleden:"
+
+msgid "Friendly fire penalty:"
+msgstr "Straf bij vuren op teamleden:"
+
+msgid "Teams:"
+msgstr "Teams:"
+
+msgid "Teamplay settings:"
+msgstr "Teaminstellingen:"
+
+msgid "Record demos while playing"
+msgstr "Demo's opnemen tijdens spelen"
+
+msgid "Play"
+msgstr "Spelen"
+
+msgid "Timedemo"
+msgstr "Tijdsdemo"
+
+msgid "Apply immediately"
+msgstr "Direct toepassen"
+
+msgid "Name:"
+msgstr "Naam:"
+
+msgid "Model:"
+msgstr "Personage:"
+
+msgid "Field of View:"
+msgstr "Gezichtsveld:"
+
+msgid "Damage kick:"
+msgstr "Schadeberokkening:"
+
+msgid "Zoom Factor:"
+msgstr "Zoomfactor:"
+
+msgid "Zoom speed:"
+msgstr "Zoomsnelheid"
+
+msgid "Weapon settings..."
+msgstr "Wapeninstellingen…"
+
+msgid "Show names:"
+msgstr "Namen tonen van:"
+
+msgid "All players"
+msgstr "Alle spelers"
+
+msgid "Teammates"
+msgstr "Teamleden"
+
+msgid "Never"
+msgstr "Nooit"
+
+msgid "Per weapon crosshairs"
+msgstr "Eigen richthulp van wapens gebruiken"
+
+msgid "& crosshair colors"
+msgstr "en richthulpkleuren"
+
+msgid "Crosshair:"
+msgstr "Richthulp:"
+
+msgid "Crosshair Size:"
+msgstr "Richthulpomvang:"
+
+msgid "Crosshair Alpha:"
+msgstr "Richthulpalfa:"
+
+msgid "Crosshair Red:"
+msgstr "Richthulp (rood):"
+
+msgid "Crosshair Green:"
+msgstr "Richthulp (groen):"
+
+msgid "Crosshair Blue:"
+msgstr "Richthulp (blauw):"
+
+msgid "Weapon settings"
+msgstr "Wapeninstellingen"
+
+msgid "HUD & Waypoints..."
+msgstr "HUD en routepunten…"
+
+msgid "Disable gore effects"
+msgstr "Grof geweld uitschakelen"
+
+msgid "Gibs:"
+msgstr "Lichaamsresten:"
+
+msgid "Few"
+msgstr "Weinig"
+
+msgid "Many"
+msgstr "Veel"
+
+msgid "Lots"
+msgstr "Héél véél"
+
+msgid "Up"
+msgstr "Omhoog"
+
+msgid "Down"
+msgstr "Omlaag"
+
+msgid "Weapon priority list:"
+msgstr "Prioriteitenlijst:"
+
+msgid "Use priority list for weapon cycling"
+msgstr "Prioriteitenlijst gebruiken om van wapen te wisselen"
+
+msgid "Auto switch weapons on pickup"
+msgstr "Automatisch wisselen na oppakken"
+
+msgid "Draw 1st person weapon model"
+msgstr "Wapen in first-personmodus tonen"
+
+msgid "Weapon alpha:"
+msgstr "Wapenalfa:"
+
+msgid "Align:"
+msgstr "Uitlijning:"
+
+msgid "Left"
+msgstr "Links"
+
+msgid "Right"
+msgstr "Rechts"
+
+msgid "Left or center"
+msgstr "Links of midden"
+
+msgid "Right or center"
+msgstr "Rechts of midden"
+
+msgid "Force center position"
+msgstr "Positie in midden afdwingen"
+
+msgid "Weapon location hint"
+msgstr "Wapenlocatiehint"
+
+msgid "Flip view horizontally"
+msgstr "Beeld horizontaal spiegelen"
+
+msgid "HUD & Waypoints"
+msgstr "HUD en routepunten"
+
+msgid "HUD settings:"
+msgstr "HUD-instellingen:"
+
+msgid "Background:"
+msgstr "Achtergrond:"
+
+msgid "Default red:"
+msgstr "Standaardrood:"
+
+msgid "Default green:"
+msgstr "Standaardgroen:"
+
+msgid "Default blue:"
+msgstr "Standaardblauw:"
+
+msgid "Team color:"
+msgstr "Teamkleur:"
+
+msgid "Waypoint settings:"
+msgstr "Routepuntinstellingen:"
+
+msgid "Show base waypoints"
+msgstr "Algemene routepunten tonen"
+
+msgid "Waypoint scale:"
+msgstr "Omvang van routepunten:"
+
+msgid "Waypoint alpha:"
+msgstr "Routepuntalfa:"
+
+msgid "Key bindings:"
+msgstr "Sneltoetsen:"
+
+msgid "Sensitivity:"
+msgstr "Gevoeligheidsgraad:"
+
+msgid "UI mouse speed:"
+msgstr "Cursorsnelheid in menu:"
+
+msgid "Invert mouse"
+msgstr "Cursorbewegingen omdraaien"
+
+msgid "Use joystick input"
+msgstr "Joystick gebruiken"
+
+msgid "\"enter console\" also closes"
+msgstr "Terminal sluiten met toets om te openen"
+
+msgid "Show binds:"
+msgstr "Toewijzingen tonen:"
+
+msgid "Actions"
+msgstr "Acties"
+
+msgid "Bound keys"
+msgstr "Toegewezen toetsen"
+
+msgid "Both"
+msgstr "Beide"
+
+msgid "Show pressed keys:"
+msgstr "Ingedrukte toetsen tonen:"
+
+msgid "Change key..."
+msgstr "Toets wijzigen…"
+
+msgid "Edit..."
+msgstr "Bewerken…"
+
+msgid "Full screen"
+msgstr "Schermvullende weergave"
+
+msgid "Desktop resolution"
+msgstr "Systeemresolutie"
+
+msgid "Resolution:"
+msgstr "Resolutie:"
+
+msgid "Color depth:"
+msgstr "Kleurdiepte:"
+
+msgid "Texture compression"
+msgstr "Textuurcompressie"
+
+msgid "Fast"
+msgstr "Snel"
+
+msgid "Good"
+msgstr "Goed"
+
+msgid "Vertical Synchronization"
+msgstr "Verticale synchronisatie"
+
+msgid "Use OpenGL 2.0 shaders (GLSL)"
+msgstr "OpenGL 2.0-schaduwen (GLSL) gebruiken"
+
+msgid "Use Occlusion Queries"
+msgstr "Occlusies gebruiken"
+
+msgid "Vertex Buffer Objects (VBOs)"
+msgstr "Vertex Buffer Objects (VBO's)"
+
+msgid "Off"
+msgstr "Uit"
+
+msgid "Vertices"
+msgstr "Hoekpunten"
+
+msgid "Vertices, some Tris (compatible)"
+msgstr "Hoekpunten met enkele driepunters (compatibel)"
+
+msgid "Vertices and Triangles"
+msgstr "Hoekpunten en driehoeken"
+
+msgid "Depth first:"
+msgstr "Diepteprioriteit:"
+
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+msgid "World"
+msgstr "Wereld"
+
+msgid "Disable multithreaded OpenGL"
+msgstr "OpenGL met meerdere processen uitschakelen"
+
+msgid "Wait for GPU to finish each frame"
+msgstr "Wachten tot gpu ieder frame heeft geladen"
+
+msgid "Brightness:"
+msgstr "Helderheid:"
+
+msgid "Contrast:"
+msgstr "Contrast:"
+
+msgid "Gamma:"
+msgstr "Gamma:"
+
+msgid "Contrast boost:"
+msgstr "Contrastversterking:"
+
+msgid "Saturation:"
+msgstr "Verzadiging:"
+
+msgid "Use GLSL to handle color control"
+msgstr "GLSL gebruiken om kleuren te beheersen"
+
+msgid "Ambient light:"
+msgstr "Sfeerlicht:"
+
+msgid "Intensity:"
+msgstr "Intensiteit:"
+
+msgid "Max FPS:"
+msgstr "Max. aantal fps:"
+
+msgid "Quality preset:"
+msgstr "Kwaliteitinstellingen:"
+
+msgid "Low"
+msgstr "Laag"
+
+msgid "Normal"
+msgstr "Normaal"
+
+msgid "High"
+msgstr "Hoog"
+
+msgid "Ultra"
+msgstr "Ultra"
+
+msgid "Geometry detail:"
+msgstr "Meetkundige details:"
+
+msgid "Best"
+msgstr "Beste"
+
+msgid "Lowest"
+msgstr "Laagste"
+
+msgid "Antialiasing:"
+msgstr "Anti-kartelvorming:"
+
+msgid "Ambient:"
+msgstr "Sfeer:"
+
+msgid "Texture quality:"
+msgstr "Textuurkwaliteit:"
+
+msgid "World texture quality:"
+msgstr "Textuurkwaliteit van kaarten:"
+
+msgid "Anisotropy:"
+msgstr "Anisotropie:"
+
+msgid "Particle quality:"
+msgstr "Deeltjeskwaliteit:"
+
+msgid "Particle dist.:"
+msgstr "Deeltjesverspreiding:"
+
+msgid "Gibs count:"
+msgstr "Aantal lichaamsresten:"
+
+msgid "Casing count:"
+msgstr "Aantal hulzen:"
+
+msgid "Decals"
+msgstr "Stickers"
+
+msgid "Distance:"
+msgstr "Afstand:"
+
+msgid "Time:"
+msgstr "Tijdsduur:"
+
+msgid "Use lightmaps"
+msgstr "Lichtkaarten gebruiken"
+
+msgid "Deluxe mapping"
+msgstr "Luxe kaartweergave"
+
+msgid "Gloss"
+msgstr "Gloeien"
+
+msgid "Offset mapping"
+msgstr "Verschuivingsweergave"
+
+msgid "Relief mapping"
+msgstr "Reliëfweergave"
+
+msgid "Reflections:"
+msgstr "Weerspiegelingen:"
+
+msgid "Blurred"
+msgstr "Vervaagd"
+
+msgid "Sharp"
+msgstr "Scherp"
+
+msgid "Realtime dynamic lighting"
+msgstr "Realtime dynamische belichting"
+
+msgid "Shadows"
+msgstr "Schaduwen"
+
+msgid "Realtime world lighting"
+msgstr "Realtime kaartbelichting"
+
+msgid "Use normal maps"
+msgstr "Normale kaarten gebruiken"
+
+msgid "Bloom"
+msgstr "Gloeiing"
+
+msgid "Coronas"
+msgstr "Lichtkransen"
+
+msgid "Deform vertexes"
+msgstr "Hoekpunten vervormen"
+
+msgid "Motion blur:"
+msgstr "Bewegingsvervaging:"
+
+msgid "Damage blur:"
+msgstr "Zichtafname door schade:"
+
+msgid "Music:"
+msgstr "Muziek:"
+
+msgid "Master:"
+msgstr "Master:"
+
+msgid "Info:"
+msgstr "Informatie:"
+
+msgid "Items:"
+msgstr "Items:"
+
+msgid "Pain:"
+msgstr "Pijn:"
+
+msgid "Player:"
+msgstr "Speler:"
+
+msgid "Shots:"
+msgstr "Schoten:"
+
+msgid "Voice:"
+msgstr "Stem:"
+
+msgid "Weapons:"
+msgstr "Wapens:"
+
+msgid "MAX"
+msgstr "MAX"
+
+msgid "Frequency:"
+msgstr "Frequentie:"
+
+msgid "Channels:"
+msgstr "Aantal kanalen:"
+
+msgid "Swap Stereo"
+msgstr "Stereo omwisselen"
+
+msgid "Headphone friendly mode"
+msgstr "Koptelefoonmodus"
+
+msgid "Stereo"
+msgstr "Stereo"
+
+msgid "Spatial voices:"
+msgstr "Ruimtelijke stemmen"
+
+msgid "Taunts"
+msgstr "Beledigingen:"
+
+msgid "Taunt range:"
+msgstr "Beledigingsbereik:"
+
+msgid "Long"
+msgstr "Ver"
+
+msgid "Very long"
+msgstr "Erg ver"
+
+msgid "Short"
+msgstr "Dichtbij"
+
+msgid "Very short"
+msgstr "Erg dichtbij"
+
+msgid "Automatic taunts"
+msgstr "Automatisch beledigen"
+
+msgid "Time warning:"
+msgstr "Tijdswaarschuwing:"
+
+msgid "1 minute"
+msgstr "1 minuut"
+
+msgid "5 minutes"
+msgstr "5 minuten"
+
+msgid "Hit indicator"
+msgstr "Trefindicator"
+
+msgid "Annoying chat beep sound"
+msgstr "Irritant chatpiepje"
+
+msgid "Unlimited"
+msgstr "Oneindig"
+
+msgid "OFF"
+msgstr "UIT"
+
+msgid "Menu skins:"
+msgstr "Menuthema's:"
+
+msgid "Show current time"
+msgstr "Huidig tijdstip tonen"
+
+msgid "Show current date"
+msgstr "Huidige datum tonen"
+
+msgid "Show frames per second"
+msgstr "Aantal frames per seconde tonen"
+
+msgid "Speedometer"
+msgstr "Snelheidsmeter"
+
+msgid "Show accelerometer"
+msgstr "Versnellingsmeter tonen"
+
+msgid "Accelerometer scale:"
+msgstr "Versnellingsmeteromvang:"
+
+msgid "Simple items:"
+msgstr "Eenvoudige items:"
+
+msgid "Old nex model"
+msgstr "Klassiek nex-model"
+
+msgid "Bright player skins"
+msgstr "Heldere spelerskledij"
+
+msgid "Cvar filter:"
+msgstr "Cvar-filter:"
+
+msgid "Setting:"
+msgstr "Instelling:"
+
+msgid "Type:"
+msgstr "Type:"
+
+msgid "Value:"
+msgstr "Waarde:"
+
+msgid "Description:"
+msgstr "Beschrijving:"
+
+msgid "km/h"
+msgstr "km/u"
+
+msgid "m/s"
+msgstr "m/s"
+
+msgid "mph"
+msgstr "mpu"
+
+msgid "knots"
+msgstr "knopen"
+
+msgid "qu/s"
+msgstr "qu/s"
+
+msgid "qu/s (hidden)"
+msgstr "qu/s (verborgen)"
+
+msgid ", will not be saved"
+msgstr ", wordt niet opgeslagen"
+
+msgid ", will be saved to config.cfg"
+msgstr ", wordt opgeslagen in config.cfg"
+
+msgid ", engine setting"
+msgstr ", aandrijvingsinstelling"
+
+msgid ", read only"
+msgstr ", alleen-lezen"
+
+msgid " dB"
+msgstr " dB"
+
+msgid "8 kHz"
+msgstr "8 kHz"
+
+msgid "11.025 kHz"
+msgstr "11.025 kHz"
+
+msgid "16 kHz"
+msgstr "16 kHz"
+
+msgid "22.05 kHz"
+msgstr "22.05 kHz"
+
+msgid "24 kHz"
+msgstr "24 kHz"
+
+msgid "32 kHz"
+msgstr "32 kHz"
+
+msgid "44.1 kHz"
+msgstr "44.1 kHz"
+
+msgid "48 kHz"
+msgstr "48 kHz"
+
+msgid "Remove"
+msgstr "Verwijderen"
+
+msgid "Info"
+msgstr "Informatie"
+
+msgid "Server Information"
+msgstr "Serverinformatie"
+
+msgid "Players:"
+msgstr "Spelers:"
+
+msgid "Map:"
+msgstr "Kaart:"
+
+msgid "Bots:"
+msgstr "Computers (bots):"
+
+msgid "Mod:"
+msgstr "Mod:"
+
+msgid "Version:"
+msgstr "Versie:"
+
+msgid "Ping:"
+msgstr "Ping:"
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "Language..."
+msgstr "Taal…"
+
+msgid "Language"
+msgstr "Taal"
+
+msgid "Disable Nexuiz-compatible symbols"
+msgstr "Nexuiz-compatibele symbolen uitschakelen"
+
+msgid ""
+"* Needed for some european characters, player names might be displayed "
+"incorrectly"
+msgstr ""
+"* Benodigd voor enkele Europese tekens. Let op: spelersnamen worden hierdoor"
+" mogelijk niet goed getoond."
+
+msgid "Acceleration:"
+msgstr "Versnelling:"
+
+msgid "* Keep this set to 0 until you know what this setting does"
+msgstr "* Stel in op 0, tenzij je weet wat je doet"
+
+msgid "Always"
+msgstr "Altijd"
+
+msgid "In spectating"
+msgstr "Tijdens toeschouwen"
+
+msgid "Game"
+msgstr "Game"
+
+msgid "Congratulations!"
+msgstr "Gefeliciteerd!"
+
+msgid "You have successfully completed the Single Player Campaign!"
+msgstr "Je hebt de eenspelermodus volledig afgelegd!"
+
+msgid "Microphone:"
+msgstr "Microfoon:"
+
+msgid "Voice chat:"
+msgstr "Spraakchat:"
+
+msgid "Effects:"
+msgstr "Effecten:"
+
+msgid "Deprecated channel control"
+msgstr "Verouderde kanaalbeheersing"
+
+msgid "Volume boost:"
+msgstr "Volumeversterking:"
+
+msgid "Automatic volume boost"
+msgstr "Volume automatisch versterken"
+
+msgid "Microphone test:"
+msgstr "Microfoon testen:"
+
+msgid "Start"
+msgstr "Starten"
+
+msgid "Stop"
+msgstr "Stoppen"
+
+msgid "Server mode:"
+msgstr "Servermodus:"
+
+msgid "Minimal amount of human and bots:"
+msgstr "Minimumaantal mensen en computers (bots):"
+
+msgid "Additional number of bots:"
+msgstr "Aanvullend aantal computers (bots):"
+
+msgid "Public"
+msgstr "Openbaar"
+
+msgid "Private"
+msgstr "Privé"
+
+msgid "Single player"
+msgstr "Eén speler"
