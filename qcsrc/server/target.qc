@@ -98,8 +98,8 @@ void(void) spawnfunc_target_voicescript {
 
 	float i, n;
 	if not(spawnfunc_target_voicescript_initialized) {
-		target_voicescript_player_spawn_next = gamehook_chain_player_spawn;
-		gamehook_chain_player_spawn = target_voicescript_player_spawn;
+		target_voicescript_player_spawn_next = plugin_chain_player_spawn;
+		plugin_chain_player_spawn = target_voicescript_player_spawn;
 		spawnfunc_target_voicescript_initialized = TRUE;
 	}
 	if (self.message == "") {

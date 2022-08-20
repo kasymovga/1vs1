@@ -75,6 +75,6 @@ void(void) damageindicator_init {
 		return;
 	
 	CVAR_CACHE(sv_damageindicator_accumulate_interval);
-	damageindicator_damage_force_done_next = gamehook_chain_damage_force_done;
-	gamehook_chain_damage_force_done = damageindicator_damage_force_done;
+	damageindicator_damage_force_done_next = plugin_chain_damage_force_done;
+	plugin_chain_damage_force_done = damageindicator_damage_force_done;
 }

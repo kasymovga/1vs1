@@ -418,10 +418,10 @@ void(void) dlc_init {
 		}
 	}
 	dlc_extra_pk3_list_build();
-	dlc_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
-	gamehook_chain_cmd_game_handle = dlc_cmd_game_handle;
-	dlc_slowmo_update_mod_NextLink = gamehook_chain_slowmo_update_mod;
-	gamehook_chain_slowmo_update_mod = dlc_slowmo_update_mod;
+	dlc_cmd_game_handle_NextLink = plugin_chain_cmd_game_handle;
+	plugin_chain_cmd_game_handle = dlc_cmd_game_handle;
+	dlc_slowmo_update_mod_NextLink = plugin_chain_slowmo_update_mod;
+	plugin_chain_slowmo_update_mod = dlc_slowmo_update_mod;
 	dlc = spawn();
 	net_link_entity(dlc, FALSE, 0, dlc_send);
 	if not(file_exists("maps/soylent.bsp")) { //check presence of data.pk3

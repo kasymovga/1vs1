@@ -499,7 +499,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 		if(time < self.kh_droptime + g_kh_delay_collect)
 			return;  // you just dropped it!
 
-	if not(gamehook_chain_PlayerCanBeCarrier(other))
+	if not(plugin_chain_PlayerCanBeCarrier(other))
 		return;
 
 	self.think = kh_Key_Think; //in case of kh_Key_MoveToRandomLocation_Think
@@ -984,17 +984,17 @@ void kh_init() {
 	precache_sound(kh_sound_drop);
 	precache_sound(kh_sound_collect);
 	precache_sound(kh_sound_alarm);  // the new siren
-	gamehook_score_give_frag_mod = kh_HandleFrags;
-	gamehook_player_death_handle = kh_DeathHandle;
-	kh_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = kh_PlayerClear;
-	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
-	kh_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
-	gamehook_chain_spectator_copy = kh_SpectateCopy;
-	gamehook_player_is_carrier = kh_player_is_carrier;
-	gamehook_player_drop_carried = kh_player_drop_carried;
-	gamehook_portal_forbidden_for = kh_portal_forbidden_for;
-	gamehook_havocbot_role_choose = kh_role_choose;
+	plugin_score_give_frag_mod = kh_HandleFrags;
+	plugin_player_death_handle = kh_DeathHandle;
+	kh_PlayerClear_NextLink = plugin_chain_player_clear;
+	plugin_chain_player_clear = kh_PlayerClear;
+	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
+	kh_SpectateCopy_NextLink = plugin_chain_spectator_copy;
+	plugin_chain_spectator_copy = kh_SpectateCopy;
+	plugin_player_is_carrier = kh_player_is_carrier;
+	plugin_player_drop_carried = kh_player_drop_carried;
+	plugin_portal_forbidden_for = kh_portal_forbidden_for;
+	plugin_havocbot_role_choose = kh_role_choose;
 	precache_model("models/keyhunt/key.md3");
 	kh_teams = cvar("g_keyhunt_teams_override");
 	if(kh_teams < 2)

@@ -403,7 +403,7 @@ void() ctf_flag_touch {
 	if (other.team != self.team)
 		return;
 
-	if not(gamehook_chain_PlayerCanBeCarrier(other))
+	if not(plugin_chain_PlayerCanBeCarrier(other))
 		return;
 
 	if (self.cnt == CTF_FLAG_CARRY)
@@ -936,8 +936,8 @@ var void(entity targ, entity attacker, float deathtype) ctf_damage_mods_set_next
 void(entity targ, entity attacker, float deathtype) ctf_damage_mods_set {
 	if (targ == attacker)
 	if (targ.flagcarried) {
-		gamehook_chain_damage_mod_force *= g_ctf_flagcarrier_selfforce;
-		gamehook_chain_damage_mod *= g_ctf_flagcarrier_selfdamage;
+		plugin_chain_damage_mod_force *= g_ctf_flagcarrier_selfforce;
+		plugin_chain_damage_mod *= g_ctf_flagcarrier_selfdamage;
 	}
 	ctf_damage_mods_set_next(targ, attacker, deathtype);
 }
@@ -1003,20 +1003,20 @@ void() ctf_init {
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
 	captureshield_force = cvar("g_ctf_shield_force");
-	gamehook_score_give_frag_mod = ctf_handle_frags;
-	ctf_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = ctf_player_clear;
-	ctf_player_think_next = gamehook_chain_player_think;
-	gamehook_chain_player_think = ctf_player_think;
-	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
-	gamehook_world_record_for_map = ctf_world_record_for_map;
-	ctf_damage_mods_set_next = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = ctf_damage_mods_set;
-	gamehook_player_death_handle = ctf_death_handle;
-	gamehook_player_is_carrier = ctf_player_is_carrier;
-	gamehook_player_drop_carried = ctf_player_drop_carried;
-	gamehook_portal_forbidden_for = ctf_portal_forbidden_for;
-	gamehook_havocbot_role_choose = ctf_role_choose;
+	plugin_score_give_frag_mod = ctf_handle_frags;
+	ctf_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = ctf_player_clear;
+	ctf_player_think_next = plugin_chain_player_think;
+	plugin_chain_player_think = ctf_player_think;
+	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
+	plugin_world_record_for_map = ctf_world_record_for_map;
+	ctf_damage_mods_set_next = plugin_chain_damage_mods_set;
+	plugin_chain_damage_mods_set = ctf_damage_mods_set;
+	plugin_player_death_handle = ctf_death_handle;
+	plugin_player_is_carrier = ctf_player_is_carrier;
+	plugin_player_drop_carried = ctf_player_drop_carried;
+	plugin_portal_forbidden_for = ctf_portal_forbidden_for;
+	plugin_havocbot_role_choose = ctf_role_choose;
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");
 }

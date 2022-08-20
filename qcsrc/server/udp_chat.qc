@@ -111,10 +111,10 @@ void(void) udp_chat_init {
 	CVAR_CACHE(sv_udpchat_spamstatus);
 	sv_udpchat_id = cvar_string_zone_ifneeded("sv_udpchat_id");
     extresponse_register_handler("udpchat", udp_chat_extresponse, world);
-	udp_chat_PupblicPlayerChat_next = gamehook_chain_PublicPlayerChat;
-	gamehook_chain_PublicPlayerChat = udp_chat_PupblicPlayerChat;
-	udp_chat_client_connect_real_next = gamehook_chain_client_connect_real;
-	gamehook_chain_client_connect_real = udp_chat_client_connect_real;
+	udp_chat_PupblicPlayerChat_next = plugin_chain_PublicPlayerChat;
+	plugin_chain_PublicPlayerChat = udp_chat_PupblicPlayerChat;
+	udp_chat_client_connect_real_next = plugin_chain_client_connect_real;
+	plugin_chain_client_connect_real = udp_chat_client_connect_real;
 	registercvar("_sv_udpchat_msgsent", "0");
 }
 

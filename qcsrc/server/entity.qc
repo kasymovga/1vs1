@@ -425,7 +425,7 @@ void(void) entity_spawn_pre {
 		if (entity_spawn_replace(cvar_string(strcat("sv_spawnreplace_", self.classname))))
 			entity_spawn_replace(cvar_string(strcat("g_spawnreplace_", self.classname)));
 	}
-	gamehook_chain_entity_spawn_pre();
+	plugin_chain_entity_spawn_pre();
 	entity_not_per_player = FALSE;
 	entity_per_player_force = FALSE;
 }

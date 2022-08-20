@@ -202,16 +202,16 @@ float(entity spot) lms_spawn_score_good {
 }
 
 void(void) lms_init {
-	lms_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = lms_player_spawn;
-	lms_client_connect_next = gamehook_chain_client_connect;
-	gamehook_chain_client_connect = lms_client_connect;
-	lms_spectator_to_player_handle_next = gamehook_chain_spectator_to_player_handle;
-	gamehook_chain_spectator_to_player_handle = lms_spectator_to_player_handle;
-	gamehook_winning_condition = lms_winning_condition;
-	gamehook_forbid_specatators = lms_forbid_spectators;
-	gamehook_player_death_handle = lms_player_death_handle;
-	gamehook_spawn_score_good = lms_spawn_score_good;
+	lms_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = lms_player_spawn;
+	lms_client_connect_next = plugin_chain_client_connect;
+	plugin_chain_client_connect = lms_client_connect;
+	lms_spectator_to_player_handle_next = plugin_chain_spectator_to_player_handle;
+	plugin_chain_spectator_to_player_handle = lms_spectator_to_player_handle;
+	plugin_winning_condition = lms_winning_condition;
+	plugin_forbid_specatators = lms_forbid_spectators;
+	plugin_player_death_handle = lms_player_death_handle;
+	plugin_spawn_score_good = lms_spawn_score_good;
 	score_basics(SCORE_FLAG_SORT_PRIO_SECONDARY, SCORE_FLAG_SORT_PRIO_SECONDARY, TRUE);
 	SP_STATUS = score_register("status", 0);
 	SP_LIVES = score_register("lives", SCORE_FLAG_SORT_PRIO_PRIMARY | SCORE_FLAG_NOCLEAR);

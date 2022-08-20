@@ -159,10 +159,10 @@ void(void) akimbo_init_common {
 	akimbo_init_done = TRUE;
 	CVAR_CACHE(g_akimbo_throwable);
 	CVAR_CACHE(g_akimbo_weaponratefactor);
-	akimbo_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = akimbo_player_clear;
-	akimbo_weapon_rate_factor_next = gamehook_chain_weapon_rate_factor;
-	gamehook_chain_weapon_rate_factor = akimbo_weapon_rate_factor;
+	akimbo_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = akimbo_player_clear;
+	akimbo_weapon_rate_factor_next = plugin_chain_weapon_rate_factor;
+	plugin_chain_weapon_rate_factor = akimbo_weapon_rate_factor;
 }
 
 void(entity e, string args, float set) akimbo_ability_init {

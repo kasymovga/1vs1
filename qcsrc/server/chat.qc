@@ -248,7 +248,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	if (flood)
 		print("NOTE: ", player_name(source), "^7 is flooding.\n");
 	else if (!teamsay && !privatesay && source.retard <= 0 && !source.muted)
-		gamehook_chain_PublicPlayerChat(source, msgin);
+		plugin_chain_PublicPlayerChat(source, msgin);
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if (privatesay)
@@ -340,5 +340,5 @@ void(void) chat_init {
 
 void(string s) chat_print {
 	bprint(strcat("\{1}", s));
-	gamehook_chain_PublicPlayerChat(world, s);
+	plugin_chain_PublicPlayerChat(world, s);
 }

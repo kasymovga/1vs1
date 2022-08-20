@@ -163,7 +163,7 @@ void(void) world_getrecords {
 	}
 	for (i = 0; i < map_info_count; ++i)
 		if (map_info_get_by_id(i)) {
-			s1 = gamehook_world_record_for_map(map_info_map_bspname);
+			s1 = plugin_world_record_for_map(map_info_map_bspname);
 			if (strlen(s) + strlen(s1) > 4095) {
 				if (cmd_records_reply_extra >= CMD_RECORDS_REPLY_STRINGS_COUNT - 1)
 					break;
@@ -478,7 +478,7 @@ void(void) world_overtime {
 	// - for this g_timelimit_overtime needs to be >0 of course
 	// - also check the winning condition calculated in the previous frame and only add normal overtime
 	//   again, if at the point at which timelimit would be extended again, still no winner was found
-	if (gamehook_OvertimeHandle())
+	if (plugin_OvertimeHandle())
 		return;
 
 	float tl;
@@ -602,12 +602,12 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 		cvar_set("timelimit", ftos((world_check_rules_suddendeathend - map_starttime) / 60));
 		if (!world_check_rules_suddendeathwarning) {
 			world_check_rules_suddendeathwarning = TRUE;
-			game_status_set(gamehook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"), 1);
+			game_status_set(plugin_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"), 1);
 		}
 	} else {
 		if (timelimit)
 		if (time >= timelimit) {
-			if (gamehook_OvertimeAllowed()) {
+			if (plugin_OvertimeAllowed()) {
 				if (score_winning_condition_helper_equality) {
 					world_overtime();
 				} else {
@@ -621,7 +621,7 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 		}
 	}
 	score_winning_condition_helper();
-	if (gamehook_winning_condition(fraglimit, score_leadlimit)) {
+	if (plugin_winning_condition(fraglimit, score_leadlimit)) {
 		map_finish();
 		return;
 	}
@@ -740,7 +740,7 @@ void(void) world_shutdown {
 		bot_endgame();
 		map_info_shutdown();
 		infomessages_shutdown();
-		gamehook_chain_shutdown();
+		plugin_chain_shutdown();
 		db_shutdown();
 	} else if (world_initialized == 0) {
 		print("NOTE: crashed before even initializing the world, not saving persistent data\n");
@@ -848,14 +848,14 @@ void(void) world_frame_start { //called by engine
 	skill = cvar("skill");
 	world_creature_frame();
 	world_check_rules();
-	gamehook_chain_world_frame_start();
+	plugin_chain_world_frame_start();
 	bot_serverframe();
 }
 
 void(float dorespawn) world_reset {
 	entity oldself;
 	oldself = self;
-	gamehook_world_reset();
+	plugin_world_reset();
 	for (self = world; (self = nextent(self)); )
 	if (clienttype(self) == CLIENTTYPE_NOTACLIENT) {
 		if (self.reset) {

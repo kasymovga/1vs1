@@ -381,8 +381,8 @@ void hook_damage_mods_set(entity targ, entity attacker, float deathtype) {
 			if (targ.hook.state)
 			if not(attacker)
 			if (deathtype == DEATH_FALL) {
-				gamehook_chain_damage_mod = 0;
-				gamehook_chain_damage_mod_force = 0;
+				plugin_chain_damage_mod = 0;
+				plugin_chain_damage_mod_force = 0;
 			}
 		}
 	hook_damage_mods_set_next(targ, attacker, deathtype);
@@ -444,16 +444,16 @@ void(void) hook_init_common {
     precache_model("models/hook.md3");
 	precache_sound("weapons/hook_fire.wav");
 	precache_sound("weapons/hook_impact.wav");
-	hook_client_connect_real_next = gamehook_chain_client_connect_real;
-	gamehook_chain_client_connect_real = hook_client_connect_real;
-	hook_damage_mods_set_next = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = hook_damage_mods_set;
-	hook_player_think_next = gamehook_chain_player_think;
-	gamehook_chain_player_think = hook_player_think;
-	hook_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = hook_player_clear;
-	hook_entity_pre_spawn_next = gamehook_chain_entity_spawn_pre;
-	gamehook_chain_entity_spawn_pre = hook_entity_pre_spawn;
+	hook_client_connect_real_next = plugin_chain_client_connect_real;
+	plugin_chain_client_connect_real = hook_client_connect_real;
+	hook_damage_mods_set_next = plugin_chain_damage_mods_set;
+	plugin_chain_damage_mods_set = hook_damage_mods_set;
+	hook_player_think_next = plugin_chain_player_think;
+	plugin_chain_player_think = hook_player_think;
+	hook_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = hook_player_clear;
+	hook_entity_pre_spawn_next = plugin_chain_entity_spawn_pre;
+	plugin_chain_entity_spawn_pre = hook_entity_pre_spawn;
 }
 
 void(entity e, string args, float set) hook_ability_init {

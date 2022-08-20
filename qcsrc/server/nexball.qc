@@ -162,24 +162,24 @@ void() nexball_init {
 	CVAR_CACHE(g_nexball_volleyball_boost_forward);
 	CVAR_CACHE(g_nexball_volleyball_melee_boost_up);
 	CVAR_CACHE(g_nexball_volleyball_melee_boost_forward);
-	nexball_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = nexball_PlayerClear;
-	nexball_weapon_frame_switch_mod_NextLink = gamehook_chain_weapon_frame_switch_mod;
-	gamehook_chain_weapon_frame_switch_mod = nexball_weapon_frame_switch_mod;
-	nexball_PlayerPreThink_NextLink = gamehook_chain_player_think;
-	gamehook_chain_player_think = nexball_PlayerPreThink;
-	nexball_SpeedMod_NextLink = gamehook_chain_physics_max_speed_mod;
-	gamehook_chain_physics_max_speed_mod = nexball_SpeedMod;
-	nexball_weapon_frame_handle_next = gamehook_chain_weapon_frame_handle;
-	gamehook_chain_weapon_frame_handle = nexball_weapon_frame_handle;
-	gamehook_ReloadAllowed = nexball_ReloadAllowed;
-	nexball_weapon_throw_allowed_NextLink = gamehook_chain_weapon_throw_allowed;
-	gamehook_chain_weapon_throw_allowed = nexball_weapon_throw_allowed;
-	nexball_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
-	gamehook_chain_spectator_copy = nexball_SpectateCopy;
-	gamehook_player_is_carrier = nexball_player_is_carrier;
-	gamehook_player_drop_carried = nexball_player_drop_carried;
-	gamehook_portal_forbidden_for = nexball_portal_forbidden_for;
+	nexball_PlayerClear_NextLink = plugin_chain_player_clear;
+	plugin_chain_player_clear = nexball_PlayerClear;
+	nexball_weapon_frame_switch_mod_NextLink = plugin_chain_weapon_frame_switch_mod;
+	plugin_chain_weapon_frame_switch_mod = nexball_weapon_frame_switch_mod;
+	nexball_PlayerPreThink_NextLink = plugin_chain_player_think;
+	plugin_chain_player_think = nexball_PlayerPreThink;
+	nexball_SpeedMod_NextLink = plugin_chain_physics_max_speed_mod;
+	plugin_chain_physics_max_speed_mod = nexball_SpeedMod;
+	nexball_weapon_frame_handle_next = plugin_chain_weapon_frame_handle;
+	plugin_chain_weapon_frame_handle = nexball_weapon_frame_handle;
+	plugin_ReloadAllowed = nexball_ReloadAllowed;
+	nexball_weapon_throw_allowed_NextLink = plugin_chain_weapon_throw_allowed;
+	plugin_chain_weapon_throw_allowed = nexball_weapon_throw_allowed;
+	nexball_SpectateCopy_NextLink = plugin_chain_spectator_copy;
+	plugin_chain_spectator_copy = nexball_SpectateCopy;
+	plugin_player_is_carrier = nexball_player_is_carrier;
+	plugin_player_drop_carried = nexball_player_drop_carried;
+	plugin_portal_forbidden_for = nexball_portal_forbidden_for;
 	entity_initialize(world, nexball_delayedinit, INITPRIO_GAMETYPE);
 	precache_model ("models/elaser.mdl");
 	precache_sound ("nexball/shoot1.wav");
@@ -486,7 +486,7 @@ void(void) nexball_hockey_touch {
 }
 
 void(void) nexball_basketball_touch {
-	if (other.ballcarried || !gamehook_chain_PlayerCanBeCarrier(other)) {
+	if (other.ballcarried || !plugin_chain_PlayerCanBeCarrier(other)) {
 		nexball_football_touch();
 		return;
 	}

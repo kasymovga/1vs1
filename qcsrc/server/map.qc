@@ -287,7 +287,7 @@ float() map_do_next_override {
 		map_already_changed = TRUE;
 		return TRUE;
 	}
-	if (gamehook_map_restart()) {
+	if (plugin_map_restart()) {
 		localcmd("restart\n");
 		map_already_changed = TRUE;
 		return TRUE;
@@ -386,7 +386,7 @@ void() map_finish {
 		if (score_winning_condition_helper_winner)
 			map_finished_message = strcat(map_finished_message, "\nThe winner is ", score_winning_condition_helper_winner.netname);
 	}
-	game_status_set(gamehook_map_finish_message_mod(map_finished_message), 30);
+	game_status_set(plugin_map_finish_message_mod(map_finished_message), 30);
 	sound_play2all("misc/menu2.wav");
 	map_intermission_running = 1;
 	FOR_EACH_CLIENT(e) {

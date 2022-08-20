@@ -36,7 +36,7 @@ float() entcs_customize {
 		if (player_alpha(o, other) < 0.25)
 			return FALSE;
 
-		if (gamehook_chain_PlayerVisibleThroughWallFor(o,other)) {
+		if (plugin_chain_PlayerVisibleThroughWallFor(o,other)) {
 			self.effects |= EFFECT_FULLBRIGHT;
 		} else
 			self.effects &= ~EFFECT_FULLBRIGHT;
@@ -57,7 +57,7 @@ float(entity to, float sf) entcs_send {
 	}
 
 	if not(sf & 128)
-	if (gamehook_chain_PlayerCanSeeHealthFor(to, o))
+	if (plugin_chain_PlayerCanSeeHealthFor(to, o))
 		sf |= 128;
 
 	net_write_byte(MSG_ENTITY, sf);

@@ -210,12 +210,12 @@ void() timeout_init {
 	if not(cvar("sv_timeout"))
 		return;
 
-	timeout_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = timeout_ClientCommandHandle;
-	timeout_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
-	gamehook_chain_cmd_game_handle = timeout_cmd_game_handle;
-	timeout_slowmo_update_mod_NextLink = gamehook_chain_slowmo_update_mod;
-	gamehook_chain_slowmo_update_mod = timeout_slowmo_update_mod;
-	timeout_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
-	gamehook_chain_gamemenu_send = timeout_gamemenu_send;
+	timeout_ClientCommandHandle_NextLink = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = timeout_ClientCommandHandle;
+	timeout_cmd_game_handle_NextLink = plugin_chain_cmd_game_handle;
+	plugin_chain_cmd_game_handle = timeout_cmd_game_handle;
+	timeout_slowmo_update_mod_NextLink = plugin_chain_slowmo_update_mod;
+	plugin_chain_slowmo_update_mod = timeout_slowmo_update_mod;
+	timeout_gamemenu_send_NextLink = plugin_chain_gamemenu_send;
+	plugin_chain_gamemenu_send = timeout_gamemenu_send;
 }

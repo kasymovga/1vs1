@@ -92,7 +92,7 @@ void(void) ready_restart_force {
 }
 
 void(void) ready_restart {
-	if (gamehook_ready_restart_hard() | map_finished | map_intermission_running) {
+	if (plugin_ready_restart_hard() | map_finished | map_intermission_running) {
 		localcmd("\nrestart\n");
 		return;
 	} else

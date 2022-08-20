@@ -118,9 +118,9 @@ void() sysinfo_client_disconnect_real {
 
 void() sysinfo_init {
 	CVAR_CACHE_STR(sv_sysinfo_checker);
-	sysinfo_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = sysinfo_ClientCommandHandle;
-	sysinfo_client_disconnect_real_NextLink = gamehook_chain_client_disconnect_real;
-	gamehook_chain_client_disconnect_real = sysinfo_client_disconnect_real;
+	sysinfo_ClientCommandHandle_NextLink = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = sysinfo_ClientCommandHandle;
+	sysinfo_client_disconnect_real_NextLink = plugin_chain_client_disconnect_real;
+	plugin_chain_client_disconnect_real = sysinfo_client_disconnect_real;
 	URI_SYSINFO_CHECKER = uri_register_handler(sysinfo_uri_callback);
 }

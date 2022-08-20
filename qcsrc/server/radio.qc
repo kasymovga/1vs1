@@ -62,16 +62,16 @@ void Radio_Init(void) {
 	CVAR_CACHE(sv_radio_queue_advanceat);
 	CVAR_CACHE(sv_radio_queue_autofill_retry);
 	CVAR_CACHE(sv_radio_log_skips);
-	Radio_client_connect_real_NextLink = gamehook_chain_client_connect_real;
-	gamehook_chain_client_connect_real = Radio_client_connect_real;
-	Radio_ServerFrame_NextLink = gamehook_chain_world_frame_start;
-	gamehook_chain_world_frame_start = Radio_ServerFrame;
-	Radio_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = Radio_ClientCommandHandle;
-	Radio_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
-	gamehook_chain_cmd_game_handle = Radio_cmd_game_handle;
-	Radio_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
-	gamehook_chain_gamemenu_send = Radio_gamemenu_send;
+	Radio_client_connect_real_NextLink = plugin_chain_client_connect_real;
+	plugin_chain_client_connect_real = Radio_client_connect_real;
+	Radio_ServerFrame_NextLink = plugin_chain_world_frame_start;
+	plugin_chain_world_frame_start = Radio_ServerFrame;
+	Radio_ClientCommandHandle_NextLink = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = Radio_ClientCommandHandle;
+	Radio_cmd_game_handle_NextLink = plugin_chain_cmd_game_handle;
+	plugin_chain_cmd_game_handle = Radio_cmd_game_handle;
+	Radio_gamemenu_send_NextLink = plugin_chain_gamemenu_send;
+	plugin_chain_gamemenu_send = Radio_gamemenu_send;
 }
 
 void Radio_SendPreload(entity e, string url) {

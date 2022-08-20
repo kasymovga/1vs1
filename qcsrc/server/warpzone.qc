@@ -659,7 +659,7 @@ void warpzone_trace_toss_stub(entity e, entity forent, float toss_frametime, flo
 var void(entity targ, entity attacker, float deathtype) warpzone_damage_mods_set_next;
 void(entity targ, entity attacker, float deathtype) warpzone_damage_mods_set { //prevent damage modificator chaining with warpzone shadow
 	if (targ.classname == "wzshadow") {
-		gamehook_chain_damage_mod = gamehook_chain_damage_mod_force = gamehook_chain_damage_mod_mirror = gamehook_chain_damage_mod_force_mirror = 1;
+		plugin_chain_damage_mod = plugin_chain_damage_mod_force = plugin_chain_damage_mod_mirror = plugin_chain_damage_mod_force_mirror = 1;
 		return;
 	}
 	warpzone_damage_mods_set_next(targ, attacker, deathtype);
@@ -762,10 +762,10 @@ void() warpzone_enable_hook {
 	warpzone_refsys_copy = warpzone_refsys_copy_real;
 	warpzone_trace_toss = warpzone_trace_toss_real;
 	warpzone_trace_toss_trough_zone = warpzone_trace_toss_trough_zone_real;
-	warpzone_damage_mods_set_next = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = warpzone_damage_mods_set;
-	warpzone_projectile_touch_handle_next = gamehook_chain_projectile_touch_handle;
-	gamehook_chain_projectile_touch_handle = warpzone_projectile_touch_handle;
+	warpzone_damage_mods_set_next = plugin_chain_damage_mods_set;
+	plugin_chain_damage_mods_set = warpzone_damage_mods_set;
+	warpzone_projectile_touch_handle_next = plugin_chain_projectile_touch_handle;
+	plugin_chain_projectile_touch_handle = warpzone_projectile_touch_handle;
 }
 
 void() warpzone_init_hook {

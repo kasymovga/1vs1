@@ -33,10 +33,10 @@ void(void) walkietalkie_init {
 		sv_walkietalkie[i] = strzone(argv(i));
 		precache_sound(walkietalkie_sound_path(i));
 	}
-	walkietalkie_gamemenu_send_next = gamehook_chain_gamemenu_send;
-	gamehook_chain_gamemenu_send = walkietalkie_gamemenu_send;
-	walkietalkie_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = walkietalkie_cmd_client_handle;
+	walkietalkie_gamemenu_send_next = plugin_chain_gamemenu_send;
+	plugin_chain_gamemenu_send = walkietalkie_gamemenu_send;
+	walkietalkie_cmd_client_handle_next = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = walkietalkie_cmd_client_handle;
 }
 
 float walkietalkie_block[4];

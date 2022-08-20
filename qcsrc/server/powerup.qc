@@ -72,19 +72,19 @@ void() powerup_init {
 	CVAR_CACHE(g_balance_powerup_strength_force);
 	CVAR_CACHE(g_balance_powerup_strength_selfdamage);
 	CVAR_CACHE(g_balance_powerup_strength_selfforce);
-	powerup_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = powerup_player_clear;
-	powerup_spectator_copy_next = gamehook_chain_spectator_copy;
-	gamehook_chain_spectator_copy = powerup_spectator_copy;
+	powerup_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = powerup_player_clear;
+	powerup_spectator_copy_next = plugin_chain_spectator_copy;
+	plugin_chain_spectator_copy = powerup_spectator_copy;
 }
 
 var void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mods_set_next;
 void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mods_set {
 	if (targ.items & IT_INVINCIBLE)
 	if (deathtype != DEATH_HURTTRIGGER) {
-		gamehook_chain_damage_mod = gamehook_chain_damage_mod * g_balance_powerup_invincible_takedamage;
+		plugin_chain_damage_mod = plugin_chain_damage_mod * g_balance_powerup_invincible_takedamage;
 		if (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
-			gamehook_chain_damage_mod = 0;
+			plugin_chain_damage_mod = 0;
 	}
 	powerup_invincible_damage_mods_set_next(targ, attacker, deathtype);
 }
@@ -116,10 +116,10 @@ void() powerup_invincible_init {
 	powerup_invincible_init_done = 1;
 	powerup_init();
 	addstat(STAT_INVINCIBLE_FINISHED, STAT_FLOAT, invincible_finished);
-	powerup_invincible_player_effects_next = gamehook_chain_player_effects;
-	gamehook_chain_player_effects = powerup_invincible_player_effects;
-	powerup_invincible_damage_mods_set_next = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = powerup_invincible_damage_mods_set;
+	powerup_invincible_player_effects_next = plugin_chain_player_effects;
+	plugin_chain_player_effects = powerup_invincible_player_effects;
+	powerup_invincible_damage_mods_set_next = plugin_chain_damage_mods_set;
+	plugin_chain_damage_mods_set = powerup_invincible_damage_mods_set;
 }
 
 var void(entity targ, entity attacker, float deathtype) powerup_strength_damage_mods_set_next;
@@ -127,11 +127,11 @@ void(entity targ, entity attacker, float deathtype) powerup_strength_damage_mods
 	// apply strength multiplier
 	if ((attacker.items & IT_STRENGTH)) {
 		if(targ == attacker) {
-			gamehook_chain_damage_mod = gamehook_chain_damage_mod * g_balance_powerup_strength_selfdamage;
-			gamehook_chain_damage_mod_force = gamehook_chain_damage_mod_force * g_balance_powerup_strength_selfforce;
+			plugin_chain_damage_mod = plugin_chain_damage_mod * g_balance_powerup_strength_selfdamage;
+			plugin_chain_damage_mod_force = plugin_chain_damage_mod_force * g_balance_powerup_strength_selfforce;
 		} else {
-			gamehook_chain_damage_mod = gamehook_chain_damage_mod * g_balance_powerup_strength_damage;
-			gamehook_chain_damage_mod_force = gamehook_chain_damage_mod_force * g_balance_powerup_strength_force;
+			plugin_chain_damage_mod = plugin_chain_damage_mod * g_balance_powerup_strength_damage;
+			plugin_chain_damage_mod_force = plugin_chain_damage_mod_force * g_balance_powerup_strength_force;
 		}
 	}
 	powerup_strength_damage_mods_set_next(targ, attacker, deathtype);
@@ -183,14 +183,14 @@ void() powerup_strength_init {
 	powerup_init();
 	addstat(STAT_STRENGTH_FINISHED, STAT_FLOAT, strength_finished);
 	if (g_powerup_strength_akimbo) {
-		powerup_strength_akimbo_player_effects_next = gamehook_chain_player_effects;
-		gamehook_chain_player_effects = powerup_strength_akimbo_player_effects;
+		powerup_strength_akimbo_player_effects_next = plugin_chain_player_effects;
+		plugin_chain_player_effects = powerup_strength_akimbo_player_effects;
 		return;
 	}
-	powerup_strength_player_effects_next = gamehook_chain_player_effects;
-	gamehook_chain_player_effects = powerup_strength_player_effects;
-	powerup_strength_damage_mods_set_next = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = powerup_strength_damage_mods_set;
+	powerup_strength_player_effects_next = plugin_chain_player_effects;
+	plugin_chain_player_effects = powerup_strength_player_effects;
+	powerup_strength_damage_mods_set_next = plugin_chain_damage_mods_set;
+	plugin_chain_damage_mods_set = powerup_strength_damage_mods_set;
 }
 
 var float() powerup_speed_weapon_rate_factor_next;
@@ -234,12 +234,12 @@ void() powerup_speed_init {
 
 	powerup_speed_init_done = 1;
 	powerup_init();
-	powerup_speed_physics_max_speed_mod_next = gamehook_chain_physics_max_speed_mod;
-	gamehook_chain_physics_max_speed_mod = powerup_speed_max_speed_mod;
-	powerup_speed_player_effects_next = gamehook_chain_player_effects;
-	gamehook_chain_player_effects = powerup_speed_player_effects;
-	powerup_speed_weapon_rate_factor_next = gamehook_chain_weapon_rate_factor;
-	gamehook_chain_weapon_rate_factor = powerup_speed_weapon_rate_factor;
+	powerup_speed_physics_max_speed_mod_next = plugin_chain_physics_max_speed_mod;
+	plugin_chain_physics_max_speed_mod = powerup_speed_max_speed_mod;
+	powerup_speed_player_effects_next = plugin_chain_player_effects;
+	plugin_chain_player_effects = powerup_speed_player_effects;
+	powerup_speed_weapon_rate_factor_next = plugin_chain_weapon_rate_factor;
+	plugin_chain_weapon_rate_factor = powerup_speed_weapon_rate_factor;
 	addstat(STAT_SPEED_FINISHED, STAT_FLOAT, speed_finished);
 }
 
@@ -279,9 +279,9 @@ void() powerup_invisibility_init {
 
 	powerup_invisibility_init_done = 1;
 	powerup_init();
-	powerup_invisibility_player_alpha_mod_next = gamehook_chain_player_alpha_mod;
-	gamehook_chain_player_alpha_mod = powerup_invisibility_player_alpha_mod;
-	powerup_invisibility_player_effects_next = gamehook_chain_player_effects;
-	gamehook_chain_player_effects = powerup_invisibility_player_effects;
+	powerup_invisibility_player_alpha_mod_next = plugin_chain_player_alpha_mod;
+	plugin_chain_player_alpha_mod = powerup_invisibility_player_alpha_mod;
+	powerup_invisibility_player_effects_next = plugin_chain_player_effects;
+	plugin_chain_player_effects = powerup_invisibility_player_effects;
 	addstat(STAT_INVISIBILITY_FINISHED, STAT_FLOAT, invisibility_finished);
 }

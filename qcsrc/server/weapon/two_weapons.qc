@@ -37,6 +37,6 @@ void() weapon_two_weapons_init {
 		twoweapons_buttonatck1 = BUTTON_ATCK2;
 		twoweapons_buttonatck2 = BUTTON_ATCK;
 	}
-	weapon_two_weapons_player_think_next = gamehook_chain_player_think;
-	gamehook_chain_player_think = weapon_two_weapons_player_think;
+	weapon_two_weapons_player_think_next = plugin_chain_player_think;
+	plugin_chain_player_think = weapon_two_weapons_player_think;
 }

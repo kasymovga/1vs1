@@ -413,8 +413,8 @@ void(void) dom_init {
 	precache_model("models/domination/dom_pink.md3");
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
-	gamehook_client_put_spawn_point = dom_client_put_spawn_point;
-	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
-	gamehook_havocbot_role_choose = dom_role_choose;
+	plugin_client_put_spawn_point = dom_client_put_spawn_point;
+	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
+	plugin_havocbot_role_choose = dom_role_choose;
 	entity_initialize(world, dom_delayedinit, INITPRIO_GAMETYPE);
 }

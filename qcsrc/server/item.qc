@@ -196,19 +196,19 @@ void(void) item_respawn_countdown {
 		self.nextthink = time + 1;
 		self.count += 1;
 		if (self.count == 1) {
-			gamehook_ItemName = NULL;
-			gamehook_chain_ItemRespawnCountDown();
+			plugin_ItemName = NULL;
+			plugin_chain_ItemRespawnCountDown();
 			switch (self.items) {
-			case IT_STRENGTH:     gamehook_ItemName = "item-strength"; gamehook_ItemColor = '0 0 1'; break;
-			case IT_INVINCIBLE:   gamehook_ItemName = "item-shield"; gamehook_ItemColor = '1 0 1'; break;
-			case IT_SPEED:        gamehook_ItemName = "item-speed"; gamehook_ItemColor = '1 0 1'; break;
-			case IT_INVISIBILITY: gamehook_ItemName = "item-invis"; gamehook_ItemColor = '0 0 1'; break;
-			case IT_JETPACK:      gamehook_ItemName = "item-jetpack"; gamehook_ItemColor = '0.5 0.5 0.5'; break;
+			case IT_STRENGTH:     plugin_ItemName = "item-strength"; plugin_ItemColor = '0 0 1'; break;
+			case IT_INVINCIBLE:   plugin_ItemName = "item-shield"; plugin_ItemColor = '1 0 1'; break;
+			case IT_SPEED:        plugin_ItemName = "item-speed"; plugin_ItemColor = '1 0 1'; break;
+			case IT_INVISIBILITY: plugin_ItemName = "item-invis"; plugin_ItemColor = '0 0 1'; break;
+			case IT_JETPACK:      plugin_ItemName = "item-jetpack"; plugin_ItemColor = '0.5 0.5 0.5'; break;
 			}
-			if (gamehook_ItemName) {
-				WaypointSprite_Spawn(gamehook_ItemName, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
+			if (plugin_ItemName) {
+				WaypointSprite_Spawn(plugin_ItemName, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
 				if (self.waypointsprite_attached) {
-					WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, gamehook_ItemColor);
+					WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, plugin_ItemColor);
 					//WaypointSprite_UpdateMaxHealth(self.waypointsprite_attached, ITEM_RESPAWN_TICKS + 1);
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
 				}
@@ -275,11 +275,11 @@ float(entity item, entity player) item_give_to {
 	if (time < map_starttime)
 		return FALSE;
 
-	if (gamehook_chain_ItemGiveToHandle(item, player)) {
-		pickedup = gamehook_chain_ItemGiveToHandle_PickedUp;
-		gamehook_chain_ItemGiveToHandle_PickedUp = FALSE;
-		_switchweapon = gamehook_chain_ItemGiveToHandle_SwitchWeapon;
-		gamehook_chain_ItemGiveToHandle_SwitchWeapon = FALSE;
+	if (plugin_chain_ItemGiveToHandle(item, player)) {
+		pickedup = plugin_chain_ItemGiveToHandle_PickedUp;
+		plugin_chain_ItemGiveToHandle_PickedUp = FALSE;
+		_switchweapon = plugin_chain_ItemGiveToHandle_SwitchWeapon;
+		plugin_chain_ItemGiveToHandle_SwitchWeapon = FALSE;
 	} else {
 		if (g_weapon_stay)
 		if not(item.flags & FL_NO_WEAPON_STAY)
@@ -651,7 +651,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 			goto item_start_fail;
 	} else {
 		// it's a level item
-		if (!g_pickup_items || gamehook_chain_ItemForbidden(self.classname))
+		if (!g_pickup_items || plugin_chain_ItemForbidden(self.classname))
 			goto item_start_fail;
 
 		if (team_mode) {
@@ -1025,7 +1025,7 @@ void(void) spawnfunc_item_mushroom {
 }
 
 voidfunc(string s) item_spawnfunc_for {
-	if (gamehook_chain_ItemForbidden(strcat("item_", s)))
+	if (plugin_chain_ItemForbidden(strcat("item_", s)))
 		return NULL;
 
 #define RETURN_SPAWNFUNC_FOR(x) if (s == #x) return spawnfunc_item_##x;

@@ -171,7 +171,7 @@ void(void) havocbot_role_choose_dm {
 void(void) havocbot_role_choose {
 	navigation_clearroute();
 	self.bot_strategytime = 0;
-	gamehook_havocbot_role_choose();
+	plugin_havocbot_role_choose();
 }
 
 void(void) havocbot_role_init {

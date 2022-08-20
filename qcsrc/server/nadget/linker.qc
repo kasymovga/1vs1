@@ -26,7 +26,7 @@ var void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForc
 void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet {
 	if (targ.hg_linker)
 	if (targ.hg_linker.owner == targ || (team_mode && targ.hg_linker.team == targ.team))
-		gamehook_chain_damage_mod = gamehook_chain_damage_mod * g_nadgets_linker_damagefactor;
+		plugin_chain_damage_mod = plugin_chain_damage_mod * g_nadgets_linker_damagefactor;
 
 	nadget_linker_DamageForceModsSet_next(targ, attacker, deathtype);
 }
@@ -147,7 +147,7 @@ NADGET_HOOKFUNCTION(linker, Init) {
 	CVAR_CACHE(g_nadgets_linker_damagefactor);
 	CVAR_CACHE(g_nadgets_linker_hps);
 	CVAR_CACHE(g_nadgets_linker_duration);
-	nadget_linker_DamageForceModsSet_next = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = nadget_linker_DamageForceModsSet;
+	nadget_linker_DamageForceModsSet_next = plugin_chain_damage_mods_set;
+	plugin_chain_damage_mods_set = nadget_linker_DamageForceModsSet;
     return NADGET_INIT_OK;
 }

@@ -35,9 +35,9 @@ void(void) hat_init {
 		sv_player_hat_origin = stov(cvar_string("sv_player_hat_origin"));
 		sv_player_hat_angles = stov(cvar_string("sv_player_hat_angles"));
 		precache_model(sv_player_hat);
-		hat_player_clear_next = gamehook_chain_player_clear;
-		gamehook_chain_player_clear = hat_player_clear;
-		hat_player_spawn_next = gamehook_chain_player_spawn;
-		gamehook_chain_player_spawn = hat_player_spawn;
+		hat_player_clear_next = plugin_chain_player_clear;
+		plugin_chain_player_clear = hat_player_clear;
+		hat_player_spawn_next = plugin_chain_player_spawn;
+		plugin_chain_player_spawn = hat_player_spawn;
 	}
 }

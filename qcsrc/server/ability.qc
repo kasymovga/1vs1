@@ -169,14 +169,14 @@ void(void) ability_init_delayed {
 	if not(ability_classes_count)
 		return;
 
-	ability_spectator_to_player_handle_next = gamehook_chain_spectator_to_player_handle;
-	gamehook_chain_spectator_to_player_handle = ability_spectator_to_player_handle;
-	ability_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = ability_player_spawn;
-	ability_gamemenu_send_next = gamehook_chain_gamemenu_send;
-	gamehook_chain_gamemenu_send = ability_gamemenu_send;
-	ability_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = ability_cmd_client_handle;
+	ability_spectator_to_player_handle_next = plugin_chain_spectator_to_player_handle;
+	plugin_chain_spectator_to_player_handle = ability_spectator_to_player_handle;
+	ability_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = ability_player_spawn;
+	ability_gamemenu_send_next = plugin_chain_gamemenu_send;
+	plugin_chain_gamemenu_send = ability_gamemenu_send;
+	ability_cmd_client_handle_next = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = ability_cmd_client_handle;
 }
 
 void(void) ability_init {

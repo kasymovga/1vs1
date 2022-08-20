@@ -143,7 +143,7 @@ void(void) weapon_melee_init {
 	if not(weapon_melee_init_done) {
 		WEAPON_MELEE_ABILITY = ability_register("melee", NULL);
 		weapon_melee_init_done = 1;
-		weapon_melee_bot_aim_next = gamehook_chain_bot_aim;
-		gamehook_chain_bot_aim = weapon_melee_bot_aim;
+		weapon_melee_bot_aim_next = plugin_chain_bot_aim;
+		plugin_chain_bot_aim = weapon_melee_bot_aim;
 	}
 }

@@ -75,22 +75,22 @@ void(void) warmup_init {
 	CVAR_CACHE(g_warmup_allguns);
 	CVAR_CACHE(g_warmup_allow_timeout);
 	warmup_active = cvar("g_warmup");
-	if (!gamehook_WarmupAllowed() || g_campaign)
+	if (!plugin_WarmupAllowed() || g_campaign)
 		warmup_active = 0; // these modes cannot work together, sorry
 
 	if not(warmup_active)
 		return;
 
-	warmup_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = warmup_player_spawn;
-	warmup_observer_spawn_next = gamehook_chain_observer_spawn;
-	gamehook_chain_observer_spawn = warmup_observer_spawn;
-	warmup_server_frame_next = gamehook_chain_world_frame_start;
-	gamehook_chain_world_frame_start = warmup_server_frame;
+	warmup_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = warmup_player_spawn;
+	warmup_observer_spawn_next = plugin_chain_observer_spawn;
+	plugin_chain_observer_spawn = warmup_observer_spawn;
+	warmup_server_frame_next = plugin_chain_world_frame_start;
+	plugin_chain_world_frame_start = warmup_server_frame;
 	warmup_note = noteline_new(warmup_note_message);
 	warmup_note_update();
-	warmup_player_equip_handle_next = gamehook_chain_player_equip_handle;
-	gamehook_chain_player_equip_handle = warmup_player_equip_handle;
+	warmup_player_equip_handle_next = plugin_chain_player_equip_handle;
+	plugin_chain_player_equip_handle = warmup_player_equip_handle;
 	warmup_start_ammo_shells = player_start_ammo_shells;
 	warmup_start_ammo_nails = player_start_ammo_nails;
 	warmup_start_ammo_rockets = player_start_ammo_rockets;

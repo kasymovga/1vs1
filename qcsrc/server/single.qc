@@ -217,27 +217,27 @@ void(void) single_init {
 	else
 		builtin_cvar_set("coop", "0");
 
-	gamehook_map_restart = single_map_restart;
-	gamehook_forbid_specatators = single_forbid_spectators;
-	single_player_equip_handle_next = gamehook_chain_player_equip_handle;
-	gamehook_chain_player_equip_handle = single_player_equip_handle;
-	gamehook_winning_condition = single_winning_condition;
-	gamehook_map_finish_message_mod = single_map_finish_message_mod;
-	gamehook_player_death_handle = single_player_death_handle;
-	gamehook_client_parms_new = single_client_parms_new;
-	gamehook_client_parms_change = single_client_parms_change;
-	gamehook_client_parms_decode = single_client_parms_decode;
-	gamehook_monster_team_switchable = single_monster_team_switchable;
-	single_player_think_next = gamehook_chain_player_think;
-	gamehook_chain_player_think = single_player_think;
-	single_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = single_player_spawn;
-	single_shutdown_next = gamehook_chain_shutdown;
-	gamehook_chain_shutdown = single_shutdown;
-	gamehook_monster_killed = single_monster_killed;
+	plugin_map_restart = single_map_restart;
+	plugin_forbid_specatators = single_forbid_spectators;
+	single_player_equip_handle_next = plugin_chain_player_equip_handle;
+	plugin_chain_player_equip_handle = single_player_equip_handle;
+	plugin_winning_condition = single_winning_condition;
+	plugin_map_finish_message_mod = single_map_finish_message_mod;
+	plugin_player_death_handle = single_player_death_handle;
+	plugin_client_parms_new = single_client_parms_new;
+	plugin_client_parms_change = single_client_parms_change;
+	plugin_client_parms_decode = single_client_parms_decode;
+	plugin_monster_team_switchable = single_monster_team_switchable;
+	single_player_think_next = plugin_chain_player_think;
+	plugin_chain_player_think = single_player_think;
+	single_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = single_player_spawn;
+	single_shutdown_next = plugin_chain_shutdown;
+	plugin_chain_shutdown = single_shutdown;
+	plugin_monster_killed = single_monster_killed;
 	if (game_type == GAME_TYPE_SINGLE) {
-		single_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
-		gamehook_chain_cmd_client_handle = single_cmd_client_handle;
+		single_cmd_client_handle_next = plugin_chain_cmd_client_handle;
+		plugin_chain_cmd_client_handle = single_cmd_client_handle;
 	}
 	entity e = spawn();
 	e.targetname = "endlevel";

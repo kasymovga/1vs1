@@ -66,10 +66,10 @@ float(string cmd, float tokens) hint_ClientCommandHandle {
 
 void(void) hint_init {
 	CVAR_CACHE(sv_hints);
-	hint_client_connect_real_next = gamehook_chain_client_connect_real;
-	gamehook_chain_client_connect_real = hint_client_connect_real;
-	hint_gamemenu_send_next = gamehook_chain_gamemenu_send;
-	gamehook_chain_gamemenu_send = hint_gamemenu_send;
-	hint_ClientCommandHandle_next = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = hint_ClientCommandHandle;
+	hint_client_connect_real_next = plugin_chain_client_connect_real;
+	plugin_chain_client_connect_real = hint_client_connect_real;
+	hint_gamemenu_send_next = plugin_chain_gamemenu_send;
+	plugin_chain_gamemenu_send = hint_gamemenu_send;
+	hint_ClientCommandHandle_next = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = hint_ClientCommandHandle;
 }

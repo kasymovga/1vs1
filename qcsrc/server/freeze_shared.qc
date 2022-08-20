@@ -42,11 +42,11 @@ void(string gt) freeze_shared_init {
 	ice_hook_unfroze = freeze_shared_ice_unfroze;
 	ice_hook_frozen_status = freeze_shared_ice_frozen_status;
 	ice_init();
-	freeze_shared_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = freeze_shared_player_spawn;
-	freeze_shared_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = freeze_shared_player_clear;
-	gamehook_score_give_frag_mod = freeze_shared_score_give_frag_mod;
+	freeze_shared_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = freeze_shared_player_spawn;
+	freeze_shared_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = freeze_shared_player_clear;
+	plugin_score_give_frag_mod = freeze_shared_score_give_frag_mod;
 	FREEZE_SHARED_SCORE_REVIVE = score_register("revs", SCORE_FLAG_SORT_PRIO_SECONDARY);
 	SP_STATUS = score_register("status", 0);
 }

@@ -632,24 +632,24 @@ void(void) rune_init_common {
 	if (sv_model_rune_vampire != "")
 		precache_model(sv_model_rune_decor);
 
-	rune_JumpVelocityMod_NextLink = gamehook_chain_JumpVelocityMod;
-	gamehook_chain_JumpVelocityMod = rune_JumpVelocityMod;
-	rune_SpeedMod_NextLink = gamehook_chain_physics_max_speed_mod;
-	gamehook_chain_physics_max_speed_mod = rune_SpeedMod;
-	rune_WeaponRateFactor_NextLink = gamehook_chain_weapon_rate_factor;
-	gamehook_chain_weapon_rate_factor = rune_WeaponRateFactor;
-	rune_DamageForceDone_NextLink = gamehook_chain_damage_force_done;
-	gamehook_chain_damage_force_done = rune_DamageForceDone;
-	rune_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = rune_PlayerClear;
-	rune_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
-	gamehook_chain_spectator_copy = rune_SpectateCopy;
-	rune_PlayerVisibleThroughWallFor_NextLink = gamehook_chain_PlayerVisibleThroughWallFor;
-	gamehook_chain_PlayerVisibleThroughWallFor = rune_PlayerVisibleThroughWallFor;
-	rune_PlayerCanSeeHealthFor_NextLink = gamehook_chain_PlayerCanSeeHealthFor;
-	gamehook_chain_PlayerCanSeeHealthFor = rune_PlayerCanSeeHealthFor;
-	rune_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = rune_DamageForceModsSet;
+	rune_JumpVelocityMod_NextLink = plugin_chain_JumpVelocityMod;
+	plugin_chain_JumpVelocityMod = rune_JumpVelocityMod;
+	rune_SpeedMod_NextLink = plugin_chain_physics_max_speed_mod;
+	plugin_chain_physics_max_speed_mod = rune_SpeedMod;
+	rune_WeaponRateFactor_NextLink = plugin_chain_weapon_rate_factor;
+	plugin_chain_weapon_rate_factor = rune_WeaponRateFactor;
+	rune_DamageForceDone_NextLink = plugin_chain_damage_force_done;
+	plugin_chain_damage_force_done = rune_DamageForceDone;
+	rune_PlayerClear_NextLink = plugin_chain_player_clear;
+	plugin_chain_player_clear = rune_PlayerClear;
+	rune_SpectateCopy_NextLink = plugin_chain_spectator_copy;
+	plugin_chain_spectator_copy = rune_SpectateCopy;
+	rune_PlayerVisibleThroughWallFor_NextLink = plugin_chain_PlayerVisibleThroughWallFor;
+	plugin_chain_PlayerVisibleThroughWallFor = rune_PlayerVisibleThroughWallFor;
+	rune_PlayerCanSeeHealthFor_NextLink = plugin_chain_PlayerCanSeeHealthFor;
+	plugin_chain_PlayerCanSeeHealthFor = rune_PlayerCanSeeHealthFor;
+	rune_DamageForceModsSet_NextLink = plugin_chain_damage_mods_set;
+	plugin_chain_damage_mods_set = rune_DamageForceModsSet;
 	if (g_runes) {
 		entity e;
 		e = spawn();

@@ -89,7 +89,7 @@ float(entity spot, entity playerlist, float teamcheck) spawn_score {
 		if(spot.restriction == 2)
 			return -1;
 	}
-	if (!gamehook_spawn_score_good(spot))
+	if (!plugin_spawn_score_good(spot))
 		return -1;
 
 	player = playerlist;

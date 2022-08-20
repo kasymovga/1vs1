@@ -1372,50 +1372,50 @@ void(void) race_init {
 		g_cts = 1;
 		g_race_qualifying = 1;
 		race_records_path = CTS_RECORD;
-		race_gamemenu_send_next = gamehook_chain_gamemenu_send;
-		gamehook_chain_gamemenu_send = race_gamemenu_send;
-		race_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
-		gamehook_chain_cmd_client_handle = race_cmd_client_handle;
+		race_gamemenu_send_next = plugin_chain_gamemenu_send;
+		plugin_chain_gamemenu_send = race_gamemenu_send;
+		race_cmd_client_handle_next = plugin_chain_cmd_client_handle;
+		plugin_chain_cmd_client_handle = race_cmd_client_handle;
 	}
 	if (g_race_qualifying) {
 		player_independent = 1;
 		race_records_load();
-		race_shutdown_next = gamehook_chain_shutdown;
-		gamehook_chain_shutdown = race_shutdown;
-		race_client_real_connect_next = gamehook_chain_client_connect_real;
-		gamehook_chain_client_connect_real = race_client_real_connect;
+		race_shutdown_next = plugin_chain_shutdown;
+		plugin_chain_shutdown = race_shutdown;
+		race_client_real_connect_next = plugin_chain_client_connect_real;
+		plugin_chain_client_connect_real = race_client_real_connect;
 	}
 	if (g_race) {
-		gamehook_winning_condition = race_winning_condition;
-		gamehook_OvertimeHandle = race_OvertimeHandle;
-		gamehook_WarmupAllowed = race_WarmupAllowed;
-		gamehook_ClearScoreAllowed = race_ClearScoresAllowed;
+		plugin_winning_condition = race_winning_condition;
+		plugin_OvertimeHandle = race_OvertimeHandle;
+		plugin_WarmupAllowed = race_WarmupAllowed;
+		plugin_ClearScoreAllowed = race_ClearScoresAllowed;
 	}
 	race_score_setup();
-	gamehook_InitSpectator = race_InitSpectator;
-	gamehook_world_reset = race_world_reset;
-	gamehook_physics_player_allowed_to_move = race_physics_player_allowed_to_move;
-	race_player_can_fire_NextLink = gamehook_chain_player_can_fire;
-	gamehook_chain_player_can_fire = race_player_can_fire;
-	gamehook_physics_frame_begin_hook = race_physics_frame_begin_hook;
-	gamehook_client_put_spawn_point = race_client_put_spawn_point;
-	race_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = race_player_spawn;
-	race_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = race_player_clear;
-	race_observer_spawn_next = gamehook_chain_observer_spawn;
-	gamehook_chain_observer_spawn = race_observer_spawn;
-	gamehook_spawn_score_good = race_spawn_score_good;
-	race_score_winning_condition_countdown_orig = gamehook_score_winning_condition_countdown;
-	gamehook_score_winning_condition_countdown = race_score_winning_condition_countdown;
-	gamehook_client_fix_cvars = race_client_fix_cvars;
-	gamehook_world_record_for_map = race_world_record_for_map;
-	gamehook_ReadyAllowed = race_ReadyAllowed;
-	gamehook_ready_restart_hard = race_ready_restart_hard;
-	gamehook_havocbot_role_choose = race_role_choose;
-	gamehook_SuddenDeathMessageMod = race_SuddenDeathMod;
-	race_cmd_game_handle_next = gamehook_chain_cmd_game_handle;
-	gamehook_chain_cmd_game_handle = race_cmd_game_handle;
+	plugin_InitSpectator = race_InitSpectator;
+	plugin_world_reset = race_world_reset;
+	plugin_physics_player_allowed_to_move = race_physics_player_allowed_to_move;
+	race_player_can_fire_NextLink = plugin_chain_player_can_fire;
+	plugin_chain_player_can_fire = race_player_can_fire;
+	plugin_physics_frame_begin_hook = race_physics_frame_begin_hook;
+	plugin_client_put_spawn_point = race_client_put_spawn_point;
+	race_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = race_player_spawn;
+	race_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = race_player_clear;
+	race_observer_spawn_next = plugin_chain_observer_spawn;
+	plugin_chain_observer_spawn = race_observer_spawn;
+	plugin_spawn_score_good = race_spawn_score_good;
+	race_score_winning_condition_countdown_orig = plugin_score_winning_condition_countdown;
+	plugin_score_winning_condition_countdown = race_score_winning_condition_countdown;
+	plugin_client_fix_cvars = race_client_fix_cvars;
+	plugin_world_record_for_map = race_world_record_for_map;
+	plugin_ReadyAllowed = race_ReadyAllowed;
+	plugin_ready_restart_hard = race_ready_restart_hard;
+	plugin_havocbot_role_choose = race_role_choose;
+	plugin_SuddenDeathMessageMod = race_SuddenDeathMod;
+	race_cmd_game_handle_next = plugin_chain_cmd_game_handle;
+	plugin_chain_cmd_game_handle = race_cmd_game_handle;
 }
 
 entity race_target_frags_filter_global;

@@ -13,7 +13,7 @@ void(void) score_damage_init {
 	if not(cvar("g_score_damage"))
 		return;
 
-	score_damage_player_damage_handle_next = gamehook_chain_player_damage_handle;
-	gamehook_chain_player_damage_handle = score_damage_player_damage_handle;
+	score_damage_player_damage_handle_next = plugin_chain_player_damage_handle;
+	plugin_chain_player_damage_handle = score_damage_player_damage_handle;
 	SP_DAMAGE = score_register("damage", 0);
 }

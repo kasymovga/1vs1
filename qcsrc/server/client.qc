@@ -71,7 +71,7 @@ void(void) client_put {
 
 			team_join_best(self, FALSE);
 		}
-		spot = gamehook_client_put_spawn_point();
+		spot = plugin_client_put_spawn_point();
 		if (!spot) {
 			if (clienttype(self) == CLIENTTYPE_REAL)
 				centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
@@ -174,7 +174,7 @@ void(void) client_parms_new { //called by engine
 	parm2 = 0;
 	parm3 = 0;
 	parm4 = 0;
-	gamehook_client_parms_new();
+	plugin_client_parms_new();
 }
 
 void(void) client_parms_change { //called by engine
@@ -182,7 +182,7 @@ void(void) client_parms_change { //called by engine
 	parm1 = self.parm_idlesince - time;
 	parm2 = self.muted;
 	parm3 = self.ability_class;
-	gamehook_client_parms_change();
+	plugin_client_parms_change();
 }
 
 void(void) client_parms_decode {
@@ -198,7 +198,7 @@ void(void) client_parms_decode {
 	self.ability_class = parm3;
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
 	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
-	gamehook_client_parms_decode();
+	plugin_client_parms_decode();
 	client_voip_setup(self);
 }
 
@@ -342,7 +342,7 @@ void(void) client_kill { //called by engine, "kill" command
 }
 
 void(entity e) client_fix_cvars{
-	stuffcmd(e, strcat("\nin_bindmap 0 0\n", gamehook_client_fix_cvars(), "\n"));
+	stuffcmd(e, strcat("\nin_bindmap 0 0\n", plugin_client_fix_cvars(), "\n"));
 }
 
 float() client_preconnect_abort {
@@ -418,7 +418,7 @@ void(void) client_connect { //called by engine
 	if (g_campaign) {
 		self.classname = "player";
 		campaign_bots_may_start = 1;
-	} else if (gamehook_forbid_specatators()) {
+	} else if (plugin_forbid_specatators()) {
 		self.classname = "player";
 	} else {
 		self.classname = "observer";
@@ -443,12 +443,12 @@ void(void) client_connect { //called by engine
 		if (!sv_foginterval && client_fog != "")
 			stuffcmd(self, strcat("\nfog ", client_fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-		gamehook_chain_client_connect_real();
+		plugin_chain_client_connect_real();
 		vote_client_connect();
 	} else {
 		self.scorekeeper.clientversion = CLIENT_BOT;
 	}
-	gamehook_chain_client_connect();
+	plugin_chain_client_connect();
 }
 
 void(void) client_disconnect { //called by engine
@@ -498,7 +498,7 @@ void(void) client_disconnect { //called by engine
 	ready_count();
 	client_cvars_free();
 	if (clienttype(self) == CLIENTTYPE_REAL) {
-		gamehook_chain_client_disconnect_real();
+		plugin_chain_client_disconnect_real();
 		vote_client_connect();
 	}
 	if (team_mode) {
@@ -612,7 +612,7 @@ void(void) client_post_think { //called by engine
 
 		if (maxidle)
 		if not(g_campaign)
-		if not(gamehook_forbid_specatators())
+		if not(plugin_forbid_specatators())
 		if not(map_intermission_running) {
 			timeleft = ceil(maxidle - (time - self.parm_idlesince));
 			if (timeleft <= 0) {

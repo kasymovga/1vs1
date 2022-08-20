@@ -146,12 +146,12 @@ void(void) coop_init {
 	SP_STATUS = score_register("status", 0);
 	CVAR_CACHE(g_coop_monster_factor);
 	CVAR_CACHE(g_coop_monster_base);
-	coop_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = coop_player_clear;
-	coop_observer_spawn_next = gamehook_chain_observer_spawn;
-	gamehook_chain_observer_spawn = coop_observer_spawn;
-	gamehook_monster_quant = coop_monster_quant;
-	gamehook_monster_killed = coop_monster_killed;
+	coop_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = coop_player_clear;
+	coop_observer_spawn_next = plugin_chain_observer_spawn;
+	plugin_chain_observer_spawn = coop_observer_spawn;
+	plugin_monster_quant = coop_monster_quant;
+	plugin_monster_killed = coop_monster_killed;
 	team_play_activate();
 	team_teams_set_count(1);
 	entity_initialize(world, coop_init_delayed, INITPRIO_GAMETYPE);

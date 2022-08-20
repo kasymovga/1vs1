@@ -353,7 +353,7 @@ void() player_effects {
 		return;
 
 	fire_apply_effect(self);
-	gamehook_chain_player_effects();
+	plugin_chain_player_effects();
 	if (g_fullbrightplayers)
 		self.effects = self.effects | EFFECT_FULLBRIGHT;
 
@@ -795,7 +795,7 @@ void(float killed) player_clear {
 		weapon_action(j, WR_CLEAR);
 		ATTACK_FINISHED_FOR(self, j) = 0;
 	}
-	gamehook_chain_player_clear(killed);
+	plugin_chain_player_clear(killed);
 	//Clear waypoints
 	WaypointSprite_PlayerDead();
 	if (self.classname == "disconnecting") {
@@ -945,7 +945,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				bprint ("^1",s, "^1 was pushed into the line of fire by ^1", a, "\n");
 			else if (deathtype == DEATH_FIRE)
 				bprint ("^1",s, "^1 was burnt to death by ^1", a, "\n");
-			else if not(gamehook_chain_player_obituary_frag(deathtype, targ, inflictor, attacker))
+			else if not(plugin_chain_player_obituary_frag(deathtype, targ, inflictor, attacker))
 				bprint ("^1",s, "^1 was ", weapon_fragprefix, "^1fragged by ", a, "\n");
 
 			if (attacker_is_player) {
@@ -1040,15 +1040,15 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_damage {
 	float take, save, waves, sdelay, dh, da;
-	gamehook_chain_player_damage_mod = 1;
-	if (gamehook_chain_player_damage_handle(inflictor, attacker, _damage, deathtype, hitloc, force))
+	plugin_chain_player_damage_mod = 1;
+	if (plugin_chain_player_damage_handle(inflictor, attacker, _damage, deathtype, hitloc, force))
 		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
-	_damage = _damage * gamehook_chain_player_damage_mod;
+	_damage = _damage * plugin_chain_player_damage_mod;
 	violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
-	save = bound(0, _damage * gamehook_chain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
+	save = bound(0, _damage * plugin_chain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
 	take = bound(0, _damage - save, _damage);
 	if (save > 10)
 		sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
@@ -1118,7 +1118,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.pushltime = 0;
 
 	if (self.health < 1)
-	if not(gamehook_player_death_handle(attacker, inflictor, deathtype)) {
+	if not(plugin_player_death_handle(attacker, inflictor, deathtype)) {
 		float defer_client_kill_now_team_change;
 		defer_client_kill_now_team_change = FALSE;
 		float switchweapon_save = self.weapon;
@@ -1142,7 +1142,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		}
         entity_drop_entities(self);
 		// clear selected player display
-		if not(gamehook_chain_player_death_weapon_throw_handle())
+		if not(plugin_chain_player_death_weapon_throw_handle())
 			weapon_throw(randomvec() * 125 + '0 0 200', (self.mins + self.maxs) * 0.5, FALSE);
 
 		self.switchweapon = switchweapon_save;
@@ -1411,7 +1411,7 @@ float(entity plr, entity viewer) player_alpha {
 	if (viewer.classname == "spectator") {
 		viewer = viewer.enemy;
 	}
-	float sa = gamehook_chain_player_alpha_mod(plr, viewer, dalpha);
+	float sa = plugin_chain_player_alpha_mod(plr, viewer, dalpha);
 	if (plr == viewer && sa < 0.01) {
 		sa = 0.01;
 	} else if (sa <= 0) {
@@ -1660,7 +1660,7 @@ void() player_setup_model {
 		player_species_setup();
 
 	if (forcecolor > -2) {
-		float colors = gamehook_chain_player_colors_mod(forcecolor);
+		float colors = plugin_chain_player_colors_mod(forcecolor);
 		if (self.clientcolors != colors)
 			player_set_colors(self, colors);
 	}
@@ -1674,7 +1674,7 @@ void() player_setup_model {
 void(entity player) player_to_spec {
 	if (player.classname == "player" || (player.classname == "spectator" && player.team >= 0))
 	if not(g_campaign)
-	if not(gamehook_forbid_specatators()) {
+	if not(plugin_forbid_specatators()) {
 		entity oldself = self;
 		self = player;
 		player_clear(FALSE);
@@ -1751,22 +1751,22 @@ void() player_respawn_countdown {
 
 void() player_regen {
 	float minh, maxh, limith, limita;
-	gamehook_player_health_armor_rot_regen = gamehook_player_health_max_mod = gamehook_player_armor_health_limit_mod = gamehook_player_regen_mod = gamehook_player_rot_mod = 1;
-	gamehook_chain_player_health_armor_fuel_mods_set();
-	if (gamehook_player_health_armor_rot_regen) {
-		limith = g_balance_health_limit * gamehook_player_armor_health_limit_mod;
-		maxh = g_balance_health_rotstable * gamehook_player_health_max_mod;
-		minh = g_balance_health_regenstable * gamehook_player_health_max_mod;
-		self.health = player_calc_rot_regen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, gamehook_player_regen_mod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, gamehook_player_rot_mod * frametime * (time > self.pauserothealth_finished), limith);
+	plugin_player_health_armor_rot_regen = plugin_player_health_max_mod = plugin_player_armor_health_limit_mod = plugin_player_regen_mod = plugin_player_rot_mod = 1;
+	plugin_chain_player_health_armor_fuel_mods_set();
+	if (plugin_player_health_armor_rot_regen) {
+		limith = g_balance_health_limit * plugin_player_armor_health_limit_mod;
+		maxh = g_balance_health_rotstable * plugin_player_health_max_mod;
+		minh = g_balance_health_regenstable * plugin_player_health_max_mod;
+		self.health = player_calc_rot_regen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, plugin_player_regen_mod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, plugin_player_rot_mod * frametime * (time > self.pauserothealth_finished), limith);
 		// if player rotted to death...  die!
 		if (self.health < 1)
 			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 
-		limita = g_balance_armor_limit * gamehook_player_armor_health_limit_mod;
-		self.armorvalue = player_calc_rot_regen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, gamehook_player_regen_mod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, gamehook_player_rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
+		limita = g_balance_armor_limit * plugin_player_armor_health_limit_mod;
+		self.armorvalue = player_calc_rot_regen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, plugin_player_regen_mod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, plugin_player_rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
 	}
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
-		self.ammo_fuel = player_calc_rot_regen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, gamehook_player_regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, gamehook_player_rot_mod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
+		self.ammo_fuel = player_calc_rot_regen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, plugin_player_regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, plugin_player_rot_mod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
 	}
 }
 
@@ -1788,7 +1788,7 @@ void() player_think {
 		self.angles = self.lastV_angle;
 		self.fixangle = TRUE;
 	}
-	gamehook_chain_player_think();
+	plugin_chain_player_think();
 	if (frametime) {
 		fire_apply_damage(self);
 		player_effects();
@@ -1939,7 +1939,7 @@ void(void) player_impulse {
 				weapon_previous(2);
 				break;
 			case 17:
-				if (gamehook_chain_weapon_throw_handle())
+				if (plugin_chain_weapon_throw_handle())
 					return;
 
 				weapon_throw(weapon_calculate_projectile_velocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
@@ -2027,7 +2027,7 @@ float(void) player_customize {
 	else
 		self.exteriormodeltoclient = world;
 
-	if (gamehook_chain_PlayerVisibleThroughWallFor(self.owner, other))
+	if (plugin_chain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EFFECT_NODEPTHTEST;
 	else
 		self.effects &= ~EFFECT_NODEPTHTEST;
@@ -2048,7 +2048,7 @@ float(void) player_body_customize {
 		else
 			self.tag_entity = self.body;
 	}
-	if (gamehook_chain_PlayerVisibleThroughWallFor(o, other))
+	if (plugin_chain_PlayerVisibleThroughWallFor(o, other))
 		self.effects |= EFFECT_NODEPTHTEST;
 	else
 		self.effects &= ~EFFECT_NODEPTHTEST;
@@ -2124,7 +2124,7 @@ void(entity spot) player_spawn {
 	self.body.nextthink = 0;
 	self.body.dead_frame = -1;
 	setmodel(self, "null");
-	if not(gamehook_chain_player_equip_handle()) {
+	if not(plugin_chain_player_equip_handle()) {
 		self.ammo_shells = player_start_ammo_shells;
 		self.ammo_nails = player_start_ammo_nails;
 		self.ammo_rockets = player_start_ammo_rockets;
@@ -2187,7 +2187,7 @@ void(entity spot) player_spawn {
 	oldself = self;
 	oldother = other;
 	player_effects();
-	gamehook_chain_player_spawn(spot);
+	plugin_chain_player_spawn(spot);
 	if (self.classname == "player") { //spawn can be aborted by game hook
 		if (g_spawnsound)
 			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
@@ -2284,7 +2284,7 @@ float(entity plr, float wep) player_can_fire {
 	if (timeout_status == 2) //don't allow the player to shoot while game is paused
 		return FALSE;
 
-	return gamehook_chain_player_can_fire(plr, wep);
+	return plugin_chain_player_can_fire(plr, wep);
 }
 
 .float hasweapon_complain_spam;
@@ -2400,7 +2400,7 @@ void(entity pl, float t, float s, float noprint) player_set_team {
 
 entity(entity pl) player_entity {
 	if (pl.classname == "player")
-		return gamehook_chain_player_entity(pl);
+		return plugin_chain_player_entity(pl);
 
 	return pl;
 }
@@ -2600,8 +2600,8 @@ void() player_init {
 		return;
 
 	player_init_done = TRUE;
-	player_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = player_cmd_client_handle;
-	player_gamemenu_add_items_next = gamehook_chain_gamemenu_send;
-	gamehook_chain_gamemenu_send = player_gamemenu_add_items;
+	player_cmd_client_handle_next = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = player_cmd_client_handle;
+	player_gamemenu_add_items_next = plugin_chain_gamemenu_send;
+	plugin_chain_gamemenu_send = player_gamemenu_add_items;
 }

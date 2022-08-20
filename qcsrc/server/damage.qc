@@ -116,12 +116,12 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 		if (targ == attacker)
 			_damage = _damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
-		gamehook_chain_damage_mod = gamehook_chain_damage_mod_force = gamehook_chain_damage_mod_mirror = gamehook_chain_damage_mod_force_mirror = 1;
-		gamehook_chain_damage_mods_set(targ, attacker, deathtype);
-		_damage = _damage * gamehook_chain_damage_mod;
-		force = force * gamehook_chain_damage_mod_force;
-		mirrordamage = mirrordamage * gamehook_chain_damage_mod_mirror;
-		mirrorforce = mirrorforce * gamehook_chain_damage_mod_force_mirror;
+		plugin_chain_damage_mod = plugin_chain_damage_mod_force = plugin_chain_damage_mod_mirror = plugin_chain_damage_mod_force_mirror = 1;
+		plugin_chain_damage_mods_set(targ, attacker, deathtype);
+		_damage = _damage * plugin_chain_damage_mod;
+		force = force * plugin_chain_damage_mod_force;
+		mirrordamage = mirrordamage * plugin_chain_damage_mod_mirror;
+		mirrorforce = mirrorforce * plugin_chain_damage_mod_force_mirror;
 		// count the damage
 		if (attacker)
 		if (!targ.deadflag)
@@ -195,11 +195,11 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 		self.lastdamage = time;
 	}
 	self = oldself;
-	gamehook_chain_damage_force_done(targ, attacker, _damage, force);
+	plugin_chain_damage_force_done(targ, attacker, _damage, force);
 	// apply mirror damage if any
 	if (mirrordamage > 0 || mirrorforce > 0) {
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
-		if not(gamehook_chain_MirrorDamageHandle(attacker, inflictor, mirrordamage, force)) {
+		if not(plugin_chain_MirrorDamageHandle(attacker, inflictor, mirrordamage, force)) {
 			damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
 		}
 	}

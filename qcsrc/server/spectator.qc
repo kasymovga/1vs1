@@ -24,7 +24,7 @@ void(void) spectator_note_message {
 }
 
 void(entity spectatee) spectator_copy {
-	gamehook_chain_spectator_copy(spectatee);
+	plugin_chain_spectator_copy(spectatee);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;
@@ -145,7 +145,7 @@ void() spectator_think {
 	oldspectatee_status = self.spectatee_status & 255;
 	self.spectatee_status = num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0);
 	if ((self.spectatee_status & 255) != (oldspectatee_status & 255))
-		gamehook_InitSpectator();
+		plugin_InitSpectator();
 }
 
 void() spectator_observer_think {
@@ -179,7 +179,7 @@ void() spectator_observer_think {
 void() spectator_to_player {
 	if (client_join_allowed()) {
 		self.parm_idlesince = time;
-		if (gamehook_chain_spectator_to_player_handle())
+		if (plugin_chain_spectator_to_player_handle())
 			return;
 
 		team_teams_allowed(self);
@@ -220,7 +220,7 @@ void() spectator_note_update {
 
 void(float frags_team_reset) spectator_observer_spawn {
 	entity spot;
-	gamehook_chain_observer_spawn();
+	plugin_chain_observer_spawn();
 	player_clear(FALSE);
 	spot = find(world, classname, "info_intermission");
 	if not(spot)

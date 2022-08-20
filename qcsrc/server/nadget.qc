@@ -247,26 +247,26 @@ void(void) nadget_init_common {
 	addstat(STAT_HGBONUS, STAT_INT, hg_bonus);
 	addstat(STAT_HGBONUSTYPE, STAT_INT, hg_bonustype);
 	addstat(STAT_HGREFIRE, STAT_FLOAT, hg_next1);
-	nadget_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = nadget_player_clear;
-	nadget_player_can_fire_next = gamehook_chain_player_can_fire;
-	gamehook_chain_player_can_fire = nadget_player_can_fire;
-	nadget_gamemenu_send_next = gamehook_chain_gamemenu_send;
-	gamehook_chain_gamemenu_send = nadget_gamemenu_send;
-	nadget_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = nadget_cmd_client_handle;
-	nadget_player_damage_handle_next = gamehook_chain_player_damage_handle;
-	gamehook_chain_player_damage_handle = nadget_player_damage_handle;
-	nadget_spectator_to_player_handle_next = gamehook_chain_spectator_to_player_handle;
-	gamehook_chain_spectator_to_player_handle = nadget_spectator_to_player_handle;
-	nadget_PlayerCanBeCarrier_next = gamehook_chain_PlayerCanBeCarrier;
-	gamehook_chain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
-	nadget_spectator_copy_next = gamehook_chain_spectator_copy;
-	gamehook_chain_spectator_copy = nadget_spectator_copy;
-	nadget_bot_aim_next = gamehook_chain_bot_aim;
-	gamehook_chain_bot_aim = nadget_bot_aim;
-	nadget_player_obituary_frag_next = gamehook_chain_player_obituary_frag;
-	gamehook_chain_player_obituary_frag = nadget_player_obituary_frag;
+	nadget_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = nadget_player_clear;
+	nadget_player_can_fire_next = plugin_chain_player_can_fire;
+	plugin_chain_player_can_fire = nadget_player_can_fire;
+	nadget_gamemenu_send_next = plugin_chain_gamemenu_send;
+	plugin_chain_gamemenu_send = nadget_gamemenu_send;
+	nadget_cmd_client_handle_next = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = nadget_cmd_client_handle;
+	nadget_player_damage_handle_next = plugin_chain_player_damage_handle;
+	plugin_chain_player_damage_handle = nadget_player_damage_handle;
+	nadget_spectator_to_player_handle_next = plugin_chain_spectator_to_player_handle;
+	plugin_chain_spectator_to_player_handle = nadget_spectator_to_player_handle;
+	nadget_PlayerCanBeCarrier_next = plugin_chain_PlayerCanBeCarrier;
+	plugin_chain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
+	nadget_spectator_copy_next = plugin_chain_spectator_copy;
+	plugin_chain_spectator_copy = nadget_spectator_copy;
+	nadget_bot_aim_next = plugin_chain_bot_aim;
+	plugin_chain_bot_aim = nadget_bot_aim;
+	nadget_player_obituary_frag_next = plugin_chain_player_obituary_frag;
+	plugin_chain_player_obituary_frag = nadget_player_obituary_frag;
 	if (g_nadgets_double) {
 		addstat(STAT_HGTYPE2, STAT_INT, hg_type2);
 		addstat(STAT_HGREFIRE2, STAT_FLOAT, hg_next2);
@@ -289,12 +289,12 @@ void(void) nadget_init_common {
 	projectile_register_auto(PROJECTILE_HG_TRANSLOC, NADGET_SIZE_TRANSLOC * '1 -1 1');
 	projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3');
 	projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
-	nadget_observer_spawn_next = gamehook_chain_observer_spawn;
-	gamehook_chain_observer_spawn = nadget_observer_spawn;
-	nadget_PlayerPreThink_next = gamehook_chain_player_think;
-	gamehook_chain_player_think = nadget_PlayerPreThink;
-	nadget_weapon_throw_handle_next = gamehook_chain_weapon_throw_handle;
-	gamehook_chain_weapon_throw_handle = nadget_weapon_throw_handle;
+	nadget_observer_spawn_next = plugin_chain_observer_spawn;
+	plugin_chain_observer_spawn = nadget_observer_spawn;
+	nadget_PlayerPreThink_next = plugin_chain_player_think;
+	plugin_chain_player_think = nadget_PlayerPreThink;
+	nadget_weapon_throw_handle_next = plugin_chain_weapon_throw_handle;
+	plugin_chain_weapon_throw_handle = nadget_weapon_throw_handle;
 	Napalm_Init();
 	hint_add("You can detonate FireTrap of enemy shooting on it");
 	hint_add("Translocator nadget can be used as teleporting or killing enemy shooting directly on enemy");
@@ -1015,6 +1015,6 @@ void nadget_Pick(float tokens) {
 }
 
 float nadget_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
-	gamehook_chain_player_damage_mod *= nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
+	plugin_chain_player_damage_mod *= nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
 	return nadget_player_damage_handle_next(inflictor, attacker, _damage, deathtype, hitloc, force);
 }

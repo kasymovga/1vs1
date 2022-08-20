@@ -233,9 +233,9 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 	if (self.health < 1) {
 		sound_stop(self, CHAN_TRIGGER);
 		monster_sound(self, self.noise2, FALSE);
-		gamehook_monster_killed(attacker);
+		plugin_monster_killed(attacker);
 		entity o = self.owner;
-		float quant = gamehook_monster_quant();
+		float quant = plugin_monster_quant();
 		if (o.spawnflags & 1) {
 			o.nextthink = time + o.respawntime;
 			o.dmg = o.dmg + quant;
@@ -462,7 +462,7 @@ void monster_shield_destroy(void) {
 }
 
 void monster_spawn_think() {
-	float quant = gamehook_monster_quant();
+	float quant = plugin_monster_quant();
 	if (team_mode)
 	if not(self.team)
 		return;
@@ -521,7 +521,7 @@ void monster_spawn_use() {
 		self.reset();
 
 	if (activator)
-	if (gamehook_monster_team_switchable())
+	if (plugin_monster_team_switchable())
 		self.team = activator.team;
 
 	if (self.lastteleporttime && self.lastteleporttime + self.respawntime > time)

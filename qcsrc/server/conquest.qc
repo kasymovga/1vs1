@@ -357,24 +357,24 @@ void(void) conquest_init {
 	if (g_conq_capture_time <= 0)
 		g_conq_capture_time = 1;
 
-	gamehook_winning_condition = conquest_winning_condition;
-	gamehook_score_give_frag_mod = conquest_score_give_frag_mod;
-	gamehook_client_put_spawn_point = conquest_client_put_spawn_point;
-	gamehook_player_death_handle = onslaught_DeathHandle;
-	onslaught_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = onslaught_player_spawn;
-	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = onslaught_PlayerClear;
-	gamehook_world_reset = conquest_world_reset;
-	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
+	plugin_winning_condition = conquest_winning_condition;
+	plugin_score_give_frag_mod = conquest_score_give_frag_mod;
+	plugin_client_put_spawn_point = conquest_client_put_spawn_point;
+	plugin_player_death_handle = onslaught_DeathHandle;
+	onslaught_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = onslaught_player_spawn;
+	onslaught_PlayerClear_NextLink = plugin_chain_player_clear;
+	plugin_chain_player_clear = onslaught_PlayerClear;
+	plugin_world_reset = conquest_world_reset;
+	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	if (cvar("g_conq_use_ons")) {
-		conquest_ons_entity_spawn_pre_NextLink = gamehook_chain_entity_spawn_pre;
-		gamehook_chain_entity_spawn_pre = conquest_ons_entity_spawn_pre;
+		conquest_ons_entity_spawn_pre_NextLink = plugin_chain_entity_spawn_pre;
+		plugin_chain_entity_spawn_pre = conquest_ons_entity_spawn_pre;
 	}
 	if (cvar("g_conq_use_ctf_and_dom")) {
-		conquest_ctf_and_dom_entity_spawn_pre_NextLink = gamehook_chain_entity_spawn_pre;
-		gamehook_chain_entity_spawn_pre = conquest_ctf_and_dom_entity_spawn_pre;
+		conquest_ctf_and_dom_entity_spawn_pre_NextLink = plugin_chain_entity_spawn_pre;
+		plugin_chain_entity_spawn_pre = conquest_ctf_and_dom_entity_spawn_pre;
 	}
-	gamehook_havocbot_role_choose = conquest_role_choose;
+	plugin_havocbot_role_choose = conquest_role_choose;
 	entity_initialize(world, conquest_delayedinit, INITPRIO_LAST);
 }

@@ -44,6 +44,6 @@ void() backpack_init {
 		return;
 
 	backpack_init_done = TRUE;
-	backpack_player_death_weapon_throw_handle_next = gamehook_chain_player_death_weapon_throw_handle;
-	gamehook_chain_player_death_weapon_throw_handle = backpack_player_death_weapon_throw_handle;
+	backpack_player_death_weapon_throw_handle_next = plugin_chain_player_death_weapon_throw_handle;
+	plugin_chain_player_death_weapon_throw_handle = backpack_player_death_weapon_throw_handle;
 }

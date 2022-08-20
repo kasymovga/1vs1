@@ -39,7 +39,7 @@ void(void) physics_check_water_jump_hook {
 }
 
 float(void) physics_jump_velocity_mod {
-	return gamehook_chain_JumpVelocityMod();
+	return plugin_chain_JumpVelocityMod();
 }
 
 void(void) physics_landing_hook {
@@ -98,7 +98,7 @@ void(void) physics_on_crouch_hook {
 float(void) physics_max_speed_mod {
 	float maxspd_mod, spd;
 	string temps;
-	maxspd_mod = gamehook_chain_physics_max_speed_mod();
+	maxspd_mod = plugin_chain_physics_max_speed_mod();
 	if (self.classname != "player")
 		maxspd_mod = self.spectatorspeed * sv_spectator_speed_multiplier;
 
@@ -141,7 +141,7 @@ void(void) physics_frame_end_hook {
 
 void(void) physics_frame_begin_hook {
 	float f;
-	gamehook_physics_frame_begin_hook();
+	plugin_physics_frame_begin_hook();
 	physics_frame_begin_origin = self.origin;
 	physics_current_player = self;
 	if (self.punchangle != '0 0 0') {
@@ -272,7 +272,7 @@ void(void) physics_player_pre { //called by engine
 		float allowed_to_move = 0;
 		if (time >= map_starttime || map_restart_active)
 		if not(map_finished)
-		if (gamehook_physics_player_allowed_to_move())
+		if (plugin_physics_player_allowed_to_move())
 			allowed_to_move = 1;
 
 		if (allowed_to_move) {
@@ -429,8 +429,8 @@ void(void) physics_climb_init {
 		return;
 
 	physics_climb_init_done = 1;
-	physics_weapon_switch_mod_next = gamehook_chain_weapon_frame_switch_mod;
-	gamehook_chain_weapon_frame_switch_mod = physics_weapon_switch_mod;
+	physics_weapon_switch_mod_next = plugin_chain_weapon_frame_switch_mod;
+	plugin_chain_weapon_frame_switch_mod = physics_weapon_switch_mod;
 }
 
 void(entity e, string args, float set) physics_ability_init {
@@ -542,8 +542,8 @@ void(void) physics_init {
 	if not(g_sideview) {
 		CVAR_CACHE(g_sideview);
 		if (g_sideview) {
-			physics_sideview_player_alpha_mod_next = gamehook_chain_player_alpha_mod;
-			gamehook_chain_player_alpha_mod = physics_sideview_player_alpha_mod;
+			physics_sideview_player_alpha_mod_next = plugin_chain_player_alpha_mod;
+			plugin_chain_player_alpha_mod = physics_sideview_player_alpha_mod;
 		}
 	}
 	CVAR_CACHE(g_sideview_up);
@@ -567,10 +567,10 @@ void(void) physics_init {
 			e.player_physic.SendFlags |= 3;
 		}
 	} else {
-		physics_client_connect_real_next = gamehook_chain_client_connect_real;
-		gamehook_chain_client_connect_real = physics_client_connect_real;
-		physics_client_disconnect_real_next = gamehook_chain_client_disconnect_real;
-		gamehook_chain_client_disconnect_real = physics_client_disconnect_real;
+		physics_client_connect_real_next = plugin_chain_client_connect_real;
+		plugin_chain_client_connect_real = physics_client_connect_real;
+		physics_client_disconnect_real_next = plugin_chain_client_disconnect_real;
+		plugin_chain_client_disconnect_real = physics_client_disconnect_real;
 		ability_register("physics", physics_ability_init);
 		physics_initiated = TRUE;
 	}

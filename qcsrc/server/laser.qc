@@ -60,7 +60,7 @@ void(void) laser_init {
 	CVAR_CACHE(g_laser_radius);
 	CVAR_CACHE(g_laser_force);
 	CVAR_CACHE(g_laser_offhand);
-	laser_weapon_frame_handle_next = gamehook_chain_weapon_frame_handle;
-	gamehook_chain_weapon_frame_handle = laser_weapon_frame_handle;
+	laser_weapon_frame_handle_next = plugin_chain_weapon_frame_handle;
+	plugin_chain_weapon_frame_handle = laser_weapon_frame_handle;
 	precache_sound ("weapons/lasergun_fire.wav");
 }

@@ -69,7 +69,7 @@ void(string command) cmd_game {
 	if (cmd_generic(command))
 		return;
 
-	if (gamehook_chain_cmd_game_handle(cmd, argc))
+	if (plugin_chain_cmd_game_handle(cmd, argc))
 		return;
 
 	if (cmd == "printstats") {
@@ -461,7 +461,7 @@ void(string s) cmd_client {
 		if (cmd_floodcheck())
 			return;
 	}
-	if (gamehook_chain_cmd_client_handle(cmd, tokens))
+	if (plugin_chain_cmd_client_handle(cmd, tokens))
 		return;
 
 	if (vote_cmd(s, self)) {
@@ -519,7 +519,7 @@ void(string s) cmd_client {
 		if not(self.flags & FL_CLIENT)
 			return;
 
-		if (warmup_active || cvar("sv_ready_restart") || gamehook_ReadyAllowed()) {
+		if (warmup_active || cvar("sv_ready_restart") || plugin_ReadyAllowed()) {
 			if (!ready_restart_happened || cvar("sv_ready_restart_repeatable")) {
 				if (self.ready) { // toggle
 					self.ready = FALSE;

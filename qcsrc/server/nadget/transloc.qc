@@ -10,8 +10,8 @@ void nadget_Transloc_Explode(void) {
         return;
     }
 
-	if(gamehook_player_is_carrier(self.owner))
-		gamehook_player_drop_carried(self.owner);
+	if(plugin_player_is_carrier(self.owner))
+		plugin_player_drop_carried(self.owner);
 
     vector a;
     a = vectoangles(normalize(self.hg_lastvel));

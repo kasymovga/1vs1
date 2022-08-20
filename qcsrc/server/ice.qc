@@ -34,7 +34,7 @@ void(void) ice_remove {
 }
 
 float(void) ice_customize {
-	if (gamehook_chain_PlayerVisibleThroughWallFor(self.owner, other))
+	if (plugin_chain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EFFECT_NODEPTHTEST;
 	else
 		self.effects &= ~EFFECT_NODEPTHTEST;
@@ -310,17 +310,17 @@ void(void) ice_init {
 	CVAR_CACHE(sv_model_ice_scale);
 	CVAR_CACHE(sv_model_ice_z);
 	CVAR_CACHE(sv_model_ice_use_skins);
-	gamehook_player_death_handle = ice_player_death_handle;
-	ice_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = ice_player_clear;
-	ice_physics_max_speed_mod_next = gamehook_chain_physics_max_speed_mod;
-	gamehook_chain_physics_max_speed_mod = ice_physics_max_speed_mod;
-	ice_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = ice_player_spawn;
-	ice_player_damage_handle_next = gamehook_chain_player_damage_handle;
-	gamehook_chain_player_damage_handle = ice_player_damage_handle;
-	ice_spectator_copy_next = gamehook_chain_spectator_copy;
-	gamehook_chain_spectator_copy = ice_spectator_copy;
-	ice_player_think_next = gamehook_chain_player_think;
-	gamehook_chain_player_think = ice_player_think;
+	plugin_player_death_handle = ice_player_death_handle;
+	ice_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = ice_player_clear;
+	ice_physics_max_speed_mod_next = plugin_chain_physics_max_speed_mod;
+	plugin_chain_physics_max_speed_mod = ice_physics_max_speed_mod;
+	ice_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = ice_player_spawn;
+	ice_player_damage_handle_next = plugin_chain_player_damage_handle;
+	plugin_chain_player_damage_handle = ice_player_damage_handle;
+	ice_spectator_copy_next = plugin_chain_spectator_copy;
+	plugin_chain_spectator_copy = ice_spectator_copy;
+	ice_player_think_next = plugin_chain_player_think;
+	plugin_chain_player_think = ice_player_think;
 }

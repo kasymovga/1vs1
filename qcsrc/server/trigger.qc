@@ -1503,8 +1503,8 @@ void(void) spawnfunc_trigger_swamp {
 
 	if not(trigger_swamp_init_done) {
 		trigger_swamp_init_done = TRUE;
-		trigger_swamp_physics_max_speed_mod_next = gamehook_chain_physics_max_speed_mod;
-		gamehook_chain_physics_max_speed_mod = trigger_swamp_physics_max_speed_mod;
+		trigger_swamp_physics_max_speed_mod_next = plugin_chain_physics_max_speed_mod;
+		plugin_chain_physics_max_speed_mod = trigger_swamp_physics_max_speed_mod;
 	}
 }
 

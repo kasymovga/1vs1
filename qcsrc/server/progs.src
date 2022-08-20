@@ -104,7 +104,7 @@ havocbot.qh
 bot/aim.qh
 navigation.qh
 bot.qh
-gamehook.qh
+plugin.qh
 nadget.qh
 nadget/cloak.qh
 nadget/genericprojectile.qh

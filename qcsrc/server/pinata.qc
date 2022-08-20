@@ -23,6 +23,6 @@ void() pinata_init {
 		return;
 
 	pinata_init_done = TRUE;
-	pinata_player_death_weapon_throw_handle_NextLink = gamehook_chain_player_death_weapon_throw_handle;
-	gamehook_chain_player_death_weapon_throw_handle = pinata_player_death_weapon_throw_handle;
+	pinata_player_death_weapon_throw_handle_NextLink = plugin_chain_player_death_weapon_throw_handle;
+	plugin_chain_player_death_weapon_throw_handle = pinata_player_death_weapon_throw_handle;
 }

@@ -27,10 +27,10 @@ void clanarena_shared_player_clear(float killed) {
 
 void(string gt) clanarena_shared_init {
 	roundbased_init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
-	gamehook_player_death_handle = clanarena_shared_death_handle;
-	clanarena_shared_player_clear_next = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = clanarena_shared_player_clear;
-	clanarena_shared_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = clanarena_shared_player_spawn;
+	plugin_player_death_handle = clanarena_shared_death_handle;
+	clanarena_shared_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = clanarena_shared_player_clear;
+	clanarena_shared_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = clanarena_shared_player_spawn;
 	SP_STATUS = score_register("status", 0);
 }

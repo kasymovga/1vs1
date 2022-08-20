@@ -1156,15 +1156,15 @@ float(float ignore, float ignore2) onslaught_WinningCondition {
 
 void(void) onslaught_init {
 	g_ons = 1;
-	gamehook_player_death_handle = onslaught_DeathHandle;
-	onslaught_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = onslaught_player_spawn;
-	gamehook_client_put_spawn_point = onslaught_client_put_spawn_point;
-	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = onslaught_PlayerClear;
-	gamehook_winning_condition = onslaught_WinningCondition;
-	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
-	gamehook_havocbot_role_choose = onslaught_role_choose;
+	plugin_player_death_handle = onslaught_DeathHandle;
+	onslaught_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = onslaught_player_spawn;
+	plugin_client_put_spawn_point = onslaught_client_put_spawn_point;
+	onslaught_PlayerClear_NextLink = plugin_chain_player_clear;
+	plugin_chain_player_clear = onslaught_PlayerClear;
+	plugin_winning_condition = onslaught_WinningCondition;
+	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
+	plugin_havocbot_role_choose = onslaught_role_choose;
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
 	precache_model("models/onslaught/generator_dmg1.md3");

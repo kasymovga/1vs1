@@ -57,7 +57,7 @@ void(entity e1, entity e2, string s) weapon_setattachment {
 }
 
 void(void) weapon_reload {
-	if not(gamehook_ReloadAllowed())
+	if not(plugin_ReloadAllowed())
 		return;
 
 	if (self.switchweapon == self.weapon)
@@ -321,7 +321,7 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 	if (w == 0)
 		return; // just in case
 
-	if not(gamehook_chain_weapon_throw_allowed(doreduce))
+	if not(plugin_chain_weapon_throw_allowed(doreduce))
 		return;
 
 	if (g_pickup_nodrop)
@@ -366,13 +366,13 @@ void(void) weapon_frame {
 	vector fo, ri, up;
 	self.ammoclip = 0;
 	makevectors(self.v_angle);
-	if (gamehook_chain_weapon_frame_handle())
+	if (plugin_chain_weapon_frame_handle())
 		return;
 
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 
-	float _switchweapon = gamehook_chain_weapon_frame_switch_mod(self.switchweapon);
+	float _switchweapon = plugin_chain_weapon_frame_switch_mod(self.switchweapon);
 	if (!_switchweapon) {
 		self.items &= ~IT_AMMO;
 		self.weaponname = "";
@@ -520,7 +520,7 @@ void(float wpn) weapon_defaultspawnfunc {
 		remove(self);
 		return;
 	}
-	if (gamehook_chain_WeaponSpawnHandle(wpn))
+	if (plugin_chain_WeaponSpawnHandle(wpn))
 		return;
 
 	// set the respawntime in advance (so replaced weapons can copy it)
@@ -576,7 +576,7 @@ void(float windex) weapon_setup {
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
 float(float secondary, float attacktime) weapon_prepareattack {
-	if (!gamehook_chain_WeaponPrepareAttack(secondary, attacktime)) {
+	if (!plugin_chain_WeaponPrepareAttack(secondary, attacktime)) {
 		return FALSE;
 	}
 	if (attacktime >= 0) {
@@ -618,7 +618,7 @@ float(void) weapon_rate_factor {
 	float t;
 	entity oldself = self;
 	self = akimbo_owner(self);
-	t = (1.0 / g_weaponratefactor) * gamehook_chain_weapon_rate_factor();
+	t = (1.0 / g_weaponratefactor) * plugin_chain_weapon_rate_factor();
 	self = oldself;
 	return t;
 }

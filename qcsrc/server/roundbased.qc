@@ -161,9 +161,9 @@ var void(entity targ, entity attacker, float deathtype) roundbased_damage_mods_s
 void(entity targ, entity attacker, float deathtype) roundbased_damage_mods_set {
 	if not(roundbased_active)
 	if (DEATH_ISWEAPON(deathtype, WEP_LASER)) {
-		gamehook_chain_damage_mod = 0;
+		plugin_chain_damage_mod = 0;
 		if (targ != attacker) {
-			gamehook_chain_damage_mod_force = 0;
+			plugin_chain_damage_mod_force = 0;
 			return; //No sense in other chain links
 		}
 	}
@@ -203,12 +203,12 @@ void(float enddelay, float startdelay) roundbased_init {
 	else
 		roundbased_warmup = map_starttime + roundbased_startdelay;
 
-	roundbased_player_can_fire_next = gamehook_chain_player_can_fire;
-	gamehook_chain_player_can_fire = roundbased_player_can_fire;
-	roundbased_damage_mods_set_next = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = roundbased_damage_mods_set;
-	roundbased_world_frame_start_next = gamehook_chain_world_frame_start;
-	gamehook_chain_world_frame_start = roundbased_world_frame_start;
-	Roundbased_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
-	gamehook_chain_cmd_game_handle = Roundbased_cmd_game_handle;
+	roundbased_player_can_fire_next = plugin_chain_player_can_fire;
+	plugin_chain_player_can_fire = roundbased_player_can_fire;
+	roundbased_damage_mods_set_next = plugin_chain_damage_mods_set;
+	plugin_chain_damage_mods_set = roundbased_damage_mods_set;
+	roundbased_world_frame_start_next = plugin_chain_world_frame_start;
+	plugin_chain_world_frame_start = roundbased_world_frame_start;
+	Roundbased_cmd_game_handle_NextLink = plugin_chain_cmd_game_handle;
+	plugin_chain_cmd_game_handle = Roundbased_cmd_game_handle;
 }

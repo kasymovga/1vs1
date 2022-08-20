@@ -124,22 +124,22 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max) {
-		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
 		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 	}
 	if ((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK)) {
-		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.items |= it;
 		sprint (player, strcat("You got the ^2", item.netname, "\n"));
 	}
-	gamehook_chain_ItemGiveToHandle_SwitchWeapon = TRUE;
+	plugin_chain_ItemGiveToHandle_SwitchWeapon = TRUE;
 	if (item.health) {
 		player.health = min(max(100, player.health + g_minstagib_health_drop), g_minstagib_health_max);
-		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
 	}
 	if (item.ammo_cells) {
-		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
 		// play some cool sounds ;)
 		if (clienttype(player) == CLIENTTYPE_REAL) {
 			if (player.health <= 5)
@@ -157,7 +157,7 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	}
 	// extralife powerup
 	if (item.max_health) {
-		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
 		// sound not available
 		// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
 		player.armorvalue = min(player.armorvalue + 100, g_minstagib_armor_max);
@@ -165,17 +165,17 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	}
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max) {
-		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
 		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 	}
-	return gamehook_chain_ItemGiveToHandle_PickedUp;
+	return plugin_chain_ItemGiveToHandle_PickedUp;
 }
 
 var void() minstagib_player_health_armor_fuel_mods_set_NextLink;
 void minstagib_player_health_armor_fuel_mods_set() {
 	minstagib_player_health_armor_fuel_mods_set_NextLink();
-	gamehook_player_health_armor_rot_regen = FALSE;
+	plugin_player_health_armor_rot_regen = FALSE;
 }
 
 float(float wpn) minstagib_WeaponSpawnHandle {
@@ -231,7 +231,7 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 
 	if (self.armorvalue >= 1  && (deathtype != DEATH_HURTTRIGGER) && _damage) {
 		self.armorvalue -= min(_damage, min(self.armorvalue, 100));
-		gamehook_chain_player_damage_mod = 0;
+		plugin_chain_player_damage_mod = 0;
 		self.hitsound += 1;
 		attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
 	}
@@ -244,13 +244,13 @@ void(entity targ, entity attacker, float deathtype) minstagib_DamageForceModsSet
 		if (attacker.classname == "player")
 		if (DEATH_ISWEAPON(deathtype, WEP_LASER))
 		if (g_minstagib_nolaserdamage || !player_can_fire(attacker, FALSE)) {
-			gamehook_chain_damage_mod = 0;
+			plugin_chain_damage_mod = 0;
 			if (targ != attacker) {
 				if (g_minstagib_nolaserdamage)
 					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
 
-				gamehook_chain_damage_mod_force = 0;
-				gamehook_chain_damage_mod_mirror = 0;
+				plugin_chain_damage_mod_force = 0;
+				plugin_chain_damage_mod_mirror = 0;
 			}
 		}
 		if (team_mode)
@@ -260,9 +260,9 @@ void(entity targ, entity attacker, float deathtype) minstagib_DamageForceModsSet
 		if (targ.deadflag == DEAD_NO)
 		if (attacker.team == targ.team) {
 			if (g_friendlyfire == 0)
-				gamehook_chain_damage_mod = 0;
+				plugin_chain_damage_mod = 0;
 			else
-				gamehook_chain_damage_mod = gamehook_chain_damage_mod / g_friendlyfire; //Restore value
+				plugin_chain_damage_mod = plugin_chain_damage_mod / g_friendlyfire; //Restore value
 		}
 	}
 	minstagib_DamageForceModsSet_NextLink(targ, attacker, deathtype);
@@ -299,8 +299,8 @@ float(void) minstagib_player_equip_handle {
 var void() minstagib_ItemRespawnCountDown_NextLink;
 void() minstagib_ItemRespawnCountDown {
 	if (self.items == IT_NAILS) {
-		gamehook_ItemName = "item-extralife";
-		gamehook_ItemColor = '1 0 0';
+		plugin_ItemName = "item-extralife";
+		plugin_ItemColor = '1 0 0';
 	}
 	minstagib_ItemRespawnCountDown_NextLink();
 }
@@ -331,29 +331,29 @@ void(void) minstagib_init {
 
 	precache_sound ("announcer/robotic/lastsecond.wav");
 	precache_sound ("announcer/robotic/narrowly.wav");
-	minstagib_PlayerPreThink_NextLink = gamehook_chain_player_think;
-	gamehook_chain_player_think = minstagib_PlayerPreThink;
-	minstagib_ItemGiveToHandle_NextLink = gamehook_chain_ItemGiveToHandle;
-	gamehook_chain_ItemGiveToHandle = minstagib_ItemGiveToHandle;
-	minstagib_player_health_armor_fuel_mods_set_NextLink = gamehook_chain_player_health_armor_fuel_mods_set;
-	gamehook_chain_player_health_armor_fuel_mods_set = minstagib_player_health_armor_fuel_mods_set;
-	gamehook_chain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
-	minstagib_weapon_throw_allowed_NextLink = gamehook_chain_weapon_throw_allowed;
-	gamehook_chain_weapon_throw_allowed = minstagib_weapon_throw_allowed;
-	minstagib_entity_spawn_pre_NextLink = gamehook_chain_entity_spawn_pre;
-	gamehook_chain_entity_spawn_pre = minstagib_entity_spawn_pre;
-	minstagib_ItemForbidden_NextLink = gamehook_chain_ItemForbidden;
-	gamehook_chain_ItemForbidden = minstagib_ItemForbidden;
-	minstagib_player_damage_handle_NextLink = gamehook_chain_player_damage_handle;
-	gamehook_chain_player_damage_handle = minstagib_player_damage_handle;
-	minstagib_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
-	gamehook_chain_damage_mods_set = minstagib_DamageForceModsSet;
-	gamehook_chain_MirrorDamageHandle = minstagib_MirrorDamageHandle;
-	minstagib_player_equip_handle_next = gamehook_chain_player_equip_handle;
-	gamehook_chain_player_equip_handle = minstagib_player_equip_handle;
-	minstagib_ItemRespawnCountDown_NextLink = gamehook_chain_ItemRespawnCountDown;
-	gamehook_chain_ItemRespawnCountDown = minstagib_ItemRespawnCountDown;
-	gamehook_chain_ArmorBlockPercentMod = minstagib_ArmorBlockPercentMod;
+	minstagib_PlayerPreThink_NextLink = plugin_chain_player_think;
+	plugin_chain_player_think = minstagib_PlayerPreThink;
+	minstagib_ItemGiveToHandle_NextLink = plugin_chain_ItemGiveToHandle;
+	plugin_chain_ItemGiveToHandle = minstagib_ItemGiveToHandle;
+	minstagib_player_health_armor_fuel_mods_set_NextLink = plugin_chain_player_health_armor_fuel_mods_set;
+	plugin_chain_player_health_armor_fuel_mods_set = minstagib_player_health_armor_fuel_mods_set;
+	plugin_chain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
+	minstagib_weapon_throw_allowed_NextLink = plugin_chain_weapon_throw_allowed;
+	plugin_chain_weapon_throw_allowed = minstagib_weapon_throw_allowed;
+	minstagib_entity_spawn_pre_NextLink = plugin_chain_entity_spawn_pre;
+	plugin_chain_entity_spawn_pre = minstagib_entity_spawn_pre;
+	minstagib_ItemForbidden_NextLink = plugin_chain_ItemForbidden;
+	plugin_chain_ItemForbidden = minstagib_ItemForbidden;
+	minstagib_player_damage_handle_NextLink = plugin_chain_player_damage_handle;
+	plugin_chain_player_damage_handle = minstagib_player_damage_handle;
+	minstagib_DamageForceModsSet_NextLink = plugin_chain_damage_mods_set;
+	plugin_chain_damage_mods_set = minstagib_DamageForceModsSet;
+	plugin_chain_MirrorDamageHandle = minstagib_MirrorDamageHandle;
+	minstagib_player_equip_handle_next = plugin_chain_player_equip_handle;
+	plugin_chain_player_equip_handle = minstagib_player_equip_handle;
+	minstagib_ItemRespawnCountDown_NextLink = plugin_chain_ItemRespawnCountDown;
+	plugin_chain_ItemRespawnCountDown = minstagib_ItemRespawnCountDown;
+	plugin_chain_ArmorBlockPercentMod = minstagib_ArmorBlockPercentMod;
 }
 
 void(void) spawnfunc_item_minst_cells {

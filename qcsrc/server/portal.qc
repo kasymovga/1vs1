@@ -111,8 +111,8 @@ float(entity teleporter, entity player) portal_teleport_player {
 	}
 	// factor -1 allows chaining portals, but may be weird
 	player.right_vector = -1 * anglestransform_apply(transform, player.right_vector);
-	if (gamehook_player_is_carrier(player))
-		gamehook_player_drop_carried(player);
+	if (plugin_player_is_carrier(player))
+		plugin_player_drop_carried(player);
 
 	if not(teleporter.enemy) {
 		backtrace("portal_teleport_player ended up without other portal being set BEFORE TeleportPlayer. Stop.");
@@ -172,7 +172,7 @@ float(vector eorg, vector emins, vector emaxs, vector evel, vector porg, vector 
 
 void(void) portal_touch {
 	vector g;
-	if (gamehook_portal_forbidden_for(other))
+	if (plugin_portal_forbidden_for(other))
 		return; // never portal these
 
 	if (other.classname == "grapplinghook")

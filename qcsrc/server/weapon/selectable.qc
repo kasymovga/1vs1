@@ -96,12 +96,12 @@ void(void) weapon_selectable_init {
 	if not(g_start_weapon_selectable)
 		return;
 
-	weapon_selectable_spectator_to_player_handle_next = gamehook_chain_spectator_to_player_handle;
-	gamehook_chain_spectator_to_player_handle = weapon_selectable_spectator_to_player_handle;
-	weapon_selectable_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = weapon_selectable_cmd_client_handle;
-	weapon_selectable_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = weapon_selectable_player_spawn;
-	weapon_selectable_gamemenu_send_next = gamehook_chain_gamemenu_send;
-	gamehook_chain_gamemenu_send = weapon_selectable_gamemenu_send;
+	weapon_selectable_spectator_to_player_handle_next = plugin_chain_spectator_to_player_handle;
+	plugin_chain_spectator_to_player_handle = weapon_selectable_spectator_to_player_handle;
+	weapon_selectable_cmd_client_handle_next = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = weapon_selectable_cmd_client_handle;
+	weapon_selectable_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = weapon_selectable_player_spawn;
+	weapon_selectable_gamemenu_send_next = plugin_chain_gamemenu_send;
+	plugin_chain_gamemenu_send = weapon_selectable_gamemenu_send;
 }

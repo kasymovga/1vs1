@@ -51,11 +51,11 @@ void(void) badass_init {
 	CVAR_CACHE(g_badass_health_limit);
 	CVAR_CACHE(g_badass_armor_limit);
 	if (g_badass_color > -2) {
-		badass_player_colors_mod_next = gamehook_chain_player_colors_mod;
-		gamehook_chain_player_colors_mod = badass_player_colors_mod;
+		badass_player_colors_mod_next = plugin_chain_player_colors_mod;
+		plugin_chain_player_colors_mod = badass_player_colors_mod;
 		if (g_badass_health_limit || g_badass_armor_limit) {
-			badass_player_health_armor_fuel_mods_set_next = gamehook_chain_player_health_armor_fuel_mods_set;
-			gamehook_chain_player_health_armor_fuel_mods_set = badass_player_health_armor_fuel_mods_set;
+			badass_player_health_armor_fuel_mods_set_next = plugin_chain_player_health_armor_fuel_mods_set;
+			plugin_chain_player_health_armor_fuel_mods_set = badass_player_health_armor_fuel_mods_set;
 		}
 	}
 }

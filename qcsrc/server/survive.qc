@@ -255,7 +255,7 @@ void survive_init_delayed() {
 		ice_hook_frozen_status = survive_ice_frozen_status;
 		ice_init();
 	} else {
-		gamehook_player_death_handle = survive_death_handle;
+		plugin_player_death_handle = survive_death_handle;
 	}
 }
 
@@ -270,13 +270,13 @@ void survive_init() {
 	CVAR_CACHE(g_surv_freeze);
 	entity_initialize(world, survive_init_delayed, INITPRIO_GAMETYPE);
 	_survive_monster_quant = 1;
-	gamehook_winning_condition = survive_winning_condition;
-	gamehook_map_finish_message_mod = survive_map_finish_message_mod;
-	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
-	gamehook_monster_quant = survive_monster_quant;
-	gamehook_monster_killed = survive_monster_killed;
-	survive_player_spawn_next = gamehook_chain_player_spawn;
-	gamehook_chain_player_spawn = survive_player_spawn;
+	plugin_winning_condition = survive_winning_condition;
+	plugin_map_finish_message_mod = survive_map_finish_message_mod;
+	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
+	plugin_monster_quant = survive_monster_quant;
+	plugin_monster_killed = survive_monster_killed;
+	survive_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = survive_player_spawn;
 	score_basics(SCORE_FLAG_SORT_PRIO_PRIMARY, SCORE_FLAG_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	SP_STATUS = score_register("status", 0);
 	if (g_surv_freeze)

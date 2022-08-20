@@ -48,9 +48,9 @@ void(void) report_init {
 	if (sv_report_url == "")
 		return;
 
-	report_gamemenu_send_next = gamehook_chain_gamemenu_send;
-	gamehook_chain_gamemenu_send = report_gamemenu_send;
-	report_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
-	gamehook_chain_cmd_client_handle = report_cmd_client_handle;
+	report_gamemenu_send_next = plugin_chain_gamemenu_send;
+	plugin_chain_gamemenu_send = report_gamemenu_send;
+	report_cmd_client_handle_next = plugin_chain_cmd_client_handle;
+	plugin_chain_cmd_client_handle = report_cmd_client_handle;
 	report_uri_handler = uri_register_handler(report_uri_callback);
 }

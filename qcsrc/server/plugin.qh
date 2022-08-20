@@ -1,0 +1,116 @@
+var float(entity attacker, entity inflictor, float deathtype) plugin_player_death_handle = { return FALSE; }
+var float() plugin_chain_physics_max_speed_mod = { return 1; }
+var void(entity spot) plugin_chain_player_spawn = {}
+var void(float killed) plugin_chain_player_clear = {}
+var float(entity attacker, entity targ, float f) plugin_score_give_frag_mod = { return f; }
+float plugin_chain_player_damage_mod;
+var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) plugin_chain_player_damage_handle = { return FALSE; }
+var float(entity plr, float wep) plugin_chain_player_can_fire = { return TRUE; }
+var float() plugin_physics_player_allowed_to_move = { return TRUE; }
+var void() plugin_physics_frame_begin_hook = {}
+var void(void) plugin_chain_player_think = {}
+var entity() plugin_client_put_spawn_point = {
+	entity spot;
+	spot = spawn_select(FALSE);
+	if not(spot)
+		spot = spawn_select(TRUE);
+
+	return spot;
+}
+var float(float fraglimit, float _leadlimit) plugin_winning_condition = {
+	if (world_check_rules_run_out_spawns()) {
+		bprint("Hey! Someone ran out of spawns!\n");
+		return TRUE;
+	}
+	return score_winning_condition(fraglimit, _leadlimit);
+}
+var float() plugin_OvertimeHandle = { return FALSE; }
+var float() plugin_OvertimeAllowed = { return TRUE; }
+var void() plugin_world_reset = {}
+var void() plugin_chain_observer_spawn = {}
+var void() plugin_InitSpectator = {}
+var float(entity spot) plugin_spawn_score_good = { return TRUE; }
+var void(float frags_remain) stub_score_winning_condition_countdown = {}
+var void(float frags_remain) plugin_score_winning_condition_countdown = {
+	if (frags_remain == 1)
+		sound_play2all("announcer/robotic/1fragleft.wav");
+	else if (frags_remain == 2)
+		sound_play2all("announcer/robotic/2fragsleft.wav");
+	else if (frags_remain == 3)
+		sound_play2all("announcer/robotic/3fragsleft.wav");
+}
+var string(string s) plugin_SuddenDeathMessageMod = { return s; }
+var string(string s) plugin_map_finish_message_mod = { return s; }
+var float() plugin_WarmupAllowed = { return TRUE; }
+var float() plugin_ReadyAllowed = { return FALSE; }
+var float() plugin_ClearScoreAllowed = { return TRUE; }
+var string() plugin_client_fix_cvars = { return ""; }
+var string(string bspname) plugin_world_record_for_map = { return ""; }
+var float() plugin_ready_restart_hard = { return FALSE; }
+var float() plugin_chain_weapon_frame_handle = { return FALSE; }
+var float() plugin_ReloadAllowed = { return TRUE; }
+var float(float dropped) plugin_chain_weapon_throw_allowed = { return TRUE; }
+var void(entity e) plugin_chain_spectator_copy = {}
+float plugin_chain_damage_mod;
+float plugin_chain_damage_mod_force;
+float plugin_chain_damage_mod_mirror;
+float plugin_chain_damage_mod_force_mirror;
+var void(entity targ, entity attacker, float deathtype) plugin_chain_damage_mods_set = {}
+var void(void(string item, string cmd) Add_Item) plugin_chain_gamemenu_send = {};
+var float(string cmd, float tokens) plugin_chain_cmd_client_handle = { return FALSE; }
+var float(string cmd, float tokens) plugin_chain_cmd_game_handle = { return FALSE; }
+var void() plugin_chain_entity_spawn_pre = {};
+float plugin_player_health_max_mod;
+float plugin_player_armor_health_limit_mod;
+float plugin_player_regen_mod;
+float plugin_player_rot_mod;
+float plugin_player_health_armor_rot_regen;
+var void() plugin_chain_player_health_armor_fuel_mods_set = {}
+var float() plugin_chain_JumpVelocityMod = { return 1; }
+var float() plugin_chain_weapon_rate_factor = { return 1; }
+var void(entity targ, entity attacker, float damage, vector force) plugin_chain_damage_force_done = {}
+var void(entity attacker) plugin_monster_killed {}
+var float() plugin_monster_quant { return 1; }
+var float(entity plr, entity viewer, float palpha) plugin_chain_player_alpha_mod = { return palpha; }
+var float(float secondary, float attacktime) plugin_chain_WeaponPrepareAttack = { return TRUE; }
+var float(entity item, entity player) plugin_chain_ItemGiveToHandle = { return FALSE; }
+float plugin_chain_ItemGiveToHandle_PickedUp;
+float plugin_chain_ItemGiveToHandle_SwitchWeapon;
+var float(float wpn) plugin_chain_WeaponSpawnHandle = { return FALSE; }
+var void() plugin_chain_client_connect_real = {}
+var void() plugin_chain_client_connect = {}
+var void() plugin_chain_client_disconnect_real = {}
+var void() plugin_chain_world_frame_start = {}
+var float(string s) plugin_chain_ItemForbidden = { return FALSE; }
+var void() plugin_chain_player_effects = {}
+var float(float c) plugin_chain_player_colors_mod = { return c; }
+var float() plugin_chain_spectator_to_player_handle = { return FALSE; }
+var float(entity attacker, entity inflictor, float mirrordamage, vector force) plugin_chain_MirrorDamageHandle = { return FALSE; }
+var float(entity plr) plugin_player_is_carrier { return FALSE; }
+var void(entity plr) plugin_player_drop_carried {}
+var float(entity plr) plugin_chain_PlayerCanBeCarrier { return TRUE; }
+var float(entity e) plugin_portal_forbidden_for { return FALSE; }
+string plugin_ItemName;
+vector plugin_ItemColor;
+var void() plugin_chain_ItemRespawnCountDown {}
+var float() plugin_chain_ArmorBlockPercentMod { return 1; }
+var float(entity plr, entity targ) plugin_chain_PlayerCanSeeHealthFor { return FALSE; }
+var float(entity plr, entity targ) plugin_chain_PlayerVisibleThroughWallFor { return FALSE; }
+var float() plugin_chain_weapon_throw_handle { return FALSE; }
+var void(entity source, string msg) plugin_chain_PublicPlayerChat = {}
+var void() plugin_havocbot_role_choose = { havocbot_role_choose_dm(); }
+var void() plugin_client_parms_new = {}
+var void() plugin_client_parms_change = {}
+var void() plugin_client_parms_decode = {}
+var float(void) plugin_forbid_specatators = { return FALSE; }
+var float(void) plugin_chain_player_equip_handle = { return FALSE; }
+var float(void) plugin_map_restart = { return FALSE; }
+var float() plugin_monster_team_switchable = { return TRUE; }
+var void() plugin_chain_shutdown = {}
+var float(float tempo) plugin_chain_slowmo_update_mod = { return tempo; }
+var float() plugin_chain_player_death_weapon_throw_handle = { return FALSE; }
+var float() plugin_chain_projectile_touch_handle = { return FALSE; }
+var float(float f) plugin_chain_weapon_frame_switch_mod = { return f; }
+var entity(entity pl) plugin_chain_player_entity = { return pl; }
+var float(void) plugin_chain_bot_aim = { return FALSE; }
+var float(float deathtype, entity targ, entity inflictor, entity attacker) plugin_chain_player_obituary_frag = { return FALSE; }

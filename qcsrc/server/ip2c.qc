@@ -84,15 +84,15 @@ void IP2C_InitSV(void) {
     IP2C_Init();
     dlc_require("flagicons");
     if(sv_ip2country_allow_fakeflag) {
-        IP2C_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
-        gamehook_chain_cmd_client_handle = IP2C_ClientCommandHandle;
+        IP2C_ClientCommandHandle_NextLink = plugin_chain_cmd_client_handle;
+        plugin_chain_cmd_client_handle = IP2C_ClientCommandHandle;
     }
-	IP2C_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
-	gamehook_chain_cmd_game_handle = IP2C_cmd_game_handle;
-	IP2C_ShutdownHook_NextLink = gamehook_chain_shutdown;
-	gamehook_chain_shutdown = IP2C_ShutdownHook;
-	IP2C_client_connect_NextLink = gamehook_chain_client_connect;
-	gamehook_chain_client_connect = IP2C_client_connect;
+	IP2C_cmd_game_handle_NextLink = plugin_chain_cmd_game_handle;
+	plugin_chain_cmd_game_handle = IP2C_cmd_game_handle;
+	IP2C_ShutdownHook_NextLink = plugin_chain_shutdown;
+	plugin_chain_shutdown = IP2C_ShutdownHook;
+	IP2C_client_connect_NextLink = plugin_chain_client_connect;
+	plugin_chain_client_connect = IP2C_client_connect;
 }
 
 float IPCacheDB;
