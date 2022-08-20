@@ -507,7 +507,7 @@ void(void) item_find_team {
 			}
 			head.effects &= ~EFFECT_NODRAW;
 		}
-		if (e.flags & FL_POWERUP) // do not spawn powerups initially!
+		if ((e.flags & FL_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
 			item_schedule_initial_respawn(e);
 	}
 }
@@ -520,7 +520,7 @@ void(void) item_reset {
 	setorigin (self, self.origin);
 	self.think = stdproc_nothing;
 	self.nextthink = 0;
-	if (self.flags & FL_POWERUP) // do not spawn powerups initially!
+	if ((self.flags & FL_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);
 }
 
@@ -753,7 +753,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 
 		self.effects = self.effects | EFFECT_NODRAW; // marker for item team search
 		entity_initialize(self, item_find_team, INITPRIO_FINDTARGET);
-	} else if ((self.flags & FL_POWERUP) && self.respawntime > 0 && substring(self.classname, 0, 7) != "dropped") // do not spawn powerups initially!
+	} else if ((self.flags & FL_POWERUP) && self.respawntime > 0 && substring(self.classname, 0, 7) != "dropped" && !entity_per_player_entities) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);
 
 	return;
