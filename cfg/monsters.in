@@ -79,4 +79,9 @@ set g_monster_turret_drop 1
 set surv_g_monster_turret_drop 0
 set coop_g_monster_turret_drop 1
 set tdm_g_monster_turret_drop 0
+set g_monster_turret_compact_health 150
+set g_monster_turret_compact_drop 1
+set surv_g_monster_turret_compact_drop 0
+set coop_g_monster_turret_compact_drop 1
+set tdm_g_monster_turret_compact_drop 0
 set g_monsters_spawn ""

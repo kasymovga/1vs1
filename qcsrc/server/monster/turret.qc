@@ -10,12 +10,12 @@ void() monster_turret_hunt {
 		vector v = self.enemy.origin - self.origin;
 		float d = vlen(v);
 		if (d < 400) {
-			v = monster_move_walk(-600, 5, 0);
+			v = monster_move_walk(-600 * self.scale, 5, 0);
 			self.frame = 1;
 			v = vectoangles(v);
 			self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
 		} else if (d > 500) {
-			vector v = monster_move_walk(600, 5, 0);
+			vector v = monster_move_walk(600 * self.scale, 5, 0);
 			self.frame = 0;
 			v = vectoangles(v);
 			self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
@@ -47,7 +47,7 @@ void() monster_turret_walk {
 
 	self.frame = 0;
 	if (self.flags & FL_ONGROUND) {
-		vector v = monster_move_walk(600, 5, 0);
+		vector v = monster_move_walk(600 * self.scale, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
 	}
@@ -67,6 +67,9 @@ void(void) monster_turret_remove {
 		return;
 
 	setattachment(self.weaponentity, world, "");
+	if (self.scale) {
+		self.weaponentity.scale *= self.scale;
+	}
 	setorigin(self.weaponentity, self.origin + '0 0 50');
 	self.weaponentity.movetype = MOVETYPE_TOSS;
 	self.weaponentity.angles_y += self.angles_y;
@@ -97,12 +100,20 @@ void() monster_turret_spawn {
 	setorigin(self, oldself.origin);
 	self.team = oldself.team;
 	self.spawnflags = TSL_NO_RESPAWN;
+	self.turret_scale_damage = (oldself.scale ? oldself.scale : 1) * self.scale * monster_difficulty;
 	callfunction(strcat("spawnfunc_turret_", oldself.owner.weaponname));
+	self.health = oldself.health * 0.25;
 	self = oldself;
 	setattachment(self.weaponentity, self, "tag_head");
 	self.weaponentity.movetype = MOVETYPE_NONE;
 	self.weaponentity.takedamage = FALSE;
 	setorigin(self.weaponentity, self.weaponentity.mins_z * '0 0 -1' + '0 0 10');
+}
+
+void() monster_turret_compact_spawn {
+	self.scale = 0.75;
+	monster_turret_spawn();
+	self.netname = "Compact Walking Turret";
 }
 
 void() monster_turret_init {
@@ -114,24 +125,45 @@ void(void) monster_turret_init_clean {
 	remove(self);
 }
 
-void() spawnfunc_monster_turret_spawn {
-	if (self.weaponname == "")
-		self.weaponname = "plasma";
-
+float(string turret_name) monster_turret_precache {
 	entity oldself = self;
 	self = spawn();
 	setorigin(self, oldself.origin);
-	string turret_func = strcat("spawnfunc_turret_", oldself.weaponname);
+	string turret_func = strcat("spawnfunc_turret_", turret_name);
 	if (isfunction(turret_func)) {
 		callfunction(turret_func);
 	} else {
 		self = oldself;
 		remove(self);
-		return;
+		return FALSE;
 	}
 	entity_initialize(self, monster_turret_init_clean, INITPRIO_LAST);
 	self = oldself;
+	return TRUE;
+}
+
+void() spawnfunc_monster_turret_spawn {
+	if (self.weaponname == "")
+		self.weaponname = "plasma";
+
+	if (!monster_turret_precache(self.weaponname)) {
+		remove(self);
+		return;
+	}
 	setsize(self, '-60 -60 5', '60 60 100');
 	monster_init(monster_turret_init);
 	monster_prepare_spawn(monster_turret_spawn, spawnfunc_monster_turret_spawn);
+}
+
+void() spawnfunc_monster_turret_compact_spawn {
+	if (self.weaponname == "")
+		self.weaponname = "plasma";
+
+	if (!monster_turret_precache(self.weaponname)) {
+		remove(self);
+		return;
+	}
+	setsize(self, '-45 -45 3.75', '45 45 75');
+	monster_init(monster_turret_init);
+	monster_prepare_spawn(monster_turret_compact_spawn, spawnfunc_monster_turret_compact_spawn);
 }
