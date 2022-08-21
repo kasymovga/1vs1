@@ -35,12 +35,14 @@ void fillNexuizLanguageDialog(entity me) {
 		e.onClick = changeLanguage;
 		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "ru", "Русский"));
 		e.onClick = changeLanguage;
-	me.TR(me);
 		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "de", "Deutsch"));
 		e.onClick = changeLanguage;
+	me.TR(me);
 		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "fr", "Français"));
 		e.onClick = changeLanguage;
 		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "pt", "Português"));
+		e.onClick = changeLanguage;
+		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "nl", "Dutch"));
 		e.onClick = changeLanguage;
 	me.TR(me);
 	me.TR(me);
