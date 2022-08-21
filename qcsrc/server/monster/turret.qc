@@ -81,6 +81,7 @@ void(void) monster_turret_remove {
 
 void() monster_turret_spawn {
 	monster_prepare(monster_turret_hunt, monster_turret_walk, monster_turret_idle);
+	if (!self.scale) self.scale = 1;
 	setmodel(self, "models/spiderbot/spiderbot.dpm");
 	self.colormap = 1024;
 	self.colormod = '0.75 1 0.75';
