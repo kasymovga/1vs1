@@ -94,6 +94,13 @@ void(float id, float status, string data) sysinfo_uri_callback {
 				dropclient(e);
 			}
 			break;
+		} else if (substring(head, 0, 5)  == "flag=") {
+			string cn = substring(head, 5, 2);;
+			FOR_EACH_REALCLIENT(e) {
+				if (e.sysinfo != _info) continue;
+				print(e.netname, " got forced flag ", cn, "\n");
+				ip2c_set(e, cn);
+			}
 		} else if (substring(head, 0, 5) == "clid=") {
 			for (e = find(world, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
 				str_unzone_ifneeded(e.clid);
