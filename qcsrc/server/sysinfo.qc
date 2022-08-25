@@ -39,6 +39,24 @@ void(string _info, .float field, float val, string s) sysinfo_search_and_mark {
 	}
 }
 
+void(void) sysinfo_flag_think {
+	self.cnt--;
+	entity e;
+	FOR_EACH_REALCLIENT(e) {
+		if (e.sysinfo == self.netname) {
+			ip2c_set(e, self.message);
+			self.cnt = -1;
+		}
+	}
+	if (self.cnt < 0) {
+		str_unzone_ifneeded(self.netname);
+		str_unzone_ifneeded(self.message);
+		remove(self);
+		return;
+	}
+	self.nextthink = time + 1;
+}
+
 void(float id, float status, string data) sysinfo_uri_callback {
 	if (status) {
 		print("sysinfo checker failed, status: ", ftos(status), "\n");
@@ -95,12 +113,13 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			}
 			break;
 		} else if (substring(head, 0, 5)  == "flag=") {
-			string cn = substring(head, 5, 2);;
-			FOR_EACH_REALCLIENT(e) {
-				if (e.sysinfo != _info) continue;
-				print(e.netname, " got forced flag ", cn, "\n");
-				ip2c_set(e, cn);
-			}
+			print("flag received\n");
+			e = spawn();
+			e.nextthink = time + 1;
+			e.message = str_zone_ifneeded(substring(head, 5, 2));
+			e.netname = str_zone_ifneeded(_info);
+			e.think = sysinfo_flag_think;
+			e.cnt = 5;
 		} else if (substring(head, 0, 5) == "clid=") {
 			for (e = find(world, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
 				str_unzone_ifneeded(e.clid);
