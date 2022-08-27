@@ -2065,7 +2065,13 @@ float(void) player_body_customize {
 	if (other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
 		modelsource = other.body;
 #endif
-	self.skin = modelsource.owner.skinindex;
+	if (self.skin != modelsource.owner.skinindex) {
+		self.skin = modelsource.owner.skinindex;
+		if (self.weaponentity) {
+			self.weaponentity.skin = self.skin;
+			if (self.exteriorweaponentity) self.exteriorweaponentity.skin = self.skin;
+		}
+	}
 	float distance;
 	float f;
 	if (other.cvar_cl_playerdetailreduction <= 0) {

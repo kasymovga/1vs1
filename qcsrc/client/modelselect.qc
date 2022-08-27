@@ -169,6 +169,8 @@ void(void) modelselect_draw {
 		}
 		modelselect_current.skin = _skin;
 		modelselect_torso.frame = 0;
+		modelselect_torso.skin = _skin;
+		modelselect_head.skin = _skin;
 		if (file_exists(strcat(_model, ".animinfo"))) {
 			modelselect_get_idle_animinfo(_model);
 		} else if (file_exists(strcat(_model, ".animinfo2"))) {
