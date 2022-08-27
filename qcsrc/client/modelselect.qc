@@ -245,11 +245,23 @@ void(string s, string curmodel, float curskin) modelselect_search_by_path {
 	if (glob < 0)
 		return;
 
-	string _model, lodcheck;
+	string _model, check;
 	for (i = 0; i < search_getsize(glob); ++i) {
 		_model = search_getfilename(glob, i);
-		lodcheck = substring(_model, max(0, strlen(_model) - 9), 5);
-		if (lodcheck == "_lod1" || lodcheck == "_lod2")
+		check = substring(_model, max(0, strlen(_model) - 9), 5);
+		if (check == "_lod1" || check == "_lod2" || check == "_head")
+			continue;
+
+		check = substring(_model, max(0, strlen(_model) - 10), 6);
+		if (check == "_torso")
+			continue;
+
+		check = substring(_model, max(0, strlen(_model) - 15), 11);
+		if (check == "_decompiled")
+			continue;
+
+		check = substring(_model, max(0, strlen(_model) - 13), 9);
+		if (check == "_compiled")
 			continue;
 
 		modelselect_list_add_all_skins(_model, curmodel, curskin);
