@@ -599,7 +599,7 @@ void(void) client_post_think { //called by engine
 		//stuffcmd(self, "seta _cl_name Player\n");
 	}
 	if (frametime)
-	if (clienttype(self) == CLIENTTYPE_REAL) {
+	if (clienttype(self) == CLIENTTYPE_REAL && (self.classname == "player" || self.team < 0)) {
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		float timeleft, drop = FALSE, maxidle;
 		if (sv_maxidle_forcespec && self.classname == "player") {

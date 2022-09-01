@@ -82,6 +82,7 @@ void(void) roundbased_world_frame_start {
 			FOR_EACH_TEAMPLAYER(plr) {
 				self = plr;
 				self.classname = "player";
+				self.parm_idlesince = time;
 				client_put();
 			}
 			self = oldself;
