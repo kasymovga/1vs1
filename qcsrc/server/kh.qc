@@ -9,7 +9,6 @@ float SP_KH_KCKILLS;
 float SP_KH_LOSSES;
 
 // #define KH_PLAYER_USE_ATTACHMENT
-// #define KH_KEY_ATTACHMENT_DEBUG
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
 vector KH_PLAYER_ATTACHMENT_DIST_ROTATED = '0 -4 0';
@@ -87,6 +86,7 @@ float g_kh_showenemycarrier;
 
 void kh_Key_Spawn(entity key, entity initial_owner, float angle, float idx);
 void kh_Key_Hide(entity key);
+void(void) kh_key_think;
 
 #define STR_ITEM_KH_KEY "item_kh_key"
 typedef void(void) kh_Think_t;
@@ -344,15 +344,17 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 	}
 }
 
-void kh_Key_Damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
-{
-	if(self.owner)
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) kh_key_damage {
+	if (self.owner)
 		return;
-	if(vlen(force) <= 0)
-		return;
-	if(time > self.pushltime)
-		if(attacker.classname == "player")
-			self.team = attacker.team;
+
+	if (vlen(force) > 0) {
+		if (time > self.pushltime)
+			if (attacker.classname == "player")
+				self.team = (attacker ? attacker.team : 0);
+	}
+	if (deathtype == DEATH_HURTTRIGGER)
+		entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256);
 }
 
 void key_reset()
@@ -365,12 +367,12 @@ void kh_Key_Spawn(entity key, entity initial_owner, float angle, float i)  // ru
 	key.count = i;
 	key.classname = STR_ITEM_KH_KEY;
 	key.touch = kh_Key_Touch;
-	key.think = kh_Key_Think;
+	key.think = kh_key_think;
 	key.nextthink = time;
 	key.items = IT_KEY1 | IT_KEY2;
 	key.cnt = angle;
 	key.angles = '0 360 0' * random();
-	key.event_damage = kh_Key_Damage;
+	key.event_damage = kh_key_damage;
 	key.takedamage = DAMAGE_YES;
 	setmodel(key, "models/keyhunt/key.md3");
 	key.kh_dropperteam = 0;
@@ -502,39 +504,23 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 	if not(plugin_chain_PlayerCanBeCarrier(other))
 		return;
 
-	self.think = kh_Key_Think; //in case of kh_Key_MoveToRandomLocation_Think
+	self.think = kh_key_think; //in case of kh_Key_MoveToRandomLocation_Think
 	kh_Key_Collect(self, other);
 }
 
-void kh_Key_Think()  // runs all the time
-{
+void(void) kh_key_think {  // runs all the time
 	entity head;
 	//entity player;  // needed by FOR_EACH_PLAYER
-
-	if(map_intermission_running)
+	if (map_intermission_running)
 		return;
 
-#ifdef KH_KEY_ATTACHMENT_DEBUG
-	if(self.kh_prev == self.owner)
-	{
-		if(cvar_string("_angles") != "")
-		{
-			self.angles = stov(cvar_string("_angles"));
-			setorigin(self, stov(cvar_string("_origin")));
-		}
-	}
-#endif
-
-	if(self.owner)
-	{
+	if (self.owner) {
 #ifndef KH_PLAYER_USE_ATTACHMENT
 		makevectors('0 1 0' * (self.cnt + math_mod(time, 360) * KH_KEY_XYSPEED));
 		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin_z);
 #endif
-
-		if(self.owner.BUTTON_DROP)
-		if(time >= self.owner.kh_droptime + g_kh_delay_drop)
-		{
+		if (self.owner.BUTTON_DROP)
+		if (time >= self.owner.kh_droptime + g_kh_delay_drop) {
 			self.owner.kh_droptime = time;
 			self.kh_droptime = time;  // prevent collecting this one for some time
 			self.enemy = self.owner;
@@ -549,38 +535,34 @@ void kh_Key_Think()  // runs all the time
 			self.kh_dropperteam = self.team;
 		}
 	}
-
 	// if in nodrop or time over, respawn key
-	if not(self.owner)
-	if not(self.effects & EFFECT_NODRAW)
-		if(time > self.pain_finished)
-			kh_LoserTeam(self.team, self);
+	if not(self.owner) {
+		if not(self.effects & EFFECT_NODRAW)
+			if (time > self.pain_finished)
+				kh_LoserTeam(self.team, self);
 
-	if(self.owner)
-	if(kh_Key_AllOwnedByWhichTeam() != -1)
-	{
-		if(self.siren_time < time)
-		{
+		if (self.waterlevel > 0)
+		if (self.watertype == CONTENT_LAVA || self.watertype == CONTENT_SLIME)
+			entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256);
+	} else if (kh_Key_AllOwnedByWhichTeam() != -1) {
+		if (self.siren_time < time) {
 			sound(self.owner, CHAN_AUTO, kh_sound_alarm, VOL_BASE, ATTN_NORM);  // play a simple alarm
 			self.siren_time = time + 2.5;  // repeat every 2.5 seconds
 		}
-
 		entity key;
 		vector p;
 		p = self.owner.origin;
 		FOR_EACH_KH_KEY(key)
 			if(vlen(key.owner.origin - p) > g_kh_maxdist)
 				goto not_winning;
+
 		kh_WinnerTeam(self.team);
 :not_winning
 	}
-
-	if(kh_interferemsg_time && time > kh_interferemsg_time)
-	{
+	if (kh_interferemsg_time && time > kh_interferemsg_time) {
 		kh_interferemsg_time = 0;
-		FOR_EACH_PLAYER(head)
-		{
-			if(head.team == kh_interferemsg_team)
+		FOR_EACH_PLAYER (head) {
+			if (head.team == kh_interferemsg_team)
 				if(head.kh_next)
 					centerprint(head, "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!");
 				else
@@ -589,7 +571,6 @@ void kh_Key_Think()  // runs all the time
 				centerprint(head, strcat("All keys are in the ", team_colored_name(kh_interferemsg_team), "^7's hands!\n\nInterfere ^1NOW^7!"));
 		}
 	}
-
 	self.nextthink = time + 0.05;
 }
 
@@ -662,7 +643,7 @@ void kh_Key_MoveToRandomLocation_Think() {
 	if (entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 30, 1024, 256)) {
 		bprint("The ", self.netname, "^7 respawned\n");
 		self.pain_finished = time + g_kh_delay_return;
-		self.think = kh_Key_Think;
+		self.think = kh_key_think;
 		sound_play2all(kh_sound_destroy);
 		te_tarexplosion(v);
 	}
