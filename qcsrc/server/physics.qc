@@ -4,6 +4,7 @@
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 float g_steponskydamage;
+float g_nodropdamage;
 float g_jump_nofalldamage;
 float g_punchangle_decrease_speed;
 float g_punchangle_decrease_delay;
@@ -397,6 +398,11 @@ float(string s) physics_cvar {
 	return cvar(sv_s);
 }
 
+void(void) physics_in_nodrop {
+	if (g_nodropdamage > 0)
+		damage(self, world, world, g_nodropdamage * frametime, DEATH_HURTTRIGGER, self.origin, '0 0 0');
+}
+
 void(void) physics_step_on_sky {
 	if (g_steponskydamage > 0)
 		damage(self, world, world, g_steponskydamage * frametime, DEATH_HURTTRIGGER, self.origin, '0 0 0');
@@ -524,6 +530,7 @@ void(void) physics_init {
 	CVAR_CACHE(g_dodging_sound);
 	CVAR_CACHE(g_walljump_smokeparticle_num);
 	CVAR_CACHE(g_steponskydamage);
+	CVAR_CACHE(g_nodropdamage);
 	CVAR_CACHE(g_jump_nofalldamage);
 	CVAR_CACHE(g_punchangle_decrease_speed);
 	CVAR_CACHE(g_punchangle_decrease_delay);

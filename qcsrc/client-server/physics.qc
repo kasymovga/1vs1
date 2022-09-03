@@ -103,13 +103,17 @@ void(void) physics_update_status {
 			}
 		}
 	}
-	if (physics_waterlevel < WATERLEVEL_SWIMMING) {
+	trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
+	if (trace_startsolid)
+	if (self.solid != SOLID_NOT) {
+		physics_unstuck();
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
-		if (trace_startsolid)
-		if (self.solid != SOLID_NOT) {
-			physics_unstuck();
-			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
-		}
+	}
+	#ifdef SVQC
+	if (trace_dpstartcontents & DPCONTENTS_NODROP)
+		physics_in_nodrop();
+	#endif
+	if (physics_waterlevel < WATERLEVEL_SWIMMING) {
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
 			physics_ground_normal = trace_plane_normal;
 			physics_flags &= ~FL_DOUBLEJUMP;

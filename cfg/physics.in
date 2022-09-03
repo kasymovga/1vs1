@@ -49,6 +49,7 @@ set g_jump_grunt 0 "Do you make a grunting noise every time you jump? Is it the 
 set g_jump_nofalldamage 0 "no fall damage when jumping"
 set g_q2doublejump 0 "Q2-style double jump"
 set g_steponskydamage 100 "Damage from stepping to sky surface"
+set g_nodropdamage 10 "Damage from get into nodrop area"
 set g_skimming_time 0 "Q3-like corner skimming"
 set g_cpmdoublejump 0 "CPM double jump"
 set g_doublejump_nopogostick 0 "Require repressing jump key for double jump"
