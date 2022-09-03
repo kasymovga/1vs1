@@ -7,6 +7,9 @@ void(float ignore) score_info_read {
 	SP_CLIENTVERSION_FIELD = -1;
 	SP_COUNTRY_FIELD = -1;
 	SP_STATUS_FIELD = -1;
+	SP_NADGET_FIELD = -1;
+	SP_NADGET_SECONDARY_FIELD = -1;
+	SP_BESTWEP_FIELD = -1;
 	for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
 		s = strzone(net_read_string());
 		if (s == "country")
@@ -19,6 +22,10 @@ void(float ignore) score_info_read {
 			SP_SUICIDES_FIELD = i;
 		else if (s == "deaths")
 			SP_DEATHS_FIELD = i;
+		else if (s == "nade")
+			SP_NADGET_FIELD = i;
+		else if (s == "nade2")
+			SP_NADGET_SECONDARY_FIELD = i;
 		else if (s == "team") {
 			SP_TEAM_BIT = 1;
 			SP_TEAM_FIELD = i;

@@ -1,4 +1,5 @@
 void nadget_init(void);
+void(void) nadget_score_init;
 void nadget_precache(void);
 void nadget_SetContext(float isalt);
 void nadget_Attack(void);
@@ -120,3 +121,5 @@ void nadget_Pick(float token);
 #define BUTTON_NADGET2 button9
 #define RM_SOUND_LASER_SECONDARY "weapons/rm_laser2.wav"
 #define RM_SOUND_LASER_PRIMARY "weapons/rm_laser1.wav"
+float NADGET_SCORE;
+float NADGET_SCORE_SECONDARY;

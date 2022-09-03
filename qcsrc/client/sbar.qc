@@ -471,7 +471,7 @@ void(float argc) sbar_help {
 string sbar_scoreboard_default_layout =
 		"ping pl ?cv ?cn name | "
 		"?rank -teams,race,single/kills -teams,single/deaths -teams,race,single/suicides -race,dm,tdm,coop,single/frags " // tdm already has this in "score"
-		"?damage ?bestwep ?status "
+		"?damage ?bestwep ?status ?nade ?nade2 "
 		"?caps ?pickups ?fckills ?returns "
 		"?caps ?pushes ?destroyed "
 		"?laps ?time ?fastest "
@@ -540,6 +540,10 @@ void(float argc) sbar_field_set {
 			sbar_field[sbar_num_fields] = SP_KDRATIO;
 		} else if (str == "cn" && SP_COUNTRY_FIELD >= 0) {
 			sbar_field[sbar_num_fields] = SP_COUNTRY;
+		} else if (str == "nade" && SP_NADGET_FIELD >= 0) {
+			sbar_field[sbar_num_fields] = SP_NADGET;
+		} else if (str == "nade2" && SP_NADGET_SECONDARY_FIELD >= 0) {
+			sbar_field[sbar_num_fields] = SP_NADGET_SECONDARY;
 		} else if (str == "cv" && SP_CLIENTVERSION_FIELD >= 0) {
 			sbar_field[sbar_num_fields] = SP_CLIENTVERSION;
 		} else if (str == "name" || str == "nick") {
@@ -687,6 +691,18 @@ string(entity pl, float field) sbar_field_get {
 			return "";
 
 		return strcat(chr2str(char0), chr2str(char1));
+	case SP_NADGET:
+		tmp = pl.(scores[SP_NADGET_FIELD]);
+		if (tmp)
+			return nadget_TypeToName(tmp);
+		else
+			return "random";
+	case SP_NADGET_SECONDARY:
+		tmp = pl.(scores[SP_NADGET_SECONDARY_FIELD]);
+		if (tmp)
+			return nadget_TypeToName(tmp);
+		else
+			return "random";
 	case SP_CLIENTVERSION:
 		tmp = pl.(scores[SP_CLIENTVERSION_FIELD]);
 		switch (tmp) {
@@ -820,6 +836,8 @@ string(float i, string str) sbar_scoreboard_columns_width_fix {
 		sbar_fixscoreboardcolumnwidth_len = stringwidth("XX", FALSE);
 	else if (field == SP_BESTWEP)
 		sbar_fixscoreboardcolumnwidth_len = stringwidth("XXXXXX", FALSE);
+	else if (field == SP_NADGET || field == SP_NADGET_SECONDARY)
+		sbar_fixscoreboardcolumnwidth_len = stringwidth("XX", FALSE);
 	else
 		sbar_fixscoreboardcolumnwidth_len = stringwidth(str, FALSE);
 
@@ -888,6 +906,9 @@ void(vector pos, entity pl, float is_self, float pl_number) sbar_scoreboard_item
 				tmp_x = tmp_x - 2 * sbar_fontsize_x;
 				drawstring(pos - tmp, strcat(ftos(f), "%"), sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
 			}
+		} else if (field == SP_NADGET || field == SP_NADGET_SECONDARY) {
+			tmp_x = sbar_fixscoreboardcolumnwidth_len * sbar_fontsize_x + sbar_fontsize_x;
+			drawpic(pos - tmp, nadget_NameToIcon(str, FALSE, FALSE), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 		} else {
 			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
 			drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
@@ -942,6 +963,9 @@ void(vector pos, entity pl, float is_self, float pl_number) sbar_scoreboard_item
 					tmp_x = tmp_x - 2 * sbar_fontsize_x;
 					drawstring(pos - tmp, strcat(ftos(f), "%"), sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
 				}
+			} else if (field == SP_NADGET || field == SP_NADGET_SECONDARY) {
+				tmp_x = sbar_fixscoreboardcolumnwidth_len * sbar_fontsize_x + sbar_fontsize_x;
+				drawpic(pos - tmp, nadget_NameToIcon(str, FALSE, FALSE), '1.5 1 0' * sbar_fontsize_x, nadget_TypeToColor(nadget_NameToType(str)), 1.0, DRAWFLAG_NORMAL);
 			} else {
 				tmp_x = sbar_fontsize_x*sbar_fixscoreboardcolumnwidth_len;
 				drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);

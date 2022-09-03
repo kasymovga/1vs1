@@ -302,6 +302,14 @@ void(void) nadget_init_common {
 	hint_add("When enemy stand close to FireTrap you will see red indicator indicating");
 }
 
+void(void) nadget_score_init {
+	if not(g_nadgets) return;
+	if not(cvar("g_nadgets_show_in_sbar")) return;
+	NADGET_SCORE = score_register("nade", 0);
+	if not(g_nadgets_double) return;
+	NADGET_SCORE_SECONDARY = score_register("nade2", 0);
+}
+
 void(entity e, string args, float set) nadget_ability_init {
 	if (e) {
 		if (set) {
@@ -309,6 +317,7 @@ void(entity e, string args, float set) nadget_ability_init {
 			self = e;
 			if (args != "") {
 				self.hg_type1 = self.hg_type1_picked = nadget_NameToType(args);
+				score_player_set(self, NADGET_SCORE, self.hg_type1);
 				nadget_ResetAmmo(self, FALSE);
 			} else if not(nadget_ShowMenu(0))
 				nadget_ResetAmmo(self, FALSE);
@@ -318,6 +327,9 @@ void(entity e, string args, float set) nadget_ability_init {
 			nadget_RemoveAll(e);
 			e.hg_type1 = 0;
 			e.hg_type2 = 0;
+			score_player_set(self, NADGET_SCORE, self.hg_type1);
+			if (g_nadgets_double)
+				score_player_set(self, NADGET_SCORE, self.hg_type1);
 		}
 	} else
 		nadget_init_common();
@@ -526,13 +538,7 @@ float nadget_PlayerNadgetType(entity e) {
 
 void nadget_SetNadgetType(entity p, float t) {
     p.hg_ctx_type = t;
-
-#if 0
-    if(p.scorekeeper) {
-        float s = p.scorekeeper.(scores[SP_STATUSICONS]) & 0xFFFFFF00;
-        PlayerScore_Set(p, SP_STATUSICONS, s + nadget_CompressDualType(p.hg_type1, p.hg_type2) & 0x000000FF);
-    }
-#endif
+	score_player_set(self, (hg_context_isalt ? NADGET_SCORE_SECONDARY : NADGET_SCORE), self.hg_ctx_type);
 }
 
 void nadget_FadeOut_Think(void) {
@@ -849,6 +855,10 @@ void nadget_ResetAmmo(entity p, float clearammo) {
 	if not(g_nadgets || (p.abilities & NADGET_ABILITY)) {
 		p.hg_type1 = 0;
 		p.hg_type2 = 0;
+		score_player_set(self, NADGET_SCORE, self.hg_type1);
+		if (g_nadgets_double)
+			score_player_set(self, NADGET_SCORE, self.hg_type2);
+
 		return;
 	}
     p.hg_ctx_ammo = (clearammo ? 0 : g_nadgets_ammo);

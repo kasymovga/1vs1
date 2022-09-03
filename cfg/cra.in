@@ -53,3 +53,4 @@ set cra_g_spawnreplace_item_health item_health_small
 set cra_g_spawnreplace_item_health_medium item_health_small
 set cra_g_spawnreplace_item_health_large item_health_medium
 set cra_g_spawnreplace_item_health_mega item_health_medium
+set cra_g_nadgets_show_in_sbar 1

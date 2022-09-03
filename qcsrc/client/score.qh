@@ -18,6 +18,8 @@ float teamscores_flags[SCORE_FILEDS_MAX];
 #define SP_STATUS -10
 #define SP_CLIENTVERSION -11
 #define SP_BESTWEP -12
+#define SP_NADGET -13
+#define SP_NADGET_SECONDARY -14
 float SP_COUNTRY_FIELD;
 float SP_TEAM_FIELD;
 float SP_TEAM_BIT;
@@ -27,6 +29,8 @@ float SP_BESTWEP_FIELD;
 float SP_SUICIDES_FIELD;
 float SP_DEATHS_FIELD;
 float SP_CLIENTVERSION_FIELD;
+float SP_NADGET_FIELD;
+float SP_NADGET_SECONDARY_FIELD;
 #define SP_SEPARATOR -100
 
 void(float ignore) score_info_read;
