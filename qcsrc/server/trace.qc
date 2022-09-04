@@ -65,6 +65,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 	float yaw;
 	float ignorehazards;
 	float swimming = FALSE;
+	float r = FALSE;
 	move = end - start;
 	move_z = 0;
 	org = start;
@@ -78,17 +79,16 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 		ignorehazards = TRUE;
 	else {
 		trace_line( start, start + '0 0 -65536', TRACE_MOVE_NORMAL, e);
-		if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
-		{
+		if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)) {
 			ignorehazards = TRUE;
 			swimming = TRUE;
 		}
 	}
 	trace_box(start, m1, m2, start, TRACE_MOVE_NOMONSTERS, e);
 	if (trace_startsolid) {
+		goto finish;
 		// Bad start
 		//print("tracewalk: ", vtos(start), " is a bad start\n");
-		return FALSE;
 	}
 	// Movement loop
 	yaw = vectoyaw(move);
@@ -97,7 +97,8 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 		if (math_boxes_overlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1')) {
 			// Succeeded
 			//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
-			return TRUE;
+			r = TRUE;
+			goto finish;
 		}
 		if (dist <= 0) {
 			break;
@@ -111,7 +112,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)) {
 				// hazards blocking path
 				//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
-				return FALSE;
+				goto finish;
 			}
 		}
 		if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
@@ -125,7 +126,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 						break;
 				}
 				if not(pointcontents(org + '0 0 1') == CONTENT_EMPTY) {
-					return FALSE;
+					goto finish;
 				}
 				continue;
 			} else
@@ -135,22 +136,23 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 			trace_box(org, m1, m2, move, movemode, e);
 			// hit something
 			if (trace_fraction < 1) {
-				if (math_boxes_overlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
-					return TRUE;
-
+				if (math_boxes_overlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1')) {
+					r = TRUE;
+					goto finish;
+				}
 				// check if we can walk over this obstacle
 				trace_box(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid) {
-					if (math_boxes_overlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
-						return TRUE;
-
+					if (math_boxes_overlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1')) {
+						r = TRUE;
+						goto finish;
+					}
 					// check for doors
 					trace_line( org, move, movemode, e);
 					if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door") {
-						local vector nextmove;
+						vector nextmove;
 						move = trace_endpos;
-						while(trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
-						{
+						while (trace_ent.classname == "door_rotating" || trace_ent.classname == "door") {
 							nextmove = move + (dir * stepdist);
 							trace_line( move, nextmove, movemode, e);
 							move = nextmove;
@@ -159,7 +161,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 						//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
 						//te_explosion(trace_endpos);
 						//print(ftos(e.dphitcontentsmask), "\n");
-						return FALSE; // failed
+						goto finish; // failed
 					}
 				} else
 					move = trace_endpos;
@@ -173,7 +175,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 			trace_box(move, m1, m2, move + '0 0 -65536', movemode, e);
 			// moved successfully
 			if (swimming) {
-				local float c;
+				float c;
 				c = pointcontents(org + '0 0 1');
 				if not(c == CONTENT_WATER || c == CONTENT_LAVA || c == CONTENT_SLIME)
 					swimming = FALSE;
@@ -185,5 +187,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 	}
 	//print("tracewalk: ", vtos(start), " did not arrive at ", vtos(end), " but at ", vtos(org), "\n");
 	// moved but didn't arrive at the intended destination
-	return FALSE;
+:finish
+	trace_endpos = org;
+	return r;
 }
