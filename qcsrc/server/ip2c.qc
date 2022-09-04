@@ -82,7 +82,7 @@ void IP2C_InitSV(void) {
 
 	SP_COUNTRY = score_register("country", SCORE_FLAG_NOCLEAR);
     IP2C_Init();
-    dlc_require("flagicons");
+    dlc_require("flagicons_v2");
     if(sv_ip2country_allow_fakeflag) {
         IP2C_ClientCommandHandle_NextLink = plugin_chain_cmd_client_handle;
         plugin_chain_cmd_client_handle = IP2C_ClientCommandHandle;
