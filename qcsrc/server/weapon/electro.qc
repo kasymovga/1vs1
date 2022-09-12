@@ -51,6 +51,7 @@ void(entity e, entity own, float _delay) weapon_electro_combo_prepare {
 	e.dmg_edge = g_balance_electro_combo_edgedamage;
 	e.dmg_force = g_balance_electro_combo_force;
 	e.dmg_radius = g_balance_electro_combo_radius;
+	e.species = EFFECT_IMPACT_PLASMA_COMBO;
 	e.projectiledeathtype = (WEP_ELECTRO | HITTYPE_BOUNCE);
 	e.nextthink = time + _delay;
 }
@@ -131,7 +132,7 @@ void(void) weapon_electro_attack {
 	weapon_setup_shot(self, g_balance_electro_primary_recoil, "weapons/electro_fire.wav", 1);
 	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
-	projectile_setup(proj, weapon_shotorg, WEP_ELECTRO, g_balance_electro_primary_damage,
+	projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_PLASMA, WEP_ELECTRO, g_balance_electro_primary_damage,
 			g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, g_balance_electro_primary_force, 0, MOVETYPE_FLY);
 	proj.classname = "plasma_prim";
 	proj.use = weapon_electro_explode;
@@ -151,7 +152,7 @@ void(void) weapon_electro_attack2 {
 	weapon_shotdir = v_forward; // no TrueAim for grenades please
 	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE, self); // no culling, it has sound
-	projectile_setup(proj, weapon_shotorg, WEP_ELECTRO | HITTYPE_SECONDARY, g_balance_electro_secondary_damage,
+	projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_PLASMA_BALL, WEP_ELECTRO | HITTYPE_SECONDARY, g_balance_electro_secondary_damage,
 			g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, g_balance_electro_secondary_force, 1, MOVETYPE_BOUNCE);
 	proj.classname = "plasma";
 	proj.use = weapon_electro_explode;
@@ -236,9 +237,8 @@ float(float req) weapon_electro {
 		precache_sound("weapons/electro_impact_combo.wav");
 		precache_sound("weapons/electro_fly.wav");
 		hint_add("Spam secondary electro balls and explode them with primary fire to create a powerful explosion.");
-	} else if (req == WR_SETUP)
-		weapon_setup(WEP_ELECTRO);
-	else if (req == WR_CHECKAMMO1)
+	} else if (req == WR_SETUP) {
+	} else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_electro_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= g_balance_electro_secondary_ammo;

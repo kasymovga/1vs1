@@ -6,6 +6,7 @@
 #include "dead.qh"
 #include "deathtype.qh"
 #include "effect.qh"
+#include "effect_impact.qh"
 #include "flag.qh"
 #include "game_type.qh"
 #include "hittype.qh"

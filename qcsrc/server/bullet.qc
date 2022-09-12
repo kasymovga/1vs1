@@ -93,7 +93,7 @@ void(void) bullet_hit {
 	float f;
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
 	if (other.solid == SOLID_BSP)
-		damage_info(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, self);
+		effect_impact(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.species, self);
 
 	if (other && other != self.enemy && other.takedamage) {
 		effect_curveparticles_end();
@@ -132,7 +132,7 @@ void(void) bullet_leave_solid_think {
 	if (self.enemy.solid == SOLID_BSP) {
 		float f;
 		f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
-		damage_info(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, self);
+		effect_impact(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, self);
 	}
 	projectile_update(self);
 }
@@ -236,7 +236,7 @@ void(float pSpeed) bullet_begin {
 	}
 }
 
-void(vector start, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant) bullet {
+void(vector start, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float impacttype, float dtype, float tracereffects, float gravityfactor, float bulletconstant) bullet {
 	entity oldself, oldself_akimbo = self;
 	entity proj;
 	if (bullet_hit_scan) {
@@ -252,7 +252,7 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 		proj.touch = bullet_touch;
 	}
-	projectile_setup(proj, start, dtype, _damage, headshotbonus, g_ballistics_materialconstant / bulletconstant, force, gravityfactor, (gravityfactor ? MOVETYPE_TOSS : MOVETYPE_FLY));
+	projectile_setup(proj, start, impacttype, dtype, _damage, headshotbonus, g_ballistics_materialconstant / bulletconstant, force, gravityfactor, (gravityfactor ? MOVETYPE_TOSS : MOVETYPE_FLY));
 	proj.velocity = (dir + randomvec() * spread) * pSpeed;
 	weapon_setup_projectile_velocity(proj);
 	proj.oldvelocity = proj.velocity;

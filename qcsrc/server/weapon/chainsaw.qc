@@ -75,7 +75,7 @@ float(float req) weapon_chainsaw {
 		dlc_precache_sound("weapons/chainsaw_idle_1.wav");
 		dlc_precache_sound("weapons/chainsaw_active_1.wav");
 	} else if (req == WR_SETUP) {
-		weapon_setup(WEP_MELEE);
+		//weapon_setup(WEP_MELEE);
 		if (g_balance_chainsaw_noise)
 			player_sound(self, CHAN_WEAPON, "weapons/chainsaw_idle_1.wav", VOL_BASE, ATTN_NORM);
 	} else if (req == WR_CLEAR) {

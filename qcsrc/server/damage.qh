@@ -2,8 +2,8 @@ void(entity targ, entity inflictor, entity attacker, float damage, float deathty
 void(entity attacker, entity targ, float deathtype, float hits, float damage) damage_record_hits;
 void(entity attacker, float deathtype, float fires) damage_record_fires;
 void(void) damage_record_init;
-.float bullets_hit[WEP_COUNT];
-.float bullets_fired[WEP_COUNT];
+.float bullets_hit[WEP_COUNT_EXTRA];
+.float bullets_fired[WEP_COUNT_EXTRA];
 float DAMAGE_NO = 0;
 float DAMAGE_YES = 1;
 float DAMAGE_AIM = 2;

@@ -132,7 +132,7 @@ float() akimbo_weapon_rate_factor {
 	if (self.akimbo_ghost.weaponentity)
 	if (self.weaponentity.state != WS_DROP)
 	if (self.weaponentity.state != WS_RAISE)
-	if (weapon_bit(self.weapon) & g_akimbo_weaponratefactor_for)
+	if (weapon_info(self.weapon).weapons & g_akimbo_weaponratefactor_for)
 		f = g_akimbo_weaponratefactor;
 
 	return f * akimbo_weapon_rate_factor_next();
@@ -149,7 +149,7 @@ void(void) akimbo_init_common {
 		for (i = 0; i < n; i++)
 			for (j = WEP_FIRST; j <= WEP_LAST; j++)
 				if (argv(i) == weapon_info(j).netname) {
-					g_akimbo_weaponratefactor_for |= weapon_bit(j);
+					g_akimbo_weaponratefactor_for |= weapon_info(j).weapons;
 					break;
 				}
 	}
@@ -208,7 +208,7 @@ void(void) akimbo_init {
 		for (i = 0; i < n; i++)
 			for (j = WEP_FIRST; j <= WEP_LAST; j++)
 				if (argv(i) == weapon_info(j).netname) {
-					g_akimbo_weapons |= weapon_bit(j);
+					g_akimbo_weapons |= weapon_info(j).weapons;
 					break;
 				}
 	}
@@ -246,7 +246,7 @@ entity(entity e, float deep) akimbo_ghost_get {
 }
 
 float(entity p, float wpn, string name) akimbo_weapon_give {
-	float wpnbit = weapon_bit(wpn);
+	float wpnbit = weapon_info(wpn).weapons;
 	if (wpnbit & p.akimbo_weapons)
 		return FALSE;
 
@@ -261,7 +261,7 @@ float(entity p, float wpn, string name) akimbo_weapon_give {
 }
 
 float(entity p, float wpn, string name) akimbo_weapon_drop {
-	float wpnbit = weapon_bit(wpn);
+	float wpnbit = weapon_info(wpn).weapons;
 	if not(g_akimbo_weapons & wpnbit)
 		return FALSE;
 
@@ -302,7 +302,7 @@ void(entity e) akimbo_clear {
 }
 
 float(entity e, float wpn, float deep) akimbo_weapon_have {
-	float wpnbit = weapon_bit(wpn);
+	float wpnbit = weapon_info(wpn).weapons;
 	if not(wpnbit & akimbo_supported_weapons)
 		return FALSE;
 

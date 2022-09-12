@@ -1,4 +1,5 @@
 vector weapon_cross_origin;
 void(void) weapon_cross_origin_set;
 float weapon_current;
-float weapon_impulses[24];
+float weapon_impulses[WEP_COUNT_EXTRA];
+void(void) weapon_info_read;

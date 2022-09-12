@@ -1,0 +1,2 @@
+void(void) weapon_extra_init;
+float weapon_extra_count;

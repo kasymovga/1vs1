@@ -29,7 +29,7 @@ float g_balance_supershotgun_secondary_spread;
 void(void) weapoon_supershotgun_touch {
 	PROJECTILE_TOUCH;
 	if (other.solid == SOLID_BSP)
-		damage_info(self.origin, self.dmg, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
+		effect_impact(self.origin, self.dmg, 0, 0, normalize(self.velocity), EFFECT_IMPACT_PELLET, self);
 
 	if (other && other.takedamage) {
 		entity o = self.realowner;
@@ -50,7 +50,7 @@ void(void) weapoon_supershotgun_touch {
 void(vector start, vector dir, float spread, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces) weapon_supershotgun_pellet {
 	entity proj;
 	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
-	projectile_setup(proj, start, dtype, _damage, 0, 0, force, gravityfactor, (bounces ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
+	projectile_setup(proj, start, 0, dtype, _damage, 0, 0, force, gravityfactor, (bounces ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
 	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + randomvec() * spread) * pSpeed;
@@ -107,7 +107,7 @@ void(float secondary, float barrels, float ballistic) weapon_supershotgun_attack
 	if (ballistic) {
 		for (sc = 0; sc < b; sc = sc + 1)
 			bullet(weapon_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s, 5,
-					d, 0, f, dtype, particleeffectnum("tr_bullet"), g, bc);
+					d, 0, f, EFFECT_IMPACT_PELLET, dtype, particleeffectnum("tr_bullet"), g, bc);
 		bullet_end();
 	} else {
 		for (sc = 0; sc < b; sc = sc + 1)
@@ -164,9 +164,8 @@ float(float req) weapon_supershotgun {
 		precache_sound("misc/itempickup.wav");
 		precache_sound("weapons/shotgun_fire.wav");
 		dlc_require("supershotgun");
-	} else if (req == WR_SETUP)
-		weapon_setup(WEP_SUPERSHOTGUN);
-	else if (req == WR_CHECKAMMO1)
+	} else if (req == WR_SETUP) {
+	} else if (req == WR_CHECKAMMO1)
 		return self.ammo_shells >= g_balance_supershotgun_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_shells >= g_balance_supershotgun_secondary_ammo;

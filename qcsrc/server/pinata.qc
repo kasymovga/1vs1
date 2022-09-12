@@ -8,7 +8,7 @@ float() pinata_player_death_weapon_throw_handle {
 
 	float j;
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j) {
-		if(self.weapons & weapon_bit(j))
+		if(self.weapons & weapon_info(j).weapons)
 			if (weapon_throwable(j) || g_pinata_drop_all)
 				weapon_throw_new(self, j, FALSE, self.origin, randomvec() * 175 + '0 0 325');
 	}

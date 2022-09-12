@@ -53,7 +53,6 @@ void() player_setup_model;
 void(entity player) player_to_spec;
 void() player_think;
 float(entity plr, float wep) player_can_fire;
-float(entity cl, float wpn, float andammo, float complain) player_hasweapon;
 string(entity p) player_name; // decolorizes and team colors the player name when needed
 void(entity pl, float _color) player_set_colors;
 void(entity pl, float t, float s, float noprint) player_set_team;
@@ -87,6 +86,7 @@ float player_start_items;
 float player_start_health;
 float player_start_armorvalue;
 float player_start_weapons;
+float player_start_weapons_extra;
 float player_start_ammo_shells;
 float player_start_ammo_nails;
 float player_start_ammo_rockets;

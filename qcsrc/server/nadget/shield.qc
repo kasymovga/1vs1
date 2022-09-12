@@ -69,7 +69,7 @@ void nadget_Shield_Discharge_Think(void) {
     setorigin(self, end);
     damage_radius(self, self.owner, _damage, _damage * g_nadgets_shield_damage_store_edgefactor,
                  g_nadgets_shield_damage_store_radius, world,
-                 _damage * g_nadgets_shield_damage_store_forcefactor, NADGET_SHIELD | HITTYPE_SECONDARY, targ);
+                 _damage * g_nadgets_shield_damage_store_forcefactor, 0, NADGET_SHIELD | HITTYPE_SECONDARY, targ);
 
     //W_SetHitscanVisuals(self.owner, end);
     weapon_zapper_attack2_effect((team_mode ? self.owner.team : COLOR_TEAM3), weapon_shotorg_visual, end_visual);

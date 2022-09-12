@@ -22,6 +22,8 @@ float WEP_ZAPPER           = 18; float WEPBIT_ZAPPER           = 131072;
 float WEP_MELEE            = 19; float WEPBIT_MELEE            = 262144;
 float WEP_LAST             = 19; float WEPBIT_ALL              = 524287;
 float WEP_COUNT            = 20;
+float WEP_LAST_EXTRA       = 27;
+float WEP_COUNT_EXTRA      = 28;
 
 // variables:
 string weaponpriority_hudselector_0;
@@ -34,6 +36,7 @@ void(void) weapon_register_weapons;
 // entity properties of weaponinfo:
 .float weapon; // WEP_...
 .float weapons; // WEPBIT_...
+.float weapons_extra; // extra weapon bit
 .string netname; // short name
 .string message; // human readable name
 .float items; // IT_...
@@ -42,3 +45,30 @@ void(void) weapon_register_weapons;
 .string model; // full name of g_ model
 .float impulse; // weapon impulse
 .string model2; // wpn- sprite name
+
+#ifdef SVQC
+#define weapon_register(id,func,ammotype,i,normalweapon,canclimb,pickupbasevalue,modelname,shortname,wname) \
+	weapon_register_real(id,func,ammotype,i,normalweapon,canclimb,pickupbasevalue,modelname,shortname,wname)
+#else
+#ifdef MENUQC
+#define weapon_register(id,func,ammotype,i,normalweapon,canclimb,pickupbasevalue,modelname,shortname,wname) \
+	weapon_register_real(id,i,modelname,shortname,wname)
+#else
+// no weapon funcs here!
+#define weapon_register(id,func,ammotype,i,normalweapon,canclimb,pickupbasevalue,modelname,shortname,wname) \
+	weapon_register_real(id,ammotype,i,modelname,shortname,wname)
+#endif
+#endif
+
+void(float id,
+#ifdef SVQC
+		float(float) func,
+#endif
+#ifndef MENUQC
+		float ammotype,
+#endif
+		float i,
+#ifdef SVQC
+		float normalweapon, float canclimb, float pickupbasevalue,
+#endif
+		string modelname, string shortname, string wname) weapon_register_real;

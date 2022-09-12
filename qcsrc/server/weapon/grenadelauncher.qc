@@ -98,7 +98,7 @@ void(void) weapon_grenadelauncher_attack {
 	}
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
-	projectile_setup(gren, weapon_shotorg, WEP_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
+	projectile_setup(gren, weapon_shotorg, EFFECT_IMPACT_GRENADE, WEP_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
 			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force, 1, (bounce ? MOVETYPE_BOUNCE : MOVETYPE_TOSS));
 
 	gren.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
@@ -121,7 +121,7 @@ void(void) weapon_grenadelauncher_attack2 {
 	weapon_shotdir = v_forward; // no TrueAim for grenades please
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
-	projectile_setup(gren, weapon_shotorg, WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY, g_balance_grenadelauncher_secondary_damage,
+	projectile_setup(gren, weapon_shotorg, EFFECT_IMPACT_GRENADE, WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY, g_balance_grenadelauncher_secondary_damage,
 			g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, g_balance_grenadelauncher_secondary_force, 1, MOVETYPE_BOUNCE);
 	gren.nextthink = time + g_balance_grenadelauncher_secondary_lifetime;
 	gren.think = projectile_think2use;
@@ -197,7 +197,7 @@ float(float req) weapon_grenadelauncher {
 		precache_sound("weapons/grenade_bounce6.wav");
 		precache_sound("weapons/grenade_fire.wav");
 	} else if (req == WR_SETUP) {
-		weapon_setup(WEP_GRENADE_LAUNCHER);
+		//weapon_setup(WEP_GRENADE_LAUNCHER);
 		if (g_balance_grenadelauncher_magazinecapacity) {
 			weapon_clip_checkmaxbullets(g_balance_grenadelauncher_magazinecapacity, ammo_rockets, gl_ammoclip, g_balance_grenadelauncher_primary_ammo, g_balance_grenadelauncher_secondary_ammo);
 			if not(self.gl_ammoclip)

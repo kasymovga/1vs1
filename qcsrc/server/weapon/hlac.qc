@@ -47,7 +47,7 @@ void(void) weapon_hlac_attack {
 	weapon_shake(1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
-	projectile_setup(missile, weapon_shotorg, WEP_HLAC, g_balance_hlac_primary_damage,
+	projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_LASER, WEP_HLAC, g_balance_hlac_primary_damage,
 			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force, 0, MOVETYPE_FLY);
 	missile.velocity = (weapon_shotdir + randomvec() * spread) * g_balance_hlac_primary_speed;
 	weapon_setup_projectile_velocity(missile);
@@ -64,7 +64,7 @@ void(void) weapon_hlac_attack2f {
 		spread = spread * g_balance_hlac_secondary_spread_crouchmod;
 
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
-	projectile_setup(missile, weapon_shotorg, WEP_HLAC | HITTYPE_SECONDARY, g_balance_hlac_secondary_damage,
+	projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_LASER, WEP_HLAC | HITTYPE_SECONDARY, g_balance_hlac_secondary_damage,
 			g_balance_hlac_secondary_edgedamage, g_balance_hlac_secondary_radius, g_balance_hlac_secondary_force, 0, MOVETYPE_FLY);
 	missile.velocity = (weapon_shotdir + randomvec() * spread) * g_balance_hlac_secondary_speed;
 	weapon_setup_projectile_velocity(missile);
@@ -129,9 +129,8 @@ float(float req) weapon_hlac {
 		}
 	} else if (req == WR_PRECACHE) {
 		precache_sound("weapons/lasergun_fire.wav");
-	} else if (req == WR_SETUP)
-		weapon_setup(WEP_HLAC);
-	else if (req == WR_CHECKAMMO1)
+	} else if (req == WR_SETUP) {
+	} else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_hlac_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= g_balance_hlac_secondary_ammo;

@@ -516,7 +516,7 @@ float(void) bot_cmd_select_weapon {
 	if (id < WEP_FIRST || id > WEP_LAST)
 		return BOT_CMD_STATUS_ERROR;
 
-	if (player_hasweapon(self, id, TRUE, FALSE))
+	if (weapon_carried(self, id, TRUE, FALSE))
 		self.switchweapon = id;
 	else
 		return BOT_CMD_STATUS_ERROR;

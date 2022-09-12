@@ -28,7 +28,7 @@ void(void) weapon_hook_explode_think {
 	f = self.cnt - dmg_remaining_next;
 	self.cnt = dmg_remaining_next;
 	damage_record_fires(self.owner, WEP_HOOK, 1);
-	damage_radius(self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, self.projectiledeathtype, world);
+	damage_radius(self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, EFFECT_IMPACT_HOOKBOOMB, self.projectiledeathtype, world);
 	self.projectiledeathtype |= HITTYPE_NOINFO;
 	if (dt < g_balance_hook_secondary_duration)
 		self.nextthink = time + 0.05; // soon
@@ -60,7 +60,7 @@ void(void) weapon_hook_attack2 {
 
 	weapon_setup_shot (self, 4, "weapons/hookbomb_fire.wav", 0);
 	gren = projectile(TRUE, PROJECTILE_HOOKBOMB, TRUE, self);
-	projectile_setup(gren, weapon_shotorg, WEP_HOOK | HITTYPE_SECONDARY, g_balance_hook_secondary_damage,
+	projectile_setup(gren, weapon_shotorg, 0, WEP_HOOK | HITTYPE_SECONDARY, g_balance_hook_secondary_damage,
 			g_balance_hook_secondary_edgedamage, g_balance_hook_secondary_radius, g_balance_hook_secondary_force, g_balance_hook_secondary_gravity, MOVETYPE_TOSS);
 	gren.nextthink = time + g_balance_hook_secondary_lifetime;
 	gren.think = projectile_think2use;
@@ -148,7 +148,7 @@ float(float req) weapon_hook {
 		precache_sound("weapons/hookbomb_fire.wav");
 		hook_init(TRUE);
 	} else if (req == WR_SETUP) {
-		weapon_setup(WEP_HOOK);
+		//weapon_setup(WEP_HOOK);
 		self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 	} else if (req == WR_CHECKAMMO1) {
 		if (self.hook)

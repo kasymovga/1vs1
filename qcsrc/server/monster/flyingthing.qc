@@ -30,7 +30,7 @@ void flyingthing_hunt() {
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		entity gren = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
-		projectile_setup(gren,_shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+		projectile_setup(gren,_shotorg, EFFECT_IMPACT_PLASMA, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 		gren.nextthink = time + 5;
 		gren.think = projectile_think2use;
 		gren.use = projectile_explode;

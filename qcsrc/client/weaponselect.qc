@@ -77,7 +77,7 @@ void(void) weaponselect_draw {
 		p_z = 0;
 		float a2 = weaponselect_selalpha[sidx];
 		float isSelected = i == weaponselect_selected;
-		vector clr = winfo.colormod * (0.5 + 0.5 * a2);
+		vector clr = '0.75 0.75 0.75';
 		if (isSelected) {
 			weaponselect_selalpha[sidx] = approach(weaponselect_selalpha[sidx], 1, frametime * 3);
 			p_x = o_x;

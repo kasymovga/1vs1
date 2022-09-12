@@ -113,7 +113,7 @@ void(void) CSQC_Init {
 	projectile_precache();
 	gib_precache();
 	casing_precache();
-	damage_info_precache();
+	effect_impact_precache();
 	warpzone_init();
 	map_shortname = mapname;
 	if (!strcasecmp(substring(map_shortname, 0, 5), "maps/"))
@@ -198,8 +198,7 @@ void(float ignore) main_init_read {
 	self.classname = "ent_client_init";
 	float sf = net_read_byte();
 	if (sf & 1) {
-		for(i = 0; i < 24; ++i)
-			weapon_impulses[i] = net_read_byte() - 1;
+		weapon_info_read();
 	}
 	if (sf & 2) {
 		i = net_read_byte();

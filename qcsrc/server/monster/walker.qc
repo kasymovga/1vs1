@@ -10,7 +10,7 @@ void walker_bullet() {
 	weapon_shotdir_y = v_forward_y;
 	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 	bullet_begin(5000);
-	bullet(weapon_shotorg, weapon_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, DEATH_TURRET, particleeffectnum("tr_bullet"), 1, 100);
+	bullet(weapon_shotorg, weapon_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, EFFECT_IMPACT_BULLET, DEATH_TURRET, particleeffectnum("tr_bullet"), 1, 100);
 	bullet_end();
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3");
@@ -92,7 +92,7 @@ void walker_hunt() {
 
 			self.bulletcounter = self.bulletcounter + 0.5;
 			entity missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self);
-			projectile_setup(missile, weapon_shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+			projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 			missile.classname = "walker_rocket";
 			missile.takedamage = DAMAGE_YES;
 			missile.damageforcescale = 1;

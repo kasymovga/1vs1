@@ -85,6 +85,7 @@ laser.qc
 projectile.qc
 gib.qc
 damage.qc
+effect_impact.qc
 casing.qc
 effect.qc
 model.qc

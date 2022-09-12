@@ -72,9 +72,8 @@ float(float req) weapon_laser {
 		precache_sound("weapons/lasergun_fire.wav");
 		if (cvar("g_balance_laser_primary_force") > 0)
 			hint_add("You can use Laser for high jumps or accelerating. Just shoot under your legs or near walls.");
-	} else if (req == WR_SETUP)
-		weapon_setup(WEP_LASER);
-	else if (req == WR_CHECKAMMO1)
+	} else if (req == WR_SETUP) {
+	} else if (req == WR_CHECKAMMO1)
 		return TRUE;
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;

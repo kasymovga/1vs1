@@ -157,7 +157,7 @@ void(void) weapon_rocketlauncher_attack {
 	weapon_setup_shot(self, g_balance_rocketlauncher_recoil, "weapons/rocket_fire.wav", 1);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE, self); // because of fly sound
-	projectile_setup(missile, weapon_shotorg - v_forward * 3, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
+	projectile_setup(missile, weapon_shotorg - v_forward * 3, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
 			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force, 0, MOVETYPE_FLY);
 	warpzone_refsys_copy(missile, missile.owner);
 	missile.classname = "rocket"; //for remote exploding
@@ -308,7 +308,7 @@ float(float req) weapon_rocketlauncher {
 		precache_sound("weapons/rocket_fire.wav");
 		precache_sound("weapons/rocket_mode.wav");
 	} else if (req == WR_SETUP) {
-		weapon_setup(WEP_ROCKET_LAUNCHER);
+		//weapon_setup(WEP_ROCKET_LAUNCHER);
 		self.rl_release = 1;
 	} else if (req == WR_CHECKAMMO1) {
 		// don't switch while guiding a missile

@@ -116,7 +116,7 @@ void(void) func_breakable_destroy {
 		sound (self, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 
 	if (self.dmg)
-		damage_radius(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, DEATH_HURTTRIGGER, world);
+		damage_radius(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, 0, DEATH_HURTTRIGGER, world);
 
 	if (self.cnt)
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);

@@ -1,0 +1,1 @@
+void(vector org, float coredamage, float edgedamage, float rad, vector force, float impacttype, entity dmgowner) effect_impact;

@@ -20,6 +20,7 @@ void nadget_Plasma_Shard_Explode(void) {
         cvar("g_nadgets_plasma_projectile_radius"),
         world,
         cvar("g_nadgets_plasma_projectile_force") /* * p */,
+        EFFECT_IMPACT_RM_PLASMA_SHARD,
         NADGET_PLASMA | HITTYPE_BOUNCE,
         other
     );

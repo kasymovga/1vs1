@@ -202,7 +202,7 @@ void(void) dlc_reset_all {
 	weapon_register_weapons();
 	float i, wbit;
 	for (i = WEP_FIRST; i <= WEP_LAST; i++) {
-		wbit = weapon_bit(i);
+		wbit = weapon_info(i).weapons;
 		if ((weapon_spawned_list & wbit) || (player_start_weapons & wbit))
 			weapon_info(i).weapon_func(WR_PRECACHE);
 	}

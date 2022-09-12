@@ -78,7 +78,7 @@ void spider_walk() {
 }
 
 void spider_remove() {
-	damage_radius (self, self, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, WEP_GRENADE_LAUNCHER, world);
+	damage_radius (self, self, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, EFFECT_IMPACT_GRENADE, WEP_GRENADE_LAUNCHER, world);
 	remove(self.weaponentity);
 }
 

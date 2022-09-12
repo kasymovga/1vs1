@@ -27,7 +27,10 @@ float() backpack_player_death_weapon_throw_handle {
 	else
 		s = "Ammo Pack";
 
-	item_start(sv_model_backpack, "models/items/g_jetpack.md3", "misc/itempickup.wav", 0, 0, s, IT_AMMO, weapon_bit(oldself.weapon), FL_WEAPON | FL_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
+	entity wi = weapon_info(oldself.weapon);
+	self.weapons = wi.weapons;
+	self.weapons_extra = wi.weapons_extra;
+	item_start(sv_model_backpack, "models/items/g_jetpack.md3", "misc/itempickup.wav", 0, 0, s, IT_AMMO, FL_WEAPON | FL_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
 	self = oldself;
 	return TRUE;
 }

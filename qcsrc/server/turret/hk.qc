@@ -196,7 +196,7 @@ void(void) turret_hk_attack {
 	//entity flash2;
 	sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 	missile                  = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, fly sound
-	projectile_setup(missile, self.tur_shotorg, WEP_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
+	projectile_setup(missile, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
 	missile.solid            = SOLID_BBOX;
 	setorigin(missile, self.tur_shotorg);
 	missile.scale            = 1;
