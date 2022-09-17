@@ -178,9 +178,8 @@ float(float req) weapon_porto {
 		precache_sound("porto/explode.wav");
 		precache_sound("porto/fire.wav");
 		precache_sound("porto/unsupported.wav");
-	} else if (req == WR_SETUP)
-		weapon_setup(WEP_PORTO);
-	else if (req == WR_SUICIDEMESSAGE)
+	} else if (req == WR_SETUP) {
+	} else if (req == WR_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE) {
 		weapon_fragprefix = "^6TELE";

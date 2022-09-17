@@ -81,9 +81,8 @@ void(void) spawnfunc_misc_follow {
 void misc_spikeshooter_spike_touch(void) {
 	PROJECTILE_TOUCH;
 	if(other.solid == SOLID_BSP)
-		damage_info(self.origin, self.dmg, 0, 0, normalize(self.velocity), WEP_UZI, self);
-	if (other && other.takedamage)
-	{
+		effect_impact(self.origin, self.dmg, 0, 0, normalize(self.velocity), EFFECT_IMPACT_BULLET, self);
+	if (other && other.takedamage) {
 		damage(other, self, world, 20, DEATH_TURRET, self.origin, 20 * normalize(self.velocity));
 	}
 	remove(self);
@@ -91,7 +90,7 @@ void misc_spikeshooter_spike_touch(void) {
 
 void misc_spikeshooter_use(void) {
 	entity spike = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, world);
-	projectile_setup(spike, self.origin, DEATH_TURRET, 20,
+	projectile_setup(spike, self.origin, EFFECT_IMPACT_BULLET, DEATH_TURRET, 20,
 			20, 0, 20, 0, MOVETYPE_FLY);
 	spike.velocity = self.movedir * 800;
 	spike.think = stdproc_remove;

@@ -55,11 +55,11 @@ void(float deathtype) weapon_uzi_attack {
 	if (self.uzi_bulletcounter == 1)
 		bullet(weapon_shotorg, weapon_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed,
 				5, g_balance_uzi_first_damage, g_balance_uzi_first_damage_headshot,
-				g_balance_uzi_first_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
+				g_balance_uzi_first_force, EFFECT_IMPACT_BULLET, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
 	else
 		bullet(weapon_shotorg, weapon_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed,
 				5, g_balance_uzi_sustained_damage, g_balance_uzi_sustained_damage_headshot,
-				g_balance_uzi_sustained_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
+				g_balance_uzi_sustained_force, EFFECT_IMPACT_BULLET, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
 
 	bullet_end();
 	pointparticles(particleeffectnum("uzi_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
@@ -147,7 +147,7 @@ float(float req) weapon_uzi {
 	else if (req == WR_RELOAD) {
 		weapon_uzi_reload();
 	} else if (req == WR_SETUP) {
-		weapon_setup(WEP_UZI);
+		//weapon_setup(WEP_UZI);
 		if (g_balance_uzi_magazinecapacity) {
 			weapon_clip_checkmaxbullets(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo);
 			if not(self.uzi_ammoclip)

@@ -254,10 +254,6 @@ void(void) weapon_zapper_beam_think {
 			damage_record_hits(o, targ, WEP_ZAPPER, 1, _damage);
 			damage(targ, self, o, _damage, WEP_ZAPPER, end, force * forcedir);
 		}
-		if (fract < 1)
-		if (targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-			damage_info(end, _damage, 0, 0, force * forcedir, WEP_ZAPPER, self);
-
 		if not(self.enemy.items & IT_UNLIMITED_AMMO)
 			self.enemy.ammo_cells = self.enemy.ammo_cells - g_balance_zapper_primary_ammo;
 
@@ -355,9 +351,6 @@ void(entity o, vector start, vector start_visual, vector end, float fraction, fl
 		damage(targ, o, o, _damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
 	}
 	weapon_zapper_attack2_effect_team = o.team;
-	if (targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		damage_info(end, _damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, o);
-
 	if not(targ.takedamage)
 	if (plane_normal != '0 0 0')
 	if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -650,7 +643,7 @@ float(float req) weapon_zapper {
 		else
 			self.zapper_heat = -1;
 	} else if (req == WR_SETUP) {
-		weapon_setup(WEP_ZAPPER);
+		//weapon_setup(WEP_ZAPPER);
 	} else if (req == WR_CLEAR) {
 		if (self.zapper_spinner) {
 			remove(self.zapper_spinner);

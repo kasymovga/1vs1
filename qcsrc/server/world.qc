@@ -85,6 +85,7 @@ void(void) world_precache {
 
 void(void) world_static_init {
 	minstagib_init();
+	weapon_extra_init();
 	item_init();
 	warmup_init();
 	if not(warmup_active)
@@ -296,6 +297,7 @@ void(void) world_init {
 	addstat(STAT_BULLETS_LOADED, STAT_INT, ammoclip);
 	addstat(STAT_PLAYER_STATE, STAT_INT, deadflag);
 	addstat(STAT_SPECSTATUS, STAT_INT, spectatee_status);
+	addstat(STAT_WEAPONS_EXTRA, STAT_INT, weapons_extra);
 	cmd_lsmaps_reply = "^7Maps available: ";
 	map_list = "";
 	for (i = 0, j = 0; i < map_info_count; ++i) {

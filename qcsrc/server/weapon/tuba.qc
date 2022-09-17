@@ -86,7 +86,7 @@ void(float hittype) weapon_tuba_attack {
 		c = CHAN_WEAPON2;
 	}
 	sound(self, c, TUBA_NOTE(weapon_tuba_note(self, hittype)), bound(0, VOL_BASE * g_balance_tuba_volume, 1), g_balance_tuba_attenuation);
-	damage_radius(self, self, g_balance_tuba_damage, g_balance_tuba_edgedamage, g_balance_tuba_radius, world, g_balance_tuba_force, hittype | WEP_TUBA | HITTYPE_NOTEAMDAMAGE, world);
+	damage_radius(self, self, g_balance_tuba_damage, g_balance_tuba_edgedamage, g_balance_tuba_radius, world, g_balance_tuba_force, 0, hittype | WEP_TUBA | HITTYPE_NOTEAMDAMAGE, world);
 	o = gettaginfo(self.exteriorweaponentity, 0);
 	pointparticles(particleeffectnum("smoke_ring"), o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
 }
@@ -120,9 +120,8 @@ float(float req) weapon_tuba {
 		float i;
 		for (i = -18; i <= +27; ++i)
 			precache_sound(TUBA_NOTE(i));
-	} else if (req == WR_SETUP)
-		weapon_setup(WEP_TUBA);
-	else if (req == WR_CHECKAMMO1)
+	} else if (req == WR_SETUP) {
+	} else if (req == WR_CHECKAMMO1)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?

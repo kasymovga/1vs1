@@ -86,11 +86,10 @@ void(void) weapon_minstanex_attack {
 			entity e = spawn();
 			setorigin(e, trace_endpos);
 			entity o = akimbo_owner(self);
-			damage_radius (e, o, g_balance_minstanex_explode_damage, g_balance_minstanex_explode_edgedamage, g_balance_minstanex_explode_radius, world, g_balance_minstanex_explode_force, 0, world);
-			pointparticles(particleeffectnum("rocket_explode"), trace_endpos, '0 0 0', 1);
+			damage_radius (e, o, g_balance_minstanex_explode_damage, g_balance_minstanex_explode_edgedamage, g_balance_minstanex_explode_radius, world, g_balance_minstanex_explode_force, EFFECT_IMPACT_ROCKET, 0, world);
 			remove(e);
 		}
-		damage_info(trace_endpos, 10000, 0, 0, 800 * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), WEP_MINSTANEX, self);
+		effect_impact(trace_endpos, 10000, 0, 0, 800 * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), EFFECT_IMPACT_NEX, self);
 	}
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - 1;
@@ -186,7 +185,6 @@ float(float req) weapon_minstanex {
 		precache_sound("weapons/nexwhoosh3.wav");
 		weapon_laser(WR_PRECACHE);
 	} else if (req == WR_SETUP) {
-		weapon_setup(WEP_MINSTANEX);
 		self.minstanex_lasthit = 0;
 		self.laser_hold = 0;
 		self.jump_interval = time;

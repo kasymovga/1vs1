@@ -790,7 +790,7 @@ void(float killed) player_clear {
 		portal_clear_all(self);
 
 	// reset fields the weapons may use just in case
-	for (j = WEP_FIRST; j <= WEP_LAST; ++j) {
+	for (j = WEP_FIRST; j <= WEP_LAST_EXTRA; ++j) {
 		weapon_action(j, WR_RESETPLAYER);
 		weapon_action(j, WR_CLEAR);
 		ATTACK_FINISHED_FOR(self, j) = 0;
@@ -2139,6 +2139,7 @@ void(entity spot) player_spawn {
 		self.health = player_start_health;
 		self.armorvalue = player_start_armorvalue;
 		self.weapons = player_start_weapons;
+		self.weapons_extra = player_start_weapons_extra;
 	}
 	self.items = player_start_items;
 	self.spawnshieldtime = time + g_spawnshieldtime;
@@ -2199,10 +2200,10 @@ void(entity spot) player_spawn {
 			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
 		self.wasplayer = TRUE;
-		if (!self.switchweapon || !player_hasweapon(self, self.switchweapon, TRUE, FALSE))
+		if (!self.switchweapon || !weapon_carried(self, self.switchweapon, TRUE, FALSE))
 			self.switchweapon = weapon_best(self);
 
-		if (!self.cnt || self.cnt == self.switchweapon || !player_hasweapon(self, self.cnt, TRUE, FALSE)) {
+		if (!self.cnt || self.cnt == self.switchweapon || !weapon_carried(self, self.cnt, TRUE, FALSE)) {
 			self.cnt = weaypon_cycle_get(self, self.cvar_cl_weaponpriority, -1, -1, 0);
 		}
 		self.weapon = 0;
@@ -2291,77 +2292,6 @@ float(entity plr, float wep) player_can_fire {
 		return FALSE;
 
 	return plugin_chain_player_can_fire(plr, wep);
-}
-
-.float hasweapon_complain_spam;
-float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
-	float weaponbit, f;
-	entity oldself;
-	if (time < cl.hasweapon_complain_spam)
-		complain = 0;
-
-	if (complain)
-		cl.hasweapon_complain_spam = time + 0.2;
-
-	if (wpn < WEP_FIRST || wpn > WEP_LAST) {
-		if (complain)
-			sprint(cl, "Invalid weapon\n");
-		return FALSE;
-	}
-	weaponbit = weapon_bit(wpn);
-	if (cl.weapons & weaponbit) {
-		if (andammo) {
-			if (cl.items & IT_UNLIMITED_WEAPON_AMMO) {
-				f = 1;
-			} else {
-				oldself = self;
-				self = cl;
-				f = weapon_action(wpn, WR_CHECKAMMO1);
-				f = f + weapon_action(wpn, WR_CHECKAMMO2);
-				self = oldself;
-			}
-			if (!f) {
-				if (complain)
-				if (clienttype(cl) == CLIENTTYPE_REAL) {
-					sound_play2(cl, "weapons/unavailable.wav");
-					sprint(cl, strcat("You don't have any ammo for the ^2", weapon_name(wpn), "\n"));
-				}
-				return FALSE;
-			}
-		}
-		return TRUE;
-	}
-	if (complain)
-	if (clienttype(cl) == CLIENTTYPE_REAL) {
-		// DRESK - 3/16/07
-		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if (weapon_spawned_list & weaponbit) {
-			sprint(cl, strcat("You do not have the ^2", weapon_name(wpn), "\n") );
-			if (self.cvar_cl_showweaponspawns) {
-				entity e;
-				string s;
-				e = weapon_info(wpn);
-				s = e.model2;
-				for (e = weapon_spawn_chain; e; e = e.enemy) {
-					if (e.weapons != weaponbit)
-						continue;
-
-					WaypointSprite_Spawn(
-						s,
-						1, 0,
-						world, e.origin,
-						cl, 0,
-						world, enemy,
-						0
-					);
-				}
-			}
-		} else
-			sprint(cl, "Requested weapon is ^1NOT AVAILABLE^7 in this map\n");
-
-		sound_play2(cl, "weapons/unavailable.wav");
-	}
-	return FALSE;
 }
 
 // decolorizes and team colors the player name when needed

@@ -11,32 +11,6 @@ float g_teamdamage_threshold;
 float g_throughfloor_damage;
 float g_throughfloor_force;
 
-float(entity to, float sf) damage_info_send {
-	net_write_byte(MSG_ENTITY, NET_CSQC_DAMAGEINFO);
-	net_write_short(MSG_ENTITY, self.projectiledeathtype);
-	net_write_coord(MSG_ENTITY, floor(self.origin_x));
-	net_write_coord(MSG_ENTITY, floor(self.origin_y));
-	net_write_coord(MSG_ENTITY, floor(self.origin_z));
-	net_write_short(MSG_ENTITY, self.oldorigin_x);
-	net_write_byte(MSG_ENTITY, self.team);
-	return TRUE;
-}
-
-void(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, entity dmgowner) damage_info {
-	// TODO maybe call this from non-edgedamage too?
-	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
-	entity e;
-	e = spawn();
-	setorigin(e, org);
-	e.projectiledeathtype = deathtype;
-	e.oldorigin_x = net_compress_vec(force);
-
-	if (team_mode) {
-		e.team = dmgowner.team;
-	}
-	net_link_entity(e, FALSE, 0.2, damage_info_send);
-}
-
 #define DAMAGE_CENTERPRINT_SPACER "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 
 float damage_goodhits;
@@ -205,14 +179,14 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	}
 }
 
-.float actual_damage[WEP_COUNT]; //amount of damage done
+.float actual_damage[WEP_COUNT_EXTRA]; //amount of damage done
 
 void(entity attacker, float deathtype, float shots) damage_record_fires {
 	float weaponid;
 	weaponid = DEATH_WEAPONOF(deathtype);
 	if not(warmup_active)
 	if (weaponid >= WEP_FIRST)
-	if (weaponid <= WEP_LAST) {
+	if (weaponid <= WEP_LAST_EXTRA) {
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float f = attacker.bullets_fired[weaponid] + shots;
 		attacker.(bullets_fired[weaponid]) = f;
@@ -238,7 +212,7 @@ void(entity attacker, entity targ, float deathtype, float hits, float _damage) d
 	if (!team_mode || targ.team != attacker.team)
 	if not(warmup_active)
 	if (weaponid >= WEP_FIRST)
-	if (weaponid <= WEP_LAST) {
+	if (weaponid <= WEP_LAST_EXTRA) {
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float h = attacker.bullets_hit[weaponid] + hits;
 		attacker.(bullets_hit[weaponid]) = h;
@@ -265,7 +239,7 @@ void() damage_record_init {
 }
 
 float damage_radius_running;
-void(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity) damage_radius {
+void(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float impacttype, float deathtype, entity directhitentity) damage_radius {
 	entity targ;
 	float finaldmg;
 	float power;
@@ -294,9 +268,9 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 			force = normalize(force);
 
 		if (forceintensity >= 0)
-			damage_info(blastorigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, attacker);
+			effect_impact(blastorigin, coredamage, edgedamage, rad, forceintensity * force, impacttype, attacker);
 		else
-			damage_info(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, attacker);
+			effect_impact(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, impacttype, attacker);
 	}
 	float record_damage = attacker.flags & FL_CLIENT;
 	targ = warpzone_find_radius(blastorigin, rad, FALSE);

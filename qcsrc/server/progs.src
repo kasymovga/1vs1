@@ -30,6 +30,7 @@ bullet.qh
 anim.qh
 projectile.qh
 effect.qh
+effect_impact.qh
 portal.qh
 hook.qh
 score.qh
@@ -46,6 +47,7 @@ vote.qh
 entity.qh
 net.qh
 weapon/melee.qh
+weapon/info.qh
 trace.qh
 irc.qh
 udp_chat.qh
@@ -130,6 +132,7 @@ weapon/two_weapons.qh
 noteline.qh
 warmup.qh
 weapon.qh
+weapon/extra.qh
 weapon/selectable.qh
 game/type.qh
 chat.qh
@@ -208,6 +211,7 @@ weapon/fireball.qc
 weapon/supershotgun.qc
 weapon/zapper.qc
 weapon/selectable.qc
+weapon/info.qc
 ../common/progs.qc
 shooter.qc
 laser.qc
@@ -217,6 +221,7 @@ powerup.qc
 backpack.qc
 pinata.qc
 weapon.qc
+weapon/extra.qc
 entcs.qc
 player.qc
 chat.qc
@@ -286,6 +291,7 @@ progressbar.qc
 cvar.qc
 location_request.qc
 effect.qc
+effect_impact.qc
 vehicle.qc
 vehicle/car.qc
 vehicle/aircraft.qc

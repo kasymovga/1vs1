@@ -93,8 +93,7 @@ float(entity to, float sf) client_init_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_INIT);
 	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
-		for(i = 1; i <= 24; ++i)
-			net_write_byte(MSG_ENTITY, (weapon_info(i)).impulse + 1);
+		weapon_info_send();
 	}
 	if (sf & 2) {
 		t = 0;

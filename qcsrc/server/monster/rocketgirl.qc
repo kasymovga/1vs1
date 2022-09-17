@@ -21,7 +21,7 @@ void rlgirl_hunt() {
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 		entity missile = projectile(TRUE, PROJECTILE_ROCKET, TRUE, self);
-		projectile_setup(missile,_shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+		projectile_setup(missile,_shotorg, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 		missile.nextthink = time + 5;
 		missile.think = projectile_think2use;
 		missile.use = projectile_explode;

@@ -476,9 +476,6 @@ void nadget_Sentry_Trigger(void) {
 
             sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
             weapon_zapper_attack2_effect((team_mode ? self.team : COLOR_TEAM3), o, end_visual);
-            if(targ.solid == SOLID_BSP && !noimpact)
-                damage_info(endpos, c_dmg, 0, 0, force, WEP_ZAPPER | HITTYPE_SECONDARY, self);
-
             e.hg_sentry_energy = bound(0, e.hg_sentry_energy - c_cost, 1);
             ++triggered;
         }

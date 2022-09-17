@@ -86,7 +86,7 @@ void(entity e, float w) weapon_switch_force {
 // switch between weapons
 void(float imp) weapon_switch {
 	if (self.switchweapon != imp) {
-		if (player_hasweapon(self, imp, TRUE, TRUE))
+		if (weapon_carried(self, imp, TRUE, TRUE))
 			weapon_switch_force(self, imp);
 		else
 			weapon_show_list(self);
@@ -96,7 +96,7 @@ void(float imp) weapon_switch {
 .float weaponcomplainindex;
 float(entity pl, string weaponorder, float dir, float imp, float complain) weaypon_cycle_get {
 	float n, i, weaponwant, first_valid, prev_valid, switchtonext, switchtolast, c;
-	float wbit;
+	entity wi;
 	n = tokenize_console(weaponorder);
 	switchtonext = switchtolast = 0;
 	first_valid = prev_valid = 0;
@@ -110,13 +110,14 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 			if ((weapon_info(weaponwant)).impulse != imp)
 				continue;
 
-		wbit = weapon_bit(weaponwant);
-		if not(wbit & weapon_spawned_list)
-		if not(pl.weapons & wbit)
+		wi = weapon_info(weaponwant);
+		if not(wi.weapons & weapon_spawned_list)
+		if not(pl.weapons & wi.weapons)
+		if not(pl.weapons_extra & wi.weapons_extra)
 			continue;
 
 		++c;
-		if (player_hasweapon(pl, weaponwant, TRUE, FALSE)) {
+		if (weapon_carried(pl, weaponwant, TRUE, FALSE)) {
 			if (switchtonext)
 				return weaponwant;
 
@@ -153,15 +154,26 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 				if ((weapon_info(weaponwant)).impulse != imp)
 					continue;
 			}
-			wbit = weapon_bit(weaponwant);
-			if (c > 0)
-			if not(wbit & weapon_spawned_list)
-			if not(pl.weapons & wbit)
-				continue;
+			if (c > 0) {
+				wi = weapon_info(weaponwant);
+				if (wi.weapons) {
+					if not(wi.weapons & weapon_spawned_list)
+						continue;
 
+					if (pl.weapons & wi.weapons)
+						continue;
+				}
+				if (wi.weapons_extra) {
+					if not(wi.weapons_extra & weapon_spawned_extra_list)
+						continue;
+
+					if (pl.weapons_extra & wi.weapons_extra)
+						continue;
+				}
+			}
 			--c;
 			if (c <= 0) {
-				player_hasweapon(pl, weaponwant, TRUE, TRUE);
+				weapon_carried(pl, weaponwant, TRUE, TRUE);
 				break;
 			}
 		}
@@ -221,15 +233,15 @@ float(entity e) weapon_best {
 // generic weapons table
 // TODO should they be macros instead?
 float(float wpn, float wrequest) weapon_action {
-	return (weapon_info(wpn)).weapon_func(wrequest);
+	float w = self.weapon;
+	self.weapon = wpn;
+	float r = (weapon_info(wpn)).weapon_func(wrequest);
+	self.weapon = w;
+	return r;
 }
 
 string(float weaponid) weapon_name {
 	return (weapon_info(weaponid)).message;
-}
-
-float(float wpn) weapon_bit {
-	return (weapon_info(wpn)).weapons;
 }
 
 float(float wpn) weapon_ammo_item_code {
@@ -293,13 +305,14 @@ string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_th
 }
 
 float(float w) weapon_throwable {
-	float wb, wa;
-	wb = weapon_bit(w);
-	if (!wb)
+	float wa;
+	entity wi = weapon_info(w);
+	if not(wi.weapons)
+	if not(wi.weapons_extra)
 		return 0;
 
 	wa = weapon_ammo_item_code(w);
-	if (player_start_weapons & wb) {
+	if ((player_start_weapons & wi.weapons) || (player_start_weapons_extra & wi.weapons_extra)) {
 		if (wa == IT_SUPERWEAPON && (player_start_items & IT_UNLIMITED_SUPERWEAPONS))
 			return 0;
 
@@ -315,7 +328,8 @@ float(float w) weapon_throwable {
 
 // toss current weapon
 void(vector velo, vector delta, float doreduce) weapon_throw {
-	float w, wb;
+	float w;
+	entity wi;
 	string a;
 	w = self.weapon;
 	if (w == 0)
@@ -330,8 +344,8 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 	if (doreduce && g_weapon_stay == 1) //prevent ammo multiplication
 		return;
 
-	wb = weapon_bit(w);
-	float akimbo_throw = akimbo_weapon_throw(wb);
+	wi = weapon_info(w);
+	float akimbo_throw = akimbo_weapon_throw(wi.weapons);
 	if not(akimbo_throw) {
 		if not(g_pickup_items)
 			return;
@@ -342,11 +356,13 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 		if (!weapon_throwable(w))
 			return;
 	}
-	if not(self.weapons & wb)
+	if not(self.weapons & wi.weapons)
+	if not(self.weapons_extra & wi.weapons_extra)
 		return;
 
 	if not(akimbo_throw) {
-		self.weapons &= ~wb;
+		self.weapons &= ~wi.weapons;
+		self.weapons_extra &= ~wi.weapons_extra;
 		weapon_switch_force(self, weapon_best(self));
 	}
 	a = weapon_throw_new(self, w, doreduce, self.origin + delta, velo);
@@ -359,6 +375,76 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 		else
 			sprint(self, strcat("You dropped the ^2", weapon_name(w), " with ", a, "\n"));
 	}
+}
+
+.float hasweapon_complain_spam;
+float(entity cl, float wpn, float andammo, float complain) weapon_carried {
+	float f;
+	entity wi;
+	entity oldself;
+	if (time < cl.hasweapon_complain_spam)
+		complain = 0;
+
+	if (complain)
+		cl.hasweapon_complain_spam = time + 0.2;
+
+	wi = weapon_info(wpn);
+	if not(wi.weapon) {
+		if (complain) sprint(cl, "Invalid weapon\n");
+		return FALSE;
+	}
+	if ((cl.weapons & wi.weapons) || (cl.weapons_extra & wi.weapons_extra)) {
+		if (andammo) {
+			if (cl.items & IT_UNLIMITED_WEAPON_AMMO) {
+				f = 1;
+			} else {
+				oldself = self;
+				self = cl;
+				f = (weapon_action(wpn, WR_CHECKAMMO1) || weapon_action(wpn, WR_CHECKAMMO2));
+				self = oldself;
+			}
+			if (!f) {
+				if (complain)
+				if (clienttype(cl) == CLIENTTYPE_REAL) {
+					sound_play2(cl, "weapons/unavailable.wav");
+					sprint(cl, strcat("You don't have any ammo for the ^2", weapon_name(wpn), "\n"));
+				}
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+	if (complain)
+	if (clienttype(cl) == CLIENTTYPE_REAL) {
+		// DRESK - 3/16/07
+		// Report Proper Weapon Status / Modified Weapon Ownership Message
+		if ((weapon_spawned_list & wi.weapons) || (weapon_spawned_extra_list & wi.weapons_extra)) {
+			sprint(cl, strcat("You do not have the ^2", weapon_name(wpn), "\n") );
+			if (self.cvar_cl_showweaponspawns) {
+				entity e;
+				string s;
+				s = wi.model2;
+				for (e = weapon_spawn_chain; e; e = e.enemy) {
+					if (!e.weapons || e.weapons != wi.weapons)
+					if (!e.weapons_extra || e.weapons_extra != wi.weapons_extra)
+						continue;
+
+					WaypointSprite_Spawn(
+						s,
+						1, 0,
+						world, e.origin,
+						cl, 0,
+						world, enemy,
+						0
+					);
+				}
+			}
+		} else
+			sprint(cl, "Requested weapon is ^1NOT AVAILABLE^7 in this map\n");
+
+		sound_play2(cl, "weapons/unavailable.wav");
+	}
+	return FALSE;
 }
 
 // Bringed back weapon frame
@@ -388,13 +474,13 @@ void(void) weapon_frame {
 			if not(akimbo_weapon_have(self, _switchweapon, aw))
 				return;
 			weapon_action(self.weapon, WR_CLEAR);
-			weapon_action(_switchweapon, WR_SETUP);
+			weapon_setup(_switchweapon);
 			weapon_thinkf(WFRAME_IDLE, 0, weapon_ready);
 		} else if (self.weaponentity.state == WS_CLEAR) {
 			player_anim_set(self, anim_draw, FALSE, TRUE, TRUE, 1);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_CLEAR);
-			weapon_action(_switchweapon, WR_SETUP);
+			weapon_setup(_switchweapon);
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
 			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
@@ -407,8 +493,8 @@ void(void) weapon_frame {
 			weapon_thinkf(WFRAME_DONTCHANGE, g_balance_weaponswitchdelay, weapon_clear);
 		}
 	}
-	float wb;
-	wb = weapon_bit(self.weapon);
+	entity wi;
+	wi = weapon_info(self.weapon);
 	// call the think code which may fire the weapon
 	// and do so multiple times to resolve framerate dependency issues if the
 	// server framerate is very low and the weapon fire rate very high
@@ -416,11 +502,11 @@ void(void) weapon_frame {
 	c = 0;
 	while (c < 5) {
 		c = c + 1;
-		if (wb && ((self.weapons & wb) == 0)) {
+		if (wi && !(self.weapons & wi.weapons) && !(self.weapons_extra & wi.weapons_extra)) {
 			weapon_switch_force(self, weapon_best(self));
-			wb = 0;
+			wi = NULL;
 		}
-		if (wb) {
+		if (wi) {
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
@@ -446,7 +532,10 @@ void(float wpn) weapon_precache {
 	item_precache(e.model, e.lodmodel1, "weapons/weaponpickup.wav");
 	precache_model(strcat("models/weapons/v_", e.mdl, ".md3"));
 	precache_model(strcat("models/weapons/h_", e.mdl, ".dpm"));
+	entity oldself = self;
+	self = e;
 	e.weapon_func(WR_PRECACHE);
+	self = oldself;
 }
 
 float internalteam;
@@ -460,6 +549,8 @@ void(float wpn) weapon_defaultspawnfunc {
 	var void() item_spawnfunc;
 	if (self.classname != "droppedweapon" && self.classname != "replacedweapon") {
 		e = weapon_info(wpn);
+		self.weapons = e.weapons;
+		self.weapons_extra = e.weapons_extra;
 		s = cvar_string(strcat("g_weaponreplace_", e.netname));
 		if (s == "0") {
 			remove(self);
@@ -553,7 +644,7 @@ void(float wpn) weapon_defaultspawnfunc {
 	if (self.team)
 		self.flags |= FL_NO_WEAPON_STAY;
 
-	item_start(e.model, e.lodmodel1, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	item_start(e.model, e.lodmodel1, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if not(item_start_failed)
 	if (self.classname != "droppedweapon") {
 		weapon_precache(e.weapon);
@@ -572,6 +663,7 @@ void(float windex) weapon_setup {
 	self.weapon = windex;
 	self.weaponname = e.mdl;
 	self.bulletcounter = 0;
+	weapon_action(windex, WR_SETUP);
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
@@ -1038,9 +1130,9 @@ void(void) weapon_model_exterior_think {
 	}
 	self.effects = self.realowner.body.effects & (EFFECT_ADDITIVE | EFFECT_RED | EFFECT_BLUE | EFFECT_LOWPRECISION | EFFECT_FULLBRIGHT);
 	self.colormap = self.owner.colormap;
-	entity we = self.owner.weaponentity;
+	entity wi = self.owner.weaponentity;
 	entity o = self.owner;
-	if (we.wframe == WFRAME_MELEE || (o.weapon == WEP_MELEE && we.frame == WFRAME_FIRE2)) {
+	if (wi.wframe == WFRAME_MELEE || (o.weapon == WEP_MELEE && wi.frame == WFRAME_FIRE2)) {
 		entity ao = akimbo_owner(o);
 		if (ao.anim_melee == ao.anim_shoot) {
 			float f;
@@ -1445,7 +1537,9 @@ void(entity e, float wep, string name) weapon_give {
 	if (!wep)
 		return;
 
-	e.weapons = e.weapons | weapon_bit(wep);
+	entity wi = weapon_info(wep);
+	e.weapons = e.weapons | wi.weapons;
+	e.weapons_extra = e.weapons_extra | wi.weapons_extra;
 	oldself = self;
 	self = e;
 	if (other.classname == "player") {

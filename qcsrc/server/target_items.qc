@@ -211,7 +211,8 @@ void(void) target_items_use {
 	if (activator.armorvalue > a0)
 		activator.pauserotarmor_finished = max(activator.pauserothealth_finished, time + g_balance_pause_health_rot);
 
-	if not(activator.weapons & weapon_bit(activator.switchweapon))
+	e = weapon_info(activator.switchweapon);
+	if not((activator.weapons & e.weapons) || (activator.weapons_extra & e.weapons_extra))
 		_switchweapon = TRUE;
 
 	if (_switchweapon)

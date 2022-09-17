@@ -30,11 +30,11 @@ void(float itemid) minstagib_items {
 			self.health = 1;
 			item_start(sv_model_healthlarge, "models/items/g_h50.md3",
 				"misc/mediumhealth.wav", 45, 0,
-				"Health", IT_CELLS, 0, 0, item_generic_pickupevalfunc, 100);
+				"Health", IT_CELLS, 0, item_generic_pickupevalfunc, 100);
 		} else {
 			item_start(sv_model_ammocells, "models/items/a_cells.md3",
 				"misc/itempickup.wav", 45, 0,
-				"Nex Ammo", IT_CELLS, 0, 0, item_generic_pickupevalfunc, 100);
+				"Nex Ammo", IT_CELLS, 0, item_generic_pickupevalfunc, 100);
 		}
 		return;
 	}
@@ -44,7 +44,7 @@ void(float itemid) minstagib_items {
 		self.max_health = 1;
 		item_start(sv_model_armorlarge, "models/items/g_a25.md3",
 			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-			"Extralife", IT_NAILS, 0, FL_POWERUP, item_generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+			"Extralife", IT_NAILS, FL_POWERUP, item_generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 		return;
 	}
 	remove(self);

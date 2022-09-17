@@ -6,16 +6,14 @@ void boss2_pellet_touch()
 {
 	PROJECTILE_TOUCH;
 	if(other.solid == SOLID_BSP)
-		damage_info(self.origin, self.dmg, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
+		effect_impact(self.origin, self.dmg, 0, 0, normalize(self.velocity), EFFECT_IMPACT_PELLET, self);
 
-	if (other && other.takedamage)
-	{
+	if (other && other.takedamage) {
 		entity o = self.realowner;
 		damage(other, self, o, self.dmg_edge, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
 		self.cnt = 0;
 	}
-	if not(self.cnt)
-	{
+	if not(self.cnt) {
 		remove(self);
 		return;
 	}
@@ -27,7 +25,7 @@ void boss2_pellet_touch()
 void(vector start, vector dir) boss2_pellet {
 	entity proj;
 	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
-	projectile_setup(proj, start, PROJECTILE_BULLET_BIG, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+	projectile_setup(proj, start, EFFECT_IMPACT_PELLET, PROJECTILE_BULLET_BIG, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 	proj.movetype = MOVETYPE_BOUNCEMISSILE;
 	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;

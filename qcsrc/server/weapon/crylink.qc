@@ -41,7 +41,7 @@ void(void) weapon_crylink_touch {
 		projectile_explode();
 		return;
 	}
-	damage_radius (self, self.realowner, self.dmg * self.lip, self.dmg_edge * self.lip, self.dmg_radius, world, self.dmg_force * self.lip, self.projectiledeathtype, other);
+	damage_radius(self, self.realowner, self.dmg * self.lip, self.dmg_edge * self.lip, self.dmg_radius, world, self.dmg_force * self.lip, EFFECT_IMPACT_CRYLINK_BIG, self.projectiledeathtype, other);
 	self.cnt = self.cnt - 1;
 	self.owner = world;
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -71,7 +71,7 @@ void(void) weapon_crylink_attack {
 	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_primary_shots);
 	while (counter < g_balance_crylink_primary_shots) {
 		proj = projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
-		projectile_setup(proj, weapon_shotorg, WEP_CRYLINK, g_balance_crylink_primary_damage,
+		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK_BIG, WEP_CRYLINK, g_balance_crylink_primary_damage,
 				g_balance_crylink_primary_edgedamage, g_balance_crylink_primary_radius, g_balance_crylink_primary_force, 0, (g_balance_crylink_primary_bouncedamagefactor ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
 		proj.lip = g_balance_crylink_primary_bouncedamagefactor;
 		s = '0 0 0';
@@ -114,7 +114,7 @@ void(void) weapon_crylink_attack2 {
 	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_secondary_shots);
 	while (counter < g_balance_crylink_secondary_shots) {
 		proj = projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
-		projectile_setup(proj, weapon_shotorg, WEP_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
+		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK, WEP_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
 				g_balance_crylink_secondary_edgedamage, g_balance_crylink_secondary_radius, g_balance_crylink_secondary_force, 0, (g_balance_crylink_secondary_bouncedamagefactor ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
 		proj.lip = g_balance_crylink_secondary_bouncedamagefactor;
 		if (g_sideview)
@@ -165,9 +165,8 @@ float(float req) weapon_crylink {
 	} else if (req == WR_PRECACHE) {
 		precache_sound("weapons/crylink_fire.wav");
 		precache_sound("weapons/crylink_fire2.wav");
-	} else if (req == WR_SETUP)
-		weapon_setup(WEP_CRYLINK);
-	else if (req == WR_CHECKAMMO1)
+	} else if (req == WR_SETUP) {
+	} else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_crylink_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= g_balance_crylink_secondary_ammo;

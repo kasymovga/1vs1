@@ -75,7 +75,7 @@ void(void) weapon_nex_attack {
 	self.nex_lasthit = damage_goodhits;
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		damage_info(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), WEP_NEX, self);
+		effect_impact(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), EFFECT_IMPACT_NEX, self);
 
 	//beam and muzzle flash done on client
 	warpzone_draw_effect_triangle(weapon_shotorg, weapon_shotorg_visual, warpzone_untransform_origin(warpzone_trace_transform, trace_endpos), weapon_nex_beam_particles);
@@ -135,7 +135,7 @@ float(float req) weapon_nex {
 	} else if (req == WR_RELOAD) {
 		weapon_nex_reload();
 	} else if (req == WR_SETUP) {
-		weapon_setup(WEP_NEX);
+		//weapon_setup(WEP_NEX);
 		if (g_balance_nex_magazinecapacity) {
 			weapon_clip_checkmaxbullets(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip, g_balance_nex_ammo, g_balance_nex_ammo);
 			if not(self.nex_ammoclip)

@@ -162,8 +162,9 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 	return e;
 }
 
-void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float _gravity, float _movetype) projectile_setup {
+void(entity e, vector _origin, float impacttype, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float _gravity, float _movetype) projectile_setup {
 	e.projectiledeathtype = deathtype;
+	e.species = impacttype;
 	PROJECTILE_MAKETRIGGER(e);
 	e.movetype = _movetype;
 	if (_gravity) {
@@ -253,7 +254,7 @@ void(void) projectile_think2use {
 void(void) projectile_explode {
 	self.event_damage = NULL;
 	self.takedamage = DAMAGE_NO;
-	damage_radius(self, self.realowner, self.dmg, self.dmg_edge, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
+	damage_radius(self, self.realowner, self.dmg, self.dmg_edge, self.dmg_radius, world, self.dmg_force, self.species, self.projectiledeathtype, other);
 	remove(self);
 }
 

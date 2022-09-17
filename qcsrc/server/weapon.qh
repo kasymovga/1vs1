@@ -78,12 +78,13 @@ void(float wpn) weapon_precache;
 void(entity pl) weapon_show_list;
 void(entity e, float w) weapon_switch_force;
 string(float weaponid) weapon_name;
-float(float wpn) weapon_bit;
 void(float imp) weapon_switch;
 void(float fr, float t, void() func) weapon_thinkf;
 float(float secondary, float attacktime) weapon_prepareattack;
 void(void) weapon_ready;
 void(void) weapon_init;
 float weapon_spawned_list;
-#define WEAPON_VALID(w) ((w) >= WEP_FIRST && (w) <= WEP_LAST)
+float weapon_spawned_extra_list;
+#define WEAPON_VALID(w) ((w) >= WEP_FIRST && (w) <= WEP_LAST_EXTRA)
 entity(string s) weapon_info_by_name;
+float(entity cl, float wpn, float andammo, float complain) weapon_carried;

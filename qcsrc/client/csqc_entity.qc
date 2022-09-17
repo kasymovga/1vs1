@@ -67,7 +67,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_RADARLINK] = teamradar_link_read;
 	csqc_entity_parsers[NET_CSQC_PROJECTILE] = projectile_read;
 	csqc_entity_parsers[NET_CSQC_GIBSPLASH] = gib_read;
-	csqc_entity_parsers[NET_CSQC_DAMAGEINFO] = damage_info_read;
+	csqc_entity_parsers[NET_CSQC_EFFECT_IMPACT] = effect_impact_read;
 	csqc_entity_parsers[NET_CSQC_CASING] = casing_read;
 	csqc_entity_parsers[NET_CSQC_INIT] = main_init_read;
 	csqc_entity_parsers[NET_CSQC_MAPVOTE] = mapvote_read;

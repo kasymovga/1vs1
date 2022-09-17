@@ -32,7 +32,7 @@ void ewheel_hunt() {
 			float i;
 			for (i = -1; i < 2; i += 2) {
 				entity proj = projectile(TRUE, PROJECTILE_LASER, TRUE, self);
-				projectile_setup(proj, _shotorg + v_right * i * 16, WEP_LASER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+				projectile_setup(proj, _shotorg + v_right * i * 16, EFFECT_IMPACT_LASER, WEP_LASER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 				proj.nextthink = time + 5;
 				proj.think = projectile_think2use;
 				proj.use = projectile_explode;

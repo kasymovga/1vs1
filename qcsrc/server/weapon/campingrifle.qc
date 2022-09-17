@@ -99,7 +99,7 @@ void(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, flo
 		weapon_shotdir = v_forward;
 		weapon_shotorg = self.origin + self.view_ofs + ((weapon_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 	}
-	bullet(weapon_shotorg, weapon_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, particleeffectnum("tr_rifle"), ((deathtype & HITTYPE_SECONDARY) ? g_balance_campingrifle_primary_gravityfactor : g_balance_campingrifle_primary_gravityfactor), pBulletConstant);
+	bullet(weapon_shotorg, weapon_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, EFFECT_IMPACT_BULLET, deathtype, particleeffectnum("tr_rifle"), ((deathtype & HITTYPE_SECONDARY) ? g_balance_campingrifle_primary_gravityfactor : g_balance_campingrifle_primary_gravityfactor), pBulletConstant);
 	bullet_end();
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 2, self);
 	self.campingrifle_ammoclip = self.campingrifle_ammoclip - 1;
@@ -173,7 +173,7 @@ float(float req) weapon_campingrifle {
 		precache_sound("weapons/campingrifle_fire.wav");
 		precache_sound("weapons/campingrifle_fire2.wav");
 	} else if (req == WR_SETUP) {
-		weapon_setup(WEP_CAMPINGRIFLE);
+		//weapon_setup(WEP_CAMPINGRIFLE);
 		full = weapon_campingrifle_checkmaxbullets();
 		if (g_balance_campingrifle_auto_reload_after_changing_weapons)
 			if (!full)

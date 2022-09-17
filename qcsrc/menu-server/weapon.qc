@@ -35,5 +35,5 @@ string(string order, float from, float to, float subtract, float complete) weapo
 }
 
 string(string order, float complete) weapon_fix_order {
-	return weapon_fix_priority_list(order, WEP_FIRST, WEP_LAST, 230 - WEP_FIRST, complete);
+	return weapon_fix_priority_list(order, WEP_FIRST, WEP_LAST + 8, 230 - WEP_FIRST, complete);
 }

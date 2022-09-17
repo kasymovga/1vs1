@@ -45,6 +45,25 @@ void nadget_GenericProjectile_RadiusDamage(void) {
     //float p = Buffs_NadgetPower(self.owner);
     float dmgmod = 1;
     float frcmod = 1;
+    float ei = 0;
+    switch (self.hg_type) {
+    case NADGET_NAPALM:
+    case NADGET_REMOTE:
+    case NADGET_NORMAL:
+    case NADGET_RAZE:
+    	ei = EFFECT_IMPACT_RM_GRENADE;
+    	break;
+    case NADGET_LASER:
+		ei = EFFECT_IMPACT_RM_LASER;
+		break;
+    case NADGET_PLASMA:
+    	if (self.projectiledeathtype & HITTYPE_SECONDARY)
+    		ei = EFFECT_IMPACT_RM_PLASMA_SHARD;
+    	else
+    		ei = EFFECT_IMPACT_RM_PLASMA;
+
+    	break;
+    }
     dmgmod *= pow(GV("damage_bouncemultiplier"), GV("bouncelimit") - self.cnt);
     damage_radius(self, self.owner,
                        GV("damage") * /*p * */ dmgmod,
@@ -52,6 +71,7 @@ void nadget_GenericProjectile_RadiusDamage(void) {
                        GV("radius"),
                        world,
                        GV("force") * frcmod,
+                       ei,
                        self.projectiledeathtype,
                        other
                 );

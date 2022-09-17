@@ -24,7 +24,7 @@ float(string cmd, float tokens) weapon_selectable_cmd_client_handle {
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
 				e = weapon_info(i);
 				if (e.netname == s) {
-					if not(g_start_weapon_selectable & weapon_bit(e.weapon))
+					if not(g_start_weapon_selectable & weapon_info(e.weapon).weapons)
 						return TRUE;
 
 					self.w_secondary_picked = e.weapon;
@@ -61,7 +61,7 @@ void(entity spot) weapon_selectable_player_spawn {
 		self.w_secondary_picked = random_selection_chosen_float;
 	}
 	if (self.w_secondary_picked) {
-		self.weapons |= weapon_bit(self.w_secondary_picked);
+		self.weapons |= weapon_info(self.w_secondary_picked).weapons;
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
 			entity e = weapon_info(self.w_secondary_picked);
 			float a = e.items & IT_AMMO;
@@ -88,7 +88,7 @@ void(void) weapon_selectable_init {
 		if (head != "") {
 			e = weapon_info_by_name(head);
 			if (e) {
-				g_start_weapon_selectable |= weapon_bit(e.weapon);
+				g_start_weapon_selectable |= weapon_info(e.weapon).weapons;
 				weapon_precache(e.weapon);
 			}
 		}
