@@ -322,6 +322,7 @@ entity(entity player) score_keeper_get {
 	}
 	player.scorekeeper = world;
 	score_attach(player);
+	score_touch(player);
 	return player.scorekeeper;
 }
 
