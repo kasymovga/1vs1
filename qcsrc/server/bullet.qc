@@ -92,9 +92,6 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 void(void) bullet_hit {
 	float f;
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
-	if (other.solid == SOLID_BSP)
-		effect_impact(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.species, self);
-
 	if (other && other != self.enemy && other.takedamage) {
 		effect_curveparticles_end();
 		damage_headshot = 0;
@@ -113,6 +110,10 @@ void(void) bullet_hit {
 			if (damage_yoda)
 				announce(self.owner, "announcer/male/awesome.wav", "^5Awesome");
 		}
+	}
+	if (other.solid == SOLID_BSP) {
+		effect_curveparticles_end();
+		effect_impact(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.species, self);
 	}
 	self.enemy = other; // don't hit the same player twice with the same bullet
 }

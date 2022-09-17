@@ -131,7 +131,7 @@ void(string mdlname, vector org, vector vconst, vector vrand, float specnum, flo
 	}
 }
 
-void(float isNew) gib_read {
+void(void) gib_read {
 	float amount, type, specnum;
 	float i;
 	vector org, vel;
@@ -145,6 +145,12 @@ void(float isNew) gib_read {
 	org_y = net_read_short() * 4 + 2;
 	org_z = net_read_short() * 4 + 2;
 	vel = net_decompress_vec(net_read_short());
+	if not(CVAR(cl_gentle))
+		amount *= 1 - CVAR(cl_nogibs);
+
+	if (amount <= 0)
+		return;
+
 	if (CVAR(cl_gentle))
 		type |= 0x80; // set gentle bit
 
@@ -157,13 +163,10 @@ void(float isNew) gib_read {
 		type |= 0x80;
 		gentle_prefix = "particlegibs_";
 	}
-	if not(CVAR(cl_gentle))
-		amount *= 1 - CVAR(cl_nogibs);
-
-	if (amount <= 0 || !isNew)
-		return;
-
-	self.origin = org; // for the sounds
+	entity e = spawn();
+	e.origin = org; // for the sounds
+	e.nextthink = time + 0.2;
+	e.think = stdproc_remove;
 	specnum = (type & 0x78) / 8; // blood/gibmodel type: using four bits (0..7, bit indexes 3,4,5)
 	issilent = (type & 0x40);
 	type = type & 0x87; // remove the species bits: bit 7 = gentle, bit 0,1,2 = kind of gib
@@ -171,7 +174,7 @@ void(float isNew) gib_read {
 	switch (type) {
 	case 0x01:
 		if (!issilent)
-			sound (self, CHAN_PAIN, "misc/gib.wav", VOL_BASE, ATTN_NORM);
+			sound (e, CHAN_PAIN, "misc/gib.wav", VOL_BASE, ATTN_NORM);
 
 		if (prandom() < amount)
 			gib_toss("models/gibs/eye.md3", org, vel, prandomvec() * 150, specnum, 0, issilent);

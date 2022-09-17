@@ -1,26 +1,13 @@
-float(entity to, float sf) violence_gib_splash_send {
-	net_write_byte(MSG_ENTITY, NET_CSQC_GIBSPLASH);
-	net_write_byte(MSG_ENTITY, self.state); // actually type
-	net_write_byte(MSG_ENTITY, bound(1, self.cnt * 16, 255)); // gibbage amount multiplier
-	net_write_short(MSG_ENTITY, floor(self.origin_x / 4)); // not using a coord here, as gibs don't need this accuracy
-	net_write_short(MSG_ENTITY, floor(self.origin_y / 4)); // not using a coord here, as gibs don't need this accuracy
-	net_write_short(MSG_ENTITY, floor(self.origin_z / 4)); // not using a coord here, as gibs don't need this accuracy
-	net_write_short(MSG_ENTITY, self.oldorigin_x); // acrually compressed velocity
-	return TRUE;
-}
-
-// TODO maybe convert this to a TE?
 void(vector org, vector dir, float type, float amount, entity gibowner, entity attacker) violence_gib_splash_at {
-	entity e;
-	e = spawn();
-	e.classname = "gibsplash";
-	e.cnt = amount;
-	e.state = type; // should stay smaller than 15
-	e.state |= 8 * self.species; // gib type, ranges from 0 to 15
-	setorigin(e, org);
-	e.velocity = dir;
-	e.oldorigin_x = net_compress_vec(e.velocity);
-	net_link_entity(e, FALSE, 0.2, violence_gib_splash_send);
+	type |= 8 * self.species; // gib type, ranges from 0 to 15
+	net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
+	net_write_byte(MSG_BROADCAST, NET_TE_CSQC_GIBSPLASH);
+	net_write_byte(MSG_BROADCAST, type); // actually type
+	net_write_byte(MSG_BROADCAST, bound(1, amount * 16, 255)); // gibbage amount multiplier
+	net_write_short(MSG_BROADCAST, floor(org_x / 4)); // not using a coord here, as gibs don't need this accuracy
+	net_write_short(MSG_BROADCAST, floor(org_y / 4)); // not using a coord here, as gibs don't need this accuracy
+	net_write_short(MSG_BROADCAST, floor(org_z / 4)); // not using a coord here, as gibs don't need this accuracy
+	net_write_short(MSG_BROADCAST, net_compress_vec(dir)); // acrually compressed velocity
 }
 
 void(entity source, float type, float amount, entity attacker) violence_gib_splash {

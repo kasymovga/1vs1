@@ -62,7 +62,7 @@ void(void) casing_touch {
 	self.nextthink = time + 0.2;
 }
 
-void(float isNew) casing_read {
+void(void) casing_read {
 	entity casing = spawn();
 	casing.classname= "casing";
 	casing.state = net_read_byte();

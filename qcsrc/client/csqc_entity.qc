@@ -1,7 +1,12 @@
 var void(float) csqc_entity_parsers[NET_CSQC_COUNT];
+var void(void) csqc_entity_temp_parsers[NET_TE_CSQC_COUNT];
 
-void (float ignore) csqc_entity_error {
+void(float ignore) csqc_entity_error {
 	error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
+}
+
+void(void) csqc_entity_temp_error {
+	error(strcat("unknown entity type in CSQC_Parse_TempEntity: ", ftos(self.enttype), "\n"));
 }
 
 void(void) csqc_entity_clean {
@@ -50,10 +55,48 @@ void(float bIsNewEntity) CSQC_Ent_Update { //called by engine
 	time = savetime;
 }
 
+void(void) csqc_entity_temp_hit_read {
+	if (CVAR(cl_hitsound))
+		sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+
+	if (CVAR(crosshair_hit_time) > 0)
+		view_crosshair_hittime = time + CVAR(crosshair_hit_time);
+}
+
+void(void) csqc_entity_temp_weapon_list_show {
+	sbar_weapons_time = time;
+}
+
+void(void) csqc_entity_temp_team_select_show {
+	if not(main_isdemo)
+		GUI_Show(GUI_TEAMSELECT);
+}
+
+void(void) csqc_entity_temp_map_list_read {
+	str_unzone_ifneeded(gui_available_maps);
+	gui_available_maps = str_zone_ifneeded(net_read_string());
+	string s = gui_available_maps;
+	gui_available_maps_count = 0;
+	while (s != "") {
+		s = str_cdr(s);
+		gui_available_maps_count++;
+	}
+}
+
+void(void) csqc_entity_temp_game_over {
+	if (main_calledhooks & MAIN_HOOK_START) {
+		localcmd("\ncl_hook_gameend;");
+		main_calledhooks |= MAIN_HOOK_END;
+	}
+}
+
 void(void) csqc_entity_init {
 	float i;
 	for (i = 0; i < NET_CSQC_COUNT; i++) {
 		csqc_entity_parsers[i] = csqc_entity_error;
+	}
+	for (i = 0; i < NET_TE_CSQC_COUNT; i++) {
+		csqc_entity_temp_parsers[i] = csqc_entity_temp_error;
 	}
 	csqc_entity_parsers[NET_CSQC_ENTCS] = entcs_read;
 	csqc_entity_parsers[NET_CSQC_SCORES_INFO] = score_info_read;
@@ -66,9 +109,6 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_WAYPOINT] = waypointsprite_read;
 	csqc_entity_parsers[NET_CSQC_RADARLINK] = teamradar_link_read;
 	csqc_entity_parsers[NET_CSQC_PROJECTILE] = projectile_read;
-	csqc_entity_parsers[NET_CSQC_GIBSPLASH] = gib_read;
-	csqc_entity_parsers[NET_CSQC_EFFECT_IMPACT] = effect_impact_read;
-	csqc_entity_parsers[NET_CSQC_CASING] = casing_read;
 	csqc_entity_parsers[NET_CSQC_INIT] = main_init_read;
 	csqc_entity_parsers[NET_CSQC_MAPVOTE] = mapvote_read;
 	csqc_entity_parsers[NET_CSQC_RANDOMSEED] = prandom_seed_read;
@@ -97,6 +137,30 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_ICE] = ice_read;
 	csqc_entity_parsers[NET_CSQC_3RDVIEW] = thirdview_read;
 	csqc_entity_parsers[NET_CSQC_SHOOTINGRANGE] = shootingrange_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_PICTURE - NET_TE_CSQC_FIRST] = mapvote_picture_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_RACE - NET_TE_CSQC_FIRST] = race_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_ZCURVEPARTICLES - NET_TE_CSQC_FIRST] = particles_zcurve_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_NEXGUNBEAMPARTICLE - NET_TE_CSQC_FIRST] = particles_nex_beam_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_LIGHTNINGARC - NET_TE_CSQC_FIRST] = effect_lightningarc_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_BIGLIGHTNINGARC - NET_TE_CSQC_FIRST] = effect_lightningarc_big_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_ZAPPERLIGHTNING - NET_TE_CSQC_FIRST] = zapper_lightning_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_NADGETSELECT - NET_TE_CSQC_FIRST] = nadgetselect_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_BLAST - NET_TE_CSQC_FIRST] = effect_blast_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_RADIO - NET_TE_CSQC_FIRST] = radio_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_WEAPONLIST - NET_TE_CSQC_FIRST] = csqc_entity_temp_weapon_list_show;
+	csqc_entity_temp_parsers[NET_TE_CSQC_WEAPONSELECT - NET_TE_CSQC_FIRST] = weaponselect_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_TEAMSELECT - NET_TE_CSQC_FIRST] = csqc_entity_temp_team_select_show;
+	csqc_entity_temp_parsers[NET_TE_CSQC_GAMEOVER - NET_TE_CSQC_FIRST] = csqc_entity_temp_game_over;
+	csqc_entity_temp_parsers[NET_TE_CSQC_MAPLIST - NET_TE_CSQC_FIRST] = csqc_entity_temp_map_list_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_TRIP - NET_TE_CSQC_FIRST] = trip_net_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_ANNOUNCE_PRINT - NET_TE_CSQC_FIRST] = announce_print;
+	csqc_entity_temp_parsers[NET_TE_CSQC_HINT - NET_TE_CSQC_FIRST] = hint_net_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_HIT - NET_TE_CSQC_FIRST] = csqc_entity_temp_hit_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_MODELSELECT - NET_TE_CSQC_FIRST] = modelselect_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_RECORDLISTCHUNK - NET_TE_CSQC_FIRST] = recordlist_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_EFFECT_IMPACT - NET_TE_CSQC_FIRST] = effect_impact_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_CASING - NET_TE_CSQC_FIRST] = casing_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_GIBSPLASH - NET_TE_CSQC_FIRST] = gib_read;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -104,88 +168,13 @@ void(void) csqc_entity_init {
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
 float() CSQC_Parse_TempEntity { //called by engine
 	// Acquire TE ID
-	float nTEID = net_read_byte();
-	switch(nTEID) {
-	case NET_TE_CSQC_HIT:
-		if (CVAR(cl_hitsound))
-			sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
-
-		if (CVAR(crosshair_hit_time) > 0) {
-			view_crosshair_hittime = time + CVAR(crosshair_hit_time);
-		}
-		return TRUE;
-	case NET_TE_CSQC_ZCURVEPARTICLES:
-		particles_zcurve_read();
-		return TRUE;
-	case NET_TE_CSQC_NEXGUNBEAMPARTICLE:
-		particles_nex_beam_read();
-		return TRUE;
-	case NET_TE_CSQC_LIGHTNINGARC:
-		effect_lightningarc_read();
-		return TRUE;
-	case NET_TE_CSQC_BIGLIGHTNINGARC:
-		effect_lightningarc_big_read();
-		return TRUE;
-	case NET_TE_CSQC_ZAPPERLIGHTNING:
-		zapper_lightning_read();
-		return TRUE;
-	case NET_TE_CSQC_BLAST:
-		effect_blast_read();
-		return TRUE;
-	case NET_TE_CSQC_ANNOUNCE_PRINT:
-		announce_print();
-		return TRUE;
-	case NET_TE_CSQC_WEAPONLIST:
-		sbar_weapons_time = time;
-		return TRUE;
-	case NET_TE_CSQC_RADIO:
-		radio_read();
-		return TRUE;
-	case NET_TE_CSQC_NADGETSELECT:
-		nadgetselect_read();
-		return TRUE;
-	case NET_TE_CSQC_WEAPONSELECT:
-		weaponselect_read();
-		return TRUE;
-	case NET_TE_CSQC_PICTURE:
-		mapvote_picture_read();
-		return TRUE;
-	case NET_TE_CSQC_RACE:
-		race_read();
-		return TRUE;
-	case NET_TE_CSQC_TEAMSELECT:
-		if not(main_isdemo)
-			GUI_Show(GUI_TEAMSELECT);
-
-		return TRUE;
-	case NET_TE_CSQC_GAMEOVER:
-		if (main_calledhooks & MAIN_HOOK_START) {
-			localcmd("\ncl_hook_gameend;");
-			main_calledhooks |= MAIN_HOOK_END;
-		}
-		return TRUE;
-	case NET_TE_CSQC_MAPLIST:
-		str_unzone_ifneeded(gui_available_maps);
-		gui_available_maps = str_zone_ifneeded(net_read_string());
-		string s = gui_available_maps;
-		gui_available_maps_count = 0;
-		while (s != "") {
-			s = str_cdr(s);
-			gui_available_maps_count++;
-		}
-		return TRUE;
-	case NET_TE_CSQC_TRIP:
-		trip_net_read();
-		return TRUE;
-	case NET_TE_CSQC_HINT:
-		hint_net_read();
-		return TRUE;
-	case NET_TE_CSQC_MODELSELECT:
-		modelselect_read();
-		return TRUE;
-	case NET_TE_CSQC_RECORDLISTCHUNK:
-		recordlist_read();
-		return TRUE;
+	float n = net_read_byte();
+	if (n < NET_TE_CSQC_FIRST) {
+		return FALSE;
 	}
-	return FALSE;
+	if (n >= NET_TE_CSQC_LAST_PLUS_ONE) {
+		return FALSE;
+	}
+	csqc_entity_temp_parsers[n - NET_TE_CSQC_FIRST]();
+	return TRUE;
 }
