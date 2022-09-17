@@ -99,7 +99,7 @@ float(float t, float scorefield, float score) score_team_add_to {
 	}
 	if (score)
 		if (score_team_label[scorefield] != "")
-			s.SendFlags = s.SendFlags | pow(2, scorefield);
+			s.SendFlags |= pow(2, scorefield);
 
 	float newscore = s.(teamscores[scorefield]) + score;
 	s.(teamscores[scorefield]) = newscore;
@@ -174,7 +174,7 @@ float(entity to, float sf) score_info_send {
 }
 
 void() score_send_delayed_think {
-	self.SendFlags = self.SendFlags | self.flags;
+	self.SendFlags |= self.SendFlags;
 	self.flags = 0;
 	self.lastshot_time = time + 1;
 }
