@@ -19,6 +19,8 @@ float weapon_extra_primary_speed[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_spread[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_radius[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_impact_type[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_primary_up[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_primary_bounces[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_primary_sound[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_primary_message[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_ammo[WEAPON_EXTRA_COUNT_MAX];
@@ -36,6 +38,8 @@ float weapon_extra_secondary_speed[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_spread[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_radius[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_impact_type[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_secondary_up[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_secondary_bounces[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_secondary_sound[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_secondary_message[WEAPON_EXTRA_COUNT_MAX];
 enum {
@@ -64,6 +68,21 @@ float(string s) weapon_extra_type_from_name {
 	}
 	print("Unknown extra weapon type: ", s, "\n");
 	return 0;
+}
+
+void(void) weapon_extra_projectile_touch {
+	if (self.cnt) {
+		if not(other) {
+			self.owner = NULL;
+			if (self.cnt > 0) {
+				self.cnt--;
+			}
+			return;
+		}
+	} else {
+		projectile_touch_explode();
+	}
+	projectile_touch_explode();
 }
 
 void(float num, float secondary, float t) weapon_extra_attack {
@@ -137,18 +156,32 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		antilag_end();
 		break;
 	case WEAPON_EXTRA_TYPE_PROJECTILE:
+		if not(e) return;
 		weapon_setup_shot(self, 0 /* TODO: recoil */, s, c);
 		pointparticles(m, weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 		entity proj;
+		float up, bounces;
+		if (secondary) {
+			up = weapon_extra_secondary_up[num];
+			bounces = weapon_extra_secondary_bounces[num];
+		} else {
+			up = weapon_extra_primary_up[num];
+			bounces = weapon_extra_primary_bounces[num];
+		}
 		for (float i = 0; i < c; i++) {
 			proj = projectile(TRUE, e, TRUE, self);
 			projectile_setup(proj, weapon_shotorg, it, hittype, d,
-					0 /* TODO: edgedamage */, r, f, g, MOVETYPE_FLY /* TODO: movetype */);
-			proj.touch = projectile_touch_explode /* TODO: touch */;
+					0 /* TODO: edgedamage */, r, f, g, (bounces ? MOVETYPE_BOUNCE : MOVETYPE_FLY));
+			proj.touch = (bounces ? weapon_extra_projectile_touch : projectile_touch_explode);
+			proj.cnt = bounces;
 			proj.use = projectile_explode;
 			proj.think = projectile_think2use;
 			proj.nextthink = time + 5 /* TODO: lifetime */;
-			proj.velocity = (weapon_shotdir + randomvec() * spr) * sp /* TODO: up velocity */;
+			if (g)
+				proj.velocity = (v_forward + randomvec() * spr) * sp + v_up * up;
+			else
+				proj.velocity = (weapon_shotdir + randomvec() * spr) * sp;
+
 			weapon_setup_projectile_velocity(proj);
 		}
 		break;
@@ -307,8 +340,7 @@ void(void) weapon_extra_init {
 	string modelname;
 	for (float i = 0; i < WEAPON_EXTRA_COUNT_MAX; i++) {
 		modelname = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_model")));
-		if (modelname == "") break;
-		weapon_extra_count++;
+		if (modelname == "") continue;
 		weapon_extra_model[i] = modelname;
 		imp = cvar(strcat("g_weapon_extra_", ftos(i), "_impulse"));
 		weapon_extra_magazinecapacity[i] = cvar(strcat("g_weapon_extra_", ftos(i), "_magazinecapacity"));
@@ -342,6 +374,8 @@ void(void) weapon_extra_init {
 		WEAPON_EXTRA_READ(speed)
 		WEAPON_EXTRA_READ(spread)
 		WEAPON_EXTRA_READ(ammo)
+		WEAPON_EXTRA_READ(bounces)
+		WEAPON_EXTRA_READ(up)
 		weapon_extra_primary_sound[i] = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_sound")));
 		weapon_extra_primary_muzzle[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_muzzle")));
 		t = weapon_extra_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_type")));
@@ -359,7 +393,7 @@ void(void) weapon_extra_init {
 		if (t == WEAPON_EXTRA_TYPE_PROJECTILE)
 			weapon_extra_secondary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 		else
-			weapon_extra_secondary_effect[i] = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
+			weapon_extra_secondary_effect[i] = t = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 
 		weapon_extra_secondary_impact_type[i] = weapon_extra_impact_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_impact_type")));
 		weapon_register(WEP_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, 1, modelname, modelname, modelname);

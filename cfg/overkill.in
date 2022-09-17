@@ -54,8 +54,8 @@ set overkill_g_player_debris "armor_small"
 //set g_weapon_extra_0_model ok_sniper
 //set g_weapon_extra_0_impulse 1
 //set g_weapon_extra_0_magazinecapacity 5
-//set g_weapon_extra_0_muzzle nex_muzzleflash
 //set g_weapon_extra_0_ammo_type cells
+//set g_weapon_extra_0_primary_muzzle nex_muzzleflash
 //set g_weapon_extra_0_primary_type nex
 //set g_weapon_extra_0_primary_impact_type nex
 //set g_weapon_extra_0_primary_effect nex_beam
@@ -72,8 +72,8 @@ set overkill_g_player_debris "armor_small"
 //set g_weapon_extra_1_model ok_mg
 //set g_weapon_extra_1_impulse 3
 //set g_weapon_extra_1_magazinecapacity 20
-//set g_weapon_extra_1_muzzle uzi_muzzleflash
 //set g_weapon_extra_1_ammo_type bullets
+//set g_weapon_extra_1_primary_muzzle uzi_muzzleflash
 //set g_weapon_extra_1_primary_type bullet
 //set g_weapon_extra_1_primary_impact_type bullet
 //set g_weapon_extra_1_primary_effect tr_bullet
@@ -94,8 +94,8 @@ set overkill_g_player_debris "armor_small"
 //set g_weapon_extra_2_model ok_shotgun
 //set g_weapon_extra_2_impulse 2
 //set g_weapon_extra_2_magazinecapacity 8
-//set g_weapon_extra_2_muzzle shutgun_muzzleflash
 //set g_weapon_extra_2_ammo_type shells
+//set g_weapon_extra_2_primary_muzzle shotgun_muzzleflash
 //set g_weapon_extra_2_primary_type bullet
 //set g_weapon_extra_2_primary_impact_type bullet
 //set g_weapon_extra_2_primary_effect tr_bullet
