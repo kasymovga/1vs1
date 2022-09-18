@@ -163,10 +163,6 @@ void(void) gib_read {
 		type |= 0x80;
 		gentle_prefix = "particlegibs_";
 	}
-	entity e = spawn();
-	e.origin = org; // for the sounds
-	e.nextthink = time + 0.2;
-	e.think = stdproc_remove;
 	specnum = (type & 0x78) / 8; // blood/gibmodel type: using four bits (0..7, bit indexes 3,4,5)
 	issilent = (type & 0x40);
 	type = type & 0x87; // remove the species bits: bit 7 = gentle, bit 0,1,2 = kind of gib
@@ -174,7 +170,7 @@ void(void) gib_read {
 	switch (type) {
 	case 0x01:
 		if (!issilent)
-			sound (e, CHAN_PAIN, "misc/gib.wav", VOL_BASE, ATTN_NORM);
+			builtin_pointsound(org, "misc/gib.wav", VOL_BASE, ATTN_NORM);
 
 		if (prandom() < amount)
 			gib_toss("models/gibs/eye.md3", org, vel, prandomvec() * 150, specnum, 0, issilent);
