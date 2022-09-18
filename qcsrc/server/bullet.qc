@@ -133,7 +133,7 @@ void(void) bullet_leave_solid_think {
 	if (self.enemy.solid == SOLID_BSP) {
 		float f;
 		f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
-		effect_impact(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, self);
+		effect_impact(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.species, self);
 	}
 	projectile_update(self);
 }
