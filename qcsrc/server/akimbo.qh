@@ -1,4 +1,4 @@
-float(float wbit) akimbo_weapon_throw;
+float(float w) akimbo_weapon_throw;
 void(void) akimbo_weapon_frame;
 void(void) akimbo_init;
 entity(entity e) akimbo_owner;

@@ -284,7 +284,7 @@ float(entity item, entity player) item_give_to {
 		if (g_weapon_stay)
 		if not(item.flags & FL_NO_WEAPON_STAY)
 		if (item.flags & FL_WEAPON) {
-			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
+			for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; ++i)
 				e = weapon_info(i);
 				if ((e.weapons & item.weapons & player.weapons) || (e.weapons_extra & item.weapons_extra & player.weapons_extra))
 					if (akimbo_weapon_give(player, i, item.netname)) {
@@ -326,8 +326,9 @@ float(entity item, entity player) item_give_to {
 		if (g_pickup_weapons_max) {
 			if (item.flags & FL_WEAPON) {
 				float weapons_count = 0;
-				for (i = WEP_FIRST, it = 1; i <= WEP_LAST; i++, it *= 2) {
-					if (player.weapons & it) {
+				for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; i++) {
+					e = weapon_info(i);
+					if ((player.weapons & e.weapons) || (player.weapons_extra & e.weapons_extra)) {
 						weapons_count++;
 						if (weapons_count >= g_pickup_weapons_max) {
 							centerprint(player, strcat("You can carry only ", ftos(g_pickup_weapons_max), " weapons.\nDrop extra weapons to take this one."));
@@ -364,12 +365,13 @@ float(entity item, entity player) item_give_to {
 			}
 		}
 		if (item.flags & FL_WEAPON) {
-			for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
+			for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; ++i) {
 				e = weapon_info(i);
 				if not(item.weapons & e.weapons)
+				if not(item.weapons_extra & e.weapons_extra)
 					continue;
 
-				if not(player.weapons & e.weapons) {
+				if (!(player.weapons & e.weapons) && !(player.weapons_extra & e.weapons_extra)) {
 					pickedup = TRUE;
 					weapon_give(player, e.weapon, item.netname);
 				} else if (akimbo_weapon_give(player, e.weapon, item.netname))

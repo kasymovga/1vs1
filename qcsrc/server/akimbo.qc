@@ -1,8 +1,10 @@
 .entity akimbo_ghost;
 float g_akimbo_weapons;
+float g_akimbo_weapons_extra;
 float g_akimbo_throwable;
 float g_akimbo_weaponratefactor;
 float g_akimbo_weaponratefactor_for;
+float g_akimbo_weaponratefactor_for_extra;
 float akimbo_supported_weapons;
 void(entity e) akimbo_clear;
 entity(entity e, float deep) akimbo_ghost_get;
@@ -40,7 +42,7 @@ entity(entity p) akimbo_ghost_spawn {
 	p.akimbo_ghost.clipgroup = p.clipgroup;
 	entity oldself = self;
 	self = p.akimbo_ghost;
-	for (float j = WEP_FIRST; j <= WEP_LAST; ++j)
+	for (float j = WEP_FIRST; j <= WEP_LAST_EXTRA; ++j)
 		weapon_action(j, WR_RESETPLAYER);
 
 	self = oldself;
@@ -124,13 +126,19 @@ void(float killed) akimbo_player_clear {
 	akimbo_player_clear_next(killed);
 }
 
-float(float wbit) akimbo_weapon_throw {
+float(float w) akimbo_weapon_throw {
+	entity wi = weapon_info(w);
 	entity ag = akimbo_ghost_get(self, 0);
 	if (g_akimbo_weapons)
-	if (ag.weapons & wbit) {
-		ag.weapons &= ~wbit;
-		return TRUE;
-	}
+		if (ag.weapons & wi.weapons) {
+			ag.weapons &= ~wi.weapons;
+			return TRUE;
+		}
+	if (g_akimbo_weapons_extra)
+		if (ag.weapons_extra & wi.weapons_extra) {
+			ag.weapons_extra &= ~wi.weapons_extra;
+			return TRUE;
+		}
 	return FALSE;
 }
 
@@ -140,10 +148,11 @@ float() akimbo_weapon_rate_factor {
 	if (self.akimbo_ghost)
 	if (self.akimbo_ghost.weaponentity)
 	if (self.weaponentity.state != WS_DROP)
-	if (self.weaponentity.state != WS_RAISE)
-	if (weapon_info(self.weapon).weapons & g_akimbo_weaponratefactor_for)
-		f = g_akimbo_weaponratefactor;
-
+	if (self.weaponentity.state != WS_RAISE) {
+		entity wi = weapon_info(self.weapon);
+		if ((wi.weapons & g_akimbo_weaponratefactor_for) || (wi.weapons & g_akimbo_weaponratefactor_for_extra))
+			f = g_akimbo_weaponratefactor;
+	}
 	return f * akimbo_weapon_rate_factor_next();
 }
 
@@ -151,14 +160,16 @@ float akimbo_init_done;
 void(void) akimbo_init_common {
 	float i, j;
 	string s = cvar_string("g_akimbo_weaponratefactor_for");
-	if (s == "all")
+	if (s == "all") {
 		g_akimbo_weaponratefactor_for = akimbo_supported_weapons;
-	else {
+		g_akimbo_weaponratefactor_for_extra = -1;
+	} else {
 		float n = tokenize_console(s);
 		for (i = 0; i < n; i++)
-			for (j = WEP_FIRST; j <= WEP_LAST; j++)
+			for (j = WEP_FIRST; j <= WEP_LAST_EXTRA; j++)
 				if (argv(i) == weapon_info(j).netname) {
 					g_akimbo_weaponratefactor_for |= weapon_info(j).weapons;
+					g_akimbo_weaponratefactor_for_extra |= weapon_info(j).weapons_extra;
 					break;
 				}
 	}
@@ -211,14 +222,17 @@ void(void) akimbo_init {
 			WEPBIT_ZAPPER |
 			WEPBIT_ROCKET_LAUNCHER;
 
-	if (s == "all")
+	if (s == "all") {
 		g_akimbo_weapons = akimbo_supported_weapons;
-	else {
+		for (j = WEP_LAST + 1; j <= WEP_LAST_EXTRA; j++)
+			g_akimbo_weapons_extra |= weapon_info(j).weapons_extra;
+	} else {
 		n = tokenize_console(s);
 		for (i = 0; i < n; i++)
-			for (j = WEP_FIRST; j <= WEP_LAST; j++)
+			for (j = WEP_FIRST; j <= WEP_LAST_EXTRA; j++)
 				if (argv(i) == weapon_info(j).netname) {
 					g_akimbo_weapons |= weapon_info(j).weapons;
+					g_akimbo_weapons_extra |= weapon_info(j).weapons_extra;
 					break;
 				}
 	}
@@ -256,14 +270,15 @@ entity(entity e, float deep) akimbo_ghost_get {
 }
 
 float(entity p, float wpn, string name) akimbo_weapon_give {
-	float wpnbit = weapon_info(wpn).weapons;
+	entity wi = weapon_info(wpn);
 	entity ag = akimbo_ghost_get(p, 0);
 	if not(ag) ag = akimbo_ghost_spawn(p);
-	if (wpnbit & ag.weapons)
+	if ((wi.weapons & ag.weapons) || (wi.weapons_extra & ag.weapons_extra))
 		return FALSE;
 
-	if (g_akimbo_weapons & wpnbit) {
-		ag.weapons |= wpnbit;
+	if ((g_akimbo_weapons & wi.weapons) || (g_akimbo_weapons_extra & wi.weapons_extra)) {
+		ag.weapons |= wi.weapons;
+		ag.weapons_extra |= wi.weapons_extra;
 		sprint(p, "You got ^4Akimbo ^2");
 		sprint(p, name);
 		sprint(p, "\n");
@@ -273,15 +288,13 @@ float(entity p, float wpn, string name) akimbo_weapon_give {
 }
 
 float(entity p, float wpn, string name) akimbo_weapon_drop {
-	float wpnbit = weapon_info(wpn).weapons;
+	entity wi = weapon_info(wpn);
 	entity ag = akimbo_ghost_get(p, 0);
-	if not(g_akimbo_weapons & wpnbit)
+	if (!(g_akimbo_weapons & wi.weapons & ag.weapons) && !(g_akimbo_weapons_extra & wi.weapons_extra & ag.weapons_extra))
 		return FALSE;
 
-	if not(wpnbit & ag.weapons)
-		return FALSE;
-
-	ag.weapons &= ~wpnbit;
+	ag.weapons &= ~wi.weapons;
+	ag.weapons_extra &= ~wi.weapons_extra;
 	sprint(p, "You drop ^4Akimbo ^2");
 	sprint(p, name);
 	sprint(p, "\n");
@@ -313,12 +326,12 @@ void(entity e) akimbo_clear {
 }
 
 float(entity e, float wpn, float deep) akimbo_weapon_have {
-	float wpnbit = weapon_info(wpn).weapons;
+	entity wi = weapon_info(wpn);
 	entity ag = akimbo_ghost_get(e, 0);
-	if not(wpnbit & akimbo_supported_weapons)
+	if (!(wi.weapons & akimbo_supported_weapons) && !wi.weapons_extra)
 		return FALSE;
 
-	if (ag.weapons & wpnbit) {
+	if ((ag.weapons & wi.weapons) || (ag.weapons_extra & wi.weapons_extra)) {
 			if (g_powerup_strength_akimbo && e.strength_finished > time)
 				return deep <= 3;
 

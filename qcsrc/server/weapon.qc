@@ -345,7 +345,7 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 		return;
 
 	wi = weapon_info(w);
-	float akimbo_throw = akimbo_weapon_throw(wi.weapons);
+	float akimbo_throw = akimbo_weapon_throw(w);
 	if not(akimbo_throw) {
 		if not(g_pickup_items)
 			return;
@@ -1590,7 +1590,7 @@ void(void) weapon_init {
 entity(string s) weapon_info_by_name {
 	float i;
 	entity e;
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
+	for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; ++i) {
 		e = weapon_info(i);
 		if (e.netname == s)
 			return e;
