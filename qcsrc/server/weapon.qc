@@ -549,8 +549,6 @@ void(float wpn) weapon_defaultspawnfunc {
 	var void() item_spawnfunc;
 	if (self.classname != "droppedweapon" && self.classname != "replacedweapon") {
 		e = weapon_info(wpn);
-		self.weapons = e.weapons;
-		self.weapons_extra = e.weapons_extra;
 		s = cvar_string(strcat("g_weaponreplace_", e.netname));
 		if (s == "0") {
 			remove(self);
@@ -626,6 +624,8 @@ void(float wpn) weapon_defaultspawnfunc {
 		}
 	}
 	e = weapon_info(wpn);
+	self.weapons = e.weapons;
+	self.weapons_extra = e.weapons_extra;
 	if (e.items && e.items != IT_SUPERWEAPON) {
 		for (i = 0, j = 1; i < 24; ++i, j *= 2) {
 			if (e.items & j) {
