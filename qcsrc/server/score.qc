@@ -49,7 +49,7 @@ float(entity to, float sendflags) score_team_send {
 	longflags = 0;
 	float score;
 	for (i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2) {
-		score = self.teamscores[i];
+		score = self.scores[i];
 		if (score > 127 || score <= -128)
 			longflags |= p;
 	}
@@ -62,7 +62,7 @@ float(entity to, float sendflags) score_team_send {
 #endif
 	for (i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2)
 		if (sendflags & p) {
-			score = self.teamscores[i];
+			score = self.scores[i];
 			if (longflags & p)
 				net_write_int24(MSG_ENTITY, score);
 			else
@@ -101,8 +101,8 @@ float(float t, float scorefield, float score) score_team_add_to {
 		if (score_team_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
 
-	float newscore = s.(teamscores[scorefield]) + score;
-	s.(teamscores[scorefield]) = newscore;
+	float newscore = s.(scores[scorefield]) + score;
+	s.(scores[scorefield]) = newscore;
 	return newscore;
 }
 
@@ -117,7 +117,7 @@ float(entity t1, entity t2) score_compare_teams {
 	float i;
 	for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i) {
 		var .float f;
-		f = teamscores[i];
+		f = scores[i];
 		result = score_field_compare(t1, t2, f, score_team_flags[i], result);
 	}
 	return result_x;
@@ -144,7 +144,7 @@ float (string label, float scoreflags) score_register_team_score {
 	score_team_label[score_team_registered] = label;
 	score_team_flags[score_team_registered] = scoreflags;
 	if ((scoreflags & SCORE_FLAG_SORT_PRIO_MASK) == SCORE_FLAG_SORT_PRIO_PRIMARY) {
-		score_team_primary = teamscores[score_team_registered];
+		score_team_primary = scores[score_team_registered];
 		score_team_primary_scorefield = score_team_registered;
 		score_team_flags_primary = scoreflags;
 	}
@@ -273,11 +273,11 @@ void() score_clear_all {
 			continue;
 
 		for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i) {
-			if (sk.(teamscores[i]) != 0)
+			if (sk.(scores[i]) != 0)
 				if (score_team_label[i] != "")
 					sk.SendFlags |= pow(2, i);
 
-			sk.(teamscores[i]) = 0;
+			sk.(scores[i]) = 0;
 		}
 	}
 }
@@ -601,18 +601,18 @@ string(float tm, float shortString) score_team_string {
 	} else if ((sk = score_teem_keepers[tm - 1])) {
 		for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i)
 			if (score_team_flags[i] & SCORE_FLAG_SORT_PRIO_MASK == SCORE_FLAG_SORT_PRIO_PRIMARY)
-				out = strcat(out, ftos(sk.(teamscores[i])), ",");
+				out = strcat(out, ftos(sk.(scores[i])), ",");
 
 		if (shortString < 2)
 			for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i)
 				if (score_team_flags[i] & SCORE_FLAG_SORT_PRIO_MASK == SCORE_FLAG_SORT_PRIO_SECONDARY)
-					out = strcat(out, ftos(sk.(teamscores[i])), ",");
+					out = strcat(out, ftos(sk.(scores[i])), ",");
 
 		if (shortString < 1)
 			for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i)
 				if (score_team_flags[i] & SCORE_FLAG_SORT_PRIO_MASK != SCORE_FLAG_SORT_PRIO_PRIMARY)
 				if (score_team_flags[i] & SCORE_FLAG_SORT_PRIO_MASK != SCORE_FLAG_SORT_PRIO_SECONDARY)
-					out = strcat(out, ftos(sk.(teamscores[i])), ",");
+					out = strcat(out, ftos(sk.(scores[i])), ",");
 		out = substring(out, 0, strlen(out) - 1);
 	}
 	return out;
@@ -725,7 +725,7 @@ void(entity to, float t, float w) score_nice_print_team {
 		for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i)
 			if (score_team_label[i] != "") {
 				fl = score_team_flags[i];
-				sc = sk.(teamscores[i]);
+				sc = sk.(scores[i]);
 				s = strcat(s, " ", score_nice_print_item_color(fl), score_string(fl, sc));
 			}
 	} else

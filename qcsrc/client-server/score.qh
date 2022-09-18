@@ -1,6 +1,6 @@
 string(float pFlags, float pValue) score_string;
 #define SCORE_FILEDS_MAX 20
-#define SCORE_TEAM_FIELDS_MAX 2
+#define SCORE_TEAM_FIELDS_MAX 2 //must be less than SCORE_FILEDS_MAX
 
 /**
  * Lower scores are better (e.g. suicides)

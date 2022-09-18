@@ -1,7 +1,6 @@
 .entity scorekeeper;
 float score_preinitialized;
 .float scores[SCORE_FILEDS_MAX];
-.float teamscores[SCORE_TEAM_FIELDS_MAX];
 void(entity player) score_attach;
 
 /**
