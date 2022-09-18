@@ -90,7 +90,7 @@ void(void) akimbo_weapon_frame {
 				self.cvar_cl_gunalpha = pl.cvar_cl_gunalpha;
 				weapon_model_spawn();
 				self.weaponentity.state = WS_RAISE;
-				weapon_action(self.weapon, WR_SETUP);
+				weapon_setup(self.weapon);
 				self = self.weaponentity;
 				self.think();
 				self = prevself.akimbo_ghost;
