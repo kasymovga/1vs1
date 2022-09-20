@@ -284,7 +284,7 @@ var float(void) minstagib_player_equip_handle_next;
 float(void) minstagib_player_equip_handle {
 	self.health = 100;
 	self.armorvalue = 0;
-	self.weapons = WEPBIT_MINSTANEX;
+	self.weapons = weapon_info(WEP_MINSTANEX).weapons;
 	self.ammo_shells = 0;
 	self.ammo_nails = 0;
 	self.ammo_rockets = 0;

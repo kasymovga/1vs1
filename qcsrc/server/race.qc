@@ -1135,10 +1135,10 @@ void(void) race_target_init_use {
 		activator.ammo_rockets = player_start_ammo_rockets;
 		activator.ammo_cells = player_start_ammo_cells;
 		if (self.spawnflags & 32) {
-			activator.weapons &= WEPBIT_MELEE;
+			activator.weapons &= weapon_info(WEP_MELEE).weapons;
 			activator.switchweapon = WEP_MELEE;
 		} else {
-			activator.weapons = WEPBIT_UZI | WEPBIT_MELEE;
+			activator.weapons = (weapon_info(WEP_MELEE).weapons | weapon_info(WEP_UZI).weapons);
 			activator.switchweapon = WEP_UZI;
 		}
 	}

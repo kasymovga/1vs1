@@ -1,26 +1,26 @@
 // Weapon indexes
 // %weaponaddpoint
 float WEP_FIRST            =  1;
-float WEP_LASER            =  1; float WEPBIT_LASER            = 1; // always: 2^(w-1)
-float WEP_SHOTGUN          =  2; float WEPBIT_SHOTGUN          = 2;
-float WEP_UZI              =  3; float WEPBIT_UZI              = 4;
-float WEP_GRENADE_LAUNCHER =  4; float WEPBIT_GRENADE_LAUNCHER = 8;
-float WEP_ELECTRO          =  5; float WEPBIT_ELECTRO          = 16;
-float WEP_CRYLINK          =  6; float WEPBIT_CRYLINK          = 32;
-float WEP_NEX              =  7; float WEPBIT_NEX              = 64;
-float WEP_HAGAR            =  8; float WEPBIT_HAGAR            = 128;
-float WEP_ROCKET_LAUNCHER  =  9; float WEPBIT_ROCKET_LAUNCHER  = 256;
-float WEP_PORTO            = 10; float WEPBIT_PORTO            = 512;
-float WEP_MINSTANEX        = 11; float WEPBIT_MINSTANEX        = 1024;
-float WEP_HOOK             = 12; float WEPBIT_HOOK             = 2048;
-float WEP_HLAC             = 13; float WEPBIT_HLAC             = 4096;
-float WEP_TUBA             = 14; float WEPBIT_TUBA             = 8192;
-float WEP_CAMPINGRIFLE     = 15; float WEPBIT_CAMPINGRIFLE     = 16384;
-float WEP_FIREBALL         = 16; float WEPBIT_FIREBALL         = 32768;
-float WEP_SUPERSHOTGUN     = 17; float WEPBIT_SUPERSHOTGUN     = 65536;
-float WEP_ZAPPER           = 18; float WEPBIT_ZAPPER           = 131072;
-float WEP_MELEE            = 19; float WEPBIT_MELEE            = 262144;
-float WEP_LAST             = 19; float WEPBIT_ALL              = 524287;
+float WEP_LASER            =  1;
+float WEP_SHOTGUN          =  2;
+float WEP_UZI              =  3;
+float WEP_GRENADE_LAUNCHER =  4;
+float WEP_ELECTRO          =  5;
+float WEP_CRYLINK          =  6;
+float WEP_NEX              =  7;
+float WEP_HAGAR            =  8;
+float WEP_ROCKET_LAUNCHER  =  9;
+float WEP_PORTO            = 10;
+float WEP_MINSTANEX        = 11;
+float WEP_HOOK             = 12;
+float WEP_HLAC             = 13;
+float WEP_TUBA             = 14;
+float WEP_CAMPINGRIFLE     = 15;
+float WEP_FIREBALL         = 16;
+float WEP_SUPERSHOTGUN     = 17;
+float WEP_ZAPPER           = 18;
+float WEP_MELEE            = 19;
+float WEP_LAST             = 19;
 float WEP_COUNT            = 20;
 float WEP_LAST_EXTRA       = 27;
 float WEP_COUNT_EXTRA      = 28;

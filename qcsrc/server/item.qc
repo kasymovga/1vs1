@@ -697,7 +697,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 		if (itemid == IT_INVINCIBLE)
 			precache_sound("misc/shield_respawn.wav");
 
-		if ((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (self.weapons & WEPBIT_ALL) || (self.weapons_extra & WEPBIT_ALL))
+		if ((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || self.weapons || self.weapons_extra)
 			self.message2 = "###item###"; // for finding the nearest item using find()
 	}
 	self.bot_pickup = TRUE;
