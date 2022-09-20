@@ -10,6 +10,7 @@ float weaponselect_width;
 float weaponselect_height;
 float weaponselect_selected;
 float weaponselect_available;
+float weaponselect_available_extra;
 
 float(float bInputType, float nPrimary, float nSecondary) weaponselect_input_event;
 
@@ -20,10 +21,12 @@ void(vector o, vector s) weaponselect_update {
 }
 
 float(void) weaponselect_get {
-	for (float n = 0, w = 0; w <= WEP_LAST; ++w) {
-		if (pow(2, w) & weaponselect_available) {
+	entity e;
+	float n = 0;
+	WEAPON_INFO_FOR_EACH(e) {
+		if ((e.weapons & weaponselect_available) || (e.weapons_extra & weaponselect_available_extra)) {
 			if (n == weaponselect_selected)
-				return w;
+				return e.weapon;
 			++n;
 		}
 	}
@@ -67,12 +70,13 @@ void(void) weaponselect_draw {
 	//txt = strcat("Key: ^2", strtoupper(input_command_key_first("+attack2")));
 	//txtw = stringwidth(txt, TRUE, sz);
 	//drawcolorcodedstring([o_x + (s_x - txtw) * 0.5, o_y + s_y + WEAPONSELECT_MARGIN * 0.5], txt, sz, a, DRAWFLAG_NORMAL);
-	for (float i = 0, w = 0; w <= WEP_LAST; ++w) {
-		if (!(pow(2, w) & weaponselect_available))
+	entity e;
+	float i = 0;
+	WEAPON_INFO_FOR_EACH(e) {
+		if (!(e.weapons & weaponselect_available) && !(e.weapons_extra & weaponselect_available_extra))
 			continue;
 
 		float sidx = i;
-		entity winfo = weapon_info(w + 1);
 		vector p;
 		p_z = 0;
 		float a2 = weaponselect_selalpha[sidx];
@@ -88,9 +92,9 @@ void(void) weaponselect_draw {
 
 		p_x = o_x + WEAPONSELECT_MARGIN * 0.5;
 		p_y = o_y + i * sz_y + WEAPONSELECT_MARGIN * 0.5;
-		drawpic(p, strcat("gfx/hud/inv_weapon", ftos(w)), '2 1 0' * WEAPONSELECT_SCALE, '1 1 1' * (0.5 + 0.5 * a2), a, DRAWFLAG_NORMAL);
+		drawpic(p, strcat("gfx/hud/inv_weapon", ftos(e.weapon)), '2 1 0' * WEAPONSELECT_SCALE, '1 1 1' * (0.5 + 0.5 * a2), a, DRAWFLAG_NORMAL);
 		p_x = WEAPONSELECT_MARGIN * 0.5 + o_x + sz_x * 2;
-		drawstring(p, winfo.message, sz, clr, a, DRAWFLAG_NORMAL);
+		drawstring(p, e.message, sz, clr, a, DRAWFLAG_NORMAL);
 		if (i < 10) {
 			txt = ((i == 9) ? "0" : ftos(i + 1));
 			txtw = stringwidth(txt, FALSE) * sz_x * 0.5;
@@ -146,6 +150,7 @@ float weaponselect_input_event(float bInputType, float nPrimary, float nSecondar
 
 void(void) weaponselect_read {
 	weaponselect_available = net_read_int24();
+	weaponselect_available_extra = net_read_int24();
 	if (weaponselect_active)
 		return;
 

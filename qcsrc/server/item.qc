@@ -267,7 +267,6 @@ float(entity item, entity player) item_give_to {
 	float _switchweapon;
 	float pickedup;
 	float it;
-	float i;
 	entity e = NULL;
 	// if nothing happens to player, just return without taking the item
 	pickedup = FALSE;
@@ -284,10 +283,9 @@ float(entity item, entity player) item_give_to {
 		if (g_weapon_stay)
 		if not(item.flags & FL_NO_WEAPON_STAY)
 		if (item.flags & FL_WEAPON) {
-			for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; ++i)
-				e = weapon_info(i);
+			WEAPON_INFO_FOR_EACH(e)
 				if ((e.weapons & item.weapons & player.weapons) || (e.weapons_extra & item.weapons_extra & player.weapons_extra))
-					if (akimbo_weapon_give(player, i, item.netname)) {
+					if (akimbo_weapon_give(player, e.weapon, item.netname)) {
 						pickedup = TRUE;
 						sound (player, CHAN_AUTO, item.noise, VOL_BASE, ATTN_NORM);
 					}
@@ -326,8 +324,7 @@ float(entity item, entity player) item_give_to {
 		if (g_pickup_weapons_max) {
 			if (item.flags & FL_WEAPON) {
 				float weapons_count = 0;
-				for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; i++) {
-					e = weapon_info(i);
+				WEAPON_INFO_FOR_EACH(e) {
 					if ((player.weapons & e.weapons) || (player.weapons_extra & e.weapons_extra)) {
 						weapons_count++;
 						if (weapons_count >= g_pickup_weapons_max) {
@@ -364,9 +361,8 @@ float(entity item, entity player) item_give_to {
 				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 			}
 		}
-		if (item.flags & FL_WEAPON) {
-			for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; ++i) {
-				e = weapon_info(i);
+		if (item.flags & FL_WEAPON)
+			WEAPON_INFO_FOR_EACH(e) {
 				if not(item.weapons & e.weapons)
 				if not(item.weapons_extra & e.weapons_extra)
 					continue;
@@ -377,7 +373,6 @@ float(entity item, entity player) item_give_to {
 				} else if (akimbo_weapon_give(player, e.weapon, item.netname))
 					pickedup = TRUE;
 			}
-		}
 		if ((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK)) {
 			pickedup = TRUE;
 			player.items |= it;
@@ -1183,8 +1178,7 @@ void(void) item_init {
 		player_start_ammo_cells = 0;
 		player_start_items |= IT_UNLIMITED_AMMO;
 	}
-	for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; ++i) {
-		e = weapon_info(i);
+	WEAPON_INFO_FOR_EACH(e) {
 		if (!(e.weapon))
 			continue;
 

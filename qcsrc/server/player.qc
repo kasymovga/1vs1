@@ -790,7 +790,7 @@ void(float killed) player_clear {
 		portal_clear_all(self);
 
 	// reset fields the weapons may use just in case
-	for (j = WEP_FIRST; j <= WEP_LAST_EXTRA; ++j) {
+	WEAPON_INFO_FOR_EACH_ID(j) {
 		weapon_action(j, WR_RESETPLAYER);
 		weapon_action(j, WR_CLEAR);
 		ATTACK_FINISHED_FOR(self, j) = 0;

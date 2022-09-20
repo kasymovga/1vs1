@@ -1,6 +1,5 @@
 // WEAPON PLUGIN SYSTEM
-entity _weapon_info[24];
-entity weapon_info_extra;
+entity _weapon_info[WEP_LAST_EXTRA];
 entity weapon_info_dummy;
 
 void(float id,
@@ -21,10 +20,13 @@ void(float id,
 #ifdef SVQC
 		str_unzone_ifneeded(e.model);
 		str_unzone_ifneeded(e.mdl);
+		str_unzone_ifneeded(e.model2);
 #endif
-	} else
+	} else {
 		e = spawn();
-
+		e.enemy = weapon_info_chain;
+		weapon_info_chain = e;
+	}
 	e.classname = "weapon_info";
 	e.weapon = id;
 	e.netname = shortname;
@@ -32,6 +34,7 @@ void(float id,
 #ifndef MENUQC
 	e.items = ammotype;
 #endif
+	e.impulse = i;
 #ifdef SVQC
 	e.weapon_func = func;
 	string s = cvar_string(strcat("sv_model_", modelname));
@@ -59,10 +62,7 @@ void(float id,
 		if (anim_parseerror)
 			print("Parse error in ", animfilename, ", some animations are broken\n");
 	}
-#endif
 	e.model2 = strzone(strcat("wpn-", e.mdl));
-	e.impulse = i;
-#ifdef SVQC
 	e.spawnflags = 0;
 	if (normalweapon > 0)
 		e.spawnflags |= WEPSPAWNFLAG_NORMAL;
@@ -75,13 +75,11 @@ void(float id,
 
 	e.bot_pickupbasevalue = pickupbasevalue;
 #endif
+	_weapon_info[id - 1] = e;
 	if (id > WEP_LAST) {
-		e.enemy = weapon_info_extra;
-		weapon_info_extra = e;
 		e.weapons_extra = pow(2, id - 1 - WEP_LAST);
 	} else {
 		e.weapons = pow(2, id - 1);
-		_weapon_info[id - 1] = e;
 	}
 }
 
@@ -103,24 +101,24 @@ void(void) weapon_register_done {
 #ifdef SVQC
 	weapon_info_dummy.spawnflags = 0;
 	weapon_info_dummy.bot_pickupbasevalue = 0;
+	weapon_info_dummy.model2 = "";
 #endif
 	weapon_info_dummy.impulse = -1;
-	weapon_info_dummy.model2 = "";
 	float i;
 	weaponpriority_hudselector_0 = "";
-	for (i = 24; i >= 1; --i)
+	for (i = WEP_LAST_EXTRA; i >= 1; --i)
 		if (_weapon_info[i-1])
 			weaponpriority_hudselector_0 = strcat(weaponpriority_hudselector_0, " ", ftos(i));
 
 	float imp;
 	weaponpriority_hudselector_1 = "";
-	for (i = 1; i <= 24; ++i) {
+	for (i = 1; i <= WEP_LAST_EXTRA; ++i) {
 		wi = _weapon_info[i-1];
 		if (wi && wi.impulse == 0)
 			weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(i));
 	}
 	for (imp = 9; imp > 0; --imp)
-		for (i = 1; i <= 24; ++i) {
+		for (i = 1; i <= WEP_LAST_EXTRA; ++i) {
 			wi = _weapon_info[i-1];
 			if (wi && wi.impulse == imp)
 				weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(i));
@@ -134,11 +132,7 @@ entity weapon_info(float id) {
 	if (id < WEP_FIRST)
 		return weapon_info_dummy;
 
-	if (id > WEP_LAST) {
-		for (entity e = weapon_info_extra; e; e = e.enemy) {
-			if (e.weapon == id)
-				return e;
-		}
+	if (id > WEP_LAST_EXTRA) {
 		return weapon_info_dummy;
 	}
 	w = _weapon_info[id - 1];

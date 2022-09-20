@@ -1576,9 +1576,9 @@ void(void) weapon_init {
 	sv_qcanimation_melee2_morph1origin = stov(cvar_string("sv_qcanimation_melee2_morph1origin"));
 	sv_qcanimation_melee2_morph2origin = stov(cvar_string("sv_qcanimation_melee2_morph2origin"));
 	sv_qcanimation_melee_exterior = stov(cvar_string("sv_qcanimation_melee_exterior"));
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		(weapon_info(i)).weapon_func(WR_CVAR_CACHE);
+	entity e;
+	WEAPON_INFO_FOR_EACH(e) {
+		e.weapon_func(WR_CVAR_CACHE);
 	}
 	weapon_melee_init();
 	bullet_init();
@@ -1590,8 +1590,7 @@ void(void) weapon_init {
 entity(string s) weapon_info_by_name {
 	float i;
 	entity e;
-	for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; ++i) {
-		e = weapon_info(i);
+	WEAPON_INFO_FOR_EACH(e) {
 		if (e.netname == s)
 			return e;
 	}

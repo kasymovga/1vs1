@@ -22,12 +22,10 @@ void() weapon_two_weapons_player_think {
 
 void() weapon_two_weapons_init {
 	string s = cvar_string("g_twoweapons");
-	float i;
 	entity e;
-	for (i = WEP_FIRST; i <= WEP_LAST; i++) {
-		e = weapon_info(i);
+	WEAPON_INFO_FOR_EACH(e) {
 		if (s == e.netname) {
-			g_twoweapons = i;
+			g_twoweapons = e.weapon;
 		}
 	}
 	if not(g_twoweapons)

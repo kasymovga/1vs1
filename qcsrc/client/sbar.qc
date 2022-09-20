@@ -1644,7 +1644,7 @@ void(void) sbar_accuracy_draw {
 	drawfont = sbar_font;
 	float top_border = SBAR_SCOREBOARD_OFFSET + 55;  // position where the hitscan row starts: pixels down the screen
 	sbar_accuracy_description_draw('1 0 0' * col_margin + '0 1 0' * top_border);
-	for (i = WEP_FIRST; i <= WEP_LAST_EXTRA; ++i) {
+	WEAPON_INFO_FOR_EACH_ID(i) {
 		weapon_hit = sbar_weapon_hits[i];
 		weapon_damage = sbar_weapon_fired[i];
 		//self = weapon_info(i);

@@ -1,7 +1,6 @@
 void(void) weapon_info_send {
 	entity e;
-	for (float i = WEP_FIRST; i < WEP_LAST_EXTRA; i++) {
-		e = weapon_info(i);
+	WEAPON_INFO_FOR_EACH(e) {
 		if not(e.weapon) continue;
 		net_write_byte(MSG_ENTITY, e.weapon);
 		net_write_byte(MSG_ENTITY, e.impulse);

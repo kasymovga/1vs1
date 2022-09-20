@@ -55,6 +55,7 @@ float WR_CVAR_CACHE     = 12; // update cvar cache
 .string weaponname;
 .float wframe;
 .vector shotorg_visual;
+.string model2; // wpn- sprite name
 
 void(float wpn) weapon_defaultspawnfunc;
 float(float wpn, float wrequest) weapon_action;

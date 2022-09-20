@@ -259,17 +259,17 @@ void(void) spawnfunc_target_items {
 		else if (argv(i) == "invisibility")           { self.items |= IT_INVISIBILITY; powerup_invisibility_init(); }
 		else if (argv(i) == "jetpack")                self.items |= IT_JETPACK;
 		else {
-			for (j = WEP_FIRST; j <= WEP_LAST; ++j) {
-				e = weapon_info(j);
+			WEAPON_INFO_FOR_EACH(e) {
 				if (argv(i) == e.netname) {
 					self.weapons |= e.weapons;
+					self.weapons_extra |= e.weapons_extra;
 					if (self.spawnflags == 0 || self.spawnflags == 2)
 						weapon_precache(e.weapon);
 
 					break;
 				}
 			}
-			if (j > WEP_LAST)
+			if not(e)
 				print("target_items: invalid item ", argv(i), "\n");
 		}
 	}

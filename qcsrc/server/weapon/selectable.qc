@@ -1,4 +1,5 @@
 float g_start_weapon_selectable;
+float g_start_weapon_selectable_extra;
 
 .float w_secondary_picked;
 void(void) weapon_selectable_send {
@@ -6,6 +7,7 @@ void(void) weapon_selectable_send {
 	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 	net_write_byte(MSG_ONE, NET_TE_CSQC_WEAPONSELECT);
 	net_write_int24(MSG_ONE, g_start_weapon_selectable);
+	net_write_int24(MSG_ONE, g_start_weapon_selectable_extra);
 }
 
 var void(void(string item, string cmd) Add_Item) weapon_selectable_gamemenu_send_next;
@@ -20,11 +22,9 @@ float(string cmd, float tokens) weapon_selectable_cmd_client_handle {
 		if (tokens == 2) {
 			entity e;
 			string s = argv(1);
-			float i;
-			for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
-				e = weapon_info(i);
+			WEAPON_INFO_FOR_EACH(e) {
 				if (e.netname == s) {
-					if not(g_start_weapon_selectable & weapon_info(e.weapon).weapons)
+					if (!(g_start_weapon_selectable & e.weapons) && !(g_start_weapon_selectable_extra & e.weapons_extra))
 						return TRUE;
 
 					self.w_secondary_picked = e.weapon;
@@ -51,11 +51,12 @@ float(void) weapon_selectable_spectator_to_player_handle {
 
 var void(entity spot) weapon_selectable_player_spawn_next;
 void(entity spot) weapon_selectable_player_spawn {
+	entity e;
 	if not(self.w_secondary_picked) {
 		random_selection_init();
-		for (float i = WEP_FIRST, j = 1; i <= WEP_LAST; i++, j *= 2) {
-			if ((j & g_start_weapon_selectable)) {
-				random_selection_add(NULL, i, "", 1, 1);
+		WEAPON_INFO_FOR_EACH(e) {
+			if ((e.weapons & g_start_weapon_selectable) || (e.weapons_extra & g_start_weapon_selectable_extra)) {
+				random_selection_add(NULL, e.weapon, "", 1, 1);
 			}
 		}
 		self.w_secondary_picked = random_selection_chosen_float;
@@ -63,7 +64,7 @@ void(entity spot) weapon_selectable_player_spawn {
 	if (self.w_secondary_picked) {
 		self.weapons |= weapon_info(self.w_secondary_picked).weapons;
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
-			entity e = weapon_info(self.w_secondary_picked);
+			e = weapon_info(self.w_secondary_picked);
 			float a = e.items & IT_AMMO;
 			if (a) {
 				var .float ammofield = item_counter_field(e.items & IT_AMMO);
@@ -88,12 +89,14 @@ void(void) weapon_selectable_init {
 		if (head != "") {
 			e = weapon_info_by_name(head);
 			if (e) {
-				g_start_weapon_selectable |= weapon_info(e.weapon).weapons;
+				g_start_weapon_selectable |= e.weapons;
+				g_start_weapon_selectable_extra |= e.weapons_extra;
 				weapon_precache(e.weapon);
 			}
 		}
 	}
 	if not(g_start_weapon_selectable)
+	if not(g_start_weapon_selectable_extra)
 		return;
 
 	weapon_selectable_spectator_to_player_handle_next = plugin_chain_spectator_to_player_handle;

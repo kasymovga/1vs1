@@ -42,7 +42,8 @@ entity(entity p) akimbo_ghost_spawn {
 	p.akimbo_ghost.clipgroup = p.clipgroup;
 	entity oldself = self;
 	self = p.akimbo_ghost;
-	for (float j = WEP_FIRST; j <= WEP_LAST_EXTRA; ++j)
+	float j;
+	WEAPON_INFO_FOR_EACH_ID(j)
 		weapon_action(j, WR_RESETPLAYER);
 
 	self = oldself;
@@ -164,12 +165,13 @@ void(void) akimbo_init_common {
 		g_akimbo_weaponratefactor_for = akimbo_supported_weapons;
 		g_akimbo_weaponratefactor_for_extra = -1;
 	} else {
+		entity e;
 		float n = tokenize_console(s);
 		for (i = 0; i < n; i++)
-			for (j = WEP_FIRST; j <= WEP_LAST_EXTRA; j++)
-				if (argv(i) == weapon_info(j).netname) {
-					g_akimbo_weaponratefactor_for |= weapon_info(j).weapons;
-					g_akimbo_weaponratefactor_for_extra |= weapon_info(j).weapons_extra;
+			WEAPON_INFO_FOR_EACH(e)
+				if (argv(i) == e.netname) {
+					g_akimbo_weaponratefactor_for |= e.weapons;
+					g_akimbo_weaponratefactor_for_extra |= e.weapons_extra;
 					break;
 				}
 	}
@@ -207,32 +209,26 @@ void(void) akimbo_init {
 	float i, j, n;
 	ability_register("akimbo", akimbo_ability_init);
 	string s = cvar_string("g_akimbo_weapons");
-	akimbo_supported_weapons =
-			WEPBIT_LASER |
-			WEPBIT_SHOTGUN |
-			WEPBIT_UZI |
-			WEPBIT_CAMPINGRIFLE |
-			WEPBIT_GRENADE_LAUNCHER |
-			WEPBIT_ELECTRO |
-			WEPBIT_CRYLINK |
-			WEPBIT_HLAC |
-			WEPBIT_NEX |
-			WEPBIT_HAGAR |
-			WEPBIT_SUPERSHOTGUN |
-			WEPBIT_ZAPPER |
-			WEPBIT_ROCKET_LAUNCHER;
+	entity e;
+	akimbo_supported_weapons = 0;
+	WEAPON_INFO_FOR_EACH(e) {
+		if (e.weapon == WEP_TUBA || e.weapon == WEP_FIREBALL || e.weapon == WEP_MELEE || e.weapon == WEP_HOOK || e.weapon == WEP_PORTO || e.weapon == WEP_MINSTANEX)
+			continue;
 
+		akimbo_supported_weapons |= e.weapons;
+	}
 	if (s == "all") {
-		g_akimbo_weapons = akimbo_supported_weapons;
-		for (j = WEP_LAST + 1; j <= WEP_LAST_EXTRA; j++)
-			g_akimbo_weapons_extra |= weapon_info(j).weapons_extra;
+		WEAPON_INFO_FOR_EACH(e) {
+			g_akimbo_weapons |= (akimbo_supported_weapons & e.weapons);
+			g_akimbo_weapons_extra |= e.weapons_extra;
+		}
 	} else {
 		n = tokenize_console(s);
 		for (i = 0; i < n; i++)
-			for (j = WEP_FIRST; j <= WEP_LAST_EXTRA; j++)
-				if (argv(i) == weapon_info(j).netname) {
-					g_akimbo_weapons |= weapon_info(j).weapons;
-					g_akimbo_weapons_extra |= weapon_info(j).weapons_extra;
+			WEAPON_INFO_FOR_EACH(e)
+				if (argv(i) == e.netname) {
+					g_akimbo_weapons |= e.weapons;
+					g_akimbo_weapons_extra |= e.weapons_extra;
 					break;
 				}
 	}

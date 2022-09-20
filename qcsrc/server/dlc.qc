@@ -200,11 +200,9 @@ void(void) dlc_reset_all {
 	}
 	self = e;
 	weapon_register_weapons();
-	float i, wbit;
-	for (i = WEP_FIRST; i <= WEP_LAST; i++) {
-		wbit = weapon_info(i).weapons;
-		if ((weapon_spawned_list & wbit) || (player_start_weapons & wbit))
-			weapon_info(i).weapon_func(WR_PRECACHE);
+	WEAPON_INFO_FOR_EACH(e) {
+		if ((weapon_spawned_list & e.weapons) || (player_start_weapons & e.weapons) || (weapon_spawned_extra_list & e.weapons_extra) || (player_start_weapons_extra & e.weapons_extra))
+			e.weapon_func(WR_PRECACHE);
 	}
 }
 

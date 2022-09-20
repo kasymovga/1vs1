@@ -185,8 +185,7 @@ void(entity attacker, float deathtype, float shots) damage_record_fires {
 	float weaponid;
 	weaponid = DEATH_WEAPONOF(deathtype);
 	if not(warmup_active)
-	if (weaponid >= WEP_FIRST)
-	if (weaponid <= WEP_LAST_EXTRA) {
+	if (WEAPON_VALID(weaponid)) {
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float f = attacker.bullets_fired[weaponid] + shots;
 		attacker.(bullets_fired[weaponid]) = f;
@@ -211,8 +210,7 @@ void(entity attacker, entity targ, float deathtype, float hits, float _damage) d
 	if (targ != attacker)
 	if (!team_mode || targ.team != attacker.team)
 	if not(warmup_active)
-	if (weaponid >= WEP_FIRST)
-	if (weaponid <= WEP_LAST_EXTRA) {
+	if (WEAPON_VALID(weaponid)) {
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float h = attacker.bullets_hit[weaponid] + hits;
 		attacker.(bullets_hit[weaponid]) = h;

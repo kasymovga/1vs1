@@ -32,6 +32,9 @@ string weaponpriority_hudselector_1;
 // functions:
 entity weapon_info(float id);
 void(void) weapon_register_weapons;
+entity weapon_info_chain;
+#define WEAPON_INFO_FOR_EACH(x) for (x = weapon_info_chain; x; x = x.enemy) if (x.weapon)
+#define WEAPON_INFO_FOR_EACH_ID(x) for (x = WEP_FIRST; x <= WEP_LAST_EXTRA; x++)
 
 // entity properties of weaponinfo:
 .float weapon; // WEP_...
@@ -44,7 +47,6 @@ void(void) weapon_register_weapons;
 .string mdl; // modelname without g_, v_, w_
 .string model; // full name of g_ model
 .float impulse; // weapon impulse
-.string model2; // wpn- sprite name
 
 #ifdef SVQC
 #define weapon_register(id,func,ammotype,i,normalweapon,canclimb,pickupbasevalue,modelname,shortname,wname) \

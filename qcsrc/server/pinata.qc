@@ -6,13 +6,11 @@ float() pinata_player_death_weapon_throw_handle {
 	if not(g_pinata)
 		return pinata_player_death_weapon_throw_handle_NextLink();
 
-	float j;
 	entity wi;
-	for (j = WEP_FIRST; j <= WEP_LAST_EXTRA; ++j) {
-		wi = weapon_info(j);
+	WEAPON_INFO_FOR_EACH(wi) {
 		if ((self.weapons & wi.weapons) || (self.weapons_extra & wi.weapons_extra))
-			if (weapon_throwable(j) || g_pinata_drop_all)
-				weapon_throw_new(self, j, FALSE, self.origin, randomvec() * 175 + '0 0 325');
+			if (weapon_throwable(wi.weapon) || g_pinata_drop_all)
+				weapon_throw_new(self, wi.weapon, FALSE, self.origin, randomvec() * 175 + '0 0 325');
 	}
 	return TRUE;
 }

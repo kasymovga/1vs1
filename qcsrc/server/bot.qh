@@ -40,9 +40,9 @@ float skill;
 float bot_custom_weapon;
 float bot_distance_far;
 float bot_distance_close;
-float bot_weapons_far[WEP_COUNT];
-float bot_weapons_mid[WEP_COUNT];
-float bot_weapons_close[WEP_COUNT];
+float bot_weapons_far[WEP_COUNT_EXTRA];
+float bot_weapons_mid[WEP_COUNT_EXTRA];
+float bot_weapons_close[WEP_COUNT_EXTRA];
 
 entity bot_list;
 .entity nextbot;
