@@ -513,7 +513,7 @@ float(void) bot_cmd_turn {
 float(void) bot_cmd_select_weapon {
 	float id;
 	id = bot_cmd.bot_cmd_parm_float;
-	if (id < WEP_FIRST || id > WEP_LAST)
+	if not(WEAPON_VALID(id))
 		return BOT_CMD_STATUS_ERROR;
 
 	if (weapon_carried(self, id, TRUE, FALSE))

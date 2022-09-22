@@ -20,19 +20,18 @@ void(entity bot) onslaught_role_reset;
 .entity havocbot_ons_target;
 
 void(float ratingscale, vector org, float sradius) onslaught_role_goalrating_offenseitems {
-	entity head;
-	float t, i, c = 0, needarmor = FALSE, needweapons = FALSE;
+	entity head, e;
+	float t, c = 0, needarmor = FALSE, needweapons = FALSE;
 
 	// Needs armor/health?
 	if(self.health<100)
 		needarmor = TRUE;
 
 	// Needs weapons?
-	for(i = WEP_FIRST; i < WEP_LAST ; ++i)
-	{
+	WEAPON_INFO_FOR_EACH(e) {
 		// Find weapon
-		if((weapon_info(i)).weapons & self.weapons)
-		if(++c>=4)
+		if ((e.weapons & self.weapons) || (e.weapons_extra & self.weapons_extra))
+		if (++c>=4)
 			break;
 	}
 

@@ -669,7 +669,7 @@ void(void) havocbot_chooseweapon {
 	// TODO: clean this up by moving it to weapon code
 	// If no weapon was chosen get the first available weapon
 	if (self.weapon==0)
-	for (i=WEP_FIRST; i <= WEP_LAST ; ++i) {
+	WEAPON_INFO_FOR_EACH_ID(i) {
 		if (weapon_carried(self, i, TRUE, FALSE)) {
 			self.switchweapon = i;
 			return;

@@ -541,28 +541,29 @@ float(entity player, entity item) weapon_pickupevalfunc {
 
 	// If custom weapon priorities for bots is enabled rate most wanted weapons higher
 	if (bot_custom_weapon && c) {
-		for (i = WEP_FIRST; i < WEP_LAST ; ++i) {
+		entity e;
+		WEAPON_INFO_FOR_EACH(e) {
 			// Find weapon
-			if (((weapon_info(i)).weapons & item.weapons)  != item.weapons)
+			if ((e.weapons & item.weapons) != item.weapons)
+			if ((e.weapons_extra & item.weapons_extra) != item.weapons_extra)
 				continue;
 
 			// Find the highest position on any range
 			position = -1;
-			for (j = 0; j < WEP_LAST ; ++j){
+			for (j = 0; j < WEP_COUNT_EXTRA ; ++j){
 				if (
-						bot_weapons_far[j] == i ||
-						bot_weapons_mid[j] == i ||
-						bot_weapons_close[j] == i)
-				{
+						bot_weapons_far[j] == e.weapon ||
+						bot_weapons_mid[j] == e.weapon ||
+						bot_weapons_close[j] == e.weapon) {
 					position = j;
 					break;
 				}
 			}
 			// Rate it
 			if (position >= 0 ) {
-				position = WEP_LAST - position;
+				position = WEP_LAST_EXTRA - position;
 				// item.bot_pickupbasevalue is overwritten here
-				return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / WEP_LAST ))) * c;
+				return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / WEP_LAST_EXTRA ))) * c;
 			}
 		}
 	}
