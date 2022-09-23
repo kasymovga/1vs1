@@ -571,13 +571,13 @@ float(entity player, entity item) weapon_pickupevalfunc {
 }
 
 float(entity player, entity item) commodity_pickupevalfunc {
-	float c, i, need_shells = FALSE, need_nails = FALSE, need_rockets = FALSE, need_cells = FALSE;
+	float c, need_shells = FALSE, need_nails = FALSE, need_rockets = FALSE, need_cells = FALSE;
 	entity wi;
 	c = 0;
 	// Detect needed ammo
-	for (i = WEP_FIRST; i < WEP_LAST ; ++i) {
-		wi = weapon_info(i);
+	WEAPON_INFO_FOR_EACH(wi) {
 		if not(wi.weapons & player.weapons)
+		if not(wi.weapons_extra & player.weapons_extra)
 			continue;
 
 		if (wi.items & IT_SHELLS)

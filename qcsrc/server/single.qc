@@ -1,5 +1,6 @@
 float single_level_finished;
 float _single_transit_weapons;
+float _single_transit_weapons_extra;
 float single_secrets_found;
 float single_secrets_total;
 float single_monsters_killed;
@@ -11,6 +12,8 @@ var void() single_shutdown_next;
 void() single_shutdown {
 	registercvar("_single_transit_weapons", "0");
 	builtin_cvar_set("_single_transit_weapons", ftos(_single_transit_weapons | weapon_spawned_list | player_start_weapons)); //builting function for avoid campaign wrapper
+	registercvar("_single_transit_weapons_extra", "0");
+	builtin_cvar_set("_single_transit_weapons_extra", ftos(_single_transit_weapons_extra | weapon_spawned_extra_list | player_start_weapons_extra)); //builting function for avoid campaign wrapper
 	single_shutdown_next();
 }
 
@@ -84,10 +87,13 @@ void single_init_delayed(void) {
 		}
 	}
 	_single_transit_weapons = builtin_cvar("_single_transit_weapons"); //builtin to avoid campaign intercepting
-	float i, j;
-	for(i = WEP_FIRST, j = 1; i < WEP_LAST; ++i, j *= 2) {
-		if (_single_transit_weapons & j)
-			weapon_precache(i);
+	_single_transit_weapons_extra = builtin_cvar("_single_transit_weapons_extra"); //builtin to avoid campaign intercepting
+	WEAPON_INFO_FOR_EACH(e) {
+		if (_single_transit_weapons & e.weapons)
+			weapon_precache(e.weapon);
+
+		if (_single_transit_weapons_extra & e.weapons_extra)
+			weapon_precache(e.weapon);
 	}
 }
 
@@ -100,6 +106,7 @@ void() single_client_parms_new {
 	parm10 = player_start_ammo_cells;
 	parm11 = player_start_weapons;
 	parm12 = FALSE;
+	parm13 = player_start_weapons_extra;
 }
 
 void() single_client_parms_change {
@@ -112,6 +119,7 @@ void() single_client_parms_change {
 		parm10 = self.ammo_cells;
 		parm11 = self.weapons;
 		parm12 = TRUE;
+		parm13 = self.weapons_extra;
 	} else {
 		single_client_parms_new();
 	}
@@ -128,6 +136,7 @@ void() single_client_parms_decode {
 		self.ammo_cells = parm10;
 		self.weapons = parm11;
 		self.default_equip = FALSE;
+		self.weapons_extra = parm13;
 	} else {
 		self.default_equip = TRUE; //Hack for force default equip
 	}
