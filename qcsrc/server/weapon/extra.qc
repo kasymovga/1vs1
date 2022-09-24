@@ -260,6 +260,7 @@ float(float req) weapon_extra_think {
 	} else if (req == WR_PRECACHE) {
 		precache_sound(weapon_extra_primary_sound[extra_num]);
 		precache_sound(weapon_extra_secondary_sound[extra_num]);
+		precache_sound("weapons/campingrifle_reload.wav");
 	} else if (req == WR_CHECKAMMO1) {
 		at = weapon_extra_ammo_type[extra_num];
 		if (at) {
