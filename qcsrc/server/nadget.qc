@@ -548,6 +548,7 @@ void nadget_SetNadgetType(entity p, float t) {
 void nadget_FadeOut_Think(void) {
 	self.alpha = approach(self.alpha, 0, frametime);
 	if (self.classname == "hg_linker")
+	if (self.enemy)
 		self.enemy.alpha = self.alpha * 0.5;
 
 	if (!self.alpha) {
