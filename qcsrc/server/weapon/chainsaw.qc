@@ -45,10 +45,16 @@ void(void) weapon_chainsaw_attack {
 
 float(float req) weapon_chainsaw {
 	if (req == WR_AIM) {
-		if (random() < bot_melee_love)
 		if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
-		if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE))
-			self.BUTTON_ATCK = TRUE;
+		if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE)) {
+			if (g_balance_chainsaw_secondary) {
+				if (random() > 0.5)
+					self.BUTTON_ATCK = TRUE;
+				else
+					self.BUTTON_ATCK2 = TRUE;
+			} else
+				self.BUTTON_ATCK = TRUE;
+		}
 	} else if (req == WR_THINK) {
 		if (self.BUTTON_ATCK) {
 			if (weapon_prepareattack(0, 0)) {
