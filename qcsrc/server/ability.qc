@@ -28,18 +28,20 @@ void(entity e, string al) ability_class_init {
 			args = "";
 		}
 		if (an == "weapons") {
-			if (e)
+			if (e) {
 				e.weapons = 0;
-
+				e.weapons_extra = 0;
+			}
 			args = strreplace(",", " ", args);
 			entity we;
 			string wn;
 			while ((wn = str_car(args)) != "") {
 				args = str_cdr(args);
 				we = weapon_info_by_name(wn);
-				if (e)
+				if (e) {
 					e.weapons |= we.weapons;
-				else
+					e.weapons_extra |= we.weapons_extra;
+				} else
 					weapon_precache(we.weapon);
 			}
 		} else if (an == "armor") {
