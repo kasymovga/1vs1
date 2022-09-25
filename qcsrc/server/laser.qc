@@ -1,3 +1,5 @@
+float LASER_ABILITY;
+float g_laser;
 float g_laser_refire;
 float g_laser_animtime;
 float g_laser_speed;
@@ -21,7 +23,7 @@ entity(vector _shotdir, float _speed, float _dmg, float _dmg_edge, float _dmg_ra
 
 var float(void) laser_weapon_frame_handle_next;
 float(void) laser_weapon_frame_handle {
-	if (self.BUTTON_ATCK2) {
+	if (self.BUTTON_ATCK2 && ((self.abilities & LASER_ABILITY) || g_laser)) {
 		float w = self.weapon;
 		float w2 = self.switchweapon;
 		float ws = self.weaponentity.state;
@@ -47,11 +49,10 @@ float(void) laser_weapon_frame_handle {
 	return laser_weapon_frame_handle_next();
 }
 
-void(void) laser_init {
-	if not(cvar("g_laser"))
-		return;
-
-	client_button_atck2_busy = TRUE;
+float laser_init_common_done;
+void(void) laser_init_common {
+	if (laser_init_common_done) return;
+	laser_init_common_done = 1;
 	CVAR_CACHE(g_laser_refire);
 	CVAR_CACHE(g_laser_animtime);
 	CVAR_CACHE(g_laser_speed);
@@ -63,4 +64,19 @@ void(void) laser_init {
 	laser_weapon_frame_handle_next = plugin_chain_weapon_frame_handle;
 	plugin_chain_weapon_frame_handle = laser_weapon_frame_handle;
 	precache_sound ("weapons/lasergun_fire.wav");
+}
+
+void(entity e, string args, float set) laser_ability_init {
+	if not(e)
+		laser_init_common();
+}
+
+void(void) laser_init {
+	if not(cvar("g_laser")) {
+		LASER_ABILITY = ability_register("laser", laser_ability_init);
+		return;
+	}
+	g_laser = TRUE;
+	client_button_atck2_busy = TRUE;
+	laser_init_common();
 }
