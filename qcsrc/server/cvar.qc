@@ -188,6 +188,15 @@ void(string profile) cvar_profile_add {
 	if (cvar_profile_prefix_len == CVAR_INHERITANCE_DEEP)
 		return;
 
+	if ((s = cvar_defstring(strcat(profile, "_dlc"))) != "") {
+		string dlc;
+		while (s != "") {
+			dlc = str_car(s);
+			s = str_cdr(s);
+			if (dlc != "")
+				dlc_require(dlc);
+		}
+	}
 	for (i = 0; i < cvar_profile_prefix_len; i++) {
 		s = cvar_profile_prefix[i];
 		if (s == profile)
