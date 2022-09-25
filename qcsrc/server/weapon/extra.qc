@@ -8,6 +8,7 @@ float weapon_extra_primary_ammo[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_type[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_damage[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_headshotaddeddamage[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_primary_flash[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_force[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_refire[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_animtime[WEAPON_EXTRA_COUNT_MAX];
@@ -27,6 +28,7 @@ float weapon_extra_secondary_ammo[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_type[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_damage[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_headshotaddeddamage[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_secondary_flash[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_force[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_refire[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_animtime[WEAPON_EXTRA_COUNT_MAX];
@@ -86,8 +88,9 @@ void(void) weapon_extra_projectile_touch {
 }
 
 void(float num, float secondary, float t) weapon_extra_attack {
-	float d, f, e, r, g, sp, m, hs, spr, hittype, c, it;
+	float d, f, e, r, g, sp, m, hs, spr, hittype, c, it, fl;
 	string s;
+	float at = weapon_extra_ammo_type[num];
 	if (secondary) {
 		c = weapon_extra_secondary_shots[num];
 		d = weapon_extra_secondary_damage[num];
@@ -101,6 +104,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		spr = weapon_extra_secondary_spread[num];
 		hs = weapon_extra_secondary_headshotaddeddamage[num];
 		it = weapon_extra_secondary_impact_type[num];
+		fl = weapon_extra_secondary_flash[num];
 		hittype = self.weapon | HITTYPE_SECONDARY;
 	} else {
 		c = weapon_extra_primary_shots[num];
@@ -115,6 +119,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		spr = weapon_extra_primary_spread[num];
 		hs = weapon_extra_primary_headshotaddeddamage[num];
 		it = weapon_extra_primary_impact_type[num];
+		fl = weapon_extra_primary_flash[num];
 		hittype = self.weapon;
 	}
 	if (weapon_extra_magazinecapacity[num])
@@ -189,8 +194,33 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		weapon_melee_attack(1, d, s);
 		break;
 	}
+	if (fl) {
+		entity flash = spawn();
+		if (fl == 1) {
+			setmodel(flash, "models/uziflash.md3");
+			flash.think = weapon_uzi_flash_go;
+			flash.nextthink = time + 0.02;
+			flash.frame = 2;
+			flash.alpha = 1;
+		} else if (fl == 2) {
+			flash = spawn();
+			setmodel(flash, "models/uziflash.md3");
+			flash.scale = 1.2;
+			flash.think = stdproc_remove;
+			flash.nextthink = time + 0.06;
+		} else {
+			setmodel (flash, "models/flash.md3");
+			entity_fade_setup(flash, time, 0.1);
+		}
+		flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
+		weapon_attach_to_shotorg(flash, '5 0 0');
+	}
+	if (at == IT_SHELLS)
+		casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
+	else if (at == IT_NAILS)
+		casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 2, self);
+
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
-		float at = weapon_extra_ammo_type[num];
 		float a;
 		if (secondary)
 			a = weapon_extra_secondary_ammo[num];
@@ -261,6 +291,8 @@ float(float req) weapon_extra_think {
 		precache_sound(weapon_extra_primary_sound[extra_num]);
 		precache_sound(weapon_extra_secondary_sound[extra_num]);
 		precache_sound("weapons/campingrifle_reload.wav");
+		precache_model("models/uziflash.md3");
+		precache_model("models/flash.md3");
 	} else if (req == WR_CHECKAMMO1) {
 		at = weapon_extra_ammo_type[extra_num];
 		if (at) {
@@ -377,6 +409,7 @@ void(void) weapon_extra_init {
 		WEAPON_EXTRA_READ(ammo)
 		WEAPON_EXTRA_READ(bounces)
 		WEAPON_EXTRA_READ(up)
+		WEAPON_EXTRA_READ(flash)
 		weapon_extra_primary_sound[i] = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_sound")));
 		weapon_extra_primary_muzzle[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_muzzle")));
 		t = weapon_extra_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_type")));
