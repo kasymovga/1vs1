@@ -262,6 +262,56 @@ float(float req) weapon_extra_think {
 	float extra_num = self.weapon - WEP_LAST - 1;
 	float at, mc;
 	if (req == WR_AIM) {
+		float pt = weapon_extra_primary_type[extra_num];
+		float st = weapon_extra_secondary_type[extra_num];
+		float secondary = 0;
+		if (!st) {
+			if (!pt) return TRUE; //weapon broken
+			secondary = 0;
+		} else if (random() > 0.5)
+			secondary = 1;
+
+		if (secondary) {
+			switch (st) {
+			case WEAPON_EXTRA_TYPE_BULLET:
+				self.BUTTON_ATCK2 = bot_aim(weapon_extra_secondary_speed[extra_num], 0, 5, FALSE);
+				break;
+			case WEAPON_EXTRA_TYPE_RAIL:
+				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 1, FALSE);
+				break;
+			case WEAPON_EXTRA_TYPE_PROJECTILE:
+				if (bot_aim(weapon_extra_secondary_speed[extra_num], weapon_extra_secondary_up[extra_num], 5, TRUE))
+					self.BUTTON_ATCK2 = TRUE;
+
+				break;
+			case WEAPON_EXTRA_TYPE_MELEE:
+				if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
+				if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE)) {
+					self.BUTTON_ATCK2 = TRUE;
+				}
+				break;
+			}
+		} else {
+			switch (pt) {
+			case WEAPON_EXTRA_TYPE_BULLET:
+				self.BUTTON_ATCK = bot_aim(weapon_extra_primary_speed[extra_num], 0, 5, FALSE);
+				break;
+			case WEAPON_EXTRA_TYPE_RAIL:
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
+				break;
+			case WEAPON_EXTRA_TYPE_PROJECTILE:
+				if (bot_aim(weapon_extra_primary_speed[extra_num], weapon_extra_primary_up[extra_num], 5, TRUE))
+					self.BUTTON_ATCK = TRUE;
+
+				break;
+			case WEAPON_EXTRA_TYPE_MELEE:
+				if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
+				if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE)) {
+					self.BUTTON_ATCK = TRUE;
+				}
+				break;
+			}
+		}
 	} else if (req == WR_THINK) {
 		float magazinecapacity = weapon_extra_magazinecapacity[extra_num];
 		var .float extra_ammoclip = weapon_extra_clip[extra_num];

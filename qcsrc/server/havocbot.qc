@@ -77,7 +77,7 @@ void(void) havocbot_ai {
 	if (self.bot_aimtarg) {
 		self.aistatus |= AI_STATUS_ATTACKING;
 		self.aistatus &= ~AI_STATUS_ROAMING;
-		if (self.weapons) {
+		if (self.weapon) {
 			if not(plugin_chain_bot_aim())
 				weapon_action(self.weapon, WR_AIM);
 
