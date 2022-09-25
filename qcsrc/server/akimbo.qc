@@ -190,7 +190,10 @@ void(void) akimbo_init_common {
 void(entity e, string args, float set) akimbo_ability_init {
 	if (e) {
 		entity ag = akimbo_ghost_get(e, 0);
-		ag.weapons = 0;
+		if not(ag) ag = akimbo_ghost_spawn(e);
+		if (ag)
+			ag.weapons = 0;
+
 		if (set) {
 			string wn;
 			entity we;
@@ -199,6 +202,8 @@ void(entity e, string args, float set) akimbo_ability_init {
 				we = weapon_info_by_name(wn);
 				if (we.weapons & akimbo_supported_weapons)
 					ag.weapons |= we.weapons;
+
+				ag.weapons_extra |= we.weapons_extra;
 			}
 		}
 	} else
