@@ -1340,6 +1340,10 @@ void race_gamemenu_send(void(string item, string cmd) send_item) {
 	race_gamemenu_send_next(send_item);
 }
 
+string(string s) race_map_finish_message_mod {
+	return "^2Race finished!";
+}
+
 void(void) race_init {
 	if (game_type == GAME_TYPE_RACE) {
 		float qualifying_override = cvar("g_race_qualifying_timelimit_override");
@@ -1376,6 +1380,7 @@ void(void) race_init {
 		plugin_chain_gamemenu_send = race_gamemenu_send;
 		race_cmd_client_handle_next = plugin_chain_cmd_client_handle;
 		plugin_chain_cmd_client_handle = race_cmd_client_handle;
+		plugin_map_finish_message_mod = race_map_finish_message_mod;
 	}
 	if (g_race_qualifying) {
 		player_independent = 1;
