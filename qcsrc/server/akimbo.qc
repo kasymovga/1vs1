@@ -79,7 +79,6 @@ void(void) akimbo_weapon_frame {
 			self.ammo_cells = pl.ammo_cells;
 			self.ammo_nails = pl.ammo_nails;
 			self.ammo_rockets = pl.ammo_rockets;
-			self.weapons = pl.weapons;
 			self.BUTTON_ATCK = pl.BUTTON_ATCK;
 			self.BUTTON_ATCK2 = pl.BUTTON_ATCK2;
 			self.deadflag = pl.deadflag;
@@ -96,7 +95,6 @@ void(void) akimbo_weapon_frame {
 				self.weapon = akimbo_weapon;
 				self.switchweapon = akimbo_weapon;
 				self.modelindex = pl.modelindex;
-				self.weapons = pl.weapons;
 				self.owner = pl;
 				self.cvar_cl_gunalpha = pl.cvar_cl_gunalpha;
 				weapon_model_spawn();
