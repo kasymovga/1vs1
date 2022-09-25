@@ -112,6 +112,7 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 
 		wi = weapon_info(weaponwant);
 		if not(wi.weapons & weapon_spawned_list)
+		if not(wi.weapons_extra & weapon_spawned_extra_list)
 		if not(pl.weapons & wi.weapons)
 		if not(pl.weapons_extra & wi.weapons_extra)
 			continue;

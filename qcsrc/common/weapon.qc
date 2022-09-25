@@ -2,6 +2,50 @@
 entity _weapon_info[WEP_LAST_EXTRA];
 entity weapon_info_dummy;
 
+float(float dummy) weapon_dummy_func {
+	return 0;
+}
+
+void(void) weapon_register_done {
+	if not(weapon_info_dummy) {
+		weapon_info_dummy = spawn();
+		weapon_info_dummy.classname = "weapon_info";
+		weapon_info_dummy.weapon = 0; // you can recognize dummies by this
+		weapon_info_dummy.weapons = 0; // you can recognize dummies by this too
+		weapon_info_dummy.netname = "@!#%'n Tuba";
+		weapon_info_dummy.items = 0;
+		weapon_info_dummy.weapon_func = weapon_dummy_func;
+		weapon_info_dummy.mdl = "";
+		weapon_info_dummy.model = "";
+		#ifdef SVQC
+		weapon_info_dummy.spawnflags = 0;
+		weapon_info_dummy.bot_pickupbasevalue = 0;
+		weapon_info_dummy.model2 = "";
+		#endif
+		weapon_info_dummy.impulse = -1;
+	}
+	str_unzone_ifneeded(weaponpriority_hudselector_0);
+	str_unzone_ifneeded(weaponpriority_hudselector_1);
+	weaponpriority_hudselector_0 = "";
+	entity wi;
+	WEAPON_INFO_FOR_EACH(wi)
+		weaponpriority_hudselector_0 = strcat(weaponpriority_hudselector_0, " ", ftos(wi.weapon));
+
+	float imp;
+	weaponpriority_hudselector_1 = "";
+	WEAPON_INFO_FOR_EACH(wi)
+		if (wi.impulse == 0)
+			weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(wi.weapon));
+
+	for (imp = 9; imp > 0; --imp)
+		WEAPON_INFO_FOR_EACH(wi)
+			if (wi.impulse == imp)
+				weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(wi.weapon));
+
+	weaponpriority_hudselector_0 = strzone(substring(weaponpriority_hudselector_0, 1, strlen(weaponpriority_hudselector_0) - 1));
+	weaponpriority_hudselector_1 = strzone(substring(weaponpriority_hudselector_1, 1, strlen(weaponpriority_hudselector_1) - 1));
+}
+
 void(float id,
 #ifdef SVQC
 		float(float) func,
@@ -81,50 +125,7 @@ void(float id,
 	} else {
 		e.weapons = pow(2, id - 1);
 	}
-}
-
-float(float dummy) weapon_dummy_func {
-	return 0;
-}
-
-void(void) weapon_register_done {
-	entity wi;
-	weapon_info_dummy = spawn();
-	weapon_info_dummy.classname = "weapon_info";
-	weapon_info_dummy.weapon = 0; // you can recognize dummies by this
-	weapon_info_dummy.weapons = 0; // you can recognize dummies by this too
-	weapon_info_dummy.netname = "@!#%'n Tuba";
-	weapon_info_dummy.items = 0;
-	weapon_info_dummy.weapon_func = weapon_dummy_func;
-	weapon_info_dummy.mdl = "";
-	weapon_info_dummy.model = "";
-#ifdef SVQC
-	weapon_info_dummy.spawnflags = 0;
-	weapon_info_dummy.bot_pickupbasevalue = 0;
-	weapon_info_dummy.model2 = "";
-#endif
-	weapon_info_dummy.impulse = -1;
-	float i;
-	weaponpriority_hudselector_0 = "";
-	for (i = WEP_LAST_EXTRA; i >= 1; --i)
-		if (_weapon_info[i-1])
-			weaponpriority_hudselector_0 = strcat(weaponpriority_hudselector_0, " ", ftos(i));
-
-	float imp;
-	weaponpriority_hudselector_1 = "";
-	for (i = 1; i <= WEP_LAST_EXTRA; ++i) {
-		wi = _weapon_info[i-1];
-		if (wi && wi.impulse == 0)
-			weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(i));
-	}
-	for (imp = 9; imp > 0; --imp)
-		for (i = 1; i <= WEP_LAST_EXTRA; ++i) {
-			wi = _weapon_info[i-1];
-			if (wi && wi.impulse == imp)
-				weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(i));
-		}
-	weaponpriority_hudselector_0 = strzone(substring(weaponpriority_hudselector_0, 1, strlen(weaponpriority_hudselector_0) - 1));
-	weaponpriority_hudselector_1 = strzone(substring(weaponpriority_hudselector_1, 1, strlen(weaponpriority_hudselector_1) - 1));
+	weapon_register_done();
 }
 
 entity weapon_info(float id) {
@@ -164,7 +165,5 @@ void(void) weapon_register_weapons {
 	weapon_register(WEP_SUPERSHOTGUN, weapon_supershotgun, IT_SHELLS, 8, 1, 0, BOT_PICKUP_RATING_MID, "supershotgun", "supershotgun", "SuperShotgun");
 	weapon_register(WEP_ZAPPER, weapon_zapper, IT_CELLS, 5, 1, 0, BOT_PICKUP_RATING_MID, "zapper", "zapper", "Zapper");
 	weapon_register(WEP_MELEE, weapon_chainsaw, 0, 1, 1, 0, BOT_PICKUP_RATING_MID, "chainsaw", "chainsaw", "Chainsaw");
-	if not(weapon_info_dummy)
-		weapon_register_done();
 }
 #endif
