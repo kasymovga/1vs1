@@ -67,6 +67,8 @@ float(string s) weapon_extra_type_from_name {
 		return WEAPON_EXTRA_TYPE_PROJECTILE;
 	case "melee":
 		return WEAPON_EXTRA_TYPE_MELEE;
+	case "":
+		return WEAPON_EXTRA_TYPE_NONE;
 	}
 	print("Unknown extra weapon type: ", s, "\n");
 	return 0;
