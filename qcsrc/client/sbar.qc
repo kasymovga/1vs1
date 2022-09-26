@@ -950,7 +950,11 @@ void(vector pos, entity pl, float is_self, float pl_number) sbar_scoreboard_item
 			w = f & 63;
 			if (w) {
 				f = (f - w) / 64;
-				drawpic(pos - tmp, strcat("gfx/hud/inv_weapon", ftos(w - 1)), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+				if (w > WEP_LAST)
+					drawpic(pos - tmp, strcat("gfx/hud/inv_weapon_", weapon_info(w).netname), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+				else
+					drawpic(pos - tmp, strcat("gfx/hud/inv_weapon", ftos(w - 1)), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+
 				tmp_x = tmp_x - 2 * sbar_fontsize_x;
 				drawstring(pos - tmp, strcat(ftos(f), "%"), sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
 			}
@@ -1007,7 +1011,10 @@ void(vector pos, entity pl, float is_self, float pl_number) sbar_scoreboard_item
 				w = f & 63;
 				if (w) {
 					f = (f - w) / 64;
-					drawpic(pos - tmp, strcat("gfx/hud/inv_weapon", ftos(w - 1)), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+					if (w > WEP_LAST)
+						drawpic(pos - tmp, strcat("gfx/hud/inv_weapon_", weapon_info(w).netname), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+					else
+						drawpic(pos - tmp, strcat("gfx/hud/inv_weapon", ftos(w - 1)), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 					tmp_x = tmp_x - 2 * sbar_fontsize_x;
 					drawstring(pos - tmp, strcat(ftos(f), "%"), sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
 				}
