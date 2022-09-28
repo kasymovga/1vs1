@@ -356,7 +356,11 @@ float(float req) weapon_extra_think {
 			return (weapon_extra_secondary_ammo[extra_num] <= self.(item_counter_field(at)));
 		}
 	} else if (req == WR_RELOAD) {
-		weapon_extra_reload(extra_num);
+		mc = weapon_extra_magazinecapacity[extra_num];
+		at = weapon_extra_ammo_type[extra_num];
+		if (mc && at) {
+			weapon_extra_reload(extra_num);
+		}
 	} else if (req == WR_SUICIDEMESSAGE) {
 	} else if (req == WR_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY)
@@ -366,7 +370,7 @@ float(float req) weapon_extra_think {
 	} else if (req == WR_SETUP) {
 		mc = weapon_extra_magazinecapacity[extra_num];
 		at = weapon_extra_ammo_type[extra_num];
-		if (mc) {
+		if (mc && at) {
 			weapon_clip_checkmaxbullets(mc, item_counter_field(at), weapon_extra_clip[extra_num], weapon_extra_primary_ammo[extra_num], weapon_extra_secondary_ammo[extra_num]);
 			if not(self.weapon_extra_clip[extra_num])
 				self.weapon_extra_clip[extra_num] = -1;
