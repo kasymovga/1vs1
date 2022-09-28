@@ -904,6 +904,7 @@ void() ctf_delayedinit {
 		freeze_shared_init("ctft");
 		roundbased_score_field_set(CTF_SCORE_TEAM_CAPS);
 	}
+	plugin_score_give_frag_mod = ctf_handle_frags;
 }
 
 var void(float killed) ctf_player_clear_next;
@@ -1003,7 +1004,6 @@ void() ctf_init {
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
 	captureshield_force = cvar("g_ctf_shield_force");
-	plugin_score_give_frag_mod = ctf_handle_frags;
 	ctf_player_clear_next = plugin_chain_player_clear;
 	plugin_chain_player_clear = ctf_player_clear;
 	ctf_player_think_next = plugin_chain_player_think;

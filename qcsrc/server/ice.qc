@@ -69,13 +69,13 @@ float(entity attacker, entity inflictor, float deathtype) ice_player_death_handl
 	if (ice_hook_skip_death_handle())
 		return FALSE;
 
+	if (deathtype)
+		player_obituary(attacker, inflictor, self, deathtype);
+
 	player_clear(TRUE);
 	roundbased_check_teams();
 	if (self.deadflag == DEAD_FREEZE)
 		return TRUE;
-
-	if (deathtype)
-		player_obituary(attacker, inflictor, self, deathtype);
 
 	self.deadflag = DEAD_FREEZE;
 	self.clipgroup = 0;
