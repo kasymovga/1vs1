@@ -956,6 +956,7 @@ void kh_init_delayed()  // sets up th KH environment
 		key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
 		WaypointSprite_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
 	}
+	plugin_score_give_frag_mod = kh_HandleFrags;
 }
 
 void kh_init() {
@@ -965,7 +966,6 @@ void kh_init() {
 	precache_sound(kh_sound_drop);
 	precache_sound(kh_sound_collect);
 	precache_sound(kh_sound_alarm);  // the new siren
-	plugin_score_give_frag_mod = kh_HandleFrags;
 	plugin_player_death_handle = kh_DeathHandle;
 	kh_PlayerClear_NextLink = plugin_chain_player_clear;
 	plugin_chain_player_clear = kh_PlayerClear;
