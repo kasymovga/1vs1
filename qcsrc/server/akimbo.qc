@@ -52,16 +52,19 @@ entity(entity p) akimbo_ghost_spawn {
 
 void(void) akimbo_weapon_frame {
 	float akimbo_weapon;
-	float i, j;
+	float i, j, _weapons, _weapons_extra;
 	entity _akimbo_ghost;
 	entity pl = self;
 	entity prevself;
 	for (i = 2; i < 4; i++) {
 		_akimbo_ghost = akimbo_ghost_get(pl, i);
 		if (_akimbo_ghost) {
-			if (_akimbo_ghost.switchweapon != pl.switchweapon)
-				_akimbo_ghost.switchweapon = pl.switchweapon;
-
+			if (_akimbo_ghost.switchweapon != pl.switchweapon) {
+				if (akimbo_weapon_have(pl, _akimbo_ghost.switchweapon, i))
+					_akimbo_ghost.switchweapon = pl.switchweapon;
+				else
+					_akimbo_ghost.switchweapon = 0;
+			}
 			if (_akimbo_ghost.weaponentity)
 				akimbo_weapon = _akimbo_ghost.weapon;
 			else
@@ -106,7 +109,13 @@ void(void) akimbo_weapon_frame {
 				weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
 				prevself.weaponentity.cnt = 0;
 			}
+			_weapons = self.weapons;
+			_weapons_extra = self.weapons_extra;
+			self.weapons = pl.weapons;
+			self.weapons_extra = pl.weapons_extra;
 			weapon_frame();
+			self.weapons = _weapons;
+			self.weapons_extra = _weapons_extra;
 			pl.ammo_shells = self.ammo_shells;
 			pl.ammo_cells = self.ammo_cells;
 			pl.ammo_nails = self.ammo_nails;
@@ -326,10 +335,10 @@ void(entity e) akimbo_clear {
 
 float(entity e, float wpn, float deep) akimbo_weapon_have {
 	entity wi = weapon_info(wpn);
-	entity ag = akimbo_ghost_get(e, 0);
 	if (!(wi.weapons & akimbo_supported_weapons) && !wi.weapons_extra)
 		return FALSE;
 
+	entity ag = akimbo_ghost_get(e, 0);
 	if ((ag.weapons & wi.weapons) || (ag.weapons_extra & wi.weapons_extra)) {
 			if (g_powerup_strength_akimbo && e.strength_finished > time)
 				return deep <= 3;
