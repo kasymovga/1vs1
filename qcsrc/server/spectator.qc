@@ -46,6 +46,7 @@ void(entity spectatee) spectator_copy {
 	self.dmg_take = spectatee.dmg_take;
 	self.dmg_save = spectatee.dmg_save;
 	self.dmg_inflictor = spectatee.dmg_inflictor;
+	self.ammoclip = spectatee.ammoclip;
 	self.angles = spectatee.v_angle;
 	//client_view_angles_set(self, spectatee.v_angle); // cause broken interpolation
 	self.fixangle = TRUE;
