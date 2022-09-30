@@ -199,9 +199,9 @@ void(float imp) weapon_next_on_impulse {
 // next weapon
 void(float list) weapon_next {
 	if (list == 0)
-		weapon_cycle(weaponpriority_hudselector_0, -1);
+		weapon_cycle(weapon_priority_by_order, -1);
 	else if (list == 1)
-		weapon_cycle(weaponpriority_hudselector_1, -1);
+		weapon_cycle(weapon_priority_by_impulse, -1);
 	else if (list == 2)
 		weapon_cycle(self.cvar_cl_weaponpriority, -1);
 }
@@ -209,9 +209,9 @@ void(float list) weapon_next {
 // prev weapon
 void(float list) weapon_previous {
 	if (list == 0)
-		weapon_cycle(weaponpriority_hudselector_0, +1);
+		weapon_cycle(weapon_priority_by_order, +1);
 	else if (list == 1)
-		weapon_cycle(weaponpriority_hudselector_1, +1);
+		weapon_cycle(weapon_priority_by_impulse, +1);
 	else if ( list == 2)
 		weapon_cycle(self.cvar_cl_weaponpriority, +1);
 }
@@ -1550,6 +1550,29 @@ void(entity e, float wep, string name) weapon_give {
 		sprint (other, "\n");
 	}
 	self = oldself;
+}
+
+void(void) weapon_priority_update {
+	str_unzone_ifneeded(weapon_priority_by_order);
+	str_unzone_ifneeded(weapon_priority_by_impulse);
+	weapon_priority_by_order = "";
+	entity wi;
+	WEAPON_INFO_FOR_EACH(wi)
+		weapon_priority_by_order = strcat(weapon_priority_by_order, " ", ftos(wi.weapon));
+
+	float imp;
+	weapon_priority_by_impulse = "";
+	WEAPON_INFO_FOR_EACH(wi)
+		if (wi.impulse == 0)
+			weapon_priority_by_impulse = strcat(weapon_priority_by_impulse, " ", ftos(wi.weapon));
+
+	for (imp = 9; imp > 0; --imp)
+		WEAPON_INFO_FOR_EACH(wi)
+			if (wi.impulse == imp)
+				weapon_priority_by_impulse = strcat(weapon_priority_by_impulse, " ", ftos(wi.weapon));
+
+	weapon_priority_by_order = strzone(substring(weapon_priority_by_order, 1, strlen(weapon_priority_by_order) - 1));
+	weapon_priority_by_impulse = strzone(substring(weapon_priority_by_impulse, 1, strlen(weapon_priority_by_impulse) - 1));
 }
 
 void(void) weapon_init {

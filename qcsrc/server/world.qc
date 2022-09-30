@@ -271,6 +271,7 @@ void(void) world_init {
 	// needs to be done so early as they would still spawn
 	weapon_register_weapons();
 	world_static_init();
+	weapon_priority_update(); //must be called after all weapons registered
 	world_dynamic_init();
 	nadget_init();
 	player_count = 0;

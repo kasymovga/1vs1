@@ -25,13 +25,8 @@ float WEP_COUNT            = 20;
 float WEP_LAST_EXTRA       = 27;
 float WEP_COUNT_EXTRA      = 28;
 
-// variables:
-string weaponpriority_hudselector_0;
-string weaponpriority_hudselector_1;
-
 // functions:
-entity weapon_info(float id);
-void(void) weapon_register_weapons;
+entity(float id) weapon_info;
 entity weapon_info_chain;
 #define WEAPON_INFO_FOR_EACH(x) for (x = weapon_info_chain; x; x = x.enemy) if (x.weapon)
 #define WEAPON_INFO_FOR_EACH_ID(x) for (x = WEP_FIRST; x <= WEP_LAST_EXTRA; x++)

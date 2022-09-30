@@ -107,7 +107,6 @@ void(void) CSQC_Init {
 	player_list = spawn();
 	team_get(TEAM_COLOR_SPECTATOR, TRUE); // add specs first
 	cvar_clientsettemp("_supports_weaponpriority", "1");
-	weapon_register_weapons();
 	world_get_min_max(1); // try the CLEVER way first
 	waypointsprite_init();
 	projectile_precache();

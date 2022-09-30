@@ -1,1 +1,2 @@
 string(string order, float complete) weapon_fix_order;
+void(void) weapon_register_weapons;
