@@ -118,7 +118,7 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 			continue;
 
 		++c;
-		if (weapon_carried(pl, weaponwant, TRUE, FALSE)) {
+		if (weapon_carried(pl, weaponwant, TRUE, TRUE)) {
 			if (switchtonext)
 				return weaponwant;
 
