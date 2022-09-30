@@ -47,20 +47,20 @@ void(void) spawnfunc_weapon_laser {
 }
 
 float(float req) weapon_laser {
-	if (req == WR_AIM)
+	if (req == WEAPON_REQUEST_AIM)
 		self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
-	else if (req == WR_THINK) {
+	else if (req == WEAPON_REQUEST_THINK) {
 		if (self.BUTTON_ATCK) {
 			if (weapon_prepareattack(0, g_balance_laser_primary_refire)) {
 				weapon_laser_attack(FALSE);
-				weapon_thinkf(WFRAME_FIRE1, g_balance_laser_primary_animtime, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_laser_primary_animtime, weapon_ready);
 			}
 		}
 		if (self.BUTTON_ATCK2) {
 			if(g_balance_laser_secondary) {
 				if (weapon_prepareattack(0, g_balance_laser_secondary_refire)) {
 					weapon_laser_attack(TRUE);
-					weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, weapon_ready);
+					weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_laser_secondary_animtime, weapon_ready);
 				}
 			} else {
 				if(self.switchweapon == WEP_LASER) // don't do this if already switching
@@ -68,20 +68,20 @@ float(float req) weapon_laser {
 			}
 		}
 	}
-	else if (req == WR_PRECACHE) {
+	else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/lasergun_fire.wav");
 		if (cvar("g_balance_laser_primary_force") > 0)
 			hint_add("You can use Laser for high jumps or accelerating. Just shoot under your legs or near walls.");
-	} else if (req == WR_SETUP) {
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_SETUP) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return TRUE;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return TRUE;
-	else if (req == WR_SUICIDEMESSAGE)
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "lasered himself to hell";
-	else if (req == WR_KILLMESSAGE)
+	else if (req == WEAPON_REQUEST_KILLMESSAGE)
 		weapon_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
-	else if (req == WR_CVAR_CACHE) {
+	else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_laser_primary_animtime);
 		CVAR_CACHE(g_balance_laser_primary_damage);
 		CVAR_CACHE(g_balance_laser_primary_edgedamage);

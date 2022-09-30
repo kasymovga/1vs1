@@ -96,7 +96,7 @@ void(void) spawnfunc_weapon_tuba {
 }
 
 float(float req) weapon_tuba {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		// bots cannot play the Tuba well yet
 		// I think they should start with the recorder first
 		if (vlen(self.origin - self.enemy.origin) < g_balance_tuba_radius) {
@@ -105,31 +105,31 @@ float(float req) weapon_tuba {
 			else
 				self.BUTTON_ATCK2 = 1;
 		}
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, g_balance_tuba_refire)) {
 			weapon_tuba_attack(0);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_tuba_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_tuba_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (weapon_prepareattack(1, g_balance_tuba_refire)) {
 			weapon_tuba_attack(HITTYPE_SECONDARY);
-			weapon_thinkf(WFRAME_FIRE2, g_balance_tuba_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_tuba_animtime, weapon_ready);
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		float i;
 		for (i = -18; i <= +27; ++i)
 			precache_sound(TUBA_NOTE(i));
-	} else if (req == WR_SETUP) {
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_SETUP) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return TRUE; // TODO use fuel?
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
-	else if (req == WR_SUICIDEMESSAGE) {
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		weapon_deathtypestring = "hurt his own ears with the @!#%'n Tuba";
-	} else if (req == WR_KILLMESSAGE) {
+	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "died of #'s great playing on the @!#%'n Tuba";
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_tuba_animtime);
 		CVAR_CACHE(g_balance_tuba_attenuation);
 		CVAR_CACHE(g_balance_tuba_damage);

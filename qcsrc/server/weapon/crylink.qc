@@ -146,40 +146,40 @@ void(void) spawnfunc_weapon_crylink {
 }
 
 float(float req) weapon_crylink {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		if (random() > 0.15)
 			self.crylink_buttonatck1 = bot_aim(g_balance_crylink_primary_speed, 0, g_balance_crylink_primary_middle_lifetime, FALSE);
 		else
 			self.crylink_buttonatck2 = bot_aim(g_balance_crylink_secondary_speed, 0, g_balance_crylink_secondary_middle_lifetime, FALSE);
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.crylink_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_crylink_primary_refire)) {
 			weapon_crylink_attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_crylink_primary_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_crylink_primary_animtime, weapon_ready);
 		}
 		if (self.crylink_buttonatck2)
 		if (weapon_prepareattack(1, g_balance_crylink_secondary_refire)) {
 			weapon_crylink_attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_crylink_secondary_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_crylink_secondary_animtime, weapon_ready);
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/crylink_fire.wav");
 		precache_sound("weapons/crylink_fire2.wav");
-	} else if (req == WR_SETUP) {
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_SETUP) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_crylink_primary_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return self.ammo_cells >= g_balance_crylink_secondary_ammo;
-	else if (req == WR_SUICIDEMESSAGE) {
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		weapon_deathtypestring = "succeeded at self-destructing himself with the Crylink";
-	} else if (req == WR_KILLMESSAGE) {
+	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_BOUNCE)
 			weapon_deathtypestring = "could not hide from #'s Crylink"; // unchecked: SPLASH (SECONDARY can't be)
 		else if (weapon_deathtype & HITTYPE_SPLASH)
 			weapon_deathtypestring = "was too close to #'s Crylink"; // unchecked: SECONDARY
 		else
 			weapon_deathtypestring = "took a close look at #'s Crylink"; // unchecked: SECONDARY
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_crylink_primary_ammo);
 		CVAR_CACHE(g_balance_crylink_primary_animtime);
 		CVAR_CACHE(g_balance_crylink_primary_bouncedamagefactor);

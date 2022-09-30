@@ -404,7 +404,7 @@ void(void) nexball_volleyball_touch {
 		v = normalize(v) * g_nexball_volleyball_boost_forward * 0.5;
 	}
 	self.velocity = v + v_forward * g_nexball_volleyball_boost_forward + '0 0 1' * g_nexball_volleyball_boost_up;
-	if (other.weaponentity.wframe == WFRAME_MELEE || other.weaponentity.wframe == WFRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WFRAME_FIRE1)) {
+	if (other.weaponentity.wframe == WEAPON_FRAME_MELEE || other.weaponentity.wframe == WEAPON_FRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WEAPON_FRAME_FIRE1)) {
 		self.velocity = self.velocity + v_forward * g_nexball_volleyball_melee_boost_forward + '0 0 1' * g_nexball_volleyball_melee_boost_up;
 	}
 	self.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
@@ -444,7 +444,7 @@ void(void) nexball_football_touch {
 		makevectors(other.v_angle);
 		self.velocity = other.velocity + v_forward * g_nexball_football_boost_forward + v_up * g_nexball_football_boost_up;
 	}
-	if (other.weaponentity.wframe == WFRAME_MELEE || other.weaponentity.wframe == WFRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WFRAME_FIRE1))
+	if (other.weaponentity.wframe == WEAPON_FRAME_MELEE || other.weaponentity.wframe == WEAPON_FRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WEAPON_FRAME_FIRE1))
 	{
 		makevectors(other.v_angle);
 		self.velocity = self.velocity + v_forward * g_nexball_football_melee_boost_forward + v_up * g_nexball_football_melee_boost_up;
@@ -477,7 +477,7 @@ void(void) nexball_hockey_touch {
 	makevectors(other.v_angle_y * '0 1 0');
 	self.velocity = other.velocity + v_forward * g_nexball_hockey_boost_forward;
 	self.velocity_z = 0;
-	if (other.weaponentity.wframe == WFRAME_MELEE || other.weaponentity.wframe == WFRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WFRAME_FIRE1))
+	if (other.weaponentity.wframe == WEAPON_FRAME_MELEE || other.weaponentity.wframe == WEAPON_FRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WEAPON_FRAME_FIRE1))
 	{
 		self.velocity = self.velocity + v_forward * g_nexball_hockey_melee_boost_forward;
 		self.velocity_z = g_nexball_hockey_melee_boost_up;

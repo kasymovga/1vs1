@@ -35,15 +35,15 @@ void (float capacity, .float ammofield, .float clipfield, float ammo1, float amm
 		return;
 	}
 	if (self.weaponentity) {
-		if (self.weaponentity.wframe == WFRAME_RELOAD)
+		if (self.weaponentity.wframe == WEAPON_FRAME_RELOAD)
 			return;
 
 		// allow to switch away while reloading, but this will cause a new reload!
-		self.weaponentity.state = WS_READY;
+		self.weaponentity.state = WEAPON_STATE_READY;
 	}
 	sound (self, CHAN_WEAPON2, reloadsound, VOL_BASE, ATTN_NORM);
 	t = max(time, ATTACK_FINISHED(self)) + reloadtime + 1;
 	ATTACK_FINISHED(self) = t;
-	weapon_thinkf(WFRAME_RELOAD, reloadtime, reloadandready);
+	weapon_thinkf(WEAPON_FRAME_RELOAD, reloadtime, reloadandready);
 	self.clipfield = -1;
 }

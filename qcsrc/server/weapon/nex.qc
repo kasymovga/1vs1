@@ -98,18 +98,18 @@ void(void) weapon_nex_reload {
 }
 
 float(float req) weapon_nex {
-	if (req == WR_AIM)
+	if (req == WEAPON_REQUEST_AIM)
 		self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
-	else if (req == WR_THINK) {
+	else if (req == WEAPON_REQUEST_THINK) {
 		if (g_balance_nex_magazinecapacity && (self.nex_ammoclip < 0 || (!self.nex_ammoclip && self.BUTTON_ATCK))) { // forced reload (e.g. because interrupted)
 			if(self.switchweapon == self.weapon)
-			if(self.weaponentity.state == WS_READY)
+			if(self.weaponentity.state == WEAPON_STATE_READY)
 				weapon_nex_reload();
 		} else if (!g_balance_nex_magazinecapacity || self.nex_ammoclip > 0) {
 			if (self.BUTTON_ATCK) {
 				if (weapon_prepareattack(0, g_balance_nex_refire)) {
 					weapon_nex_attack();
-					weapon_thinkf(WFRAME_FIRE1, g_balance_nex_animtime, weapon_ready);
+					weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_nex_animtime, weapon_ready);
 				}
 			}
 		}
@@ -117,34 +117,34 @@ float(float req) weapon_nex {
 			self.ammoclip = self.nex_ammoclip;
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_model("models/nexflash.md3");
 		precache_sound("weapons/nexfire.wav");
 		precache_sound("weapons/nexwhoosh1.wav");
 		precache_sound("weapons/nexwhoosh2.wav");
 		precache_sound("weapons/nexwhoosh3.wav");
 		hint_add("Don't forget to customize your mouse sensitivity for better aim with nex.");
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_nex_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return FALSE;
-	else if (req == WR_SUICIDEMESSAGE)
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE) {
+	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "has been vaporized by";
-	} else if (req == WR_RELOAD) {
+	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_nex_reload();
-	} else if (req == WR_SETUP) {
+	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEP_NEX);
 		if (g_balance_nex_magazinecapacity) {
 			weapon_clip_checkmaxbullets(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip, g_balance_nex_ammo, g_balance_nex_ammo);
 			if not(self.nex_ammoclip)
 				self.nex_ammoclip = -1;
 		}
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		if (g_balance_nex_magazinecapacity)
 			self.nex_ammoclip = g_balance_nex_magazinecapacity;
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_nex_magazinecapacity);
 		CVAR_CACHE(g_balance_nex_reloadtime);
 		CVAR_CACHE(g_balance_nex_ammo);

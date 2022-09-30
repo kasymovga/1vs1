@@ -1,11 +1,13 @@
 // VorteX: static frame globals
-float WFRAME_DONTCHANGE = -1;
-float WFRAME_FIRE1 = 0;
-float WFRAME_FIRE2 = 1;
-float WFRAME_IDLE = 2;
-float WFRAME_RELOAD = 3;
-float WFRAME_MELEE = 4;
-float WFRAME_MELEE2 = 5;
+enum {
+	WEAPON_FRAME_DONTCHANGE = -1,
+	WEAPON_FRAME_FIRE1,
+	WEAPON_FRAME_FIRE2,
+	WEAPON_FRAME_IDLE,
+	WEAPON_FRAME_RELOAD,
+	WEAPON_FRAME_MELEE,
+	WEAPON_FRAME_MELEE2,
+};
 
 #define WEPSPAWNFLAG_NORMAL 1
 #define WEPSPAWNFLAG_CANCLIMB 2
@@ -33,26 +35,29 @@ string weapon_priority_by_impulse;
 .void(void) weapon_think;
 
 // weapon states (self.weaponentity.state)
-float WS_CLEAR			= 0; // no weapon selected
-float WS_RAISE			= 1; // raise frame
-float WS_DROP			= 2; // deselecting frame
-float WS_INUSE			= 3; // fire state
-float WS_READY			= 4; // idle frame
+enum {
+	WEAPON_STATE_CLEAR = 0, // no weapon selected
+	WEAPON_STATE_RAISE, // raise frame
+	WEAPON_STATE_DROP, // deselecting frame
+	WEAPON_STATE_INUSE, // fire state
+	WEAPON_STATE_READY, // idle frame
+};
 
 // weapon requests
-float WR_SETUP		    = 1; // setup weapon data
-float WR_THINK		    = 2; // logic to run every frame
-float WR_CHECKAMMO1	    = 3; // checks ammo for weapon
-float WR_CHECKAMMO2	    = 4; // checks ammo for weapon
-float WR_AIM		    = 5; // runs bot aiming code for this weapon
-float WR_PRECACHE	    = 6; // precaches models/sounds used by this weapon
-float WR_SUICIDEMESSAGE = 7; // sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
-float WR_KILLMESSAGE    = 8; // sets w_deathtypestring or leaves it alone
-float WR_RELOAD         = 9; // does not need to do anything
-float WR_RESETPLAYER    = 10; // does not need to do anything
-float WR_CLEAR          = 11; // clear resources used by this weapon
-float WR_CVAR_CACHE     = 12; // update cvar cache
-
+enum {
+	WEAPON_REQUEST_SETUP = 1, // setup weapon data
+	WEAPON_REQUEST_THINK, // logic to run every frame
+	WEAPON_REQUEST_CHECKAMMO1, // checks ammo for weapon
+	WEAPON_REQUEST_CHECKAMMO2, // checks ammo for weapon
+	WEAPON_REQUEST_AIM, // runs bot aiming code for this weapon
+	WEAPON_REQUEST_PRECACHE, // precaches models/sounds used by this weapon
+	WEAPON_REQUEST_SUICIDEMESSAGE, // sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
+	WEAPON_REQUEST_KILLMESSAGE, // sets w_deathtypestring or leaves it alone
+	WEAPON_REQUEST_RELOAD, // does not need to do anything
+	WEAPON_REQUEST_RESETPLAYER, // does not need to do anything
+	WEAPON_REQUEST_CLEAR, // clear resources used by this weapon
+	WEAPON_REQUEST_CVAR_CACHE, // update cvar cache
+};
 
 .string weaponname;
 .float wframe;

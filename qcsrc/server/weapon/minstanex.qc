@@ -143,16 +143,16 @@ void(void) weapon_minstanex_laser_attack_rapid {
 }
 
 float(float req) weapon_minstanex {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		if (self.ammo_cells > 0 || self.items & IT_UNLIMITED_AMMO)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 		else
 			self.BUTTON_ATCK2 = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.BUTTON_ATCK) {
 			if (weapon_prepareattack(0, g_balance_minstanex_refire)) {
 				weapon_minstanex_attack();
-				weapon_thinkf(WFRAME_FIRE1, g_balance_minstanex_animtime, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_minstanex_animtime, weapon_ready);
 			}
 		}
 		if (g_balance_minstanex_laser) {
@@ -177,29 +177,29 @@ float(float req) weapon_minstanex {
 				self.laser_hold = 0;
 			}
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_model("models/nexflash.md3");
 		precache_sound("weapons/minstanexfire.wav");
 		precache_sound("weapons/nexwhoosh1.wav");
 		precache_sound("weapons/nexwhoosh2.wav");
 		precache_sound("weapons/nexwhoosh3.wav");
-		weapon_laser(WR_PRECACHE);
-	} else if (req == WR_SETUP) {
+		weapon_laser(WEAPON_REQUEST_PRECACHE);
+	} else if (req == WEAPON_REQUEST_SETUP) {
 		self.minstanex_lasthit = 0;
 		self.laser_hold = 0;
 		self.jump_interval = time;
-	} else if (req == WR_CHECKAMMO1) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
 		return self.ammo_cells >= 1;
-	} else if (req == WR_CHECKAMMO2)
+	} else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return TRUE;
-	else if (req == WR_SUICIDEMESSAGE)
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE) {
+	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_fragprefix = "^5INSTA";
 		weapon_deathtypestring = "has been vaporized by";
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.minstanex_lasthit = 0;
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_minstanex_damage);
 		CVAR_CACHE(g_balance_minstanex_animtime);
 		CVAR_CACHE(g_balance_minstanex_refire);

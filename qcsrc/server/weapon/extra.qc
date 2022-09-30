@@ -263,7 +263,7 @@ void(float num) weapon_extra_reload {
 float(float req) weapon_extra_think {
 	float extra_num = self.weapon - WEP_LAST - 1;
 	float at, mc;
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		float pt = weapon_extra_primary_type[extra_num];
 		float st = weapon_extra_secondary_type[extra_num];
 		float secondary = 0;
@@ -314,24 +314,24 @@ float(float req) weapon_extra_think {
 				break;
 			}
 		}
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		float magazinecapacity = weapon_extra_magazinecapacity[extra_num];
 		var .float extra_ammoclip = weapon_extra_clip[extra_num];
 		if (magazinecapacity && (self.extra_ammoclip < 0 || (!self.extra_ammoclip && (self.BUTTON_ATCK || self.BUTTON_ATCK2)))) { // forced reload (e.g. because interrupted)
 			if (self.switchweapon == self.weapon)
-			if (self.weaponentity.state == WS_READY)
+			if (self.weaponentity.state == WEAPON_STATE_READY)
 				weapon_extra_reload(extra_num);
 		} else if (!magazinecapacity || self.extra_ammoclip > 0) {
 			float t = 0;
 			if (self.BUTTON_ATCK && (t = weapon_extra_primary_type[extra_num])) {
 				if (weapon_prepareattack(0, weapon_extra_primary_refire[extra_num])) {
 					weapon_extra_attack(extra_num, FALSE, t);
-					weapon_thinkf(WFRAME_FIRE1, weapon_extra_primary_animtime[extra_num], weapon_ready);
+					weapon_thinkf(WEAPON_FRAME_FIRE1, weapon_extra_primary_animtime[extra_num], weapon_ready);
 				}
 			} else if (self.BUTTON_ATCK2 && (t = weapon_extra_secondary_type[extra_num])) {
 				if (weapon_prepareattack(0, weapon_extra_secondary_refire[extra_num])) {
 					weapon_extra_attack(extra_num, TRUE, t);
-					weapon_thinkf(WFRAME_FIRE2, weapon_extra_primary_animtime[extra_num], weapon_ready);
+					weapon_thinkf(WEAPON_FRAME_FIRE2, weapon_extra_primary_animtime[extra_num], weapon_ready);
 				}
 			}
 		}
@@ -339,35 +339,35 @@ float(float req) weapon_extra_think {
 			self.ammoclip = self.extra_ammoclip;
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound(weapon_extra_primary_sound[extra_num]);
 		precache_sound(weapon_extra_secondary_sound[extra_num]);
 		precache_sound("weapons/campingrifle_reload.wav");
 		precache_model("models/uziflash.md3");
 		precache_model("models/flash.md3");
-	} else if (req == WR_CHECKAMMO1) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
 		at = weapon_extra_ammo_type[extra_num];
 		if (at) {
 			return (weapon_extra_primary_ammo[extra_num] <= self.(item_counter_field(at)));
 		}
-	} else if (req == WR_CHECKAMMO2) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO2) {
 		at = weapon_extra_ammo_type[extra_num];
 		if (at) {
 			return (weapon_extra_secondary_ammo[extra_num] <= self.(item_counter_field(at)));
 		}
-	} else if (req == WR_RELOAD) {
+	} else if (req == WEAPON_REQUEST_RELOAD) {
 		mc = weapon_extra_magazinecapacity[extra_num];
 		at = weapon_extra_ammo_type[extra_num];
 		if (mc && at) {
 			weapon_extra_reload(extra_num);
 		}
-	} else if (req == WR_SUICIDEMESSAGE) {
-	} else if (req == WR_KILLMESSAGE) {
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
+	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_secondary_message"));
 		else
 			weapon_deathtypestring = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_primary_message"));
-	} else if (req == WR_SETUP) {
+	} else if (req == WEAPON_REQUEST_SETUP) {
 		mc = weapon_extra_magazinecapacity[extra_num];
 		at = weapon_extra_ammo_type[extra_num];
 		if (mc && at) {
@@ -375,11 +375,11 @@ float(float req) weapon_extra_think {
 			if not(self.weapon_extra_clip[extra_num])
 				self.weapon_extra_clip[extra_num] = -1;
 		}
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		mc = weapon_extra_magazinecapacity[extra_num];
 		if (mc)
 			self.weapon_extra_clip[extra_num] = mc;
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		if (weapon_extra_primary_type[extra_num] == WEAPON_EXTRA_TYPE_PROJECTILE)
 			projectile_init(weapon_extra_primary_effect[extra_num]);
 

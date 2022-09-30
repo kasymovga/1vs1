@@ -791,8 +791,8 @@ void(float killed) player_clear {
 
 	// reset fields the weapons may use just in case
 	WEAPON_INFO_FOR_EACH_ID(j) {
-		weapon_action(j, WR_RESETPLAYER);
-		weapon_action(j, WR_CLEAR);
+		weapon_action(j, WEAPON_REQUEST_RESETPLAYER);
+		weapon_action(j, WEAPON_REQUEST_CLEAR);
 		ATTACK_FINISHED_FOR(self, j) = 0;
 	}
 	plugin_chain_player_clear(killed);
@@ -834,7 +834,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		if (WEAPON_VALID(w)) {
 			weapon_deathtypestring = "couldn't resist the urge to self-destruct";
 			weapon_deathtype = deathtype;
-			weapon_action(w, WR_SUICIDEMESSAGE);
+			weapon_action(w, WEAPON_REQUEST_SUICIDEMESSAGE);
 			bprint("^1", s, "^1 ", weapon_deathtypestring, "\n");
 		} else if (deathtype == DEATH_KILL)
 			bprint ("^1",s, "^1 couldn't take it anymore\n");
@@ -909,7 +909,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			if (WEAPON_VALID(w)) {
 				weapon_deathtypestring = "was blasted by";
 				weapon_deathtype = deathtype;
-				weapon_action(w, WR_KILLMESSAGE);
+				weapon_action(w, WEAPON_REQUEST_KILLMESSAGE);
 				p = strstrofs(weapon_deathtypestring, "#", 0);
 				if (p < 0)
 					bprint("^1", s, "^1 ", weapon_deathtypestring, " ", a, "\n");

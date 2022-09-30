@@ -50,7 +50,7 @@ void(void) weapon_campingrifle_hotreload {
 	if (self.campingrifle_ammoclip >= g_balance_campingrifle_magazinecapacity)
 		return;
 
-	if (self.weaponentity.state != WS_READY)
+	if (self.weaponentity.state != WEAPON_STATE_READY)
 		return;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -121,7 +121,7 @@ void(void) spawnfunc_weapon_campingrifle {
 .float bot_secondary_campingriflemooth;
 float(float req) weapon_campingrifle {
 	float full;
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		self.cr_buttonatck1=FALSE;
 		self.cr_buttonatck2=FALSE;
 		if (vlen(self.origin-self.enemy.origin) > 1000)
@@ -138,11 +138,11 @@ float(float req) weapon_campingrifle {
 				if (random() < 0.03) self.bot_secondary_campingriflemooth = 0;
 			}
 		}
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.campingrifle_ammoclip < 0 || (!self.campingrifle_ammoclip && (self.cr_buttonatck1 || self.cr_buttonatck2))) { // forced reload (e.g. because interrupted)
 			if not(g_balance_campingrifle_hotreload)
 			if (self.switchweapon == self.weapon)
-			if (self.weaponentity.state == WS_READY)
+			if (self.weaponentity.state == WEAPON_STATE_READY)
 				weapon_campingrifle_reload();
 		} else if (self.campingrifle_ammoclip > 0) {
 			self.campingrifle_accumulator = bound(time - g_balance_campingrifle_bursttime, self.campingrifle_accumulator, time);
@@ -150,14 +150,14 @@ float(float req) weapon_campingrifle {
 			if (time >= self.campingrifle_accumulator + g_balance_campingrifle_primary_burstcost)
 			if (weapon_prepareattack(0, g_balance_campingrifle_primary_refire)) {
 				weapon_campingrifle_attack();
-				weapon_thinkf(WFRAME_FIRE1, g_balance_campingrifle_primary_animtime, weapon_campingrifle_checkreloadandready);
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_campingrifle_primary_animtime, weapon_campingrifle_checkreloadandready);
 				self.campingrifle_accumulator += g_balance_campingrifle_primary_burstcost;
 			}
 			if (self.cr_buttonatck2)
 			if (time >= self.campingrifle_accumulator + g_balance_campingrifle_secondary_burstcost)
 			if (weapon_prepareattack(1, g_balance_campingrifle_secondary_refire)) {
 				weapon_campingrifle_attack2();
-				weapon_thinkf(WFRAME_FIRE2, g_balance_campingrifle_secondary_animtime, weapon_campingrifle_checkreloadandready);
+				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_campingrifle_secondary_animtime, weapon_campingrifle_checkreloadandready);
 				self.campingrifle_accumulator += g_balance_campingrifle_secondary_burstcost;
 			}
 		}
@@ -168,11 +168,11 @@ float(float req) weapon_campingrifle {
 			if (self.ammoclip <= 0)
 				self.ammoclip = 0;
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/campingrifle_reload.wav");
 		precache_sound("weapons/campingrifle_fire.wav");
 		precache_sound("weapons/campingrifle_fire2.wav");
-	} else if (req == WR_SETUP) {
+	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEP_CAMPINGRIFLE);
 		full = weapon_campingrifle_checkmaxbullets();
 		if (g_balance_campingrifle_auto_reload_after_changing_weapons)
@@ -183,16 +183,16 @@ float(float req) weapon_campingrifle {
 			self.campingrifle_ammoclip = -1;
 
 		self.campingrifle_hotreloadtime = time + g_balance_campingrifle_reloadtime;
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_nails >= g_balance_campingrifle_primary_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return self.ammo_nails >= g_balance_campingrifle_secondary_ammo;
-	else if (req == WR_SUICIDEMESSAGE) {
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "shot himself automatically";
 		else
 			weapon_deathtypestring = "sniped himself somehow";
-	} else if (req == WR_KILLMESSAGE) {
+	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY) {
 			if (weapon_deathtype & HITTYPE_BOUNCE)
 				weapon_deathtypestring = "failed to hide from #'s bullet hail";
@@ -209,13 +209,13 @@ float(float req) weapon_campingrifle {
 					weapon_deathtypestring = "was sniped by #";
 			}
 		}
-	} else if (req == WR_RELOAD) {
+	} else if (req == WEAPON_REQUEST_RELOAD) {
 		if not(g_balance_campingrifle_hotreload)
 			weapon_campingrifle_reload();
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.campingrifle_accumulator = time - g_balance_campingrifle_bursttime;
 		self.campingrifle_ammoclip = g_balance_campingrifle_magazinecapacity;
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_campingrifle_auto_reload_after_changing_weapons);
 		CVAR_CACHE(g_balance_campingrifle_bursttime);
 		CVAR_CACHE(g_balance_campingrifle_magazinecapacity);

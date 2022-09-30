@@ -100,7 +100,7 @@ void(void) weapon_hagar_burst_3 {
 		return;
 	}
 	weapon_hagar_attack2();
-	weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, weapon_ready);
+	weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_hagar_secondary_refire, weapon_ready);
 }
 
 void(void) weapon_hagar_burst_2 {
@@ -109,44 +109,44 @@ void(void) weapon_hagar_burst_2 {
 		return;
 	}
 	weapon_hagar_attack2();
-	weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, (g_balance_hagar_secondary_burst ? weapon_hagar_burst_3 : weapon_ready));
+	weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_hagar_secondary_refire, (g_balance_hagar_secondary_burst ? weapon_hagar_burst_3 : weapon_ready));
 }
 
 float(float req) weapon_hagar {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		if (!g_balance_hagar_secondary || random() > 0.15)
 			self.hagar_buttonatck1 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
 		else {
 			// not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
 			self.hagar_buttonatck2 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, g_balance_hagar_secondary_mode);
 		}
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.hagar_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_hagar_primary_refire)) {
 			weapon_hagar_attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_hagar_primary_refire, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hagar_primary_refire, weapon_ready);
 		}
 		if (self.hagar_buttonatck2)
 		if (g_balance_hagar_secondary)
 		if (weapon_prepareattack(1, g_balance_hagar_secondary_animtime)) {
 			weapon_hagar_attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, (g_balance_hagar_secondary_burst ? weapon_hagar_burst_2 : weapon_ready));
+			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_hagar_secondary_refire, (g_balance_hagar_secondary_burst ? weapon_hagar_burst_2 : weapon_ready));
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/hagar_fire.wav");
-	} else if (req == WR_SETUP) {
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_SETUP) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_rockets >= g_balance_hagar_primary_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return self.ammo_rockets >= g_balance_hagar_secondary_ammo;
-	else if (req == WR_SUICIDEMESSAGE)
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "played with tiny rockets";
-	else if (req == WR_KILLMESSAGE) {
+	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
 			weapon_deathtypestring = "hoped #'s missiles wouldn't bounce";
 		else // unchecked: SPLASH, SECONDARY
 			weapon_deathtypestring = "was pummeled by";
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_hagar_primary_ammo);
 		CVAR_CACHE(g_balance_hagar_primary_damage);
 		CVAR_CACHE(g_balance_hagar_primary_edgedamage);

@@ -159,22 +159,22 @@ void(float i, vector f_diff) weapon_fireball_attack_effect {
 
 void(void) weapon_fireball_attack2_frame4 {
 	weapon_fireball_attack2();
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_ready);
+	weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_ready);
 }
 
 void(void) weapon_fireball_attack2_frame3 {
 	weapon_fireball_attack_effect(0, '+1.25 +3.75 0');
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame4);
+	weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame4);
 }
 
 void(void) weapon_fireball_attack2_frame2 {
 	weapon_fireball_attack_effect(0, '-1.25 +3.75 0');
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame3);
+	weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame3);
 }
 
 void(void) weapon_fireball_attack2_frame1 {
 	weapon_fireball_attack_effect(1, '+1.25 -3.75 0');
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame2);
+	weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame2);
 }
 
 void(void) weapon_fireball_attack2_frame0 {
@@ -183,7 +183,7 @@ void(void) weapon_fireball_attack2_frame0 {
 
 	weapon_fireball_attack_effect(0, '-1.25 -3.75 0');
 	sound (self, CHAN_WEAPON, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame1);
+	weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame1);
 }
 
 void(void) weapon_fireball_mine_think {
@@ -264,7 +264,7 @@ void(void) spawnfunc_weapon_fireball {
 }
 
 float(float req) weapon_fireball {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		self.fireball_buttonatck1 = FALSE;
 		self.fireball_buttonatck2 = FALSE;
 		if (self.bot_secondary_fireballmooth == 0) {
@@ -278,11 +278,11 @@ float(float req) weapon_fireball {
 				if(random() < 0.02) self.bot_secondary_fireballmooth = 0;
 			}
 		}
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.fireball_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_fireball_primary_refire)) {
 			weapon_fireball_attack1();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_fireball_primary_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_fireball_primary_animtime, weapon_ready);
 		}
 		if (self.fireball_buttonatck2)
 		if (time >= self.fireball_secondarytime)
@@ -290,22 +290,22 @@ float(float req) weapon_fireball {
 			weapon_fireball_attack2_frame0();
 			self.fireball_secondarytime = time + g_balance_fireball_secondary_refire2;
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_model("models/sphere/sphere.md3");
 		precache_sound("weapons/fireball_fire.wav");
 		precache_sound("weapons/fireball_fire2.wav");
 		precache_sound("weapons/fireball_prefire2.wav");
-	} else if (req == WR_SETUP) {
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_SETUP) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_rockets >= g_balance_fireball_primary_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return self.ammo_rockets >= g_balance_fireball_secondary_ammo;
-	else if (req == WR_SUICIDEMESSAGE) {
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if(weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "should have used a smaller gun";
 		else
 			weapon_deathtypestring = "forgot about some firemine";
-	} else if (req == WR_KILLMESSAGE) {
+	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY) {
 			if (weapon_deathtype & HITTYPE_BOUNCE) {
 				if (weapon_deathtype & HITTYPE_SPLASH) { // BFG effect
@@ -323,9 +323,9 @@ float(float req) weapon_fireball {
 			else
 				weapon_deathtypestring = "fatefully ignored #'s firemine";
 		}
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.fireball_secondarytime = time;
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_fireball_primary_ammo);
 		CVAR_CACHE(g_balance_fireball_primary_animtime);
 		CVAR_CACHE(g_balance_fireball_primary_damage);

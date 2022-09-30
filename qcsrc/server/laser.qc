@@ -36,7 +36,7 @@ float(void) laser_weapon_frame_handle {
 			pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 			laser_projectile(weapon_shotdir, g_laser_speed, g_laser_damage, g_laser_damage_edge, g_laser_radius, g_laser_force, 0, TRUE, 10);
 			if not(g_laser_offhand) {
-				weapon_thinkf(WFRAME_FIRE1, g_laser_animtime, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_laser_animtime, weapon_ready);
 			}
 		}
 		if (g_laser_offhand) {

@@ -12,7 +12,7 @@ entity(entity e, float deep) akimbo_ghost_get;
 void(entity e) akimbo_ghost_hide {
 	entity oldself = self;
 	self = e.akimbo_ghost;
-	weapon_action(self.weapon, WR_CLEAR);
+	weapon_action(self.weapon, WEAPON_REQUEST_CLEAR);
 	if (self.weaponentity)
 		weapon_model_remove(self.weaponentity);
 
@@ -44,7 +44,7 @@ entity(entity p) akimbo_ghost_spawn {
 	self = p.akimbo_ghost;
 	float j;
 	WEAPON_INFO_FOR_EACH_ID(j)
-		weapon_action(j, WR_RESETPLAYER);
+		weapon_action(j, WEAPON_REQUEST_RESETPLAYER);
 
 	self = oldself;
 	return p.akimbo_ghost;
@@ -101,12 +101,12 @@ void(void) akimbo_weapon_frame {
 				self.owner = pl;
 				self.cvar_cl_gunalpha = pl.cvar_cl_gunalpha;
 				weapon_model_spawn();
-				self.weaponentity.state = WS_RAISE;
+				self.weaponentity.state = WEAPON_STATE_RAISE;
 				weapon_setup(self.weapon);
 				self = self.weaponentity;
 				self.think();
 				self = prevself.akimbo_ghost;
-				weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
 				prevself.weaponentity.cnt = 0;
 			}
 			_weapons = self.weapons;
@@ -155,8 +155,8 @@ float() akimbo_weapon_rate_factor {
 	float f = 1;
 	if (self.akimbo_ghost)
 	if (self.akimbo_ghost.weaponentity)
-	if (self.weaponentity.state != WS_DROP)
-	if (self.weaponentity.state != WS_RAISE) {
+	if (self.weaponentity.state != WEAPON_STATE_DROP)
+	if (self.weaponentity.state != WEAPON_STATE_RAISE) {
 		entity wi = weapon_info(self.weapon);
 		if ((wi.weapons & g_akimbo_weaponratefactor_for) || (wi.weapons & g_akimbo_weaponratefactor_for_extra))
 			f = g_akimbo_weaponratefactor;

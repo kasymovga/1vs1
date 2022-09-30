@@ -79,7 +79,7 @@ void(void) havocbot_ai {
 		self.aistatus &= ~AI_STATUS_ROAMING;
 		if (self.weapon) {
 			if not(plugin_chain_bot_aim())
-				weapon_action(self.weapon, WR_AIM);
+				weapon_action(self.weapon, WEAPON_REQUEST_AIM);
 
 			if (bot_nofire || PLAYER_IS_INDEPENDENT(self)) {
 				self.BUTTON_ATCK = FALSE;

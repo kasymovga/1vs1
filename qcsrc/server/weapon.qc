@@ -61,8 +61,8 @@ void(void) weapon_reload {
 		return;
 
 	if (self.switchweapon == self.weapon)
-	if (self.weaponentity.state == WS_READY) {
-		weapon_action(self.weapon, WR_RELOAD);
+	if (self.weaponentity.state == WEAPON_STATE_READY) {
+		weapon_action(self.weapon, WEAPON_REQUEST_RELOAD);
 		if (weapon_melee_possible())
 			weapon_melee_attack_check();
 	}
@@ -401,7 +401,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 			} else {
 				oldself = self;
 				self = cl;
-				f = (weapon_action(wpn, WR_CHECKAMMO1) || weapon_action(wpn, WR_CHECKAMMO2));
+				f = (weapon_action(wpn, WEAPON_REQUEST_CHECKAMMO1) || weapon_action(wpn, WEAPON_REQUEST_CHECKAMMO2));
 				self = oldself;
 			}
 			if (!f) {
@@ -474,24 +474,24 @@ void(void) weapon_frame {
 			if (aw > 1)
 			if not(akimbo_weapon_have(self, _switchweapon, aw))
 				return;
-			weapon_action(self.weapon, WR_CLEAR);
+			weapon_action(self.weapon, WEAPON_REQUEST_CLEAR);
 			weapon_setup(_switchweapon);
-			weapon_thinkf(WFRAME_IDLE, 0, weapon_ready);
-		} else if (self.weaponentity.state == WS_CLEAR) {
+			weapon_thinkf(WEAPON_FRAME_IDLE, 0, weapon_ready);
+		} else if (self.weaponentity.state == WEAPON_STATE_CLEAR) {
 			player_anim_set(self, anim_draw, FALSE, TRUE, TRUE, 1);
-			self.weaponentity.state = WS_RAISE;
-			weapon_action(self.weapon, WR_CLEAR);
+			self.weaponentity.state = WEAPON_STATE_RAISE;
+			weapon_action(self.weapon, WEAPON_REQUEST_CLEAR);
 			weapon_setup(_switchweapon);
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
-			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
-		} else if (self.weaponentity.state == WS_READY) {
-			weapon_action(self.weapon, WR_CLEAR);
+			weapon_thinkf(WEAPON_FRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
+		} else if (self.weaponentity.state == WEAPON_STATE_READY) {
+			weapon_action(self.weapon, WEAPON_REQUEST_CLEAR);
 			// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
 			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
-			self.weaponentity.state = WS_DROP;
+			self.weaponentity.state = WEAPON_STATE_DROP;
 			// set up weapon switch think in the future, and start drop anim
-			weapon_thinkf(WFRAME_DONTCHANGE, g_balance_weaponswitchdelay, weapon_clear);
+			weapon_thinkf(WEAPON_FRAME_DONTCHANGE, g_balance_weaponswitchdelay, weapon_clear);
 		}
 	}
 	entity wi;
@@ -511,9 +511,9 @@ void(void) weapon_frame {
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
-			weapon_action(self.weapon, WR_THINK);
+			weapon_action(self.weapon, WEAPON_REQUEST_THINK);
 			if (self.spawnshieldtime > time)
-			if (self.weaponentity.state == WS_INUSE) {
+			if (self.weaponentity.state == WEAPON_STATE_INUSE) {
 				self.spawnshieldtime = time; //weapon was used, disable spawnshield
 			}
 		}
@@ -535,7 +535,7 @@ void(float wpn) weapon_precache {
 	precache_model(strcat("models/weapons/h_", e.mdl, ".dpm"));
 	entity oldself = self;
 	self = e;
-	e.weapon_func(WR_PRECACHE);
+	e.weapon_func(WEAPON_REQUEST_PRECACHE);
 	self = oldself;
 }
 
@@ -664,7 +664,7 @@ void(float windex) weapon_setup {
 	self.weapon = windex;
 	self.weaponname = e.mdl;
 	self.bulletcounter = 0;
-	weapon_action(windex, WR_SETUP);
+	weapon_action(windex, WEAPON_REQUEST_SETUP);
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
@@ -677,7 +677,7 @@ float(float secondary, float attacktime) weapon_prepareattack {
 		if (ATTACK_FINISHED(self) > time + frametime * 0.5)
 			return FALSE;
 		// don't fire while changing weapon
-		if (self.weaponentity.state != WS_READY)
+		if (self.weaponentity.state != WEAPON_STATE_READY)
 			return FALSE;
 	}
 	// do not even think about shooting if switching
@@ -688,12 +688,12 @@ float(float secondary, float attacktime) weapon_prepareattack {
 		return FALSE;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary)) {
+	if (!weapon_action(self.weapon, WEAPON_REQUEST_CHECKAMMO1 + secondary)) {
 		if (akimbo_active(self) < 2)
 			weapon_switch_force(self, weapon_best(self));
 		return FALSE;
 	}
-	self.weaponentity.state = WS_INUSE;
+	self.weaponentity.state = WEAPON_STATE_INUSE;
 	// if the weapon hasn't been firing continuously, reset the timer
 	if (attacktime >= 0) {
 		if (ATTACK_FINISHED(self) < time - frametime * 1.5) {
@@ -923,7 +923,7 @@ void(void) weapon_model_think {
 		self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
 		// check if an instant weapon switch occurred
 		if (sv_qcweaponanimation) {
-			if (self.state == WS_READY) {
+			if (self.state == WEAPON_STATE_READY) {
 				self.angles = '0 0 0';
 				makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
 				setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
@@ -953,22 +953,22 @@ void(void) weapon_model_think {
 	self.angles = '0 0 0';
 	float f;
 	f = 0;
-	float useqcanimation = (sv_qcweaponanimation || self.wframe >= WFRAME_MELEE);
-	if (self.state == WS_RAISE && !map_intermission_running && g_balance_weaponswitchdelay) {
+	float useqcanimation = (sv_qcweaponanimation || self.wframe >= WEAPON_FRAME_MELEE);
+	if (self.state == WEAPON_STATE_RAISE && !map_intermission_running && g_balance_weaponswitchdelay) {
 		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / weapon_rate_factor_for(self.owner)) / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation) {
 			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
 			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
 		}
-	} else if (self.state == WS_DROP && !map_intermission_running && g_balance_weaponswitchdelay) {
+	} else if (self.state == WEAPON_STATE_DROP && !map_intermission_running && g_balance_weaponswitchdelay) {
 		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / weapon_rate_factor_for(self.owner)) / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation) {
 			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
 			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
 		}
-	} else if (self.state == WS_CLEAR) {
+	} else if (self.state == WEAPON_STATE_CLEAR) {
 		f = 1;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation) {
@@ -1133,7 +1133,7 @@ void(void) weapon_model_exterior_think {
 	self.colormap = self.owner.colormap;
 	entity wi = self.owner.weaponentity;
 	entity o = self.owner;
-	if (wi.wframe == WFRAME_MELEE || (o.weapon == WEP_MELEE && wi.frame == WFRAME_FIRE2)) {
+	if (wi.wframe == WEAPON_FRAME_MELEE || (o.weapon == WEP_MELEE && wi.frame == WEAPON_FRAME_FIRE2)) {
 		entity ao = akimbo_owner(o);
 		if (ao.anim_melee == ao.anim_shoot) {
 			float f;
@@ -1181,10 +1181,10 @@ void(float fr, float t, void() func) weapon_thinkf {
 	vector a = '0 0 0';
 	vector of, or, ou;
 	float restartanim;
-	if (fr == WFRAME_DONTCHANGE) {
+	if (fr == WEAPON_FRAME_DONTCHANGE) {
 		fr = self.weaponentity.wframe;
 		restartanim = FALSE;
-	} else if (fr == WFRAME_IDLE)
+	} else if (fr == WEAPON_FRAME_IDLE)
 		restartanim = FALSE;
 	else
 		restartanim = TRUE;
@@ -1194,8 +1194,8 @@ void(float fr, float t, void() func) weapon_thinkf {
 	ou = v_up;
 	if (self.weaponentity) {
 		self.weaponentity.wframe = fr;
-		if (sv_qcweaponanimation || fr >= WFRAME_MELEE) {
-			if (fr != WFRAME_IDLE) {
+		if (sv_qcweaponanimation || fr >= WEAPON_FRAME_MELEE) {
+			if (fr != WEAPON_FRAME_IDLE) {
 				self.weapon_morph0time = time;
 				self.weapon_morph0angles = self.weaponentity.angles;
 				self.weapon_morph0origin = self.weaponentity.origin;
@@ -1215,19 +1215,19 @@ void(float fr, float t, void() func) weapon_thinkf {
 				self.weapon_morph4time = time + t;
 				makevectors(self.weapon_morph4angles_x * '-1 0 0' + self.weapon_morph4angles_y * '0 1 0' + self.weapon_morph4angles_z * '0 0 1');
 				self.weapon_morph4origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-				if (fr == WFRAME_FIRE1) {
+				if (fr == WEAPON_FRAME_FIRE1) {
 					self.weapon_morph1angles = '5 0 0';
 					self.weapon_morph1time = time + t * 0.1;
 					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
 					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
 					self.weapon_morph4time = time + t + 1; // delay idle effect
-				} else if (fr == WFRAME_FIRE2) {
+				} else if (fr == WEAPON_FRAME_FIRE2) {
 					self.weapon_morph1angles = '10 0 0';
 					self.weapon_morph1time = time + t * 0.1;
 					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
 					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
 					self.weapon_morph4time = time + t + 1; // delay idle effect
-				} else if (fr == WFRAME_RELOAD) {
+				} else if (fr == WEAPON_FRAME_RELOAD) {
 					self.weapon_morph1time = time + t * 0.05;
 					self.weapon_morph1angles = '-10 40 0';
 					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
@@ -1242,7 +1242,7 @@ void(float fr, float t, void() func) weapon_thinkf {
 					self.weapon_morph3angles = '-10 40 0';
 					makevectors(self.weapon_morph3angles_x * '-1 0 0' + self.weapon_morph3angles_y * '0 1 0' + self.weapon_morph3angles_z * '0 0 1');
 					self.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-				} else if (fr == WFRAME_MELEE) {
+				} else if (fr == WEAPON_FRAME_MELEE) {
 					self.weapon_morph1time = time + t * 0.25;
 					self.weapon_morph1angles = sv_qcanimation_melee_morph1angles;
 					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
@@ -1252,7 +1252,7 @@ void(float fr, float t, void() func) weapon_thinkf {
 					self.weapon_morph2angles = sv_qcanimation_melee_morph2angles;
 					makevectors(self.weapon_morph2angles_x * '-1 0 0' + self.weapon_morph2angles_y * '0 1 0' + self.weapon_morph2angles_z * '0 0 1');
 					self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + sv_qcanimation_melee_morph2origin;
-				} else if (fr == WFRAME_MELEE2) {
+				} else if (fr == WEAPON_FRAME_MELEE2) {
 					self.weapon_morph1time = time + t * 0.25;
 					self.weapon_morph1angles = sv_qcanimation_melee2_morph1angles;
 					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
@@ -1264,13 +1264,13 @@ void(float fr, float t, void() func) weapon_thinkf {
 				}
 			}
 		} else {
-			if (fr == WFRAME_IDLE)
+			if (fr == WEAPON_FRAME_IDLE)
 				a = self.weaponentity.anim_idle;
-			else if (fr == WFRAME_FIRE1)
+			else if (fr == WEAPON_FRAME_FIRE1)
 				a = self.weaponentity.anim_fire1;
-			else if (fr == WFRAME_FIRE2)
+			else if (fr == WEAPON_FRAME_FIRE2)
 				a = self.weaponentity.anim_fire2;
-			else if (fr == WFRAME_RELOAD)
+			else if (fr == WEAPON_FRAME_RELOAD)
 				a = self.weaponentity.anim_reload;
 
 			a_z *= g_weaponratefactor;
@@ -1282,7 +1282,7 @@ void(float fr, float t, void() func) weapon_thinkf {
 	v_forward = of;
 	v_right = or;
 	v_up = ou;
-	if (self.weapon_think == weapon_ready && func != weapon_ready && self.weaponentity.state == WS_RAISE) {
+	if (self.weapon_think == weapon_ready && func != weapon_ready && self.weaponentity.state == WEAPON_STATE_RAISE) {
 		backtrace("Tried to override initial weapon think function - should this really happen?");
 	}
 	t *= weapon_rate_factor();
@@ -1301,14 +1301,14 @@ void(float fr, float t, void() func) weapon_thinkf {
 	if (restartanim)
 	if (t)
 	if (!self.crouch || self.body.weaponentity) { // shoot anim stands up, this looks bad
-		if (fr == WFRAME_MELEE2)
+		if (fr == WEAPON_FRAME_MELEE2)
 			anim_set(self.body, self.anim_melee2, FALSE, TRUE, TRUE);
-		else if (fr == WFRAME_MELEE || (self.weapon == WEP_MELEE && fr == WFRAME_FIRE2)) {
+		else if (fr == WEAPON_FRAME_MELEE || (self.weapon == WEP_MELEE && fr == WEAPON_FRAME_FIRE2)) {
 			player_anim_set(self, anim_melee, FALSE, TRUE, TRUE, 1);
 			if (self.body)
 				self.body.animstate_endtime = time + t;
 
-			if (fr != WFRAME_MELEE) {
+			if (fr != WEAPON_FRAME_MELEE) {
 				self.weapon_morph0time = time;
 				self.weapon_morph1time = time + t * 0.25;
 				self.weapon_morph2time = time + t * 0.65;
@@ -1328,16 +1328,16 @@ void(void) weapon_clear {
 		self.weapon = 0;
 
 	if (self.weaponentity) {
-		self.weaponentity.state = WS_CLEAR;
+		self.weaponentity.state = WEAPON_STATE_CLEAR;
 		self.weaponentity.effects = 0;
 	}
 }
 
 void(void) weapon_ready {
 	if (self.weaponentity)
-		self.weaponentity.state = WS_READY;
+		self.weaponentity.state = WEAPON_STATE_READY;
 
-	weapon_thinkf(WFRAME_IDLE, 1000000, weapon_ready);
+	weapon_thinkf(WEAPON_FRAME_IDLE, 1000000, weapon_ready);
 }
 
 // this function calculates weapon_shotorg and weapon_shotdir based on the weapon model
@@ -1602,7 +1602,7 @@ void(void) weapon_init {
 	sv_qcanimation_melee_exterior = stov(cvar_string("sv_qcanimation_melee_exterior"));
 	entity e;
 	WEAPON_INFO_FOR_EACH(e) {
-		e.weapon_func(WR_CVAR_CACHE);
+		e.weapon_func(WEAPON_REQUEST_CVAR_CACHE);
 	}
 	weapon_melee_init();
 	bullet_init();

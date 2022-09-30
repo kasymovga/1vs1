@@ -152,25 +152,25 @@ void(void) spawnfunc_weapon_porto {
 }
 
 float(float req) weapon_porto {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		self.BUTTON_ATCK = FALSE;
 		self.BUTTON_ATCK2 = FALSE;
 		if (bot_aim(g_balance_porto_primary_speed, 0, g_balance_porto_primary_lifetime, FALSE))
 			self.BUTTON_ATCK = TRUE;
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.BUTTON_ATCK)
 		if (!self.porto_current_in)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire)) {
 			weapon_porto_attack(FALSE);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (!self.porto_current_out)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire)) {
 			weapon_porto_attack(TRUE);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_model("models/portal.md3");
 		precache_sound("porto/bounce.wav");
 		precache_sound("porto/create.wav");
@@ -178,19 +178,19 @@ float(float req) weapon_porto {
 		precache_sound("porto/explode.wav");
 		precache_sound("porto/fire.wav");
 		precache_sound("porto/unsupported.wav");
-	} else if (req == WR_SETUP) {
-	} else if (req == WR_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SETUP) {
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE) {
+	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_fragprefix = "^6TELE";
 		weapon_deathtypestring = "was telefragged by";
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.porto_current_in = world;
 		self.porto_current_out = world;
 		self.portal_id = time;
-	} else if (req == WR_CLEAR)
+	} else if (req == WEAPON_REQUEST_CLEAR)
 		weapon_porto_remove(self);
-	else if (req == WR_CVAR_CACHE) {
+	else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_porto_primary_animtime);
 		CVAR_CACHE(g_balance_porto_primary_lifetime);
 		CVAR_CACHE(g_balance_porto_primary_refire);

@@ -193,7 +193,7 @@ void(void) spawnfunc_weapon_rocketlauncher; // defined in t_items.qc
 float(float req) weapon_rocketlauncher {
 	entity rock;
 	float rockfound;
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		// aim and decide to fire if appropriate
 		self.rl_buttonatck1 = bot_aim(g_balance_rocketlauncher_speed, 0, g_balance_rocketlauncher_lifetime, FALSE);
 		if(skill >= 2) { // skill 0 and 1 bots won't detonate rockets!
@@ -279,12 +279,12 @@ float(float req) weapon_rocketlauncher {
 
 			if (self.rl_buttonatck2 == TRUE) self.rl_buttonatck1 = FALSE;
 		}
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.rl_buttonatck1) {
 			if (self.rl_release || g_balance_rocketlauncher_guidestop)
 			if (weapon_prepareattack(0, g_balance_rocketlauncher_refire)) {
 				weapon_rocketlauncher_attack();
-				weapon_thinkf(WFRAME_FIRE1, g_balance_rocketlauncher_animtime, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_rocketlauncher_animtime, weapon_ready);
 				self.rl_release = 0;
 			}
 		} else
@@ -301,36 +301,36 @@ float(float req) weapon_rocketlauncher {
 			if (rockfound)
 				sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		hint_add("With Rocket Launcher you can guide rockets by holding attack button. You can explode rocket midair with secondary attack button.");
 		precache_model("models/flash.md3");
 		precache_sound("weapons/rocket_det.wav");
 		precache_sound("weapons/rocket_fire.wav");
 		precache_sound("weapons/rocket_mode.wav");
-	} else if (req == WR_SETUP) {
+	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEP_ROCKET_LAUNCHER);
 		self.rl_release = 1;
-	} else if (req == WR_CHECKAMMO1) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
 		// don't switch while guiding a missile
 		if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
 				&& self.ammo_rockets < g_balance_rocketlauncher_ammo)
 			return FALSE;
-	} else if (req == WR_CHECKAMMO2)
+	} else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return FALSE;
-	else if (req == WR_SUICIDEMESSAGE)
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "exploded";
-	else if (req == WR_KILLMESSAGE) {
+	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if(weapon_deathtype & HITTYPE_BOUNCE) // (remote detonation)
 			weapon_deathtypestring = "got too close to #'s rocket";
 		else if(weapon_deathtype & HITTYPE_SPLASH)
 			weapon_deathtypestring = "almost dodged #'s rocket";
 		else
 			weapon_deathtypestring = "ate #'s rocket";
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.rl_release = 0;
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
-	} else if (req == WR_CLEAR) {
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CLEAR) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_rocketlauncher_ammo);
 		CVAR_CACHE(g_balance_rocketlauncher_animtime);
 		CVAR_CACHE(g_balance_rocketlauncher_damage);

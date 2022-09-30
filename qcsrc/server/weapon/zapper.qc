@@ -538,7 +538,7 @@ void(void) weapon_zapper_accumulate {
 			   || self.zapper_buttonatck1
 			   || time > self.zapper_accumulator.zapper_accumulate)) {
 			weapon_zapper_attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_zapper_secondary_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_zapper_secondary_animtime, weapon_ready);
 		} else
 			accumulate_end = 0;
 	}
@@ -551,12 +551,12 @@ void(void) weapon_zapper_accumulate {
 
 
 float(float req) weapon_zapper {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		if (vlen(self.origin-self.enemy.origin) < g_balance_zapper_primary_range)
 			self.zapper_buttonatck1 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
 			self.zapper_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		weapon_zapper_spinner_spawn();
 		weapon_zapper_cooloff();
 		if (self.zapper_buttonatck1) {
@@ -570,7 +570,7 @@ float(float req) weapon_zapper {
 						} else if (time > self.zapper_shieldready) {
 							weapon_zapper_attack3();
 						}
-						weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_primary_refire, weapon_ready);
+						weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_zapper_primary_refire, weapon_ready);
 					}
 				}
 		   } else if (weapon_prepareattack(0, (self.zapper_beam ? -1 : 0))) {
@@ -580,7 +580,7 @@ float(float req) weapon_zapper {
 					if not(self.zapper_beam) {
 						weapon_zapper_attack1();
 					}
-					weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_secondary_animtime, weapon_ready);
+					weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_zapper_secondary_animtime, weapon_ready);
 				}
 			}
 		} else if (self.zapper_buttonatck2 && g_balance_zapper_secondary) {
@@ -594,7 +594,7 @@ float(float req) weapon_zapper {
 						} else {
 							weapon_zapper_attack3();
 						}
-						weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_secondary_animtime, weapon_ready);
+						weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_zapper_secondary_animtime, weapon_ready);
 					}
 				}
 			} else if (g_balance_zapper_secondary_accumulate) {
@@ -607,11 +607,11 @@ float(float req) weapon_zapper {
 					self.zapper_accumulator.nextthink = time;
 					self.zapper_accumulator.zapper_expire = time + g_balance_zapper_secondary_animtime;
 					sound(self, CHAN_WEAPON2, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
-					weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_secondary_animtime, weapon_ready);
+					weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_zapper_secondary_animtime, weapon_ready);
 				}
 			} else if (weapon_prepareattack(1, g_balance_zapper_secondary_refire)) {
 				weapon_zapper_attack2();
-				weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_secondary_animtime, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_zapper_secondary_animtime, weapon_ready);
 			}
 		}
 		if (self.zapper_beam) {
@@ -625,7 +625,7 @@ float(float req) weapon_zapper {
 				self = e;
 			}
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_model("models/vhshield.md3");
 		precache_model("models/weapons/rtzapper_hyperhonker.iqm");
 		precache_sound("weapons/fireball_fly2.wav");
@@ -637,14 +637,14 @@ float(float req) weapon_zapper {
 		dlc_precache_sound("weapons/zapper_fly.wav");
 		dlc_precache_sound("misc/arc1.wav");
 		dlc_precache_sound("misc/arc2.wav");
-	} else if (req == WR_RESETPLAYER){
+	} else if (req == WEAPON_REQUEST_RESETPLAYER){
 		if (g_balance_zapper_primary_heatup || (g_balance_zapper_secondary_shield && g_balance_zapper_secondary_shield_heatup))
 			self.zapper_heat = 0;
 		else
 			self.zapper_heat = -1;
-	} else if (req == WR_SETUP) {
+	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEP_ZAPPER);
-	} else if (req == WR_CLEAR) {
+	} else if (req == WEAPON_REQUEST_CLEAR) {
 		if (self.zapper_spinner) {
 			remove(self.zapper_spinner);
 			self.zapper_spinner = world;
@@ -653,15 +653,15 @@ float(float req) weapon_zapper {
 			remove(self.zapper_beam);
 			self.zapper_beam = world;
 		}
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return weapon_zapper_attack1_check_ammo(self);
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return weapon_zapper_attack2_check_ammo(self);
-	else if (req == WR_SUICIDEMESSAGE)
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
+	else if (req == WEAPON_REQUEST_KILLMESSAGE)
 		weapon_deathtypestring = "was zapped by";
-	else if (req == WR_CVAR_CACHE) {
+	else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_zapper_secondary_animtime);
 		CVAR_CACHE(g_balance_zapper_primary_ammo);
 		CVAR_CACHE(g_balance_zapper_primary_cooloff);

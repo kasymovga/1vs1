@@ -179,7 +179,7 @@ void(void) weapon_electro_checkattack {
 	if (weapon_prepareattack(1, -1)) {
 		weapon_electro_attack2();
 		self.electro_count -= 1;
-		weapon_thinkf(WFRAME_FIRE2, g_balance_electro_secondary_animtime, weapon_electro_checkattack);
+		weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_electro_secondary_animtime, weapon_electro_checkattack);
 		return;
 	}
 	weapon_ready();
@@ -187,7 +187,7 @@ void(void) weapon_electro_checkattack {
 
 .float bot_secondary_electromooth;
 float(float req) weapon_electro {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		self.electro_buttonatck1=FALSE;
 		self.electro_buttonatck2=FALSE;
 		if (vlen(self.origin-self.enemy.origin) > g_balance_electro_secondary_speed)
@@ -214,11 +214,11 @@ float(float req) weapon_electro {
 				if (random() < sys_ticrate * 3) self.bot_secondary_electromooth = 0;
 			}
 		}
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.electro_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_electro_primary_refire)) {
 			weapon_electro_attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_electro_primary_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_electro_primary_animtime, weapon_ready);
 		}
 		if (self.electro_buttonatck2)
 		if (time >= self.electro_secondarytime)
@@ -226,10 +226,10 @@ float(float req) weapon_electro {
 		if (weapon_prepareattack(1, g_balance_electro_secondary_refire)) {
 			weapon_electro_attack2();
 			self.electro_count = g_balance_electro_secondary_count;
-			weapon_thinkf(WFRAME_FIRE2, g_balance_electro_secondary_animtime, weapon_electro_checkattack);
+			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_electro_secondary_animtime, weapon_electro_checkattack);
 			self.electro_secondarytime = time + g_balance_electro_secondary_refire2;
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/electro_bounce.wav");
 		precache_sound("weapons/electro_fire.wav");
 		precache_sound("weapons/electro_fire2.wav");
@@ -237,17 +237,17 @@ float(float req) weapon_electro {
 		precache_sound("weapons/electro_impact_combo.wav");
 		precache_sound("weapons/electro_fly.wav");
 		hint_add("Spam secondary electro balls and explode them with primary fire to create a powerful explosion.");
-	} else if (req == WR_SETUP) {
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_SETUP) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_electro_primary_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return self.ammo_cells >= g_balance_electro_secondary_ammo;
-	else if (req == WR_SUICIDEMESSAGE) {
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "could not remember where he put plasma";
 		else
 			weapon_deathtypestring = "played with plasma";
-	} else if (req == WR_KILLMESSAGE) {
+	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY) {
 			if (weapon_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
 				weapon_deathtypestring = "just noticed #'s blue ball";
@@ -261,9 +261,9 @@ float(float req) weapon_electro {
 			else
 				weapon_deathtypestring = "was blasted by #'s blue beam";
 		}
-	} else if (req == WR_RESETPLAYER)
+	} else if (req == WEAPON_REQUEST_RESETPLAYER)
 		self.electro_secondarytime = time;
-	else if (req == WR_CVAR_CACHE) {
+	else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_electro_combo_comboradius);
 		CVAR_CACHE(g_balance_electro_combo_damage);
 		CVAR_CACHE(g_balance_electro_combo_edgedamage);

@@ -152,7 +152,7 @@ void(void) weapon_grenadelauncher_reload {
 
 .float bot_secondary_grenademooth;
 float(float req) weapon_grenadelauncher {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		self.gl_buttonatck1 = FALSE;
 		self.gl_buttonatck2 = FALSE;
 		if (self.bot_secondary_grenademooth == 0 || !g_balance_grenadelauncher_secondary) {
@@ -166,29 +166,29 @@ float(float req) weapon_grenadelauncher {
 				if(random() < 0.02) self.bot_secondary_grenademooth = 0;
 			}
 		}
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (g_balance_grenadelauncher_magazinecapacity && (self.gl_ammoclip < 0 || (!self.gl_ammoclip && (self.gl_buttonatck1 || self.gl_buttonatck2)))) { // forced reload (e.g. because interrupted)
 			if (self.switchweapon == self.weapon)
-			if (self.weaponentity.state == WS_READY)
+			if (self.weaponentity.state == WEAPON_STATE_READY)
 				weapon_grenadelauncher_reload();
 		} else if (!g_balance_grenadelauncher_magazinecapacity || self.gl_ammoclip > 0) {
 			if (self.gl_buttonatck1)
 			if (weapon_prepareattack(0, g_balance_grenadelauncher_primary_refire)) {
 				weapon_grenadelauncher_attack();
-				weapon_thinkf(WFRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, weapon_ready);
 			}
 			if (self.gl_buttonatck2)
 			if (g_balance_grenadelauncher_secondary)
 			if (weapon_prepareattack(1, g_balance_grenadelauncher_secondary_refire)) {
 				weapon_grenadelauncher_attack2();
-				weapon_thinkf(WFRAME_FIRE2, g_balance_grenadelauncher_secondary_animtime, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_grenadelauncher_secondary_animtime, weapon_ready);
 			}
 		}
 		if (g_balance_grenadelauncher_magazinecapacity) {
 			self.ammoclip = self.gl_ammoclip;
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/grenade_bounce1.wav");
 		precache_sound("weapons/grenade_bounce2.wav");
 		precache_sound("weapons/grenade_bounce3.wav");
@@ -196,23 +196,23 @@ float(float req) weapon_grenadelauncher {
 		precache_sound("weapons/grenade_bounce5.wav");
 		precache_sound("weapons/grenade_bounce6.wav");
 		precache_sound("weapons/grenade_fire.wav");
-	} else if (req == WR_SETUP) {
+	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEP_GRENADE_LAUNCHER);
 		if (g_balance_grenadelauncher_magazinecapacity) {
 			weapon_clip_checkmaxbullets(g_balance_grenadelauncher_magazinecapacity, ammo_rockets, gl_ammoclip, g_balance_grenadelauncher_primary_ammo, g_balance_grenadelauncher_secondary_ammo);
 			if not(self.gl_ammoclip)
 				self.gl_ammoclip = -1;
 		}
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_rockets >= g_balance_grenadelauncher_primary_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return self.ammo_rockets >= g_balance_grenadelauncher_secondary_ammo;
-	else if (req == WR_SUICIDEMESSAGE) {
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if(weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "tried out his own grenade";
 		else
 			weapon_deathtypestring = "detonated";
-	} else if (req == WR_KILLMESSAGE) {
+	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SPLASH)
 			if (weapon_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
 				weapon_deathtypestring = "didn't see #'s grenade";
@@ -220,12 +220,12 @@ float(float req) weapon_grenadelauncher {
 				weapon_deathtypestring = "almost dodged #'s grenade";
 		else // unchecked: SECONDARY, BOUNCE
 			weapon_deathtypestring = "ate #'s grenade";
-	} else if (req == WR_RELOAD) {
+	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_grenadelauncher_reload();
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		if (g_balance_grenadelauncher_magazinecapacity)
 			self.gl_ammoclip = g_balance_grenadelauncher_magazinecapacity;
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_grenadelauncher_primary_ammo);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_animtime);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_bounce);

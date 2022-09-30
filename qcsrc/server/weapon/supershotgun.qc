@@ -138,42 +138,42 @@ void(void) weapon_supershotgun_attack2 {
 		return;
 	}
 	weapon_supershotgun_attack(TRUE, 2, g_balance_supershotgun_secondary_ballistic);
-	weapon_thinkf(WFRAME_FIRE2, g_balance_supershotgun_secondary_refire - g_balance_supershotgun_secondary_animtime, weapon_ready);
+	weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_supershotgun_secondary_refire - g_balance_supershotgun_secondary_animtime, weapon_ready);
 }
 
 float(float req) weapon_supershotgun {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		if (vlen(self.origin-self.enemy.origin)>200 || !g_balance_supershotgun_secondary)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 		else
 			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, g_balance_supershotgun_primary_refire)) {
 			weapon_supershotgun_attack(FALSE, 3, g_balance_supershotgun_primary_ballistic);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_supershotgun_primary_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_supershotgun_primary_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (g_balance_supershotgun_secondary)
 		if (weapon_prepareattack(1, g_balance_supershotgun_secondary_refire)) {
 			weapon_supershotgun_attack(TRUE, 1, g_balance_supershotgun_secondary_ballistic);
-			weapon_thinkf(WFRAME_FIRE2, g_balance_supershotgun_secondary_animtime, weapon_supershotgun_attack2);
+			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_supershotgun_secondary_animtime, weapon_supershotgun_attack2);
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_model("models/uziflash.md3");
 		precache_sound("misc/itempickup.wav");
 		precache_sound("weapons/shotgun_fire.wav");
 		dlc_require("supershotgun");
-	} else if (req == WR_SETUP) {
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_SETUP) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_shells >= g_balance_supershotgun_primary_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return self.ammo_shells >= g_balance_supershotgun_secondary_ammo;
-	else if (req == WR_SUICIDEMESSAGE)
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "used C++ and shot the leg out";
-	else if (req == WR_KILLMESSAGE) {
+	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "was gunned by"; // unchecked: SECONDARY
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_supershotgun_primary_ammo);
 		CVAR_CACHE(g_balance_supershotgun_primary_animtime);
 		CVAR_CACHE(g_balance_supershotgun_primary_ballistic);

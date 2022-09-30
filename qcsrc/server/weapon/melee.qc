@@ -100,7 +100,7 @@ void(void) weapon_melee_attack_check {
 	if (self.weapon_think == weapon_ready)
 	if (weapon_prepareattack(0, g_balance_melee_refire)) {
 		weapon_melee_attack(g_balance_melee, 0, sv_sound_melee);
-		weapon_thinkf(((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE), g_balance_melee_animtime, weapon_ready);
+		weapon_thinkf(((g_balance_melee == 2) ? WEAPON_FRAME_MELEE2 : WEAPON_FRAME_MELEE), g_balance_melee_animtime, weapon_ready);
 	}
 	self.weapon = w_save;
 	self.switchweapon = w_save;

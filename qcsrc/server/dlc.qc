@@ -202,7 +202,7 @@ void(void) dlc_reset_all {
 	weapon_register_weapons();
 	WEAPON_INFO_FOR_EACH(e) {
 		if ((weapon_spawned_list & e.weapons) || (player_start_weapons & e.weapons) || (weapon_spawned_extra_list & e.weapons_extra) || (player_start_weapons_extra & e.weapons_extra))
-			e.weapon_func(WR_PRECACHE);
+			e.weapon_func(WEAPON_REQUEST_PRECACHE);
 	}
 }
 

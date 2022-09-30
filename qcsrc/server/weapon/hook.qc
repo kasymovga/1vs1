@@ -75,9 +75,9 @@ void(void) spawnfunc_weapon_hook {
 }
 
 float(float req) weapon_hook {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		// ... sorry ...
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		float button_hook = self.BUTTON_HOOK;
 		if (self.BUTTON_ATCK || button_hook) {
 			if (!self.hook)
@@ -88,13 +88,13 @@ float(float req) weapon_hook {
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 					self.ammo_cells = self.ammo_cells - g_balance_hook_primary_fuel;
 				self.hook_state |= HOOK_FIRING;
-				weapon_thinkf(WFRAME_FIRE1, g_balance_hook_primary_animtime, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hook_primary_animtime, weapon_ready);
 			}
 		}
 		if (self.BUTTON_ATCK2) {
 			if (weapon_prepareattack(1, g_balance_hook_secondary_refire)) {
 				weapon_hook_attack2();
-				weapon_thinkf(WFRAME_FIRE2, g_balance_hook_secondary_animtime, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_hook_secondary_animtime, weapon_ready);
 			}
 		}
 		if (self.hook) // if hooked, no bombs, and increase the timer
@@ -142,33 +142,33 @@ float(float req) weapon_hook {
 				self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 			}
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/hook_impact.wav"); // done by g_hook.qc
 		precache_sound("weapons/hook_fire.wav");
 		precache_sound("weapons/hookbomb_fire.wav");
 		hook_init(TRUE);
-	} else if (req == WR_SETUP) {
+	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEP_HOOK);
 		self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
-	} else if (req == WR_CHECKAMMO1) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
 		if (self.hook)
 			return self.ammo_cells > 0;
 		else
 			return self.ammo_cells >= g_balance_hook_primary_fuel;
-	} else if (req == WR_CHECKAMMO2) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO2) {
 		return self.ammo_cells >= g_balance_hook_secondary_ammo;
-	} else if (req == WR_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE) {
+	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "has run into #'s gravity bomb";
 		else {
 			weapon_deathtypestring = "was hooked by";
 			weapon_fragprefix = "^xF44HOOK";
 		}
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.hook_refire = time;
-	} else if (req == WR_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_hook_primary_animtime);
 		CVAR_CACHE(g_balance_hook_primary_fuel);
 		CVAR_CACHE(g_balance_hook_primary_hooked_fuel);

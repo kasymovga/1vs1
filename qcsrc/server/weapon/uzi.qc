@@ -83,16 +83,16 @@ void(void) weapon_uzi_fire1_02 {
 	}
 	if (self.uzi_buttonatck1) {
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		if not(weapon_action(self.weapon, WR_CHECKAMMO1)) {
+		if not(weapon_action(self.weapon, WEAPON_REQUEST_CHECKAMMO1)) {
 			weapon_switch_force(self, weapon_best(self));
 			weapon_ready();
 			return;
 		}
 		self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
 		weapon_uzi_attack(WEP_UZI);
-		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
+		weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
 	} else
-		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_ready);
+		weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_ready);
 }
 
 void(void) weapon_uzi_reloadandready {
@@ -107,63 +107,63 @@ void(void) weapon_uzi_reload {
 }
 
 float(float req) weapon_uzi {
-	if (req == WR_AIM) {
+	if (req == WEAPON_REQUEST_AIM) {
 		if (vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200 || !g_balance_uzi_first)
 			self.uzi_buttonatck1 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
 			self.uzi_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
-	} else if (req == WR_THINK) {
+	} else if (req == WEAPON_REQUEST_THINK) {
 		if (g_balance_uzi_magazinecapacity && (self.uzi_ammoclip < 0 || (!self.uzi_ammoclip && (self.uzi_buttonatck1 || self.uzi_buttonatck2)))) { // forced reload (e.g. because interrupted)
 			if (self.switchweapon == self.weapon)
-			if (self.weaponentity.state == WS_READY)
+			if (self.weaponentity.state == WEAPON_STATE_READY)
 				weapon_uzi_reload();
 		} else if (!g_balance_uzi_magazinecapacity || self.uzi_ammoclip > 0) {
 			if (self.uzi_buttonatck1)
 			if (weapon_prepareattack(0, 0)) {
 				self.uzi_bulletcounter = 1;
 				weapon_uzi_attack(WEP_UZI); // sets attack_finished
-				weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
 			}
 			if (self.uzi_buttonatck2)
 			if (g_balance_uzi_first)
 			if (weapon_prepareattack(1, 0)) {
 				self.uzi_bulletcounter = 1;
 				weapon_uzi_attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
-				weapon_thinkf(WFRAME_FIRE2, g_balance_uzi_first_refire, weapon_ready);
+				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_uzi_first_refire, weapon_ready);
 			}
 		}
 		if (g_balance_uzi_magazinecapacity) {
 			self.ammoclip = self.uzi_ammoclip;
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_model("models/uziflash.md3");
 		precache_sound("weapons/uzi_fire.wav");
 		precache_sound("weapons/campingrifle_reload.wav");
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_nails >= g_balance_uzi_sustained_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return self.ammo_nails >= g_balance_uzi_first_ammo;
-	else if (req == WR_RELOAD) {
+	else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_uzi_reload();
-	} else if (req == WR_SETUP) {
+	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEP_UZI);
 		if (g_balance_uzi_magazinecapacity) {
 			weapon_clip_checkmaxbullets(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo);
 			if not(self.uzi_ammoclip)
 				self.uzi_ammoclip = -1;
 		}
-	} else if (req == WR_RESETPLAYER) {
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		if (g_balance_uzi_magazinecapacity)
 			self.uzi_ammoclip = g_balance_uzi_magazinecapacity;
-	} else if (req == WR_KILLMESSAGE) {
+	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "was sniped by";
 		else
 			weapon_deathtypestring = "was riddled full of holes by";
-	} else if (req == WR_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
-	else if (req == WR_CVAR_CACHE) {
+	else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_uzi_bulletconstant);
 		CVAR_CACHE(g_balance_uzi_magazinecapacity);
 		CVAR_CACHE(g_balance_uzi_reloadtime);

@@ -93,7 +93,7 @@ void(void) weapon_hlack_fire1_02 {
 	}
 	if (self.hlac_buttonatck1) {
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		if not(weapon_action(self.weapon, WR_CHECKAMMO1)) {
+		if not(weapon_action(self.weapon, WEAPON_REQUEST_CHECKAMMO1)) {
 			weapon_switch_force(self, weapon_best(self));
 			weapon_ready();
 			return;
@@ -101,9 +101,9 @@ void(void) weapon_hlack_fire1_02 {
 		ATTACK_FINISHED(self) = time + g_balance_hlac_primary_refire * weapon_rate_factor();
 		weapon_hlac_attack();
 		self.HLAC_bulletcounter = self.HLAC_bulletcounter + 1;
-		weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
+		weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
 	} else {
-		weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_animtime, weapon_ready);
+		weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hlac_primary_animtime, weapon_ready);
 	}
 }
 
@@ -112,33 +112,33 @@ void(void) spawnfunc_weapon_hlac {
 }
 
 float(float req) weapon_hlac {
-	if (req == WR_AIM)
+	if (req == WEAPON_REQUEST_AIM)
 		self.hlac_buttonatck1 = bot_aim(g_balance_hlac_primary_speed, 0, g_balance_hlac_primary_lifetime, FALSE);
-	else if (req == WR_THINK) {
+	else if (req == WEAPON_REQUEST_THINK) {
 		if (self.hlac_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_hlac_primary_refire)) {
 			self.HLAC_bulletcounter = 0;
 			weapon_hlac_attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
+			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
 		}
 		if (self.hlac_buttonatck2)
 		if (g_balance_hlac_secondary)
 		if (weapon_prepareattack(1, g_balance_hlac_secondary_refire)) {
 			weapon_hlac_attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_hlac_secondary_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_hlac_secondary_animtime, weapon_ready);
 		}
-	} else if (req == WR_PRECACHE) {
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/lasergun_fire.wav");
-	} else if (req == WR_SETUP) {
-	} else if (req == WR_CHECKAMMO1)
+	} else if (req == WEAPON_REQUEST_SETUP) {
+	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_hlac_primary_ammo;
-	else if (req == WR_CHECKAMMO2)
+	else if (req == WEAPON_REQUEST_CHECKAMMO2)
 		return self.ammo_cells >= g_balance_hlac_secondary_ammo;
-	else if (req == WR_SUICIDEMESSAGE)
+	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "should have used a smaller gun";
-	else if (req == WR_KILLMESSAGE)
+	else if (req == WEAPON_REQUEST_KILLMESSAGE)
 		weapon_deathtypestring = "was cut down by";
-	else if (req == WR_CVAR_CACHE) {
+	else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_hlac_primary_ammo);
 		CVAR_CACHE(g_balance_hlac_primary_animtime);
 		CVAR_CACHE(g_balance_hlac_primary_damage);
