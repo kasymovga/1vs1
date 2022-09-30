@@ -89,7 +89,6 @@ void(void) weapon_init;
 float weapon_spawned_list;
 float weapon_spawned_extra_list;
 #define WEAPON_VALID(w) ((w) >= WEP_FIRST && (w) <= WEP_LAST_EXTRA)
-entity(string s) weapon_info_by_name;
 float(entity cl, float wpn, float andammo, float complain) weapon_carried;
 void(void) weapon_priority_update;
 float(float wr) weapon_laser;

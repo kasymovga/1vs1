@@ -1,1 +1,2 @@
 void(void) weapon_info_send;
+entity(string s) weapon_info_by_name;

@@ -1610,13 +1610,3 @@ void(void) weapon_init {
 	projectile_register_auto(PROJECTILE_BULLET_GLOWING, '0 0 0');
 	projectile_register_auto(PROJECTILE_BULLET_BIG, '0 0 0');
 }
-
-entity(string s) weapon_info_by_name {
-	float i;
-	entity e;
-	WEAPON_INFO_FOR_EACH(e) {
-		if (e.netname == s)
-			return e;
-	}
-	return NULL;
-}

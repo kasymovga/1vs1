@@ -9,3 +9,13 @@ void(void) weapon_info_send {
 	}
 	net_write_byte(MSG_ENTITY, 0);
 }
+
+entity(string s) weapon_info_by_name {
+	float i;
+	entity e;
+	WEAPON_INFO_FOR_EACH(e) {
+		if (e.netname == s)
+			return e;
+	}
+	return NULL;
+}
