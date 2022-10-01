@@ -106,17 +106,18 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 	c = 0;
 	for (i = 0; i < n; ++i) {
 		weaponwant = stof(argv(i));
+		wi = weapon_info(weaponwant);
 		if (imp >= 0)
-			if ((weapon_info(weaponwant)).impulse != imp)
+			if (wi.impulse != imp)
 				continue;
 
-		wi = weapon_info(weaponwant);
 		if not(wi.weapons & weapon_spawned_list)
 		if not(wi.weapons_extra & weapon_spawned_extra_list)
-		if not(pl.weapons & wi.weapons)
-		if not(pl.weapons_extra & wi.weapons_extra)
+		if not(wi.weapons & pl.weapons)
+		if not(wi.weapons_extra & pl.weapons_extra)
 			continue;
 
+		if (wi.weapon == pl.switchweapon) continue;
 		++c;
 		if (weapon_carried(pl, weaponwant, TRUE, FALSE)) {
 			if (switchtonext)
@@ -136,12 +137,6 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 			prev_valid = weaponwant;
 		}
 	}
-	if (first_valid) {
-		if (switchtolast)
-			return prev_valid;
-		else
-			return first_valid;
-	}
 	// complain (but only for one weapon on the button that has been pressed)
 	if (complain) {
 		weapon_show_list(pl);
@@ -151,27 +146,18 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 
 		for (i = 0; i < n; ++i) {
 			weaponwant = stof(argv(i));
+			wi = weapon_info(weaponwant);
 			if (imp >= 0) {
-				if ((weapon_info(weaponwant)).impulse != imp)
+				if (wi.impulse != imp)
 					continue;
 			}
-			if (c > 0) {
-				wi = weapon_info(weaponwant);
-				if (wi.weapons) {
-					if not(wi.weapons & weapon_spawned_list)
-						continue;
+			if not(wi.weapons & weapon_spawned_list)
+			if not(wi.weapons_extra & weapon_spawned_extra_list)
+			if not(wi.weapons & pl.weapons)
+			if not(wi.weapons_extra & pl.weapons_extra)
+				continue;
 
-					if (pl.weapons & wi.weapons)
-						continue;
-				}
-				if (wi.weapons_extra) {
-					if not(wi.weapons_extra & weapon_spawned_extra_list)
-						continue;
-
-					if (pl.weapons_extra & wi.weapons_extra)
-						continue;
-				}
-			}
+			if (wi.weapon == pl.switchweapon) continue;
 			--c;
 			if (c <= 0) {
 				weapon_carried(pl, weaponwant, TRUE, TRUE);
@@ -179,12 +165,18 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 			}
 		}
 	}
+	if (first_valid) {
+		if (switchtolast)
+			return prev_valid;
+		else
+			return first_valid;
+	}
 	return 0;
 }
 
 void(string weaponorder, float dir) weapon_cycle {
 	float w;
-	w = weaypon_cycle_get(self, weaponorder, dir, -1, 1);
+	w = weaypon_cycle_get(self, weaponorder, dir, -1, 0);
 	if (w > 0)
 		weapon_switch(w);
 }
