@@ -117,7 +117,6 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 		if not(wi.weapons_extra & pl.weapons_extra)
 			continue;
 
-		if (wi.weapon == pl.switchweapon) continue;
 		++c;
 		if (weapon_carried(pl, weaponwant, TRUE, FALSE)) {
 			if (switchtonext)
@@ -157,7 +156,6 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 			if not(wi.weapons_extra & pl.weapons_extra)
 				continue;
 
-			if (wi.weapon == pl.switchweapon) continue;
 			--c;
 			if (c <= 0) {
 				weapon_carried(pl, weaponwant, TRUE, TRUE);
