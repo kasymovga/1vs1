@@ -71,7 +71,7 @@ void(void) weapon_crylink_attack {
 	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_primary_shots);
 	while (counter < g_balance_crylink_primary_shots) {
 		proj = projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
-		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK_BIG, WEP_CRYLINK, g_balance_crylink_primary_damage,
+		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK_BIG, WEAPON_CRYLINK, g_balance_crylink_primary_damage,
 				g_balance_crylink_primary_edgedamage, g_balance_crylink_primary_radius, g_balance_crylink_primary_force, 0, (g_balance_crylink_primary_bouncedamagefactor ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
 		proj.lip = g_balance_crylink_primary_bouncedamagefactor;
 		s = '0 0 0';
@@ -114,7 +114,7 @@ void(void) weapon_crylink_attack2 {
 	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_secondary_shots);
 	while (counter < g_balance_crylink_secondary_shots) {
 		proj = projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
-		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK, WEP_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
+		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK, WEAPON_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
 				g_balance_crylink_secondary_edgedamage, g_balance_crylink_secondary_radius, g_balance_crylink_secondary_force, 0, (g_balance_crylink_secondary_bouncedamagefactor ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
 		proj.lip = g_balance_crylink_secondary_bouncedamagefactor;
 		if (g_sideview)
@@ -142,7 +142,7 @@ void(void) weapon_crylink_attack2 {
 }
 
 void(void) spawnfunc_weapon_crylink {
-	weapon_defaultspawnfunc(WEP_CRYLINK);
+	weapon_defaultspawnfunc(WEAPON_CRYLINK);
 }
 
 float(float req) weapon_crylink {

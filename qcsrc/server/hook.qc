@@ -97,7 +97,7 @@ float(entity to, float sf) hook_send {
 
 	vector v;
 	if (sf & 2) {
-		if (_hook.owner.weapon == WEP_HOOK) {
+		if (_hook.owner.weapon == WEAPON_HOOK) {
 			entity oldself = self;
 			self = _hook;
 			v = weapon_shotorg_adjust('26 9 -16', TRUE, TRUE, FALSE);
@@ -163,7 +163,7 @@ void() hook_think {
 		goto end;
 	}
 	self.hook.nextthink = time;
-	if (self.owner.weapon == WEP_HOOK)
+	if (self.owner.weapon == WEAPON_HOOK)
 		org = gettaginfo(self.owner.exteriorweaponentity, gettagindex(self.owner.exteriorweaponentity, "_")) + v_forward * 20 + v_up * 3;
 	else
 		org = self.owner.origin + '0 0 12';
@@ -179,7 +179,7 @@ void() hook_think {
 			if (self.hook_attack_time)
 			if (self.aiment.takedamage)
 			while (self.hook_attack_time <= time) {
-				damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEP_HOOK, self.origin, '0 0 0');
+				damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEAPON_HOOK, self.origin, '0 0 0');
 				self.hook_attack_time += g_balance_grapplehook_damage_interval;
 			}
 			if not(self.aiment) {
@@ -259,7 +259,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			}
 			if (g_balance_grapplehook_break_damage)
 			if (f)
-				damage(self.owner, inflictor, attacker, g_balance_grapplehook_break_damage * f, WEP_HOOK, self.owner.origin, '0 0 0');
+				damage(self.owner, inflictor, attacker, g_balance_grapplehook_break_damage * f, WEAPON_HOOK, self.owner.origin, '0 0 0');
 
 			hook_remove(self.owner);
 		}
@@ -271,7 +271,7 @@ void(void) hook_fire {
 	makevectors(self.v_angle);
 	// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
 	sound(self, CHAN_WEAPON2, "weapons/hook_fire.wav", VOL_BASE, ATTN_NORM);
-	if (self.weapon == WEP_HOOK) {
+	if (self.weapon == WEAPON_HOOK) {
 		weapon_setup_shot(self, 0, "", 0);
 	} else {
 		weapon_shotorg = self.origin + self.view_ofs - '0 0 8';
@@ -318,7 +318,7 @@ void() hook_player_think {
 		return;
 
 	float grappling_hook = (g_grappling_hook || (self.abilities & HOOK_ABILITY));
-	if (grappling_hook && timeout_status != 2 && self.weapon != WEP_HOOK) {
+	if (grappling_hook && timeout_status != 2 && self.weapon != WEAPON_HOOK) {
 		// offhand hook controls
 		if (button_hook) {
 			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
@@ -338,12 +338,12 @@ void() hook_player_think {
 			self.hook_state |= HOOK_PULLING;
 			//self.hook_state &= ~HOOK_RELEASING;
 		}
-	} else if (!grappling_hook && self.switchweapon != WEP_HOOK) {
+	} else if (!grappling_hook && self.switchweapon != WEAPON_HOOK) {
 		if (button_hook && !self.hook_switchweapon)
-			weapon_switch(WEP_HOOK);
+			weapon_switch(WEAPON_HOOK);
 	}
 	self.hook_switchweapon = button_hook;
-	if (!grappling_hook && self.weapon != WEP_HOOK) {
+	if (!grappling_hook && self.weapon != WEAPON_HOOK) {
 		self.hook_state &= ~HOOK_FIRING;
 		self.hook_state |= HOOK_REMOVING;
 	}

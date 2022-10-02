@@ -70,7 +70,7 @@ void(void) turret_hellion_attack {
 	// switch tubes
 	//self.tur_shotorg_y = self.tur_shotorg_y * -1;
 	missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
-	projectile_setup(missile, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
+	projectile_setup(missile, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
 	missile.solid = SOLID_BBOX;
 	missile.classname          = "hellion_missile";
 	missile.takedamage         = DAMAGE_YES;

@@ -40,11 +40,11 @@ void(void) weapon_rocketlauncher_explode {
 				if (physics_is_flying(other))
 					announce(self.owner, "announcer/male/airshot.wav", "^5Air^1Shot");
 
-	if (self.owner.weapon == WEP_ROCKET_LAUNCHER) {
+	if (self.owner.weapon == WEAPON_ROCKET_LAUNCHER) {
 		if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 		if (self.owner.ammo_rockets < g_balance_rocketlauncher_ammo) {
-			self.owner.cnt = WEP_ROCKET_LAUNCHER;
-			ATTACK_FINISHED(self.owner) = time;
+			self.owner.cnt = WEAPON_ROCKET_LAUNCHER;
+			WEAPON_ATTACK_FINISHED(self.owner) = time;
 			self.owner.switchweapon = weapon_best(self.owner);
 		}
 	}
@@ -97,7 +97,7 @@ void(void) weapon_rocketlauncher_think {
 	if (velspeed > 0)
 		self.velocity = self.velocity + v_forward * min(g_balance_rocketlauncher_speedaccel * g_weaponspeedfactor * frametime, velspeed);
 
-	if (self.owner.weapon == WEP_ROCKET_LAUNCHER) {
+	if (self.owner.weapon == WEAPON_ROCKET_LAUNCHER) {
 		if (self == self.lastrocket.lastrocket)
 		if (!self.owner.rl_release)
 		if (g_balance_rocketlauncher_guiderate)
@@ -157,7 +157,7 @@ void(void) weapon_rocketlauncher_attack {
 	weapon_setup_shot(self, g_balance_rocketlauncher_recoil, "weapons/rocket_fire.wav", 1);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE, self); // because of fly sound
-	projectile_setup(missile, weapon_shotorg - v_forward * 3, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
+	projectile_setup(missile, weapon_shotorg - v_forward * 3, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
 			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force, 0, MOVETYPE_FLY);
 	warpzone_refsys_copy(missile, missile.owner);
 	missile.classname = "rocket"; //for remote exploding
@@ -308,11 +308,11 @@ float(float req) weapon_rocketlauncher {
 		precache_sound("weapons/rocket_fire.wav");
 		precache_sound("weapons/rocket_mode.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEP_ROCKET_LAUNCHER);
+		//weapon_setup(WEAPON_ROCKET_LAUNCHER);
 		self.rl_release = 1;
 	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
 		// don't switch while guiding a missile
-		if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
+		if ((WEAPON_ATTACK_FINISHED(self) <= time || self.weapon != WEAPON_ROCKET_LAUNCHER)
 				&& self.ammo_rockets < g_balance_rocketlauncher_ammo)
 			return FALSE;
 	} else if (req == WEAPON_REQUEST_CHECKAMMO2)
@@ -363,5 +363,5 @@ float(float req) weapon_rocketlauncher {
 }
 
 void(void) spawnfunc_weapon_rocketlauncher {
-	weapon_defaultspawnfunc(WEP_ROCKET_LAUNCHER);
+	weapon_defaultspawnfunc(WEAPON_ROCKET_LAUNCHER);
 }

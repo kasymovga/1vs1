@@ -25,7 +25,7 @@ void fish_hunt() {
 	if (dofire) {
 		trace_line(self.origin, v, TRACE_MOVE_NORMAL, self);
 		if (trace_ent) {
-			damage(trace_ent, self, self, self.dmg_edge * frametime, WEP_MELEE, trace_endpos, v_forward);
+			damage(trace_ent, self, self, self.dmg_edge * frametime, WEAPON_MELEE, trace_endpos, v_forward);
 		}
 		anim_set(self, '1 18 18', TRUE, TRUE, FALSE);
 		movelib_beak_simple(50 * frametime);

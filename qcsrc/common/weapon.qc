@@ -1,5 +1,5 @@
 // WEAPON PLUGIN SYSTEM
-entity _weapon_info[WEP_LAST_EXTRA];
+entity _weapon_info[WEAPON_LAST_EXTRA];
 entity weapon_info_dummy;
 
 #ifdef SVQC
@@ -71,19 +71,19 @@ void(float id,
 	e.model2 = strzone(strcat("wpn-", e.mdl));
 	e.spawnflags = 0;
 	if (normalweapon > 0)
-		e.spawnflags |= WEPSPAWNFLAG_NORMAL;
+		e.spawnflags |= WEAPON_FLAG_NORMAL;
 
 	if (normalweapon < 0)
-		e.spawnflags |= WEPSPAWNFLAG_HIDDEN;
+		e.spawnflags |= WEAPON_FLAG_HIDDEN;
 
 	if (canclimb)
-		e.spawnflags |= WEPSPAWNFLAG_CANCLIMB;
+		e.spawnflags |= WEAPON_FLAG_CANCLIMB;
 
 	e.bot_pickupbasevalue = pickupbasevalue;
 #endif
 	_weapon_info[id - 1] = e;
-	if (id > WEP_LAST) {
-		e.weapons_extra = pow(2, id - 1 - WEP_LAST);
+	if (id > WEAPON_LAST) {
+		e.weapons_extra = pow(2, id - 1 - WEAPON_LAST);
 	} else {
 		e.weapons = pow(2, id - 1);
 	}
@@ -108,10 +108,10 @@ void(float id,
 
 entity(float id) weapon_info {
 	entity w;
-	if (id < WEP_FIRST)
+	if (id < WEAPON_FIRST)
 		return weapon_info_dummy;
 
-	if (id > WEP_LAST_EXTRA) {
+	if (id > WEAPON_LAST_EXTRA) {
 		return weapon_info_dummy;
 	}
 	w = _weapon_info[id - 1];

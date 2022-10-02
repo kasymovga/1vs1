@@ -664,7 +664,7 @@ float(float secondary, float attacktime) weapon_prepareattack {
 	}
 	if (attacktime >= 0) {
 		// don't fire if previous attack is not finished
-		if (ATTACK_FINISHED(self) > time + frametime * 0.5)
+		if (WEAPON_ATTACK_FINISHED(self) > time + frametime * 0.5)
 			return FALSE;
 		// don't fire while changing weapon
 		if (self.weaponentity.state != WEAPON_STATE_READY)
@@ -686,14 +686,13 @@ float(float secondary, float attacktime) weapon_prepareattack {
 	self.weaponentity.state = WEAPON_STATE_INUSE;
 	// if the weapon hasn't been firing continuously, reset the timer
 	if (attacktime >= 0) {
-		if (ATTACK_FINISHED(self) < time - frametime * 1.5) {
-			ATTACK_FINISHED(self) = time;
+		if (WEAPON_ATTACK_FINISHED(self) < time - frametime * 1.5) {
+			WEAPON_ATTACK_FINISHED(self) = time;
 			//dprint("resetting attack finished to ", ftos(time), "\n");
 		}
-		ATTACK_FINISHED(self) = ATTACK_FINISHED(self) + attacktime * weapon_rate_factor();
+		WEAPON_ATTACK_FINISHED(self) = WEAPON_ATTACK_FINISHED(self) + attacktime * weapon_rate_factor();
 	}
 	self.bulletcounter += 1;
-	//dprint("attack finished ", ftos(ATTACK_FINISHED(self)), "\n");
 	return TRUE;
 }
 
@@ -1123,7 +1122,7 @@ void(void) weapon_model_exterior_think {
 	self.colormap = self.owner.colormap;
 	entity wi = self.owner.weaponentity;
 	entity o = self.owner;
-	if (wi.wframe == WEAPON_FRAME_MELEE || (o.weapon == WEP_MELEE && wi.frame == WEAPON_FRAME_FIRE2)) {
+	if (wi.wframe == WEAPON_FRAME_MELEE || (o.weapon == WEAPON_MELEE && wi.frame == WEAPON_FRAME_FIRE2)) {
 		entity ao = akimbo_owner(o);
 		if (ao.anim_melee == ao.anim_shoot) {
 			float f;
@@ -1293,7 +1292,7 @@ void(float fr, float t, void() func) weapon_thinkf {
 	if (!self.crouch || self.body.weaponentity) { // shoot anim stands up, this looks bad
 		if (fr == WEAPON_FRAME_MELEE2)
 			anim_set(self.body, self.anim_melee2, FALSE, TRUE, TRUE);
-		else if (fr == WEAPON_FRAME_MELEE || (self.weapon == WEP_MELEE && fr == WEAPON_FRAME_FIRE2)) {
+		else if (fr == WEAPON_FRAME_MELEE || (self.weapon == WEAPON_MELEE && fr == WEAPON_FRAME_FIRE2)) {
 			player_anim_set(self, anim_melee, FALSE, TRUE, TRUE, 1);
 			if (self.body)
 				self.body.animstate_endtime = time + t;

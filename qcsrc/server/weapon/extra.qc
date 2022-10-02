@@ -261,7 +261,7 @@ void(float num) weapon_extra_reload {
 #undef WEAPON_EXTRA_RELOAD_FUNCS
 
 float(float req) weapon_extra_think {
-	float extra_num = self.weapon - WEP_LAST - 1;
+	float extra_num = self.weapon - WEAPON_LAST - 1;
 	float at, mc;
 	if (req == WEAPON_REQUEST_AIM) {
 		float pt = weapon_extra_primary_type[extra_num];
@@ -486,13 +486,13 @@ void(void) weapon_extra_init {
 			weapon_extra_secondary_effect[i] = t = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 
 		weapon_extra_secondary_impact_type[i] = weapon_extra_impact_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_impact_type")));
-		weapon_register(WEP_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, 1, modelname, modelname, modelname);
+		weapon_register(WEAPON_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, 1, modelname, modelname, modelname);
 	}
 }
 
 void(void) spawnfunc_weapon_extra {
 	if (self.netname != "") {
-		for (float i = WEP_LAST + 1; i < WEP_LAST_EXTRA; i++) {
+		for (float i = WEAPON_LAST + 1; i < WEAPON_LAST_EXTRA; i++) {
 			if (weapon_info(i).netname == self.netname) {
 				weapon_defaultspawnfunc(i);
 				break;

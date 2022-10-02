@@ -11,7 +11,7 @@ float g_laser_offhand;
 
 entity(vector _shotdir, float _speed, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float expl, float issec, float lifetime) laser_projectile {
 	entity missile = projectile(TRUE, (expl ? PROJECTILE_RM_LASER : PROJECTILE_LASER), TRUE, self);
-	projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_LASER, WEP_LASER | (issec ? HITTYPE_SECONDARY: 0), _dmg, _dmg_edge, _dmg_radius, _force, 0, MOVETYPE_FLY);
+	projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_LASER, WEAPON_LASER | (issec ? HITTYPE_SECONDARY: 0), _dmg, _dmg_edge, _dmg_radius, _force, 0, MOVETYPE_FLY);
 	missile.team = self.team;
 	missile.velocity = _shotdir * _speed;
 	weapon_setup_projectile_velocity(missile);
@@ -28,8 +28,8 @@ float(void) laser_weapon_frame_handle {
 		float w2 = self.switchweapon;
 		float ws = self.weaponentity.state;
 		if (g_laser_offhand) {
-			self.weapon = WEP_LASER;
-			self.switchweapon = WEP_LASER;
+			self.weapon = WEAPON_LASER;
+			self.switchweapon = WEAPON_LASER;
 		}
 		if (weapon_prepareattack(0, g_laser_refire)) {
 			weapon_setup_shotdir(self, v_forward, 3, "weapons/lasergun_fire.wav", 1);

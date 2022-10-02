@@ -30,7 +30,7 @@ void spearguy_hunt() {
 			vector o = gettaginfo(self.exteriorweaponentity, gettagindex(self.exteriorweaponentity, ""));
 			//te_lightning1(world, o + v_forward * 20, self.enemy.origin);
 			pointparticles(particleeffectnum("sparks"), o + v_forward * 50, v_forward, 1);
-			damage(self.enemy, self, self, self.dmg_edge * frametime, WEP_MELEE, self.enemy.origin, v_forward);
+			damage(self.enemy, self, self, self.dmg_edge * frametime, WEAPON_MELEE, self.enemy.origin, v_forward);
 		}
 		v = self.enemy.origin - self.origin;
 	}

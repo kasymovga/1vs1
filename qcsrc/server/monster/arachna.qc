@@ -24,7 +24,7 @@ void arachna_hunt() {
 			pointparticles(particleeffectnum("laser_impact"), self.origin + v_forward * 40, v_forward, 1);
 			if (trace_ent)
 			if (trace_ent.takedamage) {
-				damage(trace_ent, self, self, self.dmg_edge, WEP_MELEE, trace_endpos, v_forward * 300 + v_up * 50);
+				damage(trace_ent, self, self, self.dmg_edge, WEAPON_MELEE, trace_endpos, v_forward * 300 + v_up * 50);
 			}
 			self.attack_finished_single = time + 0.5 + random();
 			self.bulletcounter = time + 0.5;
@@ -35,7 +35,7 @@ void arachna_hunt() {
 			vector _shotorg = self.origin + v_forward * 16;
 			sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
-			projectile_setup(proj,_shotorg, EFFECT_IMPACT_PLASMA, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+			projectile_setup(proj,_shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 			proj.touch = projectile_touch_explode;
 			proj.velocity = normalize(_shotdir) * 1600;
 			proj.pushltime = time + 10;

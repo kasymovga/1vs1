@@ -1,35 +1,35 @@
-// Weapon indexes
-// %weaponaddpoint
-float WEP_FIRST            =  1;
-float WEP_LASER            =  1;
-float WEP_SHOTGUN          =  2;
-float WEP_UZI              =  3;
-float WEP_GRENADE_LAUNCHER =  4;
-float WEP_ELECTRO          =  5;
-float WEP_CRYLINK          =  6;
-float WEP_NEX              =  7;
-float WEP_HAGAR            =  8;
-float WEP_ROCKET_LAUNCHER  =  9;
-float WEP_PORTO            = 10;
-float WEP_MINSTANEX        = 11;
-float WEP_HOOK             = 12;
-float WEP_HLAC             = 13;
-float WEP_TUBA             = 14;
-float WEP_CAMPINGRIFLE     = 15;
-float WEP_FIREBALL         = 16;
-float WEP_SUPERSHOTGUN     = 17;
-float WEP_ZAPPER           = 18;
-float WEP_MELEE            = 19;
-float WEP_LAST             = 19;
-float WEP_COUNT            = 20;
-float WEP_LAST_EXTRA       = 27;
-float WEP_COUNT_EXTRA      = 28;
+enum {
+	WEAPON_LASER = 1,
+	WEAPON_SHOTGUN,
+	WEAPON_UZI,
+	WEAPON_GRENADE_LAUNCHER,
+	WEAPON_ELECTRO,
+	WEAPON_CRYLINK,
+	WEAPON_NEX,
+	WEAPON_HAGAR,
+	WEAPON_ROCKET_LAUNCHER,
+	WEAPON_PORTO,
+	WEAPON_MINSTANEX,
+	WEAPON_HOOK,
+	WEAPON_HLAC,
+	WEAPON_TUBA,
+	WEAPON_CAMPINGRIFLE,
+	WEAPON_FIREBALL,
+	WEAPON_SUPERSHOTGUN,
+	WEAPON_ZAPPER,
+	WEAPON_MELEE,
+};
+#define WEAPON_FIRST WEAPON_LASER
+#define WEAPON_LAST WEAPON_MELEE
+#define WEAPON_COUNT (WEAPON_LAST + 1)
+#define WEAPON_LAST_EXTRA 27
+#define WEAPON_COUNT_EXTRA (WEAPON_LAST_EXTRA + 1)
 
 // functions:
 entity(float id) weapon_info;
 entity weapon_info_chain;
 #define WEAPON_INFO_FOR_EACH(x) for (x = weapon_info_chain; x; x = x.enemy) if (x.weapon)
-#define WEAPON_INFO_FOR_EACH_ID(x) for (x = WEP_FIRST; x <= WEP_LAST_EXTRA; x++)
+#define WEAPON_INFO_FOR_EACH_ID(x) for (x = WEAPON_FIRST; x <= WEAPON_LAST_EXTRA; x++)
 
 // entity properties of weaponinfo:
 .float weapon; // WEP_...

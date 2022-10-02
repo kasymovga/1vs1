@@ -38,7 +38,7 @@ void(void) weapon_minstanex_attack {
 	damage_yoda = 0;
 	damage_goodhits = 0;
 	damage_headshot = 0;
-	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, g_balance_minstanex_damage, 800, 0, 0, 0, 0, WEP_MINSTANEX);
+	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, g_balance_minstanex_damage, 800, 0, 0, 0, 0, WEAPON_MINSTANEX);
 	antilag_end();
 	if (damage_yoda > 1)
 		announce(self, "announcer/male/yoda.wav", "^5Awesome");
@@ -97,14 +97,14 @@ void(void) weapon_minstanex_attack {
 
 void(void) weapon_minstanex_laser_attack_setup {
 	float w_safe = self.weapon;
-	self.weapon = WEP_LASER;
+	self.weapon = WEAPON_LASER;
 	weapon_setup_shotdir(self, v_forward, 3, "weapons/lasergun_fire.wav", 1);
 	self.weapon = w_safe;
 }
 
 float(void) weapon_minstanex_player_can_fire {
 	float w_safe = self.weapon;
-	self.weapon = WEP_LASER;
+	self.weapon = WEAPON_LASER;
 	float r = player_can_fire(self, TRUE);
 	self.weapon = w_safe;
 	return r;

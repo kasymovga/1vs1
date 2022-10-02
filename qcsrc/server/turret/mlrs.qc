@@ -8,7 +8,7 @@ void(void) turret_mlrs_attack {
 	turret_tag_fire_update();
 	sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 	missile = projectile(TRUE, PROJECTILE_ROCKET, FALSE, self); // no cull, fly sound
-	projectile_setup(missile, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, self.shot_dmg, self.shot_dmg * 0.5, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
+	projectile_setup(missile, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.shot_dmg, self.shot_dmg * 0.5, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
 	missile.solid = SOLID_BBOX;
 	missile.classname          = "mlrs_missile";
 	missile.takedamage         = DAMAGE_NO;

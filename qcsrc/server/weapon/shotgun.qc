@@ -37,7 +37,7 @@ void(void) weapon_shotgun_attack {
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
 		bullet(weapon_shotorg, weapon_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
 				g_balance_shotgun_primary_damage, g_balance_shotgun_primary_damage_headshot, g_balance_shotgun_primary_force,
-				EFFECT_IMPACT_PELLET, WEP_SHOTGUN, particleeffectnum("tr_bullet"), g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
+				EFFECT_IMPACT_PELLET, WEAPON_SHOTGUN, particleeffectnum("tr_bullet"), g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
 
 	bullet_end();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -67,7 +67,7 @@ void(void) weapon_shotgun_attack2 {
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
 		bullet(weapon_shotorg, weapon_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
 				g_balance_shotgun_secondary_damage, g_balance_shotgun_secondary_damage_headshot, g_balance_shotgun_secondary_force,
-				EFFECT_IMPACT_PELLET, WEP_SHOTGUN | HITTYPE_SECONDARY, particleeffectnum("tr_bullet"), g_balance_shotgun_secondary_gravityfactor,
+				EFFECT_IMPACT_PELLET, WEAPON_SHOTGUN | HITTYPE_SECONDARY, particleeffectnum("tr_bullet"), g_balance_shotgun_secondary_gravityfactor,
 				g_balance_shotgun_secondary_bulletconstant);
 
 	bullet_end();
@@ -110,8 +110,8 @@ void(void) weapon_shotgun_reloadandready {
 	float tshells = min(g_balance_shotgun_magazinecapacity, max(1, self.sg_ammoclip + 1));
 	self.sg_ammoclip = tshells;
 	if (weapon_clip_checkmaxbullets(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo) || self.sg_buttonatck1 || self.sg_buttonatck2) {
-		t = ATTACK_FINISHED(self) - g_balance_shotgun_reloadtime - 1;
-		ATTACK_FINISHED(self) = t;
+		t = WEAPON_ATTACK_FINISHED(self) - g_balance_shotgun_reloadtime - 1;
+		WEAPON_ATTACK_FINISHED(self) = t;
 		weapon_ready();
 	} else {
 		weapon_thinkf(WEAPON_FRAME_RELOAD, g_balance_shotgun_reloadtime_shell, weapon_shotgun_reloadandready);
@@ -172,7 +172,7 @@ float(float req) weapon_shotgun {
 	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "was gunned by"; // unchecked: SECONDARY
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEP_SHOTGUN);
+		//weapon_setup(WEAPON_SHOTGUN);
 		if (g_balance_shotgun_magazinecapacity) {
 			weapon_clip_checkmaxbullets(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo);
 			if not(self.sg_ammoclip)
@@ -218,5 +218,5 @@ float(float req) weapon_shotgun {
 }
 
 void(void) spawnfunc_weapon_shotgun {
-	weapon_defaultspawnfunc(WEP_SHOTGUN);
+	weapon_defaultspawnfunc(WEAPON_SHOTGUN);
 }

@@ -86,13 +86,13 @@ void(float hittype) weapon_tuba_attack {
 		c = CHAN_WEAPON2;
 	}
 	sound(self, c, TUBA_NOTE(weapon_tuba_note(self, hittype)), bound(0, VOL_BASE * g_balance_tuba_volume, 1), g_balance_tuba_attenuation);
-	damage_radius(self, self, g_balance_tuba_damage, g_balance_tuba_edgedamage, g_balance_tuba_radius, world, g_balance_tuba_force, 0, hittype | WEP_TUBA | HITTYPE_NOTEAMDAMAGE, world);
+	damage_radius(self, self, g_balance_tuba_damage, g_balance_tuba_edgedamage, g_balance_tuba_radius, world, g_balance_tuba_force, 0, hittype | WEAPON_TUBA | HITTYPE_NOTEAMDAMAGE, world);
 	o = gettaginfo(self.exteriorweaponentity, 0);
 	pointparticles(particleeffectnum("smoke_ring"), o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
 }
 
 void(void) spawnfunc_weapon_tuba {
-	weapon_defaultspawnfunc(WEP_TUBA);
+	weapon_defaultspawnfunc(WEAPON_TUBA);
 }
 
 float(float req) weapon_tuba {

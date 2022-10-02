@@ -185,7 +185,7 @@ void(vector dir) havocbot_bunnyhop {
 	vector deviation;
 	// Don't jump when using some weapons
 	if (self.aistatus & AI_STATUS_ATTACKING)
-	if (self.weapon & WEP_CAMPINGRIFLE)
+	if (self.weapon & WEAPON_CAMPINGRIFLE)
 		return;
 
 	if (self.goalcurrent.classname == "player")
@@ -394,7 +394,7 @@ void(void) havocbot_movetogoal {
 			return;
 		} else if (self.health>g_balance_rocketlauncher_damage*0.5) {
 			if (self.velocity_z < 0)
-			if (weapon_carried(self, WEP_ROCKET_LAUNCHER, TRUE, FALSE)) {
+			if (weapon_carried(self, WEAPON_ROCKET_LAUNCHER, TRUE, FALSE)) {
 				self.movement_x = sv_maxspeed;
 				if (self.rocketjumptime) {
 					if (time > self.rocketjumptime) {
@@ -403,7 +403,7 @@ void(void) havocbot_movetogoal {
 					}
 					return;
 				}
-				self.switchweapon = WEP_ROCKET_LAUNCHER;
+				self.switchweapon = WEAPON_ROCKET_LAUNCHER;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = TRUE;
 				self.rocketjumptime = time + g_balance_rocketlauncher_detonatedelay;
@@ -644,7 +644,7 @@ void(void) havocbot_chooseenemy {
 		}
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if (best || self.weapons) // || self.weapon == WEP_CAMPINGRIFLE
+		if (best || self.weapons) // || self.weapon == WEAPON_CAMPINGRIFLE
 			break;
 
 		if (i)
@@ -681,7 +681,7 @@ void(void) havocbot_chooseweapon {
 		return;
 
 	// Workaround for rifle reloading (..)
-	if (self.weapon == WEP_CAMPINGRIFLE)
+	if (self.weapon == WEAPON_CAMPINGRIFLE)
 	if (i < g_balance_campingrifle_reloadtime + 1)
 		return;
 
@@ -704,7 +704,7 @@ void(void) havocbot_chooseweapon {
 	float spreadpenalty=10;
 	// Should it do a weapon combo?
 	float af, ct, combo_time, combo;
-	af = ATTACK_FINISHED(self);
+	af = WEAPON_ATTACK_FINISHED(self);
 	ct = bot_ai_weapon_combo_threshold;
 	// Bots with no skill will be 4 times more slower than "godlike" bots when doing weapon combos
 	// Ideally this 4 should be calculated as longest_weapon_refire / bot_ai_weapon_combo_threshold
@@ -721,7 +721,7 @@ void(void) havocbot_chooseweapon {
 	if (bot_custom_weapon) {
 		// Choose weapons for far distance
 		if (distance > bot_distance_far) {
-			for (i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i) {
+			for (i=0; i < WEAPON_COUNT && bot_weapons_far[i] != -1 ; ++i) {
 				w = bot_weapons_far[i];
 				if (weapon_carried(self, w, TRUE, FALSE)) {
 					if (self.weapon == w && combo)
@@ -734,7 +734,7 @@ void(void) havocbot_chooseweapon {
 		}
 		// Choose weapons for mid distance
 		if (distance > bot_distance_close) {
-			for (i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i) {
+			for (i=0; i < WEAPON_COUNT && bot_weapons_mid[i] != -1 ; ++i) {
 				w = bot_weapons_mid[i];
 				if (weapon_carried(self, w, TRUE, FALSE)) {
 					if (self.weapon == w && combo)
@@ -746,7 +746,7 @@ void(void) havocbot_chooseweapon {
 			}
 		}
 		// Choose weapons for close distance
-		for (i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i) {
+		for (i=0; i < WEAPON_COUNT && bot_weapons_close[i] != -1 ; ++i) {
 			w = bot_weapons_close[i];
 			if (weapon_carried(self, w, TRUE, FALSE)) {
 				if (self.weapon == w && combo)

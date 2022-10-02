@@ -92,7 +92,7 @@ void walker_hunt() {
 
 			self.bulletcounter = self.bulletcounter + 0.5;
 			entity missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self);
-			projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+			projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 			missile.classname = "walker_rocket";
 			missile.takedamage = DAMAGE_YES;
 			missile.damageforcescale = 1;

@@ -303,7 +303,7 @@ void(entity portal, float killed) portal_remove {
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) portal_damage {
-	if (deathtype == WEP_PORTO)
+	if (deathtype == WEAPON_PORTO)
 		return;
 
 	if (attacker != self.aiment)

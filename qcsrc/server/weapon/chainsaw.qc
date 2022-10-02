@@ -7,7 +7,7 @@ float g_balance_chainsaw_noise;
 
 void(void) spawnfunc_weapon_chainsaw {
 	if (g_balance_melee && g_balance_melee != 2)
-		weapon_defaultspawnfunc(WEP_MELEE);
+		weapon_defaultspawnfunc(WEAPON_MELEE);
 	else
 		remove(self);
 }
@@ -36,9 +36,9 @@ void(void) weapon_chainsaw_attack {
 	if (trace_ent.takedamage)
 	if (self.chainsaw_last_hit <= time) {
 		self.chainsaw_last_hit = time + g_balance_chainsaw_primary_refire;
-		damage_record_hits(self, trace_ent, WEP_MELEE, 1, g_balance_chainsaw_primary_damage);
+		damage_record_hits(self, trace_ent, WEAPON_MELEE, 1, g_balance_chainsaw_primary_damage);
 		damage(trace_ent, self, self, g_balance_chainsaw_primary_damage,
-				WEP_MELEE, trace_endpos, warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir) * g_balance_chainsaw_primary_force);
+				WEAPON_MELEE, trace_endpos, warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir) * g_balance_chainsaw_primary_force);
 	}
 	weapon_thinkf(WEAPON_FRAME_FIRE1, 0.05, weapon_chainsaw_attack);
 }
@@ -81,7 +81,7 @@ float(float req) weapon_chainsaw {
 		dlc_precache_sound("weapons/chainsaw_idle_1.wav");
 		dlc_precache_sound("weapons/chainsaw_active_1.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEP_MELEE);
+		//weapon_setup(WEAPON_MELEE);
 		if (g_balance_chainsaw_noise)
 			player_sound(self, CHAN_WEAPON, "weapons/chainsaw_idle_1.wav", VOL_BASE, ATTN_NORM);
 	} else if (req == WEAPON_REQUEST_CLEAR) {

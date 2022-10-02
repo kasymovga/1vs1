@@ -161,7 +161,7 @@ void(void) weaponselect_read {
 	weaponselect_numoptions = 0;
 	float olddrawfont = drawfont;
 	drawfont = sbar_bigfont;
-	for (float w = 0; w <= WEP_LAST; ++w) {
+	for (float w = 0; w <= WEAPON_LAST; ++w) {
 		if (pow(2, w) & weaponselect_available) {
 			++weaponselect_numoptions;
 			weaponselect_width = max(weaponselect_width, WEAPONSELECT_SCALE * 2 + stringwidth(weapon_info(w+1).message, FALSE) * WEAPONSELECT_SCALE);

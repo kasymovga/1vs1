@@ -107,15 +107,15 @@ void(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, flo
 }
 
 void(void) weapon_campingrifle_attack {
-	weapon_campingrifle_fire(g_balance_campingrifle_primary_spread, g_balance_campingrifle_primary_damage, g_balance_campingrifle_primary_headshotaddeddamage, g_balance_campingrifle_primary_force, g_balance_campingrifle_primary_speed, g_balance_campingrifle_primary_lifetime, g_balance_campingrifle_primary_ammo, WEP_CAMPINGRIFLE, g_balance_campingrifle_primary_bulletconstant);
+	weapon_campingrifle_fire(g_balance_campingrifle_primary_spread, g_balance_campingrifle_primary_damage, g_balance_campingrifle_primary_headshotaddeddamage, g_balance_campingrifle_primary_force, g_balance_campingrifle_primary_speed, g_balance_campingrifle_primary_lifetime, g_balance_campingrifle_primary_ammo, WEAPON_CAMPINGRIFLE, g_balance_campingrifle_primary_bulletconstant);
 }
 
 void(void) weapon_campingrifle_attack2 {
-	weapon_campingrifle_fire(g_balance_campingrifle_secondary_spread, g_balance_campingrifle_secondary_damage, g_balance_campingrifle_secondary_headshotaddeddamage, g_balance_campingrifle_secondary_force, g_balance_campingrifle_secondary_speed, g_balance_campingrifle_secondary_lifetime, g_balance_campingrifle_secondary_ammo, WEP_CAMPINGRIFLE | HITTYPE_SECONDARY, g_balance_campingrifle_secondary_bulletconstant);
+	weapon_campingrifle_fire(g_balance_campingrifle_secondary_spread, g_balance_campingrifle_secondary_damage, g_balance_campingrifle_secondary_headshotaddeddamage, g_balance_campingrifle_secondary_force, g_balance_campingrifle_secondary_speed, g_balance_campingrifle_secondary_lifetime, g_balance_campingrifle_secondary_ammo, WEAPON_CAMPINGRIFLE | HITTYPE_SECONDARY, g_balance_campingrifle_secondary_bulletconstant);
 }
 
 void(void) spawnfunc_weapon_campingrifle {
-	weapon_defaultspawnfunc(WEP_CAMPINGRIFLE);
+	weapon_defaultspawnfunc(WEAPON_CAMPINGRIFLE);
 }
 
 .float bot_secondary_campingriflemooth;
@@ -173,7 +173,7 @@ float(float req) weapon_campingrifle {
 		precache_sound("weapons/campingrifle_fire.wav");
 		precache_sound("weapons/campingrifle_fire2.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEP_CAMPINGRIFLE);
+		//weapon_setup(WEAPON_CAMPINGRIFLE);
 		full = weapon_campingrifle_checkmaxbullets();
 		if (g_balance_campingrifle_auto_reload_after_changing_weapons)
 			if (!full)

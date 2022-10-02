@@ -179,7 +179,7 @@ void minstagib_player_health_armor_fuel_mods_set() {
 }
 
 float(float wpn) minstagib_WeaponSpawnHandle {
-	if (wpn == WEP_MINSTANEX ||wpn == WEP_NEX || wpn == WEP_ROCKET_LAUNCHER) {
+	if (wpn == WEAPON_MINSTANEX ||wpn == WEAPON_NEX || wpn == WEAPON_ROCKET_LAUNCHER) {
 		minstagib_items(IT_CELLS);
 		self.think = minst_remove_item;
 		self.nextthink = time;
@@ -242,7 +242,7 @@ var void(entity targ, entity attacker, float deathtype) minstagib_DamageForceMod
 void(entity targ, entity attacker, float deathtype) minstagib_DamageForceModsSet {
 	if (targ.classname == "player") {
 		if (attacker.classname == "player")
-		if (DEATH_ISWEAPON(deathtype, WEP_LASER))
+		if (DEATH_ISWEAPON(deathtype, WEAPON_LASER))
 		if (g_minstagib_nolaserdamage || !player_can_fire(attacker, FALSE)) {
 			plugin_chain_damage_mod = 0;
 			if (targ != attacker) {
@@ -284,7 +284,7 @@ var float(void) minstagib_player_equip_handle_next;
 float(void) minstagib_player_equip_handle {
 	self.health = 100;
 	self.armorvalue = 0;
-	self.weapons = weapon_info(WEP_MINSTANEX).weapons;
+	self.weapons = weapon_info(WEAPON_MINSTANEX).weapons;
 	self.ammo_shells = 0;
 	self.ammo_nails = 0;
 	self.ammo_rockets = 0;
@@ -324,7 +324,7 @@ void(void) minstagib_init {
 
 	item_precache(sv_model_healthlarge, "models/items/g_h50.md3", "misc/mediumhealth.wav");
 	item_precache(sv_model_ammocells, "models/items/a_cells.md3", "misc/itempickup.wav");
-	weapon_precache(WEP_MINSTANEX);
+	weapon_precache(WEAPON_MINSTANEX);
 	g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 	if (g_minstagib_invis_alpha <= 0)
 		g_minstagib_invis_alpha = -1;

@@ -1135,11 +1135,11 @@ void(void) race_target_init_use {
 		activator.ammo_rockets = player_start_ammo_rockets;
 		activator.ammo_cells = player_start_ammo_cells;
 		if (self.spawnflags & 32) {
-			activator.weapons &= weapon_info(WEP_MELEE).weapons;
-			activator.switchweapon = WEP_MELEE;
+			activator.weapons &= weapon_info(WEAPON_MELEE).weapons;
+			activator.switchweapon = WEAPON_MELEE;
 		} else {
-			activator.weapons = (weapon_info(WEP_MELEE).weapons | weapon_info(WEP_UZI).weapons);
-			activator.switchweapon = WEP_UZI;
+			activator.weapons = (weapon_info(WEAPON_MELEE).weapons | weapon_info(WEAPON_UZI).weapons);
+			activator.switchweapon = WEAPON_UZI;
 		}
 	}
 	if not(self.spawnflags & 8) {
@@ -1152,8 +1152,8 @@ void(void) spawnfunc_race_target_init {
 		remove(self);
 		return;
 	}
-	weapon_precache(WEP_MELEE);
-	weapon_precache(WEP_UZI);
+	weapon_precache(WEAPON_MELEE);
+	weapon_precache(WEAPON_UZI);
 	self.use = race_target_init_use;
 }
 

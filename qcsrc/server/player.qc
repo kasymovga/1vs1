@@ -793,7 +793,7 @@ void(float killed) player_clear {
 	WEAPON_INFO_FOR_EACH_ID(j) {
 		weapon_action(j, WEAPON_REQUEST_RESETPLAYER);
 		weapon_action(j, WEAPON_REQUEST_CLEAR);
-		ATTACK_FINISHED_FOR(self, j) = 0;
+		WEAPON_ATTACK_FINISHED_FOR(self, j) = 0;
 	}
 	plugin_chain_player_clear(killed);
 	//Clear waypoints
@@ -989,7 +989,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				}
 				attacker.taunt_soundtime = time + 1;
 				attacker.lastfrag = fragtime;
-				if (DEATH_ISWEAPON(deathtype, WEP_MELEE) && sv_announcer_extra_meleefrag != "") {
+				if (DEATH_ISWEAPON(deathtype, WEAPON_MELEE) && sv_announcer_extra_meleefrag != "") {
 						announce(targ, sv_announcer_extra_meleefrag, "");
 						announce(attacker, sv_announcer_extra_meleefrag, "");
 				}
@@ -1077,7 +1077,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 					player_anim_set(self, anim_pain2, FALSE, TRUE, TRUE, 2);
 			}
 			// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
-			if (!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1) {
+			if (!DEATH_ISWEAPON(deathtype, WEAPON_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1) {
 				if (self.health > 75) // TODO make a "gentle" version?
 					player_sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_pain100), VOL_BASE, ATTN_NORM);
 				else if (self.health > 50)
@@ -1966,7 +1966,7 @@ void(void) player_impulse {
 			self.impulse = imp; // retry in next frame
 	} else if (imp >= 230 && imp <= 253) {
 		if (self.deadflag == DEAD_NO) {
-			weapon_switch(imp - 230 + WEP_FIRST);
+			weapon_switch(imp - 230 + WEAPON_FIRST);
 		} else
 			self.impulse = imp; // retry in next frame
 	} else if (imp >= 30 && imp <= 49) { // deploy waypoints

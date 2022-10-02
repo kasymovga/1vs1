@@ -51,7 +51,7 @@ void(float deathtype) weapon_uzi_attack {
 	weapon_setup_shot(self, g_balance_uzi_recoil, "weapons/uzi_fire.wav", 1);
 	weapon_shake(1);
 	// this attack_finished just enforces a cooldown at the end of a burst
-	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
+	WEAPON_ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
 	if (self.uzi_bulletcounter == 1)
 		bullet(weapon_shotorg, weapon_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed,
 				5, g_balance_uzi_first_damage, g_balance_uzi_first_damage_headshot,
@@ -89,7 +89,7 @@ void(void) weapon_uzi_fire1_02 {
 			return;
 		}
 		self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
-		weapon_uzi_attack(WEP_UZI);
+		weapon_uzi_attack(WEAPON_UZI);
 		weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
 	} else
 		weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_ready);
@@ -121,14 +121,14 @@ float(float req) weapon_uzi {
 			if (self.uzi_buttonatck1)
 			if (weapon_prepareattack(0, 0)) {
 				self.uzi_bulletcounter = 1;
-				weapon_uzi_attack(WEP_UZI); // sets attack_finished
+				weapon_uzi_attack(WEAPON_UZI); // sets attack_finished
 				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
 			}
 			if (self.uzi_buttonatck2)
 			if (g_balance_uzi_first)
 			if (weapon_prepareattack(1, 0)) {
 				self.uzi_bulletcounter = 1;
-				weapon_uzi_attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
+				weapon_uzi_attack(WEAPON_UZI | HITTYPE_SECONDARY); // sets attack_finished
 				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_uzi_first_refire, weapon_ready);
 			}
 		}
@@ -147,7 +147,7 @@ float(float req) weapon_uzi {
 	else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_uzi_reload();
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEP_UZI);
+		//weapon_setup(WEAPON_UZI);
 		if (g_balance_uzi_magazinecapacity) {
 			weapon_clip_checkmaxbullets(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo);
 			if not(self.uzi_ammoclip)
@@ -193,5 +193,5 @@ float(float req) weapon_uzi {
 }
 
 void(void) spawnfunc_weapon_uzi {
-	weapon_defaultspawnfunc(WEP_UZI);
+	weapon_defaultspawnfunc(WEAPON_UZI);
 }

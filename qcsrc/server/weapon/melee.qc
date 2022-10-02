@@ -51,10 +51,10 @@ void(void) weapon_melee_attack_think {
 	if (trace_ent)
 	if (trace_ent.takedamage) {
 		if (self.dmg)
-			damage_record_hits(self.owner, trace_ent, WEP_MELEE, 1, _damage * damage_factor);
+			damage_record_hits(self.owner, trace_ent, WEAPON_MELEE, 1, _damage * damage_factor);
 
 		damage(trace_ent, self.owner, self.owner, _damage * damage_factor,
-				WEP_MELEE, trace_endpos, warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir) * force * damage_factor + '0 0 1' * force_up * damage_factor);
+				WEAPON_MELEE, trace_endpos, warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir) * force * damage_factor + '0 0 1' * force_up * damage_factor);
 		if (onehit) {
 			remove(self);
 			return;
@@ -96,7 +96,7 @@ void(void) weapon_melee_attack_check {
 		return;
 
 	float w_save = self.weapon;
-	self.switchweapon = self.weapon = WEP_MELEE;
+	self.switchweapon = self.weapon = WEAPON_MELEE;
 	if (self.weapon_think == weapon_ready)
 	if (weapon_prepareattack(0, g_balance_melee_refire)) {
 		weapon_melee_attack(g_balance_melee, 0, sv_sound_melee);

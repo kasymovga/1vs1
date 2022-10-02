@@ -1,5 +1,5 @@
-float sbar_weapon_hits[WEP_COUNT_EXTRA];
-float sbar_weapon_fired[WEP_COUNT_EXTRA];
+float sbar_weapon_hits[WEAPON_COUNT_EXTRA];
+float sbar_weapon_fired[WEAPON_COUNT_EXTRA];
 float sbar_weapon_number;
 vector sbar_topright;
 vector sbar_bottom;
@@ -160,7 +160,7 @@ void(float fade) sbar_draw_weapons {
 	float wbit = 1;
 	entity e;
 	float a;
-	for (nr = WEP_FIRST; nr <= WEP_LAST; ++nr, wbit *= 2) {
+	for (nr = WEAPON_FIRST; nr <= WEAPON_LAST; ++nr, wbit *= 2) {
 		if not(stat_weapons & wbit) continue;
 		imp = weapon_impulses[nr - 1];
 		if not(imp >= 0) continue;
@@ -207,7 +207,7 @@ void(float fade) sbar_draw_weapons {
 		}
 	}
 	if (stat_weapons_extra)
-		for (wbit = 1; nr <= WEP_LAST_EXTRA; ++nr, wbit *= 2) {
+		for (wbit = 1; nr <= WEAPON_LAST_EXTRA; ++nr, wbit *= 2) {
 			if not(stat_weapons_extra & wbit) continue;
 			imp = weapon_impulses[nr - 1];
 			if not(imp >= 0) continue;
@@ -950,7 +950,7 @@ void(vector pos, entity pl, float is_self, float pl_number) sbar_scoreboard_item
 			w = f & 63;
 			if (w) {
 				f = (f - w) / 64;
-				if (w > WEP_LAST)
+				if (w > WEAPON_LAST)
 					drawpic(pos - tmp, strcat("gfx/hud/inv_weapon_", weapon_info(w).netname), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 				else
 					drawpic(pos - tmp, strcat("gfx/hud/inv_weapon", ftos(w - 1)), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
@@ -1011,7 +1011,7 @@ void(vector pos, entity pl, float is_self, float pl_number) sbar_scoreboard_item
 				w = f & 63;
 				if (w) {
 					f = (f - w) / 64;
-					if (w > WEP_LAST)
+					if (w > WEAPON_LAST)
 						drawpic(pos - tmp, strcat("gfx/hud/inv_weapon_", weapon_info(w).netname), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 					else
 						drawpic(pos - tmp, strcat("gfx/hud/inv_weapon", ftos(w - 1)), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
@@ -1683,7 +1683,7 @@ void(void) sbar_accuracy_draw {
 			drawpic(pos, "gfx/hud/sb_accuracy", fill_size , fill_colour, sbar_alpha_bg, DRAWFLAG_NORMAL);
 			draw_borderlines(sbar_border_thickness, pos, fill_size, '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
 			// the weapon
-			if (i <= WEP_LAST)
+			if (i <= WEAPON_LAST)
 				drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(i-1)), '1 0.5 0' * fill_size_x , '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			else
 				drawpic(pos, strcat("gfx/hud/inv_weapon_", weapon_info(i).netname), '1 0.5 0' * fill_size_x , '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);

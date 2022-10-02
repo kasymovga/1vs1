@@ -69,9 +69,9 @@ void(void) vehicle_spiderbot_rocket_do {
 
 	self.gun2.cnt = time + self.attack_finished_single;
 	sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-	damage_record_fires(self.owner, WEP_ROCKET_LAUNCHER, 1);
+	damage_record_fires(self.owner, WEAPON_ROCKET_LAUNCHER, 1);
 	missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
-	projectile_setup(missile, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire")), EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER,
+	projectile_setup(missile, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire")), EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER,
 			g_vehicle_spiderbot_rocket_damage, g_vehicle_spiderbot_rocket_edgedamage, g_vehicle_spiderbot_rocket_radius,
 			g_vehicle_spiderbot_rocket_force, 0, MOVETYPE_FLY);
 	te_explosion (missile.origin);
@@ -103,9 +103,9 @@ void(entity gun) vehicle_spiderbot_minigun_fire {
 	sound (gun, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 	entity e = self;
 	self = self.owner;
-	damage_record_fires(self, WEP_UZI, 1);
+	damage_record_fires(self, WEAPON_UZI, 1);
 	bullet_begin(10000);
-	bullet(v, v_forward, g_vehicle_spiderbot_minigun_spread, 10000, 5, g_vehicle_spiderbot_minigun_damage, 0, 0, EFFECT_IMPACT_BULLET, WEP_UZI, particleeffectnum("EFFECT_MGTURRETTRAIL"), 0, 100);
+	bullet(v, v_forward, g_vehicle_spiderbot_minigun_spread, 10000, 5, g_vehicle_spiderbot_minigun_damage, 0, 0, EFFECT_IMPACT_BULLET, WEAPON_UZI, particleeffectnum("EFFECT_MGTURRETTRAIL"), 0, 100);
 	self = e;
 	bullet_end();
 	if not(gun.enemy) {
@@ -306,7 +306,7 @@ void(void) vehicle_spiderbot_spawn {
 }
 
 void(void) vehicle_spiderbot_blowup {
-	damage_radius (self, self, 100, 15, 250, world, 250, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, world);
+	damage_radius (self, self, 100, 15, 250, world, 250, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, world);
 	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
 	self.nextthink = time + 10;
 	self.think = vehicle_spiderbot_spawn;

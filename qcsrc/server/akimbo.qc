@@ -224,7 +224,7 @@ void(void) akimbo_init {
 	entity e;
 	akimbo_supported_weapons = 0;
 	WEAPON_INFO_FOR_EACH(e) {
-		if (e.weapon == WEP_TUBA || e.weapon == WEP_FIREBALL || e.weapon == WEP_MELEE || e.weapon == WEP_HOOK || e.weapon == WEP_PORTO || e.weapon == WEP_MINSTANEX)
+		if (e.weapon == WEAPON_TUBA || e.weapon == WEAPON_FIREBALL || e.weapon == WEAPON_MELEE || e.weapon == WEAPON_HOOK || e.weapon == WEAPON_PORTO || e.weapon == WEAPON_MINSTANEX)
 			continue;
 
 		akimbo_supported_weapons |= e.weapons;

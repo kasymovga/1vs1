@@ -9,9 +9,11 @@ enum {
 	WEAPON_FRAME_MELEE2,
 };
 
-#define WEPSPAWNFLAG_NORMAL 1
-#define WEPSPAWNFLAG_CANCLIMB 2
-#define WEPSPAWNFLAG_HIDDEN 4
+enum: flag {
+	WEAPON_FLAG_NORMAL,
+	WEAPON_FLAG_CANCLIMB,
+	WEAPON_FLAG_HIDDEN,
+};
 
 float g_weaponspeedfactor;
 
@@ -63,6 +65,10 @@ enum {
 .float wframe;
 .vector shotorg_visual;
 .string model2; // wpn- sprite name
+.float attack_finished_for[WEAPON_COUNT];
+.float attack_finished_single;
+#define WEAPON_ATTACK_FINISHED_FOR(ent,w) ((ent).(attack_finished_for[(w) - WEAPON_FIRST]))
+#define WEAPON_ATTACK_FINISHED(ent) WEAPON_ATTACK_FINISHED_FOR(ent,(ent).weapon)
 
 void(float wpn) weapon_defaultspawnfunc;
 float(float wpn, float wrequest) weapon_action;
@@ -93,7 +99,7 @@ void(void) weapon_ready;
 void(void) weapon_init;
 float weapon_spawned_list;
 float weapon_spawned_extra_list;
-#define WEAPON_VALID(w) ((w) >= WEP_FIRST && (w) <= WEP_LAST_EXTRA)
+#define WEAPON_VALID(w) ((w) >= WEAPON_FIRST && (w) <= WEAPON_LAST_EXTRA)
 float(entity cl, float wpn, float andammo, float complain) weapon_carried;
 void(void) weapon_priority_update;
 float(float wr) weapon_laser;

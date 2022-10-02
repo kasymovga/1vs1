@@ -179,7 +179,7 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	}
 }
 
-.float actual_damage[WEP_COUNT_EXTRA]; //amount of damage done
+.float actual_damage[WEAPON_COUNT_EXTRA]; //amount of damage done
 
 void(entity attacker, float deathtype, float shots) damage_record_fires {
 	float weaponid;

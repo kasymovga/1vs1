@@ -148,7 +148,7 @@ void(float out) weapon_porto_attack {
 }
 
 void(void) spawnfunc_weapon_porto {
-	weapon_defaultspawnfunc(WEP_PORTO);
+	weapon_defaultspawnfunc(WEAPON_PORTO);
 }
 
 float(float req) weapon_porto {

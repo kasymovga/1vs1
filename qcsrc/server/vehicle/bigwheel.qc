@@ -51,11 +51,11 @@ void(void) vehicle_bigwheel_attack_laser {
 	else
 		weapon_shotorg = self.origin + v_forward * 20 - v_right * 70 + v_up * 80;
 
-	damage_record_fires(self.owner, WEP_HLAC, 1);
+	damage_record_fires(self.owner, WEAPON_HLAC, 1);
 	sound(self, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
 	entity proj = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
-	projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_LASER, WEP_HLAC, g_vehicle_bigwheel_laser_damage,
+	projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_LASER, WEAPON_HLAC, g_vehicle_bigwheel_laser_damage,
 			g_vehicle_bigwheel_laser_edgedamage, g_vehicle_bigwheel_laser_radius, g_vehicle_bigwheel_laser_force, 0, MOVETYPE_FLY);
 	proj.realowner = self.owner;
 	proj.velocity = (v_forward + randomvec() * g_vehicle_bigwheel_laser_spread) * g_vehicle_bigwheel_laser_speed;
@@ -216,7 +216,7 @@ void(void) vehicle_bigwheel_spawn {
 }
 
 void(void) vehicle_bigwheel_blowup {
-	damage_radius (self, self, 100, 15, 250, world, 250, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, world);
+	damage_radius (self, self, 100, 15, 250, world, 250, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, world);
 	self.alpha = -1;
 	self.nextthink = time + 10;
 	self.think = vehicle_bigwheel_spawn;

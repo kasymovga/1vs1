@@ -19,7 +19,7 @@ void(void) turret_plasma_attack {
 	sound(self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
-	projectile_setup(proj, self.tur_shotorg, EFFECT_IMPACT_PLASMA, WEP_ELECTRO, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
+	projectile_setup(proj, self.tur_shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
 	proj.classname = "plasmabomb";
 	proj.think = turret_projectile_think_explode;
 	proj.nextthink = time + 9;
@@ -37,7 +37,7 @@ void(void) turret_plasma_dual_attack {
 	entity proj;
 	sound(self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
-	projectile_setup(proj, self.tur_shotorg, EFFECT_IMPACT_PLASMA, WEP_ELECTRO, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
+	projectile_setup(proj, self.tur_shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
 	proj.classname = "plasmabomb";
 	proj.think = turret_projectile_think_explode;
 	proj.nextthink = time + 9;

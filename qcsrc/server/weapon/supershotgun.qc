@@ -33,7 +33,7 @@ void(void) weapoon_supershotgun_touch {
 
 	if (other && other.takedamage) {
 		entity o = self.realowner;
-		damage_record_hits(o, other, WEP_SUPERSHOTGUN, 1, self.dmg);
+		damage_record_hits(o, other, WEAPON_SUPERSHOTGUN, 1, self.dmg);
 		damage(other, self, o, self.dmg, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
 		self.cnt = 0;
 	}
@@ -75,7 +75,7 @@ void(float secondary, float barrels, float ballistic) weapon_supershotgun_attack
 		bc = g_balance_supershotgun_secondary_bulletconstant;
 		spread = g_balance_supershotgun_secondary_spread;
 		g = g_balance_supershotgun_secondary_gravityfactor;
-		dtype = WEP_SUPERSHOTGUN | HITTYPE_SECONDARY;
+		dtype = WEAPON_SUPERSHOTGUN | HITTYPE_SECONDARY;
 		bounces = g_balance_supershotgun_secondary_bounces;
 	} else {
 		a = g_balance_supershotgun_primary_ammo;
@@ -86,7 +86,7 @@ void(float secondary, float barrels, float ballistic) weapon_supershotgun_attack
 		bc = g_balance_supershotgun_primary_bulletconstant;
 		spread = g_balance_supershotgun_primary_spread;
 		g = g_balance_supershotgun_primary_gravityfactor;
-		dtype = WEP_SUPERSHOTGUN;
+		dtype = WEAPON_SUPERSHOTGUN;
 		bounces = g_balance_supershotgun_primary_bounces;
 	}
 	if (ballistic)
@@ -206,5 +206,5 @@ float(float req) weapon_supershotgun {
 }
 
 void(void) spawnfunc_weapon_supershotgun {
-	weapon_defaultspawnfunc(WEP_SUPERSHOTGUN);
+	weapon_defaultspawnfunc(WEAPON_SUPERSHOTGUN);
 }

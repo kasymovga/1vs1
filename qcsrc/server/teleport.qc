@@ -41,13 +41,13 @@ void(entity player, entity teleporter, entity telefragger, vector telefragmin, v
 						if(head.health >= 1)
 						if not(team_mode && head.team == player.team) {
 							++teleport_death_hit;
-							damage (head, teleporter, telefragger, _damage, WEP_PORTO, head.origin, '0 0 0');
+							damage (head, teleporter, telefragger, _damage, WEAPON_PORTO, head.origin, '0 0 0');
 						}
 					}
 					else if (telefragger.health < 1) // corpses gib
-						damage (head, teleporter, telefragger, _damage, WEP_PORTO, head.origin, '0 0 0');
+						damage (head, teleporter, telefragger, _damage, WEAPON_PORTO, head.origin, '0 0 0');
 					else // dead bodies and monsters gib themselves instead of telefragging
-						damage (telefragger, teleporter, telefragger, 10000, WEP_PORTO, telefragger.origin, '0 0 0');
+						damage (telefragger, teleporter, telefragger, 10000, WEAPON_PORTO, telefragger.origin, '0 0 0');
 				}
 }
 

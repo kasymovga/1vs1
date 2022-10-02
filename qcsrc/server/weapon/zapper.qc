@@ -61,7 +61,7 @@ vector(float t) weapon_zapper_beam_rgb {
 
 .vector glowmod; //THIS PROPERTY CAUSE CSQC CRASH ON OLD NEXUIZ CLIENTS
 void(void) weapon_zapper_spinner_think {
-	if (self.owner.weapon != WEP_ZAPPER) {
+	if (self.owner.weapon != WEAPON_ZAPPER) {
 		self.owner.zapper_spinner = world;
 		remove(self);
 		return;
@@ -177,7 +177,7 @@ float(float secondary) weapon_zapper_beam_expired {
 	if (self.owner.zapper_heat >= 1)
 		return TRUE;
 
-	if (self.owner.weapon != WEP_ZAPPER)
+	if (self.owner.weapon != WEAPON_ZAPPER)
 		return TRUE;
 
 	if (!player_can_fire(o, TRUE))
@@ -242,7 +242,7 @@ void(void) weapon_zapper_beam_think {
 	for ( ;dt >= wantedTicrate; dt -= wantedTicrate) {
 		float _damage = g_balance_zapper_primary_damage;
 		float force  = g_balance_zapper_primary_force;
-		damage_record_fires(o, WEP_ZAPPER, 1);
+		damage_record_fires(o, WEAPON_ZAPPER, 1);
 		if (targ.takedamage) {
 			float d = vlen(end - weapon_shotorg) * fract;
 			float mindist = g_balance_zapper_primary_damagefalloff_mindist;
@@ -251,15 +251,15 @@ void(void) weapon_zapper_beam_think {
 			float forcehalflifedist = g_balance_zapper_primary_damagefalloff_forcehalflife;
 			_damage *= bullet_exponential_falloff(mindist, maxdist, halflifedist, d);
 			force  *= bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, d);
-			damage_record_hits(o, targ, WEP_ZAPPER, 1, _damage);
-			damage(targ, self, o, _damage, WEP_ZAPPER, end, force * forcedir);
+			damage_record_hits(o, targ, WEAPON_ZAPPER, 1, _damage);
+			damage(targ, self, o, _damage, WEAPON_ZAPPER, end, force * forcedir);
 		}
 		if not(self.enemy.items & IT_UNLIMITED_AMMO)
 			self.enemy.ammo_cells = self.enemy.ammo_cells - g_balance_zapper_primary_ammo;
 
 		self.zapper_lastdmg = self.zapper_lastdmg + wantedTicrate;
 	}
-	ATTACK_FINISHED(self.enemy) = self.zapper_lastdmg + wantedTicrate;
+	WEAPON_ATTACK_FINISHED(self.enemy) = self.zapper_lastdmg + wantedTicrate;
 	if (org != self.pos1) {
 		self.SendFlags |= 2;
 		self.pos1 = org;
@@ -323,7 +323,7 @@ void weapon_zapper_attack2_arc(entity targ, entity attacker, float _damage) {
 	if (g_balance_zapper_secondary_arc <= 0)
 		return;
 
-	arc_damage(targ, attacker, _damage, WEP_ZAPPER | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
+	arc_damage(targ, attacker, _damage, WEAPON_ZAPPER | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
 		g_balance_zapper_secondary_arc_range, g_balance_zapper_secondary_arc,
 		g_balance_zapper_secondary_arc_force, COLOR_TEAM2, zapper_arc_hit
 	);
@@ -347,8 +347,8 @@ void(entity o, vector start, vector start_visual, vector end, float fraction, fl
 		if (targ.iscreature)
 			weapon_zapper_attack2_arc(targ, o, _damage);
 
-		damage_record_hits(o, targ, WEP_ZAPPER, 1, _damage);
-		damage(targ, o, o, _damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
+		damage_record_hits(o, targ, WEAPON_ZAPPER, 1, _damage);
+		damage(targ, o, o, _damage, WEAPON_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
 	}
 	weapon_zapper_attack2_effect_team = o.team;
 	if not(targ.takedamage)
@@ -429,7 +429,7 @@ void(void) weapon_zapper_shield_think {
 			self.owner.zapper_heat = bound(0, self.owner.zapper_heat + (g_balance_zapper_secondary_shield_heatup * frametime), 1);
 			self.owner.zapper_coolofftime = time + frametime;
 		}
-		ATTACK_FINISHED(self.owner) = self.owner.zapper_shieldready = time + g_balance_zapper_secondary_shield_refire * weapon_rate_factor_for(self.owner);
+		WEAPON_ATTACK_FINISHED(self.owner) = self.owner.zapper_shieldready = time + g_balance_zapper_secondary_shield_refire * weapon_rate_factor_for(self.owner);
 	}
 	self.nextthink = time;
 }
@@ -532,7 +532,7 @@ void(void) weapon_zapper_accumulate {
 	self.nextthink = time;
 	self = self.owner;
 	float accumulate_end = 1;
-	if (player_can_fire(self, TRUE) && self.weapon == WEP_ZAPPER) {
+	if (player_can_fire(self, TRUE) && self.weapon == WEAPON_ZAPPER) {
 		if (self.zapper_accumulator.zapper_expire < time &&
 			   (!self.zapper_buttonatck2
 			   || self.zapper_buttonatck1
@@ -643,7 +643,7 @@ float(float req) weapon_zapper {
 		else
 			self.zapper_heat = -1;
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEP_ZAPPER);
+		//weapon_setup(WEAPON_ZAPPER);
 	} else if (req == WEAPON_REQUEST_CLEAR) {
 		if (self.zapper_spinner) {
 			remove(self.zapper_spinner);
@@ -706,5 +706,5 @@ float(float req) weapon_zapper {
 }
 
 void spawnfunc_weapon_zapper(void) {
-	weapon_defaultspawnfunc(WEP_ZAPPER);
+	weapon_defaultspawnfunc(WEAPON_ZAPPER);
 }

@@ -43,7 +43,7 @@ void(float issecondary) weapon_laser_attack {
 }
 
 void(void) spawnfunc_weapon_laser {
-	weapon_defaultspawnfunc(WEP_LASER);
+	weapon_defaultspawnfunc(WEAPON_LASER);
 }
 
 float(float req) weapon_laser {
@@ -63,7 +63,7 @@ float(float req) weapon_laser {
 					weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_laser_secondary_animtime, weapon_ready);
 				}
 			} else {
-				if(self.switchweapon == WEP_LASER) // don't do this if already switching
+				if(self.switchweapon == WEAPON_LASER) // don't do this if already switching
 					weapon_switch(self.cnt);
 			}
 		}

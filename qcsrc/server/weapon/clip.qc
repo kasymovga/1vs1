@@ -15,8 +15,8 @@ void(float capacity, .float ammofield, .float clipfield, float ammo1, float ammo
 	float t;
 	self.clipfield = capacity;
 	weapon_clip_checkmaxbullets(capacity, ammofield, clipfield, ammo1, ammo2);
-	t = ATTACK_FINISHED(self) - reloadtime - 1;
-	ATTACK_FINISHED(self) = t;
+	t = WEAPON_ATTACK_FINISHED(self) - reloadtime - 1;
+	WEAPON_ATTACK_FINISHED(self) = t;
 	weapon_ready();
 }
 
@@ -42,8 +42,8 @@ void (float capacity, .float ammofield, .float clipfield, float ammo1, float amm
 		self.weaponentity.state = WEAPON_STATE_READY;
 	}
 	sound (self, CHAN_WEAPON2, reloadsound, VOL_BASE, ATTN_NORM);
-	t = max(time, ATTACK_FINISHED(self)) + reloadtime + 1;
-	ATTACK_FINISHED(self) = t;
+	t = max(time, WEAPON_ATTACK_FINISHED(self)) + reloadtime + 1;
+	WEAPON_ATTACK_FINISHED(self) = t;
 	weapon_thinkf(WEAPON_FRAME_RELOAD, reloadtime, reloadandready);
 	self.clipfield = -1;
 }

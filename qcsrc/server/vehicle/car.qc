@@ -196,7 +196,7 @@ void(void) vehicle_car_spawn {
 }
 
 void(void) vehicle_car_blowup {
-	damage_radius (self, self, 100, 15, 250, world, 250, EFFECT_IMPACT_ROCKET, WEP_ROCKET_LAUNCHER, world);
+	damage_radius (self, self, 100, 15, 250, world, 250, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, world);
 	self.alpha = -1;
 	self.nextthink = time + 10;
 	self.think = vehicle_car_spawn;

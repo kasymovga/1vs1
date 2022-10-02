@@ -176,11 +176,6 @@ typedef .float floatfield;
 
 .float respawn_countdown; // next number to count
 
-.float	attack_finished_for[WEP_COUNT];
-.float attack_finished_single;
-#define ATTACK_FINISHED_FOR(ent,w) ((ent).(attack_finished_for[(w) - WEP_FIRST]))
-#define ATTACK_FINISHED(ent) ATTACK_FINISHED_FOR(ent,(ent).weapon)
-
 // Q3 support
 .float notteam;
 .float notsingle;

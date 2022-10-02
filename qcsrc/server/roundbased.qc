@@ -18,7 +18,7 @@ float(entity plr, float wep) roundbased_player_can_fire {
 		return roundbased_player_can_fire_next(plr, wep);
 
 	if (wep) //Always allow shoot with laser (no damage when round not active)
-	if (plr.weapon == WEP_LASER)
+	if (plr.weapon == WEAPON_LASER)
 		return roundbased_player_can_fire_next(plr, wep);
 
 	return FALSE;
@@ -161,7 +161,7 @@ void(void) roundbased_check_teams {
 var void(entity targ, entity attacker, float deathtype) roundbased_damage_mods_set_next;
 void(entity targ, entity attacker, float deathtype) roundbased_damage_mods_set {
 	if not(roundbased_active)
-	if (DEATH_ISWEAPON(deathtype, WEP_LASER)) {
+	if (DEATH_ISWEAPON(deathtype, WEAPON_LASER)) {
 		plugin_chain_damage_mod = 0;
 		if (targ != attacker) {
 			plugin_chain_damage_mod_force = 0;

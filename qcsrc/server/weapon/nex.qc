@@ -61,7 +61,7 @@ void(void) weapon_nex_attack {
 	damage_headshot = 0;
 	damage_goodhits = 0;
 	damage_headshotbonus = g_balance_nex_damage_headshot;
-	bullet_railgun(weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
+	bullet_railgun(weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEAPON_NEX);
 	damage_headshotbonus = 0;
 	antilag_end();
 	if (damage_headshot)
@@ -135,7 +135,7 @@ float(float req) weapon_nex {
 	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_nex_reload();
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEP_NEX);
+		//weapon_setup(WEAPON_NEX);
 		if (g_balance_nex_magazinecapacity) {
 			weapon_clip_checkmaxbullets(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip, g_balance_nex_ammo, g_balance_nex_ammo);
 			if not(self.nex_ammoclip)
@@ -166,5 +166,5 @@ float(float req) weapon_nex {
 }
 
 void(void) spawnfunc_weapon_nex {
-	weapon_defaultspawnfunc(WEP_NEX);
+	weapon_defaultspawnfunc(WEAPON_NEX);
 }

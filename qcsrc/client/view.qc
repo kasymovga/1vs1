@@ -132,7 +132,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_fov = cvar("fov");
 	view_anybutton_zoom = input_button_zoom;
 	if (input_button_attack2_allowed) {
-		if (getstati(STAT_ACTIVEWEAPON) == WEP_NEX)
+		if (getstati(STAT_ACTIVEWEAPON) == WEAPON_NEX)
 		if not(CVAR(cl_nex_secondary_zoom_disable))
 			view_anybutton_zoom += input_button_attack2;
 	}

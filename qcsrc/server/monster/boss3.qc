@@ -25,7 +25,7 @@ void boss3_hunt() {
 		float i;
 		for (i = 0; i < 6; i++) {
 			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
-			projectile_setup(proj, _shotorg, EFFECT_IMPACT_PLASMA, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+			projectile_setup(proj, _shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 			proj.touch = projectile_touch_explode;
 			proj.velocity = normalize(normalize(_shotdir) + randomvec() * 0.1) * 1600;
 			proj.pushltime = time + 10;
