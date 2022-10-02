@@ -31,7 +31,6 @@ var .float sg_buttonatck2 = BUTTON_ATCK2;
 
 void(void) weapon_shotgun_attack {
 	float sc;
-	entity flash;
 	bullet_begin(g_balance_shotgun_primary_speed);
 	weapon_setup_shot(self, g_balance_shotgun_recoil, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
@@ -49,19 +48,11 @@ void(void) weapon_shotgun_attack {
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_shotgun_primary_ammo);
 	// casing code
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
-	// muzzle flash for 1st person view
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
-	flash.think = stdproc_remove;
-	flash.nextthink = time + 0.06;
-	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
-	weapon_attach_to_shotorg(flash, '5 0 0');
-
+	weapon_flash(WEAPON_FLASH_SHOTGUN);
 }
 
 void(void) weapon_shotgun_attack2 {
 	float sc;
-	entity flash;
 	bullet_begin(g_balance_shotgun_secondary_speed);
 	weapon_setup_shot (self, g_balance_shotgun_recoil, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
@@ -80,13 +71,7 @@ void(void) weapon_shotgun_attack2 {
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_shotgun_secondary_ammo);
 	// casing code
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
-	flash.scale = 1.2;
-	flash.think = stdproc_remove;
-	flash.nextthink = time + 0.06;
-	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
-	weapon_attach_to_shotorg(flash, '5 0 0');
+	weapon_flash(WEAPON_FLASH_SHOTGUN);
 }
 
 // weapon frames
@@ -157,7 +142,7 @@ float(float req) weapon_shotgun {
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
-		precache_model("models/uziflash.md3");
+		weapon_flash_precache(WEAPON_FLASH_SHOTGUN);
 		precache_sound("misc/itempickup.wav");
 		precache_sound("weapons/shotgun_fire.wav");
 		precache_sound("weapons/campingrifle_reload.wav");

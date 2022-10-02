@@ -1,0 +1,8 @@
+enum {
+	WEAPON_FLASH_UZI = 1,
+	WEAPON_FLASH_SHOTGUN,
+	WEAPON_FLASH_ROCKET,
+};
+void(float t) weapon_flash;
+entity(float t) weapon_flash_spawn;
+void(float t) weapon_flash_precache;

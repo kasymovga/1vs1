@@ -4,7 +4,6 @@ void walker_walk();
 void walker_idle();
 
 void walker_bullet() {
-	entity flash;
 	weapon_shotdir = normalize(self.enemy.origin - weapon_shotorg);
 	weapon_shotdir_x = v_forward_x;
 	weapon_shotdir_y = v_forward_y;
@@ -12,16 +11,7 @@ void walker_bullet() {
 	bullet_begin(5000);
 	bullet(weapon_shotorg, weapon_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, EFFECT_IMPACT_BULLET, DEATH_TURRET, particleeffectnum("tr_bullet"), 1, 100);
 	bullet_end();
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3");
-	setattachment(flash, self.weaponentity, "tag_fire");
-	flash.scale     = 3;
-	flash.think     = weapon_uzi_flash_go;
-	flash.nextthink = time + 0.02;
-	flash.frame     = 2;
-	flash.angles_z  = flash.v_angle_z + random() * 180;
-	flash.alpha     = 1;
-	flash.effects   = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
+	setattachment(weapon_flash_spawn(WEAPON_FLASH_UZI), self.weaponentity, "tag_fire");
 }
 
 void walker_rocket_event_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce) {

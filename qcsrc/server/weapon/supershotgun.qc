@@ -62,7 +62,6 @@ void(vector start, vector dir, float spread, float pSpeed, float _damage, float 
 void(float secondary, float barrels, float ballistic) weapon_supershotgun_attack {
 	float a, b, f, d, s, spread, g, bc, dtype;
 	float sc;
-	entity flash;
 	float hor_spread = 0, hor_shift = 0;
 	vector shotdir_shifted;
 	float bounces;
@@ -123,12 +122,7 @@ void(float secondary, float barrels, float ballistic) weapon_supershotgun_attack
 
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 	// muzzle flash for 1st person view
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
-	flash.think = stdproc_remove;
-	flash.nextthink = time + 0.06;
-	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
-	weapon_attach_to_shotorg(flash, '5 0 0');
+	weapon_flash(WEAPON_FLASH_SHOTGUN);
 }
 
 void(void) weapon_supershotgun_attack2 {
@@ -160,7 +154,7 @@ float(float req) weapon_supershotgun {
 			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_supershotgun_secondary_animtime, weapon_supershotgun_attack2);
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
-		precache_model("models/uziflash.md3");
+		weapon_flash_precache(WEAPON_FLASH_SHOTGUN);
 		precache_sound("misc/itempickup.wav");
 		precache_sound("weapons/shotgun_fire.wav");
 		dlc_require("supershotgun");

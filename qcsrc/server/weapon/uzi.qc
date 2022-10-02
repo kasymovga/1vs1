@@ -1,15 +1,3 @@
-// leilei's fancy muzzleflash stuff
-void weapon_uzi_flash_go() {
-	if (self.frame > 10){
-		stdproc_remove();
-		return;
-	}
-	self.frame = self.frame + 2;
-	self.alpha = self.alpha - 0.2;
-	self.think = weapon_uzi_flash_go;
-	self.nextthink = time + 0.02;
-}
-
 .float uzi_ammoclip;
 float g_balance_uzi_magazinecapacity;
 float g_balance_uzi_reloadtime;
@@ -36,7 +24,6 @@ var .float uzi_buttonatck1 = BUTTON_ATCK;
 var .float uzi_buttonatck2 = BUTTON_ATCK2;
 .float uzi_bulletcounter;
 void(float deathtype) weapon_uzi_attack {
-	entity flash;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
 		if (self.uzi_bulletcounter == 1)
 			self.ammo_nails = self.ammo_nails - g_balance_uzi_first_ammo;
@@ -64,14 +51,7 @@ void(float deathtype) weapon_uzi_attack {
 	bullet_end();
 	pointparticles(particleeffectnum("uzi_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	// muzzle flash for 1st person view
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
-	flash.think = weapon_uzi_flash_go;
-	flash.nextthink = time + 0.02;
-	flash.frame = 2;
-	flash.alpha = 1;
-	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
-	weapon_attach_to_shotorg(flash, '5 0 0');
+	weapon_flash(WEAPON_FLASH_UZI);
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 2, self);
 }
 
@@ -137,7 +117,7 @@ float(float req) weapon_uzi {
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
-		precache_model("models/uziflash.md3");
+		weapon_flash_precache(WEAPON_FLASH_UZI);
 		precache_sound("weapons/uzi_fire.wav");
 		precache_sound("weapons/campingrifle_reload.wav");
 	} else if (req == WEAPON_REQUEST_CHECKAMMO1)

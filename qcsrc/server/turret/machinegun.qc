@@ -1,6 +1,5 @@
 //.float bulletcounter;
 void(void) turret_machinegun_attack {
-	entity flash;
 	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 	bullet_begin(self.shot_speed);
 	bullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, EFFECT_IMPACT_BULLET, WEAPON_UZI, particleeffectnum("tr_bullet"), 1, cvar("g_balance_uzi_bulletconstant"));
@@ -8,15 +7,7 @@ void(void) turret_machinegun_attack {
 	//w_deathtypestring = "had an alergic reaction due to 10 kilos of led";
 	te_smallflash(self.tur_shotorg);
 	// muzzle flash for 3rd person view
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
-	setattachment(flash, self.tur_head, "tag_fire");
-	flash.think = weapon_uzi_flash_go;
-	flash.nextthink = time + 0.02;
-	flash.frame = 2;
-	flash.angles_z = flash.v_angle_z + random() * 180;
-	flash.alpha = 1;
-	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
+	setattachment(weapon_flash_spawn(WEAPON_FLASH_UZI), self.tur_head, "tag_fire");
 }
 
 /*QUAKED turret_machinegun (0 .5 .8) ?

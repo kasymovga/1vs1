@@ -130,6 +130,7 @@ weapon.qh
 ../client-server/progs.qc
 ../menu-server/progs.qc
 weapon/two_weapons.qh
+weapon/flash.qh
 noteline.qh
 warmup.qh
 weapon/extra.qh
@@ -221,6 +222,7 @@ powerup.qc
 backpack.qc
 pinata.qc
 weapon.qc
+weapon/flash.qc
 weapon/extra.qc
 entcs.qc
 player.qc

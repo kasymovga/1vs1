@@ -150,7 +150,6 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 void(void) weapon_rocketlauncher_attack {
 	entity missile;
-	entity flash;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_rocketlauncher_ammo;
 
@@ -180,12 +179,6 @@ void(void) weapon_rocketlauncher_attack {
 	missile.think = weapon_rocketlauncher_think;
 	missile.nextthink = time;
 	missile.cnt = time + g_balance_rocketlauncher_lifetime;
-	// muzzle flash for 1st person view
-	flash = spawn ();
-	setmodel (flash, "models/flash.md3"); // precision set below
-	entity_fade_setup(flash, time, 0.1);
-	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
-	weapon_attach_to_shotorg(flash, '5 0 0');
 }
 
 void(void) spawnfunc_weapon_rocketlauncher; // defined in t_items.qc
@@ -303,7 +296,7 @@ float(float req) weapon_rocketlauncher {
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		hint_add("With Rocket Launcher you can guide rockets by holding attack button. You can explode rocket midair with secondary attack button.");
-		precache_model("models/flash.md3");
+		weapon_flash_precache(WEAPON_FLASH_ROCKET);
 		precache_sound("weapons/rocket_det.wav");
 		precache_sound("weapons/rocket_fire.wav");
 		precache_sound("weapons/rocket_mode.wav");

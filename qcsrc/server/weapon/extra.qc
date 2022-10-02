@@ -197,25 +197,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		break;
 	}
 	if (fl) {
-		entity flash = spawn();
-		if (fl == 1) {
-			setmodel(flash, "models/uziflash.md3");
-			flash.think = weapon_uzi_flash_go;
-			flash.nextthink = time + 0.02;
-			flash.frame = 2;
-			flash.alpha = 1;
-		} else if (fl == 2) {
-			flash = spawn();
-			setmodel(flash, "models/uziflash.md3");
-			flash.scale = 1.2;
-			flash.think = stdproc_remove;
-			flash.nextthink = time + 0.06;
-		} else {
-			setmodel (flash, "models/flash.md3");
-			entity_fade_setup(flash, time, 0.1);
-		}
-		flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
-		weapon_attach_to_shotorg(flash, '5 0 0');
+		weapon_flash(fl - 1);
 	}
 	if (at == IT_SHELLS)
 		casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
@@ -340,11 +322,11 @@ float(float req) weapon_extra_think {
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
+		weapon_flash_precache(weapon_extra_primary_flash[extra_num]);
+		weapon_flash_precache(weapon_extra_secondary_flash[extra_num]);
 		precache_sound(weapon_extra_primary_sound[extra_num]);
 		precache_sound(weapon_extra_secondary_sound[extra_num]);
 		precache_sound("weapons/campingrifle_reload.wav");
-		precache_model("models/uziflash.md3");
-		precache_model("models/flash.md3");
 	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
 		at = weapon_extra_ammo_type[extra_num];
 		if (at) {
