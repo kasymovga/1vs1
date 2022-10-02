@@ -145,10 +145,10 @@ msgid "Map"
 msgstr "Kaart"
 
 msgid "Type"
-msgstr "Spelvorm"
+msgstr "Type"
 
 msgid "Players"
-msgstr "Aantal spelers"
+msgstr "Spelers"
 
 msgid "Filter:"
 msgstr "Filter:"
