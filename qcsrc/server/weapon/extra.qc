@@ -20,6 +20,7 @@ float weapon_extra_primary_speed[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_spread[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_radius[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_impact_type[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_primary_lifetime[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_up[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_bounces[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_primary_sound[WEAPON_EXTRA_COUNT_MAX];
@@ -40,6 +41,7 @@ float weapon_extra_secondary_speed[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_spread[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_radius[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_impact_type[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_secondary_lifetime[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_up[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_bounces[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_secondary_sound[WEAPON_EXTRA_COUNT_MAX];
@@ -136,7 +138,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		//weapon_shake(1); //TODO: shake effect
 		for (float i = 0; i < c; i++)
 			bullet(weapon_shotorg, weapon_shotdir, spr, sp,
-					5 /* lifetime */, d, hs,
+					5, d, hs,
 					f, it, self.weapon, e, g, r);
 
 		bullet_end();
@@ -167,13 +169,15 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		weapon_setup_shot(self, 0 /* TODO: recoil */, s, c);
 		pointparticles(m, weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 		entity proj;
-		float up, bounces;
+		float up, bounces, lt;
 		if (secondary) {
 			up = weapon_extra_secondary_up[num];
 			bounces = weapon_extra_secondary_bounces[num];
+			lt = weapon_extra_secondary_lifetime[num];
 		} else {
 			up = weapon_extra_primary_up[num];
 			bounces = weapon_extra_primary_bounces[num];
+			lt = weapon_extra_primary_lifetime[num];
 		}
 		for (float i = 0; i < c; i++) {
 			proj = projectile(TRUE, e, TRUE, self);
@@ -183,7 +187,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 			proj.cnt = bounces;
 			proj.use = projectile_explode;
 			proj.think = projectile_think2use;
-			proj.nextthink = time + 5 /* TODO: lifetime */;
+			proj.nextthink = time + lt /* TODO: lifetime */;
 			if (g)
 				proj.velocity = (v_forward + randomvec() * spr) * sp + v_up * up;
 			else
@@ -448,6 +452,8 @@ void(void) weapon_extra_init {
 		WEAPON_EXTRA_READ(bounces)
 		WEAPON_EXTRA_READ(up)
 		WEAPON_EXTRA_READ(flash)
+		WEAPON_EXTRA_READ(lifetime)
+		#undef WEAPON_EXTRA_READ
 		weapon_extra_primary_sound[i] = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_sound")));
 		weapon_extra_primary_muzzle[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_muzzle")));
 		t = weapon_extra_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_type")));
