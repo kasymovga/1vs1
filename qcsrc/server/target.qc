@@ -8,22 +8,23 @@ void(void) target_speaker_use {
 
 void(void) spawnfunc_target_speaker {
 	ENTITY_NOT_PER_PLAYER();
-	if(self.noise)
+	if (self.noise)
 		precache_sound (self.noise);
+
 	IFTARGETED {
-		if(!self.atten)
+		if (!self.atten)
 			self.atten = ATTN_NORM;
-		else if(self.atten < 0)
+		else if (self.atten < 0)
 			self.atten = 0;
-		if(!self.volume)
+		if (!self.volume)
 			self.volume = 1;
 		self.use = target_speaker_use;
 	} else {
-		if(!self.atten)
+		if (!self.atten)
 			self.atten = ATTN_STATIC;
-		else if(self.atten < 0)
+		else if (self.atten < 0)
 			self.atten = 0;
-		if(!self.volume)
+		if (!self.volume)
 			self.volume = 1;
 		ambientsound (self.origin, self.noise, VOL_BASE * self.volume, self.atten);
 	}
@@ -35,24 +36,23 @@ void(void) target_voicescript_ctrl_think {
 	entity vs = self.enemy;
 	entity pl = self.owner;
 	float i, n, dt;
-
 	if (pl.voicescript_ctrl != self || pl.classname != "player" || map_finished) {
 		remove(self);
 		return;
 	}
 	// get the next voice...
 	n = tokenize_console(vs.message);
-	if(self.cnt < vs.cnt)
+	if (self.cnt < vs.cnt)
 		i = self.cnt * 2;
-	else if(n > self.cnt * 2)
+	else if (n > self.cnt * 2)
 		i = math_mod(self.cnt - vs.cnt, (n - vs.cnt * 2 - 1) / 2) * 2 + vs.cnt * 2 + 1;
 	else
 		i = -1;
 
-	if(i >= 0) {
+	if (i >= 0) {
 		sound_play2(pl, strcat(vs.netname, "/", argv(i), ".wav"));
 		dt = stof(argv(i + 1));
-		if(dt >= 0)
+		if (dt >= 0)
 			self.nextthink = time + dt + vs.wait * (0.5 * random());
 		else
 			self.nextthink = time - dt;
@@ -65,8 +65,7 @@ void(void) target_voicescript_ctrl_think {
 }
 
 void(void) target_voicescript_use {
-	if(activator.voicescript_ctrl.enemy != self)
-	{
+	if (activator.voicescript_ctrl.enemy != self) {
 		entity vsctrl = spawn();
 		vsctrl.owner = activator;
 		vsctrl.enemy = self;
@@ -92,7 +91,6 @@ void(void) spawnfunc_target_voicescript {
 	//          added after this message
 	// wait: average time between messages
 	// delay: initial delay before the first message
-
 	float i, n;
 	if not(spawnfunc_target_voicescript_initialized) {
 		target_voicescript_player_spawn_next = plugin_chain_player_spawn;
@@ -107,10 +105,8 @@ void(void) spawnfunc_target_voicescript {
 
 	n = tokenize_console(self.message);
 	self.cnt = n / 2;
-	for(i = 0; i+1 < n; i += 2)
-	{
-		if(argv(i) == "*")
-		{
+	for(i = 0; i+1 < n; i += 2) {
+		if (argv(i) == "*") {
 			self.cnt = i / 2;
 			++i;
 		}
@@ -121,6 +117,7 @@ void(void) spawnfunc_target_voicescript {
 void(void) target_delay_init {
 	IFTARGETED
 		return;
+
 	self.use();
 }
 
