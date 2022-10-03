@@ -66,7 +66,7 @@ void() trigger_dont_use_targets { }
 
 void(void) trigger_delay_think {
 	activator = self.enemy;
-	trigger_use_targets ();
+	trigger_use_targets();
 	remove(self);
 }
 
@@ -1057,12 +1057,12 @@ void(void) spawnfunc_trigger_magicear {
 	//   what to trigger
 }
 
-void trigger_always_init() {
+void(void) trigger_always_init {
 	self.nextthink = time;
 	self.think = trigger_use_targets;
 }
 
-void spawnfunc_trigger_always() {
+void(void) spawnfunc_trigger_always {
 	ENTITY_PER_PLAYER_FORCE();
 	self.reset = trigger_always_init;
 	if not(entity_per_player_entities)
@@ -1070,7 +1070,7 @@ void spawnfunc_trigger_always() {
 }
 
 .string chaintarget;
-string trigger_cycle_find_next_target(string curtarget) {
+string(string curtarget) trigger_cycle_find_next_target {
 	entity e = NULL;
 	while((e = find(e, targetname, curtarget)))
 		if (e.chaintarget)
@@ -1080,17 +1080,17 @@ string trigger_cycle_find_next_target(string curtarget) {
 	return NULL;
 }
 
-void trigger_cycle_reset(void) {
+void(void) trigger_cycle_reset {
 	self.target = self.netname;
 }
 
-void trigger_cycle_use(void) {
+void(void) trigger_cycle_use {
 	trigger_use_targets_prevent_reuse();
 	self.target = trigger_cycle_find_next_target(self.target);
 	trigger_use_targets_prevent_reuse();
 }
 
-void spawnfunc_trigger_cycle(void) {
+void(void) spawnfunc_trigger_cycle {
 	self.netname = self.target;
 	self.use = trigger_cycle_use;
 	self.reset = trigger_cycle_reset;
@@ -1137,7 +1137,7 @@ void(void) trigger_relay_chance_use {
 		trigger_use_targets();
 }
 
-void spawnfunc_trigger_relay_chance(void) {
+void(void) spawnfunc_trigger_relay_chance {
 	self.classname = "trigger_relay";
 	if (!self.cnt)
 		self.cnt = 0.5;
@@ -1161,7 +1161,7 @@ void(void) trigger_relay_random_use {
 	}
 }
 
-void spawnfunc_trigger_relay_random(void) {
+void(void) spawnfunc_trigger_relay_random {
 	self.classname = "trigger_relay";
 	self.use = trigger_relay_random_use;
 	self.reset = spawnfunc_trigger_relay_random;
@@ -1175,7 +1175,7 @@ void(void) trigger_relay_foreachplayer_use {
 	activator = activatorold;
 }
 
-void spawnfunc_trigger_relay_foreachplayer(void) {
+void(void) spawnfunc_trigger_relay_foreachplayer {
 	self.classname = "trigger_relay";
 	self.use = trigger_relay_foreachplayer_use;
 	self.reset = spawnfunc_trigger_relay_foreachplayer;
@@ -1508,7 +1508,7 @@ void(void) spawnfunc_trigger_swamp {
 	}
 }
 
-void trigger_door_check_use() {
+void(void) trigger_door_check_use {
 	entity e;
 	float state_to_check;
 	if (self.spawnflags & 1)
@@ -1540,7 +1540,7 @@ void trigger_door_check_use() {
 	self.target = t;
 }
 
-void spawnfunc_trigger_door_check() {
+void(void) spawnfunc_trigger_door_check {
 	self.use = trigger_door_check_use;
 }
 

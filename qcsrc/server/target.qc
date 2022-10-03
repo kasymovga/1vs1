@@ -10,8 +10,7 @@ void(void) spawnfunc_target_speaker {
 	ENTITY_NOT_PER_PLAYER();
 	if(self.noise)
 		precache_sound (self.noise);
-	IFTARGETED
-	{
+	IFTARGETED {
 		if(!self.atten)
 			self.atten = ATTN_NORM;
 		else if(self.atten < 0)
@@ -19,9 +18,7 @@ void(void) spawnfunc_target_speaker {
 		if(!self.volume)
 			self.volume = 1;
 		self.use = target_speaker_use;
-	}
-	else
-	{
+	} else {
 		if(!self.atten)
 			self.atten = ATTN_STATIC;
 		else if(self.atten < 0)
@@ -134,91 +131,76 @@ void(void) spawnfunc_target_delay {
 	entity_initialize(self, target_delay_init, INITPRIO_SETLOCATION);
 }
 
-float NUM_NEAREST_ENTITIES = 4;
-entity nearest_entity[NUM_NEAREST_ENTITIES];
-float nearest_length[NUM_NEAREST_ENTITIES];
-entity (vector point, .string field, string value, vector axismod) target_location_find_nearest {
-    entity localhead;
-    float i;
-    float j;
-    float len;
-    vector dist;
+float TARGET_LOCATION_NEAREST_ENTITIES_COUNT = 4;
+entity target_location_nearest_entity[TARGET_LOCATION_NEAREST_ENTITIES_COUNT];
+float target_location_nearest_length[TARGET_LOCATION_NEAREST_ENTITIES_COUNT];
+entity(vector point, .string field, string value, vector axismod) target_location_find_nearest {
+	entity localhead;
+	float i;
+	float j;
+	float len;
+	vector dist;
+	float num_nearest;
+	num_nearest = 0;
+	localhead = find(world, field, value);
+	while (localhead) {
+		if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.message2 == "###item###")
+			dist = localhead.oldorigin;
+		else
+			dist = localhead.origin;
+		dist = dist - point;
+		dist = dist_x * axismod_x * '1 0 0' + dist_y * axismod_y * '0 1 0' + dist_z * axismod_z * '0 0 1';
+		len = vlen(dist);
+		for (i = 0; i < num_nearest; ++i) {
+			if (len < target_location_nearest_length[i])
+				break;
+		}
+		// now i tells us where to insert at
+		//   INSERTION SORT! YOU'VE SEEN IT! RUN!
+		if (i < TARGET_LOCATION_NEAREST_ENTITIES_COUNT) {
+			for (j = TARGET_LOCATION_NEAREST_ENTITIES_COUNT - 1; j >= i; --j) {
+				target_location_nearest_length[j + 1] = target_location_nearest_length[j];
+				target_location_nearest_entity[j + 1] = target_location_nearest_entity[j];
+			}
+			target_location_nearest_length[i] = len;
+			target_location_nearest_entity[i] = localhead;
+			if (num_nearest < TARGET_LOCATION_NEAREST_ENTITIES_COUNT)
+				num_nearest = num_nearest + 1;
+		}
+		localhead = find(localhead, field, value);
+	}
+	// now use the first one from our list that we can see
+	for (i = 0; i < num_nearest; ++i) {
+		trace_line(point, target_location_nearest_entity[i].origin, TRUE, world);
+		if (trace_fraction == 1)
+			return target_location_nearest_entity[i];
+	}
+	if (num_nearest == 0)
+		return world;
 
-    float num_nearest;
-    num_nearest = 0;
-
-    localhead = find(world, field, value);
-    while (localhead)
-    {
-        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.message2 == "###item###")
-            dist = localhead.oldorigin;
-        else
-            dist = localhead.origin;
-        dist = dist - point;
-        dist = dist_x * axismod_x * '1 0 0' + dist_y * axismod_y * '0 1 0' + dist_z * axismod_z * '0 0 1';
-        len = vlen(dist);
-
-        for (i = 0; i < num_nearest; ++i)
-        {
-            if (len < nearest_length[i])
-                break;
-        }
-
-        // now i tells us where to insert at
-        //   INSERTION SORT! YOU'VE SEEN IT! RUN!
-        if (i < NUM_NEAREST_ENTITIES)
-        {
-            for (j = NUM_NEAREST_ENTITIES - 1; j >= i; --j)
-            {
-                nearest_length[j + 1] = nearest_length[j];
-                nearest_entity[j + 1] = nearest_entity[j];
-            }
-            nearest_length[i] = len;
-            nearest_entity[i] = localhead;
-            if (num_nearest < NUM_NEAREST_ENTITIES)
-                num_nearest = num_nearest + 1;
-        }
-
-        localhead = find(localhead, field, value);
-    }
-
-    // now use the first one from our list that we can see
-    for (i = 0; i < num_nearest; ++i)
-    {
-        trace_line(point, nearest_entity[i].origin, TRUE, world);
-        if (trace_fraction == 1)
-            return nearest_entity[i];
-    }
-
-    if (num_nearest == 0)
-        return world;
-
-    return nearest_entity[0];
+	return target_location_nearest_entity[0];
 }
 
 string(vector p) target_location_nearest {
-    entity loc;
-    string ret;
-    ret = "somewhere";
-    loc = target_location_find_nearest(p, classname, "target_location", '1 1 1');
-    if (loc)
-    {
-        ret = loc.message;
-    }
-    else
-    {
-        loc = target_location_find_nearest(p, message2, "###item###", '1 1 4');
-        if (loc)
-            ret = loc.netname;
-    }
-    return ret;
+	entity loc;
+	string ret;
+	ret = "somewhere";
+	loc = target_location_find_nearest(p, classname, "target_location", '1 1 1');
+	if (loc) {
+		ret = loc.message;
+	} else {
+		loc = target_location_find_nearest(p, message2, "###item###", '1 1 4');
+		if (loc)
+			ret = loc.netname;
+	}
+	return ret;
 }
 
 void(void) spawnfunc_target_location {
 	ENTITY_NOT_PER_PLAYER();
-    self.classname = "target_location";
-    // location name in netname
-    // eventually support: count, teamgame selectors, line of sight?
+	self.classname = "target_location";
+	// location name in netname
+	// eventually support: count, teamgame selectors, line of sight?
 }
 
 void(void) target_kill_use {
