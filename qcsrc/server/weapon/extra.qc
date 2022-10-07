@@ -201,7 +201,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		break;
 	}
 	if (fl) {
-		weapon_flash(fl - 1);
+		weapon_flash(fl);
 	}
 	if (at == IT_SHELLS)
 		casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
