@@ -1564,6 +1564,61 @@ void(void) weapon_priority_update {
 	weapon_priority_by_impulse = strzone(substring(weapon_priority_by_impulse, 1, strlen(weapon_priority_by_impulse) - 1));
 }
 
+float(float wr) weapon_dummy_func {
+	return 0;
+}
+
+void(float id,
+		float(float) func,
+		float ammotype,
+		float i,
+		float normalweapon, float canclimb, float pickupbasevalue,
+		string modelname, string shortname, string wname) weapon_register {
+	entity e = weapon_register_common(id, i, shortname, wname);
+	str_unzone_ifneeded(e.model);
+	str_unzone_ifneeded(e.mdl);
+	str_unzone_ifneeded(e.model2);
+	e.weapon_func = func;
+	e.items = ammotype;
+	string s = cvar_string(strcat("sv_model_", modelname));
+	if (s == "")
+		s = modelname;
+
+	e.model = strzone(strcat("models/weapons/g_", s, ".md3"));
+	e.mdl = strzone(s);
+	e.lodmodel1 = strzone(strcat("models/weapons/g_", modelname, ".md3"));
+	float animfile;
+	string animfilename = strcat("models/weapons/h_", e.mdl, ".dpm.animinfo");
+	animfile = fopen(animfilename, FILE_READ);
+	// preset some defaults that work great for renamed zym files (which don't need an animinfo)
+	e.anim_fire1  = '0 1 0.01';
+	e.anim_fire2  = '1 1 0.01';
+	e.anim_idle   = '2 1 0.01';
+	e.anim_reload = '3 1 0.01';
+	if (animfile >= 0) {
+		anim_parseerror = FALSE;
+		anim_parseline(e, animfile, anim_fire1);
+		anim_parseline(e, animfile, anim_fire2);
+		anim_parseline(e, animfile, anim_idle);
+		anim_parseline(e, animfile, anim_reload);
+		fclose(animfile);
+		if (anim_parseerror)
+			print("Parse error in ", animfilename, ", some animations are broken\n");
+	}
+	e.model2 = strzone(strcat("wpn-", e.mdl));
+	e.spawnflags = 0;
+	if (normalweapon > 0)
+		e.spawnflags |= WEAPON_FLAG_NORMAL;
+
+	if (normalweapon < 0)
+		e.spawnflags |= WEAPON_FLAG_HIDDEN;
+
+	if (canclimb)
+		e.spawnflags |= WEAPON_FLAG_CANCLIMB;
+
+	e.bot_pickupbasevalue = pickupbasevalue;
+}
+
 void(void) weapon_init {
 	float i;
 	CVAR_CACHE(g_balance_weaponswitchdelay);

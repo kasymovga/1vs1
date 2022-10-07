@@ -181,7 +181,7 @@ void(float fade) sbar_draw_weapons {
 		if (active)
 			drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-		drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr - 1)), w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, weapon_icons[nr - 1], w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 		if (CVAR(sbar_weapons_show_ammo)) {
 			a = 0;
 			pos_x += w_space;
@@ -229,7 +229,7 @@ void(float fade) sbar_draw_weapons {
 				drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 			e = weapon_info(nr);
-			drawpic(pos, strcat("gfx/hud/inv_weapon_", e.netname), w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos, weapon_icons[nr - 1], w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 			if (CVAR(sbar_weapons_show_ammo)) {
 				a = 0;
 				pos_x += w_space;

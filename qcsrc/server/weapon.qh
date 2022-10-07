@@ -102,6 +102,13 @@ float weapon_spawned_extra_list;
 #define WEAPON_VALID(w) ((w) >= WEAPON_FIRST && (w) <= WEAPON_LAST_EXTRA)
 float(entity cl, float wpn, float andammo, float complain) weapon_carried;
 void(void) weapon_priority_update;
+void(float id,
+		float(float) func,
+		float ammotype,
+		float i,
+		float normalweapon, float canclimb, float pickupbasevalue,
+		string modelname, string shortname, string wname) weapon_register;
+float(float wr) weapon_dummy_func;
 float(float wr) weapon_laser;
 float(float wr) weapon_shotgun;
 float(float wr) weapon_uzi;

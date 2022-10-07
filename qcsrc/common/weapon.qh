@@ -43,29 +43,4 @@ entity weapon_info_chain;
 .string model; // full name of g_ model
 .float impulse; // weapon impulse
 
-#ifdef SVQC
-#define weapon_register(id,func,ammotype,i,normalweapon,canclimb,pickupbasevalue,modelname,shortname,wname) \
-	weapon_register_real(id,func,ammotype,i,normalweapon,canclimb,pickupbasevalue,modelname,shortname,wname)
-#else
-#ifdef MENUQC
-#define weapon_register(id,func,ammotype,i,normalweapon,canclimb,pickupbasevalue,modelname,shortname,wname) \
-	weapon_register_real(id,i,modelname,shortname,wname)
-#else
-// no weapon funcs here!
-#define weapon_register(id,func,ammotype,i,normalweapon,canclimb,pickupbasevalue,modelname,shortname,wname) \
-	weapon_register_real(id,ammotype,i,modelname,shortname,wname)
-#endif
-#endif
-
-void(float id,
-#ifdef SVQC
-		float(float) func,
-#endif
-#ifndef MENUQC
-		float ammotype,
-#endif
-		float i,
-#ifdef SVQC
-		float normalweapon, float canclimb, float pickupbasevalue,
-#endif
-		string modelname, string shortname, string wname) weapon_register_real;
+entity(float id, float i, string shortname, string wname) weapon_register_common;

@@ -8,6 +8,19 @@ void(void) weapon_cross_origin_set {
 	weapon_cross_origin_z = 0;
 }
 
+void(void) weapon_update_icons {
+	entity e;
+	string s;
+	WEAPON_INFO_FOR_EACH(e) {
+		str_unzone_ifneeded(e.mdl);
+		s = strcat("gfx/hud/inv_weapon_", e.netname);
+		if (drawgetimagesize(s) != '0 0 0')
+			weapon_icons[e.weapon - 1] = strzone(s);
+		else
+			weapon_icons[e.weapon - 1] = strzone(strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1)));
+	}
+}
+
 void(void) weapon_info_read {
 	float wid, imp, at;
 	string n;
@@ -17,6 +30,8 @@ void(void) weapon_info_read {
 		at = net_read_coord();
 		n = str_zone_ifneeded(net_read_string());
 		weapon_impulses[wid - 1] = imp;
-		weapon_register_real(wid, at, imp, n, n, n);
+		e = weapon_register_common(wid, imp, n, n);
+		e.items = at;
 	}
+	weapon_update_icons();
 }

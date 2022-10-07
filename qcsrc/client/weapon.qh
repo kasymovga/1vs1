@@ -3,3 +3,5 @@ void(void) weapon_cross_origin_set;
 float weapon_current;
 float weapon_impulses[WEAPON_COUNT_EXTRA];
 void(void) weapon_info_read;
+void(void) weapon_update_icons;
+string weapon_icons[WEAPON_COUNT_EXTRA];

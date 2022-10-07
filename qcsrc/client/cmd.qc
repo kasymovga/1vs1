@@ -63,6 +63,7 @@ void(string msg) GameCommand { //called by engine
 	} else if (cmd == "r_restart") {
 		waypointsprite_init();
 		draw_init();
+		weapon_update_icons();
 	} else if (cmd == "mute" && argc == 2) {
 		mute_add(rint(stof(argv(1))));
 	} else if (cmd == "unmute" && argc == 2) {
