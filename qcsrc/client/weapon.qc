@@ -15,9 +15,9 @@ void(void) weapon_update_icons {
 		str_unzone_ifneeded(e.mdl);
 		s = strcat("gfx/hud/inv_weapon_", e.netname);
 		if (drawgetimagesize(s) != '0 0 0')
-			weapon_icons[e.weapon - 1] = strzone(s);
+			weapon_icons[e.weapon] = strzone(s);
 		else
-			weapon_icons[e.weapon - 1] = strzone(strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1)));
+			weapon_icons[e.weapon] = strzone(strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1)));
 	}
 }
 
@@ -29,7 +29,7 @@ void(void) weapon_info_read {
 		imp = net_read_byte();
 		at = net_read_coord();
 		n = str_zone_ifneeded(net_read_string());
-		weapon_impulses[wid - 1] = imp;
+		weapon_impulses[wid] = imp;
 		e = weapon_register_common(wid, imp, n, n);
 		e.items = at;
 	}
