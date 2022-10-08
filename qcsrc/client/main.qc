@@ -3,6 +3,7 @@ void(float ignore) main_init_read;
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 void(void) CSQC_Init {
+	weapon_update_icons();
 	if (!cvar("con_chat"))
 		cvar_set("con_chat", "5");
 	else if (cvar("con_chat") > 99)
