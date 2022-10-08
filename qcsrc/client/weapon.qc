@@ -12,7 +12,7 @@ void(void) weapon_update_icons {
 	entity e;
 	string s;
 	WEAPON_INFO_FOR_EACH(e) {
-		str_unzone_ifneeded(e.mdl);
+		str_unzone_ifneeded(weapon_icons[e.weapon]);
 		s = strcat("gfx/hud/inv_weapon_", e.netname);
 		if (drawgetimagesize(s) != '0 0 0')
 			weapon_icons[e.weapon] = strzone(s);
