@@ -11,6 +11,11 @@ void(void) weapon_cross_origin_set {
 void(void) weapon_update_icons {
 	entity e;
 	string s;
+	float i;
+	WEAPON_INFO_FOR_EACH_ID(i) {
+		str_unzone_ifneeded(weapon_icons[i]);
+		weapon_icons[i] = strzone("gfx/hud/num_minus");
+	}
 	WEAPON_INFO_FOR_EACH(e) {
 		str_unzone_ifneeded(weapon_icons[e.weapon]);
 		s = strcat("gfx/hud/inv_weapon_", e.netname);
