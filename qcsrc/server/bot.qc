@@ -493,6 +493,9 @@ void(void) bot_serverframe {
 			minbots = realminbots = ceil(fabs(bot_vs_human) * activerealplayers);
 			minplayers = 0;
 		} else {
+			if (team_mode)
+				realminplayers = ceil(realminplayers * cvar("minplayers_team_factor")) * team_teams;
+
 			realminbots = bot_number;
 			minplayers = max(0, floor(realminplayers));
 			minbots = max(0, floor(realminbots));
