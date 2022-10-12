@@ -605,7 +605,7 @@ void(void) physics_player_jump {
 	if not(physics_flags & FL_ONGROUND)
 	if (physics_velocity_z < sv_jumpvelocity * 0.5) {
 		physics_flags |= FL_DOUBLEJUMP;
-		physics_velocity_z = sv_jumpvelocity;
+		physics_velocity_z = g_doublejump_speed;
 		#ifdef SVQC
 		self.oldvelocity_z = physics_velocity_z;
 		pointparticles(particleeffectnum("smoke_ring"), self.origin, '0 0 1', 10);

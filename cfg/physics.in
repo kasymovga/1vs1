@@ -62,6 +62,7 @@ set g_climb 0
 set g_climb_height 80
 set g_climb_speed 100
 set g_doublejump 0 "Double jump"
+set g_doublejump_speed 400
 set g_velocity_rounding 0
 set g_overbounce 0
 set sv_overbounce_sound "sound/nexball/bounce.wav"

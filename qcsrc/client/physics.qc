@@ -413,6 +413,8 @@ void(float isnew) physics_read {
 			g_climb_height = net_read_coord();
 			g_climb_speed = net_read_coord();
 		}
+		if (g_doublejump)
+			g_doublejump_speed = net_read_coord();
 	}
 	if (f & 2) {
 		self.crouch_mins_x = net_read_coord();

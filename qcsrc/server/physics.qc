@@ -544,6 +544,7 @@ void(void) physics_init {
 
 	CVAR_CACHE(g_climb_speed);
 	CVAR_CACHE(g_doublejump);
+	CVAR_CACHE(g_doublejump_speed);
 	CVAR_CACHE(g_overbounce);
 	CVAR_CACHE(g_walk_align_to_ground);
 	if not(g_sideview) {
@@ -724,6 +725,9 @@ float(entity to, float sf) physics_send {
 		if (g_climb) {
 			net_write_coord(MSG_ENTITY, g_climb_height);
 			net_write_coord(MSG_ENTITY, g_climb_speed);
+		}
+		if (g_doublejump) {
+			net_write_coord(MSG_ENTITY, g_doublejump_speed);
 		}
 	}
 	if (sf & 2) {
