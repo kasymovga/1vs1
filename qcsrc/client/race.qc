@@ -160,7 +160,7 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 	else
 		cpname = "Finish line";
 
-	if (histime < 0)
+	if (histime < 0 || cp == 254)
 		return strcat(col, cpname);
 	else if (hisname == "")
 		return strcat(col, cpname, " (", timestr, ")");
