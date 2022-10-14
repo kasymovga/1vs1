@@ -272,8 +272,10 @@ float(entity client, float idx) ban_client_banned {
 	if (!ban_loaded)
 		ban_load();
 
-	if (!net_ip_parse(client.netname))
+	if (!net_ip_parse(client.netaddress)) {
+		print("ban_client_banned: cannot parse ip address: ", client.netaddress, "\n");
 		return FALSE;
+	}
 	if (idx < 0) {
 		b = 0;
 		e = ban_count;
