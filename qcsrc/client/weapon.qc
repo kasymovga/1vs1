@@ -12,18 +12,20 @@ void(void) weapon_update_icons {
 	entity e;
 	string s;
 	float i;
-	WEAPON_INFO_FOR_EACH_ID(i) {
-		str_unzone_ifneeded(weapon_icons[i]);
-		weapon_icons[i] = strzone("gfx/hud/num_minus");
-	}
 	WEAPON_INFO_FOR_EACH(e) {
-		str_unzone_ifneeded(weapon_icons[e.weapon]);
+		str_unzone_ifneeded(e.icon);
 		s = strcat("gfx/hud/inv_weapon_", e.netname);
 		if (drawgetimagesize(s) != '0 0 0')
-			weapon_icons[e.weapon] = strzone(s);
-		else
-			weapon_icons[e.weapon] = strzone(strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1)));
+			e.icon = strzone(s);
+		else {
+			s = strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1));
+			if (drawgetimagesize(s) != '0 0 0')
+				e.icon = strzone(s);
+			else
+				s = strzone("gfx/hud/num_minus");
+		}
 	}
+	weapon_info(0).icon = "gfx/hud/num_minus"; //dummy weapon
 }
 
 void(void) weapon_info_read {
@@ -34,7 +36,6 @@ void(void) weapon_info_read {
 		imp = net_read_byte();
 		at = net_read_coord();
 		n = str_zone_ifneeded(net_read_string());
-		weapon_impulses[wid] = imp;
 		e = weapon_register_common(wid, imp, n, n);
 		e.items = at;
 	}

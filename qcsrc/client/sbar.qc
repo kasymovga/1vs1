@@ -119,7 +119,6 @@ vector sbar_position(vector pos, vector sz) {
 void(float fade) sbar_draw_weapons {
 	vector pos;
 	float value, idx, imp, sp;
-	float nr;
 	for (idx = 0; idx < 10; ++idx)
 		sbar_weaponspace[idx] = 0;
 
@@ -157,12 +156,16 @@ void(float fade) sbar_draw_weapons {
 		}
 	}
 	pos_z = 0;
-	float wbit = 1;
 	entity e;
 	float a;
-	for (nr = WEAPON_FIRST; nr <= WEAPON_LAST; ++nr, wbit *= 2) {
-		if not(stat_weapons & wbit) continue;
-		imp = weapon_impulses[nr];
+	float nr;
+	WEAPON_INFO_FOR_EACH(e) {
+		if not(stat_weapons & e.weapons)
+		if not(stat_weapons_extra & e.weapons_extra)
+			continue;
+
+		imp = e.impulse;
+		nr = e.weapon;
 		if not(imp >= 0) continue;
 		if (imp == 0)
 			idx = 9;
@@ -181,7 +184,7 @@ void(float fade) sbar_draw_weapons {
 		if (active)
 			drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-		drawpic(pos, weapon_icons[nr], w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, e.icon, w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 		if (CVAR(sbar_weapons_show_ammo)) {
 			a = 0;
 			pos_x += w_space;
@@ -206,53 +209,6 @@ void(float fade) sbar_draw_weapons {
 			drawstring(pos, ftos(imp), font_size, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
 		}
 	}
-	if (stat_weapons_extra)
-		for (wbit = 1; nr <= WEAPON_LAST_EXTRA; ++nr, wbit *= 2) {
-			if not(stat_weapons_extra & wbit) continue;
-			imp = weapon_impulses[nr];
-			if not(imp >= 0) continue;
-			if (imp == 0)
-				idx = 9;
-			else
-				idx = imp - 1;
-
-			active = (nr == weapon_current);
-			value = (active) ? 2 : 0.75;
-			sbar_color_x = sbar_color_y = sbar_color_z = value;
-			sp = sbar_weaponspace[idx];
-			sbar_weaponspace[idx] = sp + 1;
-			pos = weapon_position + w_shift2 * idx;
-			if (sp)
-				pos += w_shift * sp;
-
-			if (active)
-				drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
-
-			e = weapon_info(nr);
-			drawpic(pos, weapon_icons[nr], w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
-			if (CVAR(sbar_weapons_show_ammo)) {
-				a = 0;
-				pos_x += w_space;
-				if (e.items) {
-					if (e.items & IT_SHELLS)
-						a = getstati(STAT_SHELLS);
-					else if (e.items & IT_NAILS)
-						a = getstati(STAT_NAILS);
-					else if (e.items & IT_ROCKETS)
-						a = getstati(STAT_ROCKETS);
-					else if (e.items & IT_CELLS)
-						a = getstati(STAT_CELLS);
-
-					if (a)
-						drawstring(pos, ftos(a), font_size, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
-					else
-						drawstring(pos, "X", font_size, '1 0 0', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
-				}
-			} else if (sp == 0) {
-				pos_x += w_space;
-				drawstring(pos, ftos(imp), font_size, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
-			}
-		}
 }
 
 void(vector pos, float num, float digits, float showminusplus, float lettersize, vector rgb, float stroke, float alpha, float dflags) sbar_draw_num  {
@@ -950,7 +906,7 @@ void(vector pos, entity pl, float is_self, float pl_number) sbar_scoreboard_item
 			w = f & 63;
 			if (w) {
 				f = (f - w) / 64;
-				drawpic(pos - tmp, weapon_icons[w], '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, weapon_info(w).icon, '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 				tmp_x = tmp_x - 2 * sbar_fontsize_x;
 				drawstring(pos - tmp, strcat(ftos(f), "%"), sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
 			}
@@ -1007,7 +963,7 @@ void(vector pos, entity pl, float is_self, float pl_number) sbar_scoreboard_item
 				w = f & 63;
 				if (w) {
 					f = (f - w) / 64;
-					drawpic(pos - tmp, weapon_icons[w], '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+					drawpic(pos - tmp, weapon_info(w).icon, '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 					tmp_x = tmp_x - 2 * sbar_fontsize_x;
 					drawstring(pos - tmp, strcat(ftos(f), "%"), sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
 				}
@@ -1676,7 +1632,7 @@ void(void) sbar_accuracy_draw {
 			drawpic(pos, "gfx/hud/sb_accuracy", fill_size , fill_colour, sbar_alpha_bg, DRAWFLAG_NORMAL);
 			draw_borderlines(sbar_border_thickness, pos, fill_size, '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
 			// the weapon
-			drawpic(pos, weapon_icons[i], '1 0.5 0' * fill_size_x , '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos, weapon_info(i).icon, '1 0.5 0' * fill_size_x , '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			// the amount of shots fired or max damage
 			draw_string_right(pos + '4.5 0 0' * sbar_fontsize_x + '0 3 0' * sbar_fontsize_y, ftos(weapon_damage), sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			// the amount of hits or actual damage

@@ -1,6 +1,7 @@
 // WEAPON PLUGIN SYSTEM
 entity _weapon_info[WEAPON_LAST_EXTRA];
 entity weapon_info_dummy;
+entity weapon_info_last;
 
 entity(void) weapon_info_dummy_get {
 	if not(weapon_info_dummy) {
@@ -20,8 +21,13 @@ entity(float id,
 	e = weapon_info(id);
 	if not(e && e != weapon_info_dummy) {
 		e = spawn();
-		e.enemy = weapon_info_chain;
-		weapon_info_chain = e;
+		if (weapon_info_last) {
+			weapon_info_last.enemy = e;
+			weapon_info_last = e;
+		} else {
+			weapon_info_chain = e;
+			weapon_info_last = e;
+		}
 	}
 	e.classname = "weapon_info";
 	e.weapon = id;
