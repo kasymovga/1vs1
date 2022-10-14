@@ -122,7 +122,9 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 	string cpname;
 	string lapstr;
 	lapstr = "";
-	if (histime == 0) { // goal hit
+	if (cp == 254) {
+		col = "^7";
+	} else if (histime == 0) { // goal hit
 		if (mytime > 0) {
 			timestr = strcat("+", str_float_decimals(TIME_DECODE(+mytime), SBAR_TIME_DECIMALS));
 			col = "^1";
@@ -140,8 +142,7 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 			lapstr = strcat(" (+", ftos(-lapdelta), "L)");
 			col = "^1";
 		}
-	}
-	else if (histime > 0) { // anticipation
+	} else if (histime > 0) { // anticipation
 		if (mytime >= histime)
 			timestr = strcat("+", str_float_decimals(TIME_DECODE(mytime - histime), SBAR_TIME_DECIMALS));
 		else

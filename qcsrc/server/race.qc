@@ -351,6 +351,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 				recordholder = "";
 
 			if (t != 0)
+			if (cp)
 			if (t < recordtime || recordtime == 0) {
 				race_checkpoint_records[cp] = t;
 				if (race_checkpoint_recordholders[cp])
