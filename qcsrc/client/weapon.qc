@@ -15,15 +15,12 @@ void(void) weapon_update_icons {
 	WEAPON_INFO_FOR_EACH(e) {
 		str_unzone_ifneeded(e.icon);
 		s = strcat("gfx/hud/inv_weapon_", e.netname);
-		if (drawgetimagesize(s) != '0 0 0')
-			e.icon = strzone(s);
-		else {
+		if not(drawgetimagesize(s) != '0 0 0') {
 			s = strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1));
-			if (drawgetimagesize(s) != '0 0 0')
-				e.icon = strzone(s);
-			else
-				s = strzone("gfx/hud/num_minus");
+			if not(drawgetimagesize(s) != '0 0 0')
+				s = "gfx/hud/num_minus";
 		}
+		e.icon = strzone(s);
 	}
 	weapon_info(0).icon = "gfx/hud/num_minus"; //dummy weapon
 }
