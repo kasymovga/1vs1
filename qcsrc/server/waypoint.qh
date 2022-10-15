@@ -6,8 +6,6 @@ float WAYPOINTFLAG_PERSONAL = 524288;
 
 // fields you can query using prvm_global server to get some statistics about waypoint linking culling
 
-float waypoint_loadedforcedlinks;
-float waypoint_cachedwaypointlinks;
 float g_waypointeditor;
 
 .entity wp00, wp01, wp02, wp03, wp04, wp05, wp06, wp07, wp08, wp09, wp10, wp11, wp12, wp13, wp14, wp15;
@@ -24,22 +22,11 @@ float g_waypointeditor;
 
 void(entity from, entity to) waypoint_addlink;
 void(void) waypoint_init;
-void(void) waypoint_think;
-void(entity wp) waypoint_clearlinks;
-void(entity wp) waypoint_schedulerelink;
-void(entity e) waypoint_remove;
-void(void) waypoint_removeall;
-void(void) waypoint_schedulerelinkall;
-void(void) waypoint_load_links_hardwired;
-void(void) waypoint_save_links;
-void(void) waypoint_saveall;
-void(entity e, vector org) waypoint_spawnforitem_force;
+void(float imp) waypoint_impulse;
 void(entity e) waypoint_spawnforitem;
+void(entity e, vector org) waypoint_spawnforitem_force;
 void(entity e, vector destination, float timetaken) waypoint_spawnforteleporter;
-void(void) waypoint_show_links;
-float(void) waypoint_loadall;
-float(void) waypoint_load_links;
 entity(vector m1, vector m2, float f) waypoint_spawn;
 entity(vector position) waypoint_spawnpersonal;
+void(void) waypoint_show_links;
 vector(vector position) waypoint_fixorigin;
-void(float imp) waypoint_impulse;

@@ -1,5 +1,10 @@
 float bot_navigation_ignoreplayers;
-float waypoints_count;
+float waypoint_count;
+float waypoint_schedulerelink_count;
+float waypoint_schedulerelink_save;
+
+void(entity wp) waypoint_clearlinks;
+void(void) waypoint_save_links;
 
 void(entity w) waypoint_show {
 	vector m1, m2;
@@ -57,9 +62,8 @@ entity(vector m1, vector m2, float f) waypoint_spawn {
 		setsize(w, '0 0 0', '0 0 0');
 	}
 	waypoint_clearlinks(w);
-	//waypoint_schedulerelink(w);
 	waypoint_show(w);
-	waypoints_count++;
+	waypoint_count++;
 	return w;
 }
 
@@ -192,6 +196,14 @@ void(void) waypoint_think {
 		}
 	}
 	self.wplinked = TRUE;
+	waypoint_schedulerelink_count--;
+	if not(waypoint_schedulerelink_count) {
+		print("Relinking waypoints finished\n");
+		if (waypoint_schedulerelink_save) {
+			waypoint_save_links();
+			waypoint_schedulerelink_save = FALSE;
+		}
+	}
 }
 
 void(entity wp) waypoint_clearlinks {
@@ -211,10 +223,11 @@ void(entity wp) waypoint_clearlinks {
 
 // tell a spawnfunc_waypoint to relink
 void(entity wp) waypoint_schedulerelink {
-	if (wp == world)
+	if not(wp)
 		return;
 
 	// TODO: add some sort of visible box in edit mode for box waypoints
+	waypoint_schedulerelink_count++;
 	waypoint_show(wp);
 	wp.wpisbox = vlen(wp.size) > 0;
 	wp.enemy = world;
@@ -236,7 +249,7 @@ void(void) spawnfunc_waypoint {
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(self);
 	//waypoint_schedulerelink(self);
-	waypoints_count++;
+	waypoint_count++;
 }
 
 // remove a spawnfunc_waypoint, and schedule all neighbors to relink
@@ -292,6 +305,7 @@ void(void) waypoint_removeall {
 // tell all waypoints to relink
 // (is this useful at all?)
 void(void) waypoint_schedulerelinkall {
+	print("Relinking all waypoints\n");
 	entity head;
 	head = findchain(classname, "waypoint");
 	while (head) {
@@ -307,11 +321,12 @@ float(void) waypoint_load_links {
 	entity wp_from = NULL, wp_to;
 	vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.", ftos(waypoints_count), ".cache");
+	filename = strcat(filename, ".waypoints.", ftos(waypoint_count), ".cache");
 	file = fopen(filename, FILE_READ);
 	if (file < 0)
 		return FALSE;
 
+	print("Loading waypoint links from ", filename, "\n");
 	while (1) {
 		s = fgets(file);
 		if (!s)
@@ -362,74 +377,7 @@ float(void) waypoint_load_links {
 		waypoint_addlink(wp_from, wp_to);
 	}
 	fclose(file);
-	waypoint_cachedwaypointlinks = TRUE;
 	return TRUE;
-}
-
-void(void) waypoint_load_links_hardwired {
-	string filename, s;
-	float file, tokens, found;
-	entity wp_from = NULL, wp_to;
-	vector wp_to_pos, wp_from_pos;
-	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.hardwired");
-	file = fopen(filename, FILE_READ);
-	waypoint_loadedforcedlinks = TRUE;
-	if (file < 0)
-		return;
-
-	for (;;) {
-		s = fgets(file);
-		if (!s)
-			break;
-
-		if (substring(s, 0, 2)=="//")
-			continue;
-
-		if (substring(s, 0, 1)=="#")
-			continue;
-
-		tokens = tokenizebyseparator(s, "*");
-		if (tokens!=2)
-			continue;
-
-		wp_from_pos	= stov(argv(0));
-		wp_to_pos	= stov(argv(1));
-		// Search "from" waypoint
-		if (wp_from.origin!=wp_from_pos) {
-			wp_from = findradius(wp_from_pos, 1);
-			found = FALSE;
-			while(wp_from) {
-				if (vlen(wp_from.origin-wp_from_pos)<1)
-				if (wp_from.classname == "waypoint") {
-					found = TRUE;
-					break;
-				}
-				wp_from = wp_from.chain;
-			}
-			if (!found) {
-				print(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
-				continue;
-			}
-		}
-		// Search "to" waypoint
-		wp_to = findradius(wp_to_pos, 1);
-		found = FALSE;
-		while (wp_to) {
-			if (vlen(wp_to.origin-wp_to_pos)<1)
-			if (wp_to.classname == "waypoint") {
-				found = TRUE;
-				break;
-			}
-			wp_to = wp_to.chain;
-		}
-		if (!found) {
-			print(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
-			continue;
-		}
-		waypoint_addlink(wp_from, wp_to);
-	}
-	fclose(file);
 }
 
 // Save all waypoint links to a file
@@ -438,7 +386,7 @@ void(void) waypoint_save_links {
 	float file, c, i;
 	entity w, link = NULL;
 	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.", ftos(waypoints_count), ".cache");
+	filename = strcat(filename, ".waypoints.", ftos(waypoint_count), ".cache");
 	file = fopen(filename, FILE_WRITE);
 	if (file < 0) {
 		print("waypoint links save to ");
@@ -493,7 +441,6 @@ void(void) waypoint_save_links {
 		w = w.chain;
 	}
 	fclose(file);
-	waypoint_cachedwaypointlinks = TRUE;
 	print("saved ");
 	print(ftos(c));
 	print(" waypoints links to ");
@@ -536,7 +483,6 @@ void(void) waypoint_saveall {
 		print(" failed\n");
 	}
 	waypoint_save_links();
-	waypoint_loadedforcedlinks = FALSE;
 }
 
 // load waypoints from file
@@ -550,6 +496,7 @@ float(void) waypoint_loadall {
 	filename = strcat(filename, ".waypoints");
 	file = fopen(filename, FILE_READ);
 	if (file >= 0) {
+		print("Loading waypoints from ", filename, "\n");
 		while (1) {
 			s = fgets(file);
 			if (!s)
@@ -786,6 +733,14 @@ void(float imp) waypoint_impulse {
 	}
 }
 
+void(void) waypoint_init_delayed {
+	waypoint_loadall();
+	if (!waypoint_load_links()) {
+		waypoint_schedulerelinkall();
+		waypoint_schedulerelink_save = TRUE;
+	}
+}
+
 void(void) waypoint_init {
 	CVAR_CACHE(bot_navigation_ignoreplayers);
 	CVAR_CACHE(g_waypointeditor);
@@ -794,4 +749,5 @@ void(void) waypoint_init {
 		waypoint_show(w);
 	}
 	precache_model("models/runematch/rune.mdl");
+	entity_initialize(self, waypoint_init_delayed, INITPRIO_LAST);
 }
