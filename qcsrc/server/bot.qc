@@ -453,7 +453,6 @@ void(float maxupdate) bot_updatedangerousobjects {
 	}
 }
 
-float bot_serverframe_spawnedwaypoints;
 float bot_serverframe_nextthink;
 float bot_serverframe_nextdangertime;
 void(void) bot_serverframe {
@@ -518,28 +517,6 @@ void(void) bot_serverframe {
 		}
 		while (bot_count > bots)
 			bot_removenewest();
-	}
-	if (bot_serverframe_spawnedwaypoints) {
-		if (waypoint_benchmark)
-			localcmd("quit\n");
-	}
-	if (bot_serverframe_spawnedwaypoints) {
-		if (waypoint_cachedwaypointlinks) {
-			if (!waypoint_loadedforcedlinks)
-				waypoint_load_links_hardwired();
-		}
-		else
-		{
-			// TODO: Make this check cleaner
-			entity wp = findchain(classname, "waypoint");
-			if (time - wp.nextthink > 10)
-				waypoint_save_links();
-		}
-	} else {
-		bot_serverframe_spawnedwaypoints = TRUE;
-		waypoint_loadall();
-		if (!waypoint_load_links())
-			waypoint_schedulerelinkall();
 	}
 	if (bot_list) {
 		// cycle the goal token from one bot to the next each frame
