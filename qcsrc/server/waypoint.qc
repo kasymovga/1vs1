@@ -509,7 +509,7 @@ void(void) waypoint_path_generator_think {
 		break;
 	}
 	trace_box(self.origin, PL_MIN, PL_MAX, self.origin - '0 0 1', TRACE_MOVE_NOMONSTERS, self);
-	if (trace_plane_normal_z < 0.7) goto removegenerator;
+	if (trace_fraction < 1 && trace_plane_normal_z < 0.7) goto removegenerator;
 	if ((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP)
 		goto removegenerator;
 
@@ -530,7 +530,7 @@ void(void) waypoint_path_generator_think {
 		if (e.classname == "waypoint_path_generator")
 		if (trace_walk(self, v, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
 		if (dirv * (e.origin - v) > 0.5)
-			 goto removegenerator;
+			goto removegenerator;
 	}
 	self.count--;
 	if (self.count <= 0) {
