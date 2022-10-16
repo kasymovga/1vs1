@@ -170,6 +170,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 			// if that also fails we assume it is a wall
 			// (this is the same logic as the Quake walkmove function used)
 			trace_box(move, m1, m2, move + '0 0 -65536', movemode, e);
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) goto finish;
 			if (trace_fraction > 0) {
 				float f = trace_fraction;
 				vector v = trace_endpos;

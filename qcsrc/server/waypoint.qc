@@ -508,6 +508,11 @@ void(void) waypoint_path_generator_think {
 		dirback = 1;
 		break;
 	}
+	trace_box(self.origin, PL_MIN, PL_MAX, self.origin - '0 0 1', TRACE_MOVE_NOMONSTERS, self);
+	if (trace_plane_normal_z < 0.7) goto removegenerator;
+	if ((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP)
+		goto removegenerator;
+
 	trace_walk(self, self.origin, PL_MIN, PL_MAX, self.origin + dirv * 200, TRACE_MOVE_NOMONSTERS);
 	vector v = trace_endpos;
 	if (vlen(trace_endpos - self.pos1) <= 100) goto removegenerator;
@@ -516,8 +521,9 @@ void(void) waypoint_path_generator_think {
 		self.pos1 = self.origin;
 	}
 	for (entity e = findradius(v, 75); e; e = e.chain) {
-		if (e != self)
+		if (e == self) continue;
 		if (e.classname == "waypoint_path_generator") goto removegenerator;
+		if (e.classname == "trigger_hurt") goto removegenerator;
 	}
 	for (entity e = findradius(v, 200); e; e = e.chain) {
 		if (e != self)
@@ -573,6 +579,9 @@ void(void) waypoint_generate_waypoints {
 	entity e;
 	float i;
 	print("Generating waypoints\n");
+	for (e = NULL; (e = find(e, classname, "waypoint")); ) {
+		if not(e.wpflags) remove(e);
+	}
 	for (e = NULL; (e = find(e, classname, "info_player_deathmatch")); ) {
 		print("Generate pathes from ", vtos(e.origin), "\n");
 		for (i = 0; i < 4; i++) {
