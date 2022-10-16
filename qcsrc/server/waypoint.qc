@@ -9,6 +9,7 @@ void(void) waypoint_save_links;
 void(entity w) waypoint_show {
 	vector m1, m2;
 	if (g_waypointeditor) {
+		w.culltracemode = CULLTRACEMODE_NONE;
 		m1 = w.mins;
 		m2 = w.maxs;
 		setmodel(w, "models/runematch/rune.mdl"); w.effects = EFFECT_LOWPRECISION;
