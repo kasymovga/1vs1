@@ -516,7 +516,7 @@ void(void) waypoint_path_generator_think {
 
 	trace_walk(self, self.origin, PL_MIN, PL_MAX, self.origin + dirv * 200, TRACE_MOVE_NOMONSTERS);
 	vector v = trace_endpos;
-	if (vlen(trace_endpos - self.pos1) <= 100) goto removegenerator;
+	if (vlen(trace_endpos - self.pos1) <= 50) goto removegenerator;
 	if not(trace_walk(self, self.pos1, PL_MIN, PL_MAX, v, TRACE_MOVE_NOMONSTERS)) {
 		waypoint_spawn(self.origin, self.origin, 0);
 		self.pos1 = self.origin;
@@ -530,6 +530,7 @@ void(void) waypoint_path_generator_think {
 		if (e != self)
 		if (e.classname == "waypoint_path_generator")
 		if (trace_walk(self, v, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
+		if (trace_walk(self, e.origin, PL_MIN, PL_MAX, v, TRACE_MOVE_NOMONSTERS))
 		if (dirv * (e.origin - v) > 0.5)
 			goto removegenerator;
 	}
@@ -590,6 +591,13 @@ void(void) waypoint_generate_waypoints {
 		}
 	}
 	for (e = NULL; (e = find(e, classname, "info_teleport_destination")); ) {
+		print("Generate pathes from ", vtos(e.origin), "\n");
+		for (i = 0; i < 4; i++) {
+			waypoint_path_generator_spawn(i, e.origin, e.origin, 10);
+		}
+	}
+	for (e = NULL; (e = find(e, classname, "waypoint")); ) {
+		if not(e.wpflags & WAYPOINTFLAG_GENERATED) continue;
 		print("Generate pathes from ", vtos(e.origin), "\n");
 		for (i = 0; i < 4; i++) {
 			waypoint_path_generator_spawn(i, e.origin, e.origin, 10);
