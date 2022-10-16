@@ -449,12 +449,12 @@ void(void) waypoint_save_links {
 }
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
-void(void) waypoint_saveall {
+void(float generated) waypoint_saveall {
 	string filename, s;
 	float file, c;
 	entity w;
 	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints");
+	filename = strcat(filename, ".waypoints", (generated ? ".generated" : ""));
 	file = fopen(filename, FILE_WRITE);
 	if (file >= 0) {
 		c = 0;
@@ -474,15 +474,117 @@ void(void) waypoint_saveall {
 		fclose(file);
 		print("saved ");
 		print(ftos(c));
-		print(" waypoints to maps/");
-		print(mapname);
-		print(".waypoints\n");
+		print(" waypoints to ");
+		print(filename);
+		print("\n");
 	} else {
 		print("waypoint save to ");
 		print(filename);
 		print(" failed\n");
 	}
 	waypoint_save_links();
+}
+
+float waypoint_path_generator_count;
+entity(float dir, vector from, vector lastwp, float depth) waypoint_path_generator_spawn;
+void(void) waypoint_path_generator_think {
+	vector dirv = '0 0 0';
+	float dirback = -1;
+	switch (self.cnt) {
+	case 0:
+		dirv = '1 0 0';
+		dirback = 2;
+		break;
+	case 1:
+		dirv = '0 1 0';
+		dirback = 3;
+		break;
+	case 2:
+		dirv = '-1 0 0';
+		dirback = 0;
+		break;
+	case 3:
+		dirv = '0 -1 0';
+		dirback = 1;
+		break;
+	}
+	trace_walk(self, self.origin, PL_MIN, PL_MAX, self.origin + dirv * 200, TRACE_MOVE_NOMONSTERS);
+	vector v = trace_endpos;
+	if (vlen(trace_endpos - self.pos1) <= 100) goto removegenerator;
+	if not(trace_walk(self, self.pos1, PL_MIN, PL_MAX, v, TRACE_MOVE_NOMONSTERS)) {
+		waypoint_spawn(self.origin, self.origin, 0);
+		self.pos1 = self.origin;
+	}
+	for (entity e = findradius(v, 75); e; e = e.chain) {
+		if (e != self)
+		if (e.classname == "waypoint_path_generator") goto removegenerator;
+	}
+	for (entity e = findradius(v, 200); e; e = e.chain) {
+		if (e != self)
+		if (e.classname == "waypoint_path_generator")
+		if (trace_walk(self, v, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
+		if (dirv * (e.origin - v) > 0.5)
+			 goto removegenerator;
+	}
+	self.count--;
+	if (self.count <= 0) {
+		for (entity e = findradius(v, 75); e; e = e.chain) {
+			if (e.classname == "waypoint")
+			if not(e.wpflags & (WAYPOINTFLAG_ITEM | WAYPOINTFLAG_GENERATED))
+				goto removegenerator;
+		}
+		waypoint_spawn(v, v, 0);
+		goto removegenerator;
+	}
+	setorigin(self, v);
+	for (float i = 0; i < 4; i++) {
+		if (i != self.cnt && i != dirback)
+			waypoint_path_generator_spawn(i, v, self.pos1, self.count);
+	}
+	self.nextthink = time + 0.1;
+	return;
+:removegenerator
+	waypoint_path_generator_count--;
+	if (waypoint_path_generator_count == 0) {
+		waypoint_schedulerelink_save = TRUE;
+		waypoint_schedulerelinkall();
+		waypoint_saveall(TRUE);
+	}
+	remove(self);
+	return;
+}
+
+entity(float dir, vector from, vector lastwp, float depth) waypoint_path_generator_spawn {
+	if (waypoint_path_generator_count >= 1024) return NULL;
+	entity e = spawn();
+	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	setorigin(e, from);
+	e.pos1 = from;
+	e.cnt = dir;
+	e.count = depth;
+	e.think = waypoint_path_generator_think;
+	e.nextthink = time + 0.1;
+	e.classname = "waypoint_path_generator";
+	waypoint_path_generator_count++;
+	return e;
+}
+
+void(void) waypoint_generate_waypoints {
+	entity e;
+	float i;
+	print("Generating waypoints\n");
+	for (e = NULL; (e = find(e, classname, "info_player_deathmatch")); ) {
+		print("Generate pathes from ", vtos(e.origin), "\n");
+		for (i = 0; i < 4; i++) {
+			waypoint_path_generator_spawn(i, e.origin, e.origin, 8);
+		}
+	}
+	for (e = NULL; (e = find(e, classname, "info_teleport_destination")); ) {
+		print("Generate pathes from ", vtos(e.origin), "\n");
+		for (i = 0; i < 4; i++) {
+			waypoint_path_generator_spawn(i, e.origin, e.origin, 10);
+		}
+	}
 }
 
 // load waypoints from file
@@ -495,6 +597,11 @@ float(void) waypoint_loadall {
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints");
 	file = fopen(filename, FILE_READ);
+	if (file < 0) {
+		filename = strcat("maps/", mapname);
+		filename = strcat(filename, ".waypoints.generated");
+		file = fopen(filename, FILE_READ);
+	}
 	if (file >= 0) {
 		print("Loading waypoints from ", filename, "\n");
 		while (1) {
@@ -664,7 +771,7 @@ void(float imp) waypoint_impulse {
 			waypoint_schedulerelinkall();
 			break;
 		case 106:
-			waypoint_saveall();
+			waypoint_saveall(FALSE);
 			break;
 		case 107:
 			for (e = findchain(classname, "waypoint"); e; e = e.chain) {
@@ -734,8 +841,13 @@ void(float imp) waypoint_impulse {
 }
 
 void(void) waypoint_init_delayed {
-	waypoint_loadall();
+	if (!waypoint_loadall()) {
+		print("Loading waypoints failed\n");
+		if (cvar("g_waypoints_auto_generate"))
+			waypoint_generate_waypoints();
+	}
 	if (!waypoint_load_links()) {
+		print("Loading cached waypoint links failed\n");
 		waypoint_schedulerelinkall();
 		waypoint_schedulerelink_save = TRUE;
 	}
