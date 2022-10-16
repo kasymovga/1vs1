@@ -273,7 +273,9 @@ float(entity client, float idx) ban_client_banned {
 		ban_load();
 
 	if (!net_ip_parse(client.netaddress)) {
-		print("ban_client_banned: cannot parse ip address: ", client.netaddress, "\n");
+		if (client.netaddress != "local")
+			print("ban_client_banned: cannot parse ip address: ", client.netaddress, "\n");
+
 		return FALSE;
 	}
 	if (idx < 0) {
