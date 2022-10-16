@@ -15,9 +15,9 @@ void(void) weapon_update_icons {
 	WEAPON_INFO_FOR_EACH(e) {
 		str_unzone_ifneeded(e.icon);
 		s = strcat("gfx/hud/inv_weapon_", e.netname);
-		if not(drawgetimagesize(s) != '0 0 0') {
+		if not(file_exists_image(s)) {
 			s = strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1));
-			if not(drawgetimagesize(s) != '0 0 0')
+			if not(file_exists_image(s))
 				s = "gfx/hud/num_minus";
 		}
 		e.icon = strzone(s);
