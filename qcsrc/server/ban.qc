@@ -274,6 +274,7 @@ float(entity client, float idx) ban_client_banned {
 
 	if (!net_ip_parse(client.netaddress)) {
 		if (client.netaddress != "local")
+		if (client.netaddress != "null/botclient")
 			print("ban_client_banned: cannot parse ip address: ", client.netaddress, "\n");
 
 		return FALSE;
