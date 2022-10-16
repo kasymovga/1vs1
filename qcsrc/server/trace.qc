@@ -64,7 +64,6 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 	float stepdist;
 	float yaw;
 	float ignorehazards;
-	float swimming = FALSE;
 	float r = FALSE;
 	move = end - start;
 	move_z = 0;
@@ -81,7 +80,6 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 		trace_line( start, start + '0 0 -65536', TRACE_MOVE_NORMAL, e);
 		if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)) {
 			ignorehazards = TRUE;
-			swimming = TRUE;
 		}
 	}
 	trace_box(start, m1, m2, start, TRACE_MOVE_NOMONSTERS, e);
@@ -119,7 +117,6 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 			move = normalize(end - org);
 			trace_box(org, m1, m2, org + move * stepdist, movemode, e);
 			if (trace_fraction < 1) {
-				swimming = TRUE;
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
 				for (; org_z < end_z + self.maxs_z; org_z += stepdist) {
 					if(pointcontents(org) == CONTENT_EMPTY)
@@ -173,15 +170,19 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 			// if that also fails we assume it is a wall
 			// (this is the same logic as the Quake walkmove function used)
 			trace_box(move, m1, m2, move + '0 0 -65536', movemode, e);
-			// moved successfully
-			if (swimming) {
-				float c;
-				c = pointcontents(org + '0 0 1');
-				if not(c == CONTENT_WATER || c == CONTENT_LAVA || c == CONTENT_SLIME)
-					swimming = FALSE;
-				else
-					continue;
+			if (trace_fraction > 0) {
+				float f = trace_fraction;
+				vector v = trace_endpos;
+				vector move2 = move + dir * stepdist * 1.75; //check if we can step over
+				trace_box(move, m1, m2, move2, movemode, e);
+				if (trace_fraction == 1) {
+					trace_box(move2, m1, m2, move2 + '0 0 -65536', movemode, e);
+					if (trace_fraction >= f) //cannot step over, restore trace_endpos
+						trace_endpos = v;
+				} else //cannot step over, restore trace_endpos
+					trace_endpos = v;
 			}
+			// moved successfully
 			org = trace_endpos;
 		}
 	}
