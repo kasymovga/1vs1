@@ -509,14 +509,15 @@ void(void) waypoint_path_generator_think {
 		dirback = 1;
 		break;
 	}
-	trace_walk(self, self.origin, PL_MIN, PL_MAX, self.origin + dirv * 200, TRACE_MOVE_NOMONSTERS);
+	trace_walk(self, self.origin, PL_MIN, PL_MAX, self.origin + dirv * 225, TRACE_MOVE_NOMONSTERS);
+	if (vlen(trace_endpos - self.pos1) <= 50) goto removegenerator;
+	trace_walk(self, trace_endpos, PL_MIN, PL_MAX, trace_endpos - dirv * 25, TRACE_MOVE_NOMONSTERS);
 	vector v = trace_endpos;
 	trace_box(self.origin, PL_MIN, PL_MAX, self.origin - '0 0 1', TRACE_MOVE_NOMONSTERS, self);
-	if (trace_fraction < 1 && trace_plane_normal_z < 0.6) goto removegenerator;
+	if (trace_fraction < 1 && trace_plane_normal_z < 0.7) goto removegenerator;
 	if ((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP)
 		goto removegenerator;
 
-	if (vlen(v - self.pos1) <= 50) goto removegenerator;
 	for (entity e = findradius(v, 50); e; e = e.chain) {
 		if (e == self) continue;
 		if (e.classname == "waypoint" && !e.wpflags) goto removegenerator;
@@ -529,11 +530,19 @@ void(void) waypoint_path_generator_think {
 	}
 	for (entity e = findradius(v, 500); e; e = e.chain) {
 		if (e != self)
-		if (e.classname == "waypoint_path_generator" || (e.classname == "waypoint" && !e.wpflags))
+		if ((e.classname == "waypoint_path_generator" && e.cnt != self.cnt) || (e.classname == "waypoint" && !e.wpflags))
 		if (dirv * (e.origin - v) > 0.5)
 		if (trace_walk(self, v, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
-		if (trace_walk(self, e.origin, PL_MIN, PL_MAX, v, TRACE_MOVE_NOMONSTERS))
+		if (trace_walk(self, e.origin, PL_MIN, PL_MAX, v, TRACE_MOVE_NOMONSTERS)) {
+			if not(trace_walk(self, self.pos1, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
+			if not(trace_walk(self, e.origin, PL_MIN, PL_MAX, self.pos1, TRACE_MOVE_NOMONSTERS)) {
+				for (entity e2 = findradius(v, 50); e2; e2 = e2.chain) {
+					if (e2.classname == "waypoint" && !e2.wpflags) goto removegenerator;
+				}
+				waypoint_spawn(v, v, 0);
+			}
 			goto removegenerator;
+		}
 	}
 	self.count--;
 	if (self.count <= 0) {
