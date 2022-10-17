@@ -483,7 +483,8 @@ void(float generated) waypoint_saveall {
 		print(filename);
 		print(" failed\n");
 	}
-	waypoint_save_links();
+	if not(waypoint_schedulerelink_save)
+		waypoint_save_links();
 }
 
 float waypoint_path_generator_count;
@@ -864,8 +865,10 @@ void(float imp) waypoint_impulse {
 void(void) waypoint_init_delayed {
 	if (!waypoint_loadall()) {
 		print("Loading waypoints failed\n");
-		if (cvar("g_waypoints_auto_generate"))
+		if (cvar("g_waypoints_auto_generate")) {
 			waypoint_generate_waypoints();
+			return;
+		}
 	}
 	if (!waypoint_load_links()) {
 		print("Loading cached waypoint links failed\n");
