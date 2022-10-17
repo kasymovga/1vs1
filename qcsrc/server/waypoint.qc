@@ -309,8 +309,11 @@ void(void) waypoint_schedulerelinkall {
 	print("Relinking all waypoints\n");
 	entity head;
 	head = findchain(classname, "waypoint");
+	float t = 0;
 	while (head) {
 		waypoint_schedulerelink(head);
+		t += 0.01;
+		head.nextthink += t;
 		head = head.chain;
 	}
 }
