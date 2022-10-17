@@ -509,13 +509,13 @@ void(void) waypoint_path_generator_think {
 		dirback = 1;
 		break;
 	}
+	trace_walk(self, self.origin, PL_MIN, PL_MAX, self.origin + dirv * 200, TRACE_MOVE_NOMONSTERS);
+	vector v = trace_endpos;
 	trace_box(self.origin, PL_MIN, PL_MAX, self.origin - '0 0 1', TRACE_MOVE_NOMONSTERS, self);
-	if (trace_fraction < 1 && trace_plane_normal_z < 0.7) goto removegenerator;
+	if (trace_fraction < 1 && trace_plane_normal_z < 0.6) goto removegenerator;
 	if ((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP)
 		goto removegenerator;
 
-	trace_walk(self, self.origin, PL_MIN, PL_MAX, self.origin + dirv * 200, TRACE_MOVE_NOMONSTERS);
-	vector v = trace_endpos;
 	if (vlen(v - self.pos1) <= 50) goto removegenerator;
 	for (entity e = findradius(v, 50); e; e = e.chain) {
 		if (e == self) continue;
@@ -557,8 +557,15 @@ void(void) waypoint_path_generator_think {
 	return;
 }
 
+float waypoint_path_generator_count_warning;
 entity(float dir, vector from, vector lastwp, float depth) waypoint_path_generator_spawn {
-	if (waypoint_path_generator_count >= 1024) return NULL;
+	if (waypoint_path_generator_count >= 2048) {
+		if not(waypoint_path_generator_count_warning) {
+			waypoint_path_generator_count_warning = TRUE;
+			print("waypoint_path_generator_spawn: too much path generators\n");
+		}
+		return NULL;
+	}
 	entity e = spawn();
 	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setorigin(e, from);
@@ -587,7 +594,7 @@ void(void) waypoint_generate_waypoints {
 		if not(e.wpflags & WAYPOINTFLAG_GENERATED) continue;
 		print("Generate pathes from ", vtos(e.origin), "\n");
 		for (i = 0; i < 4; i++) {
-			waypoint_path_generator_spawn(i, e.origin, e.origin, 10);
+			waypoint_path_generator_spawn(i, e.origin, e.origin, 18);
 		}
 	}
 }
