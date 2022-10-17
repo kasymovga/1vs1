@@ -9,3 +9,4 @@ set surv_g_recoil_extra 2
 set surv_g_balance_uzi_recoil 2
 set surv_g_punchangle_decrease_speed 180
 set surv_g_punchangle_decrease_delay 0.5
+set surv_g_waypoints_use_botclip 1

@@ -79,6 +79,7 @@ set g_balance_falldamage_factor 0.05
 set g_balance_falldamage_maxdamage 25
 set g_waypoints_for_items 1 "make waypoints out of items, values: 0 = never, 1 = unless the mapper prevents it by worldspawn.spawnflags & 1, 2 = always"
 set g_waypoints_auto_generate 0 "automatically generate waypoints if map don't have them"
+set g_waypoints_use_botclip 0 "use bot clip when testing links between waypoints"
 seta g_maplist_votable 9 "number of maps that are shown in the map voting at the end of a match"
 seta g_maplist_votable_keeptwotime 15
 seta g_maplist_votable_timeout 20 "timeout for the map voting; must be below 50 seconds!"

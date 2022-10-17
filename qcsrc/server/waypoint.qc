@@ -2,6 +2,7 @@ float bot_navigation_ignoreplayers;
 float waypoint_count;
 float waypoint_schedulerelink_count;
 float waypoint_schedulerelink_save;
+float g_waypoints_use_botclip;
 
 void(entity wp) waypoint_clearlinks;
 void(void) waypoint_save_links;
@@ -40,6 +41,9 @@ entity(vector m1, vector m2, float f) waypoint_spawn {
 	}
 	w = spawn();
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	if (g_waypoints_use_botclip)
+		w.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
+
 	w.classname = "waypoint";
 	w.wpflags = f;
 	setorigin(w, (m1 + m2) * 0.5);
@@ -318,14 +322,17 @@ void(void) waypoint_schedulerelinkall {
 	}
 }
 
+string(string mapname) waypoint_link_cache_path {
+	return strcat("maps/", mapname, ".waypoints.", ftos(waypoint_count), (g_waypoints_use_botclip ? ".cache-monster" : ".cache-bot"));
+}
+
 // Load waypoint links from file
 float(void) waypoint_load_links {
 	string filename, s;
 	float file, tokens, found;
 	entity wp_from = NULL, wp_to;
 	vector wp_to_pos, wp_from_pos;
-	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.", ftos(waypoint_count), ".cache");
+	filename = waypoint_link_cache_path(mapname);
 	file = fopen(filename, FILE_READ);
 	if (file < 0)
 		return FALSE;
@@ -389,8 +396,7 @@ void(void) waypoint_save_links {
 	string filename, s;
 	float file, c, i;
 	entity w, link = NULL;
-	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.", ftos(waypoint_count), ".cache");
+	filename = waypoint_link_cache_path(mapname);
 	file = fopen(filename, FILE_WRITE);
 	if (file < 0) {
 		print("waypoint links save to ");
@@ -883,6 +889,7 @@ void(void) waypoint_init_delayed {
 void(void) waypoint_init {
 	CVAR_CACHE(bot_navigation_ignoreplayers);
 	CVAR_CACHE(g_waypointeditor);
+	CVAR_CACHE(g_waypoints_use_botclip);
 	entity w = world;
 	while ((w = find(w, classname, "waypoint"))) {
 		waypoint_show(w);
