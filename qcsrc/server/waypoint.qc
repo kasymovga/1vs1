@@ -516,32 +516,27 @@ void(void) waypoint_path_generator_think {
 
 	trace_walk(self, self.origin, PL_MIN, PL_MAX, self.origin + dirv * 200, TRACE_MOVE_NOMONSTERS);
 	vector v = trace_endpos;
-	if (vlen(trace_endpos - self.pos1) <= 50) goto removegenerator;
-	if not(trace_walk(self, self.pos1, PL_MIN, PL_MAX, v, TRACE_MOVE_NOMONSTERS)) {
-		waypoint_spawn(self.origin, self.origin, 0);
-		self.pos1 = self.origin;
-	}
-	for (entity e = findradius(v, 75); e; e = e.chain) {
+	if (vlen(v - self.pos1) <= 50) goto removegenerator;
+	for (entity e = findradius(v, 50); e; e = e.chain) {
 		if (e == self) continue;
+		if (e.classname == "waypoint" && !e.wpflags) goto removegenerator;
 		if (e.classname == "waypoint_path_generator") goto removegenerator;
 		if (e.classname == "trigger_hurt") goto removegenerator;
 	}
-	for (entity e = findradius(v, 200); e; e = e.chain) {
+	if (vlen(v - self.pos1) > 800 || !trace_walk(self, self.pos1, PL_MIN, PL_MAX, v, TRACE_MOVE_NOMONSTERS)) {
+		waypoint_spawn(self.origin, self.origin, 0);
+		self.pos1 = self.origin;
+	}
+	for (entity e = findradius(v, 500); e; e = e.chain) {
 		if (e != self)
-		if (e.classname == "waypoint_path_generator")
+		if (e.classname == "waypoint_path_generator" || (e.classname == "waypoint" && !e.wpflags))
+		if (dirv * (e.origin - v) > 0.5)
 		if (trace_walk(self, v, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
 		if (trace_walk(self, e.origin, PL_MIN, PL_MAX, v, TRACE_MOVE_NOMONSTERS))
-		if (dirv * (e.origin - v) > 0.5)
 			goto removegenerator;
 	}
 	self.count--;
 	if (self.count <= 0) {
-		for (entity e = findradius(v, 75); e; e = e.chain) {
-			if (e.classname == "waypoint")
-			if not(e.wpflags & (WAYPOINTFLAG_ITEM | WAYPOINTFLAG_GENERATED))
-				goto removegenerator;
-		}
-		waypoint_spawn(v, v, 0);
 		goto removegenerator;
 	}
 	setorigin(self, v);
@@ -567,12 +562,16 @@ entity(float dir, vector from, vector lastwp, float depth) waypoint_path_generat
 	entity e = spawn();
 	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setorigin(e, from);
-	e.pos1 = from;
+	e.pos1 = lastwp;
 	e.cnt = dir;
 	e.count = depth;
 	e.think = waypoint_path_generator_think;
 	e.nextthink = time + 0.1;
 	e.classname = "waypoint_path_generator";
+	if (!entity_move_out_of_solid(e)) {
+		remove(e);
+		return NULL;
+	}
 	waypoint_path_generator_count++;
 	return e;
 }
@@ -583,18 +582,6 @@ void(void) waypoint_generate_waypoints {
 	print("Generating waypoints\n");
 	for (e = NULL; (e = find(e, classname, "waypoint")); ) {
 		if not(e.wpflags) remove(e);
-	}
-	for (e = NULL; (e = find(e, classname, "info_player_deathmatch")); ) {
-		print("Generate pathes from ", vtos(e.origin), "\n");
-		for (i = 0; i < 4; i++) {
-			waypoint_path_generator_spawn(i, e.origin, e.origin, 8);
-		}
-	}
-	for (e = NULL; (e = find(e, classname, "info_teleport_destination")); ) {
-		print("Generate pathes from ", vtos(e.origin), "\n");
-		for (i = 0; i < 4; i++) {
-			waypoint_path_generator_spawn(i, e.origin, e.origin, 10);
-		}
 	}
 	for (e = NULL; (e = find(e, classname, "waypoint")); ) {
 		if not(e.wpflags & WAYPOINTFLAG_GENERATED) continue;
