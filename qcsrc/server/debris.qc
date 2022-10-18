@@ -34,6 +34,7 @@ void(void) debris_init {
 		s = argv(i);
 		if ((item_spawnfunc = item_spawnfunc_for(s))) {
 			self = spawn();
+			self.noalign = 1;
 			item_spawnfunc(); //for precache
 			remove(self);
 		} else if ((e = weapon_info_by_name(s))) {
