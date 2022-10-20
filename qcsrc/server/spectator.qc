@@ -111,37 +111,30 @@ float() spectator_spectate_next {
 }
 
 void() spectator_think {
-	if (self.flags & FL_JUMPRELEASED) {
-		if (self.BUTTON_JUMP && self.team <= 0) {
-			self.flags &= ~FL_JUMPRELEASED;
-			self.flags |= FL_SPAWNING;
-		} else if (self.BUTTON_ATCK) {
-			self.flags &= ~FL_JUMPRELEASED;
-			if (spectator_spectate_next() == 1) {
-				self.classname = "spectator";
-			} else {
-				self.classname = "observer";
-				self.dmg_inflictor = NULL;
-				client_put();
-			}
-		} else if (self.BUTTON_ATCK2 && self.team <= 0) {
-			spectator_observer_spawn(FALSE);
+	if (self.BUTTON_JUMP && self.team <= 0) {
+		self.flags |= FL_SPAWNING;
+	} else if (self.BUTTON_ATCK) {
+		if (spectator_spectate_next() == 1) {
+			self.classname = "spectator";
 		} else {
-			if not(spectator_update())
-				spectator_observer_spawn(FALSE);
+			self.classname = "observer";
+			self.dmg_inflictor = NULL;
+			client_put();
 		}
+	} else if (self.BUTTON_ATCK2 && self.team <= 0) {
+		spectator_observer_spawn(FALSE);
 	} else {
-		if not(self.BUTTON_ATCK || self.BUTTON_ATCK2) {
-			self.flags |= FL_JUMPRELEASED;
-			if (self.team <= 0)
-			if (self.flags & FL_SPAWNING) {
-				self.flags &= ~FL_SPAWNING;
-				spectator_to_player();
-				return;
-			}
+		if not(spectator_update())
+			spectator_observer_spawn(FALSE);
+	}
+	if not(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.BUTTON_JUMP) {
+		if (self.team <= 0)
+		if (self.flags & FL_SPAWNING) {
+			self.flags &= ~FL_SPAWNING;
+			spectator_to_player();
+			return;
 		}
 	}
-	self.flags |= FL_CLIENT | FL_NOTARGET;
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status & 255;
 	self.spectatee_status = num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0);
@@ -153,26 +146,21 @@ void() spectator_observer_think {
 	if (self.team > 0) {
 		if (spectator_spectate_next() == 1) {
 			self.classname = "spectator";
-			self.flags |= FL_JUMPRELEASED;
+			spectator_think();
+			return;
 		}
-	} else if (self.flags & FL_JUMPRELEASED) {
-		if (self.BUTTON_JUMP) {
-			self.flags &= ~FL_JUMPRELEASED;
-			self.flags |= FL_SPAWNING;
-		} else if (self.BUTTON_ATCK) {
-			self.flags &= ~FL_JUMPRELEASED;
-			if (spectator_spectate_next() == 1) {
-				self.classname = "spectator";
-			}
+	}
+	if (self.BUTTON_JUMP) {
+		self.flags |= FL_SPAWNING;
+	} else if (self.BUTTON_ATCK) {
+		if (spectator_spectate_next() == 1) {
+			self.classname = "spectator";
 		}
 	} else {
-		if (!(self.BUTTON_ATCK || self.BUTTON_JUMP)) {
-			self.flags |= FL_JUMPRELEASED;
-			if (self.flags & FL_SPAWNING) {
-				self.flags &= ~FL_SPAWNING;
-				spectator_to_player();
-				return;
-			}
+		if (self.flags & FL_SPAWNING) {
+			self.flags &= ~FL_SPAWNING;
+			spectator_to_player();
+			return;
 		}
 	}
 }

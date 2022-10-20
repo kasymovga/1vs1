@@ -718,49 +718,49 @@ void(void) physics_player_frame {
 		physics_movement = m;
 	}
 	physics_frame_begin_hook();
-	if (physics_plug)
-	if (physics_plug()) {
-		physics_frame_end_hook();
-		return;
-	}
-	physics_update_status();
-	if (physics_button_crouch) {
-		if not(sv_disable_crouch)
-		if (!physics_crouch) {
-			physics_crouch = TRUE;
-			self.view_ofs = self.crouch_view_ofs;
-			setsize (self, self.crouch_mins, self.crouch_maxs);
-			physics_on_crouch_hook();
-		}
-	} else {
-		if (physics_crouch) {
-			vector v;
-			v_x = v_y = 0;
-			v_z = self.stand_maxs_z - self.crouch_mins_z;
-			trace_box(self.origin, self.stand_mins, self.stand_maxs - v, self.origin + v, FALSE, self);
-			if (!trace_startsolid && trace_fraction == 1) {
-				physics_crouch = FALSE;
-				self.view_ofs = self.stand_view_ofs;
-				setsize (self, self.stand_mins, self.stand_maxs);
-			}
-		}
-	}
 	if (physics_movetype == MOVETYPE_NONE)
 		return;
 
 	maxspd_mod = physics_max_speed_mod();
-	// if dead, behave differently
-	if (physics_deadflag != DEAD_NO)
-	if (physics_deadflag != DEAD_FREEZE) {
-		if (physics_flags & FL_ONGROUND)
-			physics_velocity = '0 0 0';
-		else if (physics_waterlevel >= WATERLEVEL_SWIMMING)
-			physics_velocity = physics_velocity * (1 - frametime * sv_friction);
-
-		goto end;
-	}
-	physics_check_ground_hook();
 	if (physics_is_player) {
+		if (physics_plug)
+		if (physics_plug()) {
+			physics_frame_end_hook();
+			return;
+		}
+		physics_update_status();
+		if (physics_button_crouch) {
+			if not(sv_disable_crouch)
+			if (!physics_crouch) {
+				physics_crouch = TRUE;
+				self.view_ofs = self.crouch_view_ofs;
+				setsize (self, self.crouch_mins, self.crouch_maxs);
+				physics_on_crouch_hook();
+			}
+		} else {
+			if (physics_crouch) {
+				vector v;
+				v_x = v_y = 0;
+				v_z = self.stand_maxs_z - self.crouch_mins_z;
+				trace_box(self.origin, self.stand_mins, self.stand_maxs - v, self.origin + v, FALSE, self);
+				if (!trace_startsolid && trace_fraction == 1) {
+					physics_crouch = FALSE;
+					self.view_ofs = self.stand_view_ofs;
+					setsize (self, self.stand_mins, self.stand_maxs);
+				}
+			}
+		}
+		// if dead, behave differently
+		if (physics_deadflag != DEAD_NO)
+		if (physics_deadflag != DEAD_FREEZE) {
+			if (physics_flags & FL_ONGROUND)
+				physics_velocity = '0 0 0';
+			else if (physics_waterlevel >= WATERLEVEL_SWIMMING)
+				physics_velocity = physics_velocity * (1 - frametime * sv_friction);
+
+			goto end;
+		}
+		physics_check_ground_hook();
 		if (physics_button_jump)
 			physics_player_jump();
 		else {
@@ -771,11 +771,11 @@ void(void) physics_player_frame {
 		if not(physics_ladder)
 		if (physics_deadflag == DEAD_NO)
 			physics_check_water_jump();
-	}
-	if (physics_player_plug)
-	if (physics_player_plug(maxspd_mod))
-		goto end;
 
+		if (physics_player_plug)
+		if (physics_player_plug(maxspd_mod))
+			goto end;
+	}
 	if (physics_flags & FL_WATERJUMP) {
 		physics_velocity_x = self.movedir_x;
 		physics_velocity_y = self.movedir_y;
