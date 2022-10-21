@@ -4,17 +4,17 @@ set mixed_arts_g_rank_type "mixed"
 set mixed_arts_g_ability_class0_name "Rifle warrior"
 set mixed_arts_g_ability_class0_value "health=100 armor=100 physics=dodging,walljump weapons=campingrifle nadget hookuseswap"
 set mixed_arts_g_ability_class1_name "Weapon master"
-set mixed_arts_g_ability_class1_value "health=100 armor=75 weapons=laser,shotgun,rocketlauncher,grenadelauncher,nex,uzi,crylink,electro,hagar"
+set mixed_arts_g_ability_class1_value "health=100 armor=75 weapons=laser,shotgun,rocketlauncher,grenadelauncher,nex,uzi,crylink,electro,hagar melee"
 set mixed_arts_g_ability_class2_name "Minstagiber"
-set mixed_arts_g_ability_class2_value "health=100 armor=50 weapons=minstanex hook"
+set mixed_arts_g_ability_class2_value "health=100 armor=50 weapons=minstanex hook melee"
 set mixed_arts_g_ability_class3_name "Double-rocket"
-set mixed_arts_g_ability_class3_value "health=75 armor=0 weapons=rocketlauncher akimbo=rocketlauncher"
+set mixed_arts_g_ability_class3_value "health=75 armor=0 weapons=rocketlauncher akimbo=rocketlauncher melee"
 set mixed_arts_g_ability_class4_name "Double-laser"
-set mixed_arts_g_ability_class4_value "health=100 armor=50 weapons=laser akimbo=laser runes=stun"
+set mixed_arts_g_ability_class4_value "health=100 armor=50 weapons=laser akimbo=laser runes=stun melee"
 set mixed_arts_g_ability_class5_name "Jet Fighter"
-set mixed_arts_g_ability_class5_value "health=100 armor=100 weapons=hlac jetpack runes=ignite"
+set mixed_arts_g_ability_class5_value "health=100 armor=100 weapons=hlac jetpack runes=ignite melee"
 set mixed_arts_g_ability_class6_name "Boomsticker"
-set mixed_arts_g_ability_class6_value "health=100 armor=100 weapons=supershotgun,chainsaw physics=doublejump,climb runes=vitality,speed"
+set mixed_arts_g_ability_class6_value "health=100 armor=100 weapons=supershotgun,chainsaw physics=doublejump,climb runes=vitality,speed melee"
 set mixed_arts_g_ability_class7_name "Overkiller"
 set mixed_arts_g_ability_class7_value "health=100 armor=75 weapons=ok_sniper,ok_mg,ok_shotgun physics=dodging laser hookuseswap nadget"
 set mixed_arts_g_use_ammunition 0
@@ -56,7 +56,7 @@ set mixed_arts_g_weaponreplace_laser armor_small
 set mixed_arts_g_weaponreplace_porto armor_small
 set mixed_arts_g_weaponreplace_hook armor_small
 set mixed_arts_g_balance_grapplehook_damage_interval 0.1
-set mixed_arts_g_balance_melee 1
+set mixed_arts_g_balance_melee 0
 set mixed_arts_g_shootfromeye 1
 set mixed_arts_g_balance_pause_health_regen_spawn 5
 set mixed_arts_g_balance_pause_armor_rot_spawn 5
