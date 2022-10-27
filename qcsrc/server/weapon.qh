@@ -65,7 +65,7 @@ enum {
 .float wframe;
 .vector shotorg_visual;
 .string model2; // wpn- sprite name
-.float attack_finished_for[WEAPON_COUNT];
+.float attack_finished_for[WEAPON_COUNT_EXTRA];
 .float attack_finished_single;
 #define WEAPON_ATTACK_FINISHED_FOR(ent,w) ((ent).(attack_finished_for[(w) - WEAPON_FIRST]))
 #define WEAPON_ATTACK_FINISHED(ent) WEAPON_ATTACK_FINISHED_FOR(ent,(ent).weapon)
