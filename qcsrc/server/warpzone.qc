@@ -876,9 +876,7 @@ void(void) warpzone_spawn {
 	self.warpzone_next = warpzone_first;
 	if not(warpzone_first) {
 		warpzone_enable();
-		entity e = spawn();
-		e.think = warpzone_init_delayed;
-		e.nextthink = time;
+		entity_initialize(self, warpzone_init_delayed, INITPRIO_FINDTARGET);
 	}
 	warpzone_first = self;
 	warpzone_chain_add(self);
