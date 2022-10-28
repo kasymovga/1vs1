@@ -249,6 +249,7 @@ void(entity wp) waypoint_schedulerelink {
 // spawnfunc_waypoint map entity
 void(void) spawnfunc_waypoint {
 	setorigin(self, self.origin);
+	self.wpflags |= WAYPOINTFLAG_GENERATED;
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(self);
 	//waypoint_schedulerelink(self);
@@ -610,7 +611,10 @@ void(void) waypoint_generate_waypoints {
 	float i;
 	print("Generating waypoints\n");
 	for (e = NULL; (e = find(e, classname, "waypoint")); ) {
-		if not(e.wpflags) remove(e);
+		if not(e.wpflags) {
+			remove(e);
+			waypoint_count--;
+		}
 	}
 	for (e = NULL; (e = find(e, classname, "waypoint")); ) {
 		if not(e.wpflags & WAYPOINTFLAG_GENERATED) continue;
