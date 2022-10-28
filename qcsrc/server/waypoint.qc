@@ -30,14 +30,12 @@ void(entity w) waypoint_show {
 // (suitable for spawnfunc_waypoint editor)
 entity(vector m1, vector m2, float f) waypoint_spawn {
 	entity w;
-	w = find(world, classname, "waypoint");
 	if not(f & WAYPOINTFLAG_PERSONAL)
-	while (w) {
+	for (w = findradius((m1 + m2) * 0.5, vlen(m1 - m2) * 0.5 + 0.125); w; w = w.chain) {
+		if (w.classname != "waypoint") continue;
 		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
 		if (math_boxes_overlap(m1, m2, w.absmin, w.absmax))
 			return w;
-
-		w = find(w, classname, "waypoint");
 	}
 	w = spawn();
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
