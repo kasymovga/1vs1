@@ -538,6 +538,11 @@ void(void) waypoint_path_generator_think {
 		waypoint_spawn(self.origin, self.origin, 0);
 		self.pos1 = self.origin;
 	}
+	if not(v_x > world.mins_x && v_x < world.maxs_x
+			&& v_y > world.mins_y && v_y < world.maxs_y
+			&& v_z > world.mins_z && v_z < world.maxs_z)
+		goto removegenerator;
+
 	for (entity e = findradius(v, 500); e; e = e.chain) {
 		if (e != self)
 		if ((e.classname == "waypoint_path_generator" && e.cnt != self.cnt) || (e.classname == "waypoint" && !e.wpflags))
