@@ -17,6 +17,8 @@ void(entity w) waypoint_show {
 		setsize(w, m1, m2);
 		if (w.wpflags & WAYPOINTFLAG_ITEM)
 			w.colormod = '1 0 0';
+		else if (w.wpflags & WAYPOINTFLAG_TELEPORT)
+			w.colormod = '0 1 1';
 		else if (w.wpflags & WAYPOINTFLAG_GENERATED)
 			w.colormod = '1 1 0';
 		else
@@ -74,9 +76,6 @@ entity(vector m1, vector m2, float f) waypoint_spawn {
 void(entity from, entity to) waypoint_addlink {
 	float c;
 	if (from == to)
-		return;
-
-	if (from.wpflags & WAYPOINTFLAG_NORELINK)
 		return;
 
 	if (from.wp00 == to) return;if (from.wp01 == to) return;if (from.wp02 == to) return;if (from.wp03 == to) return;
@@ -230,20 +229,20 @@ void(entity wp) waypoint_schedulerelink {
 		return;
 
 	// TODO: add some sort of visible box in edit mode for box waypoints
-	waypoint_schedulerelink_count++;
 	waypoint_show(wp);
 	wp.wpisbox = vlen(wp.size) > 0;
 	wp.enemy = world;
 	if (!(wp.wpflags & WAYPOINTFLAG_PERSONAL))
 		wp.owner = world;
 
-	if (!(wp.wpflags & WAYPOINTFLAG_NORELINK))
-		waypoint_clearlinks(wp);
+	if ((wp.wpflags & WAYPOINTFLAG_NORELINK))
+		return;
 
+	waypoint_clearlinks(wp);
 	// schedule an actual relink on next frame
 	wp.think = waypoint_think;
 	wp.nextthink = time;
-	wp.effects = EFFECT_LOWPRECISION;
+	waypoint_schedulerelink_count++;
 }
 
 // spawnfunc_waypoint map entity
@@ -315,8 +314,10 @@ void(void) waypoint_schedulerelinkall {
 	float t = 0;
 	while (head) {
 		waypoint_schedulerelink(head);
-		t += 0.01;
-		head.nextthink += t;
+		if (head.nextthink) {
+			t += 0.01;
+			head.nextthink += t;
+		}
 		head = head.chain;
 	}
 }
