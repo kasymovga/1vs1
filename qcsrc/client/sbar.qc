@@ -1740,8 +1740,8 @@ void(void) sbar_draw {
 			sbar_accuracy_draw();
 			sbar_score_draw();
 		} else {
-			if (mapvote_active)
-				mapvote_draw();
+			if (map_vote_active)
+				map_vote_draw();
 		}
 		sbar_reset();
 	} else if (_health <= 0 || view_observer_status) {

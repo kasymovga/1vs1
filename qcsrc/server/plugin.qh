@@ -114,3 +114,4 @@ var float(float f) plugin_chain_weapon_frame_switch_mod = { return f; }
 var entity(entity pl) plugin_chain_player_entity = { return pl; }
 var float(void) plugin_chain_bot_aim = { return FALSE; }
 var float(float deathtype, entity targ, entity inflictor, entity attacker) plugin_chain_player_obituary_frag = { return FALSE; }
+var string(string s) plugin_map_vote_send_map_name_mod = { return s; }

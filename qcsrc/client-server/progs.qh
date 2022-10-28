@@ -14,7 +14,7 @@
 #include "item.qh"
 #include "jetpack.qh"
 #include "key.qh"
-#include "mapvote.qh"
+#include "map_vote.qh"
 #include "math.qh"
 #include "menu.qh"
 #include "nadget.qh"

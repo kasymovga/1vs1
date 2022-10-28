@@ -1,2 +1,0 @@
-float mapvote_active;
-void(void) mapvote_draw;

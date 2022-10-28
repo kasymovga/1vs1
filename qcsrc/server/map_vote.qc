@@ -5,14 +5,14 @@ string map_vote_message;
 
 float map_vote_count;
 float map_vote_count_real;
-string map_vote_maps[MAPVOTE_COUNT];
-string map_vote_pictures[MAPVOTE_COUNT];
-float map_vote_maps_suggested[MAPVOTE_COUNT];
-string map_vote_suggestions[MAPVOTE_COUNT];
+string map_vote_maps[MAP_VOTE_COUNT];
+string map_vote_pictures[MAP_VOTE_COUNT];
+float map_vote_maps_suggested[MAP_VOTE_COUNT];
+string map_vote_suggestions[MAP_VOTE_COUNT];
 float map_vote_suggestion_ptr;
 float map_vote_maxlen;
 float map_vote_voters;
-float map_vote_votes[MAPVOTE_COUNT];
+float map_vote_votes[MAP_VOTE_COUNT];
 float map_vote_run;
 float map_vote_detail;
 float map_vote_abstain;
@@ -53,7 +53,7 @@ string(string m) map_vote_suggest {
 		if (map_vote_suggestions[i] == m)
 			return "This map was already suggested.";
 
-	if (map_vote_suggestion_ptr >= MAPVOTE_COUNT) {
+	if (map_vote_suggestion_ptr >= MAP_VOTE_COUNT) {
 		i = floor(random() * map_vote_suggestion_ptr);
 	} else {
 		i = map_vote_suggestion_ptr;
@@ -96,9 +96,9 @@ void() map_vote_init {
 	map_vote_detail = !cvar("g_maplist_votable_nodetail");
 	map_vote_abstain = cvar("g_maplist_votable_abstain");
 	if (map_vote_abstain)
-		nmax = min(MAPVOTE_COUNT - 1, cvar("g_maplist_votable"));
+		nmax = min(MAP_VOTE_COUNT - 1, cvar("g_maplist_votable"));
 	else
-		nmax = min(MAPVOTE_COUNT, cvar("g_maplist_votable"));
+		nmax = min(MAP_VOTE_COUNT, cvar("g_maplist_votable"));
 
 	smax = min3(nmax, cvar("g_maplist_votable_suggestions"), map_vote_suggestion_ptr);
 	if (map_vote_suggestion_ptr)
@@ -186,7 +186,7 @@ float(entity to, float sf) map_vote_send {
 					net_write_string(MSG_ENTITY, ""); // abstain needs no text
 					net_write_string(MSG_ENTITY, ""); // abstain needs no pack
 				} else {
-					net_write_string(MSG_ENTITY, map_vote_maps[i]);
+					net_write_string(MSG_ENTITY, plugin_map_vote_send_map_name_mod(map_vote_maps[i]));
 					picfile = map_vote_pictures[i];
 					net_write_string(MSG_ENTITY, picfile);
 					pakfile = whichpack(strcat(picfile, ".tga"));

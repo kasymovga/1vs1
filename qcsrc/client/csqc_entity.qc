@@ -110,7 +110,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_RADARLINK] = teamradar_link_read;
 	csqc_entity_parsers[NET_CSQC_PROJECTILE] = projectile_read;
 	csqc_entity_parsers[NET_CSQC_INIT] = main_init_read;
-	csqc_entity_parsers[NET_CSQC_MAPVOTE] = mapvote_read;
+	csqc_entity_parsers[NET_CSQC_MAPVOTE] = map_vote_read;
 	csqc_entity_parsers[NET_CSQC_RANDOMSEED] = prandom_seed_read;
 	csqc_entity_parsers[NET_CSQC_MODEL] = model_read;
 	csqc_entity_parsers[NET_CSQC_MODELEFFECT] = effect_model_read;
@@ -137,7 +137,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_ICE] = ice_read;
 	csqc_entity_parsers[NET_CSQC_3RDVIEW] = thirdview_read;
 	csqc_entity_parsers[NET_CSQC_SHOOTINGRANGE] = shootingrange_read;
-	csqc_entity_temp_parsers[NET_TE_CSQC_PICTURE - NET_TE_CSQC_FIRST] = mapvote_picture_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_PICTURE - NET_TE_CSQC_FIRST] = map_vote_picture_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RACE - NET_TE_CSQC_FIRST] = race_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_ZCURVEPARTICLES - NET_TE_CSQC_FIRST] = particles_zcurve_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_NEXGUNBEAMPARTICLE - NET_TE_CSQC_FIRST] = particles_nex_beam_read;

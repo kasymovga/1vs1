@@ -1345,6 +1345,14 @@ string(string s) race_map_finish_message_mod {
 	return "^2Race finished!";
 }
 
+string(string s) race_map_vote_send_map_name_mod {
+	string n = db_get(db_server, strcat(s, CTS_RECORD, "netname"));
+	if (n != "")
+		return strcat(s, " ^0(^7", n, "^0)^7");
+
+	return s;
+}
+
 void(void) race_init {
 	if (game_type == GAME_TYPE_RACE) {
 		float qualifying_override = cvar("g_race_qualifying_timelimit_override");
@@ -1382,6 +1390,7 @@ void(void) race_init {
 		race_cmd_client_handle_next = plugin_chain_cmd_client_handle;
 		plugin_chain_cmd_client_handle = race_cmd_client_handle;
 		plugin_map_finish_message_mod = race_map_finish_message_mod;
+		plugin_map_vote_send_map_name_mod = race_map_vote_send_map_name_mod;
 	}
 	if (g_race_qualifying) {
 		player_independent = 1;

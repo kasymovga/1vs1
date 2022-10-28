@@ -1,0 +1,2 @@
+float map_vote_active;
+void(void) map_vote_draw;

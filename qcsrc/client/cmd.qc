@@ -17,7 +17,7 @@ void(string msg) GameCommand { //called by engine
 	string cmd;
 	cmd = argv(0);
 	if (cmd == "mv_download") {
-		mapvote_preview_download(argc);
+		map_vote_preview_download(argc);
 	} else if (cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
 	} else if (cmd == "radar") {

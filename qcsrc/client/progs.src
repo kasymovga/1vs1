@@ -19,7 +19,7 @@ waypointsprite.qh
 physics/move.qh
 prandom.qh
 bgmscript.qh
-mapvote.qh
+map_vote.qh
 menu.qh
 mouse.qh
 progressbar.qh
@@ -77,7 +77,7 @@ kh.qc
 single.qc
 nb.qc
 sbar.qc
-mapvote.qc
+map_vote.qc
 report.qh
 hook.qc
 particles.qc

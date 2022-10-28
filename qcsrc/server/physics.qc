@@ -510,6 +510,11 @@ void(void) physics_init {
 	CVAR_CACHE(g_walljump_velocity_z_factor);
 	CVAR_CACHE(g_dodging);
 	CVAR_CACHE(g_physics_fixed);
+	if (g_physics_fixed)
+		cvar_set("sys_ticrate", "0.008");
+	else
+		cvar_set("sys_ticrate", "0.032");
+
 	CVAR_CACHE(g_adjust_view_offset);
 	g_waterfriction = physics_cvar("sv_waterfriction");
 	g_wateraccelerate = physics_cvar("sv_wateraccelerate");
