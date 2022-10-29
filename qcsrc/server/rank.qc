@@ -5,7 +5,7 @@ float RANK_URI_HANDLER;
 
 void(float id, float status, string data) rank_uri_handler {
 	if (status) {
-		print(strcat("external rank database error: ", ftos(status), "\n"));
+		print(strcat("rank_uri_handler: external rank database error: ", ftos(status), "\n"));
 		return;
 	}
 	if (map_finished)
@@ -13,8 +13,11 @@ void(float id, float status, string data) rank_uri_handler {
 
 	string player_id = str_car(data);
 	string s = str_cdr(data);
-	string type = str_car(data);
-	if (type != rank_id) return;
+	string type = str_car(s);
+	if (type != rank_id) {
+		print("rank_uri_handler: wrong rank type from external rank database\n");
+		return;
+	}
 	float _rank = stof(str_cdr(s));
 	if not(_rank)
 		return;
