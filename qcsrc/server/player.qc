@@ -2114,6 +2114,7 @@ void(entity spot) player_spawn {
 		debris_setup();
 
 	self.iscreature = TRUE;
+	self.delay = FALSE;
 	player_body_setup(self);
 	self.flags = FL_CLIENT;
 	self.takedamage = DAMAGE_AIM;

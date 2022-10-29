@@ -113,7 +113,7 @@ float() spectator_spectate_next {
 void() spectator_think {
 	if (self.BUTTON_JUMP && self.team <= 0) {
 		self.flags |= FL_SPAWNING;
-	} else if (self.BUTTON_ATCK) {
+	} else if (self.BUTTON_ATCK && !self.delay) {
 		if (spectator_spectate_next() == 1) {
 			self.classname = "spectator";
 		} else {
@@ -140,6 +140,8 @@ void() spectator_think {
 	self.spectatee_status = num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0);
 	if ((self.spectatee_status & 255) != (oldspectatee_status & 255))
 		plugin_InitSpectator();
+
+	self.delay = self.BUTTON_ATCK;
 }
 
 void() spectator_observer_think {
@@ -269,6 +271,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
+	self.delay = 0;
 	spectator_note.SendFlags = 1;
 	self.customizeentityforclient = NULL;
 	if not(frags_team_reset)
