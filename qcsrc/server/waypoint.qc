@@ -3,6 +3,7 @@ float waypoint_count;
 float waypoint_generated_count;
 float waypoint_schedulerelink_count;
 float waypoint_schedulerelink_save;
+float waypoint_presents_on_map;
 float g_waypoints_use_botclip;
 
 void(entity wp) waypoint_clearlinks;
@@ -249,11 +250,28 @@ void(entity wp) waypoint_schedulerelink {
 	waypoint_schedulerelink_count++;
 }
 
+void(void) waypoint_target_init {
+	entity e, e2 = NULL;
+	if (self.target2 != "") e2 = find(NULL, targetname, self.target2);
+	if not(e2) e2 = self;
+	if ((e = find(NULL, targetname, self.target)))
+	if (e.classname == "waypoint") {
+		waypoint_spawnforteleporter(e2, e.origin, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
+		waypoint_presents_on_map = TRUE;
+	}
+	remove(self);
+}
+
 // spawnfunc_waypoint map entity
 void(void) spawnfunc_waypoint {
+	if (self.target != "") {
+		entity_initialize(self, waypoint_target_init, INITPRIO_FINDTARGET);
+		return;
+	}
 	vector v = self.origin;
 	remove(self);
 	waypoint_spawn(v, v, WAYPOINTFLAG_GENERATED);
+	waypoint_presents_on_map = TRUE;
 }
 
 // remove a spawnfunc_waypoint, and schedule all neighbors to relink
@@ -884,7 +902,7 @@ void(float imp) waypoint_impulse {
 void(void) waypoint_init_delayed {
 	if (!waypoint_loadall()) {
 		print("Loading waypoints failed\n");
-		if (cvar("g_waypoints_auto_generate")) {
+		if (cvar("g_waypoints_auto_generate") && !waypoint_presents_on_map) {
 			waypoint_generate_waypoints();
 			return;
 		}
