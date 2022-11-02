@@ -291,19 +291,19 @@ entity(entity e, float deep) akimbo_ghost_get_if_exists {
 
 float(entity p, float wpn, string name) akimbo_weapon_give {
 	entity wi = weapon_info(wpn);
+	if not((g_akimbo_weapons & wi.weapons) || (g_akimbo_weapons_extra & wi.weapons_extra))
+		return FALSE;
+
 	entity ag = akimbo_ghost_get(p, 0);
 	if ((wi.weapons & ag.weapons) || (wi.weapons_extra & ag.weapons_extra))
 		return FALSE;
 
-	if ((g_akimbo_weapons & wi.weapons) || (g_akimbo_weapons_extra & wi.weapons_extra)) {
-		ag.weapons |= wi.weapons;
-		ag.weapons_extra |= wi.weapons_extra;
-		sprint(p, "You got ^4Akimbo ^2");
-		sprint(p, name);
-		sprint(p, "\n");
-		return TRUE;
-	}
-	return FALSE;
+	ag.weapons |= wi.weapons;
+	ag.weapons_extra |= wi.weapons_extra;
+	sprint(p, "You got ^4Akimbo ^2");
+	sprint(p, name);
+	sprint(p, "\n");
+	return TRUE;
 }
 
 float(entity p, float wpn, string name) akimbo_weapon_drop {
