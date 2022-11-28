@@ -4,7 +4,6 @@ float IT_UNLIMITED_SUPERWEAPONS = 2;
 // when this bit is set, using a superweapon does not throw it away. Checkpoints can give this powerup.
 float IT_CTF_SHIELDED = 4; // set for the flag shield
 // using jetpack
-float IT_USING_JETPACK = 8; // confirmation that button is pressed
 float IT_JETPACK = 16; // actual item
 float IT_FUEL_REGEN = 32; // fuel regeneration trigger
 float IT_SHELLS = 256;

@@ -1770,7 +1770,6 @@ void() player_regen {
 	}
 }
 
-.float items_added;
 void() player_think {
 	if (self.deadflag == DEAD_NO)
 	if not(map_finished)
@@ -1823,13 +1822,6 @@ void() player_think {
 	weapon_frame();
 	akimbo_weapon_frame();
 	if (frametime) {
-		self.items &= ~self.items_added;
-		self.items_added = 0;
-		if (self.items & IT_JETPACK)
-			if (self.items & IT_FUEL_REGEN || self.ammo_fuel > 0 || !g_jetpack_fuel)
-				self.items_added |= IT_FUEL;
-
-		self.items |= self.items_added;
 		player_regen();
 		player_anim();
 	}

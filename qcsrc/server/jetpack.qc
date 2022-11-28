@@ -16,7 +16,6 @@ void(float fuel_fact) jetpack_finished {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_fuel -= g_jetpack_fuel * frametime * fuel_fact;
 
-	self.items |= IT_USING_JETPACK;
 	// jetpack also inhibits health regeneration, but only for 1 second
 	self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_fuel_regen);
 }
@@ -42,12 +41,14 @@ float(void) jetpack_using {
 
 var void() jetpack_player_effects_next_link;
 void() jetpack_player_effects {
-	if((self.items & IT_USING_JETPACK) && !self.deadflag) {
+	if (self.items & IT_FUEL_REGEN || self.ammo_fuel > 0 || !g_jetpack_fuel)
+		self.items |= IT_FUEL;
+
+	if (physics_button_jump && (physics_flags & FL_JUMPRELEASED) && !(physics_flags & FL_ONGROUND) && !physics_waterlevel && jetpack_using() && !self.deadflag) {
 		if not(self.modelflags & MF_ROCKET) {
 			sound(self, CHAN_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
 			self.modelflags |= MF_ROCKET;
 		}
-		self.items &= ~IT_USING_JETPACK;
 	} else {
 		if (self.modelflags & MF_ROCKET) {
 			sound_stop(self, CHAN_TRIGGER);
