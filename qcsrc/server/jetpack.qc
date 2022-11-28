@@ -43,6 +43,8 @@ var void() jetpack_player_effects_next_link;
 void() jetpack_player_effects {
 	if (self.items & IT_FUEL_REGEN || self.ammo_fuel > 0 || !g_jetpack_fuel)
 		self.items |= IT_FUEL;
+	else
+		self.items &= ~IT_FUEL;
 
 	if (physics_button_jump && (physics_flags & FL_JUMPRELEASED) && !(physics_flags & FL_ONGROUND) && !physics_waterlevel && jetpack_using() && !self.deadflag) {
 		if not(self.modelflags & MF_ROCKET) {
