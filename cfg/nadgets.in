@@ -323,7 +323,7 @@ set g_nadgets_linker_detect_enemies_teamwide 1
 set g_nadgets_laser_regen_time 6
 set g_nadgets_laser_regen_factor 0
 set g_nadgets_laser_regen_exponent 1.3
-set g_nadgets_laser_regen_limit 2
+set g_nadgets_laser_regen_limit 3
 set g_nadgets_laser_regen_scale 1
 set g_nadgets_laser_launchspeed 0
 set g_nadgets_laser_launch_fullforce_explodes_in_yo_face 0
@@ -424,7 +424,7 @@ set g_nadgets_sentry_friction 3
 set g_nadgets_sentry_pushfactor 0.5
 
 // Raze
-set g_nadgets_raze_regen_time 14
+set g_nadgets_raze_regen_time 11
 set g_nadgets_raze_regen_factor 0
 set g_nadgets_raze_regen_exponent 1.3
 set g_nadgets_raze_regen_limit 2
