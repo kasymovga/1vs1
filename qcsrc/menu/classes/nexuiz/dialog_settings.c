@@ -5,7 +5,7 @@ CLASS(NexuizSettingsDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizSettingsDialog, color, vector, SKINCOLOR_DIALOG_SETTINGS)
 	ATTRIB(NexuizSettingsDialog, intendedWidth, float, 0.96)
 	ATTRIB(NexuizSettingsDialog, rows, float, 24)
-	ATTRIB(NexuizSettingsDialog, columns, float, 7)
+	ATTRIB(NexuizSettingsDialog, columns, float, 6)
 ENDCLASS(NexuizSettingsDialog)
 #endif
 
@@ -22,7 +22,6 @@ void fillNexuizSettingsDialog(entity me)
 
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Input"),   makeNexuizInputSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Video"),   makeNexuizVideoSettingsTab()));
-		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Effects"), makeNexuizEffectsSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Audio"),   makeNexuizAudioSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Network"), makeNexuizNetworkSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Misc"),    makeNexuizMiscSettingsTab()));
