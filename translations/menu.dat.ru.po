@@ -982,3 +982,9 @@ msgstr "Частный"
 
 msgid "Single player"
 msgstr "Одиночная игра"
+
+msgid "Basic"
+msgstr "Основные"
+
+msgid "Advanced"
+msgstr "Расширенные"

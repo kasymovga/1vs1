@@ -984,3 +984,9 @@ msgstr "Privatgelände"
 
 msgid "Single player"
 msgstr "Einzelspieler"
+
+msgid "Basic"
+msgstr "Basis"
+
+msgid "Advanced"
+msgstr "Erweiterte"

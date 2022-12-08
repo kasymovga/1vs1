@@ -984,3 +984,9 @@ msgstr "Privé"
 
 msgid "Single player"
 msgstr "Eén speler"
+
+msgid "Basic"
+msgstr "Baseren"
+
+msgid "Advanced"
+msgstr "Geavanceerde"
