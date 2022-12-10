@@ -30,6 +30,7 @@ locationrequest.qh
 dlc.qh
 gamestatus.qh
 weaponselect.qh
+voip.qh
 view.qh
 cmd.qh
 main.qh

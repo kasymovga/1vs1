@@ -1,2 +1,7 @@
 .float voipgroup;
 .float voiplistengroup;
+void(void) voip_setup_all;
+void(entity pl) voip_setup;
+void(entity pl) voip_disable;
+void(entity pl) voip_enable;
+void(void) voip_init;

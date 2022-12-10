@@ -366,3 +366,4 @@ shootingrange.qc
 ability.qc
 perf.qc
 map_info.qc
+voip.qc

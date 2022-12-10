@@ -42,7 +42,15 @@ void(float ignore) score_info_read {
 			SP_STATUS_FIELD = i;
 		else if (s == "cv")
 			SP_CLIENTVERSION_FIELD = i;
-
+		else if (s == "voip") {
+			SP_VOIP_FIELD = i;
+			SP_VOIP_BIT = 1;
+			for (j = 0; j < i; j++) SP_VOIP_BIT *= 2;
+			for (o = player_list.sort_next; o; o = o.sort_next)
+				if (o.gotscores && o.sv_entnum == player_localentnum - 1) {
+					voip_group = o.scores[SP_VOIP_FIELD];
+				}
+		}
 		scores_label[i] = s;
 		scores_flags[i] = net_read_byte();
 	}
@@ -124,6 +132,11 @@ void(float ignore) score_player_read {
 	if (o.sort_prev)
 		sbar_scores_player_position_update(o); // if not registered, we cannot do this yet!
 
+	if (self.sv_entnum == player_localentnum - 1) {
+		if (sf & SP_VOIP_BIT) {
+			voip_group = o.scores[SP_VOIP_FIELD];
+		}
+	}
 	self.entremove = score_player_remove;
 }
 

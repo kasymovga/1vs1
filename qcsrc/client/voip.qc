@@ -1,18 +1,36 @@
 entity voip_speaker_chain;
 entity voip_note;
 float voip_talk_on;
+.float voip_last;
 
 string(void) voip_note_message {
 	string s;
+	entity e, e2;
 	s = "^2VOICE CHAT [Microphone: ";
-	if (voip_talk_on)
+	if (voip_talk_on) { //in talk mode show everyone who able to hear
 		s = strcat(s, "^1ON^2]");
-	else
-		s = strcat(s, "^3OFF^2]");
+		for (e = player_list.sort_next; e; e = e.sort_next) {
+			if (e.scores[SP_VOIP_FIELD] != voip_group)
+				continue;
 
-	entity e;
-	for (e = voip_speaker_chain; e; e = e.enemy) {
-		s = strcat(s, "\n", player_name(e.cnt), " ^3<)))");
+			if (e.sv_entnum == player_localentnum - 1)
+				s = strcat(s, "\n", player_name(e.sv_entnum), " ^3<)))");
+			else {
+				for (e2 = voip_speaker_chain; e2; e2 = e2.enemy) {
+					if (e.sv_entnum == e2.cnt) {
+						s = strcat(s, "\n", player_name(e2.cnt), " ^3<)))");
+						goto continue_2;
+					}
+				}
+				s = strcat(s, "\n", player_name(e.sv_entnum), " ^0<)))");
+			}
+:continue_2
+		}
+	} else { // in listen mode show only the ones who talk
+		s = strcat(s, "^3OFF^2]");
+		for (e2 = voip_speaker_chain; e2; e2 = e2.enemy) {
+			s = strcat(s, "\n", player_name(e2.cnt), " ^3<)))");
+		}
 	}
 	s = strcat(s, "\n", " ");
 	return s;

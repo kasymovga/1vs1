@@ -879,6 +879,7 @@ void(float sprio, float stprio, float score_enabled) score_basics {
 }
 
 void() score_basics_end {
+	plugin_chain_score_basics_end();
 	team_teams_allowed(world);
 	if (score_initialized) {
 		score_initialized.SendFlags |= 1; // force a resend

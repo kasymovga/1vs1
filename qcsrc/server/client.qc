@@ -198,7 +198,7 @@ void(void) client_parms_decode {
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
 	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
 	plugin_client_parms_decode();
-	client_voip_setup(self);
+	voip_setup(self);
 }
 
 void(entity cl, float _team) client_kill_now_team_change {
@@ -663,7 +663,7 @@ void() client_initialize {
 	CVAR_CACHE(g_maxplayers);
 	CVAR_CACHE(g_maxplayers_spectator_blocktime);
 	CVAR_CACHE(g_voice_chat_public);
-	client_voip_setup_all();
+	voip_setup_all();
 	CVAR_CACHE(sv_timeout_number);
 	CVAR_CACHE(sv_maxidle);
 	CVAR_CACHE(sv_maxidle_forcespec);
@@ -716,33 +716,6 @@ void client_cvars_request() {
 	stuffcmd(self, "sendcvar cl_gunalign_force_center\n");
 	stuffcmd(self, "sendcvar cl_showweaponspawns\n");
 	stuffcmd(self, "sendcvar _cl_id\n");
-}
-
-void(entity pl) client_voip_setup {
-	if not(pl.voipgroup) return;
-	float vg = pl.voipgroup;
-	if (team_mode && g_voice_chat_public < 2 && team_teams > 1) {
-		pl.voipgroup = pl.team;
-	} else {
-		if (pl.team < 0 || g_voice_chat_public)
-			pl.voipgroup = -1;
-		else
-			pl.voipgroup = 1;
-	}
-	if (pl.muted) {
-		pl.voipgroup = -256 - num_for_edict(pl);
-	}
-	if (pl.retard > 0) {
-		pl.voipgroup = -512 - num_for_edict(pl);
-	}
-	if (vg != pl.voipgroup)
-		print(player_name(pl), "^7 switched to VOIP channel #", ftos(pl.voipgroup), "\n");
-}
-
-void(void) client_voip_setup_all {
-	entity e;
-	FOR_EACH_REALCLIENT(e)
-		client_voip_setup(e);
 }
 
 void() client_cvars_parse {
@@ -831,9 +804,9 @@ void() client_cvars_parse {
 		}
 	} else if (s == "voipvolume") {
 		if (stof(val) > 0) {
-			self.voipgroup = -2;
-			client_voip_setup(self);
-		}
+			voip_enable(self);
+		} else
+			voip_disable(self);
 	}
 }
 
@@ -860,7 +833,7 @@ void(string _name) client_mute_ifneeded {
 		if (strstrofs(strdecolorize(_name), s, 0) >= 0) {
 			print(_name, " muted with pattern ", s, "\n");
 			self.muted = TRUE;
-			client_voip_setup(self);
+			voip_setup(self);
 		}
 	}
 }

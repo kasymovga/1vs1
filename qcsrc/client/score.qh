@@ -31,6 +31,8 @@ float SP_DEATHS_FIELD;
 float SP_CLIENTVERSION_FIELD;
 float SP_NADGET_FIELD;
 float SP_NADGET_SECONDARY_FIELD;
+float SP_VOIP_FIELD;
+float SP_VOIP_BIT;
 #define SP_SEPARATOR -100
 
 void(float ignore) score_info_read;
