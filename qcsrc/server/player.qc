@@ -196,6 +196,8 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 	body_to.modelindex_lod1 = body_from.modelindex_lod1;
 	body_to.modelindex_lod2 = body_from.modelindex_lod2;
 	body_to.modelindex_lod0_from_nexuiz = body_from.modelindex_lod0_from_nexuiz;
+	body_to.scale = body_from.scale;
+	setorigin(body_to, body_from.origin);
 	if (realloc_playermodel) {
 		str_unzone_ifneeded(body_to.playermodel);
 		body_to.playermodel = str_zone_ifneeded(body_from.playermodel); //need independent copy here
@@ -217,6 +219,7 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 	if (body_from.exteriorweaponentity) {
 		if not(body_to.exteriorweaponentity) body_to.exteriorweaponentity = spawn();
 		setmodel(body_to.exteriorweaponentity, body_from.exteriorweaponentity.model);
+		setorigin(body_to.exteriorweaponentity, body_from.exteriorweaponentity.origin);
 		body_to.exteriorweaponentity.tag_entity = body_to.weaponentity;
 		body_to.exteriorweaponentity.tag_index = body_from.exteriorweaponentity.tag_index;
 	} else if (body_to.exteriorweaponentity) {
@@ -375,6 +378,10 @@ void() player_effects {
 void(entity to, entity from) player_anim_copy {
 	to.akimbo_animation_shift = from.akimbo_animation_shift;
 	to.akimbo_use_left_hand = from.akimbo_use_left_hand;
+	to.body.scale = from.body.scale;
+	setorigin(to.body, from.body.origin);
+	if (from.body.exteriorweaponentity && to.body.exteriorweaponentity)
+		setorigin(to.body.exteriorweaponentity, from.body.exteriorweaponentity.origin);
 #define PLAYERANIMCOPY(x,y,z) x.anim_ ## z = y.anim_ ## z;
 	PLAYERANIMCOPY(to, from, die1)
 	PLAYERANIMCOPY(to, from, die2)
@@ -415,6 +422,11 @@ void(entity e, string s) player_anim_parseline {
 		return;
 	}
 	string field_name = argv(0);
+	if (field_name == "scale" && c == 2) {
+		print("set scale for entity ", ftos(num_for_edict(e.body)), "\n");
+		e.body.scale = stof(argv(1));
+		return;
+	}
 	if (field_name == "akimbo_shift") {
 		e.akimbo_animation_shift = stof(argv(1));
 		return;
@@ -433,6 +445,11 @@ void(entity e, string s) player_anim_parseline {
 	anim_x = stof(argv(1));
 	anim_y = stof(argv(2));
 	anim_z = stof(argv(3));
+	if (field_name == "origin") {
+		print("set origin for entity ", ftos(num_for_edict(e.body)), "\n");
+		setorigin(e.body, anim);
+		return;
+	}
 #define READFIELD(x) if (field_name == #x) { e.anim_ ## x = anim; return; }
 	READFIELD(die1)
 	READFIELD(die2)
@@ -488,6 +505,9 @@ void(entity e, string _model) player_anim_q3_load {
 			continue;
 
 		if (strstrofs("0123456789", substring(arg0, 0, 1), 0) < 0) {
+			if (arg0 == "headoffset") {
+				setorigin(e.body.exteriorweaponentity, stof(argv(1)) * '1 0 0' + stof(argv(2)) * '0 1 0' + stof(argv(2)) * '0 0 1');
+			}
 			continue;
 		}
 		a_x = stof(arg0) - legshift;
