@@ -423,7 +423,6 @@ void(entity e, string s) player_anim_parseline {
 	}
 	string field_name = argv(0);
 	if (field_name == "scale" && c == 2) {
-		print("set scale for entity ", ftos(num_for_edict(e.body)), "\n");
 		e.body.scale = stof(argv(1));
 		return;
 	}
@@ -446,7 +445,6 @@ void(entity e, string s) player_anim_parseline {
 	anim_y = stof(argv(2));
 	anim_z = stof(argv(3));
 	if (field_name == "origin") {
-		print("set origin for entity ", ftos(num_for_edict(e.body)), "\n");
 		setorigin(e.body, anim);
 		return;
 	}
