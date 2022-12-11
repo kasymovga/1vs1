@@ -218,6 +218,15 @@ float(float deathtype, entity targ, entity inflictor, entity attacker) nadget_pl
 	return nadget_player_obituary_frag_next(deathtype, targ, inflictor, attacker);
 }
 
+var void(void) nadget_score_basics_end_next;
+void(void) nadget_score_basics_end {
+	nadget_score_basics_end_next();
+	if not(g_nadgets_show_in_sbar) return;
+	NADGET_SCORE = score_register("nade", 0);
+	if not(g_nadgets_double) return;
+	NADGET_SCORE_SECONDARY = score_register("nade2", 0);
+}
+
 float nadget_init_done;
 void(void) nadget_init_common {
 	if (nadget_init_done)
@@ -296,19 +305,13 @@ void(void) nadget_init_common {
 	plugin_chain_player_think = nadget_PlayerPreThink;
 	nadget_weapon_throw_handle_next = plugin_chain_weapon_throw_handle;
 	plugin_chain_weapon_throw_handle = nadget_weapon_throw_handle;
+	nadget_score_basics_end_next = plugin_chain_score_basics_end;
+	plugin_chain_score_basics_end = nadget_score_basics_end;
 	Napalm_Init();
 	hint_add("You can detonate FireTrap of enemy shooting on it");
 	hint_add("Translocator nadget can be used as teleporting or killing enemy shooting directly on enemy");
 	hint_add("You can increase speed using laser nadget, you can jump higher with laser nadget aiming to ground or wall with laser nadget");
 	hint_add("When enemy stand close to FireTrap you will see red indicator indicating");
-}
-
-void(void) nadget_score_init {
-	if not(g_nadgets) return;
-	if not(g_nadgets_show_in_sbar) return;
-	NADGET_SCORE = score_register("nade", 0);
-	if not(g_nadgets_double) return;
-	NADGET_SCORE_SECONDARY = score_register("nade2", 0);
 }
 
 void(entity e, string args, float set) nadget_ability_init {
