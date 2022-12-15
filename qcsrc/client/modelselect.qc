@@ -89,12 +89,13 @@ void(string _model) modelselect_get_idle_animinfo2 {
 	modelselect_current.frame = 7; //default
 	while ((s = fgets(f))) {
 		c = tokenize_console(s);
-		if (c > 3) {
-			if (argv(0) == "idle") {
-				modelselect_current.frame = stof(argv(1));
-			} else if (argv(0) == "stand") {
-				modelselect_torso.frame = stof(argv(1));
-			}
+		s = argv(0);
+		if (s == "scale" && c > 1) {
+			modelselect_current.scale *= stof(argv(1));
+		} else if (s == "idle" && c > 3) {
+			modelselect_current.frame = stof(argv(1));
+		} else if (s == "stand" && c > 3) {
+			modelselect_torso.frame = stof(argv(1));
 		}
 	}
 	fclose(f);
@@ -111,20 +112,21 @@ void(string _model) modelselect_get_idle_q3animations {
 	float walkcrframe = 0;
 	while ((s = fgets(f))) {
 		c = tokenize_console(s);
-		if (c > 3) {
-			if (strstrofs("0123456789", substring(argv(0), 0, 1), 0) >= 0) {
-				animline++;
-				if (animline == 7) { //GESTURE
-					gestureframe = stof(argv(0));
-				} else if (animline == 12) { //STAND
-					modelselect_torso.frame = stof(argv(0));
-				} else if (animline == 14) { //WALKCR
-					walkcrframe = stof(argv(0));
-				} else if (animline == 23) { //IDLE
-					modelselect_current.frame = stof(argv(0)) - walkcrframe + gestureframe;
-					break;
-				}
+		s = argv(0);
+		if (strstrofs("0123456789", substring(s, 0, 1), 0) >= 0 && c > 3) {
+			animline++;
+			if (animline == 7) { //GESTURE
+				gestureframe = stof(s);
+			} else if (animline == 12) { //STAND
+				modelselect_torso.frame = stof(s);
+			} else if (animline == 14) { //WALKCR
+				walkcrframe = stof(s);
+			} else if (animline == 23) { //IDLE
+				modelselect_current.frame = stof(s) - walkcrframe + gestureframe;
+				break;
 			}
+		} else if (s == "headoffset" && c > 3) {
+			setorigin(modelselect_head, stof(argv(1)) * '1 0 0' + stof(argv(2)) * '0 1 0' + stof(argv(3)) * '0 0 1');
 		}
 	}
 	fclose(f);
@@ -151,6 +153,7 @@ void(void) modelselect_draw {
 		float _skin = stof(substring(s, colon + 1, -1));
 		precache_model(_model);
 		setmodel(modelselect_current, _model);
+		modelselect_current.scale = 0.1;
 		string s = strcat(substring(_model, 0, strlen(_model) - 4), "_torso", substring(_model, -4, 4));
 		if (file_exists(s)) {
 			precache_model(s);
@@ -160,6 +163,7 @@ void(void) modelselect_draw {
 			if (file_exists(s)) {
 				precache_model(s);
 				setmodel(modelselect_head, s);
+				setorigin(modelselect_head, '0 0 0');
 				setattachment(modelselect_head, modelselect_torso, "tag_head");
 			} else
 				setmodel(modelselect_head, "null");
@@ -171,14 +175,15 @@ void(void) modelselect_draw {
 		modelselect_torso.frame = 0;
 		modelselect_torso.skin = _skin;
 		modelselect_head.skin = _skin;
+		modelselect_current.frame = 7;
 		if (file_exists(strcat(_model, ".animinfo"))) {
 			modelselect_get_idle_animinfo(_model);
-		} else if (file_exists(strcat(_model, ".animinfo2"))) {
+		}
+		if (file_exists(strcat(_model, ".animinfo2"))) {
 			modelselect_get_idle_animinfo2(_model);
-		} else if (file_exists(strcat(_model, ".q3animations"))) {
+		}
+		if (file_exists(strcat(_model, ".q3animations"))) {
 			modelselect_get_idle_q3animations(_model);
-		} else {
-			modelselect_current.frame = 7;
 		}
 		modelselect_list_pos_prev = modelselect_list_pos;
 	}
@@ -323,7 +328,6 @@ void(void) modelselect_read {
 	modelselect_current.draw = modelselect_model_draw;
 	modelselect_head.draw = modelselect_model_draw;
 	modelselect_torso.draw = modelselect_model_draw;
-	modelselect_current.scale = 0.1;
 	modelselect_current.colormap = 1023;
 	modelselect_torso.colormap = 1023;
 	if not(modelselect_list_len)
