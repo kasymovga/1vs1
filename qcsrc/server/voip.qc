@@ -37,9 +37,12 @@ void(entity pl) voip_setup {
 }
 
 void(entity pl) voip_disable {
-	pl.voipgroup = 0;
-	if (pl.scorekeeper)
-		score_player_set(pl, VOIP_SCORE, 0);
+	if (pl.voipgroup) {
+		pl.voipgroup = 0;
+		print(player_name(pl), "^7 disabled VOIP\n");
+		if (pl.scorekeeper)
+			score_player_set(pl, VOIP_SCORE, 0);
+	}
 }
 
 void(entity pl) voip_enable {
