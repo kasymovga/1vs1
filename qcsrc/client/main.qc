@@ -9,8 +9,8 @@ void(void) CSQC_Init {
 	else if (cvar("con_chat") > 99)
 		cvar_set("con_chat", "0");
 
-	read_cvars_init();
 	extension_init();
+	read_cvars_init();
 	if (file_exists("rexuiz.cfg")) {
 		if (extension_ALL && (cvar_type("collision_triangle_directional") & CVAR_TYPEFLAG_ENGINE) && (cvar_type("collision_surfaceflagsmerge") & CVAR_TYPEFLAG_ENGINE))
 			localcmd("\ncmd gameclient newrexuiz\n");
