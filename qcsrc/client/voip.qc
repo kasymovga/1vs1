@@ -7,7 +7,7 @@ string(void) voip_note_message {
 	string s;
 	entity e, e2;
 	s = "^2VOICE CHAT [Microphone: ";
-	if (voip_talk_on) { //in talk mode show everyone who able to hear
+	if (voip_talk_on && voip_group) { //in talk mode show everyone who able to hear
 		s = strcat(s, "^1ON^2]");
 		for (e = player_list.sort_next; e; e = e.sort_next) {
 			if (e.scores[SP_VOIP_FIELD] != voip_group)
