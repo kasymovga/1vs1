@@ -2,11 +2,18 @@ entity voip_speaker_chain;
 entity voip_note;
 float voip_talk_on;
 .float voip_last;
+float voip_volume_send_last;
 
 string(void) voip_note_message {
 	string s;
 	entity e, e2;
 	s = "^2VOICE CHAT [Microphone: ";
+	if not(voip_group) {
+		if (time > voip_volume_send_last + 1) {
+			localcmd(";sendcvar voipvolume;");
+			voip_volume_send_last = time;
+		}
+	}
 	if (voip_talk_on && voip_group) { //in talk mode show everyone who able to hear
 		s = strcat(s, "^1ON^2]");
 		for (e = player_list.sort_next; e; e = e.sort_next) {
