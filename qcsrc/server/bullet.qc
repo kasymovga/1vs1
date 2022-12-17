@@ -245,6 +245,12 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 		self = akimbo_owner(self);
 		proj.owner = self;
 		proj.clipgroup = self.clipgroup;
+		if (entity_per_player_entities && self) {
+			if (clienttype(self) == CLIENTTYPE_NOTACLIENT)
+				proj.existsonlyfor = self.existsonlyfor;
+			else
+				proj.existsonlyfor = self;
+		}
 		proj.movetype = MOVETYPE_FLY;
 	} else {
 		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE, self);
