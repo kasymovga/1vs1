@@ -92,7 +92,7 @@ void(void) weaponselect_draw {
 
 		p_x = o_x + WEAPONSELECT_MARGIN * 0.5;
 		p_y = o_y + i * sz_y + WEAPONSELECT_MARGIN * 0.5;
-		drawpic(p, strcat("gfx/hud/inv_weapon", ftos(e.weapon)), '2 1 0' * WEAPONSELECT_SCALE, '1 1 1' * (0.5 + 0.5 * a2), a, DRAWFLAG_NORMAL);
+		drawpic(p, strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1)), '2 1 0' * WEAPONSELECT_SCALE, '1 1 1' * (0.5 + 0.5 * a2), a, DRAWFLAG_NORMAL);
 		p_x = WEAPONSELECT_MARGIN * 0.5 + o_x + sz_x * 2;
 		drawstring(p, e.message, sz, clr, a, DRAWFLAG_NORMAL);
 		if (i < 10) {
@@ -107,7 +107,7 @@ void(void) weaponselect_draw {
 }
 
 void(void) weaponselect_confirm {
-	entity w = weapon_info(weaponselect_get() + 1);
+	entity w = weapon_info(weaponselect_get());
 	localcmd("cmd pickweapon ", w.netname, "; cmd join\n");
 	weaponselect_active = FALSE;
 }
@@ -164,7 +164,7 @@ void(void) weaponselect_read {
 	for (float w = 0; w <= WEAPON_LAST; ++w) {
 		if (pow(2, w) & weaponselect_available) {
 			++weaponselect_numoptions;
-			weaponselect_width = max(weaponselect_width, WEAPONSELECT_SCALE * 2 + stringwidth(weapon_info(w+1).message, FALSE) * WEAPONSELECT_SCALE);
+			weaponselect_width = max(weaponselect_width, WEAPONSELECT_SCALE * 2 + stringwidth(weapon_info(w).message, FALSE) * WEAPONSELECT_SCALE);
 		}
 	}
 	drawfont = olddrawfont;
