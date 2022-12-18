@@ -67,6 +67,12 @@ void(entity me) fillNexuizMiscSettingsTab {
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "integration_discord_enable", _("Discord status")));
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "sv_threaded", _("Server thread")));
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 0.5, 2, e = makeNexuizTextLabel(0, _("* Good for local game performance, but may be unstable")));
+		e.colorL = SKINCOLOR_TEXT_WARNING;
+		e.fontSize = e.fontSize * 0.6;
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeNexuizButton(_("Advanced settings..."), '0 0 0'));
