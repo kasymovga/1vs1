@@ -2183,6 +2183,7 @@ void(entity spot) player_spawn {
 	self.oldvelocity = self.velocity;
 	self.waterlevel = 0; //prevent wrong waterlevel handing in server frame for bots
 	self.fire_endtime = -1;
+	self.teleport_time = 0;
 	msg_entity = self;
 	self.customizeentityforclient = player_real_customize;
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
