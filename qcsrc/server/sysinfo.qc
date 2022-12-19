@@ -6,7 +6,10 @@ var float(string cmd, float tokens) sysinfo_ClientCommandHandle_NextLink;
 float(string cmd, float tokens) sysinfo_ClientCommandHandle {
 	float i;
 	string tmp;
-    if(cmd == "sysinfo") {
+	if(cmd == "sysinfo") {
+		if (g_campaign)
+			return TRUE;
+
 		tmp = argv(1);
 		for (i = 2; i < tokens; i++) {
 			tmp = strcat(tmp, "-", argv(i));

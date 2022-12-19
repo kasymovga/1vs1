@@ -108,8 +108,8 @@ void(void) world_static_init {
 		udp_punch_hole_init();
 		report_init();
 		timeout_init();
-		sysinfo_init();
 	}
+	sysinfo_init();
 	footsteps_init();
 	jetpack_init();
 	laser_init();
