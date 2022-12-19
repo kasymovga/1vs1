@@ -203,9 +203,9 @@ void(void) physics_move {
 					physics_check_ground_hook();
 				}
 			}
-			if (trace1_plane_normal_z > 0 && trace1_plane_normal_z < 1 && self.mins_z + 0.125 < self.maxs_z) { //prevent collision with wrong plane on stairs
-				trace_box(self.origin, self.mins + '0 0 0.125', self.maxs, neworigin, TRACE_MOVE_NORMAL, self);
-				if (trace_plane_normal_z == 0 && vlen(trace1_endpos - trace_endpos) < 0.125) {
+			if (trace1_plane_normal_z > 0 && trace1_plane_normal_z < 1 && (physics_flags & FL_ONGROUND) && self.mins_z + 0.03125 < self.maxs_z) { //prevent collision with wrong plane on stairs
+				trace_box(self.origin, self.mins + '0 0 0.03125', self.maxs, neworigin, TRACE_MOVE_NORMAL, self);
+				if (trace_plane_normal_z == 0 && vlen(trace1_endpos - trace_endpos) < 0.03125) {
 					trace1_endpos = trace_endpos;
 					trace1_fraction = trace_fraction;
 					trace1_plane_normal = trace_plane_normal;
