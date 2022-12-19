@@ -220,12 +220,9 @@ void(void) dlc_wait_think {
 				dlc_exec_cfg(s);
 			}
 		}
-		entity e;
-		FOR_EACH_REALCLIENT(e)
-			if (e.netaddress == "local") {
-				localcmd("sv_cmd dlc_pause; r_restart; cl_cmd r_restart; sv_cmd dlc_unpause\n");
-				break;
-			}
+		if not(cvar("_sv_init"))
+			localcmd("sv_cmd dlc_pause; r_restart; cl_cmd r_restart; sv_cmd dlc_unpause\n");
+
 		remove(self);
 		dlc_wait = world;
 		localcmd("sv_cmd dlc_reset\n");
@@ -460,12 +457,9 @@ void(void) dlc_wait_reload_think {
 				dlc_exec_cfg(s);
 		}
 		localcmd("sv_cmd dlc_reset\n");
-		entity e;
-		FOR_EACH_REALCLIENT(e)
-			if (e.netaddress == "local") {
-				localcmd("sv_cmd dlc_pause; r_restart; cl_cmd r_restart; sv_cmd dlc_unpause\n");
-				break;
-			}
+		if not(cvar("_sv_init"))
+			localcmd("sv_cmd dlc_pause; r_restart; cl_cmd r_restart; sv_cmd dlc_unpause\n");
+
 		remove(self);
 		dlc_wait_reload = world;
 		dlc_extra_pk3_list_build();
