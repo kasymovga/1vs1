@@ -203,6 +203,14 @@ void(void) physics_move {
 					physics_check_ground_hook();
 				}
 			}
+			if (trace1_plane_normal_z > 0 && trace1_plane_normal_z < 1 & self.mins_z + 0.125 < self.maxs_z) { //prevent collision with wrong plane on stairs
+				trace_box(trace1_endpos, self.mins + '0 0 0.125', self.maxs, neworigin, TRACE_MOVE_NORMAL, self);
+				if (trace_fraction <= trace_fraction) {
+					trace1_endpos = trace_endpos;
+					trace1_fraction = trace_fraction;
+					trace1_plane_normal = trace_plane_normal;
+				}
+			}
 			if (trace1_plane_normal_z < 0.01 && trace1_plane_normal_z > -0.01) {
 				t -= t * trace1_fraction;
 				trace1_fraction = 0;
