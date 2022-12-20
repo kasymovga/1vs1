@@ -79,7 +79,9 @@ void(entity pl) weapon_show_list {
 
 void(entity e, float w) weapon_switch_force {
 	weapon_show_list(self);
-	e.cnt = e.switchweapon;
+	if (e.switchweapon && w)
+		e.cnt = e.switchweapon;
+
 	e.switchweapon = w;
 }
 
