@@ -243,12 +243,11 @@ void(void) physics_move {
 						if (trace1_plane_normal * physics_velocity < 0) {
 							currentorigin2 = trace1_endpos;
 							currentorigin2_z += g_climb_height;
-							trace_box(currentorigin2, self.mins, self.maxs, trace1_endpos, TRACE_MOVE_NORMAL, self);
-							if (trace_fraction == 1) {
+							trace_box(trace1_endpos, self.mins, self.maxs, currentorigin2, TRACE_MOVE_NORMAL, self);
+							if (trace_endpos_z - trace1_endpos_z > sv_stepheight) {
 								neworigin2 = currentorigin2 - trace1_plane_normal * self.maxs_x * 0.5;
-								trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
-								if (trace_fraction == 1)
-								if not(trace_startsolid) {
+								trace_box(currentorigin2, self.crouch_mins, self.crouch_maxs, neworigin2, TRACE_MOVE_NORMAL, self);
+								if (trace_fraction == 1) {
 									currentorigin2 = trace_endpos;
 									neworigin2_z = trace1_endpos_z;
 									trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
