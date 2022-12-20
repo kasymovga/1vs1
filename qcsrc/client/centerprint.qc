@@ -115,6 +115,7 @@ void(void) centerprint_draw {
 	vector pos;
 	string ts;
 	float a;
+	drawfont = sbar_font;
 	a = bound(0, 1 - 4 * (time - centerprint_expire), 1);
 	if (a <= 0) {
 		centerprint_num = 0;
