@@ -103,13 +103,14 @@ void(void) menu_draw {
 	vector pos;
 	float center;
 	float size_scale;
+	float subcmd;
 	string item_color;
 	sbar_hidescores = TRUE;
 	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = MENU_ITEM_TOP_MARGIN;
 	pos_z = 0;
 	pos_x = center - stringwidth(self.menu_title, FALSE) * 0.5 * 24;
-    drawfill('0 1 0' * MENU_ITEM_TOP_MARGIN, '1 0 0' * CVAR(vid_conwidth) + '0 1 0' * (MENU_ITEM_TOP_MARGIN + MENU_ITEM_HEIGHT * (self.cnt + 1)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
+    drawfill('0 1 0' * MENU_ITEM_TOP_MARGIN, '1 0 0' * CVAR(vid_conwidth) + '0 1 0' * (MENU_ITEM_TOP_MARGIN + MENU_ITEM_HEIGHT * (self.cnt + 1.5)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
 	drawstring(pos, self.menu_title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	pos_y += MENU_ITEM_HEIGHT;
 	if (self.menu_timeout) {
@@ -120,23 +121,54 @@ void(void) menu_draw {
 	}
 	pos_y += MENU_ITEM_HEIGHT;
 	menu_selected_update();
+	vector border_color = '0 0 0';
+	float maxwidth = 0;
+	float w;
+	for (i = 0; i < self.cnt; i++) {
+		subcmd = strstrofs(self.menu_items[i], "|", 0);
+		menu_string = strcat(substring(self.menu_items[i], 0, subcmd));
+		if ((w = stringwidth(strdecolorize(menu_string), FALSE)) > maxwidth)
+			maxwidth = w;
+	}
+	vector lm = (CVAR(vid_conwidth) - maxwidth * 24 * 1.1) * 0.5 * '1 0 0';
+	float paren;
+	string paren_part;
 	for (i = 0; i < self.cnt; i++) {
 		if (menu_selected == i)
 			size_scale = 1.1;
 		else
 			size_scale = 1;
 
-		if (menu_choiced == i)
+		if (menu_choiced == i) {
 			item_color = "^4";
-		else if (menu_selected == i)
+			border_color = '0.5 0.5 0.5';
+		} else if (menu_selected == i) {
 			item_color = "^3";
-		else
+			border_color = '0.75 0.75 0.75';
+		} else {
 			item_color = "^7";
-
-		float subcmd = strstrofs(self.menu_items[i], "|", 0);
-		menu_string = strcat(item_color, ftos(i + 1), ". ", substring(self.menu_items[i], 0, subcmd));
+			border_color = '0 0 0';
+		}
+		menu_string = self.menu_items[i];
+		subcmd = strstrofs(menu_string, "|", 0);
 		pos_x = center - stringwidth(strdecolorize(menu_string), FALSE) * 0.5 * 24 * size_scale;
+		if ((paren = strstrofs(menu_string, "(", 0)) >= 0 && (paren < subcmd || subcmd < 0)) {
+			paren_part = substring(menu_string, paren, subcmd - paren);
+			drawcolorcodedstring(pos_y * '0 1 0' + ((maxwidth * 24 * 1.1 + CVAR(vid_conwidth)) * 0.5 - stringwidth(strdecolorize(paren_part), FALSE) * 24 * size_scale) * '1 0 0', strcat(item_color, paren_part), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
+			menu_string = strcat(item_color, substring(menu_string, 0, paren));
+		} else {
+			menu_string = strcat(item_color, substring(menu_string, 0, subcmd));
+		}
 		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos_y * '0 1 0' + '10 0 0', 24 * '0 1 0' + CVAR(vid_conwidth) * '1 0 0' - '24 0 0', border_color, 1, DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos_y * '0 1 0' + '-28 2 0' + lm, '0 12 0' + '12 0 0' + ((i == 9) ? '12 0 0' : '0 0 0'), border_color, 1, DRAWFLAG_NORMAL);
+		if (i < 9) {
+			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, ftos(i + 1)), '12 12 0', 1, DRAWFLAG_NORMAL);
+		} else if (i == 9) {
+			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, "0/a"), '12 12 0', 1, DRAWFLAG_NORMAL);
+		} else {
+			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, substring("bcdef", i - 10, 1)), '12 12 0', 1, DRAWFLAG_NORMAL);
+		}
 		pos_y += MENU_ITEM_HEIGHT;
 	}
 	mouse_enable("");
@@ -160,6 +192,10 @@ float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 			choice = 9;
 		else
 			choice--;
+	}
+	if ('a' <= nPrimary)
+	if (nPrimary <= 'f') {
+		choice = nPrimary - 'a' + 9;
 	}
 	if (nPrimary == K_MOUSE1) {
 		menu_selected_update();
