@@ -452,7 +452,7 @@ void(void) weapon_frame {
 		return; // Dead player can't use weapons and injure impulse commands
 
 	float _switchweapon = plugin_chain_weapon_frame_switch_mod(self.switchweapon);
-	if (!_switchweapon) {
+	if (!self.weapon) {
 		self.items &= ~IT_AMMO;
 		self.weaponname = "";
 	}
