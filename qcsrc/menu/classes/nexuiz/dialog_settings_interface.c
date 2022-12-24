@@ -1,12 +1,12 @@
 #ifdef INTERFACE
-CLASS(NexuizMiscSettingsTab) EXTENDS(NexuizTab)
-	METHOD(NexuizMiscSettingsTab, fill, void(entity))
-	ATTRIB(NexuizMiscSettingsTab, title, string, _("Misc"))
-	ATTRIB(NexuizMiscSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(NexuizMiscSettingsTab, rows, float, 22)
-	ATTRIB(NexuizMiscSettingsTab, columns, float, 6.5)
-ENDCLASS(NexuizMiscSettingsTab)
-entity makeNexuizMiscSettingsTab();
+CLASS(NexuizInterfaceSettingsTab) EXTENDS(NexuizTab)
+	METHOD(NexuizInterfaceSettingsTab, fill, void(entity))
+	ATTRIB(NexuizInterfaceSettingsTab, title, string, _("Interface"))
+	ATTRIB(NexuizInterfaceSettingsTab, intendedWidth, float, 0.9)
+	ATTRIB(NexuizInterfaceSettingsTab, rows, float, 22)
+	ATTRIB(NexuizInterfaceSettingsTab, columns, float, 6.5)
+ENDCLASS(NexuizInterfaceSettingsTab)
+entity makeNexuizInterfaceSettingsTab();
 #endif
 
 #ifdef IMPLEMENTATION
@@ -14,14 +14,14 @@ void (entity btn, entity me) apply_misc_settings {
 	SetSkin_Click(btn, me);
 }
 
-entity() makeNexuizMiscSettingsTab {
+entity() makeNexuizInterfaceSettingsTab {
 	entity me;
-	me = spawnNexuizMiscSettingsTab();
+	me = spawnNexuizInterfaceSettingsTab();
 	me.configureDialog(me);
 	return me;
 }
 
-void(entity me) fillNexuizMiscSettingsTab {
+void(entity me) fillNexuizInterfaceSettingsTab {
 	entity e;
 	entity sk;
 	me.TR(me);
@@ -65,20 +65,7 @@ void(entity me) fillNexuizMiscSettingsTab {
 		me.TD(me, 1, 2.8/2, e = makeNexuizSlider(1, 10, 0.5, "cl_showacceleration_scale"));
 			gui_set_dependent(e, "cl_showacceleration", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "integration_discord_enable", _("Discord status")));
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "sv_threaded", _("Server thread")));
-	me.TR(me);
-		me.TDempty(me, 0.1);
-		me.TD(me, 0.5, 2, e = makeNexuizTextLabel(0, _("* Good for local game performance, but may be unstable")));
-		e.colorL = SKINCOLOR_TEXT_WARNING;
-		e.fontSize = e.fontSize * 0.6;
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeNexuizButton(_("Advanced settings..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.cvarsDialog;
-		me.TDempty(me, 0.5);
+		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_font_iceland", _("Use \"Iceland\" font for big messages")));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);

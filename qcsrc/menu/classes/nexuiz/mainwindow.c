@@ -9,7 +9,6 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, winnerDialog, entity, NULL)
 	ATTRIB(MainWindow, hudDialog, entity, NULL)
 	ATTRIB(MainWindow, serverInfoDialog, entity, NULL)
-	ATTRIB(MainWindow, cvarsDialog, entity, NULL)
 	ATTRIB(MainWindow, languageDialog, entity, NULL)
 	ATTRIB(MainWindow, saveLoadDialog, entity, NULL)
 	ATTRIB(MainWindow, mainNexposee, entity, NULL)
@@ -56,10 +55,6 @@ void configureMainWindowMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.serverInfoDialog = i = spawnNexuizServerInfoDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.cvarsDialog = i = spawnNexuizCvarsDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
