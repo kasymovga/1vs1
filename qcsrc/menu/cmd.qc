@@ -25,34 +25,23 @@ void(entity pass, entity me) cmd_dumptree_close {
 void(string theCommand) cmd { //called by engine
 	float argc;
 	argc = tokenize_console(theCommand);
-	if (argv(0) == "help" || argc == 0) {
+	string s = argv(0);
+	if (s == "help" || argc == 0) {
 		print("Usage: menu_cmd theCommand..., where possible theCommands are:\n");
 		print("  sync - reloads all cvars on the current menu page\n");
 		print("  directmenu ITEM - select a menu item as main item\n");
 		cmd_generic("help");
-		return;
-	}
-	if (cmd_generic(theCommand))
-		return;
-
-	if (argv(0) == "sync") {
+	} else if (cmd_generic(theCommand)) {
+	} else if (s == "sync") {
 		gui_load_all_cvars(main);
-		return;
-	}
-	if (argv(0) == "directmenu")
-	if (argc == 2) {
+	} else if (s == "directmenu" && argc == 2) {
 		// switch to a menu item
 		if (!isdemo()) // don't allow this command in demos
 			menu_goto(argv(1));
-
-		return;
-	}
-	if (argv(0) == "dumptree") {
+	} else if (s == "dumptree") {
 		cmd_dumptree_space = "";
 		gui_depth_first(main, parent, firstChild, nextSibling, cmd_dumptree_open, cmd_dumptree_close, NULL);
-		return;
-	}
-	if (argv(0) == "dumpserverlist") {
+	} else if (s == "dumpserverlist") {
 		string s = argv(1);
 		if not(s)
 			s = "serverlist.txt";
@@ -66,19 +55,18 @@ void(string theCommand) cmd { //called by engine
 			}
 			fclose(f);
 		}
-		return;
-	}
-	if (argv(0) == "dlc_reload") {
+	} else if (s == "dlc_reload") {
 		dlc_reload(TRUE, TRUE);
-		return;
-	}
-	if (argv(0) == "ui_con_width_height_set") {
+	} else if (s == "ui_con_width_height_set") {
 		ui_con_width_height_set();
-		return;
-	}
-	if (argv(0) == "skinselect") {
+	} else if (s == "skinselect") {
 		menu_goto("skinselector");
-		return;
-	}
-	print("Invalid theCommand. For a list of supported theCommands, try menu_cmd help.\n");
+	} else if (s == "video" && argc == 2) {
+		if (argv(1) == "low") lowNexuizVideoSettingsTab(NULL, NULL);
+		else if (argv(1) == "medium") mediumNexuizVideoSettingsTab(NULL, NULL);
+		else if (argv(1) == "normal") normalNexuizVideoSettingsTab(NULL, NULL);
+		else if (argv(1) == "high") highNexuizVideoSettingsTab(NULL, NULL);
+		else if (argv(1) == "ultra") ultraNexuizVideoSettingsTab(NULL, NULL);
+	} else
+		print("Invalid theCommand. For a list of supported theCommands, try menu_cmd help.\n");
 }
