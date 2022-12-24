@@ -11,6 +11,44 @@ void(void) dlc_restart_render {
 		localcmd("disconnect;wait;r_restart;wait;reconnect\n");
 }
 
+void(void) dlc_load_fonts {
+	print("Loading fonts\n");
+	registercvar("font3_is_unicode_compat", "0", 0);
+	if (cvar("utf8_enable") && dlc_ready("base-fonts")) {
+		print("Loading utf8 fonts\n");
+		localcmd(";loadfont console gfx/vera-sans-mono,fonts/unifont-5.1.20080907 32");
+		localcmd(";loadfont notify gfx/vera-sans,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 32");
+		localcmd(";loadfont chat gfx/vera-sans,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 32");
+		localcmd(";loadfont centerprint gfx/vera-sans,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 32");
+		localcmd(";loadfont infobar gfx/vera-sans,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 32");
+		localcmd(";loadfont user0 gfx/vera-sans,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 32"); // menu font
+		localcmd(";loadfont user1 gfx/vera-sans,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 32"); // csqc font
+		localcmd(";loadfont user2 gfx/vera-sans,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 48"); // csqc bold font
+		localcmd(";loadfont user3 gfx/vera-sans-unicode,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 32;"); // menu font without nexuiz symbols
+		cvar_set("font3_is_unicode_compat", "1");
+	} else {
+		print("Loading non-utf8 fonts\n");
+		localcmd(";loadfont console gfx/vera-sans-mono 32");
+		localcmd(";loadfont notify gfx/vera-sans 32");
+		localcmd(";loadfont chat gfx/vera-sans 32");
+		localcmd(";loadfont centerprint gfx/vera-sans 32");
+		localcmd(";loadfont infobar gfx/vera-sans 32");
+		localcmd(";loadfont user0 gfx/vera-sans 32"); // menu font
+		localcmd(";loadfont user1 gfx/vera-sans 32"); // csqc font
+		localcmd(";loadfont user2 gfx/vera-sans 48"); // csqc bold font
+		localcmd(";loadfont user3 gfx/vera-sans 32;"); // menu font without nexuiz symbols
+		cvar_set("font3_is_unicode_compat", "0");
+	}
+	if (dlc_ready("font-iceland")) {
+		print("Loading iceland font\n");
+		if (cvar("utf8_enable") && dlc_ready("base-fonts")) {
+			localcmd(";loadfont user2 gfx/iceland,fonts/unifont-5.1.20080907 32 scale 1.25;"); // csqc bold font
+		} else {
+			localcmd(";loadfont user2 gfx/iceland 32 scale 1.25;"); // csqc bold font
+		}
+	}
+}
+
 void(void) dlc_curl_event_listener_think {
 	if (dlc_expected == "") return;
 	if (substring(curl_file_name, 0, 8) == "dlcache/") {
@@ -88,6 +126,13 @@ float(float nodownload, float renderrestart) dlc_reload {
 		dlc_mandatory = TRUE;
 		s = strcat(s, " base-gfx");
 	}
+	if (cvar("utf8_enable") && !dlc_ready("base-fonts")) {
+		print("UTF8 fonts required, requested pk3\n");
+		s = strcat(s, " base-fonts");
+	}
+	if (cvar("cl_font_iceland")) {
+		s = strcat(s, " font-iceland");
+	}
 	if not(dlc_mandatory) {
 		s = strcat(s, " datapatches");
 	}
@@ -161,6 +206,7 @@ float(float nodownload, float renderrestart) dlc_reload {
 		}
 	}
 	if (dlc_ready_all()) {
+		dlc_load_fonts();
 		dlc_reloaded = TRUE;
 		dlc_expected = "";
 		if (dlc_curl_event_listener) {

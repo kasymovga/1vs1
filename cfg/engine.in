@@ -82,13 +82,6 @@ sv_sound_land ""
 sv_sound_watersplash ""
 r_labelsprites_scale 0.40625 // labels sprites get displayed at 0.5x from 640x480 to 1280x1024, and at 1x from 1600x1200 onwards
 
-// loadfont console     gfx/vera-mono
-// loadfont sbar        gfx/vera-mono
-loadfont notify      gfx/vera-sans
-loadfont chat        gfx/vera-sans
-// loadfont centerprint gfx/vera-mono
-// loadfont infobar     gfx/vera-mono
-loadfont user0       gfx/vera-sans
 r_textbrightness 0.2
 r_textcontrast 0.8
 r_textshadow 1

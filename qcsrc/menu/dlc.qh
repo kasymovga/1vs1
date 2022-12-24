@@ -4,3 +4,4 @@ float dlc_reloaded;
 float(float nodownload, float renderrestart) dlc_reload;
 float dlc_failed;
 void(void) dlc_think;
+void(void) dlc_load_fonts;
