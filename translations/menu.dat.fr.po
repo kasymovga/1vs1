@@ -87,9 +87,6 @@ msgstr "Audio"
 msgid "Network"
 msgstr "Réseau"
 
-msgid "Misc"
-msgstr "Divers"
-
 msgid "Show netgraph"
 msgstr "Montrer netgraph"
 
@@ -990,3 +987,6 @@ msgstr "Base"
 
 msgid "Advanced"
 msgstr "Avancés"
+
+msgid "Interface"
+msgstr "Interface"

@@ -86,9 +86,6 @@ msgstr "Звук"
 msgid "Network"
 msgstr "Сеть"
 
-msgid "Misc"
-msgstr "Дополнительно"
-
 msgid "Show netgraph"
 msgstr "Отображать монитор сети"
 
@@ -988,3 +985,6 @@ msgstr "Основные"
 
 msgid "Advanced"
 msgstr "Расширенные"
+
+msgid "Interface"
+msgstr "Интерфейс"
