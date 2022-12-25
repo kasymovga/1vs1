@@ -10,8 +10,13 @@ entity makeNexuizInterfaceSettingsTab();
 #endif
 
 #ifdef IMPLEMENTATION
-void (entity btn, entity me) apply_misc_settings {
+void (entity btn, entity me) applyNexuizInterfaceSettingsTab {
 	SetSkin_Click(btn, me);
+	if (cvar("cl_font_iceland") && !dlc_ready("font-iceland")) {
+		localcmd(";fs_rescan\n");
+	} else if (!cvar("cl_font_iceland") && dlc_ready("font-iceland")) {
+		localcmd(";fs_rescan\n");
+	}
 }
 
 entity() makeNexuizInterfaceSettingsTab {
@@ -30,7 +35,7 @@ void(entity me) fillNexuizInterfaceSettingsTab {
 		me.TD(me, me.rows - 2, 3, sk = makeNexuizSkinList());
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Apply immediately"), '0 0 0'));
-			e.onClick = apply_misc_settings;
+			e.onClick = applyNexuizInterfaceSettingsTab;
 			e.onClickEntity = sk;
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "showtime", _("Show current time")));
