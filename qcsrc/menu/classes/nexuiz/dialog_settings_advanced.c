@@ -77,9 +77,5 @@ void(entity me) fillNexuizAdvancedSettingsTab {
 		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, NULL));
 			cvarlist.cvarDescriptionBox = e;
 			e.allowWrap = 1;
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
-			e.onClick = Dialog_Close;
-			e.onClickEntity = me;
 }
 #endif
