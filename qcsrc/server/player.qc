@@ -366,8 +366,12 @@ void() player_effects {
 		self.effects = self.effects | (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 
 	b.effects = self.effects;
-	if (b.weaponentity)
+	if (b.weaponentity) {
 		b.weaponentity.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
+		b.weaponentity.effects = self.effects;
+		if (b.exteriorweaponentity)
+			b.exteriorweaponentity.effects = self.effects;
+	}
 	else
 		b.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
 
@@ -2081,6 +2085,11 @@ float(void) player_body_customize {
 			self.weaponentity.skin = self.skin;
 			if (self.exteriorweaponentity) self.exteriorweaponentity.skin = self.skin;
 		}
+	}
+	if (self.weaponentity) {
+		self.weaponentity.alpha = self.alpha;
+		if (self.exteriorweaponentity)
+			self.exteriorweaponentity.alpha = self.alpha;
 	}
 	float distance;
 	float f;
