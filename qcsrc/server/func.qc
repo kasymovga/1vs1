@@ -1374,6 +1374,7 @@ entity(vector fmins, vector fmaxs) func_spawn_field {
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = self;
 	trigger.touch = func_door_trigger_touch;
+	trigger.existsonlyfor = self.existsonlyfor;
 	t1 = fmins;
 	t2 = fmaxs;
 	v = stov(cvar_string("sv_door_trigger_field"));
