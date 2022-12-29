@@ -96,7 +96,7 @@ menu.qh
 game/menu.qh
 walkietalkie.qh
 hat.qh
-score_damage.qh
+damage_score.qh
 report.qh
 cmd.qh
 stdproc.qh
@@ -348,7 +348,7 @@ weapon/two_weapons.qc
 noteline.qc
 warmup.qc
 udp_chat.qc
-score_damage.qc
+damage_score.qc
 ice.qc
 single.qc
 coop.qc
