@@ -127,7 +127,6 @@ float SP_KILLS;
 float SP_DEATHS;
 float SP_SUICIDES;
 float SP_SCORE;
-float SP_DAMAGE;
 float SP_STATUS;
 float SP_TEAM;
 float ST_SCORE;
