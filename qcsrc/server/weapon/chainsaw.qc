@@ -36,7 +36,7 @@ void(void) weapon_chainsaw_attack {
 	if (trace_ent.takedamage)
 	if (self.chainsaw_last_hit <= time) {
 		self.chainsaw_last_hit = time + g_balance_chainsaw_primary_refire;
-		damage_record_hits(self, trace_ent, WEAPON_MELEE, 1, g_balance_chainsaw_primary_damage);
+		weapon_score_hits(self, trace_ent, WEAPON_MELEE, 1, g_balance_chainsaw_primary_damage);
 		damage(trace_ent, self, self, g_balance_chainsaw_primary_damage,
 				WEAPON_MELEE, trace_endpos, warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir) * g_balance_chainsaw_primary_force);
 	}

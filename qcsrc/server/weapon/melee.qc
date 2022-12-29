@@ -51,7 +51,7 @@ void(void) weapon_melee_attack_think {
 	if (trace_ent)
 	if (trace_ent.takedamage) {
 		if (self.dmg)
-			damage_record_hits(self.owner, trace_ent, WEAPON_MELEE, 1, _damage * damage_factor);
+			weapon_score_hits(self.owner, trace_ent, WEAPON_MELEE, 1, _damage * damage_factor);
 
 		damage(trace_ent, self.owner, self.owner, _damage * damage_factor,
 				WEAPON_MELEE, trace_endpos, warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir) * force * damage_factor + '0 0 1' * force_up * damage_factor);

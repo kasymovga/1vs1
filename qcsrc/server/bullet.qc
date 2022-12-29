@@ -74,7 +74,7 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 		// apply the damage
 		if (ent.takedamage) {
 			float d = bdamage * f;
-			damage_record_hits(self, ent, deathtype, 1, d);
+			weapon_score_hits(self, ent, deathtype, 1, d);
 			damage(ent, self, self, d, deathtype, hitloc, normalize(bullet_to - bullet_from) * bforce * ffs);
 		}
 		// advance to the next entity
@@ -100,7 +100,7 @@ void(void) bullet_hit {
 		bullet_from = self.origin - 0.1 * self.velocity;
 		bullet_to = self.origin + 0.1 * self.velocity;
 		float d = self.dmg * f;
-		damage_record_hits(self.owner, other, self.projectiledeathtype, 1, d);
+		weapon_score_hits(self.owner, other, self.projectiledeathtype, 1, d);
 		damage(other, self, self.owner, d, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
 		if (self.dmg_edge != 0) {

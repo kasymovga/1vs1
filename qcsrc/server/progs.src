@@ -118,6 +118,7 @@ nadget/transloc.qh
 nadget/waypoint.qh
 napalm.qh
 damage.qh
+weapon/score.qh
 heal.qh
 fire.qh
 badass.qh
@@ -161,6 +162,7 @@ random.qc
 net.qc
 violence.qc
 damage.qc
+weapon/score.qc
 heal.qc
 fire.qc
 arc.qc

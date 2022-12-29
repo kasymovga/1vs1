@@ -51,7 +51,7 @@ void(void) vehicle_bigwheel_attack_laser {
 	else
 		weapon_shotorg = self.origin + v_forward * 20 - v_right * 70 + v_up * 80;
 
-	damage_record_fires(self.owner, WEAPON_HLAC, 1);
+	weapon_score_fires(self.owner, WEAPON_HLAC, 1);
 	sound(self, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
 	entity proj = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);

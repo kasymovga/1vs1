@@ -27,7 +27,7 @@ void(void) weapon_hook_explode_think {
 	dmg_remaining_next = pow(bound(0, 1 - dt / g_balance_hook_secondary_duration, 1), g_balance_hook_secondary_power);
 	f = self.cnt - dmg_remaining_next;
 	self.cnt = dmg_remaining_next;
-	damage_record_fires(self.owner, WEAPON_HOOK, 1);
+	weapon_score_fires(self.owner, WEAPON_HOOK, 1);
 	damage_radius(self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, EFFECT_IMPACT_HOOKBOOMB, self.projectiledeathtype, world);
 	self.projectiledeathtype |= HITTYPE_NOINFO;
 	if (dt < g_balance_hook_secondary_duration)

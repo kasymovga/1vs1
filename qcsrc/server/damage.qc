@@ -1,7 +1,5 @@
-float SP_BESTWEP;
 .entity dmg_indicator;
 
-float g_score_bestweapon;
 float g_balance_selfdamagepercent;
 float g_friendlyfire;
 float g_friendlyfire_force;
@@ -179,63 +177,6 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	}
 }
 
-.float actual_damage[WEAPON_COUNT_EXTRA]; //amount of damage done
-
-void(entity attacker, float deathtype, float shots) damage_record_fires {
-	float weaponid;
-	weaponid = DEATH_WEAPONOF(deathtype);
-	if not(warmup_active)
-	if (WEAPON_VALID(weaponid)) {
-		// Track damage done and update the stat to be sent later in g_world.qc
-		float f = attacker.bullets_fired[weaponid] + shots;
-		attacker.(bullets_fired[weaponid]) = f;
-		attacker.maxdamage_fired = weaponid + 64 * rint(attacker.bullets_fired[weaponid]);
-		entity s = attacker.scorekeeper;
-		if (g_score_bestweapon)
-		if (s) {
-			float bestwep = s.scores[SP_BESTWEP] & 63;
-			if (weaponid == bestwep) {
-				f = rint(attacker.bullets_hit[weaponid] * 100 / f) * 64 + weaponid;
-				score_player_set(attacker, SP_BESTWEP, f);
-			}
-		}
-	}
-}
-
-void(entity attacker, entity targ, float deathtype, float hits, float _damage) damage_record_hits {
-	float weaponid;
-	weaponid = DEATH_WEAPONOF(deathtype);
-	if (targ.deadflag == DEAD_NO)
-	if (targ.iscreature)
-	if (targ != attacker)
-	if (!team_mode || targ.team != attacker.team)
-	if not(warmup_active)
-	if (WEAPON_VALID(weaponid)) {
-		// Track damage done and update the stat to be sent later in g_world.qc
-		float h = attacker.bullets_hit[weaponid] + hits;
-		attacker.(bullets_hit[weaponid]) = h;
-		float d = attacker.actual_damage[weaponid] + _damage;
-		attacker.(actual_damage[weaponid]) = d;
-		entity s = attacker.scorekeeper;
-		if (g_score_bestweapon)
-		if (s) {
-			float bestwep = s.scores[SP_BESTWEP] & 63;
-			if (attacker.actual_damage[bestwep] <= d) {
-				float f;
-				f = rint(h * 100 / attacker.bullets_fired[weaponid]) * 64 + weaponid;
-				score_player_set(attacker, SP_BESTWEP, f);
-			}
-		}
-		attacker.damage_hits = weaponid + 64 * rint(attacker.bullets_hit[weaponid]);
-	}
-}
-
-void() damage_record_init {
-	CVAR_CACHE(g_score_bestweapon);
-	if (g_score_bestweapon)
-		SP_BESTWEP = score_register("bestwep", 0);
-}
-
 float damage_radius_running;
 void(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float impacttype, float deathtype, entity directhitentity) damage_radius {
 	entity targ;
@@ -342,7 +283,7 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 					force = force * a;
 					if (hits || g_throughfloor_damage || g_throughfloor_force) {
 						if (record_damage)
-							damage_record_hits(attacker, targ, deathtype, 1, finaldmg);
+							weapon_score_hits(attacker, targ, deathtype, 1, finaldmg);
 
 						if (DEATH_ISSPECIAL(deathtype))
 							damage(targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
@@ -357,7 +298,7 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 	if (directhitentity)
 	if (directhitentity.takedamage) {
 		damage(directhitentity, inflictor, attacker, coredamage, deathtype, entity_nearest_point_on_box(directhitentity, blastorigin), forceintensity * normalize(directhitentity.origin - blastorigin + (directhitentity.mins + directhitentity.maxs) * 0.5));
-		damage_record_hits(attacker, directhitentity, deathtype, 1, coredamage);
+		weapon_score_hits(attacker, directhitentity, deathtype, 1, coredamage);
 	}
 	damage_radius_running = 0;
 }

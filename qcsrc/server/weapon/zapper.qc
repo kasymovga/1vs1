@@ -242,7 +242,7 @@ void(void) weapon_zapper_beam_think {
 	for ( ;dt >= wantedTicrate; dt -= wantedTicrate) {
 		float _damage = g_balance_zapper_primary_damage;
 		float force  = g_balance_zapper_primary_force;
-		damage_record_fires(o, WEAPON_ZAPPER, 1);
+		weapon_score_fires(o, WEAPON_ZAPPER, 1);
 		if (targ.takedamage) {
 			float d = vlen(end - weapon_shotorg) * fract;
 			float mindist = g_balance_zapper_primary_damagefalloff_mindist;
@@ -251,7 +251,7 @@ void(void) weapon_zapper_beam_think {
 			float forcehalflifedist = g_balance_zapper_primary_damagefalloff_forcehalflife;
 			_damage *= bullet_exponential_falloff(mindist, maxdist, halflifedist, d);
 			force  *= bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, d);
-			damage_record_hits(o, targ, WEAPON_ZAPPER, 1, _damage);
+			weapon_score_hits(o, targ, WEAPON_ZAPPER, 1, _damage);
 			damage(targ, self, o, _damage, WEAPON_ZAPPER, end, force * forcedir);
 		}
 		if not(self.enemy.items & IT_UNLIMITED_AMMO)
@@ -347,7 +347,7 @@ void(entity o, vector start, vector start_visual, vector end, float fraction, fl
 		if (targ.iscreature)
 			weapon_zapper_attack2_arc(targ, o, _damage);
 
-		damage_record_hits(o, targ, WEAPON_ZAPPER, 1, _damage);
+		weapon_score_hits(o, targ, WEAPON_ZAPPER, 1, _damage);
 		damage(targ, o, o, _damage, WEAPON_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
 	}
 	weapon_zapper_attack2_effect_team = o.team;

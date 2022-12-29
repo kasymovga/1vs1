@@ -1340,7 +1340,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	ent = akimbo_owner(ent);
 	// Track max damage and set the stat to be sent later in g_world.qc
 	if (maxhits > 0)
-		damage_record_fires(ent, ent.weapon, maxhits);
+		weapon_score_fires(ent, ent.weapon, maxhits);
 
 	if (ent_orig.weaponentity.movedir_x > 0) {
 		vecs = ent_orig.weaponentity.movedir;

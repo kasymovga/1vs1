@@ -1,0 +1,5 @@
+void(entity attacker, entity targ, float deathtype, float hits, float damage) weapon_score_hits;
+void(entity attacker, float deathtype, float fires) weapon_score_fires;
+void(void) weapon_score_init;
+.float bullets_hit[WEAPON_COUNT_EXTRA];
+.float bullets_fired[WEAPON_COUNT_EXTRA];

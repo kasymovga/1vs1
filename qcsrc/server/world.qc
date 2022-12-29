@@ -120,6 +120,7 @@ void(void) world_static_init {
 	ability_init();
 	voip_init();
 	damage_score_init();
+	weapon_score_init();
 }
 
 void(void) world_dynamic_init {

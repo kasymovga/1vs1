@@ -33,7 +33,7 @@ void(void) weapoon_supershotgun_touch {
 
 	if (other && other.takedamage) {
 		entity o = self.realowner;
-		damage_record_hits(o, other, WEAPON_SUPERSHOTGUN, 1, self.dmg);
+		weapon_score_hits(o, other, WEAPON_SUPERSHOTGUN, 1, self.dmg);
 		damage(other, self, o, self.dmg, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
 		self.cnt = 0;
 	}

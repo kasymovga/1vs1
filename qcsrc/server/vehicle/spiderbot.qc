@@ -69,7 +69,7 @@ void(void) vehicle_spiderbot_rocket_do {
 
 	self.gun2.cnt = time + self.attack_finished_single;
 	sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-	damage_record_fires(self.owner, WEAPON_ROCKET_LAUNCHER, 1);
+	weapon_score_fires(self.owner, WEAPON_ROCKET_LAUNCHER, 1);
 	missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
 	projectile_setup(missile, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire")), EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER,
 			g_vehicle_spiderbot_rocket_damage, g_vehicle_spiderbot_rocket_edgedamage, g_vehicle_spiderbot_rocket_radius,
@@ -103,7 +103,7 @@ void(entity gun) vehicle_spiderbot_minigun_fire {
 	sound (gun, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 	entity e = self;
 	self = self.owner;
-	damage_record_fires(self, WEAPON_UZI, 1);
+	weapon_score_fires(self, WEAPON_UZI, 1);
 	bullet_begin(10000);
 	bullet(v, v_forward, g_vehicle_spiderbot_minigun_spread, 10000, 5, g_vehicle_spiderbot_minigun_damage, 0, 0, EFFECT_IMPACT_BULLET, WEAPON_UZI, particleeffectnum("EFFECT_MGTURRETTRAIL"), 0, 100);
 	self = e;
