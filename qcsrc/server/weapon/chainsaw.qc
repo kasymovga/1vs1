@@ -4,6 +4,7 @@ float g_balance_chainsaw_primary_refire;
 float g_balance_chainsaw_secondary;
 float g_balance_chainsaw_secondary_damage;
 float g_balance_chainsaw_noise;
+string sv_announcer_extra_meleefrag;
 
 void(void) spawnfunc_weapon_chainsaw {
 	if (g_balance_melee && g_balance_melee != 2)
@@ -95,6 +96,7 @@ float(float req) weapon_chainsaw {
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_fragprefix = "^xF80MELEE";
 		weapon_deathtypestring = "was butchered by";
+		weapon_fragannounce = sv_announcer_extra_meleefrag;
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_chainsaw_primary_damage);
 		CVAR_CACHE(g_balance_chainsaw_primary_force);
@@ -102,6 +104,10 @@ float(float req) weapon_chainsaw {
 		CVAR_CACHE(g_balance_chainsaw_secondary);
 		CVAR_CACHE(g_balance_chainsaw_secondary_damage);
 		CVAR_CACHE(g_balance_chainsaw_noise);
+		CVAR_CACHE_STR(sv_announcer_extra_meleefrag);
+		if (sv_announcer_extra_meleefrag != "")
+			precache_sound(sv_announcer_extra_meleefrag);
+
 		weapon_melee_init();
 	}
 	return TRUE;

@@ -68,11 +68,9 @@ float g_player_pushfactor;
 float g_player_body_pitch_maxangle;
 float g_player_team_collisions;
 float g_endmatch_on_leave;
-string sv_announcer_extra_meleefrag;
 string sv_announcer_extra_pushfrag;
 string sv_announcer_extra_doublekill;
 float sv_announcer_extra_doublekill_interval;
-string sv_announcer_extra_telefrag;
 string sv_announcer_extra_firstblood;
 string sv_sound_frag;
 float bot_taunt;
@@ -826,13 +824,12 @@ void(float killed) player_clear {
 	}
 }
 
-float checkrules_firstblood;
+float player_obituary_firstblood;
 void(entity attacker, entity inflictor, entity targ, float deathtype) player_obituary {
 	string s, a;
 	float p, w;
 	s = targ.netname;
 	a = attacker.netname;
-	weapon_fragprefix = "";
 	float attacker_is_player = (attacker.classname == "player" || (team_mode && attacker.classname == "spectator" && attacker.team > 0));
 	if (targ == attacker) {
 		if (clienttype(attacker) == CLIENTTYPE_BOT)
@@ -919,8 +916,9 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			attacker.killcount = 0;
 		} else {
 			string blood_message = "", victim_message = "";
-			if (!checkrules_firstblood) {
-				checkrules_firstblood = TRUE;
+			weapon_fragprefix = "";
+			if (!player_obituary_firstblood) {
+				player_obituary_firstblood = TRUE;
 				bprint("^1",a, "^1 drew first blood", "\n");
 				blood_message = "^1First blood\n";
 				victim_message = "^1First victim\n";  // or First casualty
@@ -931,6 +929,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			if (WEAPON_VALID(w)) {
 				weapon_deathtypestring = "was blasted by";
 				weapon_deathtype = deathtype;
+				weapon_fragannounce = "";
 				weapon_action(w, WEAPON_REQUEST_KILLMESSAGE);
 				p = strstrofs(weapon_deathtypestring, "#", 0);
 				if (p < 0)
@@ -1011,9 +1010,10 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				}
 				attacker.taunt_soundtime = time + 1;
 				attacker.lastfrag = fragtime;
-				if (DEATH_ISWEAPON(deathtype, WEAPON_MELEE) && sv_announcer_extra_meleefrag != "") {
-						announce(targ, sv_announcer_extra_meleefrag, "");
-						announce(attacker, sv_announcer_extra_meleefrag, "");
+				if (weapon_fragannounce != "") {
+						announce(targ, weapon_fragannounce, "");
+						announce(attacker, weapon_fragannounce, "");
+						weapon_fragannounce = "";
 				}
 				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You ", weapon_fragprefix, "^4fragged ^7", s));
 			}

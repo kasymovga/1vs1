@@ -23,6 +23,7 @@ vector weapon_shotpoint;
 vector weapon_shotorg_visual;
 string weapon_deathtypestring;
 string weapon_fragprefix;
+string weapon_fragannounce;
 float weapon_deathtype;
 entity weapon_spawn_chain;
 string weapon_priority_by_order;

@@ -5,6 +5,7 @@ float g_balance_porto_primary_lifetime;
 float g_balance_porto_primary_refire;
 float g_balance_porto_primary_speed;
 float g_balance_powerup_strength_force;
+string sv_announcer_extra_telefrag;
 
 .entity porto_current_in;
 .entity porto_current_out;
@@ -184,6 +185,7 @@ float(float req) weapon_porto {
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_fragprefix = "^6TELE";
 		weapon_deathtypestring = "was telefragged by";
+		weapon_fragannounce = sv_announcer_extra_telefrag;
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.porto_current_in = world;
 		self.porto_current_out = world;
@@ -196,6 +198,10 @@ float(float req) weapon_porto {
 		CVAR_CACHE(g_balance_porto_primary_refire);
 		CVAR_CACHE(g_balance_porto_primary_speed);
 		CVAR_CACHE(g_balance_powerup_strength_force);
+		CVAR_CACHE_STR(sv_announcer_extra_telefrag);
+		if (sv_announcer_extra_telefrag != "")
+			precache_sound(sv_announcer_extra_telefrag);
+
 		projectile_init(PROJECTILE_PORTO_RED);
 		projectile_init(PROJECTILE_PORTO_BLUE);
 	}
