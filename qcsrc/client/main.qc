@@ -13,16 +13,16 @@ void(void) CSQC_Init {
 	read_cvars_init();
 	if (file_exists("rexuiz.cfg")) {
 		if (extension_ALL && (cvar_type("collision_triangle_directional") & CVAR_TYPEFLAG_ENGINE) && (cvar_type("collision_surfaceflagsmerge") & CVAR_TYPEFLAG_ENGINE))
-			localcmd("\ncmd gameclient newrexuiz\n");
+			localcmd("\ncmd clientversion newrexuiz\n");
 		else
-			localcmd("\ncmd gameclient rexuiz\n");
+			localcmd("\ncmd clientversion rexuiz\n");
 	} else if (autocvar_autocvar_check) {
-		localcmd("\ncmd gameclient nexuiz\n");
+		localcmd("\ncmd clientversion nexuiz\n");
 		if not(cvar("mod_alias_force_animated")) {
 			localcmd("\nseta mod_alias_force_animated 1; r_restart\n");
 		}
 	} else {
-		localcmd("\ncmd gameclient oldnexuiz\n");
+		localcmd("\ncmd clientversion oldnexuiz\n");
 		entity e = noteline_new("^1WARNING: ^3Your client is outdated!\n^3Updated client available here: ^2http://rexuiz.com^7");
 		e.think = stdproc_remove;
 		e.nextthink = time + 30;

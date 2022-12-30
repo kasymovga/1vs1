@@ -929,7 +929,7 @@ void(void) spawnfunc_item_invincible {
 }
 
 float(void) item_glow_customize {
-	if (other.scorekeeper.clientversion < CLIENT_NEXUIZ)
+	if (other.scorekeeper.clientversion < CLIENT_VERSION_NEXUIZ)
 		self.glowmod = '0 0 0';
 	else
 		self.glowmod = self.colormod;

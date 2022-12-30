@@ -24,8 +24,6 @@ void(entity pl, float tstart, float dt) client_write_recordmarker;
 string client_stuff;
 string client_fog;
 float client_max_count;
-void(void) client_version_init;
-void(entity cl, string s) client_version_set;
 var .float clientversion;
 .string clid;
 string client_retardplayername;

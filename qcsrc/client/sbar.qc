@@ -710,19 +710,19 @@ string(entity pl, float field) sbar_field_get {
 	case SP_CLIENTVERSION:
 		tmp = pl.(scores[SP_CLIENTVERSION_FIELD]);
 		switch (tmp) {
-		case CLIENT_NEWREXUIZ:
+		case CLIENT_VERSION_NEWREXUIZ:
 			sbar_field_rgb = '0.25 1 0.25';
 			return "R+";
-		case CLIENT_REXUIZ:
+		case CLIENT_VERSION_REXUIZ:
 			sbar_field_rgb = '0.75 0.75 0.25';
 			return "R";
-		case CLIENT_NEXUIZ:
+		case CLIENT_VERSION_NEXUIZ:
 			sbar_field_rgb = '0.75 0.5 0.25';
 			return "N+";
-		case CLIENT_OLDNEXUIZ:
+		case CLIENT_VERSION_OLDNEXUIZ:
 			sbar_field_rgb = '1 0.25 0.25';
 			return "N";
-		case CLIENT_BOT:
+		case CLIENT_VERSION_BOT:
 			sbar_field_rgb = '0.5 0.5 1';
 			return "B";
 		default:

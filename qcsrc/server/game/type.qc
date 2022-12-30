@@ -10,7 +10,6 @@ void() game_type_default_delayed_init {
 	if(!score_preinitialized)
 		score_generic();
 
-	client_version_init();
 	score_basics_end();
 }
 

@@ -549,10 +549,6 @@ void(string s) cmd_client {
 		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 		net_write_byte(MSG_ONE, NET_TE_CSQC_MAPLIST);
 		net_write_string(MSG_ONE, map_list);
-	} else if (cmd == "gameclient") {
-		s = argv(1);
-		print("Game client for ", self.netname, ": ", s, "\n");
-		client_version_set(self, s);
 	} else if (cmd == "records") {
 		if (cmd_records_reply[0] == "")
 			sprint(self, "No records are available on this server.\n");
