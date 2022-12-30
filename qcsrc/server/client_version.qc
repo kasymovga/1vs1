@@ -75,6 +75,7 @@ void(void) client_version_init {
 	if (client_version_init_done)
 		return;
 
+	client_version_init_done = TRUE;
 	client_version_basics_end_next = plugin_chain_score_basics_end;
 	plugin_chain_score_basics_end = client_version_basics_end;
 	client_version_cmd_client_handle_next = plugin_chain_cmd_client_handle;
