@@ -11,7 +11,6 @@ void() game_type_default_delayed_init {
 		score_generic();
 
 	client_version_init();
-	IP2C_InitSV();
 	score_basics_end();
 }
 

@@ -1,4 +1,4 @@
-float SP_COUNTRY;
+float IP2C_SCORE;
 
 float sv_ip2country;
 float sv_ip2country_allow_fakeflag;
@@ -15,7 +15,7 @@ void IP2C_SetCountry_Internal(entity player, string cn) {
 
     if(player.scorekeeper) {
         cn = strtolower(cn);  // flag icons have lowcase names
-        score_player_set(player, SP_COUNTRY, str2chr(substring(cn, 0, 1), 0) | (str2chr(substring(cn, 1, 1), 0) * 256));
+        score_player_set(player, IP2C_SCORE, str2chr(substring(cn, 0, 1), 0) | (str2chr(substring(cn, 1, 1), 0) * 256));
     } else {
         IP2C_Log(strcat(player.netname, "^7 has no scorekeeper"));
     }
@@ -72,6 +72,12 @@ void IP2C_client_connect(void) {
 	IP2C_client_connect_NextLink();
 }
 
+var void(void) ip2c_score_basics_end_next;
+void(void) ip2c_score_basics_end {
+	IP2C_SCORE = score_register("country", SCORE_FLAG_NOCLEAR);
+	ip2c_score_basics_end_next();
+}
+
 void IP2C_InitSV(void) {
     CVAR_CACHE(sv_ip2country);
     CVAR_CACHE(sv_ip2country_allow_fakeflag);
@@ -79,8 +85,6 @@ void IP2C_InitSV(void) {
     if(!sv_ip2country) {
         return;
     }
-
-	SP_COUNTRY = score_register("country", SCORE_FLAG_NOCLEAR);
     IP2C_Init();
     dlc_require("flagicons_v2");
     if(sv_ip2country_allow_fakeflag) {
@@ -93,6 +97,8 @@ void IP2C_InitSV(void) {
 	plugin_chain_shutdown = IP2C_ShutdownHook;
 	IP2C_client_connect_NextLink = plugin_chain_client_connect;
 	plugin_chain_client_connect = IP2C_client_connect;
+	ip2c_score_basics_end_next = plugin_chain_score_basics_end;
+	plugin_chain_score_basics_end = ip2c_score_basics_end;
 }
 
 float IPCacheDB;

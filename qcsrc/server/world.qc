@@ -121,6 +121,7 @@ void(void) world_static_init {
 	voip_init();
 	damage_score_init();
 	weapon_score_init();
+	IP2C_InitSV();
 }
 
 void(void) world_dynamic_init {
