@@ -84,6 +84,7 @@ float sv_loddistance2;
 
 float(void) player_customize;
 float(void) player_body_customize;
+float(void) player_body_torso_customize;
 void(entity to, entity from) player_copy_sounds;
 
 void(void) player_dmg_inflictor_fix {
@@ -202,7 +203,11 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 	}
 	setmodel(body_to, body_from.model);
 	if (body_from.weaponentity) {
-		if not(body_to.weaponentity) body_to.weaponentity = spawn();
+		if not(body_to.weaponentity) {
+			body_to.weaponentity = spawn();
+			body_to.weaponentity.owner = body_to.owner;
+			body_to.weaponentity.customizeentityforclient = player_body_torso_customize;
+		}
 		body_to.weaponentity.colormap = body_to.colormap;
 		setmodel(body_to.weaponentity, body_from.weaponentity.model);
 		body_to.weaponentity.tag_entity = body_to;
@@ -212,7 +217,11 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 		body_to.weaponentity = NULL;
 	}
 	if (body_from.exteriorweaponentity) {
-		if not(body_to.exteriorweaponentity) body_to.exteriorweaponentity = spawn();
+		if not(body_to.exteriorweaponentity) {
+			body_to.exteriorweaponentity = spawn();
+			body_to.exteriorweaponentity.owner = body_to.owner;
+			body_to.exteriorweaponentity.customizeentityforclient = player_body_torso_customize;
+		}
 		setmodel(body_to.exteriorweaponentity, body_from.exteriorweaponentity.model);
 		setorigin(body_to.exteriorweaponentity, body_from.exteriorweaponentity.origin);
 		body_to.exteriorweaponentity.tag_entity = body_to.weaponentity;
@@ -1475,13 +1484,21 @@ void(string modelname) player_setup_lod {
 
 	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_torso", substring(modelname, -4, 4));
 	if (file_exists(s)) {
-		if not(self.body.weaponentity) self.body.weaponentity = spawn();
+		if not(self.body.weaponentity) {
+			self.body.weaponentity = spawn();
+			self.body.weaponentity.owner = self;
+			self.body.weaponentity.customizeentityforclient = player_body_torso_customize;
+		}
 		setmodel(self.body.weaponentity, s);
 		self.body.weaponentity.colormap = self.body.colormap;
 		setattachment(self.body.weaponentity, self.body, "tag_torso");
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_head", substring(modelname, -4, 4));
 		if (file_exists(s)) {
-			if not(self.body.exteriorweaponentity) self.body.exteriorweaponentity = spawn();
+			if not(self.body.exteriorweaponentity) {
+				self.body.exteriorweaponentity = spawn();
+				self.body.exteriorweaponentity.owner = self;
+				self.body.exteriorweaponentity.customizeentityforclient = player_body_torso_customize;
+			}
 			setmodel(self.body.exteriorweaponentity, s);
 			setattachment(self.body.exteriorweaponentity, self.body.weaponentity, "tag_head");
 		} else if (self.body.exteriorweaponentity) {
@@ -2039,6 +2056,20 @@ float(void) player_customize {
 		self.exteriormodeltoclient = world;
 
 	if (plugin_chain_PlayerVisibleThroughWallFor(self.owner, other))
+		self.effects |= EFFECT_NODEPTHTEST;
+	else
+		self.effects &= ~EFFECT_NODEPTHTEST;
+
+	return TRUE;
+}
+
+float(void) player_body_torso_customize {
+	entity o = self.owner;
+	self.alpha = player_alpha(o, other);
+	if (self.alpha < 0)
+		return FALSE;
+
+	if (plugin_chain_PlayerVisibleThroughWallFor(o, other))
 		self.effects |= EFFECT_NODEPTHTEST;
 	else
 		self.effects &= ~EFFECT_NODEPTHTEST;
