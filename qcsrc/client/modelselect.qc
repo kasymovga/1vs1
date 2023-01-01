@@ -153,7 +153,8 @@ void(void) modelselect_draw {
 		float _skin = stof(substring(s, colon + 1, -1));
 		precache_model(_model);
 		setmodel(modelselect_current, _model);
-		modelselect_current.scale = 0.1;
+		float fov_factor = (view_fov / 90);
+		modelselect_current.scale = 0.8 * fov_factor;
 		string s = strcat(substring(_model, 0, strlen(_model) - 4), "_torso", substring(_model, -4, 4));
 		if (file_exists(s)) {
 			precache_model(s);
@@ -189,7 +190,7 @@ void(void) modelselect_draw {
 	}
 	if (view_fixangle) {
 		makevectors(view_fixed_angles);
-		setorigin(modelselect_current, view_camera_origin + v_forward * 15);
+		setorigin(modelselect_current, '100 0 0');
 	} else
 		setorigin(modelselect_current, view_camera_origin + view_forward * 15);
 
@@ -326,6 +327,7 @@ void(void) modelselect_read {
 	modelselect_torso.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
 	modelselect_head.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
 	modelselect_current.draw = modelselect_model_draw;
+	modelselect_current.renderflags = RF_VIEWMODEL | RF_DEPTHHACK;
 	modelselect_head.draw = modelselect_model_draw;
 	modelselect_torso.draw = modelselect_model_draw;
 	modelselect_current.colormap = 1023;
