@@ -162,12 +162,12 @@ void(void) menu_draw {
 		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
 		draw_borderlines(sbar_border_thickness, pos_y * '0 1 0' + '10 0 0', 24 * '0 1 0' + CVAR(vid_conwidth) * '1 0 0' - '24 0 0', border_color, 1, DRAWFLAG_NORMAL);
 		draw_borderlines(sbar_border_thickness, pos_y * '0 1 0' + '-28 2 0' + lm, '0 12 0' + '12 0 0' + ((i == 9) ? '12 0 0' : '0 0 0'), border_color, 1, DRAWFLAG_NORMAL);
-		if (i < 9) {
+		if (i < 9 || menu.cnt <= 10) {
 			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, ftos(i + 1)), '12 12 0', 1, DRAWFLAG_NORMAL);
 		} else if (i == 9) {
 			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, "0/a"), '12 12 0', 1, DRAWFLAG_NORMAL);
 		} else {
-			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, substring("bcdef", i - 10, 1)), '12 12 0', 1, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, substring("bcdefg", i - 10, 1)), '12 12 0', 1, DRAWFLAG_NORMAL);
 		}
 		pos_y += MENU_ITEM_HEIGHT;
 	}
@@ -193,8 +193,9 @@ float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 		else
 			choice--;
 	}
+	if (menu.cnt >= 11)
 	if ('a' <= nPrimary)
-	if (nPrimary <= 'f') {
+	if (nPrimary <= 'g') {
 		choice = nPrimary - 'a' + 9;
 	}
 	if (nPrimary == K_MOUSE1) {
