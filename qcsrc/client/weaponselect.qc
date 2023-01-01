@@ -14,6 +14,8 @@ float weaponselect_available_extra;
 
 float(float bInputType, float nPrimary, float nSecondary) weaponselect_input_event;
 
+entity weaponselect;
+
 void(vector o, vector s) weaponselect_update {
 	vector v = mouse_position();
 	weaponselect_selected = floor(weaponselect_numoptions * ((bound(o_y, v_y, o_y + s_y) - o_y) / s_y));
@@ -43,6 +45,7 @@ void(void) weaponselect_draw {
 
 	if (!weaponselect_alpha) {
 		remove(self);
+		weaponselect = NULL;
 		return;
 	}
 	sbar_hidescores = TRUE;
@@ -171,7 +174,9 @@ void(void) weaponselect_read {
 	weaponselect_height = WEAPONSELECT_SCALE * weaponselect_numoptions + WEAPONSELECT_MARGIN;
 	weaponselect_width += WEAPONSELECT_MARGIN;
 	weaponselect_active = TRUE;
-	entity e = spawn();
-	e.draw2d = weaponselect_draw;
-	e.draw2dflag = 1;
+	if not(weaponselect) {
+		weaponselect = spawn();
+		weaponselect.draw2d = weaponselect_draw;
+		weaponselect.draw2dflag = 1;
+	}
 }

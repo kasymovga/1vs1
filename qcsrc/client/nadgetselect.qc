@@ -14,6 +14,7 @@ float nadgetselect_selected_in;
 float nadgetselect_confirmed1;
 float nadgetselect_confirmed2;
 float g_nadgets_double;
+entity nadgetselect;
 
 float(float bInputType, float nPrimary, float nSecondary) nadgetselect_input_event;
 
@@ -37,6 +38,7 @@ void(void) nadgetselect_draw {
 		nadgetselect_alpha = approach(nadgetselect_alpha, 0, frametime * 7);
 
 	if (!nadgetselect_alpha) {
+		nadgetselect = NULL;
 		remove(self);
 		return;
 	}
@@ -237,7 +239,9 @@ void(void) nadgetselect_read {
 	nadgetselect_height = NADGETSELECT_SCALE * nadgetselect_numoptions + NADGETSELECT_MARGIN;
 	nadgetselect_width += NADGETSELECT_MARGIN;
 	nadgetselect_active = TRUE;
-	entity e = spawn();
-	e.draw2d = nadgetselect_draw;
-	e.draw2dflag = 1;
+	if not(nadgetselect) {
+		nadgetselect = spawn();
+		nadgetselect.draw2d = nadgetselect_draw;
+		nadgetselect.draw2dflag = 1;
+	}
 }
