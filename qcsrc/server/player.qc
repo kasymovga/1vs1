@@ -1440,7 +1440,7 @@ float(entity plr, entity viewer) player_alpha {
 		viewer = viewer.enemy;
 	}
 	float sa = plugin_chain_player_alpha_mod(plr, viewer, dalpha);
-	if ((plr == viewer && sa < 0.01) || plugin_player_is_carrier(plr)) {
+	if ((plr == viewer || plugin_player_is_carrier(plr)) && sa < 0.01) {
 		sa = 0.01;
 	} else if (sa <= 0) {
 		sa = -1;
