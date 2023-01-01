@@ -77,9 +77,6 @@ float bot_taunt;
 float bot_talk;
 float sv_loddistance1;
 float sv_loddistance2;
-#ifdef ALLOW_FORCEMODELS
-float sv_clforceplayermodels;
-#endif
 .string playermodel_save;
 .vector anim_stand;
 
@@ -2071,14 +2068,6 @@ float(void) player_body_customize {
 		return TRUE;
 
 	modelsource = self;
-#ifdef ALLOW_FORCEMODELS
-	if (other.cvar_cl_forceplayermodelsfromnexuiz)
-		if not(self.modelindex_lod0_from_nexuiz)
-			modelsource = other.body;
-
-	if (other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
-		modelsource = other.body;
-#endif
 	if (self.skin != modelsource.owner.skinindex) {
 		self.skin = modelsource.owner.skinindex;
 		if (self.weaponentity) {
@@ -2503,9 +2492,6 @@ void() player_init {
 	if (sv_loddistance2 <= sv_loddistance1)
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 
-#ifdef ALLOW_FORCEMODELS
-	CVAR_CACHE(sv_clforceplayermodels);
-#endif
 	if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
 		str_unzone_ifneeded(g_player_forcemodel_blue);
 		g_player_forcemodel_blue = str_zone_ifneeded(g_player_forcemodel);

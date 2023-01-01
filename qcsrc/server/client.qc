@@ -706,11 +706,6 @@ void client_cvars_request() {
 			"sendcvar _cl_rate\n"
 			"sendcvar voipvolume\n"
 	);
-#ifdef ALLOW_FORCEMODELS
-	stuffcmd(self, "sendcvar cl_forceplayermodels\n"
-			"sendcvar cl_forceplayermodelsfromnexuiz\n"
-	);
-#endif
 	stuffcmd(self, "sendcvar cl_gunalign\n");
 	stuffcmd(self, "sendcvar cl_gunalign_force_center\n");
 	stuffcmd(self, "sendcvar cl_showweaponspawns\n");
@@ -754,12 +749,6 @@ void() client_cvars_parse {
 			self.cvar_cl_voice_directional = stof(val);
 	} else if (s == "cl_voice_directional_taunt_attenuation")
 		self.cvar_cl_voice_directional_taunt_attenuation = stof(val);
-#ifdef ALLOW_FORCEMODELS
-	else if (s == "cl_forceplayermodels")
-		self.cvar_cl_forceplayermodels = stof(val);
-	else if (s == "cl_forceplayermodelsfromnexuiz")
-		self.cvar_cl_forceplayermodelsfromnexuiz = stof(val);
-#endif
 	else if (s == "cl_gunalign") {
 		self.cvar_cl_gunalign = (stof(val) & 7) + (self.cvar_cl_gunalign & 8);
 		if (self.weaponentity)
