@@ -1,5 +1,5 @@
 void(void) single_hud {
-	vector pos = sbar_position(CVAR(sbar_gameinfo_position), '136 48 0' * CVAR(sbar_gameinfo_scale));
+	vector pos = sbar_position_and_borders(CVAR(sbar_gameinfo_position), '136 48 0' * CVAR(sbar_gameinfo_scale));
 	if (sbar_stat_items & IT_KEY1)
 		drawpic(pos + '30 4 0' * CVAR(sbar_gameinfo_scale), "gfx/hud/sb_kh_blue", '20 40 0' * CVAR(sbar_gameinfo_scale), '1.125 1.125 0.75', sbar_alpha_fg, DRAWFLAG_NORMAL);
 

@@ -1,1 +1,2 @@
 void(float new) dlc_read;
+void(void) dlc_recheck_all;

@@ -67,7 +67,7 @@ void(void) dlc_wait_think {
 			localcmd(strcat("exec rexdlc_", s, "_client_post.cfg\n"));
 	}
 	remove(self);
-	dlc_wait = world;
+	dlc_wait = NULL;
 }
 
 void(void) dlc_draw2d {
@@ -77,6 +77,19 @@ void(void) dlc_draw2d {
 	pos_x = (CVAR(vid_conwidth) / 2) - stringwidth(s, FALSE) * 6;
 	pos_z = 0;
 	drawstring(pos, s, '12 12 0', '0 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+}
+
+void(void) dlc_recheck_all {
+	if not(dlc_wait) {
+		if (dlc_ready_all())
+			return;
+
+		dlc_wait = spawn();
+		dlc_wait.think = dlc_wait_think;
+		dlc_wait.nextthink = time + 0.2;
+		dlc_wait.draw2d = dlc_draw2d;
+		dlc_wait.draw2dflag = 1;
+	}
 }
 
 void(float new) dlc_read {
@@ -100,13 +113,7 @@ void(float new) dlc_read {
 			}
 		}
 		if (not_all_loaded) {
-			if not(dlc_wait) {
-				dlc_wait = spawn();
-				dlc_wait.think = dlc_wait_think;
-				dlc_wait.nextthink = time + 0.2;
-				dlc_wait.draw2d = dlc_draw2d;
-				dlc_wait.draw2dflag = 1;
-			}
+			dlc_recheck_all();
 		} else {
 			localcmd("\n");
 			l = list;

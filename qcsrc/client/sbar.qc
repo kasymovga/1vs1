@@ -97,7 +97,7 @@ void(string s) sbar_save {
 	}
 }
 
-vector sbar_position(vector pos, vector sz) {
+vector(vector pos, vector sz) sbar_position {
 	vector v = '0 0 0';
 	if (pos_z & 1)
 		v_x = pos_x + (CVAR(vid_conwidth) - sz_x) * 0.5;
@@ -114,6 +114,26 @@ vector sbar_position(vector pos, vector sz) {
 		v_y = pos_y;
 
 	return v;
+}
+
+void(vector pos, vector sz) sbar_draw_borders {
+	vector rgb;
+	if (team_mode) {
+		rgb = team_rgb(team_my);
+	} else {
+		rgb_x = CVAR(sbar_color_bg_r);
+		rgb_y = CVAR(sbar_color_bg_g);
+		rgb_z = CVAR(sbar_color_bg_b);
+	}
+	rm_skin_draw_borders(pos, sz, sbar_alpha_bg, rgb);
+}
+
+vector(vector pos, vector sz) sbar_position_and_borders {
+	pos = sbar_position(pos, sz);
+	if (rm_skin_loaded) {
+		sbar_draw_borders(pos, sz);
+	}
+	return pos;
 }
 
 void(float fade) sbar_draw_weapons {
@@ -181,8 +201,12 @@ void(float fade) sbar_draw_weapons {
 		if (sp)
 			pos += w_shift * sp;
 
-		if (active)
-			drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		if (active) {
+			if (rm_skin_loaded) {
+				sbar_draw_borders(pos, w_size);
+			} else
+				drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		}
 
 		drawpic(pos, e.icon, w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 		if (CVAR(sbar_weapons_show_ammo)) {
@@ -1276,7 +1300,7 @@ void(void) sbar_score_draw_default {
 	vector score_pos, secondary_score_pos, distribution_color;
 	entity tm, pl, me;
 	me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
-	score_pos = sbar_position(CVAR(sbar_score_position), '196 34 0' * CVAR(sbar_score_scale));
+	score_pos = sbar_position_and_borders(CVAR(sbar_score_position), '196 34 0' * CVAR(sbar_score_scale));
 	secondary_score_pos = score_pos + '132 0 0' * CVAR(sbar_score_scale);
 	if not(team_mode) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
@@ -1351,7 +1375,7 @@ void(void) sbar_score_draw_race {
 		racemin = floor(score/(60 * TIME_FACTOR));
 		racesec = floor((score - racemin*(60 * TIME_FACTOR))/TIME_FACTOR);
 		racemsec = score - racemin*60*TIME_FACTOR - racesec*TIME_FACTOR;
-		vector pos = sbar_position(CVAR(sbar_score_position), '160 34 0' * CVAR(sbar_score_scale));
+		vector pos = sbar_position_and_borders(CVAR(sbar_score_position), '160 34 0' * CVAR(sbar_score_scale));
 		vector font_size;
 		if (pl && ((!(scores_flags[ps_primary] & SCORE_FLAG_ZERO_IS_WORST)) || score)) {
 			// distribution display
@@ -1422,7 +1446,7 @@ void(void) sbar_timer {
 		minutes = floor(sbar_timeleft / 60);
 		seconds = sbar_timeleft - minutes*60;
 	}
-	vector pos = sbar_position(CVAR(sbar_timer_position), '103 20 0' * CVAR(sbar_timer_scale));
+	vector pos = sbar_position_and_borders(CVAR(sbar_timer_position), '103 20 0' * CVAR(sbar_timer_scale));
 	if not(hideminutes) {
 		sbar_draw_num(pos, minutes, 3, 0, 18 * CVAR(sbar_timer_scale), timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawpic(pos + '50 0 0' * CVAR(sbar_timer_scale), "gfx/hud/num_colon", '18 18 0' * CVAR(sbar_timer_scale), timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
@@ -1767,12 +1791,12 @@ void(void) sbar_draw {
 		sbar_stat_items = getstati(STAT_ITEMS);
 		// armor
 		if (armor > 0) {
-			pos = sbar_position(CVAR(sbar_armor_position), '110 32 0' * CVAR(sbar_armor_scale));
+			pos = sbar_position_and_borders(CVAR(sbar_armor_position), '110 32 0' * CVAR(sbar_armor_scale));
 			drawpic(pos + '78 0 0' * CVAR(sbar_armor_scale), "gfx/hud/sb_armor", '32 32 0' * CVAR(sbar_armor_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_armor_scale), armor, 24 * CVAR(sbar_armor_scale), sbar_alpha_fg);
 		}
 		// health
-		pos = sbar_position(CVAR(sbar_health_position), '110 32 0' * CVAR(sbar_health_scale));
+		pos = sbar_position_and_borders(CVAR(sbar_health_position), '110 32 0' * CVAR(sbar_health_scale));
 		drawpic(pos + '78 0 0' * CVAR(sbar_health_scale), "gfx/hud/sb_health", '32 32 0' * CVAR(sbar_health_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_health_scale), _health, 24 * CVAR(sbar_health_scale), sbar_alpha_fg);
 		// weapon icons
@@ -1784,7 +1808,7 @@ void(void) sbar_draw {
 		// ammo
 		float a; // i will be the ammo type (already declared), a will contain how much ammo there is of type i
 		float clip = getstati(STAT_BULLETS_LOADED);
-		pos = sbar_position(CVAR(sbar_ammo_position), '172 48 0' * CVAR(sbar_ammo_scale));
+		pos = sbar_position_and_borders(CVAR(sbar_ammo_position), '172 48 0' * CVAR(sbar_ammo_scale));
 		if (clip) {
 			if (clip < 0) clip = 0;
 			string ai = NULL;
@@ -1917,7 +1941,7 @@ void(void) sbar_draw {
 				draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(input_command_key("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 			}
 			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
-			hgapos = sbar_position(CVAR(sbar_nadget_position), '74 24 0' * CVAR(sbar_nadget_scale));
+			hgapos = sbar_position_and_borders(CVAR(sbar_nadget_position), '74 24 0' * CVAR(sbar_nadget_scale));
 			float hgregen = sbar_nadget_regen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX);
 			vector hgrsize;
 			if (hgregen && hgregen != 1) {
@@ -1928,7 +1952,7 @@ void(void) sbar_draw {
 			sbar_draw_num(hgapos, hgammo, 2, 0, 24 * CVAR(sbar_nadget_scale), '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			drawpic(hgapos + '48 0 0' * CVAR(sbar_nadget_scale), hgicon, '22 22 0' * CVAR(sbar_nadget_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			if (hgtype2) {
-				hgapos = sbar_position(CVAR(sbar_nadget2_position), '74 24 0' * CVAR(sbar_nadget2_scale));
+				hgapos = sbar_position_and_borders(CVAR(sbar_nadget2_position), '74 24 0' * CVAR(sbar_nadget2_scale));
 				hgicon = nadget_TypeToIcon(hgtype2, TRUE, 0);
 				float hgregen2 = sbar_nadget_regen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2);
 				if (hgregen2 && hgregen2 != 1) {

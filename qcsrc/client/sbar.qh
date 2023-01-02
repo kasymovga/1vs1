@@ -33,3 +33,4 @@ float sbar_stat_items;
 vector sbar_bottomleft;
 float sbar_alpha_fg;
 void(void) sbar_set_defaults;
+vector(vector pos, vector sz) sbar_position_and_borders;

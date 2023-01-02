@@ -1,0 +1,119 @@
+#define RM_SKIN_VERSION "1"
+
+vector rm_skin_size_border_left; // = '2 0 0';
+vector rm_skin_size_border_right; // = '2 0 0';
+vector rm_skin_offset_border_left;
+vector rm_skin_offset_border_right;
+float rm_skin_scale_border_left;
+float rm_skin_scale_border_right;
+string rm_skin_image_border_left; // = "hud/skins/default/border_left";
+string rm_skin_image_border_right; // = "hud/skins/default/border_right";
+float rm_skin_width_border_left;
+float rm_skin_width_border_right;
+float rm_skin_border_simple;
+float rm_skin_border_teamcolor;
+float rm_skin_sector_teamcolor;
+float rm_skin_line_teamcolor;
+float rm_skin_border_teamcolor_brightness;
+float rm_skin_sector_teamcolor_brightness;
+float rm_skin_line_teamcolor_brightness;
+vector rm_skin_border_color;
+vector rm_skin_sector_color;
+float rm_skin_border_alpha;
+float rm_skin_sector_alpha;
+vector rm_skin_line_color;
+float rm_skin_line_alpha;
+float rm_skin_flash_alphamod;
+float rm_skin_flash_intmod;
+float rm_skin_border_drawflag;
+float rm_skin_sector_padding_left;
+float rm_skin_sector_padding_right;
+float rm_skin_sector_padding_top;
+float rm_skin_sector_padding_bottom;
+float rm_skin_line_full;
+vector rm_skin_sector_teamcolor_mod;
+vector rm_skin_sector_teamcolor_mod_red;
+vector rm_skin_sector_teamcolor_mod_blue;
+vector rm_skin_sector_teamcolor_mod_yellow;
+vector rm_skin_sector_teamcolor_mod_pink;
+vector rm_skin_border_teamcolor_mod;
+vector rm_skin_border_teamcolor_mod_red;
+vector rm_skin_border_teamcolor_mod_blue;
+vector rm_skin_border_teamcolor_mod_yellow;
+vector rm_skin_border_teamcolor_mod_pink;
+vector rm_skin_line_teamcolor_mod;
+vector rm_skin_line_teamcolor_mod_red;
+vector rm_skin_line_teamcolor_mod_blue;
+vector rm_skin_line_teamcolor_mod_yellow;
+vector rm_skin_line_teamcolor_mod_pink;
+float rm_skin_flash_line_imod;
+float rm_skin_flash_line_amod;
+float rm_skin_flash_sector_imod;
+float rm_skin_flash_sector_amod;
+float rm_skin_flash_border_imod;
+float rm_skin_flash_border_amod;
+float rm_skin_line_fill;
+string rm_skin_image_sector_fill_left;
+string rm_skin_image_sector_fill_center;
+string rm_skin_image_sector_fill_right;
+vector rm_skin_size_sector_fill_left;
+vector rm_skin_size_sector_fill_center;
+vector rm_skin_size_sector_fill_right;
+float rm_skin_sector_fill;
+string rm_skin_image_line_fill;
+vector rm_skin_size_line_fill;
+vector rm_skin_line_padding;
+string rm_skin_name;
+float rm_skin_progress_bgalpha;
+float rm_skin_progress_mode;
+float rm_skin_progress_sector_colormode;
+vector rm_skin_progress_sector_color;
+float rm_skin_progress_sector_alpha;
+float rm_skin_progress_sector_teamcolor_minalpha;
+vector rm_skin_progress_sector_teamcolor_mod;
+vector rm_skin_progress_sector_overcharge_colormod;
+float rm_skin_progress_sector_overcharge_colormul;
+float rm_skin_progress_sector_overcharge_alpha;
+float rm_skin_progress_border_colormode;
+vector rm_skin_progress_border_color;
+float rm_skin_progress_border_alpha;
+float rm_skin_progress_border_teamcolor_minalpha;
+vector rm_skin_progress_border_teamcolor_mod;
+vector rm_skin_progress_border_overcharge_colormod;
+float rm_skin_progress_border_overcharge_colormul;
+float rm_skin_progress_border_overcharge_alpha;
+string rm_skin_image_progress_head;
+vector rm_skin_size_progress_head;
+vector rm_skin_progress_head_color;
+float rm_skin_progress_head_alpha;
+float rm_skin_progress_head_teamcolor;
+vector rm_skin_sector_gap;
+float rm_skin_sector_gap_screen;
+vector rm_skin_sector_gap_fract;
+float rm_skin_sector_gap_screen_fract;
+vector rm_skin_sector_gap_alt;
+float rm_skin_sector_gap_screen_alt;
+vector rm_skin_sector_gap_fract_alt;
+float rm_skin_sector_gap_screen_fract_alt;
+float rm_skin_loaded;
+
+float(string) rm_skin_load;
+void(void) rm_skin_unload;
+float(string) rm_skin_eval;
+float(float) rm_skin_get_border_width;
+vector(float) rm_skin_get_team_color_mod_sector;
+vector(float) rm_skin_get_team_color_mod_border;
+vector(float) rm_skin_get_team_color_mod_line;
+void(vector sectorpos, vector sectorsize, float borderalpha, vector bordercolor) rm_skin_draw_borders;
+
+#define RM_SKIN_BORDER_LEFT 0
+#define RM_SKIN_BORDER_RIGHT 1
+#define RM_SKIN_TC_NEVER 0
+#define RM_SKIN_TC_ALWAYS 1
+#define RM_SKIN_TC_SOME 2
+#define RM_SKIN_TC_WTF -1
+#define RM_SKIN_FILL_COLOR 0
+#define RM_SKIN_FILL_TILE 1
+#define RM_SKIN_FILL_STRETCH 2
+#define RM_SKIN_FILL_WTF -1
+#define RM_SKIN_DEFAULT "default"
