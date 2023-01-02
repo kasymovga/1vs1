@@ -576,6 +576,7 @@ float(string skin_name) rm_skin_load {
 	print("Loaded HUD skin '", skin_name, "'\n");
 	rm_skin_name = str_zone_ifneeded(skin_name);
 	rm_skin_loaded = TRUE;
+	updateNexuizSkinList();
 	return TRUE;
 #undef RM_SKIN_IMAGE
 }
