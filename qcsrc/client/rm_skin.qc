@@ -95,6 +95,7 @@ void(void) rm_skin_unload {
 	print("Unloaded HUD skin\n");
 	RM_SKIN_FREE(rm_skin_name);
 	rm_skin_loaded = FALSE;
+	cvar_set("cl_rm_skin", "");
 }
 
 float(void) rm_skin_read_team_color {
@@ -576,6 +577,7 @@ float(string skin_name) rm_skin_load {
 	print("Loaded HUD skin '", skin_name, "'\n");
 	rm_skin_name = str_zone_ifneeded(skin_name);
 	rm_skin_loaded = TRUE;
+	cvar_set("cl_rm_skin", skin_name);
 	updateNexuizSkinList();
 	return TRUE;
 #undef RM_SKIN_IMAGE
@@ -658,4 +660,97 @@ void(vector sectorpos, vector sectorsize, float borderalpha, vector bordercolor)
 			drawpic(rm_skin_sector_border_right_pos, rm_skin_image_border_right, rm_skin_sector_border_right_size, bordercolor, borderalpha, rm_skin_border_drawflag);
 	}
 }
+
+void(vector sectorpos, vector sectorsize, float basealpha, vector sectorcolor, float drawflag) rm_skin_draw_sector {
+	vector fillsize, fillpos;
+	fillpos = sectorpos;
+	fillsize = sectorsize;
+	fillpos_x += rm_skin_sector_padding_left;
+	fillsize_x -= rm_skin_sector_padding_left;
+	fillsize_x -= rm_skin_sector_padding_right;
+	fillpos_y += rm_skin_sector_padding_top;
+	fillsize_y -= rm_skin_sector_padding_top;
+	fillsize_y -= rm_skin_sector_padding_bottom;
+	vector size_left, size_center, size_right;
+	float factor;
+	switch(rm_skin_sector_fill) {
+	case RM_SKIN_FILL_COLOR:
+		drawfill(fillpos, fillsize, sectorcolor, basealpha, DRAWFLAG_NORMAL);
+		break;
+	case RM_SKIN_FILL_TILE: case RM_SKIN_FILL_STRETCH:
+		size_left = rm_skin_size_sector_fill_left;
+		size_right = rm_skin_size_sector_fill_right;
+		size_center = rm_skin_size_sector_fill_center;
+		if (rm_skin_sector_fill == RM_SKIN_FILL_STRETCH)
+		if (size_left == '0 0 0') if(size_right == '0 0 0') {
+			drawpic(fillpos, rm_skin_image_sector_fill_center, fillsize, sectorcolor, basealpha, drawflag);
+			break;
+		}
+		// Autoscaling based on the center area
+		if (size_center_y > fillsize_y) {
+			factor = fillsize_y / size_center_y;
+			size_center = size_center * factor;
+			size_left = size_left * factor;
+			size_right = size_right * factor;
+		}
+		vector part_left, part_center, part_right;
+		part_left = size_left;
+		part_right = size_right;
+		part_center = size_center;
+		part_center_x = fillsize_x;
+		vector origin_left, origin_center, origin_right;
+		origin_left = origin_center = origin_right = fillpos;
+		origin_center_x = origin_left_x + part_left_x;
+		part_center_x -= part_left_x;
+		origin_right_x = origin_right_x + fillsize_x - part_right_x;
+		part_center_x -= part_right_x;
+		if (rm_skin_image_sector_fill_left != "")
+			drawpic(origin_left, rm_skin_image_sector_fill_left, size_left, sectorcolor, basealpha, drawflag);
+
+		if (rm_skin_image_sector_fill_center != "") {
+			if (rm_skin_sector_fill == RM_SKIN_FILL_STRETCH)
+				drawpic(origin_center, rm_skin_image_sector_fill_center, part_center, sectorcolor, basealpha, drawflag);
+			else
+				draw_pic_tiled(origin_center, rm_skin_image_sector_fill_center, size_center, part_center, sectorcolor, basealpha, drawflag);
+		}
+		if (rm_skin_image_sector_fill_right != "")
+			drawpic(origin_right, rm_skin_image_sector_fill_right, size_right, sectorcolor, basealpha, drawflag);
+
+		break;
+	}
+}
+
+void(vector slicepos, vector slicesize, vector slicecolor, float slicealpha) rm_skin_draw_slice {
+	vector drawsize;
+	float factor;
+	if (slicesize_x <= 0)
+		return;
+
+	slicepos_y  += rm_skin_line_padding_x;
+	slicesize_y -= rm_skin_line_padding_x;
+	slicesize_y -= rm_skin_line_padding_y;
+	switch(rm_skin_line_fill) {
+	case RM_SKIN_FILL_COLOR:
+		drawfill(slicepos, slicesize, slicecolor, slicealpha, DRAWFLAG_NORMAL);
+		return;
+	case RM_SKIN_FILL_TILE:
+		drawsize = slicesize;
+		if (drawsize_y > rm_skin_size_line_fill_y) {
+			// autoscaling
+			factor = rm_skin_size_line_fill_y / drawsize_y;
+			drawsize = drawsize * factor;
+		}
+		if (rm_skin_image_line_fill != "")
+			draw_pic_tiled(slicepos, rm_skin_image_line_fill, drawsize, slicesize, slicecolor, slicealpha, DRAWFLAG_NORMAL);
+
+		return;
+	
+	case RM_SKIN_FILL_STRETCH:
+		if (rm_skin_image_line_fill != "")
+			draw_pic_tiled(slicepos, rm_skin_image_line_fill, slicesize, slicesize, slicecolor, slicealpha, DRAWFLAG_NORMAL);
+
+		return;
+	}
+}
+
 #undef RM_SKIN_FREE

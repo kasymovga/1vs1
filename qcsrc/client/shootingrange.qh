@@ -1,2 +1,2 @@
-void(void) shootingrange_hud;
+void(vector gameinfo_position, float gameinfo_scale) shootingrange_hud;
 void(float _ignore) shootingrange_read;

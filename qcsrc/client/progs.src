@@ -59,6 +59,7 @@ server.qh
 shootingrange.qh
 extension.qh
 rm_skin.qh
+rm_hud.qh
 ../client-server/progs.qc
 cvar.qc
 str.qc
@@ -152,3 +153,4 @@ shootingrange.qc
 voip.qc
 extension.qc
 rm_skin.qc
+rm_hud.qc

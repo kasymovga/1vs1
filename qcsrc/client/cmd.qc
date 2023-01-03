@@ -76,11 +76,9 @@ void(string msg) GameCommand { //called by engine
 		sbar_load(strcat("data/", argv(1), ".hud"));
 	} else if (cmd == "rm_skin_load" && argc == 2) {
 		string s = argv(1);
-		if (rm_skin_load(s))
-			cvar_set("cl_rm_skin", s);
+		rm_skin_load(s);
 	} else if (cmd == "rm_skin_unload" && argc == 1) {
 		rm_skin_unload();
-		cvar_set("cl_rm_skin", "");
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}
