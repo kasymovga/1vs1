@@ -512,7 +512,8 @@ void(entity e, string _model) player_anim_q3_load {
 
 		if (strstrofs("0123456789", substring(arg0, 0, 1), 0) < 0) {
 			if (arg0 == "headoffset") {
-				setorigin(e.body.exteriorweaponentity, stof(argv(1)) * '1 0 0' + stof(argv(2)) * '0 1 0' + stof(argv(2)) * '0 0 1');
+				//actually this offset mean something else
+				//setorigin(e.body.exteriorweaponentity, stof(argv(1)) * '1 0 0' + stof(argv(2)) * '0 1 0' + stof(argv(2)) * '0 0 1');
 			}
 			continue;
 		}

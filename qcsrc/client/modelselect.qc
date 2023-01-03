@@ -126,7 +126,8 @@ void(string _model) modelselect_get_idle_q3animations {
 				break;
 			}
 		} else if (s == "headoffset" && c > 3) {
-			setorigin(modelselect_head, stof(argv(1)) * '1 0 0' + stof(argv(2)) * '0 1 0' + stof(argv(3)) * '0 0 1');
+			//actually this offset mean something else
+			//setorigin(modelselect_head, stof(argv(1)) * '1 0 0' + stof(argv(2)) * '0 1 0' + stof(argv(3)) * '0 0 1');
 		}
 	}
 	fclose(f);
@@ -188,12 +189,7 @@ void(void) modelselect_draw {
 		}
 		modelselect_list_pos_prev = modelselect_list_pos;
 	}
-	if (view_fixangle) {
-		makevectors(view_fixed_angles);
-		setorigin(modelselect_current, '100 0 0');
-	} else
-		setorigin(modelselect_current, view_camera_origin + view_forward * 15);
-
+	setorigin(modelselect_current, '100 0 0');
 	modelselect_current.angles_y = view_angles_y + (time * 90);
 	vector c = '1 0 0' * (CVAR(vid_conwidth) / 2);
 	drawfont = sbar_bigfont;
