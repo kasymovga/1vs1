@@ -29,6 +29,16 @@ void(void) updateNexuizSkinList {
 		selfNexuizSkinList.nItems = 0;
 		searchStartedNexuizSkinList = FALSE;
 	}
+	string s;
+	float i;
+	for (i = 0; i < selfNexuizSkinList.nItems; i++) {
+		s = search_getfilename(searchNexuizSkinList, i);
+		s = substring(s, 14, - 1);
+		s = substring(s, 0, strstrofs(s, "/", 0));
+		if (s == cvar_string("cl_rm_skin")) {
+			selfNexuizSkinList.selectedItem = i;
+		}
+	}
 }
 
 entity(void) makeNexuizSkinList {
