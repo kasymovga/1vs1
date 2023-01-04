@@ -74,9 +74,11 @@ void(string msg) GameCommand { //called by engine
 		sbar_save(strcat(argv(1), ".hud"));
 	} else if (cmd == "sbar_load" && argc == 2) {
 		sbar_load(strcat("data/", argv(1), ".hud"));
-	} else if (cmd == "rm_skin_load" && argc == 2) {
+	} else if (cmd == "rm_skin_load" && argc >= 2) {
 		string s = argv(1);
-		rm_skin_load(s);
+		rm_skin_load((s == "") ? "default" : s);
+	} else if (cmd == "rm_skin_load" && argc == 1) {
+		rm_skin_load("default");
 	} else if (cmd == "rm_skin_unload" && argc == 1) {
 		rm_skin_unload();
 	} else {
