@@ -858,12 +858,10 @@ void(void) rm_hud_draw {
 		float isclip = 0;
 		float itemcode = rm_hud_get_ammo_item_code(i);
 		if (itemcode & currweapon_ammo) {
-			/*
-			FIXME!!!!
-			ammo_progress must be calculated
-			*/
-			a = getstati(STAT_BULLETS_LOADED);
-			isclip = TRUE;
+			isclip = getstati(STAT_BULLETS_LOADED);
+			if (isclip)
+				a = isclip;
+
 			if (ammo_progress_weapon == weapon_current) {
 				ammo_progress_max = max(a, ammo_progress_max);
 			} else {
