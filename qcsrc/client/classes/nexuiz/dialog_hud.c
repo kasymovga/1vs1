@@ -29,16 +29,13 @@ void(entity btn, entity me) applyNexuizHudDialog {
 void(entity me) saveCvarsUseRMSkinsNexuizHudDialog {
 	if (me.checked && !rm_skin_loaded) {
 		rm_skin_load("default");
-		cvar_set("cl_rm_skin", "default");
 	} else if (!me.checked && rm_skin_loaded) {
 		rm_skin_unload();
-		cvar_set("cl_rm_skin", "");
 	}
 }
 
 void(entity me) loadCvarsUseRMSkinsNexuizHudDialog {
 	me.checked = rm_skin_loaded;
-	cvar_set("cl_rm_skin", "");
 }
 
 void(entity me) fillNexuizHudDialog {

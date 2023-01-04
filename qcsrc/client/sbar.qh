@@ -13,6 +13,7 @@ void(float) sbar_help;
 vector(vector v) sbar_font_size;
 void(void) sbar_gametype_init;
 vector sbar_position(vector pos, vector sz);
+vector(vector pos, vector sz, vector sz_to) sbar_scale_for_position;
 float scoreboard_bottom;
 
 #define SBAR_FIELDS_MAX 16
@@ -33,4 +34,3 @@ float sbar_stat_items;
 vector sbar_bottomleft;
 float sbar_alpha_fg;
 void(void) sbar_set_defaults;
-vector(vector pos, vector sz) sbar_position_and_borders;

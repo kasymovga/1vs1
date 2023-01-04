@@ -4,17 +4,17 @@ void(void) kh_hud_reset {
 	kh_runheretime = 0;
 }
 
-void(void) kh_hud {
+void(vector gameinfo_position, float gameinfo_scale) kh_hud {
 	float kh_keys;
 	float keyteam;
 	float a, aa;
 	vector p, pa, kh_size, kh_asize;
-	vector pos = sbar_position_and_borders(CVAR(sbar_gameinfo_position), '108 48 0' * CVAR(sbar_gameinfo_scale));
-	p = pos +'6 11 0' * CVAR(sbar_gameinfo_scale);
+	vector pos = sbar_position(gameinfo_position, '108 48 0' * gameinfo_scale);
+	p = pos +'6 11 0' * gameinfo_scale;
 	kh_keys = getstati(STAT_KH_KEYS);
-	kh_size = '19 34 0' * CVAR(sbar_gameinfo_scale);
-	kh_asize = '19 10 0' * CVAR(sbar_gameinfo_scale);
-	pa = p + '0 -10 0' * CVAR(sbar_gameinfo_scale);
+	kh_size = '19 34 0' * gameinfo_scale;
+	kh_asize = '19 10 0' * gameinfo_scale;
+	pa = p + '0 -10 0' * gameinfo_scale;
 	float i, key;
 	float keycount;
 	keycount = 0;
@@ -86,8 +86,8 @@ void(void) kh_hud {
 				break;
 			}
 		}
-		p_x += 24 * CVAR(sbar_gameinfo_scale);
-		pa_x += 24 * CVAR(sbar_gameinfo_scale);
+		p_x += 24 * gameinfo_scale;
+		pa_x += 24 * gameinfo_scale;
 	}
 }
 

@@ -105,6 +105,11 @@ vector(float) rm_skin_get_team_color_mod_sector;
 vector(float) rm_skin_get_team_color_mod_border;
 vector(float) rm_skin_get_team_color_mod_line;
 void(vector sectorpos, vector sectorsize, float borderalpha, vector bordercolor) rm_skin_draw_borders;
+void(vector sectorpos, vector sectorsize, float basealpha, vector sectorcolor, float drawflag) rm_skin_draw_sector;
+void(vector slicepos, vector slicesize, vector slicecolor, float slicealpha) rm_skin_draw_slice;
+float(float border) rm_skin_get_border_width;
+vector(float colour) rm_skin_get_team_color_mod_sector;
+vector(float colour) rm_skin_get_team_color_mod_border;
 
 #define RM_SKIN_BORDER_LEFT 0
 #define RM_SKIN_BORDER_RIGHT 1

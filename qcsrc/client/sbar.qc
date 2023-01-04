@@ -116,27 +116,23 @@ vector(vector pos, vector sz) sbar_position {
 	return v;
 }
 
-void(vector pos, vector sz) sbar_draw_borders {
-	vector rgb;
-	if (team_mode) {
-		rgb = team_rgb(team_my);
-	} else {
-		rgb_x = CVAR(sbar_color_bg_r);
-		rgb_y = CVAR(sbar_color_bg_g);
-		rgb_z = CVAR(sbar_color_bg_b);
-	}
-	rm_skin_draw_borders(pos, sz, sbar_alpha_bg, rgb);
+vector(vector pos, vector sz, vector sz_to) sbar_scale_for_position {
+	float f1 = sz_to_x / sz_x;
+	float f2 = sz_to_y / sz_y;
+	vector v = '0 0 0';
+	if (f1 > f2) {
+		v_y = (sz_to_y - sz_y * f2) / 2;
+	} else
+		v_x = (sz_to_x - sz_x * f1) / 2;
+	v_z = min(f1, f2);
+	return v;
 }
 
-vector(vector pos, vector sz) sbar_position_and_borders {
-	pos = sbar_position(pos, sz);
-	if (rm_skin_loaded) {
-		sbar_draw_borders(pos, sz);
-	}
-	return pos;
-}
+void(vector weapons_pos, float weapons_scale) sbar_weapons_draw {
+	float fade = bound(0, CVAR(sbar_weapons_fadetime) - (time - sbar_weapons_time) *  CVAR(sbar_weapons_fadespeed), 1);
+	if (fade <= 0)
+		return;
 
-void(float fade) sbar_draw_weapons {
 	vector pos;
 	float value, idx, imp, sp;
 	for (idx = 0; idx < 10; ++idx)
@@ -144,17 +140,17 @@ void(float fade) sbar_draw_weapons {
 
 	float stat_weapons = getstati(STAT_WEAPONS);
 	float stat_weapons_extra = getstati(STAT_WEAPONS_EXTRA);
-	vector w_size = '48 24 0' * CVAR(sbar_weapons_scale), font_size = '12 12 0' * CVAR(sbar_weapons_scale), w_shift = '0 0 0', w_shift2 = '0 0 0';
-	float w_space = 2 * CVAR(sbar_weapons_scale);
+	vector w_size = '48 24 0' * weapons_scale, font_size = '12 12 0' * weapons_scale, w_shift = '0 0 0', w_shift2 = '0 0 0';
+	float w_space = 2 * weapons_scale;
 	float active;
 	vector weapon_position;
-	if (CVAR(sbar_weapons_position_z) & 1) { //horizontal bar
+	if (weapons_pos_z & 1) { //horizontal bar
 		w_shift2_x = w_size_x;
-		if (CVAR(sbar_weapons_position_z) & 8) { //down
-			weapon_position = sbar_position(CVAR(sbar_weapons_position), '480 48 0' * CVAR(sbar_weapons_scale)) + '0 24 0' * CVAR(sbar_weapons_scale);
+		if (weapons_pos_z & 8) { //down
+			weapon_position = sbar_position(weapons_pos, '480 48 0' * weapons_scale) + '0 24 0' * weapons_scale;
 			w_shift_y = -w_size_y;
 		} else {
-			weapon_position = sbar_position(CVAR(sbar_weapons_position), '480 48 0' * CVAR(sbar_weapons_scale));
+			weapon_position = sbar_position(weapons_pos, '480 48 0' * weapons_scale);
 			w_shift_y = w_size_y;
 		}
 		if (CVAR(sbar_weapons_order)) {
@@ -163,11 +159,11 @@ void(float fade) sbar_draw_weapons {
 		}
 	} else { //vertical bar
 		w_shift2_y = -w_size_y;
-		if (CVAR(sbar_weapons_position_z) & 2) { //right
-			weapon_position = sbar_position(CVAR(sbar_weapons_position), '98 240 0' * CVAR(sbar_weapons_scale)) + '48 216 0' * CVAR(sbar_weapons_scale);
+		if (weapons_pos_z & 2) { //right
+			weapon_position = sbar_position(weapons_pos, '98 240 0' * weapons_scale) + '48 216 0' * weapons_scale;
 			w_shift_x = -w_size_x;
 		} else { //left
-			weapon_position = sbar_position(CVAR(sbar_weapons_position), '98 240 0' * CVAR(sbar_weapons_scale)) + '0 216 0' * CVAR(sbar_weapons_scale);
+			weapon_position = sbar_position(weapons_pos, '98 240 0' * weapons_scale) + '0 216 0' * weapons_scale;
 			w_shift_x = w_size_x;
 		}
 		if (CVAR(sbar_weapons_order)) {
@@ -201,12 +197,8 @@ void(float fade) sbar_draw_weapons {
 		if (sp)
 			pos += w_shift * sp;
 
-		if (active) {
-			if (rm_skin_loaded) {
-				sbar_draw_borders(pos, w_size);
-			} else
-				drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
-		}
+		if (active)
+			drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		drawpic(pos, e.icon, w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 		if (CVAR(sbar_weapons_show_ammo)) {
@@ -1294,14 +1286,21 @@ void sbar_scoreboard_draw() {
 	}
 }
 
-var void(void)sbar_score_draw = {};
-void(void) sbar_score_draw_default {
+var void(vector dummy, vector dummy, float dummy)sbar_score_draw = {};
+void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_default {
 	float score, distribution, leader;
-	vector score_pos, secondary_score_pos, distribution_color;
+	vector secondary_score_pos, distribution_color;
 	entity tm, pl, me;
 	me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
-	score_pos = sbar_position_and_borders(CVAR(sbar_score_position), '196 34 0' * CVAR(sbar_score_scale));
-	secondary_score_pos = score_pos + '132 0 0' * CVAR(sbar_score_scale);
+	if (score_size == '0 0 0')
+		score_pos = sbar_position(score_pos, '196 34 0' * score_scale);
+	else {
+		vector v = sbar_scale_for_position(score_pos, '196 34 0', score_size);
+		score_scale = v_z;
+		score_pos_x += v_x;
+		score_pos_y += v_y;
+	}
+	secondary_score_pos = score_pos + '132 0 0' * score_scale;
 	if not(team_mode) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
 		pl = player_list.sort_next;
@@ -1325,8 +1324,8 @@ void(void) sbar_score_draw_default {
 		else
 			distribution_color = '1 0 0';
 
-		sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16 * CVAR(sbar_score_scale), distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		sbar_draw_num(score_pos, score, 4, 0, 34 * CVAR(sbar_score_scale), distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16 * score_scale, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(score_pos, score, 4, 0, 34 * score_scale, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float max_fragcount;
 		max_fragcount = -999;
@@ -1343,20 +1342,28 @@ void(void) sbar_score_draw_default {
 				if (max_fragcount == score)
 					leader = 1;
 
-				sbar_draw_num(score_pos, score, 4, 0, 34 * CVAR(sbar_score_scale), team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(score_pos, score, 4, 0, 34 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
 
-				sbar_draw_num(secondary_score_pos, score, 4, 0, 16 * CVAR(sbar_score_scale), team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				secondary_score_pos = secondary_score_pos + '0 16 0' * CVAR(sbar_score_scale);
+				sbar_draw_num(secondary_score_pos, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				secondary_score_pos = secondary_score_pos + '0 16 0' * score_scale;
 			}
 		}
 	}
 }
 
-void(void) sbar_score_draw_race {
+void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_race {
 	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && !team_mode) { // race/cts record display on HUD
+		if (score_size == '0 0 0')
+			score_pos = sbar_position(score_pos, '196 34 0' * score_scale);
+		else {
+			vector v = sbar_scale_for_position(score_pos, '196 34 0', score_size);
+			score_scale = v_z;
+			score_pos_x += v_x;
+			score_pos_y += v_y;
+		}
 		float score, distribution;
 		vector distribution_color;
 		entity pl, me;
@@ -1375,7 +1382,7 @@ void(void) sbar_score_draw_race {
 		racemin = floor(score/(60 * TIME_FACTOR));
 		racesec = floor((score - racemin*(60 * TIME_FACTOR))/TIME_FACTOR);
 		racemsec = score - racemin*60*TIME_FACTOR - racesec*TIME_FACTOR;
-		vector pos = sbar_position_and_borders(CVAR(sbar_score_position), '160 34 0' * CVAR(sbar_score_scale));
+		vector pos = sbar_position(score_pos, '160 34 0' * score_scale);
 		vector font_size;
 		if (pl && ((!(scores_flags[ps_primary] & SCORE_FLAG_ZERO_IS_WORST)) || score)) {
 			// distribution display
@@ -1395,19 +1402,19 @@ void(void) sbar_score_draw_race {
 				distribution_color = '1 0 0';
 				minusplus = 2; // minusplus 1: always prefix with plus sign
 			}
-			font_size = '14 14 0' * CVAR(sbar_score_scale);
-			sbar_draw_num(pos + '132 0 0' * CVAR(sbar_score_scale), distmsec, -SBAR_TIME_DECIMALS, 0, font_size_x, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic(pos + '121.5 0 0' * CVAR(sbar_score_scale), "gfx/hud/num_dot", font_size, distribution_color, sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-			sbar_draw_num(pos + '71 0 0' * CVAR(sbar_score_scale), distsec, 4, minusplus, font_size_x, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			font_size = '14 14 0' * score_scale;
+			sbar_draw_num(pos + '132 0 0' * score_scale, distmsec, -SBAR_TIME_DECIMALS, 0, font_size_x, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos + '121.5 0 0' * score_scale, "gfx/hud/num_dot", font_size, distribution_color, sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			sbar_draw_num(pos + '71 0 0' * score_scale, distsec, 4, minusplus, font_size_x, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		}
-		font_size = '20 20 0' * CVAR(sbar_score_scale);
-		sbar_draw_num(pos + '120 14 0' * CVAR(sbar_score_scale), racemsec, -SBAR_TIME_DECIMALS, 0, font_size_x, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		drawpic(pos + '105 14 0' * CVAR(sbar_score_scale), "gfx/hud/num_dot", font_size, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-		sbar_draw_num(pos + '70 14 0' * CVAR(sbar_score_scale), racesec, -2, 0, font_size_x, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		drawpic(pos + '55 14 0' * CVAR(sbar_score_scale), "gfx/hud/num_colon", font_size, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-		sbar_draw_num(pos + '20 14 0' * CVAR(sbar_score_scale), racemin, -2, 0, font_size_x, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		font_size = '20 20 0' * score_scale;
+		sbar_draw_num(pos + '120 14 0' * score_scale, racemsec, -SBAR_TIME_DECIMALS, 0, font_size_x, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos + '105 14 0' * score_scale, "gfx/hud/num_dot", font_size, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+		sbar_draw_num(pos + '70 14 0' * score_scale, racesec, -2, 0, font_size_x, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos + '55 14 0' * score_scale, "gfx/hud/num_colon", font_size, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+		sbar_draw_num(pos + '20 14 0' * score_scale, racemin, -2, 0, font_size_x, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else
-		sbar_score_draw_default();
+		sbar_score_draw_default(score_pos, score_size, score_scale);
 
 	race_sbar_draw();
 }
@@ -1446,12 +1453,32 @@ void(void) sbar_timer {
 		minutes = floor(sbar_timeleft / 60);
 		seconds = sbar_timeleft - minutes*60;
 	}
-	vector pos = sbar_position_and_borders(CVAR(sbar_timer_position), '103 20 0' * CVAR(sbar_timer_scale));
-	if not(hideminutes) {
-		sbar_draw_num(pos, minutes, 3, 0, 18 * CVAR(sbar_timer_scale), timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		drawpic(pos + '50 0 0' * CVAR(sbar_timer_scale), "gfx/hud/num_colon", '18 18 0' * CVAR(sbar_timer_scale), timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	vector pos;
+	float scale;
+	if (rm_skin_loaded) {
+		scale = 1.25;
+		pos = sbar_position('8 8 2', '103 20 0' * 1.25);
+		/*
+		vector rgb;
+		if (team_mode) {
+			rgb = team_rgb(team_my);
+		} else {
+			rgb_x = CVAR(sbar_color_bg_r);
+			rgb_y = CVAR(sbar_color_bg_g);
+			rgb_z = CVAR(sbar_color_bg_b);
+		}
+		if (rm_skin_progress_mode != 2)
+			rm_skin_draw_borders(pos, '103 20 0' * 1.25, sbar_alpha_bg, rgb);
+		*/
+	} else {
+		scale = CVAR(sbar_timer_scale);
+		pos = sbar_position(CVAR(sbar_timer_position), '103 20 0' * CVAR(sbar_timer_scale));
 	}
-	sbar_draw_num(pos + '64 0 0' * CVAR(sbar_timer_scale), seconds, -2, 0, 18 * CVAR(sbar_timer_scale), timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	if not(hideminutes) {
+		sbar_draw_num(pos, minutes, 3, 0, 18 * scale, timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos + '50 0 0' * scale, "gfx/hud/num_colon", '18 18 0' * scale, timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	}
+	sbar_draw_num(pos + '64 0 0' * scale, seconds, -2, 0, 18 * scale, timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 vector sbar_powerup_pos;
@@ -1682,7 +1709,9 @@ float(float stat_type, float stat_regen, float stat_maxregen) sbar_nadget_regen 
 	return getstatf(stat_regen) / getstatf(stat_maxregen);
 }
 
-var void(void) sbar_gametype_hud;
+void(vector dummy1, vector dummy2, float dummy3) sbar_score_nothing_draw {}
+var void(vector position, float scale) sbar_gametype_hud;
+void(vector position, float scale) sbar_gametype_hud_nothing {};
 void(void) sbar_gametype_init {
 	sbar_score_draw = sbar_score_draw_default;
 	if (game_type == GAME_TYPE_KEYHUNT || game_type == GAME_TYPE_KEYHUNT_CA || game_type == GAME_TYPE_KEYHUNT_FT)
@@ -1693,14 +1722,14 @@ void(void) sbar_gametype_init {
 		sbar_gametype_hud = nb_hud;
 	else if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP) {
 		sbar_gametype_hud = single_hud;
-		sbar_score_draw = stdproc_nothing;
+		sbar_score_draw = sbar_score_nothing_draw;
 	} else if (game_type == GAME_TYPE_RACE || game_type == GAME_TYPE_CTS) {
-		sbar_gametype_hud = stdproc_nothing;
+		sbar_gametype_hud = sbar_gametype_hud_nothing;
 		sbar_score_draw = sbar_score_draw_race;
 	} else if (game_type == GAME_TYPE_SHOOTINGRANGE) {
 		sbar_gametype_hud = shootingrange_hud;
 	} else {
-		sbar_gametype_hud = stdproc_nothing;
+		sbar_gametype_hud = sbar_gametype_hud_nothing;
 	}
 }
 
@@ -1722,6 +1751,82 @@ void(vector pos, float a, float active, string image) sbar_ammo_draw {
 }
 
 float sbar_hg_visual, sbar_hg_alpha;
+
+void(void) sbar_runes_draw {
+	float a = getstati(STAT_RUNES);
+	if (a) {
+		vector pos = '0 0 0';
+		pos_x = 0;
+		pos_y = CVAR(vid_conheight) - 50 - sbar_fontsize_y;
+		string s = "";
+		for (float i = RUNE_FIRST; i <= RUNE_LAST; i *= 2) {
+			if (i & a)
+				s = strcat(s, " ", rune_name(i));
+		}
+		draw_string_colorcoded_center(pos, s, sbar_fontsize, 0.4, DRAWFLAG_NORMAL);
+	}
+	// draw gametype specific icons
+}
+
+void(float hgtype, vector hgapos, float hgdetons, float hgammo) sbar_nadget_messages {
+	// handgrenade force meter
+	float hgstat = getstatf(STAT_HGFORCE);
+	if (hgstat) {
+		float hgls = getstatf(STAT_HGLAUNCH);
+		if (hgstat) {
+			sbar_hg_alpha = approach(sbar_hg_alpha, 1, 5 * view_drawframetime);
+		} else {
+			sbar_hg_alpha = approach(sbar_hg_alpha, 0, 5 * view_drawframetime);
+		}
+		sbar_hg_visual = approach(sbar_hg_visual, hgstat, view_drawframetime * hgls);
+		hgstat = sbar_hg_visual;
+		if (sbar_hg_alpha) {
+			vector hgpos;
+			hgpos_x = CVAR(vid_conwidth) / 2;
+			hgpos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 4;
+			hgpos_z = 0;
+			draw_progress_fragmented(hgpos, '120 5 0', hgstat, 0.7 * sbar_hg_alpha, '1 0 0' + '0 1 0' * (1 - hgstat), 1);
+		}
+	} else {
+		sbar_hg_alpha = 0;
+		sbar_hg_visual = 0;
+	}
+	if (getstati(STAT_HGSHIELDSTORE)) {
+		draw_progress_fragmented('0.5 0 0' * CVAR(vid_conwidth) + hgapos - sbar_fontsize_y * '0 2.5 0', '25 0 0' * sbar_fontsize_x + '0 7 0',
+				getstati(STAT_HGSHIELDSTORE) / getstati(STAT_HGSHIELDSTOREMAX), 0.7, '1 0.3 0',
+				getstati(STAT_HGSHIELDSTOREMAX) / getstati(STAT_HGSHIELDDAMAGEPERSHOT));
+	}
+	if (getstati(STAT_STEALTH)) {
+		draw_string_colorcoded_center(hgapos - sbar_fontsize_y * ('0 2 0'/* + '0 1 0' * !!adept */), strcat(
+				"^3Shoot or press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
+				" ^3to ", /* if (adept) "suspend" else */ "cancel", " stealth (^1", ftos(getstati(STAT_STEALTH)), " ^3seconds remaining)"),
+				sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+	} else if (getstati(STAT_STEALTH_SAVED)) {
+		draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
+				"^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
+				" ^3to re-enter stealth (^1", ftos(getstati(STAT_STEALTH_SAVED)), " ^3seconds remaining)"),
+				sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+	} else if (getstatf(STAT_HGSHIELD)) {
+		string smsg;
+		if (getstati(STAT_HGSHIELDSTORE) > 0) {
+			smsg = strcat("^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
+					" ^3to discharge your ", nadget_TypeToExpandedName(hgtype),
+					" for ^1", ftos(getstati(STAT_HGSHIELDSTORE)), " ^3damage");
+		} else {
+			smsg = strcat("^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
+					" ^3to cancel your ", ((getstati(STAT_HGSHIELDSTORE) < 0) ? "discharge" : nadget_TypeToExpandedName(hgtype)));
+		}
+		draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', smsg, sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+	} else if (hgdetons) {
+		draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
+				"^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
+				" ^3to trigger your nadget",
+				((hgdetons > 1) ? strcat("s (^2", ftos(hgdetons), "^3)") : "")),
+				sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+	} else if (hgtype == NADGET_GG && hgammo) {
+		draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(input_command_key("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+	}
+}
 
 void(void) sbar_draw {
 	sbar_topright_x = CVAR(vid_conwidth);
@@ -1759,10 +1864,8 @@ void(void) sbar_draw {
 	if (sbar_timeleft < 0 && sbar_timelimit) { // map voting screen
 		if (sbar_showscores) {
 			sbar_scoreboard_draw();
-			sbar_score_draw();
 		} else if (sbar_showaccuracy) {
 			sbar_accuracy_draw();
-			sbar_score_draw();
 		} else {
 			if (map_vote_active)
 				map_vote_draw();
@@ -1776,7 +1879,6 @@ void(void) sbar_draw {
 		else if (sbar_hidescores)
 			return;
 
-		sbar_score_draw();
 		sbar_timer();
 	} else {
 		if (sbar_showscores)
@@ -1786,29 +1888,30 @@ void(void) sbar_draw {
 		else if (sbar_hidescores)
 			return;
 
+		sbar_stat_items = getstati(STAT_ITEMS);
+		if (rm_skin_loaded) {
+			rm_hud_draw();
+			return;
+		}
 		float armor;
 		armor = getstati(STAT_ARMOR);
-		sbar_stat_items = getstati(STAT_ITEMS);
 		// armor
 		if (armor > 0) {
-			pos = sbar_position_and_borders(CVAR(sbar_armor_position), '110 32 0' * CVAR(sbar_armor_scale));
+			pos = sbar_position(CVAR(sbar_armor_position), '110 32 0' * CVAR(sbar_armor_scale));
 			drawpic(pos + '78 0 0' * CVAR(sbar_armor_scale), "gfx/hud/sb_armor", '32 32 0' * CVAR(sbar_armor_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_armor_scale), armor, 24 * CVAR(sbar_armor_scale), sbar_alpha_fg);
 		}
 		// health
-		pos = sbar_position_and_borders(CVAR(sbar_health_position), '110 32 0' * CVAR(sbar_health_scale));
+		pos = sbar_position(CVAR(sbar_health_position), '110 32 0' * CVAR(sbar_health_scale));
 		drawpic(pos + '78 0 0' * CVAR(sbar_health_scale), "gfx/hud/sb_health", '32 32 0' * CVAR(sbar_health_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_health_scale), _health, 24 * CVAR(sbar_health_scale), sbar_alpha_fg);
 		// weapon icons
-		x = 1.0;
-		float fade = bound(0, CVAR(sbar_weapons_fadetime) - (time - sbar_weapons_time) *  CVAR(sbar_weapons_fadespeed), 1);
-		if (fade)
-			sbar_draw_weapons(fade);
+		sbar_weapons_draw(CVAR(sbar_weapons_position), CVAR(sbar_weapons_scale));
 
 		// ammo
 		float a; // i will be the ammo type (already declared), a will contain how much ammo there is of type i
 		float clip = getstati(STAT_BULLETS_LOADED);
-		pos = sbar_position_and_borders(CVAR(sbar_ammo_position), '172 48 0' * CVAR(sbar_ammo_scale));
+		pos = sbar_position(CVAR(sbar_ammo_position), '172 48 0' * CVAR(sbar_ammo_scale));
 		if (clip) {
 			if (clip < 0) clip = 0;
 			string ai = NULL;
@@ -1878,70 +1981,16 @@ void(void) sbar_draw {
 			float hgtype2 = getstati(STAT_HGTYPE2);
 			float hgammo = getstati(STAT_HGAMMO);
 			float hgdetons = getstati(STAT_HGDETONABLES);
+			/*
 			float hgcd, hgcd2;
 			hgcd = getstatf(STAT_HGREFIRE) - server_time;
-			// handgrenade force meter
-			float hgstat = getstatf(STAT_HGFORCE);
-			if (hgstat) {
-				float hgls = getstatf(STAT_HGLAUNCH);
-				if (hgstat) {
-					sbar_hg_alpha = approach(sbar_hg_alpha, 1, 5 * view_drawframetime);
-				} else {
-					sbar_hg_alpha = approach(sbar_hg_alpha, 0, 5 * view_drawframetime);
-				}
-				sbar_hg_visual = approach(sbar_hg_visual, hgstat, view_drawframetime * hgls);
-				hgstat = sbar_hg_visual;
-				if (sbar_hg_alpha) {
-					vector hgpos;
-					hgpos_x = CVAR(vid_conwidth) / 2;
-					hgpos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 4;
-					hgpos_z = 0;
-					draw_progress_fragmented(hgpos, '120 5 0', hgstat, 0.7 * sbar_hg_alpha, '1 0 0' + '0 1 0' * (1 - hgstat), 1);
-				}
-			} else {
-				sbar_hg_alpha = 0;
-				sbar_hg_visual = 0;
-			}
 			if (hgtype2) {
 				hgcd2 = getstatf(STAT_HGREFIRE2) - server_time;
 			}
-			if (getstati(STAT_HGSHIELDSTORE)) {
-				draw_progress_fragmented('0.5 0 0' * CVAR(vid_conwidth) + hgapos - sbar_fontsize_y * '0 2.5 0', '25 0 0' * sbar_fontsize_x + '0 7 0',
-						getstati(STAT_HGSHIELDSTORE) / getstati(STAT_HGSHIELDSTOREMAX), 0.7, '1 0.3 0',
-						getstati(STAT_HGSHIELDSTOREMAX) / getstati(STAT_HGSHIELDDAMAGEPERSHOT));
-			}
-			if (getstati(STAT_STEALTH)) {
-				draw_string_colorcoded_center(hgapos - sbar_fontsize_y * ('0 2 0'/* + '0 1 0' * !!adept */), strcat(
-						"^3Shoot or press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
-						" ^3to ", /* if (adept) "suspend" else */ "cancel", " stealth (^1", ftos(getstati(STAT_STEALTH)), " ^3seconds remaining)"),
-						sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-			} else if (getstati(STAT_STEALTH_SAVED)) {
-				draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
-						"^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
-						" ^3to re-enter stealth (^1", ftos(getstati(STAT_STEALTH_SAVED)), " ^3seconds remaining)"),
-						sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-			} else if (getstatf(STAT_HGSHIELD)) {
-				string smsg;
-				if (getstati(STAT_HGSHIELDSTORE) > 0) {
-					smsg = strcat("^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
-							" ^3to discharge your ", nadget_TypeToExpandedName(hgtype),
-							" for ^1", ftos(getstati(STAT_HGSHIELDSTORE)), " ^3damage");
-				} else {
-					smsg = strcat("^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
-							" ^3to cancel your ", ((getstati(STAT_HGSHIELDSTORE) < 0) ? "discharge" : nadget_TypeToExpandedName(hgtype)));
-				}
-				draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', smsg, sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-			} else if (hgdetons) {
-				draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
-						"^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
-						" ^3to trigger your nadget",
-						((hgdetons > 1) ? strcat("s (^2", ftos(hgdetons), "^3)") : "")),
-						sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-			} else if (hgtype == NADGET_GG && hgammo) {
-				draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(input_command_key("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-			}
+			*/
+			sbar_nadget_messages(hgtype, hgapos, hgdetons, hgammo);
 			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
-			hgapos = sbar_position_and_borders(CVAR(sbar_nadget_position), '74 24 0' * CVAR(sbar_nadget_scale));
+			hgapos = sbar_position(CVAR(sbar_nadget_position), '74 24 0' * CVAR(sbar_nadget_scale));
 			float hgregen = sbar_nadget_regen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX);
 			vector hgrsize;
 			if (hgregen && hgregen != 1) {
@@ -1952,7 +2001,7 @@ void(void) sbar_draw {
 			sbar_draw_num(hgapos, hgammo, 2, 0, 24 * CVAR(sbar_nadget_scale), '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			drawpic(hgapos + '48 0 0' * CVAR(sbar_nadget_scale), hgicon, '22 22 0' * CVAR(sbar_nadget_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			if (hgtype2) {
-				hgapos = sbar_position_and_borders(CVAR(sbar_nadget2_position), '74 24 0' * CVAR(sbar_nadget2_scale));
+				hgapos = sbar_position(CVAR(sbar_nadget2_position), '74 24 0' * CVAR(sbar_nadget2_scale));
 				hgicon = nadget_TypeToIcon(hgtype2, TRUE, 0);
 				float hgregen2 = sbar_nadget_regen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2);
 				if (hgregen2 && hgregen2 != 1) {
@@ -1966,23 +2015,12 @@ void(void) sbar_draw {
 			}
 		}
 		// draw scores and timer
-		sbar_score_draw();
+		sbar_score_draw(CVAR(sbar_score_position), '0 0 0', CVAR(sbar_score_scale));
 		sbar_timer();
 		// draw strength/invincibility icon and timer
 		sbar_powerups_draw();
-		a = getstati(STAT_RUNES);
-		if (a) {
-			pos_x = 0;
-			pos_y = CVAR(vid_conheight) - 50 - sbar_fontsize_y;
-			s = "";
-			for (i = RUNE_FIRST; i <= RUNE_LAST; i *= 2) {
-				if (i & a)
-					s = strcat(s, " ", rune_name(i));
-			}
-			draw_string_colorcoded_center(pos, s, sbar_fontsize, 0.4, DRAWFLAG_NORMAL);
-		}
-		// draw gametype specific icons
-		sbar_gametype_hud();
+		sbar_runes_draw();
+		sbar_gametype_hud(CVAR(sbar_gameinfo_position), CVAR(sbar_gameinfo_scale));
 	}
 }
 
