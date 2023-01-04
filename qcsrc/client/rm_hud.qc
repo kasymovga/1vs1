@@ -318,6 +318,7 @@ void(vector pos, float hgtype, float hgammo, float regen, float regenrate, float
 float vhealth = 0;
 float ammo_progress_weapon;
 float ammo_progress_max;
+float rm_hud_weapon_ammo_clip_max[WEAPON_COUNT_EXTRA];
 void(void) rm_hud_draw {
 	float hgregen = 0;
 	float hgregen2 = 0;
@@ -865,8 +866,9 @@ void(void) rm_hud_draw {
 			if (ammo_progress_weapon == weapon_current) {
 				ammo_progress_max = max(a, ammo_progress_max);
 			} else {
+				rm_hud_weapon_ammo_clip_max[ammo_progress_weapon] = ammo_progress_max;
 				ammo_progress_weapon = weapon_current;
-				ammo_progress_max = a;
+				ammo_progress_max = max(a, rm_hud_weapon_ammo_clip_max[weapon_current]);
 			}
 			ammo_progress = a / ammo_progress_max;
 		}
