@@ -9,25 +9,28 @@ CLASS(NexuizSkinList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizCvarList, columnNameOrigin, float, 0)
 ENDCLASS(NexuizSkinList)
 entity makeNexuizSkinList();
+void(void) updateNexuizSkinList;
 #endif
 
 #ifdef IMPLEMENTATION
 entity selfNexuizSkinList;
 float searchNexuizSkinList;
-float searchStartedNexuizSkinList;
 
 void(void) updateNexuizSkinList {
 	if not(selfNexuizSkinList) return;
-	if (searchStartedNexuizSkinList)
+	if (searchNexuizSkinList >= 0)
 		search_end(searchNexuizSkinList);
 
+	if (!rm_skin_loaded) {
+		searchNexuizSkinList = -1;
+		selfNexuizSkinList.nItems = 0;
+		return;
+	}
 	searchNexuizSkinList = search_begin("gfx/hud/skins/*/skininfo", TRUE, TRUE);
 	if (searchNexuizSkinList >= 0) {
 		selfNexuizSkinList.nItems = search_getsize(searchNexuizSkinList);
-		searchStartedNexuizSkinList = TRUE;
 	} else {
 		selfNexuizSkinList.nItems = 0;
-		searchStartedNexuizSkinList = FALSE;
 	}
 	string s;
 	float i;
@@ -44,6 +47,7 @@ void(void) updateNexuizSkinList {
 entity(void) makeNexuizSkinList {
 	entity me;
 	selfNexuizSkinList = me = spawnNexuizSkinList();
+	searchNexuizSkinList = -1;
 	me.configureNexuizListBox(me);
 	me.selectedItem = -1;
 	updateNexuizSkinList();
@@ -68,10 +72,10 @@ void clickListBoxItemNexuizSkinList(entity me, float i, vector where, float doub
 }
 
 void(entity me) destroyNexuizSkinList {
-	if (searchStartedNexuizSkinList)
+	if (searchNexuizSkinList >= 0)
 		search_end(searchNexuizSkinList);
 
-	searchStartedNexuizSkinList = FALSE;
+	searchNexuizSkinList = -1;
 	selfNexuizSkinList = NULL;
 }
 

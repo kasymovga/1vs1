@@ -96,6 +96,8 @@ void(void) rm_skin_unload {
 	RM_SKIN_FREE(rm_skin_name);
 	rm_skin_loaded = FALSE;
 	cvar_set("cl_rm_skin", "");
+	updateNexuizSkinList();
+	updateNexuizHudList();
 }
 
 float(void) rm_skin_read_team_color {
@@ -579,6 +581,7 @@ float(string skin_name) rm_skin_load {
 	rm_skin_loaded = TRUE;
 	cvar_set("cl_rm_skin", skin_name);
 	updateNexuizSkinList();
+	updateNexuizHudList();
 	return TRUE;
 #undef RM_SKIN_IMAGE
 }

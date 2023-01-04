@@ -9,10 +9,12 @@ CLASS(NexuizHudList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizCvarList, columnNameOrigin, float, 0)
 ENDCLASS(NexuizHudList)
 entity makeNexuizHudList();
+void(void) updateNexuizHudList;
 #endif
 
 #ifdef IMPLEMENTATION
-float searchHudList;
+entity selfNexuizHudList;
+float searchNexuizHudList;
 
 void(string path, string s) checkDefaultNexuizHudList {
 	if (file_exists(strcat("data/", path, ".hud"))) return;
@@ -20,6 +22,29 @@ void(string path, string s) checkDefaultNexuizHudList {
 	if (f >= 0) {
 		fputs(f, s);
 		fclose(f);
+	}
+}
+
+void(void) updateNexuizHudList {
+	selfNexuizHudList.selectedItem = -1;
+	if (searchNexuizHudList >= 0) {
+		search_end(searchNexuizHudList);
+	}
+	if (rm_skin_loaded) {
+		searchNexuizHudList = -1;
+		selfNexuizHudList.nItems = 3;
+		if (CVAR(cl_rm_hud_old))
+			selfNexuizHudList.selectedItem = 0;
+		else if (CVAR(cl_rm_hud_alt))
+			selfNexuizHudList.selectedItem = 2;
+		else
+			selfNexuizHudList.selectedItem = 1;
+	} else {
+		searchNexuizHudList = search_begin("data/*.hud", TRUE, TRUE);
+		if (searchNexuizHudList >= 0)
+			selfNexuizHudList.nItems = search_getsize(searchNexuizHudList) + 1;
+		else
+			selfNexuizHudList.nItems = 1;
 	}
 }
 
@@ -57,28 +82,35 @@ entity(void) makeNexuizHudList {
 		"sbar_weapons_position 0 200 0\n");
 	me = spawnNexuizHudList();
 	me.configureNexuizListBox(me);
-	me.selectedItem = -1;
-	me.configureNexuizListBox(me);
-	searchHudList = search_begin("data/*.hud", TRUE, TRUE);
-	if (searchHudList >= 0)
-		me.nItems = search_getsize(searchHudList) + 1;
-	else
-		me.nItems = 1;
-
+	selfNexuizHudList = me;
+	searchNexuizHudList = -1;
+	updateNexuizHudList();
 	return me;
 }
 
 void clickListBoxItemNexuizHudList(entity me, float i, vector where, float doubleclick) {
 	if (doubleclick) {
-		string s;
-		if (i > 0 && searchHudList >= 0) {
-			s = search_getfilename(searchHudList, i - 1);
-			sbar_load(s);
-		} else if (i == 0) {
-			sbar_set_defaults();
-		} else
-			return;
-
+		if (rm_skin_loaded) {
+			if (i == 0) {
+				cvar_set("cl_rm_hud_old", "1");
+				cvar_set("cl_rm_hud_alt", "0");
+			} else if (i == 1) {
+				cvar_set("cl_rm_hud_old", "0");
+				cvar_set("cl_rm_hud_alt", "0");
+			} else {
+				cvar_set("cl_rm_hud_old", "0");
+				cvar_set("cl_rm_hud_alt", "1");
+			}
+		} else {
+			string s;
+			if (i > 0 && searchNexuizHudList >= 0) {
+				s = search_getfilename(searchNexuizHudList, i - 1);
+				sbar_load(s);
+			} else if (i == 0) {
+				sbar_set_defaults();
+			} else
+				return;
+		}
 		GUI_Hide();
 		GUI_Hide();
 		GUI_Hide();
@@ -86,7 +118,11 @@ void clickListBoxItemNexuizHudList(entity me, float i, vector where, float doubl
 }
 
 void(entity me) destroyNexuizHudList {
-	search_end(searchHudList);
+	if (searchNexuizHudList >= 0)
+		search_end(searchNexuizHudList);
+
+	searchNexuizHudList = -1;
+	selfNexuizHudList = NULL;
 }
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) resizeNotifyNexuizHudList {
@@ -101,12 +137,21 @@ void(entity me, float i, vector absSize, float isSelected) drawListBoxItemNexuiz
 	if(isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	if (i == 0) {
-		s = "[default]";
-	} else if (searchHudList >= 0 && searchHudList >= 0)
-		s = search_getfilename(searchHudList, i - 1);
-	else
-		s = "";
+	if (rm_skin_loaded) {
+		if (i == 0)
+			s = "[RM Old]";
+		else if (i == 1)
+			s = "[RM Default]";
+		else
+			s = "[RM Alternative]";
+	} else {
+		if (i == 0) {
+			s = "[default]";
+		} else if (searchNexuizHudList >= 0)
+			s = search_getfilename(searchNexuizHudList, i - 1);
+		else
+			s = "";
+	}
 
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 }
