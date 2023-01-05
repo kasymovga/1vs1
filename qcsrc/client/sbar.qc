@@ -29,6 +29,7 @@ void(void) sbar_set_defaults {
 	cvar_set_vec("sbar_nadget2_position", SBAR_NADGET2_POSITION_DEFAULT);
 	cvar_set_vec("sbar_weapons_position", SBAR_WEAPONS_POSITION_DEFAULT);
 	cvar_set_vec("sbar_gameinfo_position", SBAR_GAMEINFO_POSITION_DEFAULT);
+	cvar_set_vec("sbar_powerups_position", SBAR_POWERUPS_POSITION_DEFAULT);
 	cvar_set("sbar_timer_scale", "1");
 	cvar_set("sbar_score_scale", "1");
 	cvar_set("sbar_ammo_scale", "1");
@@ -38,6 +39,7 @@ void(void) sbar_set_defaults {
 	cvar_set("sbar_nadget2_scale", "1");
 	cvar_set("sbar_weapons_scale", "1");
 	cvar_set("sbar_gameinfo_scale", "1");
+	cvar_set("sbar_powerups_scale", "1");
 }
 
 void(string s) sbar_load {
@@ -1482,9 +1484,10 @@ void(void) sbar_timer {
 }
 
 vector sbar_powerup_pos;
+float sbar_powerup_scale;
 void sbar_powerup_timer_draw(float dt, string image, vector color) {
 	vector picsize;
-	picsize = '22 22 0' * CVAR(sbar_powerups_scale);
+	picsize = '22 22 0' * sbar_powerup_scale;
 	float countdown_fontsize = 18;
 	if (dt > 0) {
 		if (dt < 5) {
@@ -1496,20 +1499,21 @@ void sbar_powerup_timer_draw(float dt, string image, vector color) {
 
 			drawpic(sbar_powerup_pos, image, picsize, color, sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 		}
-		sbar_draw_num(sbar_powerup_pos - '40 -2 0' * CVAR(sbar_powerups_scale), ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(sbar_powerup_pos - '40 -2 0' * sbar_powerup_scale, ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else if (dt > -1) {
 		draw_pic_expanding(sbar_powerup_pos, image, picsize, color, sbar_alpha_fg, DRAWFLAG_ADDITIVE,
 			bound(0, -dt / 0.5, 1));
 	}
-	sbar_powerup_pos_y -= 40 * CVAR(sbar_powerups_scale);
+	sbar_powerup_pos_y -= 40 * sbar_powerup_scale;
 }
 
-void(void) sbar_powerups_draw {
+void(vector powerups_pos, float powerups_scale) sbar_powerups_draw {
 	if (getstati(STAT_HEALTH) <= 0)
 		return;
 
 	float strength_time, invincibility_time, speed_time, invisibility_time, jetpack_time;
-	sbar_powerup_pos = sbar_position(CVAR(sbar_powerups_position), '64 200 0') + '40 160 0' * CVAR(sbar_powerups_scale);
+	sbar_powerup_pos = sbar_position(powerups_pos, '64 200 0') + '40 160 0' * powerups_scale;
+	sbar_powerup_scale = powerups_scale;
 	//draw_borderlines(1, sbar_powerup_pos, fill_size, '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
 	strength_time = getstatf(STAT_STRENGTH_FINISHED);
 	invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
@@ -2018,7 +2022,7 @@ void(void) sbar_draw {
 		sbar_score_draw(CVAR(sbar_score_position), '0 0 0', CVAR(sbar_score_scale));
 		sbar_timer();
 		// draw strength/invincibility icon and timer
-		sbar_powerups_draw();
+		sbar_powerups_draw(CVAR(sbar_powerups_position), CVAR(sbar_powerups_scale));
 		sbar_runes_draw();
 		sbar_gametype_hud(CVAR(sbar_gameinfo_position), CVAR(sbar_gameinfo_scale));
 	}
