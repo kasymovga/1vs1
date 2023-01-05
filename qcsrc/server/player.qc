@@ -3,6 +3,7 @@ float sv_taunt;
 .float cvar_cl_autotaunt;
 .float cvar_cl_voice_directional;
 .float cvar_cl_voice_directional_taunt_attenuation;
+.float usecolormod;
 float g_respawn_delay;
 float g_respawn_mapsettings;
 float g_respawn_mapsettings_delay;
@@ -106,7 +107,6 @@ void(void) player_dmg_inflictor_fix {
 void(entity bb) player_body_spawn {
 	self.body = spawn();
 	self.body.customizeentityforclient = player_body_customize;
-	self.body.colormod = '1 1 1' * g_player_brightness;
 	if not(bb) {
 		bb = spawn();
 		bb.owner = self;
@@ -193,6 +193,7 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 	body_to.modelindex_lod2 = body_from.modelindex_lod2;
 	body_to.modelindex_lod0_from_nexuiz = body_from.modelindex_lod0_from_nexuiz;
 	body_to.scale = body_from.scale;
+	body_to.usecolormod = body_from.usecolormod;
 	setorigin(body_to, body_from.origin);
 	if (realloc_playermodel) {
 		str_unzone_ifneeded(body_to.playermodel);
@@ -208,7 +209,6 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 			body_to.weaponentity.owner = body_to.owner;
 			body_to.weaponentity.customizeentityforclient = player_body_torso_customize;
 		}
-		body_to.weaponentity.colormap = body_to.colormap;
 		setmodel(body_to.weaponentity, body_from.weaponentity.model);
 		body_to.weaponentity.tag_entity = body_to;
 		body_to.weaponentity.tag_index = body_from.weaponentity.tag_index;
@@ -438,15 +438,19 @@ void(entity e, string s) player_anim_parseline {
 		return;
 	}
 	string field_name = argv(0);
-	if (field_name == "scale" && c == 2) {
+	if (field_name == "scale" && c >= 2) {
 		e.body.scale = stof(argv(1));
 		return;
 	}
-	if (field_name == "akimbo_shift") {
+	if (field_name == "akimbo_shift" && c >= 2) {
 		e.akimbo_animation_shift = stof(argv(1));
 		return;
 	}
-	if (field_name == "akimbo_use_left_hand") {
+	if (field_name == "usecolormod" && c >= 2) {
+		e.body.usecolormod = stof(argv(1));
+		return;
+	}
+	if (field_name == "akimbo_use_left_hand" && c >= 4) {
 		e.akimbo_use_left_hand_x = stof(argv(1));
 		e.akimbo_use_left_hand_y = stof(argv(2));
 		e.akimbo_use_left_hand_z = stof(argv(3));
@@ -646,6 +650,9 @@ void(entity e, string _model) player_anim_load {
 		if (anim_parseerror)
 			print("Parse error in ", animfilename, ", some player animations are broken\n");
 	}
+	e.body.scale = 1;
+	e.body.usecolormod = 0;
+	setorigin(e.body, '0 0 0');
 	animfilename = strcat(_model, ".animinfo2");
 	player_anim_parseline_error = FALSE;
 	animfile = fopen(animfilename, FILE_READ);
@@ -1499,7 +1506,6 @@ void(string modelname) player_setup_lod {
 			self.body.weaponentity.customizeentityforclient = player_body_torso_customize;
 		}
 		setmodel(self.body.weaponentity, s);
-		self.body.weaponentity.colormap = self.body.colormap;
 		setattachment(self.body.weaponentity, self.body, "tag_torso");
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_head", substring(modelname, -4, 4));
 		if (file_exists(s)) {
@@ -1711,8 +1717,18 @@ void() player_setup_model {
 	}
 	if (self.body.colormap != self.colormap) {
 		self.body.colormap = self.colormap;
-		if (self.body.weaponentity)
-			self.body.weaponentity.colormap = self.colormap;
+		if (team_mode &&  self.body.usecolormod)
+			self.body.colormod = team_colormod(self.team) * (g_player_brightness ? g_player_brightness : 1);
+		else
+			self.body.colormod = '1 1 1' * g_player_brightness;
+
+		if (self.body.weaponentity) {
+			self.body.weaponentity.colormap = self.body.colormap;
+			self.body.weaponentity.colormod = self.body.colormod;
+			if (self.body.exteriorweaponentity) {
+				self.body.exteriorweaponentity.colormod = self.body.colormod;
+			}
+		}
 	}
 }
 
