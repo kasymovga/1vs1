@@ -11,7 +11,7 @@
 void(float) sbar_field_set;
 void(float) sbar_help;
 vector(vector v) sbar_font_size;
-void(void) sbar_gametype_init;
+void(void) sbar_game_init;
 vector sbar_position(vector pos, vector sz);
 vector(vector pos, vector sz, vector sz_to) sbar_scale_for_position;
 float scoreboard_bottom;
@@ -34,3 +34,14 @@ float sbar_stat_items;
 vector sbar_bottomleft;
 float sbar_alpha_fg;
 void(void) sbar_set_defaults;
+
+#define SBAR_POSITION_AND_SCALE(pos,scale,size_from,size_to) \
+	if (size_to == '0 0 0') \
+		pos = sbar_position(pos, size_from * scale); \
+	else { \
+		vector v = sbar_scale_for_position(pos, size_from, size_to); \
+		scale = v_z; \
+		pos##_x += v_x; \
+		pos##_y += v_y; \
+		pos##_z = 0; \
+	}

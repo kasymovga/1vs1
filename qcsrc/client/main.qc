@@ -98,7 +98,7 @@ void(void) CSQC_Init {
 	localcmd("alias +nadget2 +button9\n");
 	localcmd("alias -nadget2 -button9\n");
 	game_type = 0;
-	sbar_gametype_init();
+	sbar_game_init();
 	// sbar_fields uses strunzone on the titles!
 	for(i = 0; i < SBAR_FIELDS_MAX; ++i)
 		sbar_title[i] = strzone("(null)");

@@ -1,5 +1,5 @@
-void(vector gameinfo_position, float gameinfo_scale) single_hud {
-	vector pos = sbar_position(gameinfo_position, '136 48 0' * gameinfo_scale);
+void(vector pos, vector gameinfo_size, float gameinfo_scale) single_hud {
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '136 48 0', gameinfo_size)
 	if (sbar_stat_items & IT_KEY1)
 		drawpic(pos + '30 4 0' * gameinfo_scale, "gfx/hud/sb_kh_blue", '20 40 0' * gameinfo_scale, '1.125 1.125 0.75', sbar_alpha_fg, DRAWFLAG_NORMAL);
 

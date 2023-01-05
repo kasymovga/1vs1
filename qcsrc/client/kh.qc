@@ -4,12 +4,12 @@ void(void) kh_hud_reset {
 	kh_runheretime = 0;
 }
 
-void(vector gameinfo_position, float gameinfo_scale) kh_hud {
+void(vector pos, vector gameinfo_size, float gameinfo_scale) kh_hud {
 	float kh_keys;
 	float keyteam;
 	float a, aa;
 	vector p, pa, kh_size, kh_asize;
-	vector pos = sbar_position(gameinfo_position, '108 48 0' * gameinfo_scale);
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '108 48 0', gameinfo_size)
 	p = pos +'6 11 0' * gameinfo_scale;
 	kh_keys = getstati(STAT_KH_KEYS);
 	kh_size = '19 34 0' * gameinfo_scale;

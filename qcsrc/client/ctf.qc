@@ -6,14 +6,14 @@ void(void) ctf_hud_reset {
 	ctf_redflag_prevstatus = ctf_blueflag_prevstatus = ctf_redflag_prevframe = ctf_blueflag_prevframe = ctf_redflag_statuschange_time = ctf_blueflag_statuschange_time = 0;
 }
 
-void(vector gameinfo_position, float gameinfo_scale) ctf_hud {
+void(vector pos, vector gameinfo_size, float gameinfo_scale) ctf_hud {
 	vector redflag_pos, blueflag_pos, sz;
 	float f; // every function should have that
 	float redflag, blueflag; // current status
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
 	redflag = (sbar_stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (sbar_stat_items/IT_BLUE_FLAG_TAKEN) & 3;
-	vector pos = sbar_position(gameinfo_position, '124 50 0' * gameinfo_scale);
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '124 50 0', gameinfo_size)
 	// when status CHANGES, set old status into prevstatus and current status into status
 	if (redflag != ctf_redflag_prevframe) {
 		ctf_redflag_statuschange_time = time;

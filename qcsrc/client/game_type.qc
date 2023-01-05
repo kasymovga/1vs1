@@ -19,5 +19,5 @@ void(void) game_type_init {
 		localcmd("\n_cl_hook_gamestart ", game_type_name(game_type), ";");
 		main_calledhooks |= MAIN_HOOK_START;
 	}
-	sbar_gametype_init();
+	sbar_game_init();
 }

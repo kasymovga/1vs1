@@ -6,9 +6,9 @@ void(float _ignore) shootingrange_read {
 	shootingrange_round_time = net_read_short();
 }
 
-void(vector gameinfo_position, float gameinfo_scale) shootingrange_hud {
+void(vector pos, vector gameinfo_size, float gameinfo_scale) shootingrange_hud {
 	entity me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
-	vector pos = sbar_position(gameinfo_position, '96 48 0' * gameinfo_scale);
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '96 48 0', gameinfo_size)
 	float score = me.(scores[ps_secondary]);
 	sbar_draw_num(pos, score, 3, 0, 32 * gameinfo_scale, '1 1 0.5', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	if (shootingrange_round_start) {

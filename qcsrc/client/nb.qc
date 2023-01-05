@@ -8,9 +8,9 @@
 #define NBPB_IFLAG DRAWFLAG_NORMAL
 #define NBPB_IRGB '0.7 0.1 0'
 
-void(vector gameinfo_position, float gameinfo_scale) nb_hud {
+void(vector pos, vector gameinfo_size, float gameinfo_scale) nb_hud {
 	float nb_pb;
-	vector pos = sbar_position(gameinfo_position, '88 48 0' * gameinfo_scale) + '4 4 0' * gameinfo_scale;
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '88 38 0', gameinfo_size)
 	nb_pb = getstatf(STAT_NB_METERSTART);
 	//Manage the progress bar if any
 	if (nb_pb > 0) {

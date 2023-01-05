@@ -1,1 +1,2 @@
 void(void) rm_hud_draw;
+float rm_hud_game_info_enabled;

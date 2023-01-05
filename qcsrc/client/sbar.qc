@@ -122,10 +122,11 @@ vector(vector pos, vector sz, vector sz_to) sbar_scale_for_position {
 	float f1 = sz_to_x / sz_x;
 	float f2 = sz_to_y / sz_y;
 	vector v = '0 0 0';
-	if (f1 > f2) {
-		v_y = (sz_to_y - sz_y * f2) / 2;
+	if (f1 < f2) {
+		v_y = (sz_to_y - sz_y * f1) / 2;
 	} else
-		v_x = (sz_to_x - sz_x * f1) / 2;
+		v_x = (sz_to_x - sz_x * f2) / 2;
+
 	v_z = min(f1, f2);
 	return v;
 }
@@ -1294,14 +1295,7 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 	vector secondary_score_pos, distribution_color;
 	entity tm, pl, me;
 	me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
-	if (score_size == '0 0 0')
-		score_pos = sbar_position(score_pos, '196 34 0' * score_scale);
-	else {
-		vector v = sbar_scale_for_position(score_pos, '196 34 0', score_size);
-		score_scale = v_z;
-		score_pos_x += v_x;
-		score_pos_y += v_y;
-	}
+	SBAR_POSITION_AND_SCALE(score_pos, score_scale, '196 34 0', score_size)
 	secondary_score_pos = score_pos + '132 0 0' * score_scale;
 	if not(team_mode) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
@@ -1358,14 +1352,7 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 
 void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_race {
 	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && !team_mode) { // race/cts record display on HUD
-		if (score_size == '0 0 0')
-			score_pos = sbar_position(score_pos, '196 34 0' * score_scale);
-		else {
-			vector v = sbar_scale_for_position(score_pos, '196 34 0', score_size);
-			score_scale = v_z;
-			score_pos_x += v_x;
-			score_pos_y += v_y;
-		}
+		SBAR_POSITION_AND_SCALE(score_pos, score_scale, '196 34 0', score_size)
 		float score, distribution;
 		vector distribution_color;
 		entity pl, me;
@@ -1714,26 +1701,28 @@ float(float stat_type, float stat_regen, float stat_maxregen) sbar_nadget_regen 
 }
 
 void(vector dummy1, vector dummy2, float dummy3) sbar_score_nothing_draw {}
-var void(vector position, float scale) sbar_gametype_hud;
-void(vector position, float scale) sbar_gametype_hud_nothing {};
-void(void) sbar_gametype_init {
+var void(vector position, vector sz, float scale) sbar_game_hud;
+void(vector position, vector sz, float scale) sbar_game_hud_nothing {};
+void(void) sbar_game_init {
 	sbar_score_draw = sbar_score_draw_default;
-	if (game_type == GAME_TYPE_KEYHUNT || game_type == GAME_TYPE_KEYHUNT_CA || game_type == GAME_TYPE_KEYHUNT_FT)
-		sbar_gametype_hud = kh_hud;
-	else if (game_type == GAME_TYPE_CTF || game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT)
-		sbar_gametype_hud = ctf_hud;
-	else if (game_type == GAME_TYPE_NEXBALL)
-		sbar_gametype_hud = nb_hud;
-	else if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP) {
-		sbar_gametype_hud = single_hud;
+	rm_hud_game_info_enabled = TRUE;
+	if (game_type == GAME_TYPE_KEYHUNT || game_type == GAME_TYPE_KEYHUNT_CA || game_type == GAME_TYPE_KEYHUNT_FT) {
+		sbar_game_hud = kh_hud;
+	} else if (game_type == GAME_TYPE_CTF || game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT) {
+		sbar_game_hud = ctf_hud;
+	} else if (game_type == GAME_TYPE_NEXBALL) {
+		sbar_game_hud = nb_hud;
+	} else if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP) {
+		sbar_game_hud = single_hud;
 		sbar_score_draw = sbar_score_nothing_draw;
 	} else if (game_type == GAME_TYPE_RACE || game_type == GAME_TYPE_CTS) {
-		sbar_gametype_hud = sbar_gametype_hud_nothing;
+		sbar_game_hud = sbar_game_hud_nothing;
 		sbar_score_draw = sbar_score_draw_race;
 	} else if (game_type == GAME_TYPE_SHOOTINGRANGE) {
-		sbar_gametype_hud = shootingrange_hud;
+		sbar_game_hud = shootingrange_hud;
 	} else {
-		sbar_gametype_hud = sbar_gametype_hud_nothing;
+		rm_hud_game_info_enabled = FALSE;
+		sbar_game_hud = sbar_game_hud_nothing;
 	}
 }
 
@@ -2024,7 +2013,7 @@ void(void) sbar_draw {
 		// draw strength/invincibility icon and timer
 		sbar_powerups_draw(CVAR(sbar_powerups_position), CVAR(sbar_powerups_scale));
 		sbar_runes_draw();
-		sbar_gametype_hud(CVAR(sbar_gameinfo_position), CVAR(sbar_gameinfo_scale));
+		sbar_game_hud(CVAR(sbar_gameinfo_position), '0 0 0', CVAR(sbar_gameinfo_scale));
 	}
 }
 
