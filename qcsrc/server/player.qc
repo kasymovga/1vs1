@@ -276,6 +276,14 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 	e.crouch_mins = self.crouch_mins;
 	setsize(e, self.mins, self.maxs);
 	e.reset = stdproc_remove;
+	if (e.weaponentity) {
+		e.weaponentity.owner = e;
+		e.weaponentity.reset = stdproc_remove;
+	}
+	if (e.exteriorweaponentity) {
+		e.exteriorweaponentity.owner = e;
+		e.exteriorweaponentity.reset = stdproc_remove;
+	}
 	return e;
 }
 
