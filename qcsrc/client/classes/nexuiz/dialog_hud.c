@@ -26,31 +26,35 @@ void(entity btn, entity me) applyNexuizHudDialog {
 	GUI_Hide();
 }
 
-void(entity me) saveCvarsUseRMSkinsNexuizHudDialog {
-	if (me.checked && !rm_skin_loaded) {
-		rm_skin_load("default");
-	} else if (!me.checked && rm_skin_loaded) {
+void(entity me) saveCvarsUseRMHUDNexuizHudDialog {
+	saveCvarsNexuizTextSlider(me);
+	float i = cvar("cl_rm_hud");
+	if (i > 0)
+		rm_skin_load(cvar_string("cl_rm_skin"));
+	else if (i < 0)
 		rm_skin_unload();
+	else if (strstrofs(dlc_list, " rm_skins ", 0)) {
+		rm_skin_load(cvar_string("cl_rm_skin"));
 	}
-}
-
-void(entity me) loadCvarsUseRMSkinsNexuizHudDialog {
-	me.checked = rm_skin_loaded;
 }
 
 void(entity me) fillNexuizHudDialog {
 	entity e;
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, "Use RM HUD:"));
+		me.TD(me, 1, 1, e = makeNexuizTextSlider("cl_rm_hud"));
+			e.addValue(e, "Never", "-1");
+			e.addValue(e, "When requested", "0");
+			e.addValue(e, "Always", "1");
+			e.configureNexuizTextSliderValues(e);
+			e.saveCvars = saveCvarsUseRMHUDNexuizHudDialog;
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, "Available HUDs:"));
 	me.TR(me);
 		me.TD(me, 6, 2, e = makeNexuizHudList());
 		hudListNexuizHudDialog = e;
 	me.TR(me);
-	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "cl_rm_skin", "Use RM skins:"));
-		e.saveCvars = saveCvarsUseRMSkinsNexuizHudDialog;
-		e.loadCvars = loadCvarsUseRMSkinsNexuizHudDialog;
-		e.loadCvars(e);
+	me.gotoRC(me, 1, 2); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 6, 2, e = makeNexuizSkinList());
 		skinListNexuizHudDialog = e;

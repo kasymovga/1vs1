@@ -26,6 +26,7 @@ void(string path, string s) checkDefaultNexuizHudList {
 }
 
 void(void) updateNexuizHudList {
+	if not(selfNexuizHudList) return;
 	selfNexuizHudList.selectedItem = -1;
 	if (searchNexuizHudList >= 0) {
 		search_end(searchNexuizHudList);

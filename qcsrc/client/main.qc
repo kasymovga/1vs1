@@ -155,7 +155,7 @@ void(void) CSQC_Init {
 	mute_init();
 	registercvar("cl_rm_skin", "", CVAR_SAVE);
 	s = cvar_string("cl_rm_skin");
-	if (s == "")
+	if (s == "" || CVAR(cl_rm_hud) <= 0)
 		rm_skin_unload();
 	else
 		rm_skin_load(s);
