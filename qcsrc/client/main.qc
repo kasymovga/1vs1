@@ -154,11 +154,10 @@ void(void) CSQC_Init {
 	precache_sound("misc/hit.wav");
 	mute_init();
 	registercvar("cl_rm_skin", "", CVAR_SAVE);
-	s = cvar_string("cl_rm_skin");
-	if (s == "" || CVAR(cl_rm_hud) <= 0)
+	if (CVAR(cl_rm_hud) < 0)
 		rm_skin_unload();
-	else
-		rm_skin_load(s);
+	else if (CVAR(cl_rm_hud) > 0)
+		rm_skin_load(cvar_string("cl_rm_skin"));
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
