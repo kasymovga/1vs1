@@ -1705,7 +1705,7 @@ void() player_setup_model {
 			self.skinindex = player_allowed_skin(self.playermodel_save, stof(self.playerskin));
 			self.playerskin = "";
 		}
-		self.skinindex = (team_mode ? ((self.skinindex == 6) ? 6 : math_mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
+		self.skinindex = (team_mode ? ((self.skinindex == 6) ? 6 : math_mod(self.skinindex, 3)) : self.skinindex); // 3, 4, 5 skins is green/red/orange skins for nexus.zym
 	}
 	if (chmdl || oldskin != self.skinindex)
 		player_species_setup();
