@@ -9,6 +9,7 @@ const vector eZ = '0 0 1';
 vector gui_draw_shift;
 vector gui_draw_scale;
 float gui_draw_alpha;
+float gui_font3_is_unicode_compat;
 
 void(void) gui_draw_reset;
 void(string pic, vector theSize, vector theOffset) gui_set_mouse_pointer;

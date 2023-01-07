@@ -146,7 +146,7 @@ void drawContainer(entity me)
 		gui_draw_alpha *= e.Container_alpha;
 		if (e.nexuizFont)
 		if (cvar("utf8_oldfont_for_oldchars"))
-		if (cvar("font3_is_unicode_compat"))
+		if (gui_font3_is_unicode_compat)
 			drawfont = FONT_USER + 0;
 
 		e.draw(e);

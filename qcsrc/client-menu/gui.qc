@@ -20,7 +20,7 @@ void(vector where) gui_draw_mouse_pointer {
 }
 
 void(void) gui_draw_reset {
-	if (cvar("utf8_oldfont_for_oldchars") && cvar("font3_is_unicode_compat"))
+	if (cvar("utf8_oldfont_for_oldchars") && gui_font3_is_unicode_compat)
 		drawfont = FONT_USER + 3;
 	else
 		drawfont = FONT_USER + 0;

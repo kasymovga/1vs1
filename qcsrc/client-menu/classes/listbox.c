@@ -276,7 +276,7 @@ void drawListBox(entity me)
 	float nf = FALSE;
 	if (me.nexuizFont)
 	if (cvar("utf8_oldfont_for_oldchars"))
-	if (cvar("font3_is_unicode_compat"))
+	if (gui_font3_is_unicode_compat)
 		drawfont = FONT_USER + 0;
 
 	for(i = floor(me.scrollPos / me.itemHeight); i < me.nItems; ++i)
