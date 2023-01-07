@@ -21,6 +21,7 @@ vector menu_doubleclick_position;
 float() menu_init_pre;
 
 void() menu_init {
+	dlc_load_fonts();
 	cvar_set("_menu_alpha", "0");
 	registercvar("_menu_echo_on", "0", 0);
 	cvar_set("_menu_echo_on", "0");
@@ -92,7 +93,6 @@ void(string m1, string m2) menu_draw_loading {
 }
 
 void() menu_init_delayed {
-	dlc_load_fonts();
 	menu_initialized = 0;
 	if (!dlc_reloaded && !dlc_failed) {
 		if (dlc_downloading) {
