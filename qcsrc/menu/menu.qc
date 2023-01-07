@@ -76,6 +76,7 @@ void(void) menu_time_process {
 
 void(string m1, string m2) menu_draw_loading {
 	vector sz = drawgetimagesize("gfx/loading.tga");
+	gui_draw_reset();
 	if (sz != '0 0 0') {
 		vector v = cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0';
 		float scl = min(v_x / sz_x, v_y / sz_y);
@@ -233,7 +234,7 @@ float() menu_init_pre {
 	vector boxA, boxB;
 	map_info_enumerate();
 	if (!map_info_filter_game_type(MAP_INFO_TYPE_ALL, 0, 0, 1)) {
-		gui_draw_reset();
+		menu_draw_loading("", "");
 		sz = eX * 0.025 + eY * 0.025 * (gui_draw_scale_x / gui_draw_scale_y);
 		gui_draw_text_center('0.5 0.5 0' - 1.25 * sz_y * eY, "Autogenerating mapinfo for newly added maps...", sz, '1 1 1', 1, 0);
 		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
