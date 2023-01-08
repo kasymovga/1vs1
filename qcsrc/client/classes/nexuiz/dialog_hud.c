@@ -33,7 +33,7 @@ void(entity me) saveCvarsUseRMHUDNexuizHudDialog {
 		rm_skin_load(cvar_string("cl_rm_skin"));
 	else if (i < 0)
 		rm_skin_unload();
-	else if (strstrofs(dlc_list, " rm_skins ", 0)) {
+	else if (strstrofs(strcat(" ", dlc_list, " "), " rm_skins ", 0) >= 0) {
 		rm_skin_load(cvar_string("cl_rm_skin"));
 	}
 }
