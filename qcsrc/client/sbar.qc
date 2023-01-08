@@ -1872,10 +1872,10 @@ void(void) sbar_draw {
 		else if (sbar_hidescores)
 			return;
 
-		sbar_timer();
 		if (rm_skin_loaded) {
 			rm_hud_draw();
 		} else {
+			sbar_timer();
 			sbar_score_draw(CVAR(sbar_score_position), '0 0 0', CVAR(sbar_score_scale));
 			sbar_game_hud(CVAR(sbar_gameinfo_position), '0 0 0', CVAR(sbar_gameinfo_scale));
 		}
