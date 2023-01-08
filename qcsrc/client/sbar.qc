@@ -1873,6 +1873,12 @@ void(void) sbar_draw {
 			return;
 
 		sbar_timer();
+		if (rm_skin_loaded) {
+			rm_hud_draw();
+		} else {
+			sbar_score_draw(CVAR(sbar_score_position), '0 0 0', CVAR(sbar_score_scale));
+			sbar_game_hud(CVAR(sbar_gameinfo_position), '0 0 0', CVAR(sbar_gameinfo_scale));
+		}
 	} else {
 		if (sbar_showscores)
 			sbar_scoreboard_draw();

@@ -376,6 +376,7 @@ void(void) rm_hud_draw {
 	float armor, health;
 	armor = getstati(STAT_ARMOR);
 	health = getstati(STAT_HEALTH);
+	float deathorobserver = (health < 1 || view_observer_status);
 	//float stat_items = getstati(STAT_ITEMS);
 	float stat_weapons = getstati(STAT_WEAPONS);
 	float fade = 3.2 - 2 * (time - sbar_weapons_time);
@@ -422,28 +423,6 @@ void(void) rm_hud_draw {
 					rm_hud_game_info_finalstate = rm_hud_game_info_state;
 			}
 		}
-		// same as above, but for powerups HUD
-		/*
-		if (pwhud_enabled != pw_state) {
-			if (pwhud_enabled)
-				pw_appeartime = time;
-			else
-				pw_fadetime = time;
-
-			pw_state = pwhud_enabled;
-		}
-		if (pw_state != pw_finalstate) {
-			if (pw_state) {
-				pw_alpha = 1 - bound(0, 1 - 4 * (time - pw_appeartime), 1);
-				if (pw_alpha >= 1)
-					pw_finalstate = pw_state;
-			} else {
-				pw_alpha = bound(0, 1 - 4 * (time - pw_fadetime), 1);
-				if (!pw_alpha)
-					pw_finalstate = pw_state;
-			}
-		}
-		*/
 		vector mxdmg = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), rm_hud_armorblockpercent);
 		rm_hud_vhealth += (min(mxdmg_x + 1, /*sv_nicehealth*/200 * 2) - rm_hud_vhealth) * frametime * 10;
 		if (CVAR(cl_rm_hud_alt)) {/// RM hud layout
@@ -453,71 +432,72 @@ void(void) rm_hud_draw {
 					hudline_x = sbar_topright_x;
 				})
 			}
-			float thlimit;
+			float thlimit = 0;
 			// we_need_to_go_wider.jpg
 			rm_hud_game_info_wide = 0;
 			// pre-healtharmor
 			RM_HUD_LINE_SLICE({
 				hudline_x = sector_sgap - bw_left;
 			})
-			// healtharmor
-			{
-				hud_sector_x = RM_HUD_SECWIDTH_HEALTH;
-				hud_sector_pos_x = sector_sgap;
-				sector_mod = '0 0 0'; //'-1 0 0';
-				s_health = hud_sector_pos;
-			}
-			vdmg_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
-			rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ /*sv_nicehealth*/ 200, 2), hud_sector_pos, hud_sector,
-										RM_HUD_BG_SECTOR_TEAM, RM_HUD_BG_BORDER_TEAM, RM_HUD_A_SECTOR_TEAM, RM_HUD_A_BORDER_TEAM,
-										RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-										sector_alphamod, hud_sector_drawflag, 0);
-			// healtharmor | ammo
-			RM_HUD_LINE_SLICE({
-				hudline_x = sector_gap - bw_right - bw_left;
-				hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
-			})
-			// ammo
-			ammosector_pos = hud_sector_pos_x = hudline_pos_x - bw_right + sector_gap;
-			hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
-			sector_mod = '0 0 0';
-			thlimit = hud_sector_pos_x + hud_sector_x + sector_gap;
-			if (rm_hud_ammo_progress)
-				rm_hud_draw_progress_bar_sector(rm_hud_ammo_progress, hud_sector_pos, hud_sector,
-										RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
-										RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-										sector_alphamod, hud_sector_drawflag, 0);
-			else { RM_HUD_LINE_SECTOR({}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER) }
-			if (hgtype) if (ammosector_pos + (RM_HUD_SECWIDTH_NORMAL + sector_gap) * 2 < sbar_bottomright_x - sector_sgap - sector_gap - RM_HUD_SECWIDTH_NORMAL * 2) {
-				// ammo | nades
+			if not(deathorobserver) {
+				// healtharmor
+				{
+					hud_sector_x = RM_HUD_SECWIDTH_HEALTH;
+					hud_sector_pos_x = sector_sgap;
+					sector_mod = '0 0 0'; //'-1 0 0';
+					s_health = hud_sector_pos;
+				}
+				vdmg_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
+				rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ /*sv_nicehealth*/ 200, 2), hud_sector_pos, hud_sector,
+											RM_HUD_BG_SECTOR_TEAM, RM_HUD_BG_BORDER_TEAM, RM_HUD_A_SECTOR_TEAM, RM_HUD_A_BORDER_TEAM,
+											RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
+											sector_alphamod, hud_sector_drawflag, 0);
+				// healtharmor | ammo
 				RM_HUD_LINE_SLICE({
 					hudline_x = sector_gap - bw_right - bw_left;
 					hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
 				})
-				// nades
-				nadesector_pos = hud_sector_pos_x = hudline_pos_x - bw_right + sector_gap;
+				// ammo
+				ammosector_pos = hud_sector_pos_x = hudline_pos_x - bw_right + sector_gap;
 				hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
 				sector_mod = '0 0 0';
-				sector_alphamod = 1;
-				rm_hud_draw_progress_bar_sector(1-hgregen, hud_sector_pos, hud_sector,
-						RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
-						RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-						sector_alphamod, hud_sector_drawflag, bound(0, time - rm_hud_hg_nadecount_update, 1));
-				if (hgtype2) {
+				thlimit = hud_sector_pos_x + hud_sector_x + sector_gap;
+				if (rm_hud_ammo_progress)
+					rm_hud_draw_progress_bar_sector(rm_hud_ammo_progress, hud_sector_pos, hud_sector,
+											RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
+											RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
+											sector_alphamod, hud_sector_drawflag, 0);
+				else { RM_HUD_LINE_SECTOR({}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER) }
+				if (hgtype) if (ammosector_pos + (RM_HUD_SECWIDTH_NORMAL + sector_gap) * 2 < sbar_bottomright_x - sector_sgap - sector_gap - RM_HUD_SECWIDTH_NORMAL * 2) {
+					// ammo | nades
 					RM_HUD_LINE_SLICE({
 						hudline_x = sector_gap - bw_right - bw_left;
 						hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
 					})
-					nadesector2_pos = hud_sector_pos_x = hudline_pos_x - bw_right + sector_gap;
-					rm_hud_draw_progress_bar_sector(1-hgregen2, hud_sector_pos, hud_sector,
+					// nades
+					nadesector_pos = hud_sector_pos_x = hudline_pos_x - bw_right + sector_gap;
+					hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
+					sector_mod = '0 0 0';
+					sector_alphamod = 1;
+					rm_hud_draw_progress_bar_sector(1-hgregen, hud_sector_pos, hud_sector,
 							RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
 							RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-							sector_alphamod, hud_sector_drawflag, bound(0, time - rm_hud_hg_nadecount2_update, 1));
+							sector_alphamod, hud_sector_drawflag, bound(0, time - rm_hud_hg_nadecount_update, 1));
+					if (hgtype2) {
+						RM_HUD_LINE_SLICE({
+							hudline_x = sector_gap - bw_right - bw_left;
+							hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
+						})
+						nadesector2_pos = hud_sector_pos_x = hudline_pos_x - bw_right + sector_gap;
+						rm_hud_draw_progress_bar_sector(1-hgregen2, hud_sector_pos, hud_sector,
+								RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
+								RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
+								sector_alphamod, hud_sector_drawflag, bound(0, time - rm_hud_hg_nadecount2_update, 1));
+					}
+					thlimit = hud_sector_pos_x + hud_sector_x + sector_gap;
 				}
-				thlimit = hud_sector_pos_x + hud_sector_x + sector_gap;
 			}
 			// separator slice:
-			//		ammo/nades | teamhud
 			float thwidth = (rm_hud_game_info_wide ? RM_HUD_SECWIDTH_WIDE : RM_HUD_SECWIDTH_NORMAL);
 			next_sector = sbar_bottom_x - thwidth * 0.5;
 			float low = (hud_sector_x + hud_sector_pos_x + sector_gap > next_sector);
@@ -557,28 +537,7 @@ void(void) rm_hud_draw {
 					hudline_x = sbar_topright_x - hudline_pos_x - (sbar_bottomright_x -
 							(/*(!pwhud_enabled || pwhud_enabled != pw_finalstate) ?*/ sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL - sector_sgap/* : next_sector*/)) - bw_left;
 				})
-				// powerups
-				/*
-				if (pw_alpha) {
-					RM_HUD_LINE_SECTOR({
-						hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
-						hud_sector_pos_x = next_sector;
-						powerup_pos = hud_sector_pos;
-						sector_mod = '0 0 0';
-						sector_alphamod = pw_alpha;
-					}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
-				}
-				*/
 				sector_alphamod = 1;
-				// powerups | scores
-				/*
-				if not(!pwhud_enabled || pwhud_enabled != pw_finalstate) {
-					RM_HUD_LINE_SLICE({
-						hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
-						hudline_x = sector_gap - bw_right - bw_left;
-					})
-				}
-				*/
 				// scores
 				RM_HUD_LINE_SECTOR({
 					hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
@@ -672,67 +631,68 @@ void(void) rm_hud_draw {
 				hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
 				hudline_x = sbar_topright_x - hudline_pos_x - (sbar_bottomright_x - ammosector_pos) - bw_left;
 			})
-			// ammo
-			hud_sector_pos_x = ammosector_pos;
-			hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
-			sector_mod = '0 0 0';
-			if (rm_hud_ammo_progress)
-				rm_hud_draw_progress_bar_sector(-rm_hud_ammo_progress, hud_sector_pos, hud_sector,
-						RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
-						RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-						sector_alphamod, hud_sector_drawflag, 0);
-			else { RM_HUD_LINE_SECTOR({}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER) }
-			// ammo | health-armor
-			RM_HUD_LINE_SLICE({
-				hudline_x = sector_gap - bw_left - bw_right;
-				hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
-			})
-			// health-armor
-			hud_sector_x = RM_HUD_SECWIDTH_HEALTH;
-			hud_sector_pos_x = centersector;
-			sector_mod = '0 0 0';
-			s_health = hud_sector_pos;
-			vdmg_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
-			rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ /* sv_nicehealth */ 200, 2), hud_sector_pos, hud_sector,
-					RM_HUD_BG_SECTOR_TEAM, RM_HUD_BG_BORDER_TEAM, RM_HUD_A_SECTOR_TEAM, RM_HUD_A_BORDER_TEAM,
-					RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-					sector_alphamod, hud_sector_drawflag, 0);
-			// health-armor | nades
-			RM_HUD_LINE_SLICE({
-				hudline_x = sector_gap - bw_left - bw_right;
-				hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
-			})
-			if (hgtype) {
-				// nades
-				hud_sector_pos_x = nadesector_pos;
+			if not(deathorobserver) {
+				// ammo
+				hud_sector_pos_x = ammosector_pos;
 				hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
 				sector_mod = '0 0 0';
-				sector_alphamod = 1;
-				rm_hud_draw_progress_bar_sector(1-hgregen, hud_sector_pos, hud_sector,
-						RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
-						RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-						sector_alphamod, hud_sector_drawflag, bound(0, time - rm_hud_hg_nadecount_update, 1));
-				if (hgtype2) {
-					RM_HUD_LINE_SLICE({
-						hudline_x = sector_gap - bw_left - bw_right;
-						hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
-					})
-					hud_sector_pos_x = nadesector2_pos;
-					rm_hud_draw_progress_bar_sector(1-hgregen2, hud_sector_pos, hud_sector,
+				if (rm_hud_ammo_progress)
+					rm_hud_draw_progress_bar_sector(-rm_hud_ammo_progress, hud_sector_pos, hud_sector,
 							RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
 							RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-							sector_alphamod, hud_sector_drawflag, bound(0, time - rm_hud_hg_nadecount2_update, 1));
-				} else
+							sector_alphamod, hud_sector_drawflag, 0);
+				else { RM_HUD_LINE_SECTOR({}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER) }
+				// ammo | health-armor
+				RM_HUD_LINE_SLICE({
+					hudline_x = sector_gap - bw_left - bw_right;
+					hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
+				})
+				// health-armor
+				hud_sector_x = RM_HUD_SECWIDTH_HEALTH;
+				hud_sector_pos_x = centersector;
+				sector_mod = '0 0 0';
+				s_health = hud_sector_pos;
+				vdmg_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
+				rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ /* sv_nicehealth */ 200, 2), hud_sector_pos, hud_sector,
+						RM_HUD_BG_SECTOR_TEAM, RM_HUD_BG_BORDER_TEAM, RM_HUD_A_SECTOR_TEAM, RM_HUD_A_BORDER_TEAM,
+						RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
+						sector_alphamod, hud_sector_drawflag, 0);
+				// health-armor | nades
+				RM_HUD_LINE_SLICE({
+					hudline_x = sector_gap - bw_left - bw_right;
+					hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
+				})
+				if (hgtype) {
+					// nades
+					hud_sector_pos_x = nadesector_pos;
+					hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
+					sector_mod = '0 0 0';
+					sector_alphamod = 1;
+					rm_hud_draw_progress_bar_sector(1-hgregen, hud_sector_pos, hud_sector,
+							RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
+							RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
+							sector_alphamod, hud_sector_drawflag, bound(0, time - rm_hud_hg_nadecount_update, 1));
+					if (hgtype2) {
+						RM_HUD_LINE_SLICE({
+							hudline_x = sector_gap - bw_left - bw_right;
+							hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
+						})
+						hud_sector_pos_x = nadesector2_pos;
+						rm_hud_draw_progress_bar_sector(1-hgregen2, hud_sector_pos, hud_sector,
+								RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
+								RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
+								sector_alphamod, hud_sector_drawflag, bound(0, time - rm_hud_hg_nadecount2_update, 1));
+					} else
+						nadesector2_pos = 0;
+				} else {
+					nadesector_pos = 0;
 					nadesector2_pos = 0;
-			} else {
-				nadesector_pos = 0;
-				nadesector2_pos = 0;
-				mindist_right = centersector + RM_HUD_SECWIDTH_HEALTH + sector_gap;
-				hud_sector_pos_x = hudline_pos_x - bw_right + sector_gap;
-				hud_sector_x = -bw_right - bw_left;
+					mindist_right = centersector + RM_HUD_SECWIDTH_HEALTH + sector_gap;
+					hud_sector_pos_x = hudline_pos_x - bw_right + sector_gap;
+					hud_sector_x = -bw_right - bw_left;
+				}
 			}
 			// separator slice:
-			// 		powerups/nades | scores
 			next_sector = max(mindist_right, sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL - sector_sgap);
 			RM_HUD_LINE_SLICE({
 				hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
@@ -765,6 +725,7 @@ void(void) rm_hud_draw {
 			})
 		}
 	}
+	if (deathorobserver) goto skiphealthammo;
 	if (CVAR(cl_rm_hud_old) && cvar("sbar_hudselector") == 2) { // combined health and armor display
 		vector v;
 		v = rm_hud_healtharmor_maxdamage(health, armor, rm_hud_armorblockpercent);
@@ -1005,6 +966,7 @@ void(void) rm_hud_draw {
 		}
 		sbar_nadget_messages(hgtype, hgapos, hgdetons, hgammo);
 	}
+:skiphealthammo
 	// draw scores and timer
 	sbar_score_draw(scoresector_pos, scoresector_size, 1);
 	sbar_timer();
