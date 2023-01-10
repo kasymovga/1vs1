@@ -290,6 +290,9 @@ void(void) ice_player_think {
 
 void(void) ice_init {
 	CVAR_CACHE_STR(sv_model_ice); //strzone once and never strunzone
+	if (sv_model_ice == "models/ice/ice.md3")
+		dlc_require("ice");
+
 	precache_model(sv_model_ice);
 	CVAR_CACHE_STR(sv_sound_ice_frag);
 	if (sv_sound_ice_frag != "")

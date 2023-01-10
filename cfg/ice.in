@@ -1,8 +1,8 @@
-set sv_model_ice "models/ebomb.mdl"
-set sv_model_ice_alpha 1
-set sv_model_ice_scale "8"
-set sv_model_ice_z "15"
-set sv_model_ice_use_skins 0
+set sv_model_ice models/ice/ice.md3
+set sv_model_ice_use_skins 1
+set sv_model_ice_scale 1
+set sv_model_ice_alpha 0.5
+set sv_model_ice_z -16
 set sv_sound_ice_frag ""
 set g_ice_slowdown 0.1
 set g_ice_unfroze_time 3
