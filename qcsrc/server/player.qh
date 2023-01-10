@@ -45,10 +45,6 @@ void(float killed) player_clear;
 void play_countdown(float finished, string samp);
 float(entity plr, entity viewer) player_alpha;
 
-void(string f) player_precache_sounds;
-void() player_update_sounds;
-void() player_clear_sounds;
-void(string type, string message) player_voice_message;
 void() player_setup_model;
 void(entity player) player_to_spec;
 void() player_think;

@@ -9,8 +9,6 @@ float g_respawn_mapsettings;
 float g_respawn_mapsettings_delay;
 float g_respawn_mapsettings_waves;
 float g_respawn_waves;
-float g_voice_flood_spv;
-float g_voice_flood_spv_team;
 float g_fullbrightplayers;
 string g_player_allowed_models;
 string g_player_allowed_models_red;
@@ -86,7 +84,6 @@ float sv_loddistance2;
 float(void) player_customize;
 float(void) player_body_customize;
 float(void) player_body_torso_customize;
-void(entity to, entity from) player_copy_sounds;
 
 void(void) player_dmg_inflictor_fix {
 	entity e;
@@ -302,7 +299,7 @@ void(void) player_species_setup {
 		if (pl.body.playermodel == self.body.playermodel)
 		if (pl.body.skinindex == self.body.skinindex) {
 			self.species = pl.species;
-			player_copy_sounds(self, pl);
+			player_sound_copy(self, pl);
 			return;
 		}
 	self.species = SPECIES_HUMAN;
@@ -350,7 +347,7 @@ void(void) player_species_setup {
 		fclose(fh);
 
 	search_end(glob);
-	player_update_sounds();
+	player_sound_update();
 }
 
 void(float finished, string samp) play_countdown {
@@ -909,7 +906,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				entity oldself;
 				oldself = self;
 				self = attacker;
-				player_voice_message("taunt", "");
+				player_sound_voice_message("taunt", "");
 				self = oldself;
 			}
 		}
@@ -1253,188 +1250,6 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		}
 		if (defer_client_kill_now_team_change)
 			client_kill_now_team_change(self, self.killindicator.team);
-	}
-}
-
-string allvoicesamples;
-float player_voice_message_sample_not_found;
-float player_voice_message_sample_fixed;
-stringfield(string type) player_voice_message_sample_field {
-	player_voice_message_sample_not_found = 0;
-	player_voice_message_sample_fixed = 0;
-	switch (type) {
-#define _VOICEMSG(m) case #m: return playersound_##m;
-	ALLVOICEMSGS
-#undef _VOICEMSG
-	}
-	player_voice_message_sample_not_found = 1;
-	return playersound_taunt;
-}
-
-stringfield(string type) player_sound_sample_field {
-	player_voice_message_sample_not_found = 0;
-	player_voice_message_sample_fixed = 0;
-	switch (type) {
-#define _VOICEMSG(m) case #m: return playersound_##m;
-	ALLPLAYERSOUNDS
-#undef _VOICEMSG
-	}
-	player_voice_message_sample_not_found = 1;
-	return playersound_taunt;
-}
-
-void(string f) player_precache_sounds {
-	float fh;
-	string s;
-	fh = fopen(f, FILE_READ);
-	if (fh < 0)
-		return;
-
-	while ((s = fgets(fh))) {
-		if (tokenize_console(s) != 3)
-			continue;
-
-		sound_random_precache(argv(1), stof(argv(2)));
-	}
-	fclose(fh);
-	if not(allvoicesamples) {
-#define _VOICEMSG(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
-		ALLVOICEMSGS
-#undef _VOICEMSG
-		allvoicesamples = strzone(substring(allvoicesamples, 1, strlen(allvoicesamples) - 1));
-	}
-}
-
-void() player_clear_sounds {
-#define _VOICEMSG(m) if (self.playersound_##m) { strunzone(self.playersound_##m); self.playersound_##m = NULL; }
-	ALLPLAYERSOUNDS
-	ALLVOICEMSGS
-#undef _VOICEMSG
-}
-
-void(entity to, entity from) player_copy_sounds {
-#define _VOICEMSG(m) to.playersound_##m = str_zone_ifneeded(from.playersound_##m);
-	ALLPLAYERSOUNDS
-	ALLVOICEMSGS
-#undef _VOICEMSG
-}
-
-void(string f, float first) player_load_sounds {
-	float fh;
-	string s;
-	var .string field;
-	fh = fopen(f, FILE_READ);
-	if (fh < 0)
-		return;
-
-	while ((s = fgets(fh))) {
-		if (tokenize_console(s) != 3)
-			continue;
-
-		field = player_sound_sample_field(argv(0));
-		if (player_voice_message_sample_not_found)
-			field = player_voice_message_sample_field(argv(0));
-
-		if (player_voice_message_sample_not_found)
-			continue;
-
-		if (player_voice_message_sample_fixed)
-			if not(first)
-				continue;
-
-		if (self.field)
-			strunzone(self.field);
-
-		self.field = strzone(strcat(argv(1), " ", argv(2)));
-	}
-	fclose(fh);
-}
-
-void() player_update_sounds {
-	player_clear_sounds();
-	player_load_sounds("sound/player/default.sounds", 1);
-	player_load_sounds(strcat(self.body.model, ".sounds"), 0);
-	player_load_sounds(strcat(self.body.model, "_", ftos(self.skinindex), ".sounds"), 0);
-}
-
-void(string type, string msg) player_voice_message {
-	var .string sample;
-	float ownteam;
-	if (self.classname != "player")
-		return;
-
-	sample = player_voice_message_sample_field(type);
-	if (player_voice_message_sample_not_found) {
-		sprint(self, strcat("Invalid voice. Use one of: ", allvoicesamples, "\n"));
-		return;
-	}
-	ownteam = (type != "taunt" && type != "teamshot");
-	float flood;
-	float flood_spv;
-	var .float flood_field;
-	flood = 0;
-	if (ownteam) {
-		flood_spv = g_voice_flood_spv_team;
-		flood_field = floodcontrol_voiceteam;
-	} else {
-		flood_spv = g_voice_flood_spv;
-		flood_field = floodcontrol_voice;
-	}
-	if (time >= self.flood_field)
-		self.flood_field = max(time, self.flood_field) + flood_spv;
-	else
-		flood = 1;
-
-	if (timeout_status == 2) //when game is paused, no flood protection
-		self.flood_field = flood = 0;
-
-	if (msg != "")
-		chat_say(self, ownteam, world, msg, 0);
-
-	if (flood)
-		return;
-
-	string s = sound_random_by_str(self.sample);
-	if (type == "taunt") {
-		if (self.classname == "player")
-			if (self.deadflag == DEAD_NO)
-				anim_set((self.body.weaponentity ? self.body.weaponentity : self.body), self.anim_taunt, FALSE, TRUE, TRUE);
-
-		if (!sv_taunt)
-			return;
-
-		FOR_EACH_REALCLIENT(msg_entity) {
-			if (msg_entity.cvar_cl_voice_directional >= 1) {
-				if (msg_entity == self || !self.body)
-					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
-				else
-					sound_to(MSG_ONE, self.body.body, CHAN_VOICE, s, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
-			} else if (msg_entity.cvar_cl_voice_directional >= 0)
-				sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
-		}
-	} else if (type == "teamshoot") {
-		if (self.pusher)
-			if (self.pusher.team == self.team) {
-				msg_entity = self.pusher;
-				if (clienttype(msg_entity) == CLIENTTYPE_REAL) {
-					if (msg_entity.cvar_cl_voice_directional == 1)
-						sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
-					else if (msg_entity.cvar_cl_voice_directional >= 0)
-						sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
-				}
-				msg_entity = self;
-				if (clienttype(msg_entity) == CLIENTTYPE_REAL)
-					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASE, ATTN_NONE);
-			}
-	} else {
-		FOR_EACH_REALCLIENT(msg_entity)
-			if (!team_mode || msg_entity.team == self.team)
-			{
-				if (msg_entity.cvar_cl_voice_directional == 1)
-					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
-				else if (msg_entity.cvar_cl_voice_directional >= 0)
-					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
-			}
 	}
 }
 
@@ -2333,12 +2148,12 @@ void(string pattern) player_precache_all_models {
 		s = substring(f, -9,5);
 		if (s != "_lod1")
 		if (s != "_lod2") {
-			player_precache_sounds(strcat(f, ".sounds"));
+			player_sound_precache(strcat(f, ".sounds"));
 			globhandle2 = search_begin(strcat(f, "_*.sounds"), TRUE, FALSE);
 			if (globhandle2 >= 0) {
 				n2 = search_getsize(globhandle2);
 				for (j = 0; j < n2; j++) {
-					player_precache_sounds(search_getfilename(globhandle2, j));
+					player_sound_precache(search_getfilename(globhandle2, j));
 				}
 				search_end(globhandle2);
 			}
@@ -2454,7 +2269,7 @@ void(void(string item, string cmd) add) player_gamemenu_add_items {
 
 float player_init_done;
 void() player_init {
-	player_precache_sounds("sound/player/default.sounds");
+	player_sound_init();
 	player_precache_all_models("models/player/*.zym");
 	player_precache_all_models("models/player/*.dpm");
 	player_precache_all_models("models/player/*.md3");
@@ -2465,8 +2280,6 @@ void() player_init {
 	CVAR_CACHE(g_respawn_mapsettings_delay);
 	CVAR_CACHE(g_respawn_mapsettings_waves);
 	CVAR_CACHE(g_respawn_waves);
-	CVAR_CACHE(g_voice_flood_spv);
-	CVAR_CACHE(g_voice_flood_spv_team);
 	CVAR_CACHE(g_fullbrightplayers);
 	CVAR_CACHE_STR(g_player_allowed_models);
 	CVAR_CACHE_STR(g_player_allowed_models_red);

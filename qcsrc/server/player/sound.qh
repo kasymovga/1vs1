@@ -1,0 +1,5 @@
+void(string f) player_sound_precache;
+void() player_sound_update;
+void(string type, string message) player_sound_voice_message;
+void(entity to, entity from) player_sound_copy;
+void(void) player_sound_init;

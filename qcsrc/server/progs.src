@@ -87,6 +87,7 @@ minstagib.qh
 jetpack.qh
 client.qh
 client_version.qh
+player/sound.qh
 player.qh
 spectator.qh
 push.qh
@@ -229,6 +230,7 @@ weapon/flash.qc
 weapon/extra.qc
 entcs.qc
 player.qc
+player/sound.qc
 chat.qc
 spectator.qc
 push.qc

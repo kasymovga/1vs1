@@ -564,9 +564,9 @@ void(string s) cmd_client {
 		}
 	} else if (cmd == "voice") {
 		if (tokens >= 3)
-			player_voice_message(argv(1), substring(s, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
+			player_sound_voice_message(argv(1), substring(s, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
 		else
-			player_voice_message(argv(1), "");
+			player_sound_voice_message(argv(1), "");
 	} else if (cmd == "say") {
 		if (tokens >= 2) {
 			chat_say(self, FALSE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);

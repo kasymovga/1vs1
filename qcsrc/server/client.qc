@@ -486,7 +486,7 @@ void(void) client_disconnect { //called by engine
 	if (self.clientstatus)
 		strunzone(self.clientstatus);
 
-	player_clear_sounds();
+	player_sound_clear();
 	self.playerid = 0;
 	self.retard = 0;
 	self.saboteur = 0;
