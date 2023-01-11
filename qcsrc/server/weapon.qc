@@ -470,7 +470,7 @@ void(void) weapon_frame {
 			weapon_setup(_switchweapon);
 			weapon_thinkf(WEAPON_FRAME_IDLE, 0, weapon_ready);
 		} else if (self.weaponentity.state == WEAPON_STATE_CLEAR) {
-			player_anim_set(self, anim_draw, FALSE, TRUE, TRUE, 1);
+			player_body_animation_set(self, anim_draw, FALSE, TRUE, TRUE, 1);
 			self.weaponentity.state = WEAPON_STATE_RAISE;
 			weapon_action(self.weapon, WEAPON_REQUEST_CLEAR);
 			weapon_setup(_switchweapon);
@@ -1295,7 +1295,7 @@ void(float fr, float t, void() func) weapon_thinkf {
 		if (fr == WEAPON_FRAME_MELEE2)
 			anim_set(self.body, self.anim_melee2, FALSE, TRUE, TRUE);
 		else if (fr == WEAPON_FRAME_MELEE || (self.weapon == WEAPON_MELEE && fr == WEAPON_FRAME_FIRE2)) {
-			player_anim_set(self, anim_melee, FALSE, TRUE, TRUE, 1);
+			player_body_animation_set(self, anim_melee, FALSE, TRUE, TRUE, 1);
 			if (self.body)
 				self.body.animstate_endtime = time + t;
 
@@ -1305,11 +1305,11 @@ void(float fr, float t, void() func) weapon_thinkf {
 				self.weapon_morph2time = time + t * 0.65;
 			}
 		} else
-			player_anim_set(self, anim_shoot, FALSE, TRUE, TRUE, 1);
+			player_body_animation_set(self, anim_shoot, FALSE, TRUE, TRUE, 1);
 
 		if (self.body.weaponentity)
 		if (self.crouch)
-			player_anim_set(self, anim_duckidle, FALSE, TRUE, TRUE, 2);
+			player_body_animation_set(self, anim_duckidle, FALSE, TRUE, TRUE, 2);
 	}
 }
 

@@ -75,7 +75,7 @@ float(entity plr, float eject) vehicle_extract_player {
 		self.team = self.enemy.team;
 
 	teleport_origin_set(plr, exit_origin, 0);
-	player_body_setup(plr);
+	player_physics_setup(plr);
 	plr.velocity = self.velocity;
 	if (eject) {
 		plr.velocity = plr.velocity + (v_up + v_forward * 0.25) * 200;

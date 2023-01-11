@@ -214,7 +214,7 @@ void(void) ice_think {
 		}
 		ice_hook_unfroze(unfrozer);
 		self.owner.deadflag = DEAD_NO;
-		player_body_setup(self.owner);
+		player_physics_setup(self.owner);
 		return;
 	}
 	if (self.unfroze_progress == oldprogress)

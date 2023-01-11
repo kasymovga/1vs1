@@ -1,0 +1,7 @@
+void(void) player_body_init;
+void(void) player_body_remove;
+entity(float keepvelocity, float _movetype) player_body_detach;
+void(void) player_body_animation;
+void() player_body_model_setup;
+void(entity bb) player_body_spawn;
+void(entity e, .vector anim, float looping, float override, float restart, float torsolegs) player_body_animation_set;

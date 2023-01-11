@@ -88,6 +88,7 @@ jetpack.qh
 client.qh
 client_version.qh
 player/sound.qh
+player/body.qh
 player.qh
 spectator.qh
 push.qh
@@ -231,6 +232,7 @@ weapon/extra.qc
 entcs.qc
 player.qc
 player/sound.qc
+player/body.qc
 chat.qc
 spectator.qc
 push.qc
