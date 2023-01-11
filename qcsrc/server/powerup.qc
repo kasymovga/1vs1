@@ -89,10 +89,17 @@ void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mo
 	powerup_invincible_damage_mods_set_next(targ, attacker, deathtype);
 }
 
+void(float finished, string samp) powerup_countdown {
+	if (clienttype(self) == CLIENTTYPE_REAL)
+		if (floor(finished - time - frametime) != floor(finished - time))
+			if (finished - time < 6)
+				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);
+}
+
 var void() powerup_invincible_player_effects_next;
 void() powerup_invincible_player_effects {
 	if (self.items & IT_INVINCIBLE) {
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
+		powerup_countdown(self.invincible_finished, "misc/poweroff.wav");
 		self.effects = self.effects | (EFFECT_RED | EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 		if (time > self.invincible_finished) {
 			self.items = self.items - (self.items & IT_INVINCIBLE);
@@ -140,7 +147,7 @@ void(entity targ, entity attacker, float deathtype) powerup_strength_damage_mods
 var void() powerup_strength_player_effects_next;
 void() powerup_strength_player_effects {
 	if (self.items & IT_STRENGTH) {
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
+		powerup_countdown(self.strength_finished, "misc/poweroff.wav");
 		self.effects = self.effects | (EFFECT_BLUE | EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 		if (time > self.strength_finished) {
 			self.items = self.items - (self.items & IT_STRENGTH);
@@ -159,7 +166,7 @@ void() powerup_strength_player_effects {
 var void() powerup_strength_akimbo_player_effects_next;
 void() powerup_strength_akimbo_player_effects {
 	if (self.items & IT_STRENGTH) {
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
+		powerup_countdown(self.strength_finished, "misc/poweroff.wav");
 		if (time > self.strength_finished) {
 			self.items = self.items - (self.items & IT_STRENGTH);
 			sprint(self, "^3Akimbo has worn off\n");
@@ -204,7 +211,7 @@ float() powerup_speed_weapon_rate_factor {
 var void() powerup_speed_player_effects_next;
 void() powerup_speed_player_effects {
 	if (self.items & IT_SPEED) {
-		play_countdown(self.speed_finished, "misc/poweroff.wav");
+		powerup_countdown(self.speed_finished, "misc/poweroff.wav");
 		if (time > self.speed_finished) {
 			self.items = self.items - (self.items & IT_SPEED);
 			sprint(self, "^3Speed has worn off\n");
@@ -246,7 +253,7 @@ void() powerup_speed_init {
 var void() powerup_invisibility_player_effects_next;
 void() powerup_invisibility_player_effects {
 	if (self.items & IT_INVISIBILITY) {
-		play_countdown(self.invisibility_finished, "misc/poweroff.wav");
+		powerup_countdown(self.invisibility_finished, "misc/poweroff.wav");
 		if (time > self.invisibility_finished) {
 			self.items &= ~IT_INVISIBILITY;
 			sprint(self, "^3Invisibility has worn off\n");

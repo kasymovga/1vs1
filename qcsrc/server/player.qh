@@ -42,7 +42,6 @@ ALLVOICEMSGS
 //		_VOICEMSG(falling) \
 void() player_init;
 void(float killed) player_clear;
-void play_countdown(float finished, string samp);
 float(entity plr, entity viewer) player_alpha;
 
 void() player_setup_model;

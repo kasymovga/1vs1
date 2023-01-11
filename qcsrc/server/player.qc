@@ -126,13 +126,6 @@ void(void) player_respawn {
 	client_put();
 }
 
-void(float finished, string samp) play_countdown {
-	if (clienttype(self) == CLIENTTYPE_REAL)
-		if (floor(finished - time - frametime) != floor(finished - time))
-			if (finished - time < 6)
-				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);
-}
-
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_corpse_damage {
 	violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
 
