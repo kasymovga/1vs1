@@ -1186,6 +1186,7 @@ void(void) func_door_go_up {
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
+	activator = self.enemy;
 	trigger_use_targets();
 	self.message = oldmessage;
 }
@@ -1237,6 +1238,7 @@ void(void) func_door_fire {
 
 void(void) func_door_use {
 	entity oself;
+	self.enemy = activator;
 	//dprint("func_door_use (model: ");dprint(self.model);dprint(")\n");
 	if (self.owner) {
 		oself = self;
@@ -1278,9 +1280,11 @@ void(void) func_door_trigger_touch {
 		}
 		return;
 	}
+	entity oldself = self;
 	activator = other;
 	self = self.owner;
 	func_door_use();
+	self = oldself;
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_door_damage {
@@ -1291,6 +1295,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self = self.owner;
 		self.health = self.max_health;
 		//self.takedamage = DAMAGE_NO; // wil be reset upon return //ORLY?
+		activator = attacker;
 		func_door_use();
 		self = oself;
 	}
@@ -1362,6 +1367,7 @@ void(void) func_door_rotating_go_up {
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
+	activator = self.enemy;
 	trigger_use_targets();
 	self.message = oldmessage;
 }
