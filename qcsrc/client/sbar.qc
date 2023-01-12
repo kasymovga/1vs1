@@ -1495,9 +1495,6 @@ void sbar_powerup_timer_draw(float dt, string image, vector color) {
 }
 
 void(vector powerups_pos, float powerups_scale) sbar_powerups_draw {
-	if (getstati(STAT_HEALTH) <= 0)
-		return;
-
 	float strength_time, invincibility_time, speed_time, invisibility_time, jetpack_time;
 	sbar_powerup_pos = sbar_position(powerups_pos, '64 200 0') + '40 160 0' * powerups_scale;
 	sbar_powerup_scale = powerups_scale;
