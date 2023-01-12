@@ -1186,8 +1186,9 @@ void(void) func_door_go_up {
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
-	activator = self.enemy;
+	activator = self.pusher;
 	trigger_use_targets();
+	self.pusher = NULL;
 	self.message = oldmessage;
 }
 
@@ -1238,7 +1239,7 @@ void(void) func_door_fire {
 
 void(void) func_door_use {
 	entity oself;
-	self.enemy = activator;
+	self.pusher = activator;
 	//dprint("func_door_use (model: ");dprint(self.model);dprint(")\n");
 	if (self.owner) {
 		oself = self;
