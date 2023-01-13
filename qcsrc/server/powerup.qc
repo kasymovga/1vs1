@@ -208,6 +208,7 @@ void() powerup_akimbo_init {
 		return;
 
 	dlc_require("powerups");
+	powerup_init();
 	akimbo_init_common();
 	powerup_akimbo_init_done = 1;
 	powerup_akimbo_player_effects_next = plugin_chain_player_effects;
