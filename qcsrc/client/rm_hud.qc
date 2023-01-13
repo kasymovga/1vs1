@@ -297,13 +297,10 @@ vector(float h, float a, float armorblock) rm_hud_healtharmor_maxdamage {
 	armordamage = a + (h - 1); // damage we can take if we could use more armor
 	armorideal = healthdamage * armorblock;
 	v_y = armorideal;
-	if(armordamage < healthdamage)
-	{
+	if (armordamage < healthdamage) {
 		v_x = armordamage;
 		v_z = 1;
-	}
-	else
-	{
+	} else {
 		v_x = healthdamage;
 		v_z = 0;
 	}
@@ -436,7 +433,7 @@ void(void) rm_hud_draw {
 			}
 		}
 		vector mxdmg = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), sbar_armor_block_percentage);
-		rm_hud_vhealth += (min(mxdmg_x + 1, /*sv_nicehealth*/200 * 2) - rm_hud_vhealth) * frametime * 10;
+		rm_hud_vhealth += (min(mxdmg_x + 1, sbar_health_nice * 2) - rm_hud_vhealth) * frametime * 10;
 		if (CVAR(cl_rm_hud_alt)) {/// RM hud layout
 			if (rm_skin_line_full) {
 				RM_HUD_LINE_SLICE({
@@ -460,10 +457,10 @@ void(void) rm_hud_draw {
 					s_health = hud_sector_pos;
 				}
 				vdmg_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
-				rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ /*sv_nicehealth*/ 200, 2), hud_sector_pos, hud_sector,
-											RM_HUD_BG_SECTOR_TEAM, RM_HUD_BG_BORDER_TEAM, RM_HUD_A_SECTOR_TEAM, RM_HUD_A_BORDER_TEAM,
-											RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-											sector_alphamod, hud_sector_drawflag, 0);
+				rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ sbar_health_nice, 2), hud_sector_pos, hud_sector,
+						RM_HUD_BG_SECTOR_TEAM, RM_HUD_BG_BORDER_TEAM, RM_HUD_A_SECTOR_TEAM, RM_HUD_A_BORDER_TEAM,
+						RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
+						sector_alphamod, hud_sector_drawflag, 0);
 				// healtharmor | ammo
 				RM_HUD_LINE_SLICE({
 					hudline_x = sector_gap - bw_right - bw_left;
@@ -476,9 +473,9 @@ void(void) rm_hud_draw {
 				thlimit = hud_sector_pos_x + hud_sector_x + sector_gap;
 				if (rm_hud_ammo_progress)
 					rm_hud_draw_progress_bar_sector(rm_hud_ammo_progress, hud_sector_pos, hud_sector,
-											RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
-											RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
-											sector_alphamod, hud_sector_drawflag, 0);
+							RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER,
+							RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
+							sector_alphamod, hud_sector_drawflag, 0);
 				else { RM_HUD_LINE_SECTOR({}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER) }
 				if (hgtype) if (ammosector_pos + (RM_HUD_SECWIDTH_NORMAL + sector_gap) * 2 < sbar_bottomright_x - sector_sgap - sector_gap - RM_HUD_SECWIDTH_NORMAL * 2) {
 					// ammo | nades
@@ -665,7 +662,7 @@ void(void) rm_hud_draw {
 				sector_mod = '0 0 0';
 				s_health = hud_sector_pos;
 				vdmg_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
-				rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ /* sv_nicehealth */ 200, 2), hud_sector_pos, hud_sector,
+				rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ sbar_health_nice, 2), hud_sector_pos, hud_sector,
 						RM_HUD_BG_SECTOR_TEAM, RM_HUD_BG_BORDER_TEAM, RM_HUD_A_SECTOR_TEAM, RM_HUD_A_BORDER_TEAM,
 						RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
 						sector_alphamod, hud_sector_drawflag, 0);

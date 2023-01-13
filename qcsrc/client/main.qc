@@ -248,5 +248,6 @@ void(float ignore) main_init_read {
 	}
 	if (sf & 256) {
 		sbar_armor_block_percentage = net_read_coord();
+		sbar_health_nice = net_read_coord();
 	}
 }
