@@ -182,7 +182,7 @@ float(float nodownload, float renderrestart) dlc_reload {
 			s = strcat(s, " n23electro");
 	}
 	if ((n = cvar("cl_simpleitems")) && (!dlc_mandatory || dlc_ready("base-models"))) {
-		s = strcat(s, " chainsaw_v2 zapper_v2 supershotgun"); //need load them first, to override their g_* models
+		s = strcat(s, " chainsaw_v2 zapper_v2 supershotgun powerups"); //need load them first, to override their g_* models
 		if (dlc_ready("chainsaw_v2") && dlc_ready("zapper_v2") && dlc_ready("supershotgun")) {
 			if (n == 2)
 				s = strcat(s, " simpleitems-luma");
