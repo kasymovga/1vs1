@@ -354,11 +354,11 @@ float(entity e, float wpn, float deep) akimbo_weapon_have {
 
 	entity ag = akimbo_ghost_get_if_exists(e, 0);
 	if (ag && ((ag.weapons & wi.weapons) || (ag.weapons_extra & wi.weapons_extra))) {
-		if (g_powerup_strength_akimbo && e.strength_finished > time) {
+		if (e.akimbo_finished > time) {
 			return deep <= 3;
 		}
 		return deep == 2;
-	} else if (g_powerup_strength_akimbo && e.strength_finished > time) {
+	} else if (e.akimbo_finished > time) {
 		return deep == 2;
 	}
 	return FALSE;

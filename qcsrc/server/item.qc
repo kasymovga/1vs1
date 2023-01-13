@@ -61,11 +61,13 @@ float g_pickup_healthmega;
 float g_pickup_healthmega_max;
 float g_pickup_fuel_jetpack;
 float g_pickup_use_wait;
+float g_powerup_akimbo;
 float g_powerup_strength;
 float g_powerup_speed;
 float g_powerup_invisibility;
 float g_powerup_shield;
 float g_powerup_addition;
+float g_balance_powerup_akimbo_time;
 float g_balance_powerup_strength_time;
 float g_balance_powerup_invisibility_time;
 float g_balance_powerup_invincible_time;
@@ -201,9 +203,10 @@ void(void) item_respawn_countdown {
 			switch (self.items) {
 			case IT_STRENGTH:     plugin_ItemName = "item-strength"; plugin_ItemColor = '0 0 1'; break;
 			case IT_INVINCIBLE:   plugin_ItemName = "item-shield"; plugin_ItemColor = '1 0 1'; break;
-			case IT_SPEED:        plugin_ItemName = "item-speed"; plugin_ItemColor = '1 0 1'; break;
-			case IT_INVISIBILITY: plugin_ItemName = "item-invis"; plugin_ItemColor = '0 0 1'; break;
+			case IT_SPEED:        plugin_ItemName = "item-speed2"; plugin_ItemColor = '1 1 0'; break;
+			case IT_INVISIBILITY: plugin_ItemName = "item-invis2"; plugin_ItemColor = '0 1 0'; break;
 			case IT_JETPACK:      plugin_ItemName = "item-jetpack"; plugin_ItemColor = '0.5 0.5 0.5'; break;
+			case IT_AKIMBO:       plugin_ItemName = "item-akimbo"; plugin_ItemColor = '0 1 1'; break;
 			}
 			if (plugin_ItemName) {
 				WaypointSprite_Spawn(plugin_ItemName, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
@@ -380,6 +383,9 @@ float(entity item, entity player) item_give_to {
 		}
 		if (item.spawnshieldtime) {
 			if (item_powerup_give_to(item, player, strength_finished))
+				pickedup = TRUE;
+
+			if (item_powerup_give_to(item, player, akimbo_finished))
 				pickedup = TRUE;
 
 			if (item_powerup_give_to(item, player, invincible_finished))
@@ -912,10 +918,20 @@ void(void) spawnfunc_item_strength {
 		remove(self);
 		return;
 	}
-	precache_sound("weapons/strength_fire.wav");
 	self.strength_finished = (self.count ? self.count : g_balance_powerup_strength_time);
 	item_start(sv_model_powerupstrength, "models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 	powerup_strength_init();
+}
+
+void(void) spawnfunc_item_akimbo {
+	if (!g_powerup_akimbo) {
+		remove(self);
+		return;
+	}
+	self.akimbo_finished = (self.count ? self.count : g_balance_powerup_akimbo_time);
+	item_start(sv_model_powerupstrength, "models/items/g_akimbo.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Akimbo Powerup", IT_AKIMBO, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	self.modelflags |= MF_ROTATE;
+	powerup_akimbo_init();
 }
 
 void(void) spawnfunc_item_invincible {
@@ -946,9 +962,8 @@ void(void) spawnfunc_item_invisibility {
 		return;
 	}
 	self.invisibility_finished = (self.count ? self.count : g_balance_powerup_invisibility_time);
-	item_start(sv_model_powerupinvisibility, "models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Invisibility", IT_INVISIBILITY, FL_POWERUP, item_generic_pickupevalfunc, 100000);
-	self.colormod = '1 1.5 0.1';
-	self.glowmod = '1 1.5 0.1';
+	item_start(sv_model_powerupinvisibility, "models/items/g_invisibility.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Invisibility", IT_INVISIBILITY, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	self.modelflags |= MF_ROTATE;
 	self.customizeentityforclient = item_glow_customize;
 	powerup_invisibility_init();
 }
@@ -959,9 +974,8 @@ void(void) spawnfunc_item_speed {
 		return;
 	}
 	self.speed_finished = (self.count ? self.count : g_balance_powerup_speed_time);
-	item_start(sv_model_powerupspeed, "models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Speed", IT_SPEED, FL_POWERUP, item_generic_pickupevalfunc, 100000);
-	self.colormod = '1 1 0.1';
-	self.glowmod = '1 1 0.1';
+	item_start(sv_model_powerupspeed, "models/items/g_speed.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Speed", IT_SPEED, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	self.modelflags |= MF_ROTATE;
 	self.customizeentityforclient = item_glow_customize;
 	powerup_speed_init();
 }
@@ -1045,6 +1059,7 @@ voidfunc(string s) item_spawnfunc_for {
 	RETURN_SPAWNFUNC_FOR(invincible)
 	RETURN_SPAWNFUNC_FOR(invisibility)
 	RETURN_SPAWNFUNC_FOR(speed)
+	RETURN_SPAWNFUNC_FOR(akimbo)
 #undef RETURN_SPAWNFUNC_FOR
 	return NULL;
 }
@@ -1123,11 +1138,13 @@ void(void) item_init {
 	CVAR_CACHE(g_pickup_healthmega_max);
 	CVAR_CACHE(g_pickup_fuel_jetpack);
 	CVAR_CACHE(g_pickup_use_wait);
+	CVAR_CACHE(g_powerup_akimbo);
 	CVAR_CACHE(g_powerup_strength);
 	CVAR_CACHE(g_powerup_speed);
 	CVAR_CACHE(g_powerup_invisibility);
 	CVAR_CACHE(g_powerup_shield);
 	CVAR_CACHE(g_powerup_addition);
+	CVAR_CACHE(g_balance_powerup_akimbo_time);
 	CVAR_CACHE(g_balance_powerup_strength_time);
 	CVAR_CACHE(g_balance_powerup_invisibility_time);
 	CVAR_CACHE(g_balance_powerup_invincible_time);

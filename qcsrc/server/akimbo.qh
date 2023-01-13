@@ -1,6 +1,7 @@
 float(float w) akimbo_weapon_throw;
 void(void) akimbo_weapon_frame;
 void(void) akimbo_init;
+void(void) akimbo_init_common;
 entity(entity e) akimbo_owner;
 float g_powerup_strength_akimbo;
 float(entity p, float wpn, string name) akimbo_weapon_give;

@@ -6,14 +6,12 @@ float IT_CTF_SHIELDED = 4; // set for the flag shield
 // using jetpack
 float IT_JETPACK = 16; // actual item
 float IT_FUEL_REGEN = 32; // fuel regeneration trigger
+const float IT_FUEL = 128;
 float IT_SHELLS = 256;
 float IT_NAILS = 512;
 float IT_ROCKETS = 1024;
 float IT_CELLS = 2048;
 float IT_SUPERWEAPON = 4096;
-float IT_FUEL = 128;
-float IT_STRENGTH = 4194304;
-float IT_INVINCIBLE = 16384;
 float IT_HEALTH = 32768;
 // union:
 // for items:
@@ -28,9 +26,13 @@ float IT_BLUE_FLAG_TAKEN = 131072;
 float IT_BLUE_FLAG_LOST = 262144;
 float IT_BLUE_FLAG_CARRING = 393216;
 // end
-float IT_INVISIBILITY = 524288;
-float IT_SPEED = 1048576;
+const float IT_AKIMBO = 64;
+const float IT_INVISIBILITY = 524288;
+const float IT_SPEED = 1048576;
+const float IT_STRENGTH = 4194304;
+const float IT_INVINCIBLE = 16384;
 float IT_ARMOR = 8192;
 float IT_AMMO = 8064; // IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_SUPERWEAPON | IT_FUEL;
 float IT_PICKUPMASK = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
 float IT_UNLIMITED_AMMO = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
+float IT_POWERUPS = (IT_AKIMBO | IT_FUEL | IT_INVISIBILITY | IT_INVINCIBLE | IT_STRENGTH | IT_SPEED);

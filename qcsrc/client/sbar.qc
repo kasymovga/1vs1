@@ -1495,7 +1495,8 @@ void sbar_powerup_timer_draw(float dt, string image, vector color) {
 }
 
 void(vector powerups_pos, float powerups_scale) sbar_powerups_draw {
-	float strength_time, invincibility_time, speed_time, invisibility_time, jetpack_time;
+	if not(sbar_stat_items & IT_POWERUPS) return;
+	float strength_time, invincibility_time, speed_time, invisibility_time, jetpack_time, akimbo_time;
 	sbar_powerup_pos = sbar_position(powerups_pos, '64 200 0') + '40 160 0' * powerups_scale;
 	sbar_powerup_scale = powerups_scale;
 	//draw_borderlines(1, sbar_powerup_pos, fill_size, '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
@@ -1503,6 +1504,7 @@ void(vector powerups_pos, float powerups_scale) sbar_powerups_draw {
 	invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
 	speed_time = getstatf(STAT_SPEED_FINISHED);
 	invisibility_time = getstatf(STAT_INVISIBILITY_FINISHED);
+	akimbo_time = getstatf(STAT_AKIMBO_FINISHED);
 	jetpack_time = getstati(STAT_FUEL);
 	if (strength_time)
 		sbar_powerup_timer_draw(strength_time - time, "gfx/hud/sb_str", '1 1 1');
@@ -1511,13 +1513,16 @@ void(vector powerups_pos, float powerups_scale) sbar_powerups_draw {
 		sbar_powerup_timer_draw(invincibility_time - time, "gfx/hud/sb_invinc", '1 1 1');
 
 	if (invisibility_time)
-		sbar_powerup_timer_draw(invisibility_time - time, "gfx/hud/sb_str", '1 1 0.1');
+		sbar_powerup_timer_draw(invisibility_time - time, "gfx/hud/sb_invisibility", '1 1 1');
 
 	if (speed_time)
-		sbar_powerup_timer_draw(speed_time - time, "gfx/hud/sb_invinc", '1 1 0.1');
+		sbar_powerup_timer_draw(speed_time - time, "gfx/hud/sb_speed", '1 1 1');
 
 	if (jetpack_time)
 		sbar_powerup_timer_draw(jetpack_time, "gfx/hud/sb_fuel", '1 1 1');
+
+	if (akimbo_time)
+		sbar_powerup_timer_draw(akimbo_time - time, "gfx/hud/sb_akimbo", '1 1 1');
 }
 
 void(void) sbar_pressedkeys_draw {

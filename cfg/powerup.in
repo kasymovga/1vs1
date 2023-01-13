@@ -1,4 +1,4 @@
-set g_powerup_strength_akimbo 0
+set g_powerup_akimbo_droppable 1
 set g_powerup_strength_droppable 1
 set g_powerup_shield_droppable 1
 set g_powerup_invisibility_droppable 1
@@ -6,15 +6,19 @@ set g_powerup_speed_droppable 1
 set g_powerup_invisibility_full_distance 400
 set g_balance_powerup_invisibility_time 30
 set g_balance_powerup_speed_time 30
-set g_powerup_invisibility 1
-set g_powerup_speed 1
+set g_powerup_akimbo 1 "if set to 0 the akimbo powerup will not spawn on the map"
+set g_powerup_invisibility 1 "if set to 0 the invisibility powerup will not spawn on the map"
+set g_powerup_speed 1 "if set to 0 the speed powerup will not spawn on the map"
 set g_powerup_strength 1 "if set to 0 the strength powerup will not spawn on the map"
 set g_powerup_shield 1 "if set to 0 the shield (invincibility) powerup will not spawn on the map"
 set g_powerup_addition 1 "addition for power time"
+set g_balance_powerup_akimbo_time 30
 set g_balance_powerup_invincible_takedamage 0.2
 set g_balance_powerup_invincible_time 30
+set g_balance_powerup_invsibility_time 30
 set g_balance_powerup_strength_damage 3
 set g_balance_powerup_strength_force 4
 set g_balance_powerup_strength_time 30
 set g_balance_powerup_strength_selfdamage 1.5
 set g_balance_powerup_strength_selfforce 1.5
+set g_balance_powerup_strength_time 30

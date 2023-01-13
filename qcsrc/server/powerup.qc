@@ -1,3 +1,4 @@
+float g_powerup_akimbo_droppable;
 float g_powerup_strength_droppable;
 float g_powerup_invisibility_droppable;
 float g_powerup_shield_droppable;
@@ -38,11 +39,15 @@ void(float killed) powerup_player_clear {
 
 		if (g_powerup_speed_droppable)
 			powerup_drop(speed_finished, item_spawnfunc_for("speed"));
+
+		if (g_powerup_akimbo_droppable)
+			powerup_drop(akimbo_finished, item_spawnfunc_for("akimbo"));
 	}
 	self.invincible_finished = 0;
 	self.invisibility_finished = 0;
 	self.strength_finished = 0;
 	self.speed_finished = 0;
+	self.akimbo_finished = 0;
 	powerup_player_clear_next(killed);
 }
 
@@ -52,6 +57,7 @@ void(entity e) powerup_spectator_copy {
 	self.invincible_finished = e.invincible_finished;
 	self.speed_finished = e.speed_finished;
 	self.invisibility_finished = e.invisibility_finished;
+	self.akimbo_finished = e.akimbo_finished;
 	powerup_spectator_copy_next(e);
 }
 
@@ -61,7 +67,7 @@ void() powerup_init {
 		return;
 
 	powerup_init_done = 1;
-	CVAR_CACHE(g_powerup_strength_akimbo);
+	CVAR_CACHE(g_powerup_akimbo_droppable);
 	CVAR_CACHE(g_powerup_strength_droppable);
 	CVAR_CACHE(g_powerup_invisibility_droppable);
 	CVAR_CACHE(g_powerup_shield_droppable);
@@ -163,24 +169,6 @@ void() powerup_strength_player_effects {
 	powerup_strength_player_effects_next();
 }
 
-var void() powerup_strength_akimbo_player_effects_next;
-void() powerup_strength_akimbo_player_effects {
-	if (self.items & IT_STRENGTH) {
-		powerup_countdown(self.strength_finished, "misc/poweroff.wav");
-		if (time > self.strength_finished) {
-			self.items = self.items - (self.items & IT_STRENGTH);
-			sprint(self, "^3Akimbo has worn off\n");
-		}
-	} else if (self.strength_finished) {
-		if (time < self.strength_finished) {
-			self.items = self.items | IT_STRENGTH;
-			sprint(self, "^3Akimbo: double gun, double fun\n");
-		} else if (time > self.strength_finished + 1) //1 second for fade effect on client
-			self.strength_finished = 0;
-	}
-	powerup_strength_akimbo_player_effects_next();
-}
-
 float powerup_strength_init_done;
 void() powerup_strength_init {
 	if (powerup_strength_init_done)
@@ -188,16 +176,43 @@ void() powerup_strength_init {
 
 	powerup_strength_init_done = 1;
 	powerup_init();
+	precache_sound("weapons/strength_fire.wav");
 	addstat(STAT_STRENGTH_FINISHED, STAT_FLOAT, strength_finished);
-	if (g_powerup_strength_akimbo) {
-		powerup_strength_akimbo_player_effects_next = plugin_chain_player_effects;
-		plugin_chain_player_effects = powerup_strength_akimbo_player_effects;
-		return;
-	}
 	powerup_strength_player_effects_next = plugin_chain_player_effects;
 	plugin_chain_player_effects = powerup_strength_player_effects;
 	powerup_strength_damage_mods_set_next = plugin_chain_damage_mods_set;
 	plugin_chain_damage_mods_set = powerup_strength_damage_mods_set;
+}
+
+var void() powerup_akimbo_player_effects_next;
+void() powerup_akimbo_player_effects {
+	if (self.items & IT_AKIMBO) {
+		powerup_countdown(self.akimbo_finished, "misc/poweroff.wav");
+		if (time > self.akimbo_finished) {
+			self.items = self.items - (self.items & IT_AKIMBO);
+			sprint(self, "^3Akimbo has worn off\n");
+		}
+	} else if (self.akimbo_finished) {
+		if (time < self.akimbo_finished) {
+			self.items = self.items | IT_AKIMBO;
+			sprint(self, "^3Akimbo: double gun, double fun\n");
+		} else if (time > self.akimbo_finished + 1) //1 second for fade effect on client
+			self.akimbo_finished = 0;
+	}
+	powerup_akimbo_player_effects_next();
+}
+
+float powerup_akimbo_init_done;
+void() powerup_akimbo_init {
+	if (powerup_akimbo_init_done)
+		return;
+
+	dlc_require("powerups");
+	akimbo_init_common();
+	powerup_akimbo_init_done = 1;
+	powerup_akimbo_player_effects_next = plugin_chain_player_effects;
+	plugin_chain_player_effects = powerup_akimbo_player_effects;
+	addstat(STAT_AKIMBO_FINISHED, STAT_FLOAT, akimbo_finished);
 }
 
 var float() powerup_speed_weapon_rate_factor_next;
@@ -239,6 +254,7 @@ void() powerup_speed_init {
 	if (powerup_speed_init_done)
 		return;
 
+	dlc_require("powerups");
 	powerup_speed_init_done = 1;
 	powerup_init();
 	powerup_speed_physics_max_speed_mod_next = plugin_chain_physics_max_speed_mod;
@@ -284,6 +300,7 @@ void() powerup_invisibility_init {
 	if (powerup_invisibility_init_done)
 		return;
 
+	dlc_require("powerups");
 	powerup_invisibility_init_done = 1;
 	powerup_init();
 	powerup_invisibility_player_alpha_mod_next = plugin_chain_player_alpha_mod;
