@@ -681,8 +681,14 @@ float(float secondary, float attacktime) weapon_prepareattack {
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WEAPON_REQUEST_CHECKAMMO1 + secondary)) {
-		if (akimbo_active(self) < 2)
-			weapon_switch_force(self, weapon_best(self));
+		if (akimbo_active(self) < 2) {
+			float f = weapon_best(self);
+			if (f == self.weapon) { //best failed
+				f = weaypon_cycle_get(self, self.cvar_cl_weaponpriority, -1, -1, 0);
+			}
+			if (f > 0)
+				weapon_switch_force(self, f);
+		}
 		return FALSE;
 	}
 	self.weaponentity.state = WEAPON_STATE_INUSE;
