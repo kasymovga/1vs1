@@ -91,7 +91,7 @@ void(void) client_put {
 float(entity to, float sf) client_init_send {
 	float i, t;
 	net_write_byte(MSG_ENTITY, NET_CSQC_INIT);
-	net_write_byte(MSG_ENTITY, sf);
+	net_write_short(MSG_ENTITY, sf);
 	if (sf & 1) {
 		weapon_info_send();
 	}
@@ -157,6 +157,9 @@ float(entity to, float sf) client_init_send {
 				s = strcat(s, "\n\n^8MOTD:\n^7", strreplace("\\n", "\n", cvar_string("sv_motd")));
 		}
 		net_write_string(MSG_ENTITY, s);
+	}
+	if (sf & 256) {
+		net_write_coord(MSG_ENTITY, g_balance_selfdamagepercent);
 	}
 	return TRUE;
 }

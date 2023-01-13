@@ -201,7 +201,7 @@ void(string strMessage) CSQC_Parse_Print {
 void(float ignore) main_init_read {
 	float i;
 	self.classname = "ent_client_init";
-	float sf = net_read_byte();
+	float sf = net_read_short();
 	if (sf & 1) {
 		weapon_info_read();
 	}
@@ -245,5 +245,8 @@ void(float ignore) main_init_read {
 		map_description = str_zone_ifneeded(net_read_string());
 		str_unzone_ifneeded(server_motd);
 		server_motd = str_zone_ifneeded(net_read_string());
+	}
+	if (sf & 256) {
+		sbar_armor_block_percentage = net_read_coord();
 	}
 }

@@ -1,6 +1,5 @@
 .entity dmg_indicator;
 
-float g_balance_selfdamagepercent;
 float g_friendlyfire;
 float g_friendlyfire_force;
 float g_mirrordamage;

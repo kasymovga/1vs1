@@ -288,13 +288,25 @@ float rm_hud_hg_nadecount2_update;
 float rm_hud_ammo_last;
 float rm_hud_hg_maxcd;
 float rm_hud_hg_maxcd2;
-float rm_hud_armorblockpercent = 0.5; //stub value, incorrect
 
-vector(float x, float y, float x) rm_hud_healtharmor_maxdamage { //stub implementation, incorrect
+vector(float h, float a, float armorblock) rm_hud_healtharmor_maxdamage {
+	// NOTE: we'll always choose the SMALLER value...
+	float healthdamage, armordamage, armorideal;
 	vector v;
-	v_x = x;
-	v_y = y;
-	v_z = 0;
+	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
+	armordamage = a + (h - 1); // damage we can take if we could use more armor
+	armorideal = healthdamage * armorblock;
+	v_y = armorideal;
+	if(armordamage < healthdamage)
+	{
+		v_x = armordamage;
+		v_z = 1;
+	}
+	else
+	{
+		v_x = healthdamage;
+		v_z = 0;
+	}
 	return v;
 }
 
@@ -423,7 +435,7 @@ void(void) rm_hud_draw {
 					rm_hud_game_info_finalstate = rm_hud_game_info_state;
 			}
 		}
-		vector mxdmg = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), rm_hud_armorblockpercent);
+		vector mxdmg = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), sbar_armor_block_percentage);
 		rm_hud_vhealth += (min(mxdmg_x + 1, /*sv_nicehealth*/200 * 2) - rm_hud_vhealth) * frametime * 10;
 		if (CVAR(cl_rm_hud_alt)) {/// RM hud layout
 			if (rm_skin_line_full) {
@@ -728,7 +740,7 @@ void(void) rm_hud_draw {
 	if (deathorobserver) goto skiphealthammo;
 	if (CVAR(cl_rm_hud_old) && cvar("sbar_hudselector") == 2) { // combined health and armor display
 		vector v;
-		v = rm_hud_healtharmor_maxdamage(health, armor, rm_hud_armorblockpercent);
+		v = rm_hud_healtharmor_maxdamage(health, armor, sbar_armor_block_percentage);
 		vector num_pos;
 		num_pos = sbar_bottom - '96 28 0';
 		float x = floor(v_x + 1);
