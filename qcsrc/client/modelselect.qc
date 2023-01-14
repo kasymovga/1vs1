@@ -133,12 +133,14 @@ void(string _model) modelselect_get_idle_q3animations {
 	fclose(f);
 }
 
+float modelselect_draw_last_chase;
 void(void) modelselect_draw {
 	input_event_callback = modelselect_input_event;
 	mouse_enable("");
 	sbar_hidescores = TRUE;
 	string s = modelselect_list;
-	if (modelselect_list_pos_prev != modelselect_list_pos) {
+	if (modelselect_list_pos_prev != modelselect_list_pos || CVAR(chase_active) != modelselect_draw_last_chase) {
+		modelselect_draw_last_chase = CVAR(chase_active);
 		if (modelselect_list_pos >= modelselect_list_len)
 			modelselect_list_pos = 0;
 		else if (modelselect_list_pos < 0)
@@ -155,7 +157,12 @@ void(void) modelselect_draw {
 		precache_model(_model);
 		setmodel(modelselect_current, _model);
 		float fov_factor = (view_fov / 90);
-		modelselect_current.scale = 0.8 * fov_factor;
+		if (CVAR(chase_active)) {
+			modelselect_current.scale = 0.4 * fov_factor;
+			view_fixed_angles_x = 0;
+		} else
+			modelselect_current.scale = 0.8 * fov_factor;
+
 		string s = strcat(substring(_model, 0, strlen(_model) - 4), "_torso", substring(_model, -4, 4));
 		if (file_exists(s)) {
 			precache_model(s);
@@ -189,7 +196,12 @@ void(void) modelselect_draw {
 		}
 		modelselect_list_pos_prev = modelselect_list_pos;
 	}
-	setorigin(modelselect_current, '100 0 0');
+	if (CVAR(chase_active)) {
+		makevectors((view_fixangle ? view_fixed_angles : view_angles));
+		setorigin(modelselect_current, view_camera_origin + v_forward * 50);
+	} else
+		setorigin(modelselect_current, '100 0 0');
+
 	modelselect_current.angles_y = view_angles_y + (time * 90);
 	vector c = '1 0 0' * (CVAR(vid_conwidth) / 2);
 	drawfont = sbar_bigfont;
@@ -274,6 +286,11 @@ void(string s, string curmodel, float curskin) modelselect_search_by_path {
 }
 
 void(void) modelselect_model_draw {
+	if (CVAR(chase_active))
+		self.renderflags = 0;
+	else
+		self.renderflags = RF_VIEWMODEL | RF_DEPTHHACK;
+
 	R_AddEntity(self);
 }
 
