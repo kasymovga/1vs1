@@ -344,30 +344,12 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					bprint ("^1",a,"^1 has ",ftos(attacker.killcount)," frags in a row\n");
 				}
 				float fragtime = time;
-				if (attacker.killcount == 3) {
-					bprint (a,"^7 made a ^1TRIPLE FRAG\n");
-					announce(attacker, "announcer/male/03kills.wav", "^1Triple Kill");
-				} else if (attacker.killcount == 5) {
-					bprint (a,"^7 unleashes ^1RAGE\n");
-					announce(attacker, "announcer/male/05kills.wav", "^1Rage");
-				} else if (attacker.killcount == 10) {
-					bprint (a,"^7 starts the ^1MASSACRE!\n");
-					announce(attacker, "announcer/male/10kills.wav", "^1MASSACRE");
-				} else if (attacker.killcount == 15) {
-					bprint (a,"^7 executes ^1MAYHEM!\n");
-					announce(attacker, "announcer/male/15kills.wav", "^1MAYHEM!");
-				} else if (attacker.killcount == 20) {
-					bprint (a,"^7 is a ^1BERSERKER!\n");
-					announce(attacker, "announcer/male/20kills.wav", "^1BERSERKER!");
-				} else if (attacker.killcount == 25) {
-					bprint (a,"^7 inflicts ^1CARNAGE!\n");
-					announce(attacker, "announcer/male/25kills.wav", "^1CARNAGE!");
-				} else if (attacker.killcount == 30) {
-					bprint (a,"^7 unleashes ^1ARMAGEDDON!\n");
-					announce(attacker, "announcer/male/30kills.wav", "^1ARMAGEDDON!!!");
+				string announce_sound;
+				if ((announce_sound = cvar_string(strcat("sv_player_killcount_", ftos(attacker.killcount), "_announce_sound"))) != "") {
+					announce(attacker, announce_sound, cvar_string(strcat("sv_player_killcount_", ftos(attacker.killcount), "_announce_message")));
 				} else if (time - attacker.lastfrag < sv_announcer_extra_doublekill_interval && attacker.lastfrag && sv_announcer_extra_doublekill != "") {
-						announce(attacker, sv_announcer_extra_doublekill, "^3Excellent");
-						fragtime = 0;
+					announce(attacker, sv_announcer_extra_doublekill, "^3Excellent");
+					fragtime = 0;
 				}
 				attacker.taunt_soundtime = time + 1;
 				attacker.lastfrag = fragtime;
