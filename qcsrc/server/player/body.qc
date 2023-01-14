@@ -18,6 +18,7 @@ float g_player_forceskin_red;
 float g_player_forceskin_blue;
 float g_player_forceskin_yellow;
 float g_player_forceskin_pink;
+float g_player_brightness;
 
 float(void) player_body_customize;
 float(void) player_body_torso_customize;
@@ -882,11 +883,16 @@ void() player_body_model_setup {
 	}
 	if (self.body.colormap != self.colormap) {
 		self.body.colormap = self.colormap;
-		if (team_mode &&  self.body.usecolormod)
-			self.body.colormod = team_colormod(self.team) * (g_player_brightness ? g_player_brightness : 1);
-		else
+		if (team_mode &&  self.body.usecolormod) {
+			self.body.colormod = team_colormod(self.team);
+			if (self.body.colormod == '0 0 0')
+				self.body.colormod = '1 1 1';
+
+			self.body.colormod *= (g_player_brightness ? g_player_brightness : 1);
+		} else
 			self.body.colormod = '1 1 1' * g_player_brightness;
 
+		if (self.body.colormod == '1 1 1') self.body.colormod = '0 0 0';
 		if (self.body.weaponentity) {
 			self.body.weaponentity.colormap = self.body.colormap;
 			self.body.weaponentity.colormod = self.body.colormod;
@@ -1035,6 +1041,7 @@ void(void) player_body_init {
 	CVAR_CACHE(g_player_forceskin_blue);
 	CVAR_CACHE(g_player_forceskin_yellow);
 	CVAR_CACHE(g_player_forceskin_pink);
+	CVAR_CACHE(g_player_brightness);
 	if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
 		str_unzone_ifneeded(g_player_forcemodel_blue);
 		g_player_forcemodel_blue = str_zone_ifneeded(g_player_forcemodel);

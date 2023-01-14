@@ -39,7 +39,6 @@ float g_balance_pause_health_rot_spawn;
 float g_forced_respawn;
 float g_teamdamage_resetspeed;
 float g_reset_on_join;
-float g_player_brightness;
 float g_spawnshieldtime;
 float g_spawnfrags;
 float g_spawnsound;
@@ -1281,7 +1280,6 @@ void() player_init {
 	CVAR_CACHE(g_forced_respawn);
 	CVAR_CACHE(g_teamdamage_resetspeed);
 	CVAR_CACHE(g_reset_on_join);
-	CVAR_CACHE(g_player_brightness);
 	CVAR_CACHE(g_player_pushfactor);
 	CVAR_CACHE(g_player_body_pitch_maxangle);
 	CVAR_CACHE(g_player_team_collisions);
