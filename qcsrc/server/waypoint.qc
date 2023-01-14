@@ -311,6 +311,7 @@ void(entity e) waypoint_remove {
 	waypoint_schedulerelink(e.wp31);
 	// and now remove the spawnfunc_waypoint
 	remove(e);
+	waypoint_count--;
 }
 
 // empties the map of waypoints
@@ -322,6 +323,7 @@ void(void) waypoint_removeall {
 		remove(head);
 		head = next;
 	}
+	waypoint_count = 0;
 }
 
 // tell all waypoints to relink
@@ -353,9 +355,10 @@ float(void) waypoint_load_links {
 	vector wp_to_pos, wp_from_pos;
 	filename = waypoint_link_cache_path(mapname);
 	file = fopen(filename, FILE_READ);
-	if (file < 0)
+	if (file < 0) {
+		print("Cannot open file: ", filename, "\n");
 		return FALSE;
-
+	}
 	print("Loading waypoint links from ", filename, "\n");
 	while (1) {
 		s = fgets(file);
@@ -923,5 +926,6 @@ void(void) waypoint_init {
 		waypoint_show(w);
 	}
 	precache_model("models/runematch/rune.mdl");
-	entity_initialize(self, waypoint_init_delayed, INITPRIO_LAST);
+	if not(waypoint_count)
+		entity_initialize(self, waypoint_init_delayed, INITPRIO_LAST);
 }
