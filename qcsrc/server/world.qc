@@ -97,7 +97,7 @@ void(void) world_static_init {
 	hat_init();
 	Radio_Init();
 	badass_init();
-	damageindicator_init();
+	damage_indicator_init();
 	monster_monsters_init();
 	warpzone_init();
 	weapon_selectable_init();

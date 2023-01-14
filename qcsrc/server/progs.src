@@ -80,7 +80,7 @@ pinata.qh
 infomessages.qh
 weapon/campingrifle.qh
 weapon/rocketlauncher.qh
-damageindicator.qh
+damage/indicator.qh
 db.qh
 physics.qh
 minstagib.qh
@@ -99,7 +99,7 @@ menu.qh
 game/menu.qh
 walkietalkie.qh
 hat.qh
-damage_score.qh
+damage/score.qh
 report.qh
 cmd.qh
 stdproc.qh
@@ -350,13 +350,13 @@ minstagib.qc
 radio.qc
 badass.qc
 game/status.qc
-damageindicator.qc
+damage/indicator.qc
 warpzone.qc
 weapon/two_weapons.qc
 noteline.qc
 warmup.qc
 udp_chat.qc
-damage_score.qc
+damage/score.qc
 ice.qc
 single.qc
 coop.qc
