@@ -8,6 +8,16 @@ string g_player_forcemodel_red;
 string g_player_forcemodel_blue;
 string g_player_forcemodel_yellow;
 string g_player_forcemodel_pink;
+float g_player_forcecolor;
+float g_player_forcecolor_red;
+float g_player_forcecolor_blue;
+float g_player_forcecolor_yellow;
+float g_player_forcecolor_pink;
+float g_player_forceskin;
+float g_player_forceskin_red;
+float g_player_forceskin_blue;
+float g_player_forceskin_yellow;
+float g_player_forceskin_pink;
 
 float(void) player_body_customize;
 float(void) player_body_torso_customize;
