@@ -1315,13 +1315,11 @@ void() player_init {
 
 #define EXTRA_ANNOUNCER(x) do { str_unzone_ifneeded(sv_announcer_extra_##x); sv_announcer_extra_##x = cvar_string_zone_ifneeded("sv_announcer_extra_"#x); if (sv_announcer_extra_##x != "") { precache_sound(sv_announcer_extra_##x); print("Extra announcer sound "#x" ", sv_announcer_extra_##x, "\n");} } while (0)
 	//Extra sounds
-	EXTRA_ANNOUNCER(meleefrag);
 	EXTRA_ANNOUNCER(pushfrag);
 	CVAR_CACHE(sv_announcer_extra_doublekill_interval);
 	if (sv_announcer_extra_doublekill_interval) {
 		EXTRA_ANNOUNCER(doublekill);
 	}
-	EXTRA_ANNOUNCER(telefrag);
 	EXTRA_ANNOUNCER(firstblood);
 #undef EXTRA_ANNOUNCER
 	CVAR_CACHE_STR(sv_sound_frag);
