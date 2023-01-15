@@ -19,10 +19,14 @@ void(void) progressbar_draw {
 			f = e.iorigin1_x;
 
 		f = bound(0, f, 100);
-		e.iorigin1_z = f;
+		if (e.iorigin1_x > e.iorigin2_x)
+			e.iorigin1_z = max(f, e.iorigin1_z);
+		else
+			e.iorigin1_z = min(f, e.iorigin1_z);
+
 		//float ft = bound(0.001, frametime * 200, 0.999);
 		//e.iorigin1_z = e.iorigin1_z * (1 - ft) + f * ft;
-		//f = e.iorigin1_z;
+		f = e.iorigin1_z;
 		pos_x = left;
 		draw_borderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		fillrect_x = 200 * (f / 100);
@@ -104,14 +108,7 @@ void(float bIsNewEntity) progressbar_read {
 		self.iorigin2_x = self.iorigin1_x;
 		self.iorigin2_y = self.iorigin1_y;
 	}
-	float p = net_read_byte();
-	if (p > self.iorigin2_x) {
-		if (p < self.iorigin1_z)
-			p = self.iorigin1_z;
-	} else if (p > self.iorigin1_z)
-		p = self.iorigin1_z;
-
-	self.iorigin1_x = p;
+	self.iorigin1_x = net_read_byte();
 	self.iorigin1_y = time;
 	if (f & 2) {
 		str_unzone_ifneeded(self.netname);
