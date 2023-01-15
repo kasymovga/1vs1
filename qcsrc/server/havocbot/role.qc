@@ -133,7 +133,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 				trace_line(e.origin, e.origin + '0 0 -1500', TRUE, world);
 				t = pointcontents(trace_endpos + '0 0 1');
 				if (t != CONTENT_SOLID)
-				if (t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)
+				if ((t == CONTENT_WATER) || (t == CONTENT_SLIME) || (t == CONTENT_LAVA))
 					continue;
 
 				if (trigger_tracebox_hits_hurt(e.origin, e.mins, e.maxs, trace_endpos))
