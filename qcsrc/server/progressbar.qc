@@ -31,3 +31,14 @@ void(entity pb, float value) progressbar_set {
 	pb.cnt = bound(0, value, 1);
 	pb.SendFlags = 1;
 }
+
+void(void) progressbar_think_remove {
+	self.think = stdproc_remove;
+	self.nextthink = time;
+}
+
+void(entity pb) progressbar_remove { //delayed remove, for sending all data before remove
+	pb.SendFlags = 1;
+	pb.think = progressbar_think_remove;
+	pb.nextthink = time;
+}

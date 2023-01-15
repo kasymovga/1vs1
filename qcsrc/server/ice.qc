@@ -23,10 +23,10 @@ void(void) ice_remove {
 		remove(self.ice);
 	}
 	if (self.unfroze_pb)
-		remove(self.unfroze_pb);
+		progressbar_remove(self.unfroze_pb);
 
 	if (self.ice.unfroze_pb)
-		remove(self.ice.unfroze_pb);
+		progressbar_remove(self.ice.unfroze_pb);
 
 	self.unfroze_pb = world;
 	self.ice = world;
@@ -170,7 +170,7 @@ void(void) ice_think {
 				self.owner.unfroze_pb = progressbar_create("Reviving", self.owner);
 		} else {
 			if (self.owner.unfroze_pb)
-				remove(self.owner.unfroze_pb);
+				progressbar_remove(self.owner.unfroze_pb);
 
 			self.owner.unfroze_pb = world;
 			self.unfroze_pb = world;

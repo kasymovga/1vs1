@@ -203,7 +203,7 @@ void nadget_Sentry_Emitter_Remove(entity emitter) {
 
 void nadget_Sentry_Interrupt_Capture(void) {
 	if(self.hg_sentry_capture_pb) {
-        remove(self.hg_sentry_capture_pb);
+		progressbar_remove(self.hg_sentry_capture_pb);
 		self.hg_sentry_capture_pb = world;
 	}
     self.hg_sentry_capture_player = world;

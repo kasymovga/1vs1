@@ -1,2 +1,3 @@
 entity(string name, entity plr) progressbar_create;
 void(entity pb, float value) progressbar_set;
+void(entity pb) progressbar_remove;

@@ -98,7 +98,7 @@ void(void) dom_controlpoint_animate {
 
 void(void) dom_controlpoint_capture_stop {
 	remove(self.killindicator);
-	remove(self.killindicator.killindicator);
+	progressbar_remove(self.killindicator.killindicator);
 	self.killindicator = world;
 	self.state = 0;
 }

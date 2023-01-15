@@ -49,7 +49,7 @@ void(float byteam) conquest_cp_capture {
 
 void(void) conquest_remove_progress_bar {
 	if (self.capture_progress_bar) {
-		remove(self.capture_progress_bar);
+		progressbar_remove(self.capture_progress_bar);
 		self.capture_progress_bar = world;
 	}
 }
