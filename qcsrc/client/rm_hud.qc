@@ -293,9 +293,15 @@ vector(float h, float a, float armorblock) rm_hud_healtharmor_maxdamage {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
 	vector v;
-	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
-	armordamage = a + (h - 1); // damage we can take if we could use more armor
-	armorideal = healthdamage * armorblock;
+	if (armorblock < 1) {
+		healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
+		armordamage = a + (h - 1); // damage we can take if we could use more armor
+		armorideal = healthdamage * armorblock;
+	} else {
+		healthdamage = a + h;
+		armordamage = a + h;
+		armorideal = healthdamage;
+	}
 	v_y = armorideal;
 	if (armordamage < healthdamage) {
 		v_x = armordamage;
