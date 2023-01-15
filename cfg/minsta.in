@@ -4,6 +4,7 @@ set minsta_g_grappling_hook 1
 set minsta_g_balance_grapplehook_speed_fly 5000
 set minsta_g_balance_minstanex_refire 0.6
 set minsta_g_balance_selfdamagepercent 0
+set minsta_g_balance_armor_blockpercent 1
 set minsta_g_score_damage 0
 set minsta_g_shootfromeye 1
 set minsta_duel_inherit minsta
