@@ -534,7 +534,7 @@ void(float argc) sbar_field_set {
 		}
 	}
 	sbar_num_fields = 0;
-	drawfont = sbar_font;
+	drawfont = sbar_font; //for stringwidth
 	digit = stringwidth("0123456789", FALSE) / 10;
 	for (i = 0; i < argc - 1; ++i) {
 		float nocomplain;
