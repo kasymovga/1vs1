@@ -16,6 +16,7 @@ void(void) turret_machinegun_attack {
 void(void) spawnfunc_turret_machinegun {
 	precache_model("models/turrets/machinegun.md3");
 	precache_model("models/turrets/base.md3");
+	weapon_flash_precache(WEAPON_FLASH_UZI);
 	precache_sound("weapons/uzi_fire.wav");
 	if (self.netname == "")
 		self.netname  = "Machinegun Turret";
