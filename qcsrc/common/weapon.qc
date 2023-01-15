@@ -36,9 +36,11 @@ entity(float id,
 	e.impulse = i;
 	_weapon_info[id - 1] = e;
 	if (id > WEAPON_LAST) {
+		e.weapons = 0;
 		e.weapons_extra = pow(2, id - 1 - WEAPON_LAST);
 	} else {
 		e.weapons = pow(2, id - 1);
+		e.weapons_extra = 0;
 	}
 	return e;
 }
