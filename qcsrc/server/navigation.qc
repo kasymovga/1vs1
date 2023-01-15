@@ -125,8 +125,14 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 	entity waylist, w, best;
 	float dist, bestdist;
 	vector v, org, pm1, pm2;
-	pm1 = ent.origin + ent.mins;
-	pm2 = ent.origin + ent.maxs;
+	if (ent.flags & FL_ONGROUND) {
+		pm1 = ent.origin + ent.mins;
+		pm2 = ent.origin + ent.maxs;
+	} else {
+		trace_box(ent.origin, ent.mins, ent.maxs, ent.origin + '0 0 -1000', TRACE_MOVE_NOMONSTERS, ent);
+		pm1 = trace_endpos + ent.mins;
+		pm2 = trace_endpos + ent.maxs;
+	}
 	waylist = findchain(classname, "waypoint");
 	// do two scans, because box test is cheaper
 	w = waylist;
@@ -137,14 +143,10 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 				return w;
 		w = w.chain;
 	}
-	org = ent.origin + 0.5 * (ent.mins + ent.maxs);
+	org = (pm1 + pm2) / 2;
 	vector _mins = self.mins;
 	vector _maxs = self.maxs;
-	org_z = ent.origin_z + ent.mins_z - _mins_z; // player height
-	// TODO possibly make other code have the same support for bboxes
-	if (ent.tag_entity)
-		org = org + ent.tag_entity.origin;
-
+	org_z = org_z + ent.mins_z - _mins_z; // player height
 	best = world;
 	bestdist = 1050;
 	// box check failed, try walk
@@ -496,7 +498,7 @@ float(entity e, vector startposition) navigation_routetogoal {
 	// if it can reach the goal there is nothing more to do
 	vector v1;
 	vector v2;
-	if (e.movetype == MOVETYPE_WALK) {
+	if (e.movetype == MOVETYPE_WALK || e.movetype == MOVETYPE_QCWALK) {
 		trace_box(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', TRACE_MOVE_NORMAL, e);
 		v1 = trace_endpos + e.mins;
 		v2 = trace_endpos + e.maxs;
