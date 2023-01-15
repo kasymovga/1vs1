@@ -1,4 +1,3 @@
-float bot_navigation_ignoreplayers;
 float waypoint_count;
 float waypoint_generated_count;
 float waypoint_schedulerelink_count;
@@ -157,7 +156,7 @@ void(void) waypoint_think {
 	entity e;
 	vector sv, sm1, sm2, ev, em1, em2, dv;
 	stepheightvec = sv_stepheight * '0 0 1';
-	bot_navigation_movemode = (bot_navigation_ignoreplayers ? TRACE_MOVE_NOMONSTERS : TRACE_MOVE_NORMAL);
+	bot_navigation_movemode = TRACE_MOVE_NOMONSTERS;
 	sm1 = self.origin + self.mins;
 	sm2 = self.origin + self.maxs;
 	for (e = world; (e = find(e, classname, "waypoint")); ) {
@@ -918,7 +917,6 @@ void(void) waypoint_init_delayed {
 }
 
 void(void) waypoint_init {
-	CVAR_CACHE(bot_navigation_ignoreplayers);
 	CVAR_CACHE(g_waypointeditor);
 	CVAR_CACHE(g_waypoints_use_botclip);
 	entity w = world;

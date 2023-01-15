@@ -65,4 +65,3 @@ set bot_ai_navigation_jetpack_mindistance 400 "Bots will try fly to objects loca
 set bot_ignore_bots 0	"When set, bots don't shoot at other bots"
 set bot_join_empty 0	"When set, bots also play if no player has joined the server"
 set bot_vs_human 0	"Bots and humans play in different teams when set. positive values to make an all-bot blue team, set to negative values to make an all-bot red team, the absolute value is the ratio bots vs humans (1 for equal count)"
-set bot_navigation_ignoreplayers 0 // FIXME remove this once the issue is solved
