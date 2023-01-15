@@ -159,7 +159,7 @@ float(entity to, float sf) client_init_send {
 		net_write_string(MSG_ENTITY, s);
 	}
 	if (sf & 256) {
-		net_write_coord(MSG_ENTITY, g_balance_selfdamagepercent);
+		net_write_coord(MSG_ENTITY, g_balance_armor_blockpercent);
 		net_write_coord(MSG_ENTITY, player_start_health + g_balance_armor_rotstable);
 	}
 	return TRUE;
