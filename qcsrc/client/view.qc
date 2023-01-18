@@ -290,11 +290,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 				wcross_alpha = CVAR(crosshair_color_alpha) * (1-CVAR(_menu_alpha));
 				wcross_sizefloat = CVAR(crosshair_size) * (1-CVAR(_menu_alpha));
 				if (CVAR(crosshair_per_weapon)) {
-					if (weapon_current > WEAPON_LAST)
-						e = weapon_info(WEAPON_CAMPINGRIFLE);
-					else
-						e = weapon_info(weapon_current);
-
+					e = weapon_info(weapon_current);
 					if (e && e.netname != "") {
 						wcross_wep = e.netname;
 						wcross_style = cvar_string(strcat("crosshair_", wcross_wep));

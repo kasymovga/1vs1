@@ -34,6 +34,18 @@ void(void) weapon_info_read {
 		at = net_read_coord();
 		n = str_zone_ifneeded(net_read_string());
 		e = weapon_register_common(wid, imp, n, n);
+		if not(cvar(strcat("crosshair_", e.netname, "_size"))) {
+			if not(file_exists_image(strcat("gfx/crosshair", e.netname)))
+				registercvar(strcat("crosshair_", e.netname), "campingrifle");
+			else
+				registercvar(strcat("crosshair_", e.netname), e.netname);
+
+			registercvar(strcat("crosshair_", e.netname, "_color_red"), "1");
+			registercvar(strcat("crosshair_", e.netname, "_color_green"), "1");
+			registercvar(strcat("crosshair_", e.netname, "_color_blue"), "1");
+			registercvar(strcat("crosshair_", e.netname, "_color_alpha"), "1");
+			registercvar(strcat("crosshair_", e.netname, "_size"), "0.5");
+		}
 		e.items = at;
 	}
 	weapon_update_icons();
