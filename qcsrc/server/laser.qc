@@ -1,4 +1,6 @@
 float LASER_ABILITY;
+float LASER_ABILITY_OFFHAND;
+float LASER_ABILITY_ANY;
 float g_laser;
 float g_laser_refire;
 float g_laser_animtime;
@@ -23,11 +25,12 @@ entity(vector _shotdir, float _speed, float _dmg, float _dmg_edge, float _dmg_ra
 
 var float(void) laser_weapon_frame_handle_next;
 float(void) laser_weapon_frame_handle {
-	if (self.BUTTON_ATCK2 && ((self.abilities & LASER_ABILITY) || g_laser)) {
+	if (self.BUTTON_ATCK2 && ((self.abilities & LASER_ABILITY_ANY) || g_laser)) {
 		float w = self.weapon;
 		float w2 = self.switchweapon;
 		float ws = self.weaponentity.state;
-		if (g_laser_offhand) {
+		float offhand = g_laser_offhand || (self.abilities & LASER_ABILITY_OFFHAND);
+		if (offhand) {
 			self.weapon = WEAPON_LASER;
 			self.switchweapon = WEAPON_LASER;
 		}
@@ -35,11 +38,11 @@ float(void) laser_weapon_frame_handle {
 			weapon_setup_shotdir(self, v_forward, 3, "weapons/lasergun_fire.wav", 1);
 			pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 			laser_projectile(weapon_shotdir, g_laser_speed, g_laser_damage, g_laser_damage_edge, g_laser_radius, g_laser_force, 0, TRUE, 10);
-			if not(g_laser_offhand) {
+			if not(offhand) {
 				weapon_thinkf(WEAPON_FRAME_FIRE1, g_laser_animtime, weapon_ready);
 			}
 		}
-		if (g_laser_offhand) {
+		if (offhand) {
 			self.weapon = w;
 			self.switchweapon = w2;
 			self.weaponentity.state = ws;
@@ -74,6 +77,8 @@ void(entity e, string args, float set) laser_ability_init {
 void(void) laser_init {
 	if not(cvar("g_laser")) {
 		LASER_ABILITY = ability_register("laser", laser_ability_init);
+		LASER_ABILITY_OFFHAND = ability_register("laser_offhand", laser_ability_init);
+		LASER_ABILITY_ANY = (LASER_ABILITY | LASER_ABILITY_OFFHAND);
 		return;
 	}
 	g_laser = TRUE;
