@@ -1077,9 +1077,13 @@ void(entity w, entity p, float a) weapon_attach_to_player {
 		if (a)
 			setorigin(w, '0 20 0');
 	} else if (a == 2 && p.akimbo_use_left_hand != '0 0 0') {
-		if (a)
-			setattachment(w, b, "bip01 l hand");
-
+		if (a) {
+			float t;
+			if ((t = gettagindex(b, "bip01 l hand")))
+				setattachment(w, b, "bip01 l hand");
+			else if ((t = gettagindex(b, "hand_L")))
+				setattachment(w, b, "hand_L");
+		}
 		w.angles = p.akimbo_use_left_hand;
 	} else {
 		setattachment(w, b, "bip01 r hand");
