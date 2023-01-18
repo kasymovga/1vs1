@@ -203,7 +203,7 @@ var void() minstagib_entity_spawn_pre_NextLink;
 void() minstagib_entity_spawn_pre {
 	if (self.classname == "item_health_mega")
 		self.classname = "minstagib_extra_lives";
-	else if (self.classname == "item_strength")
+	else if (self.classname == "item_strength" || self.classname == "item_akimbo")
 		self.classname = "item_invisibility";
 	else if (self.classname == "item_invincible")
 		self.classname = "item_speed";
