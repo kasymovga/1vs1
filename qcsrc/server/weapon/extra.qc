@@ -355,10 +355,13 @@ float(float req) weapon_extra_think {
 		}
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
-		if (weapon_deathtype & HITTYPE_SECONDARY)
+		if (weapon_deathtype & HITTYPE_SECONDARY) {
 			weapon_deathtypestring = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_secondary_message"));
-		else
+			weapon_fragprefix = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_secondary_fragprefix"));
+		} else {
 			weapon_deathtypestring = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_primary_message"));
+			weapon_fragprefix = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_primary_fragprefix"));
+		}
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		mc = weapon_extra_magazinecapacity[extra_num];
 		at = weapon_extra_ammo_type[extra_num];

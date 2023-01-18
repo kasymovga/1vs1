@@ -350,6 +350,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You ", weapon_fragprefix, "^4fragged ^7", s));
 			}
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were ", weapon_fragprefix, "^1fragged by ^7", a));
+			weapon_fragprefix = "";
 		}
 	} else {
 		if (clienttype(targ) == CLIENTTYPE_BOT)

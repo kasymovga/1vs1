@@ -135,4 +135,5 @@ set mixed_arts_g_weapon_extra_3_secondary_ammo 1 //for ammo check
 set mixed_arts_g_weapon_extra_3_primary_refire 0.6
 set mixed_arts_g_weapon_extra_3_primary_animtime 0.6
 set mixed_arts_g_weapon_extra_3_primary_sound weapons/nexfire.wav
-set mixed_arts_g_weapon_extra_3_primary_message "sniped by"
+set mixed_arts_g_weapon_extra_3_primary_message "has been vaporized by"
+set mixed_arts_g_weapon_extra_3_primary_fragprefix "^5INSTA"
