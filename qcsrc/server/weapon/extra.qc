@@ -91,6 +91,12 @@ void(void) weapon_extra_projectile_touch {
 	projectile_touch_explode();
 }
 
+float weapon_extra_draw_beam_particles_effect;
+void(vector start, vector end, vector to) weapon_extra_draw_beam_particles {
+	weapon_nex_whoosh(start, end);
+	trailparticles(world, weapon_extra_draw_beam_particles_effect, start, end);
+}
+
 void(float num, float secondary, float t) weapon_extra_attack {
 	float d, f, e, r, g, sp, m, hs, spr, hittype, c, it, fl;
 	string s;
@@ -155,8 +161,8 @@ void(float num, float secondary, float t) weapon_extra_attack {
 			damage_headshotbonus = hs;
 			bullet_railgun(weapon_shotorg, weapon_shotorg + (weapon_shotdir + randomvec() * spr) * WORLD_MAX_SHOT_DISTANCE, d, f, 0, 0, 0, 0, hittype);
 			damage_headshotbonus = 0;
-			weapon_minstanex_draw_beam_particless_effect = e;
-			warpzone_draw_effect_triangle(weapon_shotorg, weapon_shotorg_visual,  warpzone_untransform_origin(warpzone_trace_transform, trace_endpos), weapon_minstanex_draw_beam_particless);
+			weapon_extra_draw_beam_particles_effect = e;
+			warpzone_draw_effect_triangle(weapon_shotorg, weapon_shotorg_visual,  warpzone_untransform_origin(warpzone_trace_transform, trace_endpos), weapon_extra_draw_beam_particles);
 			// flash and burn the wall
 			if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
 				effect_impact(trace_endpos, 10000, 0, 0, 800 * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), it, self);

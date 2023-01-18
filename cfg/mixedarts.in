@@ -6,7 +6,7 @@ set mixed_arts_g_ability_class0_value "health=100 armor=100 physics=dodging,wall
 set mixed_arts_g_ability_class1_name "Weapon master"
 set mixed_arts_g_ability_class1_value "health=100 armor=75 weapons=laser,shotgun,rocketlauncher,grenadelauncher,nex,uzi,crylink,electro,hagar melee"
 set mixed_arts_g_ability_class2_name "Minstagiber"
-set mixed_arts_g_ability_class2_value "health=100 armor=50 weapons=minstanex hook melee"
+set mixed_arts_g_ability_class2_value "health=100 armor=50 weapons=minstanex laser_offhand hook melee"
 set mixed_arts_g_ability_class3_name "Double-rocket"
 set mixed_arts_g_ability_class3_value "health=75 armor=0 weapons=rocketlauncher akimbo=rocketlauncher melee"
 set mixed_arts_g_ability_class4_name "Double-laser"
@@ -21,9 +21,6 @@ set mixed_arts_g_use_ammunition 0
 set mixed_arts_g_pickup_items 1
 set mixed_arts_g_pickup_weapons 0
 set mixed_arts_g_pickup_nodrop 0
-set mixed_arts_g_balance_minstanex_damage 80
-set mixed_arts_g_balance_minstanex_refire 0.6
-set mixed_arts_g_balance_minstanex_laser_damage 0
 set mixed_arts_g_pickup_armormedium 25
 set mixed_arts_g_pickup_armorbig 25
 set mixed_arts_g_pickup_armorlarge 25
@@ -124,3 +121,18 @@ set mixed_arts_g_weapon_extra_2_primary_animtime 0.65
 set mixed_arts_g_weapon_extra_2_primary_sound weapons/shotgun_fire.wav
 set mixed_arts_g_weapon_extra_2_primary_message "was gunned by"
 set mixed_arts_g_weapon_extra_2_reloadtime 2
+set mixed_arts_g_weapon_extra_3_model minstanex
+set mixed_arts_g_weapon_extra_3_impulse 7
+set mixed_arts_g_weapon_extra_3_ammo_type cells
+set mixed_arts_g_weapon_extra_3_primary_muzzle nex_muzzleflash
+set mixed_arts_g_weapon_extra_3_primary_type nex
+set mixed_arts_g_weapon_extra_3_primary_impact_type nex
+set mixed_arts_g_weapon_extra_3_primary_effect nex_beam
+set mixed_arts_g_weapon_extra_3_primary_damage 80
+set mixed_arts_g_weapon_extra_3_primary_force 600
+set mixed_arts_g_weapon_extra_3_primary_ammo 1
+set mixed_arts_g_weapon_extra_3_secondary_ammo 1 //for ammo check
+set mixed_arts_g_weapon_extra_3_primary_refire 0.6
+set mixed_arts_g_weapon_extra_3_primary_animtime 0.6
+set mixed_arts_g_weapon_extra_3_primary_sound weapons/nexfire.wav
+set mixed_arts_g_weapon_extra_3_primary_message "sniped by"

@@ -16,9 +16,15 @@ void(void) weapon_update_icons {
 		str_unzone_ifneeded(e.icon);
 		s = strcat("gfx/hud/inv_weapon_", e.netname);
 		if not(file_exists_image(s)) {
-			s = strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1));
-			if not(file_exists_image(s))
-				s = "gfx/hud/num_minus";
+			if (e.netname == "minstanex")
+				s = "gfx/hud/inv_weapon10";
+			else if (e.netname == "campingrifle")
+				s = "gfx/hud/inv_weapon14";
+			else {
+				s = strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1));
+				if not(file_exists_image(s))
+					s = "gfx/hud/num_minus";
+			}
 		}
 		e.icon = strzone(s);
 	}
