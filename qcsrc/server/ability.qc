@@ -109,6 +109,7 @@ void(float s) ability_class_select {
 void(entity e) ability_class_menu {
 	menu_remove_for(e, "ability");
 	entity m = menu_prepare(e, "ability", cvar_string("g_ability_message"), 0, ability_class_select);
+	menu_set_flags(m, MENU_FLAG_ESCAPEABLE | MENU_FLAG_HIDE_AFTER_SELECT);
 	string s;
 	float ac = e.ability_class - 1;
 	for (float i = 0; i < ability_classes_count; i++) {

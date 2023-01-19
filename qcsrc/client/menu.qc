@@ -97,6 +97,9 @@ void(void) menu_draw {
 	if (sbar_showscores || sbar_showaccuracy)
 		return;
 
+	if (self.flags & MENU_FLAG_HIDE_AFTER_SELECT) {
+		if (menu_choiced >= 0) return;
+	}
 	float i;
 	string menu_string;
 	drawfont = sbar_bigfont;
@@ -182,7 +185,7 @@ float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 		return FALSE;
 
 	if (nPrimary == K_ESCAPE)
-	if (menu.flags & 16)
+	if (menu.flags & MENU_FLAG_ESCAPEABLE)
 		choice = menu.cnt;
 
 	if ('0' <= nPrimary)
