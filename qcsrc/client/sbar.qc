@@ -178,6 +178,7 @@ void(vector weapons_pos, float weapons_scale) sbar_weapons_draw {
 	entity e;
 	float a;
 	float nr;
+	float weapon_switch = getstati(STAT_SWITCHWEAPON);
 	WEAPON_INFO_FOR_EACH(e) {
 		if not(stat_weapons & e.weapons)
 		if not(stat_weapons_extra & e.weapons_extra)
@@ -191,7 +192,7 @@ void(vector weapons_pos, float weapons_scale) sbar_weapons_draw {
 		else
 			idx = imp - 1;
 
-		active = (nr == weapon_current);
+		active = (nr == weapon_switch);
 		value = (active) ? 2 : 0.75;
 		sbar_color_x = sbar_color_y = sbar_color_z = value;
 		sp = sbar_weaponspace[idx];
@@ -1908,7 +1909,6 @@ void(void) sbar_draw {
 		sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_health_scale), _health, 24 * CVAR(sbar_health_scale), sbar_alpha_fg);
 		// weapon icons
 		sbar_weapons_draw(CVAR(sbar_weapons_position), CVAR(sbar_weapons_scale));
-
 		// ammo
 		float a; // i will be the ammo type (already declared), a will contain how much ammo there is of type i
 		float clip = getstati(STAT_BULLETS_LOADED);
@@ -1937,7 +1937,7 @@ void(void) sbar_draw {
 				}
 			}
 		} else if not(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO) {
-			if (CVAR(sbar_showcurrentammo)) { // force showing current ammo only with conwidths < 800
+			if (CVAR(sbar_showcurrentammo)) {
 				string ai = NULL;
 				float at;
 				if (sbar_stat_items & IT_SHELLS) { at = STAT_SHELLS; ai = "gfx/hud/sb_shells"; }

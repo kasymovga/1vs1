@@ -292,6 +292,7 @@ void(void) world_init {
 	map_info_filter_game_type(map_info_type_from_game_type(game_type_current()) | game_type_vote_mapinfo_mask, map_info_required_flags(), map_info_forbidden_flags(), 1);
 	addstat(STAT_WEAPONS, STAT_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, STAT_INT, switchweapon);
+	addstat(STAT_WEAPON, STAT_INT, weapon);
 	addstat(STAT_GAMESTARTTIME, STAT_FLOAT, stat_map_starttime);
 	ready_nagger_init();
 	addstat(STAT_PRESSED_KEYS, STAT_FLOAT, pressedkeys);

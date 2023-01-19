@@ -151,7 +151,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		}
 	}
 	sbar_alpha_fg = CVAR(sbar_alpha_fg) * (1 - CVAR(_menu_alpha));
-	weapon_current = getstati(STAT_SWITCHWEAPON);
+	weapon_current = getstati(STAT_WEAPON);
 	// ALWAYS Clear Current Scene First
 	R_ClearScene();
 	// Assign Standard Viewflags
