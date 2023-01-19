@@ -163,10 +163,10 @@ float(float req) weapon_campingrifle {
 		}
 		if (g_balance_campingrifle_hotreload)
 			weapon_campingrifle_hotreload();
-		else {
+
+		if (g_balance_campingrifle_magazinecapacity) {
 			self.ammoclip = self.campingrifle_ammoclip;
-			if (self.ammoclip <= 0)
-				self.ammoclip = 0;
+			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/campingrifle_reload.wav");
