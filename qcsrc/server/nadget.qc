@@ -319,8 +319,10 @@ void(entity e, string args, float set) nadget_ability_init {
 		if (set) {
 			entity oldself = self;;
 			self = e;
+			self.hg_type1_picked &= ~1024;
 			if (args != "") {
 				self.hg_type1 = self.hg_type1_picked = nadget_NameToType(args);
+				self.hg_type1_picked |= 1024;
 				if (g_nadgets_show_in_sbar) score_player_set(self, NADGET_SCORE, self.hg_type1);
 				nadget_ResetAmmo(self, FALSE);
 			} else if not(nadget_ShowMenu(0))
@@ -331,6 +333,7 @@ void(entity e, string args, float set) nadget_ability_init {
 			nadget_RemoveAll(e);
 			e.hg_type1 = 0;
 			e.hg_type2 = 0;
+			e.hg_type1_picked = 0;
 			if (g_nadgets_show_in_sbar) {
 				score_player_set(self, NADGET_SCORE, self.hg_type1);
 				if (g_nadgets_double)
@@ -518,6 +521,8 @@ float nadget_PlayerNadgetType(entity e) {
     float picked = nadget_NameToType(cvar_string("g_nadgets_type"));
     float argc = tokenize_console(nadget_SelectableTypes(hg_context_isalt));
     float i;
+	if (e.hg_ctx_type_picked & 1024)
+		return (e.hg_ctx_type_picked & 1023);
 
     if(argc) {
 		picked = NADGET_RANDOM;
@@ -940,6 +945,9 @@ void nadget_WriteNadgetSelect(void) {
 }
 
 float nadget_ShowMenu(float always) {
+	if (self.hg_type1_picked & 1024)
+		return FALSE;
+
     if((self.hg_type1_picked && self.BUTTON_CHAT) && always < 2)
         return FALSE;
 
@@ -970,6 +978,10 @@ void nadget_Pick(float tokens) {
 	if not(self.flags & FL_CLIENT)
 		return;
 
+	if (self.hg_type1_picked & 1024) {
+		centerprint(self, "Your nadget type is forced");
+		return;
+	}
 	if(tokens < 2) {
 		nadget_ShowMenu(2);
 		return;
