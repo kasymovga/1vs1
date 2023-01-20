@@ -1857,6 +1857,7 @@ void(void) sbar_draw {
 	sbar_starttime = getstatf(STAT_GAMESTARTTIME);
 	sbar_timelimit = getstatf(STAT_TIMELIMIT);
 	sbar_timeleft = sbar_timelimit * 60 + sbar_starttime - time;
+	sbar_stat_items = getstati(STAT_ITEMS);
 	if (sbar_timeleft < 0 && sbar_timelimit) { // map voting screen
 		if (sbar_showscores) {
 			sbar_scoreboard_draw();
@@ -1890,7 +1891,6 @@ void(void) sbar_draw {
 		else if (sbar_hidescores)
 			return;
 
-		sbar_stat_items = getstati(STAT_ITEMS);
 		if (rm_skin_loaded) {
 			rm_hud_draw();
 			return;
