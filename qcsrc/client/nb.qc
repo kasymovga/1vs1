@@ -9,6 +9,9 @@
 #define NBPB_IRGB '0.7 0.1 0'
 
 void(vector pos, vector gameinfo_size, float gameinfo_scale) nb_hud {
+	if not((rm_hud_game_info_enabled = (sbar_stat_items & IT_KEYS)))
+		return;
+
 	float nb_pb;
 	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '88 38 0', gameinfo_size)
 	nb_pb = getstatf(STAT_NB_METERSTART);
@@ -26,7 +29,6 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) nb_hud {
 		drawline(NBPB_BT, pos + s, pos + '1 0 0' * s_x, NBPB_BRGB, NBPB_BALPH, NBPB_BFLAG);
 		drawline(NBPB_BT, pos + s, pos + '0 1 0' * s_y, NBPB_BRGB, NBPB_BALPH, NBPB_BFLAG);
 	}
-	if (sbar_stat_items & IT_KEY1)
-		drawpic(pos, "gfx/hud/sb_nexball_carrying", '80 34 0' * gameinfo_scale, '1 1 1', 1, DRAWFLAG_NORMAL);
+	drawpic(pos, "gfx/hud/sb_nexball_carrying", '80 34 0' * gameinfo_scale, '1 1 1', 1, DRAWFLAG_NORMAL);
 }
 

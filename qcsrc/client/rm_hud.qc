@@ -16,10 +16,6 @@
 #define RM_HUD_A_BORDER_TEAM ((rm_skin_border_teamcolor != RM_SKIN_TC_NEVER) ? border_teamalpha : border_basealpha)
 #define RM_HUD_A_BORDER_PROGRESS ((rm_skin_progress_border_colormode) ? ((rm_skin_progress_border_colormode == 1) ? max(RM_HUD_A_BORDER_TEAM, rm_skin_progress_border_teamcolor_minalpha) : rm_skin_progress_border_alpha) : RM_HUD_A_BORDER)
 
-float rm_hud_game_info_state;
-float rm_hud_game_info_appeartime;
-float rm_hud_game_info_fadetime;
-float rm_hud_game_info_finalstate;
 float rm_hud_game_info_alpha;
 float rm_hud_game_info_wide;
 
@@ -345,7 +341,7 @@ void(void) rm_hud_draw {
 	float hud_sector_drawflag = DRAWFLAG_NORMAL;
 	float ammosector_pos = 0, nadesector_pos = 0, nadesector2_pos = 0, next_sector;
 	vector scoresector_pos = SBAR_SCORE_POSITION_DEFAULT, scoresector_size = '0 0 0';
-	vector rm_hud_game_info_pos = '0 0 0', rm_hud_game_info_size = '0 0 0';
+	vector game_info_pos = '0 0 0', game_info_size = '0 0 0';
 	vector base_teamcolor;
 	float hgtype = getstati(STAT_HGTYPE);
 	if (hgtype)
@@ -412,24 +408,12 @@ void(void) rm_hud_draw {
 		hudline_pos_y = sbar_bottom_y - 24;
 		hud_sector_y = 21;
 		hud_sector_pos_y = sbar_bottom_y - 27;
-		if (rm_hud_game_info_enabled != rm_hud_game_info_state) {
-			if (rm_hud_game_info_enabled)
-				rm_hud_game_info_appeartime = time;
-			else
-				rm_hud_game_info_fadetime = time;
-
-			rm_hud_game_info_state = rm_hud_game_info_enabled;
-		}
-		if (rm_hud_game_info_state != rm_hud_game_info_finalstate) {
-			if (rm_hud_game_info_state) {
-				rm_hud_game_info_alpha = 1 - bound(0, 1 - 4 * (time - rm_hud_game_info_appeartime), 1);
-				if (rm_hud_game_info_alpha >= 1)
-					rm_hud_game_info_finalstate = rm_hud_game_info_state;
-			} else {
-				rm_hud_game_info_alpha = bound(0, 1 - 4 * (time - rm_hud_game_info_fadetime), 1);
-				if (!rm_hud_game_info_alpha)
-					rm_hud_game_info_finalstate = rm_hud_game_info_state;
-			}
+		if (rm_hud_game_info_enabled) {
+			if (rm_hud_game_info_alpha < 1)
+				rm_hud_game_info_alpha = approach(rm_hud_game_info_alpha, 1, view_drawframetime * 2);
+		} else {
+			if (rm_hud_game_info_alpha > 0)
+				rm_hud_game_info_alpha = approach(rm_hud_game_info_alpha, 0, view_drawframetime * 2);
 		}
 		vector mxdmg = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), sbar_armor_block_percentage);
 		rm_hud_vhealth += (min(mxdmg_x + 1, sbar_health_nice * 2) - rm_hud_vhealth) * frametime * 10;
@@ -529,21 +513,21 @@ void(void) rm_hud_draw {
 				hudline_x = sbar_topright_x - hudline_pos_x - (sbar_bottomright_x - next_sector) - bw_left;
 			})
 			// teamhud
+			hud_sector_x = thwidth;
+			hud_sector_pos_x = next_sector;
 			if (rm_hud_game_info_alpha) {
 				RM_HUD_LINE_SECTOR({
-					hud_sector_x = thwidth;
-					hud_sector_pos_x = next_sector;
 					sector_mod = '0 0 0';
 					sector_alphamod = rm_hud_game_info_alpha;
 				}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
 			}
 			sector_alphamod = 1;
-			if (!rm_hud_game_info_enabled || rm_hud_game_info_enabled != rm_hud_game_info_finalstate) {
+			if (rm_hud_game_info_alpha < 0.5) {
 				hud_sector_pos_x = next_sector;
 				hud_sector_x = -bw_right - bw_left;
 			}
-			rm_hud_game_info_pos = hud_sector_pos;
-			rm_hud_game_info_size = hud_sector;
+			game_info_pos = hud_sector_pos;
+			game_info_size = hud_sector;
 			if (!low) {
 				// teamhud | scores
 				next_sector = sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL * 2 - sector_gap - sector_sgap;
@@ -612,25 +596,25 @@ void(void) rm_hud_draw {
 				next_sector = hudline_x + bw_left;
 			})
 			// teamhud
+			if (rm_hud_game_info_wide)
+				hud_sector_x = RM_HUD_SECWIDTH_WIDE;
+			else
+				hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
+
+			hud_sector_pos_x = next_sector;
 			if (rm_hud_game_info_alpha) {
 				RM_HUD_LINE_SECTOR({
-					if (rm_hud_game_info_wide)
-						hud_sector_x = RM_HUD_SECWIDTH_WIDE;
-					else
-						hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
-
-					hud_sector_pos_x = next_sector;
 					sector_mod = '0 0 0';
 					sector_alphamod = rm_hud_game_info_alpha;
 				}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
 			}
+			game_info_pos = hud_sector_pos;
+			game_info_size = hud_sector;
 			sector_alphamod = 1;
-			if (!rm_hud_game_info_enabled || rm_hud_game_info_enabled != rm_hud_game_info_finalstate) {
+			if (rm_hud_game_info_alpha < 0.5) {
 				hud_sector_x = -bw_left - bw_right;
 				hud_sector_pos_x = next_sector;
 			}
-			rm_hud_game_info_pos = hud_sector_pos;
-			rm_hud_game_info_size = hud_sector;
 			RM_HUD_LINE_SLICE({
 				hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
 				hudline_x = sbar_topright_x - hudline_pos_x - (sbar_bottomright_x - ammosector_pos) - bw_left;
@@ -965,9 +949,9 @@ void(void) rm_hud_draw {
 	// draw strength/invincibility icon and timer
 	sbar_powerups_draw(SBAR_POWERUPS_POSITION_DEFAULT, 1);
 	sbar_runes_draw();
-	if (rm_hud_game_info_size == '0 0 0')
+	if (game_info_size == '0 0 0')
 		sbar_game_hud(SBAR_GAMEINFO_POSITION_DEFAULT, '0 0 0', 1);
 	else {
-		sbar_game_hud(rm_hud_game_info_pos + '0 -8 0', rm_hud_game_info_size + '0 16 0', 1);
+		sbar_game_hud(game_info_pos + '0 -8 0', game_info_size + '0 16 0', 1);
 	}
 }

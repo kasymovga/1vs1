@@ -12,6 +12,12 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) kh_hud {
 	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '108 48 0', gameinfo_size)
 	p = pos +'6 11 0' * gameinfo_scale;
 	kh_keys = getstati(STAT_KH_KEYS);
+	if (kh_keys)
+		rm_hud_game_info_enabled = TRUE;
+	else {
+		rm_hud_game_info_enabled = FALSE;
+		return;
+	}
 	kh_size = '19 34 0' * gameinfo_scale;
 	kh_asize = '19 10 0' * gameinfo_scale;
 	pa = p + '0 -10 0' * gameinfo_scale;

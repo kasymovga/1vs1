@@ -105,14 +105,18 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) ctf_hud {
 	if (red_icon_prevstatus && f < 1)
 		draw_pic_expanding(redflag_pos, red_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 
-	if (red_icon)
+	rm_hud_game_info_enabled = FALSE;
+	if (red_icon) {
+		rm_hud_game_info_enabled = TRUE;
 		drawpic(redflag_pos, red_icon, sz, '1 1 1', sbar_alpha_fg * red_alpha * f, DRAWFLAG_NORMAL);
-
+	}
 	f = bound(0, blueflag_statuschange_elapsedtime*2, 1);
 	if (blue_icon_prevstatus && f < 1)
 		draw_pic_expanding(blueflag_pos, blue_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 
-	if (blue_icon)
+	if (blue_icon) {
+		rm_hud_game_info_enabled = TRUE;
 		drawpic(blueflag_pos, blue_icon, sz, '1 1 1', sbar_alpha_fg * blue_alpha * f, DRAWFLAG_NORMAL);
+	}
 }
 
