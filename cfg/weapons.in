@@ -550,7 +550,6 @@ alias weapsupershotgun "impulse 246"
 //Rifle
 set g_balance_campingrifle_magazinecapacity 8
 set g_balance_campingrifle_reloadtime 2 // matches reload anim
-set g_balance_campingrifle_auto_reload_after_changing_weapons 0
 set g_balance_campingrifle_bursttime 0
 set g_balance_campingrifle_primary_damage 60
 set g_balance_campingrifle_primary_headshotaddeddamage 100
@@ -576,7 +575,6 @@ set g_balance_campingrifle_secondary_animtime 0.1
 set g_balance_campingrifle_secondary_ammo 5
 set g_balance_campingrifle_secondary_bulletconstant 130 // 18.3qu
 set g_balance_campingrifle_secondary_burstcost 0
-set g_balance_campingrifle_hotreload 0
 set g_balance_campingrifle_secondary_gravityfactor 1
 set g_balance_campingrifle_primary_gravityfactor 1
 set g_balance_campingrifle_swap_buttons 0
