@@ -95,7 +95,6 @@ void(void) rm_skin_unload {
 	print("Unloaded HUD skin\n");
 	RM_SKIN_FREE(rm_skin_name);
 	rm_skin_loaded = FALSE;
-	cvar_set("cl_rm_skin", "");
 	updateNexuizSkinList();
 	updateNexuizHudList();
 }
@@ -546,6 +545,7 @@ float(string skin_name) rm_skin_load {
 	}
 	dlc_load("rm_skins", FALSE);
 	dlc_recheck_all();
+	if not(dlc_ready("rm_skins")) return FALSE;
 	if (skin_name == "_builtin_") {
 		rm_skin_load_fallback();
 		return TRUE;
