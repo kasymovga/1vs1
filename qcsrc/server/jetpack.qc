@@ -1,6 +1,14 @@
 entity jetpack_physics;
 float g_jetpack_attenuation;
 float g_balance_pause_fuel_regen;
+float g_balance_fuel_limit;
+float g_balance_fuel_regen;
+float g_balance_fuel_regenlinear;
+float g_balance_fuel_regenstable;
+float g_balance_fuel_rot;
+float g_balance_fuel_rotlinear;
+float g_balance_fuel_rotstable;
+float g_balance_pause_fuel_rot_spawn;
 
 float(entity to, float sf) jetpack_physics_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_PHYSICS_JETPACK);
@@ -12,16 +20,20 @@ float(entity to, float sf) jetpack_physics_send {
 	return TRUE;
 }
 
-void(float fuel_fact) jetpack_finished {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel -= g_jetpack_fuel * frametime * fuel_fact;
+var void(void) jetpack_player_health_armor_mods_set_next;
+void(void) jetpack_player_health_armor_mods_set {
+	self.ammo_fuel = player_calc_rot_regen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, plugin_player_regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, plugin_player_rot_mod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
+	jetpack_player_health_armor_mods_set_next();
+}
 
+void(float fuel_fact) jetpack_finished {
+	self.ammo_fuel -= g_jetpack_fuel * frametime * fuel_fact;
 	// jetpack also inhibits health regeneration, but only for 1 second
 	self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_fuel_regen);
 }
 
 float(float fvel) jetpack_velocity_mod {
-	if(g_jetpack_fuel && !(self.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(g_jetpack_fuel)
 		return min(1, self.ammo_fuel / (g_jetpack_fuel * frametime * fvel));
 
 	return 1;
@@ -29,7 +41,7 @@ float(float fvel) jetpack_velocity_mod {
 
 float(void) jetpack_using {
 	if (self.items & IT_JETPACK) {
-		if (!g_jetpack_fuel || self.ammo_fuel > 0 || self.items & IT_UNLIMITED_WEAPON_AMMO)
+		if (!g_jetpack_fuel || self.ammo_fuel > 0)
 			return TRUE;
 
 		if not(self.buttons_old & 2)
@@ -77,9 +89,18 @@ void(void) jetpack_enable {
 	CVAR_CACHE(g_jetpack_fuel);
 	CVAR_CACHE(g_jetpack_attenuation);
 	CVAR_CACHE(g_balance_pause_fuel_regen);
+	CVAR_CACHE(g_balance_fuel_limit);
+	CVAR_CACHE(g_balance_fuel_regen);
+	CVAR_CACHE(g_balance_fuel_regenlinear);
+	CVAR_CACHE(g_balance_fuel_regenstable);
+	CVAR_CACHE(g_balance_fuel_rot);
+	CVAR_CACHE(g_balance_fuel_rotlinear);
+	CVAR_CACHE(g_balance_fuel_rotstable);
 	physics_jetpack_enable();
 	jetpack_player_effects_next_link = plugin_chain_player_effects;
 	plugin_chain_player_effects = jetpack_player_effects;
+	jetpack_player_health_armor_mods_set_next = plugin_chain_player_health_armor_mods_set;
+	plugin_chain_player_health_armor_mods_set = jetpack_player_health_armor_mods_set;
 }
 
 void(entity e, string args, float set) jetpack_ability_init {
@@ -100,5 +121,5 @@ void(void) jetpack_init {
 
 	jetpack_enable();
 	player_start_items |= (IT_JETPACK | IT_FUEL_REGEN);
-	player_start_ammo_fuel = max(0, cvar("g_balance_fuel_rotstable"));
+	player_start_ammo_fuel = (g_jetpack_fuel ? max(0, cvar("g_balance_fuel_rotstable")): 999);
 }

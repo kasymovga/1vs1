@@ -5,7 +5,7 @@ float(void) jetpack_using {
 	if not(it & IT_JETPACK)
 		return 0;
 
-	if not(it & (IT_UNLIMITED_WEAPON_AMMO | IT_FUEL))
+	if not(it & IT_FUEL)
 		return 0;
 
 	return 1;

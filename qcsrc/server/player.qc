@@ -19,13 +19,6 @@ float g_balance_armor_regenstable;
 float g_balance_armor_rot;
 float g_balance_armor_rotlinear;
 float g_balance_armor_rotstable;
-float g_balance_fuel_limit;
-float g_balance_fuel_regen;
-float g_balance_fuel_regenlinear;
-float g_balance_fuel_regenstable;
-float g_balance_fuel_rot;
-float g_balance_fuel_rotlinear;
-float g_balance_fuel_rotstable;
 float g_balance_health_regen;
 float g_balance_health_regenlinear;
 float g_balance_health_regenstable;
@@ -705,7 +698,7 @@ void() player_respawn_countdown {
 void() player_regen {
 	float minh, maxh, limith, limita;
 	plugin_player_health_armor_rot_regen = plugin_player_health_max_mod = plugin_player_armor_health_limit_mod = plugin_player_regen_mod = plugin_player_rot_mod = 1;
-	plugin_chain_player_health_armor_fuel_mods_set();
+	plugin_chain_player_health_armor_mods_set();
 	if (plugin_player_health_armor_rot_regen) {
 		limith = g_balance_health_limit * plugin_player_armor_health_limit_mod;
 		maxh = g_balance_health_rotstable * plugin_player_health_max_mod;
@@ -717,9 +710,6 @@ void() player_regen {
 
 		limita = g_balance_armor_limit * plugin_player_armor_health_limit_mod;
 		self.armorvalue = player_calc_rot_regen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, plugin_player_regen_mod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, plugin_player_rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
-	}
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
-		self.ammo_fuel = player_calc_rot_regen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, plugin_player_regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, plugin_player_rot_mod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
 	}
 }
 
@@ -1260,13 +1250,6 @@ void() player_init {
 	CVAR_CACHE(g_balance_armor_rotlinear);
 	CVAR_CACHE(g_balance_armor_rotstable);
 	CVAR_CACHE(g_balance_armor_limit);
-	CVAR_CACHE(g_balance_fuel_limit);
-	CVAR_CACHE(g_balance_fuel_regen);
-	CVAR_CACHE(g_balance_fuel_regenlinear);
-	CVAR_CACHE(g_balance_fuel_regenstable);
-	CVAR_CACHE(g_balance_fuel_rot);
-	CVAR_CACHE(g_balance_fuel_rotlinear);
-	CVAR_CACHE(g_balance_fuel_rotstable);
 	CVAR_CACHE(g_balance_health_limit);
 	CVAR_CACHE(g_balance_health_regen);
 	CVAR_CACHE(g_balance_health_regenlinear);

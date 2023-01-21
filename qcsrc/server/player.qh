@@ -43,7 +43,7 @@ ALLVOICEMSGS
 void() player_init;
 void(float killed) player_clear;
 float(entity plr, entity viewer) player_alpha;
-
+float(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit) player_calc_rot_regen;
 void() player_setup_model;
 void(entity player) player_to_spec;
 void() player_think;

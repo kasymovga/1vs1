@@ -65,7 +65,7 @@ float plugin_player_armor_health_limit_mod;
 float plugin_player_regen_mod;
 float plugin_player_rot_mod;
 float plugin_player_health_armor_rot_regen;
-var void() plugin_chain_player_health_armor_fuel_mods_set = {}
+var void() plugin_chain_player_health_armor_mods_set = {}
 var float() plugin_chain_JumpVelocityMod = { return 1; }
 var float() plugin_chain_weapon_rate_factor = { return 1; }
 var void(entity targ, entity attacker, float damage, vector force) plugin_chain_damage_force_done = {}

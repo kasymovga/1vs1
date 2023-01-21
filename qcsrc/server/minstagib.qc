@@ -401,9 +401,9 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	return plugin_chain_ItemGiveToHandle_PickedUp;
 }
 
-var void() minstagib_player_health_armor_fuel_mods_set_next;
-void minstagib_player_health_armor_fuel_mods_set() {
-	minstagib_player_health_armor_fuel_mods_set_next();
+var void() minstagib_player_health_armor_mods_set_next;
+void minstagib_player_health_armor_mods_set() {
+	minstagib_player_health_armor_mods_set_next();
 	plugin_player_health_armor_rot_regen = FALSE;
 }
 
@@ -570,8 +570,8 @@ void(void) minstagib_init {
 	plugin_chain_player_think = minstagib_player_think;
 	minstagib_ItemGiveToHandle_next = plugin_chain_ItemGiveToHandle;
 	plugin_chain_ItemGiveToHandle = minstagib_ItemGiveToHandle;
-	minstagib_player_health_armor_fuel_mods_set_next = plugin_chain_player_health_armor_fuel_mods_set;
-	plugin_chain_player_health_armor_fuel_mods_set = minstagib_player_health_armor_fuel_mods_set;
+	minstagib_player_health_armor_mods_set_next = plugin_chain_player_health_armor_mods_set;
+	plugin_chain_player_health_armor_mods_set = minstagib_player_health_armor_mods_set;
 	plugin_chain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
 	minstagib_weapon_throw_allowed_next = plugin_chain_weapon_throw_allowed;
 	plugin_chain_weapon_throw_allowed = minstagib_weapon_throw_allowed;
