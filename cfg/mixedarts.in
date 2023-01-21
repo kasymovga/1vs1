@@ -54,10 +54,15 @@ set mixed_arts_g_weaponreplace_porto armor_small
 set mixed_arts_g_weaponreplace_hook armor_small
 set mixed_arts_g_balance_grapplehook_damage_interval 0.1
 set mixed_arts_g_balance_melee 0
+set mixed_arts_g_balance_hlac_magazinecapacity 42
 set mixed_arts_g_shootfromeye 1
 set mixed_arts_g_balance_pause_health_regen_spawn 5
 set mixed_arts_g_balance_pause_armor_rot_spawn 5
 set mixed_arts_g_laser_damage 0
+set mixed_arts_g_jetpack_fuel 1
+set mixed_arts_g_balance_fuel_regen 0.1
+set mixed_arts_g_balance_fuel_regenlinear 0
+set mixed_arts_g_balance_fuel_regenstable 99
 
 set mixed_arts_g_weapon_extra_0_model ok_sniper
 set mixed_arts_g_weapon_extra_0_impulse 1
