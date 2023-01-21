@@ -174,6 +174,9 @@ float(float secondary) weapon_zapper_beam_expired {
 	if (time > self.zapper_expire)
 		return TRUE;
 
+	if (!secondary && o.zapper_shield)
+		return TRUE;
+
 	if (self.owner.zapper_heat >= 1)
 		return TRUE;
 
@@ -189,8 +192,6 @@ float(float secondary) weapon_zapper_beam_expired {
 				return TRUE;
 		} else {
 			if (!weapon_zapper_attack1_check_ammo(o))
-				return TRUE;
-			if (o.zapper_shield)
 				return TRUE;
 		}
 	}
