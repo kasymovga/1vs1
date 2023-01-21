@@ -26,11 +26,14 @@ float g_balance_hlac_secondary_shots;
 float g_balance_hlac_secondary_speed;
 float g_balance_hlac_secondary_spread;
 float g_balance_hlac_secondary_spread_crouchmod;
+float g_balance_hlac_magazinecapacity;
+float g_balance_hlac_reloadtime;
 
 var .float hlac_buttonatck1 = BUTTON_ATCK;
 var .float hlac_buttonatck2 = BUTTON_ATCK2;
 
 .float HLAC_bulletcounter;
+.float hlac_ammoclip;
 
 void(void) weapon_hlac_attack {
 	entity missile;
@@ -81,7 +84,14 @@ void(void) weapon_hlac_attack2 {
 	weapon_setup_shot(self, g_balance_hlac_secondary_recoil, "weapons/lasergun_fire.wav", 1);
 	weapon_shake(1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
-	for (i = g_balance_hlac_secondary_shots; i > 0; --i)
+	float n;
+	if (g_balance_hlac_magazinecapacity) {
+		n = min(g_balance_hlac_secondary_shots, self.hlac_ammoclip);
+		self.hlac_ammoclip -= n;
+	} else
+		n = g_balance_hlac_secondary_shots;
+
+	for (i = n; i > 0; --i)
 		weapon_hlac_attack2f();
 }
 
@@ -90,6 +100,13 @@ void(void) weapon_hlack_fire1_02 {
 	if (self.weapon != self.switchweapon || !player_can_fire(self, TRUE)) {
 		weapon_ready();
 		return;
+	}
+	if (g_balance_hlac_magazinecapacity) {
+		if (self.hlac_ammoclip <= 0) {
+			weapon_ready();
+			return;
+		}
+		self.hlac_ammoclip -= 1;
 	}
 	if (self.hlac_buttonatck1) {
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -111,25 +128,56 @@ void(void) spawnfunc_weapon_hlac {
 	weapon_defaultspawnfunc(WEAPON_HLAC);
 }
 
+void(void) weapon_hlac_reloadandready {
+	weapon_clip_reloadandready(g_balance_hlac_magazinecapacity, ammo_cells, hlac_ammoclip,
+			g_balance_hlac_primary_ammo, g_balance_hlac_secondary_ammo, g_balance_hlac_reloadtime);
+}
+
+void(void) weapon_hlac_reload {
+	weapon_clip_reload(g_balance_hlac_magazinecapacity, ammo_cells, hlac_ammoclip, g_balance_hlac_primary_ammo,
+			g_balance_hlac_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_hlac_reloadtime,
+			weapon_hlac_reloadandready);
+}
+
 float(float req) weapon_hlac {
 	if (req == WEAPON_REQUEST_AIM)
 		self.hlac_buttonatck1 = bot_aim(g_balance_hlac_primary_speed, 0, g_balance_hlac_primary_lifetime, FALSE);
 	else if (req == WEAPON_REQUEST_THINK) {
-		if (self.hlac_buttonatck1)
-		if (weapon_prepareattack(0, g_balance_hlac_primary_refire)) {
-			self.HLAC_bulletcounter = 0;
-			weapon_hlac_attack();
-			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
+		if (g_balance_hlac_magazinecapacity && (self.hlac_ammoclip < 0 || (!self.hlac_ammoclip && (self.hlac_buttonatck1 || self.hlac_buttonatck2)))) { // forced reload (e.g. because interrupted)
+			if (self.switchweapon == self.weapon)
+			if (self.weaponentity.state == WEAPON_STATE_READY)
+				weapon_hlac_reload();
+		} else if (!g_balance_hlac_magazinecapacity || self.hlac_ammoclip > 0) {
+			if (self.hlac_buttonatck1)
+			if (weapon_prepareattack(0, g_balance_hlac_primary_refire)) {
+				self.HLAC_bulletcounter = 0;
+				weapon_hlac_attack();
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
+			}
+			if (self.hlac_buttonatck2)
+			if (g_balance_hlac_secondary)
+			if (weapon_prepareattack(1, g_balance_hlac_secondary_refire)) {
+				weapon_hlac_attack2();
+				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_hlac_secondary_animtime, weapon_ready);
+			}
 		}
-		if (self.hlac_buttonatck2)
-		if (g_balance_hlac_secondary)
-		if (weapon_prepareattack(1, g_balance_hlac_secondary_refire)) {
-			weapon_hlac_attack2();
-			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_hlac_secondary_animtime, weapon_ready);
+		if (g_balance_hlac_magazinecapacity) {
+			self.ammoclip = self.hlac_ammoclip;
+			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/lasergun_fire.wav");
+	} else if (req == WEAPON_REQUEST_RELOAD) {
+		weapon_hlac_reload();
 	} else if (req == WEAPON_REQUEST_SETUP) {
+		if (g_balance_hlac_magazinecapacity) {
+			weapon_clip_checkmaxbullets(g_balance_hlac_magazinecapacity, ammo_cells, hlac_ammoclip, g_balance_hlac_primary_ammo, g_balance_hlac_secondary_ammo);
+			if not(self.hlac_ammoclip)
+				self.hlac_ammoclip = -1;
+		}
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
+		if (g_balance_hlac_magazinecapacity)
+			self.hlac_ammoclip = g_balance_hlac_magazinecapacity;
 	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_hlac_primary_ammo;
 	else if (req == WEAPON_REQUEST_CHECKAMMO2)
@@ -167,6 +215,8 @@ float(float req) weapon_hlac {
 		CVAR_CACHE(g_balance_hlac_secondary_speed);
 		CVAR_CACHE(g_balance_hlac_secondary_spread);
 		CVAR_CACHE(g_balance_hlac_secondary_spread_crouchmod);
+		CVAR_CACHE(g_balance_hlac_magazinecapacity);
+		CVAR_CACHE(g_balance_hlac_reloadtime);
 		projectile_init(PROJECTILE_HLAC);
 		if (cvar("g_balance_hlac_swap_buttons")) {
 			hlac_buttonatck1 = BUTTON_ATCK2;

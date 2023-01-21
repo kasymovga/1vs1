@@ -356,6 +356,7 @@ set g_balance_hagar_swap_buttons 0
 alias weaphagar "impulse 237"
 
 //HLAC
+set g_balance_hlac_magazinecapacity 0
 set g_balance_hlac_primary_spread_min 0.01
 set g_balance_hlac_primary_spread_max 0.25
 set g_balance_hlac_primary_spread_add 0.0045
@@ -385,6 +386,7 @@ set g_balance_hlac_secondary_ammo 6
 set g_balance_hlac_secondary_shots 6
 set g_balance_hlac_secondary 1
 set g_balance_hlac_swap_buttons 0
+set g_balance_hlac_reloadtime 2
 alias weaphlac "impulse 242"
 
 //Shotgun
