@@ -73,11 +73,12 @@ float(float maxspd_mod) physics_jetpack {
 	}
 	best = sqrt(best);
 	float fxy, fz;
-	fxy = bound(0, 1 - (physics_velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / g_jetpack_maxspeed_side, 1);
+	float speed_factor = (physics_crouch ? 0.25 : 1);
+	fxy = bound(0, 1 - (physics_velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / (g_jetpack_maxspeed_side * speed_factor), 1);
 	if(wishvel_z - sv_gravity > 0)
-		fz = bound(0, 1 - physics_velocity_z / g_jetpack_maxspeed_up, 1);
+		fz = bound(0, 1 - physics_velocity_z / (g_jetpack_maxspeed_up * speed_factor), 1);
 	else
-		fz = bound(0, 1 + physics_velocity_z / g_jetpack_maxspeed_up, 1);
+		fz = bound(0, 1 + physics_velocity_z / (g_jetpack_maxspeed_up * speed_factor), 1);
 
 	float fvel;
 	fvel = vlen(wishvel);
