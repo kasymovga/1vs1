@@ -118,17 +118,11 @@ void(void) bullet_hit {
 	self.enemy = other; // don't hit the same player twice with the same bullet
 }
 
-.void(void) bullet_leave_solid_think_save;
-.float bullet_leave_solid_nextthink_save;
-.vector bullet_leave_solid_origin;
-.vector bullet_leave_solid_velocity;
-
 void(void) bullet_leave_solid_think {
-	setorigin(self, self.bullet_leave_solid_origin);
-	self.velocity = self.bullet_leave_solid_velocity;
-	self.think = self.bullet_leave_solid_think_save;
-	self.nextthink = max(time, self.bullet_leave_solid_nextthink_save);
-	self.bullet_leave_solid_think_save = stdproc_nothing;
+	setorigin(self, self.pos1);
+	self.velocity = self.pos2;
+	self.think = stdproc_remove;
+	self.nextthink = max(time, self.cnt);
 	self.flags &= ~FL_ONGROUND;
 	if (self.enemy.solid == SOLID_BSP) {
 		float f;
@@ -175,7 +169,7 @@ float(entity e, vector vel, float constant) bullet_leave_solid {
 	} else
 		trace_endpos = org;
 
-	self.bullet_leave_solid_origin = trace_endpos;
+	self.pos1 = trace_endpos;
 	dst = vlen(trace_endpos - self.origin);
 	// E(s) = E0 - constant * s, constant = area of bullet circle * material constant / mass
 	Es_m = E0_m - constant * dst;
@@ -189,14 +183,13 @@ float(entity e, vector vel, float constant) bullet_leave_solid {
 	// this is not correct, but the differential equations have no analytic
 	// solution - and these times are very small anyway
 	//print("dt = ", ftos(dt), "\n");
-	self.bullet_leave_solid_think_save = self.think;
-	self.bullet_leave_solid_nextthink_save = self.nextthink;
+	self.cnt = self.nextthink;
 	self.think = bullet_leave_solid_think;
 	self.nextthink = time + dt;
 	vel = vel * velfactor;
 	self.velocity = '0 0 0';
 	self.flags |= FL_ONGROUND; // prevent moving
-	self.bullet_leave_solid_velocity = vel;
+	self.pos2 = vel;
 	return 1;
 }
 
@@ -290,6 +283,9 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 				bullet_hit();
 			}
 			// go through solid!
+			if (other && other.armorvalue > 0)
+				break;
+
 			if (!bullet_leave_solid(self, self.velocity, self.dmg_radius))
 				break;
 
