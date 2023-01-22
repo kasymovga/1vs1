@@ -436,41 +436,48 @@ void(void) weapon_zapper_shield_think {
 }
 
 void(entity p) weapon_zappber_shield_blocker_push {
-	if (normalize(p.origin - self.oldorigin) * v_forward < 0.5)
+	vector oo = self.owner.oldorigin;
+	if (normalize(p.origin - oo) * v_forward < 0.3)
 		return;
 
-	if (vlen(p.origin - self.oldorigin) <= 90) {
+	if (vlen(p.origin - oo) <= 90) {
 		float v = max(600, vlen(p.velocity));
-		p.velocity = normalize(p.origin - self.oldorigin) * v;
+		p.velocity = normalize(p.origin - oo) * v;
+		p.lastpushtime = time;
 		projectile_update(p);
-	}
+	};
 }
 
 void(entity _shield) weapon_zapper_shield_blocker_setorigin {
-	vector o = _shield.owner.origin + _shield.owner.view_ofs;
+	vector o = _shield.owner.origin + _shield.owner.mins_z * '0 0 1' + '0 0 45';
 	vector a = _shield.owner.angles;
 	_shield.oldorigin = o;
 	makevectors(a);
 	_shield.angles = a;
 	setorigin(_shield, o - v_forward * 85);
+	setorigin(_shield.enemy, o + v_forward * 40);
 }
 
 void(void) weapon_zapper_shield_blocker_think {
 	if (self.owner.zapper_shield != self.zapper_shield) {
 		antilag_remove(self);
+		remove(self.enemy); //trigger
 		remove(self);
 		return;
 	}
 	weapon_zapper_shield_blocker_setorigin(self);
-	entity e;
-	FOR_EACH_PLAYER(e) if (e != self.owner)
-		weapon_zappber_shield_blocker_push(e);
-
-	for (e = findchainflags(flags, FL_PROJECTILE); e; e = e.chain)
-		if (e.classname != "bullet")
-			weapon_zappber_shield_blocker_push(e);
-
 	self.nextthink = time;
+}
+
+void(void) weapon_zabber_shield_blocker_trigger_touch {
+	makevectors(self.owner.angles);
+	if (other.flags & FL_PROJECTILE) {
+		if (other.classname != "bullet")
+			weapon_zappber_shield_blocker_push(other);
+	} else if (other.classname == "player") {
+		if (other != self.owner.owner)
+			weapon_zappber_shield_blocker_push(other);
+	}
 }
 
 void(void) weapon_zapper_attack3 {
@@ -512,9 +519,15 @@ void(void) weapon_zapper_attack3 {
 	b.solid = SOLID_BSP;
 	b.alpha = -1;
 	setmodel(b, "models/vhshield.md3");
-	weapon_zapper_shield_blocker_setorigin(b);
 	antilag_add(b);
 	e.zapper_shield = b;
+	entity t = spawn();
+	t.touch = weapon_zabber_shield_blocker_trigger_touch;
+	t.solid = SOLID_TRIGGER;
+	t.owner = b;
+	setsize(t, '-70 -70 -70', '70 70 70');
+	b.enemy = t;
+	weapon_zapper_shield_blocker_setorigin(b);
 }
 
 void(void) weapon_zapper_cooloff {
