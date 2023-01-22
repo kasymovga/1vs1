@@ -19,7 +19,7 @@ set mixed_arts_g_ability_class7_name "Overkiller"
 set mixed_arts_g_ability_class7_value "health=100 armor=50 weapons=ok_sniper,ok_mg,ok_shotgun physics=dodging laser hookuseswap nadget=normal"
 set mixed_arts_g_ability_class8_name "Electrocuter"
 set mixed_arts_g_ability_class8_value "health=100 armor=50 weapons=zapper physics=walljump nadget=plasma hookuseswap melee"
-set mixed_arts_g_balance_zapper_secondary_shield 0
+set mixed_arts_g_balance_zapper_secondary_shield 2
 set mixed_arts_g_balance_zapper_secondary_range 3000
 set mixed_arts_g_balance_zapper_secondary_arc 2
 set mixed_arts_g_use_ammunition 0
