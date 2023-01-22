@@ -33,13 +33,11 @@ void(void) updateNexuizHudList {
 	}
 	if (rm_skin_loaded) {
 		searchNexuizHudList = -1;
-		selfNexuizHudList.nItems = 3;
-		if (CVAR(cl_rm_hud_old))
-			selfNexuizHudList.selectedItem = 0;
-		else if (CVAR(cl_rm_hud_alt))
-			selfNexuizHudList.selectedItem = 2;
-		else
+		selfNexuizHudList.nItems = 2;
+		if (CVAR(cl_rm_hud_alt))
 			selfNexuizHudList.selectedItem = 1;
+		else
+			selfNexuizHudList.selectedItem = 0;
 	} else {
 		searchNexuizHudList = search_begin("data/*.hud", TRUE, TRUE);
 		if (searchNexuizHudList >= 0)
@@ -93,14 +91,9 @@ void clickListBoxItemNexuizHudList(entity me, float i, vector where, float doubl
 	if (doubleclick) {
 		if (rm_skin_loaded) {
 			if (i == 0) {
-				cvar_set("cl_rm_hud_old", "1");
-				cvar_set("cl_rm_hud_alt", "0");
-			} else if (i == 1) {
-				cvar_set("cl_rm_hud_old", "0");
-				cvar_set("cl_rm_hud_alt", "0");
-			} else {
-				cvar_set("cl_rm_hud_old", "0");
 				cvar_set("cl_rm_hud_alt", "1");
+			} else if (i == 1) {
+				cvar_set("cl_rm_hud_alt", "0");
 			}
 		} else {
 			string s;
@@ -139,10 +132,8 @@ void(entity me, float i, vector absSize, float isSelected) drawListBoxItemNexuiz
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	if (rm_skin_loaded) {
-		if (i == 0)
-			s = "[RM Old]";
-		else if (i == 1)
-			s = "[RM Default]";
+		if (i == 1)
+			s = "[RM Classic]";
 		else
 			s = "[RM Alternative]";
 	} else {

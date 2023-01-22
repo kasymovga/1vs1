@@ -372,11 +372,9 @@ void(void) rm_hud_draw {
 		sector_vgap  = rm_skin_sector_gap_y          + rm_skin_sector_gap_fract_y          * CVAR(vid_conheight);
 		sector_sgap  = rm_skin_sector_gap_screen     + rm_skin_sector_gap_screen_fract     * CVAR(vid_conwidth);
 	}
-	if (!CVAR(cl_rm_hud_old)) {
-		sbar_bottom_y -= 10;
-		sbar_bottomleft_y -= 10;
-		sbar_bottomright_y -= 10;
-	}
+	sbar_bottom_y -= 10;
+	sbar_bottomleft_y -= 10;
+	sbar_bottomright_y -= 10;
 	float armor, health;
 	armor = getstati(STAT_ARMOR);
 	health = getstati(STAT_HEALTH);
@@ -389,22 +387,7 @@ void(void) rm_hud_draw {
 	bg_size = '1600 58 0';
 	vector s_health = '0 0 0';
 	float isclip = getstati(STAT_BULLETS_LOADED);
-	if (CVAR(cl_rm_hud_old)) {
-		if (CVAR(viewsize) <= 100 && CVAR(vid_conwidth) <= 1600) {
-			if (team_mode)
-				color =  team_rgb(team_my) /* * sbar_color_bg_team */; // hud color = team_my color
-			else {
-				// allow for custom HUD colors in non-teamgames
-				color_x = CVAR(sbar_color_bg_r);
-				color_y = CVAR(sbar_color_bg_g);
-				color_z = CVAR(sbar_color_bg_b);
-			}
-			#if 0
-			HudFlash_Apply(color, sbar_alpha_bg, TRUE, 2, 1);
-			drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, hudflash_resultcolor, hudflash_resultalpha, DRAWFLAG_NORMAL);
-			#endif
-		}
-	} else {
+	if not(deathorobserver) {
 		hudline_y = 15;
 		hudline_pos_y = sbar_bottom_y - 24;
 		hud_sector_y = 21;
@@ -689,69 +672,25 @@ void(void) rm_hud_draw {
 			})
 		}
 	}
-	if (deathorobserver) goto skiphealthammo;
-	if (CVAR(cl_rm_hud_old) && cvar("sbar_hudselector") == 2) { // combined health and armor display
-		vector v;
-		v = rm_hud_healtharmor_maxdamage(health, armor, sbar_armor_block_percentage);
-		vector num_pos;
-		num_pos = sbar_bottom - '96 28 0';
-		float x = floor(v_x + 1);
-		if (v_z) { // fully armored
-			// here, armorideal > armor
-			drawpic(num_pos + '78 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic(num_pos + '108 -4.5 0', "gfx/hud/sb_armor", '20 20 0', '1 1 1', sbar_alpha_fg * armor / v_y, DRAWFLAG_NORMAL);
+	vector health_pos, armor_pos;
+	health_pos = s_health + '2 -1 0';
+	armor_pos = health_pos + '112 0 0';
+	// armor
+	float x = armor;
+	if (x > 0) {
+		if (x > 45) {
+			drawpic(armor_pos + '-7 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			sbar_draw_num_colored(armor_pos + '24 0 0', x, 24, sbar_alpha_fg);
 		} else {
-			drawpic(num_pos + '108 -4.5 0', "gfx/hud/sb_health", '20 20 0', '1 1 1', sbar_alpha_fg * v_y / armor, DRAWFLAG_NORMAL);
-			drawpic(num_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		sbar_draw_num_colored(num_pos, x, 24, sbar_alpha_fg); // draw the combined health and armor
-	} else {
-		vector health_pos, armor_pos;
-		if (CVAR(cl_rm_hud_old)) {
-			vdmg_dmgtakenorigin = sbar_bottom - '0 30 0';
-			if (cvar("sbar_hudselector") == 0) { // old style layout with armor left of health
-				armor_pos = sbar_bottom - '96 28 0';
-				health_pos = sbar_bottom - '-14 28 0';
-			} else {
-				health_pos = sbar_bottom - '96 28 0';
-				armor_pos = sbar_bottom - '-14 28 0';
-			}
-		} else {
-			health_pos = s_health + '2 -1 0';
-			armor_pos = health_pos + '112 0 0';
-		}
-		// armor
-		float x = armor;
-		if (x > 0) {
-			if (x > 45) {
-				if (CVAR(cl_rm_hud_old)) {
-					drawpic(armor_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					sbar_draw_num_colored(armor_pos, x, 24, sbar_alpha_fg);
-				} else {
-					drawpic(armor_pos + '-7 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					sbar_draw_num_colored(armor_pos + '24 0 0', x, 24, sbar_alpha_fg);
-				}
-			} else {
-				if (CVAR(cl_rm_hud_old)) {
-					drawpic(armor_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', (x+10)/55 * sbar_alpha_fg, DRAWFLAG_NORMAL);
-					sbar_draw_num_colored(armor_pos, x, 24, (x+10)/55 * sbar_alpha_fg);
-				} else {
-					drawpic(armor_pos + '-7 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', (x+10)/55 * sbar_alpha_fg, DRAWFLAG_NORMAL);
-					sbar_draw_num_colored(armor_pos + '26 0 0', x, 24, (x+10)/55 * sbar_alpha_fg);
-				}
-			}
-		}
-		// health
-		x = health;
-		if (CVAR(cl_rm_hud_old)) {
-			drawpic(health_pos + '78 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-			sbar_draw_num_colored(health_pos, x, 24, sbar_alpha_fg);
-		} else {
-			drawpic(health_pos + '0 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-			sbar_draw_num_colored(health_pos + '26 0 0', x, 24, sbar_alpha_fg);
+			drawpic(armor_pos + '-7 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', (x+10)/55 * sbar_alpha_fg, DRAWFLAG_NORMAL);
+			sbar_draw_num_colored(armor_pos + '26 0 0', x, 24, (x+10)/55 * sbar_alpha_fg);
 		}
 	}
-	// weapon icons
+	// health
+	x = health;
+	drawpic(health_pos + '0 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	sbar_draw_num_colored(health_pos + '26 0 0', x, 24, sbar_alpha_fg);
+// weapon icons
 	sbar_weapons_draw(SBAR_WEAPONS_POSITION_DEFAULT, 1);
 	// ammo
 	float a; // i will be the ammo type (already declared), a will contain how much ammo there is of type i
@@ -797,84 +736,42 @@ void(void) rm_hud_draw {
 		if (a <= 0 && !(isclip && (sbar_stat_items & itemcode)))
 			continue;
 
-		if (CVAR(sbar_showcurrentammo) || CVAR(vid_conwidth) < (800 + 100 * !CVAR(cl_rm_hud_old))) {
+		if (CVAR(sbar_showcurrentammo) || CVAR(vid_conwidth) < 800) {
 			if (sbar_stat_items & itemcode) {
 				if (rm_hud_ammo_notify_time < time)
 					rm_hud_ammo_notify_time = time + 1;
 				else
 					rm_hud_ammo_notify_time = 0;
 
-				if (CVAR(cl_rm_hud_old)) {
-					pos_x = 206;
-					pos_y = 33;
-					pos = sbar_bottom - pos;
-					if (CVAR(vid_conwidth) >= 800)
-						drawpic(pos + '0 1.5 0', "gfx/hud/sb_ammobg", '107 29 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				pos_y = 33;
+				pos = sbar_bottom - pos;
+				pos_x = ammosector_pos;
+				drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				if (!a)
+					draw_pic_expanding(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL, 1 - bound(0, (rm_hud_ammo_notify_time - time)*2, 1));
 
-					drawpic(pos + '76 3 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					if (!a)
-						draw_pic_expanding(pos + '76 3 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL, 1 - bound(0, (rm_hud_ammo_notify_time - time)*2, 1));
-					
-					if (a < 10 && !isclip)
-						sbar_draw_num(pos + '5 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-					else
-						sbar_draw_num(pos + '5 5 0', a, 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				} else {
-					pos_y = 33;
-					pos = sbar_bottom - pos;
-					pos_x = ammosector_pos;
-					drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					if (!a)
-						draw_pic_expanding(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL, 1 - bound(0, (rm_hud_ammo_notify_time - time)*2, 1));
-
-					if (a < 10 && !isclip)
-						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-					else
-						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				}
+				if (a < 10 && !isclip)
+					sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				else
+					sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			}
 		} else {
-			if (CVAR(cl_rm_hud_old)) {
-				switch (i) {
-				case 0: pos_x = 286; pos_y = 48; break; // shells
-				case 1: pos_x = 286; pos_y = 26; break; // bullets
-				case 2: pos_x = 200; pos_y = 48; break; // rockets
-				case 3: pos_x = 200; pos_y = 26; break; // cells
-				}
-				pos = sbar_bottom - pos;
-				if (sbar_stat_items & itemcode)
-					drawpic(pos + '0 1.5 0', "gfx/hud/sb_ammobg", '80 22 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-
-				drawpic(pos + '56 3 0', rm_hud_get_ammo_picture(i), '18 18 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-				if (a < 10) {
-					if (sbar_stat_items & itemcode)
-						sbar_draw_num(pos + '6 4.5 0', a, 3, 0, 16, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-					else
-						sbar_draw_num(pos + '6 4.5 0', a, 3, 0, 16, '0.7 0 0', 0, sbar_alpha_fg * 0.7, DRAWFLAG_NORMAL);
-				} else {
-					if (sbar_stat_items & itemcode)
-						sbar_draw_num(pos + '6 4.5 0', a, 3, 0, 16, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-					else
-						sbar_draw_num(pos + '6 4.5 0', a, 3, 0, 16, '0.7 0.7 0.7', 0, sbar_alpha_fg * 0.7, DRAWFLAG_NORMAL);
-				}
-			} else {
-				if ((sbar_stat_items & itemcode) || ((!CVAR(cl_rm_hud_alt) || CVAR(vid_conwidth) < 950) && a_unused == 4 && i == rm_hud_ammo_last)) {
-					pos_y = sbar_bottom_y - 33;
-					pos_x = ammosector_pos;
-					rm_hud_ammo_last = i;
-					drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					if (a < 10 && !isclip)
-						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-					else
-						sbar_draw_num(pos + '26 5 0', (isclip ? max(0, isclip) : a), 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				}
-				if ((isclip || !(sbar_stat_items & itemcode)) && !(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO)) {
-					pos_y = sbar_bottom_y - 43;
-					pos_x = ammosector_pos - bw_left + ((RM_HUD_SECWIDTH_NORMAL + bw_right)/2) + a_offset - (42/2) * min(a_unused, ((CVAR(cl_rm_hud_alt) && CVAR(vid_conwidth) >= 950) ? 4 : 3));
-					drawpic(pos, rm_hud_get_ammo_picture(i), '10 10 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					sbar_draw_num(pos + '9 1 0', a, 3, 0, 10, '0.7 0.7 0.7', 0, sbar_alpha_fg * 0.7, DRAWFLAG_NORMAL);
-					a_offset += 42;
-				}
+			if ((sbar_stat_items & itemcode) || ((!CVAR(cl_rm_hud_alt) || CVAR(vid_conwidth) < 950) && a_unused == 4 && i == rm_hud_ammo_last)) {
+				pos_y = sbar_bottom_y - 33;
+				pos_x = ammosector_pos;
+				rm_hud_ammo_last = i;
+				drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				if (a < 10 && !isclip)
+					sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				else
+					sbar_draw_num(pos + '26 5 0', (isclip ? max(0, isclip) : a), 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			}
+			if ((isclip || !(sbar_stat_items & itemcode)) && !(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO)) {
+				pos_y = sbar_bottom_y - 43;
+				pos_x = ammosector_pos - bw_left + ((RM_HUD_SECWIDTH_NORMAL + bw_right)/2) + a_offset - (42/2) * min(a_unused, ((CVAR(cl_rm_hud_alt) && CVAR(vid_conwidth) >= 950) ? 4 : 3));
+				drawpic(pos, rm_hud_get_ammo_picture(i), '10 10 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(pos + '9 1 0', a, 3, 0, 10, '0.7 0.7 0.7', 0, sbar_alpha_fg * 0.7, DRAWFLAG_NORMAL);
+				a_offset += 42;
 			}
 		}
 	}
