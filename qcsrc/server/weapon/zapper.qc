@@ -517,6 +517,7 @@ void(void) weapon_zapper_attack3 {
 	b.zapper_shield = e;
 	b.nextthink = time;
 	b.solid = SOLID_BSP;
+	b.armorvalue = 1; //for stopping bullets
 	b.alpha = -1;
 	setmodel(b, "models/vhshield.md3");
 	antilag_add(b);
