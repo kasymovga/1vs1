@@ -404,7 +404,6 @@ void(void) rm_hud_draw {
 			drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, hudflash_resultcolor, hudflash_resultalpha, DRAWFLAG_NORMAL);
 			#endif
 		}
-		if (deathorobserver) goto skiphealthammo;
 	} else {
 		hudline_y = 15;
 		hudline_pos_y = sbar_bottom_y - 24;
@@ -762,9 +761,11 @@ void(void) rm_hud_draw {
 	for (float i = 0; i < 4; ++i) {
 		a = getstati(rm_hud_get_ammo_stat(i));
 		if (sbar_stat_items & rm_hud_get_ammo_item_code(i)) {
-			++a_unused;
 			if (isclip || a > 0)
 				a_none = FALSE;
+
+			if not(isclip)
+				++a_unused;
 		} else if (a <= 0) {
 			++a_unused;
 		} else {
@@ -784,9 +785,6 @@ void(void) rm_hud_draw {
 		a = getstati(rm_hud_get_ammo_stat(i)); // how much ammo do we have of type i?
 		float itemcode = rm_hud_get_ammo_item_code(i);
 		if (isclip && (itemcode & sbar_stat_items)) {
-			if (sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO)
-				a = max(0, isclip);
-
 			if (rm_hud_ammo_progress_weapon == weapon_current) {
 				rm_hud_ammo_progress_max = max(isclip, rm_hud_ammo_progress_max);
 			} else {
@@ -860,18 +858,18 @@ void(void) rm_hud_draw {
 						sbar_draw_num(pos + '6 4.5 0', a, 3, 0, 16, '0.7 0.7 0.7', 0, sbar_alpha_fg * 0.7, DRAWFLAG_NORMAL);
 				}
 			} else {
-				pos_y = 33;
-				pos = sbar_bottom - pos;
-				pos_x = ammosector_pos;
 				if ((sbar_stat_items & itemcode) || ((!CVAR(cl_rm_hud_alt) || CVAR(vid_conwidth) < 950) && a_unused == 4 && i == rm_hud_ammo_last)) {
+					pos_y = sbar_bottom_y - 33;
+					pos_x = ammosector_pos;
 					rm_hud_ammo_last = i;
 					drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 					if (a < 10 && !isclip)
 						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					else
-						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				} else if (!(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO)) {
-					pos_y -= 10;
+						sbar_draw_num(pos + '26 5 0', (isclip ? max(0, isclip) : a), 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				}
+				if ((isclip || !(sbar_stat_items & itemcode)) && !(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO)) {
+					pos_y = sbar_bottom_y - 43;
 					pos_x = ammosector_pos - bw_left + ((RM_HUD_SECWIDTH_NORMAL + bw_right)/2) + a_offset - (42/2) * min(a_unused, ((CVAR(cl_rm_hud_alt) && CVAR(vid_conwidth) >= 950) ? 4 : 3));
 					drawpic(pos, rm_hud_get_ammo_picture(i), '10 10 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 					sbar_draw_num(pos + '9 1 0', a, 3, 0, 10, '0.7 0.7 0.7', 0, sbar_alpha_fg * 0.7, DRAWFLAG_NORMAL);
