@@ -107,7 +107,7 @@ void(entity e, string args, float set) jetpack_ability_init {
 	if (e) {
 		if (set) {
 			e.items |= (IT_JETPACK | IT_FUEL_REGEN);
-			e.ammo_fuel = max(0, cvar("g_balance_fuel_rotstable"));
+			e.ammo_fuel = (g_jetpack_fuel ? max(0, cvar("g_balance_fuel_rotstable")): 999);
 		}
 	} else
 		jetpack_enable();
