@@ -67,7 +67,7 @@ set mixed_arts_g_laser_damage 0
 set mixed_arts_g_jetpack_fuel 1
 set mixed_arts_g_balance_fuel_regen 0.1
 set mixed_arts_g_balance_fuel_regenlinear 0
-set mixed_arts_g_balance_fuel_regenstable 99
+set mixed_arts_g_balance_fuel_regenstable 60
 
 set mixed_arts_g_weapon_extra_0_model ok_sniper
 set mixed_arts_g_weapon_extra_0_impulse 1
