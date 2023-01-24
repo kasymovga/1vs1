@@ -230,7 +230,7 @@ void(void) physics_move {
 						neworigin2 = trace_endpos;
 						neworigin2_z = trace1_endpos_z;
 						trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
-						if (trace_plane_normal_z > 0.7 || trace_plane_normal == '0 0 0') { //continue if step on ground, trace_plane_normal is 0-vector sometimes, engine bug?
+						if (trace_plane_normal_z > 0.7 || trace_plane_normal == '0 0 0' || (physics_flags & FL_ONGROUND)) { //continue if step on ground or if already on ground, trace_plane_normal is 0-vector sometimes, engine bug?
 							trace1_fraction = trace2_fraction;
 							trace1_plane_normal = trace2_plane_normal;
 							trace1_endpos = trace_endpos;
