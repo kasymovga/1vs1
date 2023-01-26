@@ -564,7 +564,24 @@ void(void) weapon_zapper_accumulate {
 	}
 }
 
+var void(entity e) weapon_zapper_teleport_origin_set_next;
+void(entity e) weapon_zapper_teleport_origin_set {
+	entity e2;
+	if ((e2 = e.zapper_shield)) //have shield
+	if ((e2 = e2.zapper_shield)) { //have blocker
+		vector v_forward_save = v_forward;
+		vector v_up_save = v_up;
+		vector v_right_save = v_right;
+		weapon_zapper_shield_blocker_setorigin(e2);
+		v_forward = v_forward_save;
+		v_up = v_up_save;
+		v_right = v_right_save;
+		antilag_teleported(e2);
+	}
+	weapon_zapper_teleport_origin_set_next(e);
+}
 
+float weapon_zapper_init_done;
 float(float req) weapon_zapper {
 	if (req == WEAPON_REQUEST_AIM) {
 		if (vlen(self.origin-self.enemy.origin) < g_balance_zapper_primary_range)
@@ -658,7 +675,11 @@ float(float req) weapon_zapper {
 		else
 			self.zapper_heat = -1;
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEAPON_ZAPPER);
+		if not(weapon_zapper_init_done) {
+			weapon_zapper_teleport_origin_set_next = plugin_chain_teleport_origin_set;
+			plugin_chain_teleport_origin_set = weapon_zapper_teleport_origin_set;
+			weapon_zapper_init_done = TRUE;
+		}
 	} else if (req == WEAPON_REQUEST_CLEAR) {
 		if (self.zapper_spinner) {
 			remove(self.zapper_spinner);

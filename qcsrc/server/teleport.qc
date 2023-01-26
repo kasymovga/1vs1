@@ -7,6 +7,7 @@ void(entity e, vector v, float t) teleport_origin_set {
 	// don't reset back to last position, even if new position is stuck in solid
 	e.oldorigin = e.origin;
 	antilag_teleported(e);
+	plugin_chain_teleport_origin_set(e);
 	physics_mark_as_teleported(e, t);
 	BITXOR_ASSIGN(e.effects, EFFECT_TELEPORT_BIT);
 	projectile_update_after_teleport(e);
