@@ -118,7 +118,6 @@ NADGETDEFS
 
 void nadget_Pick(float token);
 
-#define BUTTON_NADGET2 button9
 #define RM_SOUND_LASER_SECONDARY "weapons/rm_laser2.wav"
 #define RM_SOUND_LASER_PRIMARY "weapons/rm_laser1.wav"
 float NADGET_SCORE;

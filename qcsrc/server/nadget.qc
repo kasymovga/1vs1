@@ -761,7 +761,7 @@ void nadget_PlayerPreThink(void) {
     float n_type;
 
     if(!held) {
-        held = self.BUTTON_NADGET2;
+        held = self.BUTTON_HOOK;
         if(held) {
             isalt = TRUE;
         }
