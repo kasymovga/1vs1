@@ -74,7 +74,7 @@ void(void) havocbot_ai {
 	}
 	havocbot_aim();
 	bot_aim_lag_update();
-	if (self.bot_aimtarg) {
+	if (self.bot_aimtarg && self.bot_aimtarg.bot_attack) {
 		self.aistatus |= AI_STATUS_ATTACKING;
 		self.aistatus &= ~AI_STATUS_ROAMING;
 		if (self.weapon) {
