@@ -10,7 +10,6 @@ CLASS(NexuizCampaignList) EXTENDS(NexuizListBox)
 	METHOD(NexuizCampaignList, destroy, void(entity))
 	METHOD(NexuizCampaignList, clickListBoxItem, void(entity, float, vector, float))
 
-	ATTRIB(NexuizCampaignList, campaignGlob, float, 0)
 	ATTRIB(NexuizCampaignList, realFontSize, vector, '0 0 0')
 	ATTRIB(NexuizCampaignList, columnPreviewOrigin, float, 0)
 	ATTRIB(NexuizCampaignList, columnPreviewSize, float, 0)
@@ -92,14 +91,11 @@ entity makeNexuizCampaignList()
 void configureNexuizCampaignListNexuizCampaignList(entity me)
 {
 	me.configureNexuizListBox(me);
-	me.campaignGlob = search_begin("maps/campaignr*.txt", TRUE, TRUE);
 	me.loadCvars(me);
 }
 
 void destroyNexuizCampaignList(entity me)
 {
-	if(me.campaignGlob >= 0)
-		search_end(me.campaignGlob);
 }
 
 void loadCvarsNexuizCampaignList(entity me)
