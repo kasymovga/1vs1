@@ -400,6 +400,7 @@ float(string s) physics_cvar {
 
 void(void) physics_in_nodrop {
 	if (g_nodropdamage > 0)
+	if (self.deadflag) //damage corpses and frozen players
 		damage(self, world, world, g_nodropdamage * frametime, DEATH_HURTTRIGGER, self.origin, '0 0 0');
 }
 
