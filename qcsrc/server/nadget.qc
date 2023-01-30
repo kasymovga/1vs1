@@ -321,9 +321,20 @@ void(entity e, string args, float set) nadget_ability_init {
 			self = e;
 			self.hg_type1_picked &= ~1024;
 			if (args != "") {
-				self.hg_type1 = self.hg_type1_picked = nadget_NameToType(args);
+				string arg1 = str_car(args);
+				self.hg_type1 = self.hg_type1_picked = nadget_NameToType(arg1);
 				self.hg_type1_picked |= 1024;
-				if (g_nadgets_show_in_sbar) score_player_set(self, NADGET_SCORE, self.hg_type1);
+				string arg2 = str_cdr(args);
+				if (arg2 != "")
+					self.hg_type2 = self.hg_type2_picked = nadget_NameToType(arg2);
+				else
+					self.hg_type2 = self.hg_type2_picked = 0;
+
+				if (g_nadgets_show_in_sbar) {
+					score_player_set(self, NADGET_SCORE, self.hg_type1);
+					if (g_nadgets_double)
+						score_player_set(self, NADGET_SCORE_SECONDARY, self.hg_type2);
+				}
 				nadget_ResetAmmo(self, FALSE);
 			} else if not(nadget_ShowMenu(0))
 				nadget_ResetAmmo(self, FALSE);
@@ -337,7 +348,7 @@ void(entity e, string args, float set) nadget_ability_init {
 			if (g_nadgets_show_in_sbar) {
 				score_player_set(self, NADGET_SCORE, self.hg_type1);
 				if (g_nadgets_double)
-					score_player_set(self, NADGET_SCORE, self.hg_type1);
+					score_player_set(self, NADGET_SCORE_SECONDARY, self.hg_type2);
 			}
 		}
 	} else
@@ -871,7 +882,7 @@ void nadget_ResetAmmo(entity p, float clearammo) {
 		if (g_nadgets_show_in_sbar) {
 			score_player_set(self, NADGET_SCORE, self.hg_type1);
 			if (g_nadgets_double)
-				score_player_set(self, NADGET_SCORE, self.hg_type2);
+				score_player_set(self, NADGET_SCORE_SECONDARY, self.hg_type2);
 		}
 		return;
 	}
