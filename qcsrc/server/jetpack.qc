@@ -58,7 +58,7 @@ void() jetpack_player_effects {
 	else
 		self.items &= ~IT_FUEL;
 
-	if (physics_button_jump && (physics_flags & FL_JUMPRELEASED) && !(physics_flags & FL_ONGROUND) && !physics_waterlevel && jetpack_using() && !self.deadflag) {
+	if (self.BUTTON_JUMP && (self.flags & FL_JUMPRELEASED) && !(self.flags & FL_ONGROUND) && !self.waterlevel && jetpack_using() && !self.deadflag) {
 		if not(self.modelflags & MF_ROCKET) {
 			sound(self, CHAN_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
 			self.modelflags |= MF_ROCKET;
