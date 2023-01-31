@@ -75,7 +75,7 @@ float(float req) weapon_chainsaw {
 		if (weapon_prepareattack(0, g_balance_melee_refire)) {
 			player_sound(self, CHAN_WEAPON, "weapons/chainsaw_active_1.wav", VOL_BASE, ATTN_NORM);
 			weapon_melee_attack(1, g_balance_chainsaw_secondary_damage, "");
-			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_melee_animtime, weapon_ready);
+			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_melee_animtime, weapon_chainsaw_ready);
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		dlc_require("chainsaw_v2");
