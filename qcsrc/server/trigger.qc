@@ -514,20 +514,12 @@ float g_trigger_hurt_interval;
 .float triggerhurttime;
 void(void) trigger_hurt_touch {
 	// only do the TRIGGER_EXACT_TOUCH checks when really needed (saves some cpu)
-	if (other.iscreature) {
-		if (other.takedamage)
-		if (other.triggerhurttime < time) {
-			TRIGGER_EXACT_TOUCH;
-			other.triggerhurttime = time + g_trigger_hurt_interval;
-			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-		}
-	} else {
-		if (!other.owner) {
-			if (other.items & IT_KEY1 || other.items & IT_KEY2) {// reset flag
-				TRIGGER_EXACT_TOUCH;
-				other.pain_finished = min(other.pain_finished, time + 2);
-			}
-		}
+	if (other.takedamage)
+	if not(other.flags & FL_PROJECTILE)
+	if (other.triggerhurttime < time) {
+		TRIGGER_EXACT_TOUCH;
+		other.triggerhurttime = time + g_trigger_hurt_interval;
+		damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 	}
 	return;
 }
