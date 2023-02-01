@@ -267,6 +267,17 @@ void(entity e) ctf_flag_return {
 	ctf_flag_regen(e);
 }
 
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) ctf_flag_damage {
+	if (self.owner)
+		return;
+
+	if (deathtype == DEATH_HURTTRIGGER) {
+		game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 respawned"), 1);
+		sound(other, CHAN_AUTO, self.noise3, VOL_BASE, ATTN_NONE);
+		ctf_flag_return(self);
+	}
+}
+
 void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	entity p;
 	if (e.classname != "ctf_flag_team") {
@@ -299,6 +310,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	setattachment(e, world, "");
 	e.damageforcescale = g_ctf_damageforcescale;
 	e.takedamage = DAMAGE_YES;
+	e.event_damage = ctf_flag_damage;
 	if (p.flagcarried == e)
 		p.flagcarried = world;
 
@@ -353,8 +365,8 @@ void() ctf_flag_think {
 
 		setattachment(self, world, "");
 		if (time > self.pain_finished) {
-			bprint("The ", self.netname, " has returned to base\n");
-			sound (self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
+			game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 respawned"), 1);
+			sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
 		}
 		return;
@@ -539,8 +551,6 @@ void() ctf_flag_touch {
 					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			score_player_add(other, CTF_SCORE_RETURNS, 1);
-			game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
-			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
 		} else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + g_ctf_delay_collect)) {
 			if (g_ctf_flag_pickup_effects) // field pickup effect
