@@ -776,6 +776,8 @@ void nadget_PlayerPreThink(void) {
             isalt = TRUE;
         }
     }
+	if (isalt && !self.hg_type2)
+		return;
 
     float charging;
 
