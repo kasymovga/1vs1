@@ -22,6 +22,7 @@ set mixed_arts_g_ability_class8_value "health=100 armor=50 weapons=zapper physic
 set mixed_arts_g_balance_zapper_secondary_shield 2
 set mixed_arts_g_balance_zapper_secondary_range 3000
 set mixed_arts_g_balance_zapper_secondary_arc 2
+set mixed_arts_g_nadgets_double 1
 set mixed_arts_g_use_ammunition 0
 set mixed_arts_g_pickup_items 1
 set mixed_arts_g_pickup_weapons 0
