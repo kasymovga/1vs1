@@ -71,14 +71,14 @@ void(float killed) nadget_player_clear {
 			self.hg_ctx_type_picked = self.hg_ctx_type_picked_nextround;
 
 		self.hg_ctx_type_picked_nextround = -1;
-	})
+	}, self.hg_type2)
 	self.hg_power = 0;
 	self.hg_bonus = 0;
 	self.hg_bonustype = NADGET_NORMAL;
 	self.hg_shield = 0;
 	self.hg_linker = world;
 	if (self.classname == "player")
-		NADGET_DO_IN_ALL_CONTEXTS(nadget_ResetAmmo(self, FALSE);)
+		NADGET_DO_IN_ALL_CONTEXTS(nadget_ResetAmmo(self, FALSE);, self.hg_type2)
 
 	self.hg_shield = 0;
 	self.hg_stealth = 0;
@@ -223,7 +223,7 @@ void(void) nadget_score_basics_end {
 	nadget_score_basics_end_next();
 	if not(g_nadgets_show_in_sbar) return;
 	NADGET_SCORE = score_register("nade", 0);
-	if not(g_nadgets_double) return;
+	if not(g_nadgets_double || NADGET_ABILITY) return;
 	NADGET_SCORE_SECONDARY = score_register("nade2", 0);
 }
 
@@ -277,7 +277,7 @@ void(void) nadget_init_common {
 	plugin_chain_bot_aim = nadget_bot_aim;
 	nadget_player_obituary_frag_next = plugin_chain_player_obituary_frag;
 	plugin_chain_player_obituary_frag = nadget_player_obituary_frag;
-	if (g_nadgets_double) {
+	if (g_nadgets_double || NADGET_ABILITY) {
 		addstat(STAT_HGTYPE2, STAT_INT, hg_type2);
 		addstat(STAT_HGREFIRE2, STAT_FLOAT, hg_next2);
 		addstat(STAT_HGAMMO2, STAT_INT, hg_ammo2);
@@ -332,13 +332,16 @@ void(entity e, string args, float set) nadget_ability_init {
 
 				if (g_nadgets_show_in_sbar) {
 					score_player_set(self, NADGET_SCORE, self.hg_type1);
-					if (g_nadgets_double)
-						score_player_set(self, NADGET_SCORE_SECONDARY, self.hg_type2);
+					score_player_set(self, NADGET_SCORE_SECONDARY, self.hg_type2);
 				}
 				nadget_ResetAmmo(self, FALSE);
-			} else if not(nadget_ShowMenu(0))
-				nadget_ResetAmmo(self, FALSE);
+			} else {
+				if not(nadget_ShowMenu(0))
+					nadget_ResetAmmo(self, FALSE);
 
+				if not(g_nadgets_double)
+					self.hg_type2 = self.hg_type2_picked = 0;
+			}
 			self = oldself;
 		} else {
 			nadget_RemoveAll(e);
@@ -347,8 +350,7 @@ void(entity e, string args, float set) nadget_ability_init {
 			e.hg_type1_picked = 0;
 			if (g_nadgets_show_in_sbar) {
 				score_player_set(self, NADGET_SCORE, self.hg_type1);
-				if (g_nadgets_double)
-					score_player_set(self, NADGET_SCORE_SECONDARY, self.hg_type2);
+				score_player_set(self, NADGET_SCORE_SECONDARY, self.hg_type2);
 			}
 		}
 	} else
@@ -408,9 +410,6 @@ void nadget_precache(void) {
 
 void nadget_SetContext(float isalt) {
     hg_context_isaltintended = isalt;
-
-    if(!g_nadgets_double)
-        isalt = FALSE;
 
     if(isalt) {
         hg_ctx_next = hg_next2;
@@ -846,7 +845,7 @@ void nadget_PlayerPreThink(void) {
             }
         } else
             self.hg_ctx_regenrate = 0;
-    })
+    }, self.hg_type2)
 
     if(self.hg_detonatepressed)
         self.hg_detonatepressed = FALSE;
@@ -881,7 +880,7 @@ void nadget_ResetAmmo(entity p, float clearammo) {
 		p.hg_type2 = 0;
 		if (g_nadgets_show_in_sbar) {
 			score_player_set(self, NADGET_SCORE, self.hg_type1);
-			if (g_nadgets_double)
+			if (NADGET_SCORE_SECONDARY)
 				score_player_set(self, NADGET_SCORE_SECONDARY, self.hg_type2);
 		}
 		return;
@@ -1053,7 +1052,7 @@ void nadget_Pick(float tokens) {
 			sprint(self, "^1This nadget type is either invalid or not allowed on this server.\n");
 			return;
 		}
-	})
+	}, g_nadgets_double)
 }
 
 float nadget_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {

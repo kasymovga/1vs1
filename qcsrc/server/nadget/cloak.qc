@@ -41,7 +41,7 @@ void nadget_Cloak_PlayerFrame(void) {
             NADGET_DO_IN_ALL_CONTEXTS({
                 if(self.hg_ctx_type == NADGET_CLOAK)
                     nadget_SetCooldown(hg_ctx_next, 0, g_nadgets_cloak_cooldown_decloak);
-            })
+            }, self.hg_type2)
 
             sound(self, CHAN_AUTO, "misc/unstealth.wav", VOL_BASE, ATTN_NORM);
         }

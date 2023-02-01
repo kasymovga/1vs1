@@ -90,8 +90,7 @@ float hg_ammo_available;
 #define GRENVARNAME(t,v) strcat("g_nadgets_", nadget_TypeToName(t), "_", (v))
 #define GRENVAR(t,v) (cvar(GRENVARNAME(t,v)))
 
-#define NADGET_DO_IN_ALL_CONTEXTS(block) { nadget_SetContext(FALSE); block if(g_nadgets_double) { nadget_SetContext(TRUE); block } }
-#define NADGET_LOOP_FOR_ALL_CONTEXTS(i,block) for(i = 0; i <= g_nadgets_double; ++i) { nadget_SetContext(i); block }
+#define NADGET_DO_IN_ALL_CONTEXTS(block, secondary) { nadget_SetContext(FALSE); block if(secondary) { nadget_SetContext(TRUE); block } }
 
 enum {
     NADGET_ATTACK_OK,

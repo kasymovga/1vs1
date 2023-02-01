@@ -125,7 +125,7 @@ float nadget_GenericProjectile_TryStick(entity targ, vector normal) {
 
             if(!entity_move_out_of_solid(self)) {
                 if(!self.hg_isbonus) NADGET_DO_IN_ALL_CONTEXTS(if(self.owner.hg_ctx_type == NADGET_TRANSLOC)
-                    self.owner.hg_ctx_ammo += 1;)
+                    self.owner.hg_ctx_ammo += 1;, self.owner.hg_type2)
 
                 bprint("^1Couldn't move ", self.owner.netname, "^1's translocator out of solid! Teleport aborted.\n");
                 nadget_GenericProjectile_Remove();
