@@ -390,11 +390,6 @@ set g_nadgets_gg_bonus_amount_multiplier 1
 set g_nadgets_gg_bonus_random_weight 0
 
 // Zapper Sentry
-set g_nadgets_sentry_regen_time 50
-set g_nadgets_sentry_regen_factor 0
-set g_nadgets_sentry_regen_exponent 1.3
-set g_nadgets_sentry_regen_limit 2
-set g_nadgets_sentry_regen_scale 1
 set g_nadgets_sentry_cooldown 1
 set g_nadgets_sentry_global_cooldown 1.0
 set g_nadgets_sentry_health 250
