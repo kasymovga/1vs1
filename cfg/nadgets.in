@@ -393,7 +393,7 @@ set g_nadgets_gg_bonus_random_weight 0
 set g_nadgets_sentry_cooldown 1
 set g_nadgets_sentry_global_cooldown 1.0
 set g_nadgets_sentry_health 250
-set g_nadgets_sentry_health_degenerate_when_damaged 2
+set g_nadgets_sentry_health_degenerate_when_damaged 0
 set g_nadgets_sentry_beam_range 400
 set g_nadgets_sentry_beam_dps 20
 set g_nadgets_sentry_beam_force -10
@@ -417,6 +417,8 @@ set g_nadgets_sentry_bonus_random_weight 0.5
 set g_nadgets_sentry_levitation 0
 set g_nadgets_sentry_friction 3
 set g_nadgets_sentry_pushfactor 0.5
+set g_nadgets_sentry_rot_pause 10
+set g_nadgets_sentry_rot 5
 
 // Raze
 set g_nadgets_raze_regen_time 11

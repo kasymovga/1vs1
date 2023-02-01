@@ -21,6 +21,8 @@ float g_nadgets_sentry_shock_force;
 float g_nadgets_sentry_shock_energy_cost;
 float g_nadgets_sentry_friction;
 float g_nadgets_sentry_pushfactor;
+float g_nadgets_sentry_rot;
+float g_nadgets_sentry_rot_pause;
 
 .float spawntime;
 
@@ -372,10 +374,13 @@ void nadget_Sentry_Think(void) {
         }
     }
 
-    if(self.health < g_nadgets_sentry_health)
-        self.health = approach(self.health, 0, frametime * g_nadgets_sentry_health_degenerate_when_damaged);
+	if(self.health < g_nadgets_sentry_health)
+		self.health -= frametime * g_nadgets_sentry_health_degenerate_when_damaged;
 
-    if(!self.health) {
+	if (g_nadgets_sentry_rot && time > self.pauserothealth_finished)
+		self.health -= g_nadgets_sentry_rot * frametime;
+
+    if(self.health <= 0) {
         nadget_Sentry_Explode();
         return;
     }
@@ -414,6 +419,7 @@ void nadget_Sentry_Damage(entity inflictor, entity attacker, float _damage, floa
             _damage *= g_nadgets_sentry_repairfactor;
 
         heal(self, inflictor, attacker, _damage, 0, g_nadgets_sentry_health, 0, deathtype, 0, 0, hitloc, '0 0 0');
+		self.pauserothealth_finished = time + g_nadgets_sentry_rot_pause;
     }
 
     if(self.health <= 0)
@@ -514,6 +520,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     e.angles = '0 360 0' * random();
     e.reset = nadget_Sentry_Remove;
     e.think = nadget_Sentry_Think;
+    e.pauserothealth_finished = time + g_nadgets_sentry_rot_pause;
     e.nextthink = time;
     e.hg_type = NADGET_SENTRY;
     e.view_ofs = '0 0 100';
@@ -579,7 +586,9 @@ NADGET_HOOKFUNCTION(sentry, Init) {
 	CVAR_CACHE(g_nadgets_sentry_shock_damage);
 	CVAR_CACHE(g_nadgets_sentry_shock_force);
 	CVAR_CACHE(g_nadgets_sentry_shock_energy_cost);
-    CVAR_CACHE(g_nadgets_sentry_friction);
-    CVAR_CACHE(g_nadgets_sentry_pushfactor);
+	CVAR_CACHE(g_nadgets_sentry_friction);
+	CVAR_CACHE(g_nadgets_sentry_pushfactor);
+	CVAR_CACHE(g_nadgets_sentry_rot);
+	CVAR_CACHE(g_nadgets_sentry_rot_pause);
     return NADGET_INIT_OK;
 }
