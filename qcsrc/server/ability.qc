@@ -5,10 +5,12 @@ var void(entity e, string args, float set) ability_initiators[ABILITY_COUNT_MAX]
 float ability_classes_count;
 string ability_class_names[MENU_ITEMS_MAXCOUNT];
 string ability_class_values[MENU_ITEMS_MAXCOUNT];
+string ability_class_model_list_allowed[MENU_ITEMS_MAXCOUNT];
 float g_ability_class_default;
 float g_ability_kill_on_change;
+float ability_class_model_list_allowed_not_empty;
 
-void(entity e, string al) ability_class_init {
+void(entity e, string al, float ac) ability_class_init {
 	string an, tail, args;
 	tail = al;
 	float i, j, eq;
@@ -16,6 +18,8 @@ void(entity e, string al) ability_class_init {
 	if (e) {
 		oldabilities = e.abilities;
 		e.abilities = 0;
+		if (e.body && ability_class_model_list_allowed_not_empty)
+			e.body.playermodel = ""; //force recheck model
 	}
 	while (tail != "") {
 		an = str_car(tail);
@@ -66,6 +70,12 @@ void(entity e, string al) ability_class_init {
 				float ofs_crouch = stof(str_cdr(args));
 				physics_set_view_offsets(e, ofs_stand * '0 0 1', ofs_crouch * '0 0 1');
 			}
+		} else if (an == "model") {
+			if not(e) {
+				ability_class_model_list_allowed_not_empty = TRUE;
+				str_unzone_ifneeded(ability_class_model_list_allowed[ac]);
+				ability_class_model_list_allowed[ac] = str_zone_ifneeded(strreplace(",", " ", args));
+			}
 		} else {
 			for (i = 0, j = 1; i < ability_count; i++, j *= 2) {
 				if (ability_names[i] == an) {
@@ -97,7 +107,7 @@ void(float s) ability_class_select {
 
 		self.ability_class = s + 1;
 		if (self.classname != "player" && self.team <= 0) {
-			ability_class_init(self, ability_class_values[self.ability_class - 1]); //early call to workaround some issues with delayed ability flags
+			ability_class_init(self, ability_class_values[self.ability_class - 1], self.ability_class); //early call to workaround some issues with delayed ability flags
 			spectator_to_player();
 		} else if (g_ability_kill_on_change) {
 			client_kill_now(self, 0);
@@ -138,7 +148,7 @@ void(entity spot) ability_player_spawn {
 	if (!self.ability_class)
 		self.ability_class = floor(random() * ability_classes_count) + 1;
 
-	ability_class_init(self, ability_class_values[self.ability_class - 1]);
+	ability_class_init(self, ability_class_values[self.ability_class - 1], self.ability_class);
 	ability_player_spawn_next(spot);
 }
 
@@ -157,6 +167,15 @@ float(string cmd, float tokens) ability_cmd_client_handle {
 	return ability_cmd_client_handle_next(cmd, tokens);
 }
 
+var string(string l) ability_player_body_model_list_allowed_next;
+string(string l) ability_player_body_model_list_allowed {
+	string s = ability_class_model_list_allowed[self.ability_class - 1];
+	if (s != "")
+		return ability_player_body_model_list_allowed_next(s);
+
+	return ability_player_body_model_list_allowed_next(l);
+}
+
 void(void) ability_init_delayed {
 	float i;
 	string an, av;
@@ -166,7 +185,7 @@ void(void) ability_init_delayed {
 		if (an == "" || av == "") break;
 		ability_class_names[i] = strzone(an);
 		ability_class_values[i] = strzone(av);
-		ability_class_init(NULL, av);
+		ability_class_init(NULL, av, i);
 	}
 	ability_classes_count = i;
 	if not(ability_classes_count)
@@ -180,6 +199,8 @@ void(void) ability_init_delayed {
 	plugin_chain_gamemenu_send = ability_gamemenu_send;
 	ability_cmd_client_handle_next = plugin_chain_cmd_client_handle;
 	plugin_chain_cmd_client_handle = ability_cmd_client_handle;
+	ability_player_body_model_list_allowed_next = plugin_chain_player_body_model_list_allowed_mod;
+	plugin_chain_player_body_model_list_allowed_mod = ability_player_body_model_list_allowed;
 }
 
 void(void) ability_init {
