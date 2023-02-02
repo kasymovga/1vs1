@@ -117,3 +117,4 @@ var float(float deathtype, entity targ, entity inflictor, entity attacker) plugi
 var string(string s) plugin_map_vote_send_map_name_mod = { return s; }
 var void(void) plugin_chain_score_basics_end = {}
 var void(entity e) plugin_chain_teleport_origin_set = {}
+var string(string l) plugin_chain_player_body_model_list_allowed_mod = { return l; };

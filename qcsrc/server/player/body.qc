@@ -702,24 +702,25 @@ void(string modelname) player_body_setup_lod {
 	player_body_animation_setup();
 }
 
-string(void) player_body_model_list_allowed {
+string() player_body_model_list_allowed {
+	string l = g_player_allowed_models;
 	if (team_mode)
 	if (self.team > 0) {
 		if (self.team == COLOR_TEAM1) {
 			if (g_player_allowed_models_red != "")
-				return g_player_allowed_models_red;
+				l = g_player_allowed_models_red;
 		} else if (self.team == COLOR_TEAM2) {
 			if (g_player_allowed_models_blue != "")
-				return g_player_allowed_models_blue;
+				l = g_player_allowed_models_blue;
 		} else if (self.team == COLOR_TEAM3) {
 			if (g_player_allowed_models_yellow != "")
-				return g_player_allowed_models_yellow;
+				l = g_player_allowed_models_yellow;
 		} else if (self.team == COLOR_TEAM4) {
 			if (g_player_allowed_models_pink != "")
-				return g_player_allowed_models_pink;
+				l = g_player_allowed_models_pink;
 		}
 	}
-	return g_player_allowed_models;
+	return plugin_chain_player_body_model_list_allowed_mod(l);
 }
 
 string(string _playermodel) player_body_model_allowed {
@@ -749,14 +750,18 @@ string(string _playermodel) player_body_model_allowed {
 
 float(string _playermodel, float _skin) player_body_allowed_skin {
 	string allowed_models = player_body_model_list_allowed();
+	string playermodelshort = substring(_playermodel, 14, -1); //without models/player/ prefix
+	string s = strcat(" ", allowed_models, " ");
 	if (str_car(allowed_models) == "")
 		return _skin;
 
-	if (strstrofs(strcat(" ", allowed_models, " "), strcat(" ", _playermodel, " "), 0) >= 0 ||
-			strstrofs(strcat(" ", allowed_models), strcat(" ", _playermodel, ":", ftos(_skin), " "), 0) >= 0)
+	if (strstrofs(s, strcat(" ", _playermodel, " "), 0) >= 0 ||
+			strstrofs(s, strcat(" ", _playermodel, ":", ftos(_skin), " "), 0) >= 0 ||
+			strstrofs(s, strcat(" ", playermodelshort, " "), 0) >= 0 ||
+			strstrofs(s, strcat(" ", playermodelshort, ":", ftos(_skin), " "), 0) >= 0)
 		return _skin;
 
-	float allowed_skin_pos = strstrofs(strcat(" ", allowed_models), strcat(" ", _playermodel, ":"), 0);
+	float allowed_skin_pos = strstrofs(s, strcat(" ", _playermodel, ":"), 0);
 	if (allowed_skin_pos >= 0) {
 		allowed_skin_pos = allowed_skin_pos + strlen(_playermodel) + 1;
 		return stof(str_car(substring(allowed_models, allowed_skin_pos, -1)));
@@ -770,6 +775,7 @@ string(string _playermodel) player_body_model_check {
 	if (strlen(_playermodel) < 4)
 		return fallback;
 	
+	if (strstrofs(_playermodel, "/", 0) < 0) _playermodel = strcat("models/player/", _playermodel);
 	if (substring(_playermodel,0,14) != "models/player/")
 		return fallback;
 	else {
