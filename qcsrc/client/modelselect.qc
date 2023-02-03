@@ -233,6 +233,9 @@ void(void) modelselect_draw {
 }
 
 void(string s, string curmodel, float curskin) modelselect_list_add {
+	if (strstrofs(s, "/", 0) < 0)
+		s = strcat("models/player/", s);
+
 	if (modelselect_list == "")
 		modelselect_list = s;
 	else
