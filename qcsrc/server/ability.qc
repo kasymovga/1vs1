@@ -169,10 +169,12 @@ float(string cmd, float tokens) ability_cmd_client_handle {
 
 var string(string l) ability_player_body_model_list_allowed_next;
 string(string l) ability_player_body_model_list_allowed {
-	string s = ability_class_model_list_allowed[self.ability_class - 1];
-	if (s != "")
-		return ability_player_body_model_list_allowed_next(s);
-
+	string s;
+	if (self.ability_class > 0) {
+		s = ability_class_model_list_allowed[self.ability_class - 1];
+		if (s != "")
+			return ability_player_body_model_list_allowed_next(s);
+	}
 	return ability_player_body_model_list_allowed_next(l);
 }
 
