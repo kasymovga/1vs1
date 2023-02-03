@@ -3,21 +3,11 @@ string g_player_allowed_models_red;
 string g_player_allowed_models_blue;
 string g_player_allowed_models_yellow;
 string g_player_allowed_models_pink;
-string g_player_forcemodel;
-string g_player_forcemodel_red;
-string g_player_forcemodel_blue;
-string g_player_forcemodel_yellow;
-string g_player_forcemodel_pink;
 float g_player_forcecolor;
 float g_player_forcecolor_red;
 float g_player_forcecolor_blue;
 float g_player_forcecolor_yellow;
 float g_player_forcecolor_pink;
-float g_player_forceskin;
-float g_player_forceskin_red;
-float g_player_forceskin_blue;
-float g_player_forceskin_yellow;
-float g_player_forceskin_pink;
 float g_player_brightness;
 
 float(void) player_body_customize;
@@ -823,22 +813,9 @@ string(string _playermodel) player_body_model_check {
 }
 
 void() player_body_model_setup {
-	string forcemodel;
-	float forceskin, forcecolor, chmdl = FALSE, oldskin;
+	float forcecolor, chmdl = FALSE, oldskin;
 	vector m1, m2;
 	if (team_mode) {
-		forcemodel =
-				((self.team == COLOR_TEAM1) ? g_player_forcemodel_red :
-				((self.team == COLOR_TEAM2) ? g_player_forcemodel_blue :
-				((self.team == COLOR_TEAM3) ? g_player_forcemodel_yellow :
-				((self.team == COLOR_TEAM4) ? g_player_forcemodel_pink : g_player_forcemodel))));
-
-		forceskin =
-				((self.team == COLOR_TEAM1) ? g_player_forceskin_red :
-				((self.team == COLOR_TEAM2) ? g_player_forceskin_blue :
-				((self.team == COLOR_TEAM3) ? g_player_forceskin_yellow :
-				((self.team == COLOR_TEAM4) ? g_player_forceskin_pink : g_player_forceskin))));
-
 		forcecolor =
 				((self.team == COLOR_TEAM1) ? g_player_forcecolor_red :
 				((self.team == COLOR_TEAM2) ? g_player_forcecolor_blue :
@@ -848,45 +825,31 @@ void() player_body_model_setup {
 		if (forcecolor < 0)
 			forcecolor = (self.team - 1) * 17;
 	} else {
-		forceskin = g_player_forceskin;
 		forcecolor = g_player_forcecolor;
-		forcemodel = g_player_forcemodel;
 	}
-	if (forcemodel != "" && forcemodel != "0") {
-		if (forcemodel != self.body.playermodel) {
+	if ((self.playermodel != "" && self.body.playermodel != self.playermodel) || self.body.playermodel == "") {
+		self.playermodel = player_body_model_check(self.playermodel);
+		if (self.playermodel != self.body.playermodel) {
 			m1 = self.mins;
 			m2 = self.maxs;
-			player_body_setup_lod(forcemodel);
+			player_body_setup_lod(self.playermodel);
 			setsize(self, m1, m2);
-			chmdl = TRUE;
+			chmdl = (self.playermodel_save != self.playermodel);
 		}
-		oldskin = self.skinindex;
-		if (forceskin >= 0)
-			self.skinindex = forceskin;
-	} else {
-		if ((self.playermodel != "" && self.body.playermodel != self.playermodel) || self.body.playermodel == "") {
-			self.playermodel = player_body_model_check(self.playermodel);
-			if (self.playermodel != self.body.playermodel) {
-				m1 = self.mins;
-				m2 = self.maxs;
-				player_body_setup_lod(self.playermodel);
-				setsize(self, m1, m2);
-				chmdl = (self.playermodel_save != self.playermodel);
-			}
-			if (self.playermodel != "") {
-				str_unzone_ifneeded(self.playermodel_save);
-				self.playermodel_save = strzone(self.playermodel);
-				self.playermodel = "";
-			}
+		if (self.playermodel != "") {
+			str_unzone_ifneeded(self.playermodel_save);
+			self.playermodel_save = strzone(self.playermodel);
+			self.playermodel = "";
 		}
-		oldskin = self.skinindex;
-		if (self.playerskin != "") {
-			self.skinindex = player_body_allowed_skin(self.playermodel_save, stof(self.playerskin));
-			self.playerskin = "";
-		}
-		if (team_mode && self.playermodel == "models/player/nexus.zym" && self.skinindex >= 3 && self.skinindex <= 5) // nexys.zym have skins 3, 4 and 5 as fbgreen/fbred/fborange
-			self.skinindex = 6;
 	}
+	oldskin = self.skinindex;
+	if (self.playerskin != "") {
+		self.skinindex = player_body_allowed_skin(self.playermodel_save, stof(self.playerskin));
+		self.playerskin = "";
+	}
+	if (team_mode && self.playermodel == "models/player/nexus.zym" && self.skinindex >= 3 && self.skinindex <= 5) // nexys.zym have skins 3, 4 and 5 as fbgreen/fbred/fborange
+		self.skinindex = 6;
+
 	if (chmdl || oldskin != self.skinindex)
 		player_species_setup();
 
@@ -1010,16 +973,12 @@ float(void) player_body_base_customize {
 var float(string s, float i) player_body_cmd_client_handle_next;
 float(string s, float i) player_body_cmd_client_handle {
 	if (s == "modelselect") {
-		if (g_player_forcemodel != "" && g_player_forcemodel != "0") {
-			centerprint(self, "Player model forced");
-		} else {
-			msg_entity = self;
-			net_write_byte(MSG_ONE, SVC_TEMPENTITY);
-			net_write_byte(MSG_ONE, NET_TE_CSQC_MODELSELECT);
-			net_write_string(MSG_ONE, self.body.playermodel);
-			net_write_byte(MSG_ONE, stof(self.body.playerskin));
-			net_write_string(MSG_ONE, player_body_model_list_allowed());
-		}
+		msg_entity = self;
+		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+		net_write_byte(MSG_ONE, NET_TE_CSQC_MODELSELECT);
+		net_write_string(MSG_ONE, self.body.playermodel);
+		net_write_byte(MSG_ONE, stof(self.body.playerskin));
+		net_write_string(MSG_ONE, player_body_model_list_allowed());
 		return TRUE;
 	}
 	return player_body_cmd_client_handle_next(s, i);
@@ -1027,7 +986,7 @@ float(string s, float i) player_body_cmd_client_handle {
 
 var void(void(string item, string cmd) Add_Item) player_body_gamemenu_add_items_next;
 void(void(string item, string cmd) add) player_body_gamemenu_add_items {
-	if (g_player_forcemodel == "" || g_player_forcemodel == "0")
+	if (g_player_allowed_models == "" || str_cdr(g_player_allowed_models) != "")
 		add("Change model", "cmd modelselect;");
 
 	player_body_gamemenu_add_items_next(add);
@@ -1113,51 +1072,56 @@ void(void) player_body_init {
 	CVAR_CACHE_STR(g_player_allowed_models_blue);
 	CVAR_CACHE_STR(g_player_allowed_models_yellow);
 	CVAR_CACHE_STR(g_player_allowed_models_pink);
-	CVAR_CACHE_STR(g_player_forcemodel);
-	CVAR_CACHE_STR(g_player_forcemodel_red);
-	CVAR_CACHE_STR(g_player_forcemodel_blue);
-	CVAR_CACHE_STR(g_player_forcemodel_yellow);
-	CVAR_CACHE_STR(g_player_forcemodel_pink);
+	string g_player_forcemodel = cvar_string("g_player_forcemodel");
+	string g_player_forcemodel_red = cvar_string("g_player_forcemodel_red");
+	string g_player_forcemodel_blue = cvar_string("g_player_forcemodel_blue");
+	string g_player_forcemodel_yellow = cvar_string("g_player_forcemodel_yellow");
+	string g_player_forcemodel_pink = cvar_string("g_player_forcemodel_pink");
 	CVAR_CACHE_CHECK_EMPTY(g_player_forcecolor, -2);
 	CVAR_CACHE_CHECK_EMPTY(g_player_forcecolor_red, -2);
 	CVAR_CACHE_CHECK_EMPTY(g_player_forcecolor_blue, -2);
 	CVAR_CACHE_CHECK_EMPTY(g_player_forcecolor_yellow, -2);
 	CVAR_CACHE_CHECK_EMPTY(g_player_forcecolor_pink, -2);
-	CVAR_CACHE(g_player_forceskin);
-	CVAR_CACHE(g_player_forceskin_red);
-	CVAR_CACHE(g_player_forceskin_blue);
-	CVAR_CACHE(g_player_forceskin_yellow);
-	CVAR_CACHE(g_player_forceskin_pink);
+	float g_player_forceskin = cvar("g_player_forceskin");
+	float g_player_forceskin_red = cvar("g_player_forceskin_red");
+	float g_player_forceskin_blue = cvar("g_player_forceskin_blue");
+	float g_player_forceskin_yellow = cvar("g_player_forceskin_yellow");
+	float g_player_forceskin_pink = cvar("g_player_forceskin_pink");
 	CVAR_CACHE(g_player_brightness);
-	if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
-		str_unzone_ifneeded(g_player_forcemodel_blue);
-		g_player_forcemodel_blue = str_zone_ifneeded(g_player_forcemodel);
-	}
-	if (g_player_forcemodel_red == "" || g_player_forcemodel_red == "0") {
-		str_unzone_ifneeded(g_player_forcemodel_red);
-		g_player_forcemodel_red = str_zone_ifneeded(g_player_forcemodel);
-	}
-	if (g_player_forcemodel_yellow == "" || g_player_forcemodel_yellow == "0") {
-		str_unzone_ifneeded(g_player_forcemodel_yellow);
-		g_player_forcemodel_yellow = str_zone_ifneeded(g_player_forcemodel);
-	}
-	if (g_player_forcemodel_pink == "" || g_player_forcemodel_pink == "0") {
-		str_unzone_ifneeded(g_player_forcemodel_pink);
-		g_player_forcemodel_pink = str_zone_ifneeded(g_player_forcemodel);
-	}
-	if (g_player_forceskin_blue < 0)
-		g_player_forceskin_blue = g_player_forceskin;
+	if (g_player_forcemodel != "" && g_player_forcemodel != "0") {
+		str_unzone_ifneeded(g_player_allowed_models);
+		str_unzone_ifneeded(g_player_allowed_models_red);
+		str_unzone_ifneeded(g_player_allowed_models_blue);
+		str_unzone_ifneeded(g_player_allowed_models_yellow);
+		str_unzone_ifneeded(g_player_allowed_models_pink);
+		g_player_allowed_models = strcat(g_player_forcemodel, (g_player_forceskin >= 0 ? strcat(":", ftos(g_player_forceskin)) : ""));
+		if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
+			g_player_allowed_models_blue = strcat(g_player_forcemodel_blue, (g_player_forceskin_blue >= 0 ? strcat(":", ftos(g_player_forceskin_blue)) : ""));;
+		} else
+			g_player_allowed_models_blue = "";
 
-	if (g_player_forceskin_red < 0)
-		g_player_forceskin_red = g_player_forceskin;
+		if (g_player_forcemodel_red == "" || g_player_forcemodel_red == "0") {
+			g_player_allowed_models_red = strcat(g_player_forcemodel_red, (g_player_forceskin_red >= 0 ? strcat(":", ftos(g_player_forceskin_red)) : ""));;
+		} else
+			g_player_allowed_models_red = "";
 
-	if (g_player_forceskin_yellow < 0)
-		g_player_forceskin_yellow = g_player_forceskin;
+		if (g_player_forcemodel_yellow == "" || g_player_forcemodel_yellow == "0") {
+			g_player_allowed_models_yellow = strcat(g_player_forcemodel_yellow, (g_player_forceskin_yellow >= 0 ? strcat(":", ftos(g_player_forceskin_yellow)) : ""));;
+		} else
+			g_player_allowed_models_yellow = "";
 
-	if (g_player_forceskin_pink < 0)
-		g_player_forceskin_pink = g_player_forceskin;
+		if (g_player_forcemodel_pink == "" || g_player_forcemodel_pink == "0") {
+			g_player_allowed_models_pink = strcat(g_player_forcemodel_pink, (g_player_forceskin_pink >= 0 ? strcat(":", ftos(g_player_forceskin_pink)) : ""));;
+		} else
+			g_player_allowed_models_pink = "";
 
-	if ((g_player_forcemodel == "" || g_player_forcemodel == "0") && str_car(g_player_allowed_models) == "") {
+		g_player_allowed_models = str_zone_ifneeded(g_player_allowed_models);
+		g_player_allowed_models_red = str_zone_ifneeded(g_player_allowed_models_red);
+		g_player_allowed_models_blue = str_zone_ifneeded(g_player_allowed_models_blue);
+		g_player_allowed_models_yellow = str_zone_ifneeded(g_player_allowed_models_yellow);
+		g_player_allowed_models_pink = str_zone_ifneeded(g_player_allowed_models_pink);
+	}
+	if (str_car(g_player_allowed_models) == "") {
 		player_body_precache_all_models("models/player/*.zym");
 		player_body_precache_all_models("models/player/*.dpm");
 		player_body_precache_all_models("models/player/*.md3");
