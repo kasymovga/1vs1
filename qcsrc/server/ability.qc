@@ -72,9 +72,11 @@ void(entity e, string al, float ac) ability_class_init {
 			}
 		} else if (an == "model") {
 			if not(e) {
+				args = strreplace(",", " ", args);
 				ability_class_model_list_allowed_not_empty = TRUE;
 				str_unzone_ifneeded(ability_class_model_list_allowed[ac]);
-				ability_class_model_list_allowed[ac] = str_zone_ifneeded(strreplace(",", " ", args));
+				ability_class_model_list_allowed[ac] = str_zone_ifneeded(args);
+				player_body_precache(args);
 			}
 		} else {
 			for (i = 0, j = 1; i < ability_count; i++, j *= 2) {
