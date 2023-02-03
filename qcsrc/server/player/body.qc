@@ -727,6 +727,7 @@ string(string _playermodel) player_body_model_allowed {
 	string allowed_models = player_body_model_list_allowed();
 	string first_allowed_model = "";
 	string tail = allowed_models;
+	string s = strcat(" ", allowed_models, " ");
 	while ((tail != "")) {
 		first_allowed_model = str_car(tail);
 		if (first_allowed_model != "") break;
@@ -741,9 +742,16 @@ string(string _playermodel) player_body_model_allowed {
 	if (_playermodel == "")
 		return first_allowed_model;
 
-	if (strstrofs(strcat(" ", allowed_models, " "), strcat(" ", _playermodel, " "), 0) >= 0 ||
-			strstrofs(strcat(" ", allowed_models), strcat(" ", _playermodel, ":"), 0) >= 0)
+	if (strstrofs(s, strcat(" ", _playermodel, " "), 0) >= 0 ||
+			strstrofs(s, strcat(" ", _playermodel, ":"), 0) >= 0)
 		return _playermodel;
+
+	if (substring(_playermodel, 0, 14) == "models/player/") {
+		string playermodelshort = substring(_playermodel, 14, -1); //without models/player/ prefix
+		if (strstrofs(s, strcat(" ", playermodelshort, " "), 0) >= 0 ||
+				strstrofs(s, strcat(" ", playermodelshort, ":"), 0) >= 0)
+			return _playermodel;
+	}
 
 	return first_allowed_model;
 }
@@ -1025,6 +1033,79 @@ void(void(string item, string cmd) add) player_body_gamemenu_add_items {
 	player_body_gamemenu_add_items_next(add);
 }
 
+void(string list) player_body_precache {
+	string s, _skin, prefix, suffix, m;
+	float glob, l, colon, n, i;
+	for (; (s = str_car(list)) != ""; list = str_cdr(list)) {
+		if (strstrofs(s, "/", 0) < 0)
+			s = strcat("models/player/", s);
+
+		l = strlen(s);
+		if (l < 19) continue;
+		prefix = substring(s, 0, l - 4);
+		suffix = substring(s, l - 4, 4);
+		print("Precaching player model: ", s, "\n");
+		precache_model(s);
+		m = strcat(prefix, "_lod1", suffix);
+		if (file_exists(m))
+			precache_model(m);
+
+		m = strcat(prefix, "_lod2", suffix);
+		if (file_exists(m))
+			precache_model(m);
+
+		m = strcat(prefix, "_torso", suffix);
+		if (file_exists(m))
+			precache_model(m);
+
+		m = strcat(prefix, "_head", suffix);
+		if (file_exists(m))
+			precache_model(m);
+
+		colon = strstrofs(s, ":", 0);
+		if (colon > 0) {
+			_skin = substring(s, colon + 1, -1);
+			s = substring(s, 0, colon);
+			player_sound_precache(strcat(s, "_", _skin, ".sounds"));
+		} else {
+			glob = search_begin(strcat(s, "_*.sounds"), TRUE, FALSE);
+			if (glob >= 0) {
+				n = search_getsize(glob);
+				for (i = 0; i < n; i++)
+					player_sound_precache(search_getfilename(glob, i));
+
+				search_end(glob);
+			}
+		}
+		player_sound_precache(strcat(s, ".sounds"));
+	}
+}
+
+void(string pattern) player_body_precache_all_models {
+	float glob, i, n, n2, j;
+	string s, f;
+	glob = search_begin(pattern, TRUE, FALSE);
+	if (glob < 0)
+		return;
+
+	n = search_getsize(glob);
+	for (i = 0; i < n; ++i) {
+		f = search_getfilename(glob, i);
+		if (substring(f, -15, 11) == "_decompiled")
+			continue;
+
+		if (substring(f, -13, 9) == "_compiled")
+			continue;
+
+		s = substring(f, -9,5);
+		if (s == "_lod1" || s == "_lod2")
+			continue;
+
+		player_body_precache(f);
+	}
+	search_end(glob);
+}
+
 float player_body_init_done;
 void(void) player_body_init {
 	CVAR_CACHE_STR(g_player_allowed_models);
@@ -1076,6 +1157,24 @@ void(void) player_body_init {
 	if (g_player_forceskin_pink < 0)
 		g_player_forceskin_pink = g_player_forceskin;
 
+	if ((g_player_forcemodel == "" || g_player_forcemodel == "0") && str_car(g_player_allowed_models) == "") {
+		player_body_precache_all_models("models/player/*.zym");
+		player_body_precache_all_models("models/player/*.dpm");
+		player_body_precache_all_models("models/player/*.md3");
+		player_body_precache_all_models("models/player/*.psk");
+		player_body_precache_all_models("models/player/*.iqm");
+	} else {
+		player_body_precache(g_player_forcemodel);
+		player_body_precache(g_player_forcemodel_red);
+		player_body_precache(g_player_forcemodel_blue);
+		player_body_precache(g_player_forcemodel_yellow);
+		player_body_precache(g_player_forcemodel_pink);
+		player_body_precache(g_player_allowed_models);
+		player_body_precache(g_player_allowed_models_red);
+		player_body_precache(g_player_allowed_models_blue);
+		player_body_precache(g_player_allowed_models_yellow);
+		player_body_precache(g_player_allowed_models_pink);
+	}
 	if (player_body_init_done) return;
 	player_body_cmd_client_handle_next = plugin_chain_cmd_client_handle;
 	plugin_chain_cmd_client_handle = player_body_cmd_client_handle;

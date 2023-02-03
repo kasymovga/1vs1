@@ -1104,40 +1104,6 @@ void(void) player_leave {
 	self.winning = FALSE;
 }
 
-void(string pattern) player_precache_all_models {
-	float globhandle, globhandle2, i, n, n2, j;
-	string s, f;
-	globhandle = search_begin(pattern, TRUE, FALSE);
-	if (globhandle < 0)
-		return;
-
-	n = search_getsize(globhandle);
-	for (i = 0; i < n; ++i) {
-		f = search_getfilename(globhandle, i);
-		if (substring(f, -15,5) == "_decompiled")
-			continue;
-
-		if (substring(f, -13,5) == "_compiled")
-			continue;
-
-		precache_model(f);
-		s = substring(f, -9,5);
-		if (s != "_lod1")
-		if (s != "_lod2") {
-			player_sound_precache(strcat(f, ".sounds"));
-			globhandle2 = search_begin(strcat(f, "_*.sounds"), TRUE, FALSE);
-			if (globhandle2 >= 0) {
-				n2 = search_getsize(globhandle2);
-				for (j = 0; j < n2; j++) {
-					player_sound_precache(search_getfilename(globhandle2, j));
-				}
-				search_end(globhandle2);
-			}
-		}
-	}
-	search_end(globhandle);
-}
-
 float(entity plr, float wep) player_can_fire {
 	if (PLAYER_DEAD(plr))
 		return FALSE;
@@ -1221,11 +1187,6 @@ float player_init_done;
 void() player_init {
 	player_sound_init();
 	player_body_init();
-	player_precache_all_models("models/player/*.zym");
-	player_precache_all_models("models/player/*.dpm");
-	player_precache_all_models("models/player/*.md3");
-	player_precache_all_models("models/player/*.psk");
-	player_precache_all_models("models/player/*.iqm");
 	CVAR_CACHE(g_respawn_delay);
 	CVAR_CACHE(g_respawn_mapsettings);
 	CVAR_CACHE(g_respawn_mapsettings_delay);

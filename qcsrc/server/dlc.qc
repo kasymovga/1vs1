@@ -71,6 +71,8 @@ float(string s) dlc_load_settemps_from {
 			dlc_load_player_model_not_forced = 1;
 		else
 			dlc_load_player_model_not_forced = -1;
+
+		dlc_rexext_forcemodel = str_zone_ifneeded(cvar_string("g_player_allowed_models"));
 	}
 	while ((line = dlc_trimspaces(fgets(f)))) {
 		c = substring(line, 0, 1);
