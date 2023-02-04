@@ -993,9 +993,14 @@ void(void(string item, string cmd) add) player_body_gamemenu_add_items {
 }
 
 void(string list) player_body_precache {
-	string s, _skin, prefix, suffix, m;
+	string s, _skin = "", prefix, suffix, m;
 	float glob, l, colon, n, i;
 	for (; (s = str_car(list)) != ""; list = str_cdr(list)) {
+		colon = strstrofs(s, ":", 0);
+		if (colon > 0) {
+			_skin = substring(s, colon + 1, -1);
+			s = substring(s, 0, colon);
+		}
 		if (strstrofs(s, "/", 0) < 0)
 			s = strcat("models/player/", s);
 
@@ -1021,10 +1026,7 @@ void(string list) player_body_precache {
 		if (file_exists(m))
 			precache_model(m);
 
-		colon = strstrofs(s, ":", 0);
 		if (colon > 0) {
-			_skin = substring(s, colon + 1, -1);
-			s = substring(s, 0, colon);
 			player_sound_precache(strcat(s, "_", _skin, ".sounds"));
 		} else {
 			glob = search_begin(strcat(s, "_*.sounds"), TRUE, FALSE);
@@ -1128,11 +1130,6 @@ void(void) player_body_init {
 		player_body_precache_all_models("models/player/*.psk");
 		player_body_precache_all_models("models/player/*.iqm");
 	} else {
-		player_body_precache(g_player_forcemodel);
-		player_body_precache(g_player_forcemodel_red);
-		player_body_precache(g_player_forcemodel_blue);
-		player_body_precache(g_player_forcemodel_yellow);
-		player_body_precache(g_player_forcemodel_pink);
 		player_body_precache(g_player_allowed_models);
 		player_body_precache(g_player_allowed_models_red);
 		player_body_precache(g_player_allowed_models_blue);
