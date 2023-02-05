@@ -19,7 +19,8 @@ void(entity e, string al, float ac) ability_class_init {
 		oldabilities = e.abilities;
 		e.abilities = 0;
 		if (e.body && ability_class_model_list_allowed_not_empty)
-			e.body.playermodel = ""; //force recheck model
+			if (e.body.playermodel != player_body_model_allowed(e.body.playermodel))
+				e.body.playermodel = ""; //force recheck model
 	}
 	while (tail != "") {
 		an = str_car(tail);
