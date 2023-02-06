@@ -1098,24 +1098,24 @@ void(void) player_body_init {
 		str_unzone_ifneeded(g_player_allowed_models_pink);
 		g_player_allowed_models = strcat(g_player_forcemodel, (g_player_forceskin >= 0 ? strcat(":", ftos(g_player_forceskin)) : ""));
 		if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
-			g_player_allowed_models_blue = strcat(g_player_forcemodel_blue, (g_player_forceskin_blue >= 0 ? strcat(":", ftos(g_player_forceskin_blue)) : ""));;
-		} else
 			g_player_allowed_models_blue = "";
+		} else
+			g_player_allowed_models_blue = strcat(g_player_forcemodel_blue, (g_player_forceskin_blue >= 0 ? strcat(":", ftos(g_player_forceskin_blue)) : ""));
 
 		if (g_player_forcemodel_red == "" || g_player_forcemodel_red == "0") {
-			g_player_allowed_models_red = strcat(g_player_forcemodel_red, (g_player_forceskin_red >= 0 ? strcat(":", ftos(g_player_forceskin_red)) : ""));;
-		} else
 			g_player_allowed_models_red = "";
+		} else
+			g_player_allowed_models_red = strcat(g_player_forcemodel_red, (g_player_forceskin_red >= 0 ? strcat(":", ftos(g_player_forceskin_red)) : ""));
 
 		if (g_player_forcemodel_yellow == "" || g_player_forcemodel_yellow == "0") {
-			g_player_allowed_models_yellow = strcat(g_player_forcemodel_yellow, (g_player_forceskin_yellow >= 0 ? strcat(":", ftos(g_player_forceskin_yellow)) : ""));;
-		} else
 			g_player_allowed_models_yellow = "";
+		} else
+			g_player_allowed_models_yellow = strcat(g_player_forcemodel_yellow, (g_player_forceskin_yellow >= 0 ? strcat(":", ftos(g_player_forceskin_yellow)) : ""));
 
 		if (g_player_forcemodel_pink == "" || g_player_forcemodel_pink == "0") {
-			g_player_allowed_models_pink = strcat(g_player_forcemodel_pink, (g_player_forceskin_pink >= 0 ? strcat(":", ftos(g_player_forceskin_pink)) : ""));;
-		} else
 			g_player_allowed_models_pink = "";
+		} else
+			g_player_allowed_models_pink = strcat(g_player_forcemodel_pink, (g_player_forceskin_pink >= 0 ? strcat(":", ftos(g_player_forceskin_pink)) : ""));
 
 		g_player_allowed_models = str_zone_ifneeded(g_player_allowed_models);
 		g_player_allowed_models_red = str_zone_ifneeded(g_player_allowed_models_red);
