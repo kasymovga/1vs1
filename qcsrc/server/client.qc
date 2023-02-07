@@ -66,9 +66,6 @@ void(void) client_put {
 	if (self.classname == "player") {
 		entity spot;
 		if (self.team < 0) {
-			if (clienttype(self) == CLIENTTYPE_BOT)
-				self.team = self.bot_forced_team;
-
 			team_join_best(self, FALSE);
 		}
 		spot = plugin_client_put_spawn_point();

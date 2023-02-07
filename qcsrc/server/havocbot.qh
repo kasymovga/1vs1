@@ -1,7 +1,8 @@
 float bot_nofire;
 float bot_ai_strategyinterval;
 
-.float havocbot_keyboardskill;
+float havocbot_keyboardskill;
+
 .float facingwalltime, ignoregoaltime;
 .float lastfiredweapon;
 .float lastcombotime;

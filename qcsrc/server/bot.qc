@@ -35,7 +35,7 @@ void(void) bot_think {
 	if (bot_god)
 		self.flags |= FL_GODMODE;
 
-	self.bot_nextthink = self.bot_nextthink + bot_ai_thinkinterval * pow(0.5, self.bot_aiskill);
+	self.bot_nextthink = self.bot_nextthink + bot_ai_thinkinterval * pow(0.5, bot_aiskill);
 	if (self.fixangle) {
 		self.v_angle = self.angles;
 		self.v_angle_z = 0;
@@ -48,7 +48,7 @@ void(void) bot_think {
 	// calculate an aiming latency based on the skill setting
 	// (simulated network latency + naturally delayed reflexes)
 	// minimum ping 20+10 random
-	self.ping = bound(0,0.07 - bound(0, (skill + self.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
+	self.ping = bound(0,0.07 - bound(0, (skill + bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
 	// skill 10 = ping 0.2 (adrenaline)
 	// skill 0 = ping 0.7 (slightly drunk)
 	// clear buttons
@@ -75,8 +75,8 @@ void(void) bot_think {
 }
 
 void(void) bot_setnameandstuff {
-	string readfile = "", s;
-	float file, tokens, prio;
+	string bot_cfg = "", s;
+	float tokens, prio, i;
 	entity p;
 	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
 	string name, prefix, suffix;
@@ -87,37 +87,24 @@ void(void) bot_setnameandstuff {
 		prefix = cvar_string("bot_prefix");
 		suffix = cvar_string("bot_suffix");
 	}
-	file = fopen(cvar_string("bot_config_file"), FILE_READ);
-	if (file < 0)
-		print(strcat("Error: Can not open the bot configuration file '",cvar_string("bot_config_file"),"'\n"));
-	else {
-		random_selection_init();
-		for(;;) {
-			readfile = fgets(file);
-			if (!readfile)
+	random_selection_init();
+	for(i = 1;; i++) {
+		bot_cfg = cvar_string(strcat("bot", ftos(i)));
+		if (bot_cfg == "") break;
+		tokens = tokenizebyseparator(bot_cfg, " ");
+		s = argv(0);
+		prio = 1;
+		FOR_EACH_CLIENT(p) {
+			if (p.isbot && strcat(prefix, s, suffix) == p.netname) {
+				prio = 0;
 				break;
-
-			if (substring(readfile, 0, 2) == "//")
-				continue;
-
-			if (substring(readfile, 0, 1) == "#")
-				continue;
-
-			tokens = tokenizebyseparator(readfile, "\t");
-			s = argv(0);
-			prio = 1;
-			FOR_EACH_CLIENT(p) {
-				if (strcat(prefix, s, suffix) == p.netname) {
-					prio = 0;
-					break;
-				}
 			}
-			random_selection_add(world, 0, readfile, 1, prio);
 		}
-		readfile = random_selection_chosen_string;
-		fclose(file);
+		random_selection_add(NULL, 0, bot_cfg, 1, prio);
 	}
-	tokens = tokenizebyseparator(readfile, "\t");
+	bot_cfg = random_selection_chosen_string;
+	if (bot_cfg == "") bot_cfg = "bot marine 1 1 1";
+	tokens = tokenizebyseparator(bot_cfg, " ");
 	if (argv(0) != "") bot_name = argv(0);
 	else bot_name = "Bot";
 	if (argv(1) != "") bot_model = argv(1);
@@ -128,22 +115,7 @@ void(void) bot_setnameandstuff {
 	else bot_shirt = ftos(floor(random() * 15));
 	if (argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
-	self.bot_forced_team = stof(argv(5));
-	prio = 6;
-#define READSKILL(f,w,r) if (argv(prio) != "") self.f = stof(argv(prio)) * (w); else self.f = (!g_campaign) * (2 * random() - 1) * (r) * (w); ++prio
 	//print(bot_name, ": ping=", argv(9), "\n");
-	READSKILL(havocbot_keyboardskill, 0.5, 0.5); // keyboards kill
-	READSKILL(bot_moveskill, 2, 0); // moves kill
-	READSKILL(bot_dodgeskill, 2, 0); // dodges kill
-	READSKILL(bot_pingskill, 0.5, 0); // pings kill
-	READSKILL(bot_weaponskill, 2, 0); // weapons kill
-	READSKILL(bot_aggresskill, 1, 0); // aggres kill
-	READSKILL(bot_rangepreference, 1, 0); // reads kill
-	READSKILL(bot_aimskill, 2, 0); // aims kill
-	READSKILL(bot_offsetskill, 2, 0.5); // offsets kill
-	READSKILL(bot_mouseskill, 1, 0.5); // mouses kill
-	READSKILL(bot_thinkskill, 1, 0.5); // thinks kill
-	READSKILL(bot_aiskill, 2, 0); // "ai"s kill
 	self.bot_config_loaded = TRUE;
 	// this is really only a default, JoinBestTeam is called later
 	setcolor(self, stof(bot_shirt) * 16 + stof(bot_pants));
@@ -299,16 +271,6 @@ void(void) bot_clientconnect {
 	if (!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches
 		bot_setnameandstuff();
 
-	if (team_mode) {
-		if (self.bot_forced_team==1)
-			self.bot_forced_team = COLOR_TEAM1;
-		else if (self.bot_forced_team==2)
-			self.bot_forced_team = COLOR_TEAM2;
-		else if (self.bot_forced_team==3)
-			self.bot_forced_team = COLOR_TEAM3;
-		else if (self.bot_forced_team==4)
-			self.bot_forced_team = COLOR_TEAM4;
-	}
 	havocbot_setupbot();
 }
 
@@ -572,6 +534,17 @@ void(void) bot_init {
 	CVAR_CACHE(skill_auto);
 	CVAR_CACHE(skill_auto_min);
 	CVAR_CACHE(skill_auto_max);
+	CVAR_CACHE(bot_moveskill);
+	CVAR_CACHE(bot_dodgeskill);
+	CVAR_CACHE(bot_pingskill);
+	CVAR_CACHE(bot_weaponskill);
+	CVAR_CACHE(bot_aggresskill);
+	CVAR_CACHE(bot_rangepreference);
+	CVAR_CACHE(bot_aimskill);
+	CVAR_CACHE(bot_offsetskill);
+	CVAR_CACHE(bot_mouseskill);
+	CVAR_CACHE(bot_thinkskill);
+	CVAR_CACHE(bot_aiskill);
 	bot_aim_init();
 	navigation_init();
 	bot_cmd_init();

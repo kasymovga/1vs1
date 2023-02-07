@@ -1,4 +1,3 @@
-//Override bot defaults
 set bot_ai_custom_weapon_priority_mid "11 16 18 9 4 5 3 7 15 14 6 13 8 17 2 1"	"Desired weapons for middle distances ordered by priority"
 set bot_ai_custom_weapon_priority_close "18 11 16 17 7 3 13 14 18 8 6 4 2 5 15 1 19"	"Desired weapons for close distances ordered by priority"
 set bot_ai_strategyinterval "3"
@@ -39,7 +38,6 @@ set bot_taunt 0.25 "how often bots do taunts"
 set bot_talk 0.25 "how often bots speak"
 set bot_melee 0.4
 
-set bot_config_file bots.txt "Name and path of the bot configuration file"
 set bot_number 0	"Minimum number of bots"
 seta bot_usemodelnames 0	"Use player model names for bot names"
 set bot_nofire 0	"When set, bots never fire. Mainly for testing in g_waypointeditor mode"
@@ -65,3 +63,36 @@ set bot_ai_navigation_jetpack_mindistance 400 "Bots will try fly to objects loca
 set bot_ignore_bots 0	"When set, bots don't shoot at other bots"
 set bot_join_empty 0	"When set, bots also play if no player has joined the server"
 set bot_vs_human 0	"Bots and humans play in different teams when set. positive values to make an all-bot blue team, set to negative values to make an all-bot red team, the absolute value is the ratio bots vs humans (1 for equal count)"
+
+//Name model skin color1 color2
+set bot1 "Hellfire carni 0 4 0 0"
+set bot2 "Toxic carni 1 14 7"
+set bot3 "Discovery crash 0 2 6"
+set bot4 "Pegasus grunt 0 13 11"
+set bot5 "Eureka headhunter 0 12 7"
+set bot6 "Airhead insurrectionist 0 11 1"
+set bot7 "Gator lurk 0 3 10"
+set bot8 "Delirium lurk 1 8 12"
+set bot9 "Death lycanthrope 0 4 11"
+set bot10 "Scorcher marine 0 13 13"
+set bot11 "Necrotic nexus 0 12 14"
+set bot12 "Dominator nexus 1 3 9"
+set bot13 "Thunderstorm nexus 2 13 6"
+set bot14 "Mystery pyria 0 9 14"
+set bot15 "Lion shock 0 0 4"
+set bot16 "Sensible skadi 0 9 9"
+set bot17 "Shadow specop 0 4 8"
+set bot18 "Resurrection visitant 0 1 1 0 1 1 1 1 1 1 1 1 2 2 0.5 1
+
+set havocbot_keyboardskill 0.5
+set bot_moveskill 2
+set bot_dodgeskill 2
+set bot_pingskill 0.5
+set bot_weaponskill 2
+set bot_aggresskill 2
+set bot_rangepreference 1
+set bot_aimskill 2
+set bot_offsetskill 4
+set bot_mouseskill 2
+set bot_thinkskill 0.5
+set bot_aiskill 2
