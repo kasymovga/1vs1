@@ -769,7 +769,7 @@ void() client_cvars_parse {
 		self.cvar_cl_simpleitems = stof(val);
 	} else if (s == "cl_netfps") {
 		f = stof(val);
-		float reqfps = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout")));
+		float reqfps = ceil(max(((sys_ticrate < 0.0125) ? 1 : 1.5) / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout")));
 		if (f < reqfps) {
 			stuffcmd(self, strcat("seta cl_netfps ", ftos(reqfps), "\n"));
 		} else if (f > 125)
