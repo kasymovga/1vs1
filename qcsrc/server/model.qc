@@ -107,6 +107,8 @@ void(void) model_setcolormaptoactivator {
 	self.colormap |= 1024; // RENDER_COLORMAPPED
 	if (self.SendEntity == model_client_send)
 		self.SendFlags |= 1;
+
+	BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
 }
 
 void(void) model_dropbyspawnflags {
