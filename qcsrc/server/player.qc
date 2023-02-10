@@ -974,7 +974,7 @@ void(entity spot) player_spawn {
 	player_physics_setup(self);
 	self.flags = FL_CLIENT;
 	self.takedamage = DAMAGE_AIM;
-	self.effects = 0;
+	self.effects &= ~EFFECT_TELEPORT_BIT;
 	self.air_finished = time + 12;
 	self.keys = 0;
 	self.touch = push_touch;
