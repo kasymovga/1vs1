@@ -722,7 +722,6 @@ void() player_think {
 	if (self.teleport_time)
 	if (time > self.teleport_time) {
 		self.teleport_time = 0;
-		self.effects = self.effects - (self.effects & EFFECT_NODRAW);
 	}
 	//don't allow the player to turn around while game is paused!
 	if (timeout_status == 2) {
