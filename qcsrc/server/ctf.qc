@@ -551,6 +551,8 @@ void() ctf_flag_touch {
 					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			score_player_add(other, CTF_SCORE_RETURNS, 1);
+			game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
+			sound(other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
 		} else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + g_ctf_delay_collect)) {
 			if (g_ctf_flag_pickup_effects) // field pickup effect
