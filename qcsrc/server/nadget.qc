@@ -324,7 +324,9 @@ void(entity e, string args, float set) nadget_ability_init {
 				string arg1 = str_car(args);
 				self.hg_type1 = self.hg_type1_picked = nadget_NameToType(arg1);
 				self.hg_type1_picked |= 1024;
-				nadget_ResetAmmo(self, FALSE);
+				NADGET_DO_IN_ALL_CONTEXTS({
+					nadget_ResetAmmo(self, FALSE);
+				}, self.hg_type2);
 				string arg2 = str_car(str_cdr(args));
 				if (arg2 != "")
 					self.hg_type2 = self.hg_type2_picked = nadget_NameToType(arg2);
@@ -335,10 +337,15 @@ void(entity e, string args, float set) nadget_ability_init {
 					score_player_set(self, NADGET_SCORE, self.hg_type1);
 					score_player_set(self, NADGET_SCORE_SECONDARY, self.hg_type2);
 				}
-			} else {
-				if not(nadget_ShowMenu(0))
+				NADGET_DO_IN_ALL_CONTEXTS({
 					nadget_ResetAmmo(self, FALSE);
-
+				}, self.hg_type2);
+			} else {
+				if not(nadget_ShowMenu(0)) {
+					NADGET_DO_IN_ALL_CONTEXTS({
+						nadget_ResetAmmo(self, FALSE);
+					}, g_nadgets_double);
+				}
 				if not(g_nadgets_double)
 					self.hg_type2 = self.hg_type2_picked = 0;
 			}
