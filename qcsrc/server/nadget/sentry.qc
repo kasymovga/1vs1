@@ -223,9 +223,11 @@ void nadget_Sentry_SetOwner(entity sentry, entity newowner) {
         sentry.skin = 0;
         sentry.aiment.effects &= ~EFFECT_NODRAW;
         sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * team_color((team_mode ? sentry.team : COLOR_TEAM3));
+        sentry.bot_attack = TRUE;
     } else {
         sentry.skin = 1;
         sentry.aiment.effects |= EFFECT_NODRAW;
+        sentry.bot_attack = FALSE;
     }
 
     if(sentry.realowner.classname == "player")
