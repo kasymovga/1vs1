@@ -3,6 +3,7 @@ string g_player_allowed_models_red;
 string g_player_allowed_models_blue;
 string g_player_allowed_models_yellow;
 string g_player_allowed_models_pink;
+string g_player_disabled_models;
 float g_player_forcecolor;
 float g_player_forcecolor_red;
 float g_player_forcecolor_blue;
@@ -767,6 +768,37 @@ float(string _playermodel, float _skin) player_body_allowed_skin {
 	return _skin;
 }
 
+float(string modelpath) player_body_model_path_check {
+	if (substring(modelpath, -4, 4) != ".zym")
+	if (substring(modelpath, -4, 4) != ".dpm")
+	if (substring(modelpath, -4, 4) != ".md3")
+	if (substring(modelpath, -4, 4) != ".psk")
+	if (substring(modelpath, -4, 4) != ".iqm")
+		return FALSE;
+
+	// forbid the LOD models
+	if (substring(modelpath, -9, 5) == "_lod1")
+		return FALSE;
+
+	if (substring(modelpath, -9, 5) == "_lod2")
+		return FALSE;
+
+	// forbid the torso/head models
+	if (substring(modelpath, -10, 6) == "_torso")
+		return FALSE;
+
+	if (substring(modelpath, -9, 5) == "_head")
+		return FALSE;
+
+	if (substring(modelpath, -15, 11) == "_decompiled")
+		return FALSE;
+
+	if (substring(modelpath, -13, 9) == "_compiled")
+		return FALSE;
+
+	return TRUE;
+}
+
 string(string _playermodel) player_body_model_check {
 	string fallback = player_body_model_allowed("models/player/marine.zym");
 	_playermodel = player_body_model_allowed(_playermodel);
@@ -774,33 +806,10 @@ string(string _playermodel) player_body_model_check {
 		return fallback;
 	
 	if (strstrofs(_playermodel, "/", 0) < 0) _playermodel = strcat("models/player/", _playermodel);
-	if (substring(_playermodel,0,14) != "models/player/")
+	if (substring(_playermodel, 0, 14) != "models/player/")
 		return fallback;
 	else {
-		if (substring(_playermodel,-4,4) != ".zym")
-		if (substring(_playermodel,-4,4) != ".dpm")
-		if (substring(_playermodel,-4,4) != ".md3")
-		if (substring(_playermodel,-4,4) != ".psk")
-		if (substring(_playermodel,-4,4) != ".iqm")
-			return fallback;
-		// forbid the LOD models
-		if (substring(_playermodel, -9,5) == "_lod1")
-			return fallback;
-
-		if (substring(_playermodel, -9,5) == "_lod2")
-			return fallback;
-
-		// forbid the torso/head models
-		if (substring(_playermodel, -10,6) == "_torso")
-			return fallback;
-
-		if (substring(_playermodel, -9,5) == "_head")
-			return fallback;
-
-		if (substring(_playermodel, -15,5) == "_decompiled")
-			return fallback;
-
-		if (substring(_playermodel, -13,5) == "_compiled")
+		if not(player_body_model_path_check(_playermodel))
 			return fallback;
 
 		if (_playermodel != strtolower(_playermodel))
@@ -1053,19 +1062,39 @@ void(string pattern) player_body_precache_all_models {
 	n = search_getsize(glob);
 	for (i = 0; i < n; ++i) {
 		f = search_getfilename(glob, i);
-		if (substring(f, -15, 11) == "_decompiled")
-			continue;
-
-		if (substring(f, -13, 9) == "_compiled")
-			continue;
-
-		s = substring(f, -9,5);
-		if (s == "_lod1" || s == "_lod2")
+		if not(player_body_model_path_check(f))
 			continue;
 
 		player_body_precache(f);
 	}
 	search_end(glob);
+}
+
+string(string s) player_body_find_models {
+	float glob = search_begin(s, TRUE, TRUE);
+	if (glob < 0) return "";
+	float n = search_getsize(glob);
+	float i;
+	string l = "";
+	string m;
+	string disabled_models = strcat(" ", g_player_disabled_models, " ");
+	for (i = 0; i < n; i++) {
+		m = search_getfilename(glob, i);
+		if (strstrofs(disabled_models, strcat(" ", m, " "), 0) >= 0)
+			continue;
+
+		if not(player_body_model_path_check(m))
+			continue;
+
+		if (strstrofs(m, "models/player/", 0) == 0) {
+			m = substring(m, 14, -1);
+			if (strstrofs(disabled_models, strcat(" ", m, " "), 0) >= 0)
+				continue;
+		}
+		l = strcat(l, " ", m);
+	}
+	search_end(glob);
+	return l;
 }
 
 float player_body_init_done;
@@ -1075,6 +1104,7 @@ void(void) player_body_init {
 	CVAR_CACHE_STR(g_player_allowed_models_blue);
 	CVAR_CACHE_STR(g_player_allowed_models_yellow);
 	CVAR_CACHE_STR(g_player_allowed_models_pink);
+	CVAR_CACHE_STR(g_player_disabled_models);
 	string g_player_forcemodel = cvar_string("g_player_forcemodel");
 	string g_player_forcemodel_red = cvar_string("g_player_forcemodel_red");
 	string g_player_forcemodel_blue = cvar_string("g_player_forcemodel_blue");
@@ -1123,7 +1153,14 @@ void(void) player_body_init {
 		g_player_allowed_models_blue = str_zone_ifneeded(g_player_allowed_models_blue);
 		g_player_allowed_models_yellow = str_zone_ifneeded(g_player_allowed_models_yellow);
 		g_player_allowed_models_pink = str_zone_ifneeded(g_player_allowed_models_pink);
+	} else if (g_player_allowed_models == "" && g_player_disabled_models != "") {
+		g_player_allowed_models = player_body_find_models("models/player/*.zym");
+		g_player_allowed_models = strcat(g_player_allowed_models, player_body_find_models("models/player/*.dpm"));
+		g_player_allowed_models = strcat(g_player_allowed_models, player_body_find_models("models/player/*.md3"));
+		g_player_allowed_models = strcat(g_player_allowed_models, player_body_find_models("models/player/*.psk"));
+		g_player_allowed_models = str_zone_ifneeded(strcat(g_player_allowed_models, player_body_find_models("models/player/*.iqm")));
 	}
+	print("g_player_allowed_models=", g_player_allowed_models, "\n");
 	if (str_car(g_player_allowed_models) == "") {
 		player_body_precache_all_models("models/player/*.zym");
 		player_body_precache_all_models("models/player/*.dpm");
