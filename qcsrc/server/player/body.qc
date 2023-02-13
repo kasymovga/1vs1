@@ -1010,6 +1010,7 @@ void(string list) player_body_precache {
 		suffix = substring(s, l - 4, 4);
 		print("Precaching player model: ", s, "\n");
 		precache_model(s);
+		dlc_add_dlc_or_pk3_by_file(s);
 		m = strcat(prefix, "_lod1", suffix);
 		if (file_exists(m))
 			precache_model(m);

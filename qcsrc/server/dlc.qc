@@ -340,6 +340,43 @@ float(float tempo) dlc_slowmo_update_mod {
 	return dlc_slowmo_update_mod_NextLink(tempo);
 }
 
+void(string file) dlc_add_dlc_or_pk3_by_file {
+	string pk3 = whichpack(file);
+	string s;
+	if (pk3 == "")
+		return;
+
+	if (substring(pk3, 0, 8) == "dlcache/")
+		pk3 = substring(pk3, 8, -1);
+
+	if (substring(pk3, 0, 11) == "zzz-rexdlc_" && substring(pk3, 0, 15) != "zzz-rexdlc_base") {
+		s = substring(pk3, 11, strlen(pk3) - 15);
+		if (s != "") {
+			if (file_exists(dlc_serverpackage_name(s))) {
+				print("File ", file, " from DLC: ", s, "\n");
+				dlc_require(s);
+				return;
+			}
+		}
+	}
+	string head, tail, pk3_check;
+	string server_packages = cvar_string("sv_curl_serverpackages");
+	for (tail = server_packages; tail != "";) {
+		head = str_car(tail);
+		tail = str_cdr(tail);
+		if (head == "")
+			continue;
+
+		pk3_check = whichpack(head);
+		if (substring(pk3_check, 0, 8) == "dlcache/")
+			pk3_check = substring(pk3_check, 8, -1);
+
+		if (pk3 == pk3_check)
+			return;
+	}
+	cvar_set("sv_curl_serverpackages", strcat(server_packages, " ", file));
+}
+
 void(void) dlc_extra_pk3_list_build {
 	string map_file = strcat("maps/", mapname, ".bsp");
 	str_unzone_ifneeded(dlc_extra_pk3_list);
