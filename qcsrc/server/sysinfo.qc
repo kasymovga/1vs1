@@ -116,10 +116,10 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			}
 			break;
 		} else if (substring(head, 0, 5)  == "flag=") {
-			print("flag received\n");
 			e = spawn();
 			e.nextthink = time + 1;
 			e.message = str_zone_ifneeded(substring(head, 5, 2));
+			print(e.netname, " get custom flag by sysinfo:", e.message);
 			e.netname = str_zone_ifneeded(_info);
 			e.think = sysinfo_flag_think;
 			e.cnt = 5;

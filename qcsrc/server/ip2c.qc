@@ -23,7 +23,7 @@ void IP2C_SetCountry_Internal(entity player, string cn) {
 
 void IP2C_LookupForPlayer_Callback(string ip, string cn, entity player) {
     entity e;
-    FOR_EACH_REALCLIENT(e) if(e.netaddress == ip && e.scorekeeper && !e.scorekeeper.scores[SP_SCORE]) {
+    FOR_EACH_REALCLIENT(e) if(e.netaddress == ip && e.scorekeeper && !e.scorekeeper.scores[IP2C_SCORE]) {
         IP2C_SetCountry_Internal(e, cn);
     }
 }
@@ -414,7 +414,7 @@ float IP2C_GameCommand(string cmd, float tokens) {
 
 void(entity pl, string cn) ip2c_set {
 	if (sv_ip2country) {
-		if (pl.scorekeeper && !pl.scorekeeper.scores[SP_SCORE])
+		if (pl.scorekeeper)
 			IP2C_SetCountry_Internal(pl, cn);
 	}
 }
