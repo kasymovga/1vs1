@@ -10,7 +10,9 @@ float(void) freeze_shared_ice_skip_think {
 	return !roundbased_active;
 }
 
+var void(entity unfrozer) freeze_shared_ice_unfroze_next;
 void(entity unfrozer) freeze_shared_ice_unfroze {
+	freeze_shared_ice_unfroze_next(unfrozer);
 	score_player_set(self.owner, SP_STATUS, 0);
 	if (unfrozer.classname == "player") {
 		score_player_add(unfrozer, SP_SCORE, 1);
@@ -39,6 +41,7 @@ void(string gt) freeze_shared_init {
 	roundbased_init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
 	ice_hook_skip_think = freeze_shared_ice_skip_think;
 	ice_hook_skip_death_handle = freeze_shared_ice_skip_think;
+	freeze_shared_ice_unfroze_next = ice_hook_unfroze;
 	ice_hook_unfroze = freeze_shared_ice_unfroze;
 	ice_hook_frozen_status = freeze_shared_ice_frozen_status;
 	ice_init();

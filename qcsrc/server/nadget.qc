@@ -12,9 +12,12 @@ float g_nadgets_shield_damage_store_allow_cancel_discharge;
 float g_nadgets_initial_regen;
 float g_nadgets_drop_on_death;
 float g_nadgets_show_in_sbar;
+float g_nadgets_bonus_at_revive;
 
 void nadget_UpdateDetonables(void);
 void nadget_ForceDetonateAll(void);
+
+.float nadget_bonus_points;
 
 var void() nadget_PlayerPreThink_next;
 void nadget_PlayerPreThink();
@@ -60,8 +63,11 @@ void(float killed) nadget_player_clear {
 		}
 		if (g_nadgets_detonate_on_death > 1)
 			nadget_ForceDetonateAll();
+
+		self.nadget_bonus_points = 0;
 	} else {
 		if ((self.classname != "player" && self.team <= 0) || self.classname == "disconnecting") {
+			self.nadget_bonus_points = 0;
 			nadget_RemoveAll(self);
 			nadget_GenericProjectile_DetonateAll(self, TRUE);
 		}
@@ -74,7 +80,7 @@ void(float killed) nadget_player_clear {
 	}, self.hg_type2)
 	self.hg_power = 0;
 	self.hg_bonus = 0;
-	self.hg_bonustype = NADGET_NORMAL;
+	self.hg_bonustype = 0;
 	self.hg_shield = 0;
 	self.hg_linker = world;
 	if (self.classname == "player")
@@ -227,6 +233,17 @@ void(void) nadget_score_basics_end {
 	NADGET_SCORE_SECONDARY = score_register("nade2", 0);
 }
 
+var void(entity unfrozer) nadget_ice_unfroze_next;
+void(entity unfrozer) nadget_ice_unfroze {
+	print("nadget_ice_unfroze\n");
+	nadget_ice_unfroze_next(unfrozer);
+	unfrozer.nadget_bonus_points++;
+	if (g_nadgets_bonus_at_revive && unfrozer.nadget_bonus_points >= g_nadgets_bonus_at_revive) {
+		nadget_GiveRandomBonus(unfrozer, 1, strcat("for reviving ", ftos(unfrozer.nadget_bonus_points), " players"));
+		unfrozer.nadget_bonus_points = 0;
+	}
+}
+
 float nadget_init_done;
 void(void) nadget_init_common {
 	if (nadget_init_done)
@@ -245,6 +262,7 @@ void(void) nadget_init_common {
 	CVAR_CACHE(g_nadgets_ammo);
 	CVAR_CACHE(g_nadgets_initial_regen);
 	CVAR_CACHE(g_nadgets_drop_on_death);
+	CVAR_CACHE(g_nadgets_bonus_at_revive);
 	addstat(STAT_HGFORCE, STAT_FLOAT, hg_power);
 	addstat(STAT_HGAMMO, STAT_INT, hg_ammo1);
 	addstat(STAT_HGREGEN, STAT_FLOAT, hg_regentime1);
@@ -277,6 +295,8 @@ void(void) nadget_init_common {
 	plugin_chain_bot_aim = nadget_bot_aim;
 	nadget_player_obituary_frag_next = plugin_chain_player_obituary_frag;
 	plugin_chain_player_obituary_frag = nadget_player_obituary_frag;
+	nadget_ice_unfroze_next = ice_hook_unfroze; //sort of hack
+	ice_hook_unfroze = nadget_ice_unfroze;
 	if (g_nadgets_double || NADGET_ABILITY) {
 		addstat(STAT_HGTYPE2, STAT_INT, hg_type2);
 		addstat(STAT_HGREFIRE2, STAT_FLOAT, hg_next2);
@@ -443,10 +463,7 @@ void nadget_SetContext(float isalt) {
     hg_context_isalt = isalt;
 }
 
-void nadget_GiveBonus(entity p, float hgtype, float amount, string reason, float allowOptout) {
-    if((allowOptout && p.hg_optout))
-        return;
-
+void nadget_GiveBonus(entity p, float hgtype, float amount, string reason) {
     amount *= GRENVAR(hgtype, "bonus_amount_multiplier") /* * Buffs_NadgetBonusMultiplier(p) */;
 
     if(amount < 1)
@@ -481,10 +498,7 @@ void nadget_GiveBonus(entity p, float hgtype, float amount, string reason, float
     sound_play2all("kh/alarm.wav");
 }
 
-void nadget_GiveRandomBonus(entity p, float amount, string reason, float allowOptout) {
-    if((allowOptout && p.hg_optout))
-        return;
-
+void nadget_GiveRandomBonus(entity p, float amount, string reason) {
     random_selection_init();
 
     float n;
@@ -497,7 +511,7 @@ void nadget_GiveRandomBonus(entity p, float amount, string reason, float allowOp
     }
 
     if(random_selection_chosen_float)
-        nadget_GiveBonus(p, random_selection_chosen_float, amount, reason, allowOptout);
+        nadget_GiveBonus(p, random_selection_chosen_float, amount, reason);
 }
 
 float nadget_RegenTime(entity e) {
@@ -688,6 +702,8 @@ void nadget_Attack(void) {
 
     if(n_bonus) {
         self.hg_bonus -= hg_ammo_used;
+		if (self.hg_bonus <= 0)
+			self.hg_bonustype = 0;
     } else {
         if(g_nadgets_regen_compensate) {
             float oregen = nadget_RegenTime(self);
@@ -979,7 +995,7 @@ float nadget_ShowMenu(float always) {
 
 void target_bonusnadgets_use() {
 	if(!PLAYER_DEAD(activator))
-		nadget_GiveBonus(activator, self.hg_type1, self.cnt, self.message, FALSE);
+		nadget_GiveBonus(activator, self.hg_type1, self.cnt, self.message);
 }
 
 void spawnfunc_target_bonusnadgets(void) {

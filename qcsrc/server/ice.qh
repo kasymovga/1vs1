@@ -1,5 +1,5 @@
 void(void) ice_init;
 var float() ice_hook_skip_think;
 var float() ice_hook_skip_death_handle;
-var void(entity unfrozer) ice_hook_unfroze;
+var void(entity unfrozer) ice_hook_unfroze = {};
 var void() ice_hook_frozen_status;

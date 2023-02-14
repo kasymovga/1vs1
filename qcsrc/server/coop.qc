@@ -89,9 +89,10 @@ float() coop_ice_skip_death_handle {
 	return !self.wasplayer;
 }
 
+var void(entity ignore) coop_ice_unfroze_next;
 void(entity ignore) coop_ice_unfroze {
+	coop_ice_unfroze_next(ignore);
 	score_player_set(self.owner, SP_STATUS, 0);
-	return;
 }
 
 void() coop_ice_frozen_status {
@@ -108,6 +109,7 @@ void() coop_ice_frozen_status {
 void(void) coop_init_delayed {
 	ice_hook_frozen_status = coop_ice_frozen_status;
 	ice_hook_skip_death_handle = coop_ice_skip_death_handle;
+	coop_ice_unfroze_next = ice_hook_unfroze;
 	ice_hook_unfroze = coop_ice_unfroze;
 	ice_init();
 }

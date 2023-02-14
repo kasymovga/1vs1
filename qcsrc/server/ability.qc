@@ -6,6 +6,7 @@ float ability_classes_count;
 string ability_class_names[MENU_ITEMS_MAXCOUNT];
 string ability_class_values[MENU_ITEMS_MAXCOUNT];
 string ability_class_model_list_allowed[MENU_ITEMS_MAXCOUNT];
+float ability_class_colors[MENU_ITEMS_MAXCOUNT];
 float g_ability_class_default;
 float g_ability_kill_on_change;
 float ability_class_model_list_allowed_not_empty;

@@ -1699,7 +1699,7 @@ void(void) sbar_reset {
 		ctf_hud_reset();
 }
 
-float(float stat_type, float stat_regen, float stat_maxregen) sbar_nadget_regen {
+float(float stat_regen, float stat_maxregen) sbar_nadget_regen {
 	return getstatf(stat_regen) / getstatf(stat_maxregen);
 }
 
@@ -1973,14 +1973,15 @@ void(void) sbar_draw {
 			}
 		}
 		// nades
-		float hgtype = getstati(STAT_HGTYPE);
+		float bt = getstati(STAT_HGBONUSTYPE);
+		float hgtype = (bt ? bt : getstati(STAT_HGTYPE));
 		if (hgtype) {
 			vector hgapos;
 			hgapos_x = 0;
 			hgapos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 7;
 			hgapos_z = 0;
 			float hgtype2 = getstati(STAT_HGTYPE2);
-			float hgammo = getstati(STAT_HGAMMO);
+			float hgammo = (bt ? getstati(STAT_HGBONUS) : getstati(STAT_HGAMMO));
 			float hgdetons = getstati(STAT_HGDETONABLES);
 			/*
 			float hgcd, hgcd2;
@@ -1992,7 +1993,7 @@ void(void) sbar_draw {
 			sbar_nadget_messages(hgtype, hgapos, hgdetons, hgammo);
 			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
 			hgapos = sbar_position(CVAR(sbar_nadget_position), '74 24 0' * CVAR(sbar_nadget_scale));
-			float hgregen = sbar_nadget_regen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX);
+			float hgregen = (bt ? 0 : sbar_nadget_regen(STAT_HGREGEN, STAT_HGREGENMAX));
 			vector hgrsize;
 			if (hgregen && hgregen != 1) {
 				hgrsize = '64 16 0' * CVAR(sbar_nadget_scale);
@@ -2004,7 +2005,7 @@ void(void) sbar_draw {
 			if (hgtype2) {
 				hgapos = sbar_position(CVAR(sbar_nadget2_position), '74 24 0' * CVAR(sbar_nadget2_scale));
 				hgicon = nadget_TypeToIcon(hgtype2, TRUE, 0);
-				float hgregen2 = sbar_nadget_regen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2);
+				float hgregen2 = sbar_nadget_regen( STAT_HGREGEN2, STAT_HGREGENMAX2);
 				if (hgregen2 && hgregen2 != 1) {
 					hgrsize = '64 16 0' * CVAR(sbar_nadget2_scale);
 					hgrsize_x *= hgregen2;

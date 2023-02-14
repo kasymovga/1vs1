@@ -342,13 +342,14 @@ void(void) rm_hud_draw {
 	vector scoresector_pos = SBAR_SCORE_POSITION_DEFAULT, scoresector_size = '0 0 0';
 	vector game_info_pos = '0 0 0', game_info_size = '0 0 0';
 	vector base_teamcolor;
-	float hgtype = getstati(STAT_HGTYPE);
-	if (hgtype)
-		hgregen = sbar_nadget_regen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX);
+	float hgbonus = getstati(STAT_HGBONUSTYPE);
+	float hgtype = (hgbonus ? hgbonus : getstati(STAT_HGTYPE));
+	if (hgtype && !hgbonus)
+		hgregen = sbar_nadget_regen(STAT_HGREGEN, STAT_HGREGENMAX);
 
 	float hgtype2 = getstati(STAT_HGTYPE2);
 	if (hgtype2)
-		hgregen2 = sbar_nadget_regen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2);
+		hgregen2 = sbar_nadget_regen(STAT_HGREGEN2, STAT_HGREGENMAX2);
 	if (team_mode) {
 		base_teamcolor = team_rgb(team_my);
 	} else {
@@ -757,7 +758,7 @@ void(void) rm_hud_draw {
 		// nades
 		vector hgapos = '0 0 0';
 		hgapos_y = CVAR(vid_conheight) - CVAR(vid_conheight)/7;
-		float hgammo = getstati(STAT_HGAMMO);
+		float hgammo = (hgbonus ? getstati(STAT_HGBONUS) : getstati(STAT_HGAMMO));
 		float hgdetons = getstati(STAT_HGDETONABLES);
 		float hgcd, hgcd2 = 0;
 		if (hgtype) {
@@ -775,10 +776,10 @@ void(void) rm_hud_draw {
 				pos_y = 33;
 				pos = sbar_bottom - pos;
 				pos_x = nadesector_pos;
-				rm_hud_draw_nadget_regen_sector(pos, hgtype, hgammo, getstatf(STAT_HGREGEN), getstatf(STAT_HGREGENRATE), getstatf(STAT_HGREGENMAX), getstati(STAT_HGREGENPAUSED), hgcd, rm_hud_hg_maxcd);
+				rm_hud_draw_nadget_regen_sector(pos, hgtype, hgammo, hgregen, getstatf(STAT_HGREGENRATE), getstatf(STAT_HGREGENMAX), getstati(STAT_HGREGENPAUSED), hgcd, rm_hud_hg_maxcd);
 				if (nadesector2_pos) {
 					pos_x = nadesector2_pos;
-					rm_hud_draw_nadget_regen_sector(pos, getstati(STAT_HGTYPE2), getstati(STAT_HGAMMO2), getstatf(STAT_HGREGEN2), getstatf(STAT_HGREGENRATE2), getstatf(STAT_HGREGENMAX2), getstati(STAT_HGREGENPAUSED2), hgcd2, rm_hud_hg_maxcd2);
+					rm_hud_draw_nadget_regen_sector(pos, hgtype2, getstati(STAT_HGAMMO2), getstatf(STAT_HGREGEN2), getstatf(STAT_HGREGENRATE2), getstatf(STAT_HGREGENMAX2), getstati(STAT_HGREGENPAUSED2), hgcd2, rm_hud_hg_maxcd2);
 				}
 			} else {
 				// HUD doesn't support the nade sector - fallback to the old display method

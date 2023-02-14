@@ -22,6 +22,7 @@ set g_nadgets_drop_on_death 0 "If enabled, players will drop their nadget on the
 set g_nadgets_detonatelaunches 0 "Use the detonation (dropweapon) button to launch the grenades"
 set g_nadgets_storage_limit_factor 2 "How many nadgets can players store overall, based on regen_limit. e.g. a value of 2 means twice as much as regen_limit"
 set g_nadgets_show_in_sbar 0 "Show nadgets in score board"
+set g_nadgets_bonus_at_revive 5 "Give bonus nadget for this amount of revives (0 - disabled)"
 
 // Hand Grenade
 set g_nadgets_normal_regen_time 30
@@ -57,7 +58,7 @@ set g_nadgets_normal_gravity 1
 set g_nadgets_normal_stick 0
 set g_nadgets_normal_stick_lifetime_override 0
 set g_nadgets_normal_bonus_amount_multiplier 1
-set g_nadgets_normal_bonus_random_weight 1
+set g_nadgets_normal_bonus_random_weight 0
 
 // Fire Trap
 set g_nadgets_remote_regen_time 30
@@ -104,7 +105,7 @@ set g_nadgets_remote_gravity 1
 set g_nadgets_remote_stick 1
 set g_nadgets_remote_stick_lifetime_override 0
 set g_nadgets_remote_bonus_amount_multiplier 1
-set g_nadgets_remote_bonus_random_weight 1
+set g_nadgets_remote_bonus_random_weight 0
 
 // Plasma Bomb
 set g_nadgets_plasma_regen_time 30
@@ -163,7 +164,7 @@ set g_nadgets_plasma_gravity 1
 set g_nadgets_plasma_stick 2
 set g_nadgets_plasma_stick_lifetime_override 0.5
 set g_nadgets_plasma_bonus_amount_multiplier 1
-set g_nadgets_plasma_bonus_random_weight 1
+set g_nadgets_plasma_bonus_random_weight 0
 
 // Napalm Grenade
 set g_nadgets_napalm_regen_time 60
@@ -211,7 +212,7 @@ set g_nadgets_napalm_gravity 1
 set g_nadgets_napalm_stick 0
 set g_nadgets_napalm_stick_lifetime_override 0
 set g_nadgets_napalm_bonus_amount_multiplier 1
-set g_nadgets_napalm_bonus_random_weight 0
+set g_nadgets_napalm_bonus_random_weight 1
 
 // Translocator
 set g_nadgets_transloc_regen_time 20
@@ -264,7 +265,7 @@ set g_nadgets_transloc_maxdistance 750
 set g_nadgets_transloc_bounceresetorigin 1
 set g_nadgets_transloc_medic_revive_health_multiplier 0.5
 set g_nadgets_transloc_bonus_amount_multiplier 2
-set g_nadgets_transloc_bonus_random_weight 1
+set g_nadgets_transloc_bonus_random_weight 0
 
 // Powershield
 set g_nadgets_shield_regen_time 35
@@ -298,7 +299,7 @@ set g_nadgets_shield_progressrate 0
 set g_nadgets_shield_immobile 0
 set g_nadgets_shield_nobuffs 0
 set g_nadgets_shield_bonus_amount_multiplier 1
-set g_nadgets_shield_bonus_random_weight 1
+set g_nadgets_shield_bonus_random_weight 0
 
 // Linking Shell
 set g_nadgets_linker_regen_time 50
@@ -315,7 +316,7 @@ set g_nadgets_linker_hps 10
 set g_nadgets_linker_split_damage 0
 set g_nadgets_linker_sharefactor 0.5
 set g_nadgets_linker_bonus_amount_multiplier 1
-set g_nadgets_linker_bonus_random_weight 1
+set g_nadgets_linker_bonus_random_weight 0
 set g_nadgets_linker_detect_enemies -1
 set g_nadgets_linker_detect_enemies_teamwide 1
 
@@ -353,7 +354,7 @@ set g_nadgets_laser_gravity 1
 set g_nadgets_laser_stick 0
 set g_nadgets_laser_stick_lifetime_override 0
 set g_nadgets_laser_bonus_amount_multiplier 4
-set g_nadgets_laser_bonus_random_weight 1
+set g_nadgets_laser_bonus_random_weight 0
 
 // Concealing Cloak
 set g_nadgets_cloak_regen_time 25
@@ -387,7 +388,7 @@ set g_nadgets_gg_global_cooldown 1
 set g_nadgets_gg_range 100000
 set g_nadgets_gg_damage 9001
 set g_nadgets_gg_bonus_amount_multiplier 1
-set g_nadgets_gg_bonus_random_weight 0
+set g_nadgets_gg_bonus_random_weight 0.25
 
 // Zapper Sentry
 set g_nadgets_sentry_regen_time 50
@@ -418,7 +419,7 @@ set g_nadgets_sentry_capture_range 120
 set g_nadgets_sentry_capture_speed 0.45
 set g_nadgets_sentry_capture_damage_delay 0.2
 set g_nadgets_sentry_bonus_amount_multiplier 1
-set g_nadgets_sentry_bonus_random_weight 0.5
+set g_nadgets_sentry_bonus_random_weight 0
 set g_nadgets_sentry_levitation 0
 set g_nadgets_sentry_friction 3
 set g_nadgets_sentry_pushfactor 0.5
@@ -477,5 +478,7 @@ set g_nadgets_raze_spread_z_min_randomfactor 10
 set g_nadgets_raze_fire_lifetime 2
 set g_nadgets_raze_fire_lifetime_randomfactor 0
 set g_nadgets_raze_fire_spawninterval 0.1
+set g_nadgets_raze_bonus_random_weight 0
+set g_nadgets_raze_bonus_random_amount_multiplier 1
 
 ///// END Handgrenades mutator /////

@@ -226,7 +226,9 @@ float() survive_ice_skip_think {
 	return !survive_active;
 }
 
+var void(entity unfrozer) survive_ice_unfroze_next;
 void(entity unfrozer) survive_ice_unfroze {
+	survive_ice_unfroze_next(unfrozer);
 	score_player_set(self.owner, SP_STATUS, 0);
 	if (unfrozer.classname == "player") {
 		score_player_add(unfrozer, SP_SCORE, 1);
@@ -251,6 +253,7 @@ void survive_init_delayed() {
 	if (g_surv_freeze) {
 		ice_hook_skip_think = survive_ice_skip_think;
 		ice_hook_skip_death_handle = survive_ice_skip_think;
+		survive_ice_unfroze_next = ice_hook_unfroze;
 		ice_hook_unfroze = survive_ice_unfroze;
 		ice_hook_frozen_status = survive_ice_frozen_status;
 		ice_init();
