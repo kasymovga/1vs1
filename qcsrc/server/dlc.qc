@@ -340,6 +340,34 @@ float(float tempo) dlc_slowmo_update_mod {
 	return dlc_slowmo_update_mod_NextLink(tempo);
 }
 
+float(string s) dlc_requested {
+	if (s == "") return FALSE;
+	if (strstrofs(strcat(" ", dlc_list, " "), strcat(" ", s, " "), 0) >= 0)
+		return TRUE;
+
+	return FALSE;
+}
+
+string(string file) dlc_by_file {
+	string pk3 = whichpack(file);
+	string s;
+	if (pk3 == "")
+		return "";
+
+	if (substring(pk3, 0, 8) == "dlcache/")
+		pk3 = substring(pk3, 8, -1);
+
+	if (substring(pk3, 0, 11) == "zzz-rexdlc_" && substring(pk3, 0, 15) != "zzz-rexdlc_base") {
+		s = substring(pk3, 11, strlen(pk3) - 15);
+		if (s != "") {
+			if (file_exists(dlc_serverpackage_name(s))) {
+				return s;
+			}
+		}
+	}
+	return "";
+}
+
 void(string file) dlc_add_dlc_or_pk3_by_file {
 	string pk3 = whichpack(file);
 	string s;

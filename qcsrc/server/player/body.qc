@@ -1078,6 +1078,7 @@ string(string s) player_body_find_models {
 	string l = "";
 	string m;
 	string disabled_models = strcat(" ", g_player_disabled_models, " ");
+	string d;
 	for (i = 0; i < n; i++) {
 		m = search_getfilename(glob, i);
 		if (strstrofs(disabled_models, strcat(" ", m, " "), 0) >= 0)
@@ -1086,6 +1087,10 @@ string(string s) player_body_find_models {
 		if not(player_body_model_path_check(m))
 			continue;
 
+		d = dlc_by_file(m);
+		if (d != "" && !dlc_requested(d)) {
+			continue;
+		}
 		if (strstrofs(m, "models/player/", 0) == 0) {
 			m = substring(m, 14, -1);
 			if (strstrofs(disabled_models, strcat(" ", m, " "), 0) >= 0)
