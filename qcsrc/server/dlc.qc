@@ -353,7 +353,6 @@ void(string file) dlc_add_dlc_or_pk3_by_file {
 		s = substring(pk3, 11, strlen(pk3) - 15);
 		if (s != "") {
 			if (file_exists(dlc_serverpackage_name(s))) {
-				print("File ", file, " from DLC: ", s, "\n");
 				dlc_require(s);
 				return;
 			}
