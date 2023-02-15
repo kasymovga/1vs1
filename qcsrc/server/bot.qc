@@ -128,7 +128,7 @@ void(void) bot_setnameandstuff {
 
 	// pick the model and skin
 	if (substring(bot_model, -4, 1) != ".")
-		bot_model = strcat(bot_model, ".zym");
+		bot_model = strcat(bot_model, ".dpm");
 
 	self.playermodel = self.playermodel_freeme = strzone(strcat("models/player/", bot_model));
 	self.playerskin = self.playerskin_freeme = strzone(bot_skin);
