@@ -1,6 +1,10 @@
-set overkill_dlc "okweapons"
+set overkill_dlc "okweapons okplayers"
 set overkill_g_rank_type "overkill"
 set overkill_g_laser 1
+set overkill_g_player_forcemodel 0
+set overkill_g_player_allowed_models "okmale1.dpm okmale2.dpm okmale3.dpm okmale4.dpm okrobot1.dpm okrobot2.dpm okrobot3.dpm okrobot4.dpm"
+set overkill_g_player_allowed_models_red "okmale1.dpm okmale2.dpm okmale3.dpm okmale4.dpm"
+set overkill_g_player_allowed_models_blue "okrobot1.dpm okrobot2.dpm okrobot3.dpm okrobot4.dpm"
 set overkill_g_start_weapon_laser 0
 set overkill_g_start_weapon_shotgun 0
 set overkill_g_start_weapon_nex 0
