@@ -13,17 +13,25 @@ void(string s) str_unzone_ifneeded {
 string(string s) str_car {
 	float o;
 	o = strstrofs(s, " ", 0);
-	if(o < 0)
+	if (o < 0)
 		return s;
+
+	if (o < 1)
+		return str_car(substring(s, 1, -1));
+
 	return substring(s, 0, o);
 }
 
 string(string s) str_cdr {
 	float o;
 	o = strstrofs(s, " ", 0);
-	if(o < 0)
+	if (o < 0)
 		return NULL;
-	return substring(s, o + 1, strlen(s) - (o + 1));
+
+	if (o < 1)
+		return str_cdr(substring(s, 1, -1));
+
+	return substring(s, o + 1, -1);
 }
 
 string(float number, float decimals) str_float_decimals {
