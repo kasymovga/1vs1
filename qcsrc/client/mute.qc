@@ -50,7 +50,7 @@ float(string strMessage) mute_check {
 	string check_name;
 	string colorstr;
 	entity pl;
-	for (s2 = mute_list; (s2 = str_cdr(s2)) != ""; ) {
+	for (s2 = mute_list; s2 != ""; s2 = str_cdr(s2)) {
 		s1 = str_car(s2);
 		n = stof(s1);
 		pl = player_slots[n - 1];
