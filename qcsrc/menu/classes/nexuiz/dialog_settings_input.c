@@ -69,7 +69,7 @@ void fillNexuizInputSettingsTab(entity me)
 			me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("UI mouse speed:")));
 			gui_set_dependent(e, "menu_mouse_absolute", 0, 0);
 			me.TD(me, 1, 2, e = makeNexuizSlider(0.2, 4.0, 0.1, "menu_mouse_speed"));
-			//gui_set_dependent(e, "menu_mouse_absolute", 0, 0);
+			gui_set_dependent(e, "menu_mouse_absolute", 0, 0);
 	}
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(1.022, "m_pitch", _("Invert mouse")));
@@ -83,6 +83,28 @@ void fillNexuizInputSettingsTab(entity me)
 			me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "vid_dgamouse", _("Turn off OS mouse acceleration")));
 		else if(cvar_type("apple_mouse_noaccel") & CVAR_TYPEFLAG_ENGINE)
 			me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "apple_mouse_noaccel", _("Turn off OS mouse acceleration")));
+	me.TR(me);
+		if(cvar_type("vid_touchscreen") & CVAR_TYPEFLAG_ENGINE)
+			me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "vid_touchscreen", _("Use touchscreen input")));
+	me.TR(me);
+	if (cvar_type("vid_touchscreen_sensitivity") & CVAR_TYPEFLAG_ENGINE) {
+		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Touch aim sensitivity:")));
+		gui_set_dependent(e, "vid_touchscreen", 1, 1);
+		me.TD(me, 1, 2, e = makeNexuizSlider(0.05, 2, 0.05, "vid_touchscreen_sensitivity"));
+		gui_set_dependent(e, "vid_touchscreen", 1, 1);
+	}
+	me.TR(me);
+	if (cvar_type("vid_touchscreen_scale") & CVAR_TYPEFLAG_ENGINE) {
+		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Touch controls scale:")));
+		gui_set_dependent(e, "vid_touchscreen", 1, 1);
+		me.TD(me, 1, 2, e = makeNexuizSlider(0.5, 2, 0.1, "vid_touchscreen_scale"));
+		gui_set_dependent(e, "vid_touchscreen", 1, 1);
+	}
+	me.TR(me);
+	if (cvar_type("vid_touchscreen_mirror") & CVAR_TYPEFLAG_ENGINE) {
+		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "vid_touchscreen_mirror", _("Mirror touch controls")));
+		gui_set_dependent(e, "vid_touchscreen", 1, 1);
+	}
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "con_closeontoggleconsole", _("\"enter console\" also closes")));
 	me.TR(me);
