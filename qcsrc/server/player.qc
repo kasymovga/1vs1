@@ -1151,10 +1151,7 @@ void(entity pl, float t, float s, float noprint) player_set_team {
 		bprint(pl.netname, "^7 has changed from ", team_name_by_no(s), " to ", team_name_by_no(t), "\n");
 	}
 	score_touch(pl);
-	if (pl.body) {
-		str_unzone_ifneeded(pl.body.playermodel);
-		pl.body.playermodel = "";
-	}
+	player_body_reset(pl);
 }
 
 entity(entity pl) player_entity {

@@ -15,6 +15,12 @@ float(void) player_body_customize;
 float(void) player_body_torso_customize;
 float(void) player_body_base_customize;
 
+void(entity pl) player_body_reset {
+	if not(pl.body) return;
+	str_unzone_ifneeded(pl.body.playermodel);
+	pl.body.playermodel = "";
+}
+
 void(void) player_species_setup {
 	float glob, i, j, fh = -1, len, sk;
 	string fn, l;
@@ -76,9 +82,19 @@ void(void) player_species_setup {
 	player_sound_update();
 }
 
+void(void) player_body_dlc_reset {
+	if (self.owner == self) return;
+	entity e = self;
+	self = self.owner;
+	player_sound_update();
+	player_body_reset(self);
+	self = e;
+}
+
 void(entity bb) player_body_spawn {
 	self.body = spawn();
 	self.body.customizeentityforclient = player_body_customize;
+	self.body.dlc_reset = player_body_dlc_reset;
 	if not(bb) {
 		bb = spawn();
 		bb.owner = self;
@@ -837,7 +853,7 @@ void() player_body_model_setup {
 		forcecolor = g_player_forcecolor;
 	}
 	if ((self.playermodel != "" && self.body.playermodel != self.playermodel) || self.body.playermodel == "") {
-		self.playermodel = player_body_model_check(self.playermodel);
+		self.playermodel = player_body_model_check(((self.playermodel == "") ? self.playermodel_save : self.playermodel));
 		if (self.playermodel != self.body.playermodel) {
 			m1 = self.mins;
 			m2 = self.maxs;
