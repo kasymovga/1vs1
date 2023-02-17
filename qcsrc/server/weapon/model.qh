@@ -1,0 +1,2 @@
+void(void) weapon_model_spawn;
+void(entity e) weapon_model_remove;

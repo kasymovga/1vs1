@@ -139,6 +139,7 @@ noteline.qh
 warmup.qh
 weapon/extra.qh
 weapon/selectable.qh
+weapon/model.qh
 game/type.qh
 chat.qh
 team.qh
@@ -226,6 +227,7 @@ powerup.qc
 backpack.qc
 pinata.qc
 weapon.qc
+weapon/model.qc
 weapon/flash.qc
 weapon/extra.qc
 entcs.qc
