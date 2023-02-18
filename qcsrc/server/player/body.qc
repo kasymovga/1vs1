@@ -874,7 +874,7 @@ void() player_body_model_setup {
 		self.skinindex = player_body_allowed_skin(self.playermodel_save, stof(self.playerskin));
 		self.playerskin = "";
 	}
-	if (team_mode && self.playermodel == "models/player/nexus.zym" && self.skinindex >= 3 && self.skinindex <= 5) // nexys.zym have skins 3, 4 and 5 as fbgreen/fbred/fborange
+	if (team_mode && self.body.playermodel == "models/player/nexus.zym" && self.skinindex >= 3 && self.skinindex <= 5) // nexys.zym have skins 3, 4 and 5 as fbgreen/fbred/fborange
 		self.skinindex = 6;
 
 	if (chmdl || oldskin != self.skinindex)
