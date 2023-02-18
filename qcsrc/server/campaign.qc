@@ -103,9 +103,9 @@ void(void) campaign_preinit {
 	if (campaign_invalid())
 		return;
 
-	title = campaign_shortdesc[0];
+	title = campaign_shortdesc[campaign_level];
 	title = strzone(strcat("Level ", ftos(campaign_level + 1), ": ", title));
-	campaign_message = strzone(campaign_longdesc[0]);
+	campaign_message = strzone(campaign_longdesc[campaign_level]);
 	strunzone(title);
 }
 
@@ -117,9 +117,9 @@ void(void) campaign_postinit {
 	if (campaign_invalid())
 		return;
 
-	cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
+	cvar_set("fraglimit", ftos(campaign_fraglimit[campaign_level]));
 	cvar_set("timelimit", "0");
-	builtin_cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
+	builtin_cvar_set("fraglimit", ftos(campaign_fraglimit[campaign_level]));
 	builtin_cvar_set("timelimit", "0");
 }
 
