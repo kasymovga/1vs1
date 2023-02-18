@@ -2,9 +2,7 @@
 #define CAMPAIGN_MAX_ENTRIES 64
 #endif
 
-// each i-th array element corresponds to the list entry campaign_offset+i
 float campaign_entries;
-float campaign_offset;
 string campaign_gametype[CAMPAIGN_MAX_ENTRIES];
 string campaign_mapname[CAMPAIGN_MAX_ENTRIES];
 float campaign_bots[CAMPAIGN_MAX_ENTRIES];
@@ -23,7 +21,5 @@ string campaign_title; // filled upon loading
 string campaign_name; // set that to the campaign you want to load before calling campaign_file_load
 float(float offset, float entries) campaign_file_load;
 void() campaign_file_unload;
-// Sets up the campaign for the n-th array item (meaning: campaign_offset+nth
-// level) using localcmd()
 void(float n) campaign_setup_cvars_only;
 void(float n) campaign_setup;

@@ -25,7 +25,6 @@ float(float offset, float n) campaign_file_load {
 	if (n > CAMPAIGN_MAX_ENTRIES)
 		n = CAMPAIGN_MAX_ENTRIES;
 
-	campaign_offset = offset;
 	campaign_entries = 0;
 	campaign_title = NULL;
 	if (campaign_name == "rexclassic") {
@@ -107,7 +106,7 @@ void() campaign_file_unload {
 void(float n) campaign_setup_cvars_only {
 	localcmd("set g_campaign 1\n");
 	localcmd("set _campaign_name \""); localcmd(campaign_name); localcmd("\"\n");
-	localcmd("set _campaign_index "); localcmd(ftos(campaign_offset + n)); localcmd("\n");
+	localcmd("set _campaign_index "); localcmd(ftos(n)); localcmd("\n");
 	localcmd("set _gametype "); localcmd(campaign_gametype[n]); localcmd("\n");
 	localcmd(strcat("maxplayers ", ftos(campaign_bots[n] + 1), "\nskill 4\n"));
 }
