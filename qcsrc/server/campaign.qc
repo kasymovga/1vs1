@@ -207,9 +207,9 @@ void(void) campaign_postintermission {
 	}
 	builtin_cvar_set("g_campaign_skill", ftos(g_campaign_skill));
 	if (campaign_map_transition)
-		campaign_setup_cvars_only(0);
+		campaign_setup_cvars_only(campaign_level);
 	else
-		campaign_setup(campaign_won);
+		campaign_setup(campaign_level + campaign_won);
 
 	campaign_file_unload();
 	strunzone(campaign_message);
