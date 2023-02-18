@@ -977,11 +977,7 @@ void kh_init() {
 	plugin_portal_forbidden_for = kh_portal_forbidden_for;
 	plugin_havocbot_role_choose = kh_role_choose;
 	precache_model("models/keyhunt/key.md3");
-	kh_teams = cvar("g_keyhunt_teams_override");
-	if(kh_teams < 2)
-		kh_teams = cvar("g_keyhunt_teams");
-
-	kh_teams = bound(2, kh_teams, 4);
+	kh_teams = bound(2, cvar("g_kh_teams"), 4);
 	team_teams_set_count(kh_teams);
 }
 

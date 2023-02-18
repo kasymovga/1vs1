@@ -1,5 +1,4 @@
-set g_dom_default_teams		2 "default number of teams for maps that aren't domination-specific"
-set g_dom_teams_override		0 "use a specific number of teams in domination games (minimum 2), disables dom_team entities"
+set g_dom_teams 0 "use a specific number of teams in domination games (minimum 2), disables dom_team entities"
 set g_dom_disable_frags		0 "players can't get frags normally, only get points from kills"
 set g_dom_point_amt		0 "override: how many points to get per ping"
 set g_dom_point_fullbright	0 "domination point fullbright"

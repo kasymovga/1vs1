@@ -3,13 +3,11 @@ Domination as a plugin for netquake mods
 by LordHavoc (lordhavoc@ghdigital.com)
 */
 float g_dom;
-float g_dom_default_teams;
 float g_dom_point_amt;
 float g_dom_point_capturetime;
 float g_dom_point_fullbright;
 float g_dom_point_glow;
 float g_dom_point_rate;
-float g_dom_teams_override;
 
 #define DOMPOINTFRAGS frags
 
@@ -22,6 +20,7 @@ entity dom_teams[5];
 
 void(void) dom_controlpoint_setup;
 void(void) dom_spawnteams;
+void(string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage) dom_spawnteam;
 
 void(void) dom_controlpoint_captured {
 	entity head;
@@ -251,6 +250,7 @@ void(void) spawnfunc_dom_team {
 		self.team = self.cnt + 1; // WHY are these different anyway?
 
 	team_teams_set_allowed(self.team);
+	dom_teams[team_index(self.team)] = self;
 }
 
 void(void) dom_controlpoint_setup {
@@ -312,6 +312,9 @@ void(void) spawnfunc_dom_controlpoint {
 // code from here on is just to support maps that don't have control point and team entities
 void(string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage) dom_spawnteam {
 	entity oldself;
+	if (teamcolor > 0)
+		team_teams_set_allowed(teamcolor + 1);
+
 	if (dom_teams[team_index(teamcolor + 1)]) //team already spawned
 		return;
 
@@ -325,7 +328,6 @@ void(string teamname, float teamcolor, string pointmodel, float pointskin, strin
 	self.noise1 = capnarration;
 	self.message = capmessage;
 	spawnfunc_dom_team();
-	dom_teams[team_index(self.team)] = self;
 	self = oldself;
 }
 
@@ -343,26 +345,20 @@ void(vector org) dom_spawnpoint {
 
 // spawn some default teams if the map is not set up for domination
 void(void) dom_spawnteams {
-	float numteams;
+	float numteams = cvar("g_dom_teams");;
+	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", ""); //check if unclaimed team spawned
+	if (numteams < 2 && team_teams >= 2) //teams spawned by dom_team
+		return;
+
 	team_teams_set_count(0);
-	if (g_dom_teams_override < 2)
-		numteams = g_dom_default_teams;
-	else
-		numteams = g_dom_teams_override;
+	numteams = bound(2, numteams, 4);
+	dom_spawnteam("Red", COLOR_TEAM1 - 1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
+	dom_spawnteam("Blue", COLOR_TEAM2 - 1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
+	if (numteams > 2)
+		dom_spawnteam("Yellow", COLOR_TEAM3 - 1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
 
-	if (team_teams < numteams)
-		dom_spawnteam("Red", COLOR_TEAM1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-
-	if (team_teams < numteams)
-		dom_spawnteam("Blue", COLOR_TEAM2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
-
-	if (team_teams < numteams)
-		dom_spawnteam("Yellow", COLOR_TEAM3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
-
-	if (team_teams < numteams)
-		dom_spawnteam("Pink", COLOR_TEAM4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
-
-	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
+	if (numteams > 3)
+		dom_spawnteam("Pink", COLOR_TEAM4 - 1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 }
 
 void(void) dom_delayedinit {
@@ -397,13 +393,11 @@ entity() dom_client_put_spawn_point {
 
 void(void) dom_init {
 	g_dom = 1;
-	CVAR_CACHE(g_dom_default_teams);
 	CVAR_CACHE(g_dom_point_amt);
 	CVAR_CACHE(g_dom_point_capturetime);
 	CVAR_CACHE(g_dom_point_fullbright);
 	CVAR_CACHE(g_dom_point_glow);
 	CVAR_CACHE(g_dom_point_rate);
-	CVAR_CACHE(g_dom_teams_override);
 	// we have to precache default models/sounds even if they might not be
 	// used because spawnfunc_worldspawn is executed before any other entities are read,
 	// so we don't even know yet if this map is set up for domination...

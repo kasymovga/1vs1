@@ -5,13 +5,9 @@ void(void) tdm_delayedinit {
 		team_teams_set_allowed(e.team);
 	}
 	team_teams_allowed(world);
-	float teams_override = cvar("g_tdm_teams_override");
-	if (team1 + team2 + team3 + team4 < -2 || teams_override > 1) {
+	float numteams = cvar("g_tdm_teams");
+	if (team_teams < 2 || (numteams > 1 && numteams != team_teams)) {
 		team_teams_set_count(0);
-		float numteams = teams_override;
-		if(numteams < 2)
-			numteams = cvar("g_tdm_teams");
-
 		numteams = bound(2, numteams, 4);
 		team_teams_set_allowed(COLOR_TEAM1);
 		team_teams_set_allowed(COLOR_TEAM2);
