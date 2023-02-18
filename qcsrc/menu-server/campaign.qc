@@ -108,11 +108,12 @@ void(float n) campaign_setup_cvars_only {
 	localcmd("set g_campaign 1\n");
 	localcmd("set _campaign_name \""); localcmd(campaign_name); localcmd("\"\n");
 	localcmd("set _campaign_index "); localcmd(ftos(campaign_offset + n)); localcmd("\n");
+	localcmd("set _gametype "); localcmd(campaign_gametype[n]); localcmd("\n");
 	localcmd(strcat("maxplayers ", ftos(campaign_bots[n] + 1), "\nskill 4\n"));
 }
 
 void(float n) campaign_setup {
-	campaign_setup_cvars_only(n);
 	localcmd("disconnect\n");
+	campaign_setup_cvars_only(n);
 	map_info_load_map(campaign_mapname[n]);
 }

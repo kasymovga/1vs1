@@ -50,8 +50,10 @@ void(string theCvar, string theValue) campaign_cvar_set {
 }
 
 float(void) campaign_invalid {
-	string s = campaign_gametype[0];
-	if (game_type_current() != game_type_from_name(s))
+	string s = campaign_gametype[campaign_level];
+	print("game_type = ", game_type_name(game_type_current()), "\n");
+	print("campaign game_type = ", s, "\n");
+	if (game_type_name(game_type_current()) != s)
 		return campaign_bailout("wrong game type!");
 
 	return 0;
@@ -89,17 +91,17 @@ void(void) campaign_preinit {
 	baseskill = bound(1, g_campaign_skill + 1, 4);
 	float minskill = baseskill * 5 - 4;
 	float maxskill = baseskill * 10;
-	baseskill = bound(minskill, campaign_botskill[0] * baseskill * 0.5, maxskill);
+	baseskill = bound(minskill, campaign_botskill[campaign_level] * baseskill * 0.5, maxskill);
 	cvar_set("sv_public", "0");
 	cvar_set("pausable", "1");
-	campaign_cvar_list = strzone(strcat("; ", campaign_mutators[0], "; "));
+	campaign_cvar_list = strzone(strcat("; ", campaign_mutators[campaign_level], "; "));
 	cvar = campaign_cvar;
 	cvar_string = campaign_cvar_string;
 	cvar_set = campaign_cvar_set;
 	cvar_set("g_campaign", "1");
 	cvar_set("skill", ftos(baseskill));
-	cvar_set("bot_number", ftos(campaign_bots[0]));
-	game_type_switch(game_type_from_name(campaign_gametype[0]));
+	cvar_set("bot_number", ftos(campaign_bots[campaign_level]));
+	game_type_switch(game_type_from_name(campaign_gametype[campaign_level]));
 	if (campaign_invalid())
 		return;
 
