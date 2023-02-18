@@ -303,10 +303,9 @@ void(void) menu_draw {
 		menu_mouse_mode = (cvar("menu_mouse_absolute") || cvar("vid_touchscreen"));
 		if (getmousetarget() == (menu_mouse_mode ? MT_CLIENT : MT_MENU) && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
 			setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
-		else {
+		else
 			menu_hide();
-			menu_display();
-		}
+
 		if (cvar("cl_capturevideo"))
 			frametime = 1 / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
 	}
