@@ -866,7 +866,9 @@ void() player_body_model_setup {
 			self.playermodel_save = strzone(self.playermodel);
 			self.playermodel = "";
 		}
-	}
+	} else if (self.playermodel != "")
+		self.playermodel = "";
+
 	oldskin = self.skinindex;
 	if (self.playerskin != "") {
 		self.skinindex = player_body_allowed_skin(self.playermodel_save, stof(self.playerskin));
