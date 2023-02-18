@@ -30,9 +30,13 @@ vector(void) mouse_position {
 void(void) mouse_draw {
 	if (mouse_enabled) {
 		mouse_position();
-		if (mouse_cursor == "")
-			drawpic(mouse_pos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
-		else {
+		if (mouse_cursor == "") {
+			string menu_skin = cvar_string("menu_skin");
+			if (skin_current != menu_skin)
+				skin_init();
+
+			drawpic(mouse_pos - SKINOFFSET_CURSOR_x * '32 0 0' - SKINOFFSET_CURSOR_y * '0 32 0', strcat("gfx/menu/", menu_skin, "/cursor"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+		} else {
 			drawpic(mouse_pos - '16 16 0', mouse_cursor, '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 		}
 		mouse_enabled = FALSE;
