@@ -51,8 +51,6 @@ void(string theCvar, string theValue) campaign_cvar_set {
 
 float(void) campaign_invalid {
 	string s = campaign_gametype[campaign_level];
-	print("game_type = ", game_type_name(game_type_current()), "\n");
-	print("campaign game_type = ", s, "\n");
 	if (game_type_name(game_type_current()) != s)
 		return campaign_bailout("wrong game type!");
 
