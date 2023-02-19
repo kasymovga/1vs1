@@ -65,10 +65,10 @@ float(float offset, float n) campaign_file_load {
 		campaign_entry("ctf", "eggandbacon", 7, 13, 200, "", "SPECIAL: Egg & Bacon", "An arena especially for spamming around with all the weapons. Enjoy it, and when you had enough of it, bring the enemy flag home...\n\nYou will notice some odd weapons here that haven't appeared before, by the way. Learn using them.");
 		campaign_entry("race", "racetrack", 0, 0, 3600, "", "Race: Racetrack", "Race is about running as fast as possible on the map, by jumping at the right times, and using your weapons to gain more speed.\n\nOn this map, you have to finish a lap in 36.0 seconds to proceed. The mortar which you will find behind you may be an useful tool for this.");
 		campaign_entry("dm", "final_rage", 3, 14, 20, "g_start_weapon_rocketlauncher 1; g_start_weapon_laser 0; g_start_weapon_shotgun 0; g_use_ammunition 0; g_pickup_weapons 0", "SPECIAL: Final rage", "Missiles... try playing with them, to let them blow up directly in the face of your enemies.\n\nThe final is near...");
-		campaign_entry("dm", "reslimed", 2, 15, 9, "", "DM: Slimepit Revisited", "It is crucial to actually dodge rockets here. Also, there are traps on this map that you can activate to hurt your opponents - find then!");
-		campaign_entry("dm", "bluesky", 3, 16, 9, "", "DM: Blue Sky", "And the sky is the limit... enjoy the view and try to keep alive! Your 3 enemies will try to hit you using the Nex and other weapons suitable for long distances, so never stop moving!");
-		campaign_entry("dm", "farewell", 4, 17, 9, "", "DM: Farewell", "Show your enemies no mercy in this medieval arena, as they certainly will have none on you!\n\nThis is the last level before the final.");
-		campaign_entry("dm", "bloodprison", 5, 20, 9, "", "DM: Blood Prison", "THE FINAL\n\nUse all you have learned so far and win the campaign if you can!");
+		campaign_entry("dm", "reslimed", 2, 15, 15, "", "DM: Slimepit Revisited", "It is crucial to actually dodge rockets here. Also, there are traps on this map that you can activate to hurt your opponents - find then!");
+		campaign_entry("dm", "bluesky", 3, 16, 15, "", "DM: Blue Sky", "And the sky is the limit... enjoy the view and try to keep alive! Your 3 enemies will try to hit you using the Nex and other weapons suitable for long distances, so never stop moving!");
+		campaign_entry("dm", "farewell", 4, 17, 15, "", "DM: Farewell", "Show your enemies no mercy in this medieval arena, as they certainly will have none on you!\n\nThis is the last level before the final.");
+		campaign_entry("dm", "bloodprison", 5, 18, 15, "", "DM: Blood Prison", "THE FINAL\n\nUse all you have learned so far and win the campaign if you can!");
 	} else if (campaign_name == "rexsurvival") {
 		campaign_title = "Rexuiz Survival Campaign";
 		campaign_entry("surv", "dangerous_swamp", 0, 1, 10, "", "Survival Level 1", "");
