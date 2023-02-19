@@ -30,5 +30,6 @@ set single_g_balance_laser_primary_force 0
 set single_g_door_shootable 0
 set single_g_balance_zapper_secondary_arc 0.5
 set single_g_waypoints_use_botclip 1
+set single_g_pickup_nodrop 1
 alias quicksave "cmd quicksave"
 alias quickload "set _restore_game 1; maxplayers 1; load slot12.sav"
