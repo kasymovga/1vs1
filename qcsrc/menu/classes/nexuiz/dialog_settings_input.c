@@ -95,7 +95,7 @@ void fillNexuizInputSettingsTab(entity me)
 		if (cvar_type("vid_touchscreen_scale") & CVAR_TYPEFLAG_ENGINE) {
 			me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Touch controls scale:")));
 			gui_set_dependent(e, "vid_touchscreen", 1, 1);
-			me.TD(me, 1, 2, e = makeNexuizSlider(0.5, 2, 0.1, "vid_touchscreen_scale"));
+			me.TD(me, 1, 2, e = makeNexuizSlider(0.3, 1.3, 0.1, "vid_touchscreen_scale"));
 			gui_set_dependent(e, "vid_touchscreen", 1, 1);
 		}
 		me.TR(me);
