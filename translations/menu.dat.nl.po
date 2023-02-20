@@ -909,11 +909,9 @@ msgstr "Taal"
 msgid "Disable Nexuiz-compatible symbols"
 msgstr "Nexuiz-compatibele symbolen uitschakelen"
 
-msgid ""
-"* Needed for some european characters, player names might be displayed "
+msgid "* Needed for some european characters, player names might be displayed "
 "incorrectly"
-msgstr ""
-"* Benodigd voor enkele Europese tekens. Let op: spelersnamen worden hierdoor"
+msgstr "* Benodigd voor enkele Europese tekens. Let op: spelersnamen worden hierdoor"
 " mogelijk niet goed getoond."
 
 msgid "Acceleration:"
@@ -983,10 +981,10 @@ msgid "Single player"
 msgstr "Eén speler"
 
 msgid "Basic"
-msgstr "Baseren"
+msgstr "Algemeen"
 
 msgid "Advanced"
-msgstr "Geavanceerde"
+msgstr "Geavanceerd"
 
 msgid "Interface"
-msgstr "Interface"
+msgstr "Vormgeving"
