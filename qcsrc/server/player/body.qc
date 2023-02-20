@@ -145,7 +145,6 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 	body_to.modelindex_lod0 = body_from.modelindex_lod0;
 	body_to.modelindex_lod1 = body_from.modelindex_lod1;
 	body_to.modelindex_lod2 = body_from.modelindex_lod2;
-	body_to.modelindex_lod0_from_nexuiz = body_from.modelindex_lod0_from_nexuiz;
 	body_to.scale = body_from.scale;
 	body_to.usecolormod = body_from.usecolormod;
 	body_to.colormap = 0; //forcing reset colormap and colormod
@@ -706,7 +705,6 @@ void(string modelname) player_body_setup_lod {
 	s = whichpack(self.body.model);
 	str_unzone_ifneeded(self.body.playermodel);
 	self.body.playermodel = str_zone_ifneeded(modelname); //need independent copy here
-	self.body.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
 	self.body.colormap = 0;
 	player_body_animation_setup();
 }
