@@ -35,9 +35,9 @@ void(void) updateNexuizHudList {
 		searchNexuizHudList = -1;
 		selfNexuizHudList.nItems = 2;
 		if (CVAR(cl_rm_hud_alt))
-			selfNexuizHudList.selectedItem = 1;
-		else
 			selfNexuizHudList.selectedItem = 0;
+		else
+			selfNexuizHudList.selectedItem = 1;
 	} else {
 		searchNexuizHudList = search_begin("data/*.hud", TRUE, TRUE);
 		if (searchNexuizHudList >= 0)
