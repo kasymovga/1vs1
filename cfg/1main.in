@@ -5,7 +5,7 @@ alias _fs_rescan_alias_enable "alias fs_rescan \"_fs_rescan_alias_disable; fs_re
 _fs_rescan_alias_enable
 alias cvardeprecated "echo \"$1 is deprecated, use $2 instead!\""
 alias cvarremoved "unset $1; alias $1 \"echo \\\"$1 was removed\\\"\""
-set rexuizversion 2.5.3
+set rexuizversion 2.5.4
 set g_nexuizversion 2.5.2
 alias nospectators "sv_cmd nospectators"
 alias cointoss "sv_cmd cointoss"
