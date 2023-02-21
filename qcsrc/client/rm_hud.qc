@@ -724,9 +724,12 @@ void(void) rm_hud_draw {
 					pos = sbar_bottom - pos;
 					pos_x = ammosector_pos;
 					drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					if (!a)
-						draw_pic_expanding(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL, 1 - bound(0, (rm_hud_ammo_notify_time - time)*2, 1));
+					if (!a) {
+						if (sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO)
+							a = max(0, isclip);
 
+						draw_pic_expanding(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL, 1 - bound(0, (rm_hud_ammo_notify_time - time)*2, 1));
+					}
 					if (a < 10 && !isclip)
 						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					else
