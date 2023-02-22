@@ -243,7 +243,7 @@ vector(void) physics_view_origin {
 				physics_stair_smoothz = v_z;
 			}
 		}
-		if not(view_camera_active)
+		if not(view_camera_free_active)
 			R_SetView(VF_ORIGIN, v);
 
 		physics_end_origin = physics.origin;
@@ -252,7 +252,7 @@ vector(void) physics_view_origin {
 		v = physics_end_origin + '0 0 1' * getstati(STAT_VIEWHEIGHT);
 		if (view_camera_correction_needed) {
 			if not(CVAR(chase_active))
-			if not(view_camera_active)
+			if not(view_camera_free_active)
 				R_SetView(VF_ORIGIN, v);
 
 			view_camera_correction_needed = FALSE;
@@ -268,7 +268,7 @@ void(void) physics_camera_setup {
 		} else
 			view_camera_origin = view_origin;
 
-		if not(view_camera_active) {
+		if not(view_camera_free_active) {
 			if not(view_spectatee_status)
 			if not(physics_player_ent) {
 				if (extension_DP_RM_SETRENDERENTITY) {

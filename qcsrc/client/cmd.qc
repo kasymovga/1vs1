@@ -129,7 +129,7 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 		sbar_showaccuracy = FALSE;
 		return TRUE;
 	}
-	if(view_camera_active)
+	if(view_camera_free_active)
 	if(strCmd == "+forward" || strCmd == "-back") {
 		++view_camera_direction_x;
 		return TRUE;
