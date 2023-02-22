@@ -1,8 +1,3 @@
-#define spider_rocket_icon "gfx/spiderbot/rocket_ico"
-#define spider_rocket_targ "gfx/spiderbot/target"
-#define SPIDER_CROSS "textures/spiderbot/cross"
-#define rkt_size 32
-
 float view_drawtime;
 float view_project_is_broken;
 float view_old_view_width, view_old_view_height, view_old_zoom, view_old_fov, view_old_vid_pixelheight;
@@ -270,11 +265,13 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		vector sz;
 		view_vehicle_hud();
 		if (view_crosshair) {
+			#define SPIDER_CROSS "textures/spiderbot/cross"
 			sz = drawgetimagesize(SPIDER_CROSS);
 			sz_x *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
 			sz_y *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
 			weapon_cross_origin_set();
 			drawpic(weapon_cross_origin - 0.5 * sz, SPIDER_CROSS, sz, '1 1 1', CVAR_OR(cl_vehicle_spiderbot_cross_alpha,0.6), DRAWFLAG_NORMAL);
+			#undef SPIDER_CROSS
 		}
 	} else {
 		if (CVAR(viewsize) < 120)
@@ -387,6 +384,7 @@ void(void) view_vehicle_hud {
 	hp = min(getstatf(STAT_SPIDERBOT_HEALTH),1);
 	shield = min(getstatf(STAT_SPIDERBOT_SHIELD),1);
 	// Draw health bar
+	#define rkt_size 32
 	p = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
 	p = p + '0 1 0' * CVAR(vid_conheight) - '0 72 0';
 	//pp = ('0 1 0' * hp) + ('1 0 0' * (1-hp));
@@ -407,6 +405,7 @@ void(void) view_vehicle_hud {
 	}
 	// Draw rocket icons for loaded/empty tubes.
 	if (rockets >= 0) {
+		#define spider_rocket_icon "gfx/spiderbot/rocket_ico"
 		pp = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
 		pp += '0 1 0' * CVAR(vid_conheight) - '0 104 0';
 		for (i = 0; i < 8; ++i) {
@@ -425,7 +424,9 @@ void(void) view_vehicle_hud {
 					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 1 0' * reload, 0.75, DRAWFLAG_NORMAL);
 			}
 		}
+		#undef spider_rocket_icon
 	}
+	#undef rkt_size
 }
 
 // following vectors must be global to allow seamless switching between camera modes
