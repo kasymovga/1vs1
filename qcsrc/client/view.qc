@@ -175,6 +175,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 			R_SetView(VF_CL_VIEWANGLES, view_fixed_angles);
 
 		view_fixangle = 0;
+		view_camera_angles = view_fixed_angles;
 	} else {
 		vector v = '0 0 0';
 		if (CVAR(cl_recoil) || view_recoil_mode) v += view_punchangle;
@@ -197,6 +198,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 			}
 		}
 		R_SetView(VF_ANGLES, view_angles + v);
+		view_camera_angles = view_angles;
 	}
 	// Set the console size vars
 	R_SetView(VF_FOV, view_fov_calculate());

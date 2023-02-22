@@ -197,7 +197,7 @@ void(void) modelselect_draw {
 		modelselect_list_pos_prev = modelselect_list_pos;
 	}
 	if (CVAR(chase_active)) {
-		makevectors((view_fixangle ? view_fixed_angles : view_angles));
+		makevectors(view_camera_angles);
 		setorigin(modelselect_current, view_camera_origin + v_forward * 50);
 	} else
 		setorigin(modelselect_current, '100 0 0');
