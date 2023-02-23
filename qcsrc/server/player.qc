@@ -1111,9 +1111,6 @@ float(entity plr, float wep) player_can_fire {
 	if (!map_restart_active)
 		return FALSE;
 
-	if (timeout_status == 2) //don't allow the player to shoot while game is paused
-		return FALSE;
-
 	return plugin_chain_player_can_fire(plr, wep);
 }
 
