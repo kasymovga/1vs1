@@ -39,3 +39,5 @@ set nexuiz25_g_projectiles_newton_style_2_minfactor 0.7
 set nexuiz25_g_jump_nofalldamage 1
 set nexuiz25_g_balance_falldamage_minspeed 1400
 set nexuiz25_g_balance_falldamage_factor 0.15
+set nexuiz25_g_balance_hlac_secondary_refire 1
+set nexuiz25_g_balance_hlac_secondary_spread 0.15
