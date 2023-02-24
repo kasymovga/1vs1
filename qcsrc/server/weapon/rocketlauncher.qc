@@ -33,7 +33,6 @@ void(void) weapon_rocketlauncher_unregister {
 }
 
 void(void) weapon_rocketlauncher_explode {
-	weapon_rocketlauncher_unregister();
 	if (other.takedamage == DAMAGE_AIM)
 		if (other.classname == "player")
 			if (team_is_different_teams(self.owner, other))
@@ -179,6 +178,7 @@ void(void) weapon_rocketlauncher_attack {
 	missile.think = weapon_rocketlauncher_think;
 	missile.nextthink = time;
 	missile.cnt = time + g_balance_rocketlauncher_lifetime;
+	missile.entremove = weapon_rocketlauncher_unregister;
 }
 
 void(void) spawnfunc_weapon_rocketlauncher; // defined in t_items.qc
