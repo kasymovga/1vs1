@@ -135,9 +135,6 @@ void(void) teleport_touch {
 			return;
 
 	TRIGGER_EXACT_TOUCH;
-	if(other.classname == "player")
-		hook_remove(other);
-
 	if(self.enemy) {
 		e = self.enemy;
 	} else {

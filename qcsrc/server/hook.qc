@@ -33,6 +33,9 @@ void(entity ent, entity e) hook_follow {
 	ent.v_angle = ent.angles - e.angles; // relative angles
 	ent.aiment_classname = strzone(e.classname);
 	ent.aiment_deadflag = e.deadflag;
+	if (time < map_starttime)
+		hook_remove(self);
+
 	if (sv_announcer_extra_hooked != "")
 	if (e.classname == "player")
 	if (e.deadflag == DEAD_NO) {
@@ -55,17 +58,21 @@ float(entity ent) hook_lost_follow {
 .float hook_length;
 .float hook_switchweapon;
 
-void(entity pl) hook_remove {
-	if (pl.hook == world)
+void(entity _hook) hook_remove {
+	if (_hook == world)
 		return;
 
-	remove(pl.hook.hook);
-	remove(pl.hook);
-	pl.hook = world;
-	if (pl.movetype == MOVETYPE_FLY)
-		pl.movetype = MOVETYPE_WALK;
+	if (_hook.classname != "grapplinghook")
+		return;
 
-	//pl.disableclientprediction = FALSE;
+	entity o = _hook.owner;
+	if (o.hook != _hook)
+		o = NULL;
+
+	remove(_hook.hook);
+	remove(_hook);
+	if (o)
+		o.hook = world;
 }
 
 void() hook_think;
@@ -158,8 +165,8 @@ void() hook_think {
 		remove(self);
 		goto end;
 	}
-	if (hook_lost_follow(self)) {
-		hook_remove(self.owner);
+	if (hook_lost_follow(self) || !player_can_fire(self.owner, FALSE)) {
+		hook_remove(self);
 		goto end;
 	}
 	self.hook.nextthink = time;
@@ -171,10 +178,6 @@ void() hook_think {
 	makevectors(self.owner.v_angle);
 	if (self.state == 1) {
 		if (self.aiment) {
-			if not(player_can_fire(self.owner, FALSE)) {
-				hook_remove(self.owner);
-				goto end;
-			}
 			if (g_balance_grapplehook_damage_interval)
 			if (self.hook_attack_time)
 			if (self.aiment.takedamage)
@@ -183,7 +186,7 @@ void() hook_think {
 				self.hook_attack_time += g_balance_grapplehook_damage_interval;
 			}
 			if not(self.aiment) {
-				hook_remove(self.owner);
+				hook_remove(self);
 				goto end;
 			}
 		}
@@ -213,7 +216,7 @@ void(void) hook_touch {
 		return;
 
 	if (projectile_no_impact_check()) {
-		hook_remove(self.owner);
+		hook_remove(self);
 		return;
 	}
 	if (team_mode)
@@ -221,7 +224,7 @@ void(void) hook_touch {
 	if (other.team == self.owner.team)
 	if (other.classname == "player")
 	if (PLAYER_REALLY_ALIVE(other)) {
-		hook_remove(self.owner);
+		hook_remove(self);
 		return;
 	}
 	if (other == world) {
@@ -230,7 +233,7 @@ void(void) hook_touch {
 		tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
 		trace_line(self.origin - tic, self.origin + tic, TRACE_MOVE_NORMAL, self);
 		if (trace_fraction < 1 && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
-			hook_remove(self.owner);
+			hook_remove(self);
 			return;
 		}
 	}
@@ -261,7 +264,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			if (f)
 				damage(self.owner, inflictor, attacker, g_balance_grapplehook_break_damage * f, WEAPON_HOOK, self.owner.origin, '0 0 0');
 
-			hook_remove(self.owner);
+			hook_remove(self);
 		}
 	}
 }
@@ -314,7 +317,7 @@ var void() hook_player_think_next;
 void() hook_player_think {
 	hook_player_think_next();
 	float button_hook = self.BUTTON_HOOK;
-	if (PLAYER_DEAD(self))
+	if not(player_can_fire(self, FALSE))
 		return;
 
 	float grappling_hook = (g_grappling_hook || (self.abilities & HOOK_ABILITY));
@@ -322,10 +325,8 @@ void() hook_player_think {
 		// offhand hook controls
 		if (button_hook) {
 			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
-			if (time > map_starttime) {
-				self.hook_state |= HOOK_FIRING;
-				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
-			}
+			self.hook_state |= HOOK_FIRING;
+			self.hook_state |= HOOK_WAITING_FOR_RELEASE;
 		} else {
 			self.hook_state |= HOOK_REMOVING;
 			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
@@ -349,13 +350,13 @@ void() hook_player_think {
 	}
 	if (self.hook_state & HOOK_FIRING) {
 		if (self.hook)
-			hook_remove(self);
+			hook_remove(self.hook);
 
 		hook_fire();
 		self.hook_state &= ~HOOK_FIRING;
 	} else if (self.hook_state & HOOK_REMOVING) {
 		if (self.hook)
-			hook_remove(self);
+			hook_remove(self.hook);
 
 		self.hook_state &= ~HOOK_REMOVING;
 	}
@@ -376,7 +377,7 @@ void hook_damage_mods_set(entity targ, entity attacker, float deathtype) {
 		if (targ.hook) {
 			if (targ.hook.aiment)
 				if (targ.hook.aiment == attacker)
-					hook_remove(targ); // STOP THAT, you parasite!
+					hook_remove(targ.hook); // STOP THAT, you parasite!
 
 			if (targ.hook.state)
 			if not(attacker)
@@ -390,7 +391,7 @@ void hook_damage_mods_set(entity targ, entity attacker, float deathtype) {
 
 var void(float killed) hook_player_clear_next;
 void(float killed) hook_player_clear {
-	hook_remove(self);
+	hook_remove(self.hook);
 	hook_player_clear_next(killed);
 }
 
