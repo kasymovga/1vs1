@@ -181,8 +181,6 @@ void(void) weapon_rocketlauncher_attack {
 	missile.entremove = weapon_rocketlauncher_unregister;
 }
 
-void(void) spawnfunc_weapon_rocketlauncher; // defined in t_items.qc
-
 float(float req) weapon_rocketlauncher {
 	entity rock;
 	float rockfound;
