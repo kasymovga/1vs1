@@ -129,7 +129,7 @@ void(void) weapon_crylink_attack {
 		else
 			proj.nextthink = time + g_balance_crylink_primary_star_lifetime;
 
-		if (g_balance_crylink_secondary_spread_time) {
+		if (g_balance_crylink_primary_spread_time) {
 			proj.movedir = weapon_shotdir * g_balance_crylink_primary_speed;
 			proj.delay = proj.nextthink;
 			proj.nextthink = time + g_balance_crylink_primary_spread_time;
