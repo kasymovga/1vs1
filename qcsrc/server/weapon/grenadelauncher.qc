@@ -19,6 +19,7 @@ float g_balance_grenadelauncher_secondary_edgedamage;
 float g_balance_grenadelauncher_secondary_force;
 float g_balance_grenadelauncher_secondary_health;
 float g_balance_grenadelauncher_secondary_lifetime;
+float g_balance_grenadelauncher_secondary_bounce_lifetime;
 float g_balance_grenadelauncher_secondary_radius;
 float g_balance_grenadelauncher_secondary_refire;
 float g_balance_grenadelauncher_secondary_speed;
@@ -68,6 +69,9 @@ void(void) weapon_grenadelauncher_touch2 {
 		else
 			sound_spam (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
 
+		if (g_balance_grenadelauncher_secondary_bounce_lifetime)
+			self.nextthink = min(time + g_balance_grenadelauncher_secondary_bounce_lifetime, self.nextthink);
+
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
@@ -84,7 +88,6 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 void(void) weapon_grenadelauncher_attack {
 	entity gren;
-	float bounce = (g_balance_grenadelauncher_primary_bounce ? TRUE : FALSE);
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_primary_ammo;
 
@@ -97,14 +100,14 @@ void(void) weapon_grenadelauncher_attack {
 		weapon_shotdir = normalize(weapon_shotdir + '0 0 1' * g_balance_grenadelauncher_primary_up);
 	}
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
-	gren = projectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
+	gren = projectile(TRUE, (g_balance_grenadelauncher_primary_bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
 	projectile_setup(gren, weapon_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
-			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force, 1, (bounce ? MOVETYPE_BOUNCE : MOVETYPE_TOSS));
+			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force, 1, (g_balance_grenadelauncher_primary_bounce ? MOVETYPE_BOUNCE : MOVETYPE_TOSS));
 
 	gren.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;
-	gren.touch = (bounce ? weapon_grenadelauncher_touch2 : weapon_grenadelauncher_touch1);
+	gren.touch = (g_balance_grenadelauncher_primary_bounce ? weapon_grenadelauncher_touch2 : weapon_grenadelauncher_touch1);
 	gren.velocity = weapon_shotdir * g_balance_grenadelauncher_primary_speed + v_up * g_balance_grenadelauncher_primary_speed_up;
 	weapon_setup_projectile_velocity(gren);
 }
@@ -247,6 +250,7 @@ float(float req) weapon_grenadelauncher {
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_force);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_health);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_lifetime);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_bounce_lifetime);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_radius);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_refire);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_speed);

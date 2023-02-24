@@ -305,6 +305,7 @@ set g_balance_grenadelauncher_primary_refire 0.8
 set g_balance_grenadelauncher_primary_animtime 0.3
 set g_balance_grenadelauncher_primary_ammo 4
 set g_balance_grenadelauncher_recoil 4
+set g_balance_grenadelauncher_secondary_bounce_lifetime 0
 set g_balance_grenadelauncher_secondary_damage 70
 set g_balance_grenadelauncher_secondary_edgedamage 38
 set g_balance_grenadelauncher_secondary_force 400
