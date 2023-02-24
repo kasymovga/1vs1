@@ -97,7 +97,7 @@ void nadget_GenericProjectile_Explode(void) {
     }
 
     nadget_GenericProjectile_RadiusDamage();
-    nadget_GenericProjectile_Remove();
+	stdproc_remove();
 }
 
 #undef GV
@@ -128,7 +128,7 @@ float nadget_GenericProjectile_TryStick(entity targ, vector normal) {
                     self.owner.hg_ctx_ammo += 1;, self.owner.hg_type2)
 
                 bprint("^1Couldn't move ", self.owner.netname, "^1's translocator out of solid! Teleport aborted.\n");
-                nadget_GenericProjectile_Remove();
+				stdproc_remove();
                 return TRUE;
             }
 
@@ -157,7 +157,7 @@ void nadget_GenericProjectile_Touch(void) {
                 goto troll;
             }
         }
-        nadget_GenericProjectile_Remove();
+		stdproc_remove();
         return;
     }
 
@@ -350,7 +350,7 @@ void nadget_GenericProjectile_Think(void) {
 
     if(time >= self.hg_deathtime) {
         if(self.hg_type == NADGET_TRANSLOC && self.health > 0) {
-            nadget_GenericProjectile_Remove();
+			stdproc_remove();
         } else
             self.use();
         return;
@@ -424,13 +424,8 @@ void nadget_GenericProjectile_Damage(entity inflictor, entity attacker, float _d
 
 void nadget_GenericProjectile_Remove(void) {
     nadget_Waypoint_Remove(self.hg_waypoint);
-
-    sound_stop(self, CHAN_PAIN);
-
     if(self.hg_detonable_updated && self.owner)
         self.owner.hg_detonables -= 1;
-
-    remove(self);
 }
 
 #define GV(v) (GRENVAR(hgtype, v))
@@ -496,7 +491,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.nextthink = time;
     gren.use = nadget_GenericProjectile_Explode;
     gren.touch = nadget_GenericProjectile_Touch;
-    gren.reset = nadget_GenericProjectile_Remove;
+    gren.entremove = nadget_GenericProjectile_Remove;
     gren.team = self.team;
     gren.hg_isbonus = self.hg_bonus;
     if(GV("takedamage") || gren.health) {
