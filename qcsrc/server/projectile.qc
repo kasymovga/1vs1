@@ -159,6 +159,7 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 		else
 			e.existsonlyfor = _owner;
 	}
+	e.reset = stdproc_remove;
 	return e;
 }
 
@@ -255,7 +256,7 @@ void(void) projectile_explode {
 	self.event_damage = NULL;
 	self.takedamage = DAMAGE_NO;
 	damage_radius(self, self.realowner, self.dmg, self.dmg_edge, self.dmg_radius, world, self.dmg_force, self.species, self.projectiledeathtype, other);
-	remove(self);
+	stdproc_remove();
 }
 
 void(void) projectile_touch_explode {

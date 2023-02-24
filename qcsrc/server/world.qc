@@ -873,11 +873,6 @@ void(float dorespawn) world_reset {
 		}
 		if (self.team_saved)
 			self.team = self.team_saved;
-
-		if (self.flags & FL_PROJECTILE) { // remove any projectiles left
-			sound_stop(self, CHAN_PAIN);
-			remove(self);
-		}
 	}
 	for (self = world; (self = nextent(self)); )
 	if (clienttype(self) == CLIENTTYPE_NOTACLIENT) {
