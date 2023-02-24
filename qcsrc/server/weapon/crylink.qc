@@ -5,6 +5,7 @@ float g_balance_crylink_primary_bounces;
 float g_balance_crylink_primary_damage;
 float g_balance_crylink_primary_edgedamage;
 float g_balance_crylink_primary_force;
+float g_balance_crylink_primary_link_explode;
 float g_balance_crylink_primary_middle_lifetime;
 float g_balance_crylink_primary_radius;
 float g_balance_crylink_primary_recoil;
@@ -22,6 +23,7 @@ float g_balance_crylink_secondary_damage;
 float g_balance_crylink_secondary_edgedamage;
 float g_balance_crylink_secondary_force;
 float g_balance_crylink_secondary_line_lifetime;
+float g_balance_crylink_secondary_link_explode;
 float g_balance_crylink_secondary_middle_lifetime;
 float g_balance_crylink_secondary_radius;
 float g_balance_crylink_secondary_recoil;
@@ -34,10 +36,41 @@ float g_balance_crylink_secondary_spread_time;
 var .float crylink_buttonatck1 = BUTTON_ATCK;
 var .float crylink_buttonatck2 = BUTTON_ATCK2;
 
+void(void) weapon_crylink_projectile_link_remove {
+	if (self.enemy)
+		self.enemy.aiment = self.aiment;
+
+	if (self.aiment)
+		self.aiment.enemy = self.enemy;
+}
+
+void(float move_correction) weapon_crylink_projectile_link_explode {
+	entity e;
+	float self_num = num_for_edict(self);
+	for (e = self.aiment; e != self; e = e.aiment) {
+		if (num_for_edict(e) < self_num)
+			trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * frametime * (1 - move_correction), TRACE_MOVE_NORMAL, e); //engine already moved it, move it back
+		else
+			trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * frametime * move_correction, TRACE_MOVE_NORMAL, e); //move it forward, because engine still not moved it. FIXME: gravity?
+
+		setorigin(e, trace_endpos);
+	}
+	entity oldself = self;
+	for (self = oldself.aiment; self != oldself; self = self.aiment) {
+		projectile_explode();
+	}
+	self = oldself;
+}
+
 // NO bounce protection, as bounces are limited!
 void(void) weapon_crylink_touch {
 	PROJECTILE_TOUCH;
 	if ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO)) {
+		if (g_balance_crylink_primary_link_explode && !(self.projectiledeathtype & HITTYPE_SECONDARY))
+			weapon_crylink_projectile_link_explode(trace_fraction);
+		else if (g_balance_crylink_secondary_link_explode && (self.projectiledeathtype & HITTYPE_SECONDARY))
+			weapon_crylink_projectile_link_explode(trace_fraction);
+
 		projectile_explode();
 		return;
 	}
@@ -58,7 +91,7 @@ void(void) weapon_crylink_velocity_change {
 
 void(void) weapon_crylink_attack {
 	float counter = 0;
-	entity proj = NULL;
+	entity prevproj, tmpproj, proj = NULL;
 	vector s;
 	vector forward, right, up;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -69,8 +102,11 @@ void(void) weapon_crylink_attack {
 	right = v_right;
 	up = v_up;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_primary_shots);
+	prevproj = tmpproj = spawn();
 	while (counter < g_balance_crylink_primary_shots) {
 		proj = projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
+		proj.enemy = prevproj;
+		prevproj.aiment = proj;
 		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK_BIG, WEAPON_CRYLINK, g_balance_crylink_primary_damage,
 				g_balance_crylink_primary_edgedamage, g_balance_crylink_primary_radius, g_balance_crylink_primary_force, 0, (g_balance_crylink_primary_bouncedamagefactor ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
 		proj.lip = g_balance_crylink_primary_bouncedamagefactor;
@@ -100,20 +136,28 @@ void(void) weapon_crylink_attack {
 			proj.think = weapon_crylink_velocity_change;
 		}
 		proj.cnt = g_balance_crylink_primary_bounces;
+		proj.entremove = weapon_crylink_projectile_link_remove;
 		counter = counter + 1;
+		prevproj = proj;
 	}
+	tmpproj.aiment.enemy = proj;
+	proj.aiment = tmpproj.aiment;
+	remove(tmpproj);
 }
 
 void(void) weapon_crylink_attack2 {
 	float counter = 0;
-	entity proj = NULL;
+	entity prevproj, tmpproj, proj = NULL;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_secondary_ammo;
 
 	weapon_setup_shot (self, g_balance_crylink_secondary_recoil, "weapons/crylink_fire2.wav", g_balance_crylink_secondary_shots);
 	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_secondary_shots);
+	prevproj = tmpproj = spawn();
 	while (counter < g_balance_crylink_secondary_shots) {
 		proj = projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
+		proj.enemy = prevproj;
+		prevproj.aiment = proj;
 		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK, WEAPON_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
 				g_balance_crylink_secondary_edgedamage, g_balance_crylink_secondary_radius, g_balance_crylink_secondary_force, 0, (g_balance_crylink_secondary_bouncedamagefactor ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
 		proj.lip = g_balance_crylink_secondary_bouncedamagefactor;
@@ -137,8 +181,13 @@ void(void) weapon_crylink_attack2 {
 			proj.think = weapon_crylink_velocity_change;
 		}
 		proj.cnt = g_balance_crylink_secondary_bounces;
+		proj.entremove = weapon_crylink_projectile_link_remove;
 		counter = counter + 1;
+		prevproj = proj;
 	}
+	tmpproj.aiment.enemy = proj;
+	proj.aiment = tmpproj.aiment;
+	remove(tmpproj);
 }
 
 void(void) spawnfunc_weapon_crylink {
@@ -187,6 +236,7 @@ float(float req) weapon_crylink {
 		CVAR_CACHE(g_balance_crylink_primary_damage);
 		CVAR_CACHE(g_balance_crylink_primary_edgedamage);
 		CVAR_CACHE(g_balance_crylink_primary_force);
+		CVAR_CACHE(g_balance_crylink_primary_link_explode);
 		CVAR_CACHE(g_balance_crylink_primary_middle_lifetime);
 		CVAR_CACHE(g_balance_crylink_primary_radius);
 		CVAR_CACHE(g_balance_crylink_primary_recoil);
@@ -204,6 +254,7 @@ float(float req) weapon_crylink {
 		CVAR_CACHE(g_balance_crylink_secondary_edgedamage);
 		CVAR_CACHE(g_balance_crylink_secondary_force);
 		CVAR_CACHE(g_balance_crylink_secondary_line_lifetime);
+		CVAR_CACHE(g_balance_crylink_secondary_link_explode);
 		CVAR_CACHE(g_balance_crylink_secondary_middle_lifetime);
 		CVAR_CACHE(g_balance_crylink_secondary_radius);
 		CVAR_CACHE(g_balance_crylink_secondary_recoil);
