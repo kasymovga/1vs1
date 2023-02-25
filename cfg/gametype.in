@@ -3,7 +3,7 @@ set _gametype dm
 alias bprint_gtswitch "bprint Game type switched to $*"
 set sv_gametypevote ""
 set sv_gametypevote_time 10
-set sv_gametypevote_shuffle 1 "Shuffle game type vote options"
+set sv_gametypevote_shuffle 0 "Shuffle game type vote options"
 set force_gametype ""
 alias reset_gametype "_gametype dm"
 alias gametype_sr "reset_gametype; _gametype sr; bprint_gtswitch ^3Shooting Range"
