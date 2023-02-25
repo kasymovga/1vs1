@@ -149,7 +149,11 @@ void game_type_vote_select(float select) {
 }
 
 void(void) game_type_vote_init {
-	sv_gametypevote = cvar_string_zone_ifneeded("sv_gametypevote");
+	sv_gametypevote = cvar_string("sv_gametypevote");
+	if (cvar("sv_gametypevote_shuffle"))
+		sv_gametypevote = str_shuffle_words(sv_gametypevote);
+
+	sv_gametypevote = str_zone_ifneeded(sv_gametypevote);
 	string head, tail;
 	float colon;
 	tail = sv_gametypevote;
