@@ -12,6 +12,8 @@ float MAP_INFO_TYPE_CTS = 4096;
 float MAP_INFO_TYPE_SURVIVE = 32768;
 float MAP_INFO_TYPE_SINGLE = 65536;
 
+typedef void(float i1, float i2, entity pass) swapfunc_t; // is only ever called for i1 < i2
+typedef float(float i1, float i2, entity pass) comparefunc_t; // <0 for <, ==0 for ==, >0 for > (like strcmp)
 void(float n, swapfunc_t swap, comparefunc_t cmp, entity pass) map_info_heapsort {
 	float start, end, root, child;
 	// heapify

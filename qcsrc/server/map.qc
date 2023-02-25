@@ -347,7 +347,7 @@ string(string m) map_goto {
 }
 
 void() map_list_shuffle {
-	cvar_set("_g_maplist", shuffle_words(cvar_string("_g_maplist")));
+	cvar_set("_g_maplist", str_shuffle_words(cvar_string("_g_maplist")));
 }
 
 entity map_intermission;

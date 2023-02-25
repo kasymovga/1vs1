@@ -5,6 +5,6 @@
 #include "game_type.qc"
 #include "map_info.qc"
 #include "masterlist.qc"
-#include "shuffle.qc"
+#include "str.qc"
 #include "udp_punch_hole.qc"
 #include "weapon.qc"

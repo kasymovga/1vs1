@@ -1,8 +1,0 @@
-// returns TRUE if handled, FALSE otherwise
-// uses tokenize on its argument!
-
-typedef void(float i1, float i2, entity pass) swapfunc_t; // is only ever called for i1 < i2
-typedef float(float i1, float i2, entity pass) comparefunc_t; // <0 for <, ==0 for ==, >0 for > (like strcmp)
-void(float n, swapfunc_t swap, entity pass) shuffle;
-string shuffle_swap_words(string str, float i, float j);
-string shuffle_words(string str);
