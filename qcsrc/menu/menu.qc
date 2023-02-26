@@ -34,6 +34,7 @@ void() menu_init {
 	udp_punch_hole_extresponse_handler_register();
 	ui_con_width_height_set();
 	time = 1;
+	campaign_init();
 }
 
 void(void) menu_update_width_height {

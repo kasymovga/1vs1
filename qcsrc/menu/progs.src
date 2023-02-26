@@ -12,6 +12,7 @@ menu.qh
 gui.qh
 classes.qh
 serverlist.qh
+campaign.qh
 ../client-menu/progs.qc
 classes.qc
 ../common/progs.qc
@@ -23,3 +24,4 @@ dlc.qc
 curl.qc
 voip.qc
 serverlist.qc
+campaign.qc
