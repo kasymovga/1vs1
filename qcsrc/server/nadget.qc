@@ -1023,7 +1023,6 @@ void nadget_Pick(float tokens) {
 	}
 
 	float isplayer = self.classname != "spectator" && self.classname != "observer";
-	float nr = (self.hg_type1 && isplayer && self.hg_nadesused && !warmup_active);
 
 	float t1 = nadget_NameToType(argv(1));
 	float t2 = nadget_NameToType(argv(2));
@@ -1040,6 +1039,7 @@ void nadget_Pick(float tokens) {
 		argc = tokenize_console(nadget_SelectableTypes(hg_context_isalt));
 		success = FALSE;
 		t = (hg_context_isalt ? t2 : t1);
+		float nr = (self.hg_ctx_type && isplayer && self.hg_nadesused && !warmup_active);
 
 		if(argc) for(i = 0; i < argc; ++i) {
 			if(t == nadget_NameToType(argv(i))) {
