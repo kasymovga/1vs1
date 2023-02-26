@@ -1,11 +1,10 @@
 string(string s, float depth) str_shuffle_words_recursive {
 	if (depth <= 0) return s;
 	float splitpos;
-	float n = strlen(s);
-	splitpos = floor(random() * n);
+	splitpos = (strlen(s) * (0.25 + random() * 0.5));
 	float spacepos = strstrofs(s, " ", splitpos);
-	while (spacepos < 0 && splitpos > 0) {
-		splitpos = floor(splitpos / 2);
+	if (spacepos < 0 && splitpos > 0) {
+		splitpos = floor(splitpos / 3);
 		spacepos = strstrofs(s, " ", splitpos);
 	}
 	if (spacepos < 0) return s;
@@ -18,5 +17,7 @@ string(string s, float depth) str_shuffle_words_recursive {
 }
 
 string(string s) str_shuffle_words {
-	return str_shuffle_words_recursive(s, 10);
+	float i;
+	for (i = 0; i < 10; i++) s = str_shuffle_words_recursive(s, 10);
+	return s;
 }
