@@ -60,7 +60,6 @@ void(float n) walkietalkie_menu_select {
 		return;
 
 	if (self.classname != "player")
-	if not(sv_walkietalkie_public)
 		return;
 
 	float _team_index = ((team_mode && !sv_walkietalkie_public) ? team_index(self.team) : 0);
