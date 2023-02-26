@@ -1,1 +1,2 @@
 set sv_walkietalkie ""
+set sv_walkietalkie_public 0
