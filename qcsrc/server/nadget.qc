@@ -594,11 +594,8 @@ void nadget_FadeOut_Think(void) {
 		if (self.classname == "hg_linker") {
 			if (self.enemy);
 				remove(self.enemy);
-
-			remove(self);
-		} else
-			nadget_GenericProjectile_Remove();
-
+		}
+		stdproc_remove_entity(self);
 		return;
 	}
 	self.nextthink = time;
