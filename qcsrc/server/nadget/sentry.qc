@@ -187,6 +187,11 @@ void nadget_Sentry_Emitter_Think() {
 	self.nextthink = time;
 }
 
+void(void) nadget_sentry_emitter_on_remove {
+	if (self.zapper_beam)
+		remove(self.zapper_beam);
+}
+
 entity nadget_Sentry_Emitter_Spawn(entity sentry) {
     entity e = spawn();
     e.classname = "hg_sentry_emitter";
@@ -194,13 +199,8 @@ entity nadget_Sentry_Emitter_Spawn(entity sentry) {
     e.origin = sentry.origin + sentry.view_ofs;
     e.think = nadget_Sentry_Emitter_Think;
     e.nextthink = time;
+    e.entremove = nadget_sentry_emitter_on_remove;
 	return e;
-}
-
-void nadget_Sentry_Emitter_Remove(entity emitter) {
-    if(emitter.zapper_beam)
-        remove(emitter.zapper_beam);
-    remove(emitter);
 }
 
 void nadget_Sentry_Interrupt_Capture(void) {
@@ -243,35 +243,31 @@ void nadget_Sentry_SetOwner(entity sentry, entity newowner) {
     }
 }
 
-void nadget_Sentry_Remove(void) {
-    entity_drop_entities(self);
-    nadget_Sentry_Interrupt_Capture();
+void(void) nadget_sentry_on_remove {
+	entity_drop_entities(self);
+	nadget_Sentry_Interrupt_Capture();
+	if (self.realowner.classname == "player")
+		self.realowner.hg_detonables -= 1;
 
-    if(self.realowner.classname == "player")
-        self.realowner.hg_detonables -= 1;
+	if (self.hg_waypoint)
+		WaypointSprite_Disown(self.hg_waypoint, 0.5);
 
-    if(self.hg_waypoint)
-        WaypointSprite_Disown(self.hg_waypoint, 0.5);
-
-    if(self.aiment) {
-        sound_stop(self.aiment, CHAN_PROJECTILE);
-        remove(self.aiment);
-    }
-
+	if (self.aiment) {
+		sound_stop(self.aiment, CHAN_PROJECTILE);
+		stdproc_remove_entity(self.aiment);
+	}
 	entity e = NULL;
     for(e; (e = find(e, classname, "hg_sentry_emitter"));)
-        if(e.owner == self)
-            nadget_Sentry_Emitter_Remove(e);
+		if(e.owner == self)
+			stdproc_remove_entity(e);
 
 	if (self.hg_sentry_capture_pb)
 		remove(self.hg_sentry_capture_pb);
-
-    remove(self);
 }
 
 void nadget_Sentry_Explode(void) {
     effect_blast(self.origin + self.view_ofs);
-    nadget_Sentry_Remove();
+    stdproc_remove();
 }
 
 void nadget_Sentry_Levitate(void) {
@@ -520,7 +516,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     e.solid = SOLID_BBOX;
     e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_FLY : (g_nadgets_sentry_pushfactor ? MOVETYPE_WALK : MOVETYPE_TOSS));
     e.angles = '0 360 0' * random();
-    e.reset = nadget_Sentry_Remove;
+    e.reset = stdproc_remove;
     e.think = nadget_Sentry_Think;
     e.pauserothealth_finished = time + g_nadgets_sentry_rot_pause;
     e.nextthink = time;
@@ -533,6 +529,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     e.cnt = time + g_nadgets_sentry_beam_initialdelay;
     e.spawntime = time;
     e.damageforcescale = e.pushfactor = g_nadgets_sentry_pushfactor;
+    e.entremove = nadget_sentry_on_remove;
 	if (e.pushfactor > 0)
 		e.touch = push_touch;
 

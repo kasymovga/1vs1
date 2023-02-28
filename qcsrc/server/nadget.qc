@@ -533,18 +533,20 @@ float nadget_PlayerMayDetonate(entity p) {
 }
 
 void nadget_RemoveAll(entity plr) {
-    entity n;
+	entity n;
 	string c;
-    for (n = nextent(world); n; n = nextent(n)) {
+	for (n = nextent(world); n; n = nextent(n)) {
 		c = n.classname;
-        if ((c == "hg_generic_projectile")  ||
-               (c == "hg_plasma")   ||
-               (c == "hg_napalm")   ||
-               (c == "hg_linker")   ||
-               ((c == "hg_sentry") &&(!g_nadgets_sentry_disown_on_death)))
-        if((n.realowner && n.realowner == plr) || n.owner == plr)
-            nadget_FadeOut(n);
-    }
+		if ((c == "hg_generic_projectile" ||
+				c == "hg_plasma" ||
+				c == "hg_napalm" ||
+				c == "hg_linker" ||
+				(c == "hg_sentry" && (!g_nadgets_sentry_disown_on_death)))
+				&& ((n.realowner && n.realowner == plr) || n.owner == plr)) {
+			pointparticles(particleeffectnum("morphed_damage_dissolve"), (n.absmin + n.absmax) * 0.5, '0 0 0', 1);
+			stdproc_remove_entity(n);
+		}
+	}
 }
 
 float nadget_PlayerNadgetType(entity e) {
@@ -581,50 +583,6 @@ float nadget_PlayerNadgetType(entity e) {
 void nadget_SetNadgetType(entity p, float t) {
     p.hg_ctx_type = t;
 	if (g_nadgets_show_in_sbar) score_player_set(self, (hg_context_isalt ? NADGET_SCORE_SECONDARY : NADGET_SCORE), self.hg_ctx_type);
-}
-
-void nadget_FadeOut_Think(void) {
-	self.alpha = approach(self.alpha, 0, frametime);
-	if (self.classname == "hg_linker")
-	if (self.enemy)
-		self.enemy.alpha = self.alpha * 0.5;
-
-	if (!self.alpha) {
-		if (self.classname == "hg_linker") {
-			if (self.enemy);
-				remove(self.enemy);
-		}
-		stdproc_remove_entity(self);
-		return;
-	}
-	self.nextthink = time;
-}
-
-void nadget_FadeOut(entity n) {
-    if(n.classname == "hg_sentry") {
-        entity o = self;
-        self = n;
-        nadget_Sentry_Explode();
-        self = o;
-        return;
-    }
-
-    if(n.hg_waypoint)
-        WaypointSprite_Disown(n.hg_waypoint, 0.5);
-
-    if(n.hg_detonable_updated && n.owner)
-        n.owner.hg_detonables -= 1;
-
-    if(!n.alpha)
-        n.alpha = 1;
-
-    n.solid = SOLID_NOT;
-    n.takedamage = DAMAGE_NO;
-    n.hg_detonable_updated = FALSE;
-    n.event_damage = NULL;
-    n.use = NULL;
-    n.think = nadget_FadeOut_Think;
-    n.nextthink = time;
 }
 
 void nadget_SetCooldown(.float cdfield, float gcd, float cd) {
@@ -928,13 +886,17 @@ void nadget_ResetState(entity p, float clearammo) {
 }
 
 void nadget_ForceDetonateAll(void) {
-    nadget_GenericProjectile_DetonateAll(self, TRUE);
-
+	nadget_GenericProjectile_DetonateAll(self, TRUE);
 	entity s;
-    for(s = world; (s = find(s, classname, "hg_sentry"));) {
-        if(s.realowner == self)
-            nadget_FadeOut(s);
-    }
+	entity oldself;
+	for (s = world; (s = find(s, classname, "hg_sentry"));) {
+		if (s.realowner == self) {
+			oldself = self;
+			self = s;
+			nadget_Sentry_Explode();
+			self = oldself;
+		}
+	}
 }
 
 string nadget_SelectableTypes(float issecondary) {

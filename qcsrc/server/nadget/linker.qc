@@ -12,14 +12,13 @@ void nadget_Linker_Adept_Push(entity p) {
     }
 }
 
-void nadget_Linker_Remove(void) {
+void(void) nadget_linker_on_remove {
 	entity  p;
 	FOR_EACH_PLAYER(p) {
 		if (p.hg_linker == self)
-			p.hg_linker = world;
+			p.hg_linker = NULL;
 	}
-    nadget_Waypoint_Remove(self.hg_waypoint);
-    remove(self);
+	nadget_Waypoint_Remove(self.hg_waypoint);
 }
 
 var void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet_next;
@@ -36,10 +35,9 @@ void nadget_Linker_Think(void) {
     entity p, e;
     float denom = 0, thealth = 0, tarmor = 0;
     if(!self.owner.iscreature || self.owner.team != self.team) {
-        nadget_Linker_Remove();
+		stdproc_remove();
         return;
     }
-
     float sharingframe = (time > self.hg_linker_nexteffect);
     FOR_EACH_PLAYER(p) {
         if(p.team != self.team || (!team_mode && p != self.owner)) {
@@ -100,12 +98,10 @@ void nadget_Linker_Think(void) {
     self.alpha = bound(0, (self.cnt - time) * 2, 1);
 
     if(self.alpha == 0) {
-        nadget_Linker_Remove();
+		stdproc_remove();
         return;
     }
-
     nadget_Waypoint();
-
     self.alpha = max(0.01, self.alpha * bound(0, (time - self.hg_spawntime) * 2, 1));
     self.glow_size = g_nadgets_linker_range * self.alpha * 3;
     self.nextthink = time;
@@ -119,7 +115,7 @@ NADGET_HOOKFUNCTION(linker, Attack) {
     e.think = nadget_Linker_Think;
     e.nextthink = time;
     e.hg_spawntime = time;
-    e.reset = nadget_Linker_Remove;
+    e.reset = stdproc_remove;
     e.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION | EFFECT_DOUBLESIDED;
     e.gravity = 100;
     e.cnt = time + g_nadgets_linker_duration/* * Buffs_NadgetPower(self) */;
@@ -130,7 +126,7 @@ NADGET_HOOKFUNCTION(linker, Attack) {
     e.glow_color = 0xF5;
     e.movetype = MOVETYPE_TOSS;
     e.hg_type = NADGET_LINKER;
-
+    e.entremove = nadget_linker_on_remove;
     if(e.team)
         e.skin = team_index(e.team);
 
