@@ -269,6 +269,6 @@ void fillNexuizVideoSettingsTab(entity me)
 		me.TD(me, me.rows - 3, me.columns, mc);
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "vid_restart; menu_cmd ui_con_width_height_set", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "vid_restart; menu_cmd ui_con_width_height_set;saveconfig\n", COMMANDBUTTON_APPLY));
 }
 #endif

@@ -204,6 +204,6 @@ void fillNexuizAudioSettingsTab(entity me)
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "con_chatsound", _("Annoying chat beep sound")));
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "snd_restart; sendcvar cl_hitsound; sendcvar cl_autotaunt; sendcvar cl_voice_directional; sendcvar cl_voice_directional_taunt_attenuation; sendcvar voipvolume", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "snd_restart; sendcvar cl_hitsound; sendcvar cl_autotaunt; sendcvar cl_voice_directional; sendcvar cl_voice_directional_taunt_attenuation; sendcvar voipvolume; saveconfig\n", COMMANDBUTTON_APPLY));
 }
 #endif

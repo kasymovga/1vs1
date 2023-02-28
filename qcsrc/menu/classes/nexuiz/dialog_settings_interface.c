@@ -13,9 +13,9 @@ entity makeNexuizInterfaceSettingsTab();
 void (entity btn, entity me) applyNexuizInterfaceSettingsTab {
 	SetSkin_Click(btn, me);
 	if (cvar("cl_font_iceland") && !dlc_ready("font-iceland")) {
-		localcmd(";fs_rescan\n");
+		localcmd(";fs_rescan;saveconfig\n");
 	} else if (!cvar("cl_font_iceland") && dlc_ready("font-iceland")) {
-		localcmd(";fs_rescan\n");
+		localcmd(";fs_rescan;saveconfig\n");
 	}
 }
 

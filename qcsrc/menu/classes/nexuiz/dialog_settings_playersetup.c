@@ -14,7 +14,7 @@ entity makeNexuizPlayerSettingsTab();
 
 #ifdef IMPLEMENTATION
 void(entity me, entity btn) applyNexuizPlayerSettingsTab {
-	localcmd("color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_gunalpha\n");
+	localcmd("color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_gunalpha;saveconfig\n");
 	float fs_rescan_needed = FALSE;
 	if (cvar_string("menu_cl_simpleitems") != cvar_string("cl_simpleitems")) {
 		registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
