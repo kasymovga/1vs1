@@ -235,7 +235,6 @@ void(void) nadget_score_basics_end {
 
 var void(entity unfrozer) nadget_ice_unfroze_next;
 void(entity unfrozer) nadget_ice_unfroze {
-	print("nadget_ice_unfroze\n");
 	nadget_ice_unfroze_next(unfrozer);
 	unfrozer.nadget_bonus_points++;
 	if (g_nadgets_bonus_at_revive && unfrozer.nadget_bonus_points >= g_nadgets_bonus_at_revive) {
