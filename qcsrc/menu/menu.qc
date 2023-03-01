@@ -35,6 +35,16 @@ void() menu_init {
 	ui_con_width_height_set();
 	time = 1;
 	campaign_init();
+	if (cvar("con_chat") == 100 && cvar("con_notify") == 0 && cvar("con_chattime") == 3600) { // +con_chat_maximize without -con_chat_maximize
+		print("Fixing cvars broken by +con_chat_maximize\n");
+		cvar_set("con_chatpos", cvar_defstring("con_chatpos"));
+		cvar_set("con_chat", cvar_defstring("con_chat"));
+		cvar_set("con_notify", cvar_defstring("con_notify"));
+		cvar_set("con_chattime", cvar_defstring("con_chattime"));
+		cvar_set("cl_deathscoreboard", cvar_defstring("cl_deathscoreboard"));
+		cvar_set("scr_centertime", cvar_defstring("scr_centertime"));
+		cvar_set("r_track_sprites", cvar_defstring("r_track_sprites"));
+	}
 }
 
 void(void) menu_update_width_height {
