@@ -47,30 +47,35 @@ void(void) weapon_crylink_projectile_link_remove {
 void(float move_correction) weapon_crylink_projectile_link_explode {
 	entity e;
 	float self_num = num_for_edict(self);
-	for (e = self.aiment; e != self; e = e.aiment) {
+	entity oldself = self;
+	entity oldother = other;
+	for (e = self.aiment; e != oldself;) {
 		if (num_for_edict(e) < self_num)
-			trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * frametime * (1 - move_correction), TRACE_MOVE_NORMAL, e); //engine already moved it, move it back
+			trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * frametime * (move_correction - 1), TRACE_MOVE_NORMAL, e); //engine already moved it, move it back
 		else
 			trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * frametime * move_correction, TRACE_MOVE_NORMAL, e); //move it forward, because engine still not moved it. FIXME: gravity?
 
 		setorigin(e, trace_endpos);
-	}
-	entity oldself = self;
-	for (self = oldself.aiment; self != oldself; self = self.aiment) {
+		self = e;
+		other = trace_ent;
+		e = e.aiment;
 		projectile_explode();
 	}
 	self = oldself;
+	other = oldother;
 }
 
 // NO bounce protection, as bounces are limited!
 void(void) weapon_crylink_touch {
 	PROJECTILE_TOUCH;
-	if ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO)) {
-		if (g_balance_crylink_primary_link_explode && !(self.projectiledeathtype & HITTYPE_SECONDARY))
-			weapon_crylink_projectile_link_explode(trace_fraction);
-		else if (g_balance_crylink_secondary_link_explode && (self.projectiledeathtype & HITTYPE_SECONDARY))
-			weapon_crylink_projectile_link_explode(trace_fraction);
-
+	float other_takedamage = (other && other.takedamage != DAMAGE_NO);
+	if (other_takedamage || self.cnt <= 0) {
+		if (other_takedamage) {
+			if (g_balance_crylink_primary_link_explode && !(self.projectiledeathtype & HITTYPE_SECONDARY))
+				weapon_crylink_projectile_link_explode(trace_fraction);
+			else if (g_balance_crylink_secondary_link_explode && (self.projectiledeathtype & HITTYPE_SECONDARY))
+				weapon_crylink_projectile_link_explode(trace_fraction);
+		}
 		projectile_explode();
 		return;
 	}
