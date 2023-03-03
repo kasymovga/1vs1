@@ -767,8 +767,7 @@ void(void) waypoint_show_links {
 	waypoint_editorlightningtime = time + 0.5;
 	player = find(world, classname, "player");
 	while (player) {
-		if (!player.isbot)
-		if (player.flags & FL_ONGROUND || player.waterlevel > WATERLEVEL_NONE) {
+		if (!player.isbot) {
 			head = navigation_findnearestwaypoint(player, FALSE);
 			if (head) {
 				w = head     ;if (w) te_lightning2(world, w.origin, player.origin);
