@@ -7,7 +7,7 @@ set sv_gameplayfix_useheightforplat 0 "Use height attribute for elevators"
 set sv_gameplayfix_trainnomins 0 "Ignore mins/maxs for func_train"
 set sv_gameplayfix_trainnowait 0 "Old behaviour for func_train"
 set sv_jumppads_target_adjust_height 0
-set sv_retardplayername "User of RetardNet"
+set sv_abuserplayername "User of RetardNet"
 set sv_sound_frag ""
 set sv_spectator_speed_multiplier 1.5
 set sv_master_list_sync 1
