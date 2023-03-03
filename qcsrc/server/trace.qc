@@ -116,18 +116,12 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 		if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
 			move = normalize(end - org);
 			trace_box(org, m1, m2, org + move * stepdist, movemode, e);
+			org = trace_endpos;
 			if (trace_fraction < 1) {
-				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
-				for (; org_z < end_z + self.maxs_z; org_z += stepdist) {
-					if(pointcontents(org) == CONTENT_EMPTY)
-						break;
-				}
-				if not(pointcontents(org + '0 0 1') == CONTENT_EMPTY) {
-					goto finish;
-				}
-				continue;
-			} else
+				trace_box(org, m1, m2, org + stepheightvec, movemode, e);
+				if (org == trace_endpos || trace_fraction == 0) goto finish;
 				org = trace_endpos;
+			}
 		} else {
 			move = dir * stepdist + org;
 			trace_box(org, m1, m2, move, movemode, e);
