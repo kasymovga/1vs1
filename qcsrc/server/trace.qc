@@ -66,9 +66,9 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 	float ignorehazards;
 	float r = FALSE;
 	move = end - start;
+	dist = totaldist = vlen(move);
 	move_z = 0;
 	org = start;
-	dist = totaldist = vlen(move);
 	dir = normalize(move);
 	stepdist = 32;
 	ignorehazards = FALSE;
@@ -90,7 +90,6 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 	}
 	// Movement loop
 	yaw = vectoyaw(move);
-	move = end - org;
 	for (;;) {
 		if (math_boxes_overlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1')) {
 			// Succeeded
