@@ -62,7 +62,7 @@ set cra_g_nadgets_show_in_sbar 1
 set cra_two_weapons_inherit cra
 set cra_two_weapons_g_twoweapons campingrifle
 set cra_two_weapons_g_balance_weaponswitchdelay 0.05
-set cra_two_weapons_g_start_weapon_selectable "uzi zapper shotgun"
+set cra_two_weapons_g_start_weapon_selectable "uzi zapper shotgun chainsaw"
 set cra_two_weapons_g_balance_zapper_swap_buttons 1
 set cra_two_weapons_g_balance_uzi_swap_buttons 1
 set cra_two_weapons_g_balance_uzi_magazinecapacity 30
@@ -71,3 +71,5 @@ set cra_two_weapons_g_balance_uzi_first_damage_headshot 1.5
 set cra_two_weapons_g_balance_uzi_sutained_damage_headshot 1.5
 set cra_two_weapons_g_balance_shotgun_magazinecapacity 15
 set cra_two_weapons_g_balance_shotgun_secondary_damage 12
+set cra_two_nadgets_inherit cra
+set cra_two_nadgets_g_nadgets_double 1
