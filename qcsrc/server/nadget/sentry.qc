@@ -266,8 +266,10 @@ void(void) nadget_sentry_on_remove {
 }
 
 void nadget_Sentry_Explode(void) {
-    effect_blast(self.origin + self.view_ofs);
-    stdproc_remove();
+	effect_blast(self.origin + self.view_ofs);
+	self.solid = SOLID_NOT;
+	self.think = stdproc_remove;
+	self.nextthink = time;
 }
 
 void nadget_Sentry_Levitate(void) {
