@@ -226,7 +226,7 @@ float(string s, entity e) vote_cmd {
 				else if (vote_called) {
 					cmd_print_to(e, "^1There is already a vote called.");
 				}
-				else if (e.retard > 0) {
+				else if (e.abuser > 0) {
 					cmd_print_to(e, "^1Error: You can not call a vote");
 				} else {
 					string vote;

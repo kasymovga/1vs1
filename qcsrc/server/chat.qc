@@ -1,5 +1,5 @@
 .float muted; // to be used by prvm_edictset server playernumber muted 1
-.float retard_last_say;
+.float abuser_last_say;
 float g_chat_flood_burst;
 float g_chat_flood_burst_team;
 float g_chat_flood_burst_tell;
@@ -12,7 +12,7 @@ float g_chat_flood_spl;
 float g_chat_flood_spl_team;
 float g_chat_flood_spl_tell;
 string g_chat_forbidden_words;
-float g_chat_forbidden_words_set_retard;
+float g_chat_forbidden_words_set_abuser;
 float g_chat_nospectators;
 float g_chat_teamcolors;
 
@@ -110,13 +110,13 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	float flood, privatemsgprefixlen = 0;
 	entity head;
 	if (source) {
-		if (source.retard > 0) {
-			if (source.retard_last_say)
-			if (time - source.retard_last_say < 60)
+		if (source.abuser > 0) {
+			if (source.abuser_last_say)
+			if (time - source.abuser_last_say < 60)
 				return;
 
-			source.retard_last_say = time;
-			float n = tokenizebyseparator(cvar_string("sv_retard_say"), "|");
+			source.abuser_last_say = time;
+			float n = tokenizebyseparator(cvar_string("sv_abuser_say"), "|");
 			if (n <= 0)
 				return;
 
@@ -125,8 +125,8 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		}
 		if not(self.muted)
 		if (chat_message_forbidden(source, msgin)) {
-			if (g_chat_forbidden_words_set_retard)
-				source.retard = 1;
+			if (g_chat_forbidden_words_set_abuser)
+				source.abuser = 1;
 			else
 				source.muted = 1;
 
@@ -247,7 +247,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	}
 	if (flood)
 		print("NOTE: ", player_name(source), "^7 is flooding.\n");
-	else if (!teamsay && !privatesay && source.retard <= 0 && !source.muted)
+	else if (!teamsay && !privatesay && source.abuser <= 0 && !source.muted)
 		plugin_chain_PublicPlayerChat(source, msgin);
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
@@ -335,7 +335,7 @@ void(void) chat_init {
 	CVAR_CACHE(g_chat_nospectators);
 	CVAR_CACHE(g_chat_teamcolors);
 	CVAR_CACHE_STR(g_chat_forbidden_words);
-	CVAR_CACHE(g_chat_forbidden_words_set_retard);
+	CVAR_CACHE(g_chat_forbidden_words_set_abuser);
 }
 
 void(string s) chat_print {

@@ -644,7 +644,7 @@ void(string s) cmd_client {
 		}
 		if (cmd == "name") {
 			string name = substring(s, argv_start_index(1), -1);
-			if (self.retard > 0)
+			if (self.abuser > 0)
 				return;
 
 			if (chat_message_forbidden(self, name)) {

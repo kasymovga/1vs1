@@ -1,4 +1,0 @@
-set sv_retard_nets ""
-set sv_retard_say "Moo|Moo?|Moo!|Moo..."
-alias retard "prvm_edictset server $1 retard 1; prvm_edictset server $1 voipgroup 0"
-alias unretard "prvm_edictset server $1 retard -1"

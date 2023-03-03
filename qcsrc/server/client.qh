@@ -26,5 +26,5 @@ string client_fog;
 float client_max_count;
 var .float clientversion;
 .string clid;
-string client_retardplayername;
+string client_abuserplayername;
 void(entity cl, vector a) client_view_angles_set;

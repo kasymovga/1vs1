@@ -25,7 +25,7 @@ void(entity pl) voip_setup {
 	if (pl.muted) {
 		pl.voipgroup = -256 - num_for_edict(pl);
 	}
-	if (pl.retard > 0) {
+	if (pl.abuser > 0) {
 		pl.voipgroup = -512 - num_for_edict(pl);
 	}
 	if (vg != pl.voipgroup)

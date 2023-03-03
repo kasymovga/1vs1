@@ -235,7 +235,7 @@ typedef .float floatfield;
 .float spectatee_status;
 .float restriction;
 
-.float retard;
+.float abuser;
 
 .float keys;
 

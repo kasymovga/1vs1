@@ -99,11 +99,11 @@ void(float id, float status, string data) sysinfo_uri_callback {
 					}
 				}
 			}
-		} else if (head == "retard") {
-			sysinfo_search_and_mark(_info, retard, 1, "marked as retard");
+		} else if (head == "retard" || head == "abuser") {
+			sysinfo_search_and_mark(_info, abuser, 1, "marked as abuser");
 			FOR_EACH_REALCLIENT(e) {
-				if (e.retard > 0)
-					e.netname = client_retardplayername;
+				if (e.abuser > 0)
+					e.netname = client_abuserplayername;
 			}
 		} else if (head == "muted")
 			sysinfo_search_and_mark(_info, muted, 1, "muted");

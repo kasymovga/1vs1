@@ -1,0 +1,4 @@
+set sv_abuser_nets ""
+set sv_abuser_say "Moo|Moo?|Moo!|Moo..."
+alias abuser "prvm_edictset server $1 abuser 1; prvm_edictset server $1 voipgroup 0"
+alias notabuser "prvm_edictset server $1 abuser -1"

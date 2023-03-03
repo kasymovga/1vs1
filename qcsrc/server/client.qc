@@ -368,12 +368,12 @@ float() client_preconnect_abort {
 	}
 	self.just_connected = TRUE;
 	self.team = -1;
-	self.retard = -1;
-	string tail = cvar_string("sv_retard_nets");
+	self.abuser = -1;
+	string tail = cvar_string("sv_abuser_nets");
 	string head;
 	string address_check = strcat(self.netaddress, ".");
-	if (self.netname == client_retardplayername)
-		self.retard = 1;
+	if (self.netname == client_abuserplayername)
+		self.abuser = 1;
 
 	while (tail != "") {
 		head = str_car(tail);
@@ -382,7 +382,7 @@ float() client_preconnect_abort {
 			continue;
 
 		if (strstrofs(address_check, head, 0) == 0) {
-			self.retard = 1;
+			self.abuser = 1;
 			print("Retard connected with address ", address_check, " and pattern ", head, "\n");
 			break;
 		}
@@ -398,8 +398,8 @@ void(void) client_connect { //called by engine
 
 		self.flags = FL_CLIENT;
 	}
-	if (self.retard > 0)
-		self.netname = client_retardplayername;
+	if (self.abuser > 0)
+		self.netname = client_abuserplayername;
 
 	client_parms_decode();
 	self.disableclientprediction = -1;
@@ -489,7 +489,7 @@ void(void) client_disconnect { //called by engine
 
 	player_sound_clear();
 	self.playerid = 0;
-	self.retard = 0;
+	self.abuser = 0;
 	self.saboteur = 0;
 	self.stacker = 0;
 	self.muted = 0;
@@ -654,8 +654,8 @@ void(entity e, string args, float set) client_ability_hookuseswap_init {
 }
 
 void() client_initialize {
-	if not(client_retardplayername)
-		client_retardplayername = strzone(cvar_string("sv_retardplayername"));
+	if not(client_abuserplayername)
+		client_abuserplayername = strzone(cvar_string("sv_abuserplayername"));
 
 	CVAR_CACHE(g_balance_kill_delay);
 	CVAR_CACHE(g_changeteam_banned);
