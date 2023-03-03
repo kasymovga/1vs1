@@ -125,7 +125,7 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 	entity waylist, w, best;
 	float dist, bestdist;
 	vector v, org, pm1, pm2;
-	if (ent.flags & FL_ONGROUND) {
+	if (ent.flags & FL_ONGROUND || ent.waterlevel > WATERLEVEL_NONE) {
 		pm1 = ent.origin + ent.mins;
 		pm2 = ent.origin + ent.maxs;
 	} else {
