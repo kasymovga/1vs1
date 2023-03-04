@@ -1,3 +1,7 @@
+#define MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_WALK '110 8 8'
+#define MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_IDLE '171 9 9'
+#define MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND '151 1 15'
+#define MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_ATTACK '130 6 15'
 void heavysoldier_idle();
 void heavysoldier_guard();
 void heavysoldier_walk();
@@ -36,10 +40,10 @@ void heavysoldier_hunt() {
 		v = monster_move_walk(250, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+		monster_common_composite_anim(MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_WALK, MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND, '13 1 1');
 	} else {
 		movelib_beak_simple(2000 * frametime);
-		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
+		monster_common_composite_anim(MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_IDLE, MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_ATTACK, '11 1 1');
 	}
 }
 
@@ -49,7 +53,7 @@ void heavysoldier_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
+	monster_common_composite_anim(MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_IDLE, MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND, '7 1 1');
 }
 
 void heavysoldier_guard() {
@@ -67,7 +71,7 @@ void heavysoldier_walk() {
 	if (monster_walk_finished(heavysoldier_idle, 40))
 		return;
 
-	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+	monster_common_composite_anim(MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_WALK, MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND, '13 1 1');
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(150, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
@@ -77,40 +81,33 @@ void heavysoldier_walk() {
 }
 
 void heavysoldier_remove() {
-	remove(self.exteriorweaponentity);
+	monster_common_on_remove();
 }
 
 void heavysoldier_spawn() {
 	monster_prepare(heavysoldier_hunt, heavysoldier_walk, heavysoldier_idle);
-	setmodel(self, "models/player/grunt.zym");
-	self.movetype = MOVETYPE_WALK;
-	self.exteriorweaponentity = spawn();
-	self.entremove = heavysoldier_remove;
-	if (self.team > 0)
-		self.colormap = 1024;
-	else
-		self.colormap = 1024 + 34;
-
-	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
-	setmodel(self.exteriorweaponentity, "models/weapons/v_gl.md3");
-	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	monster_common_composite_setup("heavysoldier", "gl");
 	self.damageforcescale = 1;
 	self.netname = "Heavy Soldier";
 	self.ammo_rockets = 10;
-	self.view_ofs = '0 0 35';
+	self.view_ofs = '0 0 27';
 }
 
 void heavysoldier_init() {
-	precache_model("models/player/grunt.zym");
-	precache_model("models/weapons/v_gl.md3");
+	dlc_require("monsters");
+	monster_common_composite_precache("heavysoldier", "gl");
 	precache_sound("weapons/grenade_fire.wav");
 }
 
 void spawnfunc_monster_heavysoldier_spawn() {
-	setsize(self, '-16 -16 -24', '16 16 45');
+	monster_common_setup_spawn_size('-16 -16 -24', '16 16 45', '0 0 8');
 	monster_init(heavysoldier_init);
-	self.noise1 = "player/torus/incoming.ogg";
-	self.noise3 = "player/torus/pain50.ogg";
+	self.noise1 = "player/soldier/coms/incoming.ogg";
+	self.noise3 = "player/soldier/player/pain50.ogg";
 	monster_prepare_spawn(heavysoldier_spawn, spawnfunc_monster_heavysoldier_spawn);
 }
+
+#undef MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_WALK
+#undef MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_IDLE
+#undef MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND
+#undef MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_ATTACK

@@ -1,3 +1,7 @@
+#define MONSTER_SPEARGUY_MOVE_ANIM_LEGS_WALK '62 11 20'
+#define MONSTER_SPEARGUY_MOVE_ANIM_LEGS_IDLE '150 29 10'
+#define MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STAND '141 1 15'
+#define MONSTER_SPEARGUY_MOVE_ANIM_TORSO_ATTACK '133 6 15'
 void spearguy_idle();
 void spearguy_guard();
 void spearguy_walk();
@@ -12,7 +16,7 @@ void spearguy_hunt() {
 	vector v;
 	v = entity_nearest_point_on_box(self.enemy, self.origin);
 	if (vlen(v - self.origin) > self.dmg_radius) {
-		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+		monster_common_composite_anim(MONSTER_SPEARGUY_MOVE_ANIM_LEGS_WALK, MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STAND, '13 1 1');
 		v = monster_move_walk(600, 5, 500);
 		if (self.lip) {
 			sound_stop(self, CHAN_WEAPON);
@@ -20,7 +24,7 @@ void spearguy_hunt() {
 		}
 	} else {
 		movelib_beak_simple(100 * frametime);
-		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
+		monster_common_composite_anim(MONSTER_SPEARGUY_MOVE_ANIM_LEGS_IDLE, MONSTER_SPEARGUY_MOVE_ANIM_TORSO_ATTACK, '11 1 1');
 		trace_line(self.origin, v, TRACE_MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
 			if not(self.lip) {
@@ -44,7 +48,7 @@ void spearguy_idle() {
 		return;
 
 	movelib_beak_simple(100 * frametime);
-	anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
+	monster_common_composite_anim(MONSTER_SPEARGUY_MOVE_ANIM_LEGS_IDLE, MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STAND, '7 1 1');
 }
 
 void spearguy_guard() {
@@ -60,7 +64,7 @@ void spearguy_walk() {
 	if (monster_walk_finished(spearguy_idle, 100))
 		return;
 
-	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+	monster_common_composite_anim(MONSTER_SPEARGUY_MOVE_ANIM_LEGS_WALK, MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STAND, '13 1 1');
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(400, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
@@ -70,38 +74,38 @@ void spearguy_walk() {
 }
 
 void spearguy_remove() {
-	remove(self.exteriorweaponentity);
+	monster_common_on_remove();
 	sound_stop(self, CHAN_WEAPON);
 	self.lip = FALSE;
 }
 
 void spearguy_spawn() {
 	monster_prepare(spearguy_hunt, spearguy_walk, spearguy_idle);
-	setmodel(self, "models/player/lurk.zym");
-	self.movetype = MOVETYPE_WALK;
-	self.exteriorweaponentity = spawn();
-	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
-	setmodel(self.exteriorweaponentity, "models/weapons/v_rspear.md3");
-	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	monster_common_composite_setup("spearguy", "rspear");
 	self.damageforcescale = 1;
 	self.entremove = spearguy_remove;
 	self.netname = "Spearguy";
 	self.ammo_cells = 10;
 	self.view_ofs = '0 0 35';
+	self.entremove = spearguy_remove;
 }
 
 void spearguy_init() {
 	dlc_require("rspear");
-	precache_model("models/player/lurk.zym");
-	precache_model("models/weapons/v_rspear.md3");
+	dlc_require("monsters");
+	monster_common_composite_precache("spearguy", "rspear");
 	precache_sound("weapons/electro_fly.wav");
 }
 
 void spawnfunc_monster_spearguy_spawn() {
-	setsize(self, '-16 -16 -24', '16 16 45');
+	monster_common_setup_spawn_size('-16 -16 -24', '16 16 45', '0 0 8');
 	monster_init(spearguy_init);
-	self.noise1 = "player/torus/incoming.ogg";
-	self.noise3 = "player/torus/pain50.ogg";
+	self.noise1 = "player/reptilian/coms/incoming.ogg";
+	self.noise3 = "player/reptilian/player/pain50.ogg";
 	monster_prepare_spawn(spearguy_spawn, spawnfunc_monster_spearguy_spawn);
 }
+
+#undef MONSTER_SPEARGUY_MOVE_ANIM_LEGS_WALK
+#undef MONSTER_SPEARGUY_MOVE_ANIM_LEGS_ID
+#undef MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STA
+#undef MONSTER_SPEARGUY_MOVE_ANIM_TORSO_ATTAC

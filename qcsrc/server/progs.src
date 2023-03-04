@@ -126,6 +126,7 @@ heal.qh
 fire.qh
 badass.qh
 monster.qh
+monster/common.qh
 warpzone.qh
 rank.qh
 shootingrange.qh
@@ -346,6 +347,7 @@ monster/boss4.qc
 monster/fish.qc
 monster/butcher.qc
 monster/turret.qc
+monster/common.qc
 survive.qc
 minstagib.qc
 radio.qc

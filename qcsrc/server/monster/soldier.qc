@@ -1,3 +1,7 @@
+#define MONSTER_SOLDIER_MOVE_ANIM_LEGS_WALK '128 11 11'
+#define MONSTER_SOLDIER_MOVE_ANIM_LEGS_IDLE '194 6 6'
+#define MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND '155 9 9'
+#define MONSTER_SOLDIER_MOVE_ANIM_TORSO_ATTACK '132 6 15'
 void soldier_idle();
 void soldier_guard();
 void soldier_walk();
@@ -37,10 +41,10 @@ void soldier_hunt() {
 		v = monster_move_walk(300, 25, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+		monster_common_composite_anim(MONSTER_SOLDIER_MOVE_ANIM_LEGS_WALK, MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND, '13 1 1');
 	} else {
 		movelib_beak_simple(2000 * frametime);
-		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
+		monster_common_composite_anim(MONSTER_SOLDIER_MOVE_ANIM_LEGS_IDLE, MONSTER_SOLDIER_MOVE_ANIM_TORSO_ATTACK, '13 1 1');
 	}
 }
 
@@ -50,7 +54,7 @@ void soldier_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
+	monster_common_composite_anim(MONSTER_SOLDIER_MOVE_ANIM_LEGS_IDLE, MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND, '7 1 1');
 }
 
 void soldier_guard() {
@@ -68,49 +72,42 @@ void soldier_walk() {
 	if (monster_walk_finished(soldier_idle, 40))
 		return;
 
-	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+	monster_common_composite_anim(MONSTER_SOLDIER_MOVE_ANIM_LEGS_WALK, MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND, '13 1 1');
 	vector v = monster_move_walk(200, 25, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-
+	anim_update(self);
 }
 
 void soldier_remove() {
-	remove(self.exteriorweaponentity);
+	monster_common_on_remove();
 }
 
 void soldier_spawn() {
 	monster_prepare(soldier_hunt, soldier_walk, soldier_idle);
-	setmodel(self, "models/player/shock.zym");
-	self.movetype = MOVETYPE_WALK;
-	self.entremove = soldier_remove;
-	if (self.team > 0)
-		self.colormap = 1024;
-	else
-		self.colormap = 1024 + 17;
-
-	self.exteriorweaponentity = spawn();
-	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
-	setmodel(self.exteriorweaponentity, "models/weapons/v_shotgun.md3");
-	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	monster_common_composite_setup("soldier", "shotgun");
 	self.damageforcescale = 1;
 	self.netname = "Soldier";
 	self.ammo_shells = 10;
-	self.view_ofs = '0 0 35';
+	self.view_ofs = '0 0 27';
 }
 
 void soldier_init() {
-	precache_model("models/player/shock.zym");
-	precache_model("models/weapons/v_shotgun.md3");
+	dlc_require("monsters");
+	monster_common_composite_precache("soldier", "shotgun");
 	precache_sound("weapons/shotgun_fire.wav");
 }
 
 void spawnfunc_monster_soldier_spawn() {
-	setsize(self, '-16 -16 -24', '16 16 45');
+	monster_common_setup_spawn_size('-16 -16 -24', '16 16 45', '0 0 8');
 	monster_init(soldier_init);
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
 	monster_prepare_spawn(soldier_spawn, spawnfunc_monster_soldier_spawn);
 }
+
+#undef MONSTER_SOLDIER_MOVE_ANIM_LEGS_IDLE
+#undef MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND
+#undef MONSTER_SOLDIER_MOVE_ANIM_TORSO_ATTACK
+#undef MONSTER_SOLDIER_MODEL_ORIGIN_ADJUST
