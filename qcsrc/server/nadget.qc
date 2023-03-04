@@ -318,6 +318,7 @@ void(void) nadget_init_common {
 	projectile_register_auto(PROJECTILE_HG_TRANSLOC, NADGET_SIZE_TRANSLOC * '1 -1 1');
 	projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3');
 	projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
+	projectile_register_auto(PROJECTILE_HG_SCAN, NADGET_SIZE_DEFAULT * '1 -1 1');
 	nadget_observer_spawn_next = plugin_chain_observer_spawn;
 	plugin_chain_observer_spawn = nadget_observer_spawn;
 	nadget_PlayerPreThink_next = plugin_chain_player_think;

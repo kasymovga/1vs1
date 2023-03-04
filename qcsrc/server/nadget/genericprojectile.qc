@@ -10,6 +10,7 @@ float nadget_GenericProjectile_CSQCProjType(float t) {
         case NADGET_REMOTE  :   return PROJECTILE_HG_REMOTE;
         case NADGET_LASER   :   return PROJECTILE_HG_LASER;
         case NADGET_RAZE    :   return PROJECTILE_HG_RAZE;
+        case NADGET_SCAN    :   return PROJECTILE_HG_SCAN;
         default         :   return PROJECTILE_HG_GENERIC;
     }
 }
@@ -78,24 +79,20 @@ void nadget_GenericProjectile_RadiusDamage(void) {
 }
 
 void nadget_GenericProjectile_Explode(void) {
-    self.event_damage = NULL;
-    self.takedamage = DAMAGE_NO;
-
-    switch(self.hg_type) {
-        case NADGET_NAPALM:
-        case NADGET_REMOTE:
-            nadget_GenericProjectile_ThrowNapalm();
-            break;
-
-        case NADGET_PLASMA:
-            nadget_Plasma_Explode();
-            break;
-
-        case NADGET_TRANSLOC:
-            nadget_Transloc_Explode();
-            break;
+	self.event_damage = NULL;
+	self.takedamage = DAMAGE_NO;
+	switch(self.hg_type) {
+		case NADGET_NAPALM:
+		case NADGET_REMOTE:
+			nadget_GenericProjectile_ThrowNapalm();
+			break;
+		case NADGET_PLASMA:
+			nadget_Plasma_Explode();
+			break;
+		case NADGET_TRANSLOC:
+			nadget_Transloc_Explode();
+			break;
     }
-
     nadget_GenericProjectile_RadiusDamage();
 	stdproc_remove();
 }

@@ -12,6 +12,7 @@
     NADGETDEF(NADGET_GG,        gg,         "GG Button",        '0.5 0.5 0.5' + colormap_palette_color(15, FALSE)) \
     NADGETDEF(NADGET_SENTRY,    sentry,     "Zapper Sentry",    '0.3 1.0 0.7') \
     NADGETDEF(NADGET_RAZE,      raze,       "Raze",             '1.0 0.4 0.5') \
+    NADGETDEF(NADGET_SCAN,      scan,       "Scan",             '1.0 0.5 1') \
 
 
 enum {

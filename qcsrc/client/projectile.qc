@@ -121,6 +121,7 @@ void(void) projectile_draw {
 			break;
 		case PROJECTILE_HG_RAZE:
 		case PROJECTILE_HG_PLASMA:
+		case PROJECTILE_HG_SCAN:
 			rot = '0 0 -1000';
 			break;
 		default:
@@ -342,6 +343,16 @@ void(float ignore) projectile_read {
 			setmodel(self, "models/plasmabomb.iqm");
 			projectile_colormap_setup(COLOR_TEAM2);
 			self.trail_effect = particles_rm_effectnum_team("RM_HG_PLASMA", self.team, 2);
+			break;
+		case PROJECTILE_HG_SCAN:
+			setmodel(self, "models/plasmabomb.iqm");
+			projectile_colormap_setup(COLOR_TEAM4);
+			switch (self.team) {
+				case COLOR_TEAM1:           self.trail_effect = particleeffectnum("TE_TEI_G3RED_HIT"); break;
+				case COLOR_TEAM2:           self.trail_effect = particleeffectnum("TE_TEI_G3BLUE_HIT"); break;
+				case COLOR_TEAM3:           self.trail_effect = particleeffectnum("TE_TEI_G3YELLOW_HIT"); break;
+				case COLOR_TEAM4: default:  self.trail_effect = particleeffectnum("TE_TEI_G3PINK_HIT"); break;
+			}
 			break;
 		case PROJECTILE_HG_REMOTE:
 			setmodel(self, "models/mine.md3");

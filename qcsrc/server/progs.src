@@ -119,6 +119,7 @@ nadget/sentry.qh
 nadget/shield.qh
 nadget/transloc.qh
 nadget/waypoint.qh
+nadget/scan.qh
 napalm.qh
 damage.qh
 weapon/score.qh
@@ -321,6 +322,7 @@ nadget/sentry.qc
 nadget/shield.qc
 nadget/transloc.qc
 nadget/waypoint.qc
+nadget/scan.qc
 napalm.qc
 game/menu.qc
 walkietalkie.qc
