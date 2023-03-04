@@ -170,7 +170,7 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 				if (trace_fraction == 1) {
 					if (walkfromwp) {
 						//print("^1can I reach ", vtos(org), " from ", vtos(v), "?\n");
-						if (trace_walk(ent, v, _mins, _maxs, org, bot_navigation_movemode)) {
+						if (trace_walk(ent, v + '0 0 -1' * ent.mins_z, _mins, _maxs, org, bot_navigation_movemode)) {
 							bestdist = dist;
 							best = w;
 						}
