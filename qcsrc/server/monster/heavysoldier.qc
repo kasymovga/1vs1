@@ -6,6 +6,28 @@ void heavysoldier_idle();
 void heavysoldier_guard();
 void heavysoldier_walk();
 
+void(void) monster_heavysoldier_projectile_bounce_touch {
+	PROJECTILE_TOUCH;
+	if (other && (other.takedamage))
+		projectile_explode();
+	else {
+		float r;
+		r = random() * 6;
+		if(r < 1)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 2)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 3)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 4)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 5)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+		else
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+	}
+}
+
 void heavysoldier_hunt() {
 	self.nextthink = time;
 	if (monster_check_target(heavysoldier_walk, heavysoldier_guard))
@@ -24,16 +46,25 @@ void heavysoldier_hunt() {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
-		entity gren = projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
-		projectile_setup(gren,_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0.01, MOVETYPE_TOSS);
+		entity gren;
+		if (random() > 0.5 || vlen(monster_look_to_end - self.origin) > 1000) {
+			gren = projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
+			projectile_setup(gren,_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0.01, MOVETYPE_TOSS);
+			gren.touch = projectile_touch_explode;
+			gren.velocity = normalize(_shotdir) * 3200;
+			self.attack_finished_single = time + 3 + random();
+		} else {
+			gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
+			projectile_setup(gren,_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 1, MOVETYPE_BOUNCE);
+			gren.touch = monster_heavysoldier_projectile_bounce_touch;
+			gren.velocity = normalize(_shotdir) * 1000 + 200 * '0 0 1';
+			self.attack_finished_single = time + 1 + random();
+		}
 		PROJECTILE_MAKETRIGGER(gren);
 		gren.nextthink = time + 5;
 		gren.think = projectile_think2use;
 		gren.use = projectile_explode;
-		gren.touch = projectile_touch_explode;
-		gren.velocity = normalize(_shotdir) * 3200;
 		weapon_setup_projectile_velocity(gren);
-		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
 	}
 	if (time > self.bulletcounter) {
@@ -97,6 +128,14 @@ void heavysoldier_init() {
 	dlc_require("monsters");
 	monster_common_composite_precache("heavysoldier", "gl");
 	precache_sound("weapons/grenade_fire.wav");
+	precache_sound("weapons/grenade_bounce1.wav");
+	precache_sound("weapons/grenade_bounce2.wav");
+	precache_sound("weapons/grenade_bounce3.wav");
+	precache_sound("weapons/grenade_bounce4.wav");
+	precache_sound("weapons/grenade_bounce5.wav");
+	precache_sound("weapons/grenade_bounce6.wav");
+	projectile_init(PROJECTILE_GRENADE);
+	projectile_init(PROJECTILE_GRENADE_BOUNCING);
 }
 
 void spawnfunc_monster_heavysoldier_spawn() {
