@@ -38,6 +38,7 @@ float g_spawnsound;
 float g_player_pushfactor;
 float g_player_body_pitch_maxangle;
 float g_player_team_collisions;
+float g_player_damage_screen_effects;
 float g_endmatch_on_leave;
 string sv_announcer_extra_pushfrag;
 string sv_announcer_extra_doublekill;
@@ -983,6 +984,14 @@ void(entity spot) player_spawn {
 	else
 		self.body.effects &= ~EFFECT_NODRAW;
 
+	if (g_player_damage_screen_effects && (!self.dmg_inflictor || self.dmg_inflictor.classname != "dmg_inflictor" || self.dmg_inflictor.owner != self || wasfreed(self.dmg_inflictor))) { //spectator copy dmg_inflictor, so we need extra checks here
+		if (clienttype(self) == CLIENTTYPE_REAL) {
+			self.dmg_inflictor = spawn();
+			self.dmg_inflictor.classname = "dmg_inflictor";
+			self.dmg_inflictor.owner = self;
+		} else
+			self.dmg_inflictor = NULL;
+	}
 	self.body.nextthink = 0;
 	self.body.dead_frame = -1;
 	setmodel(self, "null");
@@ -1101,6 +1110,15 @@ void(void) player_leave {
 		score_clear(self);
 
 	self.winning = FALSE;
+	if (self.dmg_inflictor) {
+		if (self.dmg_inflictor.classname == "dmg_inflictor" && self.dmg_inflictor.owner == self && !wasfreed(self.dmg_inflictor)) {
+			remove(self.dmg_inflictor);
+			self.dmg_inflictor = NULL;
+		} else {
+			self.dmg_inflictor = NULL;
+			player_dmg_inflictor_fix();
+		}
+	}
 }
 
 float(entity plr, float wep) player_can_fire {
@@ -1221,6 +1239,7 @@ void() player_init {
 	CVAR_CACHE(g_player_pushfactor);
 	CVAR_CACHE(g_player_body_pitch_maxangle);
 	CVAR_CACHE(g_player_team_collisions);
+	CVAR_CACHE(g_player_damage_screen_effects);
 	CVAR_CACHE(g_spawnshieldtime);
 	CVAR_CACHE(g_spawnfrags);
 	CVAR_CACHE(g_spawnsound);

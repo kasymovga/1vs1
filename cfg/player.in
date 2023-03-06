@@ -98,3 +98,4 @@ set sv_player_killcount_25_announce_sound "announcer/male/25kills.wav"
 set sv_player_killcount_25_announce_message "^1CARNAGE!"
 set sv_player_killcount_30_announce_sound "announcer/male/30kills.wav"
 set sv_player_killcount_30_announce_message "^1ARMAGEDDON!!!"
+set g_player_damage_screen_effects 0
