@@ -126,6 +126,7 @@ float(string s) dlc_load_settemps_from {
 		cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
 		if (cvar_name == "g_player_forcemodel" && cvar_value != "0") {
 			if (dlc_load_player_model_not_forced > 0) continue;
+			if (strstrofs(strcat(" ", dlc_rexext_forcemodel, " "), strcat(" ", cvar_value, " "), 0) >= 0) continue;
 			if (dlc_rexext_forcemodel != "") {
 				cvar_name = "g_player_allowed_models";
 				dlc_settemp("g_player_forcemodel", "0");
@@ -135,6 +136,7 @@ float(string s) dlc_load_settemps_from {
 			dlc_rexext_forcemodel = str_zone_ifneeded(cvar_value);
 		} else if (cvar_name == "g_player_allowed_models") {
 			if (dlc_load_player_model_not_forced > 0) continue;
+			if (strstrofs(strcat(" ", dlc_rexext_forcemodel, " "), strcat(" ", cvar_value, " "), 0) >= 0) continue;
 			dlc_settemp("g_player_forcemodel", "0");
 			cvar_value = strcat(dlc_rexext_forcemodel, " ", cvar_value);
 			str_unzone_ifneeded(dlc_rexext_forcemodel);
@@ -159,6 +161,9 @@ void(void) dlc_unload_settemps {
 		cvar_set(cvar_string(strcat("_dlc_settemp_name", ftos(i))), cvar_string(strcat("_dlc_settemp_savevalue", ftos(i))));
 	}
 	cvar_set("_dlc_settemps_count", "0");
+	str_unzone_ifneeded(dlc_rexext_forcemodel);
+	dlc_rexext_forcemodel = "";
+	dlc_load_player_model_not_forced = 0;
 }
 
 void(void) dlc_load_exts {
