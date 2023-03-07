@@ -165,6 +165,7 @@ void boss4_init() {
 	precache_model("models/player/lycanthrope.zym");
 	precache_model("models/weapons/v_fireball.md3");
 	precache_sound("weapons/fireball_fire.wav");
+	projectile_init(PROJECTILE_FIREBALL);
 }
 
 void spawnfunc_monster_boss4_spawn() {

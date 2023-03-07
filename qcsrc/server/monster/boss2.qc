@@ -146,6 +146,7 @@ void boss2_init() {
 	precache_model("models/player/shock.zym");
 	precache_model("models/weapons/v_shotgun.md3");
 	precache_sound("weapons/shotgun_fire.wav");
+	projectile_init(PROJECTILE_BULLET_BIG);
 }
 
 void spawnfunc_monster_boss2_spawn() {

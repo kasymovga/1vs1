@@ -121,8 +121,7 @@ void arachna_spawn() {
 	self.netname = "Arachna";
 	self.view_ofs = '0 0 16';
 	self.dlc_reset = arachna_dlc_reset;
-	if (dlc_ready("arachna"))
-		arachna_model_setup();
+	arachna_model_setup();
 }
 
 void arachna_init() {
@@ -131,6 +130,7 @@ void arachna_init() {
 	precache_sound("weapons/electro_fire.wav");
 	precache_sound("player/pyria-skadi/player/jump.wav");
 	dlc_require("arachna");
+	projectile_init(PROJECTILE_ELECTRO);
 }
 
 void spawnfunc_monster_arachna_spawn() {

@@ -116,6 +116,7 @@ void boss3_init() {
 	precache_model("models/weapons/v_electro.md3");
 	precache_sound("weapons/electro_fire.wav");
 	dlc_require("arachna");
+	projectile_init(PROJECTILE_ELECTRO);
 }
 
 void spawnfunc_monster_boss3_spawn() {

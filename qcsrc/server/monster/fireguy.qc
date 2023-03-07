@@ -132,6 +132,7 @@ void fireguy_init() {
 	dlc_require("monsters");
 	monster_common_composite_precache("fireguy", "fireball");
 	precache_sound("weapons/fireball_fire.wav");
+	projectile_init(PROJECTILE_FIREMINE);
 }
 
 void spawnfunc_monster_fireguy_spawn() {

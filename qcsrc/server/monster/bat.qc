@@ -87,6 +87,7 @@ void bat_init() {
 	precache_sound("weapons/crylink_fire.wav");
 	precache_model("models/bat.md3");
 	dlc_require("bat");
+	projectile_init(PROJECTILE_CRYLINK);
 }
 
 void spawnfunc_monster_bat_spawn() {

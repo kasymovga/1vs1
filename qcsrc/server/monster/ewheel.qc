@@ -87,9 +87,10 @@ void ewheel_spawn() {
 }
 
 void ewheel_init() {
-    precache_model ("models/turrets/ewheel-base2.md3");
-    precache_model ("models/turrets/ewheel-gun1.md3");
+	precache_model ("models/turrets/ewheel-base2.md3");
+	precache_model ("models/turrets/ewheel-gun1.md3");
 	precache_sound("weapons/uzi_fire.wav");
+	projectile_init(PROJECTILE_LASER);
 }
 
 void spawnfunc_monster_ewheel_spawn() {

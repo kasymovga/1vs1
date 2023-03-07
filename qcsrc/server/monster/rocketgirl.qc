@@ -98,6 +98,7 @@ void rlgirl_init() {
 	dlc_require("monsters");
 	monster_common_composite_precache("rocketgirl", "rl");
 	precache_sound("weapons/rocket_fire.wav");
+	projectile_init(PROJECTILE_ROCKET);
 }
 
 void spawnfunc_monster_rlgirl_spawn() {

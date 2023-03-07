@@ -129,6 +129,7 @@ void boss1_init() {
 	precache_model("models/player/grunt.zym");
 	precache_model("models/weapons/v_gl.md3");
 	precache_sound("weapons/grenade_fire.wav");
+	projectile_init(PROJECTILE_GRENADE);
 }
 
 void spawnfunc_monster_boss1_spawn() {

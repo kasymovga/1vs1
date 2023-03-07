@@ -171,6 +171,7 @@ void walker_init() {
 	precache_model("models/turrets/walker_body.md3");
 	precache_model("models/turrets/walker_head_minigun.md3");
 	precache_sound("weapons/uzi_fire.wav");
+	projectile_init(PROJECTILE_ROCKET);
 }
 
 void spawnfunc_monster_walker_spawn() {

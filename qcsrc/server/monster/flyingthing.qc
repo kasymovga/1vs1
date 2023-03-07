@@ -83,6 +83,7 @@ void flyingthing_spawn() {
 void flyingthing_init() {
 	precache_sound("weapons/electro_fire.wav");
 	precache_model("models/turrets/walker_mghead.md3");
+	projectile_init(PROJECTILE_ELECTRO_BEAM);
 }
 
 void spawnfunc_monster_flyingthing_spawn() {
