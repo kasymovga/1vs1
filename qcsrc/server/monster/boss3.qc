@@ -124,6 +124,7 @@ void spawnfunc_monster_boss3_spawn() {
 	monster_init(boss3_init);
 	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
 	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
+	self.atten = 0.1;
 	monster_prepare_spawn(boss3_spawn, spawnfunc_monster_boss3_spawn);
 }
 

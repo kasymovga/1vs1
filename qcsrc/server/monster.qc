@@ -18,7 +18,7 @@ void monster_sound(entity m, string s, float force) {
 	if (s != "")
 	if (m.watersound_finished < time) {
 		m.watersound_finished = time + 5;
-		sound(m, CHAN_TRIGGER, s, VOL_BASE, ATTN_NORM);
+		sound(m, CHAN_TRIGGER, s, VOL_BASEVOICE, (m.atten ? m.atten : ATTN_NORM));
 	}
 }
 

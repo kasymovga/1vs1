@@ -1,3 +1,9 @@
+#define MONSTER_BOSS1_ANIM_DIE '0 30 10'
+#define MONSTER_BOSS1_ANIM_LEGS_WALK '110 8 8'
+#define MONSTER_BOSS1_ANIM_LEGS_IDLE '171 9 9'
+#define MONSTER_BOSS1_ANIM_TORSO_STAND '151 1 15'
+#define MONSTER_BOSS1_ANIM_TORSO_ATTACK '130 6 15'
+
 void boss1_idle();
 void boss1_guard();
 void boss1_walk();
@@ -16,11 +22,12 @@ void boss1_hunt() {
 	}
 	float stay = self.owner.spawnflags & MONSTER_SPAWN_STAYSTILL;
 	if (dofire) {
-		v = vectoangles(monster_look_to_end - self.origin);
+		vector _shotorg = self.origin + self.maxs_z * '0 0 1' - '0 0 45';
+		v = vectoangles(monster_look_to_end - _shotorg);
 		self.angles_y = v_y;
 		makevectors(self.angles);
-		vector _shotdir = monster_look_to_end - self.origin;
-		vector _shotorg = self.origin + v_forward * 16;
+		vector _shotdir = monster_look_to_end - _shotorg;
+		_shotorg = _shotorg + v_forward * self.maxs_z;
 		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 		float i;
 		for (i = 0; i < 4; i++) {
@@ -43,16 +50,16 @@ void boss1_hunt() {
 	if (time > self.bulletcounter) {
 		if (stay) {
 			movelib_beak_simple(2000 * frametime);
-			anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
+			monster_common_composite_anim(MONSTER_BOSS1_ANIM_LEGS_IDLE, MONSTER_BOSS1_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 		} else {
 			v = monster_move_walk(450, 5, 0);
 			v = vectoangles(v);
 			self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-			anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+			monster_common_composite_anim(MONSTER_BOSS1_ANIM_LEGS_WALK, MONSTER_BOSS1_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 		}
 	} else {
 		movelib_beak_simple(2000 * frametime);
-		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
+		monster_common_composite_anim(MONSTER_BOSS1_ANIM_LEGS_IDLE, MONSTER_BOSS1_ANIM_TORSO_ATTACK, '11 1 1', TRUE, FALSE);
 	}
 }
 
@@ -63,7 +70,7 @@ void boss1_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
+	monster_common_composite_anim(MONSTER_BOSS1_ANIM_LEGS_IDLE, MONSTER_BOSS1_ANIM_TORSO_ATTACK, '11 1 1', TRUE, FALSE);
 }
 
 void boss1_guard() {
@@ -83,7 +90,7 @@ void boss1_walk() {
 	if (monster_walk_finished(boss1_idle, 100))
 		return;
 
-	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+	monster_common_composite_anim(MONSTER_BOSS1_ANIM_LEGS_WALK, MONSTER_BOSS1_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(350, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
@@ -93,32 +100,26 @@ void boss1_walk() {
 }
 
 void boss1_remove() {
-	remove(self.exteriorweaponentity);
+	monster_common_on_remove();
 	WaypointSprite_DetachCarrier(self);
 }
 
 void boss1_spawn() {
 	monster_prepare(boss1_hunt, boss1_walk, boss1_idle);
-	setmodel(self, "models/player/grunt.zym");
-	self.movetype = MOVETYPE_WALK;
-	self.exteriorweaponentity = spawn();
-	self.entremove = boss1_remove;
-	if (self.team > 0)
-		self.colormap = 1024;
+	if (self.colormod != '0 0 0')
+		self.colormod *= 0.25;
 	else
-		self.colormap = 1024 + 17;
+		self.colormod = '0.75 0.5 0.25';
 
-	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
-	setmodel(self.exteriorweaponentity, "models/weapons/v_gl.md3");
-	self.scale = 3;
-	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	monster_common_composite_setup("heavysoldier", "gl");
+	self.entremove = boss1_remove;
+	self.scale = 3.75;
 	self.max_health = self.health;
 	self.damageforcescale = 0.01;
-	self.netname = "Big Soldier";
-	self.anim_die1 = '0 1 0.5';
+	self.netname = "Big Heavy Soldier";
+	self.anim_die1 = MONSTER_BOSS1_ANIM_DIE;
 	self.frags = 10;
-	self.view_ofs = '0 0 105';
+	self.view_ofs = '0 0 81';
 	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
 	WaypointSprite_UpdateMaxHealth(e, self.health);
 	WaypointSprite_UpdateHealth(e, self.health);
@@ -126,17 +127,24 @@ void boss1_spawn() {
 }
 
 void boss1_init() {
-	precache_model("models/player/grunt.zym");
-	precache_model("models/weapons/v_gl.md3");
+	dlc_require("monsters");
+	monster_common_composite_precache("heavysoldier", "gl");
 	precache_sound("weapons/grenade_fire.wav");
 	projectile_init(PROJECTILE_GRENADE);
 }
 
 void spawnfunc_monster_boss1_spawn() {
-	setsize(self, '-48 -48 -72', '64 64 135');
+	monster_common_setup_spawn_size('-48 -48 -72', '64 64 135', '0 0 24');
 	monster_init(boss1_init);
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise2 = "player/torus/death.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
+	self.atten = 0.1;
 	monster_prepare_spawn(boss1_spawn, spawnfunc_monster_boss1_spawn);
 }
+
+#undef MONSTER_BOSS1_ANIM_DIE
+#undef MONSTER_BOSS1_ANIM_LEGS_WALK
+#undef MONSTER_BOSS1_ANIM_LEGS_IDLE
+#undef MONSTER_BOSS1_ANIM_TORSO_STAND
+#undef MONSTER_BOSS1_ANIM_TORSO_ATTACK
