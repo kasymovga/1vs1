@@ -125,7 +125,7 @@ void fireguy_spawn() {
 	self.netname = "FireGuy";
 	self.ammo_rockets = 20;
 	self.flags = MONSTER_IGNOREFIRE;
-	self.view_ofs = '0 0 35';
+	self.view_ofs = '0 0 27';
 }
 
 void fireguy_init() {
