@@ -1,5 +1,6 @@
 #include "campaign.qh"
 #include "cvar.qh"
+#include "dlc.qh"
 #include "extresponse.qh"
 #include "game_type.qh"
 #include "masterlist.qh"
