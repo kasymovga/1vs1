@@ -713,7 +713,7 @@ string() player_body_model_list_allowed {
 }
 
 string(string _playermodel) player_body_model_allowed {
-	string allowed_models = player_body_model_list_allowed();
+	string allowed_models = str_shuffle_words(player_body_model_list_allowed());
 	string first_allowed_model = "";
 	string tail = allowed_models;
 	string s = strcat(" ", allowed_models, " ");
