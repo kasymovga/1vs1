@@ -2,4 +2,4 @@ void(void) monster_common_on_remove;
 void(vector _mins, vector _maxs, vector originadjust) monster_common_setup_spawn_size;
 void(string monstermodel, string wepmodel) monster_common_composite_setup;
 void(string monstermodel, string wepmodel) monster_common_composite_precache;
-void(vector loweranim, vector upperanim, vector fallbackanim) monster_common_composite_anim;
+void(vector loweranim, vector upperanim, vector fallbackanim, float lowerloop, float upperloop) monster_common_composite_anim;

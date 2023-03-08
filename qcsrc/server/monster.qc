@@ -181,12 +181,21 @@ void monster_corpse_event_damage(entity inflictor, entity attacker, float _damag
 		monster_die();
 }
 
+void(void) monster_die_think {
+	if (self.cnt < time)
+		monster_die();
+
+	monster_common_composite_anim(self.anim_die1, self.anim_die1, self.anim_die1, FALSE, FALSE);
+	self.nextthink = time;
+}
+
 void monster_die_animated() {
-	anim_set(self, self.anim_die1, FALSE, TRUE, TRUE);
+	monster_common_composite_anim(self.anim_die1, self.anim_die1, self.anim_die1, FALSE, FALSE);
 	self.movetype = MOVETYPE_TOSS;
 	self.solid = SOLID_CORPSE;
-	self.nextthink = time + 5;
-	self.think = monster_die;
+	self.cnt = time + 5;
+	self.nextthink = time;
+	self.think = monster_die_think;
 	self.event_damage = monster_corpse_event_damage;
 }
 

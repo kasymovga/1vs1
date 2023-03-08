@@ -1,7 +1,7 @@
-#define MONSTER_SOLDIER_MOVE_ANIM_LEGS_WALK '128 11 11'
-#define MONSTER_SOLDIER_MOVE_ANIM_LEGS_IDLE '194 6 6'
-#define MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND '155 9 9'
-#define MONSTER_SOLDIER_MOVE_ANIM_TORSO_ATTACK '132 6 15'
+#define MONSTER_SOLDIER_ANIM_LEGS_WALK '128 11 11'
+#define MONSTER_SOLDIER_ANIM_LEGS_IDLE '194 6 6'
+#define MONSTER_SOLDIER_ANIM_TORSO_STAND '155 9 9'
+#define MONSTER_SOLDIER_ANIM_TORSO_ATTACK '132 6 15'
 void soldier_idle();
 void soldier_guard();
 void soldier_walk();
@@ -41,10 +41,10 @@ void soldier_hunt() {
 		v = monster_move_walk(300, 25, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-		monster_common_composite_anim(MONSTER_SOLDIER_MOVE_ANIM_LEGS_WALK, MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND, '13 1 1');
+		monster_common_composite_anim(MONSTER_SOLDIER_ANIM_LEGS_WALK, MONSTER_SOLDIER_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	} else {
 		movelib_beak_simple(2000 * frametime);
-		monster_common_composite_anim(MONSTER_SOLDIER_MOVE_ANIM_LEGS_IDLE, MONSTER_SOLDIER_MOVE_ANIM_TORSO_ATTACK, '13 1 1');
+		monster_common_composite_anim(MONSTER_SOLDIER_ANIM_LEGS_IDLE, MONSTER_SOLDIER_ANIM_TORSO_ATTACK, '13 1 1', TRUE, FALSE);
 	}
 }
 
@@ -54,7 +54,7 @@ void soldier_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	monster_common_composite_anim(MONSTER_SOLDIER_MOVE_ANIM_LEGS_IDLE, MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND, '7 1 1');
+	monster_common_composite_anim(MONSTER_SOLDIER_ANIM_LEGS_IDLE, MONSTER_SOLDIER_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
 void soldier_guard() {
@@ -72,7 +72,7 @@ void soldier_walk() {
 	if (monster_walk_finished(soldier_idle, 40))
 		return;
 
-	monster_common_composite_anim(MONSTER_SOLDIER_MOVE_ANIM_LEGS_WALK, MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND, '13 1 1');
+	monster_common_composite_anim(MONSTER_SOLDIER_ANIM_LEGS_WALK, MONSTER_SOLDIER_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	vector v = monster_move_walk(200, 25, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
@@ -107,7 +107,7 @@ void spawnfunc_monster_soldier_spawn() {
 	monster_prepare_spawn(soldier_spawn, spawnfunc_monster_soldier_spawn);
 }
 
-#undef MONSTER_SOLDIER_MOVE_ANIM_LEGS_IDLE
-#undef MONSTER_SOLDIER_MOVE_ANIM_TORSO_STAND
-#undef MONSTER_SOLDIER_MOVE_ANIM_TORSO_ATTACK
+#undef MONSTER_SOLDIER_ANIM_LEGS_IDLE
+#undef MONSTER_SOLDIER_ANIM_TORSO_STAND
+#undef MONSTER_SOLDIER_ANIM_TORSO_ATTACK
 #undef MONSTER_SOLDIER_MODEL_ORIGIN_ADJUST

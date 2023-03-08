@@ -1,7 +1,7 @@
-#define MONSTER_ROCKETGIRL_MOVE_ANIM_LEGS_WALK '114 8 15'
-#define MONSTER_ROCKETGIRL_MOVE_ANIM_LEGS_IDLE '180 9 8'
-#define MONSTER_ROCKETGIRL_MOVE_ANIM_TORSO_STAND '165 1 5'
-#define MONSTER_ROCKETGIRL_MOVE_ANIM_TORSO_ATTACK '132 6 15'
+#define MONSTER_ROCKETGIRL_ANIM_LEGS_WALK '114 8 15'
+#define MONSTER_ROCKETGIRL_ANIM_LEGS_IDLE '180 9 8'
+#define MONSTER_ROCKETGIRL_ANIM_TORSO_STAND '165 1 5'
+#define MONSTER_ROCKETGIRL_ANIM_TORSO_ATTACK '132 6 15'
 void rlgirl_idle();
 void rlgirl_guard();
 void rlgirl_walk();
@@ -40,10 +40,10 @@ void rlgirl_hunt() {
 		v = monster_move_walk(400, 25, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-		monster_common_composite_anim(MONSTER_ROCKETGIRL_MOVE_ANIM_LEGS_WALK, MONSTER_ROCKETGIRL_MOVE_ANIM_TORSO_STAND, '13 1 1');
+		monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_WALK, MONSTER_ROCKETGIRL_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	} else {
 		movelib_beak_simple(2000 * frametime);
-		monster_common_composite_anim(MONSTER_ROCKETGIRL_MOVE_ANIM_LEGS_IDLE, MONSTER_ROCKETGIRL_MOVE_ANIM_TORSO_ATTACK, '11 1 1');
+		monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_IDLE, MONSTER_ROCKETGIRL_ANIM_TORSO_ATTACK, '11 1 1', TRUE, FALSE);
 	}
 }
 
@@ -53,7 +53,7 @@ void rlgirl_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	monster_common_composite_anim(MONSTER_ROCKETGIRL_MOVE_ANIM_LEGS_IDLE, MONSTER_ROCKETGIRL_MOVE_ANIM_TORSO_STAND, '7 1 1');
+	monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_IDLE, MONSTER_ROCKETGIRL_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
 void rlgirl_guard() {
@@ -72,7 +72,7 @@ void rlgirl_walk() {
 	if (monster_walk_finished(rlgirl_idle, 40))
 		return;
 
-	monster_common_composite_anim(MONSTER_ROCKETGIRL_MOVE_ANIM_LEGS_WALK, MONSTER_ROCKETGIRL_MOVE_ANIM_TORSO_STAND, '13 1 1');
+	monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_WALK, MONSTER_ROCKETGIRL_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(300, 25, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
@@ -109,7 +109,7 @@ void spawnfunc_monster_rlgirl_spawn() {
 	monster_prepare_spawn(rlgirl_spawn, spawnfunc_monster_rlgirl_spawn);
 }
 
-#undef MONSTER_ROCKETGIRL_MOVE_ANIM_LEGS_WALK
-#undef MONSTER_ROCKETGIRL_MOVE_ANIM_LEGS_IDLE
-#undef MONSTER_ROCKETGIRL_MOVE_ANIM_TORSO_STAND
-#undef MONSTER_ROCKETGIRL_MOVE_ANIM_TORSO_ATTACK
+#undef MONSTER_ROCKETGIRL_ANIM_LEGS_WALK
+#undef MONSTER_ROCKETGIRL_ANIM_LEGS_IDLE
+#undef MONSTER_ROCKETGIRL_ANIM_TORSO_STAND
+#undef MONSTER_ROCKETGIRL_ANIM_TORSO_ATTACK

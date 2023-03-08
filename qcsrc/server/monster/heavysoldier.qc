@@ -1,7 +1,7 @@
-#define MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_WALK '110 8 8'
-#define MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_IDLE '171 9 9'
-#define MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND '151 1 15'
-#define MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_ATTACK '130 6 15'
+#define MONSTER_HEAVYSOLDIER_ANIM_LEGS_WALK '110 8 8'
+#define MONSTER_HEAVYSOLDIER_ANIM_LEGS_IDLE '171 9 9'
+#define MONSTER_HEAVYSOLDIER_ANIM_TORSO_STAND '151 1 15'
+#define MONSTER_HEAVYSOLDIER_ANIM_TORSO_ATTACK '130 6 15'
 void heavysoldier_idle();
 void heavysoldier_guard();
 void heavysoldier_walk();
@@ -71,10 +71,10 @@ void heavysoldier_hunt() {
 		v = monster_move_walk(250, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-		monster_common_composite_anim(MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_WALK, MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND, '13 1 1');
+		monster_common_composite_anim(MONSTER_HEAVYSOLDIER_ANIM_LEGS_WALK, MONSTER_HEAVYSOLDIER_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	} else {
 		movelib_beak_simple(2000 * frametime);
-		monster_common_composite_anim(MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_IDLE, MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_ATTACK, '11 1 1');
+		monster_common_composite_anim(MONSTER_HEAVYSOLDIER_ANIM_LEGS_IDLE, MONSTER_HEAVYSOLDIER_ANIM_TORSO_ATTACK, '11 1 1', TRUE, FALSE);
 	}
 }
 
@@ -84,7 +84,7 @@ void heavysoldier_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	monster_common_composite_anim(MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_IDLE, MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND, '7 1 1');
+	monster_common_composite_anim(MONSTER_HEAVYSOLDIER_ANIM_LEGS_IDLE, MONSTER_HEAVYSOLDIER_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
 void heavysoldier_guard() {
@@ -102,7 +102,7 @@ void heavysoldier_walk() {
 	if (monster_walk_finished(heavysoldier_idle, 40))
 		return;
 
-	monster_common_composite_anim(MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_WALK, MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND, '13 1 1');
+	monster_common_composite_anim(MONSTER_HEAVYSOLDIER_ANIM_LEGS_WALK, MONSTER_HEAVYSOLDIER_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(150, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
@@ -146,7 +146,7 @@ void spawnfunc_monster_heavysoldier_spawn() {
 	monster_prepare_spawn(heavysoldier_spawn, spawnfunc_monster_heavysoldier_spawn);
 }
 
-#undef MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_WALK
-#undef MONSTER_HEAVYSOLDIER_MOVE_ANIM_LEGS_IDLE
-#undef MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_STAND
-#undef MONSTER_HEAVYSOLDIER_MOVE_ANIM_TORSO_ATTACK
+#undef MONSTER_HEAVYSOLDIER_ANIM_LEGS_WALK
+#undef MONSTER_HEAVYSOLDIER_ANIM_LEGS_IDLE
+#undef MONSTER_HEAVYSOLDIER_ANIM_TORSO_STAND
+#undef MONSTER_HEAVYSOLDIER_ANIM_TORSO_ATTACK

@@ -40,14 +40,14 @@ void(string monstermodel, string wepmodel) monster_common_composite_setup {
 	self.entremove = monster_common_on_remove;
 }
 
-void(vector loweranim, vector upperanim, vector fallbackanim) monster_common_composite_anim {
+void(vector loweranim, vector upperanim, vector fallbackanim, float lowerloop, float upperloop) monster_common_composite_anim {
 	if (self.weaponentity) {
-		anim_set(self, loweranim, TRUE, TRUE, FALSE);
-		anim_set(self.weaponentity, upperanim, TRUE, TRUE, FALSE);
+		anim_set(self, loweranim, lowerloop, TRUE, FALSE);
+		anim_set(self.weaponentity, upperanim, upperloop, TRUE, FALSE);
 		anim_update(self.weaponentity);
 		anim_update(self);
 	} else
-		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
+		anim_set(self, '13 1 1', lowerloop, TRUE, FALSE);
 }
 
 void(string monstermodel, string wepmodel) monster_common_composite_precache {
@@ -61,5 +61,5 @@ void(vector _mins, vector _maxs, vector originadjust) monster_common_setup_spawn
 	if (originadjust != '0 0 0')
 		setorigin(self, self.origin + originadjust);
 
-	setsize(self, '-16 -16 -24' - originadjust, '16 16 45' - originadjust);
+	setsize(self, _mins - originadjust, _maxs - originadjust);
 }

@@ -1,7 +1,7 @@
-#define MONSTER_SPEARGUY_MOVE_ANIM_LEGS_WALK '62 11 20'
-#define MONSTER_SPEARGUY_MOVE_ANIM_LEGS_IDLE '150 29 10'
-#define MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STAND '141 1 15'
-#define MONSTER_SPEARGUY_MOVE_ANIM_TORSO_ATTACK '133 6 15'
+#define MONSTER_SPEARGUY_ANIM_LEGS_WALK '62 11 20'
+#define MONSTER_SPEARGUY_ANIM_LEGS_IDLE '150 29 10'
+#define MONSTER_SPEARGUY_ANIM_TORSO_STAND '141 1 15'
+#define MONSTER_SPEARGUY_ANIM_TORSO_ATTACK '133 6 15'
 void spearguy_idle();
 void spearguy_guard();
 void spearguy_walk();
@@ -16,7 +16,7 @@ void spearguy_hunt() {
 	vector v;
 	v = entity_nearest_point_on_box(self.enemy, self.origin);
 	if (vlen(v - self.origin) > self.dmg_radius) {
-		monster_common_composite_anim(MONSTER_SPEARGUY_MOVE_ANIM_LEGS_WALK, MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STAND, '13 1 1');
+		monster_common_composite_anim(MONSTER_SPEARGUY_ANIM_LEGS_WALK, MONSTER_SPEARGUY_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 		v = monster_move_walk(600, 5, 500);
 		if (self.lip) {
 			sound_stop(self, CHAN_WEAPON);
@@ -24,7 +24,7 @@ void spearguy_hunt() {
 		}
 	} else {
 		movelib_beak_simple(100 * frametime);
-		monster_common_composite_anim(MONSTER_SPEARGUY_MOVE_ANIM_LEGS_IDLE, MONSTER_SPEARGUY_MOVE_ANIM_TORSO_ATTACK, '11 1 1');
+		monster_common_composite_anim(MONSTER_SPEARGUY_ANIM_LEGS_IDLE, MONSTER_SPEARGUY_ANIM_TORSO_ATTACK, '11 1 1', TRUE, FALSE);
 		trace_line(self.origin, v, TRACE_MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
 			if not(self.lip) {
@@ -48,7 +48,7 @@ void spearguy_idle() {
 		return;
 
 	movelib_beak_simple(100 * frametime);
-	monster_common_composite_anim(MONSTER_SPEARGUY_MOVE_ANIM_LEGS_IDLE, MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STAND, '7 1 1');
+	monster_common_composite_anim(MONSTER_SPEARGUY_ANIM_LEGS_IDLE, MONSTER_SPEARGUY_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
 void spearguy_guard() {
@@ -64,7 +64,7 @@ void spearguy_walk() {
 	if (monster_walk_finished(spearguy_idle, 100))
 		return;
 
-	monster_common_composite_anim(MONSTER_SPEARGUY_MOVE_ANIM_LEGS_WALK, MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STAND, '13 1 1');
+	monster_common_composite_anim(MONSTER_SPEARGUY_ANIM_LEGS_WALK, MONSTER_SPEARGUY_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(400, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
@@ -105,7 +105,7 @@ void spawnfunc_monster_spearguy_spawn() {
 	monster_prepare_spawn(spearguy_spawn, spawnfunc_monster_spearguy_spawn);
 }
 
-#undef MONSTER_SPEARGUY_MOVE_ANIM_LEGS_WALK
-#undef MONSTER_SPEARGUY_MOVE_ANIM_LEGS_ID
-#undef MONSTER_SPEARGUY_MOVE_ANIM_TORSO_STA
-#undef MONSTER_SPEARGUY_MOVE_ANIM_TORSO_ATTAC
+#undef MONSTER_SPEARGUY_ANIM_LEGS_WALK
+#undef MONSTER_SPEARGUY_ANIM_LEGS_ID
+#undef MONSTER_SPEARGUY_ANIM_TORSO_STA
+#undef MONSTER_SPEARGUY_ANIM_TORSO_ATTAC
