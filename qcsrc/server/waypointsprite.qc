@@ -332,7 +332,7 @@ entity(
 	else
 		maxdistance = 0;
 
-	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 16', world, t, self, waypointsprite_attached, FALSE);
+	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 1' * self.maxs_z, world, t, self, waypointsprite_attached, FALSE);
 }
 
 entity(
@@ -341,7 +341,7 @@ entity(
 ) WaypointSprite_AttachCarrier {
 	entity e;
 	WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
-	e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 16', world, carrier.team, carrier, waypointsprite_attachedforcarrier, FALSE);
+	e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 1' * self.maxs_z, world, carrier.team, carrier, waypointsprite_attachedforcarrier, FALSE);
 	return e;
 }
 
