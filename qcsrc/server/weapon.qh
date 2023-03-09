@@ -32,7 +32,6 @@ string weapon_priority_by_impulse;
 .entity weaponentity;
 .entity exteriorweaponentity;
 .float switchweapon;
-.float autoswitch;
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
 .float weapon_nextthink;
 .void(void) weapon_think;

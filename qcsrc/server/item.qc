@@ -316,7 +316,7 @@ float(entity item, entity player) item_give_to {
 		// in case the player has autoswitch enabled do the following:
 		// if the player is using their best weapon before items are given, they
 		// probably want to switch to an even better weapon after items are given
-		if (player.autoswitch)
+		if (player.client_flags & CLIENT_FLAG_AUTOSWITCH)
 		if (player.switchweapon == weapon_best(player))
 			_switchweapon = TRUE;
 
@@ -630,7 +630,7 @@ float(entity player, entity item) commodity_pickupevalfunc {
 }
 
 float(void) item_customize {
-	if (other.cvar_cl_simpleitems) {
+	if (other.client_flags & CLIENT_FLAG_SIMPLEITEMS) {
 		self.modelindex = self.modelindex_lod1;
 	} else {
 		self.modelindex = self.modelindex_lod0;

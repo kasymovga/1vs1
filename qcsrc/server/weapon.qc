@@ -413,7 +413,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
 		if ((weapon_spawned_list & wi.weapons) || (weapon_spawned_extra_list & wi.weapons_extra)) {
 			sprint(cl, strcat("You do not have the ^2", weapon_name(wpn), "\n") );
-			if (self.cvar_cl_showweaponspawns) {
+			if (self.client_flags & CLIENT_FLAG_SHOWWEAPONS) {
 				entity e;
 				string s;
 				s = wi.model2;

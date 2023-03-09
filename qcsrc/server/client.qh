@@ -28,3 +28,12 @@ var .float clientversion;
 .string clid;
 string client_abuserplayername;
 void(entity cl, vector a) client_view_angles_set;
+
+.float client_flags;
+enum: flag {
+	CLIENT_FLAG_SHOWWEAPONS,
+	CLIENT_FLAG_SCREENDAMAGE,
+	CLIENT_FLAG_SIMPLEITEMS,
+	CLIENT_FLAG_AUTOSWITCH,
+	CLIENT_FLAG_AUTOTAUNT,
+};

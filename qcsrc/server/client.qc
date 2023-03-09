@@ -710,6 +710,7 @@ void client_cvars_request() {
 	stuffcmd(self, "sendcvar cl_gunalign\n");
 	stuffcmd(self, "sendcvar cl_gunalign_force_center\n");
 	stuffcmd(self, "sendcvar cl_showweaponspawns\n");
+	stuffcmd(self, "sendcvar cl_damage_screen_effects\n");
 	stuffcmd(self, "sendcvar _cl_id\n");
 }
 
@@ -718,7 +719,10 @@ void() client_cvars_parse {
 	string val = strcat1(argv(2));
 	float f;
 	if (s == "cl_autoswitch")
-		self.autoswitch = stof(val);
+		if (stof(val))
+			self.client_flags |= CLIENT_FLAG_AUTOSWITCH;
+		else
+			self.client_flags &= ~CLIENT_FLAG_AUTOSWITCH;
 	else if (s == "cl_playerdetailreduction")
 		self.cvar_cl_playerdetailreduction = stof(val);
 	else if (s == "scr_centertime")
@@ -734,7 +738,10 @@ void() client_cvars_parse {
 		str_unzone_ifneeded(self.cvar_cl_weaponpriorities[ind]);
 		(self.cvar_cl_weaponpriorities[ind]) = str_zone_ifneeded(weapon_fix_order_allow_incomplete(val));
 	} else if (s == "cl_autotaunt")
-		self.cvar_cl_autotaunt = stof(val);
+		if (stof(val))
+			self.client_flags |= CLIENT_FLAG_AUTOTAUNT;
+		else
+			self.client_flags &= ~CLIENT_FLAG_AUTOTAUNT;
 	else if (s == "cl_voice") {
 		f = stof(val);
 		if (f <= 0) {
@@ -756,14 +763,17 @@ void() client_cvars_parse {
 			self.weaponentity.cnt = 0;
 	} else if (s == "cl_gunalign_force_center") {
 		if (stof(val))
-			self.cvar_cl_gunalign = self.cvar_cl_gunalign | 8;
+			self.cvar_cl_gunalign |= 8;
 		else
-			self.cvar_cl_gunalign = self.cvar_cl_gunalign & 7;
+			self.cvar_cl_gunalign &= ~8;
 
 		if (self.weaponentity)
 			self.weaponentity.cnt = 0;
 	} else if (s == "cl_simpleitems") {
-		self.cvar_cl_simpleitems = stof(val);
+		if (stof(val))
+			self.client_flags |= CLIENT_FLAG_SIMPLEITEMS;
+		else
+			self.client_flags &= ~CLIENT_FLAG_SIMPLEITEMS;
 	} else if (s == "cl_netfps") {
 		f = stof(val);
 		float reqfps = ceil(max(((sys_ticrate < 0.0125) ? 1 : 1.5) / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout")));
@@ -772,12 +782,22 @@ void() client_cvars_parse {
 		} else if (f > 125)
 			stuffcmd(self, strcat("seta cl_netfps ", ftos(max(125, reqfps)), "\n"));
 	} else if (s == "cl_showweaponspawns") {
-		self.cvar_cl_showweaponspawns = stof(val);
+		if (stof(val))
+			self.client_flags |= CLIENT_FLAG_SHOWWEAPONS;
+		else
+			self.client_flags &= ~CLIENT_FLAG_SHOWWEAPONS;
 	} else if (s == "_cl_rate") {
 		f = stof(val);
 		float reqrate = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout"))) * 125;
 		if (f < reqrate)
 			stuffcmd(self, strcat("rate ", ftos(reqrate), "\n"));
+	} else if (s == "cl_damage_screen_effects") {
+		if (stof(val))
+			self.client_flags |= CLIENT_FLAG_SCREENDAMAGE;
+		else
+			self.client_flags &= ~CLIENT_FLAG_SCREENDAMAGE;
+
+		player_dmg_inflictor_setup();
 	} else if (s == "_cl_id" && self.clid == "") {
 		if (strlen(val) == 16) {
 			self.clid = strzone(val);

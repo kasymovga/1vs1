@@ -1,6 +1,5 @@
 float sv_autotaunt;
 float sv_taunt;
-.float cvar_cl_autotaunt;
 .float cvar_cl_voice_directional;
 .float cvar_cl_voice_directional_taunt_attenuation;
 .float usecolormod;
@@ -68,6 +67,25 @@ void(void) player_dmg_inflictor_fix {
 			e.dmg_inflictor.classname = "dmg_inflictor";
 			e.dmg_inflictor.owner = e;
 		}
+}
+
+void(void) player_dmg_inflictor_setup {
+	if (g_player_damage_screen_effects || (self.client_flags & CLIENT_FLAG_SCREENDAMAGE)) {
+		if ((!self.dmg_inflictor || self.dmg_inflictor.classname != "dmg_inflictor"
+				|| self.dmg_inflictor.owner != self || wasfreed(self.dmg_inflictor))) { //spectator copy dmg_inflictor, so we need extra checks here
+			if (clienttype(self) == CLIENTTYPE_REAL) {
+				self.dmg_inflictor = spawn();
+				self.dmg_inflictor.classname = "dmg_inflictor";
+				self.dmg_inflictor.owner = self;
+			} else
+				self.dmg_inflictor = NULL;
+		}
+	} else if (self.dmg_inflictor) {
+		if (self.dmg_inflictor.owner == self && !wasfreed(self.dmg_inflictor) && self.dmg_inflictor.classname != "dmg_inflictor")
+			remove(self.dmg_inflictor);
+
+		self.dmg_inflictor = NULL;
+	}
 }
 
 void(void) player_corpse_think {
@@ -795,7 +813,7 @@ void() player_think {
 		if (sv_autotaunt) {
 			float tauntrand = random();
 			FOR_EACH_REALCLIENT(msg_entity)
-				if (tauntrand < msg_entity.cvar_cl_autotaunt) {
+				if (tauntrand < (msg_entity.client_flags & CLIENT_FLAG_AUTOTAUNT)) {
 					if (msg_entity.cvar_cl_voice_directional >= 1)
 						sound_to(MSG_ONE, self, CHAN_VOICE, sound_random_by_str(self.playersound_taunt), VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
 					else if (msg_entity.cvar_cl_voice_directional >= 0)
@@ -984,14 +1002,7 @@ void(entity spot) player_spawn {
 	else
 		self.body.effects &= ~EFFECT_NODRAW;
 
-	if (g_player_damage_screen_effects && (!self.dmg_inflictor || self.dmg_inflictor.classname != "dmg_inflictor" || self.dmg_inflictor.owner != self || wasfreed(self.dmg_inflictor))) { //spectator copy dmg_inflictor, so we need extra checks here
-		if (clienttype(self) == CLIENTTYPE_REAL) {
-			self.dmg_inflictor = spawn();
-			self.dmg_inflictor.classname = "dmg_inflictor";
-			self.dmg_inflictor.owner = self;
-		} else
-			self.dmg_inflictor = NULL;
-	}
+	player_dmg_inflictor_setup();
 	self.body.nextthink = 0;
 	self.body.dead_frame = -1;
 	setmodel(self, "null");

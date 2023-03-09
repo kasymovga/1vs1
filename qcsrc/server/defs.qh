@@ -159,8 +159,6 @@ typedef void() voidfunc;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
 .float cvar_cl_gunalign;
-.float cvar_cl_showweaponspawns;
-.float cvar_cl_simpleitems;
 
 .float modelindex_lod0;
 .float skinindex;

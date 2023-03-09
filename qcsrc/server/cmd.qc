@@ -474,11 +474,12 @@ void(string s) cmd_client {
 		return;
 	} else if (cmd == "autoswitch") {
 		// be backwards compatible with older clients (enabled)
-		self.autoswitch = ("0" != argv(1));
 		string autoswitchmsg;
-		if (self.autoswitch) {
+		if (stof(argv(1))) {
+			self.client_flags |= CLIENT_FLAG_AUTOSWITCH;
 			autoswitchmsg = "on";
 		} else {
+			self.client_flags &= ~CLIENT_FLAG_AUTOSWITCH;
 			autoswitchmsg = "off";
 		}
 		sprint(self, strcat("^1autoswitch turned ", autoswitchmsg, "\n"));

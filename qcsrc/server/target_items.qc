@@ -94,7 +94,7 @@ void(void) target_items_use {
 
 	float _switchweapon;
 	_switchweapon = FALSE;
-	if (activator.autoswitch)
+	if (activator.client_flags & CLIENT_FLAG_AUTOSWITCH)
 		if (activator.switchweapon == weapon_best(activator))
 			_switchweapon = TRUE;
 
