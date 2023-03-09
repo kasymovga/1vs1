@@ -713,24 +713,19 @@ string() player_body_model_list_allowed {
 }
 
 string(string _playermodel) player_body_model_allowed {
-	string allowed_models = str_shuffle_words(player_body_model_list_allowed());
+	string allowed_models = player_body_model_list_allowed();
 	string first_allowed_model = "";
-	string tail = allowed_models;
 	string s = strcat(" ", allowed_models, " ");
-	while ((tail != "")) {
-		first_allowed_model = str_car(tail);
-		if (first_allowed_model != "") break;
-		tail = str_cdr(allowed_models);
-	}
+	first_allowed_model = str_car(allowed_models);
 	if (first_allowed_model == "")
 		return _playermodel;
+
+	if (_playermodel == "")
+		goto randommodel;
 
 	if (strstrofs(first_allowed_model, ":", 0) > 0) {
 		first_allowed_model = substring(first_allowed_model, 0, strstrofs(first_allowed_model, ":", 0));
 	}
-	if (_playermodel == "")
-		return first_allowed_model;
-
 	if (strstrofs(s, strcat(" ", _playermodel, " "), 0) >= 0 ||
 			strstrofs(s, strcat(" ", _playermodel, ":"), 0) >= 0)
 		return _playermodel;
@@ -740,8 +735,27 @@ string(string _playermodel) player_body_model_allowed {
 		if (strstrofs(s, strcat(" ", playermodelshort, " "), 0) >= 0 ||
 				strstrofs(s, strcat(" ", playermodelshort, ":"), 0) >= 0)
 			return _playermodel;
+	} else {
+		string playermodellong = strcat("models/player/", _playermodel); //with models/player/ prefix
+		if (strstrofs(s, strcat(" ", playermodellong, " "), 0) >= 0 ||
+				strstrofs(s, strcat(" ", playermodellong, ":"), 0) >= 0)
+			return _playermodel;
 	}
+	string modelwithoutextension = substring(_playermodel, 0, strlen(_playermodel) - 4);
+	if (substring(modelwithoutextension, 0, 14) == "models/player/")
+		modelwithoutextension = substring(modelwithoutextension, 14, -1);
 
+	float similarpos = strstrofs(s, strcat(" ", modelwithoutextension, "."), 0);
+	if (similarpos >= 0) {
+		return substring(s, similarpos + 1, strstrofs(s, " ", similarpos + 1) - similarpos - 1);
+	}
+	similarpos = strstrofs(s, strcat(" models/player/", modelwithoutextension, "."), 0);
+	if (similarpos >= 0) {
+		return substring(s, similarpos + 1, strstrofs(s, " ", similarpos + 1) - similarpos - 1);
+	}
+:randommodel
+	allowed_models = str_shuffle_words(allowed_models);
+	first_allowed_model = str_car(allowed_models);
 	return first_allowed_model;
 }
 
@@ -767,11 +781,17 @@ float(string _playermodel, float _skin) player_body_allowed_skin {
 }
 
 float(string modelpath) player_body_model_path_check {
+	if (modelpath != strtolower(modelpath))
+		return FALSE;
+
 	if (substring(modelpath, -4, 4) != ".zym")
 	if (substring(modelpath, -4, 4) != ".dpm")
 	if (substring(modelpath, -4, 4) != ".md3")
 	if (substring(modelpath, -4, 4) != ".psk")
 	if (substring(modelpath, -4, 4) != ".iqm")
+		return FALSE;
+
+	if (strstrofs(modelpath, " ", 0) >= 0)
 		return FALSE;
 
 	// forbid the LOD models
@@ -794,27 +814,24 @@ float(string modelpath) player_body_model_path_check {
 	if (substring(modelpath, -13, 9) == "_compiled")
 		return FALSE;
 
+	if (strstrofs(modelpath, "/", 0) > 0 && substring(modelpath, 0, 14) != "models/player/")
+		return FALSE;
+
 	return TRUE;
 }
 
 string(string _playermodel) player_body_model_check {
-	string fallback = player_body_model_allowed("models/player/marine.zym");
+	string fallback = player_body_model_allowed("models/player/rexus.dpm");
+	if not(player_body_model_path_check(_playermodel))
+		return fallback;
+
 	_playermodel = player_body_model_allowed(_playermodel);
 	if (strlen(_playermodel) < 4)
 		return fallback;
 	
 	if (strstrofs(_playermodel, "/", 0) < 0) _playermodel = strcat("models/player/", _playermodel);
-	if (substring(_playermodel, 0, 14) != "models/player/")
+	if not(file_exists(_playermodel)) {
 		return fallback;
-	else {
-		if not(player_body_model_path_check(_playermodel))
-			return fallback;
-
-		if (_playermodel != strtolower(_playermodel))
-			return fallback;
-
-		if (!file_exists(_playermodel))
-			return fallback;
 	}
 	return strcat1(_playermodel);
 }
