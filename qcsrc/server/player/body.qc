@@ -723,9 +723,6 @@ string(string _playermodel) player_body_model_allowed {
 	if (_playermodel == "")
 		goto randommodel;
 
-	if (strstrofs(first_allowed_model, ":", 0) > 0) {
-		first_allowed_model = substring(first_allowed_model, 0, strstrofs(first_allowed_model, ":", 0));
-	}
 	if (strstrofs(s, strcat(" ", _playermodel, " "), 0) >= 0 ||
 			strstrofs(s, strcat(" ", _playermodel, ":"), 0) >= 0)
 		return _playermodel;
@@ -745,17 +742,26 @@ string(string _playermodel) player_body_model_allowed {
 	if (substring(modelwithoutextension, 0, 14) == "models/player/")
 		modelwithoutextension = substring(modelwithoutextension, 14, -1);
 
+	float nextspace, nextcolon;
 	float similarpos = strstrofs(s, strcat(" ", modelwithoutextension, "."), 0);
-	if (similarpos >= 0) {
-		return substring(s, similarpos + 1, strstrofs(s, " ", similarpos + 1) - similarpos - 1);
-	}
-	similarpos = strstrofs(s, strcat(" models/player/", modelwithoutextension, "."), 0);
-	if (similarpos >= 0) {
-		return substring(s, similarpos + 1, strstrofs(s, " ", similarpos + 1) - similarpos - 1);
-	}
+	if (similarpos < 0)
+		similarpos = strstrofs(s, strcat(" models/player/", modelwithoutextension, "."), 0);
+
+	if (similarpos < 0)
+		goto randommodel;
+
+	nextspace = strstrofs(s, " ", similarpos + 1);
+	nextcolon = strstrofs(s, ":", similarpos + 1);
+	if (nextcolon < 0)
+		return substring(s, similarpos + 1, nextspace - similarpos - 1);
+
+	return substring(s, similarpos + 1, min(nextspace, nextcolon) - similarpos - 1);
 :randommodel
 	allowed_models = str_shuffle_words(allowed_models);
 	first_allowed_model = str_car(allowed_models);
+	if (strstrofs(first_allowed_model, ":", 0) > 0)
+		first_allowed_model = substring(first_allowed_model, 0, strstrofs(first_allowed_model, ":", 0));
+
 	return first_allowed_model;
 }
 
