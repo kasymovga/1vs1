@@ -290,7 +290,8 @@ float(string pFilename) map_info_generate { // 0: failure, 1: ok ent, 2: ok bsp
 	spawnplaces = 0;
 	map_info_map_worldspawn_music = "";
 	float loopprotect;
-	for (loopprotect = 0; loopprotect < 10000; loopprotect++) {
+	#define MAP_INFO_GENERATE_LOOP_PROTECT_VALUE 100000
+	for (loopprotect = 0; loopprotect < MAP_INFO_GENERATE_LOOP_PROTECT_VALUE; loopprotect++) {
 		if not((s = fgets(fh)))
 			break;
 
@@ -361,10 +362,14 @@ float(string pFilename) map_info_generate { // 0: failure, 1: ok ent, 2: ok bsp
 			}
 		}
 	}
-	if (inWorldspawn && loopprotect != 10000) {
+	if (inWorldspawn && loopprotect != MAP_INFO_GENERATE_LOOP_PROTECT_VALUE) {
 		print(fn, " ended still in worldspawn, BUG\n");
 		return 0;
 	}
+	if (loopprotect == MAP_INFO_GENERATE_LOOP_PROTECT_VALUE)
+		print(fn, " is too big, analyzing skipped\n");
+
+	#undef MAP_INFO_GENERATE_LOOP_PROTECT_VALUE
 	diameter = vlen(mapMaxs - mapMins);
 	twoBaseModes = (map_info_map_supported_game_types & (MAP_INFO_TYPE_CTF | MAP_INFO_TYPE_RACE | MAP_INFO_TYPE_NEXBALL));
 	if (twoBaseModes && (map_info_map_supported_game_types == twoBaseModes)) {
