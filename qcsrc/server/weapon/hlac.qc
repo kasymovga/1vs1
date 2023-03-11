@@ -81,9 +81,6 @@ void(void) weapon_hlac_attack2 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
 		self.ammo_cells = self.ammo_cells - g_balance_hlac_secondary_ammo;
 	}
-	weapon_setup_shot(self, g_balance_hlac_secondary_recoil, "weapons/lasergun_fire.wav", 1);
-	weapon_shake(1);
-	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	float n;
 	if (g_balance_hlac_magazinecapacity) {
 		n = min(g_balance_hlac_secondary_shots, self.hlac_ammoclip);
@@ -91,6 +88,9 @@ void(void) weapon_hlac_attack2 {
 	} else
 		n = g_balance_hlac_secondary_shots;
 
+	weapon_setup_shot(self, g_balance_hlac_secondary_recoil, "weapons/lasergun_fire.wav", n);
+	weapon_shake(1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	for (i = n; i > 0; --i)
 		weapon_hlac_attack2f();
 }
