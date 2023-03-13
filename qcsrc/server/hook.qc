@@ -46,13 +46,10 @@ void(entity ent, entity e) hook_follow {
 
 float(entity ent) hook_lost_follow {
 	if (ent.aiment) {
-		if (ent.aiment.classname != ent.aiment_classname)
-			return 1;
-
-		if (ent.aiment.deadflag != ent.aiment_deadflag)
-			return 1;
+		if (wasfreed(ent.aiment) || ent.aiment.classname != ent.aiment_classname || ent.aiment.deadflag != ent.aiment_deadflag)
+			return TRUE;
 	}
-	return 0;
+	return FALSE;
 }
 
 .float hook_length;
