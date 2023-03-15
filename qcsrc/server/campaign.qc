@@ -213,6 +213,4 @@ void(void) campaign_postintermission {
 	campaign_file_unload();
 	strunzone(campaign_message);
 	strunzone(campaign_index_var);
-	strunzone(campaign_name);
-	campaign_name = "";
 }

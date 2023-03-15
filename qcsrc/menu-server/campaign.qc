@@ -21,7 +21,7 @@ float(string name) campaign_file_load {
 	campaign_entries = 0;
 	campaign_title = NULL;
 	str_unzone_ifneeded(campaign_name);
-	campaign_name = str_zone_ifneeded(name);;
+	campaign_name = str_zone_ifneeded(name);
 	if (campaign_name == "rexclassic") {
 		campaign_title = "Rexuiz Classic Campaign";
 		campaign_entry("single", "e1m1", 0, 1, 0, "" , "Episode 1", "First episode from the original Quake(r) from id Software");

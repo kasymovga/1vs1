@@ -101,8 +101,6 @@ void destroyNexuizCampaignList(entity me)
 void loadCvarsNexuizCampaignList(entity me)
 {
 	// read campaign cvars
-	if(campaign_name)
-		strunzone(campaign_name);
 	if(me.cvarName)
 		strunzone(me.cvarName);
 	campaign_file_unload();
