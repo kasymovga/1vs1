@@ -77,10 +77,9 @@ void(void) campaign_preinit {
 
 	float baseskill;
 	string title;
+	campaign_file_load(cvar_string("_campaign_name"));
 	campaign_level = cvar("_campaign_index");
-	campaign_name = strzone(cvar_string("_campaign_name"));
 	campaign_index_var = strzone(strcat("g_campaign", campaign_name, "_index"));
-	campaign_file_load(campaign_level, 2);
 	if (campaign_entries < 1) {
 		campaign_bailout("unknown map");
 		return;

@@ -105,11 +105,10 @@ void loadCvarsNexuizCampaignList(entity me)
 		strunzone(campaign_name);
 	if(me.cvarName)
 		strunzone(me.cvarName);
-	campaign_name = strzone(cvar_string("g_campaign_name"));
+	campaign_file_unload();
+	campaign_file_load(cvar_string("g_campaign_name"));
 	me.cvarName = strzone(strcat("g_campaign", campaign_name, "_index"));
 	registercvar(me.cvarName, "", 0); // saved by server QC anyway
-	campaign_file_unload();
-	campaign_file_load(0, CAMPAIGN_MAX_ENTRIES);
 	me.campaignIndex = bound(0, cvar(me.cvarName), campaign_entries);
 	cvar_set(me.cvarName, ftos(me.campaignIndex));
 	if(me.columnNameSize)

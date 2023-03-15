@@ -13,13 +13,8 @@ string campaign_shortdesc[CAMPAIGN_MAX_ENTRIES];
 string campaign_longdesc[CAMPAIGN_MAX_ENTRIES];
 string campaign_title; // filled upon loading
 
-// load the campaign file, but use the given offset and limit the number of
-// entries being read. Returns the number of entries successfully read (this
-// number is also stored in campaign_entries).
-// NOTE: there MUST be a corresponding campaign_file_unload() to unzone the
-// strings.
-string campaign_name; // set that to the campaign you want to load before calling campaign_file_load
-float(float offset, float entries) campaign_file_load;
+string campaign_name;
+float(string name) campaign_file_load;
 void() campaign_file_unload;
 void(float n) campaign_setup_cvars_only;
 void(float n) campaign_setup;

@@ -1,7 +1,3 @@
-// CampaignFileLoad(offset, n)
-// - Loads campaign level data (up to n entries starting at offset)
-//   into the globals
-// - Returns the number of entries successfully read
 void(string gt, string map, float bots, float skill, float frag, string settings, string descr, string descr_long) campaign_entry {
 	if (campaign_entries >= CAMPAIGN_MAX_ENTRIES) return;
 	campaign_gametype[campaign_entries] = gt;
@@ -15,18 +11,17 @@ void(string gt, string map, float bots, float skill, float frag, string settings
 	campaign_entries++;
 }
 
-float(float offset, float n) campaign_file_load {
+float(string name) campaign_file_load {
 	float fh;
 	float lineno;
 	float entlen;
 	float i;
 	string l, a;
 	string fn;
-	if (n > CAMPAIGN_MAX_ENTRIES)
-		n = CAMPAIGN_MAX_ENTRIES;
-
 	campaign_entries = 0;
 	campaign_title = NULL;
+	str_unzone_ifneeded(campaign_name);
+	campaign_name = str_zone_ifneeded(name);;
 	if (campaign_name == "rexclassic") {
 		campaign_title = "Rexuiz Classic Campaign";
 		campaign_entry("single", "e1m1", 0, 1, 0, "" , "Episode 1", "First episode from the original Quake(r) from id Software");
@@ -101,6 +96,8 @@ void() campaign_file_unload {
 	}
 	campaign_entries = 0;
 	campaign_title = NULL;
+	str_unzone_ifneeded(campaign_name);
+	campaign_name = NULL;
 }
 
 void(float n) campaign_setup_cvars_only {
