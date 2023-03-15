@@ -199,7 +199,7 @@ void(void) campaign_preintermission {
 
 void(void) campaign_postintermission {
 	// NOTE: campaign_won is 0 or 1, that is, points to the next level
-	if (!campaign_map_transition && campaign_won && campaign_entries < 2) {
+	if (!campaign_map_transition && campaign_won && campaign_level + 1 >= campaign_entries) {
 		// last map won!
 		localcmd("togglemenu 1\n");
 		campaign_file_unload();
