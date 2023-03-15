@@ -184,7 +184,7 @@ void(void) campaign_preintermission {
 		// sound!
 	}
 	if (campaign_won && !campaign_map_transition) {
-		if (campaign_entries < 2) {
+		if (campaign_level + 1 >= campaign_entries) {
 			// I have won
 			savevar = strcat("g_campaign", campaign_name, "_won");
 			campaign_save_cvar(savevar, 1);
