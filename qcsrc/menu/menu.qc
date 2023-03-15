@@ -264,9 +264,6 @@ float() menu_init_pre {
 string menu_campaign_name_previous;
 float menu_campaign_won_previous;
 void() menu_draw_pre {
-	if not(menu_campaign_name_previous)
-		menu_campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
-
 	if (campaign_name == menu_campaign_name_previous) {
 		if (cvar(strcat("g_campaign", campaign_name, "_won"))) {
 			if (!menu_campaign_won_previous) {
@@ -277,8 +274,8 @@ void() menu_draw_pre {
 		} else
 			menu_campaign_won_previous = 0;
 	} else {
-		strunzone(menu_campaign_name_previous);
-		menu_campaign_name_previous = strzone(campaign_name);
+		str_unzone_ifneeded(menu_campaign_name_previous);
+		menu_campaign_name_previous = str_zone_ifneeded(campaign_name);
 		menu_campaign_won_previous = cvar(strcat("g_campaign", campaign_name, "_won"));
 	}
 }
