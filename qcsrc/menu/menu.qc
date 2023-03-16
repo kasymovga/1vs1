@@ -106,7 +106,7 @@ void(string m1, string m2) menu_draw_loading {
 
 void() menu_init_delayed {
 	menu_initialized = 0;
-	if (!dlc_reloaded && !dlc_failed) {
+	if (!dlc_reloaded && (!dlc_failed || dlc_downloading)) {
 		if (dlc_downloading) {
 			menu_draw_loading("Downloading missing data", "Press ESC to cancel");
 		} else {
