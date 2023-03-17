@@ -226,7 +226,9 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 			self.air_finished = time + 10;
 			return;
 		}
-	}
+	} else if (deathtype == DEATH_FALL)
+		return;
+
 	float isenemy = (!attacker || attacker.team != self.team || (!team_mode && attacker.classname != "monster"));
 	if (!isenemy) {
 		if (g_friendlyfire)
