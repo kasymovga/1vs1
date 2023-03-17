@@ -49,12 +49,11 @@ void fillNexuizSingleplayerDialog(entity me)
 	me.gotoRC(me, me.rows - 4, 0);
 		me.TD(me, 1, 0.5, makeNexuizTextLabel(0, _("Difficulty:")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
+		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "-1", _("Easiest")));
 		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "0", _("Easy")));
 		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "1", _("Medium")));
 		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "2", _("Hard")));
 		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "3", _("Insane")));
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizButton(_("Load Game..."), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.saveLoadDialog;

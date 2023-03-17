@@ -637,7 +637,7 @@ void monster_common_init() {
 	else
 		g_monster_difficulty = cvar("g_monster_difficulty");
 
-	monster_difficulty = 0.5 + bound(0, g_monster_difficulty, 3) * 0.25;
+	monster_difficulty = 0.5 + bound(-1.5, g_monster_difficulty, 3) * 0.25;
 }
 
 void monster_init(void() init_func) {

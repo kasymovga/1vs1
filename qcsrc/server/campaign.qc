@@ -85,8 +85,8 @@ void(void) campaign_preinit {
 		return;
 	}
 	CVAR_CACHE(g_campaign_skill);
-	baseskill = bound(1, g_campaign_skill + 1, 4);
-	float minskill = baseskill * 5 - 4;
+	baseskill = bound(0.2, g_campaign_skill + 1, 4);
+	float minskill = max(0, baseskill * 5 - 4);
 	float maxskill = baseskill * 10;
 	baseskill = bound(minskill, campaign_botskill[campaign_level] * baseskill * 0.5, maxskill);
 	cvar_set("sv_public", "0");
