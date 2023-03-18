@@ -64,13 +64,13 @@ void(entity to, entity from) player_sound_copy {
 #undef _VOICEMSG
 }
 
-void(string f, float first) player_sound_load {
+float(string f, float first) player_sound_load {
 	float fh;
 	string s;
 	var .string field;
 	fh = fopen(f, FILE_READ);
 	if (fh < 0)
-		return;
+		return FALSE;
 
 	while ((s = fgets(fh))) {
 		if (tokenize_console(s) != 3)
@@ -93,13 +93,17 @@ void(string f, float first) player_sound_load {
 		self.field = strzone(strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
+	return TRUE;
 }
 
 void() player_sound_update {
 	player_sound_clear();
 	player_sound_load("sound/player/default.sounds", 1);
-	player_sound_load(strcat(self.body.model, ".sounds"), 0);
-	player_sound_load(strcat(self.body.model, "_", ftos(self.skinindex), ".sounds"), 0);
+	float loaded = FALSE;
+	if (player_sound_load(strcat(self.body.model, ".sounds"), 0)) loaded = TRUE;
+	if (player_sound_load(strcat(self.body.model, "_", ftos(self.skinindex), ".sounds"), 0)) loaded = TRUE;
+	if not(loaded) //aditional fallback attempt with skin 0
+		player_sound_load(strcat(self.body.model, "_0.sounds"), 0);
 }
 
 void(string type, string msg) player_sound_voice_message {
