@@ -108,6 +108,11 @@ set con_completion_vmap map
 set con_completion_vdomap map
 set con_completion_ls *
 set con_completion_which *
+set con_completion_modeldecompile "*.md3 *.mdl *.obj *.md2 *.spr *.bsp *.iqm *.psk *.dpm *.zym *.smd"
+set con_completion_precache "*.md3 *.mdl *.obj *.md2 *.spr *.bsp *.iqm *.psk *.dpm *.zym *.smd"
+set con_completion_curl "*.pk3 *.pak"
+alias loadpack "curl --pak $*"
+set con_completion_loadpack "*.pk3 *.pak"
 
 seta cl_port $cl_port
 seta r_showsurfaces $r_showsurfaces
