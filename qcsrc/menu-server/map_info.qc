@@ -62,7 +62,7 @@ float(string acl, string str) map_info_matchacl {
 	string t, s = "";
 	float r, d;
 	r = 0;
-	while (acl) {
+	while (acl != "") {
 		t = str_car(acl); acl = str_cdr(acl);
 		d = 1;
 		if (substring(t, 0, 1) == "-") {
@@ -77,8 +77,10 @@ float(string acl, string str) map_info_matchacl {
 		} else
 			s = str;
 
-		if (s == t)
+		if (s == t) { //stop at first match
 			r = d;
+			break;
+		}
 	}
 	return r;
 }
