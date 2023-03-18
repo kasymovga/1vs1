@@ -13,7 +13,7 @@ set g_player_forcecolor_red -1
 set g_player_forcecolor_blue -1
 set g_player_forcecolor_yellow -1
 set g_player_forcecolor_pink -1
-set g_player_forceskin 6
+set g_player_forceskin 0
 set g_player_forceskin_red -1
 set g_player_forceskin_blue -1
 set g_player_forceskin_yellow -1
