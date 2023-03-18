@@ -100,6 +100,7 @@ float(string s) dlc_load_settemps_from {
 				} else if (substring(cvar_name, 0, 5) == "date_") {
 					string s1 = cvar_string(cvar_name);
 					string s2 = cvar_value;
+					//Remove leading 0 for date
 					if (substring(s1, 0, 1) == "0") s1 = substring(s1, 1, -1);
 					if (substring(s2, 0, 1) == "0") s2 = substring(s2, 1, -1);
 					if (s1 != s2) {
