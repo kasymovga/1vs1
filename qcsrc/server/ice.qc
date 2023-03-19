@@ -1,6 +1,7 @@
 #define ICE_FRAME_TIME 0.2
 string sv_model_ice;
 string sv_sound_ice_frag;
+string sv_sound_ice_revive;
 float g_ice_unfroze_time;
 float g_ice_unfroze_interruption;
 float g_ice_slowdown;
@@ -201,6 +202,11 @@ void(void) ice_think {
 		}
 	}
 	if (self.unfroze_progress >= g_ice_unfroze_time) {
+		entity snd = spawn();
+		setorigin(snd, self.owner.origin);
+		sound(snd, CHAN_PROJECTILE, sv_sound_ice_revive, VOL_BASEVOICE, ATTN_NORM);
+		snd.nextthink = time + 2;
+		snd.think = stdproc_remove;
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
 			centerprint(unfrozer, strcat("^4You revive ^7", self.owner.netname, "\n"));
 
@@ -295,8 +301,12 @@ void(void) ice_init {
 
 	precache_model(sv_model_ice);
 	CVAR_CACHE_STR(sv_sound_ice_frag);
+	CVAR_CACHE_STR(sv_sound_ice_revive);
 	if (sv_sound_ice_frag != "")
 		precache_sound(sv_sound_ice_frag);
+
+	if (sv_sound_ice_revive != "")
+		precache_sound(sv_sound_ice_revive);
 
 	CVAR_CACHE(g_ice_unfroze_time);
 	CVAR_CACHE(g_ice_unfroze_interruption);
