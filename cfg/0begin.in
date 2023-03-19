@@ -1,1 +1,4 @@
 alias bprint "sv_cmd bprint $*; echo $*"
+alias "_detect_dedicated_$qport" "$*"
+alias "_detect_dedicated_0" ""
+alias if_dedicated "_detect_dedicated_$qport $*"

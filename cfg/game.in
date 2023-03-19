@@ -60,7 +60,8 @@ set leadlimit 0
 set g_teleport_keep_velocity -1 "Keep velocity up this value after teleportation. Negative value mean keep all velocity."
 set g_trigger_hurt_interval 1
 set g_button_nowaitforever 0
-seta g_start_delay 10 "delay before the game starts, so everyone can join; recommended to set this to like 10 on a public server"
+seta g_start_delay 0 "delay before the game starts, so everyone can join; recommended to set this to like 10 on a public server"
+if_dedicated g_start_delay 10
 set g_trigger_push_use_trigger_origin 0
 set g_lava_damage_factor 4 "amount of damage provided by lava"
 set g_lava_fire_factor 2 "amount of fire damage profided by lava"
