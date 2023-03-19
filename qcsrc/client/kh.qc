@@ -9,7 +9,7 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) kh_hud {
 	float keyteam;
 	float a, aa;
 	vector p, pa, kh_size, kh_asize;
-	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '108 48 0', gameinfo_size)
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '108 48 0', gameinfo_size, CVAR(sbar_gameinfo_background))
 	p = pos +'6 11 0' * gameinfo_scale;
 	kh_keys = getstati(STAT_KH_KEYS);
 	if (kh_keys)

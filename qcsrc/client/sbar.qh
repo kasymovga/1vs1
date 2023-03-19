@@ -12,7 +12,7 @@ void(float) sbar_field_set;
 void(float) sbar_help;
 vector(vector v) sbar_font_size;
 void(void) sbar_game_init;
-vector sbar_position(vector pos, vector sz);
+vector sbar_position(vector pos, vector sz, float bg);
 vector(vector pos, vector sz, vector sz_to) sbar_scale_for_position;
 float scoreboard_bottom;
 
@@ -37,9 +37,9 @@ float sbar_armor_block_percentage;
 float sbar_health_nice;
 void(void) sbar_set_defaults;
 
-#define SBAR_POSITION_AND_SCALE(pos,scale,size_from,size_to) \
+#define SBAR_POSITION_AND_SCALE(pos,scale,size_from,size_to, bg) \
 	if (size_to == '0 0 0') \
-		pos = sbar_position(pos, size_from * scale); \
+		pos = sbar_position(pos, size_from * scale, bg); \
 	else { \
 		vector v = sbar_scale_for_position(pos, size_from, size_to); \
 		scale = v_z; \

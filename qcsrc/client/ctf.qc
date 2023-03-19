@@ -13,7 +13,7 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) ctf_hud {
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
 	redflag = (sbar_stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (sbar_stat_items/IT_BLUE_FLAG_TAKEN) & 3;
-	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '124 50 0', gameinfo_size)
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '124 50 0', gameinfo_size, CVAR(sbar_gameinfo_background))
 	// when status CHANGES, set old status into prevstatus and current status into status
 	if (redflag != ctf_redflag_prevframe) {
 		ctf_redflag_statuschange_time = time;

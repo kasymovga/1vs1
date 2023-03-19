@@ -13,7 +13,7 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) nb_hud {
 		return;
 
 	float nb_pb;
-	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '88 38 0', gameinfo_size)
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '88 38 0', gameinfo_size, CVAR(sbar_gameinfo_background))
 	nb_pb = getstatf(STAT_NB_METERSTART);
 	//Manage the progress bar if any
 	if (nb_pb > 0) {
