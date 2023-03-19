@@ -243,7 +243,11 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	// draw radar
 	if (teamradar_show)
 		teamradar_view(TRUE, "");
-
+	else if (CVAR(cl_teamradar)) {
+		if (CVAR(cl_teamradar) == 2 || team_mode)
+		if (view_crosshair)
+			teamradar_view(FALSE, "");
+	}
 	if (view_observer_status)
 		view_crosshair = FALSE;
 	else if (sbar_hidescores)

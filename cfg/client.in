@@ -194,7 +194,7 @@ alias _backup_con_chatvars "_backup_con_chatvars_$_backup_con_chatvars_set"
 alias +con_chat_maximize "_backup_con_chatvars; con_chatpos -9; con_chat 100; con_notify 0; con_chattime 3600; cl_deathscoreboard 0; scr_centertime 0; r_track_sprites 0"
 alias -con_chat_maximize "_restore_con_chatvars"
 
-seta cl_teamradar 1 "show radar in teammatches when available"
+seta cl_teamradar 0 "show radar (1 - in team modes, 2 - always)"
 seta cl_teamradar_background_alpha 0 "set to -1 to disable"
 seta cl_teamradar_foreground_alpha 0.8 "alpha of the map"
 seta cl_teamradar_scale 4096 "distance you can see on the team radar"
