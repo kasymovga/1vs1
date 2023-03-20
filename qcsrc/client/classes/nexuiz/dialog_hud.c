@@ -4,7 +4,7 @@ CLASS(NexuizHudDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizHudDialog, title, string, "HUD selection")
 	ATTRIB(NexuizHudDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizHudDialog, intendedWidth, float, 0.6)
-	ATTRIB(NexuizHudDialog, rows, float, 9)
+	ATTRIB(NexuizHudDialog, rows, float, 10)
 	ATTRIB(NexuizHudDialog, columns, float, 4)
 	ATTRIB(NexuizHudDialog, name, string, "HudMenu")
 ENDCLASS(NexuizVcallDialog)
@@ -41,8 +41,15 @@ void(entity me) saveCvarsUseRMHUDNexuizHudDialog {
 void(entity me) fillNexuizHudDialog {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, "Use RM HUD:"));
-		me.TD(me, 1, 1, e = makeNexuizTextSlider("cl_rm_hud"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Show radar:")));
+		me.TD(me, 1, 1.5, e = makeNexuizTextSlider("cl_teamradar"));
+			e.addValue(e, _("Never"), "0");
+			e.addValue(e, _("Teamplay"), "1");
+			e.addValue(e, _("Always"), "2");
+			e.configureNexuizTextSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Use RM HUD:"));
+		me.TD(me, 1, 1.5, e = makeNexuizTextSlider("cl_rm_hud"));
 			e.addValue(e, "Never", "-1");
 			e.addValue(e, "When requested", "0");
 			e.addValue(e, "Always", "1");
@@ -53,9 +60,7 @@ void(entity me) fillNexuizHudDialog {
 	me.TR(me);
 		me.TD(me, 6, 2, e = makeNexuizHudList());
 		hudListNexuizHudDialog = e;
-	me.TR(me);
-	me.gotoRC(me, 1, 2); me.setFirstColumn(me, me.currentColumn);
-	me.TR(me);
+	me.gotoRC(me, 1, 3); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 6, 2, e = makeNexuizSkinList());
 		skinListNexuizHudDialog = e;
 	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
