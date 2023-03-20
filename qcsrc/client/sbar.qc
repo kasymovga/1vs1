@@ -116,11 +116,19 @@ vector(vector pos, vector sz, float bg) sbar_position {
 	else
 		v_y = pos_y;
 
-	if (team_mode && bg && sbar_alpha_bg > 0) {
+	if (bg && sbar_alpha_bg > 0 && (team_mode || bg > 1)) {
 		pos = v;
 		pos_y -= sz_y * 0.0625;
 		sz_y *= 1.125;
-		drawpic(pos, "gfx/hud/sb_ammobg", sz, sbar_team_rgb, sbar_alpha_bg, DRAWFLAG_NORMAL);
+		if (team_mode) {
+			drawpic(pos, "gfx/hud/sb_ammobg", sz, sbar_team_rgb * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL);
+		} else {
+			vector rgb;
+			rgb_x = CVAR(sbar_color_bg_r);
+			rgb_y = CVAR(sbar_color_bg_g);
+			rgb_z = CVAR(sbar_color_bg_b);
+			drawpic(pos, "gfx/hud/sb_ammobg", sz, rgb, sbar_alpha_bg, DRAWFLAG_NORMAL);
+		}
 	}
 	return v;
 }
