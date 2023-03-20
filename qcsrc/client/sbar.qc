@@ -1842,7 +1842,11 @@ void(void) sbar_draw {
 	sbar_bottomleft_x = 0;
 	sbar_bottomleft_y = CVAR(vid_conheight);
 	sbar_bottomleft_z = 0;
-	sbar_alpha_bg = CVAR(sbar_alpha_bg) * (1 - CVAR(_menu_alpha));
+	if (CVAR(viewsize) > 100)
+		sbar_alpha_bg = 0;
+	else
+		sbar_alpha_bg = CVAR(sbar_alpha_bg) * (1 - CVAR(_menu_alpha));
+
 	sbar_border_thickness = bound(0, CVAR(sbar_border_thickness), 5);
 	float i;
 	float weapon_stats;
