@@ -6,7 +6,7 @@ CLASS(NexuizHUDDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizHUDDialog, title, string, _("HUD & Waypoints"))
 	ATTRIB(NexuizHUDDialog, color, vector, SKINCOLOR_DIALOG_RADAR)
 	ATTRIB(NexuizHUDDialog, intendedWidth, float, 0.7)
-	ATTRIB(NexuizHUDDialog, rows, float, 12)
+	ATTRIB(NexuizHUDDialog, rows, float, 14)
 	ATTRIB(NexuizHUDDialog, columns, float, 4)
 ENDCLASS(NexuizHUDDialog)
 #endif
@@ -49,6 +49,14 @@ void(entity me) fillNexuizHUDDialog {
 			me.TD(me, 1, 1.2, e = makeNexuizTextLabel(0, _("Team color:")));
 			me.TD(me, 1, 2.6, e = makeNexuizSlider(0.1, 1, 0.01, "sbar_color_bg_team"));
 				gui_set_dependent(e, "viewsize", 0, 100);
+		me.TR(me);
+			me.TDempty(me, 0.2);
+			me.TD(me, 1, 1.2, e = makeNexuizTextLabel(0, _("Show radar:")));
+			me.TD(me, 1, 2.6, e = makeNexuizTextSlider("cl_teamradar"));
+				e.addValue(e, _("Never"), "0");
+				e.addValue(e, _("Teamplay"), "1");
+				e.addValue(e, _("Always"), "2");
+				e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 4, makeNexuizTextLabel(0, _("Waypoint settings:")));
