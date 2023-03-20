@@ -1247,9 +1247,10 @@ void sbar_scoreboard_draw() {
 			if (tm.team == TEAM_COLOR_SPECTATOR)
 				continue;
 
-			sbar_draw_num(pos - '6.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 4, 0, sbar_fontsize_y * 1.5, sbar_team_rgb, 1, 1, DRAWFLAG_NORMAL);
+			rgb = team_rgb(tm.team);
+			sbar_draw_num(pos - '6.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 4, 0, sbar_fontsize_y * 1.5, rgb, 1, 1, DRAWFLAG_NORMAL);
 			if (ts_primary != ts_secondary)
-				sbar_draw_num(pos - '4.5 0 0' * sbar_fontsize_y + '0 2.5 0' * sbar_fontsize_y, tm.(teamscores[ts_secondary]), 4, 0, sbar_fontsize_y * 1, sbar_team_rgb, 1, 1, DRAWFLAG_NORMAL);
+				sbar_draw_num(pos - '4.5 0 0' * sbar_fontsize_y + '0 2.5 0' * sbar_fontsize_y, tm.(teamscores[ts_secondary]), 4, 0, sbar_fontsize_y * 1, rgb, 1, 1, DRAWFLAG_NORMAL);
 
 			pos = sbar_scoreboard_table_draw(pos, tm, team_rgb(tm.team), bg_size);
 		}
