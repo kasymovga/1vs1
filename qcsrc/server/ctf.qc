@@ -673,6 +673,7 @@ void(string basesprite) ctf_flag_spawn {
 	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 50', world, 0, self, waypointsprite_attached, FALSE);
 	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_flag_visibility;
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormap_palette_color(self.team - 1, FALSE));
+	WaypointSprite_UpdateTeamRadar(self.waypointsprite_deployed_fixed, RADARICON_FLAG, colormap_palette_color(self.team - 1, FALSE));
 	self.reset = ctf_flag_reset;
 }
 
