@@ -152,8 +152,8 @@ void(void) teleport_touch {
 		sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
 	}
 	makevectors(e.angles);
-	if(e.speed)
-		if(vlen(other.velocity) > e.speed)
+	if (e.speed_str != "" || self.speed)
+		if (vlen(other.velocity) > e.speed)
 			other.velocity = normalize(other.velocity) * max(0, e.speed);
 
 	if (g_teleport_keep_velocity > 0)
