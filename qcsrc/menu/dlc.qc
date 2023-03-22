@@ -190,6 +190,9 @@ float(float nodownload, float renderrestart) dlc_reload {
 				s = strcat(s, " simpleitems");
 		}
 	}
+	if (cvar("cl_showpressedkeys_old") && (!dlc_mandatory || dlc_ready("datapatches"))) {
+		s = strcat(s, " n25keys");
+	}
 	dlc_expected = " ";
 	string head = "", tail = s;
 	while (tail != "") {

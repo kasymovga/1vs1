@@ -17,6 +17,11 @@ void (entity btn, entity me) applyNexuizInterfaceSettingsTab {
 	} else if (!cvar("cl_font_iceland") && dlc_ready("font-iceland")) {
 		localcmd(";fs_rescan;saveconfig\n");
 	}
+	if (cvar("cl_showpressedkeys_old") && !dlc_ready("n25keys")) {
+		localcmd(";fs_rescan;saveconfig\n");
+	} else if (!cvar("cl_showpressedkeys_old") && dlc_ready("n25keys")) {
+		localcmd(";fs_rescan;saveconfig\n");
+	}
 }
 
 entity() makeNexuizInterfaceSettingsTab {
@@ -71,6 +76,22 @@ void(entity me) fillNexuizInterfaceSettingsTab {
 			gui_set_dependent(e, "cl_showacceleration", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_font_iceland", _("Use \"Iceland\" font for big messages")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, _("Show binds:")));
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "sbar_showbinds", "0", _("Actions")));
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "sbar_showbinds", "1", _("Bound keys")));
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "sbar_showbinds", "2", _("Both")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, _("Show pressed keys:")));
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(2, "cl_showpressedkeys", "0", _("Never")));
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(2, "cl_showpressedkeys", "1", _("In spectating")));
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(2, "cl_showpressedkeys", "2", _("Always")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_showpressedkeys_old", _("Use old key indicator")));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
