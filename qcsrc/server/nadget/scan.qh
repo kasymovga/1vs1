@@ -1,0 +1,3 @@
+void(void) nadget_scan_explode;
+NADGET_HOOKFUNCTION(scan, Init);
+NADGET_HOOKFUNCTION(scan, Attack);
