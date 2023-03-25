@@ -96,6 +96,9 @@ void nadget_GenericProjectile_Explode(void) {
 		case NADGET_MAGNET:
 			nadget_magnet_explode();
 			return;
+		case NADGET_SCAN:
+			stdproc_remove();
+			return;
     }
     nadget_GenericProjectile_RadiusDamage();
 	stdproc_remove();
