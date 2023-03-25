@@ -11,6 +11,7 @@ float nadget_GenericProjectile_CSQCProjType(float t) {
         case NADGET_LASER   :   return PROJECTILE_HG_LASER;
         case NADGET_RAZE    :   return PROJECTILE_HG_RAZE;
         case NADGET_SCAN    :   return PROJECTILE_HG_SCAN;
+        case NADGET_MAGNET  :   return PROJECTILE_HOOKBOMB;
         default         :   return PROJECTILE_HG_GENERIC;
     }
 }
@@ -92,6 +93,9 @@ void nadget_GenericProjectile_Explode(void) {
 		case NADGET_TRANSLOC:
 			nadget_Transloc_Explode();
 			break;
+		case NADGET_MAGNET:
+			nadget_magnet_explode();
+			return;
     }
     nadget_GenericProjectile_RadiusDamage();
 	stdproc_remove();
