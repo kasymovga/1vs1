@@ -1911,12 +1911,12 @@ void(void) sbar_draw {
 		if (armor > 0) {
 			pos = sbar_position(CVAR(sbar_armor_position), '110 32 0' * CVAR(sbar_armor_scale), CVAR(sbar_armor_background));
 			drawpic(pos + '78 0 0' * CVAR(sbar_armor_scale), "gfx/hud/sb_armor", '32 32 0' * CVAR(sbar_armor_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-			sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_armor_scale), armor, 24 * CVAR(sbar_armor_scale), sbar_alpha_fg);
+			sbar_draw_num_colored(pos + '6 4 0' * CVAR(sbar_armor_scale), armor, 24 * CVAR(sbar_armor_scale), sbar_alpha_fg);
 		}
 		// health
 		pos = sbar_position(CVAR(sbar_health_position), '110 32 0' * CVAR(sbar_health_scale), CVAR(sbar_health_background));
 		drawpic(pos + '78 0 0' * CVAR(sbar_health_scale), "gfx/hud/sb_health", '32 32 0' * CVAR(sbar_health_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-		sbar_draw_num_colored(pos + '0 4 0' * CVAR(sbar_health_scale), _health, 24 * CVAR(sbar_health_scale), sbar_alpha_fg);
+		sbar_draw_num_colored(pos + '6 4 0' * CVAR(sbar_health_scale), _health, 24 * CVAR(sbar_health_scale), sbar_alpha_fg);
 		// weapon icons
 		sbar_weapons_draw(CVAR(sbar_weapons_position), CVAR(sbar_weapons_scale));
 		// ammo
