@@ -31,6 +31,13 @@ var .float sg_buttonatck2 = BUTTON_ATCK2;
 
 void(void) weapon_shotgun_attack {
 	float sc;
+	if (g_balance_shotgun_magazinecapacity) {
+		if (self.sg_ammoclip < 1) {
+			weapon_ready();
+			return;
+		}
+		self.sg_ammoclip -= 1;
+	}
 	bullet_begin(g_balance_shotgun_primary_speed);
 	weapon_setup_shot(self, g_balance_shotgun_recoil, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
@@ -42,9 +49,6 @@ void(void) weapon_shotgun_attack {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - g_balance_shotgun_primary_ammo;
 
-	if (g_balance_shotgun_magazinecapacity)
-		self.sg_ammoclip -= 1;
-
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_shotgun_primary_ammo);
 	// casing code
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
@@ -53,6 +57,20 @@ void(void) weapon_shotgun_attack {
 
 void(void) weapon_shotgun_attack2 {
 	float sc;
+	if (g_balance_shotgun_magazinecapacity) {
+		if (self.sg_ammoclip < 1) {
+			weapon_ready();
+			return;
+		}
+		self.sg_ammoclip -= 1;
+	}
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
+		if (self.ammo_shells < g_balance_shotgun_secondary_ammo) {
+			weapon_ready();
+			return;
+		}
+		self.ammo_shells = self.ammo_shells - g_balance_shotgun_secondary_ammo;
+	}
 	bullet_begin(g_balance_shotgun_secondary_speed);
 	weapon_setup_shot (self, g_balance_shotgun_recoil, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
@@ -62,12 +80,6 @@ void(void) weapon_shotgun_attack2 {
 				g_balance_shotgun_secondary_bulletconstant);
 
 	bullet_end();
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_shells = self.ammo_shells - g_balance_shotgun_secondary_ammo;
-
-	if (g_balance_shotgun_magazinecapacity)
-		self.sg_ammoclip -= 1;
-
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_shotgun_secondary_ammo);
 	// casing code
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
@@ -149,7 +161,7 @@ float(float req) weapon_shotgun {
 	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
 		return self.ammo_shells >= g_balance_shotgun_primary_ammo;
 	} else if (req == WEAPON_REQUEST_CHECKAMMO2) {
-		return self.ammo_shells >= g_balance_shotgun_secondary_ammo * 3;
+		return self.ammo_shells >= g_balance_shotgun_secondary_ammo;
 	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_shotgun_reload();
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
