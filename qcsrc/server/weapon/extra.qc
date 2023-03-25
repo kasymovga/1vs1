@@ -23,6 +23,7 @@ float weapon_extra_primary_impact_type[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_lifetime[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_up[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_bounces[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_primary_burst[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_primary_sound[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_primary_message[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_ammo[WEAPON_EXTRA_COUNT_MAX];
@@ -44,6 +45,7 @@ float weapon_extra_secondary_impact_type[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_lifetime[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_up[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_bounces[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_secondary_burst[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_secondary_sound[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_secondary_message[WEAPON_EXTRA_COUNT_MAX];
 enum {
@@ -252,6 +254,46 @@ void(float num) weapon_extra_reload {
 
 #undef WEAPON_EXTRA_RELOAD_FUNCS
 
+void(float issec, void(void) next_func) weapon_extra_burst {
+	float extra_num = self.weapon - WEAPON_LAST - 1;
+	float magazinecapacity = weapon_extra_magazinecapacity[extra_num];
+	var .float extra_ammoclip = weapon_extra_clip[extra_num];
+	if (!player_can_fire(self, TRUE) || (magazinecapacity && self.ammoclip <= 0)) {
+		weapon_ready();
+		return;
+	}
+	float t, at, r;
+	if (issec) {
+		t = weapon_extra_secondary_type[extra_num];
+		at = weapon_extra_secondary_animtime[extra_num];
+	} else {
+		t = weapon_extra_primary_type[extra_num];
+		at = weapon_extra_primary_animtime[extra_num];
+	}
+	if (t) {
+		weapon_extra_attack(extra_num, issec, t);
+		weapon_thinkf(WEAPON_FRAME_FIRE1, at, next_func);
+	} else {
+		weapon_ready();
+	}
+}
+
+void(void) weapon_extra_primary_burst_1 {
+	weapon_extra_burst(FALSE, weapon_ready);
+}
+
+void(void) weapon_extra_primary_burst_2 {
+	weapon_extra_burst(FALSE, weapon_extra_primary_burst_1);
+}
+
+void(void) weapon_extra_secondary_burst_1 {
+	weapon_extra_burst(TRUE, weapon_ready);
+}
+
+void(void) weapon_extra_secondary_burst_2 {
+	weapon_extra_burst(TRUE, weapon_extra_secondary_burst_1);
+}
+
 float(float req) weapon_extra_think {
 	float extra_num = self.weapon - WEAPON_LAST - 1;
 	float at, mc;
@@ -315,15 +357,39 @@ float(float req) weapon_extra_think {
 				weapon_extra_reload(extra_num);
 		} else if (!magazinecapacity || self.extra_ammoclip > 0) {
 			float t = 0;
+			float burst;
+			void(void) ready_func;
 			if (self.BUTTON_ATCK && (t = weapon_extra_primary_type[extra_num])) {
 				if (weapon_prepareattack(0, weapon_extra_primary_refire[extra_num])) {
 					weapon_extra_attack(extra_num, FALSE, t);
-					weapon_thinkf(WEAPON_FRAME_FIRE1, weapon_extra_primary_animtime[extra_num], weapon_ready);
+					burst = weapon_extra_primary_burst[extra_num];
+					if (burst > 0) {
+						if (burst > 2)
+							ready_func = weapon_extra_primary_burst_2;
+						else if (burst > 1)
+							ready_func = weapon_extra_primary_burst_1;
+						else
+							ready_func = weapon_ready;
+					} else
+						ready_func = weapon_ready;
+
+					weapon_thinkf(WEAPON_FRAME_FIRE1, weapon_extra_primary_animtime[extra_num], ready_func);
 				}
 			} else if (self.BUTTON_ATCK2 && (t = weapon_extra_secondary_type[extra_num])) {
 				if (weapon_prepareattack(0, weapon_extra_secondary_refire[extra_num])) {
 					weapon_extra_attack(extra_num, TRUE, t);
-					weapon_thinkf(WEAPON_FRAME_FIRE2, weapon_extra_primary_animtime[extra_num], weapon_ready);
+					burst = weapon_extra_secondary_burst[extra_num];
+					if (burst > 0) {
+						if (burst > 2)
+							ready_func = weapon_extra_secondary_burst_2;
+						else if (burst > 1)
+							ready_func = weapon_extra_secondary_burst_1;
+						else
+							ready_func = weapon_ready;
+					} else
+						ready_func = weapon_ready;
+
+					weapon_thinkf(WEAPON_FRAME_FIRE2, weapon_extra_primary_animtime[extra_num], ready_func);
 				}
 			}
 		}
@@ -462,6 +528,7 @@ void(void) weapon_extra_init {
 		WEAPON_EXTRA_READ(up)
 		WEAPON_EXTRA_READ(flash)
 		WEAPON_EXTRA_READ(lifetime)
+		WEAPON_EXTRA_READ(burst)
 		#undef WEAPON_EXTRA_READ
 		weapon_extra_primary_sound[i] = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_sound")));
 		weapon_extra_primary_muzzle[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_muzzle")));
