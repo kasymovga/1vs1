@@ -28,7 +28,7 @@ set cra_g_footsteps 1
 set cra_g_buttons_hookuse_swap 1
 set cra_g_runes 1
 set cra_g_runes_count 7
-set cra_g_runes_hacker 1
+set cra_g_runes_hacker 0
 set cra_g_runes_carried_runes_max 2
 set cra_g_weaponreplace_nex armor_medium
 set cra_g_weaponreplace_rocketlauncher health_medium
