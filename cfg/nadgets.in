@@ -534,7 +534,7 @@ set g_nadgets_magnet_edgedamage 1
 set g_nadgets_magnet_radius 600
 set g_nadgets_magnet_force -200
 set g_nadgets_magnet_ticrate 0.1
-set g_nadgets_magnet_explosion_time 3
+set g_nadgets_magnet_explosion_time 2
 set g_nadgets_magnet_lifetime 2.5
 set g_nadgets_magnet_damageforcescale 4
 set g_nadgets_magnet_health 200
