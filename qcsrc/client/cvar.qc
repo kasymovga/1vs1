@@ -6,53 +6,53 @@ string(vector v) cvar_vtos;
 #define CVAR(x) autocvar_##x
 #define CVAR_OR(x,y) (autocvar_##x ? autocvar_##x : y)
 
-#define CACHE_CVAR(x) float autocvar_##x;
-#define CACHE_CVAR_DEF(x,y) var float autocvar_##x = y;
-#define CACHE_CVAR_VEC(x) vector autocvar_##x;
-#define CACHE_CVAR_VEC_DEF(x,y) var vector autocvar_##x = y;
-#define READ_CVARS_BEGIN(x,y)
-#define READ_CVARS_SECTION(x,y)
-#define READ_CVARS_END(x)
+#define CVAR_CACHE(x) float autocvar_##x;
+#define CVAR_CACHE_DEF(x,y) var float autocvar_##x = y;
+#define CVAR_CACHE_VEC(x) vector autocvar_##x;
+#define CVAR_CACHE_VEC_DEF(x,y) var vector autocvar_##x = y;
+#define CVAR_LIST_BEGIN(x,y)
+#define CVAR_LIST_SECTION(x,y)
+#define CVAR_LIST_END(x)
 #include "cvar_list.qc"
-#undef CACHE_CVAR
-#undef CACHE_CVAR_DEF
-#undef CACHE_CVAR_VEC
-#undef CACHE_CVAR_VEC_DEF
-#undef READ_CVARS_BEGIN
-#undef READ_CVARS_SECTION
-#undef READ_CVARS_END
+#undef CVAR_CACHE
+#undef CVAR_CACHE_DEF
+#undef CVAR_CACHE_VEC
+#undef CVAR_CACHE_VEC_DEF
+#undef CVAR_LIST_BEGIN
+#undef CVAR_LIST_SECTION
+#undef CVAR_LIST_END
 
-#define CACHE_CVAR(x) 
-#define CACHE_CVAR_DEF(x,y) if (autocvar_##x == y) { cvar_register_save(#x, ftos(y)); }
-#define CACHE_CVAR_VEC(x) 
-#define CACHE_CVAR_VEC_DEF(x,y) if (autocvar_##x == y) { cvar_register_save(#x, cvar_vtos(y)); }
-#define READ_CVARS_BEGIN(x,y) void cvar_register_autocvars() {
-#define READ_CVARS_SECTION(x,y)
-#define READ_CVARS_END(x) }
+#define CVAR_CACHE(x) 
+#define CVAR_CACHE_DEF(x,y) if (autocvar_##x == y) { cvar_register_save(#x, ftos(y)); }
+#define CVAR_CACHE_VEC(x) 
+#define CVAR_CACHE_VEC_DEF(x,y) if (autocvar_##x == y) { cvar_register_save(#x, cvar_vtos(y)); }
+#define CVAR_LIST_BEGIN(x,y) void cvar_register_autocvars() {
+#define CVAR_LIST_SECTION(x,y)
+#define CVAR_LIST_END(x) }
 #include "cvar_list.qc"
-#undef CACHE_CVAR
-#undef CACHE_CVAR_DEF
-#undef CACHE_CVAR_VEC
-#undef CACHE_CVAR_VEC_DEF
-#undef READ_CVARS_BEGIN
-#undef READ_CVARS_SECTION
-#undef READ_CVARS_END
+#undef CVAR_CACHE
+#undef CVAR_CACHE_DEF
+#undef CVAR_CACHE_VEC
+#undef CVAR_CACHE_VEC_DEF
+#undef CVAR_LIST_BEGIN
+#undef CVAR_LIST_SECTION
+#undef CVAR_LIST_END
 
-#define CACHE_CVAR(x) autocvar_##x = cvar(#x);
-#define CACHE_CVAR_DEF(x,y) autocvar_##x = cvar(#x);
-#define CACHE_CVAR_VEC(x) autocvar_##x = stov(cvar_string(#x));
-#define CACHE_CVAR_VEC_DEF(x,y) autocvar_##x = stov(cvar_string(#x));
-#define READ_CVARS_BEGIN(x,y) void read_cvars_##y(); void read_cvars_##x() {
-#define READ_CVARS_SECTION(x,y) read_cvars = read_cvars_##x; } void read_cvars_##y(); void read_cvars_##x() {
-#define READ_CVARS_END(x) read_cvars = read_cvars_##x; }
+#define CVAR_CACHE(x) autocvar_##x = cvar(#x);
+#define CVAR_CACHE_DEF(x,y) autocvar_##x = cvar(#x);
+#define CVAR_CACHE_VEC(x) autocvar_##x = stov(cvar_string(#x));
+#define CVAR_CACHE_VEC_DEF(x,y) autocvar_##x = stov(cvar_string(#x));
+#define CVAR_LIST_BEGIN(x,y) void read_cvars_##y(); void read_cvars_##x() {
+#define CVAR_LIST_SECTION(x,y) read_cvars = read_cvars_##x; } void read_cvars_##y(); void read_cvars_##x() {
+#define CVAR_LIST_END(x) read_cvars = read_cvars_##x; }
 #include "cvar_list.qc"
-#undef CACHE_CVAR
-#undef CACHE_CVAR_DEF
-#undef CACHE_CVAR_VEC
-#undef CACHE_CVAR_VEC_DEF
-#undef READ_CVARS_BEGIN
-#undef READ_CVARS_SECTION
-#undef READ_CVARS_END
+#undef CVAR_CACHE
+#undef CVAR_CACHE_DEF
+#undef CVAR_CACHE_VEC
+#undef CVAR_CACHE_VEC_DEF
+#undef CVAR_LIST_BEGIN
+#undef CVAR_LIST_SECTION
+#undef CVAR_LIST_END
 
 void cvar_register_save_old(string varname, string val) {
 	registercvar(varname, val, CVAR_SAVE);
