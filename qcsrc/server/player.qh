@@ -1,27 +1,3 @@
-// player sounds, voice messages
-// TODO implemented fall and falling
-#define ALLPLAYERSOUNDS \
-		_VOICEMSG(death) \
-		_VOICEMSG(drown) \
-		_VOICEMSG(gasp) \
-		_VOICEMSG(jump) \
-		_VOICEMSG(pain25) \
-		_VOICEMSG(pain50) \
-		_VOICEMSG(pain75) \
-		_VOICEMSG(pain100)
-#define ALLVOICEMSGS \
-		_VOICEMSG(attack) \
-		_VOICEMSG(attackinfive) \
-		_VOICEMSG(meet) \
-		_VOICEMSG(seenflag) \
-		_VOICEMSG(taunt) \
-		_VOICEMSG(teamshoot)
-
-#define _VOICEMSG(m) .string playersound_##m;
-ALLPLAYERSOUNDS
-ALLVOICEMSGS
-#undef _VOICEMSG
-
 // reserved sound names for the future (models lack sounds for them):
 //		_VOICEMSG(affirmative) \
 //		_VOICEMSG(attacking) \

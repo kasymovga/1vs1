@@ -3,3 +3,25 @@ void() player_sound_update;
 void(string type, string message) player_sound_voice_message;
 void(entity to, entity from) player_sound_copy;
 void(void) player_sound_init;
+#define PLAYER_SOUND_ALL \
+		PLAYER_SOUND(death) \
+		PLAYER_SOUND(drown) \
+		PLAYER_SOUND(gasp) \
+		PLAYER_SOUND(jump) \
+		PLAYER_SOUND(pain25) \
+		PLAYER_SOUND(pain50) \
+		PLAYER_SOUND(pain75) \
+		PLAYER_SOUND(pain100)
+#define PLAYER_SOUND_VOICE_ALL \
+		PLAYER_SOUND(attack) \
+		PLAYER_SOUND(attackinfive) \
+		PLAYER_SOUND(meet) \
+		PLAYER_SOUND(seenflag) \
+		PLAYER_SOUND(taunt) \
+		PLAYER_SOUND(needhelp) \
+		PLAYER_SOUND(teamshoot)
+
+#define PLAYER_SOUND(m) .string playersound_##m;
+PLAYER_SOUND_ALL
+PLAYER_SOUND_VOICE_ALL
+#undef PLAYER_SOUND

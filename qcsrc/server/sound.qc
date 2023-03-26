@@ -120,7 +120,7 @@ string(string s, float n) sound_random {
 	if (s == "")
 		return "";
 
-	if (n < 2)
+	if (n < 1)
 		return strcat(s, ".wav");
 
 	return strcat(s, ftos(floor(random() * n + 1)), ".wav");
@@ -134,7 +134,7 @@ string(string s) sound_random_by_str {
 
 void(string s, float n) sound_random_precache {
 	float i;
-	if (n < 2) {
+	if (n < 1) {
 		precache_sound(strcat(s, ".wav"));
 	} else
 		for (i = 1; i <= n; i++) {

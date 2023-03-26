@@ -1,3 +1,5 @@
+// player sounds, voice messages
+// TODO implemented fall and falling
 float g_voice_flood_spv;
 float g_voice_flood_spv_team;
 
@@ -8,9 +10,9 @@ stringfield(string type) player_voice_message_sample_field {
 	player_voice_message_sample_not_found = 0;
 	player_voice_message_sample_fixed = 0;
 	switch (type) {
-#define _VOICEMSG(m) case #m: return playersound_##m;
-	ALLVOICEMSGS
-#undef _VOICEMSG
+#define PLAYER_SOUND(m) case #m: return playersound_##m;
+	PLAYER_SOUND_VOICE_ALL
+#undef PLAYER_SOUND
 	}
 	player_voice_message_sample_not_found = 1;
 	return playersound_taunt;
@@ -20,9 +22,9 @@ stringfield(string type) player_sound_sample_field {
 	player_voice_message_sample_not_found = 0;
 	player_voice_message_sample_fixed = 0;
 	switch (type) {
-#define _VOICEMSG(m) case #m: return playersound_##m;
-	ALLPLAYERSOUNDS
-#undef _VOICEMSG
+#define PLAYER_SOUND(m) case #m: return playersound_##m;
+	PLAYER_SOUND_ALL
+#undef PLAYER_SOUND
 	}
 	player_voice_message_sample_not_found = 1;
 	return playersound_taunt;
@@ -43,25 +45,25 @@ void(string f) player_sound_precache {
 	}
 	fclose(fh);
 	if not(player_sound_voice_samples_all) {
-#define _VOICEMSG(m) player_sound_voice_samples_all = strcat(player_sound_voice_samples_all, " ", #m);
-		ALLVOICEMSGS
-#undef _VOICEMSG
+#define PLAYER_SOUND(m) player_sound_voice_samples_all = strcat(player_sound_voice_samples_all, " ", #m);
+		PLAYER_SOUND_VOICE_ALL
+#undef PLAYER_SOUND
 		player_sound_voice_samples_all = strzone(substring(player_sound_voice_samples_all, 1, strlen(player_sound_voice_samples_all) - 1));
 	}
 }
 
 void() player_sound_clear {
-#define _VOICEMSG(m) if (self.playersound_##m) { str_unzone_ifneeded(self.playersound_##m); self.playersound_##m = NULL; }
-	ALLPLAYERSOUNDS
-	ALLVOICEMSGS
-#undef _VOICEMSG
+#define PLAYER_SOUND(m) if (self.playersound_##m) { str_unzone_ifneeded(self.playersound_##m); self.playersound_##m = NULL; }
+	PLAYER_SOUND_ALL
+	PLAYER_SOUND_VOICE_ALL
+#undef PLAYER_SOUND
 }
 
 void(entity to, entity from) player_sound_copy {
-#define _VOICEMSG(m) str_unzone_ifneeded(to.playersound_##m); to.playersound_##m = str_zone_ifneeded(from.playersound_##m);
-	ALLPLAYERSOUNDS
-	ALLVOICEMSGS
-#undef _VOICEMSG
+#define PLAYER_SOUND(m) str_unzone_ifneeded(to.playersound_##m); to.playersound_##m = str_zone_ifneeded(from.playersound_##m);
+	PLAYER_SOUND_ALL
+	PLAYER_SOUND_VOICE_ALL
+#undef PLAYER_SOUND
 }
 
 float(string f, float first) player_sound_load {
