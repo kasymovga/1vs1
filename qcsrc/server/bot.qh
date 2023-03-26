@@ -23,6 +23,7 @@ float bot_waypoints_for_items;
 
 // Skill system
 float skill;
+float bot_skill10;
 float bot_moveskill; // moving technique
 float bot_dodgeskill; // dodging
 float bot_pingskill; // ping offset
@@ -58,7 +59,6 @@ entity bot_list;
 .float bot_dodgerating;
 .float bot_pickup;
 .float bot_pickupbasevalue;
-.float bot_canfire;
 .float bot_strategytime;
 .float bot_dontmove;
 .float bot_config_loaded;

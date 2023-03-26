@@ -854,7 +854,6 @@ void(void) world_frame_start { //called by engine
 
 	entity_initialize_run();
 	sys_ticrate = cvar("sys_ticrate");
-	skill = cvar("skill");
 	world_creature_frame();
 	world_check_rules();
 	plugin_chain_world_frame_start();
