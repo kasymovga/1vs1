@@ -38,3 +38,5 @@ set ca_g_warmup_start_ammo_cells 60
 set ca_g_balance_health_rotlinear 0
 set ca_g_score_damage 1
 set ca_g_start_delay 0
+alias cl_hook_gamestart_ca ""
+alias sv_hook_gamestart_ca ""

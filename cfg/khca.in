@@ -4,3 +4,5 @@ set g_khca_leadlimit "0" "Leadlimit for keyhunt clan arena, when empty, g_leadli
 set g_khca_startdelay 5
 set g_khca_enddelay 5
 set khca_inherit "ca kh"
+alias cl_hook_gamestart_khca ""
+alias sv_hook_gamestart_khca ""

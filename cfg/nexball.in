@@ -44,3 +44,5 @@ set g_nexball_volleyball_bouncefactor 0.6    "velocity loss when the ball bounce
 set g_nexball_volleyball_bouncestop   0.075  "speed at which the ball stops when it hits the ground (multiplied by sv_gravity)"
 set g_nexball_volleyball_melee_boost_forward "200"
 set g_nexball_volleyball_melee_boost_up "200"
+alias cl_hook_gamestart_nexball
+alias sv_hook_gamestart_nexball

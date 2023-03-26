@@ -11,3 +11,5 @@ set race_g_respawn_delay 0
 set sv_spawnreplace_trigger_race_checkpoint race_trigger_checkpoint
 set sv_spawnreplace_trigger_race_penalty race_trigger_penalty
 set sv_spawnreplace_info_player_race race_info_player
+alias sv_hook_gamestart_race
+alias cl_hook_gamestart_race

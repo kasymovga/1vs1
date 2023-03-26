@@ -9,3 +9,5 @@ set coop_g_pickup_respawntimejitter_powerup 0
 set coop_g_pickup_respawntime_key 0.1
 set coop_g_pickup_respawntimejitter_key 0
 set coop_g_maxplayers 8
+alias cl_hook_gamestart_coop ""
+alias sv_hook_gamestart_coop ""

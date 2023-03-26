@@ -251,17 +251,6 @@ alias _cl_hook_gamestart "set _cl_hook_gametype $1; _cl_hook_gamestart_stage2"
 alias _cl_hook_gamestart_stage2 "cl_hook_gamestart_all; cl_hook_gamestart_${_cl_hook_gametype}"
 alias cl_hook_gamestart_all
 alias cl_hook_gamestart_nop  //is only called when CSQC unloads before knowing the gametype, very unlikely
-alias cl_hook_gamestart_dm
-alias cl_hook_gamestart_tdm
-alias cl_hook_gamestart_dom
-alias cl_hook_gamestart_ctf
-alias cl_hook_gamestart_lms
-alias cl_hook_gamestart_kh
-alias cl_hook_gamestart_ons
-alias cl_hook_gamestart_rc cl_hook_gamestart_race
-alias cl_hook_gamestart_race
-alias cl_hook_gamestart_nexball
-alias cl_hook_gamestart_cts
 alias cl_hook_gameend
 seta cl_casings 1 "enable or disable bullet casings"
 seta cl_casings_maxcount 30 "maximum amount of shell casings (must be at least 1)"

@@ -56,21 +56,5 @@ alias unmute "prvm_edictset server $1 muted 0" // dito
 set sv_loddistance1 1024
 set sv_loddistance2 4096
 set g_mapinfo_settemp_acl "+*" "ACL for mapinfo setting cvars"
-alias _sv_hook_gamestart "set _sv_hook_gametype $1; _sv_hook_gamestart_stage2"
-alias _sv_hook_gamestart_stage2 "sv_hook_gamestart_all; sv_hook_gamestart_${_sv_hook_gametype}"
-alias sv_hook_gamestart_all
-alias sv_hook_gamestart_dm
-alias sv_hook_gamestart_tdm
-alias sv_hook_gamestart_dom
-alias sv_hook_gamestart_ctf
-alias sv_hook_gamestart_lms
-alias sv_hook_gamestart_kh
-alias sv_hook_gamestart_ons
-alias sv_hook_gamestart_as
-alias sv_hook_gamestart_rc
-alias sv_hook_gamestart_nexball
-alias sv_hook_gamestart_cts
-alias sv_hook_gamerestart
-alias sv_hook_gameend
 set sv_clientversion_hidden 0
 set sv_maxconnects_per_address 0

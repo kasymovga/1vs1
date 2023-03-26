@@ -34,3 +34,5 @@ set single_g_pickup_nodrop 1
 set single_g_player_damage_screen_effects 1
 alias quicksave "cmd quicksave"
 alias quickload "set _restore_game 1; maxplayers 1; load slot12.sav"
+alias cl_hook_gamestart_single ""
+alias sv_hook_gamestart_single ""

@@ -37,3 +37,5 @@ set lms_g_warmup_start_ammo_shells 60
 set lms_g_warmup_start_ammo_rockets 120
 set lms_g_warmup_start_ammo_cells 120
 set lms_g_balance_health_rotlinear 0
+alias cl_hook_gamestart_lms
+alias sv_hook_gamestart_lms

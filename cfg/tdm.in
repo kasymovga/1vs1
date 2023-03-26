@@ -4,3 +4,5 @@ set g_tdm_leadlimit "0" "Leadlimit for team deathmatch, when empty, g_leadlimit 
 set g_tdm_use_dm_maps 0
 set g_tdm_use_ctf_maps 0
 set g_tdm_teams 2 "how many teams are in team deathmatch"
+alias cl_hook_gamestart_tdm
+alias sv_hook_gamestart_tdm

@@ -4,3 +4,5 @@ set g_ctft_leadlimit "0" "Leadlimit for CTF freeze tag, when empty, g_leadlimit 
 set g_ctft_startdelay 5
 set g_ctft_enddelay 5
 set ctft_inherit "ft ctf"
+alias cl_hook_gamestart_ctft ""
+alias sv_hook_gamestart_ctft ""

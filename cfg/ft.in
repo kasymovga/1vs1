@@ -30,3 +30,5 @@ set ft_g_weaponreplace_grenadelauncher rockets
 set ft_g_weaponreplace_rocketlauncher rockets
 set ft_g_weaponreplace_fireball rockets
 set ft_g_start_delay 0
+alias cl_hook_gamestart_ft ""
+alias sv_hook_gamestart_ft ""

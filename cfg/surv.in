@@ -11,3 +11,5 @@ set surv_g_punchangle_decrease_speed 180
 set surv_g_punchangle_decrease_delay 0.5
 set surv_g_waypoints_use_botclip 1
 set surv_g_player_damage_screen_effects 1
+alias cl_hook_gamestart_surv ""
+alias sv_hook_gamestart_surv ""

@@ -8,3 +8,5 @@ set g_conq_teamscore_alternative 1
 set g_conq_use_ons 0
 set g_conq_use_ctf_and_dom 0
 set conq_g_forced_respawn 0
+alias sv_hook_gamestart_conq ""
+alias cl_hook_gamestart_conq ""

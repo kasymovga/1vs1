@@ -2,3 +2,5 @@ set g_dm_scorelimit "" "Scorelimit for deathmatch, when empty, g_scorelimit usin
 set g_dm_timelimit "" "Timelimit for deathmatch, when empty, g_timelimit using, <= 0 mean no limit"
 set g_dm_leadlimit "" "Leadlimit for deathmatch, when empty, g_leadlimit using, <= 0 mean no limit"
 set g_dm_use_tdm_maps 0
+alias cl_hook_gamestart_dm
+alias sv_hook_gamestart_dm

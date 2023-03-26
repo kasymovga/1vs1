@@ -61,3 +61,5 @@ set g_ctf_personalscore_return_by_killer 2
 set g_ctf_personalscore_return_rogue_by_killer 2
 set g_ctf_adjust_score_by_enemy_number 0.25
 set g_ctf_count_suicides 0
+alias cl_hook_gamestart_ctf
+alias sv_hook_gamestart_ctf

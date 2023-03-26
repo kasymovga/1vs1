@@ -4,3 +4,5 @@ set g_catf_leadlimit "0" "Leadlimit for CTF clan arena, when empty, g_leadlimit 
 set g_catf_enddelay 5
 set g_catf_startdelay 5
 set catf_inherit "ca ctf"
+alias cl_hook_gamestart_catf ""
+alias sv_hook_gamestart_catf ""
