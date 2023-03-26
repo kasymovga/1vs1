@@ -850,8 +850,10 @@ void score_touch(entity e) {
 
 // NOTE: SP_ constants may not be >= SCORE_FILEDS_MAX; ST_constants may not be >= SCORE_TEAM_FIELDS_MAX
 // scores that should be in all modes:
+float score_have_score;
 void(float sprio, float stprio, float score_enabled) score_basics {
 	float i;
+	score_have_score = score_enabled;
 	score_preinitialized = 1;
 	score_registered = 0;
 	score_team_registered = 0;
@@ -933,6 +935,7 @@ void(entity attacker, entity targ, float f) score_give_frag {
 	}
 	f = plugin_score_give_frag_mod(attacker, targ, f);
 	if (f)
+	if (score_have_score)
 		score_player_team_add_score(attacker, f);
 }
 
