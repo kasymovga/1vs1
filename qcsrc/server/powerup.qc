@@ -25,6 +25,17 @@ void(.float powerupfield, void(void) spawnfunc) powerup_drop {
 	}
 }
 
+void(string itemname) powerup_precache {
+	entity oldself = self;
+	self = spawn();
+	self.classname = "precache";
+	item_spawnfunc_for(itemname)();
+	if not(wasfreed(self))
+		stdproc_remove_entity(self);
+
+	self = oldself;
+}
+
 var void(float killed) powerup_player_clear_next;
 void(float killed) powerup_player_clear {
 	if (killed) {
@@ -128,6 +139,7 @@ void() powerup_invincible_init {
 
 	powerup_invincible_init_done = 1;
 	powerup_init();
+	powerup_precache("invincible");
 	addstat(STAT_INVINCIBLE_FINISHED, STAT_FLOAT, invincible_finished);
 	powerup_invincible_player_effects_next = plugin_chain_player_effects;
 	plugin_chain_player_effects = powerup_invincible_player_effects;
@@ -176,6 +188,7 @@ void() powerup_strength_init {
 
 	powerup_strength_init_done = 1;
 	powerup_init();
+	powerup_precache("strength");
 	precache_sound("weapons/strength_fire.wav");
 	addstat(STAT_STRENGTH_FINISHED, STAT_FLOAT, strength_finished);
 	powerup_strength_player_effects_next = plugin_chain_player_effects;
@@ -207,10 +220,11 @@ void() powerup_akimbo_init {
 	if (powerup_akimbo_init_done)
 		return;
 
+	powerup_akimbo_init_done = 1;
 	dlc_require("powerups");
 	powerup_init();
+	powerup_precache("akimbo");
 	akimbo_init_common();
-	powerup_akimbo_init_done = 1;
 	powerup_akimbo_player_effects_next = plugin_chain_player_effects;
 	plugin_chain_player_effects = powerup_akimbo_player_effects;
 	addstat(STAT_AKIMBO_FINISHED, STAT_FLOAT, akimbo_finished);
@@ -255,9 +269,10 @@ void() powerup_speed_init {
 	if (powerup_speed_init_done)
 		return;
 
-	dlc_require("powerups");
 	powerup_speed_init_done = 1;
+	dlc_require("powerups");
 	powerup_init();
+	powerup_precache("speed");
 	powerup_speed_physics_max_speed_mod_next = plugin_chain_physics_max_speed_mod;
 	plugin_chain_physics_max_speed_mod = powerup_speed_max_speed_mod;
 	powerup_speed_player_effects_next = plugin_chain_player_effects;
@@ -301,9 +316,10 @@ void() powerup_invisibility_init {
 	if (powerup_invisibility_init_done)
 		return;
 
-	dlc_require("powerups");
 	powerup_invisibility_init_done = 1;
+	dlc_require("powerups");
 	powerup_init();
+	powerup_precache("invisibility");
 	powerup_invisibility_player_alpha_mod_next = plugin_chain_player_alpha_mod;
 	plugin_chain_player_alpha_mod = powerup_invisibility_player_alpha_mod;
 	powerup_invisibility_player_effects_next = plugin_chain_player_effects;
