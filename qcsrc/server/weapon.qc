@@ -491,13 +491,13 @@ void(void) weapon_frame {
 	// call the think code which may fire the weapon
 	// and do so multiple times to resolve framerate dependency issues if the
 	// server framerate is very low and the weapon fire rate very high
-	float c;
-	c = 0;
-	while (c < 5) {
-		c = c + 1;
+	float i;
+	for (i = 0; i < 5; i++) {
 		if (wi && !(self.weapons & wi.weapons) && !(self.weapons_extra & wi.weapons_extra)) {
-			weapon_switch_force(self, weapon_best(self));
-			wi = NULL;
+			if (self.weapon || self.weapons || self.weapons_extra) { //in other case there is no any weapon
+				weapon_switch_force(self, weapon_best(self));
+				wi = weapon_info(self.weapon);
+			}
 		}
 		if (wi) {
 			v_forward = fo;
@@ -516,7 +516,8 @@ void(void) weapon_frame {
 				v_up = up;
 				self.weapon_think();
 			}
-		}
+		} else
+			break;
 	}
 }
 
