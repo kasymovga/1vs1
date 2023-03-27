@@ -8,6 +8,11 @@ set race_g_start_weapon_laser 0
 set race_g_telefrags 0
 set race_g_balance_kill_delay 0
 set race_g_respawn_delay 0
+set race_g_powerup_akimbo_droppable 0
+set race_g_powerup_strength_droppable 0
+set race_g_powerup_shield_droppable 0
+set race_g_powerup_invisibility_droppable 0
+set race_g_powerup_speed_droppable 0
 set sv_spawnreplace_trigger_race_checkpoint race_trigger_checkpoint
 set sv_spawnreplace_trigger_race_penalty race_trigger_penalty
 set sv_spawnreplace_info_player_race race_info_player
