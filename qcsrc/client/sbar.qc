@@ -1587,7 +1587,7 @@ void(void) sbar_speed_draw {
 	numsize_z = 0;
 	pos = (CVAR(vid_conheight) - numsize_y) * CVAR(cl_showspeed_position);
 	drawfont = sbar_bigfont;
-	draw_string_center('1 0 0' + pos * '0 1 0', speed, numsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	draw_string_center(CVAR(cl_showspeed_offset) * '1 0 0' + pos * '0 1 0', speed, numsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 	drawfont = sbar_font;
 }
 
@@ -1598,14 +1598,14 @@ void(void) sbar_acceleration_draw {
 
 	top_x = CVAR(vid_conwidth)/2;
 	top_z = top_y = 0;
-	float acceleration;
+	float acceleration, ab;
 	if (CVAR(cl_showacceleration_z))
 		acceleration = (vlen(physics_velocity_frame_end) - vlen(physics_velocity_frame_begin)) * (1 / physics_frametime);
 	else
 		acceleration = (vlen(physics_velocity_frame_end - '0 0 1' * physics_velocity_frame_end_z) - vlen(physics_velocity_frame_begin - '0 0 1' * physics_velocity_frame_begin_z)) * (1 / physics_frametime);
 
-	acceleration = acceleration / getstatf(STAT_MOVEVARS_MAXSPEED);
-	pos = top - CVAR(cl_showacceleration_size)/2 * '0 1 0' + (CVAR(cl_showacceleration_position) * CVAR(vid_conheight)) * '0 1 0';
+	ab = atan(acceleration * 0.0004 * CVAR(cl_showacceleration_scale)) / MATH_PI * CVAR(cl_showacceleration_width);
+	pos = top + CVAR(cl_showacceleration_offset) * '1 0 0' - CVAR(cl_showacceleration_size) / 2 * '0 1 0' + (CVAR(cl_showacceleration_position) * CVAR(vid_conheight)) * '0 1 0';
 	if (CVAR(cl_showacceleration_color_custom))
 		rgb = stov(cvar_string("cl_showacceleration_color"));
 	else {
@@ -1617,9 +1617,9 @@ void(void) sbar_acceleration_draw {
 		}
 	}
 	if (acceleration > 0)
-		drawpic(pos, "gfx/hud/accelerometer_gradient", acceleration * CVAR(cl_showacceleration_scale) * '40 0 0' + CVAR(cl_showacceleration_size) * '0 1 0', rgb, CVAR(cl_showacceleration_alpha) * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, "gfx/hud/accelerometer_gradient", ab * '1 0 0' + CVAR(cl_showacceleration_size) * '0 1 0', rgb, CVAR(cl_showacceleration_alpha) * sbar_alpha_fg, DRAWFLAG_NORMAL);
 	else if (acceleration < 0)
-		drawpic(pos + acceleration * CVAR(cl_showacceleration_scale) * '40 0 0', "gfx/hud/accelerometer_gradient", -acceleration * CVAR(cl_showacceleration_scale) * '40 0 0' + CVAR(cl_showacceleration_size) * '0 1 0', rgb, CVAR(cl_showacceleration_alpha) * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos + ab * '1 0 0', "gfx/hud/accelerometer_gradient", -ab * '1 0 0' + CVAR(cl_showacceleration_size) * '0 1 0', rgb, CVAR(cl_showacceleration_alpha) * sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void(vector position) sbar_accuracy_description_draw {
