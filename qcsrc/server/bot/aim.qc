@@ -153,14 +153,6 @@ void(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, ve
 	self.bot_aimselfvelocity = v2;
 	self.bot_aimtargorigin = v3;
 	self.bot_aimtargvelocity = v4;
-	if(skill <= 0)
-		self.bot_canfire = (random() < 0.8);
-	else if(skill <= 1)
-		self.bot_canfire = (random() < 0.9);
-	else if(skill <= 2)
-		self.bot_canfire = (random() < 0.95);
-	else
-		self.bot_canfire = 1;
 }
 
 float(vector v, float maxfiredeviation) bot_aim_dir {
@@ -183,7 +175,7 @@ float(vector v, float maxfiredeviation) bot_aim_dir {
 	//te_lightning2(world, self.origin + self.view_ofs, self.origin + self.view_ofs + v * 200);
 	if (time >= self.bot_badaimtime) {
 		self.bot_badaimtime = max(self.bot_badaimtime + 0.3, time);
-		self.bot_badaimoffset = randomvec() * bound(0, 5 - 0.5 * (skill+bot_offsetskill), 5) * bot_ai_aimskill_offset;
+		self.bot_badaimoffset = randomvec() * bound(0, 5 - 0.5 * (bot_skill10 +bot_offsetskill), 5) * bot_ai_aimskill_offset;
 	}
 	desiredang = vectoangles(v) + self.bot_badaimoffset;
 	if (desiredang_x >= 180)
@@ -207,7 +199,7 @@ float(vector v, float maxfiredeviation) bot_aim_dir {
 	self.bot_4th_order_aimfilter = self.bot_4th_order_aimfilter + (self.bot_3th_order_aimfilter - self.bot_4th_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_4th, 1);
 	self.bot_5th_order_aimfilter = self.bot_5th_order_aimfilter + (self.bot_4th_order_aimfilter - self.bot_5th_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_5th, 1);
 	//blend = (bound(0,skill,10)*0.1)*pow(1-bound(0,skill,10)*0.05,2.5)*5.656854249; //Plot formule before changing !
-	blend = bound(0,skill+bot_aimskill,10)*0.1;
+	blend = bound(0, bot_skill10 + bot_aimskill, 10)*0.1;
 	desiredang = desiredang + blend * (self.bot_1st_order_aimfilter * bot_ai_aimskill_order_mix_1st
 			+ self.bot_2nd_order_aimfilter * bot_ai_aimskill_order_mix_2nd
 			+ self.bot_3th_order_aimfilter * bot_ai_aimskill_order_mix_3th
@@ -221,8 +213,8 @@ float(vector v, float maxfiredeviation) bot_aim_dir {
 		diffang_y = diffang_y - 360;
 
 	if (time >= self.bot_aimthinktime) {
-		self.bot_aimthinktime = max(self.bot_aimthinktime + 0.5 - 0.05*(skill+bot_thinkskill), time);
-		self.bot_mouseaim = self.bot_mouseaim + diffang * (1-random()*0.1*bound(1,10-(skill+bot_thinkskill),10));
+		self.bot_aimthinktime = max(self.bot_aimthinktime + 0.5 - 0.05*(bot_skill10 +bot_thinkskill), time);
+		self.bot_mouseaim = self.bot_mouseaim + diffang * (1-random()*0.1*bound(1,10-(bot_skill10 +bot_thinkskill),10));
 	}
 	//self.v_angle = self.v_angle + diffang * bound(0, r * frametime * (skill * 0.5 + 2), 1);
 	diffang = self.bot_mouseaim - desiredang;
@@ -248,7 +240,7 @@ float(vector v, float maxfiredeviation) bot_aim_dir {
 	blendrate = bot_ai_aimskill_blendrate;
 	r = max(fixedrate, blendrate);
 	//self.v_angle = self.v_angle + diffang * bound(frametime, r * frametime * (2+skill*skill*0.05-random()*0.05*(10-skill)), 1);
-	self.v_angle = self.v_angle + diffang * bound(delta_t, r * delta_t * (2+pow(skill+bot_mouseskill,3)*0.005-random()), 1);
+	self.v_angle = self.v_angle + diffang * bound(delta_t, r * delta_t * (2+pow(bot_skill10 +bot_mouseskill,3)*0.005-random()), 1);
 	self.v_angle = self.v_angle * bound(0,bot_ai_aimskill_mouse,1) + desiredang * bound(0,(1-bot_ai_aimskill_mouse),1);
 	//self.v_angle = self.v_angle + diffang * bound(0, r * frametime * (skill * 0.5 + 2), 1);
 	//self.v_angle = self.v_angle + diffang * (1/ blendrate);
@@ -260,14 +252,14 @@ float(vector v, float maxfiredeviation) bot_aim_dir {
 	// decide whether to fire this time
 	// note the maxfiredeviation is in degrees so this has to convert to radians first
 	if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
-	if (vlen(trace_endpos-shotorg) < 500+500*bound(0, skill+bot_aggresskill, 10) || random()*random()>bound(0,(skill+bot_aggresskill)*0.05,1))
-		self.bot_firetimer = time + bound(0.1, 0.5-(skill+bot_aggresskill)*0.05, 0.5);
+	if (vlen(trace_endpos-shotorg) < 500+500*bound(0, bot_skill10 +bot_aggresskill, 10) || random()*random()>bound(0,(bot_skill10 +bot_aggresskill)*0.05,1))
+		self.bot_firetimer = time + bound(0.1, 0.5-(bot_skill10 +bot_aggresskill)*0.05, 0.5);
 	//trace_line(shotorg,shotorg+shotdir*1000,FALSE,world);
 	if (g_topview) {
 		self.v_angle_x = 0;
 		self.bot_mouseaim_x = 0;
 	}
-	return self.bot_canfire && (time < self.bot_firetimer);
+	return (time < self.bot_firetimer);
 }
 
 vector(vector targorigin, vector targvelocity, float shotspeed, float shotdelay) bot_aim_shotlead {

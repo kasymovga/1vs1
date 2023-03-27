@@ -426,6 +426,8 @@ void(void) bot_serverframe {
 	if (time < 2)
 		return;
 
+	skill = cvar("skill");
+	bot_skill10 = sqrt(skill * 2.5);
 	stepheightvec = sv_stepheight * '0 0 1';
 	bot_navigation_movemode = ((bot_navigation_ignoreplayers) ? TRACE_MOVE_NOMONSTERS : TRACE_MOVE_NORMAL);
 	if (time > bot_skill_auto_nextthink) {
