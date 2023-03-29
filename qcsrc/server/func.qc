@@ -1077,7 +1077,7 @@ void(void) spawnfunc_func_button {
 	if (self.wait < 0 && cvar("g_button_nowaitforever")) {
 		self.wait = 0.001;
 	}
-	if (!self.lip)
+	if (!self.lip && self.lip_str == "")
 		self.lip = 4;
 
 	if (self.sounds > 0)
@@ -1594,7 +1594,7 @@ void(void) spawnfunc_func_door {
 	if (!self.wait)
 		self.wait = 3;
 
-	if (!self.lip)
+	if (!self.lip && self.lip_str == "")
 		self.lip = 8;
 
 	func_pos_setup();
