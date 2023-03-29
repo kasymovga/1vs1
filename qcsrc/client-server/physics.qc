@@ -629,9 +629,10 @@ void(void) physics_player_jump {
 		if (!(physics_flags & FL_JUMPRELEASED))
 			return;
 
-	if (!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND))
+	if (!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND)) {
+		physics_skimming = g_skimming_time;
 		physics_landing_hook();
-
+	}
 	if (g_cpmdoublejump && physics_cpmdoublejump_time > 0 && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))) {
 		if (physics_groundvelocity_dotproduct > 0)
 			physics_velocity_z = max(sv_jumpvelocity * 1.3704, physics_velocity_z);
@@ -652,7 +653,6 @@ void(void) physics_player_jump {
 	physics_cpmdoublejump_time = 0.4;
 	physics_flags &= ~FL_ONGROUND_OR_SLICK;
 	physics_flags &= ~FL_JUMPRELEASED;
-	physics_skimming = g_skimming_time;
 	physics_on_jump_hook();
 }
 
