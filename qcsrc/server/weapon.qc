@@ -18,6 +18,7 @@ vector sv_qcanimation_melee_exterior;
 float sv_qcweaponanimation;
 float g_shootfromcenter;
 float g_shootfromeye;
+float g_shootforward;
 float g_norecoil;
 float g_recoil_extra;
 float g_recoil_extra_spread;
@@ -909,7 +910,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	vecs_visual = ent_orig.weaponentity.shotorg_visual;
 	vecs_visual_y = -vecs_visual_y;
 	dv = v_right * vecs_y + v_up * vecs_z;
-	weapon_shotorg = ent.origin + ent.view_ofs;
+	weapon_shotorg = ent.origin + ent.view_ofs + v_forward * g_shootforward;
 	weapon_shotorg_visual = weapon_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 48;
 	weapon_shotorg = weapon_shotorg + dv;
 	// calculate the shotdir from the chosen shotorg
@@ -1189,6 +1190,7 @@ void(void) weapon_init {
 	CVAR_CACHE(g_weaponratefactor);
 	CVAR_CACHE(g_shootfromcenter);
 	CVAR_CACHE(g_shootfromeye);
+	CVAR_CACHE(g_shootforward);
 	CVAR_CACHE(g_projectiles_newton_style);
 	CVAR_CACHE(g_norecoil);
 	CVAR_CACHE(g_recoil_extra);
