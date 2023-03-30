@@ -192,6 +192,7 @@ string(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
 
 void(void) map_list_reset {
 	print("Building map list...\n");
+	registercvar("_g_maplist", "");
 	string exclude = strcat(" ", cvar_string("g_maplist_exclude"), " ");
 	string list = "";
 	string h, t = map_list_allowed_maps(map_info_required_flags(), map_info_forbidden_flags());
