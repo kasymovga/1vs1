@@ -1,6 +1,7 @@
 set g_cts_scorelimit "0" "Scorelimit for CTS"
 set g_cts_timelimit "" "Timelimit for CTS, when empty, g_timelimit using, <= 0 mean no limit"
 set g_cts_leadlimit "" "Dummy cvar, CTS not have leadlimit"
+set g_cts_use_race_maps 1 "Allow playing race maps in CTS mode"
 set cts_g_balance_kill_delay 0
 set cts_g_start_weapon_laser 0
 set cts_g_respawn_delay 0

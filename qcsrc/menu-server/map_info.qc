@@ -595,6 +595,10 @@ float(string pFilename, float pAllowGenerate, float pGametypeToSet) map_info_get
 				if (cvar("g_tdm_use_dm_maps"))
 					map_info_map_supported_game_types |= MAP_INFO_TYPE_TEAM_DEATHMATCH;
 
+			if (map_info_map_supported_game_types & MAP_INFO_TYPE_RACE)
+				if (cvar("g_cts_use_race_maps"))
+					map_info_map_supported_game_types |= MAP_INFO_TYPE_CTS;
+
 			if (map_info_map_supported_game_types & MAP_INFO_TYPE_CTF)
 				if (cvar("g_tdm_use_ctf_maps"))
 					map_info_map_supported_game_types |= MAP_INFO_TYPE_TEAM_DEATHMATCH;
