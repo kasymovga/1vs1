@@ -60,7 +60,7 @@ void(entity me) fillNexuizHudDialog {
 	me.TR(me);
 		me.TD(me, 6, 2, e = makeNexuizHudList());
 		hudListNexuizHudDialog = e;
-	me.gotoRC(me, 1, 3); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 2, 3); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 6, 2, e = makeNexuizSkinList());
 		skinListNexuizHudDialog = e;
 	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
