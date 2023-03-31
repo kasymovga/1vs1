@@ -31,10 +31,6 @@ void(entity me) fillNexuizAdvancedDialog {
 		me.TD(me, 1, 1.7, e = makeNexuizSlider(0, 30, 0.5, "g_start_delay"));
 	me.TR(me);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeNexuizCheckBoxEx(2, 0, "g_antilag", _("AntiLag")));
-	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1.2, makeNexuizTextLabel(0, _("Teamplay settings:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
