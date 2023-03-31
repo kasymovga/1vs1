@@ -23,9 +23,6 @@ void(entity me) fillNexuizAdvancedDialog {
 		me.TD(me, 1, 1.2, makeNexuizTextLabel(0, _("Game settings:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeNexuizCheckBox(0, "sv_spectate", _("Allow spectating")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeNexuizTextLabel(0, _("Spawn shield:")));
 		me.TD(me, 1, 1.7, e = makeNexuizSlider(0, 15, 0.5, "g_spawnshieldtime"));
 	me.TR(me);
