@@ -1188,7 +1188,7 @@ void(void) player_body_init {
 		g_player_allowed_models = strcat(g_player_allowed_models, player_body_find_models("models/player/*.psk"));
 		g_player_allowed_models = str_zone_ifneeded(strcat(g_player_allowed_models, player_body_find_models("models/player/*.iqm")));
 	}
-	print("g_player_allowed_models=", g_player_allowed_models, "\n");
+	print("Allowed player models: ", g_player_allowed_models, "\n");
 	if (str_car(g_player_allowed_models) == "") {
 		player_body_precache_all_models("models/player/*.zym");
 		player_body_precache_all_models("models/player/*.dpm");
