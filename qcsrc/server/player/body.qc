@@ -742,6 +742,9 @@ string(string _playermodel) player_body_model_allowed {
 	if (substring(modelwithoutextension, 0, 14) == "models/player/")
 		modelwithoutextension = substring(modelwithoutextension, 14, -1);
 
+	if (modelwithoutextension == "nexus")
+		modelwithoutextension = "rexus"; //workaroud for disabled nexus.zym
+
 	float nextspace, nextcolon;
 	float similarpos = strstrofs(s, strcat(" ", modelwithoutextension, "."), 0);
 	if (similarpos < 0)
