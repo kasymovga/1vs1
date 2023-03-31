@@ -6,7 +6,7 @@ CLASS(NexuizMutatorsDialog) EXTENDS(NexuizDialog)
 	METHOD(NexuizMutatorsDialog, close, void(entity))
 	ATTRIB(NexuizMutatorsDialog, title, string, _("Mutators"))
 	ATTRIB(NexuizMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
-	ATTRIB(NexuizMutatorsDialog, intendedWidth, float, 0.3)
+	ATTRIB(NexuizMutatorsDialog, intendedWidth, float, 0.5)
 	ATTRIB(NexuizMutatorsDialog, rows, float, 10)
 	ATTRIB(NexuizMutatorsDialog, columns, float, 4)
 	ATTRIB(NexuizMutatorsDialog, refilterEntity, entity, NULL)
@@ -22,11 +22,16 @@ string profileDescriptionNexuizMutatorsDialog(string profile_name) {
 	if (profile_name == "") return "Default";
 	if (profile_name == "bestakimbo") return "Best Akimbo";
 	if (profile_name == "minsta") return "Minsta+Hook";
+	if (profile_name == "minsta_duel") return "Minsta+Hook Duel";
 	if (profile_name == "cra") return "Camping Rifle Arena";
 	if (profile_name == "explosive_minsta") return "Explosive Minsta+Hook";
 	if (profile_name == "defragcpm") return "Defrag CPM";
 	if (profile_name == "overkill") return "OverKill";
 	if (profile_name == "mixed_arts") return "Mixed Arts";
+	if (profile_name == "nexuiz25") return "Nexuiz";
+	if (profile_name == "physicscpma") return "RexuizProMod";
+	if (profile_name == "quakiuz") return "Quakiuz";
+	if (profile_name == "duel") return "Duel";
 	return "Unknown";
 }
 
@@ -49,12 +54,20 @@ void fillNexuizMutatorsDialog(entity me) {
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "cra", profileDescriptionNexuizMutatorsDialog("cra")));
 	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "quakiuz", profileDescriptionNexuizMutatorsDialog("quakiuz")));
+	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
+	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "overkill", profileDescriptionNexuizMutatorsDialog("overkill")));
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "mixed_arts", profileDescriptionNexuizMutatorsDialog("mixed_arts")));
 	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "nexuiz25", profileDescriptionNexuizMutatorsDialog("nexuiz25")));
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "physicscpma", profileDescriptionNexuizMutatorsDialog("physicscpma")));
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "duel", profileDescriptionNexuizMutatorsDialog("duel")));
+	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "defragcpm", profileDescriptionNexuizMutatorsDialog("defragcpm")));
-
 	me.gotoRC(me, me.rows - 1, 0);
 	me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
 		e.onClick = Dialog_Close;
