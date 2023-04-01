@@ -596,7 +596,7 @@ float(entity plr, entity viewer) player_alpha {
 	if (viewer.classname == "spectator") {
 		viewer = viewer.enemy;
 	}
-	if (plr.clipgroup == viewer.clipgroup && plr != viewer) {
+	if (plr.clipgroup && plr.clipgroup == viewer.clipgroup && plr != viewer) {
 		float d = vlen(plr.origin - viewer.origin);
 		if (d < 160) {
 			dalpha *= (d / 330);
