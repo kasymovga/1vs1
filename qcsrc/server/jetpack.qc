@@ -53,7 +53,7 @@ float(void) jetpack_using {
 
 var void() jetpack_player_effects_next_link;
 void() jetpack_player_effects {
-	if (self.items & IT_FUEL_REGEN || self.ammo_fuel > 0 || !g_jetpack_fuel)
+	if ((self.items & IT_FUEL_REGEN) || self.ammo_fuel > 0 || !g_jetpack_fuel)
 		self.items |= IT_FUEL;
 	else
 		self.items &= ~IT_FUEL;

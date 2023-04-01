@@ -29,11 +29,11 @@ float(float a, float b) target_items_func_and {
 }
 
 float(float a, float b) target_items_func_itembitset {
-	return (a - (a & (IT_PICKUPMASK | IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY))) | b;
+	return (a - (a & (IT_PICKUPMASK | IT_FUEL | IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY))) | b;
 }
 
 float(float a, float b) target_items_func_itemand {
-	return (a - (a & (IT_PICKUPMASK | IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY))) | (a & b);
+	return (a - (a & (IT_PICKUPMASK | IT_FUEL | IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY))) | (a & b);
 }
 
 float(float a, float b) target_items_func_or {
@@ -122,7 +122,6 @@ void(void) target_items_use {
 			activator.speed_finished = time + self.speed_finished;
 
 		if ((self.items & activator.items) & IT_INVISIBILITY)
-
 			activator.invisibility_finished = time + self.invisibility_finished;
 	} else if (self.spawnflags == 1) { // AND/MIN
 		target_items_change(0, ammo_shells, target_items_func_min, "misc/itempickup.wav", "");
