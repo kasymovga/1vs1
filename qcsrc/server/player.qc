@@ -596,6 +596,12 @@ float(entity plr, entity viewer) player_alpha {
 	if (viewer.classname == "spectator") {
 		viewer = viewer.enemy;
 	}
+	if (plr.clipgroup == viewer.clipgroup && plr != viewer) {
+		float d = vlen(plr.origin - viewer.origin);
+		if (d < 160) {
+			dalpha *= (d / 330);
+		}
+	}
 	float sa = plugin_chain_player_alpha_mod(plr, viewer, dalpha);
 	if ((plr == viewer || plugin_player_is_carrier(plr)) && sa < 0.01) {
 		sa = 0.01;
