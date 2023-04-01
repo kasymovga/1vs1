@@ -11,7 +11,8 @@ void spider_hunt() {
 	float f = vlen(v);
 	if (f < 60) {
 		self.enemy = self;
-		monster_die();
+		self.classname = "explode";
+		self.event_damage(self, self, self.health + 1, DEATH_HURTTRIGGER, (self.absmin + self.absmax) * 0.5, '0 0 0');
 		return;
 	}
 	float dofire;
