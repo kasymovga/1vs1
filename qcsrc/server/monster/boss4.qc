@@ -169,7 +169,7 @@ void boss4_spawn() {
 	WaypointSprite_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
 }
 
-void boss4_init() {
+void(void) monster_boss4_init {
 	dlc_require("monsters");
 	monster_common_composite_precache("fireguy", "fireball");
 	precache_sound("player/carni-lycan/coms/taunt2.ogg");
@@ -177,9 +177,9 @@ void boss4_init() {
 	projectile_init(PROJECTILE_FIREBALL);
 }
 
-void spawnfunc_monster_boss4_spawn() {
+void(void) spawnfunc_monster_boss4_spawn {
 	setsize(self, '-48 -48 -72', '64 64 135');
-	monster_init(boss4_init);
+	monster_init(monster_boss4_init);
 	self.noise1 = "player/carni-lycan/coms/incoming.ogg";
 	self.noise2 = "player/carni-lycan/player/death2.ogg";
 	self.noise3 = "player/carni-lycan/player/pain50.ogg";

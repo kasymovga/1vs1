@@ -167,15 +167,15 @@ void walker_spawn() {
 	self.view_ofs = '0 0 50';
 }
 
-void walker_init() {
+void(void) monster_walker_init {
 	precache_model("models/turrets/walker_body.md3");
 	precache_model("models/turrets/walker_head_minigun.md3");
 	precache_sound("weapons/uzi_fire.wav");
 	projectile_init(PROJECTILE_ROCKET);
 }
 
-void spawnfunc_monster_walker_spawn() {
+void(void) spawnfunc_monster_walker_spawn {
     setsize(self, WALKER_MIN, WALKER_MAX);
-	monster_init(walker_init);
+	monster_init(monster_walker_init);
 	monster_prepare_spawn(walker_spawn, spawnfunc_monster_walker_spawn);
 }

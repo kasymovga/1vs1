@@ -90,16 +90,16 @@ void spearguy_spawn() {
 	self.entremove = spearguy_remove;
 }
 
-void spearguy_init() {
+void(void) monster_spearguy_init {
 	dlc_require("rspear");
 	dlc_require("monsters");
 	monster_common_composite_precache("spearguy", "rspear");
 	precache_sound("weapons/electro_fly.wav");
 }
 
-void spawnfunc_monster_spearguy_spawn() {
+void(void) spawnfunc_monster_spearguy_spawn {
 	monster_common_setup_spawn_size('-16 -16 -24', '16 16 45', '0 0 8');
-	monster_init(spearguy_init);
+	monster_init(monster_spearguy_init);
 	self.noise1 = "player/reptilian/coms/incoming.ogg";
 	self.noise3 = "player/reptilian/player/pain50.ogg";
 	monster_prepare_spawn(spearguy_spawn, spawnfunc_monster_spearguy_spawn);

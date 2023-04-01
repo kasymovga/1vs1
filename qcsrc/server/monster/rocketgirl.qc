@@ -94,16 +94,16 @@ void rlgirl_spawn() {
 	self.entremove = rlgirl_remove;
 }
 
-void rlgirl_init() {
+void(void) monster_rlgirl_init {
 	dlc_require("monsters");
 	monster_common_composite_precache("rocketgirl", "rl");
 	precache_sound("weapons/rocket_fire.wav");
 	projectile_init(PROJECTILE_ROCKET);
 }
 
-void spawnfunc_monster_rlgirl_spawn() {
+void(void) spawnfunc_monster_rlgirl_spawn {
 	monster_common_setup_spawn_size('-16 -16 -24', '16 16 45', '0 0 8');
-	monster_init(rlgirl_init);
+	monster_init(monster_rlgirl_init);
 	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
 	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
 	monster_prepare_spawn(rlgirl_spawn, spawnfunc_monster_rlgirl_spawn);

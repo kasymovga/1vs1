@@ -93,15 +93,15 @@ void soldier_spawn() {
 	self.view_ofs = '0 0 27';
 }
 
-void soldier_init() {
+void(void) monster_soldier_init {
 	dlc_require("monsters");
 	monster_common_composite_precache("soldier", "shotgun");
 	precache_sound("weapons/shotgun_fire.wav");
 }
 
-void spawnfunc_monster_soldier_spawn() {
+void(void) spawnfunc_monster_soldier_spawn {
 	monster_common_setup_spawn_size('-16 -16 -24', '16 16 45', '0 0 8');
-	monster_init(soldier_init);
+	monster_init(monster_soldier_init);
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
 	monster_prepare_spawn(soldier_spawn, spawnfunc_monster_soldier_spawn);

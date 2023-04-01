@@ -111,7 +111,7 @@ void boss3_spawn() {
 	WaypointSprite_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
 }
 
-void boss3_init() {
+void(void) monster_boss3_init {
 	precache_model("models/arachna/arachna.md3");
 	precache_model("models/weapons/v_electro.md3");
 	precache_sound("weapons/electro_fire.wav");
@@ -119,9 +119,9 @@ void boss3_init() {
 	projectile_init(PROJECTILE_ELECTRO);
 }
 
-void spawnfunc_monster_boss3_spawn() {
+void(void) spawnfunc_monster_boss3_spawn {
 	setsize(self, '-32 -32 -72', '32 32 96');
-	monster_init(boss3_init);
+	monster_init(monster_boss3_init);
 	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
 	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
 	self.atten = 0.1;

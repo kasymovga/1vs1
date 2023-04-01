@@ -128,16 +128,16 @@ void fireguy_spawn() {
 	self.view_ofs = '0 0 27';
 }
 
-void fireguy_init() {
+void(void) monster_fireguy_init {
 	dlc_require("monsters");
 	monster_common_composite_precache("fireguy", "fireball");
 	precache_sound("weapons/fireball_fire.wav");
 	projectile_init(PROJECTILE_FIREMINE);
 }
 
-void spawnfunc_monster_fireguy_spawn() {
+void(void) spawnfunc_monster_fireguy_spawn {
 	monster_common_setup_spawn_size('-16 -16 -24', '16 16 45', '0 0 8');
-	monster_init(fireguy_init);
+	monster_init(monster_fireguy_init);
 	self.noise1 = "player/carni-lycan/coms/incoming.ogg";
 	self.noise3 = "player/carni-lycan/player/pain50.ogg";
 	monster_prepare_spawn(fireguy_spawn, spawnfunc_monster_fireguy_spawn);

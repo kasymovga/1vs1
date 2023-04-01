@@ -71,14 +71,14 @@ void fish_spawn() {
 	anim_set(self, '40 18 18', TRUE, TRUE, FALSE);
 }
 
-void fish_init() {
+void(void) monster_fish_init {
 	precache_model("models/oq/fish.mdl");
 	dlc_require("oqmodels");
 }
 
-void spawnfunc_monster_fish_spawn() {
+void(void) spawnfunc_monster_fish_spawn {
 	setsize(self, '-24 -24 -32', '24 24 16');
-	monster_init(fish_init);
+	monster_init(monster_fish_init);
 	monster_prepare_spawn(fish_spawn, spawnfunc_monster_fish_spawn);
 }
 

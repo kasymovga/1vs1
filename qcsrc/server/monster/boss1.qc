@@ -126,16 +126,16 @@ void boss1_spawn() {
 	WaypointSprite_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
 }
 
-void boss1_init() {
+void(void) monster_boss1_init {
 	dlc_require("monsters");
 	monster_common_composite_precache("heavysoldier", "gl");
 	precache_sound("weapons/grenade_fire.wav");
 	projectile_init(PROJECTILE_GRENADE);
 }
 
-void spawnfunc_monster_boss1_spawn() {
+void(void) spawnfunc_monster_boss1_spawn {
 	monster_common_setup_spawn_size('-48 -48 -72', '64 64 135', '0 0 24');
-	monster_init(boss1_init);
+	monster_init(monster_boss1_init);
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise2 = "player/torus/death.ogg";
 	self.noise3 = "player/torus/pain50.ogg";

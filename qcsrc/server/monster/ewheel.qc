@@ -86,15 +86,15 @@ void ewheel_spawn() {
 	self.ammo_cells = 10;
 }
 
-void ewheel_init() {
+void(void) monster_ewheel_init {
 	precache_model ("models/turrets/ewheel-base2.md3");
 	precache_model ("models/turrets/ewheel-gun1.md3");
 	precache_sound("weapons/uzi_fire.wav");
 	projectile_init(PROJECTILE_LASER);
 }
 
-void spawnfunc_monster_ewheel_spawn() {
+void(void) spawnfunc_monster_ewheel_spawn {
     setsize(self,'-32 -32 0','32 32 48');
-	monster_init(ewheel_init);
+	monster_init(monster_ewheel_init);
 	monster_prepare_spawn(ewheel_spawn, spawnfunc_monster_ewheel_spawn);
 }

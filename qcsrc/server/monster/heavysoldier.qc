@@ -124,7 +124,7 @@ void heavysoldier_spawn() {
 	self.view_ofs = '0 0 27';
 }
 
-void heavysoldier_init() {
+void(void) monster_heavysoldier_init {
 	dlc_require("monsters");
 	monster_common_composite_precache("heavysoldier", "gl");
 	precache_sound("weapons/grenade_fire.wav");
@@ -138,9 +138,9 @@ void heavysoldier_init() {
 	projectile_init(PROJECTILE_GRENADE_BOUNCING);
 }
 
-void spawnfunc_monster_heavysoldier_spawn() {
+void(void) spawnfunc_monster_heavysoldier_spawn {
 	monster_common_setup_spawn_size('-16 -16 -24', '16 16 45', '0 0 8');
-	monster_init(heavysoldier_init);
+	monster_init(monster_heavysoldier_init);
 	self.noise1 = "player/soldier/coms/incoming.ogg";
 	self.noise3 = "player/soldier/player/pain50.ogg";
 	monster_prepare_spawn(heavysoldier_spawn, spawnfunc_monster_heavysoldier_spawn);

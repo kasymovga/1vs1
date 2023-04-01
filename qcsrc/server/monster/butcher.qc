@@ -91,14 +91,14 @@ void butcher_spawn() {
 	self.view_ofs = '0 0 35';
 }
 
-void butcher_init() {
+void(void) monster_butcher_init {
 	precache_model("models/oq/demon.mdl");
 	dlc_require("oqmodels");
 }
 
-void spawnfunc_monster_butcher_spawn() {
+void(void) spawnfunc_monster_butcher_spawn {
 	setsize(self, '-20 -20 -45', '20 20 40');
-	monster_init(butcher_init);
+	monster_init(monster_butcher_init);
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
 	monster_prepare_spawn(butcher_spawn, spawnfunc_monster_butcher_spawn);

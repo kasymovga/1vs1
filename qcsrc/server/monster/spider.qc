@@ -101,13 +101,13 @@ void spider_spawn() {
 	self.weaponentity.colormod = self.colormod;
 }
 
-void spider_init() {
+void(void) monster_spider_init {
 	precache_model("models/spiderbot/spiderbot.dpm");
 	precache_model("models/grenademodel.md3");
 }
 
-void spawnfunc_monster_spider_spawn() {
+void(void) spawnfunc_monster_spider_spawn {
 	setsize(self, '-16 -16 0', '16 16 24');
-	monster_init(spider_init);
+	monster_init(monster_spider_init);
 	monster_prepare_spawn(spider_spawn, spawnfunc_monster_spider_spawn);
 }

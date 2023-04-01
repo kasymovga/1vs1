@@ -83,15 +83,15 @@ void bat_spawn() {
 	self.damageforcescale = 1;
 }
 
-void bat_init() {
+void(void) monster_bat_init {
 	precache_sound("weapons/crylink_fire.wav");
 	precache_model("models/bat.md3");
 	dlc_require("bat");
 	projectile_init(PROJECTILE_CRYLINK);
 }
 
-void spawnfunc_monster_bat_spawn() {
+void(void) spawnfunc_monster_bat_spawn {
 	setsize(self, '-32 -32 -32', '32 32 32');
-	monster_init(bat_init);
+	monster_init(monster_bat_init);
 	monster_prepare_spawn(bat_spawn, spawnfunc_monster_bat_spawn);
 }

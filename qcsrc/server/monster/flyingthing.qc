@@ -80,14 +80,14 @@ void flyingthing_spawn() {
 	self.ammo_cells = 10;
 }
 
-void flyingthing_init() {
+void(void) monster_flyingthing_init {
 	precache_sound("weapons/electro_fire.wav");
 	precache_model("models/turrets/walker_mghead.md3");
 	projectile_init(PROJECTILE_ELECTRO_BEAM);
 }
 
-void spawnfunc_monster_flyingthing_spawn() {
+void(void) spawnfunc_monster_flyingthing_spawn {
 	setsize(self, '-16 -16 -48', '16 16 0');
-	monster_init(flyingthing_init);
+	monster_init(monster_flyingthing_init);
 	monster_prepare_spawn(flyingthing_spawn, spawnfunc_monster_flyingthing_spawn);
 }
