@@ -23,6 +23,20 @@ void(entity me, entity bnt) showHudDialogGameSettingsDialog {
 	GUI_Show(GUI_HUD);
 }
 
+void(entity me) loadCvarsNexuizGameSettingsDialogGunAlpha {
+	float f = (cvar("r_drawviewmodel") ? cvar("cl_gunalpha") : -1);
+	me.value = ((f == 0) ? 1 : (f < 0 ? 0 : f));
+}
+
+void(entity me) saveCvarsNexuizGameSettingsDialogGunAlpha {
+	if (me.value == 0)
+		cvar_set("cl_gunalpha", "-1");
+	else {
+		cvar_set("r_drawviewmodel", "1");
+		cvar_set("cl_gunalpha", ftos(me.value));
+	}
+}
+
 void fillNexuizGameSettingsDialog(entity me)
 {
 	entity e;
@@ -64,7 +78,10 @@ void fillNexuizGameSettingsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, "Weapon opacity:"));
-		me.TD(me, 1, 2.5, e = makeNexuizSlider(0.05, 1, 0.05, "cl_gunalpha"));
+		me.TD(me, 1, 2.5, e = makeNexuizSlider(0, 1, 0.05, "cl_gunalpha"));
+		e.saveCvars = saveCvarsNexuizGameSettingsDialogGunAlpha;
+		e.loadCvars = loadCvarsNexuizGameSettingsDialogGunAlpha;
+		e.loadCvars(e); //cvar must be reloaded with custom loadCvars function
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, "Weapon position:"));
