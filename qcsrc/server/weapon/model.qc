@@ -215,7 +215,7 @@ void(void) weapon_model_think {
 	}
 	self.effects = self.realowner.body.effects & (EFFECT_ADDITIVE | EFFECT_RED | EFFECT_BLUE);
 	self.colormap = self.owner.colormap;
-	self.alpha = player_alpha(self.owner, self.owner);
+	self.alpha = player_alpha(self.owner, akimbo_owner(self.owner));
 	if (self.owner.cvar_cl_gunalpha)
 		self.alpha *= self.owner.cvar_cl_gunalpha;
 

@@ -596,10 +596,10 @@ float(entity plr, entity viewer) player_alpha {
 	if (viewer.classname == "spectator") {
 		viewer = viewer.enemy;
 	}
-	if (plr.clipgroup && plr.clipgroup == viewer.clipgroup && akimbo_owner(plr) != akimbo_owner(viewer)) {
+	if (plr.clipgroup && plr.clipgroup == viewer.clipgroup && plr != viewer) {
 		float d = vlen(plr.origin - viewer.origin);
-		if (d < 160) {
-			dalpha *= (d + 10 / 170);
+		if (d < 320) {
+			dalpha *= ((d + 10) / 330);
 		}
 	}
 	float sa = plugin_chain_player_alpha_mod(plr, viewer, dalpha);
