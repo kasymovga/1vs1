@@ -988,3 +988,15 @@ msgstr "Geavanceerd"
 
 msgid "Interface"
 msgstr "Vormgeving"
+
+msgid "Radar position:"
+msgstr "Radarpositie:"
+
+msgid "Swing of the weapon model when walking"
+msgstr "Zwaaien van het wapenmodel tijdens het lopen"
+
+msgid "Use old key indicator"
+msgstr "Gebruik oude sleutelindicator"
+
+msgid "Use \"Iceland\" font for big messages"
+msgstr "Gebruik het lettertype \"Iceland\" voor grote berichten"

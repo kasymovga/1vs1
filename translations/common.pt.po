@@ -50,3 +50,6 @@ msgstr "Salvar/Carregar Jogo"
 
 msgid "custom"
 msgstr "personalisar"
+
+msgid "Show radar:"
+msgstr "Mostrar radar:"

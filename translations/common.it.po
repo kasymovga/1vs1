@@ -36,3 +36,6 @@ msgstr "Salva/Carica Partita"
 
 msgid "custom"
 msgstr "custom"
+
+msgid "Show radar:"
+msgstr "Mostra radar:"

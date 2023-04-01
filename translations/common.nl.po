@@ -50,3 +50,6 @@ msgstr "Game opslaan/laden"
 
 msgid "custom"
 msgstr "aangepast"
+
+msgid "Show radar:"
+msgstr "Radar tonen:"

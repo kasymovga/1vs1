@@ -988,3 +988,15 @@ msgstr "Расширенные"
 
 msgid "Interface"
 msgstr "Интерфейс"
+
+msgid "Radar position:"
+msgstr "Расположение радара:"
+
+msgid "Swing of the weapon model when walking"
+msgstr "Тряска модели оружия при ходьбе"
+
+msgid "Use old key indicator"
+msgstr "Использовать старый индикатор клавиш"
+
+msgid "Use \"Iceland\" font for big messages"
+msgstr "Использовать шрифт \"Iceland\" для больших сообщений"

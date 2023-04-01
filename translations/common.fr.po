@@ -50,3 +50,6 @@ msgstr "Sauvegarder/Charger Partie"
 
 msgid "custom"
 msgstr "personnaliser"
+
+msgid "Show radar:"
+msgstr "Afficher les radars:"

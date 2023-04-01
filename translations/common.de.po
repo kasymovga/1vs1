@@ -50,3 +50,6 @@ msgstr "Speicher/Lade Spiel"
 
 msgid "custom"
 msgstr "custom"
+
+msgid "Show radar:"
+msgstr "Radar zeigen:"

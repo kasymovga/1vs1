@@ -989,3 +989,15 @@ msgstr "Avanzate"
 
 msgid "Interface"
 msgstr "Interfaccia"
+
+msgid "Radar position:"
+msgstr "Posizione radar:"
+
+msgid "Swing of the weapon model when walking"
+msgstr "Oscillazione del modello dell'arma quando si cammina"
+
+msgid "Use old key indicator"
+msgstr "Usa il vecchio indicatore chiave"
+
+msgid "Use \"Iceland\" font for big messages"
+msgstr "Usa il carattere \"Iceland\" per i messaggi di grandi dimensioni"

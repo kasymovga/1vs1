@@ -36,3 +36,6 @@ msgstr "Сохранить/загрузить игру"
 
 msgid "custom"
 msgstr "особое"
+
+msgid "Show radar:"
+msgstr "Показывать радар:"
