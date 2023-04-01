@@ -63,7 +63,7 @@ void(entity me) fillNexuizWeaponsDialog {
 		me.TDempty(me, 1.5);
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_gunalign_force_center", _("Force center position")));
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeNexuizCheckBox(0, "cl_bobmodel", _("Weapon model bob on walk")));
+		me.TD(me, 1, 4, e = makeNexuizCheckBox(0, "cl_bobmodel", _("Swing of the weapon model when walking")));
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeNexuizCheckBox(0, "cl_showweaponspawns", _("Weapon location hint")));
 	me.gotoRC(me, 0, 2);
