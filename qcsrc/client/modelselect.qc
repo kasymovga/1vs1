@@ -133,14 +133,15 @@ void(string _model) modelselect_get_idle_q3animations {
 	fclose(f);
 }
 
-float modelselect_draw_last_chase;
+float modelselect_draw_last_noviewmodel;
 void(void) modelselect_draw {
 	input_event_callback = modelselect_input_event;
 	mouse_enable("");
 	sbar_hidescores = TRUE;
 	string s = modelselect_list;
-	if (modelselect_list_pos_prev != modelselect_list_pos || CVAR(chase_active) != modelselect_draw_last_chase) {
-		modelselect_draw_last_chase = CVAR(chase_active);
+	float noviewmodel = (CVAR(chase_active) || !cvar("r_drawviewmodel"));
+	if (modelselect_list_pos_prev != modelselect_list_pos || noviewmodel != modelselect_draw_last_noviewmodel) {
+		modelselect_draw_last_noviewmodel = noviewmodel;
 		if (modelselect_list_pos >= modelselect_list_len)
 			modelselect_list_pos = 0;
 		else if (modelselect_list_pos < 0)
@@ -157,7 +158,7 @@ void(void) modelselect_draw {
 		precache_model(_model);
 		setmodel(modelselect_current, _model);
 		float fov_factor = (view_fov / 90);
-		if (CVAR(chase_active)) {
+		if (noviewmodel) {
 			modelselect_current.scale = 0.4 * fov_factor;
 			view_fixed_angles_x = 0;
 		} else
@@ -196,7 +197,7 @@ void(void) modelselect_draw {
 		}
 		modelselect_list_pos_prev = modelselect_list_pos;
 	}
-	if (CVAR(chase_active)) {
+	if (noviewmodel) {
 		makevectors(view_camera_angles);
 		setorigin(modelselect_current, view_camera_origin + v_forward * 50);
 	} else
@@ -289,7 +290,7 @@ void(string s, string curmodel, float curskin) modelselect_search_by_path {
 }
 
 void(void) modelselect_model_draw {
-	if (CVAR(chase_active))
+	if (CVAR(chase_active) || !cvar("r_drawviewmodel"))
 		self.renderflags = 0;
 	else
 		self.renderflags = RF_VIEWMODEL | RF_DEPTHHACK;
