@@ -257,7 +257,8 @@ void(void) spawnfunc_target_items {
 		else if (argv(i) == "invincible")             { self.items |= IT_INVINCIBLE; powerup_invincible_init(); }
 		else if (argv(i) == "speed")                  { self.items |= IT_SPEED; powerup_speed_init(); }
 		else if (argv(i) == "invisibility")           { self.items |= IT_INVISIBILITY; powerup_invisibility_init(); }
-		else if (argv(i) == "jetpack")                self.items |= IT_JETPACK;
+		else if (argv(i) == "jetpack")                { self.items |= IT_JETPACK; if not(self.ammo_fuel) self.ammo_fuel = g_balance_fuel_limit; jetpack_enable(); }
+		else if (argv(i) == "fuel_regen")             { self.items |= IT_FUEL_REGEN; if not(self.ammo_fuel) self.ammo_fuel = g_balance_fuel_limit; }
 		else {
 			WEAPON_INFO_FOR_EACH(e) {
 				if (argv(i) == e.netname) {
