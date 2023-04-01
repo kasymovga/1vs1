@@ -191,6 +191,6 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.onClick = showHudDialogGameSettingsDialog;
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_voice;sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;sendcvar cl_damage_screen_effects", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_voice;sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;sendcvar cl_damage_screen_effects;menu_cmd sync", COMMANDBUTTON_CLOSE));
 }
 #endif

@@ -55,7 +55,7 @@ float(float bInputType, float nPrimary, float nSecondary) modelselect_input_even
 			else if (i == 2)
 				modelselect_list_pos++;
 			else if (i == 3) {
-				localcmd("playermodel ", modelselect_current.model, ";playerskin ", ftos(modelselect_current.skin), "\n");
+				localcmd("playermodel ", modelselect_current.model, ";playerskin ", ftos(modelselect_current.skin), ";menu_cmd sync\n");
 				modelselect_remove();
 			} else if (i == 4)
 				modelselect_remove();
