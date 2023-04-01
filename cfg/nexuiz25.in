@@ -46,3 +46,5 @@ set nexuiz25_g_balance_falldamage_minspeed 1400
 set nexuiz25_g_balance_falldamage_factor 0.15
 set nexuiz25_g_balance_hlac_secondary_refire 1
 set nexuiz25_g_balance_hlac_secondary_spread 0.15
+set nexuiz25_race_g_start_weapon_laser 1
+set nexuiz25_race_g_start_weapon_shotgun 0
