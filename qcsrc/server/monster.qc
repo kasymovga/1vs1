@@ -698,7 +698,7 @@ void spawnfunc_monster_walk_path() {
 	waypoint_spawn(org, org, WAYPOINTFLAG_GENERATED);
 }
 
-void(void) monster_monsters_init {
+void(void) monster_monsters_init_delayed {
 	string monster_list = cvar_string("g_monsters_spawn");
 	string head, tail;
 	tail = monster_list;
@@ -741,6 +741,10 @@ void(void) monster_monsters_init {
 		} else
 			print("Function ", monster_func, " not found\n");
 	}
+}
+
+void(void) monster_monsters_init {
+	entity_initialize(world, monster_monsters_init_delayed, INITPRIO_LAST);
 	precache_model("models/items/a_bullets.mdl");
 	precache_model("models/items/a_shells.md3");
 	precache_model("models/items/a_rockets.md3");
