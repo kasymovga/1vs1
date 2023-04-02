@@ -67,25 +67,30 @@ void(void) weapon_porto_touch {
 		return; // handled by the portal
 
 	norm = trace_plane_normal;
-	if (trace_ent.iscreature) {
-		trace_line(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN_z, TRACE_MOVE_WORLDONLY, self);
-		if (trace_fraction >= 1)
-			return;
+	if (other) {
+		if (other.iscreature) {
+			trace_line(other.origin + '0 0 1' * other.mins_z + '0 0 1', other.origin + '0 0 1' * other.mins_z + '0 0 -1', TRACE_MOVE_WORLDONLY, self);
+			if (trace_fraction >= 1)
+				return;
 
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
-			return;
+			if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
+				return;
 
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+				return;
+		} else if (trace_dphitcontents == 0) //something touching projectile
 			return;
 	}
 	if (self.owner.playerid != self.playerid) {
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		remove(self);
-	} else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP) {
+	} else if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP)) {
 		sound_spam(self, CHAN_PROJECTILE, "porto/bounce.wav", VOL_BASE, ATTN_NORM);
 		// just reflect
 		self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * trace_plane_normal);
 		self.angles = vectoangles(self.velocity - 2 * trace_plane_normal * (self.velocity * trace_plane_normal));
+		self.velocity += 2 * trace_plane_normal * (self.velocity * trace_plane_normal);
+		projectile_update(self);
 	} else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) {
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		weapoon_porto_fail();
@@ -119,7 +124,7 @@ void(float out) weapon_porto_attack {
 	weapon_shotdir = v_forward;
 	weapon_shotorg = self.origin + self.view_ofs + ((weapon_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 	gren = projectile(TRUE, (out ? PROJECTILE_PORTO_BLUE : PROJECTILE_PORTO_RED), TRUE, self);
-	gren.movetype = MOVETYPE_FLY;
+	gren.movetype = MOVETYPE_BOUNCEMISSILE;
 	gren.playerid = self.playerid;
 	gren.classname = "porto";
 	gren.bot_dodge = TRUE;

@@ -175,9 +175,6 @@ void(void) portal_touch {
 	if (plugin_portal_forbidden_for(other))
 		return; // never portal these
 
-	if (other.classname == "grapplinghook")
-		return; // handled by think
-
 	if (!self.enemy)
 		error("portal_touch called for a broken portal\n");
 
