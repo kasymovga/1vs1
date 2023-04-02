@@ -4,6 +4,7 @@ float g_balance_porto_primary_animtime;
 float g_balance_porto_primary_lifetime;
 float g_balance_porto_primary_refire;
 float g_balance_porto_primary_speed;
+float g_balance_porto_old;
 float g_balance_powerup_strength_force;
 string sv_announcer_extra_telefrag;
 
@@ -89,8 +90,6 @@ void(void) weapon_porto_touch {
 		// just reflect
 		self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * trace_plane_normal);
 		self.angles = vectoangles(self.velocity - 2 * trace_plane_normal * (self.velocity * trace_plane_normal));
-		self.velocity += 2 * trace_plane_normal * (self.velocity * trace_plane_normal);
-		projectile_update(self);
 	} else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) {
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		weapoon_porto_fail();
@@ -202,6 +201,7 @@ float(float req) weapon_porto {
 		CVAR_CACHE(g_balance_porto_primary_lifetime);
 		CVAR_CACHE(g_balance_porto_primary_refire);
 		CVAR_CACHE(g_balance_porto_primary_speed);
+		CVAR_CACHE(g_balance_porto_old);
 		CVAR_CACHE(g_balance_powerup_strength_force);
 		CVAR_CACHE_STR(sv_announcer_extra_telefrag);
 		if (sv_announcer_extra_telefrag != "")
