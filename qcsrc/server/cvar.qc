@@ -137,6 +137,10 @@ float(string cvarname) cvar_ext {
 
 	string s;
 	float i, j;
+	s = strcat("force_", "_", cvarname);
+	if (cvar_string_orig(s) != "")
+		return cvar_orig(s);
+
 	for (i = 0; i < cvar_profile_prefix_len; i++) {
 		for (j = 0; j < cvar_game_prefix_len; j++) {
 			s = strcat(cvar_profile_prefix[i], "_", cvar_game_prefix[j], "_", cvarname);
@@ -161,6 +165,9 @@ string(string cvarname) cvar_string_ext {
 
 	string s, val;
 	float i, j;
+	if ((s = cvar_string(strcat("force_", "_", cvarname))) != "")
+		return s;
+
 	for (i = 0; i < cvar_profile_prefix_len; i++) {
 		for (j = 0; j < cvar_game_prefix_len; j++) {
 			s = strcat(cvar_profile_prefix[i], "_", cvar_game_prefix[j], "_", cvarname);
@@ -250,6 +257,7 @@ void(string profile) cvar_init {
 	string s;
 	cvar_orig = cvar;
 	cvar_string_orig = cvar_string;
+	cvar_profile_add("force");
 	profile = strreplace("+", " ", profile);
 	cvar_game_add(game_type_name(game_type_current()));
 	while (profile != "") {

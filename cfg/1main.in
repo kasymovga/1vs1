@@ -55,6 +55,5 @@ alias mute "prvm_edictset server $1 muted 1; prvm_edictset server $1 voipgroup 0
 alias unmute "prvm_edictset server $1 muted 0" // dito
 set sv_loddistance1 1024
 set sv_loddistance2 4096
-set g_mapinfo_settemp_acl "+*" "ACL for mapinfo setting cvars"
 set sv_clientversion_hidden 0
 set sv_maxconnects_per_address 0

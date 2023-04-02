@@ -449,6 +449,9 @@ void(string pFilename, string acl, string s, float recurse) map_info_parse_set_t
 	else if (map_info_matchacl(acl, t) <= 0)
 		print("Map ", pFilename, " contains a denied setting, ignored\n");
 	else {
+		if (cvar("g_mapinfo_settemp_force"))
+			t = strcat("force_", t);
+
 		cvar_settemp(t, s);
 #ifdef SVQC
 		if (g_campaign)
