@@ -202,10 +202,10 @@ float(float req) weapon_porto {
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.porto_current_in = world;
 		self.porto_current_out = world;
-	} else if (req == WEAPON_REQUEST_CLEAR)
+	} else if (req == WEAPON_REQUEST_CLEAR) {
 		if (g_balance_porto_remove_on_death)
 			weapon_porto_remove(self);
-	else if (req == WEAPON_REQUEST_CVAR_CACHE) {
+	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_porto_primary_animtime);
 		CVAR_CACHE(g_balance_porto_primary_lifetime);
 		CVAR_CACHE(g_balance_porto_primary_refire);
