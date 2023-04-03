@@ -1,7 +1,15 @@
 var void(void) client_version_basics_end_next;
 void(void) client_version_basics_end {
+	var .float oldclientversionfield = clientversion;
 	CLIENT_SCORE_VERSION = score_register((cvar("sv_clientversion_hidden") ? "cvhidden" : "cv"), SCORE_FLAG_NOCLEAR);
 	clientversion = scores[CLIENT_SCORE_VERSION];
+	if (oldclientversionfield) {
+		entity e;
+		FOR_EACH_REALPLAYER(e) {
+			score_player_set(e, CLIENT_SCORE_VERSION, e.oldclientversionfield);
+			e.clientversion = e.oldclientversionfield;
+		}
+	}
 	client_version_basics_end_next();
 }
 
@@ -13,6 +21,7 @@ void(void) client_version_set_delayed {
 	}
 	if (self.owner.scorekeeper) {
 		score_player_set(self.owner, CLIENT_SCORE_VERSION, self.cnt);
+		self.owner.clientversion = self.cnt;
 		remove(self);
 		return;
 	}
@@ -49,6 +58,7 @@ void(entity cl, string s) client_version_set {
 		return;
 	}
 	score_player_set(cl, CLIENT_SCORE_VERSION, v);
+	cl.clientversion = v;
 }
 
 var float(string cmd, float tokens) client_version_cmd_client_handle_next;

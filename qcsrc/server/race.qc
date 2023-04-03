@@ -824,6 +824,7 @@ void() race_world_reset {
 		cvar_set("leadlimit", ftos(race_leadlimit));
 		cvar_set("timelimit", ftos(race_timelimit));
 		race_score_setup();
+		score_basics_end();
 	}
 }
 
@@ -1112,6 +1113,9 @@ float() race_ready_restart_hard {
 }
 
 void(void) race_qualifying_limits {
+	race_fraglimit = cvar("fraglimit");
+	race_leadlimit = cvar("leadlimit");
+	race_timelimit = cvar("timelimit");
 	cvar_set("fraglimit", "0");
 	cvar_set("leadlimit", "0");
 	cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
@@ -1355,7 +1359,6 @@ string(string s) race_map_vote_send_map_name_mod {
 
 void(void) race_init {
 	if (game_type == GAME_TYPE_RACE) {
-		float qualifying_override = cvar("g_race_qualifying_timelimit_override");
 		g_race = 1;
 		if (cvar("g_race_teams")) {
 			team_play_activate();
@@ -1364,16 +1367,10 @@ void(void) race_init {
 		} else
 			race_teams = 0;
 
-		if (qualifying_override >= 0)
-			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
-
 		if (g_campaign) {
 			g_race_qualifying = 1;
 		} else {
 			if (cvar("g_race_qualifying_timelimit") > 0) {
-				race_fraglimit = cvar("fraglimit");
-				race_leadlimit = cvar("leadlimit");
-				race_timelimit = cvar("timelimit");
 				defer(0, race_qualifying_limits);
 				g_race_qualifying = 2;
 			} else

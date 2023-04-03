@@ -23,6 +23,7 @@ alias gametype_khft "reset_gametype; _gametype khft; bprint_gtswitch ^3Key Hunt 
 alias gametype_ons "reset_gametype; _gametype onslaught; bprint_gtswitch ^3Onslaught"
 alias gametype_onslaught gametype_ons
 alias gametype_race "reset_gametype; _gametype race; bprint_gtswitch ^3Race"
+alias gametype_rc gametype_race
 alias gametype_nexball "reset_gametype; _gametype nexball; bprint_gtswitch ^3Nexball"
 alias gametype_cts "reset_gametype; _gametype cts; bprint_gtswitch ^3CTS"
 alias gametype_ft "reset_gametype; _gametype freeze; bprint_gtswitch ^3Freeze Tag"

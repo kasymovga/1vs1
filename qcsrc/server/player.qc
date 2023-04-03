@@ -980,7 +980,9 @@ void(entity pl) player_physics_setup {
 	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | (g_playerclip_collisions ? DPCONTENTS_PLAYERCLIP : 0);
 	if (player_independent)
 		PLAYER_MAKE_INDEPENDENT(pl);
-
+	else {
+		pl.clipgroup = 0;
+	}
 	if (team_mode)
 	if (g_sideview || !g_player_team_collisions)
 		pl.clipgroup = pl.team;
