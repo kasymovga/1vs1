@@ -235,8 +235,8 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.health = 1;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_TRIGGER;
-	self.movetype = MOVETYPE_NOCLIP;
-	self.flags = FL_CLIENT | FL_NOTARGET;
+	self.movetype = MOVETYPE_QCWALK;
+	self.flags = (FL_CLIENT | FL_NOTARGET);
 	self.armorvalue = 0;
 	self.effects = 0;
 	self.pauserotarmor_finished = 0;

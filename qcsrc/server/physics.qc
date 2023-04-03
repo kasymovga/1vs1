@@ -276,12 +276,25 @@ void(void) physics_player_pre { //called by engine
 		if (plugin_physics_player_allowed_to_move())
 			allowed_to_move = 1;
 
-		if (allowed_to_move) {
+		//cheats
+		if (self.movetype == MOVETYPE_NOCLIP) {
+			self.flags &= ~FL_FLY;
+			BITXOR_ASSIGN(self.flags, FL_SWIM);
+			self.movetype = MOVETYPE_QCWALK;
+		} else if (self.movetype == MOVETYPE_FLY) {
+			self.flags &= ~FL_SWIM;
+			BITXOR_ASSIGN(self.flags, FL_FLY);
+			self.movetype = MOVETYPE_QCWALK;
+		} else if (allowed_to_move) {
 			self.movetype = MOVETYPE_QCWALK;
 		} else {
 			physics_velocity = '0 0 0';
 			self.movetype = MOVETYPE_NONE;
 		}
+	} else if (self.classname == "observer") {
+		self.movetype = MOVETYPE_QCWALK;
+		self.flags |= FL_SWIM;
+		self.flags &= ~FL_ONGROUND;
 	}
 	if (clienttype(self) == CLIENTTYPE_BOT) {
 		bot_think();
@@ -602,7 +615,6 @@ float(entity to, float sf) physics_send {
 		else if (self.classname == "spectator" && (self.enemy.flags & FL_ONGROUND)) sf |= 16;
 		if (self.last_physics_ladder) sf |= 32;
 		if (self.ladder_entity.classname == "func_water") sf |= 64;
-		if (self.flags & FL_JUMPRELEASED) sf |= 128;
 		if (self.crouch) sf |= 256;
 		if (self.last_maxspeedmod != 1) sf |= 512;
 		if (self.movetype != MOVETYPE_QCWALK) sf |= 1024;
@@ -635,9 +647,6 @@ float(entity to, float sf) physics_send {
 
 		if (g_physics_fixed)
 			sf2 |= 8;
-
-		if (self.flags & FL_DOUBLEJUMP)
-			sf2 |= 16;
 
 		if (sf2) sf |= 16384;
 	}
@@ -763,6 +772,7 @@ float(entity to, float sf) physics_send {
 		net_write_coord(MSG_ENTITY, self.velocity_x);
 		net_write_coord(MSG_ENTITY, self.velocity_y);
 		net_write_coord(MSG_ENTITY, self.velocity_z);
+		net_write_coord(MSG_ENTITY, self.flags);
 		if ((sf & 32) && (sf & 64)) {
 			net_write_coord(MSG_ENTITY, self.ladder_entity.speed);
 			net_write_coord(MSG_ENTITY, self.ladder_entity.watertype);

@@ -105,6 +105,7 @@ void(void) physics_update_status {
 	}
 	trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
 	if (trace_startsolid)
+	if not(physics_flags & FL_SWIM) //NOCLIP
 	if (self.solid != SOLID_NOT) {
 		physics_unstuck();
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
@@ -835,10 +836,7 @@ void(void) physics_player_frame {
 			physics_velocity -= physics_ground_normal * (physics_velocity * physics_ground_normal);
 			physics_velocity = normalize(physics_velocity) * f;
 		}
-	} else if (physics_movetype == MOVETYPE_NOCLIP || physics_movetype == MOVETYPE_FLY) {
-		// noclipping or flying
-		physics_flags &= ~FL_ONGROUND;
-
+	} else if (physics_flags & (FL_FLY | FL_SWIM)) { //NOCLIP or FLY
 		physics_velocity = physics_velocity * (1 - frametime * sv_friction);
 		if (g_sideview)
 			makevectors(physics_v_angle_y * '0 1 0');
@@ -987,7 +985,16 @@ void(void) physics_player_frame {
 		}
 	}
 :end
-	if (physics_movetype == MOVETYPE_QCWALK)
+	if (physics_flags & (FL_SWIM | FL_FLY)) { //CHEATS
+		if (physics_flags & FL_SWIM) //NOCLIP
+			setorigin(self, self.origin + physics_velocity * frametime);
+		else { //FLY
+			float gs = sv_gravity;
+			sv_gravity = 0;
+			physics_move();
+			sv_gravity = gs;
+		}
+	} else if (physics_movetype == MOVETYPE_QCWALK)
 		physics_move();
 
 	if (g_adjust_view_offset)

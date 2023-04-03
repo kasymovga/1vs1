@@ -3,8 +3,7 @@ float physics_button_crouch;
 float physics_jump_velocity_factor;
 float physics_start_teleport_time;
 float physics_start_crouch;
-float physics_start_flags_jumpreleased;
-float physics_start_flags_doublejump;
+float physics_start_flags;
 float physics_start_frametime_accumulator;
 float physics_ground_time;
 float physics_ground_curtime;
@@ -134,9 +133,6 @@ void(void) physics_frame_begin_hook {
 
 void(void) physics_frame_end_hook {
 	physics_teleport_time -= frametime;
-	if (physics_movetype == MOVETYPE_NOCLIP) {
-		setorigin(self, self.origin + (physics_velocity * frametime));
-	}
 	physics_velocity_frame_end = physics_velocity;
 	physics_frametime = frametime;
 }
@@ -163,14 +159,7 @@ vector(void) physics_view_origin {
 		physics_teleport_time = physics_start_teleport_time;
 		physics_deadflag = player_deadflag;
 		physics_cantjump = (physics_deadflag != DEAD_NO);
-		if (physics_start_flags_jumpreleased)
-			physics_flags = FL_JUMPRELEASED;
-		else
-			physics_flags = 0;
-
-		if (physics_start_flags_doublejump)
-			physics_flags |= FL_DOUBLEJUMP;
-
+		physics_flags = physics_start_flags;
 		if (physics_plug_pre)
 			physics_plug_pre();
 
@@ -444,13 +433,13 @@ void(float isnew) physics_read {
 		self.pmove_velocity_x = net_read_coord();
 		self.pmove_velocity_y = net_read_coord();
 		self.pmove_velocity_z = net_read_coord();
+		physics_start_flags = net_read_coord();
 		physics_velocity_frame_end = self.pmove_velocity;
 		physics_frametime = server_ticrate;
 		physics_is_player = f & 8;
 		self.solid = (physics_is_player ? SOLID_SLIDEBOX : SOLID_NOT);
 		physics_ladder = f & 32;
 		physics_ladder_iswater = f & 64;
-		physics_start_flags_jumpreleased = f & 128;
 		physics_start_crouch = f & 256;
 		if (physics_ladder && physics_ladder_iswater) {
 			physics_ladder_speed = net_read_coord();
@@ -469,7 +458,7 @@ void(float isnew) physics_read {
 		else
 			physics_movetype = MOVETYPE_QCWALK;
 
-		if (physics_movetype == MOVETYPE_NOCLIP)
+		if (physics_flags & FL_SWIM) //noclip
 			self.dphitcontentsmask = 0;
 		else
 			self.dphitcontentsmask = physics_player_content;
@@ -535,6 +524,5 @@ void(float isnew) physics_read {
 			physics_cpmdoublejump_time_start = 0;
 		}
 		if (view_spectatee_status) physics_flags = ((f & 16) ? FL_ONGROUND : 0);
-		physics_start_flags_doublejump = f2 & 16;
 	}
 }
