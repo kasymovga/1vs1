@@ -178,10 +178,9 @@ void(void) portal_touch {
 	if (!self.enemy)
 		error("portal_touch called for a broken portal\n");
 
-	if (other.classname == "porto") {
-		if(other.portal_id == self.portal_id)
-			return;
-	}
+	if(other.portal_id == self.portal_id)
+		return;
+
 	if (time < self.portal_activatetime)
 		if(other == self.aiment) {
 			self.portal_activatetime = time + 0.1;
@@ -255,6 +254,7 @@ void(entity teleporter, entity destination) portal_disconnect {
 	portal_make_broken_portal(destination);
 }
 
+float portal_counter;
 void(entity teleporter, entity destination) portal_connect {
 	vector a = destination.angles + '0 180 0';
 	teleporter.angles_x = -teleporter.angles_x;
@@ -264,6 +264,8 @@ void(entity teleporter, entity destination) portal_connect {
 	destination.enemy = teleporter;
 	portal_make_in_portal(teleporter);
 	portal_make_out_portal(destination);
+	if (portal_counter > 1000000) portal_counter = 0;
+	portal_counter = teleporter.portal_id = destination.portal_id = portal_counter + 1;
 	teleporter.fade_time = time + cvar("g_balance_portal_lifetime");
 	destination.fade_time = teleporter.fade_time;
 	teleporter.portal_wants_to_vanish = 0;
@@ -360,7 +362,6 @@ float(entity own, entity portal) portal_set_in_portal {
 	}
 	own.portal_in = portal;
 	if (own.portal_out) {
-		own.portal_out.portal_id = portal.portal_id;
 		portal_connect(own.portal_in, own.portal_out);
 	}
 	return 2;
@@ -375,7 +376,6 @@ float(entity own, entity portal) portal_set_out_portal {
 	}
 	own.portal_out = portal;
 	if (own.portal_in) {
-		own.portal_in.portal_id = portal.portal_id;
 		portal_connect(own.portal_in, own.portal_out);
 	}
 	return 1;
@@ -411,22 +411,6 @@ void(entity own) portal_clear_all_later_portals_only {
 }
 void(entity own) portal_clear_all_later {
 	portal_clear_all_later_portals_only(own);
-}
-void(entity own, float id) portal_clear_with_id {
-	if (own.portal_in)
-		if (own.portal_in.portal_id == id) {
-			if (own.portal_out)
-				portal_disconnect(own.portal_in, own.portal_out);
-
-			portal_remove(own.portal_in, 0);
-		}
-	if (own.portal_out)
-		if (own.portal_out.portal_id == id) {
-			if (own.portal_in)
-				portal_disconnect(own.portal_in, own.portal_out);
-
-			portal_remove(own.portal_out, 0);
-		}
 }
 
 float(entity forent, vector v0, vector dvx, vector dvy, vector dvz) portal_check_wire_frame_box {
@@ -477,7 +461,7 @@ entity(entity own, vector org, vector ang) portal_spawn {
 	return portal;
 }
 
-float(entity own, vector dir, float portal_id_val) portal_spawn_in_portal_at_trace {
+float(entity own, vector dir) portal_spawn_in_portal_at_trace {
 	entity portal;
 	vector ang;
 	vector org;
@@ -487,12 +471,11 @@ float(entity own, vector dir, float portal_id_val) portal_spawn_in_portal_at_tra
 	if (!portal)
 		return 0;
 
-	portal.portal_id = portal_id_val;
 	portal_set_in_portal(own, portal);
 	return 1;
 }
 
-float(entity own, vector dir, float portal_id_val) portal_spawn_out_portal_at_trace {
+float(entity own, vector dir) portal_spawn_out_portal_at_trace {
 	entity portal;
 	vector ang;
 	vector org;
@@ -500,12 +483,10 @@ float(entity own, vector dir, float portal_id_val) portal_spawn_out_portal_at_tr
 	ang = vectoangles(trace_plane_normal, dir);
 	portal = portal_spawn(own, org, ang);
 	if (!portal) {
-		// if(!own.portal_in || own.portal_in.portal_id == portal_id_val)
-			portal_clear_all_portals_only(own);
+		portal_clear_all_portals_only(own);
 
 		return 0;
 	}
-	portal.portal_id = portal_id_val;
 	portal_set_out_portal(own, portal);
 	return 1;
 }

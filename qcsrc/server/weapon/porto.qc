@@ -12,7 +12,7 @@ string sv_announcer_extra_telefrag;
 .entity porto_current_out;
 .vector right_vector;
 
-void(void) weapon_port_success {
+void(void) weapon_porto_success {
 	if (self.owner == world) {
 		entity_abort("Cannot succeed successfully: no owner\n");
 		return;
@@ -22,7 +22,13 @@ void(void) weapon_port_success {
 	else
 		self.owner.porto_current_out = world;
 
-	remove(self);
+	if (!g_balance_porto_old || (self.projectiledeathtype & HITTYPE_BOUNCE)) {
+		remove(self);
+	} else {
+		self.projectiledeathtype |= HITTYPE_BOUNCE;
+		BITXOR_ASSIGN(self.effects, EFFECT_RED);
+		projectile_update_with_type(self, ((self.effects & EFFECT_RED) ? PROJECTILE_PORTO_RED : PROJECTILE_PORTO_BLUE));
+	}
 }
 
 void(void) weapoon_porto_fail {
@@ -94,21 +100,23 @@ void(void) weapon_porto_touch {
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		weapoon_porto_fail();
 	} else if (self.effects & EFFECT_RED) {
-		if (portal_spawn_in_portal_at_trace(self.owner, self.right_vector, self.owner.portal_id)) {
+		if (portal_spawn_in_portal_at_trace(self.owner, self.right_vector)) {
+			self.portal_id = self.owner.portal_in.portal_id;
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			centerprint(self.owner, "^1In^7-portal created.");
-			weapon_port_success();
+			weapon_porto_success();
 		} else {
 			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
 			weapoon_porto_fail();
 		}
 	} else {
-		if (portal_spawn_out_portal_at_trace(self.owner, self.right_vector, self.owner.portal_id)) {
+		if (portal_spawn_out_portal_at_trace(self.owner, self.right_vector)) {
+			//self.portal_id = self.owner.portal_out.portal_id;
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
 			centerprint(self.owner, "^4Out^7-portal created.");
-			weapon_port_success();
+			weapon_porto_success();
 		} else {
 			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 			weapoon_porto_fail();
@@ -193,7 +201,6 @@ float(float req) weapon_porto {
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.porto_current_in = world;
 		self.porto_current_out = world;
-		self.portal_id = time;
 	} else if (req == WEAPON_REQUEST_CLEAR)
 		weapon_porto_remove(self);
 	else if (req == WEAPON_REQUEST_CVAR_CACHE) {

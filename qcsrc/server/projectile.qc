@@ -200,6 +200,14 @@ void(entity e) projectile_update {
 	}
 }
 
+void(entity e, float t) projectile_update_with_type {
+	if (e.SendEntity == projectile_send) {
+		// send new origin data
+		e.csqcprojectile_type = t;
+		e.SendFlags |= 3;
+	}
+}
+
 void(entity e) projectile_update_angles {
 	if (e.SendEntity == projectile_send) {
 		// send new angles data (does nothing in predictive mode)
