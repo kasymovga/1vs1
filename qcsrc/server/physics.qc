@@ -266,6 +266,7 @@ void(void) physics_abilities_end {
 }
 
 void(void) physics_player_pre { //called by engine
+	float sv_pogostick_save = 0;
 	if (self.player_physic)
 		self.player_physic.SendFlags |= 4;
 
@@ -357,9 +358,16 @@ void(void) physics_player_pre { //called by engine
 		physics_skimming = max(0, g_skimming_time + self.lastground - time);
 
 	physics_cpmdoublejump_time = self.cpmdoublejump;
+	if (self.client_flags & CLIENT_FLAG_NOPOGOSTICK) {
+		sv_pogostick_save = sv_pogostick;
+		sv_pogostick = 0;
+	}
 	physics_abilities_start();
 	physics_player();
 	physics_abilities_end();
+	if (sv_pogostick_save)
+		sv_pogostick = sv_pogostick_save;
+
 	self.frametime_accumulator = physics_frametime_accumulator;
 	if (physics_flags & FL_ONGROUND_OR_SLICK)
 		self.lastground = time;
@@ -687,7 +695,7 @@ float(entity to, float sf) physics_send {
 		float switches =
 				(g_velocity_rounding ? 1 : 0)
 				+ (g_slicksurfaces_allowjump ? 2 : 0)
-				+ (sv_pogostick ? 4 : 0)
+				+ ((sv_pogostick && !(self.client_flags & CLIENT_FLAG_NOPOGOSTICK)) ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)
 				+ (sv_gameplayfix_q2airaccelerate ? 16 : 0)
 				+ (g_walljump ? 32 : 0)
@@ -834,6 +842,10 @@ void(entity pl, float tptime) physics_mark_as_teleported {
 		pl.teleport_time = time + tptime;
 }
 
+void(entity pl) physics_sync {
+	if (pl.player_physic)
+		pl.player_physic.SendFlags |= 1;
+}
 
 void(entity pl, vector _stand_mins, vector _stand_maxs, vector _crouch_mins, vector _crouch_maxs) physics_set_sizes {
 	if (pl.stand_mins != _stand_mins || pl.crouch_mins != _crouch_mins || pl.stand_maxs != _stand_maxs || pl.crouch_maxs != _crouch_maxs) {

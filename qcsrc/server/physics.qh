@@ -2,6 +2,7 @@ float(entity a) physics_is_flying;
 void(entity pl, float tptime) physics_mark_as_teleported;
 void(void) physics_step_on_sky;
 void(void) physics_in_nodrop;
+void(entity pl) physics_sync;
 float g_walljump_smokeparticle_num;
 float g_dodging_sound;
 string sv_overbounce_sound;

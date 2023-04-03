@@ -705,13 +705,14 @@ void client_cvars_request() {
 			"sendcvar cl_netfps\n"
 			"sendcvar cl_simpleitems\n"
 			"sendcvar _cl_rate\n"
+			"sendcvar cl_nopogostick\n"
 			"sendcvar voipvolume\n"
+			"sendcvar cl_gunalign\n"
+			"sendcvar cl_gunalign_force_center\n"
+			"sendcvar cl_showweaponspawns\n"
+			"sendcvar cl_damage_screen_effects\n"
+			"sendcvar _cl_id\n"
 	);
-	stuffcmd(self, "sendcvar cl_gunalign\n");
-	stuffcmd(self, "sendcvar cl_gunalign_force_center\n");
-	stuffcmd(self, "sendcvar cl_showweaponspawns\n");
-	stuffcmd(self, "sendcvar cl_damage_screen_effects\n");
-	stuffcmd(self, "sendcvar _cl_id\n");
 }
 
 void() client_cvars_parse {
@@ -812,6 +813,13 @@ void() client_cvars_parse {
 		if (self.scorekeeper) {
 			rank_load();
 		}
+	} else if (s == "cl_nopogostick") {
+		if (stof(val))
+			self.client_flags |= CLIENT_FLAG_NOPOGOSTICK;
+		else
+			self.client_flags &= ~CLIENT_FLAG_NOPOGOSTICK;
+
+		physics_sync(self);
 	} else if (s == "voipvolume") {
 		if (stof(val) > 0) {
 			voip_enable(self);
