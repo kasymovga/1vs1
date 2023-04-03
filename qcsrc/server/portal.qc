@@ -131,7 +131,7 @@ float(entity teleporter, entity player) portal_teleport_player {
 	}
 	// reset fade counter
 	teleporter.portal_wants_to_vanish = 0;
-	teleporter.fade_time = time + cvar("g_balance_portal_lifetime");
+	teleporter.nextthink = time + cvar("g_balance_portal_lifetime");
 	teleporter.health = cvar("g_balance_portal_health");
 	teleporter.enemy.health = cvar("g_balance_portal_health");
 	return 1;
@@ -266,8 +266,8 @@ void(entity teleporter, entity destination) portal_connect {
 	portal_make_out_portal(destination);
 	if (portal_counter > 1000000) portal_counter = 0;
 	portal_counter = teleporter.portal_id = destination.portal_id = portal_counter + 1;
-	teleporter.fade_time = time + cvar("g_balance_portal_lifetime");
-	destination.fade_time = teleporter.fade_time;
+	teleporter.nextthink = time + cvar("g_balance_portal_lifetime");
+	destination.nextthink = teleporter.nextthink;
 	teleporter.portal_wants_to_vanish = 0;
 	destination.portal_wants_to_vanish = 0;
 	teleporter.teleport_time = time;
@@ -315,11 +315,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 }
 
 void(void) portal_think {
-	entity e, o;
-	vector g;
-	self.nextthink = time;
-	if(time > self.fade_time)
-		portal_remove(self, 0);
+	portal_remove(self, 0);
 }
 
 float(void) portal_customize {
@@ -447,7 +443,7 @@ entity(entity own, vector org, vector ang) portal_spawn {
 	portal.portal_activatetime = time + 0.1;
 	portal.takedamage = DAMAGE_AIM;
 	portal.event_damage = portal_damage;
-	portal.fade_time = time + cvar("g_balance_portal_lifetime");
+	portal.nextthink = time + cvar("g_balance_portal_lifetime");
 	portal.health = cvar("g_balance_portal_health");
 	setmodel(portal, "models/portal.md3");
 	portal.modelindex_lod0 = portal.modelindex;

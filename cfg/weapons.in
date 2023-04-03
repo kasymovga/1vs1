@@ -622,6 +622,7 @@ set g_balance_porto_primary_refire 1.5
 set g_balance_porto_primary_speed 2000
 set g_balance_porto_primary_lifetime 30
 set g_balance_porto_old 0
+set g_balance_porto_remove_on_death 1
 set g_balance_portal_health 200 // these get recharged whenever the portal is used
 set g_balance_portal_lifetime 15 // these get recharged whenever the portal is used
 alias weapporto "impulse 239"

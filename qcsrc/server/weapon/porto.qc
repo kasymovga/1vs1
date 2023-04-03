@@ -5,6 +5,7 @@ float g_balance_porto_primary_lifetime;
 float g_balance_porto_primary_refire;
 float g_balance_porto_primary_speed;
 float g_balance_porto_old;
+float g_balance_porto_remove_on_death;
 float g_balance_powerup_strength_force;
 string sv_announcer_extra_telefrag;
 
@@ -202,13 +203,15 @@ float(float req) weapon_porto {
 		self.porto_current_in = world;
 		self.porto_current_out = world;
 	} else if (req == WEAPON_REQUEST_CLEAR)
-		weapon_porto_remove(self);
+		if (g_balance_porto_remove_on_death)
+			weapon_porto_remove(self);
 	else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_porto_primary_animtime);
 		CVAR_CACHE(g_balance_porto_primary_lifetime);
 		CVAR_CACHE(g_balance_porto_primary_refire);
 		CVAR_CACHE(g_balance_porto_primary_speed);
 		CVAR_CACHE(g_balance_porto_old);
+		CVAR_CACHE(g_balance_porto_remove_on_death);
 		CVAR_CACHE(g_balance_powerup_strength_force);
 		CVAR_CACHE_STR(sv_announcer_extra_telefrag);
 		if (sv_announcer_extra_telefrag != "")
