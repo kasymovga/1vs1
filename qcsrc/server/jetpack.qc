@@ -17,6 +17,7 @@ float(entity to, float sf) jetpack_physics_send {
 	net_write_coord(MSG_ENTITY, g_jetpack_antigravity);
 	net_write_coord(MSG_ENTITY, g_jetpack_maxspeed_side);
 	net_write_coord(MSG_ENTITY, g_jetpack_maxspeed_up);
+	net_write_byte(MSG_ENTITY, !!g_jetpack_hook_button);
 	return TRUE;
 }
 
@@ -58,7 +59,7 @@ void() jetpack_player_effects {
 	else
 		self.items &= ~IT_FUEL;
 
-	if (self.BUTTON_JUMP && (self.flags & FL_JUMPRELEASED) && !(self.flags & FL_ONGROUND) && !self.waterlevel && jetpack_using() && !self.deadflag) {
+	if ((g_jetpack_hook_button ? self.BUTTON_HOOK : (self.BUTTON_JUMP && (self.flags & FL_JUMPRELEASED) && !(self.flags & FL_ONGROUND))) && !self.waterlevel && jetpack_using() && !self.deadflag) {
 		if not(self.modelflags & MF_ROCKET) {
 			sound(self, CHAN_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
 			self.modelflags |= MF_ROCKET;
@@ -88,6 +89,7 @@ void(void) jetpack_enable {
 	CVAR_CACHE(g_jetpack_maxspeed_up);
 	CVAR_CACHE(g_jetpack_fuel);
 	CVAR_CACHE(g_jetpack_attenuation);
+	CVAR_CACHE(g_jetpack_hook_button);
 	CVAR_CACHE(g_balance_pause_fuel_regen);
 	CVAR_CACHE(g_balance_fuel_limit);
 	CVAR_CACHE(g_balance_fuel_regen);

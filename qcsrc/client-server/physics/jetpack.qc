@@ -3,15 +3,24 @@ float(float maxspd_mod) physics_jetpack {
 	float maxairspd, f;
 	vector wishvel;
 	float r = (physics_jetpack_next ? physics_jetpack_next(maxspd_mod) : 0);
-	if not(physics_button_jump)
-		return r;
+	if (g_jetpack_hook_button) {
+		#ifdef SVQC
+		if not(self.BUTTON_HOOK)
+		#else
+		if not(input_buttons & 32)
+		#endif
+			return r;
+	} else {
+		if not(physics_button_jump)
+			return r;
 
-	if not(physics_flags & FL_JUMPRELEASED)
-		return r;
+		if not(physics_flags & FL_JUMPRELEASED)
+			return r;
 
-	if (physics_flags & FL_ONGROUND)
-		return r;
+		if (physics_flags & FL_ONGROUND)
+			return r;
 
+	}
 	if (physics_waterlevel)
 		return r;
 

@@ -3,4 +3,5 @@ float g_jetpack_acceleration_up;
 float g_jetpack_antigravity;
 float g_jetpack_maxspeed_side;
 float g_jetpack_maxspeed_up;
+float g_jetpack_hook_button;
 void(void) physics_jetpack_enable;

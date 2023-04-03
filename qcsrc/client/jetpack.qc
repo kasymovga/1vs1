@@ -25,5 +25,6 @@ void(float dummy) jetpack_read {
 	g_jetpack_antigravity = net_read_coord();
 	g_jetpack_maxspeed_side = net_read_coord();
 	g_jetpack_maxspeed_up = net_read_coord();
+	g_jetpack_hook_button = net_read_byte();
 	physics_jetpack_enable();
 }
