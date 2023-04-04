@@ -1,0 +1,1 @@
+float(entity forent, vector v0, vector dvx, vector dvy, vector dvz) portal_check_wire_frame_box;

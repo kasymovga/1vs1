@@ -125,6 +125,11 @@ void(void) weapon_porto_touch {
 	}
 }
 
+float(entity to, float sf) weapon_porto_send {
+	net_write_byte(MSG_ENTITY, NET_CSQC_PORTO);
+	return TRUE;
+}
+
 void(float out) weapon_porto_attack {
 	entity gren;
 	weapon_setup_shot (self, 4, "porto/fire.wav", 0);
@@ -165,6 +170,7 @@ void(void) spawnfunc_weapon_porto {
 	weapon_defaultspawnfunc(WEAPON_PORTO);
 }
 
+.entity porto_indicator;
 float(float req) weapon_porto {
 	if (req == WEAPON_REQUEST_AIM) {
 		self.BUTTON_ATCK = FALSE;
@@ -179,6 +185,7 @@ float(float req) weapon_porto {
 			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
+		if (!g_balance_porto_old)
 		if (!self.porto_current_out)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire)) {
 			weapon_porto_attack(TRUE);
@@ -193,6 +200,13 @@ float(float req) weapon_porto {
 		precache_sound("porto/fire.wav");
 		precache_sound("porto/unsupported.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
+		if (g_balance_porto_old)
+		if not(self.porto_indicator)
+		if (clienttype(self) == CLIENTTYPE_REAL) {
+			self.porto_indicator = spawn();
+			net_link_entity(self.porto_indicator, FALSE, 0, weapon_porto_send);
+			self.porto_indicator.viewmodelforclient = self;
+		}
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
@@ -200,9 +214,13 @@ float(float req) weapon_porto {
 		weapon_deathtypestring = "was telefragged by";
 		weapon_fragannounce = sv_announcer_extra_telefrag;
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
-		self.porto_current_in = world;
-		self.porto_current_out = world;
+		self.porto_current_in = NULL;
+		self.porto_current_out = NULL;
 	} else if (req == WEAPON_REQUEST_CLEAR) {
+		if (self.porto_indicator) {
+			remove(self.porto_indicator);
+			self.porto_indicator = NULL;
+		}
 		if (g_balance_porto_remove_on_death)
 			weapon_porto_remove(self);
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {

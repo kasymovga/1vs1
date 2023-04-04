@@ -12,6 +12,7 @@
 #include "physics/hook.qc"
 #include "physics/jetpack.qc"
 #include "physics/spiderbot.qc"
+#include "portal.qc"
 #include "projectile.qc"
 #include "rune.qc"
 #include "score.qc"

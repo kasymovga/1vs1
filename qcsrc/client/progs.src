@@ -60,6 +60,7 @@ shootingrange.qh
 extension.qh
 rm_skin.qh
 rm_hud.qh
+porto.qh
 ../client-server/progs.qc
 cvar.qc
 str.qc
@@ -154,3 +155,4 @@ voip.qc
 extension.qc
 rm_skin.qc
 rm_hud.qc
+porto.qc
