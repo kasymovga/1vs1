@@ -78,7 +78,6 @@ void(void) jetpack_enable {
 	if (jetpack_enabled)
 		return;
 
-	hint_add("Press jump key while midair to activate jetpack after you picked up one.");
 	jetpack_enabled = TRUE;
 	jetpack_physics = spawn();
 	net_link_entity(jetpack_physics, FALSE, 0, jetpack_physics_send);
@@ -90,6 +89,11 @@ void(void) jetpack_enable {
 	CVAR_CACHE(g_jetpack_fuel);
 	CVAR_CACHE(g_jetpack_attenuation);
 	CVAR_CACHE(g_jetpack_hook_button);
+	if (g_jetpack_hook_button)
+		hint_add("Press hook key to activate jetpack after you picked up one.");
+	else
+		hint_add("Press jump key while midair to activate jetpack after you picked up one.");
+
 	CVAR_CACHE(g_balance_pause_fuel_regen);
 	CVAR_CACHE(g_balance_fuel_limit);
 	CVAR_CACHE(g_balance_fuel_regen);
