@@ -1,5 +1,5 @@
 enum: flag {
-	FL_FLY = 0,
+	FL_FLY = 0, //real value is 1, this is how flag enum working
 	FL_SWIM, //engine 2
 	FL_CONVEYOR, //unused 4
 	FL_CLIENT, //8
