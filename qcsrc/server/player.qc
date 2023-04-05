@@ -93,14 +93,6 @@ void(void) player_corpse_think {
 		anim_update(self);
 		if (self.weaponentity) anim_update(self.weaponentity);
 		if (time >= self.animstate_endtime) {
-			if (self.modelindex) {
-				entity o = self.owner;
-				vector _stand_maxs = o.stand_maxs;
-				vector _crouch_maxs = o.crouch_maxs;
-				_stand_maxs_z = 5;
-				_crouch_maxs_z = 5;
-				physics_set_sizes(o, o.stand_mins, _stand_maxs, o.crouch_mins, _crouch_maxs);
-			}
 			self.frame = self.dead_frame;
 			if (self.weaponentity)
 				self.weaponentity.frame = self.dead_frame;
@@ -565,6 +557,11 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			player_body_animation_set(self, anim_die2, FALSE, TRUE, TRUE, 3);
 			self.body.dead_frame = self.anim_dead2_x;
 		}
+		vector _stand_maxs = self.stand_maxs;
+		vector _crouch_maxs = self.crouch_maxs;
+		_stand_maxs_z = 5;
+		_crouch_maxs_z = 5;
+		physics_set_sizes(self, self.stand_mins, _stand_maxs, self.crouch_mins, _crouch_maxs);
 		// set damage function to corpse damage
 		self.event_damage = player_corpse_damage;
 		// call the corpse damage function just in case it wants to gib
