@@ -1,25 +1,24 @@
-//"enum: flag" is a mess
-const float FL_FLY = 1; //engine (but we use as fly cheat) 1
-enum: flag {
-	FL_SWIM, //engine (but we use as noclip cheat) 2
-	FL_CONVEYOR, //unused 4
-	FL_CLIENT, //8
-	FL_INWATER, //16
-	FL_MONSTER, //unused 32
-	FL_GODMODE, //engine 64
-	FL_NOTARGET, //engine 128
-	FL_ITEM, //engine 256
-	FL_ONGROUND, //engine 512
-	FL_PARTIALGROUND, //engine
-	FL_WATERJUMP, //engine
-	FL_JUMPRELEASED, //engine
-	FL_WEAPON,
-	FL_POWERUP,
-	FL_PROJECTILE,
-	FL_TOSSED, //unused
-	FL_NO_WEAPON_STAY,
-	FL_SPAWNING,
-	FL_SLICK,
-	FL_CLIMB,
-	FL_DOUBLEJUMP,
+enum {
+	FL_FLY = 1, //engine (but we use as fly cheat) 1
+	FL_SWIM = 2, //engine (but we use as noclip cheat) 2
+	FL_CONVEYOR = 4, //unused 4
+	FL_CLIENT = 8, //8
+	FL_INWATER = 16, //16
+	FL_MONSTER = 32, //unused 32
+	FL_GODMODE = 64, //engine 64
+	FL_NOTARGET = 128, //engine 128
+	FL_ITEM = 256, //engine 256
+	FL_ONGROUND = 512, //engine 512
+	FL_PARTIALGROUND = 1024, //engine
+	FL_WATERJUMP = 2048, //engine
+	FL_JUMPRELEASED = 4096, //engine
+	FL_WEAPON = 8192,
+	FL_POWERUP = 16384,
+	FL_PROJECTILE = 32768,
+	FL_TOSSED = 65536, //unused
+	FL_NO_WEAPON_STAY = 131072,
+	FL_SPAWNING = 262144,
+	FL_SLICK = 524288,
+	FL_CLIMB = 1048576,
+	FL_DOUBLEJUMP = 2097152,
 };
