@@ -1,6 +1,6 @@
 enum: flag {
-	FL_FLY = 0, //real value is 1, this is how flag enum working
-	FL_SWIM, //engine 2
+	FL_FLY, //engine (but we use as fly cheat) 1
+	FL_SWIM, //engine (but we use as noclip cheat) 2
 	FL_CONVEYOR, //unused 4
 	FL_CLIENT, //8
 	FL_INWATER, //16
