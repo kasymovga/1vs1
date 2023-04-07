@@ -1,5 +1,6 @@
+//"enum: flag" is a mess
+const float FL_FLY = 1; //engine (but we use as fly cheat) 1
 enum: flag {
-	FL_FLY, //engine (but we use as fly cheat) 1
 	FL_SWIM, //engine (but we use as noclip cheat) 2
 	FL_CONVEYOR, //unused 4
 	FL_CLIENT, //8
