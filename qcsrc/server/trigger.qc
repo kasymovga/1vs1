@@ -1173,14 +1173,14 @@ void(void) spawnfunc_trigger_relay_foreachplayer {
 	self.reset = spawnfunc_trigger_relay_foreachplayer;
 }
 
-enum: flag {
-	TSTATE_ENABLED,
-	TSTATE_USE_ON,
-	TSTATE_USE_OFF,
+enum {
+	TSTATE_ENABLED = 1,
+	TSTATE_USE_ON = 2,
+	TSTATE_USE_OFF = 4,
 };
 
-enum: flag {
-	TSTATE_NOT,
+enum {
+	TSTATE_NOT = 1,
 };
 
 typedef float(void) statefunc_t;
