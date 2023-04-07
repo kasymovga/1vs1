@@ -4,8 +4,8 @@ float shootingrange_round_active;
 float SHOOTINGRANGE_ROUND_SCORE;
 float g_shootingrange_roundtime;
 float g_shootingrange_rounddelay;
-enum: flag {
-	SHOOTINGRANGE_SPLASH,
+enum {
+	SHOOTINGRANGE_SPLASH = 1,
 };
 
 void(void) shootingrange_target_show {
