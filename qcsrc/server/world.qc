@@ -122,6 +122,7 @@ void(void) world_static_init {
 	damage_score_init();
 	weapon_score_init();
 	IP2C_InitSV();
+	cheat_init();
 }
 
 void(void) world_dynamic_init {

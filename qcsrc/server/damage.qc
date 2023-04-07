@@ -27,11 +27,15 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	float mirrorforce;
 	mirrordamage = 0;
 	mirrorforce = 0;
-	if (targ.flags & FL_GODMODE)
-	if (deathtype != DEATH_HURTTRIGGER)
-	if (deathtype != DEATH_TEAMCHANGE)
-		_damage = 0;
-
+	if (targ.flags & FL_GODMODE) {
+		if (g_campaign) {
+			cheat_assign(targ, flags, FL_GODMODE, "GOD");
+		} else {
+			if (deathtype != DEATH_HURTTRIGGER)
+			if (deathtype != DEATH_TEAMCHANGE)
+				_damage = 0;
+		}
+	}
 	if (map_finished || targ.killcount == -666)
 		return;
 

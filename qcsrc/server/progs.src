@@ -145,6 +145,7 @@ weapon/selectable.qh
 weapon/model.qh
 game/type.qh
 chat.qh
+cheat.qh
 team.qh
 tdm.qh
 map_vote.qh
@@ -382,3 +383,4 @@ ability.qc
 perf.qc
 map_info.qc
 voip.qc
+cheat.qc

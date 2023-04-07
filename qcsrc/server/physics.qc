@@ -280,11 +280,11 @@ void(void) physics_player_pre { //called by engine
 		//cheats
 		if (self.movetype == MOVETYPE_NOCLIP) {
 			self.flags &= ~FL_FLY;
-			BITXOR_ASSIGN(self.flags, FL_SWIM);
+			cheat_assign(self, flags, FL_SWIM, "NOCLIP");
 			self.movetype = MOVETYPE_QCWALK;
 		} else if (self.movetype == MOVETYPE_FLY) {
 			self.flags &= ~FL_SWIM;
-			BITXOR_ASSIGN(self.flags, FL_FLY);
+			cheat_assign(self, flags, FL_FLY, "FLY");
 			self.movetype = MOVETYPE_QCWALK;
 		} else if (allowed_to_move) {
 			self.movetype = MOVETYPE_QCWALK;
