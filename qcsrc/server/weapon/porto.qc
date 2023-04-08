@@ -14,33 +14,34 @@ string sv_announcer_extra_telefrag;
 .vector right_vector;
 
 void(void) weapon_porto_success {
-	if (self.owner == world) {
+	if not(self.owner) {
 		entity_abort("Cannot succeed successfully: no owner\n");
 		return;
 	}
 	if (self.effects & EFFECT_RED)
-		self.owner.porto_current_in = world;
+		self.owner.porto_current_in = NULL;
 	else
-		self.owner.porto_current_out = world;
+		self.owner.porto_current_out = NULL;
 
 	if (!g_balance_porto_old || (self.projectiledeathtype & HITTYPE_BOUNCE)) {
 		remove(self);
 	} else {
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
+		self.owner.porto_current_out = self;
 		BITXOR_ASSIGN(self.effects, EFFECT_RED);
 		projectile_update_with_type(self, ((self.effects & EFFECT_RED) ? PROJECTILE_PORTO_RED : PROJECTILE_PORTO_BLUE));
 	}
 }
 
 void(void) weapoon_porto_fail {
-	if (self.owner == world) {
+	if not(self.owner) {
 		entity_abort("Cannot fail successfully: no owner\n");
 		return;
 	}
 	if (self.effects & EFFECT_RED)
-		self.owner.porto_current_in = world;
+		self.owner.porto_current_in = NULL;
 	else
-		self.owner.porto_current_out = world;
+		self.owner.porto_current_out = NULL;
 
 	remove(self);
 }
@@ -184,12 +185,17 @@ float(float req) weapon_porto {
 			weapon_porto_attack(FALSE);
 			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
 		}
-		if (self.BUTTON_ATCK2)
-		if (!g_balance_porto_old)
-		if (!self.porto_current_out)
-		if (weapon_prepareattack(0, g_balance_porto_primary_refire)) {
-			weapon_porto_attack(TRUE);
-			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
+		if (self.BUTTON_ATCK2) {
+			if (g_balance_porto_old) {
+				portal_clear_all(self);
+				weapon_porto_remove(self);
+			} else {
+				if (!self.porto_current_out)
+				if (weapon_prepareattack(0, g_balance_porto_primary_refire)) {
+					weapon_porto_attack(TRUE);
+					weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
+				}
+			}
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_model("models/portal.md3");
@@ -221,8 +227,10 @@ float(float req) weapon_porto {
 			remove(self.porto_indicator);
 			self.porto_indicator = NULL;
 		}
-		if (g_balance_porto_remove_on_death)
-			weapon_porto_remove(self);
+		if (g_balance_porto_remove_on_death) {
+			portal_clear_all(self);
+		}
+		weapon_porto_remove(self);
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_porto_primary_animtime);
 		CVAR_CACHE(g_balance_porto_primary_lifetime);
