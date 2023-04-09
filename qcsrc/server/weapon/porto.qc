@@ -38,6 +38,12 @@ void(void) weapoon_porto_fail {
 		entity_abort("Cannot fail successfully: no owner\n");
 		return;
 	}
+	if (g_balance_porto_old) {
+		if not(self.effects & EFFECT_RED)
+		if not(self.owner.portal_out)
+		if (self.owner.portal_in)
+			portal_clear_all(self.owner);
+	}
 	if (self.effects & EFFECT_RED)
 		self.owner.porto_current_in = NULL;
 	else
@@ -145,7 +151,6 @@ void(float out) weapon_porto_attack {
 	gren.bot_dodgerating = 200;
 	PROJECTILE_MAKETRIGGER(gren);
 	if (out) {
-		gren.effects = EFFECT_BLUE;
 		self.porto_current_out = gren;
 	} else {
 		gren.effects = EFFECT_RED;
