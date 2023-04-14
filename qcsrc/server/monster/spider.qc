@@ -10,9 +10,8 @@ void spider_hunt() {
 	vector v = entity_nearest_point_on_box(self.enemy, self.origin) - self.origin;
 	float f = vlen(v);
 	if (f < 60) {
-		self.enemy = self;
 		self.classname = "explode";
-		self.event_damage(self, self, self.health + 1, DEATH_HURTTRIGGER, (self.absmin + self.absmax) * 0.5, '0 0 0');
+		self.event_damage(self, self.enemy, self.health + 1, DEATH_HURTTRIGGER, (self.absmin + self.absmax) * 0.5, '0 0 0');
 		return;
 	}
 	float dofire;
