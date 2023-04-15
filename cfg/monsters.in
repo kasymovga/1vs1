@@ -62,6 +62,10 @@ set g_monster_spider_health 100
 set g_monster_spider_damage 100
 set g_monster_spider_force 100
 set g_monster_spider_radius 150
+set g_monster_spider_chainsaw_health 100
+set g_monster_spider_chainsaw_damage 200
+set g_monster_spider_chainsaw_force 10
+set g_monster_spider_chainsaw_radius 50
 set g_monster_rlgirl_damage 100
 set g_monster_rlgirl_health 50
 set g_monster_rlgirl_force 100
