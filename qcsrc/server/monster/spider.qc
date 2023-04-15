@@ -132,7 +132,11 @@ void(void) monster_spider_spawn {
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 2;
-	self.netname = "Explosive Spider";
+	if (self.weapon)
+		self.netname = "Chainsaw Spider";
+	else
+		self.netname = "Explosive Spider";
+
 	self.weaponentity.colormod = self.colormod;
 }
 
