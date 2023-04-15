@@ -376,7 +376,7 @@ float(float req) weapon_extra_think {
 					weapon_thinkf(WEAPON_FRAME_FIRE1, weapon_extra_primary_animtime[extra_num], ready_func);
 				}
 			} else if (self.BUTTON_ATCK2 && (t = weapon_extra_secondary_type[extra_num])) {
-				if (weapon_prepareattack(0, weapon_extra_secondary_refire[extra_num])) {
+				if (weapon_prepareattack(1, weapon_extra_secondary_refire[extra_num])) {
 					weapon_extra_attack(extra_num, TRUE, t);
 					burst = weapon_extra_secondary_burst[extra_num];
 					if (burst > 0) {
