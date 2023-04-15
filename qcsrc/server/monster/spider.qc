@@ -21,7 +21,7 @@ void(void) monster_spider_hunt {
 		self.event_damage(self, self.enemy, self.health + 1, DEATH_HURTTRIGGER, (self.absmin + self.absmax) * 0.5, '0 0 0');
 		return;
 	}
-	if (self.lip == 1 && f < self.dmg_radius) { //chainsaw jump
+	if (self.lip && f < self.dmg_radius) { //chainsaw jump
 		if (normalize(v) * normalize(self.velocity) >= 0.5) {
 			trace_line(org, ENTITY_CENTER(self.enemy), TRACE_MOVE_NORMAL, self);
 			if (trace_ent == self.enemy) {
@@ -50,12 +50,12 @@ void(void) monster_spider_hunt {
 			self.bulletcounter = time + 0.5;
 			if (self.weapon) {
 				sound(self, CHAN_WEAPON, "weapons/chainsaw_active_1.wav", VOL_BASE, ATTN_NORM);
+				self.lip = 1;
 			}
 		} else if (self.flags & FL_ONGROUND) {
 			v = monster_move_walk(500, 5, 0);
 			v = vectoangles(v);
 			self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-			self.lip = 1;
 		}
 	}
 	if (time > self.bulletcounter) {
@@ -138,7 +138,7 @@ void(void) monster_spider_spawn {
 	self.weaponentity.colormod = self.colormod;
 }
 
-void(void) monster_spider_init {
+void(void) monster_spider_explosive_init {
 	precache_model("models/spiderbot/spiderbot.dpm");
 	precache_model("models/grenademodel.md3");
 }
@@ -150,17 +150,31 @@ void(void) monster_spider_chainsaw_init {
 	precache_sound("weapons/chainsaw_active_1.wav");
 }
 
-void(void) spawnfunc_monster_spider_spawn {
+void(void) spawnfunc_monster_spider_explosive_spawn {
 	setsize(self, '-16 -16 0', '16 16 24');
-	monster_init(monster_spider_init);
-	monster_prepare_spawn(monster_spider_spawn, spawnfunc_monster_spider_spawn);
+	self.weapon = 0;
+	monster_init(monster_spider_explosive_init);
+	monster_prepare_spawn(monster_spider_spawn, spawnfunc_monster_spider_explosive_spawn);
 }
 
 void(void) spawnfunc_monster_spider_chainsaw_spawn {
 	setsize(self, '-16 -16 0', '16 16 24');
 	self.weapon = 1;
 	monster_init(monster_spider_chainsaw_init);
-	monster_prepare_spawn(monster_spider_spawn, spawnfunc_monster_spider_spawn);
+	monster_prepare_spawn(monster_spider_spawn, spawnfunc_monster_spider_chainsaw_spawn);
+}
+
+float monster_spider_spawn_counter;
+void(void) spawnfunc_monster_spider_spawn {
+	if (monster_spider_spawn_counter) {
+		self.classname = "monster_spider_chainsaw_spawn";
+		spawnfunc_monster_spider_chainsaw_spawn();
+		monster_spider_spawn_counter = 0;
+	} else {
+		self.classname = "monster_spider_explosive_spawn";
+		spawnfunc_monster_spider_explosive_spawn();
+		monster_spider_spawn_counter = 1;
+	}
 }
 
 #undef monster_spider_idle

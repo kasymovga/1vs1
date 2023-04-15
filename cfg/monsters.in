@@ -58,10 +58,10 @@ set g_monster_soldier_radius 0.1
 set g_monster_spearguy_health 100
 set g_monster_spearguy_damage 50
 set g_monster_spearguy_radius 80
-set g_monster_spider_health 100
-set g_monster_spider_damage 100
-set g_monster_spider_force 100
-set g_monster_spider_radius 150
+set g_monster_spider_explosive_health 100
+set g_monster_spider_explosive_damage 100
+set g_monster_spider_explosive_force 100
+set g_monster_spider_explosive_radius 150
 set g_monster_spider_chainsaw_health 100
 set g_monster_spider_chainsaw_damage 200
 set g_monster_spider_chainsaw_force 10
