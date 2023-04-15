@@ -545,9 +545,9 @@ void(void) weapon_extra_init {
 		t = weapon_extra_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_type")));
 		weapon_extra_secondary_type[i] = t;
 		if (t == WEAPON_EXTRA_TYPE_PROJECTILE)
-			weapon_extra_secondary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
+			weapon_extra_secondary_effect[i] = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 		else
-			weapon_extra_secondary_effect[i] = t = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
+			weapon_extra_secondary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 
 		weapon_extra_secondary_impact_type[i] = weapon_extra_impact_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_impact_type")));
 		weapon_register(WEAPON_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, 1, modelname, modelname, modelname);
