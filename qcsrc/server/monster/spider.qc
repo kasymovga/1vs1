@@ -18,8 +18,6 @@ void(void) monster_spider_hunt {
 	vector v = entity_nearest_point_on_box(self.enemy, org) - org;
 	float f = vlen(v);
 	if (f < 60 && !self.weapon) {
-		self.enemy = self;
-		self.classname = "explode";
 		self.event_damage(self, self.enemy, self.health + 1, DEATH_HURTTRIGGER, (self.absmin + self.absmax) * 0.5, '0 0 0');
 		return;
 	}
