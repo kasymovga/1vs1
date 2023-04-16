@@ -25,6 +25,7 @@ void monster_sound(entity m, string s, float force) {
 void monster_set_route() {
 	float f1 = 0, f2 = 0, f3 = 0, f4 = 0;
 	entity p;
+	self.bot_strategytime = time + 1 + random() * 1;
 	if (self.items & IT_JETPACK) {
 		self.navigation_jetpack_goal = NULL;
 		if (self.enemy) {
@@ -361,10 +362,9 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 			return v;
 		}
 	}
-	if (self.bot_strategytime < time) {
-		self.bot_strategytime = time + 1 + random() * 1;
+	if (self.bot_strategytime < time)
 		monster_set_route();
-	}
+
 	if (self.spectatortime < time) {
 		v = monster_get_direction();
 		v_z = 0;
@@ -446,10 +446,9 @@ vector monster_move_fly(float _speed, float blend_factor) {
 	g_jetpack_maxspeed_up = _speed;
 	g_jetpack_maxspeed_side = _speed;
 	vector v;
-	if (self.bot_strategytime < time) {
-		self.bot_strategytime = time + 1 + random() * 1;
+	if (self.bot_strategytime < time)
 		monster_set_route();
-	}
+
 	g_jetpack_maxspeed_up = save_g_jetpack_maxspeed_up;
 	g_jetpack_maxspeed_side = save_g_jetpack_maxspeed_side;
 	v = monster_get_direction();
@@ -599,10 +598,8 @@ float monster_walk_finished(void() idle, float dist) {
 		} else
 			monster_set_route();
 	} else if not(self.goalcurrent) {
-		if (self.bot_strategytime < time) {
-			self.bot_strategytime = time + 1 + random();
+		if (self.bot_strategytime < time)
 			monster_set_route();
-		}
 	}
 	return FALSE;
 }
@@ -622,10 +619,9 @@ float monster_check_target(void() walk, void() guard) {
 
 		self.think();
 		return TRUE;
-	} else if (self.bot_strategytime < time) {
-		self.bot_strategytime = time + 1 + random() * 1;
+	} else if (self.bot_strategytime < time)
 		monster_set_route();
-	}
+
 	return FALSE;
 }
 
