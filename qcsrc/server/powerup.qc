@@ -29,6 +29,7 @@ void(string itemname) powerup_precache {
 	entity oldself = self;
 	self = spawn();
 	self.classname = "precache";
+	self.noalign = 1; //prevent droptofloor for other entities
 	item_spawnfunc_for(itemname)();
 	if not(wasfreed(self))
 		stdproc_remove_entity(self);
