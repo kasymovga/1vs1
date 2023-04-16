@@ -158,44 +158,34 @@ void(void) spawnfunc_misc_teleporter {
 .float modelscale;
 void(void) misc_laser_aim {
 	vector a;
-	if(self.enemy)
-	{
-		if(self.spawnflags & 2)
-		{
-			if(self.enemy.origin != self.mangle)
-			{
+	if (self.enemy) {
+		if (self.spawnflags & 2) {
+			if(self.enemy.origin != self.mangle) {
 				self.mangle = self.enemy.origin;
 				self.SendFlags |= 2;
 			}
-		}
-		else
-		{
+		} else {
 			a = vectoangles(self.enemy.origin - self.origin);
 			a_x = -a_x;
-			if(a != self.mangle)
-			{
+			if(a != self.mangle) {
 				self.mangle = a;
 				self.SendFlags |= 2;
 			}
 		}
-	}
-	else
-	{
-		if(self.angles != self.mangle)
-		{
+	} else {
+		if (self.angles != self.mangle) {
 			self.mangle = self.angles;
 			self.SendFlags |= 2;
 		}
 	}
-	if(self.origin != self.oldorigin)
-	{
+	if (self.origin != self.oldorigin) {
 		self.SendFlags |= 1;
 		self.oldorigin = self.origin;
 	}
 }
 
 void(void) misc_laser_init {
-	if(self.target != "")
+	if (self.target != "")
 		self.enemy = find(world, targetname, self.target);
 }
 
@@ -203,57 +193,40 @@ void(void) misc_laser_init {
 void(void) misc_laser_think {
 	vector o;
 	entity oldself;
-
 	self.nextthink = time;
-
-	if(!self.state)
+	if (!self.state)
 		return;
 
 	misc_laser_aim();
-
-	if(self.enemy)
-	{
+	if (self.enemy) {
 		o = self.enemy.origin;
 		if not(self.spawnflags & 2)
 			o = self.origin + normalize(o - self.origin) * 32768;
-	}
-	else
-	{
+	} else {
 		makevectors(self.mangle);
 		o = self.origin + v_forward * 32768;
 	}
-
-	if(self.dmg)
-	{
-		if(self.dmg < 0)
+	if (self.dmg) {
+		if (self.dmg < 0)
 			bullet_railgun(self.origin, o, 100000, 0, 0, 0, 0, 0, DEATH_HURTTRIGGER);
 		else
 			bullet_railgun(self.origin, o, self.dmg * frametime, 0, 0, 0, 0, 0, DEATH_HURTTRIGGER);
 	}
-
-	if(self.enemy.target != "") // DETECTOR laser
-	{
+	if (self.enemy.target != "") { // DETECTOR laser
 		trace_line(self.origin, o, TRACE_MOVE_NORMAL, self);
-		if(trace_ent.iscreature)
-		{
+		if (trace_ent.iscreature) {
 			self.pusher = trace_ent;
-			if(!self.count)
-			{
+			if (!self.count) {
 				self.count = 1;
-
 				oldself = self;
 				self = self.enemy;
 				activator = self.pusher;
 				trigger_use_targets();
 				self = oldself;
 			}
-		}
-		else
-		{
-			if(self.count)
-			{
+		} else {
+			if (self.count) {
 				self.count = 0;
-
 				oldself = self;
 				self = self.enemy;
 				activator = self.pusher;
@@ -267,61 +240,58 @@ void(void) misc_laser_think {
 float(entity to, float fl) misc_laser_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_LASER);
 	fl = fl - (fl & 0xE0); // use that bit to indicate finite length laser
-	if(self.spawnflags & 2)
+	if (self.spawnflags & 2)
 		fl |= 0x80;
-	if(self.alpha)
+
+	if (self.alpha)
 		fl |= 0x40;
-	if(self.scale != 1 || self.modelscale != 1)
+
+	if (self.scale != 1 || self.modelscale != 1)
 		fl |= 0x20;
+
 	net_write_byte(MSG_ENTITY, fl);
-	if(fl & 1)
-	{
+	if(fl & 1) {
 		net_write_coord(MSG_ENTITY, self.origin_x);
 		net_write_coord(MSG_ENTITY, self.origin_y);
 		net_write_coord(MSG_ENTITY, self.origin_z);
 	}
-	if(fl & 8)
-	{
+	if (fl & 8) {
 		net_write_byte(MSG_ENTITY, self.colormod_x * 255.0);
 		net_write_byte(MSG_ENTITY, self.colormod_y * 255.0);
 		net_write_byte(MSG_ENTITY, self.colormod_z * 255.0);
-		if(fl & 0x40)
+		if (fl & 0x40)
 			net_write_byte(MSG_ENTITY, self.alpha * 255.0);
-		if(fl & 0x20)
-		{
+
+		if (fl & 0x20) {
 			net_write_byte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
 			net_write_byte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
 		}
 		net_write_short(MSG_ENTITY, self.cnt + 1);
 	}
-	if(fl & 2)
-	{
-		if(fl & 0x80)
-		{
+	if (fl & 2) {
+		if (fl & 0x80) {
 			net_write_coord(MSG_ENTITY, self.enemy.origin_x);
 			net_write_coord(MSG_ENTITY, self.enemy.origin_y);
 			net_write_coord(MSG_ENTITY, self.enemy.origin_z);
-		}
-		else
-		{
+		} else {
 			net_write_angle(MSG_ENTITY, self.mangle_x);
 			net_write_angle(MSG_ENTITY, self.mangle_y);
 		}
 	}
-	if(fl & 4)
+	if (fl & 4)
 		net_write_byte(MSG_ENTITY, self.state);
+
 	return 1;
 }
 
-void misc_laser_use()
-{
+void(void) misc_laser_use {
 	self.state = !self.state;
 	self.SendFlags |= 4;
 	misc_laser_aim();
 }
 
 void(void) misc_laser_reset {
-	if(self.spawnflags & 1)
+	if (self.spawnflags & 1)
 		self.state = 1;
 	else
 		self.state = 0;
@@ -340,54 +310,50 @@ Keys:
  damage per second (-1 for a laser that kills immediately)
 */
 void(void) spawnfunc_misc_laser {
-	if(self.mdl)
-	{
-		if(self.mdl == "none")
+	if (self.mdl) {
+		if (self.mdl == "none")
 			self.cnt = -1;
-		else
-		{
+		else {
 			self.cnt = particleeffectnum(self.mdl);
-			if(self.cnt < 0)
-				if(self.dmg)
+			if (self.cnt < 0)
+				if (self.dmg)
 					self.cnt = particleeffectnum("laser_deadly");
 		}
-	}
-	else if(!self.cnt)
-	{
-		if(self.dmg)
+	} else if (!self.cnt) {
+		if (self.dmg)
 			self.cnt = particleeffectnum("laser_deadly");
 		else
 			self.cnt = -1;
 	}
-	if(self.cnt < 0)
+	if (self.cnt < 0)
 		self.cnt = -1;
 
-	if(self.colormod == '0 0 0')
-		if(!self.alpha)
+	if (self.colormod == '0 0 0')
+		if (!self.alpha)
 			self.colormod = '1 0 0';
-	if(!self.message)
+
+	if (!self.message)
 		self.message = "saw the light";
+
 	if (!self.message2)
 		self.message2 = "was pushed into a laser by";
-	if(!self.scale)
+
+	if (!self.scale)
 		self.scale = 1;
-	if(!self.modelscale)
+
+	if (!self.modelscale)
 		self.modelscale = 1;
+
 	self.think = misc_laser_think;
 	self.nextthink = time;
 	entity_initialize(self, misc_laser_init, INITPRIO_FINDTARGET);
-
 	self.mangle = self.angles;
-
 	net_link_entity(self, FALSE, 0, misc_laser_send);
-
-	IFTARGETED
-	{
+	IFTARGETED {
 		self.reset = misc_laser_reset;
 		misc_laser_reset();
 		self.use = misc_laser_use;
-	}
-	else
+	} else
 		self.state = 1;
 }
 
