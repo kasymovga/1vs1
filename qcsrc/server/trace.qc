@@ -158,13 +158,9 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 			} else
 				move = trace_endpos;
 
-			// trace down from stepheight as far as possible and move there,
-			// if this starts in solid we try again without the stepup, and
-			// if that also fails we assume it is a wall
-			// (this is the same logic as the Quake walkmove function used)
 			trace_box(move, m1, m2, move + '0 0 -65536', movemode, e);
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) goto finish;
-			if (trace_fraction > 0) {
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) goto finish; //above the void
+			if (trace_fraction > 0.003) { //some deep hole
 				float f = trace_fraction;
 				vector v = trace_endpos;
 				vector move2 = move + dir * stepdist * 1.75; //check if we can step over
