@@ -138,8 +138,10 @@ float(float nodownload, float renderrestart) dlc_reload {
 	if (cvar("cl_brightskins") && (!dlc_mandatory || dlc_ready("base-models"))) {
 		s = strcat(s, " brightskins");
 	}
-	if (cvar("cl_oldnexmodel") <= 0 && (!dlc_mandatory || dlc_ready("base-models"))) {
-		if (cvar("cl_oldnexmodel") < 0)
+	if (cvar("cl_oldnexmodel") != 1 && (!dlc_mandatory || dlc_ready("base-models"))) {
+		if (cvar("cl_oldnexmodel") == 2)
+			s = strcat(s, " n11nex");
+		else if (cvar("cl_oldnexmodel") < 0)
 			s = strcat(s, " xonnex");
 		else
 			s = strcat(s, " newnex");
@@ -172,10 +174,14 @@ float(float nodownload, float renderrestart) dlc_reload {
 	if ((n = cvar("cl_sgmodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
 		if (n == -1)
 			s = strcat(s, " n23shotgun");
+		else if (n == -2)
+			s = strcat(s, " n11shotgun");
 	}
 	if ((n = cvar("cl_uzimodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
 		if (n == -1)
 			s = strcat(s, " n23uzi");
+		else if (n == -2)
+			s = strcat(s, " n11uzi");
 	}
 	if ((n = cvar("cl_electromodel")) && (!dlc_mandatory || dlc_ready("base-models"))) {
 		if (n == -1)
