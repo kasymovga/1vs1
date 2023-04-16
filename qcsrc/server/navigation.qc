@@ -269,17 +269,7 @@ void(entity fixed_source_waypoint) navigation_markroutes {
 		fixed_source_waypoint.wpfire = 1;
 		fixed_source_waypoint.enemy = world;
 	} else {
-		// try a short range search for the nearest waypoints, and expand the search repeatedly if none are found
-		// as this search is expensive we will use lower values if the bot is on the air
-		float i, increment, maxdistance;
-		if (self.flags & FL_ONGROUND) {
-			increment = 750;
-			maxdistance = 50000;
-		} else {
-			increment = 500;
-			maxdistance = 1500;
-		}
-		for (i=increment;!navigation_markroutes_nearestwaypoints(waylist, i)&&i<maxdistance;i+=increment);
+		if (!navigation_markroutes_nearestwaypoints(waylist, 750)) return;
 	}
 	searching = TRUE;
 	while (searching) {
