@@ -39,3 +39,6 @@ msgstr "особое"
 
 msgid "Show radar:"
 msgstr "Показывать радар:"
+
+msgid "Close"
+msgstr "Закрыть"

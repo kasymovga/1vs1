@@ -53,3 +53,6 @@ msgstr "personnaliser"
 
 msgid "Show radar:"
 msgstr "Afficher les radars:"
+
+msgid "Close"
+msgstr "Fermer"

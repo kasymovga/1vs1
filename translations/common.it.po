@@ -39,3 +39,6 @@ msgstr "custom"
 
 msgid "Show radar:"
 msgstr "Mostra radar:"
+
+msgid "Close"
+msgstr "Chiudi"

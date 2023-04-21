@@ -53,3 +53,6 @@ msgstr "aangepast"
 
 msgid "Show radar:"
 msgstr "Radar tonen:"
+
+msgid "Close"
+msgstr "Sluiten"

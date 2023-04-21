@@ -897,9 +897,6 @@ msgstr "Versão:"
 msgid "Ping:"
 msgstr "Ping:"
 
-msgid "Close"
-msgstr "Fechar"
-
 msgid "Language..."
 msgstr "Língua... / Language..."
 
