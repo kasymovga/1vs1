@@ -73,7 +73,7 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 void GUI_Draw_Remove() {
 	float timescale = getstatf(STAT_MOVEVARS_TIMESCALE);
 	if (GUI_alpha > 0) {
-		if (timescale < 1)
+		if (timescale < 1 || frametime <= 0)
 			GUI_alpha -= 0.05;
 		else
 			GUI_alpha -= frametime * 5;
@@ -100,7 +100,7 @@ void GUI_Draw() {
 	float timescale = getstatf(STAT_MOVEVARS_TIMESCALE);
 	drawfont = sbar_font;
 	if (GUI_alpha < 1) {
-		if (timescale < 1)
+		if (timescale < 1 || frametime <= 0)
 			GUI_alpha += 0.05;
 		else
 			GUI_alpha += frametime * 5;
