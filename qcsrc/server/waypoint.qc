@@ -315,14 +315,12 @@ void(entity e) waypoint_remove {
 
 // empties the map of waypoints
 void(void) waypoint_removeall {
-	entity head, next;
-	head = findchain(classname, "waypoint");
-	while (head) {
-		next = head.chain;
+	entity head;
+	for (head = findchain(classname, "waypoint"); head; head = head.chain) {
+		if (head.wpflags & WAYPOINTFLAG_GENERATED) continue;
 		remove(head);
-		head = next;
+		waypoint_count--;
 	}
-	waypoint_count = 0;
 }
 
 // tell all waypoints to relink
@@ -809,17 +807,19 @@ void(void) waypoint_show_links {
 	}
 }
 
-void(float imp) waypoint_impulse {
-	if (g_waypointeditor) {
+var float(string s, float argc) waypoint_cmd_client_next;
+float(string s, float argc) waypoint_cmd_client {
+	if (g_waypointeditor && s == "waypoint" && argc > 1) {
 		entity e, e2;
 		float i, m;
 		vector org;
-		switch (imp) {
-		case 103:
+		s = argv(1);
+		switch (s) {
+		case "spawn":
 			waypoint_schedulerelink(waypoint_spawn(self.origin, self.origin, 0));
 			bprint(strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
 			break;
-		case 104:
+		case "remove":
 			e = navigation_findnearestwaypoint(self, FALSE);
 			if (e)
 			if not(e.wpflags & WAYPOINTFLAG_GENERATED) {
@@ -827,13 +827,7 @@ void(float imp) waypoint_impulse {
 				waypoint_remove(e);
 			}
 			break;
-		case 105:
-			waypoint_schedulerelinkall();
-			break;
-		case 106:
-			waypoint_saveall(FALSE);
-			break;
-		case 107:
+		case "unreachable":
 			for (e = findchain(classname, "waypoint"); e; e = e.chain) {
 				e.colormod_x = 1;
 				e.effects &= ~(EFFECT_NODEPTHTEST | EFFECT_RED | EFFECT_BLUE);
@@ -897,7 +891,9 @@ void(float imp) waypoint_impulse {
 
 			break;
 		}
+		return TRUE;
 	}
+	return waypoint_cmd_client_next(s, argc);
 }
 
 void(void) waypoint_init_delayed {
@@ -915,6 +911,25 @@ void(void) waypoint_init_delayed {
 	}
 }
 
+var float(string s, float argc) waypoint_cmd_game_next;
+float(string s, float argc) waypoint_cmd_game {
+	if (g_waypointeditor && s == "waypoint" && argc > 1) {
+		s = argv(1);
+		if (s == "autogenerate")
+			waypoint_generate_waypoints();
+		else if (s == "removeall")
+			waypoint_removeall();
+		else if (s == "relinkall")
+			waypoint_schedulerelinkall();
+		else if (s == "saveall")
+			waypoint_saveall(FALSE);
+
+		return TRUE;
+	}
+	return waypoint_cmd_game_next(s, argc);
+}
+
+float waypoint_init_done;
 void(void) waypoint_init {
 	CVAR_CACHE(g_waypointeditor);
 	CVAR_CACHE(g_waypoints_use_botclip);
@@ -923,6 +938,12 @@ void(void) waypoint_init {
 		waypoint_show(w);
 	}
 	precache_model("models/runematch/rune.mdl");
-	if not(waypoint_count)
+	if not(waypoint_init_done) {
 		entity_initialize(self, waypoint_init_delayed, INITPRIO_LAST);
+		waypoint_init_done = 1;
+		waypoint_cmd_game_next = plugin_chain_cmd_game_handle;
+		plugin_chain_cmd_game_handle = waypoint_cmd_game;
+		waypoint_cmd_client_next = plugin_chain_cmd_client_handle;
+		plugin_chain_cmd_client_handle = waypoint_cmd_client;
+	}
 }

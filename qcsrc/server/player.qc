@@ -927,8 +927,6 @@ void(void) player_impulse {
 			self.impulse = imp; // retry in next frame
 	} else if (imp >= 30 && imp <= 49) { // deploy waypoints
 		waypointsprite_impulse(imp);
-	} else if (imp >= 103 && imp <= 107) {
-		waypoint_impulse(imp);
 	}
 }
 

@@ -415,10 +415,6 @@ void(string command) cmd_game {
 		world_dynamic_init();
 		return;
 	}
-	if (cmd == "generatewaypoints") {
-		waypoint_generate_waypoints();
-		return;
-	}
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }
 

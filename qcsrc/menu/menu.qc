@@ -378,6 +378,7 @@ void(void) menu_draw {
 }
 
 void(void) menu_display {
+	print("menu_display\n");
 	menu_active = TRUE;
 	menu_mouse_mode = (cvar("menu_mouse_absolute") || cvar("vid_touchscreen"));
 	setkeydest(KEY_MENU);
@@ -394,6 +395,7 @@ void(void) menu_display {
 }
 
 void() menu_hide {
+	print("menu_hide\n");
 	menu_active = FALSE;
 	setkeydest(KEY_GAME);
 	setmousetarget(MT_CLIENT);
