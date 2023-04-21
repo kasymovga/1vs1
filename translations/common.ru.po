@@ -42,3 +42,51 @@ msgstr "Показывать радар:"
 
 msgid "Close"
 msgstr "Закрыть"
+
+msgid "Game menu"
+msgstr "Игровое меню"
+
+msgid "Main menu"
+msgstr "Основное меню"
+
+msgid "Game settings"
+msgstr "Игровые настройки"
+
+msgid "Join"
+msgstr "Присоединиться"
+
+msgid "Switch team"
+msgstr "Сменить команду"
+
+msgid "Spectate"
+msgstr "Наблюдать"
+
+msgid "Save/Load"
+msgstr "Сохранить/Загрузить"
+
+msgid "Call a vote"
+msgstr "Голосование"
+
+msgid "Mute list..."
+msgstr "Чёрный список"
+
+msgid "Stop demo"
+msgstr "Остановить демо"
+
+msgid "Stop game"
+msgstr "Остановить игру"
+
+msgid "Disconnect"
+msgstr "Отключиться"
+
+msgid "Restart"
+msgstr "Перезапуск"
+
+msgid "Reconnect"
+msgstr "Переподключиться"
+
+msgid "Return to game"
+msgstr "Продолжить играть"
+
+msgid "Quit to desktop"
+msgstr "Выход их игры"

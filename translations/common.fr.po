@@ -56,3 +56,51 @@ msgstr "Afficher les radars:"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Game menu"
+msgstr "Menu du jeu"
+
+msgid "Main menu"
+msgstr "Menu principal"
+
+msgid "Game settings"
+msgstr "Paramètres de jeu"
+
+msgid "Join"
+msgstr "Rejoindre"
+
+msgid "Switch team"
+msgstr "Changer d'équipe"
+
+msgid "Spectate"
+msgstr "Regarde"
+
+msgid "Save/Load"
+msgstr "Sauvegarder charger"
+
+msgid "Call a vote"
+msgstr "Appelez un vote"
+
+msgid "Mute list..."
+msgstr "Liste muette..."
+
+msgid "Stop demo"
+msgstr "Arrêter la démo"
+
+msgid "Stop game"
+msgstr "Arrêter le jeu"
+
+msgid "Disconnect"
+msgstr "Déconnecter"
+
+msgid "Restart"
+msgstr "Redémarrage"
+
+msgid "Reconnect"
+msgstr "Se reconnecter"
+
+msgid "Return to game"
+msgstr "Revenir au jeu"
+
+msgid "Quit to desktop"
+msgstr "Quitter sur le bureau"

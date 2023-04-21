@@ -53,3 +53,54 @@ msgstr "personalisar"
 
 msgid "Show radar:"
 msgstr "Mostrar radar:"
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Game menu"
+msgstr "menu do jogo"
+
+msgid "Main menu"
+msgstr "Menu principal"
+
+msgid "Game settings"
+msgstr "Configurações do jogo"
+
+msgid "Join"
+msgstr "Juntar"
+
+msgid "Switch team"
+msgstr "Troque de equipe"
+
+msgid "Spectate"
+msgstr "Dê uma olhada"
+
+msgid "Save/Load"
+msgstr "Salvar/Carregar"
+
+msgid "Call a vote"
+msgstr "Chame uma votação"
+
+msgid "Mute list..."
+msgstr "Desativar lista..."
+
+msgid "Stop demo"
+msgstr "Parar demonstração"
+
+msgid "Stop game"
+msgstr "Parar o jogo"
+
+msgid "Disconnect"
+msgstr "desconectar"
+
+msgid "Restart"
+msgstr "Reiniciar"
+
+msgid "Reconnect"
+msgstr "Reconecte"
+
+msgid "Return to game"
+msgstr "Voltar ao jogo"
+
+msgid "Quit to desktop"
+msgstr "Sair para a área de trabalho"

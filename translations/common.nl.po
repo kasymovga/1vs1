@@ -56,3 +56,51 @@ msgstr "Radar tonen:"
 
 msgid "Close"
 msgstr "Sluiten"
+
+msgid "Game menu"
+msgstr "Spelmenu"
+
+msgid "Main menu"
+msgstr "Hoofdmenu"
+
+msgid "Game settings"
+msgstr "Spelinstellingen"
+
+msgid "Join"
+msgstr "Meedoen"
+
+msgid "Switch team"
+msgstr "Van ploeg wisselen"
+
+msgid "Spectate"
+msgstr "Kijk eens"
+
+msgid "Save/Load"
+msgstr "Opslaan/laden"
+
+msgid "Call a vote"
+msgstr "Bel een stemming"
+
+msgid "Mute list..."
+msgstr "Lijst dempen..."
+
+msgid "Stop demo"
+msgstr "Demo stoppen"
+
+msgid "Stop game"
+msgstr "Stoppen met spel"
+
+msgid "Disconnect"
+msgstr "Loskoppelen"
+
+msgid "Restart"
+msgstr "Herstarten"
+
+msgid "Reconnect"
+msgstr "Maak opnieuw verbinding"
+
+msgid "Return to game"
+msgstr "Terug naar spel"
+
+msgid "Quit to desktop"
+msgstr "Afsluiten naar bureaublad"
