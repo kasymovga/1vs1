@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(NexuizHudDialog) EXTENDS(NexuizRootDialog)
 	METHOD(NexuizHudDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
-	ATTRIB(NexuizHudDialog, title, string, "HUD selection")
+	ATTRIB(NexuizHudDialog, title, string, _("HUD selection"))
 	ATTRIB(NexuizHudDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizHudDialog, intendedWidth, float, 0.6)
 	ATTRIB(NexuizHudDialog, rows, float, 10)
@@ -48,7 +48,7 @@ void(entity me) fillNexuizHudDialog {
 			e.addValue(e, _("Always"), "2");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Use RM HUD:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Use RM HUD:")));
 		me.TD(me, 1, 1.5, e = makeNexuizTextSlider("cl_rm_hud"));
 			e.addValue(e, "Never", "-1");
 			e.addValue(e, "When requested", "0");
@@ -56,7 +56,7 @@ void(entity me) fillNexuizHudDialog {
 			e.configureNexuizTextSliderValues(e);
 			e.saveCvars = saveCvarsUseRMHUDNexuizHudDialog;
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, "Available HUDs:"));
+		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, _("Available HUDs:")));
 	me.TR(me);
 		me.TD(me, 6, 2, e = makeNexuizHudList());
 		hudListNexuizHudDialog = e;
@@ -64,8 +64,8 @@ void(entity me) fillNexuizHudDialog {
 		me.TD(me, 6, 2, e = makeNexuizSkinList());
 		skinListNexuizHudDialog = e;
 	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 2, e = makeNexuizButton("Apply", '0 0 0'));
+		me.TD(me, 1, 2, e = makeNexuizButton(_("Apply"), '0 0 0'));
 			e.onClick = applyNexuizHudDialog;
-		me.TD(me, 1, 2, e = makeNexuizCommandButton("Cancel", '0 0 0', "", 1));
+		me.TD(me, 1, 2, e = makeNexuizCommandButton(_("Cancel"), '0 0 0', "", 1));
 }
 #endif

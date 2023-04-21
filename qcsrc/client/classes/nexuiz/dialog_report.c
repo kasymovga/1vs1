@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(NexuizReportDialog) EXTENDS(NexuizRootDialog)
 	METHOD(NexuizReportDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
-	ATTRIB(NexuizReportDialog, title, string, "Report a player")
+	ATTRIB(NexuizReportDialog, title, string, _("Report a player"))
 	ATTRIB(NexuizReportDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizReportDialog, intendedWidth, float, 0.8)
 	ATTRIB(NexuizReportDialog, rows, float, 15)
@@ -28,8 +28,8 @@ void(entity btn, entity me) reportNexuizReportDialog {
 void(entity me) fillNexuizReportDialog {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, "Naughty behaviour:"));
-		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, "Player:"));
+		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, _("Naughty behaviour:")));
+		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, _("Player:")));
 	me.TR(me);
 		me.TD(me, 13, 10, e = makeNexuizReportTypeList());
 		typeNexuizReportDialog = e;
@@ -48,10 +48,10 @@ void(entity me) fillNexuizReportDialog {
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 10, e = makeNexuizButton("Report", '0 0 0'));
+		me.TD(me, 1, 10, e = makeNexuizButton(_("Report"), '0 0 0'));
 			e.onClick = reportNexuizReportDialog;
 			e.onClickEntity = me;
-		me.TD(me, 1, 10, e = makeNexuizCommandButton("Cancel", '0 0 0', "", 1));
+		me.TD(me, 1, 10, e = makeNexuizCommandButton(_("Cancel"), '0 0 0', "", 1));
 }
 #endif
 

@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(NexuizMuteListDialog) EXTENDS(NexuizRootDialog)
 	METHOD(NexuizMuteListDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
-	ATTRIB(NexuizMuteListDialog, title, string, "Mute list")
+	ATTRIB(NexuizMuteListDialog, title, string, _("Mute list"))
 	ATTRIB(NexuizMuteListDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizMuteListDialog, intendedWidth, float, 0.8)
 	ATTRIB(NexuizMuteListDialog, rows, float, 16)
@@ -38,14 +38,14 @@ void fillNexuizMuteListDialog(entity me) {
 	me.TR(me);
 	me.TR(me); // ???
 	me.TR(me);
-		me.TD(me, 1, 5, e = makeNexuizButton("Mute", '0 0 0'));
+		me.TD(me, 1, 5, e = makeNexuizButton(_("Mute"), '0 0 0'));
 		e.onClick = muteMuteListDialog;
 		e.onClickEntity = list;
-		me.TD(me, 1, 5, e = makeNexuizButton("Unmute", '0 0 0'));
+		me.TD(me, 1, 5, e = makeNexuizButton(_("Unmute"), '0 0 0'));
 		e.onClick = unmuteMuteListDialog;
 		e.onClickEntity = list;
 
 	me.TR(me);
-		me.TD(me, 1, 10, e = makeNexuizCommandButton("Close", '0 0 0', "", 1));
+		me.TD(me, 1, 10, e = makeNexuizCommandButton(_("Close"), '0 0 0', "", 1));
 }
 #endif

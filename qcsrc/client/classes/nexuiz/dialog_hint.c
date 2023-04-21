@@ -40,14 +40,14 @@ void fillNexuizHintDialog(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.125);
-		me.TD(me, 1, 3.75, e = makeNexuizCheckBox(0, "cl_hints_skip", "Skip start hints"));
+		me.TD(me, 1, 3.75, e = makeNexuizCheckBox(0, "cl_hints_skip", _("Skip start hints")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeNexuizButton("<< Previous", '0 0 0'));
+		me.TD(me, 1, 1.5, e = makeNexuizButton(_("<< Previous"), '0 0 0'));
 		e.onClick = prevNexuizHintDialog;
-		me.TD(me, 1, 1.5, e = makeNexuizButton("Next >>", '0 0 0'));
+		me.TD(me, 1, 1.5, e = makeNexuizButton(_("Next >>"), '0 0 0'));
 		e.onClick = nextNexuizHintDialog;
-		me.TD(me, 1, 1, e = makeNexuizButton("Close", '0 0 0'));
+		me.TD(me, 1, 1, e = makeNexuizButton(_("Close"), '0 0 0'));
 		e.onClick = closeNexuizHintDialog;
 }
 #endif

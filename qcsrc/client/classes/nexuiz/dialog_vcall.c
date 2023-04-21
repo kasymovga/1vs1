@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(NexuizVcallDialog) EXTENDS(NexuizRootDialog)
 	METHOD(NexuizVcallDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
-	ATTRIB(NexuizVcallDialog, title, string, "Call a vote")
+	ATTRIB(NexuizVcallDialog, title, string, _("Call a vote"))
 	ATTRIB(NexuizVcallDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizVcallDialog, intendedWidth, float, 0.8)
 	ATTRIB(NexuizVcallDialog, rows, float, 16)
@@ -23,8 +23,8 @@ void fillNexuizVcallDialog(entity me)
 	entity e, vlist;
 	
 	me.TR(me);
-		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, "Available votes:"));
-		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, "Possible arguments:"));
+		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, _("Available votes:")));
+		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, _("Possible arguments:")));
 	me.TR(me);
         me.TD(me, 13, 10, vlist = makeNexuizVoteList());
         me.TD(me, 13, 10, vlist.voteArgsList = makeNexuizVoteArgsList());
@@ -48,10 +48,10 @@ void fillNexuizVcallDialog(entity me)
         vlist.textBox = e;
         vlist.voteArgsList.textBox = e;
     me.TR(me);
-        me.TD(me, 1, 10, e = makeNexuizButton("Call the vote", '0 0 0'));
+        me.TD(me, 1, 10, e = makeNexuizButton(_("Call the vote"), '0 0 0'));
             e.onClick = VoteCall_f;
             e.onClickEntity = me;
-        me.TD(me, 1, 10, e = makeNexuizCommandButton("Cancel", '0 0 0', "", 1));
+        me.TD(me, 1, 10, e = makeNexuizCommandButton(_("Cancel"), '0 0 0', "", 1));
     
     me.voteList = vlist;
 }
