@@ -107,3 +107,9 @@ msgstr "Beenden Sie zum Desktop"
 
 msgid "Hints"
 msgstr "Hinweise"
+
+msgid "Switch Ability Class"
+msgstr "Fähigkeitsklasse wechseln"
+
+msgid "Switch Nadget"
+msgstr "Nadget wechseln"

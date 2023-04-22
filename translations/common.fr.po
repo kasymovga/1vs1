@@ -107,3 +107,9 @@ msgstr "Quitter sur le bureau"
 
 msgid "Hints"
 msgstr "Astuces"
+
+msgid "Switch Ability Class"
+msgstr "Changer de classe de capacité"
+
+msgid "Switch Nadget"
+msgstr "Changer de nadget"

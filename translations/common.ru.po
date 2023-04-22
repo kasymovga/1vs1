@@ -93,3 +93,9 @@ msgstr "Выход их игры"
 
 msgid "Hints"
 msgstr "Подсказки"
+
+msgid "Switch Ability Class"
+msgstr "Переключить класс способности"
+
+msgid "Switch Nadget"
+msgstr "Переключить наджет"

@@ -107,3 +107,9 @@ msgstr "Afsluiten naar bureaublad"
 
 msgid "Hints"
 msgstr "Tips"
+
+msgid "Switch Ability Class"
+msgstr "Wissel van vaardigheidsklasse"
+
+msgid "Switch Nadget"
+msgstr "Wissel van Nadget"

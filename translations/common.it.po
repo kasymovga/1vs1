@@ -93,3 +93,9 @@ msgstr "Torna al desktop"
 
 msgid "Hints"
 msgstr "Suggerimenti"
+
+msgid "Switch Ability Class"
+msgstr "Cambia classe di abilità"
+
+msgid "Switch Nadget"
+msgstr "Cambia Nadget"

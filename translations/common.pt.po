@@ -107,3 +107,9 @@ msgstr "Sair para a área de trabalho"
 
 msgid "Hints"
 msgstr "dicas"
+
+msgid "Switch Ability Class"
+msgstr "Classe de habilidade de troca"
+
+msgid "Switch Nadget"
+msgstr "Alternar Nadget"
