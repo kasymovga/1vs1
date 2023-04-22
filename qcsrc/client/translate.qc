@@ -26,9 +26,9 @@ void(void) translate_init {
 		argc = tokenize_console(s);
 		if (argc < 1) {
 			if (msgstr != "") {
-				print("added translation:\n");
-				print("msgid=", msgid, "\n");
-				print("msgstr=", msgstr, "\n");
+				//print("added translation:\n");
+				//print("msgid=", msgid, "\n");
+				//print("msgstr=", msgstr, "\n");
 				db_put(translate_db, msgid, msgstr);
 				msgstr = "";
 				msgid = "";
@@ -54,9 +54,9 @@ void(void) translate_init {
 	}
 	fclose(pofile);
 	if (msgid != "" && msgstr != "") {
-		print("added translation:\n");
-		print("msgid=", msgid, "\n");
-		print("msgstr=", msgstr, "\n");
+		//print("added translation:\n");
+		//print("msgid=", msgid, "\n");
+		//print("msgstr=", msgstr, "\n");
 		db_put(translate_db, msgid, msgstr);
 	}
 }
