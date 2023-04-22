@@ -48,13 +48,19 @@ void(void) coop_teleporter_use {
 	self.nextthink = time;
 }
 
+void(void) coop_teleporter_touch {
+	if not(other.classname == "player" && other.health > 0) return;
+	entity t = find(NULL, targetname, self.target);
+	if (t)
+		teleport(self, other, t.origin, t.angles, '0 0 0', '0 0 0', '0 0 0', 0);
+}
+
 void(void) spawnfunc_coop_teleporter {
 	if (game_type != GAME_TYPE_COOP) {
 		remove(self);
 		return;
 	}
 	precache_model("models/portal.md3");
-	spawnfunc_trigger_teleport();
 	setmodel(self, "models/portal.md3");
 	setsize(self, '-32 -32 0', '32 32 40');
 	self.angles_x = 90;
@@ -62,6 +68,8 @@ void(void) spawnfunc_coop_teleporter {
 	self.alpha = -1;
 	self.think = coop_teleporter_think;
 	self.use = coop_teleporter_use;
+	self.touch = coop_teleporter_touch;
+	self.solid = SOLID_TRIGGER;
 	self.use();
 }
 
