@@ -90,3 +90,6 @@ msgstr "Продолжить играть"
 
 msgid "Quit to desktop"
 msgstr "Выход их игры"
+
+msgid "Hints"
+msgstr "Подсказки"

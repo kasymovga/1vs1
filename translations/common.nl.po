@@ -104,3 +104,6 @@ msgstr "Terug naar spel"
 
 msgid "Quit to desktop"
 msgstr "Afsluiten naar bureaublad"
+
+msgid "Hints"
+msgstr "Tips"

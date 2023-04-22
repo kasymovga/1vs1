@@ -1,0 +1,3 @@
+string(string s) translate;
+void(void) translate_init;
+void(void) translate_shutdown;

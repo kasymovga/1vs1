@@ -75,6 +75,7 @@ centerprint.qc
 game_type.qh
 ready.qh
 race.qh
+translate.qh
 flag.qc
 ctf.qc
 kh.qc
@@ -156,3 +157,4 @@ extension.qc
 rm_skin.qc
 rm_hud.qc
 porto.qc
+translate.qc

@@ -104,3 +104,6 @@ msgstr "Revenir au jeu"
 
 msgid "Quit to desktop"
 msgstr "Quitter sur le bureau"
+
+msgid "Hints"
+msgstr "Astuces"

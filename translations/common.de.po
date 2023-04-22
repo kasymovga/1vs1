@@ -104,3 +104,6 @@ msgstr "Zum Spiel zurückkehren"
 
 msgid "Quit to desktop"
 msgstr "Beenden Sie zum Desktop"
+
+msgid "Hints"
+msgstr "Hinweise"

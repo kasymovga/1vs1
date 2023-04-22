@@ -90,3 +90,6 @@ msgstr "Tornare al gioco"
 
 msgid "Quit to desktop"
 msgstr "Torna al desktop"
+
+msgid "Hints"
+msgstr "Suggerimenti"

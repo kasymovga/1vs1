@@ -159,6 +159,8 @@ void(void) CSQC_Init {
 		rm_skin_unload();
 	else if (CVAR(cl_rm_hud) > 0)
 		rm_skin_load(cvar_string("cl_rm_skin"));
+
+	translate_init();
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -182,6 +184,7 @@ void(void) CSQC_Shutdown {
 	}
 	trip_shutdown();
 	mute_shutdown();
+	translate_shutdown();
 }
 
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.

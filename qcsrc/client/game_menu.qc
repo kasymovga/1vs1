@@ -10,7 +10,7 @@ void(void) game_menu_read {
 		if (s == "")
 			break;
 
-		game_menu_items[i] = str_zone_ifneeded(s);
+		game_menu_items[i] = str_zone_ifneeded(translate(s));
 		game_menu_commands[i] = str_zone_ifneeded(net_read_string());
 	}
 	game_menu_commands_count = i;

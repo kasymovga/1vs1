@@ -104,3 +104,6 @@ msgstr "Voltar ao jogo"
 
 msgid "Quit to desktop"
 msgstr "Sair para a área de trabalho"
+
+msgid "Hints"
+msgstr "dicas"
