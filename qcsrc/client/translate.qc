@@ -13,7 +13,7 @@ void(void) translate_init {
 	string lang = cvar_string("prvm_language");
 	if (lang == "" || lang == "en") return;
 	s = strcat("common.", lang, ".po");
-	float pofile = fopen(s, FILE_READ);
+	float pofile = fopen(s, (extension_DP_RM_FILE ? FILE_READ_NODATA : FILE_READ));
 	print("Loading translation\n");
 	if (pofile < 0) {
 		print("Cannot open ", s, "\n");

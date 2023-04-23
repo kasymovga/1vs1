@@ -6,3 +6,4 @@ float(string path) file_exists_image;
 const float FILE_READ = 0;
 const float FILE_APPEND = 1;
 const float FILE_WRITE = 2;
+const float FILE_READ_NODATA = 3; //DP_RM_FILE

@@ -232,7 +232,7 @@ float(float req) weapon_porto {
 			remove(self.porto_indicator);
 			self.porto_indicator = NULL;
 		}
-		if (g_balance_porto_remove_on_death) {
+		if (g_balance_porto_remove_on_death && (self.health <= 0 || self.deadflag != DEAD_NO)) {
 			portal_clear_all(self);
 		}
 		weapon_porto_remove(self);
