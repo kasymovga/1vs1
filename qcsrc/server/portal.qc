@@ -72,42 +72,10 @@ float(entity teleporter, entity player) portal_teleport_player {
 	//print(vtos(to), "\n");
 	// ang_x stuff works around weird quake angles
 	if (player.classname == "player") {
-		ang = player.v_angle;
-		// PLAYERS use different math
-		ang_x = -ang_x;
-		makevectors(ang);
-		old_forward = v_forward;
-		old_up = v_up;
-		makevectors(ang_y * '0 1 0');
-		old_yawforward = v_forward;
-		// their aiming directions are portalled...
-		new_forward = anglestransform_apply(transform, old_forward);
-		new_up = anglestransform_apply(transform, old_up);
-		new_yawforward = anglestransform_apply(transform, old_yawforward);
-		// but now find a new sense of direction
-		// this is NOT easy!
-		// assume new_forward points straight up.
-		// What is our yaw?
-		//
-		// new_up could now point forward OR backward... which direction to choose?
-		if (new_forward_z > 0.7 || new_forward_z < -0.7) { // far up; in this case, the "up" vector points backwards
-			// new_yawforward and new_yawup define the new aiming half-circle
-			// we "just" need to find out whether new_up or -new_up is in that half circle
-			ang = vectoangles(new_forward); // this still gets us a nice pitch value...
-			if(new_up * new_yawforward < 0)
-				new_up = -1 * new_up;
-
-			ang_y = vectoyaw(new_up); // this vector is the yaw we want
-			//print("UP/DOWN path: ", vtos(ang), "\n");
-		} else {
-			// good angles; here, "forward" suffices
-			ang = vectoangles(new_forward);
-			//print("GOOD path: ", vtos(ang), "\n");
-		}
-		ang_z = player.angles_z;
+		ang = anglestransform_apply_to_vangles(transform, player.v_angle);
+		ang_z = 0;
 	} else {
-		ang = player.angles;
-		ang = anglestransform_multiply(transform, ang);
+		ang = anglestransform_multiply(transform, player.angles);
 	}
 	// factor -1 allows chaining portals, but may be weird
 	player.right_vector = -1 * anglestransform_apply(transform, player.right_vector);
