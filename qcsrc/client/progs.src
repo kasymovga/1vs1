@@ -99,6 +99,7 @@ zapper.qc
 nadgetselect.qc
 trip.qc
 func_camera.qc
+portal.qc
 announce.qc
 vote.qh
 game_menu.qh
