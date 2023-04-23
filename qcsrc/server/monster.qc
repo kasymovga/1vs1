@@ -132,6 +132,9 @@ void monster_drop_item(float item_code, string _model, string _sound, string _na
 	if (random() > 0.3)
 		return;
 
+	if (player_start_items & IT_UNLIMITED_WEAPON_AMMO)
+		return;
+
 	entity e = self;
 	self = spawn();
 	self.itemfield = itemvalue;
