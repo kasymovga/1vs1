@@ -80,7 +80,8 @@ float(string name) campaign_file_load {
 		campaign_entry("surv", "area51", 0, 1, 10, "", "Survival Level 12: Secret base", "");
 		campaign_entry("surv", "failed_experiment", 0, 1, 10, "", "Survival Level 13", "Final challenge");
 	} else if (campaign_name == "spdemo") {
-		campaign_entry("single", "rexsp01_city", 0, 1, 10, "", "Pre-Alpha GamePlay Demo", "");
+		campaign_entry("single", "rexsp01_city", 0, 1, 10, "", "Demo Level 1", "");
+		campaign_entry("single", "rexsp02_lavacastle", 0, 1, 10, "", "Demo Level 2", "");
 	}
 	return campaign_entries;
 }
