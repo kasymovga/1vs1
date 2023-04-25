@@ -24,9 +24,6 @@ void SwitchTo(entity btn, entity me) {
 }
 
 entity addCampaign(entity me, entity e, string _title, string cfg) {
-	if not(file_exists(strcat("maps/campaign", cfg, ".txt")))
-		return e;
-
 	me.TD(me, 1, 1.1, e.btnGame = makeNexuizButton(_title, '0 0 0'));
 	e = e.btnGame;
 	e.cvarName = cfg;
