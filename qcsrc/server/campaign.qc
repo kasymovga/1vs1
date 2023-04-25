@@ -57,6 +57,14 @@ float(void) campaign_invalid {
 	return 0;
 }
 
+string(float d) campaign_difficulty_string {
+	if (d >= 3) return "^6Insane";
+	if (d >= 2) return "^1Hard";
+	if (d >= 1) return "^3Medium";
+	if (d >= 0) return "^5Easy";
+	return "^2Easiest";
+}
+
 void(void) campaign_preinit {
 	if (builtin_cvar("_restore_game")) { //Hack for load game
 		campaign_cvar_list = strzone("; ");
@@ -104,7 +112,7 @@ void(void) campaign_preinit {
 
 	title = campaign_shortdesc[campaign_level];
 	title = strzone(strcat("Level ", ftos(campaign_level + 1), ": ", title));
-	campaign_message = strzone(campaign_longdesc[campaign_level]);
+	campaign_message = strzone(strcat("^3Difficulty: ", campaign_difficulty_string(g_campaign_skill), "^7\n\n", campaign_longdesc[campaign_level]));
 	strunzone(title);
 }
 
