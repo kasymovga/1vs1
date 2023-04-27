@@ -5,3 +5,4 @@ void(entity own) portal_clear_all;
 void(entity own) portal_clear_all_later;
 float(entity own, vector dir) portal_spawn_out_portal_at_trace;
 float(entity own, vector dir) portal_spawn_in_portal_at_trace;
+void(void) portal_init;

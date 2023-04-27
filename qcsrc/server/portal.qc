@@ -6,6 +6,9 @@
 .float portal_wants_to_vanish;
 .float portal_activatetime;
 
+string portal_model;
+float portal_type;
+
 float(entity p, vector v) portal_player_edge_distance {
 	vector vbest;
 	if(v_x < 0) vbest_x = p.mins_x; else vbest_x = p.maxs_x;
@@ -182,6 +185,10 @@ void(entity portal) portal_make_broken_portal {
 	portal.effects = 0;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_NO;
+	if (portal_type) {
+		portal.SendFlags |= 255;
+		portal.camera_transform = NULL;
+	}
 }
 
 void(entity portal) portal_make_waiting_portal {
@@ -192,6 +199,17 @@ void(entity portal) portal_make_waiting_portal {
 	portal.effects = EFFECT_ADDITIVE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
+	if (portal_type) {
+		portal.SendFlags |= 255;
+		portal.camera_transform = NULL;
+	}
+}
+
+vector(vector org, vector ang) portal_camera_transform {
+	// a fixed camera view
+	trace_endpos = self.enemy.origin;
+	makevectors(self.portal_transform);
+	return trace_endpos;
 }
 
 void(void) portal_think;
@@ -203,6 +221,10 @@ void(entity portal) portal_make_in_portal {
 	portal.effects = EFFECT_RED;
 	portal.nextthink = time;
 	portal.takedamage = DAMAGE_NO;
+	if (portal_type) {
+		portal.SendFlags |= 255;
+		portal.camera_transform = portal_camera_transform;
+	}
 }
 
 void(entity portal) portal_make_out_portal {
@@ -213,6 +235,10 @@ void(entity portal) portal_make_out_portal {
 	portal.effects = EFFECT_STARDUST | EFFECT_BLUE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
+	if (portal_type) {
+		portal.SendFlags |= 255;
+		portal.camera_transform = portal_camera_transform;
+	}
 }
 
 void(entity teleporter, entity destination) portal_disconnect {
@@ -377,6 +403,33 @@ void(entity own) portal_clear_all_later {
 	portal_clear_all_later_portals_only(own);
 }
 
+float(entity to, float sendflags) portal_send {
+	net_write_byte(MSG_ENTITY, NET_CSQC_PORTAL);
+	net_write_short(MSG_ENTITY, self.modelindex);
+	net_write_short(MSG_ENTITY, self.skin);
+	net_write_coord(MSG_ENTITY, self.effects & ~EFFECT_NODEPTHTEST);
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
+	net_write_coord(MSG_ENTITY, self.angles_x);
+	net_write_coord(MSG_ENTITY, self.angles_y);
+	net_write_coord(MSG_ENTITY, self.angles_z);
+	if (self.enemy && !self.skin) {
+		net_write_byte(MSG_ENTITY, 1);
+		makevectors(self.enemy.angles);
+		vector o = self.enemy.origin + v_forward * 4;
+		net_write_coord(MSG_ENTITY, o_x);
+		net_write_coord(MSG_ENTITY, o_y);
+		net_write_coord(MSG_ENTITY, o_z);
+		net_write_coord(MSG_ENTITY, self.portal_transform_x);
+		net_write_coord(MSG_ENTITY, self.portal_transform_y);
+		net_write_coord(MSG_ENTITY, self.portal_transform_z);
+	} else {
+		net_write_byte(MSG_ENTITY, 0);
+	}
+	return TRUE;
+}
+
 entity(entity own, vector org, vector ang) portal_spawn {
 	entity portal;
 	ang_x = -ang_x;
@@ -397,7 +450,7 @@ entity(entity own, vector org, vector ang) portal_spawn {
 	portal.event_damage = portal_damage;
 	portal.nextthink = time + cvar("g_balance_portal_lifetime");
 	portal.health = cvar("g_balance_portal_health");
-	setmodel(portal, "models/portal.md3");
+	setmodel(portal, portal_model);
 	portal.modelindex_lod0 = portal.modelindex;
 	portal.customizeentityforclient = portal_customize;
 	if (!portal_find_save_origin(portal)) {
@@ -406,6 +459,9 @@ entity(entity own, vector org, vector ang) portal_spawn {
 	}
 	setsize(portal, '-48 -48 -48', '48 48 48');
 	portal_make_waiting_portal(portal);
+	if (portal_type)
+		net_link_entity(portal, FALSE, 0, portal_send);
+
 	return portal;
 }
 
@@ -437,4 +493,20 @@ float(entity own, vector dir) portal_spawn_out_portal_at_trace {
 	}
 	portal_set_out_portal(own, portal);
 	return 1;
+}
+
+float portal_init_done;
+void(void) portal_init {
+	if (portal_init_done)
+		return;
+
+	if (cvar("g_portal_type")) {
+		portal_model = "models/portalwithcamera.md3";
+		portal_type = 1;
+		dlc_require("portalwithcamera");
+	} else {
+		portal_model = "models/portal.md3";
+		portal_type = 0;
+	}
+	precache_model(portal_model);
 }

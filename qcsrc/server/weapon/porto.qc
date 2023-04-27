@@ -203,7 +203,7 @@ float(float req) weapon_porto {
 			}
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
-		precache_model("models/portal.md3");
+		portal_init();
 		precache_sound("porto/bounce.wav");
 		precache_sound("porto/create.wav");
 		precache_sound("porto/expire.wav");
