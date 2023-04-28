@@ -17,6 +17,7 @@ entity(entity start, .string fld, string match) find = #18;
 string(string s) precache_sound = #19;
 float(string s) precache_sound_index = #19;
 string(string s) precache_model = #20;
+float(string s) precache_model_index = #20;
 void(entity client, string s) stuffcmd = #21;
 entity(vector org, float rad) findradius = #22;
 void(string s, ...) bprint = #23;

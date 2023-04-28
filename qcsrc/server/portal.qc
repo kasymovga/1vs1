@@ -7,7 +7,14 @@
 .float portal_activatetime;
 
 string portal_model;
+string portal_model_out;
+float portal_model_index;
+float portal_model_out_index;
 float portal_type;
+
+float g_portal_bidirectional;
+
+void(entity portal, float killed) portal_remove;
 
 float(entity p, vector v) portal_player_edge_distance {
 	vector vbest;
@@ -149,6 +156,9 @@ void(void) portal_touch {
 	if (!self.enemy)
 		error("portal_touch called for a broken portal\n");
 
+	if (other == self.enemy) { //we are too close
+		portal_remove(self, FALSE);
+	}
 	if(other.portal_id == self.portal_id)
 		return;
 
@@ -162,6 +172,14 @@ void(void) portal_touch {
 			if(PLAYER_IS_INDEPENDENT(other) || PLAYER_IS_INDEPENDENT(self.aiment))
 				return; // cannot go through someone else's portal
 
+	if (g_portal_bidirectional) {
+		self.angles_x = -self.angles_x;
+		makevectors(self.angles);
+		self.angles_x = -self.angles_x;
+		if (other.velocity * v_forward > 0) {//moving out of portal
+			return;
+		}
+	}
 	if (other.aiment != self.aiment)
 		if(other.aiment.classname == "player")
 			if(PLAYER_IS_INDEPENDENT(other.aiment) || PLAYER_IS_INDEPENDENT(self.aiment))
@@ -175,10 +193,19 @@ void(void) portal_touch {
 		return;
 
 	portal_teleport_player(self, other);
+	if (g_portal_bidirectional) {
+		self.enemy.angles_x = -self.enemy.angles_x;
+		makevectors(self.enemy.angles);
+		self.enemy.angles_x = -self.enemy.angles_x;
+		if (other.velocity * v_forward < sv_jumpvelocity) {
+			other.velocity += (v_forward * (sv_jumpvelocity - other.velocity * v_forward));
+		}
+	}
 }
 
 void(entity portal) portal_make_broken_portal {
 	portal.skin = 2;
+	portal.modelindex_lod0 = portal_model_index;
 	portal.solid = SOLID_NOT;
 	portal.touch = stdproc_nothing;
 	portal.think = stdproc_nothing;
@@ -193,6 +220,7 @@ void(entity portal) portal_make_broken_portal {
 
 void(entity portal) portal_make_waiting_portal {
 	portal.skin = 2;
+	portal.modelindex_lod0 = portal_model_index;
 	portal.solid = SOLID_NOT;
 	portal.touch = stdproc_nothing;
 	portal.think = stdproc_nothing;
@@ -215,6 +243,7 @@ vector(vector org, vector ang) portal_camera_transform {
 void(void) portal_think;
 void(entity portal) portal_make_in_portal {
 	portal.skin = 0;
+	portal.modelindex_lod0 = portal_model_index;
 	portal.solid = SOLID_NOT; // this is done when connecting them!
 	portal.touch = portal_touch;
 	portal.think = portal_think;
@@ -228,9 +257,20 @@ void(entity portal) portal_make_in_portal {
 }
 
 void(entity portal) portal_make_out_portal {
-	portal.skin = 1;
-	portal.solid = SOLID_NOT;
-	portal.touch = stdproc_nothing;
+	if (g_portal_bidirectional) {
+		portal.modelindex_lod0 = portal_model_out_index;
+		portal.skin = 0;
+	} else {
+		portal.modelindex_lod0 = portal_model_index;
+		portal.skin = 1;
+	}
+	if (g_portal_bidirectional) {
+		portal.solid = SOLID_TRIGGER;
+		portal.touch = portal_touch;
+	} else {
+		portal.solid = SOLID_NOT;
+		portal.touch = stdproc_nothing;
+	}
 	portal.think = stdproc_nothing;
 	portal.effects = EFFECT_STARDUST | EFFECT_BLUE;
 	portal.nextthink = 0;
@@ -256,6 +296,7 @@ void(entity teleporter, entity destination) portal_connect {
 	teleporter.angles_x = -teleporter.angles_x;
 	teleporter.enemy = destination;
 	destination.enemy = teleporter;
+	destination.portal_transform = anglestransform_invert(teleporter.portal_transform);
 	portal_make_in_portal(teleporter);
 	portal_make_out_portal(destination);
 	if (portal_counter > 1000000) portal_counter = 0;
@@ -500,13 +541,27 @@ void(void) portal_init {
 	if (portal_init_done)
 		return;
 
-	if (cvar("g_portal_type")) {
+	CVAR_CACHE(g_portal_bidirectional);
+	if (cvar("g_portal_type") || g_portal_bidirectional) {
 		portal_model = "models/portalwithcamera.md3";
+		if (g_portal_bidirectional)
+			portal_model_out = "models/portalwithcamera_blue.md3";
+		else
+			portal_model_out = portal_model;
+
 		portal_type = 1;
 		dlc_require("portalwithcamera");
 	} else {
 		portal_model = "models/portal.md3";
+		portal_model_out = "models/portal.md3";
 		portal_type = 0;
 	}
+	entity e = spawn();
 	precache_model(portal_model);
+	setmodel(e, portal_model);
+	portal_model_index = e.modelindex;
+	precache_model(portal_model_out);
+	setmodel(e, portal_model_out);
+	portal_model_out_index = e.modelindex;
+	remove(e);
 }
