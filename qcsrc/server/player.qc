@@ -99,12 +99,16 @@ void(void) player_corpse_think {
 		}
 	} else if (time >= self.fade_time) {
 		if (self.owner == self) {
-			pointparticles(particleeffectnum("morphed_damage_dissolve"), self.origin + (self.mins + self.maxs) * 0.5, '0 0 0', 1);
+			if (self.modelindex)
+				pointparticles(particleeffectnum("morphed_damage_dissolve"), self.origin + (self.mins + self.maxs) * 0.5, '0 0 0', 1);
+
 			if (self.weaponentity) remove(self.weaponentity);
 			if (self.exteriorweaponentity) remove(self.exteriorweaponentity);
 			remove(self);
 		} else {
-			pointparticles(particleeffectnum("morphed_damage_dissolve"), self.owner.origin + (self.owner.mins + self.maxs) * 0.5, '0 0 0', 1);
+			if (self.modelindex)
+				pointparticles(particleeffectnum("morphed_damage_dissolve"), self.owner.origin + (self.owner.mins + self.owner.maxs) * 0.5, '0 0 0', 1);
+
 			self = self.owner;
 			player_body_remove();
 			self = world;
