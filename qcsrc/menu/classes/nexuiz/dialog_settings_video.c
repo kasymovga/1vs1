@@ -169,7 +169,7 @@ void(entity btn, entity me) highNexuizVideoSettingsTab {
 	cvar_set("r_glsl_offsetmapping", "1");
 	cvar_set("r_glsl_offsetmapping_reliefmapping", "0");
 	cvar_set("r_hdr_irisadaptation", "0");
-	cvar_set("r_motionblur", "0.4");
+	cvar_set("r_motionblur", "0");
 	cvar_set("r_picmipworld", "1");
 	cvar_set("r_shadow_gloss", "1");
 	cvar_set("r_shadow_realtime_dlight", "1");
