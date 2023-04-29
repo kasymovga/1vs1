@@ -52,6 +52,7 @@ void(entity btn, entity me) lowNexuizVideoSettingsTab {
 	cvar_set("v_glslgamma", "0");
 	cvar_set("r_deformvertexes", "0");
 	cvar_set("cl_decals_max", "64");
+	cvar_set("r_extra_texture_effects", "0");
 	gui_load_all_cvars(main);
 }
 
@@ -97,6 +98,7 @@ void(entity btn, entity me) mediumNexuizVideoSettingsTab {
 	cvar_set("v_glslgamma", "0");
 	cvar_set("r_deformvertexes", "1");
 	cvar_set("cl_decals_max", "128");
+	cvar_set("r_extra_texture_effects", "1");
 	gui_load_all_cvars(main);
 }
 
@@ -142,6 +144,7 @@ void(entity btn, entity me) normalNexuizVideoSettingsTab {
 	cvar_set("v_glslgamma", "0");
 	cvar_set("r_deformvertexes", "1");
 	cvar_set("cl_decals_max", "192");
+	cvar_set("r_extra_texture_effects", "1");
 	gui_load_all_cvars(main);
 }
 
@@ -187,6 +190,7 @@ void(entity btn, entity me) highNexuizVideoSettingsTab {
 	cvar_set("v_glslgamma", "1");
 	cvar_set("r_deformvertexes", "1");
 	cvar_set("cl_decals_max", "256");
+	cvar_set("r_extra_texture_effects", "1");
 	gui_load_all_cvars(main);
 }
 
@@ -232,6 +236,7 @@ void(entity btn, entity me) ultraNexuizVideoSettingsTab {
 	cvar_set("v_glslgamma", "1");
 	cvar_set("r_deformvertexes", "1");
 	cvar_set("cl_decals_max", "512");
+	cvar_set("r_extra_texture_effects", "1");
 	gui_load_all_cvars(main);
 }
 
