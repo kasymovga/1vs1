@@ -25,9 +25,6 @@ void() menu_init {
 	cvar_set("_menu_alpha", "0");
 	registercvar("_menu_echo_on", "0", 0);
 	cvar_set("_menu_echo_on", "0");
-	if (cvar("sys_first_run"))
-		cvar_set("vid_desktopfullscreen", "1");
-
 	serverlist_init();
 	masterlist_init();
 	dlc_reload(TRUE, FALSE);
