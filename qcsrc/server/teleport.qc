@@ -93,6 +93,8 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 		} else {
 			player.pushltime = 0;
 		}
+	} else if (player.flags & FL_PROJECTILE) {
+		player.lastpushtime = time;
 	}
 }
 
