@@ -99,16 +99,12 @@ void(void) player_corpse_think {
 		}
 	} else if (time >= self.fade_time) {
 		if (self.owner == self) {
-			if (self.modelindex)
-				pointparticles(particleeffectnum("morphed_damage_dissolve"), self.origin + (self.mins + self.maxs) * 0.5, '0 0 0', 1);
-
+			pointparticles(particleeffectnum("morphed_damage_dissolve"), self.origin + (self.mins + self.maxs) * 0.5, '0 0 0', 1);
 			if (self.weaponentity) remove(self.weaponentity);
 			if (self.exteriorweaponentity) remove(self.exteriorweaponentity);
 			remove(self);
 		} else {
-			if (self.modelindex)
-				pointparticles(particleeffectnum("morphed_damage_dissolve"), self.owner.origin + (self.owner.mins + self.owner.maxs) * 0.5, '0 0 0', 1);
-
+			pointparticles(particleeffectnum("morphed_damage_dissolve"), self.owner.origin + (self.owner.mins + self.owner.maxs) * 0.5, '0 0 0', 1);
 			self = self.owner;
 			player_body_remove();
 			self = world;
@@ -142,7 +138,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
 	o.health = o.health - _damage;
-	if (o.health <= -75 && b.modelindex != 0) {
+	if (o.health <= -75) {
 		violence_gib_splash(self, 1, 1, attacker);
 		if (self == b) { //detached body
 			if (self.weaponentity) remove(self.weaponentity);
@@ -150,7 +146,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			self.nextthink = time;
 			self.think = stdproc_remove;
 		} else { //player
-			b.effects |= EFFECT_NODRAW;
+			player_body_remove();
 			// view just above the floor
 			physics_set_view_offsets(o, '0 0 4', '0 0 4');
 		}
@@ -616,7 +612,7 @@ void() player_effects {
 	entity b = self.body;
 	if (!b) return;
 	b.body.effects = self.effects & EFFECT_TELEPORT_BIT; //for teleportation
-	if (!b.modelindex || PLAYER_REALLY_DEAD(self)) // don't apply the flags if the player is gibbed
+	if ((b.effects & EFFECT_NODRAW) || PLAYER_REALLY_DEAD(self)) // don't apply the flags if the player is gibbed
 		return;
 
 	fire_apply_effect(self);

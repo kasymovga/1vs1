@@ -169,9 +169,6 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 }
 
 entity(float keepvelocity, float _movetype) player_body_detach {
-	if (self.effects & EFFECT_NODRAW)
-		return NULL;
-
 	entity e = self.body;
 	if not(e)
 		return NULL;
@@ -570,7 +567,7 @@ void(void) player_body_animation {
 	if (!self.weaponentity.animstate_override)
 		anim_set(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
 
-	if (!b || !b.modelindex || b.frame == b.dead_frame) //dead or gibbed
+	if (!b || b.frame == b.dead_frame) //dead or gibbed
 		return;
 
 	anim_update(b);
@@ -946,9 +943,6 @@ float(void) player_body_customize {
 		self.effects |= EFFECT_NODEPTHTEST;
 	else
 		self.effects &= ~EFFECT_NODEPTHTEST;
-
-	if (!self.modelindex && PLAYER_REALLY_DEAD(o))
-		return TRUE;
 
 	modelsource = self;
 	if (self.skin != modelsource.owner.skinindex) {
