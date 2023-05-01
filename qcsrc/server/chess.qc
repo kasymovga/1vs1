@@ -215,8 +215,8 @@ float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal 
 			goto checkforcheck;
 		}
 		//short castling
-		if (!piece.dmg && x == 6
-				&& (e = chess_piece_find(7, piece.pos1_y)) && e.cnt == CHESS_ROOK && !e.dmg
+		if (!piece.dmg && x == 6 && y == piece.pos1_y
+				&& (e = chess_piece_find(7, piece.pos1_y)) && e.cnt == CHESS_ROOK && !e.dmg && e.team == piece.team
 				&& chess_path_is_empty(piece, 7, piece.pos1_y)
 				&& !chess_cell_is_under_attack(piece.pos1_x, piece.pos1_y, piece.team)
 				&& !chess_cell_is_under_attack(5, piece.pos1_y, piece.team)
@@ -225,8 +225,8 @@ float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal 
 			return TRUE;
 		}
 		//long castling
-		if (!piece.dmg && x == 2
-				&& (e = chess_piece_find(0, piece.pos1_y)) && e.cnt == CHESS_ROOK && !e.dmg
+		if (!piece.dmg && x == 2 && y == piece.pos1_y
+				&& (e = chess_piece_find(0, piece.pos1_y)) && e.cnt == CHESS_ROOK && !e.dmg && e.team == piece.team
 				&& chess_path_is_empty(piece, 0, piece.pos1_y)
 				&& !chess_cell_is_under_attack(piece.pos1_x, piece.pos1_y, piece.team)
 				&& !chess_cell_is_under_attack(3, piece.pos1_y, piece.team)
