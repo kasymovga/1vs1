@@ -9,6 +9,7 @@ float MAP_INFO_TYPE_CONQUEST = 256;
 float MAP_INFO_TYPE_KEYHUNT = 1024;
 float MAP_INFO_TYPE_NEXBALL = 2048;
 float MAP_INFO_TYPE_CTS = 4096;
+float MAP_INFO_TYPE_CHESS = 8192;
 float MAP_INFO_TYPE_SURVIVE = 32768;
 float MAP_INFO_TYPE_SINGLE = 65536;
 
@@ -775,6 +776,7 @@ float(float t) map_info_type_from_game_type {
 	case GAME_TYPE_SINGLE:          return MAP_INFO_TYPE_SINGLE;
 	case GAME_TYPE_NEXBALL:         return MAP_INFO_TYPE_NEXBALL;
 	case GAME_TYPE_SHOOTINGRANGE:   return MAP_INFO_TYPE_SHOOTINGRANGE;
+	case GAME_TYPE_CHESS:           return MAP_INFO_TYPE_CHESS;
 	}
 	return 0;
 }

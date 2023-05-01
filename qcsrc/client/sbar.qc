@@ -1726,6 +1726,8 @@ void(void) sbar_game_init {
 		sbar_score_draw = sbar_score_draw_race;
 	} else if (game_type == GAME_TYPE_SHOOTINGRANGE) {
 		sbar_game_hud = shootingrange_hud;
+	} else if (game_type == GAME_TYPE_CHESS) {
+		sbar_game_hud = chess_hud;
 	} else {
 		rm_hud_game_info_enabled = FALSE;
 		sbar_game_hud = sbar_game_hud_nothing;

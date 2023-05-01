@@ -81,6 +81,7 @@ ctf.qc
 kh.qc
 single.qc
 nb.qc
+chess.qc
 sbar.qc
 map_vote.qc
 report.qh

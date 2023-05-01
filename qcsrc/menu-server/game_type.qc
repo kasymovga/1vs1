@@ -30,6 +30,7 @@ float(string t) game_type_from_name {
 	if (t == "single") return GAME_TYPE_SINGLE;
 	if (t == "coop") return GAME_TYPE_COOP;
 	if (t == "shootingrange" || t == "sr") return GAME_TYPE_SHOOTINGRANGE;
+	if (t == "chess") return GAME_TYPE_CHESS;
 	return 0;
 }
 

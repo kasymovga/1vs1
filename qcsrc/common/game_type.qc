@@ -20,5 +20,6 @@ string(float g) game_type_name {
 	if (g == GAME_TYPE_SINGLE) return "single";
 	if (g == GAME_TYPE_COOP) return "coop";
 	if (g == GAME_TYPE_SHOOTINGRANGE) return "sr";
+	if (g == GAME_TYPE_CHESS) return "chess";
 	return "dm";
 }

@@ -146,6 +146,7 @@ weapon/model.qh
 game/type.qh
 chat.qh
 cheat.qh
+chess.qh
 team.qh
 tdm.qh
 map_vote.qh
@@ -384,3 +385,4 @@ perf.qc
 map_info.qc
 voip.qc
 cheat.qc
+chess.qc
