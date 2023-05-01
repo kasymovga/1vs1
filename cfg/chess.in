@@ -1,0 +1,11 @@
+set g_chess_timelimit "" "Timelimit for chess, when empty, g_timelimit using, <= 0 mean no limit"
+set g_chess_leadlimit 0 "Dummy cvar, chess don't гыу leadlimit"
+set g_chess_timecontrol_start 10 "time control: start value"
+set g_chess_timecontrol_addition 0 "time control: per move addition"
+set chess_g_balance_kill_delay 0
+set chess_g_respawn_delay 0
+set chess_g_voip_chat_public 2
+set chess_g_start_weapon_laser 0
+set chess_g_start_weapon_shotgun 0
+alias sv_hook_gamestart_race
+alias cl_hook_gamestart_race
