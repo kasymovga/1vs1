@@ -344,7 +344,10 @@ void(void) chess_board_init {
 
 float(entity to, float f) chess_info_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_CHESS_INFO);
-	f &= 127;
+	f &= 3;
+	if (chess_turn)
+		f |= 4;
+
 	net_write_byte(MSG_ENTITY, f);
 	if (f & 1)
 		net_write_coord(MSG_ENTITY, chess_timer_white);
@@ -414,6 +417,7 @@ void(float sel) chess_promotion_select {
 		break;
 	}
 	chess_turn = !chess_turn;
+	chess_info.SendFlags |= 4;
 	menu_remove(chess_promotion_menu);
 	chess_promotion_menu = NULL;
 }
@@ -518,6 +522,7 @@ void(void) chess_physics_frame_begin_hook {
 				chess_piece_pick(NULL);
 				if not(chess_promotion) {
 					chess_turn = !chess_turn;
+					chess_info.SendFlags |= 4;
 					if (chess_position_is_stale((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) {
 						if (chess_position_is_check((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) { //checkmate, win
 							bprint("\{3}* Checkmate\n");
