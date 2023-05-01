@@ -107,7 +107,7 @@ float(float t) chess_position_is_stale {
 		if (e.team == t && e.pos1_x >= 0 && e.pos1_y >= 0) {
 			for (x = 0; x < 8; x++)
 				for (y = 0; y < 8; y++) {
-					if (chess_move_is_legal(e, x, y, TRUE)) {
+					if (e.pos1_x != x && e.pos1_y != y && chess_move_is_legal(e, x, y, TRUE)) {
 						return FALSE;
 					}
 				}
@@ -152,7 +152,7 @@ float(float x, float y, float ft) chess_cell_is_under_attack {
 	return FALSE;
 }
 
-float(entity piece, float x, float y, float checkforcheck) chess_move_is_legal {
+float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal {
 	entity e;
 	entity capture;
 	if ((e = chess_piece_find(x, y)) && e.team == piece.team) return FALSE;
@@ -240,7 +240,7 @@ float(entity piece, float x, float y, float checkforcheck) chess_move_is_legal {
 	return FALSE;
 :checkforcheck
 	float ischeck = FALSE;
-	if (checkforcheck) {
+	if (_checkforcheck) {
 		vector v1, v2 = '0 0 0';
 		if (capture) {
 			v2 = capture.pos1;
