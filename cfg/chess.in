@@ -8,5 +8,6 @@ set chess_g_voice_chat_public 2
 set chess_g_start_weapon_laser 0
 set chess_g_start_weapon_shotgun 0
 set chess_g_maxplayers 2
+set chess_g_rank_type "chess"
 alias sv_hook_gamestart_chess
 alias cl_hook_gamestart_chess
