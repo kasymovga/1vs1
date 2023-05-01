@@ -401,6 +401,21 @@ void(entity e) chess_piece_point {
 	}
 }
 
+void(void) chess_turn_switch {
+	chess_turn = !chess_turn;
+	chess_info.SendFlags |= 4;
+	if (chess_position_is_stale((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) {
+		if (chess_position_is_check((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) { //checkmate, win
+			bprint("\{3}* Checkmate\n");
+			chess_win = (chess_turn ? COLOR_TEAM1 : COLOR_TEAM2);
+			score_player_team_add_score(self, 10);
+		} else { //stalemate, draw
+			bprint("\{3}* Stalemate\n");
+			chess_win = -1;
+		}
+	}
+}
+
 void(float sel) chess_promotion_select {
 	if (sel < 0 || sel > 3) return;
 	float x = chess_promotion.pos1_x;
@@ -421,10 +436,9 @@ void(float sel) chess_promotion_select {
 		chess_piece_spawn(CHESS_KNIGHT, x, y, chess_turn);
 		break;
 	}
-	chess_turn = !chess_turn;
-	chess_info.SendFlags |= 4;
 	menu_remove(chess_promotion_menu);
 	chess_promotion_menu = NULL;
+	chess_turn_switch();
 }
 
 void(void) chess_physics_frame_begin_hook {
@@ -506,12 +520,16 @@ void(void) chess_physics_frame_begin_hook {
 					score_player_team_add_score(self, 1);
 					centerprint(self, strcat("You capture a ", chess_piece_name(e.cnt)));
 					pointparticles(particleeffectnum("rocket_explode"), e.origin + '0 0 1', '0 0 0', 1);
-					sound(chess_piece_picked, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+					sound(chess_piece_picked, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NONE);
 					stdproc_remove_entity(e);
 					e = NULL;
-				} else
-					sound(chess_piece_picked, CHAN_PROJECTILE, "misc/menu1.wav", VOL_BASE, ATTN_NORM);
-
+				} else {
+					if (chess_position_is_check(chess_turn ? COLOR_TEAM1 : COLOR_TEAM2)) {
+						bprint("\{3}* Check\n");
+						sound(chess_piece_picked, CHAN_PROJECTILE, "domination/claim.wav", VOL_BASE, ATTN_NONE);
+					} else
+						sound(chess_piece_picked, CHAN_PROJECTILE, "misc/menu1.wav", VOL_BASE, ATTN_NONE);
+				}
 				if (chess_piece_picked.cnt == CHESS_PAWN && (chess_board_pointery == 0 || chess_board_pointery == 7)) {
 					chess_promotion = chess_piece_picked;
 					chess_promotion_menu = menu_prepare(self, "chess_promotion", "Promote pawn to", 0, chess_promotion_select);
@@ -525,21 +543,10 @@ void(void) chess_physics_frame_begin_hook {
 				chess_board_pointery = -1;
 				chess_piece_pick(NULL);
 				if not(chess_promotion) {
-					chess_turn = !chess_turn;
-					chess_info.SendFlags |= 4;
-					if (chess_position_is_stale((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) {
-						if (chess_position_is_check((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) { //checkmate, win
-							bprint("\{3}* Checkmate\n");
-							chess_win = (chess_turn ? COLOR_TEAM1 : COLOR_TEAM2);
-							score_player_team_add_score(self, 10);
-						} else { //stalemate, draw
-							bprint("\{3}* Stalemate\n");
-							chess_win = -1;
-						}
-					}
+					chess_turn_switch();
 				}
 			} else {
-				sound(chess_piece_picked, CHAN_PROJECTILE, "misc/typehit.wav", VOL_BASE, ATTN_NORM);
+				sound(chess_piece_picked, CHAN_PROJECTILE, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
 			}
 		}
 	}
@@ -647,4 +654,5 @@ void(void) chess_init {
 	precache_sound("weapons/rocket_impact.wav");
 	precache_sound("misc/menu1.wav");
 	precache_sound("misc/typehit.wav");
+	precache_sound("domination/claim.wav");
 }
