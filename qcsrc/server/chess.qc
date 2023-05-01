@@ -503,7 +503,6 @@ void(void) chess_physics_frame_begin_hook {
 					}
 				}
 				if (e) {
-					score_player_add(self, SP_KILLS, 1);
 					score_player_team_add_score(self, 1);
 					centerprint(self, strcat("You capture a ", chess_piece_name(e.cnt)));
 					pointparticles(particleeffectnum("rocket_explode"), e.origin + '0 0 1', '0 0 0', 1);
@@ -532,7 +531,6 @@ void(void) chess_physics_frame_begin_hook {
 						if (chess_position_is_check((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) { //checkmate, win
 							bprint("\{3}* Checkmate\n");
 							chess_win = (chess_turn ? COLOR_TEAM1 : COLOR_TEAM2);
-							score_player_add(self, SP_KILLS, 10);
 							score_player_team_add_score(self, 10);
 						} else { //stalemate, draw
 							bprint("\{3}* Stalemate\n");
