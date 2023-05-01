@@ -638,7 +638,7 @@ float(void) chess_WarmupAllowed {
 
 void(void) chess_init {
 	team_teams_set_count(2);
-	score_basics(0, 0, TRUE);
+	score_basics(SCORE_FLAG_SORT_PRIO_PRIMARY, SCORE_FLAG_SORT_PRIO_PRIMARY, TRUE);
 	entity_initialize(NULL, chess_init_delayed, INITPRIO_LAST);
 	plugin_physics_frame_begin_hook = chess_physics_frame_begin_hook;
 	plugin_winning_condition = chess_winning_condition;
