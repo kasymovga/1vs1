@@ -105,12 +105,14 @@ float(float t) chess_position_is_stale {
 	entity e;
 	for (e = chess_pieces; e; e = e.enemy) {
 		if (e.team == t && e.pos1_x >= 0 && e.pos1_y >= 0) {
-			for (x = 0; x < 8; x++)
+			for (x = 0; x < 8; x++) {
 				for (y = 0; y < 8; y++) {
-					if (e.pos1_x != x && e.pos1_y != y && chess_move_is_legal(e, x, y, TRUE)) {
+					if ((e.pos1_x != x || e.pos1_y != y) && chess_move_is_legal(e, x, y, TRUE)) {
+						//print("have legal move: ", chess_cell_name(e.pos1_x, e.pos1_y), " -> ", chess_cell_name(x, y), "\n");
 						return FALSE;
 					}
 				}
+			}
 		}
 	}
 	return TRUE;
@@ -146,8 +148,10 @@ float(float x, float y, float ft) chess_cell_is_under_attack {
 	entity e;
 	for (e = chess_pieces; e; e = e.enemy) {
 		if (e.team != ft && e.pos1_x >= 0 && e.pos2_y >= 0)
-			if (chess_move_is_legal(e, x, y, FALSE))
+			if (chess_move_is_legal(e, x, y, FALSE)) {
+				//print("cell ", chess_cell_name(x, y), " under attack from ", chess_cell_name(e.pos1_x, e.pos1_y), "\n");
 				return TRUE;
+			}
 	}
 	return FALSE;
 }
@@ -247,6 +251,7 @@ float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal 
 			capture.pos1 = '-1 -1 0';
 		}
 		v1 = piece.pos1;
+		//print("check for check after ", chess_cell_name(piece.pos1_x, piece.pos1_y), " -> ", chess_cell_name(x, y), "\n");
 		piece.pos1_x = x;
 		piece.pos1_y = y;
 		ischeck = chess_position_is_check(piece.team);
