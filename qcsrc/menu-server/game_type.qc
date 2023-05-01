@@ -77,6 +77,8 @@ string(float t) game_type_name_long {
 		return "Cooperative";
 	} else if (t == GAME_TYPE_SHOOTINGRANGE) {
 		return "Shooting Range";
+	} else if (t == GAME_TYPE_CHESS) {
+		return "Chess";
 	}
 	return "WTF";
 }
