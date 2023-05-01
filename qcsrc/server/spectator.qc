@@ -253,6 +253,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.pushltime = 0;
 	self.think = stdproc_nothing;
 	self.nextthink = 0;
+	self.clipgroup = 0;
 	client_put_to_spot(spot);
 	setsize (self, '0 0 0', '0 0 0');
 	self.items = 0;
