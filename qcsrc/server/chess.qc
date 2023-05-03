@@ -377,7 +377,14 @@ void(void) chess_init_delayed {
 	chess_info.SendFlags = 255;
 }
 
+entity chess_allowed_moves;
 void(entity piece) chess_piece_pick {
+	entity e;
+	while (chess_allowed_moves) {
+		e = chess_allowed_moves.enemy;
+		remove(chess_allowed_moves);
+		chess_allowed_moves = e;
+	}
 	if (chess_piece_picked) {
 		setorigin(chess_piece_picked, chess_piece_picked.origin_x * '1 0 0' + chess_piece_picked.origin_y * '0 1 0' + chess_board_pos_z * '0 0 1');
 		chess_piece_picked.alpha = 0;
@@ -386,6 +393,22 @@ void(entity piece) chess_piece_pick {
 	if (chess_piece_picked) {
 		setorigin(chess_piece_picked, chess_piece_picked.origin_x * '1 0 0' + chess_piece_picked.origin_y * '0 1 0' + (chess_board_pos_z + chess_cell_width * 0.5) * '0 0 1');
 	}
+	float i, j;
+	for (i = 0; i < 8; i++)
+		for (j = 0; j < 8; j++) {
+			if (i != chess_piece_picked.pos1_x || j != chess_piece_picked.pos1_y) {
+				if (chess_move_is_legal(chess_piece_picked, i, j, TRUE)) {
+					e = spawn();
+					setmodel(e, "models/runematch/rune.mdl");
+					e.colormod = '1 1 0';
+					e.effects = (EFFECT_ADDITIVE | EFFECT_NODEPTHTEST);
+					e.scale = chess_cell_width / (self.maxs_x - self.mins_x) * 0.9;
+					chess_piece_move(e, i, j, FALSE);
+					e.enemy = chess_allowed_moves;
+					chess_allowed_moves = e;
+				}
+			}
+		}
 }
 
 void(entity e) chess_piece_point {
