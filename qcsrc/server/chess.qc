@@ -385,28 +385,26 @@ void(entity piece) chess_piece_pick {
 		remove(chess_allowed_moves);
 		chess_allowed_moves = e;
 	}
-	if (chess_piece_picked) {
-		setorigin(chess_piece_picked, chess_piece_picked.origin_x * '1 0 0' + chess_piece_picked.origin_y * '0 1 0' + chess_board_pos_z * '0 0 1');
-		chess_piece_picked.alpha = 0;
-	}
 	chess_piece_picked = piece;
-	if (chess_piece_picked) {
-		setorigin(chess_piece_picked, chess_piece_picked.origin_x * '1 0 0' + chess_piece_picked.origin_y * '0 1 0' + (chess_board_pos_z + chess_cell_width * 0.5) * '0 0 1');
-	}
+	if not(chess_piece_picked)
+		return;
+
 	float i, j;
 	for (i = 0; i < 8; i++)
 		for (j = 0; j < 8; j++) {
-			if (i != chess_piece_picked.pos1_x || j != chess_piece_picked.pos1_y) {
-				if (chess_move_is_legal(chess_piece_picked, i, j, TRUE)) {
-					e = spawn();
-					setmodel(e, "models/runematch/rune.mdl");
+			if (chess_move_is_legal(chess_piece_picked, i, j, TRUE) || (i == chess_piece_picked.pos1_x && j == chess_piece_picked.pos1_y)) {
+				e = spawn();
+				setmodel(e, "models/runematch/rune.mdl");
+				if (i == chess_piece_picked.pos1_x && j == chess_piece_picked.pos1_y)
+					e.colormod = '0.75 0.75 0.75';
+				else
 					e.colormod = '1 1 0';
-					e.effects = (EFFECT_ADDITIVE | EFFECT_NODEPTHTEST);
-					e.scale = chess_cell_width / (self.maxs_x - self.mins_x) * 0.9;
-					chess_piece_move(e, i, j, FALSE);
-					e.enemy = chess_allowed_moves;
-					chess_allowed_moves = e;
-				}
+
+				e.effects = (EFFECT_ADDITIVE | EFFECT_NODEPTHTEST);
+				e.scale = chess_cell_width / (self.maxs_x - self.mins_x) * 0.9;
+				chess_piece_move(e, i, j, FALSE);
+				e.enemy = chess_allowed_moves;
+				chess_allowed_moves = e;
 			}
 		}
 }
@@ -581,20 +579,18 @@ void(void) chess_physics_frame_begin_hook {
 	if (chess_board_pointerx >= 0 && chess_board_pointerx < 8 &&
 			chess_board_pointery >= 0 && chess_board_pointery < 8 && chess_piece_picked && !((e = chess_piece_find(chess_board_pointerx, chess_board_pointery)) && e.team == self.team)
 			&& chess_move_is_legal(chess_piece_picked, chess_board_pointerx, chess_board_pointery, TRUE)) {
-		if not(chess_board_pointer) {
-			chess_board_pointer = spawn();
-			setmodel(chess_board_pointer, chess_piece_picked.model);
-			chess_board_pointer.angles = chess_piece_picked.angles;
-			chess_board_pointer.effects |= (EFFECT_NODEPTHTEST | EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
-			chess_board_pointer.colormod = chess_piece_picked.colormod;
-			chess_piece_picked.alpha = 0.1;
+		if (chess_board_pointer)
+			chess_board_pointer.colormod = '1 1 0';
+
+		for (chess_board_pointer = chess_allowed_moves; chess_board_pointer; chess_board_pointer = chess_board_pointer.enemy) {
+			if (chess_board_pointer.pos1_x == chess_board_pointerx && chess_board_pointer.pos1_y == chess_board_pointery)
+				break;
 		}
-		chess_piece_move(chess_board_pointer, chess_board_pointerx, chess_board_pointery, FALSE);
+		chess_board_pointer.colormod = '0 1 1';
 	} else {
 		if (chess_board_pointer) {
-			remove(chess_board_pointer);
+			chess_board_pointer.colormod = '1 1 0';
 			chess_board_pointer = NULL;
-			chess_piece_picked.alpha = 0;
 		}
 	}
 	if (e && e.team == self.team) chess_piece_point(e);
@@ -686,4 +682,5 @@ void(void) chess_init {
 	precache_sound("misc/menu1.wav");
 	precache_sound("misc/typehit.wav");
 	precache_sound("domination/claim.wav");
+	precache_model("models/runematch/rune.mdl");
 }
