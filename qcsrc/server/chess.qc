@@ -378,9 +378,10 @@ void(void) chess_init_delayed {
 }
 
 void(entity piece) chess_piece_pick {
-	if (chess_piece_picked)
+	if (chess_piece_picked) {
 		setorigin(chess_piece_picked, chess_piece_picked.origin_x * '1 0 0' + chess_piece_picked.origin_y * '0 1 0' + chess_board_pos_z * '0 0 1');
-
+		chess_piece_picked.alpha = 0;
+	}
 	chess_piece_picked = piece;
 	if (chess_piece_picked) {
 		setorigin(chess_piece_picked, chess_piece_picked.origin_x * '1 0 0' + chess_piece_picked.origin_y * '0 1 0' + (chess_board_pos_z + chess_cell_width * 0.5) * '0 0 1');
@@ -441,6 +442,7 @@ void(float sel) chess_promotion_select {
 	chess_turn_switch();
 }
 
+float chess_interacted;
 void(void) chess_physics_frame_begin_hook {
 	if (self.classname != "player") return;
 	if (chess_turn) {
@@ -464,6 +466,7 @@ void(void) chess_physics_frame_begin_hook {
 	entity e = NULL;
 	if (trace_ent) {
 		if (trace_ent.classname == "chess_board" || trace_ent.classname == "chess_piece") {
+			chess_interacted = TRUE;
 			if (trace_ent.classname == "chess_piece") {
 				if (trace_ent.team == self.team)
 					chess_piece_point(trace_ent);
@@ -481,8 +484,11 @@ void(void) chess_physics_frame_begin_hook {
 				}
 			}
 		}
-		if (click && chess_piece_pointed && chess_piece_pointed != chess_piece_picked) {
-			chess_piece_pick(chess_piece_pointed);
+		if (click && chess_piece_pointed) {
+			if (chess_piece_pointed != chess_piece_picked)
+				chess_piece_pick(chess_piece_pointed);
+			else
+				chess_piece_pick(NULL);
 		}
 		if (click && chess_piece_picked && chess_board_pointerx >= 0 && chess_board_pointerx < 8 &&
 				chess_board_pointery >= 0 && chess_board_pointery < 8) {
@@ -550,21 +556,22 @@ void(void) chess_physics_frame_begin_hook {
 		}
 	}
 	if (chess_board_pointerx >= 0 && chess_board_pointerx < 8 &&
-			chess_board_pointery >= 0 && chess_board_pointery < 8 && chess_piece_picked && !((e = chess_piece_find(chess_board_pointerx, chess_board_pointery)) && e.team == self.team)) {
+			chess_board_pointery >= 0 && chess_board_pointery < 8 && chess_piece_picked && !((e = chess_piece_find(chess_board_pointerx, chess_board_pointery)) && e.team == self.team)
+			&& chess_move_is_legal(chess_piece_picked, chess_board_pointerx, chess_board_pointery, TRUE)) {
 		if not(chess_board_pointer) {
 			chess_board_pointer = spawn();
-			setmodel(chess_board_pointer, "models/laser_dot.mdl");
-			chess_board_pointer.angles = '90 0 0';
-			chess_board_pointer.scale = (chess_cell_width / chess_board_pointer.maxs_x);
+			setmodel(chess_board_pointer, chess_piece_picked.model);
+			chess_board_pointer.angles = chess_piece_picked.angles;
+			chess_board_pointer.effects |= (EFFECT_NODEPTHTEST | EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
+			chess_board_pointer.colormod = chess_piece_picked.colormod;
+			chess_piece_picked.alpha = 0.1;
 		}
-		chess_board_pointer.origin_z = chess_board_pos_z - chess_board_pointer.scale * chess_board_pointer.maxs_y * 0.8;
 		chess_piece_move(chess_board_pointer, chess_board_pointerx, chess_board_pointery, FALSE);
-		chess_board_pointer.origin_z = chess_board_pos_z - chess_board_pointer.scale * chess_board_pointer.maxs_y * 1.8;
-		setorigin(chess_board_pointer, chess_board_pointer.origin);
 	} else {
 		if (chess_board_pointer) {
 			remove(chess_board_pointer);
 			chess_board_pointer = NULL;
+			chess_piece_picked.alpha = 0;
 		}
 	}
 	if (e && e.team == self.team) chess_piece_point(e);
@@ -572,8 +579,11 @@ void(void) chess_physics_frame_begin_hook {
 
 var void(void) chess_player_think_next;
 void(void) chess_player_think {
-	self.BUTTON_ATCK = FALSE;
-	self.BUTTON_ATCK2 = FALSE;
+	if (chess_interacted) {
+		self.BUTTON_ATCK = FALSE;
+		self.BUTTON_ATCK2 = FALSE;
+		chess_interacted = FALSE;
+	}
 	chess_player_think_next();
 }
 
@@ -649,7 +659,6 @@ void(void) chess_init {
 	chess_player_think_next = plugin_chain_player_think;
 	plugin_chain_player_think = chess_player_think;
 	plugin_WarmupAllowed = chess_WarmupAllowed;
-	precache_model("models/laser_dot.mdl");
 	precache_sound("weapons/rocket_impact.wav");
 	precache_sound("misc/menu1.wav");
 	precache_sound("misc/typehit.wav");
