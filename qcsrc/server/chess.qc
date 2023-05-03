@@ -519,7 +519,6 @@ void(void) chess_physics_frame_begin_hook {
 				if (e) {
 					score_player_team_add_score(self, 1);
 					centerprint(self, strcat("You capture a ", chess_piece_name(e.cnt)));
-					pointparticles(particleeffectnum("rocket_explode"), e.origin + '0 0 1', '0 0 0', 1);
 					sound(chess_piece_picked, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NONE);
 					stdproc_remove_entity(e);
 					e = NULL;
