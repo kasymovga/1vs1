@@ -23,6 +23,8 @@ entity chess_board_pointer;
 float chess_timer_white;
 float chess_timer_black;
 
+float chess_last_move_time;
+
 entity chess_pieces;
 entity chess_piece_pointed;
 entity chess_piece_picked;
@@ -86,6 +88,19 @@ void(void) spawnfunc_chess_board {
 	chess_board_initialized = 1;
 }
 
+float(float t) chess_piece_cost {
+	if (t == CHESS_PAWN)
+		return 1;
+	else if (t == CHESS_BISHOP || t == CHESS_KNIGHT)
+		return 3;
+	else if (t == CHESS_ROOK)
+		return 5;
+	else if (t == CHESS_QUEEN)
+		return 8;
+
+	return 0;
+}
+
 float(float t) chess_position_is_check {
 	entity e;
 	for (e = chess_pieces; e; e = e.enemy) {
@@ -120,11 +135,15 @@ float(float t) chess_position_is_stale {
 
 entity(float x, float y) chess_piece_find {
 	entity e;
-	for (e = chess_pieces; e; e = e.enemy) {
+	float antiloop;
+	for (antiloop = 0, e = chess_pieces; e && antiloop < 64; e = e.enemy, antiloop++) {
 		if (e.pos1_x == x && e.pos1_y == y) {
 			return e;
 		}
 	}
+	if (antiloop == 64)
+		backtrace("chess_piece_find: broken chain");
+
 	return NULL;
 }
 
@@ -458,18 +477,85 @@ void(float sel) chess_promotion_select {
 		chess_piece_spawn(CHESS_KNIGHT, x, y, chess_turn);
 		break;
 	}
-	menu_remove(chess_promotion_menu);
-	chess_promotion_menu = NULL;
+	if (chess_promotion_menu) {
+		menu_remove(chess_promotion_menu);
+		chess_promotion_menu = NULL;
+	}
 	chess_turn_switch();
+}
+
+void(entity piece, float x, float y) chess_move_perform {
+	entity e;
+	chess_last_move_time = time;
+	float iscastling = 0;
+	e = chess_piece_find(x, y);
+	if not(chess_turn) {
+		cvar_set("timelimit", "0");
+		chess_move_number++;
+	}
+	if (piece.cnt == CHESS_KING && !piece.dmg && (x == 6 || x == 2))
+		iscastling = 1;
+
+	if (piece.cnt == CHESS_PAWN && chess_en_passant && !e && piece.pos1_x != x) { //en passant
+		e = chess_en_passant;
+	}
+	chess_piece_move(piece, x, y, TRUE);
+	chess_en_passant = NULL;
+	if (piece.cnt == CHESS_PAWN && !piece.dmg && (y == 3 || y == 4))
+		chess_en_passant = piece;
+
+	piece.dmg = 1;
+	if (iscastling) {
+		if (x == 6) { //short castling
+			chess_piece_move((e = chess_piece_find(7, y)), 5, y, FALSE);
+			e.dmg = 1;
+			e = NULL;
+		} else if (x == 2) { //long castling
+			chess_piece_move((e = chess_piece_find(0, y)), 3, y, FALSE);
+			e.dmg = 1;
+			e = NULL;
+		}
+	}
+	if (e) {
+		score_player_team_add_score(self, 1);
+		centerprint(self, strcat("You capture a ", chess_piece_name(e.cnt)));
+		sound(piece, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NONE);
+		stdproc_remove_entity(e);
+		e = NULL;
+	} else {
+		if (chess_position_is_check(chess_turn ? COLOR_TEAM1 : COLOR_TEAM2)) {
+			bprint("\{3}* Check\n");
+			sound(piece, CHAN_PROJECTILE, "domination/claim.wav", VOL_BASE, ATTN_NONE);
+		} else
+			sound(piece, CHAN_PROJECTILE, "misc/menu1.wav", VOL_BASE, ATTN_NONE);
+	}
+	if (piece.cnt == CHESS_PAWN && (y == 0 || y == 7)) {
+		chess_promotion = piece;
+		chess_promotion_menu = menu_prepare(self, "chess_promotion", "Promote pawn to", 0, chess_promotion_select);
+		chess_promotion_started = time;
+		menu_add_item(chess_promotion_menu, "Queen");
+		menu_add_item(chess_promotion_menu, "Rook");
+		menu_add_item(chess_promotion_menu, "Bishop");
+		menu_add_item(chess_promotion_menu, "Knight");
+	}
+	chess_piece_pick(NULL);
+	if not(chess_promotion) {
+		chess_turn_switch();
+	}
 }
 
 float chess_interacted;
 void(void) chess_physics_frame_begin_hook {
 	if (self.classname != "player") return;
+	if (time < map_starttime) return;
 	if (chess_turn) {
 		if (self.team != COLOR_TEAM2) return;
 	} else {
 		if (self.team != COLOR_TEAM1) return;
+	}
+	if (chess_promotion && time - chess_promotion_started > 10) {
+		chess_promotion_select(0);
+		return;
 	}
 	if (chess_promotion)
 		return;
@@ -514,63 +600,9 @@ void(void) chess_physics_frame_begin_hook {
 		if (click && chess_piece_picked && chess_board_pointerx >= 0 && chess_board_pointerx < 8 &&
 				chess_board_pointery >= 0 && chess_board_pointery < 8) {
 			if (chess_move_is_legal(chess_piece_picked, chess_board_pointerx, chess_board_pointery, TRUE)) {
-				float iscastling = 0;
-				e = chess_piece_find(chess_board_pointerx, chess_board_pointery);
-				if not(chess_turn) {
-					cvar_set("timelimit", "0");
-					chess_move_number++;
-				}
-				if (chess_piece_picked.cnt == CHESS_KING && !chess_piece_picked.dmg && (chess_board_pointerx == 6 || chess_board_pointerx == 2))
-					iscastling = 1;
-
-				if (chess_piece_picked.cnt == CHESS_PAWN && chess_en_passant && !e && chess_piece_picked.pos1_x != chess_board_pointerx) { //en passant
-					e = chess_en_passant;
-				}
-				chess_piece_move(chess_piece_picked, chess_board_pointerx, chess_board_pointery, TRUE);
-				chess_en_passant = NULL;
-				if (chess_piece_picked.cnt == CHESS_PAWN && !chess_piece_picked.dmg && (chess_board_pointery == 3 || chess_board_pointery == 4))
-					chess_en_passant = chess_piece_picked;
-
-				chess_piece_picked.dmg = 1;
-				if (iscastling) {
-					if (chess_board_pointerx == 6) { //short castling
-						chess_piece_move((e = chess_piece_find(7, chess_board_pointery)), 5, chess_board_pointery, FALSE);
-						e.dmg = 1;
-						e = NULL;
-					} else if (chess_board_pointerx == 2) { //long castling
-						chess_piece_move((e = chess_piece_find(0, chess_board_pointery)), 3, chess_board_pointery, FALSE);
-						e.dmg = 1;
-						e = NULL;
-					}
-				}
-				if (e) {
-					score_player_team_add_score(self, 1);
-					centerprint(self, strcat("You capture a ", chess_piece_name(e.cnt)));
-					sound(chess_piece_picked, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NONE);
-					stdproc_remove_entity(e);
-					e = NULL;
-				} else {
-					if (chess_position_is_check(chess_turn ? COLOR_TEAM1 : COLOR_TEAM2)) {
-						bprint("\{3}* Check\n");
-						sound(chess_piece_picked, CHAN_PROJECTILE, "domination/claim.wav", VOL_BASE, ATTN_NONE);
-					} else
-						sound(chess_piece_picked, CHAN_PROJECTILE, "misc/menu1.wav", VOL_BASE, ATTN_NONE);
-				}
-				if (chess_piece_picked.cnt == CHESS_PAWN && (chess_board_pointery == 0 || chess_board_pointery == 7)) {
-					chess_promotion = chess_piece_picked;
-					chess_promotion_menu = menu_prepare(self, "chess_promotion", "Promote pawn to", 0, chess_promotion_select);
-					chess_promotion_started = time;
-					menu_add_item(chess_promotion_menu, "Queen");
-					menu_add_item(chess_promotion_menu, "Rook");
-					menu_add_item(chess_promotion_menu, "Bishop");
-					menu_add_item(chess_promotion_menu, "Knight");
-				}
+				chess_move_perform(chess_piece_picked, chess_board_pointerx, chess_board_pointery);
 				chess_board_pointerx = -1;
 				chess_board_pointery = -1;
-				chess_piece_pick(NULL);
-				if not(chess_promotion) {
-					chess_turn_switch();
-				}
 			} else {
 				sound(chess_piece_picked, CHAN_PROJECTILE, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
 			}
@@ -598,6 +630,9 @@ void(void) chess_physics_frame_begin_hook {
 
 var void(void) chess_player_think_next;
 void(void) chess_player_think {
+	if (clienttype(self) == CLIENTTYPE_BOT)
+		bot_stay(self, 1);
+
 	if (chess_interacted) {
 		self.BUTTON_ATCK = FALSE;
 		self.BUTTON_ATCK2 = FALSE;
@@ -620,7 +655,123 @@ float(float t) chess_can_mate {
 	return FALSE;
 }
 
+float(float t) chess_position_evaluate {
+	entity e, e2;
+	float score = 0;
+	float sign;
+	float i, j;
+	if (chess_position_is_check((t == COLOR_TEAM1) ? COLOR_TEAM2 : COLOR_TEAM1)) {
+		if (chess_position_is_stale((t == COLOR_TEAM1) ? COLOR_TEAM2 : COLOR_TEAM1))
+			score += 1000;
+		else
+			score += 5;
+	}
+	for (e = chess_pieces; e; e = e.enemy) {
+		if (e.pos1_x < 0 || e.pos1_y < 0) continue;
+		if (t == e.team)
+			sign = 1;
+		else
+			sign = -1;
+
+		if (chess_cell_is_under_attack(e.pos1_x, e.pos1_y, e.team))
+			score -= sign * chess_piece_cost(e.cnt) * 10;
+
+		score += sign * chess_piece_cost(e.cnt);
+		for (i = 0; i < 8; i++)
+			for (j = 0; j < 8; j++) {
+				if ((e.pos1_x != i || e.pos1_y != j) && chess_move_is_legal(e, i, j, TRUE)) {
+					score += sign;
+					if (e.cnt == CHESS_PAWN && (j == 7 || j == 0))
+						score += sign * 20;
+				}
+			}
+	}
+	return score;
+}
+
+float chess_ai_bestscore;
+entity chess_ai_bestpiece;
+vector chess_ai_bestmove;
+entity chess_ai_current_piece;
+void(entity chess_bot) chess_ai_move {
+	if (chess_last_move_time + 1 > time) return;
+	float check_amounts = 0;
+	float t = chess_bot.team;
+	entity e, capture;
+	float i, j, type;
+	vector v, v2 = '0 0 0';
+	if not(chess_ai_bestpiece)
+		chess_ai_bestscore = -100000;
+
+	float score;
+	if not(chess_ai_current_piece) chess_ai_current_piece = chess_pieces;
+	while (chess_ai_current_piece && chess_ai_current_piece.team != t) chess_ai_current_piece = chess_ai_current_piece.enemy;
+	e = chess_ai_current_piece;
+	if (e) {
+		//print("analyzing piece at ", chess_cell_name(e.pos1_x, e.pos1_y), "\n");
+		for (i = 0; i < 8; i++)
+			for (j = 0; j < 8; j++) {
+				if ((e.pos1_x != i || e.pos1_y != j) && chess_move_is_legal(e, i, j, TRUE)) {
+					//print("checking move: ", chess_cell_name(e.pos1_x, e.pos1_y) , " -> ", chess_cell_name(i, j), "\n");
+					capture = chess_piece_find(i, j);
+					v = e.pos1;
+					e.pos1_x = i;
+					e.pos1_y = j;
+					type = e.cnt;
+					if (capture) {
+						v2 = capture.pos1;
+						capture.pos1 = '-1 -1 0';
+					}
+					if (e.cnt == CHESS_PAWN && (e.pos1_y == 0 || e.pos1_y == 7))
+						e.cnt = CHESS_QUEEN;
+
+					score = chess_position_evaluate(t);
+					if (capture) {
+							score += 10 * chess_piece_cost(e.cnt);
+					}
+					if (chess_cell_is_under_attack(i, j, t))
+						score -= 10 * chess_piece_cost(e.cnt);
+
+					if (score > chess_ai_bestscore) {
+						chess_ai_bestscore = score;
+						chess_ai_bestmove_x = i;
+						chess_ai_bestmove_y = j;
+						chess_ai_bestpiece = e;
+					}
+					e.pos1 = v;
+					e.cnt = type;
+					if (capture) {
+						capture.pos1 = v2;
+					}
+				}
+			}
+		chess_ai_current_piece = chess_ai_current_piece.enemy;
+	}
+	if (chess_ai_current_piece) return;
+	entity oldself = self;
+	self = chess_bot;
+	chess_move_perform(chess_ai_bestpiece, chess_ai_bestmove_x, chess_ai_bestmove_y);
+	chess_ai_bestpiece = NULL;
+	self = oldself;
+}
+
 float(float ignore1, float ignore2) chess_winning_condition {
+	if (time < map_starttime) return FALSE;
+	entity e, wh = NULL, wb = NULL, bh = NULL, bb = NULL;
+	FOR_EACH_PLAYER(e) {
+		if (clienttype(e) == CLIENTTYPE_BOT) {
+			if (e.team == COLOR_TEAM1)
+				wb = e;
+			else if (e.team == COLOR_TEAM2)
+				bb = e;
+		} else {
+			if (e.team == COLOR_TEAM1)
+				wh = e;
+			else if (e.team == COLOR_TEAM2)
+				bh = e;
+		}
+		if (wh && wb && bh && bb) break;
+	}
 	if (chess_win) {
 		score_winning_condition_helper_winnerteam = chess_win;
 		float t = (chess_turn ? COLOR_TEAM1 : COLOR_TEAM2);
@@ -646,6 +797,8 @@ float(float ignore1, float ignore2) chess_winning_condition {
 				}
 				return TRUE;
 			}
+			if (!bh && bb)
+				chess_ai_move(bb);
 		} else { //"white"
 			chess_timer_white -= frametime;
 			chess_info.SendFlags |= 1;
@@ -660,6 +813,14 @@ float(float ignore1, float ignore2) chess_winning_condition {
 				}
 				return TRUE;
 			}
+			if (!wh && wb)
+				chess_ai_move(wb);
+		}
+	} else {
+		//only bots or white team have only bots
+		if ((!wh && !bh && bb && wb) || (wb && !wh && (bb || bh))) {
+			if (time > map_starttime + 1 && wb && !chess_turn)
+				chess_ai_move(wb);
 		}
 	}
 	return FALSE;
