@@ -612,9 +612,6 @@ void() player_effects {
 	entity b = self.body;
 	if (!b) return;
 	b.body.effects = self.effects & EFFECT_TELEPORT_BIT; //for teleportation
-	if ((b.effects & EFFECT_NODRAW) || PLAYER_REALLY_DEAD(self)) // don't apply the flags if the player is gibbed
-		return;
-
 	fire_apply_effect(self);
 	plugin_chain_player_effects();
 	if (g_fullbrightplayers)
