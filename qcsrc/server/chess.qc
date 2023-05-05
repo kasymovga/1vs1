@@ -96,7 +96,7 @@ float(float t) chess_piece_cost {
 	else if (t == CHESS_ROOK)
 		return 5;
 	else if (t == CHESS_QUEEN)
-		return 8;
+		return 10;
 
 	return 0;
 }
@@ -673,9 +673,16 @@ float(float t) chess_position_evaluate {
 		else
 			sign = -1;
 
-		if (chess_cell_is_under_attack(e.pos1_x, e.pos1_y, e.team))
-			score -= sign * chess_piece_cost(e.cnt) * 10;
-
+		if (chess_cell_is_under_attack(e.pos1_x, e.pos1_y, e.team)) {
+			score -= sign * chess_piece_cost(e.cnt) * 5;
+			if not(chess_cell_is_under_attack(e.pos1_x, e.pos1_y, ((e.team == COLOR_TEAM1) ? COLOR_TEAM2 : COLOR_TEAM1)))
+				score -= sign * chess_piece_cost(e.cnt) * 5;
+		}
+		if (chess_cell_is_under_attack(e.pos1_x, e.pos1_y, ((e.team == COLOR_TEAM1) ? COLOR_TEAM2 : COLOR_TEAM1))) {
+			score += sign * chess_piece_cost(e.cnt) * 10;
+			if not(chess_cell_is_under_attack(e.pos1_x, e.pos1_y, e.team))
+				score += sign * chess_piece_cost(e.cnt) * 10;
+		}
 		score += sign * chess_piece_cost(e.cnt);
 		for (i = 0; i < 8; i++)
 			for (j = 0; j < 8; j++) {
@@ -694,6 +701,9 @@ entity chess_ai_bestpiece;
 vector chess_ai_bestmove;
 entity chess_ai_current_piece;
 void(entity chess_bot) chess_ai_move {
+	if (chess_promotion) {
+		chess_promotion_select(0);
+	}
 	if (chess_last_move_time + 1 > time) return;
 	float check_amounts = 0;
 	float t = chess_bot.team;
@@ -726,12 +736,19 @@ void(entity chess_bot) chess_ai_move {
 						e.cnt = CHESS_QUEEN;
 
 					score = chess_position_evaluate(t);
+					if (e.cnt == CHESS_KING)
+						score -= 10;
+
+					if (e.cnt == CHESS_PAWN)
+						score += 5;
+
 					if (capture) {
-							score += 10 * chess_piece_cost(e.cnt);
+						score += 10 * chess_piece_cost(capture.cnt);
 					}
 					if (chess_cell_is_under_attack(i, j, t))
 						score -= 10 * chess_piece_cost(e.cnt);
 
+					score *= (1 + 0.05 * random());
 					if (score > chess_ai_bestscore) {
 						chess_ai_bestscore = score;
 						chess_ai_bestmove_x = i;
