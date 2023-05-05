@@ -679,9 +679,9 @@ float(float t) chess_position_evaluate {
 				score -= sign * chess_piece_cost(e.cnt) * 5;
 		}
 		if (chess_cell_is_under_attack(e.pos1_x, e.pos1_y, ((e.team == COLOR_TEAM1) ? COLOR_TEAM2 : COLOR_TEAM1))) {
-			score += sign * chess_piece_cost(e.cnt) * 10;
+			score += sign * chess_piece_cost(e.cnt) * 5;
 			if not(chess_cell_is_under_attack(e.pos1_x, e.pos1_y, e.team))
-				score += sign * chess_piece_cost(e.cnt) * 10;
+				score += sign * chess_piece_cost(e.cnt) * 5;
 		}
 		score += sign * chess_piece_cost(e.cnt);
 		for (i = 0; i < 8; i++)
@@ -713,11 +713,12 @@ void(entity chess_bot) chess_ai_move {
 	if not(chess_ai_bestpiece)
 		chess_ai_bestscore = -100000;
 
-	float score;
+	float score, under_attack;
 	if not(chess_ai_current_piece) chess_ai_current_piece = chess_pieces;
 	while (chess_ai_current_piece && chess_ai_current_piece.team != t) chess_ai_current_piece = chess_ai_current_piece.enemy;
 	e = chess_ai_current_piece;
 	if (e) {
+		under_attack = chess_cell_is_under_attack(e.pos1_x, e.pos1_y, t);
 		//print("analyzing piece at ", chess_cell_name(e.pos1_x, e.pos1_y), "\n");
 		for (i = 0; i < 8; i++)
 			for (j = 0; j < 8; j++) {
@@ -736,18 +737,33 @@ void(entity chess_bot) chess_ai_move {
 						e.cnt = CHESS_QUEEN;
 
 					score = chess_position_evaluate(t);
-					if (e.cnt == CHESS_KING)
-						score -= 10;
-
-					if (e.cnt == CHESS_PAWN)
+					if (e.cnt == CHESS_KING) {
+						if (!e.dmg && (j == 6 || j == 2))
+							score += 20;
+						else if (chess_move_number < 10)
+							score -= 10;
+					}
+					if (e.cnt == CHESS_PAWN) //pawn push is often good
 						score += 5;
+
+					if (chess_move_number < 5 && e.cnt == CHESS_QUEEN && !e.dmg) //defer queen at beginning
+						score -= 50;
+
+					if ((e.cnt == CHESS_KNIGHT || e.cnt == CHESS_BISHOP) && !e.dmg) //developing is good
+						score += chess_move_number * 2;
 
 					if (capture) {
 						score += 10 * chess_piece_cost(capture.cnt);
 					}
 					if (chess_cell_is_under_attack(i, j, t))
-						score -= 10 * chess_piece_cost(e.cnt);
+						score -= 30 * chess_piece_cost(e.cnt);
+					else {
+						if (capture)
+							score += 10 * chess_piece_cost(capture.cnt); //free piece
 
+						if (under_attack)
+							score += 10 * chess_piece_cost(e.cnt); //escape from attack
+					}
 					score *= (1 + 0.05 * random());
 					if (score > chess_ai_bestscore) {
 						chess_ai_bestscore = score;
