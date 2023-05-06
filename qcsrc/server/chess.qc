@@ -368,7 +368,7 @@ void(void) chess_board_init {
 
 float(entity to, float f) chess_info_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_CHESS_INFO);
-	f &= 3;
+	f &= 11;
 	if (chess_turn)
 		f |= 4;
 
@@ -379,6 +379,35 @@ float(entity to, float f) chess_info_send {
 	if (f & 2)
 		net_write_coord(MSG_ENTITY, chess_timer_black);
 
+	if (f & 8) {
+		entity e;
+		for (e = chess_pieces; e; e = e.enemy) {
+			switch (e.cnt) {
+			case CHESS_PAWN:
+				net_write_byte(MSG_ENTITY, 'p');
+				break;
+			case CHESS_KNIGHT:
+				net_write_byte(MSG_ENTITY, 'n');
+				break;
+			case CHESS_BISHOP:
+				net_write_byte(MSG_ENTITY, 'b');
+				break;
+			case CHESS_ROOK:
+				net_write_byte(MSG_ENTITY, 'r');
+				break;
+			case CHESS_QUEEN:
+				net_write_byte(MSG_ENTITY, 'q');
+				break;
+			case CHESS_KING:
+				net_write_byte(MSG_ENTITY, 'k');
+				break;
+			}
+			net_write_byte(MSG_ENTITY, e.pos1_x);
+			net_write_byte(MSG_ENTITY, e.pos1_y);
+			net_write_byte(MSG_ENTITY, e.team);
+		}
+		net_write_byte(MSG_ENTITY, 0);
+	}
 	return TRUE;
 }
 
@@ -542,6 +571,7 @@ void(entity piece, float x, float y) chess_move_perform {
 	if not(chess_promotion) {
 		chess_turn_switch();
 	}
+	chess_info.SendFlags |= 8;
 }
 
 float chess_interacted;
