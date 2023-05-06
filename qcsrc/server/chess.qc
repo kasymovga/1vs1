@@ -851,7 +851,7 @@ float(float ignore1, float ignore2) chess_winning_condition {
 		}
 	} else {
 		//only bots or white team have only bots
-		if ((!wh && !bh && bb && wb) || (wb && !wh && (bb || bh))) {
+		if ((!wh && !bh && bb && wb && cvar("g_chess_bot_vs_bot")) || (wb && !wh && bh)) {
 			if (time > map_starttime + 1 && wb && !chess_turn)
 				chess_ai_move(wb);
 		}

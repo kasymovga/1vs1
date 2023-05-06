@@ -2,6 +2,7 @@ set g_chess_timelimit "" "Timelimit for chess, when empty, g_timelimit using, <=
 set g_chess_leadlimit 0 "Dummy cvar, chess don't гыу leadlimit"
 set g_chess_timecontrol_start 10 "time control: start value"
 set g_chess_timecontrol_addition 0 "time control: per move addition"
+set g_chess_bot_vs_bot 0 "allow bot vs bot play in chess"
 set chess_g_balance_kill_delay 0
 set chess_g_respawn_delay 0
 set chess_g_voice_chat_public 2
