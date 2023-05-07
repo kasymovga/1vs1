@@ -490,14 +490,12 @@ void(void) chess_turn_switch {
 
 void(float sel) chess_promotion_select {
 	if (sel < 0 || sel > 3) return;
+	chess_last_move_time = time;
 	float x = chess_promotion.pos1_x;
 	float y = chess_promotion.pos1_y;
 	stdproc_remove_entity(chess_promotion);
 	chess_promotion = NULL;
 	switch (sel) {
-	case 0: //queen
-		chess_piece_spawn(CHESS_QUEEN, x, y, chess_turn);
-		break;
 	case 1: //rook
 		chess_piece_spawn(CHESS_ROOK, x, y, chess_turn);
 		break;
@@ -506,6 +504,9 @@ void(float sel) chess_promotion_select {
 		break;
 	case 3: //knight
 		chess_piece_spawn(CHESS_KNIGHT, x, y, chess_turn);
+		break;
+	default: //queen
+		chess_piece_spawn(CHESS_QUEEN, x, y, chess_turn);
 		break;
 	}
 	if (chess_promotion_menu) {
