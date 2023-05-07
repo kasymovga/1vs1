@@ -601,13 +601,10 @@ void(entity piece, float x, float y) chess_move_perform {
 		bprint("\{3}* Draw by 50 move rule\n");
 		chess_win = -1;
 	} else if (n >= 60) { //Threefold repetition rule, at least 6 move per 10 bytes
-		print("check threefold rule\n");
 		string s;
 		float i, j = n / 3;
 		for (i = 20; i <= j; i += 10) {
 			s = substring(chess_history, 0, i);
-			print("s = ", s, "\n");
-			print("s = ", s, "\n");
 			if (s == substring(chess_history, i, i) && s == substring(chess_history, i * 2, i)) {
 				bprint("\{3}* Draw by threefold repetition rule\n");
 				chess_win = -1;
