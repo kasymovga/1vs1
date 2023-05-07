@@ -31,6 +31,8 @@ entity chess_piece_picked;
 entity chess_en_passant;
 entity chess_info;
 
+string chess_history;
+
 enum {
 	CHESS_PAWN,
 	CHESS_BISHOP,
@@ -510,13 +512,29 @@ void(float sel) chess_promotion_select {
 		menu_remove(chess_promotion_menu);
 		chess_promotion_menu = NULL;
 	}
+	chess_info.SendFlags |= 8;
 	chess_turn_switch();
+}
+
+void(void) chess_history_clean {
+	str_unzone_ifneeded(chess_history);
+	chess_history = "";
+}
+
+void(entity e, float x, float y) chess_history_add {
+	//note, written backward
+	string s = strcat(chess_cell_name(e.pos1_x, e.pos1_y), chess_cell_name(x, y), " ", chess_history);
+	str_unzone_ifneeded(chess_history);
+	chess_history = strzone(s);
+	print("chess_history = ", chess_history, "\n");
 }
 
 void(entity piece, float x, float y) chess_move_perform {
 	entity e;
 	chess_last_move_time = time;
 	float iscastling = 0;
+	chess_piece_point(NULL);
+	chess_piece_pick(NULL);
 	e = chess_piece_find(x, y);
 	if not(chess_turn) {
 		cvar_set("timelimit", "0");
@@ -528,6 +546,7 @@ void(entity piece, float x, float y) chess_move_perform {
 	if (piece.cnt == CHESS_PAWN && chess_en_passant && !e && piece.pos1_x != x) { //en passant
 		e = chess_en_passant;
 	}
+	chess_history_add(piece, x, y);
 	chess_piece_move(piece, x, y, TRUE);
 	chess_en_passant = NULL;
 	if (piece.cnt == CHESS_PAWN && !piece.dmg && (y == 3 || y == 4))
@@ -548,10 +567,15 @@ void(entity piece, float x, float y) chess_move_perform {
 	if (e) {
 		score_player_team_add_score(self, 1);
 		centerprint(self, strcat("You capture a ", chess_piece_name(e.cnt)));
+		bprint("\{3}* ", chess_piece_name(e.cnt), " captured\n");
+		chess_history_clean();
 		sound(piece, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NONE);
 		stdproc_remove_entity(e);
 		e = NULL;
 	} else {
+		if (piece.cnt == CHESS_PAWN)
+			chess_history_clean();
+
 		if (chess_position_is_check(chess_turn ? COLOR_TEAM1 : COLOR_TEAM2)) {
 			bprint("\{3}* Check\n");
 			sound(piece, CHAN_PROJECTILE, "domination/claim.wav", VOL_BASE, ATTN_NONE);
@@ -567,11 +591,29 @@ void(entity piece, float x, float y) chess_move_perform {
 		menu_add_item(chess_promotion_menu, "Bishop");
 		menu_add_item(chess_promotion_menu, "Knight");
 	}
-	chess_piece_pick(NULL);
 	if not(chess_promotion) {
 		chess_turn_switch();
 	}
 	chess_info.SendFlags |= 8;
+	float n = strlen(chess_history);
+	print("n = ", ftos(n), "\n");
+	if (n >= 500) { //10 symbols per move, 50 moves
+		bprint("\{3}* Draw by 50 move rule\n");
+		chess_win = -1;
+	} else if (n >= 60) { //Threefold repetition rule, at least 6 move per 10 bytes
+		print("check threefold rule\n");
+		string s;
+		float i, j = n / 3;
+		for (i = 20; i <= j; i += 10) {
+			s = substring(chess_history, 0, i);
+			print("s = ", s, "\n");
+			print("s = ", s, "\n");
+			if (s == substring(chess_history, i, i) && s == substring(chess_history, i * 2, i)) {
+				bprint("\{3}* Draw by threefold repetition rule\n");
+				chess_win = -1;
+			}
+		}
+	}
 }
 
 float chess_interacted;
