@@ -81,7 +81,7 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) chess_hud {
 			i = e.origin_x;
 			j = e.origin_y;
 		}
-		drawstring('102 302 0' + i * '20 0 0' - j * '0 20 0', piece, '20 20 0', ((e.team == 14) ? '0 0 1' : '1 0 0'), 1, DRAWFLAG_NORMAL);
+		drawstring('101 302 0' + i * '20 0 0' - j * '0 20 0', piece, '20 20 0', ((e.team == 14) ? '0 0 1' : '1 0 0'), 1, DRAWFLAG_NORMAL);
 	}
 }
 
