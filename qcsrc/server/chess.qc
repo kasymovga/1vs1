@@ -714,11 +714,22 @@ void(void) chess_player_think {
 float(float t) chess_can_mate {
 	entity e;
 	float c = 0;
+	entity bishop = NULL;
 	for (e = chess_pieces; e; e = e.enemy) {
 		if (e.team == t || !t) {
 			if (e.cnt == CHESS_PAWN) return TRUE;
-			if (e.cnt == CHESS_KNIGHT || e.cnt == CHESS_BISHOP) c++;
-			if (e.cnt == CHESS_ROOK || e.cnt == CHESS_QUEEN) c++;
+			if (e.cnt == CHESS_KNIGHT || e.cnt == CHESS_BISHOP) {
+				if (t) //position not was counted as draw in non-team check, so opposite side have some extra material and some miracle mate is possible
+					return TRUE;
+				else {
+					//secondary bishop counting only if it have different color
+					if not(e.cnt == CHESS_BISHOP && bishop && math_mod(bishop.pos1_x + bishop.pos1_y, 2) == math_mod(e.pos1_x + e.pos1_y, 2)) {
+						c++;
+						bishop = e;
+					}
+				}
+			}
+			if (e.cnt == CHESS_ROOK || e.cnt == CHESS_QUEEN) return TRUE;
 			if (c > 1) return TRUE;
 		}
 	}
