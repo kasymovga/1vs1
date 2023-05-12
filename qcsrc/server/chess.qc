@@ -1,3 +1,4 @@
+float chess_type;
 float g_chess_timecontrol_addition;
 
 string chess_bishop_model;
@@ -40,6 +41,13 @@ enum {
 	CHESS_ROOK,
 	CHESS_KING,
 	CHESS_QUEEN,
+};
+
+enum {
+	CHESS_CLASSIC,
+	CHESS_960,
+	CHESS_CHECKERS_ENGLAND,
+	CHESS_CHECKERS_RUSSIAN,
 };
 
 string(float t) chess_piece_name {
@@ -88,6 +96,9 @@ void(void) spawnfunc_chess_board {
 	chess_cell_width = chess_board_width / 8;
 	chess_cell_height = chess_board_height / 8;
 	chess_board_initialized = 1;
+	if (self.netname == "chess960" || self.netname == "960" || self.netname == "fisher") {
+		chess_type = CHESS_960;
+	}
 }
 
 float(float t) chess_piece_cost {
@@ -180,7 +191,15 @@ float(float x, float y, float ft) chess_cell_is_under_attack {
 float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal {
 	entity e;
 	entity capture;
-	if ((e = chess_piece_find(x, y)) && e.team == piece.team) return FALSE;
+	float x2;
+	float i;
+	if ((e = chess_piece_find(x, y)) && e.team == piece.team) {
+		if (chess_type == CHESS_960) { //check for castling
+			if (piece.cnt != CHESS_KING || piece.dmg || e.dmg || e.cnt != CHESS_ROOK || e.pos1_y != piece.pos1_y)
+				return FALSE;
+		} else
+			return FALSE;
+	}
 	capture = e;
 	switch (piece.cnt) {
 	case CHESS_PAWN:
@@ -232,28 +251,75 @@ float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal 
 		}
 		break;
 	case CHESS_KING:
+		if (chess_type == CHESS_960 && capture.team == piece.team) { //castling in 960
+			if (capture.pos1_x > piece.pos1_x) {
+				//short castling
+				x = 6;
+				x2 = 5;
+			} else {
+				x = 2;
+				x2 = 3;
+				//long castling
+			}
+			if (piece.pos1_x < x) {
+				for (i = piece.pos1_x; i < x; i++) {
+					if (chess_cell_is_under_attack(i, piece.pos1_y, piece.team))
+						return FALSE;
+				}
+			} else {
+				for (i = piece.pos1_x; i > x; i--) {
+					if (chess_cell_is_under_attack(i, piece.pos1_y, piece.team))
+						return FALSE;
+				}
+			}
+			if (piece.pos1_x < x) {
+				for (i = piece.pos1_x; i <= x; i++) {
+					if ((e = chess_piece_find(i, piece.pos1_y)) && e != piece && e != capture)
+						return FALSE;
+				}
+			} else {
+				for (i = piece.pos1_x; i >= x; i--) {
+					if ((e = chess_piece_find(i, piece.pos1_y)) && e != piece && e != capture)
+						return FALSE;
+				}
+			}
+			if (capture.pos1_x < x2) {
+				for (i = capture.pos1_x; i <= x2; i++) {
+					if ((e = chess_piece_find(i, piece.pos1_y)) && e != piece && e != capture)
+						return FALSE;
+				}
+			} else {
+				for (i = capture.pos1_x; i >= x2; i--) {
+					if ((e = chess_piece_find(i, piece.pos1_y)) && e != piece && e != capture)
+						return FALSE;
+				}
+			}
+			goto checkforcheck;
+		}
 		if (fabs(x - piece.pos1_x) <= 1 && fabs(y - piece.pos1_y) <= 1) {
 			goto checkforcheck;
 		}
-		//short castling
-		if (!piece.dmg && x == 6 && y == piece.pos1_y
-				&& (e = chess_piece_find(7, piece.pos1_y)) && e.cnt == CHESS_ROOK && !e.dmg && e.team == piece.team
-				&& chess_path_is_empty(piece, 7, piece.pos1_y)
-				&& !chess_cell_is_under_attack(piece.pos1_x, piece.pos1_y, piece.team)
-				&& !chess_cell_is_under_attack(5, piece.pos1_y, piece.team)
-				&& !chess_cell_is_under_attack(6, piece.pos1_y, piece.team)
-				) {
-			return TRUE;
-		}
-		//long castling
-		if (!piece.dmg && x == 2 && y == piece.pos1_y
-				&& (e = chess_piece_find(0, piece.pos1_y)) && e.cnt == CHESS_ROOK && !e.dmg && e.team == piece.team
-				&& chess_path_is_empty(piece, 0, piece.pos1_y)
-				&& !chess_cell_is_under_attack(piece.pos1_x, piece.pos1_y, piece.team)
-				&& !chess_cell_is_under_attack(3, piece.pos1_y, piece.team)
-				&& !chess_cell_is_under_attack(2, piece.pos1_y, piece.team)
-				) {
-			return TRUE;
+		if (chess_type == CHESS_CLASSIC) {
+			//short castling
+			if (!piece.dmg && x == 6 && y == piece.pos1_y
+					&& (e = chess_piece_find(7, piece.pos1_y)) && e.cnt == CHESS_ROOK && !e.dmg && e.team == piece.team
+					&& chess_path_is_empty(piece, 7, piece.pos1_y)
+					&& !chess_cell_is_under_attack(piece.pos1_x, piece.pos1_y, piece.team)
+					&& !chess_cell_is_under_attack(5, piece.pos1_y, piece.team)
+					&& !chess_cell_is_under_attack(6, piece.pos1_y, piece.team)
+					) {
+				return TRUE;
+			}
+			//long castling
+			if (!piece.dmg && x == 2 && y == piece.pos1_y
+					&& (e = chess_piece_find(0, piece.pos1_y)) && e.cnt == CHESS_ROOK && !e.dmg && e.team == piece.team
+					&& chess_path_is_empty(piece, 0, piece.pos1_y)
+					&& !chess_cell_is_under_attack(piece.pos1_x, piece.pos1_y, piece.team)
+					&& !chess_cell_is_under_attack(3, piece.pos1_y, piece.team)
+					&& !chess_cell_is_under_attack(2, piece.pos1_y, piece.team)
+					) {
+				return TRUE;
+			}
 		}
 		break;
 	case CHESS_QUEEN:
@@ -269,7 +335,12 @@ float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal 
 		vector v1, v2 = '0 0 0';
 		if (capture) {
 			v2 = capture.pos1;
-			capture.pos1 = '-1 -1 0';
+			if (capture.team != e.team)
+				capture.pos1 = '-1 -1 0';
+			else if (x == 6) //castling short
+				capture.pos1_x = 5;
+			else
+				capture.pos1_x = 3;
 		}
 		v1 = piece.pos1;
 		//print("check for check after ", chess_cell_name(piece.pos1_x, piece.pos1_y), " -> ", chess_cell_name(x, y), "\n");
@@ -334,38 +405,81 @@ entity(float t, float cellx, float celly, float wb) chess_piece_spawn {
 
 void(void) chess_board_init {
 	float i;
-	chess_piece_spawn(CHESS_PAWN, 0, 1, 0);
-	chess_piece_spawn(CHESS_PAWN, 1, 1, 0);
-	chess_piece_spawn(CHESS_PAWN, 2, 1, 0);
-	chess_piece_spawn(CHESS_PAWN, 3, 1, 0);
-	chess_piece_spawn(CHESS_PAWN, 4, 1, 0);
-	chess_piece_spawn(CHESS_PAWN, 5, 1, 0);
-	chess_piece_spawn(CHESS_PAWN, 6, 1, 0);
-	chess_piece_spawn(CHESS_PAWN, 7, 1, 0);
-	chess_piece_spawn(CHESS_ROOK, 0, 0, 0);
-	chess_piece_spawn(CHESS_KNIGHT, 1, 0, 0);
-	chess_piece_spawn(CHESS_BISHOP, 2, 0, 0);
-	chess_piece_spawn(CHESS_QUEEN, 3, 0, 0);
-	chess_piece_spawn(CHESS_KING, 4, 0, 0);
-	chess_piece_spawn(CHESS_BISHOP, 5, 0, 0);
-	chess_piece_spawn(CHESS_KNIGHT, 6, 0, 0);
-	chess_piece_spawn(CHESS_ROOK, 7, 0, 0);
-	chess_piece_spawn(CHESS_PAWN, 0, 6, 1);
-	chess_piece_spawn(CHESS_PAWN, 1, 6, 1);
-	chess_piece_spawn(CHESS_PAWN, 2, 6, 1);
-	chess_piece_spawn(CHESS_PAWN, 3, 6, 1);
-	chess_piece_spawn(CHESS_PAWN, 4, 6, 1);
-	chess_piece_spawn(CHESS_PAWN, 5, 6, 1);
-	chess_piece_spawn(CHESS_PAWN, 6, 6, 1);
-	chess_piece_spawn(CHESS_PAWN, 7, 6, 1);
-	chess_piece_spawn(CHESS_ROOK, 0, 7, 1);
-	chess_piece_spawn(CHESS_KNIGHT, 1, 7, 1);
-	chess_piece_spawn(CHESS_BISHOP, 2, 7, 1);
-	chess_piece_spawn(CHESS_QUEEN, 3, 7, 1);
-	chess_piece_spawn(CHESS_KING, 4, 7, 1);
-	chess_piece_spawn(CHESS_BISHOP, 5, 7, 1);
-	chess_piece_spawn(CHESS_KNIGHT, 6, 7, 1);
-	chess_piece_spawn(CHESS_ROOK, 7, 7, 1);
+	float queen = 3;
+	float king = 4;
+	float rookq = 0;
+	float rookk = 7;
+	float knightq = 1;
+	float knightk = 6;
+	float bishopq = 2;
+	float bishopk = 5;
+	if (chess_type == CHESS_960) {
+		string squares = "01234567";
+		//rook king side
+		rookk = 2 + floor(random() * 6);
+		squares = strcat(substring(squares, 0, rookk), substring(squares, rookk + 1, 8 - rookk - 1));
+		//rook queen side
+		rookq = floor(random() * (rookk - 1));
+		squares = strcat(substring(squares, 0, rookq), substring(squares, rookq + 1, 8 - rookq - 1));
+		//king
+		king = rookq + floor(random() * (rookk - rookq - 1)) + 1;
+		squares = strcat(substring(squares, 0, king - 1), substring(squares, king, 8 - king - 2)); //king value is his string index + 1
+		//queen
+		i = floor(random() * 5);
+		queen = stof(substring(squares, i, 1));
+		squares = strcat(substring(squares, 0, i), substring(squares, i + 1, 5 - i - 1));
+		//knight queen side
+		i = floor(random() * 4);
+		knightq = stof(substring(squares, i, 1));
+		squares = strcat(substring(squares, 0, i), substring(squares, i + 1, 4 - i - 1));
+		//knight king side
+		i = floor(random() * 3);
+		knightk = stof(substring(squares, i, 1));
+		squares = strcat(substring(squares, 0, i), substring(squares, i + 1, 3 - i - 1));
+		//bishop qeen side
+		i = floor(random() * 2);
+		bishopq = stof(substring(squares, i, 1));
+		squares = strcat(substring(squares, 0, i), substring(squares, i + 1, 2 - i - 1));
+		//bishop king side
+		bishopk = stof(squares);
+		if (math_mod(bishopq, 2) == math_mod(bishopk, 2)) {
+			if (math_mod(knightk, 2) != math_mod(bishopq, 2)) {
+				i = knightk;
+				knightk = bishopq;
+				bishopq = i;
+			} else if (math_mod(knightq, 2) != math_mod(bishopq, 2)) {
+				i = knightq;
+				knightq = bishopq;
+				bishopq = i;
+			} else if (math_mod(queen, 2) != math_mod(bishopq, 2)) {
+				i = queen;
+				queen = bishopq;
+				bishopq = i;
+			}
+		}
+	}
+	for (i = 0; i < 8; i++)
+		chess_piece_spawn(CHESS_PAWN, i, 1, 0);
+
+	chess_piece_spawn(CHESS_ROOK, rookq, 0, 0);
+	chess_piece_spawn(CHESS_KNIGHT, knightq, 0, 0);
+	chess_piece_spawn(CHESS_BISHOP, bishopq, 0, 0);
+	chess_piece_spawn(CHESS_QUEEN, queen, 0, 0);
+	chess_piece_spawn(CHESS_KING, king, 0, 0);
+	chess_piece_spawn(CHESS_BISHOP, bishopk, 0, 0);
+	chess_piece_spawn(CHESS_KNIGHT, knightk, 0, 0);
+	chess_piece_spawn(CHESS_ROOK, rookk, 0, 0);
+	for (i = 0; i < 8; i++)
+		chess_piece_spawn(CHESS_PAWN, i, 6, 1);
+
+	chess_piece_spawn(CHESS_ROOK, rookq, 7, 1);
+	chess_piece_spawn(CHESS_KNIGHT, knightq, 7, 1);
+	chess_piece_spawn(CHESS_BISHOP, bishopq, 7, 1);
+	chess_piece_spawn(CHESS_QUEEN, queen, 7, 1);
+	chess_piece_spawn(CHESS_KING, king, 7, 1);
+	chess_piece_spawn(CHESS_BISHOP, bishopk, 7, 1);
+	chess_piece_spawn(CHESS_KNIGHT, knightk, 7, 1);
+	chess_piece_spawn(CHESS_ROOK, rookk, 7, 1);
 }
 
 float(entity to, float f) chess_info_send {
@@ -540,29 +654,55 @@ void(entity piece, float x, float y) chess_move_perform {
 		cvar_set("timelimit", "0");
 		chess_move_number++;
 	}
-	if (piece.cnt == CHESS_KING && !piece.dmg && (x == 6 || x == 2))
-		iscastling = 1;
-
+	if (piece.cnt == CHESS_KING) {
+		if (chess_type == CHESS_CLASSIC && !piece.dmg && (x == 6 || x == 2))
+			iscastling = 1;
+		else if (chess_type == CHESS_960 && e.team == piece.team) {
+			iscastling = 1;
+			if (piece.pos1_x > e.pos1_x) //castling long
+				x = 2;
+			else
+				x = 6; //castling short
+		}
+	}
 	if (piece.cnt == CHESS_PAWN && chess_en_passant && !e && piece.pos1_x != x) { //en passant
 		e = chess_en_passant;
 	}
 	chess_history_add(piece, x, y);
-	chess_piece_move(piece, x, y, TRUE);
 	chess_en_passant = NULL;
 	if (piece.cnt == CHESS_PAWN && !piece.dmg && (y == 3 || y == 4))
 		chess_en_passant = piece;
 
+	chess_piece_move(piece, x, y, TRUE);
 	piece.dmg = 1;
 	if (iscastling) {
-		if (x == 6) { //short castling
-			chess_piece_move((e = chess_piece_find(7, y)), 5, y, FALSE);
-			e.dmg = 1;
-			e = NULL;
-		} else if (x == 2) { //long castling
-			chess_piece_move((e = chess_piece_find(0, y)), 3, y, FALSE);
-			e.dmg = 1;
-			e = NULL;
+		if (chess_type == CHESS_CLASSIC) {
+			if (x == 6) { //short castling
+				chess_piece_move((e = chess_piece_find(7, y)), 5, y, FALSE);
+				e.dmg = 1;
+				e = NULL;
+			} else if (x == 2) { //long castling
+				chess_piece_move((e = chess_piece_find(0, y)), 3, y, FALSE);
+				e.dmg = 1;
+				e = NULL;
+			}
+		} else {
+			if (x == 6) { //short castling
+				chess_piece_move(e, 5, y, FALSE);
+				e.dmg = 1;
+				e = NULL;
+			} else if (x == 2) { //long castling
+				chess_piece_move(e, 3, y, FALSE);
+				e.dmg = 1;
+				e = NULL;
+			}
 		}
+	}
+	if (iscastling) {
+		if (x == 6)
+			bprint("\{3}* Short castling\n");
+		else if (x == 2)
+			bprint("\{3}* Long castling\n");
 	}
 	if (e) {
 		score_player_team_add_score(self, 1);
@@ -643,7 +783,7 @@ void(void) chess_physics_frame_begin_hook {
 		if (trace_ent.classname == "chess_board" || trace_ent.classname == "chess_piece") {
 			chess_interacted = TRUE;
 			if (trace_ent.classname == "chess_piece") {
-				if (trace_ent.team == self.team)
+				if (trace_ent.team == self.team && !(chess_type == CHESS_960 && chess_piece_picked && chess_move_is_legal(chess_piece_picked, trace_ent.pos1_x, trace_ent.pos1_y, TRUE)))
 					chess_piece_point(trace_ent);
 				else {
 					chess_board_pointerx = trace_ent.pos1_x;
@@ -652,7 +792,7 @@ void(void) chess_physics_frame_begin_hook {
 			} else {
 				chess_board_pointerx = floor((trace_endpos_x - chess_board_pos_x) / chess_cell_width);
 				chess_board_pointery = floor((trace_endpos_y - chess_board_pos_y) / chess_cell_height);
-				if ((e = chess_piece_find(chess_board_pointerx, chess_board_pointery)) && e.team == self.team) {
+				if ((e = chess_piece_find(chess_board_pointerx, chess_board_pointery)) && e.team == self.team && !(chess_type == CHESS_960 && chess_piece_picked && chess_move_is_legal(chess_piece_picked, trace_ent.pos1_x, trace_ent.pos1_y, TRUE))) {
 					chess_piece_point(e);
 					chess_board_pointerx = -1;
 					chess_board_pointery = -1;
@@ -956,4 +1096,8 @@ void(void) chess_init {
 	precache_sound("misc/typehit.wav");
 	precache_sound("domination/claim.wav");
 	precache_model("models/runematch/rune.mdl");
+	chess_type = CHESS_CLASSIC;
+	string s = cvar_string("g_chess_type");
+	if (s == "960" || s == "chess960" || s == "fisher")
+		chess_type = CHESS_960;
 }
