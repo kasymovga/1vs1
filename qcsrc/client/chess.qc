@@ -7,23 +7,7 @@ float chess_unicode;
 void(void) chess_hud_reset {
 }
 
-void(vector pos, vector gameinfo_size, float gameinfo_scale) chess_hud {
-	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '108 48 0', gameinfo_size, CVAR(sbar_gameinfo_background))
-	vector p;
-	p = pos +'100 24 0' * gameinfo_scale;
-	float mins = floor(chess_timer_white / 60);
-	float secs = floor(chess_timer_white - mins * 60);
-	float tens = floor((chess_timer_white - floor(chess_timer_white)) * 10);
-	string s = strcat(ftos(mins), ":", ((secs < 10) ? "0" : ""), ftos(secs), ".", ftos(tens));
-	if (!chess_turn) s = strcat("* ", s);
-	draw_string_right(p, s, '20 20 0' * gameinfo_scale, '1 0.5 0.5', 1, DRAWFLAG_NORMAL);
-	p += '0 20 0';
-	mins = floor(chess_timer_black / 60);
-	secs = floor(chess_timer_black - mins * 60);
-	tens = floor((chess_timer_black - floor(chess_timer_black)) * 10);
-	s = strcat(ftos(mins), ":", ((secs < 10) ? "0" : ""), ftos(secs), ".", ftos(tens));
-	if (chess_turn) s = strcat("* ", s);
-	draw_string_right(p, s, '20 20 0' * gameinfo_scale, '0.5 0.5 1', 1, DRAWFLAG_NORMAL);
+void() chess_draw2d {
 	//2d board
 	entity e;
 	//♚♛♜♝♞♟
@@ -85,6 +69,25 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) chess_hud {
 	}
 }
 
+void(vector pos, vector gameinfo_size, float gameinfo_scale) chess_hud {
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '108 48 0', gameinfo_size, CVAR(sbar_gameinfo_background))
+	vector p;
+	p = pos +'100 24 0' * gameinfo_scale;
+	float mins = floor(chess_timer_white / 60);
+	float secs = floor(chess_timer_white - mins * 60);
+	float tens = floor((chess_timer_white - floor(chess_timer_white)) * 10);
+	string s = strcat(ftos(mins), ":", ((secs < 10) ? "0" : ""), ftos(secs), ".", ftos(tens));
+	if (!chess_turn) s = strcat("* ", s);
+	draw_string_right(p, s, '20 20 0' * gameinfo_scale, '1 0.5 0.5', 1, DRAWFLAG_NORMAL);
+	p += '0 20 0';
+	mins = floor(chess_timer_black / 60);
+	secs = floor(chess_timer_black - mins * 60);
+	tens = floor((chess_timer_black - floor(chess_timer_black)) * 10);
+	s = strcat(ftos(mins), ":", ((secs < 10) ? "0" : ""), ftos(secs), ".", ftos(tens));
+	if (chess_turn) s = strcat("* ", s);
+	draw_string_right(p, s, '20 20 0' * gameinfo_scale, '0.5 0.5 1', 1, DRAWFLAG_NORMAL);
+}
+
 void(float isnew) chess_info_read {
 	float f = net_read_byte();
 	if (f & 1)
@@ -95,6 +98,8 @@ void(float isnew) chess_info_read {
 
 	chess_turn = (f & 4);
 	if (f & 8) {
+		self.draw2d = chess_draw2d;
+		self.draw2dflag = 1;
 		entity e, e2;
 		for (e = chess_pieces; e; e = e2) {
 			e2 = e.enemy;
