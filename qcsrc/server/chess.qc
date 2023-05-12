@@ -335,7 +335,7 @@ float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal 
 		vector v1, v2 = '0 0 0';
 		if (capture) {
 			v2 = capture.pos1;
-			if (capture.team != e.team)
+			if (capture.team != piece.team)
 				capture.pos1 = '-1 -1 0';
 			else if (x == 6) //castling short
 				capture.pos1_x = 5;
