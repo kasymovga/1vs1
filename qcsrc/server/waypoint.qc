@@ -341,7 +341,7 @@ void(void) waypoint_schedulerelinkall {
 }
 
 string(string mapname) waypoint_link_cache_path {
-	return strcat("maps/", mapname, ".waypoints.", ftos(waypoint_count), (g_waypoints_use_botclip ? ".cache-monster" : ".cache-bot"));
+	return strcat("maps/", mapname, ".wpcache.", ftos(waypoint_count), (g_waypoints_use_botclip ? ".monster" : ".bot"), "-", game_type_name(game_type_current()));
 }
 
 // Load waypoint links from file
