@@ -527,7 +527,6 @@ void(entity e, float x, float y) chess_history_add {
 	string s = strcat(chess_cell_name(e.pos1_x, e.pos1_y), chess_cell_name(x, y), " ", chess_history);
 	str_unzone_ifneeded(chess_history);
 	chess_history = strzone(s);
-	print("chess_history = ", chess_history, "\n");
 }
 
 void(entity piece, float x, float y) chess_move_perform {
@@ -597,7 +596,6 @@ void(entity piece, float x, float y) chess_move_perform {
 	}
 	chess_info.SendFlags |= 8;
 	float n = strlen(chess_history);
-	print("n = ", ftos(n), "\n");
 	if (n >= 500) { //10 symbols per move, 50 moves
 		bprint("\{3}* Draw by 50 move rule\n");
 		chess_win = -1;
