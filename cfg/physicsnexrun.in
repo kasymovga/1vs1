@@ -1,3 +1,4 @@
+set physicsnexrun_profile ""
 set physicsnexrun_g_gravity 800
 set physicsnexrun_g_stepairslowdown 0
 set physicsnexrun_g_maxspeed 400

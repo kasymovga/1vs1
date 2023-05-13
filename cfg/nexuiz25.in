@@ -1,3 +1,4 @@
+set nexuiz25_profile ""
 set nexuiz25_g_balance_shotgun_primary_damage 12
 set nexuiz25_g_balance_shotgun_secondary_damage 12
 set nexuiz25_g_balance_hagar_primary_refire 0.15

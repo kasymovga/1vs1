@@ -51,3 +51,5 @@
 #include "classes/nexuiz/demolist.c"
 #include "classes/nexuiz/colorpicker.c"
 #include "classes/nexuiz/cvarlist.c"
+#include "classes/nexuiz/availableprofileslist.c"
+#include "classes/nexuiz/profilelist.c"

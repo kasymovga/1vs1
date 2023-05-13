@@ -183,6 +183,7 @@ set _defrag_g_spawnreplace_ammo_bullets item_bullets
 set _defrag_g_spawnreplace_ammo_shells item_shells
 set _defrag_g_pickup_use_wait 1
 //set _defrag_g_spawn_znudge -8
+set defragcpm_profile ""
 set defragcpm_inherit _defrag
 set defragcpm_g_q2doublejump 0
 set defragcpm_g_cpmdoublejump 1
@@ -194,6 +195,7 @@ set defragcpm_g_airstopaccelerate 2.5
 set defragcpm_g_airstrafeaccelerate 70
 set defragcpm_g_maxairstrafespeed 30
 set defragcpm_g_aircontrol 150
+set defragvq3_profile ""
 set defragvq3_inherit _defrag
 set defragvq3_g_accelerate 10
 set defragvq3_g_airaccelerate 1

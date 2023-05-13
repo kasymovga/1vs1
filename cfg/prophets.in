@@ -1,3 +1,4 @@
+set prophets_profile ""
 set prophets_g_balance_selfdamagepercent 0
 set prophets_g_score_damage 0
 set prophets_g_grappling_hook 1
@@ -17,6 +18,7 @@ set prophets_g_respawn_delay 1
 set prophets_g_shootfromeye 1
 set prophets_g_spawnfrags 1
 set prophets_g_spawnshieldtime 1
+set prophets_duel_profile ""
 set prophets_duel_inherit prophets
 set prophets_duel_g_maxplayers 2
 set prophets_duel_g_minstagib_extralives 0

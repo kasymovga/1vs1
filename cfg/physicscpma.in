@@ -1,3 +1,4 @@
+set physicscpma_profile
 set physicscpma_inherit physicsq3
 set physicscpma_g_accelerate 15
 set physicscpma_g_friction 8

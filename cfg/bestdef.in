@@ -1,3 +1,4 @@
+set bestdef_profile ""
 set bestdef_g_weaponreplace_tuba "crylink"
 set bestdef_g_weaponreplace_minstanex "fireball"
 set bestdef_g_weaponreplace_campingrifle "nex"

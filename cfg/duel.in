@@ -1,3 +1,4 @@
+set duel_profile ""
 set duel_g_player_forcemodel "models/player/rexus.dpm"
 set duel_g_voice_chat_public 0
 set duel_g_maxplayers 2

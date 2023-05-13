@@ -1,3 +1,4 @@
+set bestakimbo_profile ""
 set bestakimbo_inherit "bestdef akimbo"
 set bestakimbo_g_casings 0
 set bestakimbo_g_balance_shotgun_primary_gravityfactor 0

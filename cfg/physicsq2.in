@@ -1,3 +1,4 @@
+set physicsq2_profile ""
 set physicsq2_g_slicksurfaces_levitation 0
 set physicsq2_g_gravity 1000
 set physicsq2_g_stepairslowdown 0

@@ -36,3 +36,8 @@ alias g_balance_rune_speed_atkrate "cvardeprecated g_balance_rune_speed_atkrate 
 alias g_balance_rune_speed_moverate "cvardeprecated g_balance_rune_speed_moverate g_rune_speed_moverate; g_rune_speed_moverate $1"
 alias g_balance_rune_speed_jumpheight "cvardeprecated g_balance_rune_speed_jumpheight g_rune_speed_jumpheight; g_rune_speed_jumpheight $1"
 alias g_balance_rune_vampire_absorb "cvardeprecated g_balance_rune_vampire_absorb g_rune_vampire_damage_factor; g_rune_vampire_damage_factor $1"
+set runes_profile ""
+set runes_g_runes 1
+set runes_all_profile ""
+set runes_all_inherit "runes"
+set runes_all_g_runes_hacker 1

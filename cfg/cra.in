@@ -1,3 +1,4 @@
+set cra_profile ""
 set cra_dlc rm_skins
 set cra_g_rank_type "cra"
 set cra_g_start_weapon_laser 0
@@ -59,6 +60,7 @@ set cra_g_spawnreplace_item_nails item_health_small
 set cra_g_spawnreplace_item_rockets item_armor_small
 set cra_g_spawnreplace_item_shells item_armor_small
 set cra_g_nadgets_show_in_sbar 1
+set cra_two_weapons_profile ""
 set cra_two_weapons_inherit cra
 set cra_two_weapons_g_twoweapons campingrifle
 set cra_two_weapons_g_balance_weaponswitchdelay 0.05

@@ -1,3 +1,4 @@
+set overkill_profile ""
 set overkill_dlc "okweapons okplayers"
 set overkill_g_rank_type "overkill"
 set overkill_g_laser 1

@@ -1,3 +1,4 @@
+set akimbo_profile ""
 set g_akimbo_weaponratefactor 1
 set akimbo_g_akimbo_weaponratefactor 1.25
 set akimbo_g_akimbo_weaponratefactor_for "electro uzi"

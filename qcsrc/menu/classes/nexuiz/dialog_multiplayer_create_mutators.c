@@ -3,13 +3,13 @@ CLASS(NexuizMutatorsDialog) EXTENDS(NexuizDialog)
 	METHOD(NexuizMutatorsDialog, toString, string(entity))
 	METHOD(NexuizMutatorsDialog, fill, void(entity))
 	METHOD(NexuizMutatorsDialog, showNotify, void(entity))
-	METHOD(NexuizMutatorsDialog, close, void(entity))
 	ATTRIB(NexuizMutatorsDialog, title, string, _("Mutators"))
 	ATTRIB(NexuizMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
 	ATTRIB(NexuizMutatorsDialog, intendedWidth, float, 0.5)
 	ATTRIB(NexuizMutatorsDialog, rows, float, 10)
 	ATTRIB(NexuizMutatorsDialog, columns, float, 4)
-	ATTRIB(NexuizMutatorsDialog, refilterEntity, entity, NULL)
+	ATTRIB(NexuizMutatorsDialog, currentProfile, entity, NULL)
+	ATTRIB(NexuizMutatorsDialog, availableProfiles, entity, NULL)
 ENDCLASS(NexuizMutatorsDialog)
 #endif
 
@@ -32,11 +32,49 @@ string profileDescriptionNexuizMutatorsDialog(string profile_name) {
 	if (profile_name == "physicscpma") return "RexuizProMod";
 	if (profile_name == "quakiuz") return "Quakiuz";
 	if (profile_name == "duel") return "Duel";
-	return "Unknown";
+	return profile_name;
 }
 
 string(entity me) toStringNexuizMutatorsDialog {
 	return profileDescriptionNexuizMutatorsDialog(cvar_string("g_profile"));
+}
+
+void(entity btn, entity me) addClickNexuizMutatorsDialog {
+	if (me.currentProfile.nItems >= PROFILELIST_MAX) {
+		print("Too much profiles\n");
+		return;
+	}
+	string s = me.availableProfiles.toString(me.availableProfiles);
+	if (s == "") {
+		print("No profile selected\n");
+		return;
+	}
+	string profile = cvar_string("g_profile");
+	if (strstrofs(strcat(" ", profile, " "), strcat(" ", s, " "), 0) >= 0) {
+		return;
+	}
+	profile = strcat(profile, " ", s);
+	while (substring(profile, 0, 1) == " ")
+		profile = substring(profile, 1, -1);
+
+	while (substring(profile, -1, 1) == " ")
+		profile = substring(profile, 0, strlen(profile) - 1);
+
+	cvar_set("g_profile", profile);
+	me.currentProfile.loadCvars(me.currentProfile);
+	me.availableProfiles.loadCvars(me.availableProfiles);
+}
+
+void(entity btn, entity me) removeClickNexuizMutatorsDialog {
+	if (me.currentProfile.nItems <= 0) return;
+	string s = me.currentProfile.toString(me.currentProfile);
+	string profile = cvar_string("g_profile");
+	profile = strreplace("+", " ", profile);
+	profile = strreplace(strcat(" ", s, " "), " ", strcat(" ", profile, " "));
+	profile = strreplace("  ", " ", profile);
+	cvar_set("g_profile", profile);
+	me.currentProfile.loadCvars(me.currentProfile);
+	me.availableProfiles.loadCvars(me.availableProfiles);
 }
 
 void fillNexuizMutatorsDialog(entity me) {
@@ -44,41 +82,29 @@ void fillNexuizMutatorsDialog(entity me) {
 	me.TR(me);
 		me.TD(me, 1, 2, makeNexuizTextLabel(0, _("Gameplay mutators:")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "", profileDescriptionNexuizMutatorsDialog("")));
+		me.TD(me, 1, 1.75, makeNexuizTextLabel(0, _("Available:")));
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 1.75, makeNexuizTextLabel(0, _("Enabled:")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "bestakimbo", profileDescriptionNexuizMutatorsDialog("bestakimbo")));
+		me.TD(me, 7, 1.75, me.availableProfiles = e = makeNexuizAvailableProfilesList());
+		me.TDempty(me, 0.5);
+		me.TD(me, 7, 1.75, me.currentProfile = e = makeNexuizProfileList());
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "minsta", profileDescriptionNexuizMutatorsDialog("minsta")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "explosive_minsta", profileDescriptionNexuizMutatorsDialog("explosive_minsta")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "cra", profileDescriptionNexuizMutatorsDialog("cra")));
+		me.TDempty(me, 1.8);
+		me.TD(me, 1, 0.4, e = makeNexuizButton(_(">>"), '0 0 0'));
+		e.onClick = addClickNexuizMutatorsDialog;
+		e.onClickEntity = me;
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "quakiuz", profileDescriptionNexuizMutatorsDialog("quakiuz")));
-	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
-	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "overkill", profileDescriptionNexuizMutatorsDialog("overkill")));
-	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "mixed_arts", profileDescriptionNexuizMutatorsDialog("mixed_arts")));
-	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "nexuiz25", profileDescriptionNexuizMutatorsDialog("nexuiz25")));
-	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "physicscpma", profileDescriptionNexuizMutatorsDialog("physicscpma")));
-	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "duel", profileDescriptionNexuizMutatorsDialog("duel")));
-	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "defragcpm", profileDescriptionNexuizMutatorsDialog("defragcpm")));
+		me.TDempty(me, 1.8);
+		me.TD(me, 1, 0.4, e = makeNexuizButton(_("<<"), '0 0 0'));
+		e.onClick = removeClickNexuizMutatorsDialog;
+		e.onClickEntity = me;
 	me.gotoRC(me, me.rows - 1, 0);
 	me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
 		e.onClick = Dialog_Close;
 		e.onClickEntity = me;
 
-}
-
-void(entity me) closeNexuizMutatorsDialog {
-	if(me.refilterEntity)
-		me.refilterEntity.refilter(me.refilterEntity);
-
-	closeDialog(me);
 }
 #endif
