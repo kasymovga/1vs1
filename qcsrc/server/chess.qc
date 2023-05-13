@@ -96,7 +96,7 @@ void(void) spawnfunc_chess_board {
 	chess_cell_width = chess_board_width / 8;
 	chess_cell_height = chess_board_height / 8;
 	chess_board_initialized = 1;
-	if (self.netname == "chess960" || self.netname == "960" || self.netname == "fisher") {
+	if (self.netname == "chess960" || self.netname == "960" || self.netname == "fischer") {
 		chess_type = CHESS_960;
 	}
 }
@@ -1098,6 +1098,6 @@ void(void) chess_init {
 	precache_model("models/runematch/rune.mdl");
 	chess_type = CHESS_CLASSIC;
 	string s = cvar_string("g_chess_type");
-	if (s == "960" || s == "chess960" || s == "fisher")
+	if (s == "960" || s == "chess960" || s == "fischer")
 		chess_type = CHESS_960;
 }
