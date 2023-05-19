@@ -34,6 +34,10 @@ entity chess_info;
 
 string chess_history;
 
+string chess_checkers_allowed_moves;
+string chess_checkers_move_chain;
+float chess_checkers_allowed_moves_captures;
+
 enum {
 	CHESS_PAWN,
 	CHESS_BISHOP,
@@ -98,6 +102,8 @@ void(void) spawnfunc_chess_board {
 	chess_board_initialized = 1;
 	if (self.netname == "chess960" || self.netname == "960" || self.netname == "fischer") {
 		chess_type = CHESS_960;
+	} else if (self.netname == "checkers") {
+		chess_type = CHESS_CHECKERS_ENGLAND;
 	}
 }
 
@@ -188,7 +194,149 @@ float(float x, float y, float ft) chess_cell_is_under_attack {
 	return FALSE;
 }
 
+void(entity piece, float captures, string moves) chess_checkers_allowed_moves_calculate_add {
+	if (captures < chess_checkers_allowed_moves_captures) return;
+	if (captures > chess_checkers_allowed_moves_captures) {
+		str_unzone_ifneeded(chess_checkers_allowed_moves);
+		chess_checkers_allowed_moves = "";
+		chess_checkers_allowed_moves_captures = captures;
+	}
+	string s = strcat(chess_checkers_allowed_moves, " ", moves);
+	str_unzone_ifneeded(chess_checkers_allowed_moves);
+	chess_checkers_allowed_moves = str_zone_ifneeded(s);
+}
+
+void(entity piece, float captures, string moves) chess_checkers_allowed_moves_calculate_recursive {
+	float diry = 0;
+	float x, y;
+	entity e;
+	vector v = '0 0 0';
+	float newcapture = 0;
+	if (piece.team == COLOR_TEAM1) diry = 1;
+	else diry = -1;
+	switch (piece.cnt) {
+	case CHESS_PAWN:
+		y = piece.pos1_y + diry * 2;
+		if (y >= 0 && y <= 7) {
+			if (piece.pos1_x < 6) {
+				x = piece.pos1_x + 2;
+				if ((e = chess_piece_find(x - 1, y - diry)) && e.team != piece.team && !chess_piece_find(x, y)) {
+					v = piece.pos1;
+					piece.pos1_x = x;
+					piece.pos1_y = y;
+					chess_checkers_allowed_moves_calculate_recursive(piece, captures + 1, strcat(moves, chess_cell_name(x, y)));
+					piece.pos1 = v;
+					newcapture = 1;
+				}
+			}
+			if (piece.pos1_x > 1) {
+				x = piece.pos1_x - 2;
+				if ((e = chess_piece_find(x + 1, y - diry)) && e.team != piece.team && !chess_piece_find(x, y)) {
+					v = piece.pos1;
+					piece.pos1_x = x;
+					piece.pos1_y = y;
+					chess_checkers_allowed_moves_calculate_recursive(piece, captures + 1, strcat(moves, chess_cell_name(x, y)));
+					piece.pos1 = v;
+					newcapture = 1;
+				}
+			}
+		}
+		y = piece.pos1_y + diry;
+		if (!captures && !chess_checkers_allowed_moves_captures && y >= 0 && y <= 7) {
+			if (piece.pos1_x < 7) {
+				x = piece.pos1_x + 1;
+				if (!chess_piece_find(x, y)) {
+					chess_checkers_allowed_moves_calculate_add(piece, captures, strcat(moves, chess_cell_name(x, y)));
+				}
+			}
+			if (piece.pos1_x > 0) {
+				x = piece.pos1_x - 1;
+				if (!chess_piece_find(x, y)) {
+					chess_checkers_allowed_moves_calculate_add(piece, captures, strcat(moves, chess_cell_name(x, y)));
+				}
+			}
+		}
+		break;
+	case CHESS_QUEEN:
+		for (diry = -1; diry < 2; diry += 2) {
+			y = piece.pos1_y + diry * 2;
+			if (y >= 0 && y <= 7) {
+				if (piece.pos1_x < 6) {
+					x = piece.pos1_x + 2;
+					if ((e = chess_piece_find(x - 1, y - diry)) && e.team != piece.team && !chess_piece_find(x, y) && !e.dmg) {
+						v = piece.pos1;
+						piece.pos1_x = x;
+						piece.pos1_y = y;
+						e.dmg = 1;
+						chess_checkers_allowed_moves_calculate_recursive(piece, captures + 1, strcat(moves, chess_cell_name(x, y)));
+						e.dmg = 0;
+						piece.pos1 = v;
+						newcapture = 1;
+					}
+				}
+				if (piece.pos1_x > 1) {
+					x = piece.pos1_x - 2;
+					if ((e = chess_piece_find(x + 1, y - diry)) && e.team != piece.team && !chess_piece_find(x, y) && !e.dmg) {
+						v = piece.pos1;
+						piece.pos1_x = x;
+						piece.pos1_y = y;
+						e.dmg = 1;
+						chess_checkers_allowed_moves_calculate_recursive(piece, captures + 1, strcat(moves, chess_cell_name(x, y)));
+						e.dmg = 0;
+						piece.pos1 = v;
+						newcapture = 1;
+					}
+				}
+			}
+			y = piece.pos1_y + diry;
+			if (!captures && !chess_checkers_allowed_moves_captures && y >= 0 && y <= 7) {
+				if (piece.pos1_x < 7) {
+					x = piece.pos1_x + 1;
+					if (!chess_piece_find(x, y)) {
+						chess_checkers_allowed_moves_calculate_add(piece, captures, strcat(moves, chess_cell_name(x, y)));
+					}
+				}
+				if (piece.pos1_x > 0) {
+					x = piece.pos1_x - 1;
+					if (!chess_piece_find(x, y)) {
+						chess_checkers_allowed_moves_calculate_add(piece, captures, strcat(moves, chess_cell_name(x, y)));
+					}
+				}
+			}
+		}
+		break;
+	}
+	if (captures && !newcapture) {
+		chess_checkers_allowed_moves_calculate_add(piece, captures, moves);
+	}
+}
+
+void(void) chess_checkers_allowed_moves_calculate {
+	str_unzone_ifneeded(chess_checkers_allowed_moves);
+	chess_checkers_allowed_moves = "";
+	chess_checkers_allowed_moves_captures = 0;
+	float t = (chess_turn ? COLOR_TEAM2 : COLOR_TEAM1);
+	entity e;
+	for (e = chess_pieces; e; e = e.enemy) {
+		if (e.team != t) continue;
+		chess_checkers_allowed_moves_calculate_recursive(e, 0, chess_cell_name(e.pos1_x, e.pos1_y));
+	}
+}
+
+float(entity piece, float x, float y) chess_checkers_move_is_legal {
+	string s = chess_checkers_move_chain;
+	if (s == "") s = chess_cell_name(piece.pos1_x, piece.pos1_y);
+	s = strcat(s, chess_cell_name(x, y));
+	if (strstrofs(chess_checkers_allowed_moves, strcat(" ", s), 0) >= 0)
+		return TRUE;
+
+	return FALSE;
+}
+
 float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal {
+	if (chess_type == CHESS_CHECKERS_ENGLAND || chess_type == CHESS_CHECKERS_RUSSIAN)
+		return chess_checkers_move_is_legal(piece, x, y);
+
 	entity e;
 	entity capture;
 	float x2;
@@ -403,6 +551,18 @@ entity(float t, float cellx, float celly, float wb) chess_piece_spawn {
 	return e;
 }
 
+void(void) chess_checkers_board_init {
+	float x, y;
+	for (x = 0; x < 8; x++)
+		for (y = 0; y < 8; y++) {
+			if (math_mod(x + y, 2)) continue;
+			if (y < 3)
+				chess_piece_spawn(CHESS_PAWN, x, y, 0);
+			else if (y > 4)
+				chess_piece_spawn(CHESS_PAWN, x, y, 1);
+		}
+}
+
 void(void) chess_board_init {
 	float i;
 	float queen = 3;
@@ -533,7 +693,12 @@ void(void) chess_init_delayed {
 
 	chess_timer_white = chess_timer_black = cvar("g_chess_timecontrol_start") * 60;
 	CVAR_CACHE(g_chess_timecontrol_addition);
-	chess_board_init();
+	if (chess_type == CHESS_CLASSIC || chess_type == CHESS_960)
+		chess_board_init();
+	else {
+		chess_checkers_board_init();
+		chess_checkers_allowed_moves_calculate();
+	}
 	if not(chess_info) {
 		chess_info = spawn();
 		net_link_entity(chess_info, FALSE, 0, chess_info_send);
@@ -549,7 +714,9 @@ void(entity piece) chess_piece_pick {
 		remove(chess_allowed_moves);
 		chess_allowed_moves = e;
 	}
-	chess_piece_picked = piece;
+	if (chess_checkers_move_chain == "") {
+		chess_piece_picked = piece;
+	}
 	if not(chess_piece_picked)
 		return;
 
@@ -590,7 +757,16 @@ void(entity e) chess_piece_point {
 void(void) chess_turn_switch {
 	chess_turn = !chess_turn;
 	chess_info.SendFlags |= 4;
-	if (chess_position_is_stale((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) {
+	if (chess_type == CHESS_CHECKERS_ENGLAND || chess_type == CHESS_CHECKERS_RUSSIAN) {
+		chess_checkers_allowed_moves_calculate();
+		str_unzone_ifneeded(chess_checkers_move_chain);
+		chess_checkers_move_chain = "";
+		if (chess_checkers_allowed_moves == "") {
+			bprint("\{3}* Win\n");
+			chess_win = (chess_turn ? COLOR_TEAM1 : COLOR_TEAM2);
+			score_player_team_add_score(self, 10);
+		}
+	} else if (chess_position_is_stale((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) {
 		if (chess_position_is_check((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) { //checkmate, win
 			bprint("\{3}* Checkmate\n");
 			chess_win = (chess_turn ? COLOR_TEAM1 : COLOR_TEAM2);
@@ -643,15 +819,70 @@ void(entity e, float x, float y) chess_history_add {
 	chess_history = strzone(s);
 }
 
+
+void(entity piece, float x, float y) chess_checkers_move_perform {
+	float cx, cy;
+	float dx = ((piece.pos1_x < x) ? 1 : -1), dy = ((piece.pos1_y < y) ? 1 : -1);
+	if (chess_checkers_move_chain == "" && !chess_turn)
+		chess_move_number++;
+
+	string s = chess_checkers_move_chain;
+	if (s == "")
+		s = chess_cell_name(piece.pos1_x, piece.pos1_y);
+
+	s = strcat(s, chess_cell_name(x, y));
+	str_unzone_ifneeded(chess_checkers_move_chain);
+	chess_checkers_move_chain = strzone(s);
+	entity e;
+	for (cx = piece.pos1_x + dx, cy = piece.pos1_y + dy; cx != x && cy != y; cx += dx, cy += dy) {
+		if ((e = chess_piece_find(cx, cy))) {
+			e.dmg = 1;
+			break;
+		}
+	}
+	chess_piece_move(piece, x, y, TRUE);
+	if (y == 0 || y == 7) {
+		float wb = (piece.team == COLOR_TEAM2);
+		stdproc_remove_entity(piece);
+		piece = chess_piece_spawn(CHESS_QUEEN, x, y, wb);
+		sound(piece, CHAN_PROJECTILE, "domination/claim.wav", VOL_BASE, ATTN_NONE);
+		chess_piece_picked = NULL; //force unselect picked piece
+	} else {
+		chess_piece_picked = piece; //force select current piece
+		sound(piece, CHAN_PROJECTILE, "misc/menu1.wav", VOL_BASE, ATTN_NONE);
+	}
+	chess_piece_pick(piece); //draw and list allowed moves
+	if (!chess_allowed_moves || !chess_allowed_moves.enemy) {
+		str_unzone_ifneeded(chess_checkers_move_chain);
+		chess_checkers_move_chain = "";
+		chess_piece_pick(NULL);
+		print("move chain ended, switching\n");
+		while (chess_pieces.dmg) stdproc_remove_entity(chess_pieces);
+		for (e = chess_pieces; e && e.enemy; e = e.enemy) {
+			while (e.enemy.dmg)
+				stdproc_remove_entity(e.enemy);
+		}
+		chess_turn_switch();
+	}
+	return;
+}
+
 void(entity piece, float x, float y) chess_move_perform {
 	entity e;
 	chess_last_move_time = time;
 	float iscastling = 0;
 	chess_piece_point(NULL);
 	chess_piece_pick(NULL);
+	chess_info.SendFlags |= 8;
+	if not(chess_move_number) {
+		cvar_set("timelimit", "0");
+	}
+	if (chess_type == CHESS_CHECKERS_ENGLAND || chess_type == CHESS_CHECKERS_RUSSIAN) {
+		chess_checkers_move_perform(piece, x, y);
+		return;
+	}
 	e = chess_piece_find(x, y);
 	if not(chess_turn) {
-		cvar_set("timelimit", "0");
 		chess_move_number++;
 	}
 	if (piece.cnt == CHESS_KING) {
@@ -734,7 +965,6 @@ void(entity piece, float x, float y) chess_move_perform {
 	if not(chess_promotion) {
 		chess_turn_switch();
 	}
-	chess_info.SendFlags |= 8;
 	float n = strlen(chess_history);
 	if (n >= 500) { //10 symbols per move, 50 moves
 		bprint("\{3}* Draw by 50 move rule\n");
@@ -1100,4 +1330,6 @@ void(void) chess_init {
 	string s = cvar_string("g_chess_type");
 	if (s == "960" || s == "chess960" || s == "fischer")
 		chess_type = CHESS_960;
+	else if (s == "checkers")
+		chess_type = CHESS_CHECKERS_ENGLAND;
 }
