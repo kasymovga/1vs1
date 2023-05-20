@@ -1159,11 +1159,55 @@ float(float t) chess_position_evaluate {
 	return score;
 }
 
+entity chess_checkers_ai_move_piece;
+string chess_checkers_ai_move_move;
+void(entity chess_bot) chess_checkers_ai_move {
+	string letters = "abcdefgh";
+	float y, x;
+	string s;
+	if (!chess_checkers_ai_move_piece) {
+		if (chess_last_move_time + 1 > time) return;
+		s = chess_checkers_allowed_moves;
+		string s1;
+		random_selection_init();
+		while ((s1 = str_car(s)) != "") {
+			s = str_cdr(s);
+			random_selection_add(NULL, 0, s1, strlen(s1), 0);
+		}
+		str_unzone_ifneeded(chess_checkers_ai_move_move);
+		chess_checkers_ai_move_move = random_selection_chosen_string;
+		x = strstrofs(letters, substring(chess_checkers_ai_move_move, 0, 1), 0);
+		y = stof(substring(chess_checkers_ai_move_move, 1, 1)) - 1;
+		chess_checkers_ai_move_piece = chess_piece_find(x, y);
+		chess_checkers_ai_move_move = str_zone_ifneeded(substring(chess_checkers_ai_move_move, 2, -1));
+	} else
+		if (chess_last_move_time + 0.25 > time) return;
+
+	x = strstrofs(letters, substring(chess_checkers_ai_move_move, 0, 1), 0);
+	y = stof(substring(chess_checkers_ai_move_move, 1, 1)) - 1;
+	s = substring(chess_checkers_ai_move_move, 2, -1);
+	str_unzone_ifneeded(chess_checkers_ai_move_move);
+	chess_checkers_ai_move_move = str_zone_ifneeded(s);
+	entity oldself = self;
+	self = chess_bot;
+	chess_move_perform(chess_checkers_ai_move_piece, x, y);
+	self = oldself;
+	if (chess_checkers_ai_move_move == "") {
+		chess_checkers_ai_move_piece = NULL;
+	} else {
+		chess_last_move_time -= 0.75;
+	}
+}
+
 float chess_ai_bestscore;
 entity chess_ai_bestpiece;
 vector chess_ai_bestmove;
 entity chess_ai_current_piece;
 void(entity chess_bot) chess_ai_move {
+	if (chess_type == CHESS_CHECKERS_ENGLAND || chess_type == CHESS_CHECKERS_RUSSIAN) {
+		chess_checkers_ai_move(chess_bot);
+		return;
+	}
 	if (chess_promotion) {
 		chess_promotion_select(0);
 	}
