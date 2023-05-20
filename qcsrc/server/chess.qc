@@ -195,11 +195,11 @@ float(float x, float y, float ft) chess_cell_is_under_attack {
 }
 
 void(entity piece, float captures, string moves) chess_checkers_allowed_moves_calculate_add {
-	if (captures < chess_checkers_allowed_moves_captures) return;
-	if (captures > chess_checkers_allowed_moves_captures) {
+	if (!captures && chess_checkers_allowed_moves_captures) return;
+	if (captures && !chess_checkers_allowed_moves_captures) {
 		str_unzone_ifneeded(chess_checkers_allowed_moves);
 		chess_checkers_allowed_moves = "";
-		chess_checkers_allowed_moves_captures = captures;
+		chess_checkers_allowed_moves_captures = max(captures, chess_checkers_allowed_moves_captures);
 	}
 	string s = strcat(chess_checkers_allowed_moves, " ", moves);
 	str_unzone_ifneeded(chess_checkers_allowed_moves);
