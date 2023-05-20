@@ -863,7 +863,7 @@ void(entity piece, float x, float y) chess_checkers_move_perform {
 		chess_history_add(piece, x, y);
 
 	chess_piece_move(piece, x, y, TRUE);
-	if (y == 0 || y == 7) {
+	if (piece.cnt == CHESS_PAWN && (y == 0 || y == 7)) {
 		float wb = (piece.team == COLOR_TEAM2);
 		stdproc_remove_entity(piece);
 		piece = chess_piece_spawn(CHESS_QUEEN, x, y, wb);
