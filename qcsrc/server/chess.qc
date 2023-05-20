@@ -881,8 +881,14 @@ void(entity piece, float x, float y) chess_checkers_move_perform {
 		print("move chain ended, switching\n");
 		while (chess_pieces.dmg) stdproc_remove_entity(chess_pieces);
 		for (e = chess_pieces; e && e.enemy; e = e.enemy) {
-			while (e.enemy.dmg)
+			while (e.enemy.dmg) {
+				if (e.enemy.cnt == CHESS_PAWN)
+					score_player_team_add_score(self, 1);
+				else
+					score_player_team_add_score(self, 3);
+
 				stdproc_remove_entity(e.enemy);
+			}
 		}
 		chess_turn_switch();
 		chess_history_check();
