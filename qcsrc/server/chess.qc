@@ -819,6 +819,23 @@ void(entity e, float x, float y) chess_history_add {
 	chess_history = strzone(s);
 }
 
+void(void) chess_history_check {
+	float n = strlen(chess_history);
+	if (n >= 500) { //10 symbols per move, 50 moves
+		bprint("\{3}* Draw by 50 move rule\n");
+		chess_win = -1;
+	} else if (n >= 60) { //Threefold repetition rule, at least 6 move per 10 bytes
+		string s;
+		float i, j = n / 3;
+		for (i = 20; i <= j; i += 10) {
+			s = substring(chess_history, 0, i);
+			if (s == substring(chess_history, i, i) && s == substring(chess_history, i * 2, i)) {
+				bprint("\{3}* Draw by threefold repetition rule\n");
+				chess_win = -1;
+			}
+		}
+	}
+}
 
 void(entity piece, float x, float y) chess_checkers_move_perform {
 	float cx, cy;
@@ -833,13 +850,18 @@ void(entity piece, float x, float y) chess_checkers_move_perform {
 	s = strcat(s, chess_cell_name(x, y));
 	str_unzone_ifneeded(chess_checkers_move_chain);
 	chess_checkers_move_chain = strzone(s);
-	entity e;
+	entity e = NULL;
 	for (cx = piece.pos1_x + dx, cy = piece.pos1_y + dy; cx != x && cy != y; cx += dx, cy += dy) {
 		if ((e = chess_piece_find(cx, cy))) {
 			e.dmg = 1;
 			break;
 		}
 	}
+	if (e || piece.cnt == CHESS_PAWN)
+		chess_history_clean();
+	else
+		chess_history_add(piece, x, y);
+
 	chess_piece_move(piece, x, y, TRUE);
 	if (y == 0 || y == 7) {
 		float wb = (piece.team == COLOR_TEAM2);
@@ -863,8 +885,8 @@ void(entity piece, float x, float y) chess_checkers_move_perform {
 				stdproc_remove_entity(e.enemy);
 		}
 		chess_turn_switch();
+		chess_history_check();
 	}
-	return;
 }
 
 void(entity piece, float x, float y) chess_move_perform {
@@ -965,21 +987,7 @@ void(entity piece, float x, float y) chess_move_perform {
 	if not(chess_promotion) {
 		chess_turn_switch();
 	}
-	float n = strlen(chess_history);
-	if (n >= 500) { //10 symbols per move, 50 moves
-		bprint("\{3}* Draw by 50 move rule\n");
-		chess_win = -1;
-	} else if (n >= 60) { //Threefold repetition rule, at least 6 move per 10 bytes
-		string s;
-		float i, j = n / 3;
-		for (i = 20; i <= j; i += 10) {
-			s = substring(chess_history, 0, i);
-			if (s == substring(chess_history, i, i) && s == substring(chess_history, i * 2, i)) {
-				bprint("\{3}* Draw by threefold repetition rule\n");
-				chess_win = -1;
-			}
-		}
-	}
+	chess_history_check();
 }
 
 float chess_interacted;
