@@ -878,7 +878,7 @@ void(entity piece, float x, float y) chess_checkers_move_perform {
 		str_unzone_ifneeded(chess_checkers_move_chain);
 		chess_checkers_move_chain = "";
 		chess_piece_pick(NULL);
-		print("move chain ended, switching\n");
+		//print("move chain ended, switching\n");
 		while (chess_pieces.dmg) stdproc_remove_entity(chess_pieces);
 		for (e = chess_pieces; e && e.enemy; e = e.enemy) {
 			while (e.enemy.dmg) {
