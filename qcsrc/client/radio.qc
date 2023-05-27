@@ -43,12 +43,10 @@ void(void) radio_think {
 void(void) radio_read {
 	float preload = net_read_byte();
 	string url = net_read_string();
-	if (autocvar_bgmvolume < 0.1)
-		cvar_clientsettemp("bgmvolume", "0.1");
-
 	if (preload) {
-		if (autocvar__radio)
+		if (CVAR(_radio))
 			localcmd("curl --pak ", url, "\n");
+
 		return;
 	}
 	string fname = net_read_string();
@@ -59,13 +57,16 @@ void(void) radio_read {
 	if (!loop)
 		start = net_read_coord();
 
-	if (!autocvar__radio) {
+	if (!CVAR(_radio)) {
 		if (!force)
 			return;
 
-		autocvar__radio = 1;
+		CVAR(_radio) = 1;
 		cvar_set("_radio", "1");
 	}
+	if (CVAR(_radio) && CVAR(bgmvolume) < 0.1)
+		cvar_clientsettemp("bgmvolume", "0.1");
+
 	localcmd("curl --pak ", url, "\n");
 	entity e;
 	for(e = world; (e = find(e, classname, "radio"));)
