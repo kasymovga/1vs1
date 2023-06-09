@@ -726,6 +726,7 @@ void(void) world_restore {
 		dlc_reload();
 
 	game_type_switch(game_type_from_name("single"));
+	game_type_readcvars();
 }
 
 //DP_SV_SHUTDOWN
