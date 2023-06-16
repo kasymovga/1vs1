@@ -15,7 +15,7 @@ void(float id, float status, string data) rank_uri_handler {
 	string s = str_cdr(data);
 	string type = str_car(s);
 	if (type != rank_id) {
-		print("rank_uri_handler: wrong rank type from external rank database\n");
+		print("rank_uri_handler: wrong rank type '", type, "' (expected '", rank_id, "') from external rank database\n");
 		return;
 	}
 	float _rank = stof(str_cdr(s));
