@@ -1,5 +1,6 @@
 float g_teleport_projectiles;
 float g_teleport_keep_velocity;
+float g_teleport_time;
 float g_telefrags;
 
 void(entity e, vector v, float t) teleport_origin_set {
@@ -72,7 +73,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	// assuming to allows PL_MIN to PL_MAX box and some more
 	from = player.origin;
 	setorigin (player, to);
-	teleport_origin_set(player, to, 0.1);
+	teleport_origin_set(player, to, g_teleport_time);
 	player.angles = to_angles;
 	client_view_angles_set(player, to_angles);
 	player.velocity = to_velocity;
@@ -212,6 +213,7 @@ void(void) teleport_findtarget {
 void(void) teleport_init {
 	CVAR_CACHE(g_teleport_keep_velocity);
 	CVAR_CACHE(g_teleport_projectiles);
+	CVAR_CACHE(g_teleport_time);
 	CVAR_CACHE(g_telefrags);
 }
 

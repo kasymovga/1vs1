@@ -182,6 +182,7 @@ set _defrag_g_weaponreplace_shotgun shotgun
 set _defrag_g_spawnreplace_ammo_bullets item_bullets
 set _defrag_g_spawnreplace_ammo_shells item_shells
 set _defrag_g_pickup_use_wait 1
+set _defrag_g_teleport_time 0.16
 //set _defrag_g_spawn_znudge -8
 set defragcpm_profile ""
 set defragcpm_inherit _defrag
