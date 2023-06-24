@@ -176,8 +176,7 @@ void(void) rune_touch {
 	self.solid = SOLID_NOT;
 	self.movetype = MOVETYPE_NONE;
 	setorigin(self, self.origin);
-	bprint("^3", other.netname, "^7 has picked up ", rune_name(self.runes & (RUNE_LAST*2-1)), "^7");
-	bprint("\n");
+	bprint("^3", other.netname, "^7 has picked up ", rune_name(self.runes & (RUNE_LAST*2-1)), "^7\n");
 	sound (other, CHAN_TRIGGER, "misc/mediumhealth.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	entity e;
 	if (self.runes & RUNE_HACKER)
@@ -219,8 +218,7 @@ void(entity pl, entity e) rune_drop {
 	setorigin(e, pl.origin + '0 0 10');
 	e.velocity = '0 0 200' + '0 100 0'*random_2() + '100 0 0'*random_2();
 	e.enemy.alpha = 0;
-	bprint("^3", pl.netname, "^7 has lost ", rune_name(e.runes & (RUNE_LAST*2-1)), "^7");
-	bprint("\n");
+	bprint("^3", pl.netname, "^7 has lost ", rune_name(e.runes & (RUNE_LAST*2-1)), "^7\n");
 }
 
 // player died, drop runes
