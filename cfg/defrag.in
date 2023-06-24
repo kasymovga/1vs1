@@ -196,6 +196,7 @@ set defragcpm_g_airstopaccelerate 2.5
 set defragcpm_g_airstrafeaccelerate 70
 set defragcpm_g_maxairstrafespeed 30
 set defragcpm_g_aircontrol 150
+set defragcpm_g_nofriction_cpm_hacks 1
 set defragvq3_profile ""
 set defragvq3_inherit _defrag
 set defragvq3_g_accelerate 10

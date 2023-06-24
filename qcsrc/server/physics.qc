@@ -357,6 +357,7 @@ void(void) physics_player_pre { //called by engine
 	if not(physics_flags & FL_ONGROUND_OR_SLICK)
 		physics_skimming = max(0, g_skimming_time + self.lastground - time);
 
+	physics_nofriction = self.physics_nofriction_time;
 	physics_cpmdoublejump_time = self.cpmdoublejump;
 	if (self.client_flags & CLIENT_FLAG_NOPOGOSTICK) {
 		sv_pogostick_save = sv_pogostick;
@@ -373,6 +374,7 @@ void(void) physics_player_pre { //called by engine
 		self.lastground = time;
 
 	self.teleport_time = time + physics_teleport_time;
+	self.physics_nofriction_time = physics_nofriction;
 	self.crouch = physics_crouch;
 	if (physics_flags & FL_CLIMB)
 	if not(physics_lastflags & FL_CLIMB)
@@ -490,6 +492,15 @@ void(entity e, string args, float set) physics_ability_init {
 	}
 }
 
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) physics_player_damage_handle_next;
+float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) physics_player_damage_handle {
+	if (!self.physics_nofriction_time) {
+		print("nofriction damage added\n");
+		self.physics_nofriction_time = bound(0.05, _damage * 0.002, 0.2);
+	}
+	return physics_player_damage_handle_next(inflictor, attacker, _damage, deathtype, hitloc, force);
+}
+
 float physics_initiated;
 void(void) physics_init {
 #define PHYSICS_CVAR_CACHE(x) x = physics_cvar(#x)
@@ -582,6 +593,13 @@ void(void) physics_init {
 		}
 	}
 	CVAR_CACHE(g_sideview_up);
+	if not(g_nofriction_cpm_hacks) {
+		CVAR_CACHE(g_nofriction_cpm_hacks);
+		if (g_nofriction_cpm_hacks) {
+			physics_player_damage_handle_next = plugin_chain_player_damage_handle;
+			plugin_chain_player_damage_handle = physics_player_damage_handle;
+		}
+	}
 	CVAR_CACHE_STR(sv_overbounce_sound);
 	if (sv_overbounce_sound != "")
 		precache_sound(sv_overbounce_sound);
@@ -656,6 +674,9 @@ float(entity to, float sf) physics_send {
 		if (g_physics_fixed)
 			sf2 |= 8;
 
+		if (self.physics_nofriction_time)
+			sf2 |= 16;
+
 		if (sf2) sf |= 16384;
 	}
 	else
@@ -723,6 +744,7 @@ float(entity to, float sf) physics_send {
 				+ (cvar("collision_surfaceflagsmerge") ? 2 : 0)
 				+ (g_climb ? 4 : 0)
 				+ (g_walk_align_to_ground ? 8 : 0)
+				+ (g_nofriction_cpm_hacks ? 16 : 0)
 				;
 		net_write_byte(MSG_ENTITY, switches);
 		if (g_walljump) {
@@ -813,6 +835,9 @@ float(entity to, float sf) physics_send {
 		if (sf2 & 8) {
 			net_write_coord(MSG_ENTITY, self.frametime_accumulator);
 		}
+		if (sf2 & 16)
+			net_write_coord(MSG_ENTITY, self.physics_nofriction_time);
+
 		if (sf & 32768) {
 			net_write_coord(MSG_ENTITY, num_for_edict(self.groundentity));
 			net_write_coord(MSG_ENTITY, self.groundentity.origin_x);
@@ -838,8 +863,13 @@ void(entity pl, float tptime) physics_mark_as_teleported {
 	if (pl == physics_current_player)
 		physics_frame_begin_origin = pl.origin;
 
-	if (tptime)
-		pl.teleport_time = time + tptime;
+	if (tptime) {
+		if (g_nofriction_cpm_hacks)
+			pl.physics_nofriction_time = tptime;
+		else
+			pl.teleport_time = time + tptime;
+	}
+
 }
 
 void(entity pl) physics_sync {

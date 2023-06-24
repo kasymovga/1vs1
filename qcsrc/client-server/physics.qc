@@ -147,6 +147,8 @@ void(void) physics_update_status {
 			if (physics_flags & FL_ONGROUND_OR_SLICK)
 				physics_cpmdoublejump_time = 0;
 		}
+		if (physics_nofriction)
+			physics_nofriction = max(0, physics_nofriction - frametime);
 	}
 }
 
@@ -796,6 +798,10 @@ void(void) physics_player_frame {
 		makevectors(physics_v_angle_y * '0 1 0');
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
 		if not((physics_lastflags & FL_ONGROUND)) {
+			physics_skimming = g_skimming_time;
+			if (g_nofriction_cpm_hacks && physics_nofriction && physics_skimming) {
+				physics_nofriction = physics_skimming;
+			}
 			physics_landing_hook();
 		}
 		v = physics_velocity;
@@ -803,9 +809,9 @@ void(void) physics_player_frame {
 		f = vlen(v);
 		if (f > 0) {
 			float _friction;
-			if (physics_flags & FL_SLICK)
+			if ((physics_flags & FL_SLICK) || physics_nofriction > 0) {
 				_friction = 0;
-			else
+			} else
 				_friction = sv_friction;
 
 			if (f < sv_stopspeed) {

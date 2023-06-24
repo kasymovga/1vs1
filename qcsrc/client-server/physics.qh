@@ -60,6 +60,7 @@ float g_doublejump_speed;
 float g_velocity_rounding;
 float g_overbounce;
 float g_walk_align_to_ground;
+float g_nofriction_cpm_hacks;
 
 float physics_deadflag;
 float physics_cantjump;
@@ -82,6 +83,7 @@ float physics_movetype;
 float physics_gravity_factor;
 float physics_teleport_time;
 float physics_skimming;
+float physics_nofriction;
 float physics_have_doubjejump;
 float physics_cpmdoublejump_time;
 float physics_frametime_accumulator;
@@ -108,6 +110,7 @@ var float(float maxspd_mod) physics_player_plug;
 .vector stand_view_ofs;
 .float lastwj;
 .float last_dodging_time;
+.float physics_nofriction_time;
 void(void) physics_update_status;
 void(void) physics_move;
 

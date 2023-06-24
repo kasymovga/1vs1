@@ -5,6 +5,7 @@ float physics_start_teleport_time;
 float physics_start_crouch;
 float physics_start_flags;
 float physics_start_frametime_accumulator;
+float physics_start_nofriction_time;
 float physics_ground_time;
 float physics_ground_curtime;
 float physics_ground_oldtime;
@@ -194,6 +195,7 @@ vector(void) physics_view_origin {
 			self.lastkeys = getstatf(STAT_PRESSED_KEYS);
 		}
 		physics_frametime_accumulator = physics_start_frametime_accumulator;
+		physics_nofriction = physics_start_nofriction_time;
 		for (i = servercommandframe + 1; i <= n; i++) {
 			if not(RetrieveMovementFrame(i))
 				break;
@@ -372,6 +374,7 @@ void(float isnew) physics_read {
 
 		g_climb = switches & 4;
 		g_walk_align_to_ground = switches & 8;
+		g_nofriction_cpm_hacks = switches & 16;
 		if (g_sideview)
 			physics_plug_adjust_view = physics_side_adjust_view;
 		else if (g_topview)
@@ -497,6 +500,11 @@ void(float isnew) physics_read {
 		if (f2 & 8) {
 			physics_start_frametime_accumulator = net_read_coord();
 		}
+		if (f2 & 16)
+			physics_start_nofriction_time = net_read_coord();
+		else
+			physics_start_nofriction_time = 0;
+
 		if (f & 32768) {
 			physics_ground_oldorigin = physics_ground_origin;
 			physics_ground_curtime = physics_ground_oldtime = physics_ground_time;
