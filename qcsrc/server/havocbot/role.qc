@@ -112,7 +112,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 		return;
 
 	// don't chase players if we're under water
-	if (self.waterlevel>WATERLEVEL_WETFEET)
+	if (self.waterlevel>WATER_LEVEL_WETFEET)
 		return;
 
 	FOR_EACH_PLAYER(head) {

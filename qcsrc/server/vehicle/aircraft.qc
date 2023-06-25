@@ -191,7 +191,7 @@ void(void) vehicle_aircraft_think {
 		physics_update_status();
 		self.velocity = physics_velocity;
 		self.flags = physics_flags;
-		movelib_beak_simple(g_vehicle_aircraft_speed_stop * frametime);
+		move_beak_simple(g_vehicle_aircraft_speed_stop * frametime);
 		physics_velocity = self.velocity;
 		physics_move();
 		self.velocity = physics_velocity;

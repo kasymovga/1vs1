@@ -1,0 +1,22 @@
+enum {
+	//Engine constants
+	MOVETYPE_NONE = 0,
+	MOVETYPE_ANGLENOCLIP = 1,
+	MOVETYPE_ANGLECLIP = 2,
+	MOVETYPE_WALK = 3,
+	MOVETYPE_STEP = 4,
+	MOVETYPE_FLY = 5,
+	MOVETYPE_TOSS = 6,
+	MOVETYPE_PUSH = 7,
+	MOVETYPE_NOCLIP = 8,
+	MOVETYPE_FLYMISSILE = 9,
+	MOVETYPE_BOUNCE = 10,
+	MOVETYPE_BOUNCEMISSILE = 11, // Like bounce but doesn't lose speed on bouncing
+	MOVETYPE_FOLLOW = 12, // 'Attaches' the entity to its aim_ent
+	MOVETYPE_PHYSICS = 32,
+	MOVETYPE_QCWALK = 128,
+};
+
+void(vector newdir,float velo,float blendrate) move_simple;
+void(float force) move_beak_simple;
+void(float spring_length,float spring_up,float blendrate) move_groundalign4point;

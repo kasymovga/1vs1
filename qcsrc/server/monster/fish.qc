@@ -6,7 +6,7 @@ void fish_idle() {
 	if (monster_look_for_player(1000, 500, 0, 1, 1)) {
 		return;
 	}
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 }
 
 void fish_hunt() {
@@ -28,7 +28,7 @@ void fish_hunt() {
 			damage(trace_ent, self, self, self.dmg_edge * frametime, WEAPON_MELEE, trace_endpos, v_forward);
 		}
 		anim_set(self, '1 18 18', TRUE, TRUE, FALSE);
-		movelib_beak_simple(50 * frametime);
+		move_beak_simple(50 * frametime);
 	} else {
 		anim_set(self, '40 18 18', TRUE, TRUE, FALSE);
 		v = monster_move_swim(450, 5);

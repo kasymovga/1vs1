@@ -40,7 +40,7 @@ void boss3_hunt() {
 		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 		anim_set(self, '16 1 1', TRUE, TRUE, FALSE);
 	} else {
-		movelib_beak_simple(2000 * frametime);
+		move_beak_simple(2000 * frametime);
 		anim_set(self, '8 1 1', TRUE, TRUE, FALSE);
 	}
 }
@@ -52,7 +52,7 @@ void boss3_idle() {
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
 		return;
 	}
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 	anim_set(self, '23 1 1', TRUE, TRUE, FALSE);
 }
 

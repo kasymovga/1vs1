@@ -85,21 +85,21 @@ void(void) physics_update_status {
 	// set watertype/waterlevel
 	vector origin1 = self.origin;
 	origin1_z += self.mins_z + 1;
-	physics_waterlevel = WATERLEVEL_NONE;
+	physics_waterlevel = WATER_LEVEL_NONE;
 	physics_flags &= ~FL_ONGROUND_OR_SLICK_OR_CLIMB;
 	float thepoint = pointcontents(origin1);
 	physics_watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
 	if (physics_watertype) {
 		physics_watertype = thepoint;
-		physics_waterlevel = WATERLEVEL_WETFEET;
+		physics_waterlevel = WATER_LEVEL_WETFEET;
 		origin1_z = self.origin_z + (self.mins_z + self.maxs_z) * 0.5;
 		thepoint = pointcontents(origin1);
 		if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
-			physics_waterlevel = WATERLEVEL_SWIMMING;
+			physics_waterlevel = WATER_LEVEL_SWIMMING;
 			origin1_z = self.origin_z + self.view_ofs_z;
 			thepoint = pointcontents(origin1);
 			if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
-				physics_waterlevel = WATERLEVEL_SUBMERGED;
+				physics_waterlevel = WATER_LEVEL_SUBMERGED;
 			}
 		}
 	}
@@ -114,7 +114,7 @@ void(void) physics_update_status {
 	if (trace_dpstartcontents & DPCONTENTS_NODROP)
 		physics_in_nodrop();
 	#endif
-	if (physics_waterlevel < WATERLEVEL_SWIMMING) {
+	if (physics_waterlevel < WATER_LEVEL_SWIMMING) {
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
 			physics_ground_normal = trace_plane_normal;
 			physics_flags &= ~FL_DOUBLEJUMP;
@@ -511,7 +511,7 @@ void(void) physics_dodging {
 
 	if (dodge_detected == 1) {
 		vector dodge_velocity;
-		if (physics_waterlevel >= WATERLEVEL_SWIMMING)
+		if (physics_waterlevel >= WATER_LEVEL_SWIMMING)
 			return;
 
 		makevectors(self.angles);
@@ -576,7 +576,7 @@ vector(void) physics_player_touch_wall {
 
 
 void(void) physics_player_jump {
-	if (physics_waterlevel >= WATERLEVEL_SWIMMING)
+	if (physics_waterlevel >= WATER_LEVEL_SWIMMING)
 		return;
 
 	if (physics_cantjump)
@@ -765,7 +765,7 @@ void(void) physics_player_frame {
 		if (physics_deadflag != DEAD_FREEZE) {
 			if (physics_flags & FL_ONGROUND)
 				physics_velocity = '0 0 0';
-			else if (physics_waterlevel >= WATERLEVEL_SWIMMING)
+			else if (physics_waterlevel >= WATER_LEVEL_SWIMMING)
 				physics_velocity = physics_velocity * (1 - frametime * sv_friction);
 
 			goto end;
@@ -777,7 +777,7 @@ void(void) physics_player_frame {
 			physics_flags |= FL_JUMPRELEASED;
 			physics_dodging();
 		}
-		if (physics_waterlevel == WATERLEVEL_SWIMMING)
+		if (physics_waterlevel == WATER_LEVEL_SWIMMING)
 		if not(physics_ladder)
 		if (physics_deadflag == DEAD_NO)
 			physics_check_water_jump();
@@ -789,7 +789,7 @@ void(void) physics_player_frame {
 	if (physics_flags & FL_WATERJUMP) {
 		physics_velocity_x = self.movedir_x;
 		physics_velocity_y = self.movedir_y;
-		if (physics_teleport_time < 0 || physics_waterlevel == WATERLEVEL_NONE || physics_velocity_z < 0) {
+		if (physics_teleport_time < 0 || physics_waterlevel == WATER_LEVEL_NONE || physics_velocity_z < 0) {
 			physics_flags &= ~FL_WATERJUMP;
 			physics_teleport_time = 0;
 		}
@@ -858,7 +858,7 @@ void(void) physics_player_frame {
 			wishspeed = sv_maxspeed*maxspd_mod;
 		if (physics_teleport_time <= 0)
 			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
-	} else if (physics_waterlevel >= WATERLEVEL_SWIMMING) {
+	} else if (physics_waterlevel >= WATER_LEVEL_SWIMMING) {
 		// swimming
 		physics_flags &= ~FL_ONGROUND;
 		if (g_sideview)
@@ -873,7 +873,7 @@ void(void) physics_player_frame {
 
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + '0 0 1' * physics_movement_z;
 		if (physics_deadflag == DEAD_FREEZE) {
-			if (physics_waterlevel >= WATERLEVEL_SWIMMING)
+			if (physics_waterlevel >= WATER_LEVEL_SWIMMING)
 				physics_accelerate('0 0 1', 0, sv_gravity * 0.25, sv_accelerate, 1, 0);
 			else
 				physics_accelerate('0 0 1', sv_gravity * 0.25, sv_gravity * 0.25, sv_accelerate, 1, 0);
@@ -912,13 +912,13 @@ void(void) physics_player_frame {
 			physics_watertype = physics_ladder_watertype;
 			f = physics_ladder_top;
 			if ((self.origin_z + self.view_ofs_z) < f)
-				physics_waterlevel = WATERLEVEL_SUBMERGED;
+				physics_waterlevel = WATER_LEVEL_SUBMERGED;
 			else if ((self.origin_z + (self.mins_z + self.maxs_z) * 0.5) < f)
-				physics_waterlevel = WATERLEVEL_SWIMMING;
+				physics_waterlevel = WATER_LEVEL_SWIMMING;
 			else if ((self.origin_z + self.mins_z + 1) < f)
-				physics_waterlevel = WATERLEVEL_WETFEET;
+				physics_waterlevel = WATER_LEVEL_WETFEET;
 			else {
-				physics_waterlevel = WATERLEVEL_NONE;
+				physics_waterlevel = WATER_LEVEL_NONE;
 				physics_watertype = CONTENT_EMPTY;
 			}
 		}

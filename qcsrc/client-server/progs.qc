@@ -3,7 +3,7 @@
 #include "db.qc"
 #include "game_type.qc"
 #include "math.qc"
-#include "movelib.qc"
+#include "move.qc"
 #include "nadget.qc"
 #include "net.qc"
 #include "physics.qc"

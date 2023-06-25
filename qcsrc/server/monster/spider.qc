@@ -73,7 +73,7 @@ void(void) monster_spider_idle {
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
 	}
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 	self.frame = 5;
 }
 

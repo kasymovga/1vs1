@@ -79,7 +79,7 @@ void boss4_hunt() {
 	}
 	if (time > self.bulletcounter) {
 		if (stay) {
-			movelib_beak_simple(2000 * frametime);
+			move_beak_simple(2000 * frametime);
 			monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_IDLE, MONSTER_BOSS4_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 		} else {
 			v = monster_move_walk(750, 5, 0);
@@ -88,7 +88,7 @@ void boss4_hunt() {
 			monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_WALK, MONSTER_BOSS4_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 		}
 	} else {
-		movelib_beak_simple(2000 * frametime);
+		move_beak_simple(2000 * frametime);
 		monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_IDLE, MONSTER_BOSS4_ANIM_TORSO_ATTACK, '11 1 1', TRUE, FALSE);
 	}
 }
@@ -101,7 +101,7 @@ void boss4_idle() {
 	if (monster_look_for_player(2000, 500, 0, 1, 3))
 		return;
 
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 	monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_IDLE, MONSTER_BOSS4_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 

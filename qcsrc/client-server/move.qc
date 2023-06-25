@@ -1,8 +1,8 @@
-void(vector newdir,float velo,float blendrate) movelib_move_simple {
+void(vector newdir,float velo,float blendrate) move_simple {
 	self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
 }
 
-void(float force) movelib_beak_simple {
+void(float force) move_beak_simple {
 	float mspeed;
 	vector mdir;
 	float vz;
@@ -13,7 +13,7 @@ void(float force) movelib_beak_simple {
 	self.velocity_z = vz;
 }
 
-void(float spring_length,float spring_up,float blendrate) movelib_groundalign4point {
+void(float spring_length,float spring_up,float blendrate) move_groundalign4point {
 	vector v, vx, vy, vz, v1, mn, vcross1, vcross2;
 	float f;
 	v = self.origin;

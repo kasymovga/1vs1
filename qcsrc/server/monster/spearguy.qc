@@ -23,7 +23,7 @@ void spearguy_hunt() {
 			self.lip = FALSE;
 		}
 	} else {
-		movelib_beak_simple(100 * frametime);
+		move_beak_simple(100 * frametime);
 		monster_common_composite_anim(MONSTER_SPEARGUY_ANIM_LEGS_IDLE, MONSTER_SPEARGUY_ANIM_TORSO_ATTACK, '11 1 1', TRUE, FALSE);
 		trace_line(self.origin, v, TRACE_MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
@@ -47,7 +47,7 @@ void spearguy_idle() {
 	if (monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
 
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 	monster_common_composite_anim(MONSTER_SPEARGUY_ANIM_LEGS_IDLE, MONSTER_SPEARGUY_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 

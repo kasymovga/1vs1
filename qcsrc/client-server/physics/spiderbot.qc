@@ -24,7 +24,7 @@ float(void) physics_spiderbot {
 			self.flags &= ~FL_ONGROUND;
 		} else {
 			if (vlen(physics_movement) == 0) {
-				movelib_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);
+				move_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);
 			} else {
 				if (physics_v_angle_y != self.angles_y) {
 					float turn_angle_speed = g_vehicle_spiderbot_turnspeed * frametime;
@@ -48,14 +48,14 @@ float(void) physics_spiderbot {
 						physics_movement_x = -1;
 
 					physics_movement_y = 0;
-					movelib_move_simple(normalize(v_forward * physics_movement_x),g_vehicle_spiderbot_speed_walk,g_vehicle_spiderbot_movement_inertia * frametime);
+					move_simple(normalize(v_forward * physics_movement_x),g_vehicle_spiderbot_speed_walk,g_vehicle_spiderbot_movement_inertia * frametime);
 				} else if(physics_movement_y != 0) {
 					if(physics_movement_y < 0)
 						physics_movement_y = -1;
 					else if(physics_movement_y > 0)
 						physics_movement_y = 1;
 
-					movelib_move_simple(normalize(v_right * physics_movement_y),g_vehicle_spiderbot_speed_strafe,g_vehicle_spiderbot_movement_inertia * frametime);
+					move_simple(normalize(v_right * physics_movement_y),g_vehicle_spiderbot_speed_strafe,g_vehicle_spiderbot_movement_inertia * frametime);
 				}
 			}
 		}
@@ -66,7 +66,7 @@ float(void) physics_spiderbot {
 	#endif
 
 	self.angles_x = -self.angles_x;
-	movelib_groundalign4point(75, 75, 1);
+	move_groundalign4point(75, 75, 1);
 	physics_spiderbot_jump_decr = 0;
 	physics_velocity = self.velocity;
 	physics_move();

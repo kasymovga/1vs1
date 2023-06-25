@@ -238,11 +238,11 @@ void(void) vehicle_spiderbot_think {
 		self.flags = physics_flags;
 		if(self.flags & FL_ONGROUND) {
 			self.velocity = physics_velocity;
-			movelib_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);
+			move_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);
 			self.angles_x *= -1;
 			makevectors(self.angles);
 			self.angles_x *= -1;
-			movelib_groundalign4point(75, 75, 1);
+			move_groundalign4point(75, 75, 1);
 			physics_velocity = self.velocity;
 		}
 		physics_move();

@@ -142,7 +142,7 @@ void walker_idle() {
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
 	}
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 	anim_set(self, '0 0 0', TRUE, TRUE, FALSE);
 	anim_update(self);
 }

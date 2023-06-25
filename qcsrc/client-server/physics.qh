@@ -113,23 +113,3 @@ var float(float maxspd_mod) physics_player_plug;
 .float physics_nofriction_time;
 void(void) physics_update_status;
 void(void) physics_move;
-
-const float WATERLEVEL_NONE = 0;
-const float WATERLEVEL_WETFEET = 1;
-const float WATERLEVEL_SWIMMING = 2;
-const float WATERLEVEL_SUBMERGED = 3;
-const float MOVETYPE_NONE = 0;
-const float MOVETYPE_ANGLENOCLIP = 1;
-const float MOVETYPE_ANGLECLIP = 2;
-const float MOVETYPE_WALK = 3;
-const float MOVETYPE_STEP = 4;
-const float MOVETYPE_FLY = 5;
-const float MOVETYPE_TOSS = 6;
-const float MOVETYPE_PUSH = 7;
-const float MOVETYPE_NOCLIP = 8;
-const float MOVETYPE_FLYMISSILE = 9;
-const float MOVETYPE_BOUNCE = 10;
-const float MOVETYPE_BOUNCEMISSILE = 11; // Like bounce but doesn't lose speed on bouncing
-const float MOVETYPE_FOLLOW = 12; // 'Attaches' the entity to its aim_ent
-const float MOVETYPE_PHYSICS = 32;
-const float MOVETYPE_QCWALK = 128;

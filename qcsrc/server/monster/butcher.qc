@@ -36,7 +36,7 @@ void butcher_hunt() {
 			}
 		}
 		v = self.enemy.origin - self.origin;
-		movelib_beak_simple(200 * frametime);
+		move_beak_simple(200 * frametime);
 		anim_set(self, '55 15 15', TRUE, TRUE, FALSE);
 	} else {
 		anim_set(self, '22 6 6', TRUE, TRUE, FALSE);
@@ -52,7 +52,7 @@ void butcher_idle() {
 	if (monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
 
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 	anim_set(self, '1 12 12', TRUE, TRUE, FALSE);
 }
 

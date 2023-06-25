@@ -315,23 +315,23 @@ vector monster_get_direction() {
 
 vector monster_move_swim(float _speed, float blend_factor) {
 	vector v = '0 0 0';
-	if (self.waterlevel < WATERLEVEL_SWIMMING) {
-		movelib_beak_simple(blend_factor * frametime);
+	if (self.waterlevel < WATER_LEVEL_SWIMMING) {
+		move_beak_simple(blend_factor * frametime);
 		self.gravity = 1;
 		return v;
 	}
 	self.gravity = 0.01;
 	v = normalize(self.enemy.origin - self.origin);
-	if (self.waterlevel == WATERLEVEL_SUBMERGED) {
+	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
 		v_z = v_z + 0.5 * vlen(v);
 	}
-	movelib_move_simple(normalize(v), _speed, blend_factor * frametime);
+	move_simple(normalize(v), _speed, blend_factor * frametime);
 	return v;
 }
 
 void monster_move_fly_idle(float _speed, float blend_factor) {
 	if (self.waterlevel) {
-		movelib_move_simple('0 0 1', _speed, blend_factor * frametime);
+		move_simple('0 0 1', _speed, blend_factor * frametime);
 		return;
 	}
 	if (self.velocity != '0 0 0') {
@@ -346,7 +346,7 @@ void monster_move_fly_idle(float _speed, float blend_factor) {
 vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	float vel_z_save;
 	vector v;
-	if (self.waterlevel == WATERLEVEL_SUBMERGED) {
+	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
 		_speed *= 0.5;
 		//if(self.air_finished < time + 6)
 			self.velocity_z += (_speed - self.velocity_z) * frametime;
@@ -363,7 +363,7 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 			v = normalize(self.enemy.origin - self.origin);
 			v_z = 0;
 			vel_z_save = self.velocity_z;
-			movelib_move_simple(v, _speed, blend_factor * frametime);
+			move_simple(v, _speed, blend_factor * frametime);
 			self.velocity_z = vel_z_save;
 			return v;
 		}
@@ -441,7 +441,7 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	if not(self.flags & FL_ONGROUND)
 		_speed = _speed * 0.5;
 
-	movelib_move_simple(v, _speed, blend_factor * frametime);
+	move_simple(v, _speed, blend_factor * frametime);
 	self.velocity_z = vel_z_save;
 	return v;
 }
@@ -459,7 +459,7 @@ vector monster_move_fly(float _speed, float blend_factor) {
 	g_jetpack_maxspeed_side = save_g_jetpack_maxspeed_side;
 	v = monster_get_direction();
 	v_z = v_z + 0.5;
-	movelib_move_simple(normalize(v), _speed, blend_factor * frametime);
+	move_simple(normalize(v), _speed, blend_factor * frametime);
 	return v;
 }
 

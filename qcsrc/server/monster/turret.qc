@@ -20,7 +20,7 @@ void() monster_turret_hunt {
 			v = vectoangles(v);
 			self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
 		} else {
-			movelib_beak_simple(1000 * frametime);
+			move_beak_simple(1000 * frametime);
 			v = vectoangles(v);
 			d = self.angles_y - v_y;
 			while (d >= 360) d -= 360;
@@ -58,7 +58,7 @@ void() monster_turret_idle {
 	if (monster_look_for_player(1500, 1500, 0, 1, 3)) {
 		return;
 	}
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 	self.frame = 5;
 }
 

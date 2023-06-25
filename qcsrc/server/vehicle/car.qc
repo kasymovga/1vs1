@@ -132,12 +132,12 @@ void(void) vehicle_car_think {
 		self.flags = physics_flags;
 		if (physics_flags & FL_ONGROUND) {
 			self.velocity = physics_velocity;
-			movelib_beak_simple(g_vehicle_car_speed_stop * frametime);
+			move_beak_simple(g_vehicle_car_speed_stop * frametime);
 			self.angles_x *= -1;
 			makevectors(self.angles);
 			self.angles_x *= -1;
 			float as = self.maxs_x * 0.75;
-			movelib_groundalign4point(as, as, 1);
+			move_groundalign4point(as, as, 1);
 			physics_velocity = self.velocity;
 		}
 		physics_move();

@@ -771,14 +771,14 @@ void(void) world_creature_frame {
 					self.flags |= FL_INWATER;
 					self.dmgtime = time - 0.1;
 				}
-				if (self.waterlevel != WATERLEVEL_SUBMERGED) {
+				if (self.waterlevel != WATER_LEVEL_SUBMERGED) {
 					if (self.air_finished < time + 9) {
 						sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_gasp), VOL_BASE, ATTN_NORM);
 						self.nextstep = time + 1.5;
 					}
 					self.air_finished = time + 12;
 					if (self.nextstep < time)
-					if (self.waterlevel < WATERLEVEL_SUBMERGED)
+					if (self.waterlevel < WATER_LEVEL_SUBMERGED)
 					if (vlen(self.velocity) > 220) {
 						self.nextstep = time + 1.5;
 						sound(self, CHAN_PLAYER, "misc/outwater.wav", VOL_BASE * 0.25, ATTN_NORM);

@@ -10,7 +10,7 @@ float(void) physics_aircraft {
 		self.velocity_z = self.velocity_z + g_vehicle_aircraft_accel_up * frametime;
 	}
 	if (self.flags & FL_ONGROUND) {
-		movelib_beak_simple(g_vehicle_aircraft_speed_stop * frametime);
+		move_beak_simple(g_vehicle_aircraft_speed_stop * frametime);
 	}
 	float turn_angle_speed;
 	if (self.angles_y != physics_v_angle_y) {
@@ -56,7 +56,7 @@ float(void) physics_aircraft {
 		else if(physics_movement_x < 0)
 			physics_movement_x = -1;
 
-		movelib_move_simple(normalize(v_forward * physics_movement_x),g_vehicle_aircraft_speed,g_vehicle_aircraft_movement_inertia * frametime);
+		move_simple(normalize(v_forward * physics_movement_x),g_vehicle_aircraft_speed,g_vehicle_aircraft_movement_inertia * frametime);
 	}
 	if(physics_movement_y != 0) {
 		if(physics_movement_y < 0)
@@ -64,7 +64,7 @@ float(void) physics_aircraft {
 		else if(physics_movement_y > 0)
 			physics_movement_y = 1;
 
-		movelib_move_simple(normalize(v_right * physics_movement_y),g_vehicle_aircraft_speed,g_vehicle_aircraft_movement_inertia * frametime);
+		move_simple(normalize(v_right * physics_movement_y),g_vehicle_aircraft_speed,g_vehicle_aircraft_movement_inertia * frametime);
 	}
 	self.angles_x = -self.angles_x;
 	physics_velocity = self.velocity;

@@ -33,7 +33,7 @@ void(void) monster_ugandaknuckles_hunt {
 			sound(self, CHAN_WEAPON, "youdunnodawae.ogg", VOL_BASE, ATTN_NORM);
 	}
 	if (self.attack_finished_single >= time) {
-		movelib_beak_simple(500 * frametime);
+		move_beak_simple(500 * frametime);
 		if (time - self.lastshot_time < 1) {
 			anim_set(self, '7 2 4', TRUE, TRUE, FALSE);
 			anim_update(self);
@@ -56,7 +56,7 @@ void(void) monster_ugandaknuckles_idle {
 	if (monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
 
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 	self.frame = 1;
 }
 

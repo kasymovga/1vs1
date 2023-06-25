@@ -33,9 +33,9 @@ float(void) physics_car {
 
 		if not(physics_movement_x) {
 			if (turn_inertia_factor > 0)
-				movelib_move_simple(normalize(v_forward * forwdir), _speed, 20 * turn_inertia_factor * frametime); //Turning
+				move_simple(normalize(v_forward * forwdir), _speed, 20 * turn_inertia_factor * frametime); //Turning
 
-			movelib_beak_simple(g_vehicle_car_speed_stop * frametime); //Stopping
+			move_beak_simple(g_vehicle_car_speed_stop * frametime); //Stopping
 		} else {
 			if(physics_movement_x != 0) {
 				if(physics_movement_x < 0)
@@ -44,16 +44,16 @@ float(void) physics_car {
 					physics_movement_x = 1;
 
 				if (turn_inertia_factor > 0)
-					movelib_move_simple(normalize(v_forward * forwdir), _speed, 20 * turn_inertia_factor * frametime); //Turning
+					move_simple(normalize(v_forward * forwdir), _speed, 20 * turn_inertia_factor * frametime); //Turning
 
-				movelib_move_simple(normalize(v_forward * physics_movement_x), g_vehicle_car_speed ,g_vehicle_car_movement_inertia * frametime); //Accelerating
+				move_simple(normalize(v_forward * physics_movement_x), g_vehicle_car_speed ,g_vehicle_car_movement_inertia * frametime); //Accelerating
 			}
 		}
 	}
 	self.angles_x = -self.angles_x;
 	if (g_vehicle_car_align) {
 		float as = self.maxs_x * 0.75;
-		movelib_groundalign4point(as, as, 1);
+		move_groundalign4point(as, as, 1);
 	}
 	physics_velocity = self.velocity;
 	physics_move();

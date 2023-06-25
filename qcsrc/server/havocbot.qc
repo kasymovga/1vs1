@@ -27,7 +27,7 @@ void(void) havocbot_ai {
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
 		if (self.deadflag != DEAD_NO)
 		if (self.goalcurrent==world)
-		if (self.waterlevel==WATERLEVEL_SWIMMING || self.aistatus & AI_STATUS_OUT_WATER) {
+		if (self.waterlevel==WATER_LEVEL_SWIMMING || self.aistatus & AI_STATUS_OUT_WATER) {
 			// Look for the closest waypoint out of water
 			entity newgoal, head;
 			float bestdistance, distance;
@@ -112,7 +112,7 @@ void(void) havocbot_ai {
 		//v = now * ((1-skillblend) + (distanceblend) * (skillblend)) + next * (1-distanceblend) * (skillblend);
 		v = now + blend * (next - now);
 		//v = now * (distanceblend) + next * (1-distanceblend);
-		if (self.waterlevel < WATERLEVEL_SWIMMING)
+		if (self.waterlevel < WATER_LEVEL_SWIMMING)
 			v_z = 0;
 
 		//te_lightning2(world, self.origin, self.goalcurrent.origin);
@@ -198,7 +198,7 @@ void(vector dir) havocbot_bunnyhop {
 		self.bot_timelastseengoal = 0;
 		return;
 	}
-	if (self.waterlevel > WATERLEVEL_WETFEET) {
+	if (self.waterlevel > WATER_LEVEL_WETFEET) {
 		self.aistatus &= ~AI_STATUS_RUNNING;
 		return;
 	}
@@ -419,9 +419,9 @@ void(void) havocbot_movetogoal {
 	if (self.waterlevel)
 	if (self.goalcurrent==world) {
 		dir = '0 0 0';
-		if (self.waterlevel>WATERLEVEL_SWIMMING)
+		if (self.waterlevel>WATER_LEVEL_SWIMMING)
 			dir_z = 1;
-		else if (self.velocity_z >= 0 && !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER))
+		else if (self.velocity_z >= 0 && !(self.waterlevel == WATER_LEVEL_WETFEET && self.watertype == CONTENT_WATER))
 			self.BUTTON_JUMP = TRUE;
 		else
 			self.BUTTON_JUMP = FALSE;
@@ -457,12 +457,12 @@ void(void) havocbot_movetogoal {
 	evadeobstacle = '0 0 0';
 	evadelava = '0 0 0';
 	if (self.waterlevel) {
-		if (self.waterlevel>WATERLEVEL_SWIMMING) {
+		if (self.waterlevel > WATER_LEVEL_SWIMMING) {
 		//	flatdir_z = 1;
 			self.aistatus |= AI_STATUS_OUT_WATER;
 		} else {
 			if (self.velocity_z >= 0 && !(self.watertype == CONTENT_WATER && self.goalcurrent.origin_z < self.origin_z) &&
-					(!(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER) || self.aistatus & AI_STATUS_OUT_WATER))
+					(!(self.waterlevel == WATER_LEVEL_WETFEET && self.watertype == CONTENT_WATER) || self.aistatus & AI_STATUS_OUT_WATER))
 				self.BUTTON_JUMP = TRUE;
 			else
 				self.BUTTON_JUMP = FALSE;

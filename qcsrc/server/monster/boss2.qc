@@ -77,7 +77,7 @@ void boss2_hunt() {
 		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 		monster_common_composite_anim(MONSTER_BOSS2_ANIM_LEGS_WALK, MONSTER_BOSS2_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	} else {
-		movelib_beak_simple(2000 * frametime);
+		move_beak_simple(2000 * frametime);
 		monster_common_composite_anim(MONSTER_BOSS2_ANIM_LEGS_IDLE, MONSTER_BOSS2_ANIM_TORSO_ATTACK, '11 1 1', TRUE, FALSE);
 	}
 }
@@ -88,7 +88,7 @@ void boss2_idle() {
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
 	}
-	movelib_beak_simple(100 * frametime);
+	move_beak_simple(100 * frametime);
 	monster_common_composite_anim(MONSTER_BOSS2_ANIM_LEGS_IDLE, MONSTER_BOSS2_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
