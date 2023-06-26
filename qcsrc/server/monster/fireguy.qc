@@ -1,12 +1,21 @@
+//compatibility with old save files
+#define monster_fireguy_idle fireguy_idle
+#define monster_fireguy_guard fireguy_guard
+#define monster_fireguy_walk fireguy_walk
+#define monster_fireguy_hunt fireguy_hunt
+#define monster_fireguy_remove fireguy_remove
+#define monster_fireguy_spawn fireguy_spawn
+#define monster_fireguy_mine_touch fireguy_mine_touch
+#define monster_fireguy_mine_think fireguy_mine_think
 #define MONSTER_FIREGUY_ANIM_LEGS_WALK '67 11 20'
 #define MONSTER_FIREGUY_ANIM_LEGS_IDLE '173 10 10'
 #define MONSTER_FIREGUY_ANIM_TORSO_STAND '82 1 15'
 #define MONSTER_FIREGUY_ANIM_TORSO_ATTACK '132 6 15'
-void fireguy_idle();
-void fireguy_guard();
-void fireguy_walk();
+void() monster_fireguy_idle;
+void() monster_fireguy_guard;
+void() monster_fireguy_walk;
 
-void(void) fireguy_mine_touch {
+void(void) monster_fireguy_mine_touch {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
 	if(fire_add_damage(other, self.realowner, self.dmg_edge, 2, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0) {
@@ -16,10 +25,8 @@ void(void) fireguy_mine_touch {
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void fireguy_mine_think()
-{
-	if(time > self.pushltime)
-	{
+void() monster_fireguy_mine_think {
+	if (time > self.pushltime) {
 		remove(self);
 		return;
 	}
@@ -31,9 +38,9 @@ void fireguy_mine_think()
 	self.nextthink = time + 0.1;
 }
 
-void fireguy_hunt() {
+void() monster_fireguy_hunt {
 	self.nextthink = time;
-	if (monster_check_target(fireguy_walk, fireguy_guard))
+	if (monster_check_target(monster_fireguy_walk, monster_fireguy_guard))
 		return;
 
 	vector v;
@@ -52,8 +59,8 @@ void fireguy_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 		entity proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
 		projectile_setup(proj, _shotorg, 0, WEAPON_FIREBALL, self.dmg_edge, self.dmg_edge, self.dmg_radius, self.dmg_force, 1, MOVETYPE_BOUNCE);
-		proj.touch = fireguy_mine_touch;
-		proj.think = fireguy_mine_think;
+		proj.touch = monster_fireguy_mine_touch;
+		proj.think = monster_fireguy_mine_think;
 		proj.nextthink = time;
 		proj.damageforcescale = 0.5;
 		proj.velocity = normalize(_shotdir) * 2000 + v_up * 50;
@@ -81,7 +88,7 @@ void fireguy_hunt() {
 	}
 }
 
-void fireguy_idle() {
+void() monster_fireguy_idle {
 	self.nextthink = time;
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
 		return;
@@ -90,19 +97,19 @@ void fireguy_idle() {
 	monster_common_composite_anim(MONSTER_FIREGUY_ANIM_LEGS_IDLE, MONSTER_FIREGUY_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
-void fireguy_guard() {
+void() monster_fireguy_guard {
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	fireguy_idle();
+	monster_fireguy_idle();
 }
 
-void fireguy_walk() {
+void() monster_fireguy_walk {
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(fireguy_idle, 40))
+	if (monster_walk_finished(monster_fireguy_idle, 40))
 		return;
 
 	monster_common_composite_anim(MONSTER_FIREGUY_ANIM_LEGS_WALK, MONSTER_FIREGUY_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
@@ -114,12 +121,12 @@ void fireguy_walk() {
 
 }
 
-void fireguy_remove() {
+void() monster_fireguy_remove { //compatibility with old save files
 	monster_common_on_remove();
 }
 
-void fireguy_spawn() {
-	monster_prepare(fireguy_hunt, fireguy_walk, fireguy_idle);
+void() monster_fireguy_spawn {
+	monster_prepare(monster_fireguy_hunt, monster_fireguy_walk, monster_fireguy_idle);
 	monster_common_composite_setup("fireguy", "fireball");
 	self.damageforcescale = 1;
 	self.netname = "FireGuy";
@@ -140,10 +147,18 @@ void(void) spawnfunc_monster_fireguy_spawn {
 	monster_init(monster_fireguy_init);
 	self.noise1 = "player/carni-lycan/coms/incoming.ogg";
 	self.noise3 = "player/carni-lycan/player/pain50.ogg";
-	monster_prepare_spawn(fireguy_spawn, spawnfunc_monster_fireguy_spawn);
+	monster_prepare_spawn(monster_fireguy_spawn, spawnfunc_monster_fireguy_spawn);
 }
 
 #undef MONSTER_FIREGUY_ANIM_LEGS_WALK
 #undef MONSTER_FIREGUY_ANIM_LEGS_IDLE
 #undef MONSTER_FIREGUY_ANIM_TORSO_STAND
 #undef MONSTER_FIREGUY_ANIM_TORSO_ATTACK
+#undef monster_fireguy_idle
+#undef monster_fireguy_guard
+#undef monster_fireguy_walk
+#undef monster_fireguy_hunt
+#undef monster_fireguy_remove
+#undef monster_fireguy_spawn
+#undef monster_fireguy_mine_touch
+#undef monster_fireguy_mine_think

@@ -1,14 +1,21 @@
+//compatibility with old save files
+#define monster_soldier_idle soldier_idle
+#define monster_soldier_guard soldier_guard
+#define monster_soldier_walk soldier_walk
+#define monster_soldier_hunt soldier_hunt
+#define monster_soldier_remove soldier_remove
+#define monster_soldier_spawn soldier_spawn
 #define MONSTER_SOLDIER_ANIM_LEGS_WALK '128 11 11'
 #define MONSTER_SOLDIER_ANIM_LEGS_IDLE '194 6 6'
 #define MONSTER_SOLDIER_ANIM_TORSO_STAND '155 9 9'
 #define MONSTER_SOLDIER_ANIM_TORSO_ATTACK '132 6 15'
-void soldier_idle();
-void soldier_guard();
-void soldier_walk();
+void() monster_soldier_idle;
+void() monster_soldier_guard;
+void() monster_soldier_walk;
 
 void soldier_hunt() {
 	self.nextthink = time;
-	if (monster_check_target(soldier_walk, soldier_guard))
+	if (monster_check_target(monster_soldier_walk, monster_soldier_guard))
 		return;
 
 	vector v;
@@ -48,7 +55,7 @@ void soldier_hunt() {
 	}
 }
 
-void soldier_idle() {
+void() monster_soldier_idle {
 	self.nextthink = time;
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
@@ -57,19 +64,19 @@ void soldier_idle() {
 	monster_common_composite_anim(MONSTER_SOLDIER_ANIM_LEGS_IDLE, MONSTER_SOLDIER_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
-void soldier_guard() {
+void() monster_soldier_guard {
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	soldier_idle();
+	monster_soldier_idle();
 }
 
-void soldier_walk() {
+void() monster_soldier_walk {
 	self.nextthink = time;
 	if (monster_look_for_player(1500, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(soldier_idle, 40))
+	if (monster_walk_finished(monster_soldier_idle, 40))
 		return;
 
 	monster_common_composite_anim(MONSTER_SOLDIER_ANIM_LEGS_WALK, MONSTER_SOLDIER_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
@@ -80,12 +87,12 @@ void soldier_walk() {
 	anim_update(self);
 }
 
-void soldier_remove() {
+void() monster_soldier_remove {
 	monster_common_on_remove();
 }
 
-void soldier_spawn() {
-	monster_prepare(soldier_hunt, soldier_walk, soldier_idle);
+void() monster_soldier_spawn {
+	monster_prepare(soldier_hunt, monster_soldier_walk, monster_soldier_idle);
 	monster_common_composite_setup("soldier", "shotgun");
 	self.damageforcescale = 1;
 	self.netname = "Soldier";
@@ -104,10 +111,16 @@ void(void) spawnfunc_monster_soldier_spawn {
 	monster_init(monster_soldier_init);
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
-	monster_prepare_spawn(soldier_spawn, spawnfunc_monster_soldier_spawn);
+	monster_prepare_spawn(monster_soldier_spawn, spawnfunc_monster_soldier_spawn);
 }
 
 #undef MONSTER_SOLDIER_ANIM_LEGS_IDLE
 #undef MONSTER_SOLDIER_ANIM_TORSO_STAND
 #undef MONSTER_SOLDIER_ANIM_TORSO_ATTACK
 #undef MONSTER_SOLDIER_MODEL_ORIGIN_ADJUST
+#undef monster_soldier_idle
+#undef monster_soldier_guard
+#undef monster_soldier_walk
+#undef monster_soldier_hunt
+#undef monster_soldier_remove
+#undef monster_soldier_spawn

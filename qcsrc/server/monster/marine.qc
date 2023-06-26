@@ -1,5 +1,4 @@
 //compatibility with old save files
-#define monster_marine_init marine_init
 #define monster_marine_idle marine_idle
 #define monster_marine_guard marine_guard
 #define monster_marine_walk marine_walk
@@ -159,3 +158,10 @@ void(void) spawnfunc_monster_marine_spawn {
 	self.noise3 = "player/torus/pain50.ogg";
 	monster_prepare_spawn(monster_marine_spawn, spawnfunc_monster_marine_spawn);
 }
+
+#undef monster_marine_idle
+#undef monster_marine_guard
+#undef monster_marine_walk
+#undef monster_marine_hunt
+#undef monster_marine_remove
+#undef monster_marine_spawn

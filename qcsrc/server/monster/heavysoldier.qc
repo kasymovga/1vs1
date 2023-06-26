@@ -1,10 +1,17 @@
+//compatibility with old save files
+#define monster_heavysoldier_idle heavysoldier_idle
+#define monster_heavysoldier_guard heavysoldier_guard
+#define monster_heavysoldier_walk heavysoldier_walk
+#define monster_heavysoldier_hunt heavysoldier_hunt
+#define monster_heavysoldier_remove heavysoldier_remove
+#define monster_heavysoldier_spawn heavysoldier_spawn
 #define MONSTER_HEAVYSOLDIER_ANIM_LEGS_WALK '110 8 8'
 #define MONSTER_HEAVYSOLDIER_ANIM_LEGS_IDLE '171 9 9'
 #define MONSTER_HEAVYSOLDIER_ANIM_TORSO_STAND '151 1 15'
 #define MONSTER_HEAVYSOLDIER_ANIM_TORSO_ATTACK '130 6 15'
-void heavysoldier_idle();
-void heavysoldier_guard();
-void heavysoldier_walk();
+void() monster_heavysoldier_idle;
+void() monster_heavysoldier_guard;
+void() monster_heavysoldier_walk;
 
 void(void) monster_heavysoldier_projectile_bounce_touch {
 	PROJECTILE_TOUCH;
@@ -28,9 +35,9 @@ void(void) monster_heavysoldier_projectile_bounce_touch {
 	}
 }
 
-void heavysoldier_hunt() {
+void() monster_heavysoldier_hunt {
 	self.nextthink = time;
-	if (monster_check_target(heavysoldier_walk, heavysoldier_guard))
+	if (monster_check_target(monster_heavysoldier_walk, monster_heavysoldier_guard))
 		return;
 
 	vector v;
@@ -78,7 +85,7 @@ void heavysoldier_hunt() {
 	}
 }
 
-void heavysoldier_idle() {
+void() monster_heavysoldier_idle {
 	self.nextthink = time;
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
 		return;
@@ -87,19 +94,19 @@ void heavysoldier_idle() {
 	monster_common_composite_anim(MONSTER_HEAVYSOLDIER_ANIM_LEGS_IDLE, MONSTER_HEAVYSOLDIER_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
-void heavysoldier_guard() {
+void() monster_heavysoldier_guard {
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	heavysoldier_idle();
+	monster_heavysoldier_idle();
 }
 
-void heavysoldier_walk() {
+void() monster_heavysoldier_walk {
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(heavysoldier_idle, 40))
+	if (monster_walk_finished(monster_heavysoldier_idle, 40))
 		return;
 
 	monster_common_composite_anim(MONSTER_HEAVYSOLDIER_ANIM_LEGS_WALK, MONSTER_HEAVYSOLDIER_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
@@ -111,12 +118,12 @@ void heavysoldier_walk() {
 
 }
 
-void heavysoldier_remove() {
+void() monster_heavysoldier_remove {
 	monster_common_on_remove();
 }
 
-void heavysoldier_spawn() {
-	monster_prepare(heavysoldier_hunt, heavysoldier_walk, heavysoldier_idle);
+void() monster_heavysoldier_spawn {
+	monster_prepare(monster_heavysoldier_hunt, monster_heavysoldier_walk, monster_heavysoldier_idle);
 	monster_common_composite_setup("heavysoldier", "gl");
 	self.damageforcescale = 1;
 	self.netname = "Heavy Soldier";
@@ -143,10 +150,16 @@ void(void) spawnfunc_monster_heavysoldier_spawn {
 	monster_init(monster_heavysoldier_init);
 	self.noise1 = "player/soldier/coms/incoming.ogg";
 	self.noise3 = "player/soldier/player/pain50.ogg";
-	monster_prepare_spawn(heavysoldier_spawn, spawnfunc_monster_heavysoldier_spawn);
+	monster_prepare_spawn(monster_heavysoldier_spawn, spawnfunc_monster_heavysoldier_spawn);
 }
 
 #undef MONSTER_HEAVYSOLDIER_ANIM_LEGS_WALK
 #undef MONSTER_HEAVYSOLDIER_ANIM_LEGS_IDLE
 #undef MONSTER_HEAVYSOLDIER_ANIM_TORSO_STAND
 #undef MONSTER_HEAVYSOLDIER_ANIM_TORSO_ATTACK
+#undef monster_heavysoldier_idle
+#undef monster_heavysoldier_guard
+#undef monster_heavysoldier_walk
+#undef monster_heavysoldier_hunt
+#undef monster_heavysoldier_remove
+#undef monster_heavysoldier_spawn

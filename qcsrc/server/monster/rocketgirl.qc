@@ -1,14 +1,21 @@
+//compatibility with old save files
+#define monster_rlgirl_idle rlgirl_idle
+#define monster_rlgirl_guard rlgirl_guard
+#define monster_rlgirl_walk rlgirl_walk
+#define monster_rlgirl_hunt rlgirl_hunt
+#define monster_rlgirl_remove rlgirl_remove
+#define monster_rlgirl_spawn rlgirl_spawn
 #define MONSTER_ROCKETGIRL_ANIM_LEGS_WALK '114 8 15'
 #define MONSTER_ROCKETGIRL_ANIM_LEGS_IDLE '180 9 8'
 #define MONSTER_ROCKETGIRL_ANIM_TORSO_STAND '165 1 5'
 #define MONSTER_ROCKETGIRL_ANIM_TORSO_ATTACK '132 6 15'
-void rlgirl_idle();
-void rlgirl_guard();
-void rlgirl_walk();
+void() monster_rlgirl_idle;
+void() monster_rlgirl_guard;
+void() monster_rlgirl_walk;
 
-void rlgirl_hunt() {
+void() monster_rlgirl_hunt {
 	self.nextthink = time;
-	if (monster_check_target(rlgirl_walk, rlgirl_guard))
+	if (monster_check_target(monster_rlgirl_walk, monster_rlgirl_guard))
 		return;
 
 	vector v;
@@ -47,7 +54,7 @@ void rlgirl_hunt() {
 	}
 }
 
-void rlgirl_idle() {
+void() monster_rlgirl_idle {
 	self.nextthink = time;
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
 		return;
@@ -56,20 +63,20 @@ void rlgirl_idle() {
 	monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_IDLE, MONSTER_ROCKETGIRL_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
-void rlgirl_guard() {
+void() monster_rlgirl_guard {
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
 
-	rlgirl_idle();
+	monster_rlgirl_idle();
 }
 
-void rlgirl_walk() {
+void() monster_rlgirl_walk {
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(rlgirl_idle, 40))
+	if (monster_walk_finished(monster_rlgirl_idle, 40))
 		return;
 
 	monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_WALK, MONSTER_ROCKETGIRL_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
@@ -80,18 +87,18 @@ void rlgirl_walk() {
 	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 }
 
-void rlgirl_remove() {
+void() monster_rlgirl_remove {
 	monster_common_on_remove();
 }
 
-void rlgirl_spawn() {
-	monster_prepare(rlgirl_hunt, rlgirl_walk, rlgirl_idle);
+void() monster_rlgirl_spawn {
+	monster_prepare(monster_rlgirl_hunt, monster_rlgirl_walk, monster_rlgirl_idle);
 	monster_common_composite_setup("rocketgirl", "rl");
 	self.damageforcescale = 1;
 	self.netname = "Rocket Girl";
 	self.ammo_rockets = 10;
 	self.view_ofs = '0 0 27';
-	self.entremove = rlgirl_remove;
+	self.entremove = monster_rlgirl_remove;
 }
 
 void(void) monster_rlgirl_init {
@@ -106,10 +113,16 @@ void(void) spawnfunc_monster_rlgirl_spawn {
 	monster_init(monster_rlgirl_init);
 	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
 	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
-	monster_prepare_spawn(rlgirl_spawn, spawnfunc_monster_rlgirl_spawn);
+	monster_prepare_spawn(monster_rlgirl_spawn, spawnfunc_monster_rlgirl_spawn);
 }
 
 #undef MONSTER_ROCKETGIRL_ANIM_LEGS_WALK
 #undef MONSTER_ROCKETGIRL_ANIM_LEGS_IDLE
 #undef MONSTER_ROCKETGIRL_ANIM_TORSO_STAND
 #undef MONSTER_ROCKETGIRL_ANIM_TORSO_ATTACK
+#undef monster_rlgirl_idle
+#undef monster_rlgirl_guard
+#undef monster_rlgirl_walk
+#undef monster_rlgirl_hunt
+#undef monster_rlgirl_remove
+#undef monster_rlgirl_spawn
