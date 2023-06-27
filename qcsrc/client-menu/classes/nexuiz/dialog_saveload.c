@@ -93,7 +93,7 @@ void SlotSelect(entity btn, entity me) {
 	}
 	btn.forcePressed = 1;
 #ifdef CSQC
-	if (GetSlotNumber(me) > 9)
+	if (GetSlotNumber(me) > 10)
 		buttonSave.disabled = TRUE;
 	else
 		buttonSave.disabled = FALSE;
