@@ -201,6 +201,10 @@ float(string s, entity e) vote_cmd {
 		cmd_print_to(e, "  vote COMMANDS ARGUMENTS. See 'vhelp' for more info.");
 		return TRUE;
 	} else if (argv(0) == "vote") {
+		if (e && !(e.flags & FL_CLIENT)) {
+			cmd_print_to(e, "^1You can't use vote in unconnected state!");
+			return TRUE;
+		}
 		if (g_campaign) {
 			cmd_print_to(e, "^1You can't use vote in campaing mode!");
 			return TRUE;
