@@ -1,3 +1,4 @@
+//compatibility with old save files
 #define monster_arachna_idle arachna_idle
 #define monster_arachna_guard arachna_guard
 #define monster_arachna_walk arachna_walk

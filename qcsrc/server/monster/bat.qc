@@ -1,3 +1,4 @@
+//compatibility with old save files
 #define monster_bat_idle bat_idle
 #define monster_bat_walk bat_walk
 #define monster_bat_hunt bat_hunt

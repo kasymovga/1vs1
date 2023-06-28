@@ -1,17 +1,24 @@
+//compatibility with old save files
+#define monster_boss1_idle boss1_idle
+#define monster_boss1_guard boss1_guard
+#define monster_boss1_walk boss1_walk
+#define monster_boss1_hunt boss1_hunt
+#define monster_boss1_remove boss1_remove
+#define monster_boss1_spawn boss1_spawn
 #define MONSTER_BOSS1_ANIM_DIE '0 30 10'
 #define MONSTER_BOSS1_ANIM_LEGS_WALK '110 8 8'
 #define MONSTER_BOSS1_ANIM_LEGS_IDLE '171 9 9'
 #define MONSTER_BOSS1_ANIM_TORSO_STAND '151 1 15'
 #define MONSTER_BOSS1_ANIM_TORSO_ATTACK '130 6 15'
 
-void boss1_idle();
-void boss1_guard();
-void boss1_walk();
+void() monster_boss1_idle;
+void() monster_boss1_guard;
+void() monster_boss1_walk;
 
-void boss1_hunt() {
+void() monster_boss1_hunt {
 	self.nextthink = time;
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
-	if (monster_check_target(boss1_walk, boss1_guard))
+	if (monster_check_target(monster_boss1_walk, monster_boss1_guard))
 		return;
 
 	vector v;
@@ -63,7 +70,7 @@ void boss1_hunt() {
 	}
 }
 
-void boss1_idle() {
+void() monster_boss1_idle {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
@@ -73,21 +80,22 @@ void boss1_idle() {
 	monster_common_composite_anim(MONSTER_BOSS1_ANIM_LEGS_IDLE, MONSTER_BOSS1_ANIM_TORSO_ATTACK, '11 1 1', TRUE, FALSE);
 }
 
-void boss1_guard() {
+void() monster_boss1_guard {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	boss1_idle();
+
+	monster_boss1_idle();
 }
 
-void boss1_walk() {
+void() monster_boss1_walk {
 	self.nextthink = time;
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	if (monster_look_for_player(2000, 1000, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(boss1_idle, 100))
+	if (monster_walk_finished(monster_boss1_idle, 100))
 		return;
 
 	monster_common_composite_anim(MONSTER_BOSS1_ANIM_LEGS_WALK, MONSTER_BOSS1_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
@@ -99,20 +107,20 @@ void boss1_walk() {
 
 }
 
-void boss1_remove() {
+void() monster_boss1_remove {
 	monster_common_on_remove();
 	WaypointSprite_DetachCarrier(self);
 }
 
-void boss1_spawn() {
-	monster_prepare(boss1_hunt, boss1_walk, boss1_idle);
+void() monster_boss1_spawn {
+	monster_prepare(monster_boss1_hunt, monster_boss1_walk, monster_boss1_idle);
 	if (self.colormod != '0 0 0')
 		self.colormod *= 0.25;
 	else
 		self.colormod = '0.75 0.5 0.25';
 
 	monster_common_composite_setup("heavysoldier", "gl");
-	self.entremove = boss1_remove;
+	self.entremove = monster_boss1_remove;
 	self.scale = 3.75;
 	self.max_health = self.health;
 	self.damageforcescale = 0.01;
@@ -140,7 +148,7 @@ void(void) spawnfunc_monster_boss1_spawn {
 	self.noise2 = "player/torus/death.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
 	self.atten = 0.1;
-	monster_prepare_spawn(boss1_spawn, spawnfunc_monster_boss1_spawn);
+	monster_prepare_spawn(monster_boss1_spawn, spawnfunc_monster_boss1_spawn);
 }
 
 #undef MONSTER_BOSS1_ANIM_DIE
@@ -148,3 +156,9 @@ void(void) spawnfunc_monster_boss1_spawn {
 #undef MONSTER_BOSS1_ANIM_LEGS_IDLE
 #undef MONSTER_BOSS1_ANIM_TORSO_STAND
 #undef MONSTER_BOSS1_ANIM_TORSO_ATTACK
+#undef monster_boss1_idle
+#undef monster_boss1_guard
+#undef monster_boss1_walk
+#undef monster_boss1_hunt
+#undef monster_boss1_remove
+#undef monster_boss1_spawn

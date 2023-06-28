@@ -1,15 +1,22 @@
+//compatibility with old save files
+#define monster_boss2_idle boss2_idle
+#define monster_boss2_guard boss2_guard
+#define monster_boss2_walk boss2_walk
+#define monster_boss2_hunt boss2_hunt
+#define monster_boss2_remove boss2_remove
+#define monster_boss2_spawn boss2_spawn
+#define monster_boss2_pellet_touch boss2_pellet_touch
 #define MONSTER_BOSS2_ANIM_DIE '0 29 15'
 #define MONSTER_BOSS2_ANIM_LEGS_WALK '128 11 11'
 #define MONSTER_BOSS2_ANIM_LEGS_IDLE '194 6 6'
 #define MONSTER_BOSS2_ANIM_TORSO_STAND '155 9 9'
 #define MONSTER_BOSS2_ANIM_TORSO_ATTACK '132 6 15'
 
-void boss2_idle();
-void boss2_guard();
-void boss2_walk();
+void() monster_boss2_idle;
+void() monster_boss2_guard;
+void() monster_boss2_walk;
 
-void boss2_pellet_touch()
-{
+void() monster_boss2_pellet_touch {
 	PROJECTILE_TOUCH;
 	if(other.solid == SOLID_BSP)
 		effect_impact(self.origin, self.dmg, 0, 0, normalize(self.velocity), EFFECT_IMPACT_PELLET, self);
@@ -28,7 +35,7 @@ void boss2_pellet_touch()
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void(vector start, vector dir) boss2_pellet {
+void(vector start, vector dir) monster_boss2_pellet {
 	entity proj;
 	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
 	projectile_setup(proj, start, EFFECT_IMPACT_PELLET, PROJECTILE_BULLET_BIG, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
@@ -37,15 +44,15 @@ void(vector start, vector dir) boss2_pellet {
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + randomvec() * 0.1) * 2000;
 	weapon_setup_projectile_velocity(proj);
-	proj.touch = boss2_pellet_touch;
+	proj.touch = monster_boss2_pellet_touch;
 	proj.oldvelocity = proj.velocity;
 	proj.cnt = 3;
 }
 
-void boss2_hunt() {
+void() monster_boss2_hunt {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
-	if (monster_check_target(boss2_walk, boss2_guard))
+	if (monster_check_target(monster_boss2_walk, monster_boss2_guard))
 		return;
 
 	vector v;
@@ -65,7 +72,7 @@ void boss2_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/shotgun_fire.wav", VOL_BASE, ATTN_NORM);
 		float sc;
 		for (sc = 0; sc < 16; sc ++)
-			boss2_pellet(_shotorg, _shotdir);
+			monster_boss2_pellet(_shotorg, _shotdir);
 
 		pointparticles(particleeffectnum("shotgun_muzzleflash"), _shotorg, _shotdir * 1000, g_balance_shotgun_primary_ammo);
 		self.attack_finished_single = time + 1 + random();
@@ -82,7 +89,7 @@ void boss2_hunt() {
 	}
 }
 
-void boss2_idle() {
+void() monster_boss2_idle {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
@@ -92,22 +99,22 @@ void boss2_idle() {
 	monster_common_composite_anim(MONSTER_BOSS2_ANIM_LEGS_IDLE, MONSTER_BOSS2_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
-void boss2_guard() {
+void() monster_boss2_guard {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
 
-	boss2_idle();
+	monster_boss2_idle();
 }
 
-void boss2_walk() {
+void() monster_boss2_walk {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
 	if (monster_look_for_player(1500, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(boss2_idle, 100))
+	if (monster_walk_finished(monster_boss2_idle, 100))
 		return;
 
 	monster_common_composite_anim(MONSTER_BOSS2_ANIM_LEGS_WALK, MONSTER_BOSS2_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
@@ -118,13 +125,13 @@ void boss2_walk() {
 
 }
 
-void boss2_remove() {
+void() monster_boss2_remove {
 	WaypointSprite_DetachCarrier(self);
 	remove(self.exteriorweaponentity);
 }
 
-void boss2_spawn() {
-	monster_prepare(boss2_hunt, boss2_walk, boss2_idle);
+void() monster_boss2_spawn {
+	monster_prepare(monster_boss2_hunt, monster_boss2_walk, monster_boss2_idle);
 	if (self.colormod != '0 0 0')
 		self.colormod *= 0.25;
 	else
@@ -159,7 +166,7 @@ void(void) spawnfunc_monster_boss2_spawn {
 	self.noise2 = "player/torus/death.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
 	self.atten = 0.1;
-	monster_prepare_spawn(boss2_spawn, spawnfunc_monster_boss2_spawn);
+	monster_prepare_spawn(monster_boss2_spawn, spawnfunc_monster_boss2_spawn);
 }
 
 #undef MONSTER_BOSS2_ANIM_DIE
@@ -167,3 +174,10 @@ void(void) spawnfunc_monster_boss2_spawn {
 #undef MONSTER_BOSS2_ANIM_TORSO_STAND
 #undef MONSTER_BOSS2_ANIM_TORSO_ATTACK
 #undef MONSTER_BOSS2_MODEL_ORIGIN_ADJUST
+#undef monster_boss2_idle
+#undef monster_boss2_guard
+#undef monster_boss2_walk
+#undef monster_boss2_hunt
+#undef monster_boss2_remove
+#undef monster_boss2_spawn
+#undef monster_boss2_pellet_touch
