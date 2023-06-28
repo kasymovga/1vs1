@@ -14,7 +14,10 @@ void(void) progressbar_draw {
 		pos_y -= self.origin_z;
 		if (time != e.iorigin1_x) {
 			f = (e.iorigin1_x - e.iorigin2_x);
-			f = e.iorigin1_x + bound(0, (f / (e.iorigin1_y - e.iorigin2_y)) * (time - e.iorigin1_y), f);
+			if (e.iorigin1_y != e.iorigin2_y)
+				f = e.iorigin1_x + bound(0, (f / (e.iorigin1_y - e.iorigin2_y)) * (time - e.iorigin1_y), f);
+			else
+				f = 0;
 		} else
 			f = e.iorigin1_x;
 

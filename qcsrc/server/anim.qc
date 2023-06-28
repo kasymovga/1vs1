@@ -13,7 +13,7 @@ void(entity e, vector anim, float looping, float override, float restart) anim_s
 	e.animstate_numframes = anim_y;
 	e.animstate_framerate = anim_z;
 	e.animstate_starttime = time - 0.01; // shift it a little bit into the past to prevent float inaccuracy hiccups
-	e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
+	e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / max(e.animstate_framerate, 0.00001);
 	e.animstate_looping = looping;
 	e.animstate_override = override;
 	e.frame = e.animstate_startframe;
@@ -23,7 +23,7 @@ void(entity e) anim_update {
 	if (time >= e.animstate_endtime) {
 		if (e.animstate_looping) {
 			e.animstate_starttime = e.animstate_endtime;
-			e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
+			e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / max(e.animstate_framerate, 0.00001);
 		}
 		e.animstate_override = FALSE;
 	}
