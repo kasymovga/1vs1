@@ -144,15 +144,16 @@ void(void) trigger_push_findtarget {
 		self.movedir = trigger_push_calculatevelocity(org, self.enemy, self.height);
 		flighttime = trigger_push_calculatevelocity_flighttime;
 		// calculate the destination and spawn a teleporter spawnfunc_waypoint
-		print("spawn waypoint for ", self.classname, "\n");
-		e = spawn();
-		setorigin(e, org);
-		setsize(e, PL_MIN, PL_MAX);
-		e.velocity = self.movedir;
-		builtin_tracetoss(e, e);
-		self.dest = trace_endpos;
-		remove(e);
-		waypoint_spawnforteleporter(self, self.dest, flighttime);
+		if (self.solid == SOLID_TRIGGER) {
+			e = spawn();
+			setorigin(e, org);
+			setsize(e, PL_MIN, PL_MAX);
+			e.velocity = self.movedir;
+			builtin_tracetoss(e, e);
+			self.dest = trace_endpos;
+			remove(e);
+			waypoint_spawnforteleporter(self, self.dest, flighttime);
+		}
 	} else
 		flighttime = 0;
 }
