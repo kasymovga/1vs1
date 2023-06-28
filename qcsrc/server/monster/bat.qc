@@ -1,6 +1,11 @@
-void bat_walk();
+#define monster_bat_idle bat_idle
+#define monster_bat_walk bat_walk
+#define monster_bat_hunt bat_hunt
+#define monster_bat_spawn bat_spawn
 
-void bat_idle() {
+void monster_bat_walk();
+
+void() monster_bat_idle {
 	self.movetype = MOVETYPE_FLY;
 	anim_update(self);
 	self.nextthink = time;
@@ -10,11 +15,11 @@ void bat_idle() {
 	monster_move_fly_idle(100, 5);
 }
 
-void bat_hunt() {
+void() monster_bat_hunt {
 	self.movetype = MOVETYPE_WALK;
 	anim_update(self);
 	self.nextthink = time;
-	if (monster_check_target(bat_walk, bat_idle))
+	if (monster_check_target(monster_bat_walk, monster_bat_idle))
 		return;
 
 	vector v;
@@ -49,14 +54,14 @@ void bat_hunt() {
 	}
 }
 
-void bat_walk() {
+void() monster_bat_walk {
 	self.movetype = MOVETYPE_WALK;
 	anim_update(self);
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
 	}
-	if (monster_walk_finished(bat_idle, 100))
+	if (monster_walk_finished(monster_bat_idle, 100))
 		return;
 
 	//self.velocity = normalize(v) * 400;
@@ -67,12 +72,12 @@ void bat_walk() {
 	self.angles_x = approach_angle(self.angles_x, v_x, 90 * frametime);
 }
 
-void bat_spawn() {
+void() monster_bat_spawn {
 	self.movetype = MOVETYPE_FLY;
 	self.species = SPECIES_ALIEN;
 	self.netname = "Hell Bat";
 	monster_set_fly();
-	monster_prepare(bat_hunt, bat_walk, bat_idle);
+	monster_prepare(monster_bat_hunt, monster_bat_walk, monster_bat_idle);
 	setmodel(self, "models/bat.md3");
 	self.colormod = '3 2 1';
 	self.solid = SOLID_BBOX;
@@ -93,5 +98,10 @@ void(void) monster_bat_init {
 void(void) spawnfunc_monster_bat_spawn {
 	setsize(self, '-32 -32 -32', '32 32 32');
 	monster_init(monster_bat_init);
-	monster_prepare_spawn(bat_spawn, spawnfunc_monster_bat_spawn);
+	monster_prepare_spawn(monster_bat_spawn, spawnfunc_monster_bat_spawn);
 }
+
+#undef monster_bat_idle
+#undef monster_bat_walk
+#undef monster_bat_hunt
+#undef monster_bat_spawn

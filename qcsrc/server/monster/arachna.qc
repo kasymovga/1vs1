@@ -1,10 +1,16 @@
-void arachna_idle();
-void arachna_guard();
-void arachna_walk();
+#define monster_arachna_idle arachna_idle
+#define monster_arachna_guard arachna_guard
+#define monster_arachna_walk arachna_walk
+#define monster_arachna_hunt arachna_hunt
+#define monster_arachna_remove arachna_remove
+#define monster_arachna_spawn arachna_spawn
+void() monster_arachna_idle;
+void() monster_arachna_guard;
+void() monster_arachna_walk;
 
-void arachna_hunt() {
+void() monster_arachna_hunt {
 	self.nextthink = time;
-	if (monster_check_target(arachna_walk, arachna_guard))
+	if (monster_check_target(monster_arachna_walk, monster_arachna_guard))
 		return;
 
 	vector v;
@@ -57,7 +63,7 @@ void arachna_hunt() {
 	}
 }
 
-void arachna_idle() {
+void() monster_arachna_idle {
 	self.nextthink = time;
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
 		return;
@@ -66,19 +72,19 @@ void arachna_idle() {
 	anim_set(self, '23 1 1', TRUE, TRUE, FALSE);
 }
 
-void arachna_guard() {
+void() monster_arachna_guard {
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	arachna_idle();
+	monster_arachna_idle();
 }
 
-void arachna_walk() {
+void() monster_arachna_walk {
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(arachna_idle, 100))
+	if (monster_walk_finished(monster_arachna_idle, 100))
 		return;
 
 	anim_set(self, '15 1 1', TRUE, TRUE, FALSE);
@@ -89,7 +95,7 @@ void arachna_walk() {
 	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 }
 
-void arachna_remove() {
+void() monster_arachna_remove {
 	remove(self.exteriorweaponentity);
 }
 
@@ -100,19 +106,19 @@ void(void) arachna_model_setup {
 	}
 }
 
-void arachna_dlc_reset() {
+void() arachna_dlc_reset {
 	vector _mins = self.mins;
 	vector _maxs = self.maxs;
 	arachna_model_setup();
 	setsize(self, _mins, _maxs);
 }
 
-void arachna_spawn() {
-	monster_prepare(arachna_hunt, arachna_walk, arachna_idle);
+void() monster_arachna_spawn {
+	monster_prepare(monster_arachna_hunt, monster_arachna_walk, monster_arachna_idle);
 	self.movetype = MOVETYPE_WALK;
 	self.species = SPECIES_ALIEN;
 	self.exteriorweaponentity = spawn();
-	self.entremove = arachna_remove;
+	self.entremove = monster_arachna_remove;
 	self.exteriorweaponentity.scale = 0.6;
 	setmodel(self.exteriorweaponentity, "models/weapons/v_electro.md3");
 	self.takedamage = DAMAGE_AIM;
@@ -124,7 +130,7 @@ void arachna_spawn() {
 	arachna_model_setup();
 }
 
-void arachna_init() {
+void() arachna_init {
 	precache_model("models/arachna/arachna.md3");
 	precache_model("models/weapons/v_electro.md3");
 	precache_sound("weapons/electro_fire.wav");
@@ -133,10 +139,17 @@ void arachna_init() {
 	projectile_init(PROJECTILE_ELECTRO);
 }
 
-void spawnfunc_monster_arachna_spawn() {
+void() spawnfunc_monster_arachna_spawn {
 	setsize(self, '-16 -16 -24', '16 16 32');
 	monster_init(arachna_init);
 	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
 	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
-	monster_prepare_spawn(arachna_spawn, spawnfunc_monster_arachna_spawn);
+	monster_prepare_spawn(monster_arachna_spawn, spawnfunc_monster_arachna_spawn);
 }
+
+#undef monster_arachna_idle
+#undef monster_arachna_guard
+#undef monster_arachna_walk
+#undef monster_arachna_hunt
+#undef monster_arachna_remove
+#undef monster_arachna_spawn
