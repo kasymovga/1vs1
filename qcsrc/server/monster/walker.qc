@@ -1,9 +1,18 @@
+//compatibility with old save files
+#define monster_walker_idle walker_idle
+#define monster_walker_walk walker_walk
+#define monster_walker_hunt walker_hunt
+#define monster_walker_spawn walker_spawn
+#define monster_walker_remove walker_remove
+#define monster_walker_rocket_event_damage walker_rocket_event_damage
+#define monster_walker_rocket_think walker_rocket_think
 #define WALKER_MIN '-70 -70 5'
 #define WALKER_MAX '70 70 90'
-void walker_walk();
-void walker_idle();
 
-void walker_bullet() {
+void() monster_walker_walk;
+void() monster_walker_idle;
+
+void() monster_walker_bullet {
 	weapon_shotdir = normalize(self.enemy.origin - weapon_shotorg);
 	weapon_shotdir_x = v_forward_x;
 	weapon_shotdir_y = v_forward_y;
@@ -14,7 +23,7 @@ void walker_bullet() {
 	setattachment(weapon_flash_spawn(WEAPON_FLASH_UZI), self.weaponentity, "tag_fire");
 }
 
-void walker_rocket_event_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce) {
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce) monster_walker_rocket_event_damage  {
 	self.health = self.health - _damage;
 	self.velocity = self.velocity + vforce;
 	if (self.health <= 0) {
@@ -23,7 +32,7 @@ void walker_rocket_event_damage (entity inflictor, entity attacker, float _damag
 	}
 }
 
-void walker_rocket_think() {
+void() monster_walker_rocket_think {
 	if (time > self.cnt) {
 		projectile_explode();
 		return;
@@ -47,9 +56,9 @@ void walker_rocket_think() {
 	}
 }
 
-void walker_hunt() {
+void() monster_walker_hunt {
 	self.nextthink = time;
-	if (monster_check_target(walker_walk, walker_idle))
+	if (monster_check_target(monster_walker_walk, monster_walker_idle))
 		return;
 
 	float dofire;
@@ -71,7 +80,7 @@ void walker_hunt() {
 			weapon_shotorg = self.origin + v_forward * 32 + '0 0 16';
 			anim_set(self.weaponentity, '0 12 12', TRUE, TRUE, FALSE);
 			anim_update(self.weaponentity);
-			walker_bullet();
+			monster_walker_bullet();
 		} else {
 			//Rockets
 			weapon_shotorg = self.origin + v_up * 80;
@@ -87,11 +96,11 @@ void walker_hunt() {
 			missile.takedamage = DAMAGE_YES;
 			missile.damageforcescale = 1;
 			missile.health = 10;
-			missile.event_damage = walker_rocket_event_damage;
+			missile.event_damage = monster_walker_rocket_event_damage;
 			missile.enemy = self.enemy;
 			missile.velocity = normalize(v_forward + '0 0 0.5') * 600;
 			missile.touch = projectile_touch_explode;
-			missile.think = walker_rocket_think;
+			missile.think = monster_walker_rocket_think;
 			missile.nextthink = time;
 			missile.cnt = time + 30;
 			missile.angles = vectoangles(missile.velocity);
@@ -113,12 +122,12 @@ void walker_hunt() {
 	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 }
 
-void walker_walk() {
+void() monster_walker_walk {
 	self.nextthink = time;
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(walker_idle, 100))
+	if (monster_walk_finished(monster_walker_idle, 100))
 		return;
 
 	float onground = (self.flags & FL_ONGROUND);
@@ -129,7 +138,7 @@ void walker_walk() {
 	self.angles_y = approach_angle(self.angles_y, v_y, 180 * frametime);
 }
 
-void walker_remove() {
+void() monster_walker_remove {
 	remove(self.weaponentity);
 	entity e;
 	for (e = world; (e = findentity(e, owner, self));)
@@ -137,7 +146,7 @@ void walker_remove() {
 			e.owner = world;
 }
 
-void walker_idle() {
+void() monster_walker_idle {
 	self.nextthink = time;
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
@@ -147,8 +156,8 @@ void walker_idle() {
 	anim_update(self);
 }
 
-void walker_spawn() {
-	monster_prepare(walker_hunt, walker_walk, walker_idle);
+void() monster_walker_spawn {
+	monster_prepare(monster_walker_hunt, monster_walker_walk, monster_walker_idle);
 	setmodel(self, "models/turrets/walker_body.md3");
 	self.weaponentity = spawn();
 	setmodel(self.weaponentity, "models/turrets/walker_head_minigun.md3");
@@ -158,7 +167,7 @@ void walker_spawn() {
 	self.damageforcescale = 0.1;
 	self.netname = "Walker Nagibator";
 	self.movetype = MOVETYPE_WALK;
-	self.entremove = walker_remove;
+	self.entremove = monster_walker_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.weaponentity.colormod = self.colormod;
 	self.ammo_rockets = 20;
@@ -177,5 +186,13 @@ void(void) monster_walker_init {
 void(void) spawnfunc_monster_walker_spawn {
     setsize(self, WALKER_MIN, WALKER_MAX);
 	monster_init(monster_walker_init);
-	monster_prepare_spawn(walker_spawn, spawnfunc_monster_walker_spawn);
+	monster_prepare_spawn(monster_walker_spawn, spawnfunc_monster_walker_spawn);
 }
+
+#undef monster_walker_idle
+#undef monster_walker_walk
+#undef monster_walker_hunt
+#undef monster_walker_spawn
+#undef monster_walker_remove
+#undef monster_walker_rocket_event_damage
+#undef monster_walker_rocket_think

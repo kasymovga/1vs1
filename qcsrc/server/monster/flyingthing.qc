@@ -1,6 +1,12 @@
-void flyingthing_walk();
+//compatibility with old save files
+#define monster_flyingthing_idle flyingthing_idle
+#define monster_flyingthing_walk flyingthing_walk
+#define monster_flyingthing_hunt flyingthing_hunt
+#define monster_flyingthing_spawn flyingthing_spawn
 
-void flyingthing_idle() {
+void() monster_flyingthing_walk;
+
+void() monster_flyingthing_idle {
 	self.movetype = MOVETYPE_FLY;
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
@@ -9,10 +15,10 @@ void flyingthing_idle() {
 	monster_move_fly_idle(100, 5);
 }
 
-void flyingthing_hunt() {
+void() monster_flyingthing_hunt {
 	self.movetype = MOVETYPE_WALK;
 	self.nextthink = time;
-	if (monster_check_target(flyingthing_walk, flyingthing_idle))
+	if (monster_check_target(monster_flyingthing_walk, monster_flyingthing_idle))
 		return;
 
 	vector v;
@@ -46,13 +52,13 @@ void flyingthing_hunt() {
 	}
 }
 
-void flyingthing_walk() {
+void() monster_flyingthing_walk {
 	self.movetype = MOVETYPE_WALK;
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
 	}
-	if (monster_walk_finished(flyingthing_idle, 100))
+	if (monster_walk_finished(monster_flyingthing_idle, 100))
 		return;
 
 	//self.velocity = normalize(v) * 400;
@@ -63,12 +69,12 @@ void flyingthing_walk() {
 	self.angles_x = approach_angle(self.angles_x, v_x, 90 * frametime);
 }
 
-void flyingthing_spawn() {
+void() monster_flyingthing_spawn {
 	self.movetype = MOVETYPE_FLY;
 	self.species = SPECIES_ROBOT_SOLID;
 	self.netname = "Flying Thing";
 	monster_set_fly();
-	monster_prepare(flyingthing_hunt, flyingthing_walk, flyingthing_idle);
+	monster_prepare(monster_flyingthing_hunt, monster_flyingthing_walk, monster_flyingthing_idle);
 	setmodel(self, "models/turrets/walker_mghead.md3");
 	self.colormod = '2 3 1';
 	//self.effects = EFFECT_FULLBRIGHT;
@@ -89,5 +95,10 @@ void(void) monster_flyingthing_init {
 void(void) spawnfunc_monster_flyingthing_spawn {
 	setsize(self, '-16 -16 -48', '16 16 0');
 	monster_init(monster_flyingthing_init);
-	monster_prepare_spawn(flyingthing_spawn, spawnfunc_monster_flyingthing_spawn);
+	monster_prepare_spawn(monster_flyingthing_spawn, spawnfunc_monster_flyingthing_spawn);
 }
+
+#undef monster_flyingthing_idle
+#undef monster_flyingthing_walk
+#undef monster_flyingthing_hunt
+#undef monster_flyingthing_spawn

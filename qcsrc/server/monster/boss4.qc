@@ -1,3 +1,11 @@
+//compatibility with old save files
+#define monster_boss4_idle boss4_idle
+#define monster_boss4_guard boss4_guard
+#define monster_boss4_walk boss4_walk
+#define monster_boss4_hunt boss4_hunt
+#define monster_boss4_remove boss4_remove
+#define monster_boss4_spawn boss4_spawn
+#define monster_boss4_mine_think boss4_mine_think
 #define MONSTER_BOSS4_ANIM_DIE '15 11 10'
 #define MONSTER_BOSS4_ANIM_LEGS_WALK '67 11 20'
 #define MONSTER_BOSS4_ANIM_LEGS_IDLE '173 10 10'
@@ -5,11 +13,11 @@
 #define MONSTER_BOSS4_ANIM_TORSO_ATTACK '132 6 15'
 #define MONSTER_BOSS4_ANIM_TORSO_DROP '144 5 20'
 
-void boss4_idle();
-void boss4_guard();
-void boss4_walk();
+void monster_boss4_idle();
+void monster_boss4_guard();
+void monster_boss4_walk();
 
-float boss4_prethink_skip(void) {
+float(void) monster_boss4_prethink_skip {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	if (self.owner.spawnflags & MONSTER_SPAWN_SHIELDED)
 	if not(self.spawnflags & MONSTER_SPAWN_SHIELDED) {
@@ -25,10 +33,8 @@ float boss4_prethink_skip(void) {
 	return FALSE;
 }
 
-void boss4_mine_think()
-{
-	if(time > self.pushltime)
-	{
+void() monster_boss4_mine_think {
+	if (time > self.pushltime) {
 		remove(self);
 		return;
 	}
@@ -40,12 +46,12 @@ void boss4_mine_think()
 	self.nextthink = time + 0.1;
 }
 
-void boss4_hunt() {
+void() monster_boss4_hunt {
 	self.nextthink = time;
-	if (boss4_prethink_skip())
+	if (monster_boss4_prethink_skip())
 		return;
 
-	if (monster_check_target(boss4_walk, boss4_guard))
+	if (monster_check_target(monster_boss4_walk, monster_boss4_guard))
 		return;
 
 	vector v;
@@ -66,7 +72,7 @@ void boss4_hunt() {
 		entity proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
 		projectile_setup(proj, _shotorg, EFFECT_IMPACT_FIREBALL, WEAPON_FIREBALL, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 		proj.touch = projectile_touch_explode;
-		proj.think = boss4_mine_think;
+		proj.think = monster_boss4_mine_think;
 		proj.nextthink = time;
 		proj.velocity = normalize(_shotdir) * 1000;
 		proj.pushltime = time + 20;
@@ -93,9 +99,9 @@ void boss4_hunt() {
 	}
 }
 
-void boss4_idle() {
+void() monster_boss4_idle {
 	self.nextthink = time;
-	if (boss4_prethink_skip())
+	if (monster_boss4_prethink_skip())
 		return;
 
 	if (monster_look_for_player(2000, 500, 0, 1, 3))
@@ -105,8 +111,8 @@ void boss4_idle() {
 	monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_IDLE, MONSTER_BOSS4_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
-void boss4_guard() {
-	if (boss4_prethink_skip()) {
+void() monster_boss4_guard {
+	if (monster_boss4_prethink_skip()) {
 		self.nextthink = time;
 		return;
 	}
@@ -114,18 +120,18 @@ void boss4_guard() {
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
 
-	boss4_idle();
+	monster_boss4_idle();
 }
 
-void boss4_walk() {
+void() monster_boss4_walk {
 	self.nextthink = time;
-	if (boss4_prethink_skip())
+	if (monster_boss4_prethink_skip())
 		return;
 
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(boss4_idle, 100))
+	if (monster_walk_finished(monster_boss4_idle, 100))
 		return;
 
 	monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_WALK, MONSTER_BOSS4_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
@@ -137,7 +143,7 @@ void boss4_walk() {
 
 }
 
-void boss4_remove() {
+void() monster_boss4_remove {
 	monster_common_on_remove();
 	if (self.fire_burner)
 		remove(self.fire_burner);
@@ -145,8 +151,8 @@ void boss4_remove() {
 	WaypointSprite_DetachCarrier(self);
 }
 
-void boss4_spawn() {
-	monster_prepare(boss4_hunt, boss4_walk, boss4_idle);
+void() monster_boss4_spawn {
+	monster_prepare(monster_boss4_hunt, monster_boss4_walk, monster_boss4_idle);
 	if (self.colormod != '0 0 0')
 		self.colormod *= 0.25;
 	else
@@ -154,7 +160,7 @@ void boss4_spawn() {
 
 	monster_common_composite_setup("fireguy", "fireball");
 	self.scale = 3.75;
-	self.entremove = boss1_remove;
+	self.entremove = monster_boss4_remove;
 	self.netname = "Big FireGuy";
 	self.max_health = self.health;
 	self.damageforcescale = 0.01;
@@ -184,7 +190,7 @@ void(void) spawnfunc_monster_boss4_spawn {
 	self.noise2 = "player/carni-lycan/player/death2.ogg";
 	self.noise3 = "player/carni-lycan/player/pain50.ogg";
 	self.atten = 0.1;
-	monster_prepare_spawn(boss4_spawn, spawnfunc_monster_boss4_spawn);
+	monster_prepare_spawn(monster_boss4_spawn, spawnfunc_monster_boss4_spawn);
 }
 
 #undef MONSTER_BOSS4_ANIM_DIE
@@ -192,3 +198,9 @@ void(void) spawnfunc_monster_boss4_spawn {
 #undef MONSTER_BOSS4_ANIM_LEGS_IDLE
 #undef MONSTER_BOSS4_ANIM_TORSO_STAND
 #undef MONSTER_BOSS4_ANIM_TORSO_ATTACK
+#undef monster_boss4_idle
+#undef monster_boss4_guard
+#undef monster_boss4_walk
+#undef monster_boss4_hunt
+#undef monster_boss4_remove
+#undef monster_boss4_spawn

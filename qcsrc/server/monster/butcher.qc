@@ -1,11 +1,18 @@
-void butcher_idle();
-void butcher_guard();
-void butcher_walk();
+//compatibility with old save files
+#define monster_butcher_idle butcher_idle
+#define monster_butcher_guard butcher_guard
+#define monster_butcher_walk butcher_walk
+#define monster_butcher_hunt butcher_hunt
+#define monster_butcher_spawn butcher_spawn
 
-void butcher_hunt() {
+void() monster_butcher_idle;
+void() monster_butcher_guard;
+void() monster_butcher_walk;
+
+void() monster_butcher_hunt {
 	anim_update(self);
 	self.nextthink = time;
-	if (monster_check_target(butcher_walk, butcher_guard))
+	if (monster_check_target(monster_butcher_walk, monster_butcher_guard))
 		return;
 
 	vector v = '0 0 0';
@@ -46,7 +53,7 @@ void butcher_hunt() {
 	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
 }
 
-void butcher_idle() {
+void() monster_butcher_idle {
 	anim_update(self);
 	self.nextthink = time;
 	if (monster_look_for_player(1500, 500, 0, 0, 0))
@@ -56,18 +63,18 @@ void butcher_idle() {
 	anim_set(self, '1 12 12', TRUE, TRUE, FALSE);
 }
 
-void butcher_guard() {
+void() monster_butcher_guard {
 	self.angles_y = self.angles_y + frametime * 15;
-	butcher_idle();
+	monster_butcher_idle();
 }
 
-void butcher_walk() {
+void() monster_butcher_walk {
 	anim_update(self);
 	self.nextthink = time;
 	if(monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
 
-	if (monster_walk_finished(butcher_idle, 100))
+	if (monster_walk_finished(monster_butcher_idle, 100))
 		return;
 
 	anim_set(self, '14 8 8', TRUE, TRUE, FALSE);
@@ -79,8 +86,8 @@ void butcher_walk() {
 
 }
 
-void butcher_spawn() {
-	monster_prepare(butcher_hunt, butcher_walk, butcher_idle);
+void() monster_butcher_spawn {
+	monster_prepare(monster_butcher_hunt, monster_butcher_walk, monster_butcher_idle);
 	setmodel(self, "models/oq/demon.mdl");
 	self.movetype = MOVETYPE_WALK;
 	self.takedamage = DAMAGE_AIM;
@@ -101,6 +108,11 @@ void(void) spawnfunc_monster_butcher_spawn {
 	monster_init(monster_butcher_init);
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
-	monster_prepare_spawn(butcher_spawn, spawnfunc_monster_butcher_spawn);
+	monster_prepare_spawn(monster_butcher_spawn, spawnfunc_monster_butcher_spawn);
 }
 
+#undef monster_butcher_idle
+#undef monster_butcher_guard
+#undef monster_butcher_walk
+#undef monster_butcher_hunt
+#undef monster_butcher_spawn

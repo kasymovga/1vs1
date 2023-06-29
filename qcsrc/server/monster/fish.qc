@@ -1,6 +1,12 @@
-void fish_walk();
+//compatibility with old save files
+#define monster_fish_idle fish_idle
+#define monster_fish_walk fish_walk
+#define monster_fish_hunt fish_hunt
+#define monster_fish_spawn fish_spawn
 
-void fish_idle() {
+void() monster_fish_walk;
+
+void() monster_fish_idle {
 	anim_update(self);
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 1)) {
@@ -9,10 +15,10 @@ void fish_idle() {
 	move_beak_simple(100 * frametime);
 }
 
-void fish_hunt() {
+void() monster_fish_hunt {
 	anim_update(self);
 	self.nextthink = time;
-	if (monster_check_target(fish_walk, fish_idle))
+	if (monster_check_target(monster_fish_walk, monster_fish_idle))
 		return;
 
 	vector v;
@@ -40,13 +46,13 @@ void fish_hunt() {
 	}
 }
 
-void fish_walk() {
+void() monster_fish_walk {
 	anim_update(self);
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 1)) {
 		return;
 	}
-	if (monster_walk_finished(fish_idle, 100))
+	if (monster_walk_finished(monster_fish_idle, 100))
 		return;
 
 	vector v = monster_move_swim(300, 5);
@@ -57,11 +63,11 @@ void fish_walk() {
 	}
 }
 
-void fish_spawn() {
+void() monster_fish_spawn {
 	self.movetype = MOVETYPE_WALK;
 	self.species = SPECIES_ALIEN;
 	self.netname = "Acid Fish";
-	monster_prepare(fish_hunt, fish_walk, fish_idle);
+	monster_prepare(monster_fish_hunt, monster_fish_walk, monster_fish_idle);
 	setmodel(self, "models/oq/fish.mdl");
 	self.solid = SOLID_BBOX;
 	self.scale = 1.6;
@@ -79,6 +85,10 @@ void(void) monster_fish_init {
 void(void) spawnfunc_monster_fish_spawn {
 	setsize(self, '-24 -24 -32', '24 24 16');
 	monster_init(monster_fish_init);
-	monster_prepare_spawn(fish_spawn, spawnfunc_monster_fish_spawn);
+	monster_prepare_spawn(monster_fish_spawn, spawnfunc_monster_fish_spawn);
 }
 
+#undef monster_fish_idle
+#undef monster_fish_walk
+#undef monster_fish_hunt
+#undef monster_fish_spawn

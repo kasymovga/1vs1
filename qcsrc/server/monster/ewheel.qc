@@ -1,6 +1,6 @@
-void ewheel_walk();
+void() monster_ewheel_walk;
 
-void ewheel_idle() {
+void() monster_ewheel_idle {
 	self.nextthink = time;
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
@@ -10,9 +10,9 @@ void ewheel_idle() {
 	anim_update(self);
 }
 
-void ewheel_hunt() {
+void() monster_ewheel_hunt {
 	self.nextthink = time;
-	if (monster_check_target(ewheel_walk, ewheel_idle))
+	if (monster_check_target(monster_ewheel_walk, monster_ewheel_idle))
 		return;
 
 	vector v;
@@ -49,12 +49,12 @@ void ewheel_hunt() {
 	self.frame = 2;
 }
 
-void ewheel_walk() {
+void() monster_ewheel_walk {
 	self.nextthink = time;
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(ewheel_idle, 100))
+	if (monster_walk_finished(monster_ewheel_idle, 100))
 		return;
 
 	self.frame = 1;
@@ -65,12 +65,12 @@ void ewheel_walk() {
 	}
 }
 
-void ewheel_remove() {
+void() monster_ewheel_remove {
 	remove(self.weaponentity);
 }
 
-void ewheel_spawn() {
-	monster_prepare(ewheel_hunt, ewheel_walk, ewheel_idle);
+void() monster_ewheel_spawn {
+	monster_prepare(monster_ewheel_hunt, monster_ewheel_walk, monster_ewheel_idle);
 	setmodel(self, "models/turrets/ewheel-base2.md3");
 	self.weaponentity = spawn();
 	setmodel(self.weaponentity, "models/turrets/ewheel-gun1.md3");
@@ -80,7 +80,7 @@ void ewheel_spawn() {
 	self.damageforcescale = 1;
 	self.netname = "Magic Wheel";
 	self.movetype = MOVETYPE_WALK;
-	self.entremove = ewheel_remove;
+	self.entremove = monster_ewheel_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.weaponentity.colormod = self.colormod;
 	self.ammo_cells = 10;
@@ -96,5 +96,5 @@ void(void) monster_ewheel_init {
 void(void) spawnfunc_monster_ewheel_spawn {
     setsize(self,'-32 -32 0','32 32 48');
 	monster_init(monster_ewheel_init);
-	monster_prepare_spawn(ewheel_spawn, spawnfunc_monster_ewheel_spawn);
+	monster_prepare_spawn(monster_ewheel_spawn, spawnfunc_monster_ewheel_spawn);
 }

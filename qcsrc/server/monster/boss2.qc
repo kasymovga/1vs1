@@ -1,11 +1,3 @@
-//compatibility with old save files
-#define monster_boss2_idle boss2_idle
-#define monster_boss2_guard boss2_guard
-#define monster_boss2_walk boss2_walk
-#define monster_boss2_hunt boss2_hunt
-#define monster_boss2_remove boss2_remove
-#define monster_boss2_spawn boss2_spawn
-#define monster_boss2_pellet_touch boss2_pellet_touch
 #define MONSTER_BOSS2_ANIM_DIE '0 29 15'
 #define MONSTER_BOSS2_ANIM_LEGS_WALK '128 11 11'
 #define MONSTER_BOSS2_ANIM_LEGS_IDLE '194 6 6'
@@ -174,10 +166,3 @@ void(void) spawnfunc_monster_boss2_spawn {
 #undef MONSTER_BOSS2_ANIM_TORSO_STAND
 #undef MONSTER_BOSS2_ANIM_TORSO_ATTACK
 #undef MONSTER_BOSS2_MODEL_ORIGIN_ADJUST
-#undef monster_boss2_idle
-#undef monster_boss2_guard
-#undef monster_boss2_walk
-#undef monster_boss2_hunt
-#undef monster_boss2_remove
-#undef monster_boss2_spawn
-#undef monster_boss2_pellet_touch
