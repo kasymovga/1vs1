@@ -67,6 +67,46 @@ void(string theCommand) cmd { //called by engine
 		else if (argv(1) == "normal") normalNexuizVideoSettingsTab(NULL, NULL);
 		else if (argv(1) == "high") highNexuizVideoSettingsTab(NULL, NULL);
 		else if (argv(1) == "ultra") ultraNexuizVideoSettingsTab(NULL, NULL);
+	} else if (s == "loadfallback" && argc == 2) {
+		if (isserver() || clientstate() == CS_CONNECTED) {
+			//print("Loading successful\n");
+			return;
+		}
+		print("Loading failed, attempt to fallback\n");
+		float f = fopen(argv(1), FILE_READ);
+		string mn = "";
+		if (f >= 0) {
+			registercvar("_campaign_index", "", 0);
+			registercvar("_campaign_name", "", 0);
+			string line;
+			float lineno = 0;
+			while ((line = fgets(f))) {
+				lineno++;
+				if (lineno <= 21) {
+					if (lineno == 20) {
+						mn = line;
+					} else if (lineno >= 3 && lineno <= 18) {
+						registercvar(strcat("_override_parm", ftos(lineno - 2)), "", 0);
+						cvar_set(strcat("_override_parm", ftos(lineno - 2)), line);
+					}
+				}
+				if (substring(line, 0, 17) == "\"campaign_level\" " && strlen(line) >= 19) {
+					cvar_set("_campaign_index", substring(line, 18, strlen(line) - 19));
+				}
+				if (substring(line, 0, 19) == "\"g_campaign_skill\" " && strlen(line) >= 21) {
+					cvar_set("g_campaign_skill", substring(line, 20, strlen(line) - 21));
+				}
+				if (substring(line, 0, 16) == "\"campaign_name\" " && strlen(line) >= 18) {
+					cvar_set("_campaign_name", substring(line, 17, strlen(line) - 18));
+				}
+				if (line == "}") break;
+			}
+			fclose(f);
+		}
+		localcmd(strcat("\n_restore_game 0;maxplayers 1;skill 3;coop 0;deathmatch 0;g_campaign 1;_gametype single;map ", mn, "\n"));
+		for (f = 1; f <= 16; f++) {
+			localcmd(strcat("unset _override_parm", ftos(f), "\n"));
+		}
 	} else
 		print("Invalid theCommand. For a list of supported theCommands, try menu_cmd help.\n");
 }

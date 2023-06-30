@@ -187,6 +187,26 @@ void(void) client_parms_change { //called by engine
 
 void(void) client_parms_decode {
 	// load parms
+	if (num_for_edict(self) == 1) {
+		#define PARMOVERRIDE(x) if (cvar_string("_override_parm" #x) != "") { parm##x = cvar("_override_parm" #x); cvar_set("_override_parm" #x, ""); }
+		PARMOVERRIDE(1)
+		PARMOVERRIDE(2)
+		PARMOVERRIDE(3)
+		PARMOVERRIDE(4)
+		PARMOVERRIDE(5)
+		PARMOVERRIDE(6)
+		PARMOVERRIDE(7)
+		PARMOVERRIDE(8)
+		PARMOVERRIDE(9)
+		PARMOVERRIDE(10)
+		PARMOVERRIDE(11)
+		PARMOVERRIDE(12)
+		PARMOVERRIDE(13)
+		PARMOVERRIDE(14)
+		PARMOVERRIDE(15)
+		PARMOVERRIDE(16)
+		#undef PARMOVERRIDE
+	}
 	self.parm_idlesince = parm1;
 	if (self.parm_idlesince == -(86400 * 366))
 		self.parm_idlesince = time;
