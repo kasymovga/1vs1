@@ -419,7 +419,6 @@ void() map_finish {
 	}
 	vote_reset();
 	world_dump_stats(TRUE);
-	IRC_Announce_GameOver();
 	FOR_EACH_CLIENT(other) {
 		if (other.winning)
 			bprint(other.netname, " ^7wins.\n");

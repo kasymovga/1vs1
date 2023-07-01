@@ -650,7 +650,6 @@ void(string s) cmd_client {
 				return;
 			}
 			client_mute_ifneeded(name);
-			IRC_Announce_Name(self, name);
 			if (strlen(strdecolorize(name)) > 48) {
 				name = substring(name, 0, 47);
 				s = strcat("name ", substring(name, 0, 47), "~");

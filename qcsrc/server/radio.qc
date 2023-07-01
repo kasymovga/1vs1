@@ -99,7 +99,6 @@ void Radio_Announce(entity e) {
 			sprint(e, strcat("\{1}", desc, "\n"));
 		else {
 			bprint("\{1}", desc, "\n");
-			IRC_Announce_Radio(desc);
 		}
 	}
 }

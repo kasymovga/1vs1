@@ -343,7 +343,6 @@ void(void) world_init {
 	random_seed_spawn();
 	localcmd("\n_sv_hook_gamestart ", game_type_name(game_type), ";");
 	world_initialized = 1;
-	IRC_Init();
 	infomessages_init();
 	defer(20000, world_end_of_time); //prevent bugs with 32bit float time value
 }
