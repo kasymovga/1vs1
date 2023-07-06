@@ -104,9 +104,6 @@ void(string theCommand) cmd { //called by engine
 			fclose(f);
 		}
 		localcmd(strcat("\n_restore_game 0;maxplayers 1;skill 3;coop 0;deathmatch 0;g_campaign 1;_gametype single;map ", mn, "\n"));
-		for (f = 1; f <= 16; f++) {
-			localcmd(strcat("unset _override_parm", ftos(f), "\n"));
-		}
 	} else
 		print("Invalid theCommand. For a list of supported theCommands, try menu_cmd help.\n");
 }
