@@ -495,7 +495,6 @@ void(entity e, string args, float set) physics_ability_init {
 var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) physics_player_damage_handle_next;
 float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) physics_player_damage_handle {
 	if (!self.physics_nofriction_time) {
-		print("nofriction damage added\n");
 		self.physics_nofriction_time = bound(0.05, _damage * 0.002, 0.2);
 	}
 	return physics_player_damage_handle_next(inflictor, attacker, _damage, deathtype, hitloc, force);
