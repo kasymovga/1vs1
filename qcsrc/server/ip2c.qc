@@ -211,12 +211,6 @@ string IP2C_LookupCached(string ip) {
         return res;
     }
 
-    if(checkextension("DP_RM_GEOIP") && cvar("sv_ip2country_use_builtin")) {
-        if((res = GeoIP_LookUp(ip))) {
-            return res;
-        }
-    }
-
     return "";
 }
 
