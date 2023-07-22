@@ -113,3 +113,4 @@ set g_slowmo 1
 set g_mapinfo_settemp_acl "+*" "ACL for mapinfo setting cvars"
 set g_mapinfo_settemp_force 1 "Prioritize mapinfo settemp over profile settings"
 set g_teleport_time 0.1 "Time of prevention player movement after teleportation for better client-server synchronization"
+set sv_gametypevote_same_limit 0 "Limit for same result in game type vote"
