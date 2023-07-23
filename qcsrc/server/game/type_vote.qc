@@ -88,7 +88,7 @@ float(void) game_type_vote_think {
 			if (mapinfo_type & game_type_vote_mapinfo_mask) {
 				if (sv_gametypevote_same_limit > 0) {
 					if (cvar("_gametypevote_same") >= sv_gametypevote_same_limit)
-					if (t == game_type && profile == cvar_string("g_profile")) {
+					if (t == game_type && (profile == cvar_string("g_profile") || profile == " ")) {
 						print("Option ", head, " skipped from game type vote, because of limit\n");
 						cvar_set("_gametypevote_same", "0");
 						continue;
@@ -113,6 +113,7 @@ float(void) game_type_vote_think {
 	if (game_type_vote_count == 1) {
 		game_type_switch(game_type_vote_types[0]);
 		game_type_vote_finished = TRUE;
+		cvar_set("g_profile", game_type_vote_profiles[0]);
 		return TRUE;
 	}
 	for (i = 0; i < game_type_vote_count; i++) {
