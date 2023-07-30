@@ -123,7 +123,7 @@ float(void) physics_max_speed_mod {
 void(void) physics_frame_end_hook {
 	self.last_physics_ladder = physics_ladder;
 	if (physics_is_player)
-	if (g_physics_fixed || (vlen(physics_frame_begin_origin - self.origin) / frametime) * max(frametime, sys_ticrate) > 32)
+	if (g_physics_fixed || (vlen(physics_frame_begin_origin - self.origin) / frametime) * max(frametime, sys_ticrate) > self.maxs_x - self.mins_x)
 	if (self.solid != SOLID_NOT)
 	if (self.mins != self.maxs) {
 		physics_triggers(physics_frame_begin_origin, self.origin, vlen(self.maxs - self.mins) / 2, 0);
