@@ -216,6 +216,8 @@ void(float ignore) main_init_read {
 		input_hook_use_swapped = i & 8;
 		input_button_attack2_allowed = !(i & 16);
 		view_recoil_mode = (i & 32);
+		font_extra_symbols = (i & 64);
+		font_load_icons();
 	}
 	if (sf & 4) {
 		str_unzone_ifneeded(fog_settings);

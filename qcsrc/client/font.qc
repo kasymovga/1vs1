@@ -5,6 +5,7 @@ void(float i, string s) font_load_icon {
 
 void(void) font_load_icons {
 	float i, n;
+	if not(font_extra_symbols) return;
 	if not(cvar_type("r_font_extra_symbols") & CVAR_TYPEFLAG_ENGINE) return;
 	for (i = WEAPON_FIRST; i <= WEAPON_LAST; i++) {
 		font_load_icon(i, weapon_info(i).icon);

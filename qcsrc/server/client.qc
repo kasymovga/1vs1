@@ -109,6 +109,9 @@ float(entity to, float sf) client_init_send {
 		if (g_recoil_extra)
 			t |= 32;
 
+		if (sv_notification_type)
+			t |= 64;
+
 		net_write_byte(MSG_ENTITY, t);
 	}
 	if (sf & 4) {

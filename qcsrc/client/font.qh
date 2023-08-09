@@ -6,4 +6,5 @@ enum {
 	FONT_ICON_FALL,
 	FONT_ICON_KILL,
 };
+float font_extra_symbols;
 void(void) font_load_icons;
