@@ -38,6 +38,7 @@ float g_player_pushfactor;
 float g_player_body_pitch_maxangle;
 float g_player_team_collisions;
 float g_player_damage_screen_effects;
+float sv_notification_type;
 float g_endmatch_on_leave;
 string sv_announcer_extra_pushfrag;
 string sv_announcer_extra_doublekill;
@@ -185,48 +186,48 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 	s = targ.netname;
 	a = attacker.netname;
 	float attacker_is_player = (attacker.classname == "player" || (team_mode && attacker.classname == "spectator" && attacker.team > 0));
+	string bmsg = "", camsg = "", ctmsg = "";
 	if (targ == attacker) {
 		if (clienttype(attacker) == CLIENTTYPE_BOT)
 			bot_say(attacker, FALSE, world, cvar_string("bot_messages_suicide"), "");
 
 		if (deathtype == DEATH_TEAMCHANGE) {
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", team_colored_name(targ.team)));
+			ctmsg = strcat("You are now on: ", team_colored_name(targ.team));
 		} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", team_colored_name(targ.team)));
-			return;
+			ctmsg = strcat("You have been moved into a different team to improve team balance\nYou are now on: ", team_colored_name(targ.team));
 		} else if (deathtype == DEATH_NOAMMO) {
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were killed for running out of ammo..."));
+			ctmsg = "^1You were killed for running out of ammo...";
 		} else if (deathtype == DEATH_ROT) {
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You grew too old without taking your medicine"));
+			ctmsg = "^1You grew too old without taking your medicine";
 		} else if (deathtype == DEATH_MIRRORDAMAGE) {
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't shoot your team mates!"));
+			ctmsg = "^1Don't shoot your team mates!";
 		} else {
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
+			ctmsg = "^1You killed your own dumb self!";
 		}
 		w = DEATH_WEAPONOF(deathtype);
 		if (WEAPON_VALID(w)) {
 			weapon_deathtypestring = "couldn't resist the urge to self-destruct";
 			weapon_deathtype = deathtype;
 			weapon_action(w, WEAPON_REQUEST_SUICIDEMESSAGE);
-			bprint("^1", s, "^1 ", weapon_deathtypestring, "\n");
+			bmsg = strcat("^1", s, "^1 ", weapon_deathtypestring, "\n");
 		} else if (deathtype == DEATH_KILL)
-			bprint ("^1",s, "^1 couldn't take it anymore\n");
+			bmsg = strcat("^1",s, "^1 couldn't take it anymore\n");
 		else if (deathtype == DEATH_ROT)
-			bprint ("^1",s, "^1 died\n");
+			bmsg = strcat("^1",s, "^1 died\n");
 		else if (deathtype == DEATH_NOAMMO)
-			bprint ("^7",s, "^7 committed suicide. What's the point of living without ammo?\n");
+			bmsg = strcat("^7",s, "^7 committed suicide. What's the point of living without ammo?\n");
 		else if (deathtype == DEATH_MIRRORDAMAGE)
-			bprint ("^1",s, "^1 didn't become friends with the Lord of Teamplay\n");
+			bmsg = strcat("^1",s, "^1 didn't become friends with the Lord of Teamplay\n");
 		else if (deathtype == DEATH_FIRE)
-			bprint ("^1",s, "^1 burned to death\n");
+			bmsg = strcat("^1",s, "^1 burned to death\n");
 		else if (deathtype != DEATH_TEAMCHANGE)
-			bprint ("^1",s, "^1 couldn't resist the urge to self-destruct\n");
+			bmsg = strcat("^1",s, "^1 couldn't resist the urge to self-destruct\n");
 
 		if (deathtype != DEATH_TEAMCHANGE) {
 			score_give_frag(attacker, targ, -1);
 		}
 		if (targ.killcount > 2)
-			bprint ("^1",s,"^1 ended it all after a ",ftos(targ.killcount)," kill spree\n");
+			bmsg = strcat("^1",s,"^1 ended it all after a ",ftos(targ.killcount)," kill spree\n");
 	} else if (attacker_is_player || attacker.netname != "") {
 		if (clienttype(attacker) == CLIENTTYPE_BOT) {
 			if (bot_talk)
@@ -259,13 +260,13 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			}
 		}
 		if (team_mode && attacker.team == targ.team && !targ.saboteur && attacker_is_player) {
-			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s, ", a team mate!"));
-			bprint ("^1", a, "^1 mows down a team mate\n");
+			camsg = strcat("^1Moron! You fragged ", s, ", a team mate!");
+			bmsg = strcat("^1", a, "^1 mows down a team mate\n");
 			if (targ.killcount > 2) {
-				bprint ("^1",s,"'s ^1",ftos(targ.killcount)," kill spree was ended by a team mate!\n");
+				bmsg = strcat("^1",s,"'s ^1",ftos(targ.killcount)," kill spree was ended by a team mate!\n");
 			}
 			if (attacker.killcount > 2) {
-				bprint ("^1",a,"^1 ended a ",ftos(attacker.killcount)," kill spree by killing a team mate\n");
+				bmsg = strcat("^1",a,"^1 ended a ",ftos(attacker.killcount)," kill spree by killing a team mate\n");
 			}
 			attacker.killcount = 0;
 		} else {
@@ -273,7 +274,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			weapon_fragprefix = "";
 			if (!player_obituary_firstblood) {
 				player_obituary_firstblood = TRUE;
-				bprint("^1",a, "^1 drew first blood", "\n");
+				bmsg = strcat("^1",a, "^1 drew first blood", "\n");
 				blood_message = "^1First blood\n";
 				victim_message = "^1First victim\n";  // or First casualty
 				if (sv_announcer_extra_firstblood != "")
@@ -287,23 +288,23 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				weapon_action(w, WEAPON_REQUEST_KILLMESSAGE);
 				p = strstrofs(weapon_deathtypestring, "#", 0);
 				if (p < 0)
-					bprint("^1", s, "^1 ", weapon_deathtypestring, " ", a, "\n");
+					bmsg = strcat("^1", s, "^1 ", weapon_deathtypestring, " ", a, "\n");
 				else
-					bprint("^1", s, "^1 ", substring(weapon_deathtypestring, 0, p), a, "^1", substring(weapon_deathtypestring, p+1, strlen(weapon_deathtypestring) - (p+1)), "\n");
+					bmsg = strcat("^1", s, "^1 ", substring(weapon_deathtypestring, 0, p), a, "^1", substring(weapon_deathtypestring, p+1, strlen(weapon_deathtypestring) - (p+1)), "\n");
 			} else if (deathtype == DEATH_DROWN)
-				bprint ("^1",s, "^1 was drowned by ", a, "\n");
+				bmsg = strcat("^1",s, "^1 was drowned by ", a, "\n");
 			else if (deathtype == DEATH_SLIME)
-				bprint ("^1",s, "^1 was slimed by ", a, "\n");
+				bmsg = strcat("^1",s, "^1 was slimed by ", a, "\n");
 			else if (deathtype == DEATH_LAVA)
-				bprint ("^1",s, "^1 was cooked by ", a, "\n");
+				bmsg = strcat("^1",s, "^1 was cooked by ", a, "\n");
 			else if (deathtype == DEATH_FALL) {
-				bprint ("^1",s, "^1 was grounded by ", a, "\n");
+				bmsg = strcat("^1",s, "^1 was grounded by ", a, "\n");
 				if (sv_announcer_extra_pushfrag != "") {
 					announce(targ, sv_announcer_extra_pushfrag, "");
 					announce(attacker, sv_announcer_extra_pushfrag, "");
 				}
 			} else if (deathtype == DEATH_SWAMP)
-				bprint ("^1",s, "^1 was conserved by ", a, "\n");
+				bmsg = strcat("^1",s, "^1 was conserved by ", a, "\n");
 			else if (deathtype == DEATH_HURTTRIGGER) {
 				if (sv_announcer_extra_pushfrag != "") {
 					announce(targ, sv_announcer_extra_pushfrag, "");
@@ -312,16 +313,16 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				if (inflictor.message2 != "") {
 					p = strstrofs(inflictor.message2, "#", 0);
 					if (p < 0)
-						bprint("^1", s, "^1 ", inflictor.message2, " ", a, "\n");
+						bmsg = strcat("^1", s, "^1 ", inflictor.message2, " ", a, "\n");
 					else
-						bprint("^1", s, "^1 ", substring(inflictor.message2, 0, p), a, "^1", substring(inflictor.message2, p+1, strlen(inflictor.message2) - (p+1)), "\n");
+						bmsg = strcat("^1", s, "^1 ", substring(inflictor.message2, 0, p), a, "^1", substring(inflictor.message2, p+1, strlen(inflictor.message2) - (p+1)), "\n");
 				}
 			} else if (deathtype == DEATH_TURRET)
-				bprint ("^1",s, "^1 was pushed into the line of fire by ^1", a, "\n");
+				bmsg = strcat("^1",s, "^1 was pushed into the line of fire by ^1", a, "\n");
 			else if (deathtype == DEATH_FIRE)
-				bprint ("^1",s, "^1 was burnt to death by ^1", a, "\n");
+				bmsg = strcat("^1",s, "^1 was burnt to death by ^1", a, "\n");
 			else if not(plugin_chain_player_obituary_frag(deathtype, targ, inflictor, attacker))
-				bprint ("^1",s, "^1 was ", weapon_fragprefix, "^1fragged by ", a, "\n");
+				bmsg = strcat("^1",s, "^1 was ", weapon_fragprefix, "^1fragged by ", a, "\n");
 
 			if (attacker_is_player) {
 				if (g_spawnfrags && (targ.spawnshieldtime > time || attacker.spawnshieldtime > time)) {
@@ -330,11 +331,11 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					score_give_frag(attacker, targ, 1);
 				}
 				if (targ.killcount > 2) {
-					bprint ("^1",s,"'s ^1", ftos(targ.killcount), " kill spree was ended by ", a, "\n");
+					bmsg = strcat("^1",s,"'s ^1", ftos(targ.killcount), " kill spree was ended by ", a, "\n");
 				}
 				attacker.killcount = attacker.killcount + 1;
 				if (attacker.killcount > 2) {
-					bprint ("^1",a,"^1 has ",ftos(attacker.killcount)," frags in a row\n");
+					bmsg = strcat("^1",a,"^1 has ",ftos(attacker.killcount)," frags in a row\n");
 				}
 				float fragtime = time;
 				string announce_sound;
@@ -351,9 +352,9 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 						announce(attacker, weapon_fragannounce, "");
 						weapon_fragannounce = "";
 				}
-				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You ", weapon_fragprefix, "^4fragged ^7", s));
+				camsg = strcat(blood_message, "^4You ", weapon_fragprefix, "^4fragged ^7", s);
 			}
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were ", weapon_fragprefix, "^1fragged by ^7", a));
+			ctmsg = strcat(victim_message, "^1You were ", weapon_fragprefix, "^1fragged by ^7", a);
 			weapon_fragprefix = "";
 		}
 	} else {
@@ -362,25 +363,25 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		if (random() <= bot_talk)
 			bot_say(targ, FALSE, world, cvar_string("bot_messages_suicide"), "");
 
-		centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!"));
+		ctmsg = "^1Watch your step!";
 		if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
-			bprint ("^1",s, "^1 ", inflictor.message, "\n");
+			bmsg = strcat("^1",s, "^1 ", inflictor.message, "\n");
 		else if (deathtype == DEATH_DROWN)
-			bprint ("^1",s, "^1 drowned\n");
+			bmsg = strcat("^1",s, "^1 drowned\n");
 		else if (deathtype == DEATH_SLIME)
-			bprint ("^1",s, "^1 was slimed\n");
+			bmsg = strcat("^1",s, "^1 was slimed\n");
 		else if (deathtype == DEATH_LAVA)
-			bprint ("^1",s, "^1 turned into hot slag\n");
+			bmsg = strcat("^1",s, "^1 turned into hot slag\n");
 		else if (deathtype == DEATH_FALL)
-			bprint ("^1",s, "^1 hit the ground with a crunch\n");
+			bmsg = strcat("^1",s, "^1 hit the ground with a crunch\n");
 		else if (deathtype == DEATH_SWAMP)
-			bprint ("^1",s, "^1 is now conserved for centuries to come\n");
+			bmsg = strcat("^1",s, "^1 is now conserved for centuries to come\n");
 		else if (deathtype == DEATH_TURRET)
-			bprint ("^1",s, "^1 was mowed down by a turret \n");
+			bmsg = strcat("^1",s, "^1 was mowed down by a turret \n");
 		else if (deathtype == DEATH_FIRE)
-			bprint ("^1",s, "^1 burnt to death\n");
+			bmsg = strcat("^1",s, "^1 burnt to death\n");
 		else
-			bprint ("^1",s, "^1 died\n");
+			bmsg = strcat("^1",s, "^1 died\n");
 
 		if (targ.classname == "player") {
 			score_give_frag(targ, targ, -1);
@@ -389,12 +390,22 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			}
 		}
 		if (targ.killcount > 2)
-			bprint ("^1",s,"^1 died with a ",ftos(targ.killcount)," kill spree\n");
+			bmsg = strcat("^1",s,"^1 died with a ",ftos(targ.killcount)," kill spree\n");
 	}
 	targ.death_origin = targ.origin;
 	// FIXME: this should go in client_put
 	if (targ.killcount)
 		targ.killcount = 0;
+
+	if (sv_notification_type) {
+		notification(attacker, NOTIFICATION_DEATH, deathtype, targ);
+	} else {
+		bprint(bmsg);
+		if (camsg != "")
+			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, camsg));
+
+		centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, ctmsg));
+	}
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_damage {
@@ -1251,6 +1262,7 @@ void() player_init {
 	CVAR_CACHE(g_player_body_pitch_maxangle);
 	CVAR_CACHE(g_player_team_collisions);
 	CVAR_CACHE(g_player_damage_screen_effects);
+	CVAR_CACHE(sv_notification_type);
 	CVAR_CACHE(g_spawnshieldtime);
 	CVAR_CACHE(g_spawnfrags);
 	CVAR_CACHE(g_spawnsound);

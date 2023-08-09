@@ -1,0 +1,1 @@
+void(entity e1, float icontype, float iconmessage, entity e2) notification;

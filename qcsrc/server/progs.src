@@ -138,6 +138,7 @@ weapon.qh
 weapon/two_weapons.qh
 weapon/flash.qh
 noteline.qh
+notification.qh
 warmup.qh
 weapon/extra.qh
 weapon/selectable.qh
@@ -361,6 +362,7 @@ damage/indicator.qc
 warpzone.qc
 weapon/two_weapons.qc
 noteline.qc
+notification.qc
 warmup.qc
 udp_chat.qc
 damage/score.qc

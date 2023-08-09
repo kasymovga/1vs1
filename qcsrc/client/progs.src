@@ -105,6 +105,7 @@ announce.qc
 vote.qh
 game_menu.qh
 entcs.qh
+font.qh
 main.qc
 mute.qc
 input.qc
@@ -151,6 +152,7 @@ fog.qc
 net.qc
 modelselect.qc
 thirdview.qc
+notification.qc
 csqc_entity.qc
 recordlist.qc
 shootingrange.qc
@@ -160,3 +162,4 @@ rm_skin.qc
 rm_hud.qc
 porto.qc
 translate.qc
+font.qc

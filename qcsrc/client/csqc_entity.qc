@@ -164,6 +164,7 @@ void(void) csqc_entity_init {
 	csqc_entity_temp_parsers[NET_TE_CSQC_EFFECT_IMPACT - NET_TE_CSQC_FIRST] = effect_impact_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_CASING - NET_TE_CSQC_FIRST] = casing_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_GIBSPLASH - NET_TE_CSQC_FIRST] = gib_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_NOTIFICATION - NET_TE_CSQC_FIRST] = notification_read;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

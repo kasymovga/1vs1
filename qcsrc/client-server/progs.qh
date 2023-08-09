@@ -20,6 +20,7 @@
 #include "menu.qh"
 #include "move.qh"
 #include "nadget.qh"
+#include "notification.qh"
 #include "net.qh"
 #include "physics.qh"
 #include "physics/aircraft.qh"

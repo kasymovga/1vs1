@@ -29,6 +29,7 @@ void(void) weapon_update_icons {
 		e.icon = strzone(s);
 	}
 	weapon_info(0).icon = "gfx/hud/num_minus"; //dummy weapon
+	font_load_icons();
 }
 
 void(void) weapon_info_read {
