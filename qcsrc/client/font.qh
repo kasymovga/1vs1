@@ -1,0 +1,9 @@
+enum {
+	FONT_ICON_LAVA = 64,
+	FONT_ICON_SLIME,
+	FONT_ICON_WATER,
+	FONT_ICON_VOID,
+	FONT_ICON_FALL,
+	FONT_ICON_KILL,
+};
+void(void) font_load_icons;
