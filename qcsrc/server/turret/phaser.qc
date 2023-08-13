@@ -107,7 +107,7 @@ void(void) turret_phaser_beam_think {
 			self.shot_force,
 			oldself.shot_dmg,
 			0.75,
-			DEATH_TURRET);
+			WEAPON_NEX);
 	self = oldself;
 	self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
 }

@@ -303,9 +303,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					announce(targ, sv_announcer_extra_pushfrag, "");
 					announce(attacker, sv_announcer_extra_pushfrag, "");
 				}
-			} else if (deathtype == DEATH_SWAMP)
-				bmsg = strcat("^1",s, "^1 was conserved by ", a, "\n");
-			else if (deathtype == DEATH_HURTTRIGGER) {
+			} else if (deathtype == DEATH_HURTTRIGGER) {
 				if (sv_announcer_extra_pushfrag != "") {
 					announce(targ, sv_announcer_extra_pushfrag, "");
 					announce(attacker, sv_announcer_extra_pushfrag, "");
@@ -317,9 +315,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					else
 						bmsg = strcat("^1", s, "^1 ", substring(inflictor.message2, 0, p), a, "^1", substring(inflictor.message2, p+1, strlen(inflictor.message2) - (p+1)), "\n");
 				}
-			} else if (deathtype == DEATH_TURRET)
-				bmsg = strcat("^1",s, "^1 was pushed into the line of fire by ^1", a, "\n");
-			else if (deathtype == DEATH_FIRE)
+			} else if (deathtype == DEATH_FIRE)
 				bmsg = strcat("^1",s, "^1 was burnt to death by ^1", a, "\n");
 			else if not(plugin_chain_player_obituary_frag(deathtype, targ, inflictor, attacker))
 				bmsg = strcat("^1",s, "^1 was ", weapon_fragprefix, "^1fragged by ", a, "\n");
@@ -374,10 +370,6 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			bmsg = strcat("^1",s, "^1 turned into hot slag\n");
 		else if (deathtype == DEATH_FALL)
 			bmsg = strcat("^1",s, "^1 hit the ground with a crunch\n");
-		else if (deathtype == DEATH_SWAMP)
-			bmsg = strcat("^1",s, "^1 is now conserved for centuries to come\n");
-		else if (deathtype == DEATH_TURRET)
-			bmsg = strcat("^1",s, "^1 was mowed down by a turret \n");
 		else if (deathtype == DEATH_FIRE)
 			bmsg = strcat("^1",s, "^1 burnt to death\n");
 		else

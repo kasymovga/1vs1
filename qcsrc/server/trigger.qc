@@ -1471,7 +1471,7 @@ void(void) trigger_swamp_touch {
 	TRIGGER_EXACT_TOUCH;
 	if (other.swamp_interval < time) {
 		other.swamp_interval = time + self.swamp_interval;
-		damage(other, self, self, self.dmg, DEATH_SWAMP, other.origin, '0 0 0');
+		damage(other, self, self, self.dmg, DEATH_SLIME, other.origin, '0 0 0');
 	}
 	other.swampslug = self;
 }

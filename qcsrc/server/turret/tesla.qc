@@ -25,7 +25,7 @@ entity(entity from, float range, float _damage) turret_tesla_toast {
 	if (etarget) {
 		te_smallflash(etarget.origin);
 		effect_lightningarc(from.origin,etarget.origin);
-		damage(etarget,self,self,_damage,DEATH_TURRET,etarget.origin,'0 0 0');
+		damage(etarget,self,self,_damage, WEAPON_ZAPPER, etarget.origin,'0 0 0');
 		etarget.toasted = 1;
 	}
 	return etarget;

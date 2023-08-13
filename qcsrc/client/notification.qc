@@ -15,7 +15,7 @@ void(void) notification_read {
 		} else {
 			if (deathtype == DEATH_FIRE || deathtype == DEATH_LAVA)
 				_icon = chr2str(0xE100 + FONT_ICON_LAVA);
-			else if (deathtype == DEATH_SLIME || deathtype == DEATH_SWAMP)
+			else if (deathtype == DEATH_SLIME)
 				_icon = chr2str(0xE100 + FONT_ICON_SLIME);
 			else if (deathtype == DEATH_FALL)
 				_icon = chr2str(0xE100 + FONT_ICON_FALL);
