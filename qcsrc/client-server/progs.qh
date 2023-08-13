@@ -4,7 +4,7 @@
 #include "content.qh"
 #include "db.qh"
 #include "dead.qh"
-#include "deathtype.qh"
+#include "death.qh"
 #include "dpcontents.qh"
 #include "effect.qh"
 #include "effect_impact.qh"
