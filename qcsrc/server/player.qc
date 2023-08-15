@@ -195,8 +195,6 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			ctmsg = strcat("You are now on: ", team_colored_name(targ.team));
 		} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
 			ctmsg = strcat("You have been moved into a different team to improve team balance\nYou are now on: ", team_colored_name(targ.team));
-		} else if (deathtype == DEATH_NOAMMO) {
-			ctmsg = "^1You were killed for running out of ammo...";
 		} else if (deathtype == DEATH_ROT) {
 			ctmsg = "^1You grew too old without taking your medicine";
 		} else if (deathtype == DEATH_MIRRORDAMAGE) {
@@ -214,8 +212,6 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			bmsg = strcat("^1",s, "^1 couldn't take it anymore\n");
 		else if (deathtype == DEATH_ROT)
 			bmsg = strcat("^1",s, "^1 died\n");
-		else if (deathtype == DEATH_NOAMMO)
-			bmsg = strcat("^7",s, "^7 committed suicide. What's the point of living without ammo?\n");
 		else if (deathtype == DEATH_MIRRORDAMAGE)
 			bmsg = strcat("^1",s, "^1 didn't become friends with the Lord of Teamplay\n");
 		else if (deathtype == DEATH_FIRE)

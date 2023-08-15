@@ -63,7 +63,7 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 		targ.health = 0.9; // this is < 1
 		targ.flags -= targ.flags & FL_GODMODE;
 		_damage = 100000;
-	} else if (deathtype == DEATH_MIRRORDAMAGE || deathtype == DEATH_NOAMMO) {
+	} else if (deathtype == DEATH_MIRRORDAMAGE || deathtype == DEATH_ROT) {
 		// no processing
 	} else {
 		if (targ.classname == "player") {
