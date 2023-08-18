@@ -49,7 +49,7 @@ void(void) notification_read {
 		else
 			centerprint("^1You killed your own dumb self!");
 	} else if (target == player_localentnum) {
-		if not(attacker)
+		if (!attacker && !isnotclient)
 			centerprint("^1Watch your step!");
 		else
 			centerprint(strcat("^1You were fragged by ^7", s));
