@@ -1,6 +1,16 @@
 void(void) notification_read {
 	float notification_type = net_read_byte();
-	float attacker = net_read_short();
+	float isnotclient = (notification_type & 64);
+	notification_type &= 63;
+	float attacker = 0;
+	string s;
+	if (isnotclient) {
+		s = net_read_string();
+		attacker = 0;
+	} else {
+		attacker = net_read_short();
+		s = "";
+	}
 	float target = net_read_short();
 	float deathtype = net_read_coord();
 	float w = DEATH_WEAPONOF(deathtype);
@@ -28,8 +38,7 @@ void(void) notification_read {
 		}
 	} else {
 	}
-	string s = "";
-	if (attacker != target && attacker > 0)
+	if (!isnotclient && attacker != target && attacker > 0)
 		s = player_name(attacker - 1);
 
 	string st = player_name(target - 1);
