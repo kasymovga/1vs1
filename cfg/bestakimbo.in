@@ -19,3 +19,5 @@ set bestakimbo_tdm_g_runes 1
 set bestakimbo_tdm_g_runes_carried_runes_max 1
 set bestakimbo_g_spawnshieldtime 2
 set bestakimbo_ctf_g_akimbo_weapons ""
+set bestakimbo_g_balance_rocketlauncher_damage 84
+set bestakimbo_g_balance_rocketlauncher_edgedamage 32
