@@ -96,3 +96,21 @@ set bot_offsetskill 4
 set bot_mouseskill 2
 set bot_thinkskill 0.5
 set bot_aiskill 2
+
+alias bot0 "settemp minplayers 0"
+alias bot1 "settemp minplayers 1"
+alias bot2 "settemp minplayers 2"
+alias bot3 "settemp minplayers 3"
+alias bot4 "settemp minplayers 4"
+alias bot5 "settemp minplayers 5"
+alias bot6 "settemp minplayers 6"
+alias bot7 "settemp minplayers 7"
+alias bot8 "settemp minplayers 8"
+alias bot9 "settemp minplayers 9"
+alias bot10 "settemp minplayers 10"
+alias bot11 "settemp minplayers 11"
+alias bot12 "settemp minplayers 12"
+alias bot13 "settemp minplayers 13"
+alias bot14 "settemp minplayers 14"
+alias bot15 "settemp minplayers 15"
+alias bot16 "settemp minplayers 16"
