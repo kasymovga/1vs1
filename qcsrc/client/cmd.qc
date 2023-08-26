@@ -129,6 +129,13 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 		sbar_showaccuracy = FALSE;
 		return TRUE;
 	}
+	if (game_type == GAME_TYPE_SINGLE && strCmd == "impulse") {
+		float imp = stof(argv(1));
+		if (imp == 18 || imp == 19)
+			return weapon_wheel();
+
+		return FALSE;
+	}
 	if(view_camera_free_active)
 	if(strCmd == "+forward" || strCmd == "-back") {
 		++view_camera_direction_x;

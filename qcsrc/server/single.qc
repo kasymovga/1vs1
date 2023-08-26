@@ -6,6 +6,7 @@ float single_secrets_total;
 float single_monsters_killed;
 float single_monsters_total;
 float single_skill_save;
+float single_slowmo;
 entity single_secrets_controller;
 
 var void() single_shutdown_next;
@@ -213,7 +214,22 @@ float(string cmd, float tokens) single_cmd_client_handle {
 		localcmd("save slot12.sav\nsaveconfig\n");
 		return TRUE;
 	}
+	if (cmd == "slowmostart") {
+		single_slowmo = 0.05;
+		return TRUE;
+	}
+	if (cmd == "slowmoend") {
+		single_slowmo = 1;
+		return TRUE;
+	}
 	return single_cmd_client_handle_next(cmd, tokens);
+}
+
+var float(float f) single_slowmo_update_mod_next;
+float(float f) single_slowmo_update_mod {
+	f *= single_slowmo;
+	single_slowmo = min(1, single_slowmo + sys_ticrate * 0.1);
+	return single_slowmo_update_mod_next(f);
 }
 
 void(void) single_init {
@@ -245,8 +261,11 @@ void(void) single_init {
 	plugin_chain_shutdown = single_shutdown;
 	plugin_monster_killed = single_monster_killed;
 	if (game_type == GAME_TYPE_SINGLE) {
+		single_slowmo = 1;
 		single_cmd_client_handle_next = plugin_chain_cmd_client_handle;
 		plugin_chain_cmd_client_handle = single_cmd_client_handle;
+		single_slowmo_update_mod_next = plugin_chain_slowmo_update_mod;
+		plugin_chain_slowmo_update_mod = single_slowmo_update_mod;
 	}
 	entity e = spawn();
 	e.targetname = "endlevel";

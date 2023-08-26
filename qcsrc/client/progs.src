@@ -109,6 +109,7 @@ font.qh
 main.qc
 mute.qc
 input.qc
+weapon_wheel.qc
 cmd.qc
 entcs.qc
 score.qc
