@@ -95,6 +95,21 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 	// Acquire Command
 	string strCmd;
 	strCmd = argv(0);
+	if (game_type == GAME_TYPE_SINGLE) {
+		if (strCmd == "impulse") {
+			float imp = stof(argv(1));
+			if (imp == 18 || imp == 19)
+				return weapon_wheel();
+
+			return FALSE;
+		}
+		if (strCmd == "+attack")
+			return weapon_wheel_remove();
+
+		if (strCmd == "+button3")
+			if (weapon_wheel_remove())
+				return TRUE;
+	}
 	if (strCmd == "+button4") { // zoom
 		// return FALSE, because the message shall be sent to the server anyway (for demos/speccing)
 		if(cmd_ignore_plus_zoom) {
@@ -128,13 +143,6 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 	} else if(strCmd == "-showaccuracy") {
 		sbar_showaccuracy = FALSE;
 		return TRUE;
-	}
-	if (game_type == GAME_TYPE_SINGLE && strCmd == "impulse") {
-		float imp = stof(argv(1));
-		if (imp == 18 || imp == 19)
-			return weapon_wheel();
-
-		return FALSE;
 	}
 	if(view_camera_free_active)
 	if(strCmd == "+forward" || strCmd == "-back") {

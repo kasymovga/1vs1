@@ -1,10 +1,12 @@
 entity weapon_wheel_control;
 float weapon_wheel_under_cursor;
 
-void(void) weapon_wheel_remove {
+float(void) weapon_wheel_remove {
+	if not(weapon_wheel_control) return FALSE;
 	remove(weapon_wheel_control);
 	weapon_wheel_control = NULL;
 	localcmd("cmd slowmoend\n");
+	return TRUE;
 }
 
 float(float bInputType, float nPrimary, float nSecondary) weapon_wheel_input_event {
@@ -28,6 +30,8 @@ void(void) weapon_wheel_draw {
 	mouse_enable("");
 	weapon_wheel_under_cursor = -1;
 	sbar_hidescores = TRUE;
+	view_fixangle = 1;
+	view_fixed_angles = view_camera_angles;
 	input_event_callback = weapon_wheel_input_event;
 	float weapon_switch = getstati(STAT_SWITCHWEAPON);
 	entity e;
