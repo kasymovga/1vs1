@@ -95,7 +95,7 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 	// Acquire Command
 	string strCmd;
 	strCmd = argv(0);
-	if (game_type == GAME_TYPE_SINGLE) {
+	if (weapon_wheel_available) {
 		if (strCmd == "impulse") {
 			float imp = stof(argv(1));
 			if (imp == 18 || imp == 19)

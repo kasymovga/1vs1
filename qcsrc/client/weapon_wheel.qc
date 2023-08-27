@@ -1,5 +1,6 @@
 entity weapon_wheel_control;
 float weapon_wheel_under_cursor;
+float weapon_wheel_available;
 
 float(void) weapon_wheel_remove {
 	if not(weapon_wheel_control) return FALSE;
@@ -43,6 +44,7 @@ void(void) weapon_wheel_draw {
 	for (idx = 0; idx < 10; ++idx)
 		sbar_weaponspace[idx] = 0;
 
+	drawfill('0 0 0', '1 0 0' * CVAR(vid_conwidth) + CVAR(vid_conheight) * '0 1 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
 	vector mpos = mouse_position();
 	WEAPON_INFO_FOR_EACH(e) {
 		if not(stat_weapons & e.weapons)
@@ -65,7 +67,7 @@ void(void) weapon_wheel_draw {
 		apos = 2 * MATH_PI * ((idx / 10) - 0.15);
 		pos_x = cos(apos) * 200 * (sp ? 1.5 : 1) + CVAR(vid_conwidth) * 0.5 - 40;
 		pos_y = sin(apos) * 150 * (sp ? 1.5 : 1) + CVAR(vid_conheight) * 0.5 - 20;
-		if (mpos_x >= pos_x && mpos_y >= pos_y && mpos_x <= pos_x + 80 && mpos_y <= pos_y + 40) {
+		if (weapon_wheel_under_cursor < 0 && mpos_x >= pos_x - 10 && mpos_y >= pos_y - 10 && mpos_x <= pos_x + 90 && mpos_y <= pos_y + 50) {
 			weapon_wheel_under_cursor = e.weapon;
 			undercursore = TRUE;
 		} else
@@ -106,4 +108,10 @@ float(void) weapon_wheel {
 	}
 	localcmd("cmd slowmostart\n");
 	return FALSE;
+}
+
+void(void) weapon_wheel_enable {
+	weapon_wheel_available = 1;
+	registercmd("impulse");
+	registercmd("+attack");
 }

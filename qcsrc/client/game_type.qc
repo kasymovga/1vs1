@@ -12,8 +12,7 @@ void(void) game_type_init {
 	}
 	if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP || game_type == GAME_TYPE_SURVIVE) {
 		if (game_type == GAME_TYPE_SINGLE) {
-			registercmd("impulse");
-			registercmd("+attack");
+			weapon_wheel_enable();
 		}
 		view_kickangles = TRUE;
 	} else
