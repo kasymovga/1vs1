@@ -99,6 +99,7 @@ void(void) weapon_wheel_draw {
 }
 
 float(void) weapon_wheel {
+	if not(CVAR(cl_weapon_wheel)) return FALSE;
 	if not(weapon_wheel_control) {
 		weapon_wheel_control = spawn();
 		weapon_wheel_control.draw2d = weapon_wheel_draw;

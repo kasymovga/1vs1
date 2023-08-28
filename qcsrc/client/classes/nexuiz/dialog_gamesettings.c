@@ -16,6 +16,9 @@ void configureDialogNexuizGameSettingsDialog(entity me) {
 	if not(extension_DP_CSQC_QUERYRENDERENTITY)
 		me.rows = me.rows + 2;
 
+	if (game_type == GAME_TYPE_SINGLE)
+		me.rows = me.rows - 2;
+
 	configureDialogNexuizDialog(me); //Parent method
 }
 
@@ -40,41 +43,47 @@ void(entity me) saveCvarsNexuizGameSettingsDialogGunAlpha {
 void fillNexuizGameSettingsDialog(entity me)
 {
 	entity e;
-	me.TR(me);
-		me.TDempty(me, 0.25);
-		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Show names:")));
-		if not(extension_DP_CSQC_QUERYRENDERENTITY)
-			e.disabled = 1;
-		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_shownames"));
-			e.addValue(e, _("Never"), "0");
-			e.addValue(e, _("Only for teammates"), "1");
-			e.addValue(e, _("Always"), "2");
-			e.configureNexuizTextSliderValues(e);
-		if not(extension_DP_CSQC_QUERYRENDERENTITY) {
-			e.disabled = 1;
-			me.TDempty(me, 0.5);
-			me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
-			e.colorL = SKINCOLOR_TEXT_WARNING;
-		}
-	me.TR(me);
-		me.TDempty(me, 0.25);
-		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Show names view sector:")));
-		if not(extension_DP_CSQC_QUERYRENDERENTITY)
-			e.disabled = 1;
-		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_shownames_cos"));
-			e.addValue(e, _("Wide"), "0");
-			e.addValue(e, _("Narrow"), "0.9");
-			e.addValue(e, _("Very narrow"), "0.99");
-			e.configureNexuizTextSliderValues(e);
-		if not(extension_DP_CSQC_QUERYRENDERENTITY) {
-			e.disabled = 1;
-			me.TDempty(me, 0.5);
-			me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
-			e.colorL = SKINCOLOR_TEXT_WARNING;
-		}
-	me.TR(me);
-		me.TDempty(me, 0.25);
-		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_voice", _("Player voices")));
+	if (game_type == GAME_TYPE_SINGLE) {
+		me.TR(me);
+			me.TDempty(me, 0.25);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_weapon_wheel", _("Weapon wheel")));
+	} else {
+		me.TR(me);
+			me.TDempty(me, 0.25);
+			me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Show names:")));
+			if not(extension_DP_CSQC_QUERYRENDERENTITY)
+				e.disabled = 1;
+			me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_shownames"));
+				e.addValue(e, _("Never"), "0");
+				e.addValue(e, _("Only for teammates"), "1");
+				e.addValue(e, _("Always"), "2");
+				e.configureNexuizTextSliderValues(e);
+			if not(extension_DP_CSQC_QUERYRENDERENTITY) {
+				e.disabled = 1;
+				me.TDempty(me, 0.5);
+				me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
+				e.colorL = SKINCOLOR_TEXT_WARNING;
+			}
+		me.TR(me);
+			me.TDempty(me, 0.25);
+			me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Show names view sector:")));
+			if not(extension_DP_CSQC_QUERYRENDERENTITY)
+				e.disabled = 1;
+			me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_shownames_cos"));
+				e.addValue(e, _("Wide"), "0");
+				e.addValue(e, _("Narrow"), "0.9");
+				e.addValue(e, _("Very narrow"), "0.99");
+				e.configureNexuizTextSliderValues(e);
+			if not(extension_DP_CSQC_QUERYRENDERENTITY) {
+				e.disabled = 1;
+				me.TDempty(me, 0.5);
+				me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
+				e.colorL = SKINCOLOR_TEXT_WARNING;
+			}
+		me.TR(me);
+			me.TDempty(me, 0.25);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_voice", _("Player voices")));
+	}
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Weapon opacity:")));
