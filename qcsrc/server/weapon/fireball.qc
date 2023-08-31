@@ -210,11 +210,9 @@ void(void) weapon_fireball_mine_think {
 
 void(void) weapon_fireball_mine_touch {
 	PROJECTILE_TOUCH;
-	if not(self.dmg)
-		weapon_score_hits(self.realowner, other, self.projectiledeathtype, 1, g_balance_fireball_primary_damage);
-
 	if (other.takedamage == DAMAGE_AIM)
 	if (fire_add_damage(other, self.realowner, g_balance_fireball_primary_damage, g_balance_fireball_primary_damagetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0) {
+		weapon_score_hits(self.realowner, other, self.projectiledeathtype, 1, g_balance_fireball_primary_damage);
 		remove(self);
 		return;
 	}
