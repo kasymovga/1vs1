@@ -73,11 +73,7 @@ float(float req) weapon_laser {
 		if (cvar("g_balance_laser_primary_force") > 0)
 			hint_add("You can use Laser for high jumps or accelerating. Just shoot under your legs or near walls.");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return TRUE;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return TRUE;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "lasered himself to hell";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE)
 		weapon_deathtypestring = "was lasered to death by"; // unchecked: SPLASH

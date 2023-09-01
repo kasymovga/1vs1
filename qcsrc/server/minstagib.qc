@@ -201,11 +201,7 @@ float(float req) minstagib_weapon {
 		self.minstanex_lasthit = 0;
 		self.laser_hold = 0;
 		self.jump_interval = time;
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
-		return self.ammo_cells >= 1;
-	} else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return TRUE;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_fragprefix = "^5INSTA";
@@ -239,6 +235,8 @@ float(float req) minstagib_weapon {
 			projectile_init(PROJECTILE_RM_LASER);
 		} else
 			projectile_init(PROJECTILE_LASER);
+
+		weapon_ammo_limits(MINSTAGIB_WEAPON, g_balance_fireball_primary_ammo, g_balance_fireball_secondary_ammo);
 	}
 	return TRUE;
 }

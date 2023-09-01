@@ -159,11 +159,7 @@ float(float req) weapon_supershotgun {
 		precache_sound("weapons/shotgun_fire.wav");
 		dlc_require("supershotgun");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return self.ammo_shells >= g_balance_supershotgun_primary_ammo;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return self.ammo_shells >= g_balance_supershotgun_secondary_ammo;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "used C++ and shot the leg out";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "was gunned by"; // unchecked: SECONDARY
@@ -195,6 +191,7 @@ float(float req) weapon_supershotgun {
 		CVAR_CACHE(g_balance_supershotgun_secondary_refire);
 		CVAR_CACHE(g_balance_supershotgun_secondary_speed);
 		CVAR_CACHE(g_balance_supershotgun_secondary_spread);
+		weapon_ammo_limits(WEAPON_SUPERSHOTGUN, g_balance_supershotgun_primary_ammo, g_balance_supershotgun_secondary_ammo);
 	}
 	return TRUE;
 }

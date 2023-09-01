@@ -63,7 +63,7 @@ void(void) weapon_uzi_fire1_02 {
 	}
 	if (self.uzi_buttonatck1) {
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		if not(weapon_action(self.weapon, WEAPON_REQUEST_CHECKAMMO1)) {
+		if not(self.ammo_nails >= g_balance_uzi_sustained_ammo) {
 			weapon_switch_force(self, weapon_best(self));
 			weapon_ready();
 			return;
@@ -120,11 +120,7 @@ float(float req) weapon_uzi {
 		weapon_flash_precache(WEAPON_FLASH_UZI);
 		precache_sound("weapons/uzi_fire.wav");
 		precache_sound("weapons/campingrifle_reload.wav");
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return self.ammo_nails >= g_balance_uzi_sustained_ammo;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return self.ammo_nails >= g_balance_uzi_first_ammo;
-	else if (req == WEAPON_REQUEST_RELOAD) {
+	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_uzi_reload();
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEAPON_UZI);
@@ -168,6 +164,7 @@ float(float req) weapon_uzi {
 			uzi_buttonatck1 = BUTTON_ATCK2;
 			uzi_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_UZI, g_balance_uzi_sustained_ammo, g_balance_uzi_first_ammo);
 	}
 	return TRUE;
 }

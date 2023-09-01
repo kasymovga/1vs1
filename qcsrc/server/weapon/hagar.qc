@@ -135,11 +135,7 @@ float(float req) weapon_hagar {
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("weapons/hagar_fire.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return self.ammo_rockets >= g_balance_hagar_primary_ammo;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return self.ammo_rockets >= g_balance_hagar_secondary_ammo;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "played with tiny rockets";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
@@ -178,6 +174,7 @@ float(float req) weapon_hagar {
 			hagar_buttonatck1 = BUTTON_ATCK2;
 			hagar_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_HAGAR, g_balance_hagar_primary_ammo, g_balance_hagar_secondary_ammo);
 	}
 	return TRUE;
 }

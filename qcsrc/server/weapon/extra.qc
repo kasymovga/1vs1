@@ -403,16 +403,6 @@ float(float req) weapon_extra_think {
 		precache_sound(weapon_extra_primary_sound[extra_num]);
 		precache_sound(weapon_extra_secondary_sound[extra_num]);
 		precache_sound("weapons/campingrifle_reload.wav");
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
-		at = weapon_extra_ammo_type[extra_num];
-		if (at) {
-			return (weapon_extra_primary_ammo[extra_num] <= self.(item_counter_field(at)));
-		}
-	} else if (req == WEAPON_REQUEST_CHECKAMMO2) {
-		at = weapon_extra_ammo_type[extra_num];
-		if (at) {
-			return (weapon_extra_secondary_ammo[extra_num] <= self.(item_counter_field(at)));
-		}
 	} else if (req == WEAPON_REQUEST_RELOAD) {
 		mc = weapon_extra_magazinecapacity[extra_num];
 		at = weapon_extra_ammo_type[extra_num];
@@ -446,6 +436,8 @@ float(float req) weapon_extra_think {
 
 		if (weapon_extra_secondary_type[extra_num] == WEAPON_EXTRA_TYPE_PROJECTILE)
 			projectile_init(weapon_extra_secondary_effect[extra_num]);
+
+		weapon_ammo_limits(self.weapon, weapon_extra_primary_ammo[extra_num], weapon_extra_secondary_ammo[extra_num]);
 	}
 	return TRUE;
 }

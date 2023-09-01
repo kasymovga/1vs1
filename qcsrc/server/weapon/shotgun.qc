@@ -158,10 +158,6 @@ float(float req) weapon_shotgun {
 		precache_sound("misc/itempickup.wav");
 		precache_sound("weapons/shotgun_fire.wav");
 		precache_sound("weapons/campingrifle_reload.wav");
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
-		return self.ammo_shells >= g_balance_shotgun_primary_ammo;
-	} else if (req == WEAPON_REQUEST_CHECKAMMO2) {
-		return self.ammo_shells >= g_balance_shotgun_secondary_ammo;
 	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_shotgun_reload();
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
@@ -210,6 +206,7 @@ float(float req) weapon_shotgun {
 			sg_buttonatck1 = BUTTON_ATCK2;
 			sg_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_SHOTGUN, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo);
 	}
 	return TRUE;
 }

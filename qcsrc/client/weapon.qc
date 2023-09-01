@@ -36,10 +36,12 @@ void(void) weapon_info_read {
 	float wid, imp, at;
 	string n;
 	entity e;
+	float a;
 	while ((wid = net_read_byte())) {
 		imp = net_read_byte();
 		at = net_read_coord();
 		n = str_zone_ifneeded(net_read_string());
+		a = net_read_short();
 		e = weapon_register_common(wid, imp, n, n);
 		if not(cvar(strcat("crosshair_", e.netname, "_size"))) {
 			if not(file_exists_image(strcat("gfx/crosshair", e.netname)))
@@ -54,6 +56,7 @@ void(void) weapon_info_read {
 			registercvar(strcat("crosshair_", e.netname, "_size"), "0.5");
 		}
 		e.items = at;
+		e.health = at;
 	}
 	weapon_update_icons();
 }

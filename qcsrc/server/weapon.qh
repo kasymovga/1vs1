@@ -49,8 +49,6 @@ enum {
 enum {
 	WEAPON_REQUEST_SETUP = 1, // setup weapon data
 	WEAPON_REQUEST_THINK, // logic to run every frame
-	WEAPON_REQUEST_CHECKAMMO1, // checks ammo for weapon
-	WEAPON_REQUEST_CHECKAMMO2, // checks ammo for weapon
 	WEAPON_REQUEST_AIM, // runs bot aiming code for this weapon
 	WEAPON_REQUEST_PRECACHE, // precaches models/sounds used by this weapon
 	WEAPON_REQUEST_SUICIDEMESSAGE, // sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
@@ -102,6 +100,7 @@ float weapon_spawned_extra_list;
 #define WEAPON_VALID(w) ((w) >= WEAPON_FIRST && (w) <= WEAPON_LAST_EXTRA)
 float(entity cl, float wpn, float andammo, float complain) weapon_carried;
 void(void) weapon_priority_update;
+void(float w, float a1, float a2) weapon_ammo_limits;
 void(float id,
 		float(float) func,
 		float ammotype,

@@ -110,7 +110,7 @@ void(void) weapon_hlack_fire1_02 {
 	}
 	if (self.hlac_buttonatck1) {
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		if not(weapon_action(self.weapon, WEAPON_REQUEST_CHECKAMMO1)) {
+		if (self.ammo_cells < g_balance_hlac_primary_ammo) {
 			weapon_switch_force(self, weapon_best(self));
 			weapon_ready();
 			return;
@@ -178,11 +178,7 @@ float(float req) weapon_hlac {
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		if (g_balance_hlac_magazinecapacity)
 			self.hlac_ammoclip = g_balance_hlac_magazinecapacity;
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return self.ammo_cells >= g_balance_hlac_primary_ammo;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return self.ammo_cells >= g_balance_hlac_secondary_ammo;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "should have used a smaller gun";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE)
 		weapon_deathtypestring = "was cut down by";
@@ -222,6 +218,7 @@ float(float req) weapon_hlac {
 			hlac_buttonatck1 = BUTTON_ATCK2;
 			hlac_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_HLAC, g_balance_hlac_primary_ammo, g_balance_hlac_secondary_ammo);
 	}
 	return TRUE;
 }

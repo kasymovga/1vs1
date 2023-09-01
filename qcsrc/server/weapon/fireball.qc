@@ -294,11 +294,7 @@ float(float req) weapon_fireball {
 		precache_sound("weapons/fireball_fire2.wav");
 		precache_sound("weapons/fireball_prefire2.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return self.ammo_rockets >= g_balance_fireball_primary_ammo;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return self.ammo_rockets >= g_balance_fireball_secondary_ammo;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if(weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "should have used a smaller gun";
 		else
@@ -364,6 +360,7 @@ float(float req) weapon_fireball {
 			fireball_buttonatck1 = BUTTON_ATCK2;
 			fireball_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_FIREBALL, g_balance_fireball_primary_ammo, g_balance_fireball_secondary_ammo);
 	}
 	return TRUE;
 }

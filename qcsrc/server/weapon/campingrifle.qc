@@ -145,11 +145,7 @@ float(float req) weapon_campingrifle {
 			if not(self.campingrifle_ammoclip)
 				self.campingrifle_ammoclip = -1;
 		}
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return self.ammo_nails >= g_balance_campingrifle_primary_ammo;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return self.ammo_nails >= g_balance_campingrifle_secondary_ammo;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "shot himself automatically";
 		else
@@ -213,6 +209,7 @@ float(float req) weapon_campingrifle {
 			cr_buttonatck1 = BUTTON_ATCK2;
 			cr_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_CAMPINGRIFLE, g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo);
 	}
 	return TRUE;
 }

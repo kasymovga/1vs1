@@ -150,13 +150,6 @@ float(float req) weapon_hook {
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEAPON_HOOK);
 		self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
-		if (self.hook)
-			return self.ammo_cells > 0;
-		else
-			return self.ammo_cells >= g_balance_hook_primary_fuel;
-	} else if (req == WEAPON_REQUEST_CHECKAMMO2) {
-		return self.ammo_cells >= g_balance_hook_secondary_ammo;
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
@@ -188,6 +181,7 @@ float(float req) weapon_hook {
 		CVAR_CACHE(g_balance_hook_secondary_refire);
 		CVAR_CACHE(g_balance_hook_secondary_speed);
 		projectile_init(PROJECTILE_HOOKBOMB);
+		weapon_ammo_limits(WEAPON_HOOK, g_balance_hook_primary_fuel, g_balance_hook_secondary_ammo);
 	}
 	return TRUE;
 }

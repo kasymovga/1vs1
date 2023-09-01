@@ -87,11 +87,7 @@ float(float req) weapon_chainsaw {
 			player_sound(self, CHAN_WEAPON, "weapons/chainsaw_idle_1.wav", VOL_BASE, ATTN_NORM);
 	} else if (req == WEAPON_REQUEST_CLEAR) {
 		player_sound_stop(self, CHAN_WEAPON);
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return TRUE;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return TRUE;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "rekt himself";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_fragprefix = "^xF80MELEE";

@@ -301,14 +301,7 @@ float(float req) weapon_rocketlauncher {
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEAPON_ROCKET_LAUNCHER);
 		self.rl_release = 1;
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1) {
-		// don't switch while guiding a missile
-		if ((WEAPON_ATTACK_FINISHED(self) <= time || self.weapon != WEAPON_ROCKET_LAUNCHER)
-				&& self.ammo_rockets < g_balance_rocketlauncher_ammo)
-			return FALSE;
-	} else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return FALSE;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "exploded";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if(weapon_deathtype & HITTYPE_BOUNCE) // (remote detonation)
@@ -349,6 +342,7 @@ float(float req) weapon_rocketlauncher {
 			rl_buttonatck1 = BUTTON_ATCK2;
 			rl_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_ROCKET_LAUNCHER, g_balance_rocketlauncher_ammo, 0);
 	}
 	return TRUE;
 }

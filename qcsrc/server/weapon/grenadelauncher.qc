@@ -206,11 +206,7 @@ float(float req) weapon_grenadelauncher {
 			if not(self.gl_ammoclip)
 				self.gl_ammoclip = -1;
 		}
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return self.ammo_rockets >= g_balance_grenadelauncher_primary_ammo;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return self.ammo_rockets >= g_balance_grenadelauncher_secondary_ammo;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if(weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "tried out his own grenade";
 		else
@@ -265,6 +261,7 @@ float(float req) weapon_grenadelauncher {
 			gl_buttonatck1 = BUTTON_ATCK2;
 			gl_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_ammo, g_balance_grenadelauncher_secondary_ammo);
 	}
 	return TRUE;
 }

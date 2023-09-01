@@ -689,11 +689,7 @@ float(float req) weapon_zapper {
 			remove(self.zapper_beam);
 			self.zapper_beam = world;
 		}
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return weapon_zapper_attack1_check_ammo(self);
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return weapon_zapper_attack2_check_ammo(self);
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE)
 		weapon_deathtypestring = "was zapped by";
@@ -737,6 +733,7 @@ float(float req) weapon_zapper {
 			zapper_buttonatck1 = BUTTON_ATCK2;
 			zapper_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_ZAPPER, g_balance_zapper_primary_ammo, (g_balance_zapper_secondary_shield ? 1 : g_balance_zapper_secondary_ammo));
 	}
 	return TRUE;
 }

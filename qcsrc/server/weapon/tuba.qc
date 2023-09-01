@@ -121,11 +121,7 @@ float(float req) weapon_tuba {
 		for (i = -18; i <= +27; ++i)
 			precache_sound(TUBA_NOTE(i));
 	} else if (req == WEAPON_REQUEST_SETUP) {
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return TRUE; // TODO use fuel?
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return TRUE; // TODO use fuel?
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		weapon_deathtypestring = "hurt his own ears with the @!#%'n Tuba";
 	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "died of #'s great playing on the @!#%'n Tuba";

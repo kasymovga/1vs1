@@ -43,6 +43,65 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
 
+float(float w) weapon_ammo_check {
+	entity e = weapon_info(w);
+	if (e.ammo_rockets) {
+		if (e.items & IT_SHELLS) {
+			return e.ammo_rockets <= self.ammo_shells;
+		} else if (e.items & IT_CELLS) {
+			return e.ammo_rockets <= self.ammo_cells;
+		} else if (e.items & IT_ROCKETS) {
+			return e.ammo_rockets <= self.ammo_rockets;
+		} else if (e.items & IT_NAILS) {
+			return e.ammo_rockets <= self.ammo_nails;
+		}
+		return FALSE;
+	}
+	return TRUE;
+}
+
+float(float w, float secondary) weapon_ammo_check_secondary {
+	entity e = weapon_info(w);
+	if (secondary) {
+		if (e.ammo_nails) {
+			if (e.items & IT_SHELLS) {
+				return e.ammo_nails <= self.ammo_shells;
+			} else if (e.items & IT_CELLS) {
+				return e.ammo_nails <= self.ammo_cells;
+			} else if (e.items & IT_ROCKETS) {
+				return e.ammo_nails <= self.ammo_rockets;
+			} else if (e.items & IT_NAILS) {
+				return e.ammo_nails <= self.ammo_nails;
+			}
+		}
+	} else {
+		if (e.ammo_shells) {
+			if (e.items & IT_SHELLS) {
+				return e.ammo_shells <= self.ammo_shells;
+			} else if (e.items & IT_CELLS) {
+				return e.ammo_shells <= self.ammo_cells;
+			} else if (e.items & IT_ROCKETS) {
+				return e.ammo_shells <= self.ammo_rockets;
+			} else if (e.items & IT_NAILS) {
+				return e.ammo_shells <= self.ammo_nails;
+			}
+		}
+	}
+	return TRUE;
+}
+
+void(float w, float a1, float a2) weapon_ammo_limits {
+	entity e = weapon_info(w);
+	e.ammo_shells = a1; //primary
+	e.ammo_nails = a2; //secondary
+	if not(a1)
+		e.ammo_rockets = a2;
+	else if not(a2)
+		e.ammo_rockets = a1;
+	else
+		e.ammo_rockets = min(a1, a2); //required minimum
+}
+
 float(entity e, string s) weapon_gettagindex {
 	float t = gettagindex(e, s);
 	if not(t)
@@ -394,7 +453,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 			} else {
 				oldself = self;
 				self = cl;
-				f = (weapon_action(wpn, WEAPON_REQUEST_CHECKAMMO1) || weapon_action(wpn, WEAPON_REQUEST_CHECKAMMO2));
+				f = weapon_ammo_check(wpn);
 				self = oldself;
 			}
 			if (!f) {
@@ -686,7 +745,7 @@ float(float secondary, float attacktime) weapon_prepareattack {
 		return FALSE;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	if (!weapon_action(self.weapon, WEAPON_REQUEST_CHECKAMMO1 + secondary)) {
+	if not(weapon_ammo_check_secondary(self.weapon, secondary)) {
 		if (akimbo_active(self) < 2) {
 			float f = weapon_best(self);
 			if (f == self.weapon) { //best failed

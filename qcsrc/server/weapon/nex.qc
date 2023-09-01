@@ -124,11 +124,7 @@ float(float req) weapon_nex {
 		precache_sound("weapons/nexwhoosh2.wav");
 		precache_sound("weapons/nexwhoosh3.wav");
 		hint_add("Don't forget to customize your mouse sensitivity for better aim with nex.");
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return self.ammo_cells >= g_balance_nex_ammo;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return FALSE;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "did the impossible";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "has been vaporized by";
@@ -161,6 +157,8 @@ float(float req) weapon_nex {
 		CVAR_CACHE_STR(sv_announcer_extra_twohits);
 		if (sv_announcer_extra_twohits != "")
 			precache_sound(sv_announcer_extra_twohits);
+
+		weapon_ammo_limits(WEAPON_NEX, g_balance_nex_ammo, 0);
 	}
 	return TRUE;
 }

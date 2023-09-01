@@ -220,11 +220,7 @@ float(float req) weapon_crylink {
 		precache_sound("weapons/crylink_fire.wav");
 		precache_sound("weapons/crylink_fire2.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-	} else if (req == WEAPON_REQUEST_CHECKAMMO1)
-		return self.ammo_cells >= g_balance_crylink_primary_ammo;
-	else if (req == WEAPON_REQUEST_CHECKAMMO2)
-		return self.ammo_cells >= g_balance_crylink_secondary_ammo;
-	else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
+	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		weapon_deathtypestring = "succeeded at self-destructing himself with the Crylink";
 	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_BOUNCE)
@@ -273,6 +269,7 @@ float(float req) weapon_crylink {
 			crylink_buttonatck1 = BUTTON_ATCK2;
 			crylink_buttonatck2 = BUTTON_ATCK;
 		}
+		weapon_ammo_limits(WEAPON_CRYLINK, g_balance_crylink_primary_ammo, g_balance_crylink_secondary_ammo);
 	}
 	return TRUE;
 }
