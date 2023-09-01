@@ -98,10 +98,9 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 	if (weapon_wheel_available) {
 		if (strCmd == "impulse") {
 			float imp = stof(argv(1));
-			if (imp == 18 || imp == 19)
-				return weapon_wheel();
-
-			return FALSE;
+			if (imp == 18 || imp == 19) {
+				return weapon_wheel(imp == 18);
+			}
 		}
 		if (strCmd == "+attack")
 			return weapon_wheel_remove();
