@@ -283,6 +283,8 @@ score.qc
 portal.qc
 target_spawn.qc
 func.qc
+func_weight_button.qc
+func_portable.qc
 func_breakable.qc
 debris.qc
 func_laserbeam.qc
