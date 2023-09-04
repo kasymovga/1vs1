@@ -56,7 +56,7 @@ void(void) weapon_info_read {
 			registercvar(strcat("crosshair_", e.netname, "_size"), "0.5");
 		}
 		e.items = at;
-		e.health = at;
+		e.health = a;
 	}
 	weapon_update_icons();
 }
