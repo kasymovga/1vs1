@@ -265,40 +265,57 @@ void(void) race_sbar_draw {
 	}
 	if (game_type == GAME_TYPE_CTS) {
 		if (CVAR(cl_cts_strafe_helper))
-		if (race_velocity_x != 0 || race_velocity_y != 0)
-		if (race_movement_x != 0 || race_movement_y != 0) {
-			float wishangle = view_angles_y;
+		if (race_velocity_x != 0 || race_velocity_y != 0) {
+			float diffangle;
 			vector v = vectoangles(race_velocity);
 			float moveangle = v_y;
-			if (race_movement_x > 0) {
-				if (race_movement_y > 0)
-					wishangle -= 45;
-				else if (race_movement_y < 0)
-					wishangle += 45;
-			} else if (race_movement_x < 0) {
-				if (race_movement_y > 0)
-					wishangle -= 135;
-				else if (race_movement_y < 0)
-					wishangle += 135;
-			} else {
-				if (race_movement_y > 0)
-					wishangle -= 90;
-				else if (race_movement_y < 0)
-					wishangle += 90;
+			if (race_movement_x != 0 || race_movement_y != 0) {
+				float wishangle = view_angles_y;
+				if (race_movement_x > 0) {
+					if (race_movement_y > 0)
+						wishangle -= 45;
+					else if (race_movement_y < 0)
+						wishangle += 45;
+				} else if (race_movement_x < 0) {
+					if (race_movement_y > 0)
+						wishangle -= 135;
+					else if (race_movement_y < 0)
+						wishangle += 135;
+				} else {
+					if (race_movement_y > 0)
+						wishangle -= 90;
+					else if (race_movement_y < 0)
+						wishangle += 90;
+				}
+				diffangle = race_angle_norm(wishangle - moveangle);
+				float strafeangle = race_angle_norm(race_strafe_angle(diffangle));
+				vector v1, v2;
+				v1_x = race_angle_to_con_x(diffangle + strafeangle);
+				v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_strafe_helper_position);
+				v1_z = 0;
+				v2_x = max(0, race_angle_to_con_x(diffangle + 90) - v1_x);
+				v2_y = CVAR(cl_cts_strafe_helper_height);
+				v2_z = 0;
+				drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
+				v1_x = race_angle_to_con_x(diffangle - 90);
+				v2_x = max(0, race_angle_to_con_x(diffangle - strafeangle) - v1_x);
+				drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
 			}
-			float diffangle = race_angle_norm(wishangle - moveangle);
-			float strafeangle = race_angle_norm(race_strafe_angle(diffangle));
-			vector v1, v2;
-			v1_x = race_angle_to_con_x(diffangle + strafeangle);
-			v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_strafe_helper_position);
-			v1_z = 0;
-			v2_x = max(0, race_angle_to_con_x(diffangle + 90) - v1_x);
-			v2_y = CVAR(cl_cts_strafe_helper_height);
-			v2_z = 0;
-			drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
-			v1_x = race_angle_to_con_x(diffangle - 90);
-			v2_x = max(0, race_angle_to_con_x(diffangle - strafeangle) - v1_x);
-			drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
+			if (CVAR(cl_cts_strafe_helper_velocity_direction)) {
+				diffangle = race_angle_norm(view_angles_y - moveangle);
+				if (diffangle > -90 && diffangle < 90) {
+					vector v1;
+					v1_x = race_angle_to_con_x(diffangle);
+					v1_y = CVAR(vid_conheight) * 0.5 + CVAR(cl_cts_strafe_helper_height);
+					v1_z = 0;
+					float f = CVAR(cl_cts_strafe_helper_height) * 0.5;
+					R_BeginPolygon("", DRAWFLAG_NORMAL);
+					R_PolygonVertex(v1, '0 0 0', '1 1 1', 0.5);
+					R_PolygonVertex(v1 + '-0.5 1 0' * f, '0 0 0', '1 1 1', 0.5);
+					R_PolygonVertex(v1 + '0.5 1 0' * f, '0 0 0', '1 1 1', 0.5);
+					R_EndPolygon();
+				}
+			}
 		}
 		if (CVAR(cl_cts_snap_helper))
 		if (g_velocity_rounding)

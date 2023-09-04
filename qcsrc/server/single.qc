@@ -228,7 +228,6 @@ float(string cmd, float tokens) single_cmd_client_handle {
 var float(float f) single_slowmo_update_mod_next;
 float(float f) single_slowmo_update_mod {
 	f *= single_slowmo;
-	single_slowmo = min(1, single_slowmo + sys_ticrate * 0.1);
 	return single_slowmo_update_mod_next(f);
 }
 
