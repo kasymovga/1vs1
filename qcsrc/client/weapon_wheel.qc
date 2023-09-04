@@ -2,6 +2,20 @@ entity weapon_wheel_control;
 float weapon_wheel_under_cursor;
 float weapon_wheel_available;
 
+float(entity e) weapon_wheel_ammo_check {
+	if ((e.items & IT_AMMO) && e.health) {
+		if (e.items & IT_SHELLS)
+			return e.health <= getstati(STAT_SHELLS);
+		else if (e.items & IT_NAILS)
+			return e.health <= getstati(STAT_NAILS);
+		else if (e.items & IT_ROCKETS)
+			return e.health <= getstati(STAT_ROCKETS);
+		else if (e.items & IT_CELLS)
+			return e.health <= getstati(STAT_CELLS);
+	}
+	return TRUE;
+}
+
 float(void) weapon_wheel_remove {
 	if not(weapon_wheel_control) return FALSE;
 	remove(weapon_wheel_control);
@@ -40,7 +54,7 @@ void(void) weapon_wheel_draw {
 	input_event_callback = weapon_wheel_input_event;
 	float weapon_switch = getstati(STAT_SWITCHWEAPON);
 	entity e;
-	float imp, nr, sp, apos, idx, active, value, a, undercursore;
+	float imp, nr, sp, apos, idx, active, value, a, undercursore, noammo;
 	float stat_weapons = getstati(STAT_WEAPONS);
 	float stat_weapons_extra = getstati(STAT_WEAPONS_EXTRA);
 	float fade = 1;
@@ -71,18 +85,9 @@ void(void) weapon_wheel_draw {
 		apos = 2 * MATH_PI * ((idx / 10) - 0.15);
 		pos_x = cos(apos) * 200 * (sp ? 1.5 : 1) + CVAR(vid_conwidth) * 0.5 - 40;
 		pos_y = sin(apos) * 150 * (sp ? 1.5 : 1) + CVAR(vid_conheight) * 0.5 - 20;
-		if (!cursor_found && mpos_x >= pos_x - 10 && mpos_y >= pos_y - 10 && mpos_x <= pos_x + 90 && mpos_y <= pos_y + 50) {
-			weapon_wheel_under_cursor = e.weapon;
-			cursor_found = TRUE;
-		}
-		undercursore = (weapon_wheel_under_cursor == e.weapon);
-		if (active || undercursore)
-			drawpic(pos, "gfx/hud/sb_ammobg", '80 40 0', '1 1 1', fade * sbar_alpha_fg * (active * 0.25 + undercursore * 0.75), DRAWFLAG_NORMAL);
-
-		drawpic(pos, e.icon, '80 40 0', sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		noammo = FALSE;
 		a = 0;
-		pos_x += 2;
-		if (e.items) {
+		if (e.items & IT_AMMO) {
 			if (e.items & IT_SHELLS)
 				a = getstati(STAT_SHELLS);
 			else if (e.items & IT_NAILS)
@@ -92,11 +97,23 @@ void(void) weapon_wheel_draw {
 			else if (e.items & IT_CELLS)
 				a = getstati(STAT_CELLS);
 
-			if (a)
-				drawstring(pos, ftos(a), '8 8 0', '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
-			else
-				drawstring(pos, "X", '8 8 0', '1 0 0', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
+			if (e.health && e.health > a)
+				noammo = TRUE;
 		}
+		if (!noammo && !cursor_found && mpos_x >= pos_x - 10 && mpos_y >= pos_y - 10 && mpos_x <= pos_x + 90 && mpos_y <= pos_y + 50) {
+			weapon_wheel_under_cursor = e.weapon;
+			cursor_found = TRUE;
+		}
+		undercursore = (weapon_wheel_under_cursor == e.weapon);
+		if (active || undercursore)
+			drawpic(pos, "gfx/hud/sb_ammobg", '80 40 0', '1 1 1', fade * sbar_alpha_fg * (active * 0.25 + undercursore * 0.75), DRAWFLAG_NORMAL);
+
+		drawpic(pos, e.icon, '80 40 0', noammo ? '1 0 0' : '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		pos_x += 2;
+		if (a)
+			drawstring(pos, ftos(a), '8 8 0', '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
+		else if (e.items)
+			drawstring(pos, "X", '8 8 0', '1 0 0', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
 	}
 }
 
@@ -117,22 +134,18 @@ float(float forward) weapon_wheel {
 		entity e;
 		float stat_weapons = getstati(STAT_WEAPONS);
 		float stat_weapons_extra = getstati(STAT_WEAPONS_EXTRA);
+		float a;
+		#define SKIPWEAPON if not(stat_weapons & e.weapons) if not(stat_weapons_extra & e.weapons_extra) continue; if (e.weapon != weapon_wheel_under_cursor) if not(weapon_wheel_ammo_check(e)) continue;
 		if (weapon_wheel_under_cursor <= 0) {
 			WEAPON_INFO_FOR_EACH(e) {
-				if not(stat_weapons & e.weapons)
-				if not(stat_weapons_extra & e.weapons_extra)
-					continue;
-
+				SKIPWEAPON
 				weapon_wheel_under_cursor = e.weapon;
 				break;
 			}
 		} else {
 			float imp = -1;
 			WEAPON_INFO_FOR_EACH(e) {
-				if not(stat_weapons & e.weapons)
-				if not(stat_weapons_extra & e.weapons_extra)
-					continue;
-
+				SKIPWEAPON
 				if (e.weapon == weapon_wheel_under_cursor) {
 					imp = e.impulse;
 					break;
@@ -141,10 +154,7 @@ float(float forward) weapon_wheel {
 			if (forward) {
 				float next = FALSE;
 				WEAPON_INFO_FOR_EACH(e) {
-					if not(stat_weapons & e.weapons)
-					if not(stat_weapons_extra & e.weapons_extra)
-						continue;
-
+					SKIPWEAPON
 					if (next) {
 						if (imp == e.impulse) {
 							weapon_wheel_under_cursor = e.weapon;
@@ -160,10 +170,7 @@ float(float forward) weapon_wheel {
 				if (next) {
 					float nextimp = -1, nextw = -1;
 					WEAPON_INFO_FOR_EACH(e) {
-						if not(stat_weapons & e.weapons)
-						if not(stat_weapons_extra & e.weapons_extra)
-							continue;
-
+						SKIPWEAPON
 						if (e.weapon == weapon_wheel_under_cursor) continue;
 						if (nextimp < 0) {
 							nextimp = e.impulse;
@@ -182,10 +189,7 @@ float(float forward) weapon_wheel {
 				float prev = FALSE;
 				float prevw = -1;
 				WEAPON_INFO_FOR_EACH(e) {
-					if not(stat_weapons & e.weapons)
-					if not(stat_weapons_extra & e.weapons_extra)
-						continue;
-
+					SKIPWEAPON
 					if (prev) {
 						if (prevw >= 0) {
 							weapon_wheel_under_cursor = prevw;
@@ -203,10 +207,7 @@ float(float forward) weapon_wheel {
 				if (prev) {
 					float previmp = -1;
 					WEAPON_INFO_FOR_EACH(e) {
-						if not(stat_weapons & e.weapons)
-						if not(stat_weapons_extra & e.weapons_extra)
-							continue;
-
+						SKIPWEAPON
 						if (e.weapon == weapon_wheel_under_cursor) continue;
 						if (previmp < 0) {
 							previmp = e.impulse;
@@ -225,6 +226,7 @@ float(float forward) weapon_wheel {
 		}
 	}
 	localcmd("cmd slowmostart\n");
+	#undef SKIPWEAPON
 	return TRUE;
 }
 
