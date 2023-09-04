@@ -82,7 +82,6 @@ void(void) weapon_wheel_draw {
 		drawpic(pos, e.icon, '80 40 0', sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 		a = 0;
 		pos_x += 2;
-		e = weapon_info(nr);
 		if (e.items) {
 			if (e.items & IT_SHELLS)
 				a = getstati(STAT_SHELLS);

@@ -223,7 +223,6 @@ void(vector weapons_pos, float weapons_scale) sbar_weapons_draw {
 		if (CVAR(sbar_weapons_show_ammo)) {
 			a = 0;
 			pos_x += w_space;
-			e = weapon_info(nr);
 			if (e.items) {
 				if (e.items & IT_SHELLS)
 					a = getstati(STAT_SHELLS);
