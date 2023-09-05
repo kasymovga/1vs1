@@ -138,6 +138,10 @@ void(void) physics_update_status {
 				if (!trace_ent || trace_ent.solid != SOLID_NOT)
 					physics_velocity -= physics_groundvelocity_dotproduct * trace_plane_normal;
 			}
+		} else if (physics_skimming > 0 && trace_fraction <= 0.01) {
+			float f = vlen(physics_velocity);
+			physics_velocity -= trace_plane_normal * (physics_velocity * trace_plane_normal);
+			physics_velocity = f * normalize(physics_velocity);
 		}
 		if (g_cpmdoublejump) {
 			if (physics_cpmdoublejump_time > 0)
@@ -183,7 +187,6 @@ void(void) physics_move {
 	float trace2_fraction = 0;
 	vector trace1_plane_normal = '0 0 0';
 	vector trace2_plane_normal = '0 0 0';
-	float skipskimming = 0;
 	float halfgrav;
 	halfgrav = physics_gravity_factor * sv_gravity * frametime * 0.5;
 	physics_velocity_z -= halfgrav;
@@ -265,8 +268,7 @@ void(void) physics_move {
 						}
 					}
 				}
-			} else
-				skipskimming = 1;
+			}
 		}
 		// check if it moved at all
 		if (trace1_endpos == self.origin) {
@@ -288,9 +290,7 @@ void(void) physics_move {
 		f = (physics_velocity * trace1_plane_normal);
 		physics_velocity = physics_velocity - f * trace1_plane_normal;
 	}
-	if not(physics_flags & FL_ONGROUND_OR_SLICK)
-	if (physics_skimming > 0)
-	if not(skipskimming) {
+	if (physics_skimming > 0) {
 		physics_velocity = primalvelocity;
 		physics_skimming -= frametime;
 		if (physics_skimming < 0)
