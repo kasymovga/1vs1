@@ -934,21 +934,17 @@ void(void) physics_player_frame {
 		}
 	} else {
 		float wishspeed0;
-		if (maxspd_mod < 1) {
-			maxairspd = sv_maxairspeed*maxspd_mod;
-			airaccel = sv_airaccelerate*maxspd_mod;
-		} else {
-			maxairspd = sv_maxairspeed;
-			airaccel = sv_airaccelerate;
-		}
+		float maxspd_mod2 = min(1, maxspd_mod);
+		maxairspd = sv_maxairspeed*maxspd_mod2;
+		airaccel = sv_airaccelerate*maxspd_mod2;
 		// airborn
 		makevectors(physics_v_angle_y * '0 1 0');
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
 		// acceleration
 		wishdir = normalize(wishvel);
 		wishspeed = wishspeed0 = vlen(wishvel);
-		if (wishspeed0 > sv_maxspeed*maxspd_mod)
-			wishspeed0 = sv_maxspeed*maxspd_mod;
+		if (wishspeed0 > sv_maxspeed*maxspd_mod2)
+			wishspeed0 = sv_maxspeed*maxspd_mod2;
 
 		if (wishspeed > maxairspd)
 			wishspeed = maxairspd;
@@ -966,16 +962,16 @@ void(void) physics_player_frame {
 			// CPM
 			if (sv_airstopaccelerate)
 				if (physics_velocity * wishdir < 0)
-					airaccel = sv_airstopaccelerate*maxspd_mod;
+					airaccel = sv_airstopaccelerate*maxspd_mod2;
 
 			if (physics_movement_x == 0 && physics_movement_y != 0) {
 				if (sv_maxairstrafespeed) {
-					wishspeed = min(wishspeed, sv_maxairstrafespeed*maxspd_mod);
+					wishspeed = min(wishspeed, sv_maxairstrafespeed*maxspd_mod2);
 					if (sv_maxairstrafespeed < sv_maxairspeed)
 						airaccelqw = 1;
 				}
 				if (sv_airstrafeaccelerate) {
-					airaccel = sv_airstrafeaccelerate*maxspd_mod;
+					airaccel = sv_airstrafeaccelerate*maxspd_mod2;
 					if (sv_airstrafeaccelerate > sv_airaccelerate)
 						airaccelqw = 1;
 				}
