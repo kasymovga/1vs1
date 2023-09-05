@@ -204,8 +204,10 @@ void(void) campaign_preintermission {
 	}
 }
 
+float campaign_postintermission_done;
 void(void) campaign_postintermission {
 	// NOTE: campaign_won is 0 or 1, that is, points to the next level
+	campaign_postintermission_done = 1;
 	if (!campaign_map_transition && campaign_won && campaign_level + 1 >= campaign_entries) {
 		// last map won!
 		localcmd("togglemenu 1\n");
@@ -221,4 +223,15 @@ void(void) campaign_postintermission {
 	campaign_file_unload();
 	strunzone(campaign_message);
 	strunzone(campaign_index_var);
+}
+
+void(void) campaign_restart {
+	if not(g_campaign) return;
+	if (campaign_postintermission_done) return;
+	registercvar("_campaign_name", "");
+	registercvar("_campaign_index", "");
+	builtin_cvar_set("g_campaign", "1");
+	builtin_cvar_set("_campaign_name", campaign_name);
+	builtin_cvar_set("_campaign_index", ftos(campaign_level));
+	builtin_cvar_set("g_campaign_skill", ftos(g_campaign_skill));
 }

@@ -2,6 +2,7 @@ void(void) campaign_preinit;
 void(void) campaign_postinit;
 void(void) campaign_preintermission;
 void(void) campaign_postintermission; // must change map
+void(void) campaign_restart;
 
 float g_campaign;
 string campaign_message;
