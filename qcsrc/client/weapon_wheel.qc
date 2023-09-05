@@ -106,14 +106,14 @@ void(void) weapon_wheel_draw {
 		}
 		undercursore = (weapon_wheel_under_cursor == e.weapon);
 		if (active || undercursore)
-			drawpic(pos, "gfx/hud/sb_ammobg", '80 40 0', '1 1 1', fade * sbar_alpha_fg * (active * 0.25 + undercursore * 0.75), DRAWFLAG_NORMAL);
+			drawpic(pos, "gfx/hud/sb_ammobg", '80 40 0', '1 1 1', fade * (active * 0.25 + undercursore * 0.75), DRAWFLAG_NORMAL);
 
-		drawpic(pos, e.icon, '80 40 0', noammo ? '1 0 0' : '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, e.icon, '80 40 0', noammo ? '0.25 0.25 0.25' : '1 1 1', fade * (noammo ? 0.5 : 1), DRAWFLAG_NORMAL);
 		pos_x += 2;
-		if (a)
-			drawstring(pos, ftos(a), '8 8 0', '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
+		if (a && !noammo)
+			drawstring(pos, ftos(a), '8 8 0', '1 1 1', fade, DRAWFLAG_NORMAL);
 		else if (e.items)
-			drawstring(pos, "X", '8 8 0', '1 0 0', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
+			drawstring(pos, "X", '8 8 0', '1 0 0', fade, DRAWFLAG_NORMAL);
 	}
 }
 
