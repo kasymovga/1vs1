@@ -724,7 +724,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 	self.netname = itemname;
 	self.items = itemid;
 	self.flags = FL_ITEM | itemflags;
-	if (self.targetname != "")
+	if (self.targetname != "" && !self.noalign)
 		self.mdl = ""; //invisible
 	else
 		self.touch = item_touch;
