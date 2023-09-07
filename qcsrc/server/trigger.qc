@@ -1,4 +1,5 @@
 float g_trigger_collisions_exact;
+float g_trigger_collisions_exact_side;
 vector trigger_exact_hit_mins;
 vector trigger_exact_hit_maxs;
 float(void) trigger_exact_hit_recurse {
@@ -27,8 +28,32 @@ float(void) trigger_exact_hit {
 
 	s = self.solid;
 	self.solid = SOLID_BSP;
-	trigger_exact_hit_mins = other.absmin;
-	trigger_exact_hit_maxs = other.absmax;
+	if (g_trigger_collisions_exact_side) {
+		trigger_exact_hit_mins = other.absmin;
+		trigger_exact_hit_maxs = other.absmax;
+	} else {
+		if (other.absmax_x - other.absmin_x > 2) {
+			trigger_exact_hit_mins_x = other.absmin_x + 1;
+			trigger_exact_hit_maxs_x = other.absmax_x - 1;
+		} else {
+			trigger_exact_hit_mins_x = other.absmin_x;
+			trigger_exact_hit_maxs_x = other.absmax_x;
+		}
+		if (other.absmax_y - other.absmin_y > 2) {
+			trigger_exact_hit_mins_y = other.absmin_y + 1;
+			trigger_exact_hit_maxs_y = other.absmax_y - 1;
+		} else {
+			trigger_exact_hit_mins_y = other.absmin_y;
+			trigger_exact_hit_maxs_y = other.absmax_y;
+		}
+		if (other.absmax_z - other.absmin_z > 2) {
+			trigger_exact_hit_mins_z = other.absmin_z + 1;
+			trigger_exact_hit_maxs_z = other.absmax_z - 1;
+		} else {
+			trigger_exact_hit_mins_z = other.absmin_z;
+			trigger_exact_hit_maxs_z = other.absmax_z;
+		}
+	}
 	if (g_trigger_collisions_exact > 1) {
 		string dir = cvar_string("collision_triangle_directional");
 		cvar_set("collision_triangle_directional", "0");
@@ -46,6 +71,7 @@ void(void) trigger_solid_brush_init {
 	if not(trigger_solid_brush_init_done) {
 		trigger_solid_brush_init_done = TRUE;
 		CVAR_CACHE(g_trigger_collisions_exact);
+		CVAR_CACHE(g_trigger_collisions_exact_side);
 	}
 	// trigger angles are used for one-way touches.  An angle of 0 is assumed
 	// to mean no restrictions, so use a yaw of 360 instead.

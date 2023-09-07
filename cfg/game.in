@@ -94,6 +94,7 @@ set minplayers 0 "number of players playing at the same time (if not enough real
 set minplayers_team_factor 0.5 "in team modes amount of minimal players will multiply to this factor and amount of teams"
 set g_maxplayers 0 "maximum number of players allowed to play at the same time, set to 0 to allow all players to join the game"
 set g_trigger_collisions_exact 1 "exact collisions with trigger brushes"
+set g_trigger_collisions_exact_side 1 "activate triggers by side touching"
 set g_reset_on_join 0 "automatic reset game when this amount of player join"
 set g_endmatch_on_leave 0 "automatic end game when this amount of player left (0 - disabled)"
 set g_target_push_speed_factor 10
