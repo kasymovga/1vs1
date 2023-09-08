@@ -179,9 +179,8 @@ float(float diffangle) race_strafe_angle {
 	if (physics_crouch)
 		maxspeed *= 0.5;
 
-	if (physics_flags & FL_ONGROUND) {
-		maxspeed *= physics_maxspeedmod;
-	} else {
+	maxspeed *= physics_maxspeedmod;
+	if not(physics_flags & FL_ONGROUND) {
 		if (race_movement_y)
 		if not(race_movement_x)
 		if (sv_maxairstrafespeed) {
