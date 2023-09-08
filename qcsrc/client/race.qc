@@ -319,16 +319,30 @@ void(void) race_sbar_draw {
 		if (CVAR(cl_cts_snap_helper))
 		if (g_velocity_rounding)
 		if (race_movement_x != 0 || race_movement_y != 0) {
+			//Zones without haste
 			//0
 			//11.263
 			//12.429
 			//35.869
 			//45
-			if (sv_airaccelerate * min(1, physics_maxspeedmod) == 1) {
+			//
+			//Zones with haste
+			//0.000
+			//8.641
+			//26.790
+			//41.305
+			//45
+			if (sv_airaccelerate == 1 && physics_maxspeedmod >= 1) {
 				float ba = 0;
+				float mspeed = sv_maxspeed * physics_maxspeedmod;
 				if (sv_airstrafeaccelerate || race_movement_x) ba = 45;
-				race_sbar_draw_snap_zone(11.263, 12.429, ba);
-				race_sbar_draw_snap_zone(35.869, 45, ba);
+				if (mspeed == 320) {
+					race_sbar_draw_snap_zone(11.263, 12.429, ba);
+					race_sbar_draw_snap_zone(35.869, 45, ba);
+				} else if (mspeed == 320 * 1.3) {
+					race_sbar_draw_snap_zone(8.641, 26.790, ba);
+					race_sbar_draw_snap_zone(41.305, 45, ba);
+				}
 			}
 		}
 	}
