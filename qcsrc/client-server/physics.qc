@@ -933,16 +933,16 @@ void(void) physics_player_frame {
 	} else {
 		float wishspeed0;
 		float maxspd_mod2 = min(1, maxspd_mod);
-		maxairspd = sv_maxairspeed*maxspd_mod2;
+		maxairspd = sv_maxairspeed*maxspd_mod;
 		airaccel = sv_airaccelerate*maxspd_mod2;
 		// airborn
 		makevectors(physics_v_angle_y * '0 1 0');
-		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
+		wishvel = (v_forward * physics_movement_x + v_right * physics_movement_y) * maxspd_mod;
 		// acceleration
 		wishdir = normalize(wishvel);
 		wishspeed = wishspeed0 = vlen(wishvel);
-		if (wishspeed0 > sv_maxspeed*maxspd_mod2)
-			wishspeed0 = sv_maxspeed*maxspd_mod2;
+		if (wishspeed0 > sv_maxspeed*maxspd_mod)
+			wishspeed0 = sv_maxspeed*maxspd_mod;
 
 		if (wishspeed > maxairspd)
 			wishspeed = maxairspd;
