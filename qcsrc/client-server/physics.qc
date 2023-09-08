@@ -139,9 +139,7 @@ void(void) physics_update_status {
 					physics_velocity -= physics_groundvelocity_dotproduct * trace_plane_normal;
 			}
 		} else if (physics_skimming > 0 && trace_fraction <= 0.01) {
-			float f = vlen(physics_velocity);
 			physics_velocity -= trace_plane_normal * (physics_velocity * trace_plane_normal);
-			physics_velocity = f * normalize(physics_velocity);
 		}
 		if (g_cpmdoublejump) {
 			if (physics_cpmdoublejump_time > 0)
