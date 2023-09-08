@@ -9,6 +9,7 @@ set g_balance_powerup_speed_time 30
 set g_powerup_akimbo 1 "if set to 0 the akimbo powerup will not spawn on the map"
 set g_powerup_invisibility 1 "if set to 0 the invisibility powerup will not spawn on the map"
 set g_powerup_speed 1 "if set to 0 the speed powerup will not spawn on the map"
+set g_powerup_speed_factor 1.5 "speed factor"
 set g_powerup_strength 1 "if set to 0 the strength powerup will not spawn on the map"
 set g_powerup_shield 1 "if set to 0 the shield (invincibility) powerup will not spawn on the map"
 set g_powerup_addition 1 "addition for power time"

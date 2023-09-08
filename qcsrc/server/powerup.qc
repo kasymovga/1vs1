@@ -3,6 +3,7 @@ float g_powerup_strength_droppable;
 float g_powerup_invisibility_droppable;
 float g_powerup_shield_droppable;
 float g_powerup_speed_droppable;
+float g_powerup_speed_factor;
 float g_powerup_invisibility_full_distance;
 float g_balance_powerup_invincible_takedamage;
 float g_balance_powerup_strength_damage;
@@ -84,6 +85,7 @@ void() powerup_init {
 	CVAR_CACHE(g_powerup_invisibility_droppable);
 	CVAR_CACHE(g_powerup_shield_droppable);
 	CVAR_CACHE(g_powerup_speed_droppable);
+	CVAR_CACHE(g_powerup_speed_factor);
 	CVAR_CACHE(g_powerup_invisibility_full_distance);
 	CVAR_CACHE(g_balance_powerup_invincible_takedamage);
 	CVAR_CACHE(g_balance_powerup_strength_damage);
@@ -260,7 +262,7 @@ void() powerup_speed_player_effects {
 var float() powerup_speed_physics_max_speed_mod_next;
 float() powerup_speed_max_speed_mod {
 	if (time < self.speed_finished)
-		return powerup_speed_physics_max_speed_mod_next() * 1.5;
+		return powerup_speed_physics_max_speed_mod_next() * 1.3;
 
 	return powerup_speed_physics_max_speed_mod_next();
 }
