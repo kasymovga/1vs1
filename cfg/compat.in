@@ -124,6 +124,10 @@ set sv_spawnreplace_weapon_seeker "weapon_hagar"
 //Quake Live compat
 set sv_spawnreplace_func_advertisement "func_wall"
 
+//Quake Champions compat
+set sv_spawnreplace_weapon_tribolt weapon_grenadelauncher
+set sv_spawnreplace_item_hourglass item_health_small
+
 //Previous monster names compat
 set sv_spawnreplace_arachna_spawn monster_arachna_spawn
 set sv_spawnreplace_bat_spawn monster_bat_spawn
