@@ -343,7 +343,7 @@ float(entity item, entity player) item_give_to {
 			#define PICK_AMMO(x, max) \
 			if (item.x) \
 			if (player.x < max) { \
-				if ((item.flags & FL_WEAPON) && g_pickup_weapon_ammo_limit) { \
+				if ((item.flags & FL_WEAPON) && g_pickup_weapon_ammo_limit && ((player.weapons & self.weapons) || (player.weapons_extra & self.weapons_extra))) { \
 					if (player.x < item.x) { \
 						player.x = item.x; \
 						pickedup = TRUE; \
