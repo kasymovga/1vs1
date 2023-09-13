@@ -146,7 +146,7 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 	org = (pm1 + pm2) / 2;
 	vector _mins = self.mins;
 	vector _maxs = self.maxs;
-	org_z = org_z + ent.mins_z - _mins_z; // player height
+	org_z = min(org_z, pm1_z + 1);
 	best = world;
 	bestdist = 1050;
 	// box check failed, try walk
@@ -170,7 +170,7 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 				if (trace_fraction == 1) {
 					if (walkfromwp) {
 						//print("^1can I reach ", vtos(org), " from ", vtos(v), "?\n");
-						if (trace_walk(ent, v + '0 0 -1' * ent.mins_z, _mins, _maxs, org, bot_navigation_movemode)) {
+						if (trace_walk(ent, v + '0 0 -1' * _mins_z, _mins, _maxs, org, bot_navigation_movemode)) {
 							bestdist = dist;
 							best = w;
 						}

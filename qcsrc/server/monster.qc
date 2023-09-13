@@ -44,7 +44,7 @@ void monster_set_route() {
 	navigation_clearroute();
 	navigation_goalrating_start();
 	if (self.enemy)
-		navigation_routerating(self.enemy, 10000, 10000);
+		navigation_routerating(player_entity(self.enemy), 10000, 10000);
 	else
 		FOR_EACH_PLAYER(p)
 			if (p.health >= 1)
