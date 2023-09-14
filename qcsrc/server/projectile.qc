@@ -295,6 +295,22 @@ void(entity e, entity to, vector a) projectile_stick {
 	projectile_update_angles(e);
 }
 
+void(entity proj, float delta) projectile_premove {
+	trace_box(proj.origin, proj.mins, proj.maxs, proj.origin + proj.velocity * delta, TRACE_MOVE_NORMAL, proj);
+	setorigin(proj, trace_endpos);
+	if (trace_fraction < 1) {
+		entity oldself = self;
+		entity oldother = other;
+		self = proj;
+		other = trace_ent;
+		if (proj.touch)
+			proj.touch();
+
+		self = oldself;
+		other = oldother;
+	}
+}
+
 void(void) projectile_info_send {
 	float i;
 	net_write_byte(MSG_ENTITY, projectile_info_highest_registered);

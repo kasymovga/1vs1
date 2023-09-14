@@ -3,6 +3,7 @@ float g_balance_hagar_primary_damage;
 float g_balance_hagar_primary_edgedamage;
 float g_balance_hagar_primary_force;
 float g_balance_hagar_primary_lifetime;
+float g_balance_hagar_primary_premove;
 float g_balance_hagar_primary_radius;
 float g_balance_hagar_primary_refire;
 float g_balance_hagar_primary_speed;
@@ -65,6 +66,7 @@ void(void) weapon_hagar_attack {
 	missile.nextthink = time + g_balance_hagar_primary_lifetime;
 	missile.velocity = (weapon_shotdir + randomvec() * g_balance_hagar_primary_spread) * g_balance_hagar_primary_speed;
 	weapon_setup_projectile_velocity(missile);
+	if (g_balance_hagar_primary_premove) projectile_premove(missile, g_balance_hagar_primary_premove);
 }
 
 void(void) weapon_hagar_attack2 {
@@ -148,6 +150,7 @@ float(float req) weapon_hagar {
 		CVAR_CACHE(g_balance_hagar_primary_edgedamage);
 		CVAR_CACHE(g_balance_hagar_primary_force);
 		CVAR_CACHE(g_balance_hagar_primary_lifetime);
+		CVAR_CACHE(g_balance_hagar_primary_premove);
 		CVAR_CACHE(g_balance_hagar_primary_radius);
 		CVAR_CACHE(g_balance_hagar_primary_refire);
 		CVAR_CACHE(g_balance_hagar_primary_speed);

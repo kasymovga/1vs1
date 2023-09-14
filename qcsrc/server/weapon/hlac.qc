@@ -4,6 +4,7 @@ float g_balance_hlac_primary_damage;
 float g_balance_hlac_primary_edgedamage;
 float g_balance_hlac_primary_force;
 float g_balance_hlac_primary_lifetime;
+float g_balance_hlac_primary_premove;
 float g_balance_hlac_primary_radius;
 float g_balance_hlac_primary_recoil;
 float g_balance_hlac_primary_refire;
@@ -57,6 +58,7 @@ void(void) weapon_hlac_attack {
 	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
 	missile.nextthink = time + g_balance_hlac_primary_lifetime;
+	if (g_balance_hlac_primary_premove) projectile_premove(missile, g_balance_hlac_primary_premove);
 }
 
 void(void) weapon_hlac_attack2f {
@@ -189,6 +191,7 @@ float(float req) weapon_hlac {
 		CVAR_CACHE(g_balance_hlac_primary_edgedamage);
 		CVAR_CACHE(g_balance_hlac_primary_force);
 		CVAR_CACHE(g_balance_hlac_primary_lifetime);
+		CVAR_CACHE(g_balance_hlac_primary_premove);
 		CVAR_CACHE(g_balance_hlac_primary_radius);
 		CVAR_CACHE(g_balance_hlac_primary_recoil);
 		CVAR_CACHE(g_balance_hlac_primary_refire);

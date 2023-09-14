@@ -22,3 +22,4 @@ void(float csqcid, vector sizes) projectile_register_auto;
 void(entity e, entity to, vector a) projectile_stick;
 void(entity e) projectile_update_angles;
 void(entity e, float t) projectile_update_with_type;
+void(entity proj, float delta) projectile_premove;

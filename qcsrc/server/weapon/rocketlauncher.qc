@@ -12,6 +12,7 @@ float g_balance_rocketlauncher_guideratedelay;
 float g_balance_rocketlauncher_guidestop;
 float g_balance_rocketlauncher_health;
 float g_balance_rocketlauncher_lifetime;
+float g_balance_rocketlauncher_premove;
 float g_balance_rocketlauncher_radius;
 float g_balance_rocketlauncher_recoil;
 float g_balance_rocketlauncher_refire;
@@ -179,6 +180,7 @@ void(void) weapon_rocketlauncher_attack {
 	missile.nextthink = time;
 	missile.cnt = time + g_balance_rocketlauncher_lifetime;
 	missile.entremove = weapon_rocketlauncher_unregister;
+	if (g_balance_rocketlauncher_premove) projectile_premove(missile, g_balance_rocketlauncher_premove);
 }
 
 float(float req) weapon_rocketlauncher {
@@ -331,6 +333,7 @@ float(float req) weapon_rocketlauncher {
 		CVAR_CACHE(g_balance_rocketlauncher_guidestop);
 		CVAR_CACHE(g_balance_rocketlauncher_health);
 		CVAR_CACHE(g_balance_rocketlauncher_lifetime);
+		CVAR_CACHE(g_balance_rocketlauncher_premove);
 		CVAR_CACHE(g_balance_rocketlauncher_radius);
 		CVAR_CACHE(g_balance_rocketlauncher_recoil);
 		CVAR_CACHE(g_balance_rocketlauncher_refire);

@@ -140,6 +140,7 @@ set g_balance_minstanex_laser_rapid_refire 0.35
 set g_balance_rocketlauncher_damage 105
 set g_balance_rocketlauncher_edgedamage 40
 set g_balance_rocketlauncher_force 600
+set g_balance_rocketlauncher_premove 0
 set g_balance_rocketlauncher_radius 150
 set g_balance_rocketlauncher_recoil 4
 set g_balance_rocketlauncher_speed 850
@@ -335,6 +336,7 @@ set g_balance_hagar_primary_force 100
 set g_balance_hagar_primary_radius 65
 set g_balance_hagar_primary_spread 0
 set g_balance_hagar_primary_speed 4500
+set g_balance_hagar_primary_premove 0
 set g_balance_hagar_primary_lifetime 30
 set g_balance_hagar_primary_refire 0.125
 set g_balance_hagar_primary_ammo 1
@@ -367,6 +369,7 @@ set g_balance_hlac_primary_spread_crouchmod 0.25
 set g_balance_hlac_primary_damage 23
 set g_balance_hlac_primary_edgedamage 10
 set g_balance_hlac_primary_force 100
+set g_balance_hlac_primary_premove 0
 set g_balance_hlac_primary_radius 70
 set g_balance_hlac_primary_recoil 3
 set g_balance_hlac_primary_refire 0.1
