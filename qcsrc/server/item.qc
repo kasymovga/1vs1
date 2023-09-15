@@ -340,16 +340,16 @@ float(entity item, entity player) item_give_to {
 		}
 		if (item.spawnshieldtime)
 		if (g_use_ammunition) {
-			#define PICK_AMMO(x, max) \
+			#define PICK_AMMO(x, maxx) \
 			if (item.x) \
-			if (player.x < max) { \
+			if (player.x < maxx) { \
 				if ((item.flags & FL_WEAPON) && g_pickup_weapon_ammo_limit && ((player.weapons & self.weapons) || (player.weapons_extra & self.weapons_extra))) { \
 					if (player.x < item.x) { \
-						player.x = item.x; \
+						player.x = max(0, item.x); \
 						pickedup = TRUE; \
 					} \
 				} else { \
-					player.x = min(player.x + item.x, max); \
+					player.x = min(player.x + max(0, item.x), maxx); \
 					pickedup = TRUE; \
 				} \
 			}
