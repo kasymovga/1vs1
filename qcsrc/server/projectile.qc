@@ -296,18 +296,15 @@ void(entity e, entity to, vector a) projectile_stick {
 }
 
 void(entity proj, float delta) projectile_premove {
+	float g = 0;
+	if (proj.movetype == MOVETYPE_TOSS || proj.movetype == MOVETYPE_BOUNCE) {
+		g = (proj.gravity ? proj.gravity : 1) * sv_gravity;
+		proj.velocity_z -= 0.5 * g * delta;
+	}
 	trace_box(proj.origin, proj.mins, proj.maxs, proj.origin + proj.velocity * delta, TRACE_MOVE_NORMAL, proj);
 	setorigin(proj, trace_endpos);
-	if (trace_fraction < 1) {
-		entity oldself = self;
-		entity oldother = other;
-		self = proj;
-		other = trace_ent;
-		if (proj.touch)
-			proj.touch();
-
-		self = oldself;
-		other = oldother;
+	if (g) {
+		proj.velocity_z -= 0.5 * g * delta;
 	}
 }
 

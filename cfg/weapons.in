@@ -299,6 +299,7 @@ set g_balance_grenadelauncher_primary_up 0 "alternative to speed_up"
 set g_balance_grenadelauncher_primary_damage 70
 set g_balance_grenadelauncher_primary_edgedamage 38
 set g_balance_grenadelauncher_primary_force 400
+set g_balance_grenadelauncher_primary_premove 0
 set g_balance_grenadelauncher_primary_radius 140
 set g_balance_grenadelauncher_primary_speed 2000
 set g_balance_grenadelauncher_primary_speed_up 200

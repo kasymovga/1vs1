@@ -5,6 +5,7 @@ float g_balance_grenadelauncher_primary_damage;
 float g_balance_grenadelauncher_primary_edgedamage;
 float g_balance_grenadelauncher_primary_force;
 float g_balance_grenadelauncher_primary_lifetime;
+float g_balance_grenadelauncher_primary_premove;
 float g_balance_grenadelauncher_primary_radius;
 float g_balance_grenadelauncher_primary_refire;
 float g_balance_grenadelauncher_primary_speed;
@@ -103,13 +104,13 @@ void(void) weapon_grenadelauncher_attack {
 	gren = projectile(TRUE, (g_balance_grenadelauncher_primary_bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
 	projectile_setup(gren, weapon_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
 			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force, 1, (g_balance_grenadelauncher_primary_bounce ? MOVETYPE_BOUNCE : MOVETYPE_TOSS));
-
 	gren.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;
 	gren.touch = (g_balance_grenadelauncher_primary_bounce ? weapon_grenadelauncher_touch2 : weapon_grenadelauncher_touch1);
 	gren.velocity = weapon_shotdir * g_balance_grenadelauncher_primary_speed + v_up * g_balance_grenadelauncher_primary_speed_up;
 	weapon_setup_projectile_velocity(gren);
+	if (g_balance_grenadelauncher_primary_premove) projectile_premove(gren, g_balance_grenadelauncher_primary_premove);
 }
 
 void(void) weapon_grenadelauncher_attack2 {
@@ -232,6 +233,7 @@ float(float req) weapon_grenadelauncher {
 		CVAR_CACHE(g_balance_grenadelauncher_primary_edgedamage);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_force);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_lifetime);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_premove);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_radius);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_refire);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_speed);
