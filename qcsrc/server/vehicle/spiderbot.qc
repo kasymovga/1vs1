@@ -306,12 +306,7 @@ void(void) vehicle_spiderbot_spawn {
 }
 
 void(void) vehicle_spiderbot_blowup {
-	damage_radius (self, self, 100, 15, 250, world, 250, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, world);
-	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
-	self.nextthink = time + 10;
-	self.think = vehicle_spiderbot_spawn;
-	self.velocity = '0 0 0';
-	setorigin(self,self.tur_aimpos);
+	vehicle_blowup(100, 15, 250, 250);
 }
 
 void(void) vehicle_spiderbot_die {
@@ -370,7 +365,6 @@ void(void) vehicle_spiderbot_dinit {
 	self.tur_head.owner = self;
 	self.customizeentityforclient = vehicle_stdproc_customize;
 	//setorigin(self.vehicle_viewport,'35 0 -14');
-	self.tur_aimpos = self.origin;
 	vehicle_spiderbot_spawn();
 	self.vehicle_die = vehicle_spiderbot_die;
 	self.vehicle_exit = vehicle_spiderbot_exit;

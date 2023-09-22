@@ -196,12 +196,7 @@ void(void) vehicle_car_spawn {
 }
 
 void(void) vehicle_car_blowup {
-	damage_radius (self, self, 100, 15, 250, world, 250, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, world);
-	self.alpha = -1;
-	self.nextthink = time + 10;
-	self.think = vehicle_car_spawn;
-	self.velocity = '0 0 0';
-	setorigin(self,self.tur_aimpos);
+	vehicle_blowup(100, 15, 250, 250);
 }
 
 void(void) vehicle_car_die {

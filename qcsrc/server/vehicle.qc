@@ -135,6 +135,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		else
 			return;
 	}
+	self.dmg_inflictor = attacker;
 	self.dmg_time = time;
 	if ((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0)) {
 		if not (self.killindicator)
@@ -225,6 +226,14 @@ float(float f) vehicle_weapon_frame_switch_mod {
 		return 0;
 	}
 	return f;
+}
+
+void(float d, float ed, float r, float f) vehicle_blowup {
+	damage_radius(self, self.dmg_inflictor, d, ed, r, world, f, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, world);
+	self.alpha = -1;
+	self.nextthink = time + 10;
+	self.think = self.vehicle_spawn;
+	self.velocity = '0 0 0';
 }
 
 float vehicle_init_done;

@@ -249,12 +249,7 @@ void(void) vehicle_aircraft_spawn {
 }
 
 void(void) vehicle_aircraft_blowup {
-	damage_radius (self, self, 100, 15, 250, world, 250, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, world);
-	self.alpha = -1;
-	self.nextthink = time + 10;
-	self.think = vehicle_aircraft_spawn;
-	self.velocity = '0 0 0';
-	setorigin(self,self.tur_aimpos);
+	vehicle_blowup(100, 15, 250, 250);
 }
 
 void(void) vehicle_aircraft_die {
@@ -293,15 +288,12 @@ void(void) vehicle_aircraft_dinit {
     if (self.netname == "")
 		self.netname = "aircraft";
 
-    //self.vehicle_viewport = spawn();
     self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN | VHF_HIDEPLAYER | VHF_HEAT;
     self.cvar_basename = "g_vehicle_aircraft";
 	self.vehicle_heat = 0;
     setmodel(self, self.message2);
 	self.scale = 0.6;
     self.customizeentityforclient = vehicle_stdproc_customize;
-    //setorigin(self.vehicle_viewport,'35 0 -14');
-    self.tur_aimpos = self.origin;
     vehicle_aircraft_spawn();
     self.vehicle_die = vehicle_aircraft_die;
     self.vehicle_exit = vehicle_aircraft_exit;
