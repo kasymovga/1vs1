@@ -349,4 +349,12 @@ void(string name, void() delayed_init) vehicle_stdproc_init {
 	self.shield_regen_dmgpause = cvar(strcat("g_vehicle_", name, "_shield_regen_dmgpause"));
 	self.bot_attack = (self.team && team_mode);
 	entity_initialize(self, delayed_init, INITPRIO_DROPTOFLOOR);
+	self.enemy = spawn();
+	self.enemy.angles = self.angles;
+	setorigin(self.enemy, self.origin);
+	if (self.team && !team_mode)
+		self.team = 0;
+	else
+		self.enemy.team = self.team;
+
 }

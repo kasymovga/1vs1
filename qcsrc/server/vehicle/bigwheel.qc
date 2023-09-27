@@ -233,14 +233,6 @@ void(void) vehicle_bigwheel_die {
 }
 
 void(void) vehicle_bigwheel_dinit {
-	self.enemy = spawn();
-	self.enemy.angles = self.angles;
-	setorigin(self.enemy, self.origin);
-	if (self.team && !team_mode)
-		self.team = 0;
-	else
-		self.enemy.team = self.team;
-
 	if (self.netname == "")
 		self.netname = "bigwheel";
 
