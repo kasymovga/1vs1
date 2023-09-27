@@ -209,16 +209,7 @@ void(void) vehicle_car_die {
 	self.deadflag = DEAD_DEAD;
 	self.think = vehicle_car_blowup;
 	self.nextthink = time;
-	float i, f;
-	for (i = 0; i < 10; i++) {
-		f = random();
-		if (f < 0.3)
-			onslaught_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 11 + '0 0 20', "models/onslaught/gen_gib1.md3", 6, TRUE);
-		else if(f > 0.7)
-			onslaught_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 12 + '0 0 20', "models/onslaught/gen_gib2.md3", 6, TRUE);
-		else
-			onslaught_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 13 + '0 0 20', "models/onslaught/gen_gib3.md3", 6, TRUE);
-	}
+	vehicle_explode(10);
 }
 
 void(void) car_dlc_reset {

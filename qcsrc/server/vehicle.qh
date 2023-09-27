@@ -47,3 +47,4 @@ void(void) vehicle_reset;
 float(void) vehicle_stdproc_customize;
 void(vector _mins, vector _maxs, float start_offs, float back, float up) vehicle_write_common;
 void(float d, float ed, float r, float f) vehicle_blowup;
+void(float n) vehicle_explode;

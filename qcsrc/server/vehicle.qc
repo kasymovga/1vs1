@@ -326,6 +326,20 @@ float(void) vehicle_stdproc_customize {
 	return TRUE;
 }
 
+void(float n) vehicle_explode {
+	float i, f;
+	vector o = ENTITY_CENTER(self);
+	for (i = 0; i < n; i++) {
+		f = random();
+		if(f < 0.3)
+			onslaught_throwgib(o, (100 * randomvec() - '1 1 1') * 11 + '0 0 20', "models/onslaught/gen_gib1.md3", 6, TRUE);
+		else if(f > 0.7)
+			onslaught_throwgib(o, (100 * randomvec() - '1 1 1') * 12 + '0 0 20', "models/onslaught/gen_gib2.md3", 6, TRUE);
+		else
+			onslaught_throwgib(o, (100 * randomvec() - '1 1 1') * 13 + '0 0 20', "models/onslaught/gen_gib3.md3", 6, TRUE);
+	}
+}
+
 void(string name, void() delayed_init) vehicle_stdproc_init {
 	self.health_max = cvar(strcat("g_vehicle_", name, "_health"));
 	self.health_regen = cvar(strcat("g_vehicle_", name, "_health_regen"));
