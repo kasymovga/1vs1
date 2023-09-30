@@ -231,6 +231,7 @@ float(float f) vehicle_weapon_frame_switch_mod {
 void(float d, float ed, float r, float f) vehicle_blowup {
 	damage_radius(self, self.dmg_inflictor, d, ed, r, world, f, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, world);
 	self.alpha = -1;
+	self.effects |= EFFECT_NODRAW;
 	self.nextthink = time + 10;
 	self.think = self.vehicle_spawn;
 	self.velocity = '0 0 0';
@@ -319,13 +320,6 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	return TRUE;
 }
 
-float(void) vehicle_stdproc_customize {
-	if (self.deadflag == DEAD_DEAD)
-		return FALSE;
-
-	return TRUE;
-}
-
 void(float n) vehicle_explode {
 	float i, f;
 	vector o = ENTITY_CENTER(self);
@@ -338,6 +332,44 @@ void(float n) vehicle_explode {
 		else
 			onslaught_throwgib(o, (100 * randomvec() - '1 1 1') * 13 + '0 0 20', "models/onslaught/gen_gib3.md3", 6, TRUE);
 	}
+}
+
+void(void(void) think_func, void(void) touch_func) vehicle_stdproc_spawn {
+	setorigin(self, self.enemy.origin);
+	self.angles = self.enemy.angles;
+	self.takedamage = DAMAGE_AIM;
+	self.solid = SOLID_SLIDEBOX;
+	self.movetype = MOVETYPE_PHYSICS;
+	self.deadflag = DEAD_NO;
+	self.health = self.health_max;
+	self.vehicle_shield = self.shield_max;
+	self.iscreature = TRUE;
+	self.event_damage = vehicle_stdproc_damage;
+	self.alpha = 1;
+	self.effects &= ~EFFECT_NODRAW;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	self.touch = touch_func;
+	if (think_func) {
+		self.think = think_func;
+		self.nextthink = time;
+	}
+	pointparticles(particleeffectnum("teleport"), ENTITY_CENTER(self), '0 0 0', 1);
+}
+
+void(void(void) think_func) vehicle_stdproc_die {
+	self.takedamage = DAMAGE_NO;
+	self.deadflag = DEAD_DEAD;
+	self.event_damage = NULL;
+	self.health = 0;
+	self.iscreature = FALSE;
+	self.solid = SOLID_NOT;
+	self.touch = NULL;
+	if (think_func) {
+		self.think = think_func;
+		self.nextthink = time;
+	}
+	self.movetype = MOVETYPE_NONE;
+	self.dphitcontentsmask = 0;
 }
 
 void(string name, void() delayed_init) vehicle_stdproc_init {
@@ -356,5 +388,4 @@ void(string name, void() delayed_init) vehicle_stdproc_init {
 		self.team = 0;
 	else
 		self.enemy.team = self.team;
-
 }

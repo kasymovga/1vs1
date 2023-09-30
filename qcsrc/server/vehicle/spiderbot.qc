@@ -270,7 +270,7 @@ void(float eject) vehicle_spiderbot_exit {
 	vehicle_spiderbot_stop(self);
 }
 
-void(void) vector_spiderbot_touch {
+void(void) vehicle_spiderbot_touch {
 	push_touch();
 	if (self.owner || other.classname != "player")
 		return;
@@ -280,27 +280,13 @@ void(void) vector_spiderbot_touch {
 
 //void spiderbot_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void(void) vehicle_spiderbot_spawn {
+	vehicle_stdproc_spawn(vehicle_spiderbot_think, vehicle_spiderbot_touch);
 	self.frame = 5;
-	self.think = vehicle_spiderbot_think;
-	self.nextthink = time;
-	self.health = self.health_max;
-	self.vehicle_shield = self.shield_max;
-	self.event_damage = vehicle_stdproc_damage;
-	self.iscreature = TRUE;
-	self.movetype = MOVETYPE_PHYSICS;
-	self.solid = SOLID_SLIDEBOX;
-	self.takedamage = DAMAGE_AIM;
-	self.touch = vector_spiderbot_touch;
 	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
 	self.tur_head.angles = '0 0 0';
 	self.colormap = 1024;
 	self.tur_head.colormap = 1024;
-	self.deadflag = DEAD_NO;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	setorigin(self,self.enemy.origin);
-	self.angles = self.enemy.angles;
 	vehicle_stdproc_setcolormod();
-	pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 }
 
 void(void) vehicle_spiderbot_blowup {
@@ -308,17 +294,9 @@ void(void) vehicle_spiderbot_blowup {
 }
 
 void(void) vehicle_spiderbot_die {
-	self.health = 0;
-	self.event_damage = NULL;
-	self.iscreature = FALSE;
-	self.solid = SOLID_NOT;
-	self.takedamage = DAMAGE_NO;
-	self.touch = NULL;
-	self.deadflag = DEAD_DEAD;
 	self.frame = 0;
 	self.tur_head.frame = 0;
-	self.think = vehicle_spiderbot_blowup;
-	self.nextthink = time;
+	vehicle_stdproc_die(vehicle_spiderbot_blowup);
 	vehicle_explode(10);
 }
 
@@ -345,7 +323,6 @@ void(void) vehicle_spiderbot_dinit {
 	setattachment(self.gun2,self.tur_head,"tag_hardpoint02");
 	setsize(self,SPIDERBOT_MIN, SPIDERBOT_MAX);
 	self.tur_head.owner = self;
-	self.customizeentityforclient = vehicle_stdproc_customize;
 	//setorigin(self.vehicle_viewport,'35 0 -14');
 	vehicle_spiderbot_spawn();
 	self.vehicle_die = vehicle_spiderbot_die;

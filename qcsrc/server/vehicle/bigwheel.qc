@@ -195,23 +195,9 @@ void(void) vehicle_bigwheel_touch {
 }
 
 void(void) vehicle_bigwheel_spawn {
-	self.think = vehicle_bigwheel_think;
-	self.nextthink = time;
-	self.health = self.health_max;
-	self.event_damage = vehicle_stdproc_damage;
-	self.iscreature = TRUE;
-	self.movetype = MOVETYPE_PHYSICS;
-	self.solid = SOLID_SLIDEBOX;
-	self.takedamage = DAMAGE_AIM;
-	self.touch = vehicle_bigwheel_touch;
-	self.alpha = 1;
+	vehicle_stdproc_spawn(vehicle_bigwheel_think, vehicle_bigwheel_touch);
 	self.colormap = 1024;
-	self.deadflag = DEAD_NO;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	setorigin(self,self.enemy.origin);
-	self.angles = self.enemy.angles;
 	vehicle_stdproc_setcolormod();
-	pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 }
 
 void(void) vehicle_bigwheel_blowup {
@@ -219,15 +205,7 @@ void(void) vehicle_bigwheel_blowup {
 }
 
 void(void) vehicle_bigwheel_die {
-	self.health = 0;
-	self.event_damage = NULL;
-	self.iscreature = FALSE;
-	self.solid = SOLID_NOT;
-	self.takedamage = DAMAGE_NO;
-	self.touch = stdproc_nothing;
-	self.deadflag = DEAD_DEAD;
-	self.think = vehicle_bigwheel_blowup;
-	self.nextthink = time;
+	vehicle_stdproc_die(vehicle_bigwheel_blowup);
 	vehicle_explode(10);
 }
 
@@ -242,7 +220,6 @@ void(void) vehicle_bigwheel_dinit {
 	setmodel(self.gun1, self.weaponmodel);
 	setattachment(self.gun1, self, "tag_head");
 	setsize(self, BIGWHEEL_MIN, BIGWHEEL_MAX);
-	self.customizeentityforclient = vehicle_stdproc_customize;
 	vehicle_bigwheel_spawn();
 	self.vehicle_die = vehicle_bigwheel_die;
 	self.vehicle_exit = vehicle_bigwheel_exit;

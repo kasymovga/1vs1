@@ -225,25 +225,9 @@ void(void) vehicle_aircraft_touch {
 }
 
 void(void) vehicle_aircraft_spawn {
-	self.frame = 5;
-	self.think = vehicle_aircraft_think;
-	self.nextthink = time;
-	self.health = self.health_max;
-	self.vehicle_shield = self.shield_max;
-	self.event_damage = vehicle_stdproc_damage;
-	self.iscreature = TRUE;
-	self.movetype = MOVETYPE_PHYSICS;
-	self.solid = SOLID_SLIDEBOX;
-	self.takedamage = DAMAGE_AIM;
-	self.touch = vehicle_aircraft_touch;
-	self.alpha = 1;
+	vehicle_stdproc_spawn(vehicle_aircraft_think, vehicle_aircraft_touch);
 	self.colormap = 1024;
-	self.deadflag = DEAD_NO;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	setorigin(self,self.enemy.origin);
-	self.angles = self.enemy.angles;
 	vehicle_stdproc_setcolormod();
-	pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 }
 
 void(void) vehicle_aircraft_blowup {
@@ -252,16 +236,7 @@ void(void) vehicle_aircraft_blowup {
 
 void(void) vehicle_aircraft_die {
 	vehicle_aircraft_engine_off();
-	self.health = 0;
-	self.event_damage = NULL;
-	self.iscreature = FALSE;
-	self.solid = SOLID_NOT;
-	self.takedamage = DAMAGE_NO;
-	self.touch = NULL;
-	self.deadflag = DEAD_DEAD;
-	self.frame = 0;
-	self.think = vehicle_aircraft_blowup;
-	self.nextthink = time;
+	vehicle_stdproc_die(vehicle_aircraft_blowup);
 	vehicle_explode(10);
 }
 
@@ -275,7 +250,6 @@ void(void) vehicle_aircraft_dinit {
     setmodel(self, self.message2);
 	setsize(self, AIRCRAFT_MIN, AIRCRAFT_MAX);
 	self.scale = 0.6;
-    self.customizeentityforclient = vehicle_stdproc_customize;
     vehicle_aircraft_spawn();
     self.vehicle_die = vehicle_aircraft_die;
     self.vehicle_exit = vehicle_aircraft_exit;

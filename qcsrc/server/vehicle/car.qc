@@ -175,23 +175,9 @@ void(void) vehicle_car_touch {
 
 //void car_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void(void) vehicle_car_spawn {
-	self.think = vehicle_car_think;
-	self.nextthink = time;
-	self.health = self.health_max;
-	self.event_damage = vehicle_stdproc_damage;
-	self.iscreature = TRUE;
-	self.movetype = MOVETYPE_PHYSICS;
-	self.solid = SOLID_SLIDEBOX;
-	self.takedamage = DAMAGE_AIM;
-	self.touch = vehicle_car_touch;
-	self.alpha = 1;
+	vehicle_stdproc_spawn(vehicle_car_think, vehicle_car_touch);
 	self.colormap = 1024;
-	self.deadflag = DEAD_NO;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	setorigin(self,self.enemy.origin);
-	self.angles = self.enemy.angles;
 	vehicle_stdproc_setcolormod();
-	pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 }
 
 void(void) vehicle_car_blowup {
@@ -199,15 +185,7 @@ void(void) vehicle_car_blowup {
 }
 
 void(void) vehicle_car_die {
-	self.health = 0;
-	self.event_damage = NULL;
-	self.iscreature = FALSE;
-	self.solid = SOLID_NOT;
-	self.takedamage = DAMAGE_NO;
-	self.touch = stdproc_nothing;
-	self.deadflag = DEAD_DEAD;
-	self.think = vehicle_car_blowup;
-	self.nextthink = time;
+	vehicle_stdproc_die(vehicle_car_blowup);
 	vehicle_explode(10);
 }
 
@@ -242,7 +220,6 @@ void(void) vehicle_car_dinit {
 	setsize(self, CAR_MIN, CAR_MAX);
 	self.dlc_reset = car_dlc_reset;
 	self.dlc_reset();
-	self.customizeentityforclient = vehicle_stdproc_customize;
 	//setorigin(self.vehicle_viewport,'35 0 -14');
 	vehicle_car_spawn();
 	self.vehicle_die = vehicle_car_die;
