@@ -187,7 +187,6 @@ void(void) vehicle_car_spawn {
 	self.alpha = 1;
 	self.colormap = 1024;
 	self.deadflag = DEAD_NO;
-	self.pushfactor = g_vehicle_car_pushfactor;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setorigin(self,self.enemy.origin);
 	self.angles = self.enemy.angles;
@@ -250,6 +249,7 @@ void(void) vehicle_car_dinit {
 	self.vehicle_exit = vehicle_car_exit;
 	self.vehicle_spawn = vehicle_car_spawn;
 	self.reset = vehicle_reset;
+	self.pushfactor = g_vehicle_car_pushfactor;
 }
 
 float vehicle_car_init_done;

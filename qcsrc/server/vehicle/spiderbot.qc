@@ -296,9 +296,7 @@ void(void) vehicle_spiderbot_spawn {
 	self.colormap = 1024;
 	self.tur_head.colormap = 1024;
 	self.deadflag = DEAD_NO;
-	self.pushfactor = g_vehicle_spiderbot_pushfactor;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	setsize(self,SPIDERBOT_MIN, SPIDERBOT_MAX);
 	setorigin(self,self.enemy.origin);
 	self.angles = self.enemy.angles;
 	vehicle_stdproc_setcolormod();
@@ -345,6 +343,7 @@ void(void) vehicle_spiderbot_dinit {
 	setattachment(self.tur_head, self, "tag_head");
 	setattachment(self.gun1,self.tur_head,"tag_hardpoint01");
 	setattachment(self.gun2,self.tur_head,"tag_hardpoint02");
+	setsize(self,SPIDERBOT_MIN, SPIDERBOT_MAX);
 	self.tur_head.owner = self;
 	self.customizeentityforclient = vehicle_stdproc_customize;
 	//setorigin(self.vehicle_viewport,'35 0 -14');
@@ -353,6 +352,7 @@ void(void) vehicle_spiderbot_dinit {
 	self.vehicle_exit = vehicle_spiderbot_exit;
 	self.vehicle_spawn = vehicle_spiderbot_spawn;
 	self.reset = vehicle_reset;
+	self.pushfactor = g_vehicle_spiderbot_pushfactor;
 }
 
 float vehicle_spiderbot_init_done;

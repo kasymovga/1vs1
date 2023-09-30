@@ -239,9 +239,7 @@ void(void) vehicle_aircraft_spawn {
 	self.alpha = 1;
 	self.colormap = 1024;
 	self.deadflag = DEAD_NO;
-	self.pushfactor = g_vehicle_aircraft_pushfactor;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	setsize(self, AIRCRAFT_MIN, AIRCRAFT_MAX);
 	setorigin(self,self.enemy.origin);
 	self.angles = self.enemy.angles;
 	vehicle_stdproc_setcolormod();
@@ -275,6 +273,7 @@ void(void) vehicle_aircraft_dinit {
     self.cvar_basename = "g_vehicle_aircraft";
 	self.vehicle_heat = 0;
     setmodel(self, self.message2);
+	setsize(self, AIRCRAFT_MIN, AIRCRAFT_MAX);
 	self.scale = 0.6;
     self.customizeentityforclient = vehicle_stdproc_customize;
     vehicle_aircraft_spawn();
@@ -282,6 +281,7 @@ void(void) vehicle_aircraft_dinit {
     self.vehicle_exit = vehicle_aircraft_exit;
     self.vehicle_spawn = vehicle_aircraft_spawn;
 	self.reset = vehicle_reset;
+	self.pushfactor = g_vehicle_aircraft_pushfactor;
 }
 
 float vehicle_aircraft_init_done;
