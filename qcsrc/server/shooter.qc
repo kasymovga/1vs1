@@ -29,7 +29,7 @@ void(void) shooter_plasma_use {
 
 void(void) shooter_rocket_use {
 	vector v = normalize(self.enemy.origin - self.origin);
-	pointparticles(particleeffectnum("laser_muzzleflash"), self.origin, v * 1000, 1);
+	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), self.origin, v * 1000, 1);
 	entity missile = projectile(TRUE, PROJECTILE_ROCKET, TRUE, activator);
 	missile.owner = NULL;
 	projectile_setup(missile, self.origin, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage,
