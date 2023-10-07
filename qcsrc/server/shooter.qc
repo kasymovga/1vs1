@@ -40,6 +40,19 @@ void(void) shooter_rocket_use {
     missile.nextthink = time + g_balance_rocketlauncher_lifetime;
 }
 
+void(void) shooter_grenade_use {
+	vector v = normalize(self.enemy.origin - self.origin);
+	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), self.origin, v * 1000, 1);
+	entity missile = projectile(TRUE, (g_balance_grenadelauncher_primary_bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, activator);
+	missile.owner = NULL;
+	projectile_setup(missile, self.origin, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
+			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force, 0, (g_balance_grenadelauncher_primary_bounce ? MOVETYPE_BOUNCE : MOVETYPE_TOSS));
+    missile.velocity = v * g_balance_grenadelauncher_primary_speed;
+	missile.touch = (g_balance_grenadelauncher_primary_bounce ? weapon_grenadelauncher_touch2 : projectile_touch_explode);
+	missile.think = (g_balance_grenadelauncher_primary_bounce ? projectile_explode : stdproc_remove);
+    missile.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
+}
+
 void(void) spawnfunc_shooter_plasma {
 	self.use = shooter_plasma_use;
 	entity_initialize(self, shooter_setup, INITPRIO_FINDTARGET);
@@ -47,5 +60,10 @@ void(void) spawnfunc_shooter_plasma {
 
 void(void) spawnfunc_shooter_rocket {
 	self.use = shooter_rocket_use;
+	entity_initialize(self, shooter_setup, INITPRIO_FINDTARGET);
+}
+
+void(void) spawnfunc_shooter_grenade {
+	self.use = shooter_grenade_use;
 	entity_initialize(self, shooter_setup, INITPRIO_FINDTARGET);
 }
