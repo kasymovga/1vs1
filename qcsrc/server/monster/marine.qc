@@ -37,7 +37,7 @@ void() monster_marine_hunt {
 		vector _shotdir = normalize(monster_look_to_end - self.origin);
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-		bullet_begin(1000);
+		bullet_begin(0); //0 to prevent antilag
 		bullet(_shotorg, _shotdir, self.dmg_radius, 1000, 5, self.dmg_edge, 0, self.dmg_force, EFFECT_IMPACT_BULLET, WEAPON_UZI, particleeffectnum("tr_bullet"), 0, 1);
 		bullet_end();
 		pointparticles(particleeffectnum("uzi_muzzleflash"), _shotorg, _shotdir * 1000, g_balance_shotgun_primary_ammo);

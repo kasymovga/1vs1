@@ -17,7 +17,7 @@ void() monster_walker_bullet {
 	weapon_shotdir_x = v_forward_x;
 	weapon_shotdir_y = v_forward_y;
 	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-	bullet_begin(5000);
+	bullet_begin(0); //0 to prevent antilag
 	bullet(weapon_shotorg, weapon_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, EFFECT_IMPACT_BULLET, WEAPON_UZI, particleeffectnum("tr_bullet"), 1, 100);
 	bullet_end();
 	setattachment(weapon_flash_spawn(WEAPON_FLASH_UZI), self.weaponentity, "tag_fire");
