@@ -146,7 +146,7 @@ void() monster_boss2_spawn {
 
 void(void) monster_boss2_init {
 	dlc_require("monsters");
-	monster_common_composite_precache("heavysoldier", "gl");
+	monster_common_composite_precache("soldier", "shotgun");
 	precache_sound("weapons/shotgun_fire.wav");
 	projectile_init(PROJECTILE_BULLET_BIG);
 }
