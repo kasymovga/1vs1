@@ -34,7 +34,7 @@ void() monster_marine_hunt {
 		move_beak_simple(100 * frametime);
 		self.angles_y = v_y;
 		makevectors(self.angles);
-		vector _shotdir = normalize(monster_look_to_end - self.origin);
+		vector _shotdir = normalize(normalize(monster_look_to_end - self.origin) + (5 - self.cnt) * '0 0 0.005' + randomvec() * 0.0025);
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 		bullet_begin(1000);
