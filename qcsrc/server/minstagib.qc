@@ -236,7 +236,7 @@ float(float req) minstagib_weapon {
 		} else
 			projectile_init(PROJECTILE_LASER);
 
-		weapon_ammo_limits(MINSTAGIB_WEAPON, g_balance_fireball_primary_ammo, g_balance_fireball_secondary_ammo);
+		weapon_ammo_limits(MINSTAGIB_WEAPON, 1, 0);
 	}
 	return TRUE;
 }
