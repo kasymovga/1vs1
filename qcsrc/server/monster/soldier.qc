@@ -33,9 +33,9 @@ void soldier_hunt() {
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/shotgun_fire.wav", VOL_BASE, ATTN_NORM);
 		float sc;
-		bullet_begin(1000);
+		bullet_begin(10000);
 		for (sc = 0; sc < 5; sc++)
-			bullet(_shotorg, _shotdir, self.dmg_radius, 1000, 5, self.dmg_edge, 0, self.dmg_force, EFFECT_IMPACT_PELLET, WEAPON_SHOTGUN, particleeffectnum("tr_bullet"), 0, 1);
+			bullet(_shotorg, _shotdir, self.dmg_radius, 10000, 5, self.dmg_edge, 0, self.dmg_force, EFFECT_IMPACT_PELLET, WEAPON_SHOTGUN, particleeffectnum("tr_bullet"), 0, 1);
 
 		bullet_end();
 		pointparticles(particleeffectnum("shotgun_muzzleflash"), _shotorg, _shotdir * 1000, g_balance_shotgun_primary_ammo);

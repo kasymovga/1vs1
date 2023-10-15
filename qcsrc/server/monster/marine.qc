@@ -34,11 +34,11 @@ void() monster_marine_hunt {
 		move_beak_simple(100 * frametime);
 		self.angles_y = v_y;
 		makevectors(self.angles);
-		vector _shotdir = normalize(normalize(monster_look_to_end - self.origin) + (5 - self.cnt) * '0 0 0.005' + randomvec() * 0.0025);
+		vector _shotdir = normalize(normalize(monster_look_to_end - self.origin) + (3 - self.cnt) * '0 0 0.005' + randomvec() * 0.0025);
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-		bullet_begin(1000);
-		bullet(_shotorg, _shotdir, self.dmg_radius, 1000, 5, self.dmg_edge, 0, self.dmg_force, EFFECT_IMPACT_BULLET, WEAPON_UZI, particleeffectnum("tr_bullet"), 0, 1);
+		bullet_begin(10000);
+		bullet(_shotorg, _shotdir, self.dmg_radius, 10000, 5, self.dmg_edge, 0, self.dmg_force, EFFECT_IMPACT_BULLET, WEAPON_UZI, particleeffectnum("tr_bullet"), 0, 1);
 		bullet_end();
 		pointparticles(particleeffectnum("uzi_muzzleflash"), _shotorg, _shotdir * 1000, g_balance_shotgun_primary_ammo);
 		// casing code

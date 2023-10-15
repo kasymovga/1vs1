@@ -264,10 +264,10 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 			bullet_trace_callback_ent = self;
 			bullet_trace_callback_eff = tracereffects;
 			if (proj.gravity) {
-				warpzone_trace_toss_trough_zone(self, oldself, 0.05, 200, world, bullet_trace_callback);
+				warpzone_trace_toss_trough_zone(self, oldself, (lifetime / 200), 200, world, bullet_trace_callback); // life time distance
 				self.velocity = warpzone_trace_toss_velocity;
 			} else {
-				warpzone_trace_line_trough_zone(self.origin, start + proj.velocity * 10, FALSE, self, world, bullet_trace_callback);
+				warpzone_trace_line_trough_zone(self.origin, start + proj.velocity * lifetime, FALSE, self, world, bullet_trace_callback); // life time distance
 				self.velocity = warpzone_transform_velocity(warpzone_trace_transform, self.velocity);
 			}
 			if (trace_fraction == 1)
