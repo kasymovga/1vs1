@@ -5,7 +5,7 @@ CLASS(NexuizDemoBrowserTab) EXTENDS(NexuizTab)
 	ATTRIB(NexuizDemoBrowserTab, intendedWidth, float, 0.9)
 	ATTRIB(NexuizDemoBrowserTab, rows, float, 22)
 	ATTRIB(NexuizDemoBrowserTab, columns, float, 6.5)
-	ATTRIB(NexuizDemoBrowserTab, name, string, _("DemoBrowser"))	
+	ATTRIB(NexuizDemoBrowserTab, name, string, "DemoBrowser")
 ENDCLASS(NexuizDemoBrowserTab)
 entity makeNexuizDemoBrowserTab();
 #endif
