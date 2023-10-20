@@ -163,6 +163,9 @@ void drawNexposee(entity me)
 				me.animationFactor = 1;
 				me.animationState = 2;
 				setFocusContainer(me, me.selectedChild);
+				#ifdef MENUQC
+				gui_load_all_cvars(me);
+				#endif
 			}
 			break;
 		case 2:
@@ -361,8 +364,12 @@ void addItemNexposee(entity me, entity theOther, vector theOrigin, vector theSiz
 
 void focusEnterNexposee(entity me)
 {
-	if(me.animationState == 2)
+	if(me.animationState == 2) {
 		setFocusContainer(me, me.selectedChild);
+		#ifdef MENUQC
+		gui_load_all_cvars(me);
+		#endif
+	}
 }
 
 void pullNexposeeNexposee(entity me, entity theOther, vector theAlign)

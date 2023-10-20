@@ -6,23 +6,31 @@ CLASS(NexuizServerCreateTab) EXTENDS(NexuizTab)
 	ATTRIB(NexuizServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(NexuizServerCreateTab, rows, float, 22)
 	ATTRIB(NexuizServerCreateTab, columns, float, 6.5)
+	ATTRIB(NexuizServerCreateTab, isSinglePlayer, float, 0)
 
 	ATTRIB(NexuizServerCreateTab, mapListBox, entity, NULL)
 	ATTRIB(NexuizServerCreateTab, sliderFraglimit, entity, NULL)
 	ATTRIB(NexuizServerCreateTab, sliderTimelimit, entity, NULL)
 	ATTRIB(NexuizServerCreateTab, checkboxFraglimit, entity, NULL)
 ENDCLASS(NexuizServerCreateTab)
-entity makeNexuizServerCreateTab();
+entity makeNexuizServerCreateTab(float single);
 #endif
 
 #ifdef IMPLEMENTATION
 
-entity makeNexuizServerCreateTab()
+entity makeNexuizServerCreateTab(float single)
 {
 	entity me;
 	me = spawnNexuizServerCreateTab();
+	me.isSinglePlayer = single;
 	me.configureDialog(me);
 	return me;
+}
+
+void(entity btn, entity me) loadMapSingleNexuizServerCreateTab {
+	cvar_set("sv_public", "-1");
+	cvar_set("minplayers", "0");
+	MapList_LoadMap(btn, me);
 }
 
 void fillNexuizServerCreateTab(entity me)
@@ -68,13 +76,15 @@ void fillNexuizServerCreateTab(entity me)
 	me.gotoRC(me, 4, 3.5); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, _("Match settings:")));
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Server mode:")));
-		me.TD(me, 1, 2, e = makeNexuizTextSlider("sv_public"));
-			e.addValue(e, _("Single player"), "-1");
-			e.addValue(e, _("Private"), "0");
-			e.addValue(e, _("Public"), "1");
-			e.configureNexuizTextSliderValues(e);
+	if (!me.isSinglePlayer) {
+		me.TR(me);
+			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Server mode:")));
+			me.TD(me, 1, 2, e = makeNexuizTextSlider("sv_public"));
+				e.addValue(e, _("Single player"), "-1");
+				e.addValue(e, _("Private"), "0");
+				e.addValue(e, _("Public"), "1");
+				e.configureNexuizTextSliderValues(e);
+	}
 	me.TR(me);
 		me.sliderTimelimit = makeNexuizSlider(1.0, 60.0, 0.5, "g_timelimit");
 		me.TD(me, 1, 1, e = makeNexuizSliderCheckBox(0, 1, me.sliderTimelimit, _("Time limit:")));
@@ -85,18 +95,20 @@ void fillNexuizServerCreateTab(entity me)
 			me.checkboxFraglimit = e;
 		me.TD(me, 1, 2, me.sliderFraglimit);
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Player slots:")));
-		me.TD(me, 1, 2, makeNexuizSlider(1, 64, 1, "menu_maxplayers"));
+	if not(me.isSinglePlayer) {
+		me.TR(me);
+			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Player slots:")));
+			me.TD(me, 1, 2, makeNexuizSlider(1, 64, 1, "menu_maxplayers"));
+		me.TR(me);
+			me.TDempty(me, 0.2);
+			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Minimal amount of human and bots:")));
+		me.TR(me);
+			me.TDempty(me, 1);
+			me.TD(me, 1, 2, makeNexuizSlider(0, 32, 1, "minplayers"));
+	}
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Minimal amount of human and bots:")));
-	me.TR(me);
-		me.TDempty(me, 1);
-		me.TD(me, 1, 2, makeNexuizSlider(0, 32, 1, "minplayers"));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Additional number of bots:")));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, (me.isSinglePlayer ? _("Number of bots:") :_("Additional number of bots:"))));
 	me.TR(me);
 		me.TDempty(me, 1);
 		me.TD(me, 1, 2, makeNexuizSlider(0, 32, 1, "bot_number"));
@@ -135,8 +147,8 @@ void fillNexuizServerCreateTab(entity me)
 
 	me.gotoRC(me, me.rows - 1, 0);
 		//me.TD(me, 1, 2, e = makeNexuizModButton("Multiplayer_Create"));
-		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Start Multiplayer!"), '0 0 0'));
-			e.onClick = MapList_LoadMap;
+		me.TD(me, 1, me.columns, e = makeNexuizButton((me.isSinglePlayer ? _("Start Game!") : _("Start Multiplayer!")), '0 0 0'));
+			e.onClick = (me.isSinglePlayer ? loadMapSingleNexuizServerCreateTab : MapList_LoadMap);
 			e.onClickEntity = me.mapListBox;
 			me.mapListBox.startButton = e;
 

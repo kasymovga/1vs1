@@ -39,6 +39,7 @@
 #include "classes/nexuiz/dialog_settings_input_userbind.c"
 #include "classes/nexuiz/slider_decibels.c"
 #include "classes/nexuiz/dialog_singleplayer.c"
+#include "classes/nexuiz/dialog_singleplayer_campaign.c"
 #include "classes/nexuiz/campaign.c"
 #include "classes/nexuiz/dialog_singleplayer_winner.c"
 #include "classes/nexuiz/dialog_language.c"
