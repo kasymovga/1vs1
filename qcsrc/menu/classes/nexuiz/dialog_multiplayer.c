@@ -17,7 +17,7 @@ void fillNexuizMultiplayerDialog(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Servers"),  makeNexuizServerListTab()));
 			//setDependentStringNotEqual(e, "_cl_name", "Player");
-		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Create"),  makeNexuizServerCreateTab()));
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Create"),  makeNexuizServerCreateTab(FALSE)));
 			//setDependentStringNotEqual(e, "_cl_name", "Player");
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Demos"),   makeNexuizDemoBrowserTab()));
 	me.TR(me);
