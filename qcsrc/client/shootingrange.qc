@@ -11,7 +11,7 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) shootingrange_hud {
 	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '96 48 0', gameinfo_size, CVAR(sbar_gameinfo_background))
 	float score = me.(scores[ps_secondary]);
 	sbar_draw_num(pos, score, 3, 0, 32 * gameinfo_scale, '1 1 0.5', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-	if (shootingrange_round_start) {
+	if (shootingrange_round_time) {
 		pos_y += 34 * gameinfo_scale;
 		float t = (shootingrange_round_start + shootingrange_round_time) - server_time;
 		float w = 92 * (t / shootingrange_round_time) * gameinfo_scale;
