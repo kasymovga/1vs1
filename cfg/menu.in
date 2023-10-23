@@ -18,3 +18,5 @@ set _menu_alpha "" // will be set by menu QC to the current fading of the menu, 
 set menu_vid_conheight 600
 set menu_vid_conwidth 800
 seta cl_showpressedkeys_old 0 "Use old key indicator"
+seta menu_minplayers 0
+seta menu_public 0

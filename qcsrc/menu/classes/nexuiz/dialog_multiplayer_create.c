@@ -28,12 +28,6 @@ entity makeNexuizServerCreateTab(float single)
 	return me;
 }
 
-void(entity btn, entity me) loadMapSingleNexuizServerCreateTab {
-	cvar_set("sv_public", "-1");
-	cvar_set("minplayers", "0");
-	MapList_LoadMap(btn, me);
-}
-
 void fillNexuizServerCreateTab(entity me)
 {
 	entity e, selected;
@@ -59,7 +53,7 @@ void fillNexuizServerCreateTab(entity me)
 	}
 	me.TR(me);
 	me.TR(me);
-		me.mapListBox = makeNexuizMapList();
+		me.mapListBox = makeNexuizMapList(me.isSinglePlayer);
 		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, _("Map list:")));
 			gui_make_callback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
@@ -80,7 +74,7 @@ void fillNexuizServerCreateTab(entity me)
 	if (!me.isSinglePlayer) {
 		me.TR(me);
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Server mode:")));
-			me.TD(me, 1, 2, e = makeNexuizTextSlider("sv_public"));
+			me.TD(me, 1, 2, e = makeNexuizTextSlider("menu_public"));
 				e.addValue(e, _("Single player"), "-1");
 				e.addValue(e, _("Private"), "0");
 				e.addValue(e, _("Public"), "1");
@@ -105,7 +99,7 @@ void fillNexuizServerCreateTab(entity me)
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Minimal amount of human and bots:")));
 		me.TR(me);
 			me.TDempty(me, 1);
-			me.TD(me, 1, 2, makeNexuizSlider(0, 32, 1, "minplayers"));
+			me.TD(me, 1, 2, makeNexuizSlider(0, 32, 1, "menu_minplayers"));
 	}
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -152,7 +146,7 @@ void fillNexuizServerCreateTab(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		//me.TD(me, 1, 2, e = makeNexuizModButton("Multiplayer_Create"));
 		me.TD(me, 1, me.columns, e = makeNexuizButton((me.isSinglePlayer ? _("Start Game!") : _("Start Multiplayer!")), '0 0 0'));
-			e.onClick = (me.isSinglePlayer ? loadMapSingleNexuizServerCreateTab : MapList_LoadMap);
+			e.onClick = MapList_LoadMap;
 			e.onClickEntity = me.mapListBox;
 			me.mapListBox.startButton = e;
 

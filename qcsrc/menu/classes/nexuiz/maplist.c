@@ -20,6 +20,7 @@ CLASS(NexuizMapList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizMapList, realUpperMargin2, float, 0)
 
 	ATTRIB(NexuizMapList, lastGametype, float, 0)
+	ATTRIB(NexuizMapList, isSinglePlayer, float, 0)
 
 	ATTRIB(NexuizMapList, origin, vector, '0 0 0')
 	ATTRIB(NexuizMapList, itemAbsSize, vector, '0 0 0')
@@ -37,7 +38,7 @@ CLASS(NexuizMapList) EXTENDS(NexuizListBox)
 
 	METHOD(NexuizMapList, destroy, void(entity))
 ENDCLASS(NexuizMapList)
-entity makeNexuizMapList();
+entity makeNexuizMapList(float single);
 void MapList_All(entity btn, entity me);
 void MapList_None(entity btn, entity me);
 void MapList_LoadMap(entity btn, entity me);
@@ -49,10 +50,10 @@ void destroyNexuizMapList(entity me)
 	map_info_shutdown();
 }
 
-entity makeNexuizMapList()
-{
+entity makeNexuizMapList(float single) {
 	entity me;
 	me = spawnNexuizMapList();
+	me.isSinglePlayer = single;
 	me.configureNexuizMapList(me);
 	return me;
 }
@@ -263,6 +264,13 @@ void MapList_LoadMap(entity btn, entity me)
 	}
 	if(map_info_check_map(m))
 	{
+		if (me.isSinglePlayer) {
+			cvar_set("sv_public", "-1");
+			cvar_set("minplayers", "0");
+		} else {
+			cvar_set("sv_public", ftos(cvar("menu_public")));
+			cvar_set("minplayers", ftos(cvar("menu_minplayers")));
+		}
 		localcmd("\ndisconnect; wait; g_campaign 0; maxplayers ", ftos(max(max(cvar("bot_number") + 1, cvar("minplayers")), cvar("menu_maxplayers"))), "; g_maplist_shufflenow\n");
 		if(cvar("menu_use_default_hostname"))
 			localcmd("hostname \"", strdecolorize(cvar_string("_cl_name")), "'s Rexuiz server\"\n");
