@@ -23,6 +23,9 @@ void(void) single_endlevel {
 	//if (PLAYER_DEAD(activator))
 	//	return;
 	//
+	if (single_level_finished)
+		return;
+
 	single_level_finished = TRUE;
 	entity e;
 	FOR_EACH_PLAYER(e)
