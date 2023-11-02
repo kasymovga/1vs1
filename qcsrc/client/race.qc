@@ -30,7 +30,6 @@ string race_records_name[10];
 void(void) race_read {
 	float b;
 	b = net_read_byte();
-	float i;
 	switch(b) {
 		case RACE_NET_CHECKPOINT_HIT_QUALIFYING:
 			race_checkpoint = net_read_byte();
@@ -106,13 +105,15 @@ void(void) race_read {
 
 			race_penaltyreason = strzone(net_read_string());
 			break;
-		case RACE_NET_RECORDS_TABLE:
-			for (i = 0; i < 10; i++) {
-				race_records_time[i] = net_read_coord();
-				race_records_speed[i] = net_read_short();
-				race_records_name[i] = str_zone_ifneeded(net_read_string());
-			}
-			break;
+	}
+}
+
+void(float unused) race_records_read {
+	float i;
+	for (i = 0; i < 10; i++) {
+		race_records_time[i] = net_read_coord();
+		race_records_speed[i] = net_read_short();
+		race_records_name[i] = str_zone_ifneeded(net_read_string());
 	}
 }
 

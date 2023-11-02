@@ -61,6 +61,7 @@ float SP_RACE_TIME;
 float race_records_time[10];
 float race_records_speed[10];
 string race_records_name[10];
+entity race_records_sender;
 
 float(string name, float checktime, float _speed) race_records_put;
 
@@ -129,21 +130,19 @@ float(string name) race_record_delete {
 	return r;
 }
 
-void(entity to) race_records_send {
-	msg_entity = to;
-	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
-	net_write_byte(MSG_ONE, NET_TE_CSQC_RACE);
-	net_write_byte(MSG_ONE, RACE_NET_RECORDS_TABLE);
+float(entity to, float sf) race_records_send {
+	net_write_byte(MSG_ENTITY, NET_CSQC_RACE_RECORDS);
 	float i, t, sp;
 	string n;
 	for (i = 0; i < 10; i++) {
 		n = race_records_name[i];
 		t = race_records_time[i];
 		sp = race_records_speed[i];
-		net_write_coord(MSG_ONE, t);
-		net_write_short(MSG_ONE, sp);
-		net_write_string(MSG_ONE, n);
+		net_write_coord(MSG_ENTITY, t);
+		net_write_short(MSG_ENTITY, sp);
+		net_write_string(MSG_ENTITY, n);
 	}
+	return TRUE;
 }
 
 void(string m) race_records_clear {
@@ -156,9 +155,7 @@ void(string m) race_records_clear {
 			race_records_time[i] = 0;
 			race_records_speed[i] = 0;
 		}
-		FOR_EACH_REALCLIENT(e) {
-			race_records_send(e);
-		}
+		race_records_sender.SendFlags = 1;
 	} else {
 		db_put(db_server, strcat(m, race_records_path, "time"), "");
 		db_put(db_server, strcat(m, race_records_path, "netname"), "");
@@ -379,9 +376,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 							announce(e, "announcer/male/impressive.wav", "^2New record!");
 
 						entity e3;
-						FOR_EACH_REALCLIENT(e3) {
-							race_records_send(e3);
-						}
+						race_records_sender.SendFlags = 1;
 					}
 				}
 			}
@@ -1212,12 +1207,6 @@ void(void) race_shutdown {
 	race_shutdown_next();
 }
 
-var void(void) race_client_real_connect_next;
-void(void) race_client_real_connect {
-	race_records_send(self);
-	race_client_real_connect_next();
-}
-
 var float(string cmd, float argc) race_cmd_game_handle_next;
 float(string cmd, float argc) race_cmd_game_handle {
 	if (cmd == "clear_records") {
@@ -1392,10 +1381,10 @@ void(void) race_init {
 	if (g_race_qualifying) {
 		player_independent = 1;
 		race_records_load();
+		race_records_sender = spawn();
+		net_link_entity(race_records_sender, FALSE, 0, race_records_send);
 		race_shutdown_next = plugin_chain_shutdown;
 		plugin_chain_shutdown = race_shutdown;
-		race_client_real_connect_next = plugin_chain_client_connect_real;
-		plugin_chain_client_connect_real = race_client_real_connect;
 	}
 	if (g_race) {
 		plugin_winning_condition = race_winning_condition;
