@@ -694,11 +694,13 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	if (self.noise3 != "")
 		precache_sound(self.noise3);
 
-	vector org = ENTITY_CENTER(self);
-	trace_line(org, org - '0 0 64', TRACE_MOVE_WORLDONLY, world);
-	if not(trace_startsolid)
-	if (trace_fraction < 1)
-		waypoint_spawn(trace_endpos, trace_endpos + '0 0 1', WAYPOINTFLAG_GENERATED);
+	if not(self.spawnflags & MONSTER_SPAWN_STAYSTILL) {
+		vector org = ENTITY_CENTER(self);
+		trace_line(org, org - '0 0 64', TRACE_MOVE_WORLDONLY, world);
+		if not(trace_startsolid)
+		if (trace_fraction < 1)
+			waypoint_spawn(trace_endpos, trace_endpos + '0 0 1', WAYPOINTFLAG_GENERATED);
+	}
 }
 
 void spawnfunc_monster_walk_path() {
