@@ -60,6 +60,8 @@ void(entity btn, entity me) addClickNexuizMutatorsDialog {
 	while (substring(profile, -1, 1) == " ")
 		profile = substring(profile, 0, strlen(profile) - 1);
 
+	if (substring(profile, strlen(profile) - 1, 1) == " ") profile = substring(profile, 0, strlen(profile) - 1);
+	if (substring(profile, 0, 1) == " ") profile = substring(profile, 1, -1);
 	cvar_set("g_profile", profile);
 	me.currentProfile.loadCvars(me.currentProfile);
 	me.availableProfiles.loadCvars(me.availableProfiles);
@@ -72,6 +74,8 @@ void(entity btn, entity me) removeClickNexuizMutatorsDialog {
 	profile = strreplace("+", " ", profile);
 	profile = strreplace(strcat(" ", s, " "), " ", strcat(" ", profile, " "));
 	profile = strreplace("  ", " ", profile);
+	if (substring(profile, strlen(profile) - 1, 1) == " ") profile = substring(profile, 0, strlen(profile) - 1);
+	if (substring(profile, 0, 1) == " ") profile = substring(profile, 1, -1);
 	cvar_set("g_profile", profile);
 	me.currentProfile.loadCvars(me.currentProfile);
 	me.availableProfiles.loadCvars(me.availableProfiles);
