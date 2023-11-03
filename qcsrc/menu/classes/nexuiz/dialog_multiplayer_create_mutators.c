@@ -20,18 +20,12 @@ void showNotifyNexuizMutatorsDialog(entity me) {
 
 string profileDescriptionNexuizMutatorsDialog(string profile_name) {
 	if (profile_name == "") return "Default";
-	if (profile_name == "bestakimbo") return "Best Akimbo";
-	if (profile_name == "minsta") return "Minsta+Hook";
-	if (profile_name == "minsta_duel") return "Minsta+Hook Duel";
-	if (profile_name == "cra") return "Camping Rifle Arena";
-	if (profile_name == "explosive_minsta") return "Explosive Minsta+Hook";
-	if (profile_name == "defragcpm") return "Defrag CPM";
-	if (profile_name == "overkill") return "OverKill";
-	if (profile_name == "mixed_arts") return "Mixed Arts";
-	if (profile_name == "nexuiz25") return "Nexuiz";
-	if (profile_name == "physicscpma") return "RexuizProMod";
-	if (profile_name == "quakiuz") return "Quakiuz";
-	if (profile_name == "duel") return "Duel";
+	if (strstrofs(profile_name, " ", 0) >= 0)
+		return profile_name;
+	else {
+		string s = cvar_string(strcat(profile_name, "_profile"));
+		if (s != "") return s;
+	}
 	return profile_name;
 }
 

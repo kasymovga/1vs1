@@ -1,4 +1,4 @@
-set nexrun_profile ""
+set nexrun_profile "Nexrun"
 set nexrun_inherit physicsnexrun
 set nexrun_g_shootfromcenter 1
 set nexrun_g_projectiles_newton_style 0

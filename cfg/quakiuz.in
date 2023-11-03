@@ -1,4 +1,4 @@
-set quakiuz_profile ""
+set quakiuz_profile "Quakiuz"
 set quakiuz_inherit physicsq3
 set quakiuz_g_footsteps 1
 set quakiuz_g_shootfromeye 1
