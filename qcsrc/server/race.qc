@@ -1219,6 +1219,18 @@ float(string cmd, float argc) race_cmd_game_handle {
 		race_records_clear(m);
 		return TRUE;
 	}
+	if (cmd == "clear_record") {
+		if (argc != 2) {
+			sprint(self, "usage: sv_cmd clear_record <position>\n");
+		}
+		float i = stof(argv(1));
+		string n = race_records_name[i - 1];
+		if (n != "") {
+			race_record_delete(n);
+			race_records_sender.SendFlags = 1;
+		}
+		return TRUE;
+	}
 	return race_cmd_game_handle_next(cmd, argc);
 }
 
