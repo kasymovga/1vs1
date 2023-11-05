@@ -463,7 +463,7 @@ void(vector tdest, float tspeed, void() func) func_calc_move {
 	traveltime = vlen (delta) / tspeed;
 	if (traveltime < sys_ticrate) {
 		self.velocity = '0 0 0';
-		self.nextthink = self.ltime + sys_ticrate;
+		self.nextthink = self.ltime  + sys_ticrate;
 		return;
 	}
 	self.velocity = delta * (1/traveltime); // QuakeC doesn't allow vector/float division
@@ -652,7 +652,6 @@ void(void) func_plat_reset {
 	sound_stop(self, CHAN_TRIGGER);
 }
 
-void(void) spawnfunc_path_corner { }
 void(void) spawnfunc_func_plat {
 	if (!self.t_length)
 		self.t_length = 80;
@@ -741,7 +740,12 @@ void(void) func_train_next {
 	if (!self.wait)
 		self.wait = 0.1;
 
-	float _speed = (targ.speed ? targ.speed : self.speed);
+	float _speed = ((targ.speed < 0 && self.speed < 0) ? 100 : (targ.speed ? targ.speed : self.speed));
+	if (_speed < 0) {
+		teleport_origin_set(self, targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), 0);
+		func_train_next();
+		return;
+	}
 	if (self.wait < 0) {
 		if (self.targetname != "" && !sv_gameplayfix_trainnowait)
 			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, stdproc_nothing);

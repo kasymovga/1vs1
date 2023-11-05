@@ -657,7 +657,9 @@ float(entity to, float sf) physics_send {
 				sf2 |= 4;
 		}
 		if (self.groundentity)
-		if (self.flags & FL_ONGROUND_OR_SLICK) {
+		if (self.flags & FL_ONGROUND_OR_SLICK)
+		if (self.groundentity.movetype != MOVETYPE_NONE)
+		if (self.groundentity.solid == SOLID_BSP) {
 			sf |= 32768;
 		}
 		if (g_skimming_time)
@@ -842,6 +844,7 @@ float(entity to, float sf) physics_send {
 			net_write_coord(MSG_ENTITY, self.groundentity.origin_x);
 			net_write_coord(MSG_ENTITY, self.groundentity.origin_y);
 			net_write_coord(MSG_ENTITY, self.groundentity.origin_z);
+			net_write_byte(MSG_ENTITY, (self.groundentity.effects & EFFECT_TELEPORT_BIT) == 0);
 		}
 		if (sf2 & 1) {
 			net_write_coord(MSG_ENTITY, skimming);

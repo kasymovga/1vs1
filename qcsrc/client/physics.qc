@@ -9,6 +9,7 @@ float physics_start_nofriction_time;
 float physics_ground_time;
 float physics_ground_curtime;
 float physics_ground_oldtime;
+float physics_ground_teleport_bit;
 vector physics_ground_origin;
 vector physics_ground_oldorigin;
 float physics_ground_lastent;
@@ -512,11 +513,13 @@ void(float isnew) physics_read {
 			physics_ground_origin_x = net_read_coord();
 			physics_ground_origin_y = net_read_coord();
 			physics_ground_origin_z = net_read_coord();
+			float tb = net_read_byte();
 			physics_ground_time = time;
-			if (physics_ground_lastent != ground_ent) {
+			if (physics_ground_lastent != ground_ent || physics_ground_teleport_bit != tb) {
 				physics_ground_oldorigin = physics_ground_origin;
 				physics_ground_oldtime = physics_ground_time;
 				physics_ground_lastent = ground_ent;
+				physics_ground_teleport_bit = tb;
 			}
 		} else {
 			physics_ground_lastent = 0;

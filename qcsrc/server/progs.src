@@ -282,6 +282,7 @@ turret/tesla.qc
 score.qc
 portal.qc
 target_spawn.qc
+path.qc
 func.qc
 func_weight_button.qc
 func_portable.qc
