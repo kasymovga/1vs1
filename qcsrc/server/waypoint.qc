@@ -521,6 +521,7 @@ entity(float dir, vector from, vector lastwp, float depth) waypoint_path_generat
 void(void) waypoint_path_generator_think {
 	vector dirv = '0 0 0';
 	float dirback = -1;
+	entity e;
 	switch (self.cnt) {
 	case 0:
 		dirv = '1 0 0';
@@ -548,7 +549,7 @@ void(void) waypoint_path_generator_think {
 	if ((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP)
 		goto removegenerator;
 
-	for (entity e = findradius(v, 50); e; e = e.chain) {
+	for (e = findradius(v, 50); e; e = e.chain) {
 		if (e == self) continue;
 		if (e.classname == "waypoint" && !e.wpflags) goto removegenerator;
 		if (e.classname == "waypoint_path_generator") goto removegenerator;
@@ -563,7 +564,7 @@ void(void) waypoint_path_generator_think {
 			&& v_z > world.mins_z && v_z < world.maxs_z)
 		goto removegenerator;
 
-	for (entity e = findradius(v, 500); e; e = e.chain) {
+	for (e = findradius(v, 500); e; e = e.chain) {
 		if (e != self)
 		if ((e.classname == "waypoint_path_generator" && e.cnt != self.cnt) || (e.classname == "waypoint" && !e.wpflags))
 		if (dirv * (e.origin - v) > 0.5)
@@ -638,12 +639,14 @@ void(void) waypoint_generate_waypoints {
 		}
 	}
 	for (e = NULL; (e = find(e, classname, "waypoint")); ) {
-		for (e2 = findradius(e.origin, 200); e2; e2 = e2.chain) {
-			if (e.classname == "waypoint_path_generator")
-			if (trace_walk(e, e2.origin, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
-				goto skipgeneration;
-		}
 		if not(e.wpflags & WAYPOINTFLAG_GENERATED) continue;
+		for (e2 = findradius(e.origin, 200); e2; e2 = e2.chain) {
+			if (e2.classname == "waypoint_path_generator")
+			if (trace_walk(e, e2.origin, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS)) {
+				print("skipping waypoint path generator at ", vtos(e.origin), "\n");
+				goto skipgeneration;
+			}
+		}
 		for (i = 0; i < 4; i++) {
 			waypoint_path_generator_spawn(i, e.origin, e.origin, 18);
 		}

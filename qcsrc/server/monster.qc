@@ -699,7 +699,7 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 		trace_line(org, org - '0 0 64', TRACE_MOVE_WORLDONLY, world);
 		if not(trace_startsolid)
 		if (trace_fraction < 1)
-			waypoint_spawn(trace_endpos, trace_endpos + '0 0 1', WAYPOINTFLAG_GENERATED);
+			waypoint_spawn(trace_endpos + '0 0 32', trace_endpos + '0 0 32', WAYPOINTFLAG_GENERATED);
 	}
 }
 
