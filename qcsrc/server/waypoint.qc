@@ -629,7 +629,7 @@ entity(float dir, vector from, vector lastwp, float depth) waypoint_path_generat
 }
 
 void(void) waypoint_generate_waypoints {
-	entity e;
+	entity e, e2;
 	float i;
 	for (e = NULL; (e = find(e, classname, "waypoint")); ) {
 		if not(e.wpflags) {
@@ -638,10 +638,16 @@ void(void) waypoint_generate_waypoints {
 		}
 	}
 	for (e = NULL; (e = find(e, classname, "waypoint")); ) {
+		for (e2 = findradius(e.origin, 200); e2; e2 = e2.chain) {
+			if (e.classname == "waypoint_path_generator")
+			if (trace_walk(e, e2.origin, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
+				goto skipgeneration;
+		}
 		if not(e.wpflags & WAYPOINTFLAG_GENERATED) continue;
 		for (i = 0; i < 4; i++) {
 			waypoint_path_generator_spawn(i, e.origin, e.origin, 18);
 		}
+:skipgeneration
 	}
 	print(strcat("Automatic waypoint generation started with ", ftos(waypoint_path_generator_count), " path generators\n"));
 }

@@ -32,7 +32,7 @@ set single_g_balance_zapper_secondary_arc 0.5
 set single_g_waypoints_use_botclip 1
 set single_g_pickup_nodrop 1
 set single_g_player_damage_screen_effects 1
-set single_g_waypoints_auto_generate 0
+set single_g_waypoints_auto_generate 1
 alias quicksave "cmd quicksave"
 alias quickload "set _restore_game 1; maxplayers 1; load slot12.sav"
 alias cl_hook_gamestart_single ""
