@@ -643,7 +643,6 @@ void(void) waypoint_generate_waypoints {
 		for (e2 = findradius(e.origin, 200); e2; e2 = e2.chain) {
 			if (e2.classname == "waypoint_path_generator")
 			if (trace_walk(e, e2.origin, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS)) {
-				print("skipping waypoint path generator at ", vtos(e.origin), "\n");
 				goto skipgeneration;
 			}
 		}
