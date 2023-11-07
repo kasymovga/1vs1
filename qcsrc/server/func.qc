@@ -684,13 +684,13 @@ void(void) spawnfunc_func_plat {
 		self.noise1 = "plats/medplat2.wav";
 	}
 	if (self.sound1) {
-		precache_sound(self.sound1);
 		self.noise = self.sound1;
 	}
 	if (self.sound2) {
-		precache_sound(self.sound2);
 		self.noise1 = self.sound2;
 	}
+	if (self.noise1 != "") precache_sound(self.noise1);
+	if (self.noise2 != "") precache_sound(self.noise2);
 	self.mangle = self.angles;
 	self.angles = '0 0 0';
 	self.classname = "plat";
@@ -1587,8 +1587,6 @@ void(void) spawnfunc_func_door {
 		self.message2 = "was squished by";
 
 	if (self.sounds > 0) {
-		precache_sound("plats/medplat1.wav");
-		precache_sound("plats/medplat2.wav");
 		self.noise2 = "plats/medplat1.wav";
 		self.noise1 = "plats/medplat2.wav";
 	}
@@ -1601,6 +1599,8 @@ void(void) spawnfunc_func_door {
 	if (!self.lip && self.lip_str == "")
 		self.lip = 8;
 
+	if (self.noise1 != "") precache_sound(self.noise1);
+	if (self.noise2 != "") precache_sound(self.noise2);
 	func_pos_setup();
 	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 	// but spawn in the open position
@@ -1687,10 +1687,10 @@ void(void) spawnfunc_func_door_rotating {
 		self.noise2 = "plats/medplat1.wav";
 		self.noise1 = "plats/medplat2.wav";
 	}
-	if (self.noise1)
+	if (self.noise1 != "")
 		precache_sound(self.noise1);
 
-	if (self.noise2)
+	if (self.noise2 != "")
 		precache_sound(self.noise2);
 
 	if (!self.speed)
