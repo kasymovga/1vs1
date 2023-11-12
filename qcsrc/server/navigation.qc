@@ -133,20 +133,25 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 		pm1 = trace_endpos + ent.mins;
 		pm2 = trace_endpos + ent.maxs;
 	}
-	waylist = findchain(classname, "waypoint");
+	org = (pm1 + pm2) / 2;
+	org_z = min(org_z, pm1_z + 1);
+	waylist = findradius(org, 1050);
 	// do two scans, because box test is cheaper
+	while (waylist && waylist.classname != "waypoint") {
+		waylist = waylist.chain;
+	}
 	w = waylist;
 	while (w) {
+		while (w.chain && w.chain.classname != "waypoint") w.chain = w.chain.chain;
 		// if object is touching spawnfunc_waypoint
 		if (w != ent)
 			if (math_boxes_overlap(pm1, pm2, w.absmin, w.absmax))
 				return w;
+
 		w = w.chain;
 	}
-	org = (pm1 + pm2) / 2;
 	vector _mins = self.mins;
 	vector _maxs = self.maxs;
-	org_z = min(org_z, pm1_z + 1);
 	best = world;
 	bestdist = 1050;
 	// box check failed, try walk
