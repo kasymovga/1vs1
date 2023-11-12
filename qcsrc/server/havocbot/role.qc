@@ -91,10 +91,9 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_item
 			// Rate the item only if no one needs it, or if an enemy is closer to it
 			if ((enemy_distance < friend_distance && distance < enemy_distance) ||
 				(friend_distance > bot_ai_friends_aware_pickup_radius ) || !discard )
-				if (head.bot_pickupevalfunc)
-					rating = head.bot_pickupevalfunc(self, head);
+				rating = head.bot_pickupevalfunc(self, head);
 
-		} else if (head.bot_pickupevalfunc)
+		} else
 			rating = head.bot_pickupevalfunc(self, head);
 
 		if (rating > 0)
