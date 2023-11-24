@@ -191,6 +191,7 @@ set _defrag_g_balance_hagar_primary_premove 0.05
 set _defrag_g_balance_hlac_primary_premove 0.05
 set _defrag_g_balance_rocketlauncher_premove 0.05
 set _defrag_g_balance_grenadelauncher_primary_premove 0.05
+set _defrag_g_ability_class_save 1
 //set _defrag_g_spawn_znudge -8
 set defragcpm_profile "Defrag CPM"
 set defragcpm_inherit _defrag

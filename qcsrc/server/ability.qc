@@ -9,6 +9,7 @@ string ability_class_model_list_allowed[MENU_ITEMS_MAXCOUNT];
 float ability_class_colors[MENU_ITEMS_MAXCOUNT];
 float g_ability_class_default;
 float g_ability_kill_on_change;
+float g_ability_class_save;
 float ability_class_model_list_allowed_not_empty;
 
 void(entity e, string al, float ac) ability_class_init {
@@ -103,9 +104,25 @@ void(entity e, string al, float ac) ability_class_init {
 				ability_initiators[i](e, "", FALSE);
 }
 
+string(void) ability_profile_string {
+	string ps = cvar_string("g_profile");
+	ps = strreplace(";", "", ps);
+	ps = strreplace("\\", "", ps);
+	ps = strreplace("\"", "", ps);
+	ps = strreplace("$", "", ps);
+	ps = strreplace("\n", "", ps);
+	ps = strreplace(" ", "_", ps);
+	ps = strreplace("\t", "_", ps);
+	ps = strreplace("+", "_", ps);
+	return ps;
+}
+
 void(float s) ability_class_select {
 	if (s >= 0 && s < ability_classes_count) {
 		menu_remove_for(self, "ability");
+		if (g_ability_class_save) {
+			stuffcmd(self, strcat("seta cl_", ability_profile_string(), "_class ", ftos(s + 1), "\n"));
+		}
 		if (self.ability_class == s + 1)
 			return;
 
@@ -165,7 +182,12 @@ void(void(string item, string cmd) Add_Item) ability_gamemenu_send {
 var float(string cmd, float tokens) ability_cmd_client_handle_next;
 float(string cmd, float tokens) ability_cmd_client_handle {
 	if (cmd == "pickabilityclass") {
-		ability_class_menu(self);
+		if (tokens > 1) {
+			print("get ability class: ", argv(1), "\n");
+			ability_class_select(stof(argv(1)) - 1);
+		} else
+			ability_class_menu(self);
+
 		return TRUE;
 	}
 	return ability_cmd_client_handle_next(cmd, tokens);
@@ -180,6 +202,12 @@ string(string l) ability_player_body_model_list_allowed {
 			return ability_player_body_model_list_allowed_next(s);
 	}
 	return ability_player_body_model_list_allowed_next(l);
+}
+
+var void(void) ability_client_connect_real_next;
+void(void) ability_client_connect_real {
+	stuffcmd(self, strcat("cmd pickabilityclass $cl_", ability_profile_string(), "_class\n"));
+	ability_client_connect_real_next();
 }
 
 void(void) ability_init_delayed {
@@ -207,12 +235,17 @@ void(void) ability_init_delayed {
 	plugin_chain_cmd_client_handle = ability_cmd_client_handle;
 	ability_player_body_model_list_allowed_next = plugin_chain_player_body_model_list_allowed_mod;
 	plugin_chain_player_body_model_list_allowed_mod = ability_player_body_model_list_allowed;
+	if (g_ability_class_save) {
+		ability_client_connect_real_next = plugin_chain_client_connect_real;
+		plugin_chain_client_connect_real = ability_client_connect_real;
+	}
 }
 
 void(void) ability_init {
 	entity_initialize(NULL, ability_init_delayed, INITPRIO_GAMETYPE);
 	CVAR_CACHE(g_ability_class_default);
 	CVAR_CACHE(g_ability_kill_on_change);
+	CVAR_CACHE(g_ability_class_save);
 }
 
 float(string n) ability_flag {

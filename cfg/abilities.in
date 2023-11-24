@@ -23,3 +23,4 @@ set g_ability_kill_on_change 0
 set g_ability_message "Please select your ability class:"
 set g_ability_switch_message "^7Your ability class will be changed at next spawn"
 set g_ability_switch_title "Switch Ability Class"
+set g_ability_class_save 0 "Save selected ability class between games"
