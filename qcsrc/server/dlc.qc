@@ -183,7 +183,7 @@ void(void) dlc_load_exts {
 		if not(dlc_load_settemps_from(s))
 			continue;
 
-		tail = cvar_string("sv_curl_serverpackages");
+		tail = builtin_cvar_string("sv_curl_serverpackages");
 		while (tail != "") {
 			head = str_car(tail);
 			tail = str_cdr(tail);
@@ -193,7 +193,7 @@ void(void) dlc_load_exts {
 			}
 		}
 		if (add_to_server_packages)
-			cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", s));
+			builtin_cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", s));
 	}
 	search_end(search);
 }
@@ -276,7 +276,7 @@ void(string dlc_name) dlc_require_server_only {
 
 void(string dlc_name) dlc_require {
 	string s, list;
-	list = cvar_string("sv_curl_serverpackages");
+	list = builtin_cvar_string("sv_curl_serverpackages");
 	float add_to_server_packages;
 	add_to_server_packages = TRUE;
 	while (list != "") {
@@ -288,7 +288,7 @@ void(string dlc_name) dlc_require {
 		}
 	}
 	if (add_to_server_packages)
-		cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", dlc_serverpackage_name(dlc_name)));
+		builtin_cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", dlc_serverpackage_name(dlc_name)));
 
 	list = dlc_list_send;
 	while (list != "") {
@@ -393,7 +393,7 @@ void(string file) dlc_add_dlc_or_pk3_by_file {
 		}
 	}
 	string head, tail, pk3_check;
-	string server_packages = cvar_string("sv_curl_serverpackages");
+	string server_packages = builtin_cvar_string("sv_curl_serverpackages");
 	for (tail = server_packages; tail != "";) {
 		head = str_car(tail);
 		tail = str_cdr(tail);
@@ -407,7 +407,7 @@ void(string file) dlc_add_dlc_or_pk3_by_file {
 		if (pk3 == pk3_check)
 			return;
 	}
-	cvar_set("sv_curl_serverpackages", strcat(server_packages, " ", file));
+	builtin_cvar_set("sv_curl_serverpackages", strcat(server_packages, " ", file));
 }
 
 void(void) dlc_extra_pk3_list_build {
@@ -441,7 +441,7 @@ void(void) dlc_init {
 	string s;
 	registercvar("_dlc_settemps_count", "0");
 	dlc_set_repos(cvar_string("sv_dlc_repository"));
-	string server_packages = cvar_string("sv_curl_serverpackages");
+	string server_packages = builtin_cvar_string("sv_curl_serverpackages");
 	string server_packages_without_dlc = "";
 	while (server_packages != "") {
 		s = str_car(server_packages);
@@ -450,7 +450,7 @@ void(void) dlc_init {
 		if (strstrofs(s, "rexdlc_", 0) != 0 && strstrofs(s, "rexext_", 0) != 0)
 			server_packages_without_dlc = strcat(server_packages_without_dlc, " ", s);
 	}
-	cvar_set("sv_curl_serverpackages", server_packages_without_dlc);
+	builtin_cvar_set("sv_curl_serverpackages", server_packages_without_dlc);
 	dlc_load_exts();
 	string dlc_extra = cvar_string("sv_dlc_extra");
 	while (dlc_extra != "") {
