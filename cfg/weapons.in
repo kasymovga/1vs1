@@ -378,7 +378,7 @@ set g_balance_hlac_primary_speed 9000
 set g_balance_hlac_primary_lifetime 5
 set g_balance_hlac_primary_animtime 0.4
 set g_balance_hlac_primary_ammo 1
-set g_balance_hlac_secondary_spread 0.05
+set g_balance_hlac_secondary_spread 0.07
 set g_balance_hlac_secondary_spread_crouchmod 0.5
 set g_balance_hlac_secondary_damage 23
 set g_balance_hlac_secondary_edgedamage 10
