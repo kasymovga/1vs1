@@ -64,8 +64,8 @@ void(void) radio_read {
 		CVAR(_radio) = 1;
 		cvar_set("_radio", "1");
 	}
-	if (CVAR(_radio) && CVAR(bgmvolume) < 0.1)
-		cvar_clientsettemp("bgmvolume", "0.1");
+	if (CVAR(_radio) && CVAR(bgmvolume) <= 0)
+		cvar_clientsettemp("bgmvolume", cvar("volume") * 0.1);
 
 	localcmd("curl --pak ", url, "\n");
 	entity e;
