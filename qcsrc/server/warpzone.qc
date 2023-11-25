@@ -65,8 +65,6 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	makevectors(to_angles);
 	teleport_origin_set(player, to, 0);
 	player.angles = to_angles;
-	player.v_angle = to_angles;
-	player.v_angle_x = -player.v_angle_x;
 	player.velocity = to_velocity;
 	if (player.classname == "player")
 		player.flags &= ~FL_ONGROUND;
@@ -79,6 +77,8 @@ float(entity to, float sf) warpzone_teleported_send {
 	net_write_coord(MSG_ENTITY, self.angles_x);
 	net_write_coord(MSG_ENTITY, self.angles_y);
 	net_write_coord(MSG_ENTITY, self.angles_z);
+	net_write_coord(MSG_ENTITY, self.owner.v_angle_x);
+	net_write_coord(MSG_ENTITY, self.owner.v_angle_y);
 	return TRUE;
 }
 

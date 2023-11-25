@@ -46,12 +46,26 @@ void(float isnew) warpzone_read {
 	warpzone_enable();
 }
 
+void(void) warpzone_teleported_draw2d {
+	if (server_time != self.cnt) {
+		remove(self);
+		return;
+	}
+	view_fixangle = 1;
+	view_fixed_angles = self.origin;
+	makevectors(view_fixed_angles);
+	view_forward = v_forward; //hack for crosshair position
+}
+
 void(float isnew) warpzone_teleported_read {
-	vector v;
+	vector v, v2;
 	v_x = net_read_coord();
 	v_y = net_read_coord();
 	v_z = net_read_coord();
-	if(!isnew)
+	v2_x = net_read_coord();
+	v2_y = net_read_coord();
+	v2_z = 0;
+	if (!isnew)
 		return;
 
 	if (warpzone_passed)
@@ -60,6 +74,18 @@ void(float isnew) warpzone_teleported_read {
 	physics_was_teleported = TRUE;
 	warpzone_passed = spawn();
 	warpzone_passed.warpzone_transform = v;
+	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
+		entity e = spawn();
+		e.origin = v2;
+		e.draw2dflag = 1;
+		e.draw2d = warpzone_teleported_draw2d;
+		e.cnt = server_time;
+		view_fixangle = 1;
+		view_fixed_angles = v2;
+		remove(warpzone_passed);
+		warpzone_passed = NULL;
+		return;
+	}
 }
 
 float warpzone_fixingview;
@@ -153,7 +179,7 @@ void(void) warpzone_view_fix_real {
 
 			warpzone_fixangles = TRUE;
 			remove(warpzone_passed);
-			warpzone_passed = world;
+			warpzone_passed = NULL;
 		}
 	}
 	warpzone_view = e;
