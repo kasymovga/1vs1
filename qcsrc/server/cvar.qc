@@ -195,15 +195,6 @@ void(string profile) cvar_profile_add {
 	if (cvar_profile_prefix_len == CVAR_INHERITANCE_DEEP)
 		return;
 
-	if ((s = cvar_string_orig(strcat(profile, "_dlc"))) != "") {
-		string dlc;
-		while (s != "") {
-			dlc = str_car(s);
-			s = str_cdr(s);
-			if (dlc != "")
-				dlc_require(dlc);
-		}
-	}
 	for (i = 0; i < cvar_profile_prefix_len; i++) {
 		s = cvar_profile_prefix[i];
 		if (s == profile)
@@ -251,6 +242,23 @@ float(string profile) cvar_profile_presents {
 			return TRUE;
 	}
 	return FALSE;
+}
+
+void(void) cvar_profile_dlc_load {
+	float i;
+	string s, dlc;
+	for (i = 0; i < cvar_profile_prefix_len; i++) {
+		s = cvar_profile_prefix[i];
+		if ((s = cvar_string_orig(strcat(s, "_dlc"))) != "") {
+			string dlc;
+			while (s != "") {
+				dlc = str_car(s);
+				s = str_cdr(s);
+				if (dlc != "")
+					dlc_require(dlc);
+			}
+		}
+	}
 }
 
 void(string profile) cvar_init {

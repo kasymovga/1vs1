@@ -10,3 +10,4 @@ var void(string var, string val) cvar_set;
 string cvar_changes;
 void(void) cvar_changes_init;
 float(string profile) cvar_profile_presents;
+void(void) cvar_profile_dlc_load;
