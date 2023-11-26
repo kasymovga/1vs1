@@ -67,6 +67,7 @@ void(void) weapon_hlac_attack2f {
 	float spread;
 	spread = g_balance_hlac_secondary_spread;
 	if (self.crouch)
+	if (self.flags & FL_ONGROUND_OR_SLICK)
 		spread = spread * g_balance_hlac_secondary_spread_crouchmod;
 
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
