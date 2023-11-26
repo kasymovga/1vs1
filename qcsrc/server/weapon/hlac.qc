@@ -44,7 +44,8 @@ void(void) weapon_hlac_attack {
 	}
 	spread = g_balance_hlac_primary_spread_min + (g_balance_hlac_primary_spread_add * self.HLAC_bulletcounter);
 	spread = min(spread,g_balance_hlac_primary_spread_max);
-	if(self.crouch)
+	if (self.crouch)
+	if (self.flags & FL_ONGROUND_OR_SLICK)
 		spread = spread * g_balance_hlac_primary_spread_crouchmod;
 
 	weapon_setup_shot (self, g_balance_hlac_primary_recoil, "weapons/lasergun_fire.wav", 1);
