@@ -145,7 +145,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		pointparticles(m, weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 		//weapon_shake(1); //TODO: shake effect
 		for (float i = 0; i < c; i++)
-			bullet(weapon_shotorg, weapon_shotdir, spr, sp,
+			bullet(weapon_shotorg, weapon_shotorg_visual, weapon_shotdir, spr, sp,
 					5, d, hs,
 					f, it, self.weapon, e, g, r);
 

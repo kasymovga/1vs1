@@ -105,7 +105,7 @@ void(entity gun) vehicle_spiderbot_minigun_fire {
 	self = self.owner;
 	weapon_score_fires(self, WEAPON_UZI, 1);
 	bullet_begin(10000);
-	bullet(v, v_forward, g_vehicle_spiderbot_minigun_spread, 10000, 5, g_vehicle_spiderbot_minigun_damage, 0, 0, EFFECT_IMPACT_BULLET, WEAPON_UZI, particleeffectnum("EFFECT_MGTURRETTRAIL"), 0, 100);
+	bullet(v, v, v_forward, g_vehicle_spiderbot_minigun_spread, 10000, 5, g_vehicle_spiderbot_minigun_damage, 0, 0, EFFECT_IMPACT_BULLET, WEAPON_UZI, particleeffectnum("EFFECT_MGTURRETTRAIL"), 0, 100);
 	self = e;
 	bullet_end();
 	if not(gun.enemy) {

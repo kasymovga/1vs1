@@ -218,8 +218,13 @@ void() bullet_end {
 entity bullet_trace_callback_ent;
 float bullet_trace_callback_eff;
 void(vector start, vector hit, vector end) bullet_trace_callback {
-	if (vlen(hit - start) > 16)
-		effect_curveparticles_from_tracetoss(bullet_trace_callback_eff, bullet_trace_callback_ent.origin, hit, bullet_trace_callback_ent.velocity); //bullet_trace_callback_ent.origin changed by warpzone_trace_toss_trough_zone, it's needed for curve particles
+	if (vlen(hit - start) > 16) {
+		if (bullet_trace_callback_ent.wframe) {
+			bullet_trace_callback_ent.wframe = 0;
+			effect_curveparticles_from_tracetoss(bullet_trace_callback_eff, warpzone_transform_origin(warpzone_trace_transform, bullet_trace_callback_ent.oldorigin), hit, bullet_trace_callback_ent.velocity);
+		} else
+			effect_curveparticles_from_tracetoss(bullet_trace_callback_eff, start, hit, bullet_trace_callback_ent.velocity);
+	}
 }
 
 void(float pSpeed) bullet_begin {
@@ -230,7 +235,7 @@ void(float pSpeed) bullet_begin {
 	}
 }
 
-void(vector start, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float impacttype, float dtype, float tracereffects, float gravityfactor, float bulletconstant) bullet {
+void(vector start, vector start_visual, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float impacttype, float dtype, float tracereffects, float gravityfactor, float bulletconstant) bullet {
 	entity oldself, oldself_akimbo = self;
 	entity proj;
 	if (bullet_hit_scan) {
@@ -257,6 +262,8 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 	weapon_setup_projectile_velocity(proj);
 	proj.oldvelocity = proj.velocity;
 	if (bullet_hit_scan) {
+		proj.oldorigin = start_visual;
+		proj.wframe = 1;
 		oldself = self;
 		self = proj;
 		float i;

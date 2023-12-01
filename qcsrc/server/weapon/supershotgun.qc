@@ -105,7 +105,7 @@ void(float secondary, float barrels, float ballistic) weapon_supershotgun_attack
 	shotdir_shifted = weapon_shotdir + v_right * hor_shift;
 	if (ballistic) {
 		for (sc = 0; sc < b; sc = sc + 1)
-			bullet(weapon_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s, 5,
+			bullet(weapon_shotorg, weapon_shotorg_visual, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s, 5,
 					d, 0, f, EFFECT_IMPACT_PELLET, dtype, particleeffectnum("tr_bullet"), g, bc);
 		bullet_end();
 	} else {
