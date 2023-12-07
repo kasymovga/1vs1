@@ -1015,12 +1015,8 @@ void(void) physics_player {
 		float oldframetime = frametime;
 		float f = frametime + physics_frametime_accumulator;
 		frametime = 0.008;
-		for ( ; f > 0.000;) {
+		for ( ; f >= 0.008; f -= 0.008) {
 			physics_player_frame();
-			f -= 0.008;
-			if (f < 0.004) {
-				break;
-			}
 		}
 		physics_frametime_accumulator = f;
 		frametime = oldframetime;
