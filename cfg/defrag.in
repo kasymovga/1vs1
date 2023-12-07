@@ -192,6 +192,7 @@ set _defrag_g_balance_hlac_primary_premove 0.05
 set _defrag_g_balance_rocketlauncher_premove 0.05
 set _defrag_g_balance_grenadelauncher_primary_premove 0.05
 set _defrag_g_ability_class_save 1
+set _defrag_g_teleport_prediction 1
 //set _defrag_g_spawn_znudge -8
 set defragcpm_profile "Defrag CPM"
 set defragcpm_inherit _defrag
@@ -206,6 +207,7 @@ set defragcpm_g_airstrafeaccelerate 70
 set defragcpm_g_maxairstrafespeed 30
 set defragcpm_g_aircontrol 150
 set defragcpm_g_nofriction_cpm_hacks 1
+set defragcpm_g_teleport_prediction 1
 set defragvq3_profile "Defrag VQ3"
 set defragvq3_inherit _defrag
 set defragvq3_g_accelerate 10
