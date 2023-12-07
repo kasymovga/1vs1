@@ -216,6 +216,10 @@ vector(void) physics_view_origin {
 			physics_player();
 		}
 		physics_lastcommandframe = i;
+		if (physics_frametime_accumulator) {
+			frametime = physics_frametime_accumulator;
+			physics_player_frame();
+		}
 		if (physics_plug_post)
 			physics_plug_post();
 
