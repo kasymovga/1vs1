@@ -1,6 +1,7 @@
 float g_teleport_projectiles;
 float g_teleport_keep_velocity;
 float g_teleport_time;
+float g_teleport_prediction;
 float g_telefrags;
 
 void(entity e, vector v, float t) teleport_origin_set {
@@ -53,6 +54,15 @@ void(entity player, entity teleporter, entity telefragger, vector telefragmin, v
 				}
 }
 
+void(entity teleporter, entity to, vector to_angles) teleport_teleportation_send {
+	msg_entity = to;
+	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+	net_write_byte(MSG_ONE, NET_TE_CSQC_TELEPORTATION);
+	net_write_coord(MSG_ONE, num_for_edict(teleporter));
+	net_write_coord(MSG_ONE, to_angles_x);
+	net_write_coord(MSG_ONE, to_angles_y);
+}
+
 void(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float _damage) teleport {
 	entity telefragger;
 	vector from;
@@ -74,8 +84,12 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	from = player.origin;
 	setorigin (player, to);
 	teleport_origin_set(player, to, g_teleport_time);
-	player.angles = to_angles;
-	client_view_angles_set(player, to_angles);
+	//player.angles = to_angles;
+	if (g_teleport_prediction && teleporter)
+		teleport_teleportation_send(teleporter, player, to_angles);
+	else
+		client_view_angles_set(player, to_angles);
+
 	player.velocity = to_velocity;
 	if(player.classname == "player") {
 		if (g_telefrags)
@@ -176,6 +190,29 @@ void(void) teleport_touch {
 	}
 }
 
+float(entity to, float sf) teleport_prediction_send {
+	net_write_byte(MSG_ENTITY, NET_CSQC_TELEPORT_PREDICTION);
+	net_write_coord(MSG_ENTITY, num_for_edict(self));
+	net_write_coord(MSG_ENTITY, self.modelindex);
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
+	net_write_coord(MSG_ENTITY, self.mins_x);
+	net_write_coord(MSG_ENTITY, self.mins_y);
+	net_write_coord(MSG_ENTITY, self.mins_z);
+	net_write_coord(MSG_ENTITY, self.maxs_x);
+	net_write_coord(MSG_ENTITY, self.maxs_y);
+	net_write_coord(MSG_ENTITY, self.maxs_z);
+	net_write_coord(MSG_ENTITY, self.enemy.origin_x);
+	net_write_coord(MSG_ENTITY, self.enemy.origin_y);
+	net_write_coord(MSG_ENTITY, self.enemy.origin_z);
+	net_write_coord(MSG_ENTITY, self.enemy.angles_x);
+	net_write_coord(MSG_ENTITY, self.enemy.angles_y);
+	net_write_coord(MSG_ENTITY, g_teleport_keep_velocity);
+	net_write_coord(MSG_ENTITY, g_teleport_time);
+	return TRUE;
+}
+
 void(void) teleport_findtarget {
 	entity e;
 	float n;
@@ -208,6 +245,9 @@ void(void) teleport_findtarget {
 
 	// now enable touch
 	self.touch = teleport_touch;
+	if (g_teleport_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE) {
+		net_link_entity(self, FALSE, 0, teleport_prediction_send);
+	}
 }
 
 void(void) teleport_init {
@@ -215,6 +255,7 @@ void(void) teleport_init {
 	CVAR_CACHE(g_teleport_projectiles);
 	CVAR_CACHE(g_teleport_time);
 	CVAR_CACHE(g_telefrags);
+	CVAR_CACHE(g_teleport_prediction);
 }
 
 void(void) teleport_setup {

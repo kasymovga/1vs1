@@ -134,6 +134,9 @@ void(void) physics_frame_begin_hook {
 }
 
 void(void) physics_frame_end_hook {
+	if (teleport_prediction)
+		teleport_predict();
+
 	physics_teleport_time -= frametime;
 	physics_velocity_frame_end = physics_velocity;
 	physics_frametime = frametime;

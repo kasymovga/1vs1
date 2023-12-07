@@ -102,6 +102,7 @@ trip.qc
 func_camera.qc
 portal.qc
 announce.qc
+teleport.qc
 vote.qh
 game_menu.qh
 entcs.qh

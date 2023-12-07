@@ -27,7 +27,6 @@ set g_timelimit_overtime 2 "duration in minutes of one added overtime, added to 
 set g_timelimit_overtimes 0 "how many overtimes to add at max"
 set g_scorelimit 30
 set g_leadlimit 0
-set g_telefrags 1
 set g_antilag 1 "AntiLag (0 = no AntiLag, 1 = server side hit scan in the past)"
 set g_antilag_bullets 1 "Bullets AntiLag (0 = no AntiLag, 1 = server side hit scan in the past) - DO NOT TOUCH (severely changes weapon balance)"
 set g_shootfromeye 0 "shots are fired from your eye/crosshair; visual gun position can still be influenced by cl_gunalign 1 and 2"
@@ -58,7 +57,6 @@ set timelimit_min 5
 set timelimit_max 60
 set g_balance_kill_delay 5
 set leadlimit 0
-set g_teleport_keep_velocity -1 "Keep velocity up this value after teleportation. Negative value mean keep all velocity."
 set g_trigger_hurt_interval 1
 set g_button_nowaitforever 0
 seta g_start_delay 0 "delay before the game starts, so everyone can join; recommended to set this to like 10 on a public server"
@@ -112,6 +110,5 @@ set g_pickup_weapon_ammo_limit 0 "Don't allow get extra ammo from weapon"
 set g_slowmo 1
 set g_mapinfo_settemp_acl "+*" "ACL for mapinfo setting cvars"
 set g_mapinfo_settemp_force 1 "Prioritize mapinfo settemp over profile settings"
-set g_teleport_time 0.1 "Time of prevention player movement after teleportation for better client-server synchronization"
 set sv_gametypevote_same_limit 0 "Limit for same result in game type vote"
 set sv_notification_type 0 "Notifications type: 0 - simple text, 1 - new way with images"
