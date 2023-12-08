@@ -46,17 +46,6 @@ void(float isnew) warpzone_read {
 	warpzone_enable();
 }
 
-void(void) warpzone_teleported_draw2d {
-	if (server_time != self.cnt) {
-		remove(self);
-		return;
-	}
-	view_fixangle = 1;
-	view_fixed_angles = self.origin;
-	makevectors(view_fixed_angles);
-	view_forward = v_forward; //hack for crosshair position
-}
-
 void(float isnew) warpzone_teleported_read {
 	vector v, v2;
 	v_x = net_read_coord();
@@ -75,13 +64,7 @@ void(float isnew) warpzone_teleported_read {
 	warpzone_passed = spawn();
 	warpzone_passed.warpzone_transform = v;
 	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
-		entity e = spawn();
-		e.origin = v2;
-		e.draw2dflag = 1;
-		e.draw2d = warpzone_teleported_draw2d;
-		e.cnt = server_time;
-		view_fixangle = 1;
-		view_fixed_angles = v2;
+		teleport_fix_angles(v2);
 		remove(warpzone_passed);
 		warpzone_passed = NULL;
 		return;

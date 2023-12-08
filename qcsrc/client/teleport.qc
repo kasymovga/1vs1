@@ -37,6 +37,27 @@ void(float isnew) teleport_prediction_read {
 	g_teleport_time = net_read_coord();
 }
 
+void(void) teleport_teleported_draw2d {
+	if (server_time != self.cnt) {
+		remove(self);
+		return;
+	}
+	view_fixangle = 1;
+	view_fixed_angles = self.origin;
+	makevectors(view_fixed_angles);
+	view_forward = v_forward; //hack for crosshair position
+}
+
+void(vector a) teleport_fix_angles {
+	entity e = spawn();
+	e.origin = a;
+	e.draw2dflag = 1;
+	e.draw2d = teleport_teleported_draw2d;
+	e.cnt = server_time;
+	view_fixangle = 1;
+	view_fixed_angles = a;
+}
+
 void(void) teleport_teleportation_read {
 	vector a;
 	float teleport = net_read_coord();
@@ -48,6 +69,9 @@ void(void) teleport_teleportation_read {
 	}
 	view_angles = a;
 	R_SetView(VF_CL_VIEWANGLES, a);
+	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
+		teleport_fix_angles(a);
+	}
 }
 
 void(void) teleport_predict {
@@ -104,5 +128,8 @@ void(void) teleport_predict {
 		teleport_predicted_last = e.cnt;
 		view_angles = e.iorigin1;
 		R_SetView(VF_CL_VIEWANGLES, e.iorigin1);
+		if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
+			teleport_fix_angles(e.iorigin1);
+		}
 	}
 }
