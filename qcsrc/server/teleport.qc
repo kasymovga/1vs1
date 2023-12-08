@@ -13,7 +13,7 @@ void(entity e, vector v, float t) teleport_origin_set {
 	physics_mark_as_teleported(e, t);
 	BITXOR_ASSIGN(e.effects, EFFECT_TELEPORT_BIT);
 	projectile_update_after_teleport(e);
-	if(e.isbot)
+	if (e.isbot)
 		e.lastteleporttime = time;
 }
 
@@ -33,21 +33,18 @@ void(entity player, entity teleporter, entity telefragger, vector telefragmin, v
 		if(deathmax_z < telefragmax_z) deathmax_z = telefragmax_z;
 	}
 	deathradius = max(vlen(deathmin), vlen(deathmax));
-	for(head = findradius(player.origin, deathradius); head; head = head.chain)
-		if(head != player)
-			if(head.takedamage)
-				if(math_boxes_overlap(deathmin, deathmax, head.absmin, head.absmax))
-				{
-					if ((player.classname == "player") && (player.health >= 1))
-					{
+	for (head = findradius(player.origin, deathradius); head; head = head.chain)
+		if (head != player)
+			if (head.takedamage)
+				if(math_boxes_overlap(deathmin, deathmax, head.absmin, head.absmax)) {
+					if ((player.classname == "player") && (player.health >= 1)) {
 						if(head.classname == "player")
 						if(head.health >= 1)
 						if not(team_mode && head.team == player.team) {
 							++teleport_death_hit;
 							damage (head, teleporter, telefragger, _damage, WEAPON_PORTO, head.origin, '0 0 0');
 						}
-					}
-					else if (telefragger.health < 1) // corpses gib
+					} else if (telefragger.health < 1) // corpses gib
 						damage (head, teleporter, telefragger, _damage, WEAPON_PORTO, head.origin, '0 0 0');
 					else // dead bodies and monsters gib themselves instead of telefragging
 						damage (telefragger, teleporter, telefragger, 10000, WEAPON_PORTO, telefragger.origin, '0 0 0');
@@ -66,14 +63,13 @@ void(entity teleporter, entity to, vector to_angles) teleport_teleportation_send
 void(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float _damage) teleport {
 	entity telefragger;
 	vector from;
-	if(teleporter.owner)
+	if (teleporter && teleporter.owner)
 		telefragger = teleporter.owner;
 	else
 		telefragger = player;
 
 	makevectors (to_angles);
-	if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
-	{
+	if (self.pushltime < time) { // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		sound (player, CHAN_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
 		pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
 		pointparticles(particleeffectnum("teleport"), to + v_forward * 32, '0 0 0', 1);
@@ -91,7 +87,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 		client_view_angles_set(player, to_angles);
 
 	player.velocity = to_velocity;
-	if(player.classname == "player") {
+	if (player.classname == "player") {
 		if (g_telefrags)
 		if (player.takedamage)
 		if (player.deadflag == DEAD_NO)
@@ -147,17 +143,16 @@ void(void) teleport_touch {
 		if (other.maxs_z > PL_MAX_z)
 			return;
 	}
-	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+	if (self.team)
+		if ((self.spawnflags & 4 == 0) == (self.team != other.team))
 			return;
 
 	TRIGGER_EXACT_TOUCH;
-	if(self.enemy) {
+	if (self.enemy) {
 		e = self.enemy;
 	} else {
 		random_selection_init();
-		for(e = world; (e = find(e, targetname, self.target)); )
-		{
+		for(e = world; (e = find(e, targetname, self.target)); ) {
 			if(e.cnt)
 				random_selection_add(e, 0, NULL, e.cnt, 0);
 			else
@@ -165,7 +160,7 @@ void(void) teleport_touch {
 		}
 		e = random_selection_chosen_ent;
 	}
-	if(!e) {
+	if (!e) {
 		sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
 	}
 	makevectors(e.angles);
@@ -181,7 +176,7 @@ void(void) teleport_touch {
 		v = '0 0 0';
 
 	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.angles, v, '0 0 0', '0 0 0', 10000);
-	if(e.target) {
+	if (e.target) {
 		oldself = self;
 		activator = other;
 		self = e;
@@ -217,39 +212,31 @@ float(entity to, float sf) teleport_prediction_send {
 void(void) teleport_findtarget {
 	entity e;
 	float n;
-
 	n = 0;
-	for(e = world; (e = find(e, targetname, self.target)); )
-	{
+	for (e = world; (e = find(e, targetname, self.target)); ) {
 		++n;
-		if(e.movetype == MOVETYPE_NONE)
+		if (e.movetype == MOVETYPE_NONE)
 			waypoint_spawnforteleporter(self, e.origin, 0);
 	}
-
-	if(n == 0)
-	{
+	if (n == 0) {
 		// no dest!
 		entity_abort("Teleporter with nonexistant target");
 		return;
-	}
-	else if(n == 1)
-	{
+	} else if (n == 1) {
 		// exactly one dest - bots love that
 		self.enemy = find(e, targetname, self.target);
 		self.dest = self.enemy.origin;
-	}
-	else
-	{
+	} else {
 		// have to use random selection every single time
 		self.enemy = world;
 	}
-
 	// now enable touch
 	self.touch = teleport_touch;
 	if (g_teleport_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE) {
 		entity e = spawn();
 		e.owner = self;
-		net_link_entity(e, FALSE, 0, teleport_prediction_send);
+		setsize(e, e.owner.mins, e.owner.maxs);
+		net_link_entity(e, TRUE, 0, teleport_prediction_send);
 	}
 }
 
