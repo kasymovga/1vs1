@@ -16,5 +16,6 @@ set cts_g_telefrags 0
 set cts_g_player_death_sound 0
 set cts_g_stepairslowdown 0
 set cts_g_waypoints_auto_generate 0
+set cts_g_trigger_push_prediction 1
 alias cl_hook_gamestart_cts
 alias sv_hook_gamestart_cts
