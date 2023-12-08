@@ -50,11 +50,6 @@ void(void) teleport_teleportation_read {
 	R_SetView(VF_CL_VIEWANGLES, a);
 }
 
-float(entity e) teleport_collision {
-
-	return TRUE;
-}
-
 void(void) teleport_predict {
 	float r = vlen(self.maxs - self.mins) / 2;
 	vector o = self.origin + (self.maxs + self.mins) * 2;
