@@ -2,6 +2,7 @@ entity physics;
 .vector view_ofs;
 var void() physics_plug_pre;
 var void() physics_plug_post;
+var void(entity e) physics_plug_frame_end;
 var vector() physics_plug_adjust_view;
 float vehicle_adjust_view_up;
 float vehicle_adjust_view_back;

@@ -134,9 +134,29 @@ void(void) physics_frame_begin_hook {
 }
 
 void(void) physics_frame_end_hook {
-	if (teleport_prediction)
-		teleport_predict();
+	if (physics_plug_frame_end) {
+		vector mins1, mins2, maxs1, maxs2;
+		mins2 = self.origin + self.mins;
+		maxs2 = self.origin + self.maxs;
+		vector o = self.origin + (self.maxs + self.mins) * 0.5;
+		entity e = findradius(o, vlen(self.maxs - self.mins) * 0.5);
+		for (; e; e = e.chain) {
+			if (e == self) continue;
+			mins1 = e.origin + e.mins;
+			maxs1 = e.origin + e.maxs;
+			if (
+					mins1_x >= maxs2_x
+					|| mins1_y >= maxs2_y
+					|| mins1_z >= maxs2_z
+					|| maxs1_x <= mins2_x
+					|| maxs1_y <= mins2_y
+					|| maxs1_z <= mins2_z
+					)
+				continue;
 
+			physics_plug_frame_end(e);
+		}
+	}
 	physics_teleport_time -= frametime;
 	physics_velocity_frame_end = physics_velocity;
 	physics_frametime = frametime;

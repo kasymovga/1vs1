@@ -5,49 +5,15 @@
 
 void() trigger_use_targets;
 
-float trigger_push_calculatevelocity_flighttime;
 float g_trigger_push_use_trigger_origin;
 float g_trigger_push_speed_factor;
 float g_trigger_push_speed_nodecrease;
 float g_trigger_push_skip_projectiles;
+float g_trigger_push_prediction;
 
 void(void) trigger_push_use {
 	if(team_mode)
 		self.team = activator.team;
-}
-
-/*
-	trigger_push_calculatevelocity
-
-	Arguments:
-	  org - origin of the object which is to be pushed
-	  tgt - target entity (can be either a point or a model entity; if it is
-	        the latter, its midpoint is used)
-	  ht  - jump height, measured from the higher one of org and tgt's midpoint
-
-	Returns: velocity for the jump
-	the global trigger_push_calculatevelocity_flighttime is set to the total
-	jump time
- */
-
-vector(vector org, entity tgt, float ht) trigger_push_calculatevelocity {
-	float sdist, zdist, vs, vz;
-	vector sdir, torg;
-	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
-	ht = max(ht, org_z - torg_z + sv_gravity * 0.05);
-	zdist = torg_z - org_z + ht;
-	sdist = vlen(torg - org - fabs(zdist) * '0 0 1');
-	sdir = normalize(torg - org - zdist * '0 0 1');
-	float t1 = sqrt(zdist / (0.5 * sv_gravity));
-	float t2 = sqrt(ht / (0.5 * sv_gravity));
-	if (torg_z > org_z)
-		vz = t1 * sv_gravity;
-	else
-		vz = t2 * sv_gravity;
-
-	trigger_push_calculatevelocity_flighttime = t1 + t2;
-	vs = sdist / trigger_push_calculatevelocity_flighttime;
-	return sdir * vs + '0 0 1' * vz;
 }
 
 float trigger_push_recursive;
@@ -66,9 +32,10 @@ void(void) trigger_push_touch {
 			return;
 
 	TRIGGER_EXACT_TOUCH;
-	if (self.target)
-		self.movedir = trigger_push_calculatevelocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), self.enemy, self.height);
-
+	if (self.enemy) {
+		entity tgt = self.enemy;
+		self.movedir = trigger_push_calculate_velocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), tgt.origin + (tgt.mins + tgt.maxs) * 0.5, self.height);
+	}
 	if (self.movedir == '0 0 0') return;
 	other.flags &= ~FL_ONGROUND;
 	if (g_trigger_push_speed_nodecrease) {
@@ -125,6 +92,28 @@ void(void) trigger_push_touch {
 	}
 }
 
+float(entity to, float sf) trigger_push_prediction_send {
+	entity o = self.owner;
+	net_write_byte(MSG_ENTITY, NET_CSQC_TRIGGER_PUSH_PREDICTION);
+	net_write_coord(MSG_ENTITY, o.modelindex);
+	net_write_coord(MSG_ENTITY, o.origin_x);
+	net_write_coord(MSG_ENTITY, o.origin_y);
+	net_write_coord(MSG_ENTITY, o.origin_z);
+	net_write_coord(MSG_ENTITY, o.mins_x);
+	net_write_coord(MSG_ENTITY, o.mins_y);
+	net_write_coord(MSG_ENTITY, o.mins_z);
+	net_write_coord(MSG_ENTITY, o.maxs_x);
+	net_write_coord(MSG_ENTITY, o.maxs_y);
+	net_write_coord(MSG_ENTITY, o.maxs_z);
+	vector v = o.enemy.origin + (o.enemy.mins + o.enemy.maxs) * 0.5;
+	net_write_coord(MSG_ENTITY, v_x);
+	net_write_coord(MSG_ENTITY, v_y);
+	net_write_coord(MSG_ENTITY, v_z);
+	net_write_coord(MSG_ENTITY, o.height);
+	net_write_coord(MSG_ENTITY, g_trigger_push_use_trigger_origin);
+	return TRUE;
+}
+
 .vector dest;
 void(void) trigger_push_findtarget {
 	entity e;
@@ -133,7 +122,7 @@ void(void) trigger_push_findtarget {
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;
 	org_z = self.absmax_z - PL_MIN_z;
-	if (self.target) {
+	if (self.target != "") {
 		// find the target
 		self.enemy = find(world, targetname, self.target);
 		if not(self.enemy) {
@@ -141,8 +130,9 @@ void(void) trigger_push_findtarget {
 			return;
 		}
 		self.enemy.origin = self.enemy.origin + '0 0 1' * cvar("sv_jumppads_target_adjust_height");
-		self.movedir = trigger_push_calculatevelocity(org, self.enemy, self.height);
-		flighttime = trigger_push_calculatevelocity_flighttime;
+		entity tgt = self.enemy;
+		self.movedir = trigger_push_calculate_velocity(org, tgt.origin + (tgt.mins + tgt.maxs) * 0.5, self.height);
+		flighttime = trigger_push_calculate_velocity_flighttime;
 		// calculate the destination and spawn a teleporter spawnfunc_waypoint
 		if (self.solid == SOLID_TRIGGER) {
 			e = spawn();
@@ -154,8 +144,14 @@ void(void) trigger_push_findtarget {
 			remove(e);
 			waypoint_spawnforteleporter(self, self.dest, flighttime);
 		}
-	} else
-		flighttime = 0;
+	}
+	if (g_trigger_push_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE) {
+		entity e = spawn();
+		e.owner = self;
+		setsize(e, e.owner.mins, e.owner.maxs);
+		net_link_entity(e, TRUE, 0, trigger_push_prediction_send);
+		e.culltracemode = CULLTRACEMODE_NONE;
+	}
 }
 
 /*
@@ -179,6 +175,7 @@ void(void) spawnfunc_trigger_push {
 		CVAR_CACHE(g_trigger_push_speed_factor);
 		CVAR_CACHE(g_trigger_push_speed_nodecrease);
 		CVAR_CACHE(g_trigger_push_skip_projectiles);
+		CVAR_CACHE(g_trigger_push_prediction);
 		trigger_push_init_done = 1;
 	}
 	if (self.speed)
@@ -214,19 +211,21 @@ void(void) trigger_push_velocity_touch {
 		return;
 
 	vector v1, v2;
+	entity tgt = self.enemy;
+	vector torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_PLAYERDIR_XY) {
 		v1 = other.velocity;
 		v1_z = 0;
 		v1 = self.speed * normalize(v1);
 	} else {
-		v1 = trigger_push_calculatevelocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), self.enemy, self.height);
+		v1 = trigger_push_calculate_velocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), torg, self.height);
 	}
 	v2_x = v1_x;
 	v2_y = v1_y;
 	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_PLAYERDIR_Z) {
 		v1 = self.count * '0 0 1';
 	} else {
-		v1 = trigger_push_calculatevelocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), self.enemy, self.height);
+		v1 = trigger_push_calculate_velocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), torg, self.height);
 	}
 	v2_z = v1_z;
 	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_ADD_XY) {

@@ -142,6 +142,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_CHESS_INFO] = chess_info_read;
 	csqc_entity_parsers[NET_CSQC_RACE_RECORDS] = race_records_read;
 	csqc_entity_parsers[NET_CSQC_TELEPORT_PREDICTION] = teleport_prediction_read;
+	csqc_entity_parsers[NET_CSQC_TRIGGER_PUSH_PREDICTION] = trigger_push_prediction_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_PICTURE - NET_TE_CSQC_FIRST] = map_vote_picture_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RACE - NET_TE_CSQC_FIRST] = race_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_ZCURVEPARTICLES - NET_TE_CSQC_FIRST] = particles_zcurve_read;

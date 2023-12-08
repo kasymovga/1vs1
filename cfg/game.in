@@ -61,7 +61,6 @@ set g_trigger_hurt_interval 1
 set g_button_nowaitforever 0
 seta g_start_delay 0 "delay before the game starts, so everyone can join; recommended to set this to like 10 on a public server"
 if_dedicated g_start_delay 10
-set g_trigger_push_use_trigger_origin 0
 set g_lava_damage_factor 4 "amount of damage provided by lava"
 set g_lava_fire_factor 2 "amount of fire damage profided by lava"
 set g_lava_fire_time 2 "time of fire profided by lava"
@@ -95,9 +94,6 @@ set g_trigger_collisions_exact 1 "exact collisions with trigger brushes"
 set g_reset_on_join 0 "automatic reset game when this amount of player join"
 set g_endmatch_on_leave 0 "automatic end game when this amount of player left (0 - disabled)"
 set g_target_push_speed_factor 10
-set g_trigger_push_speed_factor 10
-set g_trigger_push_speed_nodecrease 0
-set g_trigger_push_skip_projectiles 0 "0 - jumppads affect projectiles, 1 - jumpads ignore projectiles"
 set g_spawn_znudge 1
 set g_punchangle_decrease_speed 10
 set g_punchangle_decrease_delay 0

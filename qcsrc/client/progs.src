@@ -103,6 +103,7 @@ func_camera.qc
 portal.qc
 announce.qc
 teleport.qc
+trigger_push.qc
 vote.qh
 game_menu.qh
 entcs.qh

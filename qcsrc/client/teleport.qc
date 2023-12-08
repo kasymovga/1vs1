@@ -1,11 +1,18 @@
 float teleport_predicted_last;
 float teleport_predicted_last_time;
-float teleport_prediction;
+float teleport_prediction_init_done;
 float g_teleport_keep_velocity;
 float g_teleport_time;
+var void(entity e) teleport_predict_next;
+
+void(entity e) teleport_predict;
 
 void(float isnew) teleport_prediction_read {
-	teleport_prediction = 1;
+	if not(teleport_prediction_init_done) {
+		teleport_predict_next = physics_plug_frame_end;
+		physics_plug_frame_end = teleport_predict;
+		teleport_prediction_init_done = 1;
+	}
 	self.cnt = net_read_coord();
 	self.classname = "teleport_prediction";
 	self.modelindex = net_read_coord();
@@ -74,62 +81,47 @@ void(void) teleport_teleportation_read {
 	}
 }
 
-void(void) teleport_predict {
-	float r = vlen(self.maxs - self.mins) / 2;
-	vector o = self.origin + (self.maxs + self.mins) * 2;
-	entity e = findradius(o, r);
-	vector mins1, mins2, maxs1, maxs2;
+void(entity e) teleport_predict {
 	float ss, vel;
-	for (; e; e = e.chain) {
-		if (e.classname != "teleport_prediction") continue;
-		mins1 = e.origin + e.mins;
-		maxs1 = e.origin + e.maxs;
-		mins2 = self.origin + self.mins;
-		maxs2 = self.origin + self.maxs;
-		if (
-				mins1_x >= maxs1_x
-				|| mins1_y >= maxs1_y
-				|| mins1_z >= maxs1_z
-				|| maxs1_x <= mins2_x
-				|| maxs1_y <= mins2_y
-				|| maxs1_z <= mins2_z
-				)
-			continue;
+	if (e.classname != "teleport_prediction") {
+		if (teleport_predict_next)
+			teleport_predict_next(e);
 
-		e.solid = SOLID_BSP;
-		ss = self.solid;
-		self.solid = SOLID_NOT;
-		trace_box(self.origin, self.mins, self.maxs, self.origin, TRACE_MOVE_NORMAL, NULL);
-		self.solid = ss;
-		e.solid = SOLID_NOT;
-		if not(trace_ent == e) continue;
-		physics_was_teleported = TRUE;
-		vel = vlen(physics_velocity);
-		if (g_teleport_keep_velocity > 0)
-			vel = min(vel, g_teleport_keep_velocity);
-		else if (g_teleport_keep_velocity == 0)
-			vel = 0;
+		return;
+	}
+	e.solid = SOLID_BSP;
+	ss = self.solid;
+	self.solid = SOLID_NOT;
+	trace_box(self.origin, self.mins, self.maxs, self.origin, TRACE_MOVE_NORMAL, NULL);
+	self.solid = ss;
+	e.solid = SOLID_NOT;
+	if not(trace_ent == e) return;
+	physics_was_teleported = TRUE;
+	vel = vlen(physics_velocity);
+	if (g_teleport_keep_velocity > 0)
+		vel = min(vel, g_teleport_keep_velocity);
+	else if (g_teleport_keep_velocity == 0)
+		vel = 0;
 
-		makevectors(e.iorigin1);
-		physics_velocity = vlen(physics_velocity) * v_forward;
-		//Must be synced with similar code in server physics code
-		if (g_teleport_time) {
-			if (g_nofriction_cpm_hacks)
-				physics_nofriction = g_teleport_time;
-			else
-				physics_teleport_time = g_teleport_time;
-		}
-		setorigin(self, e.movedir);
-		if (teleport_predicted_last == e.cnt && teleport_predicted_last_time > time - 0.5) {
-			teleport_predicted_last_time = time; //yes, it must be this way
-			continue;
-		}
+	makevectors(e.iorigin1);
+	physics_velocity = vlen(physics_velocity) * v_forward;
+	//Must be synced with similar code in server physics code
+	if (g_teleport_time) {
+		if (g_nofriction_cpm_hacks)
+			physics_nofriction = g_teleport_time;
+		else
+			physics_teleport_time = g_teleport_time;
+	}
+	setorigin(self, e.movedir);
+	if (teleport_predicted_last == e.cnt && teleport_predicted_last_time > time - 0.5) {
 		teleport_predicted_last_time = time; //yes, it must be this way
-		teleport_predicted_last = e.cnt;
-		view_angles = e.iorigin1;
-		R_SetView(VF_CL_VIEWANGLES, e.iorigin1);
-		if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
-			teleport_fix_angles(e.iorigin1);
-		}
+		return;
+	}
+	teleport_predicted_last_time = time; //yes, it must be this way
+	teleport_predicted_last = e.cnt;
+	view_angles = e.iorigin1;
+	R_SetView(VF_CL_VIEWANGLES, e.iorigin1);
+	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
+		teleport_fix_angles(e.iorigin1);
 	}
 }

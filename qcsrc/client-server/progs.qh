@@ -43,6 +43,7 @@
 #include "team.qh"
 #include "time.qh"
 #include "trace.qh"
+#include "trigger_push.qh"
 #include "warpzone.qh"
 #include "world.qh"
 #include "water.qh"
