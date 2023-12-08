@@ -237,6 +237,7 @@ void(void) teleport_findtarget {
 		e.owner = self;
 		setsize(e, e.owner.mins, e.owner.maxs);
 		net_link_entity(e, TRUE, 0, teleport_prediction_send);
+		e.culltracemode = CULLTRACEMODE_NONE;
 	}
 }
 
