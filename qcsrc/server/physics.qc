@@ -867,9 +867,9 @@ void(entity pl, float tptime) physics_mark_as_teleported {
 
 	if (tptime) {
 		if (g_nofriction_cpm_hacks)
-			pl.physics_nofriction_time = tptime;
+			physics_nofriction = pl.physics_nofriction_time = tptime;
 		else
-			pl.teleport_time = time + tptime;
+			physics_teleport_time = pl.teleport_time = time + tptime;
 	}
 
 }
