@@ -61,6 +61,7 @@ void fillNexuizVideoSettingsBasicTab(entity me)
 			e.addValue(e, "125", "125");
 			e.addValue(e, "250", "250");
 			e.addValue(e, "500", "500");
+			e.addValue(e, "1000", "1000");
 			e.addValue(e, _("Unlimited"), "0");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
