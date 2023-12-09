@@ -144,7 +144,6 @@ void(void) physics_frame_begin_hook {
 	float f;
 	plugin_physics_frame_begin_hook();
 	physics_frame_begin_origin = self.origin;
-	physics_current_player = self;
 	if (self.punchangle != '0 0 0') {
 		f = (g_punchangle_decrease_delay ? min(1, (time - self.lastshot_time) / g_punchangle_decrease_delay) : 1);
 		f = vlen(self.punchangle) - g_punchangle_decrease_speed * f * frametime;
@@ -329,6 +328,7 @@ void(void) physics_player_pre { //called by engine
 			}
 		}
 	}
+	physics_current_player = self;
 	physics_flags = self.flags;
 	physics_velocity = self.velocity;
 	physics_frametime_accumulator = self.frametime_accumulator;
@@ -385,6 +385,7 @@ void(void) physics_player_pre { //called by engine
 	self.waterlevel = physics_waterlevel;
 	self.watertype = physics_watertype;
 	self.cpmdoublejump = physics_cpmdoublejump_time;
+	physics_current_player = NULL;
 }
 
 var void(void) physics_client_connect_real_next;
@@ -494,8 +495,14 @@ void(entity e, string args, float set) physics_ability_init {
 
 var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) physics_player_damage_handle_next;
 float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) physics_player_damage_handle {
-	if (!self.physics_nofriction_time) {
-		self.physics_nofriction_time = bound(0.05, _damage * 0.002, 0.2);
+	if (physics_current_player == self) {
+		if (!physics_nofriction) {
+			physics_nofriction = bound(0.05, _damage * 0.002, 0.2);
+		}
+	} else {
+		if (!self.physics_nofriction_time) {
+			self.physics_nofriction_time = bound(0.05, _damage * 0.002, 0.2);
+		}
 	}
 	return physics_player_damage_handle_next(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
@@ -866,10 +873,17 @@ void(entity pl, float tptime) physics_mark_as_teleported {
 		physics_frame_begin_origin = pl.origin;
 
 	if (tptime) {
-		if (g_nofriction_cpm_hacks)
-			physics_nofriction = pl.physics_nofriction_time = tptime;
-		else
-			physics_teleport_time = pl.teleport_time = time + tptime;
+		if (physics_current_player == pl) {
+			if (g_nofriction_cpm_hacks)
+				physics_nofriction = tptime;
+			else
+				physics_teleport_time = tptime;
+		} else {
+			if (g_nofriction_cpm_hacks)
+				pl.physics_nofriction_time = tptime;
+			else
+				pl.teleport_time = time + tptime;
+		}
 	}
 
 }
