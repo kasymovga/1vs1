@@ -8,3 +8,4 @@ void(string s) dlc_precache_sound;
 void(string file) dlc_add_dlc_or_pk3_by_file;
 float(string s) dlc_requested;
 string(string file) dlc_by_file;
+#define DLC_WARPZONE "warpzone"

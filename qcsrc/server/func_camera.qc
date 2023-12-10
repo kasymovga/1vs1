@@ -69,4 +69,5 @@ void(void) spawnfunc_func_camera {
 	self.SendFlags = 0xFFFFFF;
 	self.camera_transform = func_camera_transform;
 	entity_initialize(self, func_camera_init, INITPRIO_FIRST);
+	dlc_require(DLC_WARPZONE);
 }

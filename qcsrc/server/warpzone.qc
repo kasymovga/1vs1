@@ -880,6 +880,7 @@ void(void) warpzone_spawn {
 	}
 	warpzone_first = self;
 	warpzone_chain_add(self);
+	dlc_require(DLC_WARPZONE);
 }
 
 void(void) warpzone_position_spawn {
