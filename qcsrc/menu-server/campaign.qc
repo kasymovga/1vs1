@@ -82,6 +82,7 @@ float(string name) campaign_file_load {
 	} else if (campaign_name == "spdemo") {
 		campaign_entry("single", "rexsp01_city", 0, 1, 10, "", "Demo Level 1", "");
 		campaign_entry("single", "rexsp02_lavacastle", 0, 1, 10, "", "Demo Level 2", "");
+		campaign_entry("single", "rexsp03_snowbase", 0, 1, 10, "", "Demo Level 3", "");
 	}
 	return campaign_entries;
 }
