@@ -183,7 +183,6 @@ var float(string cmd, float tokens) ability_cmd_client_handle_next;
 float(string cmd, float tokens) ability_cmd_client_handle {
 	if (cmd == "pickabilityclass") {
 		if (tokens > 1) {
-			print("get ability class: ", argv(1), "\n");
 			ability_class_select(stof(argv(1)) - 1);
 		} else
 			ability_class_menu(self);
