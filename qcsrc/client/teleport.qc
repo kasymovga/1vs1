@@ -30,6 +30,7 @@ void(float isnew) teleport_prediction_read {
 	v2_y = net_read_coord();
 	v2_z = net_read_coord();
 	setsize(self, v, v2);
+	self.cnt = net_read_coord();
 	//target origin
 	v_x = net_read_coord();
 	v_y = net_read_coord();
@@ -97,7 +98,11 @@ void(entity e) teleport_predict {
 	e.solid = SOLID_NOT;
 	if not(trace_ent == e) return;
 	physics_was_teleported = TRUE;
+	//Must be synced with similar code in server physics code
 	vel = vlen(physics_velocity);
+	if (e.cnt >= 0)
+		vel = min(vel, e.cnt);
+
 	if (g_teleport_keep_velocity > 0)
 		vel = min(vel, g_teleport_keep_velocity);
 	else if (g_teleport_keep_velocity == 0)

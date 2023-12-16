@@ -199,6 +199,7 @@ float(entity to, float sf) teleport_prediction_send {
 	net_write_coord(MSG_ENTITY, o.maxs_x);
 	net_write_coord(MSG_ENTITY, o.maxs_y);
 	net_write_coord(MSG_ENTITY, o.maxs_z);
+	net_write_coord(MSG_ENTITY, (o.speed_str == "" ? -1 : o.speed));
 	net_write_coord(MSG_ENTITY, o.enemy.origin_x);
 	net_write_coord(MSG_ENTITY, o.enemy.origin_y);
 	net_write_coord(MSG_ENTITY, o.enemy.origin_z);
