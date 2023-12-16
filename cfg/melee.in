@@ -23,3 +23,7 @@ set sv_qcanimation_melee2_morph1origin "0 0 0"
 set sv_qcanimation_melee2_morph2angles "0 -90 0"
 set sv_qcanimation_melee2_morph2origin "0 0 0"
 set sv_qcanimation_melee_exterior "60 -60 60"
+set melee_profile ""
+set melee_g_balance_melee 1
+set melee_kick_profile ""
+set melee_kick_g_balance_melee 2
