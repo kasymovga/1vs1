@@ -27,6 +27,12 @@ void(float isnew) trigger_push_prediction_read {
 	self.movedir_y = net_read_coord();
 	self.movedir_z = net_read_coord();
 	self.cnt = net_read_coord();
+	self.state = net_read_byte();
+	if (self.state) {
+		self.iorigin1_x = net_read_coord(); //spawnflags
+		self.iorigin1_y = net_read_coord(); //count
+		self.iorigin1_z = net_read_coord(); //speed
+	}
 	trigger_push_use_trigger_origin = net_read_coord();
 }
 
@@ -45,6 +51,11 @@ void(entity e) trigger_push_predict {
 	self.solid = ss;
 	e.solid = SOLID_NOT;
 	if not(trace_ent == e) return;
-	physics_velocity = trigger_push_calculate_velocity((trigger_push_use_trigger_origin ? (e.origin + (e.mins + e.maxs) * 0.5) : self.origin), e.movedir, e.cnt);
 	//Must be synced with similar code in server physics code
+	if (e.state) {
+		physics_velocity = trigger_push_velocity_calculate_velocity(physics_velocity,
+				(trigger_push_use_trigger_origin ? (e.origin + (e.mins + e.maxs) * 0.5) : self.origin), e.movedir, e.cnt,
+				e.iorigin1_z/*speed*/, e.iorigin1_x/*spawnflags*/, e.iorigin1_y/*count*/);
+	} else
+		physics_velocity = trigger_push_calculate_velocity((trigger_push_use_trigger_origin ? (e.origin + (e.mins + e.maxs) * 0.5) : self.origin), e.movedir, e.cnt);
 }

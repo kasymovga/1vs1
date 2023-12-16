@@ -86,6 +86,10 @@ void(void) entity_initialize_run {
 void(void) entity_droptofloor_handler {
 	builtin_droptofloor();
 	self.dropped_origin = self.origin;
+	if (self.classname == "item_key_silver") {
+		print("self.mins=", vtos(self.mins), "\n");
+		print("self.maxs=", vtos(self.maxs), "\n");
+	}
 }
 
 void(void) entity_droptofloor {

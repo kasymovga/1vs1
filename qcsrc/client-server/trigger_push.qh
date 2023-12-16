@@ -1,2 +1,3 @@
 float trigger_push_calculate_velocity_flighttime;
 vector(vector org, vector torg, float ht) trigger_push_calculate_velocity;
+vector(vector ov, vector org, vector torg, float ht, float _speed, float _spawnflags, float _count) trigger_push_velocity_calculate_velocity;

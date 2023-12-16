@@ -110,6 +110,14 @@ float(entity to, float sf) trigger_push_prediction_send {
 	net_write_coord(MSG_ENTITY, v_y);
 	net_write_coord(MSG_ENTITY, v_z);
 	net_write_coord(MSG_ENTITY, o.height);
+	if (o.classname == "trigger_push_velocity") {
+		net_write_byte(MSG_ENTITY, 1);
+		net_write_coord(MSG_ENTITY, o.spawnflags);
+		net_write_coord(MSG_ENTITY, o.count);
+		net_write_coord(MSG_ENTITY, o.speed);
+	} else
+		net_write_byte(MSG_ENTITY, 0);
+
 	net_write_coord(MSG_ENTITY, g_trigger_push_use_trigger_origin);
 	return TRUE;
 }
@@ -168,16 +176,18 @@ void(void) trigger_push_findtarget {
  */
 
 float trigger_push_init_done;
+void(void) trigger_push_init {
+	if (trigger_push_init_done) return;
+	CVAR_CACHE(g_trigger_push_use_trigger_origin);
+	CVAR_CACHE(g_trigger_push_speed_factor);
+	CVAR_CACHE(g_trigger_push_speed_nodecrease);
+	CVAR_CACHE(g_trigger_push_skip_projectiles);
+	CVAR_CACHE(g_trigger_push_prediction);
+	trigger_push_init_done = 1;
+}
 void(void) spawnfunc_trigger_push {
 	ENTITY_NOT_PER_PLAYER();
-	if not(trigger_push_init_done) {
-		CVAR_CACHE(g_trigger_push_use_trigger_origin);
-		CVAR_CACHE(g_trigger_push_speed_factor);
-		CVAR_CACHE(g_trigger_push_speed_nodecrease);
-		CVAR_CACHE(g_trigger_push_skip_projectiles);
-		CVAR_CACHE(g_trigger_push_prediction);
-		trigger_push_init_done = 1;
-	}
+	trigger_push_init();
 	if (self.speed)
 		entity_movedir_setup();
 
@@ -198,11 +208,6 @@ void(void) spawnfunc_trigger_push {
 	entity_initialize(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }
 
-#define TRIGGER_PUSH_VELOCITY_PLAYERDIR_XY 1
-#define TRIGGER_PUSH_VELOCITY_ADD_XY 2
-#define TRIGGER_PUSH_VELOCITY_PLAYERDIR_Z 4
-#define TRIGGER_PUSH_VELOCITY_ADD_Z 8
-
 void(void) trigger_push_velocity_touch {
 	if (other.classname != "player")
 		return;
@@ -210,41 +215,17 @@ void(void) trigger_push_velocity_touch {
 	if not(self.enemy)
 		return;
 
-	vector v1, v2;
 	entity tgt = self.enemy;
 	vector torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
-	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_PLAYERDIR_XY) {
-		v1 = other.velocity;
-		v1_z = 0;
-		v1 = self.speed * normalize(v1);
-	} else {
-		v1 = trigger_push_calculate_velocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), torg, self.height);
-	}
-	v2_x = v1_x;
-	v2_y = v1_y;
-	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_PLAYERDIR_Z) {
-		v1 = self.count * '0 0 1';
-	} else {
-		v1 = trigger_push_calculate_velocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), torg, self.height);
-	}
-	v2_z = v1_z;
-	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_ADD_XY) {
-		other.velocity_x = other.velocity_x + v2_x * frametime;
-		other.velocity_y = other.velocity_y + v2_y * frametime;
-	} else {
-		other.velocity_x = v2_x;
-		other.velocity_y = v2_y;
-	}
-	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_ADD_Z) {
-		other.velocity_z = other.velocity_z + v2_z * frametime;
-	} else {
-		other.velocity_z = v2_z;
-	}
+	other.velocity = trigger_push_velocity_calculate_velocity(other.velocity,
+			(g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin),
+			torg, self.height, self.speed, self.spawnflags, self.count);
 }
 
 float trigger_push_velocity_init_done;
 void(void) spawnfunc_trigger_push_velocity {
 	ENTITY_NOT_PER_PLAYER();
+	trigger_push_init();
 	if not(trigger_push_velocity_init_done) {
 		CVAR_CACHE(g_trigger_push_use_trigger_origin);
 		trigger_push_velocity_init_done = 1;

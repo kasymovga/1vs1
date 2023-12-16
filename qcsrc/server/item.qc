@@ -997,6 +997,9 @@ void(void) spawnfunc_item_key_gold {
 
 void(void) spawnfunc_item_key_silver {
 	item_key_spawn(IT_KEY1, "Silver Key", '0 0 0');
+	print("self.mins=", vtos(self.mins), "\n");
+	print("self.maxs=", vtos(self.maxs), "\n");
+	print("self=", ftos(num_for_edict(self)), "\n");
 }
 
 void(void) spawnfunc_item_key_blood {
