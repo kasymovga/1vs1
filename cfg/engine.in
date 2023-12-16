@@ -158,7 +158,7 @@ snd_streaming_length 3
 snd_perchannelvolumecontrol 0
 r_viewfbo 1
 gl_vbo 1
-seta sv_threaded 0
+seta sv_threaded 1
 cl_decals 1
 cl_decals_time 2
 cl_particles_quality 0.5
