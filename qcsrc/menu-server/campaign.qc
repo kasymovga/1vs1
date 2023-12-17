@@ -66,23 +66,23 @@ float(string name) campaign_file_load {
 		campaign_entry("dm", "bloodprison", 5, 18, 15, "", "DM: Blood Prison", "THE FINAL\n\nUse all you have learned so far and win the campaign if you can!");
 	} else if (campaign_name == "rexsurvival") {
 		campaign_title = "Rexuiz Survival Campaign";
-		campaign_entry("surv", "dangerous_swamp", 0, 1, 10, "", "Survival Level 1", "");
-		campaign_entry("surv", "spider_lair", 0, 1, 10, "", "Survival Level 2", "");
-		campaign_entry("surv", "ufo_invasion", 0, 1, 10, "", "Survival Level 3", "");
-		campaign_entry("surv", "survive_pyramid", 0, 1, 10, "", "Survival Level 4", "");
-		campaign_entry("surv", "dark_church", 0, 1, 10, "", "Survival Level 5", "");
-		campaign_entry("surv", "survive_arena", 0, 1, 10, "", "Survival Level 6", "");
-		campaign_entry("surv", "rex2dsurvdemo", 0, 1, 10, "", "Survival Level 8: 2d special", "");
-		campaign_entry("surv", "surv_snowplace", 0, 1, 10, "", "Survival Level 8", "");
-		campaign_entry("surv", "surv_canyon", 0, 1, 10, "", "Survival Level 9", "");
-		campaign_entry("surv", "rextopviewsurvdemo", 0, 1, 10, "", "Survival Level 10: top-view special", "");
-		campaign_entry("surv", "survive_desert", 0, 1, 10, "", "Survival Level 11", "");
-		campaign_entry("surv", "area51", 0, 1, 10, "", "Survival Level 12: Secret base", "");
-		campaign_entry("surv", "failed_experiment", 0, 1, 10, "", "Survival Level 13", "Final challenge");
+		campaign_entry("surv", "dangerous_swamp", 0, 1, 0, "", "Survival Level 1", "");
+		campaign_entry("surv", "spider_lair", 0, 1, 0, "", "Survival Level 2", "");
+		campaign_entry("surv", "ufo_invasion", 0, 1, 0, "", "Survival Level 3", "");
+		campaign_entry("surv", "survive_pyramid", 0, 1, 0, "", "Survival Level 4", "");
+		campaign_entry("surv", "dark_church", 0, 1, 0, "", "Survival Level 5", "");
+		campaign_entry("surv", "survive_arena", 0, 1, 0, "", "Survival Level 6", "");
+		campaign_entry("surv", "rex2dsurvdemo", 0, 1, 0, "", "Survival Level 8: 2d special", "");
+		campaign_entry("surv", "surv_snowplace", 0, 1, 0, "", "Survival Level 8", "");
+		campaign_entry("surv", "surv_canyon", 0, 1, 0, "", "Survival Level 9", "");
+		campaign_entry("surv", "rextopviewsurvdemo", 0, 1, 0, "", "Survival Level 10: top-view special", "");
+		campaign_entry("surv", "survive_desert", 0, 1, 0, "", "Survival Level 11", "");
+		campaign_entry("surv", "area51", 0, 1, 0, "", "Survival Level 12: Secret base", "");
+		campaign_entry("surv", "failed_experiment", 0, 1, 0, "", "Survival Level 13", "Final challenge");
 	} else if (campaign_name == "spdemo") {
-		campaign_entry("single", "rexsp01_city", 0, 1, 10, "", "Demo Level 1", "");
-		campaign_entry("single", "rexsp02_lavacastle", 0, 1, 10, "", "Demo Level 2", "");
-		campaign_entry("single", "rexsp03_snowbase", 0, 1, 10, "", "Demo Level 3", "");
+		campaign_entry("single", "rexsp01_city", 0, 1, 0, "", "Demo Level 1", "");
+		campaign_entry("single", "rexsp02_lavacastle", 0, 1, 0, "", "Demo Level 2", "");
+		campaign_entry("single", "rexsp03_snowbase", 0, 1, 0, "", "Demo Level 3", "");
 	}
 	return campaign_entries;
 }

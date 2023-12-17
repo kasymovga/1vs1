@@ -564,13 +564,23 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 		return;
 	}
 	timelimit = cvar("timelimit");
-	float timelimit_real = builtin_cvar("timelimit");
-	if (timelimit_real != timelimit) {
-		builtin_cvar_set("timelimit", ftos(timelimit));
-	}
 	timelimit *= 60;
 	fraglimit = cvar("fraglimit");
 	score_leadlimit = cvar("leadlimit");
+	if (g_campaign) {
+		float timelimit_real = builtin_cvar("timelimit");
+		if (timelimit_real != timelimit) {
+			builtin_cvar_set("timelimit", ftos(timelimit));
+		}
+		float fraglimit_real = builtin_cvar("fraglimit");
+		if (fraglimit_real != fraglimit) {
+			builtin_cvar_set("fraglimit", ftos(fraglimit));
+		}
+		float leadlimit_real = builtin_cvar("leadlimit");
+		if (leadlimit_real != score_leadlimit) {
+			builtin_cvar_set("leadlimit", ftos(score_leadlimit));
+		}
+	}
 	if (warmup_active || time <= map_starttime) { // NOTE: this is <= to prevent problems in the very tic where the game starts
 		if (timelimit > 0)
 			timelimit = 0; // timelimit is not made for warmup
