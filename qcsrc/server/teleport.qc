@@ -236,6 +236,7 @@ void(void) teleport_findtarget {
 	if (g_teleport_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE) {
 		entity e = spawn();
 		e.owner = self;
+		e.existsonlyfor = self.existsonlyfor;
 		setsize(e, e.owner.mins, e.owner.maxs);
 		net_link_entity(e, TRUE, 0, teleport_prediction_send);
 		e.culltracemode = CULLTRACEMODE_NONE;
