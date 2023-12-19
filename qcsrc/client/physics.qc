@@ -135,6 +135,8 @@ void(void) physics_frame_begin_hook {
 }
 
 void(void) physics_frame_end_hook {
+	//last command frame skipped, because it's probably not sended to server and change of angles in prediction function will cause desyncronization
+	//same thing with not full frames with g_physics_fixed 1
 	if (physics_plug_frame_end && (!g_physics_fixed || frametime == 0.008) && physics_command_frame < clientcommandframe) {
 		vector mins1, mins2, maxs1, maxs2;
 		mins2 = self.origin + self.mins;
