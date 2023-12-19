@@ -15,6 +15,7 @@ vector physics_ground_oldorigin;
 float physics_ground_lastent;
 float physics_skimming_start;
 float physics_cpmdoublejump_time_start;
+float physics_command_frame;
 
 vector(void) physics_side_adjust_view {
 	makevectors('0 90 0');
@@ -134,7 +135,7 @@ void(void) physics_frame_begin_hook {
 }
 
 void(void) physics_frame_end_hook {
-	if (physics_plug_frame_end) {
+	if (physics_plug_frame_end && (!g_physics_fixed || frametime == 0.008) && physics_command_frame < clientcommandframe) {
 		vector mins1, mins2, maxs1, maxs2;
 		mins2 = self.origin + self.mins;
 		maxs2 = self.origin + self.maxs;
@@ -174,8 +175,7 @@ vector(void) physics_view_origin {
 	vector v;
 	if (physics && servercommandframe && clientcommandframe && (!view_spectatee_status || view_observer_status)) {
 		float frametime_save = frametime;
-		float i;
-		float n = clientcommandframe + 1;
+		float n = clientcommandframe;
 		physics_skimming = physics_skimming_start;
 		physics_cpmdoublejump_time = physics_cpmdoublejump_time_start;
 		entity oldself = self;
@@ -220,13 +220,13 @@ vector(void) physics_view_origin {
 		}
 		physics_frametime_accumulator = physics_start_frametime_accumulator;
 		physics_nofriction = physics_start_nofriction_time;
-		for (i = servercommandframe + 1; i <= n; i++) {
-			if not(RetrieveMovementFrame(i))
+		for (physics_command_frame = servercommandframe + 1; physics_command_frame <= n; physics_command_frame++) {
+			if not(RetrieveMovementFrame(physics_command_frame)) {
 				break;
-
+			}
 			if (warpzone_view && !warpzone_passed)
-			if (i >= warpzone_view_commandframe) {
-				//print("warp input angles correction ", ftos(i), " ", vtos(input_angles));
+			if (physics_command_frame >= warpzone_view_commandframe) {
+				//print("warp input angles correction ", ftos(physics_command_frame), " ", vtos(input_angles));
 				input_angles = warpzone_untransform_angles(warpzone_view, input_angles);
 				//print(" ", vtos(input_angles), "\n");
 			}
@@ -238,7 +238,7 @@ vector(void) physics_view_origin {
 			self.angles_y = input_angles_y;
 			physics_player();
 		}
-		physics_lastcommandframe = i;
+		physics_lastcommandframe = physics_command_frame;
 		if (physics_frametime_accumulator) {
 			frametime = physics_frametime_accumulator;
 			physics_player_frame();
