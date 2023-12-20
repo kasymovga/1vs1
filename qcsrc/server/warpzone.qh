@@ -6,6 +6,7 @@ var void(entity e, entity forent, float toss_frametime, float toss_count, entity
 void warpzone_trace_toss_trough_zone_real(entity e, entity forent, float toss_frametime, float toss_count, entity zone, warpzone_trace_callback_t cb);
 void(void) warpzone_spawn;
 void(void) warpzone_position_spawn;
+void(void) warpzone_dlc_load;
 
 // reference systems (chained warpzone transforms)
 var vector(entity from, entity to, vector org) warpzone_refsys_transform_origin;

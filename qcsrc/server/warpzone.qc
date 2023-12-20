@@ -831,6 +831,21 @@ float(entity e) warpzone_move_out_of_solid {
 	return TRUE;
 }
 
+void(void) warpzone_dlc_load {
+	float i;
+	string tex;
+	for (i = 0; ; ++i) {
+		tex = getsurfacetexture(self, i);
+		if not(tex)
+			break;
+
+		if (tex == "texture/common/warpzone" || tex == "textures/common/camera") {
+			dlc_require(DLC_WARPZONE);
+			break;
+		}
+	}
+}
+
 void(void) warpzone_spawn {
 	// warp zone entities must have:
 	// "killtarget" pointing to a target_position with a direction arrow
@@ -880,7 +895,7 @@ void(void) warpzone_spawn {
 	}
 	warpzone_first = self;
 	warpzone_chain_add(self);
-	dlc_require(DLC_WARPZONE);
+	warpzone_dlc_load();
 }
 
 void(void) warpzone_position_spawn {
