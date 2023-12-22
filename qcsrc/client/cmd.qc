@@ -12,6 +12,7 @@ void(string msg) GameCommand { //called by engine
 		print("  radar\n");
 		print("  sbar_columns_set ...\n");
 		print("  sbar_columns_help\n");
+		print("  camera_script ...\n");
 		return;
 	}
 	string cmd;
@@ -81,6 +82,8 @@ void(string msg) GameCommand { //called by engine
 		rm_skin_load("default");
 	} else if (cmd == "rm_skin_unload" && argc == 1) {
 		rm_skin_unload();
+	} else if (cmd == "camera_script") {
+		view_camera_script_cmd(argc);
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}

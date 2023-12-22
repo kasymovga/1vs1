@@ -22,3 +22,4 @@ vector view_fixed_angles;
 float view_vehicle;
 float view_kickangles;
 float view_recoil_mode;
+void(float argc) view_camera_script_cmd;
