@@ -120,6 +120,7 @@ ready.qc
 vote.qc
 game_menu.qc
 race.qc
+view_camera_script.qc
 view.qc
 weapon.qc
 interpolate.qc
