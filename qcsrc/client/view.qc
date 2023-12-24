@@ -481,11 +481,23 @@ void(void) view_camera_script {
 }
 
 void(void) view_camera_script_cmd_help {
-	print("Usage:\n");
-	print("cl_cmd camera_script play [speed]\n");
-	print("                     stop\n");
-	print("                     add [speed] [roll] [wait]\n");
-	print("                     clear\n");
+	print("Usage:\n"
+			"cl_cmd camera_script play [speed]\n"
+			"                     stop\n"
+			"                     add [speed] [roll] [wait]\n"
+			"                     clear\n"
+			"                     save <name>\n"
+			"                     load <name>\n"
+			);
+}
+
+void(void) view_camera_script_clear {
+	entity e;
+	while (view_camera_script_chain) {
+		e = view_camera_script_chain.enemy;
+		remove(view_camera_script_chain);
+		view_camera_script_chain = e;
+	}
 }
 
 void(float argc) view_camera_script_cmd {
@@ -495,6 +507,7 @@ void(float argc) view_camera_script_cmd {
 	}
 	entity e;
 	string s = argv(1);
+	float f;
 	if (s == "play" && argc <= 3) {
 		if (!view_camera_script_chain || !view_camera_script_chain.enemy) {
 			print("nothing to play\n");
@@ -545,11 +558,55 @@ void(float argc) view_camera_script_cmd {
 			print("can't clear while playing script\n");
 			return;
 		}
-		while (view_camera_script_chain) {
-			e = view_camera_script_chain.enemy;
-			remove(view_camera_script_chain);
-			view_camera_script_chain = e;
-		}
+		view_camera_script_clear();
+	} else if (s == "save" && argc == 3) {
+		s = strcat(argv(2), ".csc");
+		f = fopen(s, FILE_WRITE);
+		if (f >= 0) {
+			for (e = view_camera_script_chain; e; e = e.enemy) {
+				fputs(f, strcat(ftos(e.origin_x), " "));
+				fputs(f, strcat(ftos(e.origin_y), " "));
+				fputs(f, strcat(ftos(e.origin_z), " "));
+				fputs(f, strcat(ftos(e.angles_x), " "));
+				fputs(f, strcat(ftos(e.angles_y), " "));
+				fputs(f, strcat(ftos(e.angles_z), " "));
+				fputs(f, strcat(ftos(e.cnt/*speed*/), " "));
+				fputs(f, strcat(ftos(e.float1/*wait*/), "\n"));
+			}
+			fclose(f);
+		} else
+			print("Can't open file: ", s, "\n");
+	} else if (s == "load" && argc == 3) {
+		view_camera_script_clear();
+		s = strcat(argv(2), ".csc");
+		f = fopen(s, FILE_READ);
+		if (f >= 0) {
+			while ((s = fgets(f))) {
+				e = spawn();
+				argc = tokenize_console(s);
+				if (argc < 8) {
+					print("not enough arguments in line\n");
+					break;
+				}
+				e.origin_x = stof(argv(0));
+				e.origin_y = stof(argv(1));
+				e.origin_z = stof(argv(2));
+				e.angles_x = stof(argv(3));
+				e.angles_y = stof(argv(4));
+				e.angles_z = stof(argv(5));
+				e.cnt = stof(argv(6));
+				e.float1 = stof(argv(7));
+				if not(view_camera_script_chain)
+					view_camera_script_chain = e;
+				else {
+					entity e2;
+					for (e2 = view_camera_script_chain; e2.enemy; e2 = e2.enemy);
+					e2.enemy = e;
+				}
+			}
+			fclose(f);
+		} else
+			print("Can't open file: ", s, "\n");
 	} else {
 		view_camera_script_cmd_help();
 	}
