@@ -186,6 +186,7 @@ set _defrag_g_spawnreplace_ammo_shells item_shells
 set _defrag_g_pickup_use_wait 1
 set _defrag_g_teleport_time 0.16
 set _defrag_g_trigger_collisions_exact_side 0
+set _defrag_g_trigger_collisions_exact_extend 0
 set _defrag_g_powerup_speed_factor 1.3
 set _defrag_g_balance_hagar_primary_premove 0.05
 set _defrag_g_balance_hlac_primary_premove 0.05
