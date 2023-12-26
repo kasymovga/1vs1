@@ -201,7 +201,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	if (view_camera_free_active) {
 		if (CVAR(camera_enable)
 #ifndef CAMERATEST
-				&& (main_isdemo || view_observer_status)
+				&& main_isdemo
 #endif
 				)
 			view_camera_setup();
@@ -212,7 +212,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		}
 	} else if (CVAR(camera_enable)
 #ifndef CAMERATEST
-			&& (main_isdemo || view_observer_status)
+			&& main_isdemo
 #endif
 			) {
 		// Enable required Darkplaces cvars
