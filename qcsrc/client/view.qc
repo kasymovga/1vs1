@@ -199,7 +199,11 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	R_SetView(VF_FOV, view_fov_calculate());
 	// Camera for demo playback
 	if (view_camera_free_active) {
-		if (CVAR(camera_enable))
+		if (CVAR(camera_enable)
+#ifndef CAMERATEST
+				&& (main_isdemo || view_observer_status)
+#endif
+				)
 			view_camera_setup();
 		else {
 			cvar_set("chase_active", ftos(view_chase_active_backup));
