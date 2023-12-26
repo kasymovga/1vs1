@@ -263,7 +263,7 @@ void(void) race_sbar_draw {
 		race_velocity = physics_velocity_frame_end;
 		race_movement = input_movevalues;
 	}
-	if (game_type == GAME_TYPE_CTS) {
+	if (game_type == GAME_TYPE_CTS && !view_observer_status) {
 		if (CVAR(cl_cts_strafe_helper))
 		if (race_velocity_x != 0 || race_velocity_y != 0) {
 			float diffangle;
@@ -303,18 +303,31 @@ void(void) race_sbar_draw {
 			}
 			if (CVAR(cl_cts_strafe_helper_velocity_direction)) {
 				diffangle = race_angle_norm(view_angles_y - moveangle);
-				if (diffangle > -90 && diffangle < 90) {
-					vector v1;
-					v1_x = race_angle_to_con_x(diffangle);
-					v1_y = CVAR(vid_conheight) * 0.5 + CVAR(cl_cts_strafe_helper_height);
-					v1_z = 0;
-					float f = CVAR(cl_cts_strafe_helper_height) * 0.5;
-					R_BeginPolygon("", DRAWFLAG_NORMAL);
+				float backward = FALSE;
+				if (diffangle < -90) {
+					diffangle += 180;
+					backward = TRUE;
+				}
+				if (diffangle > 90) {
+					diffangle -= 180;
+					backward = TRUE;
+				}
+				vector v1;
+				v1_x = race_angle_to_con_x(diffangle);
+				v1_y = CVAR(vid_conheight) * 0.5 + CVAR(cl_cts_strafe_helper_height);
+				v1_z = 0;
+				float f = CVAR(cl_cts_strafe_helper_height) * 0.5;
+				R_BeginPolygon("", DRAWFLAG_NORMAL);
+				if (backward) {
+					R_PolygonVertex(v1 + '-0.5 0 0' * f, '0 0 0', '1 1 1', 0.5);
+					R_PolygonVertex(v1 + '0.5 0 0' * f, '0 0 0', '1 1 1', 0.5);
+					R_PolygonVertex(v1 + '0 1 0' * f, '0 0 0', '1 1 1', 0.5);
+				} else {
 					R_PolygonVertex(v1, '0 0 0', '1 1 1', 0.5);
 					R_PolygonVertex(v1 + '-0.5 1 0' * f, '0 0 0', '1 1 1', 0.5);
 					R_PolygonVertex(v1 + '0.5 1 0' * f, '0 0 0', '1 1 1', 0.5);
-					R_EndPolygon();
 				}
+				R_EndPolygon();
 			}
 		}
 		if (CVAR(cl_cts_snap_helper))
