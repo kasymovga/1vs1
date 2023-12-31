@@ -82,6 +82,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	if ((e = player_entity(pl)))
 	if (e.health >= 1)
 	if (e.takedamage)
+	if not(e.flags & FL_NOTARGET)
 	if (e.deadflag == DEAD_NO) {
 		if (team_mode) {
 			if not(self.team)
