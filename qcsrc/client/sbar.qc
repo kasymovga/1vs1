@@ -1131,7 +1131,7 @@ float(float on) sbar_scoreboard_fade_check {
 	if (on)
 		sbar_scoreboard_fade = min(1, max(0.5, sbar_scoreboard_fade + frametime * CVAR(sbar_scoreboard_fade_speed)));
 	else {
-		sbar_scoreboard_fade = sbar_scoreboard_fade - frametime * 2;
+		sbar_scoreboard_fade = sbar_scoreboard_fade - frametime * CVAR(sbar_scoreboard_fade_speed);
 		if (sbar_scoreboard_fade < 0.5) sbar_scoreboard_fade = 0;
 	}
 	return sbar_scoreboard_fade;
