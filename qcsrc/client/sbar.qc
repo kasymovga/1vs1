@@ -7,6 +7,7 @@ vector sbar_bottomright;
 float sbar_alpha_bg;
 float sbar_border_thickness;
 vector sbar_team_rgb;
+float sbar_scoreboard_fade;
 
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
@@ -1123,9 +1124,24 @@ vector(vector pos, entity tm, vector rgb, vector bg_size) sbar_scoreboard_table_
 	return pos;
 }
 
+float(float on) sbar_scoreboard_fade_check {
+	if (CVAR(sbar_scoreboard_fade_speed) <= 0)
+		return on;
+
+	if (on)
+		sbar_scoreboard_fade = min(1, max(0.5, sbar_scoreboard_fade + frametime * CVAR(sbar_scoreboard_fade_speed)));
+	else {
+		sbar_scoreboard_fade = sbar_scoreboard_fade - frametime * 2;
+		if (sbar_scoreboard_fade < 0.5) sbar_scoreboard_fade = 0;
+	}
+	return sbar_scoreboard_fade;
+}
+
 float sbar_nextplayerscheck;
 float sbar_lastpingstime;
 void sbar_scoreboard_draw() {
+	vector sbar_fontsize_old = sbar_fontsize;
+	sbar_fontsize *= sbar_scoreboard_fade;
 	vector rgb, pos, tmp;
 	entity pl, tm;
 	view_crosshair = FALSE;
@@ -1302,6 +1318,7 @@ void sbar_scoreboard_draw() {
 			pos_y += sbar_fontsize_y;
 		}
 	}
+	sbar_fontsize = sbar_fontsize_old;
 }
 
 var void(vector dummy, vector dummy, float dummy)sbar_score_draw = {};
@@ -1870,7 +1887,7 @@ void(void) sbar_draw {
 	sbar_timeleft = sbar_timelimit * 60 + sbar_starttime - time;
 	sbar_stat_items = getstati(STAT_ITEMS);
 	if (sbar_timeleft < 0 && sbar_timelimit) { // map voting screen
-		if (sbar_showscores) {
+		if (sbar_scoreboard_fade_check(sbar_showscores)) {
 			sbar_scoreboard_draw();
 		} else if (sbar_showaccuracy) {
 			sbar_accuracy_draw();
@@ -1882,9 +1899,9 @@ void(void) sbar_draw {
 	} else if (_health <= 0 || view_observer_status) {
 		if (sbar_showaccuracy)
 			sbar_accuracy_draw();
-		else if (sbar_showscores || (_health <= 0 && CVAR(cl_deathscoreboard && !sbar_hidescores)))
+		else if (sbar_scoreboard_fade_check(sbar_showscores || (_health <= 0 && CVAR(cl_deathscoreboard && !sbar_hidescores)))) {
 			sbar_scoreboard_draw();
-		else if (sbar_hidescores)
+		} else if (sbar_hidescores)
 			return;
 
 		if (rm_skin_loaded) {
@@ -1895,9 +1912,9 @@ void(void) sbar_draw {
 			sbar_game_hud(CVAR(sbar_gameinfo_position), '0 0 0', CVAR(sbar_gameinfo_scale));
 		}
 	} else {
-		if (sbar_showscores)
+		if (sbar_scoreboard_fade_check(sbar_showscores)) {
 			sbar_scoreboard_draw();
-		else if (sbar_showaccuracy)
+		} else if (sbar_showaccuracy)
 			sbar_accuracy_draw();
 		else if (sbar_hidescores)
 			return;
