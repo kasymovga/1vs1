@@ -2,14 +2,16 @@ void(void) damage_indicator_draw {
 	if (self.alpha <= 0)
 		return;
 
+	drawfont = sbar_bigfont;
 	self.alpha -= frametime / CVAR(cl_damageindicator);
 	self.origin_z += frametime * 25;
 	vector o = view_project_3d_to_2d(self.origin);
-    if (o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
-        return;
+	if (o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
+		return;
 
 	o_z = 0;
 	drawstring(o, NET_UNBOUND_FROM_BYTE(self.cnt), '12 12 0', '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
+	drawfont = sbar_font;
 }
 
 void(void) damage_indicator_remove {
