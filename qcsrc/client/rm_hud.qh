@@ -1,2 +1,3 @@
 void(void) rm_hud_draw;
+void(vector colour, float staytime, float intensivity, float alph) rm_hud_flash;
 float rm_hud_game_info_enabled;

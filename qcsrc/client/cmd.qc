@@ -82,6 +82,12 @@ void(string msg) GameCommand { //called by engine
 		rm_skin_load("default");
 	} else if (cmd == "rm_skin_unload" && argc == 1) {
 		rm_skin_unload();
+	} else if (cmd == "rm_hud_flash") {
+		if (argc < 4) {
+			print("Usage: hudflash color time intensivity alpha\n");
+			return;
+		}
+		rm_hud_flash(stov(argv(1)), stof(argv(2)), stof(argv(3)), stof(argv(4)));
 	} else if (cmd == "camera_script") {
 		view_camera_script_cmd(argc);
 	} else {

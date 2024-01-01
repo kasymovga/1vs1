@@ -20,6 +20,64 @@ float rm_hud_game_info_wide;
 
 vector rm_hud_sector_clip_pos, rm_hud_sector_clip_size;
 vector rm_hud_sector_border_right_pos, rm_hud_sector_border_left_pos, rm_hud_sector_border_right_size, rm_hud_sector_border_left_size;
+float rm_hud_flash_resultalpha;
+vector rm_hud_flash_resultcolor;
+float rm_hud_flash_alpha;
+vector rm_hud_flash_color;
+float rm_hud_flash_intensivity;
+float rm_hud_flash_appeartime;
+float rm_hud_flash_fadetime;
+float rm_hud_flash_enabled;
+
+void(vector colour, float staytime, float intensivity, float alph) rm_hud_flash {
+	rm_hud_flash_color = colour;
+	rm_hud_flash_intensivity = intensivity;
+	rm_hud_flash_alpha = alph;
+	rm_hud_flash_appeartime = time;
+	rm_hud_flash_fadetime = time + staytime;
+	rm_hud_flash_enabled = TRUE;
+}
+
+void(vector basecolor, float basealpha, float additive, float imod, float amod) rm_hud_flash_apply {
+	float a, i;
+	vector c;
+	imod *= rm_skin_flash_intmod;
+	amod *= rm_skin_flash_alphamod;
+	rm_hud_flash_resultalpha = basealpha;
+	rm_hud_flash_resultcolor = basecolor;
+	if (!rm_hud_flash_enabled)
+		return;
+
+	if (time < rm_hud_flash_appeartime)
+		return;	//weird
+
+	if (time < rm_hud_flash_fadetime)
+		a = 1 - bound(0, 1 - 11 * (time - rm_hud_flash_appeartime), 1);
+	else
+		a = 1; // cause fade
+
+	if (a >= 1)
+		a = bound(0, 1 - 11 * (time - (rm_hud_flash_fadetime - 1)), 1);
+
+	if (!a) {
+		rm_hud_flash_enabled = FALSE;
+		return;
+	}
+	i = rm_hud_flash_intensivity * a;
+	i *= imod;
+	a *= rm_hud_flash_alpha;
+	a *= amod;
+	a = min(a, 1.0);
+	if (additive)
+		c = basecolor + rm_hud_flash_color * i;
+	else {
+		c_x = max(basecolor_x * (1 - min(i, 1.0)), rm_hud_flash_color_x * i);
+		c_y = max(basecolor_y * (1 - min(i, 1.0)), rm_hud_flash_color_y * i);
+		c_z = max(basecolor_z * (1 - min(i, 1.0)), rm_hud_flash_color_z * i);
+	}
+	rm_hud_flash_resultalpha = max(basealpha, a);
+	rm_hud_flash_resultcolor = c;
+}
 
 void(vector sectorpos, vector sectorsize) rm_hud_get_sector_border_values {
 	vector pos_left, pos_right, size_left, size_right;
@@ -329,6 +387,9 @@ void(void) rm_hud_draw {
 	float border_basealpha = rm_skin_border_alpha;
 	vector color, hudline = '0 0 0', hudline_pos = '0 0 0', hud_sector = '0 0 0', hud_sector_pos = '0 0 0';
 	float linedrawn = 0;
+	rm_hud_flash_apply(slice_basecolor, slice_basealpha, TRUE, rm_skin_flash_line_imod, rm_skin_flash_line_amod);
+	slice_basecolor = rm_hud_flash_resultcolor;
+	slice_basealpha = rm_hud_flash_resultalpha;
 	float sector_gap, sector_vgap, sector_sgap;
 	float bw_left, bw_right;
 	vector sector_basecolor = rm_skin_sector_color;
@@ -359,6 +420,12 @@ void(void) rm_hud_draw {
 	}
 	vector sector_teamcolor = (base_teamcolor + rm_skin_sector_teamcolor_mod + rm_skin_get_team_color_mod_sector(team_my)) * rm_skin_sector_teamcolor_brightness;
 	vector border_teamcolor = (base_teamcolor + rm_skin_border_teamcolor_mod + rm_skin_get_team_color_mod_border(team_my)) * rm_skin_border_teamcolor_brightness;
+	rm_hud_flash_apply(border_teamcolor, border_teamalpha, TRUE, rm_skin_flash_border_imod, rm_skin_flash_border_amod);
+	border_teamcolor = rm_hud_flash_resultcolor;
+	border_teamalpha = rm_hud_flash_resultalpha;
+	rm_hud_flash_apply(sector_teamcolor, sector_teamalpha, TRUE, rm_skin_flash_sector_imod, rm_skin_flash_sector_amod);
+	sector_teamcolor = rm_hud_flash_resultcolor;
+	sector_teamalpha = rm_hud_flash_resultalpha;
 	vector sector_mod = '0 0 0', vdmg_dmgtakenorigin = '0 0 0';
 	bw_left = rm_skin_get_border_width(RM_SKIN_BORDER_LEFT);
 	bw_right = rm_skin_get_border_width(RM_SKIN_BORDER_RIGHT);
