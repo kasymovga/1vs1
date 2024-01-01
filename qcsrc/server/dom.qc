@@ -80,6 +80,7 @@ void(void) dom_controlpoint_captured {
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 	self.death_time = time;
+	RM(rm_hud_flash_teamcolor_default_spec(self.enemy));
 }
 
 void(void) dom_controlpoint_animate {
