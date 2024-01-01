@@ -60,6 +60,7 @@ set cra_g_spawnreplace_item_nails item_health_small
 set cra_g_spawnreplace_item_rockets item_armor_small
 set cra_g_spawnreplace_item_shells item_armor_small
 set cra_g_nadgets_show_in_sbar 1
+set cra_g_rm 1
 set cra_two_weapons_profile "Camping Rifle Arena with secondary weapon"
 set cra_two_weapons_inherit cra
 set cra_two_weapons_g_twoweapons campingrifle
