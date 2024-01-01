@@ -127,3 +127,5 @@ float(float wr) weapon_minstanex;
 float(float wr) weapon_supershotgun;
 float(float wr) weapon_fireball;
 float(float wr) weapon_porto;
+float(float wr) weapon_pryaxe;
+float(float wr) weapon_flak;

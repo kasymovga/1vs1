@@ -133,6 +133,8 @@ rank.qh
 shootingrange.qh
 voip.qh
 weapon.qh
+rm/hud_flash.qh
+rm.qh
 ../client-server/progs.qc
 ../menu-server/progs.qc
 weapon/two_weapons.qh
@@ -156,8 +158,6 @@ map_info.qh
 debris.qh
 thirdview.qh
 ability.qh
-rm/hud_flash.qh
-rm.qh
 centerprint.qc
 sound.qc
 announce.qc
@@ -224,6 +224,8 @@ weapon/fireball.qc
 weapon/supershotgun.qc
 weapon/zapper.qc
 weapon/selectable.qc
+weapon/pryaxe.qc
+weapon/flak.qc
 weapon/info.qc
 ../common/progs.qc
 shooter.qc

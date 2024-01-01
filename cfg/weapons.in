@@ -102,6 +102,8 @@ set g_start_weapon_hlac 0 "0 = never provide the weapon, 1 = always provide the 
 set g_start_weapon_campingrifle 0 "0 = never provide the weapon, 1 = always provide the weapon"
 set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the weapon"
 set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_flak 0
+set g_start_weapon_pryaxe 0
 set g_start_weapon_selectable ""
 set g_start_weapon_selectable_nails 0
 set g_start_weapon_selectable_shells 0
@@ -630,3 +632,41 @@ set g_balance_porto_remove_on_death 1
 set g_balance_portal_health 200 // these get recharged whenever the portal is used
 set g_balance_portal_lifetime 15 // these get recharged whenever the portal is used
 alias weapporto "impulse 239"
+
+//Pryaxe
+set g_balance_pryaxe_primary_animtime 1
+set g_balance_pryaxe_primary_damage 200
+set g_balance_pryaxe_primary_refire 1
+set g_balance_pryaxe_secondary_animtime 1
+set g_balance_pryaxe_secondary_damage 200
+set g_balance_pryaxe_secondary_refire 1
+set g_balance_pryaxe_swap_buttons 0
+
+//Flak canon
+set g_balance_flak_primary_ammo 3
+set g_balance_flak_primary_animtime 0.3
+set g_balance_flak_primary_bounces 1
+set g_balance_flak_primary_bullets 12
+set g_balance_flak_primary_damage 18
+set g_balance_flak_primary_force 60
+set g_balance_flak_primary_gravityfactor 0
+set g_balance_flak_primary_recoil 5
+set g_balance_flak_primary_refire 0.8
+set g_balance_flak_primary_speed 2500
+set g_balance_flak_primary_spread 0.15
+set g_balance_flak_secondary 1
+set g_balance_flak_secondary_ammo 4
+set g_balance_flak_secondary_animtime 0.3
+set g_balance_flak_secondary_bounces 2
+set g_balance_flak_secondary_bullets 18
+set g_balance_flak_secondary_damage 18
+set g_balance_flak_secondary_force 60
+set g_balance_flak_secondary_gravityfactor 0
+set g_balance_flak_secondary_lifetime 10
+set g_balance_flak_secondary_recoil 5
+set g_balance_flak_secondary_refire 0.6
+set g_balance_flak_secondary_speed 1500
+set g_balance_flak_secondary_speed_up 200
+set g_balance_flak_secondary_spread 0.15
+set g_balance_flak_swap_buttons 0
+set g_weaponreplace_flak ""
