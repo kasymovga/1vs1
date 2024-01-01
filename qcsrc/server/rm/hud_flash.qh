@@ -1,0 +1,2 @@
+void(entity e, vector flashcolor, float staytime, float intensivity, float alph) rm_hud_flash;
+void(entity e, float staytime, float intensivity, float alph) rm_hud_flash_teamcolor;

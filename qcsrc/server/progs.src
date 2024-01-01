@@ -156,6 +156,7 @@ map_info.qh
 debris.qh
 thirdview.qh
 ability.qh
+rm/hud_flash.qh
 centerprint.qc
 sound.qc
 announce.qc
@@ -389,3 +390,4 @@ map_info.qc
 voip.qc
 cheat.qc
 chess.qc
+rm/hud_flash.qc

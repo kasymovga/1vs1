@@ -29,6 +29,28 @@ float rm_hud_flash_appeartime;
 float rm_hud_flash_fadetime;
 float rm_hud_flash_enabled;
 
+void(void) rm_hud_flash_read {
+	float a, i, t;
+	vector c;
+	c_x = net_read_coord();
+	c_y = net_read_coord();
+	c_z = net_read_coord();
+	t = net_read_coord();
+	i = net_read_coord();
+	a = net_read_coord();
+	rm_hud_flash(c, t, i, a);
+}
+
+void(void) rm_hud_flash_team_read {
+	float a, i, t;
+	vector c;
+	c = team_rgb(team_my);
+	t = net_read_coord();
+	i = net_read_coord();
+	a = net_read_coord();
+	rm_hud_flash(c, t, i, a);
+}
+
 void(vector colour, float staytime, float intensivity, float alph) rm_hud_flash {
 	rm_hud_flash_color = colour;
 	rm_hud_flash_intensivity = intensivity;
