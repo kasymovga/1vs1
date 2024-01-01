@@ -256,4 +256,7 @@ void(float ignore) main_init_read {
 		sbar_armor_block_percentage = net_read_coord();
 		sbar_health_nice = net_read_coord();
 	}
+	if (sf & 512) {
+		rm_active = net_read_byte();
+	}
 }

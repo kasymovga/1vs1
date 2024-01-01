@@ -1125,9 +1125,10 @@ vector(vector pos, entity tm, vector rgb, vector bg_size) sbar_scoreboard_table_
 }
 
 float(float on) sbar_scoreboard_fade_check {
-	if (CVAR(sbar_scoreboard_fade_speed) <= 0)
+	if (!rm_active || CVAR(sbar_scoreboard_fade_speed) <= 0) {
+		sbar_scoreboard_fade = 1;
 		return on;
-
+	}
 	if (on)
 		sbar_scoreboard_fade = min(1, max(0.5, sbar_scoreboard_fade + frametime * CVAR(sbar_scoreboard_fade_speed)));
 	else {

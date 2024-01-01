@@ -1,3 +1,1 @@
 void(void) rm_init;
-float rm_active;
-#define RM(BLOCK) if (rm_active) { BLOCK; }

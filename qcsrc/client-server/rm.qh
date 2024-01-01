@@ -1,0 +1,2 @@
+float rm_active;
+#define RM(BLOCK) if (rm_active) { BLOCK; }
