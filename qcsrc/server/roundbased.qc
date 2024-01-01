@@ -151,6 +151,13 @@ void(void) roundbased_world_frame_start {
 			}
 		}
 		roundbased_round_start();
+		if (rm_active) {
+			if (roundbased_winner_team > 0) {
+				FOR_EACH_REALCLIENT(plr)
+					if (plr.team == roundbased_winner_team)
+						rm_hud_flash_teamcolor_default_spec(plr);
+			}
+		}
 	}
 }
 

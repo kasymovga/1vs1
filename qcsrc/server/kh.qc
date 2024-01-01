@@ -453,6 +453,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 	bprint(player.netname, "^7 picked up the ", key.netname, "\n");
 
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
+	RM(rm_hud_flash_teamcolor_default_spec(player));
 }
 
 void kh_Key_DropAll(entity player, float suicide, float died) // runs whenever a player dies
@@ -636,6 +637,12 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 
 	sound_play2all(kh_sound_capture);
 	kh_FinishRound();
+	if (rm_active) {
+		entity pl;
+		FOR_EACH_REALCLIENT(pl)
+			if (pl.team == teem)
+				rm_hud_flash_teamcolor_default_spec(pl);
+	}
 }
 
 void kh_Key_MoveToRandomLocation_Think() {
@@ -852,6 +859,7 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 		{
 			kh_Scores_Event(attacker, targ.kh_next, g_kh_score_carrierfrag - 1, 0);
 			score_player_add(attacker, SP_KH_KCKILLS, 1);
+			RM(rm_hud_flash_teamcolor_default_spec(attacker));
 			// the frag gets added later
 		}
 	}
