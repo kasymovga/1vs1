@@ -81,7 +81,7 @@ void(vector basecolor, float basealpha, float additive, float imod, float amod) 
 	if (a >= 1)
 		a = bound(0, 1 - 11 * (time - (rm_hud_flash_fadetime - 1)), 1);
 
-	if (!a) {
+	if (a <= 0 && time > rm_hud_flash_fadetime) {
 		rm_hud_flash_enabled = FALSE;
 		return;
 	}

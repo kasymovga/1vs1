@@ -157,6 +157,7 @@ debris.qh
 thirdview.qh
 ability.qh
 rm/hud_flash.qh
+rm.qh
 centerprint.qc
 sound.qc
 announce.qc
@@ -391,3 +392,4 @@ voip.qc
 cheat.qc
 chess.qc
 rm/hud_flash.qc
+rm.qc

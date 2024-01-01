@@ -1,2 +1,8 @@
 void(entity e, vector flashcolor, float staytime, float intensivity, float alph) rm_hud_flash;
 void(entity e, float staytime, float intensivity, float alph) rm_hud_flash_teamcolor;
+void(entity pl, vector flashcolor, float staytime, float intensivity, float alph) rm_hud_flash_spec;
+void(entity pl, float staytime, float intensivity, float alph) rm_hud_flash_teamcolor_spec;
+void(entity e, vector flashcolor) rm_hud_flash_default;
+void(entity e, vector flashcolor) rm_hud_flash_default_spec;
+void(entity e) rm_hud_flash_teamcolor_default;
+void(entity e) rm_hud_flash_teamcolor_default_spec;

@@ -95,6 +95,7 @@ float(entity attacker, entity targ, float f) ctf_handle_frags {
 	}
 	if (targ.flagcarried) {
 		score_player_add(attacker, CTF_SCORE_FCKILLS, 1);
+		RM(rm_hud_flash_teamcolor_default_spec(attacker));
 		f = ((g_ctf_win_mode != 2 ) ? g_ctf_personalscore_kill : g_ctf_flagscore_kill);
 		if not(f)
 			score_player_team_add_score(attacker, f);
@@ -479,6 +480,7 @@ void() ctf_flag_touch {
 		ctf_flag_regen (other.flagcarried);
 		other.flagcarried = world;
 		other.next_take_time = time + 1;
+		RM(rm_hud_flash_teamcolor_default_spec(other));
 	}
 	if (self.cnt == CTF_FLAG_BASE)
 	if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2) // only red and blue team can steal flags
@@ -519,6 +521,7 @@ void() ctf_flag_touch {
 		other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ctf_flagcarrier_visible;
 		WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
 		WaypointSprite_Ping(self.sprite);
+		RM(rm_hud_flash_teamcolor_default_spec(other));
 		return;
 	}
 	if (self.cnt == CTF_FLAG_DROPPED) {
@@ -592,6 +595,7 @@ void() ctf_flag_touch {
 			WaypointSprite_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
 			other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ctf_flagcarrier_visible;
 			WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+			RM(rm_hud_flash_teamcolor_default_spec(other));
 		}
 	}
 }
