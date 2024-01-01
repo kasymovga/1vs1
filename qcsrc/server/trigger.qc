@@ -28,8 +28,8 @@ float(void) trigger_exact_hit {
 
 	s = self.solid;
 	self.solid = SOLID_BSP;
-	trigger_exact_hit_mins = other.mins + other.origin + (g_trigger_collisions_exact_extend ? '-.125 -.125 -.125' : '0 0 0');
-	trigger_exact_hit_maxs = other.maxs + other.origin + (g_trigger_collisions_exact_extend ? '.125 .125 .125' : '0 0 0');
+	trigger_exact_hit_mins = other.mins + other.origin + (g_trigger_collisions_exact_extend ? '-1 -1 -1' : '0 0 0');
+	trigger_exact_hit_maxs = other.maxs + other.origin + (g_trigger_collisions_exact_extend ? '1 1 1' : '0 0 0');
 	if (g_trigger_collisions_exact > 1) {
 		string dir = cvar_string("collision_triangle_directional");
 		cvar_set("collision_triangle_directional", "0");
