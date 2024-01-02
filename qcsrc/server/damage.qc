@@ -164,6 +164,10 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 		}
 	}
 	// apply damage
+	if (rm_active) {
+		if (targ.classname != "player")
+			rm_damage_indicator(attacker, hitloc, _damage, 0);
+	}
 	if (_damage != 0 || (self.damageforcescale && vlen(force)))
 	if (self.event_damage) {
 		self.event_damage (inflictor, attacker, _damage, deathtype, hitloc, force);
