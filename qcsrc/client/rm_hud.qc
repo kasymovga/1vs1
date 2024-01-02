@@ -397,6 +397,14 @@ void(vector pos, float hgtype, float hgammo, float regen, float regenrate, float
 	sbar_draw_num(pos + '26 5 0', hgammo, 3, 0, 24, '1 1 1' - '0 1 1' * (!hgammo), 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
+void(string s) rm_hud_draw_name {
+	vector pos = '0 0 0';
+	drawfont = sbar_bigfont;
+	pos_y = CVAR(vid_conheight) - 50 - sbar_fontsize_y * 2;
+	drawcolorcodedstring(pos, s, sbar_fontsize * 2, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawfont = sbar_font;
+}
+
 float rm_hud_vhealth = 0;
 float rm_hud_ammo_progress_weapon;
 float rm_hud_ammo_progress_max;
@@ -427,6 +435,9 @@ void(void) rm_hud_draw {
 	vector base_teamcolor;
 	float hgbonus = getstati(STAT_HGBONUSTYPE);
 	float hgtype = (hgbonus ? hgbonus : getstati(STAT_HGTYPE));
+	if (view_spectatee_status && !view_observer_status) {
+		rm_hud_draw_name(player_name(view_spectatee_status - 1));
+	}
 	if (hgtype && !hgbonus)
 		hgregen = sbar_nadget_regen(STAT_HGREGEN, STAT_HGREGENMAX);
 
