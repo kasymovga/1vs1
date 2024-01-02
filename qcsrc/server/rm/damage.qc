@@ -7,5 +7,5 @@ void(entity to, vector o, float _damage, float admg) rm_damage_indicator {
 	net_write_short(MSG_ONE, o_y);
 	net_write_short(MSG_ONE, o_z);
 	net_write_byte(MSG_ONE, NET_BOUND_TO_BYTE(_damage + 0.4));
-	net_write_byte(MSG_ONE, NET_BOUND_TO_BYTE(admg));
+	net_write_byte(MSG_ONE, NET_BOUND_TO_BYTE(admg + 0.4));
 }
