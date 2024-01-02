@@ -74,7 +74,10 @@ void(entity targ, entity attacker, float _damage, vector ignore) damage_indicato
 void(void) damage_indicator_init {
 	if not(cvar("sv_damageindicator"))
 		return;
-	
+
+	if (rm_active)
+		return;
+
 	CVAR_CACHE(sv_damageindicator_accumulate_interval);
 	damage_indicator_damage_force_done_next = plugin_chain_damage_force_done;
 	plugin_chain_damage_force_done = damage_indicator_damage_force_done;

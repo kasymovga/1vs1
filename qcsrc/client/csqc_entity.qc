@@ -171,6 +171,7 @@ void(void) csqc_entity_init {
 	csqc_entity_temp_parsers[NET_TE_CSQC_TELEPORTATION - NET_TE_CSQC_FIRST] = teleport_teleportation_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RM_HUDFLASH - NET_TE_CSQC_FIRST] = rm_hud_flash_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RM_HUDFLASH_TEAMCOLOR - NET_TE_CSQC_FIRST] = rm_hud_flash_team_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_RM_DAMAGE_INDICATOR - NET_TE_CSQC_FIRST] = rm_damage_indicator_read;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

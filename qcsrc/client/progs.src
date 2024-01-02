@@ -60,6 +60,7 @@ shootingrange.qh
 extension.qh
 rm_skin.qh
 rm_hud.qh
+rm_damage.qh
 porto.qh
 ../client-server/progs.qc
 cvar.qc
@@ -167,3 +168,4 @@ rm_hud.qc
 porto.qc
 translate.qc
 font.qc
+rm_damage.qc
