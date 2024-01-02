@@ -72,7 +72,7 @@ void() chess_draw2d {
 void(vector pos, vector gameinfo_size, float gameinfo_scale) chess_hud {
 	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '108 48 0', gameinfo_size, CVAR(sbar_gameinfo_background))
 	vector p;
-	p = pos +'100 24 0' * gameinfo_scale;
+	p = pos +'100 4 0' * gameinfo_scale;
 	float mins = floor(chess_timer_white / 60);
 	float secs = floor(chess_timer_white - mins * 60);
 	float tens = floor((chess_timer_white - floor(chess_timer_white)) * 10);
