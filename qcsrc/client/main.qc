@@ -258,5 +258,15 @@ void(float ignore) main_init_read {
 	}
 	if (sf & 512) {
 		rm_active = net_read_byte();
+		RM({
+			str_unzone_ifneeded(main_hostname);
+			str_unzone_ifneeded(main_motd);
+			str_unzone_ifneeded(main_profile);
+			str_unzone_ifneeded(main_rexuiz_info);
+			main_hostname = str_zone_ifneeded(net_read_string());
+			main_motd = str_zone_ifneeded(net_read_string());
+			main_profile = str_zone_ifneeded(net_read_string());
+			main_rexuiz_info = str_zone_ifneeded(net_read_string());
+		});
 	}
 }

@@ -405,6 +405,44 @@ void(string s) rm_hud_draw_name {
 	drawfont = sbar_font;
 }
 
+float rm_hud_draw_server_info_movealpha;
+void(void) rm_hud_draw_server_info {
+	if(pmove_vel_x || pmove_vel_y || pmove_vel_z)
+		rm_hud_draw_server_info_movealpha = approach(rm_hud_draw_server_info_movealpha, 1, 3 * frametime);
+	else
+		rm_hud_draw_server_info_movealpha = approach(rm_hud_draw_server_info_movealpha, 0, 3 * frametime);
+
+	vector pos = '0 0.6 0' * CVAR(vid_conheight);
+	float a = 0.5 * (1 - sbar_scoreboard_fade_alpha - rm_hud_draw_server_info_movealpha);
+	if (a <= 0)
+		return;
+
+	vector sz_big  = sbar_fontsize_spec * a * 2;
+	vector sz_norm = sbar_fontsize * a * 2;
+	drawfont = sbar_bigfont;
+	draw_string_colorcoded_center(pos, main_hostname, sz_big, a, DRAWFLAG_NORMAL);
+	pos_y += sz_big_y + sz_norm_y * 0.5;
+	drawfont = sbar_font;
+	draw_string_center(pos, main_rexuiz_info, sz_norm, '1 0.6 0', a, DRAWFLAG_NORMAL);
+	pos_y += sz_norm_y;
+	draw_string_colorcoded_center(pos, strcat("Playing ^5", game_type_name_long(game_type), " ^7on ^2", map_shortname), sz_norm, a, DRAWFLAG_NORMAL);
+	if (main_motd == "")
+		return;
+
+	pos_y += sz_big_y * 1.5;
+	drawfont = sbar_bigfont;
+	draw_string_colorcoded_center(pos, "Message of The Day", sz_big, a, DRAWFLAG_NORMAL);
+	pos_y += sz_big_y + sz_norm_y * 0.5;
+	drawfont = sbar_font;
+	float n = tokenizebyseparator(main_motd, "\n");
+	float i;
+	for (i = 0; i < n; ++i) {
+		draw_string_colorcoded_center(pos, argv(i), sz_norm, a, DRAWFLAG_NORMAL);
+		pos_y += sz_norm_y;
+	}
+	drawfont = sbar_font;
+}
+
 float rm_hud_vhealth = 0;
 float rm_hud_ammo_progress_weapon;
 float rm_hud_ammo_progress_max;
@@ -435,8 +473,11 @@ void(void) rm_hud_draw {
 	vector base_teamcolor;
 	float hgbonus = getstati(STAT_HGBONUSTYPE);
 	float hgtype = (hgbonus ? hgbonus : getstati(STAT_HGTYPE));
-	if (view_spectatee_status && !view_observer_status) {
-		rm_hud_draw_name(player_name(view_spectatee_status - 1));
+	if (view_spectatee_status) {
+		if (view_observer_status) {
+			RM(rm_hud_draw_server_info());
+		} else
+			rm_hud_draw_name(player_name(view_spectatee_status - 1));
 	}
 	if (hgtype && !hgbonus)
 		hgregen = sbar_nadget_regen(STAT_HGREGEN, STAT_HGREGENMAX);

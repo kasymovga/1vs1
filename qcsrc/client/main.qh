@@ -10,4 +10,8 @@ float main_calledhooks;
 float main_isdemo;
 float main_campaign;
 float main_localgame;
+string main_hostname;
+string main_motd;
+string main_profile;
+string main_rexuiz_info;
 .float float1;

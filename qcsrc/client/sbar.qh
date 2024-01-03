@@ -35,6 +35,7 @@ vector sbar_bottomleft;
 float sbar_alpha_fg;
 float sbar_armor_block_percentage;
 float sbar_health_nice;
+float sbar_scoreboard_fade_alpha;
 void(void) sbar_set_defaults;
 
 #define SBAR_POSITION_AND_SCALE(pos,scale,size_from,size_to, bg) \

@@ -164,6 +164,12 @@ float(entity to, float sf) client_init_send {
 	}
 	if (sf & 512) {
 		net_write_byte(MSG_ENTITY, rm_active);
+		RM({
+			net_write_string(MSG_ENTITY, cvar_string("hostname"));
+			net_write_string(MSG_ENTITY, cvar_string("sv_motd"));
+			net_write_string(MSG_ENTITY, cvar_string("g_profile"));
+			net_write_string(MSG_ENTITY, strcat("Rexuiz ", cvar_string("rexuizversion")));
+		});
 	}
 	return TRUE;
 }
