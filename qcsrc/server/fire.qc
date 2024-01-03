@@ -7,6 +7,7 @@ float g_balance_firetransfer_time;
 .float fire_hitsound;
 .entity fire_burner;
 void(void) fire_burner_think;
+#define FIRE_RM_TICRATE 0.2
 
 float(entity e) fire_is_burning {
 	return (time < e.fire_endtime);
@@ -15,9 +16,8 @@ float(entity e) fire_is_burning {
 float(entity e, entity o, float d, float t, float dt) fire_add_damage {
 	float dps;
 	float maxtime, mintime, maxdamage, mindamage, maxdps, mindps, totaldamage, totaltime;
-	if (e.classname == "player") {
-		if (e.deadflag)
-			return -1;
+	if (e.classname == "player" && e.deadflag) {
+		return -1;
 	} else {
 		if (!e.fire_burner) {
 			// print("adding a fire burner to ", e.classname, "\n");
@@ -98,7 +98,8 @@ void(entity e) fire_apply_damage {
 		e.fire_endtime = 0;
 		return;
 	}
-	t = min(frametime, e.fire_endtime - time);
+	RM_ELSE(t = min(FIRE_RM_TICRATE, e.fire_endtime - time), t = min(frametime, e.fire_endtime - time));
+	print("t=", ftos(t), "\n");
 	d = e.fire_damagepersec * t;
 	hi = e.fire_owner.hitsound;
 	ty = e.fire_owner.typehitsound;
@@ -134,14 +135,16 @@ void(void) fire_burner_think {
 		remove(self);
 		return;
 	}
-	fire_apply_effect(self.owner);
 	if not(fire_is_burning(self.owner)) {
 		self.owner.fire_burner = world;
 		remove(self);
 		return;
 	}
+	if (self.owner.classname != "player")
+		fire_apply_effect(self.owner);
+
 	fire_apply_damage(self.owner);
-	self.nextthink = time;
+	RM_ELSE(self.nextthink = time + FIRE_RM_TICRATE, self.nextthink = time);
 }
 
 void(entity from, entity to) fire_move {

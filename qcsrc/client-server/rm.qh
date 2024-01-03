@@ -1,2 +1,3 @@
 float rm_active;
 #define RM(BLOCK) if (rm_active) { BLOCK; }
+#define RM_ELSE(BLOCK1, BLOCK2) if (rm_active) { BLOCK1; } else { BLOCK2; }

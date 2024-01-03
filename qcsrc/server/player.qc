@@ -750,7 +750,6 @@ void() player_think {
 	}
 	plugin_chain_player_think();
 	if (frametime) {
-		fire_apply_damage(self);
 		player_effects();
 	}
 	if (PLAYER_REALLY_DEAD(self)) {
