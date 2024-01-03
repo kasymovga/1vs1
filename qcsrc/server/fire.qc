@@ -99,7 +99,6 @@ void(entity e) fire_apply_damage {
 		return;
 	}
 	RM_ELSE(t = min(FIRE_RM_TICRATE, e.fire_endtime - time), t = min(frametime, e.fire_endtime - time));
-	print("t=", ftos(t), "\n");
 	d = e.fire_damagepersec * t;
 	hi = e.fire_owner.hitsound;
 	ty = e.fire_owner.typehitsound;
