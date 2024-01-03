@@ -887,7 +887,7 @@ void(void) rm_hud_draw {
 					else
 						sbar_draw_num(pos + '26 5 0', (isclip ? max(0, isclip) : a), 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				}
-				if ((isclip || !(sbar_stat_items & itemcode)) && !(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO)) {
+				if ((isclip || !(sbar_stat_items & itemcode)) && !(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO) && i != rm_hud_ammo_last) {
 					pos_y = sbar_bottom_y - 43;
 					pos_x = ammosector_pos - bw_left + ((RM_HUD_SECWIDTH_NORMAL + bw_right)/2) + a_offset - (42/2) * min(a_unused, ((CVAR(cl_rm_hud_alt) && CVAR(vid_conwidth) >= 950) ? 4 : 3));
 					drawpic(pos, rm_hud_get_ammo_picture(i), '10 10 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
