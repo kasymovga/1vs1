@@ -129,6 +129,7 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 		pm1 = ent.origin + ent.mins;
 		pm2 = ent.origin + ent.maxs;
 	} else {
+		if not(ent.iscreature) return NULL;
 		trace_box(ent.origin, ent.mins, ent.maxs, ent.origin + '0 0 -1000', TRACE_MOVE_NOMONSTERS, ent);
 		pm1 = trace_endpos + ent.mins;
 		pm2 = trace_endpos + ent.maxs;
