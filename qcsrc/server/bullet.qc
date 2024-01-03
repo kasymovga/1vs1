@@ -38,7 +38,7 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 
 		// make the entity non-solid so we can hit the next one
 		trace_ent.railgunhit = TRUE;
-		trace_ent.railgunhitloc = end;
+		trace_ent.railgunhitloc = trace_endpos;
 		trace_ent.railgunhittransform = warpzone_trace_transform;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		// stop if this is a wall
