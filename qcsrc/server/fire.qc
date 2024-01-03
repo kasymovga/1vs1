@@ -24,7 +24,7 @@ float(entity e, entity o, float d, float t, float dt) fire_add_damage {
 			e.fire_burner = spawn();
 			e.fire_burner.classname = "fireburner";
 			e.fire_burner.think = fire_burner_think;
-			e.fire_burner.nextthink = time;
+			RM_ELSE(e.fire_burner.nextthink = time + FIRE_RM_TICRATE, e.fire_burner.nextthink = time);
 			e.fire_burner.owner = e;
 		}
 	}
