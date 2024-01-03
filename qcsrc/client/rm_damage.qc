@@ -5,7 +5,10 @@ void(void) rm_damage_indicator_draw {
 	}
 	drawfont = sbar_bigfont;
 	self.alpha -= frametime / CVAR(cl_damageindicator);
-	self.origin_z += frametime * 25;
+	float f = (2 - self.alpha);
+	self.origin_z += frametime * 25 * f;
+	self.origin_x += sin(time * 2) * frametime * 25 * f;
+	self.origin_y += sin(time * 2 + 1.57) * frametime * 25 * f;
 	vector o = view_project_3d_to_2d(self.origin);
 	if (o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
 		return;
