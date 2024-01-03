@@ -1,3 +1,11 @@
+string(float f) rm_damage_indicator_ftos {
+	float tens = f % 10;
+	if (tens) {
+		return strcat(ftos((f - tens) / 10), ".", ftos(tens));
+	}
+	return ftos(f / 10);
+}
+
 void(void) rm_damage_indicator_draw {
 	if (self.alpha <= 0 || !CVAR(cl_damageindicator)) {
 		remove(self);
@@ -15,11 +23,11 @@ void(void) rm_damage_indicator_draw {
 
 	o_z = 0;
 	vector fs = '16 16 0';
-	string d = NET_UNBOUND_FROM_BYTE(self.cnt);
+	string d = rm_damage_indicator_ftos(self.cnt);
 	float dw = stringwidth(d, FALSE) * fs_x;
-	drawstring(o, NET_UNBOUND_FROM_BYTE(self.cnt), fs, '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
+	drawstring(o, d, fs, '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
 	if (self.float1) {
-		string ad = strcat(" [", NET_UNBOUND_FROM_BYTE(self.float1), "]");
+		string ad = strcat(" [", rm_damage_indicator_ftos(self.float1), "]");
 		drawstring(o + '1 0 0' * dw, ad, fs, '1 0.75 0.5', self.alpha, DRAWFLAG_NORMAL);
 	}
 	drawfont = sbar_font;
@@ -31,8 +39,8 @@ void(void) rm_damage_indicator_read {
 	e.origin_x = net_read_short();
 	e.origin_y = net_read_short();
 	e.origin_z = net_read_short();
-	e.cnt = net_read_byte();
-	e.float1 = net_read_byte();
+	e.cnt = net_read_short();
+	e.float1 = net_read_short();
 	e.draw2d = rm_damage_indicator_draw;
 	e.draw2dflag = 1;
 }
