@@ -500,7 +500,7 @@ void(void) rm_hud_draw {
 	rm_hud_flash_apply(sector_teamcolor, sector_teamalpha, TRUE, rm_skin_flash_sector_imod, rm_skin_flash_sector_amod);
 	sector_teamcolor = rm_hud_flash_resultcolor;
 	sector_teamalpha = rm_hud_flash_resultalpha;
-	vector sector_mod = '0 0 0', vdmg_dmgtakenorigin = '0 0 0';
+	vector sector_mod = '0 0 0';
 	bw_left = rm_skin_get_border_width(RM_SKIN_BORDER_LEFT);
 	bw_right = rm_skin_get_border_width(RM_SKIN_BORDER_RIGHT);
 	if (CVAR(cl_rm_hud_alt)) {
@@ -587,7 +587,7 @@ void(void) rm_hud_draw {
 				sector_mod = '0 0 0'; //'-1 0 0';
 				s_health = hud_sector_pos;
 			}
-			vdmg_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
+			rm_hud_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
 			rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ sbar_health_nice, 2), hud_sector_pos, hud_sector,
 					RM_HUD_BG_SECTOR_TEAM, RM_HUD_BG_BORDER_TEAM, RM_HUD_A_SECTOR_TEAM, RM_HUD_A_BORDER_TEAM,
 					RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,
@@ -762,7 +762,7 @@ void(void) rm_hud_draw {
 			hud_sector_pos_x = centersector;
 			sector_mod = '0 0 0';
 			s_health = hud_sector_pos;
-			vdmg_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
+			rm_hud_dmgtakenorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
 			rm_hud_draw_progress_bar_sector(bound(0.01, rm_hud_vhealth/ sbar_health_nice, 2), hud_sector_pos, hud_sector,
 					RM_HUD_BG_SECTOR_TEAM, RM_HUD_BG_BORDER_TEAM, RM_HUD_A_SECTOR_TEAM, RM_HUD_A_BORDER_TEAM,
 					RM_HUD_BG_SECTOR_PROGRESS, RM_HUD_BG_BORDER_PROGRESS, RM_HUD_A_SECTOR_PROGRESS, RM_HUD_A_BORDER_PROGRESS,

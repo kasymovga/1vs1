@@ -1,1 +1,2 @@
 void(void) rm_damage_indicator_read;
+void(void) rm_damage_received_indicator_read;

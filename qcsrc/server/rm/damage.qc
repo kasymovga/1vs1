@@ -27,3 +27,12 @@ void(entity to, vector o, float _damage, float admg) rm_damage_indicator {
 	net_write_short(MSG_ONE, _damage * 10 + 0.5);
 	net_write_short(MSG_ONE, admg * 10 + 0.5);
 }
+
+void(entity to, float _damage, float admg) rm_damage_received_indicator {
+	if (clienttype(to) != CLIENTTYPE_REAL) return;
+	msg_entity = to;
+	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+	net_write_byte(MSG_ONE, NET_TE_CSQC_RM_DAMAGE_RECEIVED_INDICATOR);
+	net_write_short(MSG_ONE, _damage * 10 + 0.5);
+	net_write_short(MSG_ONE, admg * 10 + 0.5);
+}

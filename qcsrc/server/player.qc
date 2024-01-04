@@ -421,7 +421,10 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (take > 100)
 		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
-	RM(rm_damage_indicator(attacker, hitloc, take, save));
+	RM({
+		if (attacker != self) rm_damage_indicator(attacker, hitloc, take, save);
+		rm_damage_received_indicator(self, take, save);
+	});
 	if (time >= self.spawnshieldtime || g_spawnfrags) {
 		self.armorvalue = self.armorvalue - save;
 		self.health = self.health - take;

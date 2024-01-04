@@ -1,1 +1,2 @@
 void(entity to, vector o, float _damage, float admg) rm_damage_indicator;
+void(entity to, float _damage, float admg) rm_damage_received_indicator;
