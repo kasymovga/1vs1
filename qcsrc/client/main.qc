@@ -264,7 +264,7 @@ void(float ignore) main_init_read {
 			str_unzone_ifneeded(main_profile);
 			str_unzone_ifneeded(main_rexuiz_info);
 			main_hostname = str_zone_ifneeded(net_read_string());
-			main_motd = str_zone_ifneeded(net_read_string());
+			main_motd = str_zone_ifneeded(strreplace("\\n", "\n", net_read_string()));
 			main_profile = str_zone_ifneeded(net_read_string());
 			main_rexuiz_info = str_zone_ifneeded(net_read_string());
 		});
