@@ -52,6 +52,7 @@ void dlc_settemp(string name, string value) {
 	registercvar(s2, "");
 	cvar_set(s1, name);
 	cvar_set(s2, cvar_string(name));
+	registercvar(name, "");
 	cvar_set(name, value);
 	cvar_set("_dlc_settemps_count", ftos(n + 1));
 }
