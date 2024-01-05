@@ -389,7 +389,7 @@ float(float req) weapon_extra_think {
 					} else
 						ready_func = weapon_ready;
 
-					weapon_thinkf(WEAPON_FRAME_FIRE2, weapon_extra_primary_animtime[extra_num], ready_func);
+					weapon_thinkf(WEAPON_FRAME_FIRE2, weapon_extra_secondary_animtime[extra_num], ready_func);
 				}
 			}
 		}
