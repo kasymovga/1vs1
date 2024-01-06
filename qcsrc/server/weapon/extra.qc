@@ -1,6 +1,7 @@
 #define WEAPON_EXTRA_COUNT_MAX 8
 .float weapon_extra_clip[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_model[WEAPON_EXTRA_COUNT_MAX];
+string weapon_extra_name[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_ammo_type[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_magazinecapacity[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_reloadtime[WEAPON_EXTRA_COUNT_MAX];
@@ -26,6 +27,7 @@ float weapon_extra_primary_bounces[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_burst[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_primary_sound[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_primary_message[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_primary_recoil[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_ammo[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_type[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_damage[WEAPON_EXTRA_COUNT_MAX];
@@ -46,6 +48,7 @@ float weapon_extra_secondary_lifetime[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_up[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_bounces[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_burst[WEAPON_EXTRA_COUNT_MAX];
+float weapon_extra_secondary_recoil[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_secondary_sound[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_secondary_message[WEAPON_EXTRA_COUNT_MAX];
 enum {
@@ -100,7 +103,7 @@ void(vector start, vector end, vector to) weapon_extra_draw_beam_particles {
 }
 
 void(float num, float secondary, float t) weapon_extra_attack {
-	float d, f, e, r, g, sp, m, hs, spr, hittype, c, it, fl;
+	float d, f, e, r, g, sp, m, hs, spr, hittype, c, it, fl, rec;
 	string s;
 	float at = weapon_extra_ammo_type[num];
 	if (secondary) {
@@ -117,6 +120,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		hs = weapon_extra_secondary_headshotaddeddamage[num];
 		it = weapon_extra_secondary_impact_type[num];
 		fl = weapon_extra_secondary_flash[num];
+		rec = weapon_extra_secondary_recoil[num];
 		hittype = self.weapon | HITTYPE_SECONDARY;
 	} else {
 		c = weapon_extra_primary_shots[num];
@@ -132,6 +136,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		hs = weapon_extra_primary_headshotaddeddamage[num];
 		it = weapon_extra_primary_impact_type[num];
 		fl = weapon_extra_primary_flash[num];
+		rec = weapon_extra_primary_recoil[num];
 		hittype = self.weapon;
 	}
 	if (weapon_extra_magazinecapacity[num])
@@ -141,7 +146,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 	switch (t) {
 	case WEAPON_EXTRA_TYPE_BULLET:
 		bullet_begin(sp);
-		weapon_setup_shot(self, 0 /* TODO: recoil */, s, c);
+		weapon_setup_shot(self, rec, s, c);
 		pointparticles(m, weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 		//weapon_shake(1); //TODO: shake effect
 		for (float i = 0; i < c; i++)
@@ -153,7 +158,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		break;
 	case WEAPON_EXTRA_TYPE_RAIL:
 		antilag_begin(self);
-		weapon_setup_shot(self, 0 /* TODO: recoil */, s, c);
+		weapon_setup_shot(self, rec, s, c);
 		pointparticles(m, weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 		for (float i = 0; i < c; i++) {
 			//TODO: yoda
@@ -174,7 +179,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		break;
 	case WEAPON_EXTRA_TYPE_PROJECTILE:
 		if not(e) return;
-		weapon_setup_shot(self, 0 /* TODO: recoil */, s, c);
+		weapon_setup_shot(self, rec, s, c);
 		pointparticles(m, weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 		entity proj;
 		float up, bounces, lt;
@@ -195,7 +200,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 			proj.cnt = bounces;
 			proj.use = projectile_explode;
 			proj.think = projectile_think2use;
-			proj.nextthink = time + lt /* TODO: lifetime */;
+			proj.nextthink = time + lt;
 			if (g)
 				proj.velocity = (v_forward + randomvec() * spr) * sp + v_up * up;
 			else
@@ -479,11 +484,13 @@ float(string s) weapon_extra_projectile_type_from_name {
 void(void) weapon_extra_init {
 	float at = 0, imp, t;
 	string ats;
-	string modelname;
+	string modelname, name;
 	for (float i = 0; i < WEAPON_EXTRA_COUNT_MAX; i++) {
 		modelname = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_model")));
 		if (modelname == "") continue;
 		weapon_extra_model[i] = modelname;
+		name = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_name")));
+		if (name == "") name = modelname;
 		imp = cvar(strcat("g_weapon_extra_", ftos(i), "_impulse"));
 		weapon_extra_magazinecapacity[i] = cvar(strcat("g_weapon_extra_", ftos(i), "_magazinecapacity"));
 		ats = cvar_string(strcat("g_weapon_extra_", ftos(i), "_ammo_type"));
@@ -521,6 +528,7 @@ void(void) weapon_extra_init {
 		WEAPON_EXTRA_READ(flash)
 		WEAPON_EXTRA_READ(lifetime)
 		WEAPON_EXTRA_READ(burst)
+		WEAPON_EXTRA_READ(recoil)
 		#undef WEAPON_EXTRA_READ
 		weapon_extra_primary_sound[i] = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_sound")));
 		weapon_extra_primary_muzzle[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_muzzle")));
@@ -542,7 +550,7 @@ void(void) weapon_extra_init {
 			weapon_extra_secondary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 
 		weapon_extra_secondary_impact_type[i] = weapon_extra_impact_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_impact_type")));
-		weapon_register(WEAPON_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, 1, modelname, modelname, modelname);
+		weapon_register(WEAPON_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, 1, modelname, modelname, name);
 	}
 }
 
