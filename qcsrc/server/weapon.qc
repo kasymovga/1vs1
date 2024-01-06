@@ -621,7 +621,6 @@ void(float wpn) weapon_defaultspawnfunc {
 					copyentity(oldself, self);
 					self.classname = "replacedweapon";
 					weapon_defaultspawnfunc(e.weapon);
-					break;
 				} else {
 					item_spawnfunc = item_spawnfunc_for(s);
 					if (item_spawnfunc) {
