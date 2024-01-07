@@ -481,10 +481,24 @@ float(string s) weapon_extra_projectile_type_from_name {
 	return 0;
 }
 
+var float(float fr) weapon_extra_weapon_animation_is_melee_next;
+float(float fr) weapon_extra_weapon_animation_is_melee {
+	if (self.weapon > WEAPON_LAST && self.weapon <= WEAPON_LAST_EXTRA) {
+		if (fr == WEAPON_FRAME_FIRE1) {
+			return weapon_extra_primary_type[self.weapon - WEAPON_LAST - 1] == WEAPON_EXTRA_TYPE_MELEE;
+		} else if (fr == WEAPON_FRAME_FIRE2) {
+			return weapon_extra_secondary_type[self.weapon - WEAPON_LAST - 1] == WEAPON_EXTRA_TYPE_MELEE;
+		}
+	}
+	return weapon_extra_weapon_animation_is_melee_next(fr);
+}
+
+float weapon_extra_melee_init_done;
 void(void) weapon_extra_init {
 	float at = 0, imp, t;
 	string ats;
 	string modelname, name;
+	float havemelee = FALSE;
 	for (float i = 0; i < WEAPON_EXTRA_COUNT_MAX; i++) {
 		modelname = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_model")));
 		if (modelname == "") continue;
@@ -534,6 +548,7 @@ void(void) weapon_extra_init {
 		weapon_extra_primary_muzzle[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_muzzle")));
 		t = weapon_extra_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_type")));
 		weapon_extra_primary_type[i] = t;
+		if (t == WEAPON_EXTRA_TYPE_MELEE) havemelee = TRUE;
 		if (t == WEAPON_EXTRA_TYPE_PROJECTILE)
 			weapon_extra_primary_effect[i] = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_effect")));
 		else
@@ -544,6 +559,7 @@ void(void) weapon_extra_init {
 		weapon_extra_secondary_muzzle[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_muzzle")));
 		t = weapon_extra_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_type")));
 		weapon_extra_secondary_type[i] = t;
+		if (t == WEAPON_EXTRA_TYPE_MELEE) havemelee = TRUE;
 		if (t == WEAPON_EXTRA_TYPE_PROJECTILE)
 			weapon_extra_secondary_effect[i] = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 		else
@@ -551,6 +567,11 @@ void(void) weapon_extra_init {
 
 		weapon_extra_secondary_impact_type[i] = weapon_extra_impact_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_impact_type")));
 		weapon_register(WEAPON_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, 1, modelname, modelname, name);
+	}
+	if (havemelee && !weapon_extra_melee_init_done) {
+		weapon_extra_melee_init_done = TRUE;
+		weapon_extra_weapon_animation_is_melee_next = plugin_chain_weapon_animation_is_melee;
+		plugin_chain_weapon_animation_is_melee = weapon_extra_weapon_animation_is_melee;
 	}
 }
 

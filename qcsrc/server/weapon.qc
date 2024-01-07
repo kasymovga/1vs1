@@ -911,7 +911,7 @@ void(float fr, float t, void() func) weapon_thinkf {
 	if (!self.crouch || self.body.weaponentity) { // shoot anim stands up, this looks bad
 		if (fr == WEAPON_FRAME_MELEE2)
 			anim_set(self.body, self.anim_melee2, FALSE, TRUE, TRUE);
-		else if (fr == WEAPON_FRAME_MELEE || (self.weapon == WEAPON_MELEE && fr == WEAPON_FRAME_FIRE2)) {
+		else if (fr == WEAPON_FRAME_MELEE || plugin_chain_weapon_animation_is_melee(fr)) {
 			player_body_animation_set(self, anim_melee, FALSE, TRUE, TRUE, 1);
 			if (self.body)
 				self.body.animstate_endtime = time + t;

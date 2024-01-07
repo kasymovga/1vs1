@@ -44,6 +44,15 @@ void(void) weapon_chainsaw_attack {
 	weapon_thinkf(WEAPON_FRAME_FIRE1, 0.05, weapon_chainsaw_attack);
 }
 
+var float(float fr) weapon_chainsaw_weapon_animation_is_melee_next;
+float(float fr) weapon_chainsaw_weapon_animation_is_melee {
+	if (fr == WEAPON_FRAME_FIRE2 && self.weapon == WEAPON_MELEE)
+		return 1;
+
+	return weapon_chainsaw_weapon_animation_is_melee_next(fr);
+}
+
+float weapon_chainsaw_init_done;
 float(float req) weapon_chainsaw {
 	if (req == WEAPON_REQUEST_AIM) {
 		if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
@@ -81,6 +90,11 @@ float(float req) weapon_chainsaw {
 		dlc_require("chainsaw_v2");
 		dlc_precache_sound("weapons/chainsaw_idle_1.wav");
 		dlc_precache_sound("weapons/chainsaw_active_1.wav");
+		if not(weapon_chainsaw_init_done) {
+			weapon_chainsaw_weapon_animation_is_melee_next = plugin_chain_weapon_animation_is_melee;
+			plugin_chain_weapon_animation_is_melee = weapon_chainsaw_weapon_animation_is_melee;
+			weapon_chainsaw_init_done = TRUE;
+		}
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		//weapon_setup(WEAPON_MELEE);
 		if (g_balance_chainsaw_noise)
