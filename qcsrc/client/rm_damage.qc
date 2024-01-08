@@ -29,7 +29,7 @@ void(void) rm_damage_received_indicator_draw {
 	}
 	self.alpha -= frametime / CVAR(cl_damageindicator);
 	self.origin_y -= frametime * 50;
-	rm_damage_indicator_draw_numbers(self.origin, '20 20 0', self.cnt, self.float1, self.alpha, '1 0.2 0.2');
+	rm_damage_indicator_draw_numbers(self.origin, '20 20 0' * max(1, self.alpha * self.scale), self.cnt, self.float1, self.alpha, '1 0.2 0.2');
 }
 
 void(void) rm_damage_indicator_draw {
@@ -47,7 +47,7 @@ void(void) rm_damage_indicator_draw {
 		return;
 
 	o_z = 0;
-	rm_damage_indicator_draw_numbers(o, self.iorigin1, self.cnt, self.float1, self.alpha, self.iorigin2);
+	rm_damage_indicator_draw_numbers(o, '20 20 0' * max(1, self.alpha * self.scale), self.cnt, self.float1, self.alpha, self.colormod);
 }
 
 void(void) rm_damage_indicator_read {
@@ -63,20 +63,20 @@ void(void) rm_damage_indicator_read {
 	e.draw2d = rm_damage_indicator_draw;
 	e.draw2dflag = 1;
 	if (t == RM_DAMAGE_DEFAULT) {
-		e.iorigin1 = '16 16 0';
-		e.iorigin2 = '1 0.7 0';
+		e.scale = 1;
+		e.colormod = '1 0.7 0';
 	} else if (t == RM_DAMAGE_NOTPLAYER) {
-		e.iorigin1 = '13 13 0';
-		e.iorigin2 = '1 1 1';
+		e.scale = 0.8;
+		e.colormod = '1 1 1';
 	} else if (t == RM_DAMAGE_HEAL) {
-		e.iorigin1 = '16 16 0';
-		e.iorigin2 = '0 1 0';
+		e.scale = 1;
+		e.colormod = '0 1 0';
 	} else if (t == RM_DAMAGE_CRITICAL) {
-		e.iorigin1 = '32 32 0';
-		e.iorigin2 = '1 0.7 0';
+		e.scale = 2;
+		e.colormod = '1 0.7 0';
 	} else if (t == RM_DAMAGE_FRIENDLY_FIRE) {
-		e.iorigin1 = '16 16 0';
-		e.iorigin2 = '1 0.2 0.2';
+		e.scale = 1;
+		e.colormod = '1 0.2 0.2';
 	}
 }
 
@@ -92,6 +92,7 @@ void(void) rm_damage_received_indicator_read {
 		rm_damage_received_indicator_last = e;
 		rm_damage_received_indicator_last_time = time;
 		e.alpha = 1;
+		e.scale = 1.3;
 		e.cnt = net_read_short();
 		e.float1 = net_read_short();
 		e.origin = rm_hud_dmgtakenorigin;
