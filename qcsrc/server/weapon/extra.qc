@@ -83,15 +83,14 @@ float(string s) weapon_extra_type_from_name {
 
 void(void) weapon_extra_projectile_touch {
 	if (self.cnt) {
-		if not(other) {
+		if (!other || !other.takedamage) {
+			PROJECTILE_TOUCH;
 			self.owner = NULL;
 			if (self.cnt > 0) {
 				self.cnt--;
 			}
 			return;
 		}
-	} else {
-		projectile_touch_explode();
 	}
 	projectile_touch_explode();
 }
