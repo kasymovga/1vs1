@@ -15,6 +15,15 @@ void(void) spawnfunc_weapon_pryaxe {
 		remove(self);
 }
 
+var float(float fr) weapon_pryaxe_weapon_animation_is_melee_next;
+float(float fr) weapon_pryaxe_weapon_animation_is_melee {
+	if ((fr == WEAPON_FRAME_FIRE1 || fr == WEAPON_FRAME_FIRE2) && self.weapon == WEAPON_MELEE)
+		return 1;
+
+	return weapon_pryaxe_weapon_animation_is_melee_next(fr);
+}
+
+float weapon_pryaxe_init_done;
 float(float req) weapon_pryaxe {
 	if (req == WEAPON_REQUEST_AIM) {
 		if (random() < bot_melee_love)
@@ -43,6 +52,11 @@ float(float req) weapon_pryaxe {
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_sound("nexball/shoot2.wav");
 		dlc_require("axe_v2");
+		if not(weapon_pryaxe_init_done) {
+			weapon_pryaxe_weapon_animation_is_melee_next = plugin_chain_weapon_animation_is_melee;
+			plugin_chain_weapon_animation_is_melee = weapon_pryaxe_weapon_animation_is_melee;
+			weapon_pryaxe_init_done = TRUE;
+		}
 	} else if (req == WEAPON_REQUEST_SETUP) {
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "rekt himself";
