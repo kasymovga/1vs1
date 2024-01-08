@@ -1,3 +1,11 @@
 float rm_active;
 #define RM(BLOCK) if (rm_active) { BLOCK; }
 #define RM_ELSE(BLOCK1, BLOCK2) if (rm_active) { BLOCK1; } else { BLOCK2; }
+
+enum {
+	RM_DAMAGE_DEFAULT,
+	RM_DAMAGE_HEAL,
+	RM_DAMAGE_NOTPLAYER,
+	RM_DAMAGE_CRITICAL,
+	RM_DAMAGE_FRIENDLY_FIRE,
+};

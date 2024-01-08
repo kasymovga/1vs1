@@ -1,4 +1,4 @@
-void(entity to, vector o, float _damage, float admg) rm_damage_indicator {
+void(entity to, vector o, float _damage, float admg, float type) rm_damage_indicator {
 	if (clienttype(to) != CLIENTTYPE_REAL) return;
 	if not(checkpvs(o, to)) {
 		return;
@@ -21,6 +21,7 @@ void(entity to, vector o, float _damage, float admg) rm_damage_indicator {
 	msg_entity = to;
 	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 	net_write_byte(MSG_ONE, NET_TE_CSQC_RM_DAMAGE_INDICATOR);
+	net_write_byte(MSG_ONE, type);
 	net_write_short(MSG_ONE, o_x);
 	net_write_short(MSG_ONE, o_y);
 	net_write_short(MSG_ONE, o_z);

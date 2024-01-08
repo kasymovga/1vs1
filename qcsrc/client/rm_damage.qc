@@ -47,13 +47,14 @@ void(void) rm_damage_indicator_draw {
 		return;
 
 	o_z = 0;
-	vector fs = '16 16 0';
-	rm_damage_indicator_draw_numbers(o, fs, self.cnt, self.float1, self.alpha, '1 0.7 0');
+	rm_damage_indicator_draw_numbers(o, self.iorigin1, self.cnt, self.float1, self.alpha, self.iorigin2);
 }
 
 void(void) rm_damage_indicator_read {
 	entity e = spawn();
+	float t;
 	e.alpha = 1;
+	t = net_read_byte();
 	e.origin_x = net_read_short();
 	e.origin_y = net_read_short();
 	e.origin_z = net_read_short();
@@ -61,6 +62,22 @@ void(void) rm_damage_indicator_read {
 	e.float1 = net_read_short();
 	e.draw2d = rm_damage_indicator_draw;
 	e.draw2dflag = 1;
+	if (t == RM_DAMAGE_DEFAULT) {
+		e.iorigin1 = '16 16 0';
+		e.iorigin2 = '1 0.7 0';
+	} else if (t == RM_DAMAGE_NOTPLAYER) {
+		e.iorigin1 = '13 13 0';
+		e.iorigin2 = '1 1 1';
+	} else if (t == RM_DAMAGE_HEAL) {
+		e.iorigin1 = '16 16 0';
+		e.iorigin2 = '0 1 0';
+	} else if (t == RM_DAMAGE_CRITICAL) {
+		e.iorigin1 = '32 32 0';
+		e.iorigin2 = '1 0.7 0';
+	} else if (t == RM_DAMAGE_FRIENDLY_FIRE) {
+		e.iorigin1 = '16 16 0';
+		e.iorigin2 = '1 0.2 0.2';
+	}
 }
 
 float rm_damage_received_indicator_last_time;

@@ -422,7 +422,14 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
 	RM({
-		if (attacker != self) rm_damage_indicator(attacker, hitloc, take, save);
+		if (attacker != self) {
+			if (team_mode && attacker.team == self.team)
+				rm_damage_indicator(attacker, hitloc, take, save, RM_DAMAGE_FRIENDLY_FIRE);
+			else if (damage_headshot)
+				rm_damage_indicator(attacker, hitloc, take, save, RM_DAMAGE_CRITICAL);
+			else
+				rm_damage_indicator(attacker, hitloc, take, save, RM_DAMAGE_DEFAULT);
+		}
 		rm_damage_received_indicator(self, take, save);
 	});
 	if (time >= self.spawnshieldtime || g_spawnfrags) {
