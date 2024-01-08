@@ -1,1 +1,3 @@
 void(void) rm_init;
+float rm_pryaxe;
+float rm_flak;

@@ -135,6 +135,9 @@ void(float type) projectile_init {
 	case PROJECTILE_HG_NAPALMSHARD:
 		sizes = '0 -3 -3';
 		break;
+	case PROJECTILE_RM_FLAK_BOMB:
+		sizes = '1 -1 1';
+		break;
 	}
 	projectile_register_auto(type, sizes);
 }

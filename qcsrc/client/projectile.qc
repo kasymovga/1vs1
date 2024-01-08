@@ -134,6 +134,7 @@ void(void) projectile_draw {
 	switch (self.cnt) {
 	case PROJECTILE_GRENADE:
 	case PROJECTILE_GRENADE_BOUNCING:
+	case PROJECTILE_RM_FLAK_BOMB:
 		trailorigin += v_right * 1 + v_forward * -10;
 		break;
 	default:
@@ -287,6 +288,7 @@ void(float ignore) projectile_read {
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_HOOKBOMB:
 		case PROJECTILE_GRENADE_BOUNCING:
+		case PROJECTILE_RM_FLAK_BOMB:
 			self.trail_effect = particleeffectnum("TR_KNIGHTSPIKE");
 			setmodel(self, "models/grenademodel.md3");
 			break;
