@@ -193,7 +193,7 @@ float(float req) weapon_flak {
 		if (g_balance_flak_primary_charge) {
 			if (self.flak_buttonatck1) {
 				if (weapon_prepareattack(0, -1)) {
-					self.flak_charge += frametime;
+					self.flak_charge += frametime / g_balance_flak_primary_charge;
 					weapon_ready();
 				}
 			} else if (self.flak_charge) {
