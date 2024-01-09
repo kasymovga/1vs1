@@ -218,6 +218,7 @@ float(float req) weapon_flak {
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		weapon_flash_precache(WEAPON_FLASH_SHOTGUN);
 		precache_sound("weapons/shotgun_fire.wav");
+		precache_sound("weapons/grenade_fire.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		self.flak_charge = 0;
 	} else if (req == WEAPON_REQUEST_CLEAR) {
