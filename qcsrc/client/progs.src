@@ -61,6 +61,7 @@ extension.qh
 rm_skin.qh
 rm_hud.qh
 rm_damage.qh
+rm_flak.qh
 porto.qh
 ../client-server/progs.qc
 cvar.qc
@@ -169,3 +170,4 @@ porto.qc
 translate.qc
 font.qc
 rm_damage.qc
+rm_flak.qc

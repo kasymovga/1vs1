@@ -31,8 +31,11 @@ float g_balance_flak_secondary_refire;
 float g_balance_flak_secondary_speed;
 float g_balance_flak_secondary_spread;
 
+entity weapon_flak_charge_indicator;
+
 var .float flak_buttonatck1;
 var .float flak_buttonatck2;
+.float flak_charge;
 //.float flak_ammoclip;
 
 void(void) weapoon_flak_pellet_touch {
@@ -72,11 +75,16 @@ entity(vector start, vector dir, float spread, float pSpeed, float _damage, floa
 void(void) weapon_flak_attack {
 	float sc;
 	float bounces;
+	float spread = g_balance_flak_primary_spread;
+	if (g_balance_flak_primary_charge) {
+		float charge = bound(0, self.flak_charge, 1);
+		spread *= ((1 - charge) + g_balance_flak_primary_charge_mod * charge);
+	}
 	bounces = g_balance_flak_primary_bounces;
 	weapon_setup_shot(self, g_balance_flak_primary_recoil, "weapons/shotgun_fire.wav", g_balance_flak_primary_bullets);
 		for (sc = 0; sc < g_balance_flak_primary_bullets; sc = sc + 1)
-			weapon_flak_pellet(weapon_shotorg, weapon_shotdir, g_balance_flak_primary_spread,
-					g_balance_flak_primary_speed + (g_balance_flak_primary_speed * random() * g_balance_flak_primary_spread * 5),
+			weapon_flak_pellet(weapon_shotorg, weapon_shotdir, spread,
+					g_balance_flak_primary_speed + (g_balance_flak_primary_speed * random() * spread * 5),
 					g_balance_flak_primary_damage, g_balance_flak_primary_force, WEAPON_SUPERSHOTGUN, g_balance_flak_primary_gravityfactor, bounces);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -86,6 +94,7 @@ void(void) weapon_flak_attack {
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 	// muzzle flash for 1st person view
 	weapon_flash(WEAPON_FLASH_SHOTGUN);
+	self.flak_charge = 0;
 }
 
 void(void) weapon_flak_bomb_explode {
@@ -149,6 +158,31 @@ void(void) weapon_flak_bomb {
 	weapon_setup_projectile_velocity(gren);
 }
 
+float(entity to, float sf) weapon_flak_charge_indicator_send {
+	net_write_byte(MSG_ENTITY, NET_CSQC_RM_FLAK_CHARGE_INDICATOR);
+	net_write_byte(MSG_ENTITY, sf & 7);
+	if (sf & 1) {
+		net_write_coord(MSG_ENTITY, g_balance_flak_primary_spread);
+		net_write_coord(MSG_ENTITY, g_balance_flak_primary_charge_mod);
+	}
+	if (sf & 2) {
+		net_write_coord(MSG_ENTITY, to.flak_charge);
+		entity e = to.weaponentity;
+		net_write_coord(MSG_ENTITY, e.shotorg_visual_x);
+		net_write_coord(MSG_ENTITY, e.shotorg_visual_y);
+		net_write_coord(MSG_ENTITY, e.shotorg_visual_z);
+	}
+	return TRUE;
+}
+
+float(void) weapon_flak_charge_indicator_customize {
+	if (other.flak_charge) {
+		self.SendFlags |= 2;
+		return TRUE;
+	}
+	return FALSE;
+}
+
 float(float req) weapon_flak {
 	if (req == WEAPON_REQUEST_AIM) {
 		if (vlen(self.origin-self.enemy.origin)>200 || !g_balance_flak_secondary)
@@ -156,10 +190,24 @@ float(float req) weapon_flak {
 		else
 			self.flak_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
 	} else if (req == WEAPON_REQUEST_THINK) {
-		if (self.flak_buttonatck1)
-		if (weapon_prepareattack(0, g_balance_flak_primary_refire)) {
-			weapon_flak_attack();
-			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_flak_primary_animtime, weapon_ready);
+		if (g_balance_flak_primary_charge) {
+			if (self.flak_buttonatck1) {
+				if (weapon_prepareattack(0, -1)) {
+					self.flak_charge += frametime;
+					weapon_ready();
+				}
+			} else if (self.flak_charge) {
+				if (weapon_prepareattack(0, g_balance_flak_primary_refire)) {
+					weapon_flak_attack();
+					weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_flak_primary_animtime, weapon_ready);
+				}
+			}
+		} else {
+			if (self.flak_buttonatck1)
+			if (weapon_prepareattack(0, g_balance_flak_primary_refire)) {
+				weapon_flak_attack();
+				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_flak_primary_animtime, weapon_ready);
+			}
 		}
 		if (self.flak_buttonatck2)
 		if (g_balance_flak_secondary)
@@ -171,6 +219,9 @@ float(float req) weapon_flak {
 		weapon_flash_precache(WEAPON_FLASH_SHOTGUN);
 		precache_sound("weapons/shotgun_fire.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
+		self.flak_charge = 0;
+	} else if (req == WEAPON_REQUEST_CLEAR) {
+		self.flak_charge = 0;
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "used C++ and shot the leg out";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
@@ -217,6 +268,15 @@ float(float req) weapon_flak {
 		}
 		projectile_init(PROJECTILE_RM_FLAK_BOMB);
 		weapon_ammo_limits(WEAPON_SUPERSHOTGUN, g_balance_flak_primary_ammo, g_balance_flak_secondary_ammo);
+		if (g_balance_flak_primary_charge) {
+			if (weapon_flak_charge_indicator) {
+				weapon_flak_charge_indicator.SendFlags |= 1;
+			} else {
+				weapon_flak_charge_indicator = spawn();
+				weapon_flak_charge_indicator.customizeentityforclient = weapon_flak_charge_indicator_customize;
+				net_link_entity(weapon_flak_charge_indicator, FALSE, 0, weapon_flak_charge_indicator_send);
+			}
+		}
 	}
 	return TRUE;
 }

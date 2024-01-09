@@ -729,6 +729,7 @@ float(float secondary, float attacktime) weapon_prepareattack {
 		// don't fire if previous attack is not finished
 		if (WEAPON_ATTACK_FINISHED(self) > time + frametime * 0.5)
 			return FALSE;
+
 		// don't fire while changing weapon
 		if (self.weaponentity.state != WEAPON_STATE_READY)
 			return FALSE;
