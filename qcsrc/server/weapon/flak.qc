@@ -2,6 +2,8 @@ float g_balance_flak_primary_ammo;
 float g_balance_flak_primary_animtime;
 float g_balance_flak_primary_bounces;
 float g_balance_flak_primary_bullets;
+float g_balance_flak_primary_charge;
+float g_balance_flak_primary_charge_mod;
 float g_balance_flak_primary_damage;
 float g_balance_flak_primary_force;
 float g_balance_flak_primary_gravityfactor;
@@ -12,16 +14,21 @@ float g_balance_flak_primary_spread;
 float g_balance_flak_secondary;
 float g_balance_flak_secondary_ammo;
 float g_balance_flak_secondary_animtime;
+float g_balance_flak_secondary_bomb_damage;
+float g_balance_flak_secondary_bomb_edgedamage;
+float g_balance_flak_secondary_bomb_force;
+float g_balance_flak_secondary_bomb_lifetime;
+float g_balance_flak_secondary_bomb_radius;
+float g_balance_flak_secondary_bomb_speed_up;
+float g_balance_flak_secondary_bomb_speed;
 float g_balance_flak_secondary_bounces;
 float g_balance_flak_secondary_bullets;
 float g_balance_flak_secondary_damage;
 float g_balance_flak_secondary_force;
 float g_balance_flak_secondary_gravityfactor;
-float g_balance_flak_secondary_lifetime;
 float g_balance_flak_secondary_recoil;
 float g_balance_flak_secondary_refire;
 float g_balance_flak_secondary_speed;
-float g_balance_flak_secondary_speed_up;
 float g_balance_flak_secondary_spread;
 
 var .float flak_buttonatck1;
@@ -123,25 +130,22 @@ void(void) weapon_flak_bomb_touch {
 void(void) weapon_flak_bomb {
 	entity gren;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - g_balance_flak_secondary_ammo;
+		self.ammo_shells = self.ammo_shells - g_balance_flak_secondary_ammo;
 
 	//if (g_balance_flak_magazinecapacity)
 	//	self.flak_ammoclip -= 1;
 
 	weapon_setup_shot(self, g_balance_flak_secondary_recoil, "weapons/grenade_fire.wav", 1);
 	//weapon_shotdir = v_forward; // no TrueAim for grenades please
-	if (g_balance_flak_secondary_speed_up) {
-		weapon_shotdir = normalize(weapon_shotdir + '0 0 1' * g_balance_grenadelauncher_primary_up);
-	}
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, PROJECTILE_RM_FLAK_BOMB, TRUE, self);
 	projectile_setup(gren, weapon_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_SUPERSHOTGUN | HITTYPE_SECONDARY, 0,
 			0, 0, 0, 1, MOVETYPE_TOSS);
-	gren.nextthink = time + g_balance_flak_secondary_lifetime;
+	gren.nextthink = time + g_balance_flak_secondary_bomb_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_flak_bomb_explode;
 	gren.touch = weapon_flak_bomb_touch;
-	gren.velocity = weapon_shotdir * g_balance_flak_secondary_speed + v_up * g_balance_flak_secondary_speed_up;
+	gren.velocity = weapon_shotdir * g_balance_flak_secondary_bomb_speed + v_up * g_balance_flak_secondary_bomb_speed_up;
 	weapon_setup_projectile_velocity(gren);
 }
 
@@ -176,6 +180,8 @@ float(float req) weapon_flak {
 		CVAR_CACHE(g_balance_flak_primary_animtime);
 		CVAR_CACHE(g_balance_flak_primary_bounces);
 		CVAR_CACHE(g_balance_flak_primary_bullets);
+		CVAR_CACHE(g_balance_flak_primary_charge);
+		CVAR_CACHE(g_balance_flak_primary_charge_mod);
 		CVAR_CACHE(g_balance_flak_primary_damage);
 		CVAR_CACHE(g_balance_flak_primary_force);
 		CVAR_CACHE(g_balance_flak_primary_gravityfactor);
@@ -186,16 +192,21 @@ float(float req) weapon_flak {
 		CVAR_CACHE(g_balance_flak_secondary);
 		CVAR_CACHE(g_balance_flak_secondary_ammo);
 		CVAR_CACHE(g_balance_flak_secondary_animtime);
+		CVAR_CACHE(g_balance_flak_secondary_bomb_damage);
+		CVAR_CACHE(g_balance_flak_secondary_bomb_edgedamage);
+		CVAR_CACHE(g_balance_flak_secondary_bomb_force);
+		CVAR_CACHE(g_balance_flak_secondary_bomb_lifetime);
+		CVAR_CACHE(g_balance_flak_secondary_bomb_radius);
+		CVAR_CACHE(g_balance_flak_secondary_bomb_speed);
+		CVAR_CACHE(g_balance_flak_secondary_bomb_speed_up);
 		CVAR_CACHE(g_balance_flak_secondary_bounces);
 		CVAR_CACHE(g_balance_flak_secondary_bullets);
 		CVAR_CACHE(g_balance_flak_secondary_damage);
 		CVAR_CACHE(g_balance_flak_secondary_force);
 		CVAR_CACHE(g_balance_flak_secondary_gravityfactor);
-		CVAR_CACHE(g_balance_flak_secondary_lifetime);
 		CVAR_CACHE(g_balance_flak_secondary_recoil);
 		CVAR_CACHE(g_balance_flak_secondary_refire);
 		CVAR_CACHE(g_balance_flak_secondary_speed);
-		CVAR_CACHE(g_balance_flak_secondary_speed_up);
 		CVAR_CACHE(g_balance_flak_secondary_spread);
 		if (cvar("g_balance_flak_swap_buttons")) {
 			flak_buttonatck1 = BUTTON_ATCK2;
