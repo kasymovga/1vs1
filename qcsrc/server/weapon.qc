@@ -6,6 +6,7 @@ float g_projectiles_newton_style_2_maxfactor;
 float g_projectiles_newton_style_2_minfactor;
 float g_weaponratefactor;
 float g_weapon_throw_mode;
+float g_showweaponspawns;
 vector sv_qcanimation_melee_morph1angles;
 vector sv_qcanimation_melee_morph2angles;
 vector sv_qcanimation_melee_morph1origin;
@@ -469,10 +470,9 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 	}
 	if (complain)
 	if (clienttype(cl) == CLIENTTYPE_REAL) {
-		// DRESK - 3/16/07
-		// Report Proper Weapon Status / Modified Weapon Ownership Message
 		if ((weapon_spawned_list & wi.weapons) || (weapon_spawned_extra_list & wi.weapons_extra)) {
 			sprint(cl, strcat("You do not have the ^2", weapon_name(wpn), "\n") );
+			if (g_showweaponspawns)
 			if (self.client_flags & CLIENT_FLAG_SHOWWEAPONS) {
 				entity e;
 				string s;
@@ -1255,6 +1255,7 @@ void(void) weapon_init {
 	CVAR_CACHE(g_recoil_extra);
 	CVAR_CACHE(g_recoil_extra_spread);
 	CVAR_CACHE(g_weapon_throw_mode);
+	CVAR_CACHE(g_showweaponspawns);
 	CVAR_CACHE(sv_debug_weapon_tags);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
