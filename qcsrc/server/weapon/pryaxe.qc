@@ -58,7 +58,6 @@ void(void) weapon_pryaxe_flyback {
 	self.think = weapon_pryaxe_flyback_think;
 	self.movetype = MOVETYPE_NOCLIP;
 	self.solid = SOLID_NOT;
-	self.speed = vlen(self.velocity);
 	//remove(self);
 }
 
@@ -83,7 +82,8 @@ void(float issecondary) weapon_pryaxe_throw {
 	proj.use = weapon_pryaxe_flyback;
 	proj.think = projectile_think2use;
 	proj.touch = weapon_pryaxe_touch;
-	proj.velocity = weapon_shotdir * (issecondary ? g_balance_pryaxe_secondary_throw_speed : g_balance_pryaxe_primary_throw_speed);
+	proj.speed = (issecondary ? g_balance_pryaxe_secondary_throw_speed : g_balance_pryaxe_primary_throw_speed);
+	proj.velocity = weapon_shotdir * proj.speed;
 	weapon_setup_projectile_velocity(proj);
 	weapon_ready();
 	self.pryaxe_throwed = proj;
