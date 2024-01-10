@@ -161,6 +161,12 @@ void(void) effect_impact_read {
 			builtin_pointsound(sorg, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
 
 		break;
+	case EFFECT_IMPACT_RM_PRYAXE:
+		pointparticles(particleeffectnum("hagar_bounce"), org, backoff * 1000, 5);
+		if (!issilent)
+			builtin_pointsound(sorg, strcat("weapons/pryaxe_impact", ftos(floor(random() * 3) + 1), ".wav"), VOL_BASE, ATTN_NORM);
+
+		break;
 	default:
 		//print("Unhandled damage of weapon ", ftos(hitwep), "\n");
 		break;

@@ -125,6 +125,7 @@ void(float type) projectile_init {
 		sizes = '8 -8 8';
 		break;
 	case PROJECTILE_FIREMINE:
+	case PROJECTILE_RM_PRYAXE:
 		sizes = '4 -4 4';
 		break;
 	case PROJECTILE_ROCKET:

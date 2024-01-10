@@ -634,12 +634,26 @@ set g_balance_portal_lifetime 15 // these get recharged whenever the portal is u
 alias weapporto "impulse 239"
 
 //Pryaxe
-set g_balance_pryaxe_primary_animtime 1
-set g_balance_pryaxe_primary_damage 200
+set g_balance_pryaxe_primary_animtime 0.6
+set g_balance_pryaxe_primary_damage 120
+set g_balance_pryaxe_primary_delay 0.3
+set g_balance_pryaxe_primary_force 400
+set g_balance_pryaxe_primary_range 60
 set g_balance_pryaxe_primary_refire 1
-set g_balance_pryaxe_secondary_animtime 1
-set g_balance_pryaxe_secondary_damage 200
+set g_balance_pryaxe_primary_throw 0
+set g_balance_pryaxe_primary_throw_damage 120
+set g_balance_pryaxe_primary_throw_force 400
+set g_balance_pryaxe_primary_throw_speed 2000
+set g_balance_pryaxe_secondary_animtime 0.6
+set g_balance_pryaxe_secondary_damage 120
+set g_balance_pryaxe_secondary_delay 0.3
+set g_balance_pryaxe_secondary_force 400
+set g_balance_pryaxe_secondary_range 60
 set g_balance_pryaxe_secondary_refire 1
+set g_balance_pryaxe_secondary_throw 2
+set g_balance_pryaxe_secondary_throw_damage 120
+set g_balance_pryaxe_secondary_throw_force 400
+set g_balance_pryaxe_secondary_throw_speed 2000
 set g_balance_pryaxe_swap_buttons 0
 
 //Flak canon

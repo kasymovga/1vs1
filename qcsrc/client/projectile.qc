@@ -111,6 +111,7 @@ void(void) projectile_draw {
 			break;
 		case PROJECTILE_HG_GENERIC:
 		case PROJECTILE_HG_NAPALM:
+		case PROJECTILE_RM_PRYAXE:
 			rot = '0 1000 0'; // sideways
 			break;
 		case PROJECTILE_HOOKBOMB:
@@ -409,6 +410,9 @@ void(float ignore) projectile_read {
 			setmodel(self, "models/raze.md3");
 			projectile_colormap_setup(COLOR_TEAM1);
 			self.trail_effect = particles_rm_effectnum_team("RM_HG_PLASMA", self.team, 1);
+			break;
+		case PROJECTILE_RM_PRYAXE:
+			setmodel(self, "models/weapons/pryaxe2_thrown.md3");
 			break;
 		default:
 			error("Received invalid CSQC projectile, can't work with this!");
