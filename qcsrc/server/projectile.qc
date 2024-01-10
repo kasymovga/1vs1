@@ -125,7 +125,6 @@ void(float type) projectile_init {
 		sizes = '8 -8 8';
 		break;
 	case PROJECTILE_FIREMINE:
-	case PROJECTILE_RM_PRYAXE:
 		sizes = '4 -4 4';
 		break;
 	case PROJECTILE_ROCKET:
@@ -138,6 +137,9 @@ void(float type) projectile_init {
 		break;
 	case PROJECTILE_RM_FLAK_BOMB:
 		sizes = '1 -1 1';
+		break;
+	case PROJECTILE_RM_PRYAXE:
+		sizes = '16 -4 4';
 		break;
 	}
 	projectile_register_auto(type, sizes);
