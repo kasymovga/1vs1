@@ -547,7 +547,11 @@ void(void) weapon_frame {
 		}
 	}
 	entity wi;
-	wi = weapon_info(self.weapon);
+	if (self.weapon)
+		wi = weapon_info(self.weapon);
+	else
+		wi = NULL;
+
 	// call the think code which may fire the weapon
 	// and do so multiple times to resolve framerate dependency issues if the
 	// server framerate is very low and the weapon fire rate very high
