@@ -159,10 +159,24 @@ float(float f) weapon_pryaxe_weapon_switch_mod {
 float weapon_pryaxe_init_done;
 float(float req) weapon_pryaxe {
 	if (req == WEAPON_REQUEST_AIM) {
-		if (random() < bot_melee_love)
-		if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
-		if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE))
-			self.BUTTON_ATCK = TRUE;
+		if (g_balance_pryaxe_primary_throw) {
+			if (bot_aim(g_balance_pryaxe_primary_throw_speed, 0, 10, FALSE)) {
+				self.pryaxe_buttonatck1 = TRUE;
+			}
+		} else {
+			if (vlen(self.origin - self.enemy.origin) < g_balance_pryaxe_primary_range * 1.5)
+			if (bot_aim(g_balance_pryaxe_primary_range * 100, 0, 0.1, FALSE))
+				self.pryaxe_buttonatck1 = TRUE;
+		}
+		if (g_balance_pryaxe_secondary_throw) {
+			if (bot_aim(g_balance_pryaxe_secondary_throw_speed, 0, 10, FALSE)) {
+				self.pryaxe_buttonatck2 = TRUE;
+			}
+		} else {
+			if (vlen(self.origin - self.enemy.origin) < g_balance_pryaxe_secondary_range * 1.5)
+			if (bot_aim(g_balance_pryaxe_secondary_range * 100, 0, 0.1, FALSE))
+				self.pryaxe_buttonatck2 = TRUE;
+		}
 	} else if (req == WEAPON_REQUEST_THINK) {
 		if (self.pryaxe_buttonatck1) {
 			if (weapon_prepareattack(0, g_balance_pryaxe_primary_refire)) {
