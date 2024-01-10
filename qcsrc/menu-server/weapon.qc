@@ -65,7 +65,7 @@ void(void) weapon_register_weapons {
 	WEAPON_REGISTER(WEAPON_ZAPPER, weapon_zapper, IT_CELLS, 5, 1, 0, BOT_PICKUP_RATING_MID, "zapper", "zapper", "Zapper");
 	#ifdef SVQC
 	if (rm_active && rm_pryaxe)
-		WEAPON_REGISTER(WEAPON_MELEE, weapon_pryaxe, IT_SHELLS, 1, 1, 0, BOT_PICKUP_RATING_MID, "pryaxe2", "pryaxe", "PryAxe");
+		WEAPON_REGISTER(WEAPON_MELEE, weapon_pryaxe, 0, 1, 1, 0, BOT_PICKUP_RATING_MID, "pryaxe2", "pryaxe", "PryAxe");
 	else
 	#endif
 		WEAPON_REGISTER(WEAPON_MELEE, weapon_chainsaw, 0, 1, 1, 0, BOT_PICKUP_RATING_MID, "chainsaw", "chainsaw", "Chainsaw");
