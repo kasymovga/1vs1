@@ -269,6 +269,7 @@ float(float req) weapon_flak {
 		}
 		projectile_init(PROJECTILE_RM_FLAK_BOMB);
 		weapon_ammo_limits(WEAPON_SUPERSHOTGUN, g_balance_flak_primary_ammo, g_balance_flak_secondary_ammo);
+		dlc_require("flak");
 		if (g_balance_flak_primary_charge) {
 			if (weapon_flak_charge_indicator) {
 				weapon_flak_charge_indicator.SendFlags |= 1;

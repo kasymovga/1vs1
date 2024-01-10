@@ -152,7 +152,11 @@ float(float req) weapon_pryaxe {
 			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_pryaxe_primary_animtime, weapon_pryaxe_attack1);
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
-		precache_sound("weapons/swing.wav");
+		dlc_require("pryaxe");
+		dlc_precache_sound("weapons/swing.wav");
+		dlc_precache_sound("weapons/pryaxe_impact1.wav");
+		dlc_precache_sound("weapons/pryaxe_impact2.wav");
+		dlc_precache_sound("weapons/pryaxe_impact3.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		self.pryaxe_throwed = NULL;
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
