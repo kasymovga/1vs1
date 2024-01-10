@@ -30,18 +30,48 @@ void(void) spawnfunc_weapon_pryaxe {
 		remove(self);
 }
 
-void(void) weapon_pryaxe_flyback {
+void(void) weapon_pryaxe_return {
 	if (self == self.realowner.pryaxe_throwed)
 		self.realowner.pryaxe_throwed = NULL;
 
 	remove(self);
 }
 
-void(void) weapon_pryaxe_touch {
-	if (self == self.realowner.pryaxe_throwed)
-		self.realowner.pryaxe_throwed = NULL;
+void(void) weapon_pryaxe_flyback_think {
+	if (self != self.realowner.pryaxe_throwed) {
+		remove(self);
+		return;
+	}
+	vector v = ENTITY_CENTER(self.realowner) - ENTITY_CENTER(self);
+	if (vlen(v) < self.speed * sys_ticrate) {
+		weapon_pryaxe_return();
+		return;
+	}
+	self.velocity = normalize(v) * self.speed;
+	self.nextthink = time;
+}
 
-	projectile_explode();
+void(void) weapon_pryaxe_flyback {
+	self.csqcprojectile_clientanimate = FALSE;
+	projectile_update(self);
+	self.nextthink = time;
+	self.think = weapon_pryaxe_flyback_think;
+	self.movetype = MOVETYPE_NOCLIP;
+	self.solid = SOLID_NOT;
+	self.speed = vlen(self.velocity);
+	//remove(self);
+}
+
+void(void) weapon_pryaxe_touch {
+	if (other && other.takedamage) {
+		damage(other, self.realowner, self.realowner, self.dmg,
+				WEAPON_MELEE, ENTITY_CENTER(self), normalize(self.velocity) * self.dmg_force);
+	}
+	if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+	if (!other || other.solid == SOLID_BSP) {
+		effect_impact(ENTITY_CENTER(self), self.dmg, self.dmg, 0, normalize(self.velocity) * self.dmg_force, EFFECT_IMPACT_RM_PRYAXE, self.realowner);
+	}
+	weapon_pryaxe_flyback();
 }
 
 void(float issecondary) weapon_pryaxe_throw {
