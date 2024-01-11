@@ -11,6 +11,7 @@ float g_balance_flak_primary_gravityfactor;
 float g_balance_flak_primary_recoil;
 float g_balance_flak_primary_refire;
 float g_balance_flak_primary_speed;
+float g_balance_flak_primary_speed_up;
 float g_balance_flak_primary_spread_side;
 float g_balance_flak_primary_spread_vertical;
 float g_balance_flak_secondary;
@@ -61,13 +62,13 @@ void(void) weapoon_flak_pellet_touch {
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-entity(vector start, vector dir, float spread_side, float spread_ver, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces) weapon_flak_pellet {
+entity(vector start, vector dir, float spread_side, float spread_ver, float pSpeed, float speed_up, float _damage, float force, float dtype, float gravityfactor, float bounces) weapon_flak_pellet {
 	entity proj;
 	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
 	projectile_setup(proj, start, 0, dtype, _damage, 0, 0, force, gravityfactor, (bounces ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
 	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;
-	proj.velocity = normalize(dir + random_2() * spread_side * v_right + random_2() * spread_ver * v_up) * pSpeed;
+	proj.velocity = normalize(dir + random_2() * spread_side * v_right + random_2() * spread_ver * v_up) * pSpeed + '0 0 1' * speed_up;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = weapoon_flak_pellet_touch;
 	proj.cnt = bounces;
@@ -88,7 +89,7 @@ void(void) weapon_flak_attack {
 	weapon_setup_shot(self, g_balance_flak_primary_recoil, "weapons/shotgun_fire.wav", g_balance_flak_primary_bullets);
 	for (sc = 0; sc < g_balance_flak_primary_bullets; sc = sc + 1)
 		weapon_flak_pellet(weapon_shotorg, weapon_shotdir, spread_side, spread_vertical,
-				g_balance_flak_primary_speed,
+				g_balance_flak_primary_speed, g_balance_flak_primary_speed_up,
 				g_balance_flak_primary_damage, g_balance_flak_primary_force, WEAPON_SUPERSHOTGUN, g_balance_flak_primary_gravityfactor, bounces);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -108,7 +109,7 @@ void(void) weapon_flak_bomb_explode {
 		makevectors(vectoangles(self.movedir));
 		for (sc = 0; sc < g_balance_flak_secondary_bullets; sc++) {
 			e = weapon_flak_pellet(ENTITY_CENTER(self), self.movedir, g_balance_flak_secondary_spread, g_balance_flak_secondary_spread,
-					g_balance_flak_secondary_speed,
+					g_balance_flak_secondary_speed, 0,
 					g_balance_flak_secondary_damage, g_balance_flak_secondary_force,
 					WEAPON_SUPERSHOTGUN | HITTYPE_SECONDARY | HITTYPE_BOUNCE, g_balance_flak_secondary_gravityfactor, g_balance_flak_secondary_bounces);
 			e.owner = NULL;
@@ -117,7 +118,7 @@ void(void) weapon_flak_bomb_explode {
 	} else {
 		for (sc = 0; sc < g_balance_flak_secondary_bullets; sc++) {
 			e = weapon_flak_pellet(ENTITY_CENTER(self), randomvec(), 0, 0,
-					g_balance_flak_secondary_speed,
+					g_balance_flak_secondary_speed, 0,
 					g_balance_flak_secondary_damage, g_balance_flak_secondary_force,
 					WEAPON_SUPERSHOTGUN | HITTYPE_SECONDARY | HITTYPE_BOUNCE, g_balance_flak_secondary_gravityfactor, g_balance_flak_secondary_bounces);
 			e.owner = NULL;
@@ -247,6 +248,7 @@ float(float req) weapon_flak {
 		CVAR_CACHE(g_balance_flak_primary_recoil);
 		CVAR_CACHE(g_balance_flak_primary_refire);
 		CVAR_CACHE(g_balance_flak_primary_speed);
+		CVAR_CACHE(g_balance_flak_primary_speed_up);
 		CVAR_CACHE(g_balance_flak_primary_spread_side);
 		CVAR_CACHE(g_balance_flak_primary_spread_vertical);
 		CVAR_CACHE(g_balance_flak_secondary);

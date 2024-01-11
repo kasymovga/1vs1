@@ -666,12 +666,13 @@ set g_balance_flak_primary_charge_spreadmod_side -1
 set g_balance_flak_primary_charge_spreadmod_vertical 1
 set g_balance_flak_primary_damage 18
 set g_balance_flak_primary_force 60
-set g_balance_flak_primary_gravityfactor 0
+set g_balance_flak_primary_gravityfactor 1
 set g_balance_flak_primary_recoil 5
 set g_balance_flak_primary_refire 0.8
-set g_balance_flak_primary_speed 2500
+set g_balance_flak_primary_speed 4000
+set g_balance_flak_primary_speed_up 140
 set g_balance_flak_primary_spread_side 0.34
-set g_balance_flak_primary_spread_vertical 0.07
+set g_balance_flak_primary_spread_vertical 0.035
 set g_balance_flak_secondary 1
 set g_balance_flak_secondary_ammo 4
 set g_balance_flak_secondary_animtime 0.3
