@@ -169,6 +169,7 @@ float(entity to, float sf) weapon_flak_charge_indicator_send {
 	if (sf & 1) {
 		net_write_coord(MSG_ENTITY, g_balance_flak_primary_spread_side);
 		net_write_coord(MSG_ENTITY, g_balance_flak_primary_charge_spreadmod_side);
+		net_write_coord(MSG_ENTITY, 1 / g_balance_flak_primary_charge);
 	}
 	if (sf & 2) {
 		net_write_coord(MSG_ENTITY, to.flak_charge);
