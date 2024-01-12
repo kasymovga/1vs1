@@ -126,7 +126,7 @@ void(void) physics_update_status {
 			} else
 				physics_flags |= FL_ONGROUND;
 
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) { //step on sky, usually this is map error
+			if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) && g_steponskydamage) { //step on sky, usually this is map error
 				#ifdef SVQC
 				physics_step_on_sky();
 				#endif

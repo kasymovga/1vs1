@@ -3,7 +3,6 @@
 
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
-float g_steponskydamage;
 float g_nodropdamage;
 float g_jump_nofalldamage;
 float g_punchangle_decrease_speed;
@@ -753,6 +752,7 @@ float(entity to, float sf) physics_send {
 				+ (g_climb ? 4 : 0)
 				+ (g_walk_align_to_ground ? 8 : 0)
 				+ (g_nofriction_cpm_hacks ? 16 : 0)
+				+ (g_steponskydamage ? 32 : 0)
 				;
 		net_write_byte(MSG_ENTITY, switches);
 		if (g_walljump) {

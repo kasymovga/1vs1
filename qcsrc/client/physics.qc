@@ -405,6 +405,7 @@ void(float isnew) physics_read {
 		g_climb = switches & 4;
 		g_walk_align_to_ground = switches & 8;
 		g_nofriction_cpm_hacks = switches & 16;
+		g_steponskydamage = switches & 32;
 		if (g_sideview)
 			physics_plug_adjust_view = physics_side_adjust_view;
 		else if (g_topview)

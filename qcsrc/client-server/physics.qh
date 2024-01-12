@@ -61,6 +61,7 @@ float g_velocity_rounding;
 float g_overbounce;
 float g_walk_align_to_ground;
 float g_nofriction_cpm_hacks;
+float g_steponskydamage;
 
 float physics_deadflag;
 float physics_cantjump;
