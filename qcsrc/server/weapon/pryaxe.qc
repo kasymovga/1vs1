@@ -196,6 +196,7 @@ float(float req) weapon_pryaxe {
 			weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_pryaxe_primary_animtime, weapon_pryaxe_attack1);
 		}
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
+		dlc_require("pryaxe_balls");
 		dlc_require("pryaxe");
 		dlc_precache_sound("weapons/swing.wav");
 		dlc_precache_sound("weapons/pryaxe_impact1.wav");
