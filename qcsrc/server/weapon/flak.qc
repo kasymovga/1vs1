@@ -244,20 +244,32 @@ float(float req) weapon_flak {
 				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_flak_secondary_animtime, weapon_ready);
 			}
 		}
+		if (g_balance_flak_magazinecapacity) {
+			self.ammoclip = self.flak_ammoclip;
+			if (self.ammoclip <= 0) self.ammoclip = -1;
+		}
 	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_flak_reload();
-	} else if (req == WEAPON_REQUEST_PRECACHE) {
-		weapon_flash_precache(WEAPON_FLASH_SHOTGUN);
-		precache_sound("weapons/shotgun_fire.wav");
-		precache_sound("weapons/grenade_fire.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		self.flak_charge = 0;
+		if (g_balance_flak_magazinecapacity) {
+			weapon_clip_checkmaxbullets(g_balance_flak_magazinecapacity, ammo_shells, flak_ammoclip, g_balance_flak_primary_ammo, g_balance_flak_secondary_ammo);
+			if not(self.flak_ammoclip)
+				self.flak_ammoclip = -1;
+		}
+	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
+		if (g_balance_flak_magazinecapacity)
+			self.flak_ammoclip = g_balance_flak_magazinecapacity;
 	} else if (req == WEAPON_REQUEST_CLEAR) {
 		self.flak_charge = 0;
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "used C++ and shot the leg out";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "was gunned by"; // unchecked: SECONDARY
+	} else if (req == WEAPON_REQUEST_PRECACHE) {
+		weapon_flash_precache(WEAPON_FLASH_SHOTGUN);
+		precache_sound("weapons/shotgun_fire.wav");
+		precache_sound("weapons/grenade_fire.wav");
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_flak_magazinecapacity);
 		CVAR_CACHE(g_balance_flak_primary_ammo);
