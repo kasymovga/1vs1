@@ -374,9 +374,14 @@ void(entity w, entity p, float a) weapon_model_attach_to_player {
 }
 
 void(void) weapon_model_exterior_dlc_reset {
-	if (self.owner.weaponname != "")
-		setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
-	else
+	string s;
+	if (self.owner.weaponname != "") {
+		s = strcat("models/weapons/o_", self.owner.weaponname, ".md3");
+		if (file_exists(s))
+			setmodel(self, s);
+		else
+			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
+	} else
 		self.model = "";
 
 	entity ao = akimbo_owner(self.owner);

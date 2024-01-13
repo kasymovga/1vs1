@@ -590,6 +590,10 @@ void(float wpn) weapon_precache {
 	item_precache(e.model, e.lodmodel1, "weapons/weaponpickup.wav");
 	precache_model(strcat("models/weapons/v_", e.mdl, ".md3"));
 	precache_model(strcat("models/weapons/h_", e.mdl, ".dpm"));
+	string s = strcat("models/weapons/o_", e.mdl, ".md3");
+	if (file_exists(s))
+		precache_model(s);
+
 	entity oldself = self;
 	self = e;
 	e.weapon_func(WEAPON_REQUEST_PRECACHE);
