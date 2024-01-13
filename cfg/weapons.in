@@ -657,6 +657,7 @@ set g_balance_pryaxe_secondary_throw_speed 2000
 set g_balance_pryaxe_swap_buttons 0
 
 //Flak canon
+set g_balance_flak_magazinecapacity 6
 set g_balance_flak_primary_ammo 3
 set g_balance_flak_primary_animtime 0.3
 set g_balance_flak_primary_bounces 1
@@ -673,6 +674,7 @@ set g_balance_flak_primary_speed 4000
 set g_balance_flak_primary_speed_up 140
 set g_balance_flak_primary_spread_side 0.34
 set g_balance_flak_primary_spread_vertical 0.035
+set g_balance_flak_reloadtime 2
 set g_balance_flak_secondary 1
 set g_balance_flak_secondary_ammo 4
 set g_balance_flak_secondary_animtime 0.3

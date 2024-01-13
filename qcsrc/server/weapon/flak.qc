@@ -1,3 +1,4 @@
+float g_balance_flak_magazinecapacity;
 float g_balance_flak_primary_ammo;
 float g_balance_flak_primary_animtime;
 float g_balance_flak_primary_bounces;
@@ -14,6 +15,7 @@ float g_balance_flak_primary_speed;
 float g_balance_flak_primary_speed_up;
 float g_balance_flak_primary_spread_side;
 float g_balance_flak_primary_spread_vertical;
+float g_balance_flak_reloadtime;
 float g_balance_flak_secondary;
 float g_balance_flak_secondary_ammo;
 float g_balance_flak_secondary_animtime;
@@ -39,7 +41,7 @@ entity weapon_flak_charge_indicator;
 var .float flak_buttonatck1;
 var .float flak_buttonatck2;
 .float flak_charge;
-//.float flak_ammoclip;
+.float flak_ammoclip;
 
 void(void) weapoon_flak_pellet_touch {
 	PROJECTILE_TOUCH;
@@ -80,6 +82,9 @@ void(void) weapon_flak_attack {
 	float bounces;
 	float spread_side = g_balance_flak_primary_spread_side;
 	float spread_vertical = g_balance_flak_primary_spread_vertical;
+	if (g_balance_flak_magazinecapacity) {
+		self.flak_ammoclip -= 1;
+	}
 	if (g_balance_flak_primary_charge) {
 		float charge = bound(0, self.flak_charge, 1);
 		spread_side *= ((1 - charge) + g_balance_flak_primary_charge_spreadmod_side * charge);
@@ -147,8 +152,8 @@ void(void) weapon_flak_bomb {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - g_balance_flak_secondary_ammo;
 
-	//if (g_balance_flak_magazinecapacity)
-	//	self.flak_ammoclip -= 1;
+	if (g_balance_flak_magazinecapacity)
+		self.flak_ammoclip -= 1;
 
 	weapon_setup_shot(self, g_balance_flak_secondary_recoil, "weapons/grenade_fire.wav", 1);
 	//weapon_shotdir = v_forward; // no TrueAim for grenades please
@@ -190,6 +195,17 @@ float(void) weapon_flak_charge_indicator_customize {
 	return FALSE;
 }
 
+void(void) weapon_flak_reloadandready {
+	weapon_clip_reloadandready(g_balance_flak_magazinecapacity, ammo_shells, flak_ammoclip,
+			g_balance_flak_primary_ammo, g_balance_flak_secondary_ammo, g_balance_flak_reloadtime);
+}
+
+void(void) weapon_flak_reload {
+	weapon_clip_reload(g_balance_flak_magazinecapacity, ammo_shells, flak_ammoclip, g_balance_flak_primary_ammo,
+			g_balance_flak_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_flak_reloadtime,
+			weapon_flak_reloadandready);
+}
+
 float(float req) weapon_flak {
 	if (req == WEAPON_REQUEST_AIM) {
 		if (vlen(self.origin-self.enemy.origin)>200 || !g_balance_flak_secondary)
@@ -197,31 +213,39 @@ float(float req) weapon_flak {
 		else
 			self.flak_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
 	} else if (req == WEAPON_REQUEST_THINK) {
-		if (g_balance_flak_primary_charge) {
-			if (self.flak_buttonatck1) {
-				if (weapon_prepareattack(0, -1)) {
-					self.flak_charge += frametime / g_balance_flak_primary_charge;
-					weapon_ready();
+		if (g_balance_flak_magazinecapacity && (self.flak_ammoclip < 0 || (!self.flak_ammoclip && (self.flak_buttonatck1 || self.flak_buttonatck2)))) { // forced reload (e.g. because interrupted)
+			if (self.switchweapon == self.weapon)
+			if (self.weaponentity.state == WEAPON_STATE_READY)
+				weapon_flak_reload();
+		} else {
+			if (g_balance_flak_primary_charge) {
+				if (self.flak_buttonatck1) {
+					if (weapon_prepareattack(0, -1)) {
+						self.flak_charge += frametime / g_balance_flak_primary_charge;
+						weapon_ready();
+					}
+				} else if (self.flak_charge) {
+					if (weapon_prepareattack(0, g_balance_flak_primary_refire)) {
+						weapon_flak_attack();
+						weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_flak_primary_animtime, weapon_ready);
+					}
 				}
-			} else if (self.flak_charge) {
+			} else {
+				if (self.flak_buttonatck1)
 				if (weapon_prepareattack(0, g_balance_flak_primary_refire)) {
 					weapon_flak_attack();
 					weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_flak_primary_animtime, weapon_ready);
 				}
 			}
-		} else {
-			if (self.flak_buttonatck1)
-			if (weapon_prepareattack(0, g_balance_flak_primary_refire)) {
-				weapon_flak_attack();
-				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_flak_primary_animtime, weapon_ready);
+			if (self.flak_buttonatck2)
+			if (g_balance_flak_secondary)
+			if (weapon_prepareattack(1, g_balance_flak_secondary_refire)) {
+				weapon_flak_bomb();
+				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_flak_secondary_animtime, weapon_ready);
 			}
 		}
-		if (self.flak_buttonatck2)
-		if (g_balance_flak_secondary)
-		if (weapon_prepareattack(1, g_balance_flak_secondary_refire)) {
-			weapon_flak_bomb();
-			weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_flak_secondary_animtime, weapon_ready);
-		}
+	} else if (req == WEAPON_REQUEST_RELOAD) {
+		weapon_flak_reload();
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		weapon_flash_precache(WEAPON_FLASH_SHOTGUN);
 		precache_sound("weapons/shotgun_fire.wav");
@@ -235,6 +259,7 @@ float(float req) weapon_flak {
 	else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "was gunned by"; // unchecked: SECONDARY
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
+		CVAR_CACHE(g_balance_flak_magazinecapacity);
 		CVAR_CACHE(g_balance_flak_primary_ammo);
 		CVAR_CACHE(g_balance_flak_primary_animtime);
 		CVAR_CACHE(g_balance_flak_primary_bounces);
@@ -251,6 +276,7 @@ float(float req) weapon_flak {
 		CVAR_CACHE(g_balance_flak_primary_speed_up);
 		CVAR_CACHE(g_balance_flak_primary_spread_side);
 		CVAR_CACHE(g_balance_flak_primary_spread_vertical);
+		CVAR_CACHE(g_balance_flak_reloadtime);
 		CVAR_CACHE(g_balance_flak_secondary);
 		CVAR_CACHE(g_balance_flak_secondary_ammo);
 		CVAR_CACHE(g_balance_flak_secondary_animtime);
