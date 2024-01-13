@@ -114,8 +114,6 @@ void(float issecondary) weapon_pryaxe_attack {
 	float throw = (issecondary ? g_balance_pryaxe_secondary_throw : g_balance_pryaxe_primary_throw);
 	if (throw) {
 		if (throw & 2) {
-			weapon_pryaxe_throw(issecondary);
-		} else {
 			if ((issecondary ? self.pryaxe_buttonatck2 : self.pryaxe_buttonatck1)) {
 				if (throw & 1)
 					weapon_pryaxe_melee(issecondary);
@@ -127,6 +125,8 @@ void(float issecondary) weapon_pryaxe_attack {
 				else
 					weapon_pryaxe_melee(issecondary);
 			}
+		} else {
+			weapon_pryaxe_throw(issecondary);
 		}
 	} else {
 		weapon_pryaxe_melee(issecondary);
