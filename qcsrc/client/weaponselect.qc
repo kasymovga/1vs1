@@ -95,7 +95,7 @@ void(void) weaponselect_draw {
 
 		p_x = o_x + WEAPONSELECT_MARGIN * 0.5;
 		p_y = o_y + i * sz_y + WEAPONSELECT_MARGIN * 0.5;
-		drawpic(p, strcat("gfx/hud/inv_weapon", ftos(e.weapon - 1)), '2 1 0' * WEAPONSELECT_SCALE, '1 1 1' * (0.5 + 0.5 * a2), a, DRAWFLAG_NORMAL);
+		drawpic(p, e.icon, '2 1 0' * WEAPONSELECT_SCALE, '1 1 1' * (0.5 + 0.5 * a2), a, DRAWFLAG_NORMAL);
 		p_x = WEAPONSELECT_MARGIN * 0.5 + o_x + sz_x * 2;
 		drawstring(p, e.message, sz, clr, a, DRAWFLAG_NORMAL);
 		if (i < 10) {
