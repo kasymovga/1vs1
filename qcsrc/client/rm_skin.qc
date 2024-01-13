@@ -539,10 +539,12 @@ float(string skin_name) rm_skin_load {
 #define RM_SKIN_IMAGE(i) str_zone_ifneeded(strcat("gfx/hud/skins/", skin_name, "/" i))
 	rm_skin_unload();
 	if (skin_name == "") skin_name = "default";
-	if (CVAR(cl_rm_hud) < 0) {
-		print("RM HUD disabled\n");
+	if (CVAR(cl_rm_hud) < 0)
 		return TRUE;
-	}
+
+	if (!rm_active && CVAR(cl_rm_hud) <= 0)
+		return TRUE;
+
 	dlc_load("rm_skins", FALSE);
 	dlc_recheck_all();
 	if not(dlc_ready("rm_skins")) return FALSE;
