@@ -65,6 +65,7 @@ void(void) weapon_pryaxe_touch {
 	if (other && other.takedamage) {
 		damage(other, self.realowner, self.realowner, self.dmg,
 				WEAPON_MELEE, ENTITY_CENTER(self), normalize(self.velocity) * self.dmg_force);
+		weapon_score_hits(self.realowner, other, self.projectiledeathtype, 1, self.dmg);
 	}
 	if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	if (!other || other.solid == SOLID_BSP) {
