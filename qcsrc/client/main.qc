@@ -155,11 +155,7 @@ void(void) CSQC_Init {
 	precache_sound("misc/hit.wav");
 	mute_init();
 	registercvar("cl_rm_skin", "", CVAR_SAVE);
-	if (CVAR(cl_rm_hud) < 0)
-		rm_skin_unload();
-	else if (CVAR(cl_rm_hud) > 0)
-		rm_skin_load(cvar_string("cl_rm_skin"));
-
+	rm_skin_load(cvar_string("cl_rm_skin"));
 	translate_init();
 }
 
@@ -267,6 +263,7 @@ void(float ignore) main_init_read {
 			main_motd = str_zone_ifneeded(strreplace("\\n", "\n", net_read_string()));
 			main_profile = str_zone_ifneeded(net_read_string());
 			main_rexuiz_info = str_zone_ifneeded(net_read_string());
+			rm_skin_load(cvar_string("cl_rm_skin"));
 		});
 	}
 }
