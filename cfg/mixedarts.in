@@ -16,7 +16,7 @@ set mixed_arts_g_ability_class5_value "health=100 armor=100 weapons=hlac jetpack
 set mixed_arts_g_ability_class6_name "Boomsticker"
 set mixed_arts_g_ability_class6_value "health=100 armor=100 weapons=supershotgun,chainsaw physics=doublejump,climb runes=vitality,speed melee model=shock.dpm"
 set mixed_arts_g_ability_class7_name "Overkiller"
-set mixed_arts_g_ability_class7_value "health=100 armor=50 weapons=ok_sniper,ok_mg,ok_shotgun physics=dodging laser hookuseswap nadget=normal model=okmale1.dpm,okmale2.dpm,okmale3.dpm,okmale4.dpm,okrobot1.dpm,okrobot2.dpm,okrobot3.dpm,okrobot4.dpm"
+set mixed_arts_g_ability_class7_value "health=100 armor=50 weapons=ok_sniper,ok_mg,ok_shotgun physics=dodging laser_offhand hookuseswap nadget=normal model=okmale1.dpm,okmale2.dpm,okmale3.dpm,okmale4.dpm,okrobot1.dpm,okrobot2.dpm,okrobot3.dpm,okrobot4.dpm"
 set mixed_arts_g_ability_class8_name "Electrocuter"
 set mixed_arts_g_ability_class8_value "health=100 armor=50 weapons=zapper physics=walljump nadget=plasma,sentry hookuseswap melee model=crash.dpm"
 set mixed_arts_g_balance_zapper_secondary_shield 2
