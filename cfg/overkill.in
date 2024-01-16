@@ -107,3 +107,4 @@ set overkill_g_weapon_extra_2_primary_sound weapons/shotgun_fire.wav
 set overkill_g_weapon_extra_2_primary_message "was gunned by"
 set overkill_g_weapon_extra_2_reloadtime 2
 set overkill_g_start_weapon_ok_shotgun 1
+set overkill_g_projectile_use_clipgroup 0
