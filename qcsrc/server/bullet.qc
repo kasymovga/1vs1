@@ -17,6 +17,7 @@ float(float mindist, float maxdist, float halflifedist, float d) bullet_exponent
 		return 1;
 }
 
+entity bullet_railgun_projectile;
 void(vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype) bullet_railgun {
 	entity oldself = self;
 	vector hitloc, endpoint, dir;
@@ -24,6 +25,8 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 	float endq3surfaceflags;
 	float f, ffs;
 	self = akimbo_owner(self);
+	bullet_railgun_projectile.clipgroup = self.clipgroup;
+	bullet_railgun_projectile.owner = self.owner;
 	dir = normalize(end - start);
 	// go a little bit into the wall because we need to hit this wall later
 	end = end + dir;
@@ -31,7 +34,7 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 	// non-solid so we can hit the next, while doing this we spawn effects and
 	// note down which entities were hit so we can damage them later
 	while (1) {
-		warpzone_trace_line(start, end, FALSE, self);
+		warpzone_trace_line(start, end, FALSE, bullet_railgun_projectile);
 		// if it is world we can't hurt it so stop now
 		if (trace_ent == world || trace_fraction == 1)
 			break;
@@ -310,4 +313,6 @@ void bullet_init(void) {
 	CVAR_CACHE(g_ballistics_materialconstant);
 	CVAR_CACHE(g_ballistics_mindistance);
 	CVAR_CACHE(g_antilag_bullets);
+	if not(bullet_railgun_projectile)
+		bullet_railgun_projectile = spawn();
 }
