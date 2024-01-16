@@ -1,5 +1,6 @@
 set sv_projectile_tracecull 0
 set sv_projectile_rocket_size "3 -3 3"
+set g_projectile_use_clipgroup 1
 set g_projectiles_newton_style 2 "0 - absolute, 1 - newtonian, 2 - newtonian + aimfix, 3 - pseudo-newtonian"
 set g_projectiles_newton_style_2_minfactor "1"
 set g_projectiles_newton_style_2_maxfactor 5

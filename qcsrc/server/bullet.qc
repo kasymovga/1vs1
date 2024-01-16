@@ -25,7 +25,9 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 	float endq3surfaceflags;
 	float f, ffs;
 	self = akimbo_owner(self);
-	bullet_railgun_projectile.clipgroup = self.clipgroup;
+	if (g_projectile_use_clipgroup)
+		bullet_railgun_projectile.clipgroup = self.clipgroup;
+
 	bullet_railgun_projectile.owner = self.owner;
 	dir = normalize(end - start);
 	// go a little bit into the wall because we need to hit this wall later
@@ -245,7 +247,9 @@ void(vector start, vector start_visual, vector dir, float spread, float pSpeed, 
 		proj = spawn();
 		self = akimbo_owner(self);
 		proj.owner = self;
-		proj.clipgroup = self.clipgroup;
+		if (g_projectile_use_clipgroup)
+			proj.clipgroup = self.clipgroup;
+
 		if (entity_per_player_entities && self) {
 			if (clienttype(self) == CLIENTTYPE_NOTACLIENT)
 				proj.existsonlyfor = self.existsonlyfor;

@@ -119,6 +119,7 @@ void(float csqcid, vector sizes) projectile_register_auto {
 void(float type) projectile_init {
 	vector sizes;
 	CVAR_CACHE(sv_projectile_tracecull);
+	CVAR_CACHE(g_projectile_use_clipgroup);
 	sizes = '0 0 0';
 	switch (type) {
 	case PROJECTILE_FIREBALL:
@@ -150,7 +151,9 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 	if not(sv_projectile_tracecull)
 		e.culltracemode = CULLTRACEMODE_NONE;
 
-	e.clipgroup = _owner.clipgroup;
+	if (g_projectile_use_clipgroup)
+		e.clipgroup = _owner.clipgroup;
+
 	e.realowner = e.owner = akimbo_owner(_owner);
 	e.team = e.owner.team;
 	projectile_set_size(e, type);

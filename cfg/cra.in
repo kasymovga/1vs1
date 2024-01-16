@@ -63,6 +63,7 @@ set cra_g_nadgets_show_in_sbar 1
 set cra_g_rm 1
 set cra_g_rm_pryaxe 1
 set cra_g_rm_flak 1
+set cra_g_projectile_use_clipgroup 0
 set cra_two_weapons_profile "Camping Rifle Arena with secondary weapon"
 set cra_two_weapons_inherit cra
 set cra_two_weapons_g_twoweapons campingrifle
