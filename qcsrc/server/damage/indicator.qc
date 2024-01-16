@@ -1,4 +1,5 @@
-float sv_damageindicator_accumulate_interval;
+float g_damageindicator_accumulate_interval;
+float g_damageindicator_projectiles;
 
 #define damage_indicator_send damageindicator_send //compatibility with old save-files
 float(entity to, float sf) damage_indicator_send {
@@ -43,7 +44,7 @@ void(entity targ, entity attacker, float _damage, vector ignore) damage_indicato
 	if (targ == attacker)
 		return;
 
-	if (targ.flags & FL_PROJECTILE)
+	if (!g_damageindicator_projectiles && (targ.flags & FL_PROJECTILE))
 		return;
 
 	entity e;
@@ -68,17 +69,18 @@ void(entity targ, entity attacker, float _damage, vector ignore) damage_indicato
 	setorigin(e, targ.origin + 0.5 * (targ.maxs + targ.mins));
 	e.SendFlags = 1;
 	e.dmg = e.dmg + _damage;
-	e.nextthink = time + sv_damageindicator_accumulate_interval;
+	e.nextthink = time + g_damageindicator_accumulate_interval;
 }
 
 void(void) damage_indicator_init {
-	if not(cvar("sv_damageindicator"))
+	if not(cvar("g_damageindicator"))
 		return;
 
 	if (rm_active)
 		return;
 
-	CVAR_CACHE(sv_damageindicator_accumulate_interval);
+	CVAR_CACHE(g_damageindicator_accumulate_interval);
+	CVAR_CACHE(g_damageindicator_projectiles);
 	damage_indicator_damage_force_done_next = plugin_chain_damage_force_done;
 	plugin_chain_damage_force_done = damage_indicator_damage_force_done;
 }
