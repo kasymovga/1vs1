@@ -1,4 +1,4 @@
-#define WEAPON_EXTRA_COUNT_MAX 8
+#define WEAPON_EXTRA_COUNT_MAX 20
 .float weapon_extra_clip[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_model[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_name[WEAPON_EXTRA_COUNT_MAX];
