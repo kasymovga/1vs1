@@ -419,12 +419,7 @@ float(entity item, entity player) item_give_to {
 		pickedup = TRUE;
 		player.keys |= it;
 	}
-
 :skip
-	// always eat teamed entities
-	if (item.team)
-		pickedup = TRUE;
-
 	if (!pickedup)
 		return 0;
 
