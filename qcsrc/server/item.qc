@@ -400,6 +400,7 @@ float(entity item, entity player) item_give_to {
 			if (item.health)
 			if (player.health < item.max_health) {
 				pickedup = TRUE;
+				RM(rm_damage_received_indicator(player, -0.1 - item.health, 0));
 				player.health = min(player.health + item.health, item.max_health);
 				player.pauserothealth_finished = max(player.pauserothealth_finished, time + g_balance_pause_health_rot);
 			}

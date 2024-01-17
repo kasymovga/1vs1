@@ -29,7 +29,10 @@ void(void) rm_damage_received_indicator_draw {
 	}
 	self.alpha -= frametime / CVAR(cl_damageindicator);
 	self.origin_y -= frametime * 50;
-	rm_damage_indicator_draw_numbers(self.origin, '20 20 0' * max(1, self.alpha * self.scale), self.cnt, self.float1, self.alpha, '1 0.2 0.2');
+	if (self.cnt < 0)
+		rm_damage_indicator_draw_numbers(self.origin, '20 20 0' * max(1, self.alpha * self.scale), -self.cnt, self.float1, self.alpha, '0 1 0');
+	else
+		rm_damage_indicator_draw_numbers(self.origin, '20 20 0' * max(1, self.alpha * self.scale), self.cnt, self.float1, self.alpha, '1 0.2 0.2');
 }
 
 void(void) rm_damage_indicator_draw {
