@@ -1,4 +1,3 @@
-#define WEAPON_EXTRA_COUNT_MAX 20
 .float weapon_extra_clip[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_model[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_name[WEAPON_EXTRA_COUNT_MAX];
@@ -241,6 +240,18 @@ WEAPON_EXTRA_RELOAD(4) \
 WEAPON_EXTRA_RELOAD(5) \
 WEAPON_EXTRA_RELOAD(6) \
 WEAPON_EXTRA_RELOAD(7) \
+WEAPON_EXTRA_RELOAD(8) \
+WEAPON_EXTRA_RELOAD(9) \
+WEAPON_EXTRA_RELOAD(10) \
+WEAPON_EXTRA_RELOAD(11) \
+WEAPON_EXTRA_RELOAD(12) \
+WEAPON_EXTRA_RELOAD(13) \
+WEAPON_EXTRA_RELOAD(14) \
+WEAPON_EXTRA_RELOAD(15) \
+WEAPON_EXTRA_RELOAD(16) \
+WEAPON_EXTRA_RELOAD(17) \
+WEAPON_EXTRA_RELOAD(18) \
+WEAPON_EXTRA_RELOAD(19) \
 
 #define WEAPON_EXTRA_RELOAD(i) \
 void(void) weapon_extra_reloadandready##i { weapon_clip_reloadandready(weapon_extra_magazinecapacity[i], item_counter_field(weapon_extra_ammo_type[i]), weapon_extra_clip[i], weapon_extra_primary_ammo[i], weapon_extra_secondary_ammo[i], weapon_extra_reloadtime[i]); } \
@@ -565,6 +576,7 @@ void(void) weapon_extra_init {
 			weapon_extra_secondary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 
 		weapon_extra_secondary_impact_type[i] = weapon_extra_impact_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_impact_type")));
+		print("Registering extra weapon: ", modelname, " (", name, ")\n");
 		weapon_register(WEAPON_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, 1, modelname, modelname, name);
 	}
 	if (havemelee && !weapon_extra_melee_init_done) {
