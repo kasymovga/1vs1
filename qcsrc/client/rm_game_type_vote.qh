@@ -1,0 +1,3 @@
+void(float ignore) rm_game_type_vote_read;
+void(void) rm_game_type_vote_picture_read;
+void(void) rm_game_type_vote_picture_check;

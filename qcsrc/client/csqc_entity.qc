@@ -144,6 +144,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_TELEPORT_PREDICTION] = teleport_prediction_read;
 	csqc_entity_parsers[NET_CSQC_TRIGGER_PUSH_PREDICTION] = trigger_push_prediction_read;
 	csqc_entity_parsers[NET_CSQC_RM_FLAK_CHARGE_INDICATOR] = rm_flak_charge_indicator_read;
+	csqc_entity_parsers[NET_CSQC_RM_GAME_TYPE_VOTE] = rm_game_type_vote_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_PICTURE - NET_TE_CSQC_FIRST] = map_vote_picture_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RACE - NET_TE_CSQC_FIRST] = race_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_ZCURVEPARTICLES - NET_TE_CSQC_FIRST] = particles_zcurve_read;
@@ -174,6 +175,7 @@ void(void) csqc_entity_init {
 	csqc_entity_temp_parsers[NET_TE_CSQC_RM_HUDFLASH_TEAMCOLOR - NET_TE_CSQC_FIRST] = rm_hud_flash_team_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RM_DAMAGE_INDICATOR - NET_TE_CSQC_FIRST] = rm_damage_indicator_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RM_DAMAGE_RECEIVED_INDICATOR - NET_TE_CSQC_FIRST] = rm_damage_received_indicator_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_RM_GAME_TYPE_VOTE_PICTURE - NET_TE_CSQC_FIRST] = rm_game_type_vote_picture_read;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

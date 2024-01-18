@@ -90,6 +90,8 @@ void(string msg) GameCommand { //called by engine
 		rm_hud_flash(stov(argv(1)), stof(argv(2)), stof(argv(3)), stof(argv(4)));
 	} else if (cmd == "camera_script") {
 		view_camera_script_cmd(argc);
+	} else if (cmd == "rm_game_type_vote_picture_check") {
+		rm_game_type_vote_picture_check();
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}

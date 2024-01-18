@@ -291,11 +291,16 @@ float() map_do_next_override {
 		map_already_changed = TRUE;
 		return TRUE;
 	}
-	if (cvar_string("nextmap") != "") {
-		print("Have nextmap override (", cvar_string("nextmap"), ")\n");
-		if (map_info_check_map(cvar_string("nextmap"))) {
+	string nextmap = cvar_string("nextmap");
+	if (nextmap != "") {
+		print("Have nextmap override (", nextmap, ")\n");
+		if (map_info_check_map(nextmap)) {
 			print("nextmap override successful\n");
-			map_next_set(cvar_string("nextmap"));
+			map_next_set(nextmap);
+			RM({
+				rm_game_type_vote(nextmap);
+				return TRUE;
+			})
 			map_change();
 			map_already_changed = TRUE;
 			return TRUE;

@@ -1,0 +1,6 @@
+float(string nextmap) rm_game_type_vote;
+float(void) rm_game_type_vote_map_info_mask;
+void(void) rm_game_type_vote_impulse;
+float(void) rm_game_type_vote_think;
+void(void) rm_game_type_vote_picture_send;
+float rm_game_type_vote_run;

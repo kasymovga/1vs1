@@ -16,6 +16,7 @@ float map_vote_votes[MAP_VOTE_COUNT];
 float map_vote_run;
 float map_vote_detail;
 float map_vote_abstain;
+entity map_vote_ent;
 .float mapvote;
 
 void() map_vote_spawn;
@@ -139,6 +140,10 @@ float map_vote_client_command(string cmd) {
 		return FALSE;
 
 	if (cmd == "mv_getpic") {
+		if (rm_game_type_vote_run) {
+			rm_game_type_vote_picture_send();
+			return TRUE;
+		}
 		map_vote_send_picture(stof(argv(1)));
 		return TRUE;
 	}
@@ -159,7 +164,6 @@ float() map_vote_mask {
 	return mask;
 }
 
-entity map_vote_ent;
 float(entity to, float sf) map_vote_send {
 	string picfile, pakfile;
 	float i, o;
@@ -237,7 +241,14 @@ float(float mappos) map_vote_finished {
 	FOR_EACH_REALCLIENT(other)
 		client_fix_cvars(other);
 
+	remove(map_vote_ent);
+	map_vote_ent = NULL;
 	map_next_set(map_vote_maps[mappos]);
+	RM({
+		map_vote_clear_all_votes();
+		if (rm_game_type_vote(map_vote_maps[mappos]))
+			return TRUE;
+	})
 	map_change();
 	map_already_changed = TRUE;
 	return TRUE;
@@ -339,7 +350,9 @@ void() map_vote_tick {
 
 void(void) map_vote_impulse {
 	// use impulses as new vote
-	if (map_vote_run && self.impulse >= 1 && self.impulse <= map_vote_count)
+	if (rm_game_type_vote_run) {
+		rm_game_type_vote_impulse();
+	} else if (map_vote_run && self.impulse >= 1 && self.impulse <= map_vote_count)
 		if (map_vote_maps[self.impulse - 1] != "") {
 			self.mapvote = self.impulse;
 			map_vote_check_rules1(); // just count
@@ -352,11 +365,24 @@ void() map_vote_start {
 		return;
 
 	map_info_enumerate();
-	if (map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), map_info_required_flags(), map_info_forbidden_flags(), 1))
+	float mask;
+	RM_ELSE({
+		mask = rm_game_type_vote_map_info_mask();
+	} , {
+		mask = map_info_type_from_game_type(game_type_current());
+	})
+	if (map_info_filter_game_type(mask, map_info_required_flags(), map_info_forbidden_flags(), 1))
 		map_vote_run = TRUE;
 }
 
 void() map_vote_think {
+	if (rm_game_type_vote_run) {
+		if not(rm_game_type_vote_think()) {
+			map_change();
+			map_already_changed = TRUE;
+		}
+		return;
+	}
 	if (!map_vote_run)
 		return;
 
@@ -369,9 +395,9 @@ void() map_vote_think {
 	map_vote_nextthink = time + 0.5;
 	if (!map_vote_initialized) {
 		map_vote_initialized = TRUE;
-		if (map_do_next_override())
+		if (map_do_next_override()) {
 			return;
-			
+		}
 		if (!cvar("g_maplist_votable") || player_count <= 0) {
 			map_goto_next();
 			return;

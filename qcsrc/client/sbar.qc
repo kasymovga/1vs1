@@ -1892,9 +1892,6 @@ void(void) sbar_draw {
 			sbar_scoreboard_draw();
 		} else if (sbar_showaccuracy) {
 			sbar_accuracy_draw();
-		} else {
-			if (map_vote_active)
-				map_vote_draw();
 		}
 		sbar_reset();
 	} else if (_health <= 0 || view_observer_status) {

@@ -136,6 +136,7 @@ weapon.qh
 rm.qh
 rm/hud_flash.qh
 rm/damage.qh
+rm/game_type_vote.qh
 ../client-server/progs.qc
 ../menu-server/progs.qc
 weapon/two_weapons.qh
@@ -396,4 +397,5 @@ cheat.qc
 chess.qc
 rm/hud_flash.qc
 rm/damage.qc
+rm/game_type_vote.qc
 rm.qc
