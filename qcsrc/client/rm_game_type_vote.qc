@@ -240,9 +240,12 @@ void(float ignore) rm_game_type_vote_read {
 		rm_game_type_vote_map_pic = str_zone_ifneeded(net_read_string());
 		pakfile = net_read_string();
 		if not(file_exists_image(rm_game_type_vote_map_pic)) {
-			localcmd("curl --pak ", pakfile, "\n");
-			localcmd("cl_cmd rm_game_type_vote_picture_check\n");
 			rm_game_type_vote_map_pic_ready = FALSE;
+			if (pakfile != "") {
+				localcmd("curl --pak ", pakfile, "\n");
+				localcmd("cl_cmd rm_game_type_vote_picture_check\n");
+			} else
+				rm_game_type_vote_picture_check();
 		} else
 			rm_game_type_vote_map_pic_ready = TRUE;
 
