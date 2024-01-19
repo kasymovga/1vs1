@@ -140,6 +140,8 @@ vector(vector o, float gtype, float count, float id) rm_game_type_vote_draw_item
 
 void(void) rm_game_type_vote_draw {
 	if (sbar_showscores) return;
+	view_crosshair = FALSE;
+	sbar_hidescores = TRUE;
 	vector pos;
 	string map;
 	float xmin, xmax, ymin, ymax = 0, i;
