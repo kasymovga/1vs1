@@ -1,3 +1,7 @@
 void(void) rm_init;
+entity rm_findfilter(entity e, float(entity) filter);
+float(entity targ, entity inflictor, entity healer, float heal, float aheal, float hlimit, float alimit, float healtype, float pauserot, float pausearot, vector hitloc, vector force) rm_heal;
+float(float bits, float k, float error_return) rm_randombits;
+
 float rm_pryaxe;
 float rm_flak;

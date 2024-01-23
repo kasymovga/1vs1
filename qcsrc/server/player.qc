@@ -402,6 +402,28 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (plugin_chain_player_damage_handle(inflictor, attacker, _damage, deathtype, hitloc, force))
 		return;
 
+	RM({
+		if(self != attacker)
+		if(!DEATH_ISSPECIAL(deathtype) || deathtype == DEATH_RM_MEODP)
+		if(deathtype != DEATH_RM_ARC)
+		if(DEATH_NADGETTYPE(deathtype) != NADGET_SHIELD)
+			Buffs_ArcDamage(self, attacker, _damage, deathtype);
+
+		if(_damage /*&& deathtype != DEATH_RESOURCE_ARMOR*/) { //FIXME
+			_damage = Buffs_IgniteDamage(self, attacker, inflictor, _damage, deathtype);
+			_damage = Buffs_TenacityDamage(self, attacker, _damage, deathtype);
+			//FIXME
+			//if(DEATH_NADGETTYPE(deathtype) == NADGET_PLASMA && deathtype & HITTYPE_SECONDARY) {
+			//	if(time > inflictor.damage_nextarceffect) {
+			//		te_csqc_lightningarc(inflictor.origin, self.origin + '0 0 0.5' * self.maxs_z, FALSE, attacker.team);
+			//		inflictor.damage_nextarceffect = time + inflictor.hg_plasma_projdps_delay + 0.2 * (random() - 0.5);
+			//	}
+			//}
+			//if(self.hg_stealth) if(time < self.hg_stealth_protectionexpiretime) {
+			//		_damage *= g_nadgets_cloak_damagereduction_factor;
+			//}
+		}
+	})
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
 	_damage = _damage * plugin_chain_player_damage_mod;
@@ -431,6 +453,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 				rm_damage_indicator(attacker, hitloc, take, save, RM_DAMAGE_DEFAULT);
 		}
 		rm_damage_received_indicator(self, take, save);
+		float cdmg = min(self.health, take);
+		Buffs_VampireDamage(self, attacker, cdmg, deathtype);
+		Buffs_WrathDamage(self, attacker, cdmg + save, deathtype);
 	});
 	if (time >= self.spawnshieldtime || g_spawnfrags) {
 		self.armorvalue = self.armorvalue - save;

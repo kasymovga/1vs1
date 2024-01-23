@@ -63,6 +63,7 @@ rm_hud.qh
 rm_damage.qh
 rm_flak.qh
 rm_game_type_vote.qh
+rm_buffs.qh
 porto.qh
 ../client-server/progs.qc
 cvar.qc
@@ -173,3 +174,4 @@ font.qc
 rm_damage.qc
 rm_flak.qc
 rm_game_type_vote.qc
+rm_buffs.qc

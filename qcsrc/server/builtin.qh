@@ -292,6 +292,7 @@ void(entity ent, float colors) setcolor = #401;
 //darkplaces implementation: LordHavoc
 //builtin definitions:
 entity(.string fld, string match) findchain = #402;
+entity(.string fld, string match, .entity fld) findchain_tofield = #402;
 //description:
 //similar to find() but returns a chain of entities like findradius.
 //

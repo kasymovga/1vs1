@@ -778,3 +778,36 @@ void(float t) team_spawn_players {
 			self = oldself;
 		}
 }
+
+float(float t) team_next {
+	if (t == COLOR_TEAM1) {
+		if (at2)
+			return COLOR_TEAM2;
+		else if (at3)
+			return COLOR_TEAM3;
+		else if (at4)
+			return COLOR_TEAM4;
+	} else if (t == COLOR_TEAM2) {
+		if (at3)
+			return COLOR_TEAM3;
+		else if (at4)
+			return COLOR_TEAM4;
+		else if (at1)
+			return COLOR_TEAM1;
+	} else if (t == COLOR_TEAM3) {
+		if (at4)
+			return COLOR_TEAM4;
+		else if (at1)
+			return COLOR_TEAM1;
+		else if (at2)
+			return COLOR_TEAM2;
+	} else {
+		if (at1)
+			return COLOR_TEAM1;
+		else if (at2)
+			return COLOR_TEAM2;
+		else if (at3)
+			return COLOR_TEAM3;
+	}
+	return t;
+}

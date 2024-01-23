@@ -1,8 +1,136 @@
 void(void) rm_init {
 	rm_active = cvar("g_rm");
+	if not(rm_active) return;
+	print("RM mode active\n");
 	rm_flak = cvar("g_rm_flak");
 	rm_pryaxe = cvar("g_rm_pryaxe");
-	if (rm_active) {
-		print("RM mode active\n");
+	Buffs_Init();
+}
+
+entity rm_findfilter(entity e, float(entity) filter) {
+	for (;(e = nextent(e));)
+		if (filter(e))
+			return e;
+
+	return NULL;
+}
+
+.float heal_next_particle;
+
+/*
+void(entity targ, entity healer, float heal) rm_heal_score {
+	if(targ == healer || targ.classname != "player")
+		return;
+
+	PlayerScore_Add(healer, SP_HEALING, heal);
+	PlayerScore_Add(healer, SP_SCORE, heal * cvar(strcat("g_healing_score_", gametype_ID_to_Name(game))));
+}
+*/
+
+float(entity targ, entity inflictor, entity healer, float heal, float aheal, float hlimit, float alimit, float healtype, float pauserot, float pausearot, vector hitloc, vector force) rm_heal {
+	if (targ.classname == "player") {
+		if(hlimit)
+			hlimit = min(g_balance_health_limit, hlimit);
+		else
+			hlimit = g_balance_health_limit;
+
+		if (alimit)
+			alimit = min(g_balance_armor_limit,  alimit);
+		else
+			alimit = g_balance_armor_limit;
+
+		#if 0
+		if(g_clanarena) {
+			hlimit = min(CVAR(g_clanarena_start_health), hlimit);
+			alimit = min(CVAR(g_clanarena_start_armor),  alimit);
+
+			if(healtype != DEATH_HURTTRIGGER)
+			if(!(DEATH_HGTYPE(healtype) == HG_LINKER && healtype & HITTYPE_SECONDARY)) {
+				float lim = CVAR(g_clanarena_heal_limit);
+				hlimit = min(hlimit, lim);
+				alimit = min(alimit, lim);
+			}
+		}
+		#endif
 	}
+	float silent = (healtype == DEATH_RM_ITEM);
+	if (pauserot  < 0) pauserot  = g_balance_pause_health_rot;
+	if (pausearot < 0) pausearot = g_balance_pause_armor_rot;
+	//if (roundstate == ROUNDSTATE_OVER)
+	//	heal = aheal = 0;
+	//else {
+		heal  = max(0, min(heal,  hlimit - targ.health));
+		aheal = max(0, min(aheal, alimit - targ.armorvalue));
+	//}
+	targ.health += heal;
+	targ.pauserothealth_finished = max(targ.pauserothealth_finished, time + pauserot);
+	targ.armorvalue += aheal;
+	targ.pauserotarmor_finished = max(targ.pauserotarmor_finished, time + pausearot);
+	if (targ.classname == "player")
+		Buffs_ConduitDamage(targ, healer, heal, aheal, healtype, TRUE);
+
+	if (heal || aheal) {
+		//float vdtype = VDMG_TYPE_HEAL;
+		//if (heal >= 100 || aheal >= 100)
+		//	vdtype |= VDMG_TYPE_CRIT;
+		//else if (DEATH_ISWEAPON(healtype, WEP_CAMPINGRIFLE) && (healtype & HITTYPE_HEADSHOT))
+		//	vdtype |= VDMG_TYPE_CRIT;
+
+		rm_damage_indicator(healer, hitloc, heal, aheal, RM_DAMAGE_HEAL);
+		rm_damage_received_indicator(targ, -0.1 - heal, -0.1 - aheal);
+		//rm_heal_score(targ, healer, heal + aheal);
+		if not(silent) {
+			if (time > targ.heal_next_particle) {
+				//te_heal(targ); //FIXME
+				targ.heal_next_particle = time + 0.2;
+			}
+			if (heal) 
+				sound(targ, CHAN_AUTO, "misc/mediumhealth.wav", VOL_BASE, ATTN_NORM);
+
+			if (aheal)
+				sound(targ, CHAN_AUTO, "misc/armor10.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	// apply push
+	if (targ.damageforcescale)
+	if (vlen(force)) {
+		targ.velocity = targ.velocity + targ.damageforcescale * force;
+		//targ.flags &= ~FL_ONGROUND;
+	}
+	return heal + aheal;
+}
+
+float(float bits) rm_randombit {
+	if not(bits & (bits-1)) // this ONLY holds for powers of two!
+		return bits;
+
+	float n, f, b, r;
+	r = random();
+	b = 0;
+	n = 0;
+	for (f = 1; f <= bits; f *= 2) {
+		if (bits & f) {
+			++n;
+			r *= n;
+			if (r <= 1)
+				b = f;
+			else
+				r = (r - 1) / (n - 1);
+		}
+	}
+	return b;
+}
+
+float(float bits, float k, float error_return) rm_randombits {
+	float r;
+	r = 0;
+	while (k > 0 && bits != r) {
+		r += rm_randombit(bits - r);
+		--k;
+	}
+	if (error_return)
+		if (k > 0)
+			return -1; // all
+
+	return r;
 }

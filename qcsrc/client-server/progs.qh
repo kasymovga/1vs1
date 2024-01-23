@@ -33,6 +33,7 @@
 #include "q3surfaceflag.qh"
 #include "race.qh"
 #include "rm.qh"
+#include "rm/buffs.qh"
 #include "rune.qh"
 #include "score.qh"
 #include "solid.qh"

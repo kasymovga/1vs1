@@ -10,6 +10,14 @@ float DEATH_AUTOTEAMCHANGE = 10010;
 float DEATH_ROT = 10013;
 float DEATH_MIRRORDAMAGE = 10014;
 float DEATH_FIRE = 10017;
+float DEATH_RM_CONDUIT = 10018;
+float DEATH_RM_VAMPIRE = 10019;
+float DEATH_RM_ENDURANCE = 10020;
+float DEATH_RM_ARC = 10021;
+float DEATH_RM_IGNITE = 10022;
+float DEATH_RM_MEODP = 10023;
+float DEATH_RM_ITEM = 10024;
+#define DEATH_RM_ISPROJECTED(t) ((t) == DEATH_RM_ARC || (t) == DEATH_RM_IGNITE || (t) == DEATH_RM_ENDURANCE)
 float DEATH_WEAPONMASK = 0xFF;
 float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
 // macros to access these

@@ -27,6 +27,10 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	float mirrorforce;
 	mirrordamage = 0;
 	mirrorforce = 0;
+	RM({
+		_damage = Buffs_MedicDamage(targ, attacker, inflictor, _damage, deathtype, hitloc, force);
+		if (_damage < 0) return;
+	})
 	if (targ.flags & FL_GODMODE) {
 		if (g_campaign) {
 			cheat_assign(targ, flags, FL_GODMODE, "GOD");

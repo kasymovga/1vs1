@@ -1,0 +1,118 @@
+
+float g_buffs;
+float g_buffs_team_only;
+float g_buffs_stack;
+float g_buffs_replace;
+float g_buffs_noteam;
+float g_buffs_randomize;
+float g_buffs_randomize_dual;
+float g_buffs_randomize_byinstance;
+float g_buffs_randomize_chaos;
+float g_buffs_randomize_interval;
+float g_buffs_spawn_on_powerups;
+float g_buffs_random_spawns;
+float g_buffs_lockon;
+
+float g_buffs_enabled;
+float g_buffs_baseline;
+
+float g_buffs_replacements[BUFF_COUNT];
+float g_buffs_used[BUFF_COUNT];
+float g_buffs_used_dual[BUFF_COUNT];
+
+float g_buffs_randomize_ulevel;
+float g_buffs_randomize_ulevel_dual;
+float g_buffs_count;
+
+.float buffs;
+.float oldbuffs;
+.float origbuffs;
+.float effective_buffs;
+.float buffs_arc_hit;
+.float buff_active;
+.float buff_activetime;
+.float buff_activetime_updated;
+.float buff_cdoverride;
+.float buffstat;
+.float oldbuffstat;
+
+.float buff_vamp_ticks;
+.float buff_vamp_healthpool;
+.float buff_vamp_nexttick;
+
+.float buff_endur_ticks;
+.float buff_endur_dmgpool;
+
+.float buff_conduit_hpool;
+.float buff_conduit_apool;
+.float buff_conduit_dpool;
+.float buff_conduit_next;
+
+.float buff_stealth_time;
+
+.entity meodp_point;
+.entity buff_waypoint;
+.entity buff_model;
+.entity buff_teamwp;
+.entity buff_lockon;
+.float buff_lockon_updatetime;
+
+.float nobuffs;
+
+#define BUFF_RANDOM -1337
+
+typedef void(entity, entity) meodp_death_f;
+.meodp_death_f meodp_death;
+
+void Buffs_Init(void);
+void Buffs_Init_Delayed(void);
+void Buffs_ClientFrame(void);
+void Buffs_ArcDamage(entity, entity, float, float);
+float Buffs_MedicDamage(entity, entity, entity, float, float, vector, vector);
+float Buffs_IgniteDamage(entity, entity, entity, float, float);
+void Buffs_VampireDamage(entity, entity, float, float);
+float Buffs_TenacityDamage(entity, entity, float, float);
+void Buffs_ConduitDamage(entity, entity, float, float, float, float);
+float Buffs_EnduranceDamage(entity, entity, float, float);
+void Buffs_WrathDamage(entity, entity, float, float);
+void Buffs_ReaperFrag(entity, entity);
+void Buffs_BuffPickup_Remove(void);
+void Buffs_Randomize(entity, float);
+void Buffs_BuffPickup_Placeholder(void);
+void Buffs_BuffPickup_Setup(void);
+// float Buffs_Present(entity, float);
+float Buffs_NadgetPower(entity);
+float Buffs_NadgetRegen(entity);
+float Buffs_NadgetCooldown(entity);
+float Buffs_NadgetRegenDmgPause(entity);
+float Buffs_NadgetBonusMultiplier(entity);
+float Buffs_ClipLimitMultiplier(entity);
+void Buffs_BuffPickup_SetInitialCooldown(entity);
+void Buffs_BuffPickup_SetCooldown(entity, float);
+void Buffs_Random_Spawn(void);
+float Buffs_Give(entity, float, float);
+void Buffs_Notify(entity, float, float);
+void Buffs_Endurance_DOT_Think(void);
+
+#define Buffs_Present(p,b) (((p).effective_buffs & (b)) == (b))
+
+.vector meodp_point_offs;
+.entity meodp_point_ref;
+.vector meodp_point_angleoffs;
+
+void Buffs_MEODP_Point_Attach(entity e, meodp_death_f death);
+void Buffs_MEODP_Point_Detach(entity e);
+entity Buffs_MEODP_Hitscan_Begin(entity plr);
+void Buffs_MEODP_Hitscan_End(entity pts);
+void Buffs_MEODP_TriggerDeath(entity targ, entity attacker, entity inflictor);
+void Buffs_MEODP_Death_Player(entity attacker, entity inflictor);
+void Buffs_MEODP_Death_Remove(entity attacker, entity inflictor);
+void Buffs_MEODP_Death_Use(entity attacker, entity inflictor);
+void Buffs_MEODP_Death_Remove_Multiple(entity attacker, entity inflictor);
+void Buffs_MEODP_Death_Use_Multiple(entity attacker, entity inflictor);
+void Buffs_MEODP_Antilag(entity plr, float t);
+
+float g_buffs_meodp;
+
+.float buff_active_old;
+.float oldteam;

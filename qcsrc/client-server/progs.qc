@@ -15,6 +15,7 @@
 #include "portal.qc"
 #include "projectile.qc"
 #include "rune.qc"
+#include "rm/buffs.qc"
 #include "score.qc"
 #include "stdproc.qc"
 #include "team.qc"
