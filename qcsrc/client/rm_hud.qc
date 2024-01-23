@@ -424,7 +424,7 @@ void(void) rm_hud_draw_server_info {
 	pos_y += sz_big_y + sz_norm_y * 0.5;
 	drawfont = sbar_font;
 	draw_string_center(pos, main_rexuiz_info, sz_norm, '1 0.6 0', a, DRAWFLAG_NORMAL);
-	pos_y += sz_norm_y;
+	pos_y += sz_norm_y * 2;
 	draw_string_colorcoded_center(pos, strcat("Playing ^5", game_type_name_long(game_type), " ^7on ^2", map_shortname), sz_norm, a, DRAWFLAG_NORMAL);
 	if (main_motd == "")
 		return;
