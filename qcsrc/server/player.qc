@@ -456,6 +456,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		float cdmg = min(self.health, take);
 		Buffs_VampireDamage(self, attacker, cdmg, deathtype);
 		Buffs_WrathDamage(self, attacker, cdmg + save, deathtype);
+		take = Buffs_EnduranceDamage(self, attacker, take, deathtype);
+		Buffs_ConduitDamage(self, attacker, take, save, deathtype, FALSE);
 	});
 	if (time >= self.spawnshieldtime || g_spawnfrags) {
 		self.armorvalue = self.armorvalue - save;

@@ -397,19 +397,26 @@ float(entity item, entity player) item_give_to {
 			if (item_powerup_give_to(item, player, invisibility_finished))
 				pickedup = TRUE;
 
-			if (item.health)
-			if (player.health < item.max_health) {
-				pickedup = TRUE;
-				RM(rm_damage_received_indicator(player, -0.1 - item.health, 0));
-				player.health = min(player.health + item.health, item.max_health);
-				player.pauserothealth_finished = max(player.pauserothealth_finished, time + g_balance_pause_health_rot);
-			}
-			if (item.armorvalue)
-			if (player.armorvalue < item.max_armorvalue) {
-				pickedup = TRUE;
-				player.armorvalue = min(player.armorvalue + item.armorvalue, item.max_armorvalue);
-				player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + g_balance_pause_armor_rot);
-			}
+			RM_ELSE({
+				if (item.health || item.armorvalue) {
+					rm_heal(player, item, player, item.health, item.armorvalue, item.max_health, item.max_armorvalue,
+							DEATH_RM_ITEM, (item.health ? g_balance_pause_health_rot : 0), (item.armorvalue ? g_balance_pause_armor_rot : 0), '0 0 0', '0 0 0');
+					pickedup = TRUE;
+				}
+			}, {
+				if (item.health)
+				if (player.health < item.max_health) {
+					pickedup = TRUE;
+					player.health = min(player.health + item.health, item.max_health);
+					player.pauserothealth_finished = max(player.pauserothealth_finished, time + g_balance_pause_health_rot);
+				}
+				if (item.armorvalue)
+				if (player.armorvalue < item.max_armorvalue) {
+					pickedup = TRUE;
+					player.armorvalue = min(player.armorvalue + item.armorvalue, item.max_armorvalue);
+					player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + g_balance_pause_armor_rot);
+				}
+			})
 		}
 	}
 	if (item.spawnshieldtime)
