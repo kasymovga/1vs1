@@ -53,40 +53,29 @@ void Shownames_DrawPlayer() {
 
     float oldfont = drawfont;
     float dist = vlen(self.iorigin - view_origin);
-    float a = SHOWNAMES_ALPHA;
-
-    if(self.alpha)
-        a *= self.alpha;
-
+    float a = SHOWNAMES_ALPHA * CVAR(sbar_alpha_fg);
     if(dist >= SHOWNAMES_MAXDISTANCE)
         return;
 
     a *= ((SHOWNAMES_MAXDISTANCE - SHOWNAMES_MINDISTANCE) - max(0, dist - SHOWNAMES_MINDISTANCE)) / (SHOWNAMES_MAXDISTANCE - SHOWNAMES_MINDISTANCE);
-
     vector o;
     o = view_project_3d_to_2d(self.iorigin + self.maxs + SHOWNAMES_ORIGIN_OFFSET);
-
     if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
         return;
 
     o_z = 0;
-
     vector myPos, mySize;
 	mySize = '0 0 0';
     mySize_x = SHOWNAMES_ASPECT;
 	mySize_y = SHOWNAMES_HEIGHT;
     myPos = o - '0.5 0 0' * mySize_x - '0 1 0' * mySize_y;
-
     vector namepos; // this is where the origin of the string
     float namesize; // total area where we can draw the string
-
     namepos = myPos + '0 1 0' * 0.5 * (SHOWNAMES_HEIGHT - SHOWNAMES_FONTSIZE);
     namesize = mySize_x;
-
     string s;
     s = player_name(self.sv_entnum);
     float textsz = SHOWNAMES_FONTSIZE;
-
 	float _team;
     if (team_mode) {
 		_team = player_color_force(self.sv_entnum);
@@ -99,18 +88,13 @@ void Shownames_DrawPlayer() {
 		s = strcat(s, " ^7(^1", NET_UNBOUND_FROM_BYTE(self.health), (self.armorvalue ? strcat("^7/^2", NET_UNBOUND_FROM_BYTE(self.armorvalue)): ""), "^7)");
 
     float width = stringwidth(s, TRUE);
-
     if(width != namesize)
         namepos_x += (namesize - width) / 2;
 
 	drawfont = sbar_font;
-
 	float fade = 0.7;
-
 	namepos_x = namepos_x - 0.5 * width * textsz;
-
 	drawcolorcodedstring(namepos, s, textsz * '1 1 0', a, DRAWFLAG_NORMAL);
-    
     drawfont = oldfont;
 }
 

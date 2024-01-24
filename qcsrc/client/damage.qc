@@ -31,7 +31,7 @@ void(float bisnew) damage_indicator_read {
 	self.origin_y = net_read_short();
 	self.origin_z = net_read_short();
 	if (CVAR(cl_damageindicator) > 0) {
-		self.alpha = 1;
+		self.alpha = CVAR(sbar_alpha_fg);
 		self.draw2d = damage_indicator_draw;
 		self.draw2dflag = 1;
 		self.entremove = damage_indicator_remove;
