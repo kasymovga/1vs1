@@ -135,7 +135,10 @@ void(void) fire_burner_think {
 		return;
 	}
 	if not(fire_is_burning(self.owner)) {
-		self.owner.fire_burner = world;
+		if (self.owner.fire_burner == self) {
+			self.owner.effects &= ~EFFECT_FLAME;
+			self.owner.fire_burner = NULL;
+		}
 		remove(self);
 		return;
 	}
