@@ -960,7 +960,6 @@ void Buffs_VampireDamage(entity targ, entity a, float damage, float deathtype) {
     if(damage <= 0 || !Buffs_Present(a, BUFF_VAMPIRE))
         return;
     
-	print("Buffs_VampireDamage\n");
     // paranoid sanity check, should not happen
     if((!a.buff_vamp_ticks  &&  a.buff_vamp_healthpool) ||
         (a.buff_vamp_ticks  && !a.buff_vamp_healthpool))
