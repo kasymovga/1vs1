@@ -161,9 +161,9 @@ float(entity to, float f) coop_item_give_factor {
 
 var float(entity item, entity plr) coop_item_give_to_handle_next;
 float(entity item, entity plr) coop_item_give_to_handle {
-	if (item.flags & FL_POWERUP) return FALSE;
-	if (item.flags & FL_WEAPON) return FALSE;
-	if (coop_item_give) return FALSE; //no recursion
+	if (item.flags & FL_POWERUP) goto finish;
+	if (item.flags & FL_WEAPON) goto finish;
+	if (coop_item_give) goto finish; //no recursion
 	entity e, e2;
 	e2 = spawn();
 	FOR_EACH_PLAYER(e) {
@@ -175,8 +175,8 @@ float(entity item, entity plr) coop_item_give_to_handle {
 		}
 	}
 	remove(e2);
-	coop_item_give_to_handle_next(item, plr);
-	return FALSE;
+:finish
+	return coop_item_give_to_handle_next(item, plr);
 }
 
 void(void) coop_init {
