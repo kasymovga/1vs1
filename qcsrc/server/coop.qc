@@ -161,9 +161,11 @@ float(entity to, float f) coop_item_give_factor {
 
 var float(entity item, entity plr) coop_item_give_to_handle_next;
 float(entity item, entity plr) coop_item_give_to_handle {
-	if (item.flags & FL_POWERUP) goto finish;
-	if (item.flags & FL_WEAPON) goto finish;
-	if (coop_item_give) goto finish; //no recursion
+	if ((item.flags & FL_POWERUP) //no powerups
+			|| (item.flags & FL_WEAPON) //no weapons
+			|| (item.items & (IT_KEY1 | IT_KEY2 | IT_KEY3)) //no keys
+			|| coop_item_give) //no recursion
+		goto finish;
 	entity e, e2;
 	e2 = spawn();
 	FOR_EACH_PLAYER(e) {
