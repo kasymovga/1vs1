@@ -167,7 +167,7 @@ float(entity item, entity plr) coop_item_give_to_handle {
 	entity e, e2;
 	e2 = spawn();
 	FOR_EACH_PLAYER(e) {
-		if (e != plr) {
+		if (e != plr && e.deadflag == DEAD_NO) {
 			copyentity(item, e2);
 			coop_item_give = TRUE;
 			item_give_to(e2, e);
