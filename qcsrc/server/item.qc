@@ -343,13 +343,14 @@ float(entity item, entity player) item_give_to {
 			#define PICK_AMMO(x, maxx) \
 			if (item.x) \
 			if (player.x < maxx) { \
+				float amount = plugin_chain_item_give_factor(player, 1) * item.x;\
 				if ((item.flags & FL_WEAPON) && g_pickup_weapon_ammo_limit && ((player.weapons & self.weapons) || (player.weapons_extra & self.weapons_extra))) { \
-					if (player.x < item.x) { \
-						player.x = max(0, item.x); \
+					if (player.x < amount) { \
+						player.x = max(0, amount); \
 						pickedup = TRUE; \
 					} \
 				} else { \
-					player.x = min(player.x + max(0, item.x), maxx); \
+					player.x = min(player.x + max(0, amount), maxx); \
 					pickedup = TRUE; \
 				} \
 			}
@@ -399,7 +400,8 @@ float(entity item, entity player) item_give_to {
 
 			RM_ELSE({
 				if (item.health || item.armorvalue) {
-					rm_heal(player, item, player, item.health, item.armorvalue, item.max_health, item.max_armorvalue,
+					float f = plugin_chain_item_give_factor(player, 1);
+					rm_heal(player, item, player, item.health * f, item.armorvalue * f, item.max_health, item.max_armorvalue,
 							DEATH_RM_ITEM, (item.health ? g_balance_pause_health_rot : 0), (item.armorvalue ? g_balance_pause_armor_rot : 0), '0 0 0', '0 0 0');
 					pickedup = TRUE;
 				}
@@ -407,13 +409,13 @@ float(entity item, entity player) item_give_to {
 				if (item.health)
 				if (player.health < item.max_health) {
 					pickedup = TRUE;
-					player.health = min(player.health + item.health, item.max_health);
+					player.health = min(player.health + item.health * plugin_chain_item_give_factor(player, 1), item.max_health);
 					player.pauserothealth_finished = max(player.pauserothealth_finished, time + g_balance_pause_health_rot);
 				}
 				if (item.armorvalue)
 				if (player.armorvalue < item.max_armorvalue) {
 					pickedup = TRUE;
-					player.armorvalue = min(player.armorvalue + item.armorvalue, item.max_armorvalue);
+					player.armorvalue = min(player.armorvalue + item.armorvalue * plugin_chain_item_give_factor(player, 1), item.max_armorvalue);
 					player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + g_balance_pause_armor_rot);
 				}
 			})

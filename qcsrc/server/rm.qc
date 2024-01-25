@@ -76,8 +76,12 @@ float(entity targ, entity inflictor, entity healer, float heal, float aheal, flo
 		//else if (DEATH_ISWEAPON(healtype, WEP_CAMPINGRIFLE) && (healtype & HITTYPE_HEADSHOT))
 		//	vdtype |= VDMG_TYPE_CRIT;
 
-		rm_damage_indicator(healer, hitloc, heal, aheal, RM_DAMAGE_HEAL);
-		rm_damage_received_indicator(targ, -0.1 - heal, -0.1 - aheal);
+		if (healer && clienttype(healer) == CLIENTTYPE_REAL)
+			rm_damage_indicator(healer, hitloc, heal, aheal, RM_DAMAGE_HEAL);
+
+		if (clienttype(targ) == CLIENTTYPE_REAL)
+			rm_damage_received_indicator(targ, -0.1 - heal, -0.1 - aheal);
+
 		//rm_heal_score(targ, healer, heal + aheal);
 		if not(silent) {
 			if (time > targ.heal_next_particle) {

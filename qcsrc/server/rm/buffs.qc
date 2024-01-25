@@ -56,6 +56,7 @@ float g_buffs_reactivate_delay_dual;
 float g_buffs_team_swap;
 float g_buffs_haste_refire_rate;
 float g_buffs_haste_move_rate;
+float g_buffs_supply_pickup_multiplier;
 
 #define ON_BUFF_ADDED(b) if(self.buffs & (b)) if not(self.oldbuffs & (b))
 #define ON_BUFF_REMOVED(b) if(self.oldbuffs & (b)) if not(self.buffs & (b))
@@ -197,6 +198,14 @@ float() rm_buffs_physics_max_speed_mod {
 //	rm_buffs_damage_mods_set_next(attacker, targ, deathtype);
 //}
 
+var float(entity to, float f) rm_buffs_item_give_factor_next;
+float(entity to, float f) rm_buffs_item_give_factor {
+	if(Buffs_Present(to, BUFF_SUPPLY))
+		f *= g_buffs_supply_pickup_multiplier;
+
+	return rm_buffs_item_give_factor_next(to, f);
+}
+
 void Buffs_Init(void) {
     float i, b;
     
@@ -218,6 +227,8 @@ void Buffs_Init(void) {
 	plugin_chain_weapon_rate_factor = rm_buffs_weapon_rate_factor;
 	//rm_buffs_damage_mods_set_next = plugin_chain_damage_mods_set;
 	//plugin_chain_damage_mods_set = rm_buffs_damage_mods_set;
+	rm_buffs_item_give_factor_next = plugin_chain_item_give_factor;
+	plugin_chain_item_give_factor = rm_buffs_item_give_factor;
 	CVAR_CACHE(g_buffs_random_spawns_distant);
 	CVAR_CACHE(g_buffs_random_spawns_min);
 	CVAR_CACHE(g_buffs_random_spawns_max);
@@ -274,6 +285,7 @@ void Buffs_Init(void) {
 	CVAR_CACHE(g_buffs_team_swap);
 	CVAR_CACHE(g_buffs_haste_refire_rate);
 	CVAR_CACHE(g_buffs_haste_move_rate);
+	CVAR_CACHE(g_buffs_supply_pickup_multiplier);
     CVAR_CACHE(g_buffs_team_only);
     CVAR_CACHE(g_buffs_stack);
     CVAR_CACHE(g_buffs_replace);
