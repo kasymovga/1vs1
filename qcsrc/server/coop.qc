@@ -1,5 +1,6 @@
 float g_coop_monster_factor;
 float g_coop_monster_base;
+float g_coop_item_share;
 
 void(void) coop_teleporter_think {
 	if (self.solid == SOLID_TRIGGER) {
@@ -150,18 +151,53 @@ void(entity attacker) coop_monster_killed {
 	}
 }
 
+float coop_item_give;
+
+var float(entity to, float f) coop_item_give_factor_next;
+float(entity to, float f) coop_item_give_factor {
+	if (coop_item_give) f *= g_coop_item_share;
+	return coop_item_give_factor_next(to, f);
+}
+
+var float(entity item, entity plr) coop_item_give_to_handle_next;
+float(entity item, entity plr) coop_item_give_to_handle {
+	if (item.flags & FL_POWERUP) return FALSE;
+	if (item.flags & FL_WEAPON) return FALSE;
+	if (coop_item_give) return FALSE; //no recursion
+	entity e, e2;
+	e2 = spawn();
+	FOR_EACH_PLAYER(e) {
+		if (e != plr) {
+			copyentity(item, e2);
+			coop_item_give = TRUE;
+			item_give_to(e2, e);
+			coop_item_give = FALSE;
+		}
+	}
+	remove(e2);
+	coop_item_give_to_handle_next(item, plr);
+	return FALSE;
+}
+
 void(void) coop_init {
 	single_init();
 	score_generic();
 	SP_STATUS = score_register("status", 0);
 	CVAR_CACHE(g_coop_monster_factor);
 	CVAR_CACHE(g_coop_monster_base);
+	CVAR_CACHE(g_coop_item_share);
 	coop_player_clear_next = plugin_chain_player_clear;
 	plugin_chain_player_clear = coop_player_clear;
 	coop_observer_spawn_next = plugin_chain_observer_spawn;
 	plugin_chain_observer_spawn = coop_observer_spawn;
 	plugin_monster_quant = coop_monster_quant;
 	plugin_monster_killed = coop_monster_killed;
+	coop_item_give_to_handle_next = plugin_chain_ItemGiveToHandle;
+	plugin_chain_ItemGiveToHandle = coop_item_give_to_handle;
+	if (g_coop_item_share) {
+		coop_item_give_factor_next = plugin_chain_item_give_factor;
+		plugin_chain_item_give_factor = coop_item_give_factor;
+	}
 	team_play_activate();
 	team_teams_set_count(1);
 	entity_initialize(world, coop_init_delayed, INITPRIO_GAMETYPE);
