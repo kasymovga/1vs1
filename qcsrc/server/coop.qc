@@ -181,7 +181,7 @@ float(entity item, entity plr) coop_item_give_to_handle {
 	if ((item.flags & FL_POWERUP) //no powerups
 			|| (item.flags & FL_WEAPON) //no weapons
 			|| (item.items & (IT_KEY1 | IT_KEY2 | IT_KEY3)) //no keys
-			|| coop_item_give //no recursion
+			|| coop_item_give_recursion //no recursion
 			|| substring(item.classname, 0, 7) == "dropped") //no dropped item
 		goto finish;
 
