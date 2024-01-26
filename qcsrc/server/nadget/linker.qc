@@ -63,6 +63,9 @@ void nadget_Linker_Think(void) {
             }
 
             p.hg_linker_effecttime = time;
+			if(self.hg_adept)
+				if(p != self.owner && p.deadflag != DEAD_FREEZE && (!team_mode || p.team != self.team))
+					nadget_Linker_Adept_Push(p);
         }
     }
     if(sharingframe) {
@@ -124,6 +127,7 @@ NADGET_HOOKFUNCTION(linker, Attack) {
     setmodel(e, "models/ctf/shield.md3");
     e.scale = g_nadgets_linker_range / e.maxs_x;
     e.glow_color = 0xF5;
+    e.hg_adept = Buffs_Present(self, BUFF_ADEPT);
     e.movetype = MOVETYPE_TOSS;
     e.hg_type = NADGET_LINKER;
     e.entremove = nadget_linker_on_remove;
