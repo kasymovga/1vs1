@@ -151,33 +151,41 @@ void(entity attacker) coop_monster_killed {
 	}
 }
 
-float coop_item_give;
+entity coop_item_give;
+float coop_item_give_recursion;
 
 var float(entity to, float f) coop_item_give_factor_next;
 float(entity to, float f) coop_item_give_factor {
-	if (coop_item_give) f *= g_coop_item_share;
+	if (coop_item_give && !coop_item_give_recursion) {
+		coop_item_give_recursion = TRUE;
+		entity e, e2;
+		e2 = spawn();
+		FOR_EACH_PLAYER(e) {
+			if (e != to && e.deadflag == DEAD_NO) {
+				copyentity(coop_item_give, e2);
+				item_give_to(e2, e);
+			}
+		}
+		remove(e2);
+		coop_item_give_recursion = FALSE;
+		coop_item_give = NULL;
+	} else if (coop_item_give_recursion)
+		f *= g_coop_item_share;
+
 	return coop_item_give_factor_next(to, f);
 }
 
 var float(entity item, entity plr) coop_item_give_to_handle_next;
 float(entity item, entity plr) coop_item_give_to_handle {
+	coop_item_give = NULL;
 	if ((item.flags & FL_POWERUP) //no powerups
 			|| (item.flags & FL_WEAPON) //no weapons
 			|| (item.items & (IT_KEY1 | IT_KEY2 | IT_KEY3)) //no keys
 			|| coop_item_give //no recursion
 			|| substring(item.classname, 0, 7) == "dropped") //no dropped item
 		goto finish;
-	entity e, e2;
-	e2 = spawn();
-	FOR_EACH_PLAYER(e) {
-		if (e != plr && e.deadflag == DEAD_NO) {
-			copyentity(item, e2);
-			coop_item_give = TRUE;
-			item_give_to(e2, e);
-			coop_item_give = FALSE;
-		}
-	}
-	remove(e2);
+
+	coop_item_give = item;
 :finish
 	return coop_item_give_to_handle_next(item, plr);
 }
