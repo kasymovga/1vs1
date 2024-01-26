@@ -850,6 +850,14 @@ void nadget_Trigger(void) {
         nadget_Sentry_Trigger();
 		nadget_GenericProjectile_DetonateAll(self, FALSE);
         self.hg_detonatepressed = TRUE;
+		if(Buffs_Present(self, BUFF_ADEPT)) {
+			NADGET_DO_IN_ALL_CONTEXTS({
+				if(self.hg_ctx_type == HG_LASER) {
+					nadget_Attack();
+					break;
+				}
+			}, self.hg_type2)
+		}
     }
 }
 
