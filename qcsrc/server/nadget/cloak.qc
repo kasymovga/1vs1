@@ -20,8 +20,19 @@ void nadget_Cloak(void) {
 }
 
 void nadget_Cloak_Trigger(void) {
-	self.hg_stealth = 0;
-	return;
+	if (!Buffs_Present(self, BUFF_ADEPT)) {
+		self.hg_stealth = 0;
+		return;
+	}
+	if (self.hg_stealth) {
+		self.hg_stealth_saved = self.hg_stealth;
+		self.hg_stealth = 0;
+	} else if (self.hg_stealth_saved) {
+		sound(self, CHAN_AUTO, "misc/stealth.wav", VOL_BASE, ATTN_NORM);
+		self.hg_stealth = self.hg_stealth_saved;
+		self.hg_stealth_saved = 0;
+		self.fire_endtime = 0;
+	}
 }
 
 void nadget_Cloak_PlayerFrame(void) {
