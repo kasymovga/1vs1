@@ -423,6 +423,14 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			//		_damage *= g_nadgets_cloak_damagereduction_factor;
 			//}
 		}
+		if(_damage &&
+				DEATH_NADGETTYPE(deathtype) == NADGET_SHIELD &&
+				(deathtype & HITTYPE_SECONDARY) &&
+				attacker.hg_shield &&
+				team_is_different_teams(self, attacker) &&
+				Buffs_Present(attacker, BUFF_ADEPT)
+				)
+			nadget_Shield_Adept_ExtendRenew(attacker);
 	})
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);

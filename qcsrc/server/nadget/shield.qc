@@ -16,6 +16,9 @@ float g_nadgets_shield_duration;
 float g_nadgets_shield_immobile;
 float g_nadgets_shield_health;
 float g_nadgets_shield_diminish;
+float g_nadgets_shield_adept_discharge_extend;
+float g_nadgets_shield_adept_discharge_renew;
+float g_nadgets_shield_adept_duration;
 
 void nadget_Shield_Discharge_Arc(entity targ, entity attacker, float _damage) {
     arc_damage(targ, attacker, _damage, NADGET_SHIELD | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
@@ -104,8 +107,21 @@ void nadget_Shield_Trigger(void) {
         self.think();
 		self = oldself;
     }
-	self.hg_shield = 0;
-	sound_stop(self, CHAN_AUTO);
+	if(!Buffs_Present(self, BUFF_ADEPT) || self.hg_shield_stored <= 0) {
+		self.hg_shield = 0;
+		sound_stop(self, CHAN_AUTO);
+	}
+}
+
+void nadget_Shield_Adept_ExtendRenew(entity plr) {
+    float extend = g_nadgets_shield_adept_discharge_extend;
+    float renew = g_nadgets_shield_adept_discharge_renew;
+    if (!extend && !renew)
+        return;
+
+    plr.hg_shield = max(plr.hg_shield, renew) + extend;
+    sound_stop(plr, CHAN_AUTO);
+    sound(plr, CHAN_AUTO, "misc/powerup_shield.wav", VOL_BASE, ATTN_NORM);
 }
 
 void nadget_Shield_Model_Think(void) {
@@ -122,6 +138,9 @@ void nadget_Shield_Model_Think(void) {
 
     self.colormod = '1 1 0';
     self.colormod_z = 1 - self.owner.hg_shieldpower;
+    if(self.hg_adept && self.owner.hg_shieldpower == 1)
+        self.colormod_z = 1;
+
     setorigin(self, self.owner.origin);
     self.nextthink = time;
 }
@@ -225,7 +244,12 @@ float nadget_Shield_Damage(entity attacker, float _damage, float deathtype, vect
 NADGET_HOOKFUNCTION(shield, Attack) {
     entity e;
     float d;
-	d = g_nadgets_shield_duration;
+	float adept = Buffs_Present(self, BUFF_ADEPT);
+	if (adept)
+		d = g_nadgets_shield_adept_duration;
+	else
+		d = g_nadgets_shield_duration;
+
 	if(g_nadgets_shield_immobile) {
 		self.hg_shield_oldmovetype = self.movetype;
 		self.movetype = MOVETYPE_NONE;
@@ -261,7 +285,8 @@ NADGET_HOOKFUNCTION(shield, Attack) {
         setorigin(e, self.origin);
         setmodel(e, "models/ctf/shield.md3");
         e.scale = 0.5;
-        e.skin = 10;
+		e.hg_adept = adept;
+		e.skin = 10 + !!adept;
         e.exteriormodeltoclient = self;
         setsize(e, e.scale * e.mins, e.scale * e.maxs);
 
@@ -297,5 +322,8 @@ NADGET_HOOKFUNCTION(shield, Init) {
 	CVAR_CACHE(g_nadgets_shield_immobile);
 	CVAR_CACHE(g_nadgets_shield_health);
 	CVAR_CACHE(g_nadgets_shield_diminish);
+	CVAR_CACHE(g_nadgets_shield_adept_discharge_extend);
+	CVAR_CACHE(g_nadgets_shield_adept_discharge_renew);
+	CVAR_CACHE(g_nadgets_shield_adept_duration);
     return NADGET_INIT_OK;
 }

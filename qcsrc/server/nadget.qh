@@ -18,6 +18,7 @@ void nadget_SetRegenTime(entity e, float t);
 void nadget_Trigger(void);
 void nadget_SetCooldown(.float cdfield, float gcd, float cd);
 string nadget_SelectableTypes(float issecondary);
+void nadget_Shield_Adept_ExtendRenew(entity plr);
 
 typedef float(void) hg_hookfunc_t;
 
