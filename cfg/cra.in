@@ -79,6 +79,9 @@ set cra_two_weapons_g_balance_shotgun_magazinecapacity 15
 set cra_two_weapons_g_balance_shotgun_secondary_damage 12
 set cra_two_weapons_g_balance_pryaxe_secondary_throw 3
 set cra_two_weapons_g_balance_flak_swap_buttons 1
+set cra_two_weapons_g_balance_zapper_primary_damage 20
+set cra_two_weapons_g_balance_zapper_primary_range 700
+set cra_two_weapons_g_balance_zapper_primary_refire 0.1
 set cra_two_nadgets_profile "Camping Rifle Arena with secondary nadget"
 set cra_two_nadgets_inherit cra
 set cra_two_nadgets_g_nadgets_double 1
