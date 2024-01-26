@@ -19,10 +19,15 @@ float g_nadgets_sentry_repairfactor_nadgets;
 float g_nadgets_sentry_shock_damage;
 float g_nadgets_sentry_shock_force;
 float g_nadgets_sentry_shock_energy_cost;
+float g_nadgets_sentry_shock_energy_cost;
 float g_nadgets_sentry_friction;
 float g_nadgets_sentry_pushfactor;
 float g_nadgets_sentry_rot;
 float g_nadgets_sentry_rot_pause;
+float g_nadgets_sentry_adept_shock_energy_cost;
+float g_nadgets_sentry_adept_shock_arc;
+float g_nadgets_sentry_adept_shock_arc_range;
+float g_nadgets_sentry_adept_shock_arc_force;
 
 .float spawntime;
 
@@ -445,9 +450,12 @@ void nadget_Sentry_Trigger(void) {
     float c_dmg = g_nadgets_sentry_shock_damage;
     float c_frc = g_nadgets_sentry_shock_force;
     float c_cost;
-	c_cost = g_nadgets_sentry_shock_energy_cost;
-    float found = 0, triggered = 0;
+	if(Buffs_Present(self, BUFF_ADEPT))
+		c_cost = g_nadgets_sentry_adept_shock_energy_cost;
+	else
+		c_cost = g_nadgets_sentry_shock_energy_cost;
 
+    float found = 0, triggered = 0;
     for(e = world; (e = find(e, classname, "hg_sentry"));) if(e.realowner == self) {
         ++found;
 
@@ -482,6 +490,17 @@ void nadget_Sentry_Trigger(void) {
 
             sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
             weapon_zapper_attack2_effect((team_mode ? self.team : COLOR_TEAM3), o, end_visual);
+			if(targ.takedamage && Buffs_Present(self, BUFF_ADEPT)) {
+				if(g_nadgets_sentry_adept_shock_arc) {
+					arc_damage(targ, self, c_dmg, NADGET_SENTRY | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
+						g_nadgets_sentry_adept_shock_arc_range, g_nadgets_sentry_adept_shock_arc,
+						g_nadgets_sentry_adept_shock_arc_force, COLOR_TEAM3, sentry_arc_hit
+					);
+				}
+			}
+			if (targ.solid == SOLID_BSP && !noimpact) {
+				effect_impact(endpos, c_dmg, 0, 0, force, WEAPON_ZAPPER | HITTYPE_SECONDARY, self);
+			}
             e.hg_sentry_energy = bound(0, e.hg_sentry_energy - c_cost, 1);
             ++triggered;
         }
@@ -591,5 +610,9 @@ NADGET_HOOKFUNCTION(sentry, Init) {
 	CVAR_CACHE(g_nadgets_sentry_pushfactor);
 	CVAR_CACHE(g_nadgets_sentry_rot);
 	CVAR_CACHE(g_nadgets_sentry_rot_pause);
+	CVAR_CACHE(g_nadgets_sentry_adept_shock_energy_cost);
+	CVAR_CACHE(g_nadgets_sentry_adept_shock_arc);
+	CVAR_CACHE(g_nadgets_sentry_adept_shock_arc_range);
+	CVAR_CACHE(g_nadgets_sentry_adept_shock_arc_force);
     return NADGET_INIT_OK;
 }
