@@ -1,8 +1,8 @@
 #if 0
 float hg_plasma_group;
+#endif
 .float hg_plasmalock_nexteffect;
 .entity hg_plasmalock_owner;
-#endif
 .float hg_plasmalock;
 
 .float hg_plasma_projrange;
@@ -14,3 +14,6 @@ float hg_plasma_group;
 
 void nadget_Plasma_Shard(float kickangle);
 void nadget_Plasma_Explode(void);
+
+float g_nadgets_plasma_adept_stun;
+float g_nadgets_plasma_projectile_frozenlock;

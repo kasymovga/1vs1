@@ -403,6 +403,20 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		return;
 
 	RM({
+		if (time < self.hg_plasmalock)
+		//if (deathtype != DEATH_NOISE)
+		if (deathtype != DEATH_TEAMCHANGE)
+		if (deathtype != DEATH_AUTOTEAMCHANGE)
+		if (deathtype != DEATH_KILL)
+		if (deathtype != DEATH_FALL)
+		if (deathtype != DEATH_DROWN)
+		if (deathtype != DEATH_ROT)
+		if (deathtype != DEATH_HURTTRIGGER)
+		//if (deathtype != DEATH_RESOURCE_ARMOR)
+		{
+			_damage = 0;
+			force = '0 0 0';
+		}
 		if(self != attacker)
 		if(!DEATH_ISSPECIAL(deathtype) || deathtype == DEATH_RM_MEODP)
 		if(deathtype != DEATH_RM_ARC)
@@ -423,6 +437,12 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			//		_damage *= g_nadgets_cloak_damagereduction_factor;
 			//}
 		}
+		if (DEATH_NADGETTYPE(deathtype) == NADGET_PLASMA)
+			if(self.deadflag == DEAD_FREEZE || (inflictor.hg_adept && g_nadgets_plasma_adept_stun)) if(self != attacker && (!team_mode || team_is_different_teams(self, attacker))) {
+				self.hg_plasmalock = time + g_nadgets_plasma_projectile_frozenlock * Buffs_NadgetPower(attacker);
+				self.hg_plasmalock_owner = attacker;
+				//te_csqc_lightningarc(inflictor.origin, hitloc, TRUE, attacker.team); //FIXME
+			}
 		if(_damage &&
 				DEATH_NADGETTYPE(deathtype) == NADGET_SHIELD &&
 				(deathtype & HITTYPE_SECONDARY) &&

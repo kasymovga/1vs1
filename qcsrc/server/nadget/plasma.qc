@@ -144,6 +144,9 @@ void nadget_Plasma_Shard(float kickangle) {
 }
 
 void nadget_Plasma_Explode(void) {
+	if (self.hg_adept && g_nadgets_plasma_adept_stun)
+		return;
+
     float c;
 
 	vector v;

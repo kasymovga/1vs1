@@ -268,6 +268,8 @@ void(void) nadget_init_common {
 	CVAR_CACHE(g_nadgets_transloc_adept_revive);
 	CVAR_CACHE(g_nadgets_transloc_medic_revive_health_multiplier);
 	CVAR_CACHE(g_nadgets_plasma_adept_projectiles_on_bounce);
+	CVAR_CACHE(g_nadgets_plasma_adept_stun);
+	CVAR_CACHE(g_nadgets_plasma_projectile_frozenlock);
 	addstat(STAT_HGFORCE, STAT_FLOAT, hg_power);
 	addstat(STAT_HGAMMO, STAT_INT, hg_ammo1);
 	addstat(STAT_HGREGEN, STAT_FLOAT, hg_regentime1);
