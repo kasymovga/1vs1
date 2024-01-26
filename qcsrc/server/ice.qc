@@ -123,6 +123,28 @@ float(entity attacker, entity inflictor, float deathtype) ice_player_death_handl
 	return TRUE;
 }
 
+void(entity frozen, entity unfrozer) ice_unfroze {
+	entity snd = spawn();
+	setorigin(snd, ENTITY_CENTER(frozen));
+	sound(snd, CHAN_PROJECTILE, sv_sound_ice_revive, VOL_BASEVOICE, ATTN_NORM);
+	snd.nextthink = time + 2;
+	snd.think = stdproc_remove;
+	if (clienttype(unfrozer) == CLIENTTYPE_REAL)
+		centerprint(unfrozer, strcat("^4You revive ^7", frozen.netname, "\n"));
+
+	if (unfrozer.classname == "player") {
+		bprint ("^1", frozen.netname, "^1 was revived by ", unfrozer.netname, "\n");
+		if (clienttype(frozen) == CLIENTTYPE_REAL)
+			centerprint(frozen, strcat("^4You revived by ^7", unfrozer.netname, "\n"));
+	} else {
+		bprint ("^1", frozen.netname, "^1 was autorevived\n");
+		centerprint(frozen, "^4You autorevived\n");
+	}
+	ice_hook_unfroze(unfrozer);
+	frozen.deadflag = DEAD_NO;
+	player_physics_setup(frozen);
+}
+
 void(void) ice_think {
 	self.nextthink = time + ICE_FRAME_TIME;
 	if (self.owner.deadflag != DEAD_FREEZE || self.owner.ice != self) {
@@ -202,25 +224,7 @@ void(void) ice_think {
 		}
 	}
 	if (self.unfroze_progress >= g_ice_unfroze_time) {
-		entity snd = spawn();
-		setorigin(snd, self.owner.origin);
-		sound(snd, CHAN_PROJECTILE, sv_sound_ice_revive, VOL_BASEVOICE, ATTN_NORM);
-		snd.nextthink = time + 2;
-		snd.think = stdproc_remove;
-		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
-			centerprint(unfrozer, strcat("^4You revive ^7", self.owner.netname, "\n"));
-
-		if (unfrozer.classname == "player") {
-			bprint ("^1", self.owner.netname, "^1 was revived by ", unfrozer.netname, "\n");
-			if (clienttype(self.owner) == CLIENTTYPE_REAL)
-				centerprint(self.owner, strcat("^4You revived by ^7", unfrozer.netname, "\n"));
-		} else {
-			bprint ("^1", self.owner.netname, "^1 was autorevived\n");
-			centerprint(self.owner, "^4You autorevived\n");
-		}
-		ice_hook_unfroze(unfrozer);
-		self.owner.deadflag = DEAD_NO;
-		player_physics_setup(self.owner);
+		ice_unfroze(self.owner, unfrozer);
 		return;
 	}
 	if (self.unfroze_progress == oldprogress)

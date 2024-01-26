@@ -13,6 +13,9 @@ float g_nadgets_initial_regen;
 float g_nadgets_drop_on_death;
 float g_nadgets_show_in_sbar;
 float g_nadgets_bonus_at_revive;
+float g_nadgets_transloc_adept_revive;
+float g_nadgets_transloc_medic_revive_health_multiplier;
+float g_nadgets_plasma_adept_projectiles_on_bounce;
 
 void nadget_UpdateDetonables(void);
 void nadget_ForceDetonateAll(void);
@@ -262,6 +265,9 @@ void(void) nadget_init_common {
 	CVAR_CACHE(g_nadgets_initial_regen);
 	CVAR_CACHE(g_nadgets_drop_on_death);
 	CVAR_CACHE(g_nadgets_bonus_at_revive);
+	CVAR_CACHE(g_nadgets_transloc_adept_revive);
+	CVAR_CACHE(g_nadgets_transloc_medic_revive_health_multiplier);
+	CVAR_CACHE(g_nadgets_plasma_adept_projectiles_on_bounce);
 	addstat(STAT_HGFORCE, STAT_FLOAT, hg_power);
 	addstat(STAT_HGAMMO, STAT_INT, hg_ammo1);
 	addstat(STAT_HGREGEN, STAT_FLOAT, hg_regentime1);
@@ -697,14 +703,12 @@ float nadget_RegenLimit(entity plr) {
     if(mx < 1)
         return 0;
 
-#if 0
-    if(Buffs_Present(plr, BUFF_ADEPT))
-        mx += GRENVAR(plr.hg_ctx_type, "adept_regen_limit_extend");
+		if (Buffs_Present(plr, BUFF_ADEPT))
+			mx += GRENVAR(plr.hg_ctx_type, "adept_regen_limit_extend");
 
-    float supply = Buffs_Present(plr, BUFF_SUPPLY);
-    if(supply)
-        mx += CVAR(g_buffs_supply_hg_extra_regen_limit) * rint(supply);
-#endif
+		float supply = Buffs_Present(plr, BUFF_SUPPLY);
+		if (supply)
+			mx += g_buffs_supply_hg_extra_regen_limit * rint(supply);
 
     return mx;
 }

@@ -47,6 +47,14 @@ void nadget_GenericProjectile_RadiusDamage(void) {
     //float p = Buffs_NadgetPower(self.owner);
     float dmgmod = 1;
     float frcmod = 1;
+	if (self.hg_adept) {
+		if (GV("adept_damagemod")) {
+			dmgmod = dmgmod * (1 + (GV("adept_damagemod") - 1) * self.hg_adept);
+		}
+		if (GV("adept_forcemod")) {
+			frcmod = frcmod * (1 + (GV("adept_forcemod")  - 1) * self.hg_adept);
+		}
+	}
     float ei = 0;
     switch (self.hg_type) {
     case NADGET_NAPALM:
@@ -108,7 +116,11 @@ void nadget_GenericProjectile_Explode(void) {
 
 float nadget_GenericProjectile_TryStick(entity targ, vector normal) {
     float doStick;
-	doStick = GRENVAR(self.hg_type, "stick");
+	if(self.hg_adept)
+		doStick = GRENVAR(self.hg_type, "adept_stick");
+	else
+		doStick = GRENVAR(self.hg_type, "stick");
+
     if(!doStick || (targ.takedamage == DAMAGE_AIM && doStick < 2) || targ.solid == SOLID_CORPSE)
         return FALSE;
 
@@ -175,7 +187,28 @@ void nadget_GenericProjectile_Touch(void) {
             return;
 
         if(self.hg_type == NADGET_TRANSLOC && team_mode && other.team == self.owner.team) {
-			goto troll;
+            float adeptRev = (Buffs_Present(self.owner, BUFF_ADEPT) && g_nadgets_transloc_adept_revive);
+			if(adeptRev || Buffs_Present(self.owner, BUFF_MEDIC)) {
+				if (other.deadflag == DEAD_FREEZE) {
+					self.owner.chain = world;
+					ice_unfroze(other, self);
+					self.hg_tl_revived = TRUE;
+					float m = g_nadgets_transloc_medic_revive_health_multiplier;
+					float h = other.health * m;
+					float a = other.armorvalue * m;
+					if(adeptRev)
+						m = max(1.0, m);
+
+					if(m > 1.0)
+						rm_heal(other, self, self.owner, other.health - h, other.armorvalue - a, 0, 0, NADGET_TRANSLOC, 0, 0, self.origin, '0 0 0');
+					else if(m < 1.0) {
+						other.health = h;
+						other.armorvalue = a;
+						other.pauseregen_finished = time + g_balance_pause_health_regen;
+					}
+				}
+			} else
+				goto troll;
         } else if(self.hg_type == NADGET_REMOTE) {
             goto troll;
         } else if(self.hg_type == NADGET_PLASMA) {
@@ -198,7 +231,19 @@ void nadget_GenericProjectile_Touch(void) {
             return;
         } else if(self.hg_type == NADGET_LASER) {
             nadget_GenericProjectile_RadiusDamage();
-        }
+		} else if (self.hg_type == NADGET_PLASMA && self.hg_adept) {
+			float pcount = g_nadgets_plasma_adept_projectiles_on_bounce;
+			if (pcount > 0) {
+				vector oldvel = self.velocity;
+				self.velocity = '0 0 0';
+				//++nadget_plasma_group;
+				float c;
+				for (c = 0; c < pcount; ++c)
+					nadget_Plasma_Shard(2 * MATH_PI * (c / pcount));
+
+				self.velocity = oldvel;
+			}
+		}
 :troll
         if(self.hg_type == NADGET_RAZE) {
             if(trace_ent && trace_ent.solid == SOLID_BSP)
@@ -274,7 +319,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
 	if (self.movetype != MOVETYPE_NONE)
 	if (self.movetype != MOVETYPE_FOLLOW) { //not already sticked
 		sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
-		float lt_override = GRENVAR(e.hg_type, "stick_lifetime_override");
+		float lt_override = GRENVAR(e.hg_type, (e.hg_adept ? "_adept_stick_lifetime_override" : "stick_lifetime_override"));
 		if(lt_override > 0)
 			e.hg_deathtime = time + lt_override;
 	}
@@ -393,7 +438,26 @@ void nadget_GenericProjectile_Think(void) {
 }
 
 float nadget_GenericProjectile_Attack(float hgtype) {
-	nadget_GenericProjectile(hgtype, '0 0 0', FALSE);
+	if(Buffs_Present(self, BUFF_ADEPT) && (GRENVAR(hgtype, "adept_split") > 0 ||
+	   (hgtype == NADGET_LASER && self.hg_detonatepressed))) {
+		float split = GRENVAR(hgtype, "adept_split");
+		float spread = GRENVAR(hgtype, "adept_split_spread");
+		vector dir = '0 0 0';
+		float i;
+
+		if(!split && hgtype == NADGET_LASER) {
+			split = hg_ammo_used = hg_ammo_available;
+		}
+
+		if(split == 1)
+			nadget_GenericProjectile(hgtype, '0 0 0', FALSE);
+		else for(i = 0; i < split; ++i) {
+			dir_y = spread * (-0.5 + (i / (split-1)));
+			nadget_GenericProjectile(hgtype, dir, i);
+		}
+	} else
+		nadget_GenericProjectile(hgtype, '0 0 0', FALSE);
+
     return NADGET_ATTACK_OK;
 }
 
@@ -461,7 +525,11 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     makevectors(a + ang);
     weapon_shotdir = v_forward;
     entity gren = projectile(hgtype != NADGET_RAZE, nadget_GenericProjectile_CSQCProjType(hgtype), TRUE, self);
-	gren.movetype = GV("movetype");
+	if(gren.hg_adept && GV("adept_movetype"))
+		gren.movetype = GV("adept_movetype");
+	else
+		gren.movetype = GV("movetype");
+
     gren.classname = "hg_generic_projectile";
     gren.bot_dodge = TRUE;
     gren.bot_dodgerating = GV("damage") + 300;
@@ -471,21 +539,45 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.hg_type = hgtype;
     gren.spawnorigin = self.origin;
     gren.hg_spawntime = time;
-	gren.hg_detonable = GV("detonable");
-	gren.hg_detonatedelay = GV("detonate_delay");
-	gren.hg_detonateready = time + GV("detonate_threshold");
+	if(hgtype != NADGET_NAPALM) {
+		gren.hg_adept = Buffs_Present(self, BUFF_ADEPT);
+	}
+	if(gren.hg_adept && GV("adept_detonable")) {
+		gren.hg_detonable = GV("adept_detonable");
+		gren.hg_detonatedelay = GV("adept_detonate_delay");
+		gren.hg_detonateready = time + GV("adept_detonate_threshold");
+	} else {
+		gren.hg_detonable = GV("detonable");
+		gren.hg_detonatedelay = GV("detonate_delay");
+		gren.hg_detonateready = time + GV("detonate_threshold");
+	}
 	if (gren.movetype == MOVETYPE_TOSS || gren.movetype == MOVETYPE_BOUNCE)
 		gren.gravity = GV("gravity");
 
     setorigin(gren, weapon_shotorg);
 
     float lt;
-    if(hgtype == NADGET_TRANSLOC && self.BUTTON_CROUCH) {
-		lt = GV("crouch_lifetime");
-    } else
-        lt = GV("lifetime");
+	if (hgtype == NADGET_TRANSLOC && self.BUTTON_CROUCH) {
+		if (gren.hg_adept) {
+			lt = GV("adept_crouch_lifetime");
+			if (!lt)
+				lt = GV("crouch_lifetime");
+		} else
+			lt = GV("crouch_lifetime");
+	} else if (gren.hg_adept) {
+		lt = GV("adept_lifetime");
+		if (!lt)
+			lt = GV("lifetime");
+		else if(hgtype == NADGET_REMOTE)
+			lt = lt * Buffs_NadgetPower(self);
+	} else
+		lt = GV("lifetime");
 
-	gren.cnt = GV("bouncelimit");
+	if (gren.hg_adept)
+		gren.cnt = GV("adept_bouncelimit");
+	else
+		gren.cnt = GV("bouncelimit");
+
     if(self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face"))
 		gren.hg_deathtime = time + 0.01;
 	else
@@ -498,6 +590,11 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.entremove = nadget_GenericProjectile_Remove;
     gren.team = self.team;
     gren.hg_isbonus = self.hg_bonus;
+    if (gren.hg_adept) {
+		gren.health = GV("adept_health");
+		if (gren.hg_type == NADGET_RAZE)
+			gren.hg_fireSpawnTime = gren.hg_spawntime + GV("adept_trailblaze_delay");
+    }
     if(GV("takedamage") || gren.health) {
         gren.takedamage = DAMAGE_AIM;
         gren.event_damage = nadget_GenericProjectile_Damage;

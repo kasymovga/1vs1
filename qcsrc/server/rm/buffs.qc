@@ -298,6 +298,7 @@ void Buffs_Init(void) {
     CVAR_CACHE(g_buffs_spawn_on_powerups);
     CVAR_CACHE(g_buffs_random_spawns);
     CVAR_CACHE(g_buffs_lockon);
+	CVAR_CACHE(g_buffs_supply_hg_extra_regen_limit);
 
     if(g_buffs_stack)
         g_buffs_replace = FALSE;

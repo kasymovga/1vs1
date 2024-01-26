@@ -12,6 +12,7 @@ float g_buffs_randomize_interval;
 float g_buffs_spawn_on_powerups;
 float g_buffs_random_spawns;
 float g_buffs_lockon;
+float g_buffs_supply_hg_extra_regen_limit;
 
 float g_buffs_enabled;
 float g_buffs_baseline;
