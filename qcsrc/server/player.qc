@@ -441,7 +441,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			if(self.deadflag == DEAD_FREEZE || (inflictor.hg_adept && g_nadgets_plasma_adept_stun)) if(self != attacker && (!team_mode || team_is_different_teams(self, attacker))) {
 				self.hg_plasmalock = time + g_nadgets_plasma_projectile_frozenlock * Buffs_NadgetPower(attacker);
 				self.hg_plasmalock_owner = attacker;
-				//te_csqc_lightningarc(inflictor.origin, hitloc, TRUE, attacker.team); //FIXME
+				//te_csqc_lightningarc(inflictor.origin, hitloc, TRUE, attacker.team);
+				effect_lightningarc(inflictor.origin, hitloc/*, TRUE, attacker.team*/); //FIXME
 			}
 		if(_damage &&
 				DEATH_NADGETTYPE(deathtype) == NADGET_SHIELD &&
