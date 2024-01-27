@@ -59,6 +59,10 @@ float g_buffs_haste_move_rate;
 float g_buffs_supply_pickup_multiplier;
 float g_buffs_stealth_alpha;
 float g_buffs_stealth_regaintime;
+float g_buffs_guard_health;
+float g_buffs_guard_armor;
+float g_buffs_guard_health_regen;
+float g_buffs_guard_armor_regen;
 
 #define ON_BUFF_ADDED(b) if(self.buffs & (b)) if not(self.oldbuffs & (b))
 #define ON_BUFF_REMOVED(b) if(self.oldbuffs & (b)) if not(self.buffs & (b))
@@ -222,14 +226,28 @@ float rm_buffs_WeaponPrepareAttack(float secondary, float attacktime) {
 	return rm_buffs_WeaponPrepareAttack_next(secondary, attacktime);
 }
 
+var void() rm_buffs_player_health_armor_mods_set_next;
+void() rm_buffs_player_health_armor_mods_set {
+	rm_buffs_player_health_armor_mods_set_next();
+	if not(Buffs_Present(self, BUFF_GUARD)) return;
+	plugin_player_health_armor_rot_regen = FALSE;
+	float limith = g_balance_health_limit * plugin_player_armor_health_limit_mod;
+	float maxh = g_buffs_guard_health * plugin_player_health_max_mod;
+	float minh = g_buffs_guard_health * plugin_player_health_max_mod;
+	self.health = player_calc_rot_regen(self.health, minh, g_buffs_guard_armor_regen, g_balance_health_regenlinear, plugin_player_regen_mod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, plugin_player_rot_mod * frametime * (time > self.pauserothealth_finished), limith);
+	// if player rotted to death...  die!
+	if (self.health < 1)
+		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+
+	float limita = g_balance_armor_limit * plugin_player_armor_health_limit_mod;
+	self.armorvalue = player_calc_rot_regen(self.armorvalue, g_buffs_guard_armor, g_buffs_guard_armor_regen, g_balance_armor_regenlinear, plugin_player_regen_mod * frametime * (time > self.pauseregen_finished), max(g_balance_armor_rotstable, g_buffs_guard_armor), g_balance_armor_rot, g_balance_armor_rotlinear, plugin_player_rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
+}
+
 void Buffs_Init(void) {
     float i, b;
-    
     CVAR_CACHE(g_buffs);
-    
     //if(g_clanarena)
     //    g_buffs = (g_buffs && CVAR(g_clanarena_buffs));
-    
     if(!g_buffs)
         return;
 
@@ -249,6 +267,8 @@ void Buffs_Init(void) {
 	plugin_chain_player_alpha_mod = rm_buffs_player_alpha_mod;
 	rm_buffs_WeaponPrepareAttack_next = plugin_chain_WeaponPrepareAttack;
 	plugin_chain_WeaponPrepareAttack = rm_buffs_WeaponPrepareAttack;
+	rm_buffs_player_health_armor_mods_set_next = plugin_chain_player_health_armor_mods_set;
+	plugin_chain_player_health_armor_mods_set = rm_buffs_player_health_armor_mods_set;
 	CVAR_CACHE(g_buffs_random_spawns_distant);
 	CVAR_CACHE(g_buffs_random_spawns_min);
 	CVAR_CACHE(g_buffs_random_spawns_max);
@@ -308,6 +328,10 @@ void Buffs_Init(void) {
 	CVAR_CACHE(g_buffs_supply_pickup_multiplier);
 	CVAR_CACHE(g_buffs_stealth_alpha);
 	CVAR_CACHE(g_buffs_stealth_regaintime);
+	CVAR_CACHE(g_buffs_guard_health);
+	CVAR_CACHE(g_buffs_guard_armor);
+	CVAR_CACHE(g_buffs_guard_health_regen);
+	CVAR_CACHE(g_buffs_guard_armor_regen);
     CVAR_CACHE(g_buffs_team_only);
     CVAR_CACHE(g_buffs_stack);
     CVAR_CACHE(g_buffs_replace);
@@ -603,7 +627,10 @@ float Buffs_Model_Send(entity to, float sf) {
     net_write_byte(MSG_ENTITY, sf);
 
     if(sf & 1) {
-        net_write_byte(MSG_ENTITY, num_for_edict(o));
+		if (to == o)
+			net_write_byte(MSG_ENTITY, num_for_edict(o));
+		else
+			net_write_byte(MSG_ENTITY, num_for_edict(o.body.body));
     }
 
     if(sf & 2) {
