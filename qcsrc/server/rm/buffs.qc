@@ -243,6 +243,11 @@ void() rm_buffs_player_health_armor_mods_set {
 	self.armorvalue = player_calc_rot_regen(self.armorvalue, g_buffs_guard_armor, g_buffs_guard_armor_regen, g_balance_armor_regenlinear, plugin_player_regen_mod * frametime * (time > self.pauseregen_finished), max(g_balance_armor_rotstable, g_buffs_guard_armor), g_balance_armor_rot, g_balance_armor_rotlinear, plugin_player_rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
 }
 
+var void(entity spot) rm_buffs_player_spawn_next;
+void(entity spot) rm_buffs_player_spawn {
+	Buffs_MEODP_Point_Attach(self, Buffs_MEODP_Death_Player);
+}
+
 void Buffs_Init(void) {
     float i, b;
     CVAR_CACHE(g_buffs);
@@ -269,6 +274,8 @@ void Buffs_Init(void) {
 	plugin_chain_WeaponPrepareAttack = rm_buffs_WeaponPrepareAttack;
 	rm_buffs_player_health_armor_mods_set_next = plugin_chain_player_health_armor_mods_set;
 	plugin_chain_player_health_armor_mods_set = rm_buffs_player_health_armor_mods_set;
+	rm_buffs_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = rm_buffs_player_spawn;
 	CVAR_CACHE(g_buffs_random_spawns_distant);
 	CVAR_CACHE(g_buffs_random_spawns_min);
 	CVAR_CACHE(g_buffs_random_spawns_max);
@@ -790,6 +797,7 @@ void(float killed) rm_buffs_player_clear {
 	self.effective_buffs = 0;
 	self.buffs = 0;
 	rm_buffs_player_clear_next(killed);
+	Buffs_MEODP_Point_Detach(self);
 }
 
 void(void) rm_buffs_player_think {
@@ -1190,6 +1198,7 @@ void Buffs_ReaperFrag(entity targ, entity attacker) {
 
 void Buffs_MEODP_Point_Think(void) {
     if(!self.owner || wasfreed(self.owner)) {
+		antilag_remove(self);
         remove(self);
         return;
     }
@@ -1331,7 +1340,7 @@ void Buffs_MEODP_Point_Attach(entity e, meodp_death_f death) {
     p.event_damage = Buffs_MEODP_Point_Damage;
     setmodel(p, "models/runematch/rune.mdl");
     setsize(p, '-8 -8 -8', '8 8 8');
-    
+	antilag_add(p);
     e.meodp_point = p;
     e.meodp_death = death;
 }
@@ -1339,7 +1348,8 @@ void Buffs_MEODP_Point_Attach(entity e, meodp_death_f death) {
 void Buffs_MEODP_Point_Detach(entity e) {
     if(!e.meodp_point)
         return;
-    
+
+	antilag_remove(e.meodp_point);
     remove(e.meodp_point);
     e.meodp_point = NULL;
     e.meodp_death = NULL;
@@ -1400,20 +1410,6 @@ void Buffs_MEODP_Death_Use_Multiple(entity attacker, entity inflictor) {
     Buffs_MEODP_TriggerDeath_Multiple(attacker, inflictor,
                                       Buffs_MEODP_Filter_NearbyRelated, self);
 }
-
-//FIXME
-#if 0
-void Buffs_MEODP_Antilag(entity plr, float t) {
-    if(!plr.meodp_point)
-        return;
-
-    using(time = t) using(self = plr.meodp_point) {
-        save_trace_globals();
-        self.think();
-        restore_trace_globals();
-    }
-}
-#endif
 
 float Buffs_BuffPickup_PickupAllowed(entity buff, entity plr) {
     float allowReplace = g_buffs_replace;

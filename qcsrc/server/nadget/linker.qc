@@ -110,6 +110,10 @@ void nadget_Linker_Think(void) {
     self.nextthink = time;
 }
 
+void nadget_Linker_MEODP_Death(entity attacker, entity inflictor) {
+	stdproc_remove();
+}
+
 NADGET_HOOKFUNCTION(linker, Attack) {
     entity e = spawn();
     e.classname = "hg_linker";
@@ -136,6 +140,7 @@ NADGET_HOOKFUNCTION(linker, Attack) {
 
     setorigin(e, self.origin + self.view_ofs);
     setsize(e, '-32 -32 0', '32 32 32');
+    Buffs_MEODP_Point_Attach(e, nadget_Linker_MEODP_Death);
     sound(e, CHAN_PROJECTILE, "misc/powerup.wav", 1, 1.5);
 
     return NADGET_ATTACK_OK;

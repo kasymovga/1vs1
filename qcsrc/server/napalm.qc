@@ -99,6 +99,7 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
 
     PROJECTILE_MAKETRIGGER(proj);
     setorigin(proj, porg);
+    Buffs_MEODP_Point_Attach(proj, Buffs_MEODP_Death_Remove_Multiple);
     return proj;
 }
 

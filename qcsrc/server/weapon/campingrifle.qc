@@ -78,7 +78,9 @@ void(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, flo
 }
 
 void(void) weapon_campingrifle_attack {
+	entity pts = Buffs_MEODP_Hitscan_Begin(self);
 	weapon_campingrifle_fire(g_balance_campingrifle_primary_spread, g_balance_campingrifle_primary_damage, g_balance_campingrifle_primary_headshotaddeddamage, g_balance_campingrifle_primary_force, g_balance_campingrifle_primary_speed, g_balance_campingrifle_primary_lifetime, g_balance_campingrifle_primary_ammo, WEAPON_CAMPINGRIFLE, g_balance_campingrifle_primary_bulletconstant);
+	Buffs_MEODP_Hitscan_End(pts);
 }
 
 void(void) weapon_campingrifle_attack2 {

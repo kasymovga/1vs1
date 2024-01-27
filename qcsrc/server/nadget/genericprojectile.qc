@@ -496,6 +496,14 @@ void nadget_GenericProjectile_Remove(void) {
         self.owner.hg_detonables -= 1;
 }
 
+void nadget_GenericProjectile_MEODP_Death(entity attacker, entity inflictor) {
+    self.takedamage = DAMAGE_AIM;
+    self.health = max(10, self.health);
+    self.event_damage = nadget_GenericProjectile_Damage;
+    self.hg_state = 1;
+    damage(self, inflictor, attacker, self.health, DEATH_RM_MEODP, self.meodp_point.origin, '0 0 0');
+}
+
 #define GV(v) (GRENVAR(hgtype, v))
 
 entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
@@ -638,6 +646,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.max_health = gren.health;
     gren.angles = vectoangles(gren.velocity);
     gren.hg_nadesused = self.hg_nadesused;
+    Buffs_MEODP_Point_Attach(gren, nadget_GenericProjectile_MEODP_Death);
     if(hgtype == NADGET_NAPALM && self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face")) {
         damage(self, self, self, GV("kamikaze_damage") /* * Buffs_NadgetPower(self) */, NADGET_NAPALM, self.origin, '0 0 0');
     }
