@@ -544,6 +544,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 	if (self.health < 1)
 	if not(plugin_player_death_handle(attacker, inflictor, deathtype)) {
+		RM({
+			Buffs_ReaperFrag(attacker, self);
+		})
 		float defer_client_kill_now_team_change;
 		defer_client_kill_now_team_change = FALSE;
 		float switchweapon_save = self.weapon;
