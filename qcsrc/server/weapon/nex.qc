@@ -56,6 +56,7 @@ void(void) weapon_nex_attack {
 	float flying;
 	flying = physics_is_flying(self); // do this BEFORE to make the trace values from bullet_railgun last
 	antilag_begin(akimbo_owner(self));
+	entity pts = Buffs_MEODP_Hitscan_Begin(self);
 	weapon_setup_shot (self, g_balance_nex_recoil, "weapons/nexfire.wav", 1);
 	damage_yoda = 0;
 	damage_headshot = 0;
@@ -63,6 +64,7 @@ void(void) weapon_nex_attack {
 	damage_headshotbonus = g_balance_nex_damage_headshot;
 	bullet_railgun(weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEAPON_NEX);
 	damage_headshotbonus = 0;
+	Buffs_MEODP_Hitscan_End(pts);
 	antilag_end();
 	if (damage_headshot)
 		announce(akimbo_owner(self), "announcer/male/headshot.wav", "^1Head^3Shot");

@@ -1358,7 +1358,7 @@ void Buffs_MEODP_Point_Detach(entity e) {
 .entity meodp_chain;
 
 entity Buffs_MEODP_Hitscan_Begin(entity plr) {
-    if(!Buffs_Present(plr, BUFF_MEODP))
+    if(!Buffs_Present(akimbo_owner(plr), BUFF_MEODP))
         return NULL;
     
     entity p, pts = findchain_tofield(classname, "meodp_point", meodp_chain);
