@@ -1231,10 +1231,10 @@ float Buffs_MEODP_Point_VisibleForPlayer(entity p, entity plr) {
     if(!Buffs_Present(plr, BUFF_MEODP))
         return FALSE;
     
-    if(p.owner.iscreature)
-    if(!team_is_different_teams(p.owner, plr))
-        return FALSE;
-    
+	if (p.owner.iscreature)
+	if (p.owner.deadflag != DEAD_FREEZE && !team_is_different_teams(p.owner, plr))
+			return FALSE;
+
     return TRUE;
 }
 

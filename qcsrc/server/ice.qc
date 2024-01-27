@@ -20,6 +20,7 @@ void(void) ice_think;
 
 void(void) ice_remove {
 	if (self.ice) {
+		Buffs_MEODP_Point_Detach(self);
 		remove(self.ice.ice);
 		remove(self.ice);
 	}
@@ -65,6 +66,10 @@ float(entity to, float sf) ice_pov_send {
 	return TRUE;
 }
 
+void(entity attacker, entity inflictor) ice_meodp_hit {
+	ice_unfroze(self, attacker);
+}
+
 float(entity attacker, entity inflictor, float deathtype) ice_player_death_handle {
 	if (ice_hook_skip_death_handle)
 	if (ice_hook_skip_death_handle())
@@ -93,6 +98,8 @@ float(entity attacker, entity inflictor, float deathtype) ice_player_death_handl
 	if (team_is_different_teams(attacker, self))
 		sound_play2(attacker, sv_sound_ice_frag);
 
+	Buffs_MEODP_Point_Detach(self);
+	Buffs_MEODP_Point_Attach(self, ice_meodp_hit);
 	self.ice = spawn();
 	self.ice.alpha = sv_model_ice_alpha;
 	self.ice.scale = sv_model_ice_scale;
@@ -140,9 +147,14 @@ void(entity frozen, entity unfrozer) ice_unfroze {
 		bprint ("^1", frozen.netname, "^1 was autorevived\n");
 		centerprint(frozen, "^4You autorevived\n");
 	}
+	entity oldself = self;
+	self = frozen.ice;
 	ice_hook_unfroze(unfrozer);
 	frozen.deadflag = DEAD_NO;
-	player_physics_setup(frozen);
+	self = frozen;
+	ice_remove();
+	self = oldself;
+	Buffs_MEODP_Point_Attach(frozen, Buffs_MEODP_Death_Player);
 }
 
 void(void) ice_think {
