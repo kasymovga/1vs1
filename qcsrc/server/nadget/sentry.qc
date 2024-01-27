@@ -48,7 +48,7 @@ float nadget_Sentry_TargetIsValid(entity emitter, entity e) {
     if(PLAYER_DEAD(e))
         return FALSE;
 
-    if(!team_is_different_teams(e, sentry.realowner)/* && !Buffs_Present(sentry.realowner, BUFF_MEDIC) */)
+    if(!team_is_different_teams(e, sentry.realowner) && !Buffs_Present(sentry.realowner, BUFF_MEDIC))
         return FALSE;
 
     if(nadget_Sentry_TargetIsTaken(emitter, e))
