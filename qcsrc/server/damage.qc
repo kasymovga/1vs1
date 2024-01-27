@@ -172,6 +172,15 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 		if (targ.classname != "player") {
 			rm_damage_indicator(attacker, hitloc, _damage, 0, RM_DAMAGE_NOTPLAYER);
 		}
+		if (_damage > 0 && deathtype != DEATH_RM_ENDURANCE)
+			if (!team_mode || self.team != attacker.team) {
+				self.buff_stealth_time = time;
+				if (self.hg_stealth && self.hg_stealthalpha > 0.2) {
+					self.hg_stealth = 0;
+					self.hg_stealth_saved = 0;
+					self.hg_stealthtime = 0; // no action delay if forcefully decloaked
+				}
+			}
 	})
 	if (_damage != 0 || (self.damageforcescale && vlen(force)))
 	if (self.event_damage) {

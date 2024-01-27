@@ -57,6 +57,8 @@ float g_buffs_team_swap;
 float g_buffs_haste_refire_rate;
 float g_buffs_haste_move_rate;
 float g_buffs_supply_pickup_multiplier;
+float g_buffs_stealth_alpha;
+float g_buffs_stealth_regaintime;
 
 #define ON_BUFF_ADDED(b) if(self.buffs & (b)) if not(self.oldbuffs & (b))
 #define ON_BUFF_REMOVED(b) if(self.oldbuffs & (b)) if not(self.buffs & (b))
@@ -206,6 +208,20 @@ float(entity to, float f) rm_buffs_item_give_factor {
 	return rm_buffs_item_give_factor_next(to, f);
 }
 
+var float(entity plr, entity viewer, float a) rm_buffs_player_alpha_mod_next;
+float(entity plr, entity viewer, float a) rm_buffs_player_alpha_mod {
+    if (Buffs_Present(plr, BUFF_STEALTH))
+        a *= (1 - (1 - g_buffs_stealth_alpha) * bound(0, (time - plr.buff_stealth_time) / g_buffs_stealth_regaintime, 1));
+
+	return rm_buffs_player_alpha_mod_next(plr, viewer, a);
+}
+
+var float(float secondary, float attacktime) rm_buffs_WeaponPrepareAttack_next;
+float rm_buffs_WeaponPrepareAttack(float secondary, float attacktime) {
+	self.buff_stealth_time = time;
+	return rm_buffs_WeaponPrepareAttack_next(secondary, attacktime);
+}
+
 void Buffs_Init(void) {
     float i, b;
     
@@ -229,6 +245,10 @@ void Buffs_Init(void) {
 	//plugin_chain_damage_mods_set = rm_buffs_damage_mods_set;
 	rm_buffs_item_give_factor_next = plugin_chain_item_give_factor;
 	plugin_chain_item_give_factor = rm_buffs_item_give_factor;
+	rm_buffs_player_alpha_mod_next = plugin_chain_player_alpha_mod;
+	plugin_chain_player_alpha_mod = rm_buffs_player_alpha_mod;
+	rm_buffs_WeaponPrepareAttack_next = plugin_chain_WeaponPrepareAttack;
+	plugin_chain_WeaponPrepareAttack = rm_buffs_WeaponPrepareAttack;
 	CVAR_CACHE(g_buffs_random_spawns_distant);
 	CVAR_CACHE(g_buffs_random_spawns_min);
 	CVAR_CACHE(g_buffs_random_spawns_max);
@@ -286,6 +306,8 @@ void Buffs_Init(void) {
 	CVAR_CACHE(g_buffs_haste_refire_rate);
 	CVAR_CACHE(g_buffs_haste_move_rate);
 	CVAR_CACHE(g_buffs_supply_pickup_multiplier);
+	CVAR_CACHE(g_buffs_stealth_alpha);
+	CVAR_CACHE(g_buffs_stealth_regaintime);
     CVAR_CACHE(g_buffs_team_only);
     CVAR_CACHE(g_buffs_stack);
     CVAR_CACHE(g_buffs_replace);
