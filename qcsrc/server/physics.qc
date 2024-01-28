@@ -264,6 +264,10 @@ void(void) physics_abilities_end {
 }
 
 void(void) physics_player_pre { //called by engine
+	if (self.teleport_time)
+	if (time > self.teleport_time) {
+		self.teleport_time = 0;
+	}
 	float sv_pogostick_save = 0;
 	if (self.player_physic)
 		self.player_physic.SendFlags |= 4;
@@ -919,4 +923,12 @@ void(entity pl, vector _stand_view_ofs, vector _crouch_view_ofs) physics_set_vie
 		pl.view_ofs = pl.crouch_view_ofs;
 	else
 		pl.view_ofs = pl.stand_view_ofs;
+}
+
+void(entity pl) physics_clear {
+	pl.waterlevel = 0; //prevent wrong waterlevel handing in server frame for bots
+	pl.teleport_time = 0;
+	pl.physics_nofriction_time = 0;
+	pl.cpmdoublejump = 0;
+	pl.last_dodging_time = 0;
 }

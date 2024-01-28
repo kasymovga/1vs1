@@ -801,10 +801,6 @@ void() player_think {
 	if not(warmup_active)
 		self.play_time = self.play_time + frametime;
 
-	if (self.teleport_time)
-	if (time > self.teleport_time) {
-		self.teleport_time = 0;
-	}
 	//don't allow the player to turn around while game is paused!
 	if (timeout_status == 2) {
 		self.v_angle = self.lastV_angle;
@@ -1029,6 +1025,7 @@ float(void) player_real_customize {
 }
 
 void(entity pl) player_physics_setup {
+	physics_clear(pl);
 	pl.movetype = MOVETYPE_QCWALK;
 	pl.solid = SOLID_SLIDEBOX;
 	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | (g_playerclip_collisions ? DPCONTENTS_PLAYERCLIP : 0);
@@ -1108,9 +1105,7 @@ void(entity spot) player_spawn {
 	self.punchangle = '0 0 0';
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
-	self.waterlevel = 0; //prevent wrong waterlevel handing in server frame for bots
 	self.fire_endtime = -1;
-	self.teleport_time = 0;
 	msg_entity = self;
 	self.customizeentityforclient = player_real_customize;
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
