@@ -396,6 +396,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 	}
 }
 
+//.float damage_nextarceffect;
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_damage {
 	float take, save, waves, sdelay, dh, da;
 	plugin_chain_player_damage_mod = 1;
@@ -423,27 +424,20 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		if(DEATH_NADGETTYPE(deathtype) != NADGET_SHIELD)
 			Buffs_ArcDamage(self, attacker, _damage, deathtype);
 
-		if(_damage /*&& deathtype != DEATH_RESOURCE_ARMOR*/) { //FIXME
+		if (_damage /*&& deathtype != DEATH_RESOURCE_ARMOR*/) { //FIXME
 			_damage = Buffs_IgniteDamage(self, attacker, inflictor, _damage, deathtype);
 			_damage = Buffs_TenacityDamage(self, attacker, _damage, deathtype);
-			//FIXME
-			//if(DEATH_NADGETTYPE(deathtype) == NADGET_PLASMA && deathtype & HITTYPE_SECONDARY) {
+			//if (DEATH_NADGETTYPE(deathtype) == NADGET_PLASMA && (deathtype & HITTYPE_SECONDARY)) {
 			//	if(time > inflictor.damage_nextarceffect) {
-			//		te_csqc_lightningarc(inflictor.origin, self.origin + '0 0 0.5' * self.maxs_z, FALSE, attacker.team);
+			//		//te_csqc_lightningarc(inflictor.origin, self.origin + '0 0 0.5' * self.maxs_z, FALSE, attacker.team);
+			//		effect_lightningarc(inflictor.origin, self.origin + '0 0 0.5' * self.maxs_z/*, FALSE, attacker.team*/); //FIXME
 			//		inflictor.damage_nextarceffect = time + inflictor.hg_plasma_projdps_delay + 0.2 * (random() - 0.5);
 			//	}
 			//}
-			//if(self.hg_stealth) if(time < self.hg_stealth_protectionexpiretime) {
-			//		_damage *= g_nadgets_cloak_damagereduction_factor;
-			//}
-		}
-		if (DEATH_NADGETTYPE(deathtype) == NADGET_PLASMA)
-			if(self.deadflag == DEAD_FREEZE || (inflictor.hg_adept && g_nadgets_plasma_adept_stun)) if(self != attacker && (!team_mode || team_is_different_teams(self, attacker))) {
-				self.hg_plasmalock = time + g_nadgets_plasma_projectile_frozenlock * Buffs_NadgetPower(attacker);
-				self.hg_plasmalock_owner = attacker;
-				//te_csqc_lightningarc(inflictor.origin, hitloc, TRUE, attacker.team);
-				effect_lightningarc(inflictor.origin, hitloc/*, TRUE, attacker.team*/); //FIXME
+			if (self.hg_stealth) if(time < self.hg_stealth_protectionexpiretime) {
+					_damage *= g_nadgets_cloak_damagereduction_factor;
 			}
+		}
 		if(_damage &&
 				DEATH_NADGETTYPE(deathtype) == NADGET_SHIELD &&
 				(deathtype & HITTYPE_SECONDARY) &&

@@ -375,8 +375,8 @@ void Buffs_Init(void) {
             continue;
         
         if(b == BUFF_WRATH || b == BUFF_ADEPT)
-        if(!g_nadgets)
-            continue;
+		if(!cvar("g_nadgets"))
+			continue;
         
         if(cvar(strcat("g_buffs_", Buffs_TypeToName(b)))) {
             g_buffs_enabled |= b;

@@ -275,6 +275,18 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 	if not(self.deadflag == DEAD_FREEZE)
 		return ice_player_damage_handle_next(inflictor, attacker, _damage, deathtype, hitloc, force);
 
+	RM({
+		if (DEATH_NADGETTYPE(deathtype) == NADGET_PLASMA) {
+			if (self.deadflag == DEAD_FREEZE || (inflictor.hg_adept && g_nadgets_plasma_adept_stun)) {
+				if (self != attacker && (!team_mode || team_is_different_teams(self, attacker))) {
+					self.hg_plasmalock = time + g_nadgets_plasma_projectile_frozenlock * Buffs_NadgetPower(attacker);
+					self.hg_plasmalock_owner = attacker;
+					//te_csqc_lightningarc(inflictor.origin, hitloc, TRUE, attacker.team);
+					effect_lightningarc(inflictor.origin, hitloc/*, TRUE, attacker.team*/); //FIXME
+				}
+			}
+		}
+	})
 	if (attacker)
 	if (attacker.team != self.team)
 	if (g_ice_unfroze_interruption || (self.ice.fade_time && time > self.ice.fade_time)) {

@@ -16,6 +16,9 @@ float g_nadgets_bonus_at_revive;
 float g_nadgets_transloc_adept_revive;
 float g_nadgets_transloc_medic_revive_health_multiplier;
 float g_nadgets_plasma_adept_projectiles_on_bounce;
+float g_nadgets_plasma_projectile_frozenlock_dps;
+float g_nadgets_plasma_projectile_frozenlock_dps_radius;
+float g_nadgets_plasma_projectile_frozenlock_dps_force;
 
 void nadget_UpdateDetonables(void);
 void nadget_ForceDetonateAll(void);
@@ -42,6 +45,9 @@ float(string cmd, float tokens) nadget_cmd_client_handle {
 var float(entity plr, float wep) nadget_player_can_fire_next;
 float(entity plr, float wep) nadget_player_can_fire {
 	if (self.hg_stealth)
+		return FALSE;
+
+	if (self.hg_plasmalock > time)
 		return FALSE;
 
 	return nadget_player_can_fire_next(plr, wep);
@@ -246,6 +252,43 @@ void(entity unfrozer) nadget_ice_unfroze {
 	}
 }
 
+var void() nadget_player_effects_next;
+void() nadget_player_effects {
+	if (time < self.hg_plasmalock) {
+		self.effects |= (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
+		if (self.hg_plasmalock_owner.classname != "player") {
+			self.hg_plasmalock_owner = NULL;
+			self.hg_plasmalock = 0;
+		}
+		if (time > self.hg_plasmalock_nexteffect) {
+			float edelay = 0.35;
+			self.hg_plasmalock_nexteffect = time + edelay;
+			vector eorigin = self.origin + self.maxs_z * '0 0 0.5';
+			float pdmg = g_nadgets_plasma_projectile_frozenlock_dps * edelay;
+			if (pdmg)
+				damage_radius(self, self.hg_plasmalock_owner, pdmg, pdmg, g_nadgets_plasma_projectile_frozenlock_dps_radius, world, g_nadgets_plasma_projectile_frozenlock_dps_force, EFFECT_IMPACT_PLASMA, self.projectiledeathtype, NULL);
+
+			effect_lightningarc(eorigin + randomvec() * 100, eorigin + randomvec() * 10/*, TRUE, self.hg_plasmalock_owner.team*/); //FIXME
+			sound(self, CHAN_AUTO, "sound/weapons/electro_impact.wav", 0.4, 1.5);
+		}
+	}
+	nadget_player_effects_next();
+}
+
+var float() nadget_JumpVelocityMod_next;
+float() nadget_JumpVelocityMod {
+	float jump_mod = nadget_JumpVelocityMod_next();
+	if (self.hg_plasmalock > time) jump_mod = 0;
+	return jump_mod;
+}
+
+var float() nadget_physics_max_speed_mod_next;
+float() nadget_physics_max_speed_mod {
+	float maxspd_mod = nadget_physics_max_speed_mod_next();
+	if (self.hg_plasmalock > time) maxspd_mod = 0;
+	return maxspd_mod;
+}
+
 float nadget_init_done;
 void(void) nadget_init_common {
 	if (nadget_init_done)
@@ -270,6 +313,10 @@ void(void) nadget_init_common {
 	CVAR_CACHE(g_nadgets_plasma_adept_projectiles_on_bounce);
 	CVAR_CACHE(g_nadgets_plasma_adept_stun);
 	CVAR_CACHE(g_nadgets_plasma_projectile_frozenlock);
+	CVAR_CACHE(g_nadgets_plasma_projectile_frozenlock_dps);
+	CVAR_CACHE(g_nadgets_plasma_projectile_frozenlock_dps_radius);
+	CVAR_CACHE(g_nadgets_plasma_projectile_frozenlock_dps_force);
+	CVAR_CACHE(g_nadgets_cloak_damagereduction_factor);
 	addstat(STAT_HGFORCE, STAT_FLOAT, hg_power);
 	addstat(STAT_HGAMMO, STAT_INT, hg_ammo1);
 	addstat(STAT_HGREGEN, STAT_FLOAT, hg_regentime1);
@@ -304,6 +351,12 @@ void(void) nadget_init_common {
 	plugin_chain_player_obituary_frag = nadget_player_obituary_frag;
 	nadget_ice_unfroze_next = ice_hook_unfroze; //sort of hack
 	ice_hook_unfroze = nadget_ice_unfroze;
+	nadget_player_effects_next = plugin_chain_player_effects;
+	plugin_chain_player_effects = nadget_player_effects;
+	nadget_JumpVelocityMod_next = plugin_chain_JumpVelocityMod;
+	plugin_chain_JumpVelocityMod = nadget_JumpVelocityMod;
+	nadget_physics_max_speed_mod_next = plugin_chain_physics_max_speed_mod;
+	plugin_chain_physics_max_speed_mod = nadget_physics_max_speed_mod;
 	if (g_nadgets_double || NADGET_ABILITY) {
 		addstat(STAT_HGTYPE2, STAT_INT, hg_type2);
 		addstat(STAT_HGREFIRE2, STAT_FLOAT, hg_next2);
@@ -433,6 +486,7 @@ void nadget_precache(void) {
 	precache_sound("misc/powerup_shield.wav");
 	precache_sound("misc/powerup.wav");
 	precache_sound("kh/capture.wav");
+	precache_sound("sound/weapons/electro_impact.wav");
 	dlc_precache_sound("misc/gg.wav");
 	dlc_precache_sound("misc/stealth.wav");
 	dlc_precache_sound("misc/unstealth.wav");

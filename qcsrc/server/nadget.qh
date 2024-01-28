@@ -119,3 +119,5 @@ void nadget_Pick(float token);
 #define RM_SOUND_LASER_PRIMARY "weapons/rm_laser1.wav"
 float NADGET_SCORE;
 float NADGET_SCORE_SECONDARY;
+
+float g_nadgets_cloak_damagereduction_factor;

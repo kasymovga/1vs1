@@ -105,7 +105,7 @@ void nadget_Plasma_Shard(float kickangle) {
     proj.hg_detonatetime = time + cvar("g_nadgets_plasma_projectile_lifetime") + random() * cvar("g_nadgets_plasma_projectile_lifetime_randomfactor");
 
     PROJECTILE_MAKETRIGGER(proj);
-    proj.projectiledeathtype = NADGET_PLASMA | HITTYPE_SECONDARY;
+    proj.projectiledeathtype = (NADGET_PLASMA | HITTYPE_SECONDARY);
     setorigin(proj, self.origin);
 
     proj.movetype = MOVETYPE_BOUNCE;
