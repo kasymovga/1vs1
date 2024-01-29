@@ -264,6 +264,9 @@ void Buffs_Init(void) {
     if(!g_buffs)
         return;
 
+	dlc_require("rm_arc");
+	dlc_require(DLC_RM_EFFECTS);
+	dlc_require("rm_buffs");
 	rm_buffs_player_think_next = plugin_chain_player_think;
 	plugin_chain_player_think = rm_buffs_player_think;
 	rm_buffs_player_clear_next = plugin_chain_player_clear;
@@ -368,14 +371,12 @@ void Buffs_Init(void) {
 
     //if(g_clanarena)
     //    g_buffs_team_only = CVAR(g_clanarena_buffs_team_only);
-    
     precache_sound("misc/strength_respawn.wav");
     precache_sound("misc/shield_respawn.wav");
     precache_sound("misc/arc1.wav");
     precache_sound("misc/arc2.wav");
-    precache_model("models/buffs/buff_ring.md3");
+    precache_sound("kh/capture.wav");
     precache_model("models/runematch/rune.mdl");
-    
     addstat(STAT_RM_BUFFS, STAT_INT, buffstat);
     
     float enabled = 0;

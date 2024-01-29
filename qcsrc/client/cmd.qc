@@ -65,6 +65,7 @@ void(string msg) GameCommand { //called by engine
 		waypointsprite_init();
 		draw_init();
 		weapon_update_icons();
+		Buffs_LoadModels();
 	} else if (cmd == "mute" && argc == 2) {
 		mute_add(rint(stof(argv(1))));
 	} else if (cmd == "unmute" && argc == 2) {

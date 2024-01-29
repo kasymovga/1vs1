@@ -663,7 +663,7 @@ float(float req) weapon_zapper {
 		precache_model("models/vhshield.md3");
 		precache_model("models/weapons/rtzapper_hyperhonker.iqm");
 		precache_sound("weapons/fireball_fly2.wav");
-		dlc_require("rm_effects_v2");
+		dlc_require(DLC_RM_EFFECTS);
 		dlc_require("pryaxe_balls");
 		dlc_require("rm_arc");
 		dlc_require("zapper_v2");

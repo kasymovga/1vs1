@@ -142,7 +142,7 @@ void(void) spawnfunc_misc_lightning {
 	self.use = misc_lightning_use;
 	self.think = misc_lightning_spark;
 	precache_sound("ambient/sparks1.ogg");
-	dlc_require("rm_effects_v2");
+	dlc_require(DLC_RM_EFFECTS);
 }
 
 //Q2 compat

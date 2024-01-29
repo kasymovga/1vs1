@@ -231,7 +231,7 @@ float(float req) minstagib_weapon {
 		CVAR_CACHE(g_balance_minstanex_laser_rapid_delay);
 		CVAR_CACHE(g_balance_minstanex_laser_rapid_refire);
 		if (g_balance_minstanex_explode) {
-			dlc_require("rm_effects_v2");
+			dlc_require(DLC_RM_EFFECTS);
 			projectile_init(PROJECTILE_RM_LASER);
 		} else
 			projectile_init(PROJECTILE_LASER);

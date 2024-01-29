@@ -11,6 +11,7 @@ string buff_modelnames[BUFF_COUNT];
 .entity buff_ring;
 
 void Buffs_LoadModels(void) {
+	precache_model("models/buffs/buff_ring.md3");
 	float i, b;
 	for (i = 0, b = 1; i < BUFF_COUNT; ++i, b *= 2) if(b & g_buffs_enabled) {
 		string n = Buffs_TypeToName(b);

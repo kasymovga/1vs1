@@ -459,7 +459,7 @@ void(void) nadget_init {
 
 void nadget_precache(void) {
 	heal_init();
-	dlc_require("rm_effects_v2");
+	dlc_require(DLC_RM_EFFECTS);
 	dlc_require("rm_laser");
 	dlc_require("rm_arc");
 	dlc_require("pryaxe_balls");
