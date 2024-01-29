@@ -440,9 +440,7 @@ float(float req) weapon_extra_think {
 			weapon_clip_setup(mc, item_counter_field(at), weapon_extra_clip[extra_num], weapon_extra_primary_ammo[extra_num], weapon_extra_secondary_ammo[extra_num]);
 		}
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
-		mc = weapon_extra_magazinecapacity[extra_num];
-		if (mc)
-			self.weapon_extra_clip[extra_num] = mc;
+		weapon_clip_reset(weapon_extra_magazinecapacity[extra_num], weapon_extra_clip[extra_num]);
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		if (weapon_extra_primary_type[extra_num] == WEAPON_EXTRA_TYPE_PROJECTILE)
 			projectile_init(weapon_extra_primary_effect[extra_num]);

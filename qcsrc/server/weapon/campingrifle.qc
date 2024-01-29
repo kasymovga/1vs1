@@ -168,7 +168,7 @@ float(float req) weapon_campingrifle {
 		weapon_campingrifle_reload();
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		self.campingrifle_accumulator = time - g_balance_campingrifle_bursttime;
-		self.campingrifle_ammoclip = g_balance_campingrifle_magazinecapacity;
+		weapon_clip_reset(g_balance_campingrifle_magazinecapacity, campingrifle_ammoclip);
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_campingrifle_bursttime);
 		CVAR_CACHE(g_balance_campingrifle_magazinecapacity);

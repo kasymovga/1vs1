@@ -135,8 +135,7 @@ float(float req) weapon_nex {
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		weapon_clip_setup(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip, g_balance_nex_ammo, g_balance_nex_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
-		if (g_balance_nex_magazinecapacity)
-			self.nex_ammoclip = g_balance_nex_magazinecapacity;
+		weapon_clip_reset(g_balance_nex_magazinecapacity, nex_ammoclip);
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_nex_magazinecapacity);
 		CVAR_CACHE(g_balance_nex_reloadtime);

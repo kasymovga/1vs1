@@ -167,8 +167,7 @@ float(float req) weapon_shotgun {
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		weapon_clip_setup(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
-		if (g_balance_shotgun_magazinecapacity)
-			self.sg_ammoclip = g_balance_shotgun_magazinecapacity;
+		weapon_clip_reset(g_balance_shotgun_magazinecapacity, sg_ammoclip);
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_shotgun_magazinecapacity);
 		CVAR_CACHE(g_balance_shotgun_reloadtime);

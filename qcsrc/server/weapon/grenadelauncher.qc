@@ -218,8 +218,7 @@ float(float req) weapon_grenadelauncher {
 	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_grenadelauncher_reload();
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
-		if (g_balance_grenadelauncher_magazinecapacity)
-			self.gl_ammoclip = g_balance_grenadelauncher_magazinecapacity;
+		weapon_clip_reset(g_balance_grenadelauncher_magazinecapacity, gl_ammoclip);
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_grenadelauncher_primary_ammo);
 		CVAR_CACHE(g_balance_grenadelauncher_primary_animtime);

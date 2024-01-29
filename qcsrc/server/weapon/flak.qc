@@ -254,8 +254,7 @@ float(float req) weapon_flak {
 		self.flak_charge = 0;
 		weapon_clip_setup(g_balance_flak_magazinecapacity, ammo_shells, flak_ammoclip, g_balance_flak_primary_ammo, g_balance_flak_secondary_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
-		if (g_balance_flak_magazinecapacity)
-			self.flak_ammoclip = g_balance_flak_magazinecapacity;
+		weapon_clip_reset(g_balance_flak_magazinecapacity, flak_ammoclip);
 	} else if (req == WEAPON_REQUEST_CLEAR) {
 		self.flak_charge = 0;
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)

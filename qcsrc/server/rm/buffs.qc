@@ -248,6 +248,14 @@ void(entity spot) rm_buffs_player_spawn {
 	Buffs_MEODP_Point_Attach(self, Buffs_MEODP_Death_Player);
 }
 
+var float(float f) rm_buffs_weapon_clip_capacity_mod_next;
+float(float f) rm_buffs_weapon_clip_capacity_mod {
+	if (Buffs_Present(self, BUFF_SUPPLY)) {
+		f = floor(f * 1.5);
+	}
+	return rm_buffs_weapon_clip_capacity_mod_next(f);
+}
+
 void Buffs_Init(void) {
     float i, b;
     CVAR_CACHE(g_buffs);
@@ -276,6 +284,8 @@ void Buffs_Init(void) {
 	plugin_chain_player_health_armor_mods_set = rm_buffs_player_health_armor_mods_set;
 	rm_buffs_player_spawn_next = plugin_chain_player_spawn;
 	plugin_chain_player_spawn = rm_buffs_player_spawn;
+	rm_buffs_weapon_clip_capacity_mod_next = plugin_chain_weapon_clip_capacity_mod;
+	plugin_chain_weapon_clip_capacity_mod = rm_buffs_weapon_clip_capacity_mod;
 	CVAR_CACHE(g_buffs_random_spawns_distant);
 	CVAR_CACHE(g_buffs_random_spawns_min);
 	CVAR_CACHE(g_buffs_random_spawns_max);
@@ -812,9 +822,16 @@ void(void) rm_buffs_player_think {
         self.effective_buffs = (self.buffstat | g_buffs_baseline);
     }
     if(self.buffs != self.oldbuffs) {
-        ON_BUFF_ADDED(BUFF_SUPPLY) {
-            //W_Clip_ResetAll(TRUE); //FIXME
-
+		ON_BUFF_ADDED(BUFF_SUPPLY) {
+			//FIXME: not the best solution
+			float i;
+			self.ammoclipmax = floor(self.ammoclipmax * g_buffs_supply_clip_limit_multiplier);
+			if (self.items & IT_UNLIMITED_WEAPON_AMMO)
+			if (self.ammoclip > 0 && self.ammoclipmax > 0) {
+				WEAPON_INFO_FOR_EACH_ID(i) {
+					weapon_action(i, WEAPON_REQUEST_RESETPLAYER);
+				}
+			}
             if(g_use_ammunition) {
                 float a = g_buffs_supply_grant_ammo;
                 self.ammo_cells += a;

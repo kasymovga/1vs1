@@ -127,8 +127,7 @@ float(float req) weapon_uzi {
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		weapon_clip_setup(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
-		if (g_balance_uzi_magazinecapacity)
-			self.uzi_ammoclip = g_balance_uzi_magazinecapacity;
+		weapon_clip_reset(g_balance_uzi_magazinecapacity, uzi_ammoclip);
 	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "was sniped by";

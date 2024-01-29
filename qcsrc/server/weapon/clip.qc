@@ -50,9 +50,16 @@ void(.float ammofield, .float clipfield, float ammo1, float ammo2, string reload
 
 void(float capacity , .float ammofield, .float clipfield, float ammo1, float ammo2) weapon_clip_setup {
 	if (capacity) {
-		self.ammoclipmax = capacity;
+		self.ammoclipmax = plugin_chain_weapon_clip_capacity_mod(capacity);
 		weapon_clip_checkmaxbullets(ammofield, clipfield, ammo1, ammo2);
 		if not(self.clipfield)
 			self.clipfield = -1;
 	}
+}
+
+void(float capacity, .float ammofield) weapon_clip_reset {
+	if (capacity)
+		self.ammofield = plugin_chain_weapon_clip_capacity_mod(capacity);
+	else
+		self.ammofield = 0;
 }

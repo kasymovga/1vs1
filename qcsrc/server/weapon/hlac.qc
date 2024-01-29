@@ -176,8 +176,7 @@ float(float req) weapon_hlac {
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		weapon_clip_setup(g_balance_hlac_magazinecapacity, ammo_cells, hlac_ammoclip, g_balance_hlac_primary_ammo, g_balance_hlac_secondary_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
-		if (g_balance_hlac_magazinecapacity)
-			self.hlac_ammoclip = g_balance_hlac_magazinecapacity;
+		weapon_clip_reset(g_balance_hlac_magazinecapacity, hlac_ammoclip);
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE)
 		weapon_deathtypestring = "should have used a smaller gun";
 	else if (req == WEAPON_REQUEST_KILLMESSAGE)
