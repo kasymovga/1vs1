@@ -373,8 +373,7 @@ void Buffs_Init(void) {
     //    g_buffs_team_only = CVAR(g_clanarena_buffs_team_only);
     precache_sound("misc/strength_respawn.wav");
     precache_sound("misc/shield_respawn.wav");
-    precache_sound("misc/arc1.wav");
-    precache_sound("misc/arc2.wav");
+    dlc_precache_sound("misc/arc1.wav");
     precache_sound("kh/capture.wav");
     precache_model("models/runematch/rune.mdl");
     addstat(STAT_RM_BUFFS, STAT_INT, buffstat);
@@ -947,9 +946,9 @@ float Buffs_NadgetBonusMultiplier(entity plr) {
     return (Buffs_Present(plr, BUFF_WRATH) ? g_buffs_wrath_hgbonusmultiplier : 1);
 }
 
-float Buffs_ClipLimitMultiplier(entity plr) {
-    return (Buffs_Present(plr, BUFF_SUPPLY) ? g_buffs_supply_clip_limit_multiplier : 1);
-}
+//float Buffs_ClipLimitMultiplier(entity plr) {
+//    return (Buffs_Present(plr, BUFF_SUPPLY) ? g_buffs_supply_clip_limit_multiplier : 1);
+//}
 
 float Buffs_MedicDamage(entity targ, entity attacker, entity inflictor, float damage, float deathtype, vector hitloc, vector force) {
     if(!targ.iscreature || deathtype == DEATH_RM_ENDURANCE || (DEATH_ISSPECIAL(deathtype) && !DEATH_RM_ISPROJECTED(deathtype)))

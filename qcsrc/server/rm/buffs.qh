@@ -87,7 +87,7 @@ float Buffs_NadgetRegen(entity);
 float Buffs_NadgetCooldown(entity);
 float Buffs_NadgetRegenDmgPause(entity);
 float Buffs_NadgetBonusMultiplier(entity);
-float Buffs_ClipLimitMultiplier(entity);
+//float Buffs_ClipLimitMultiplier(entity);
 void Buffs_BuffPickup_SetInitialCooldown(entity);
 void Buffs_BuffPickup_SetCooldown(entity, float);
 void Buffs_Random_Spawn(void);
