@@ -136,7 +136,7 @@ float(entity targ, entity inflictor, entity healer, float heal, float aheal, flo
 		//else if (DEATH_ISWEAPON(healtype, WEP_CAMPINGRIFLE) && (healtype & HITTYPE_HEADSHOT))
 		//	vdtype |= VDMG_TYPE_CRIT;
 
-		if (healer && clienttype(healer) == CLIENTTYPE_REAL)
+		if (healer && clienttype(healer) == CLIENTTYPE_REAL && (targ != healer))
 			rm_damage_indicator(healer, hitloc, heal, aheal, RM_DAMAGE_HEAL);
 
 		if (clienttype(targ) == CLIENTTYPE_REAL)

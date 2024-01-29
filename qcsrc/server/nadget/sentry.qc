@@ -73,7 +73,7 @@ entity nadget_Sentry_FindTarget(entity emitter) {
 
     entity targ = NULL, p;
     float mindist, dist;
-	float diffteam;
+	float diffteam, medicflag;
     vector t, o = sentry.origin + sentry.view_ofs;
 
     mindist = g_nadgets_sentry_beam_range;
@@ -81,9 +81,10 @@ entity nadget_Sentry_FindTarget(entity emitter) {
     if(!sentry.realowner)
         return world;
 
+	medicflag = Buffs_Present(sentry.realowner, BUFF_MEDIC);
     FOR_EACH_PLAYER(p) if not(PLAYER_DEAD(p)) {
         diffteam = (p != sentry.realowner && team_is_different_teams(sentry, p));
-		if not(diffteam)
+		if (!diffteam && !medicflag)
 			continue;
 
         if(nadget_Sentry_TargetIsTaken(emitter, p))
@@ -91,7 +92,7 @@ entity nadget_Sentry_FindTarget(entity emitter) {
 
 		t = warpzone_find_nearest_origin(o, p.origin + p.view_ofs, FALSE);
 		dist = warpzone_find_nearest_origin_length;
-        if(diffteam /* || (!diffteam && medicflag) */) {
+        if(diffteam || (!diffteam && medicflag)) {
             if(dist > mindist)
                 continue;
         } else if(dist > g_nadgets_sentry_beam_range)
