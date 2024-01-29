@@ -655,7 +655,7 @@ float Buffs_Model_Send(entity to, float sf) {
     }
 
     if(sf & 4) {
-        net_write_short(MSG_ENTITY, self.buffs);
+        net_write_coord(MSG_ENTITY, self.buffs);
     }
 
     if(sf & 8) {

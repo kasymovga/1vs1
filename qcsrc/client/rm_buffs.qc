@@ -255,7 +255,7 @@ void Buffs_Model_Read(float ignore) {
 		self.buff_active = net_read_byte();
 	}
 	if (sf & 4) {
-		Buffs_Model_Set(self, net_read_short());
+		Buffs_Model_Set(self, net_read_coord());
 	}
 	if (sf & 8) {
 		vector o;

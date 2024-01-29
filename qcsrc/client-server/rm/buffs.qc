@@ -76,7 +76,7 @@ string Buffs_TypeToExpandedName(float buff, string sep, float colorfactor) {
         }
     }
 
-    if(!r)
+    if(r == "")
         return "Unknown";
 
     return r;
