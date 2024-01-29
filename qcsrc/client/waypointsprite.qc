@@ -331,4 +331,10 @@ void(void) waypointsprite_init {
 		db_put(db_temp, sname, ftos(max(f, stof(db_get(db_temp, sname)))));
 	}
 	search_end(dh);
+	entity e = NULL;
+	while ((e = nextent(e))) {
+		if (e.draw2d == waypointsprite_draw) {
+			e.cnt = 0;
+		}
+	}
 }
