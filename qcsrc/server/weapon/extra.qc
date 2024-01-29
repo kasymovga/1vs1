@@ -254,8 +254,8 @@ WEAPON_EXTRA_RELOAD(18) \
 WEAPON_EXTRA_RELOAD(19) \
 
 #define WEAPON_EXTRA_RELOAD(i) \
-void(void) weapon_extra_reloadandready##i { weapon_clip_reloadandready(weapon_extra_magazinecapacity[i], item_counter_field(weapon_extra_ammo_type[i]), weapon_extra_clip[i], weapon_extra_primary_ammo[i], weapon_extra_secondary_ammo[i], weapon_extra_reloadtime[i]); } \
-void(void) weapon_extra_reload##i { weapon_clip_reload(weapon_extra_magazinecapacity[i], item_counter_field(weapon_extra_ammo_type[i]), weapon_extra_clip[i], weapon_extra_primary_ammo[i], weapon_extra_secondary_ammo[i], "weapons/campingrifle_reload.wav", weapon_extra_reloadtime[i], weapon_extra_reloadandready##i); }
+void(void) weapon_extra_reloadandready##i { weapon_clip_reloadandready(item_counter_field(weapon_extra_ammo_type[i]), weapon_extra_clip[i], weapon_extra_primary_ammo[i], weapon_extra_secondary_ammo[i], weapon_extra_reloadtime[i]); } \
+void(void) weapon_extra_reload##i { weapon_clip_reload(item_counter_field(weapon_extra_ammo_type[i]), weapon_extra_clip[i], weapon_extra_primary_ammo[i], weapon_extra_secondary_ammo[i], "weapons/campingrifle_reload.wav", weapon_extra_reloadtime[i], weapon_extra_reloadandready##i); }
 WEAPON_EXTRA_RELOAD_FUNCS
 #undef WEAPON_EXTRA_RELOAD
 
@@ -437,9 +437,7 @@ float(float req) weapon_extra_think {
 		mc = weapon_extra_magazinecapacity[extra_num];
 		at = weapon_extra_ammo_type[extra_num];
 		if (mc && at) {
-			weapon_clip_checkmaxbullets(mc, item_counter_field(at), weapon_extra_clip[extra_num], weapon_extra_primary_ammo[extra_num], weapon_extra_secondary_ammo[extra_num]);
-			if not(self.weapon_extra_clip[extra_num])
-				self.weapon_extra_clip[extra_num] = -1;
+			weapon_clip_setup(mc, item_counter_field(at), weapon_extra_clip[extra_num], weapon_extra_primary_ammo[extra_num], weapon_extra_secondary_ammo[extra_num]);
 		}
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		mc = weapon_extra_magazinecapacity[extra_num];

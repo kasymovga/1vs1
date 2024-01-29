@@ -725,6 +725,7 @@ void(float windex) weapon_setup {
 	self.weaponname = e.mdl;
 	self.bulletcounter = 0;
 	self.ammoclip = 0;
+	self.ammoclipmax = 0;
 	weapon_action(windex, WEAPON_REQUEST_SETUP);
 }
 

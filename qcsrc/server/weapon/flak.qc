@@ -196,12 +196,12 @@ float(void) weapon_flak_charge_indicator_customize {
 }
 
 void(void) weapon_flak_reloadandready {
-	weapon_clip_reloadandready(g_balance_flak_magazinecapacity, ammo_shells, flak_ammoclip,
+	weapon_clip_reloadandready(ammo_shells, flak_ammoclip,
 			g_balance_flak_primary_ammo, g_balance_flak_secondary_ammo, g_balance_flak_reloadtime);
 }
 
 void(void) weapon_flak_reload {
-	weapon_clip_reload(g_balance_flak_magazinecapacity, ammo_shells, flak_ammoclip, g_balance_flak_primary_ammo,
+	weapon_clip_reload(ammo_shells, flak_ammoclip, g_balance_flak_primary_ammo,
 			g_balance_flak_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_flak_reloadtime,
 			weapon_flak_reloadandready);
 }
@@ -252,11 +252,7 @@ float(float req) weapon_flak {
 		weapon_flak_reload();
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		self.flak_charge = 0;
-		if (g_balance_flak_magazinecapacity) {
-			weapon_clip_checkmaxbullets(g_balance_flak_magazinecapacity, ammo_shells, flak_ammoclip, g_balance_flak_primary_ammo, g_balance_flak_secondary_ammo);
-			if not(self.flak_ammoclip)
-				self.flak_ammoclip = -1;
-		}
+		weapon_clip_setup(g_balance_flak_magazinecapacity, ammo_shells, flak_ammoclip, g_balance_flak_primary_ammo, g_balance_flak_secondary_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		if (g_balance_flak_magazinecapacity)
 			self.flak_ammoclip = g_balance_flak_magazinecapacity;

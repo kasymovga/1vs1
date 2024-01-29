@@ -444,9 +444,6 @@ void(void) rm_hud_draw_server_info {
 }
 
 float rm_hud_vhealth = 0;
-float rm_hud_ammo_progress_weapon;
-float rm_hud_ammo_progress_max;
-float rm_hud_weapon_ammo_clip_max[WEAPON_COUNT_EXTRA];
 void(void) rm_hud_draw {
 	float hgregen = 0;
 	float hgregen2 = 0;
@@ -554,14 +551,7 @@ void(void) rm_hud_draw {
 					a_none = FALSE;
 			}
 			if (isclip && (rm_hud_get_ammo_item_code(i) & sbar_stat_items)) {
-				if (rm_hud_ammo_progress_weapon == weapon_current) {
-					rm_hud_ammo_progress_max = max(isclip, rm_hud_ammo_progress_max);
-				} else {
-					rm_hud_weapon_ammo_clip_max[rm_hud_ammo_progress_weapon] = rm_hud_ammo_progress_max;
-					rm_hud_ammo_progress_weapon = weapon_current;
-					rm_hud_ammo_progress_max = max(isclip, rm_hud_weapon_ammo_clip_max[weapon_current]);
-				}
-				rm_hud_ammo_progress = max(0, isclip / rm_hud_ammo_progress_max);
+				rm_hud_ammo_progress = max(0, isclip / getstati(STAT_BULLETS_LOADED_MAX));
 			}
 		}
 	}

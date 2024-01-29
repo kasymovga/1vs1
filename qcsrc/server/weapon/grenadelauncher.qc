@@ -144,12 +144,12 @@ void(void) spawnfunc_weapon_grenadelauncher {
 }
 
 void(void) weapon_grenadelauncher_reloadandready {
-	weapon_clip_reloadandready(g_balance_grenadelauncher_magazinecapacity, ammo_rockets, gl_ammoclip,
+	weapon_clip_reloadandready(ammo_rockets, gl_ammoclip,
 			g_balance_grenadelauncher_primary_ammo, g_balance_grenadelauncher_secondary_ammo, g_balance_grenadelauncher_reloadtime);
 }
 
 void(void) weapon_grenadelauncher_reload {
-	weapon_clip_reload(g_balance_grenadelauncher_magazinecapacity, ammo_rockets, gl_ammoclip, g_balance_grenadelauncher_primary_ammo,
+	weapon_clip_reload(ammo_rockets, gl_ammoclip, g_balance_grenadelauncher_primary_ammo,
 			g_balance_grenadelauncher_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_grenadelauncher_reloadtime,
 			weapon_grenadelauncher_reloadandready);
 }
@@ -201,12 +201,7 @@ float(float req) weapon_grenadelauncher {
 		precache_sound("weapons/grenade_bounce6.wav");
 		precache_sound("weapons/grenade_fire.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEAPON_GRENADE_LAUNCHER);
-		if (g_balance_grenadelauncher_magazinecapacity) {
-			weapon_clip_checkmaxbullets(g_balance_grenadelauncher_magazinecapacity, ammo_rockets, gl_ammoclip, g_balance_grenadelauncher_primary_ammo, g_balance_grenadelauncher_secondary_ammo);
-			if not(self.gl_ammoclip)
-				self.gl_ammoclip = -1;
-		}
+		weapon_clip_setup(g_balance_grenadelauncher_magazinecapacity, ammo_rockets, gl_ammoclip, g_balance_grenadelauncher_primary_ammo, g_balance_grenadelauncher_secondary_ammo);
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if(weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "tried out his own grenade";

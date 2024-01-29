@@ -89,12 +89,12 @@ void(void) weapon_nex_attack {
 }
 
 void(void) weapon_nex_reloadandready {
-	weapon_clip_reloadandready(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip,
+	weapon_clip_reloadandready(ammo_cells, nex_ammoclip,
 			g_balance_nex_ammo, g_balance_nex_ammo, g_balance_nex_reloadtime);
 }
 
 void(void) weapon_nex_reload {
-	weapon_clip_reload(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip, g_balance_nex_ammo,
+	weapon_clip_reload(ammo_cells, nex_ammoclip, g_balance_nex_ammo,
 			g_balance_nex_ammo, "weapons/campingrifle_reload.wav", g_balance_nex_reloadtime,
 			weapon_nex_reloadandready);
 }
@@ -133,12 +133,7 @@ float(float req) weapon_nex {
 	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_nex_reload();
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEAPON_NEX);
-		if (g_balance_nex_magazinecapacity) {
-			weapon_clip_checkmaxbullets(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip, g_balance_nex_ammo, g_balance_nex_ammo);
-			if not(self.nex_ammoclip)
-				self.nex_ammoclip = -1;
-		}
+		weapon_clip_setup(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip, g_balance_nex_ammo, g_balance_nex_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		if (g_balance_nex_magazinecapacity)
 			self.nex_ammoclip = g_balance_nex_magazinecapacity;

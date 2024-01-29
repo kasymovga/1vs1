@@ -133,12 +133,12 @@ void(void) spawnfunc_weapon_hlac {
 }
 
 void(void) weapon_hlac_reloadandready {
-	weapon_clip_reloadandready(g_balance_hlac_magazinecapacity, ammo_cells, hlac_ammoclip,
+	weapon_clip_reloadandready(ammo_cells, hlac_ammoclip,
 			g_balance_hlac_primary_ammo, g_balance_hlac_secondary_ammo, g_balance_hlac_reloadtime);
 }
 
 void(void) weapon_hlac_reload {
-	weapon_clip_reload(g_balance_hlac_magazinecapacity, ammo_cells, hlac_ammoclip, g_balance_hlac_primary_ammo,
+	weapon_clip_reload(ammo_cells, hlac_ammoclip, g_balance_hlac_primary_ammo,
 			g_balance_hlac_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_hlac_reloadtime,
 			weapon_hlac_reloadandready);
 }
@@ -174,11 +174,7 @@ float(float req) weapon_hlac {
 	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_hlac_reload();
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		if (g_balance_hlac_magazinecapacity) {
-			weapon_clip_checkmaxbullets(g_balance_hlac_magazinecapacity, ammo_cells, hlac_ammoclip, g_balance_hlac_primary_ammo, g_balance_hlac_secondary_ammo);
-			if not(self.hlac_ammoclip)
-				self.hlac_ammoclip = -1;
-		}
+		weapon_clip_setup(g_balance_hlac_magazinecapacity, ammo_cells, hlac_ammoclip, g_balance_hlac_primary_ammo, g_balance_hlac_secondary_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		if (g_balance_hlac_magazinecapacity)
 			self.hlac_ammoclip = g_balance_hlac_magazinecapacity;

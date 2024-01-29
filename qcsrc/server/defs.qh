@@ -231,6 +231,7 @@ typedef .float floatfield;
 .float stat_leadlimit;
 
 .float ammoclip;
+.float ammoclipmax;
 
 .float spectatee_status;
 .float restriction;

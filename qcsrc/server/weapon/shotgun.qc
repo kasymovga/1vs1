@@ -99,14 +99,14 @@ void(void) weapon_shotgun_fire2_02 {
 
 void(void) weapon_shotgun_reloadandready {
 	if not(g_balance_shotgun_reloadtime_shell) {
-		weapon_clip_reloadandready(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip,
+		weapon_clip_reloadandready(ammo_shells, sg_ammoclip,
 				g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo, g_balance_shotgun_reloadtime);
 		return;
 	}
 	float t;
 	float tshells = min(g_balance_shotgun_magazinecapacity, max(1, self.sg_ammoclip + 1));
 	self.sg_ammoclip = tshells;
-	if (weapon_clip_checkmaxbullets(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo) || self.sg_buttonatck1 || self.sg_buttonatck2) {
+	if (weapon_clip_checkmaxbullets(ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo) || self.sg_buttonatck1 || self.sg_buttonatck2) {
 		t = WEAPON_ATTACK_FINISHED(self) - g_balance_shotgun_reloadtime - 1;
 		WEAPON_ATTACK_FINISHED(self) = t;
 		weapon_ready();
@@ -118,7 +118,7 @@ void(void) weapon_shotgun_reloadandready {
 
 void(void) weapon_shotgun_reload {
 	float clipsave = self.sg_ammoclip;
-	weapon_clip_reload(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo,
+	weapon_clip_reload(ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo,
 			g_balance_shotgun_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_shotgun_reloadtime,
 			weapon_shotgun_reloadandready);
 	if (g_balance_shotgun_reloadtime_shell)
@@ -165,12 +165,7 @@ float(float req) weapon_shotgun {
 	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
 		weapon_deathtypestring = "was gunned by"; // unchecked: SECONDARY
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEAPON_SHOTGUN);
-		if (g_balance_shotgun_magazinecapacity) {
-			weapon_clip_checkmaxbullets(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo);
-			if not(self.sg_ammoclip)
-				self.sg_ammoclip = -1;
-		}
+		weapon_clip_setup(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		if (g_balance_shotgun_magazinecapacity)
 			self.sg_ammoclip = g_balance_shotgun_magazinecapacity;

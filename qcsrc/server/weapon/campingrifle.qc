@@ -37,12 +37,12 @@ var .float cr_buttonatck2 = BUTTON_ATCK2;
 .float campingrifle_accumulator;
 
 void(void) weapon_campingrifle_reloadandready {
-	weapon_clip_reloadandready(g_balance_campingrifle_magazinecapacity, ammo_nails, campingrifle_ammoclip,
+	weapon_clip_reloadandready(ammo_nails, campingrifle_ammoclip,
 			g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo, g_balance_campingrifle_reloadtime);
 }
 
 void(void) weapon_campingrifle_reload {
-	weapon_clip_reload(g_balance_campingrifle_magazinecapacity, ammo_nails, campingrifle_ammoclip, g_balance_campingrifle_primary_ammo,
+	weapon_clip_reload(ammo_nails, campingrifle_ammoclip, g_balance_campingrifle_primary_ammo,
 			g_balance_campingrifle_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_campingrifle_reloadtime,
 			weapon_campingrifle_reloadandready);
 }
@@ -74,7 +74,7 @@ void(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, flo
 	bullet_end();
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 2, self);
 	self.campingrifle_ammoclip = self.campingrifle_ammoclip - 1;
-	weapon_clip_checkmaxbullets(g_balance_campingrifle_magazinecapacity, ammo_nails, campingrifle_ammoclip, g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo);
+	weapon_clip_checkmaxbullets(ammo_nails, campingrifle_ammoclip, g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo);
 }
 
 void(void) weapon_campingrifle_attack {
@@ -141,12 +141,7 @@ float(float req) weapon_campingrifle {
 		precache_sound("weapons/campingrifle_fire.wav");
 		precache_sound("weapons/campingrifle_fire2.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEAPON_CAMPINGRIFLE);
-		if (g_balance_campingrifle_magazinecapacity) {
-			weapon_clip_checkmaxbullets(g_balance_campingrifle_magazinecapacity, ammo_nails, campingrifle_ammoclip, g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo);
-			if not(self.campingrifle_ammoclip)
-				self.campingrifle_ammoclip = -1;
-		}
+		weapon_clip_setup(g_balance_campingrifle_magazinecapacity, ammo_nails, campingrifle_ammoclip, g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo);
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if (weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "shot himself automatically";

@@ -78,12 +78,12 @@ void(void) weapon_uzi_fire1_02 {
 }
 
 void(void) weapon_uzi_reloadandready {
-	weapon_clip_reloadandready(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip,
+	weapon_clip_reloadandready(ammo_nails, uzi_ammoclip,
 			g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo, g_balance_uzi_reloadtime);
 }
 
 void(void) weapon_uzi_reload {
-	weapon_clip_reload(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo,
+	weapon_clip_reload(ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo,
 			g_balance_uzi_sustained_ammo, "weapons/campingrifle_reload.wav", g_balance_uzi_reloadtime,
 			weapon_uzi_reloadandready);
 }
@@ -125,12 +125,7 @@ float(float req) weapon_uzi {
 	} else if (req == WEAPON_REQUEST_RELOAD) {
 		weapon_uzi_reload();
 	} else if (req == WEAPON_REQUEST_SETUP) {
-		//weapon_setup(WEAPON_UZI);
-		if (g_balance_uzi_magazinecapacity) {
-			weapon_clip_checkmaxbullets(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo);
-			if not(self.uzi_ammoclip)
-				self.uzi_ammoclip = -1;
-		}
+		weapon_clip_setup(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo);
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		if (g_balance_uzi_magazinecapacity)
 			self.uzi_ammoclip = g_balance_uzi_magazinecapacity;

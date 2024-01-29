@@ -1,9 +1,9 @@
-float(float capacity, .float ammofield, .float clipfield, float ammo1, float ammo2) weapon_clip_checkmaxbullets {
+float(.float ammofield, .float clipfield, float ammo1, float ammo2) weapon_clip_checkmaxbullets {
 	float maxbulls;
 	if (self.items & IT_UNLIMITED_WEAPON_AMMO)
-		maxbulls = capacity;
+		maxbulls = self.ammoclipmax;
 	else
-		maxbulls = min(capacity, floor(self.ammofield / min(ammo1, ammo2)));
+		maxbulls = min(self.ammoclipmax, floor(self.ammofield / min(ammo1, ammo2)));
 
 	if(self.clipfield > maxbulls)
 		self.clipfield = maxbulls;
@@ -11,19 +11,19 @@ float(float capacity, .float ammofield, .float clipfield, float ammo1, float amm
 	return (self.clipfield == maxbulls);
 }
 
-void(float capacity, .float ammofield, .float clipfield, float ammo1, float ammo2, float reloadtime) weapon_clip_reloadandready {
+void(.float ammofield, .float clipfield, float ammo1, float ammo2, float reloadtime) weapon_clip_reloadandready {
 	float t;
-	self.clipfield = capacity;
-	weapon_clip_checkmaxbullets(capacity, ammofield, clipfield, ammo1, ammo2);
+	self.clipfield = self.ammoclipmax;
+	weapon_clip_checkmaxbullets(ammofield, clipfield, ammo1, ammo2);
 	t = WEAPON_ATTACK_FINISHED(self) - reloadtime - 1;
 	WEAPON_ATTACK_FINISHED(self) = t;
 	weapon_ready();
 }
 
-void (float capacity, .float ammofield, .float clipfield, float ammo1, float ammo2, string reloadsound, float reloadtime, void(void) reloadandready) weapon_clip_reload {
+void(.float ammofield, .float clipfield, float ammo1, float ammo2, string reloadsound, float reloadtime, void(void) reloadandready) weapon_clip_reload {
 	float t;
-	weapon_clip_checkmaxbullets(capacity, ammofield, clipfield, ammo1, ammo2);
-	if (self.clipfield >= capacity)
+	weapon_clip_checkmaxbullets(ammofield, clipfield, ammo1, ammo2);
+	if (self.clipfield >= self.ammoclipmax)
 		return;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -46,4 +46,13 @@ void (float capacity, .float ammofield, .float clipfield, float ammo1, float amm
 	WEAPON_ATTACK_FINISHED(self) = t;
 	weapon_thinkf(WEAPON_FRAME_RELOAD, reloadtime, reloadandready);
 	self.clipfield = -1;
+}
+
+void(float capacity , .float ammofield, .float clipfield, float ammo1, float ammo2) weapon_clip_setup {
+	if (capacity) {
+		self.ammoclipmax = capacity;
+		weapon_clip_checkmaxbullets(ammofield, clipfield, ammo1, ammo2);
+		if not(self.clipfield)
+			self.clipfield = -1;
+	}
 }
