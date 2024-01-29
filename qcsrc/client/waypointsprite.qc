@@ -1,4 +1,3 @@
-float waypointsprite_initialized;
 float waypointsprite_fadedistance;
 float waypointsprite_edgefadealpha;
 float waypointsprite_edgefadescale;
@@ -312,27 +311,24 @@ void(void) waypointsprite_init {
 	waypointsprite_distancefadealpha = CVAR_OR(g_waypointsprite_distancefadealpha, 1);
 	waypointsprite_distancefadescale = CVAR_OR(g_waypointsprite_distancefadescale, 1);
 	waypointsprite_distancefadedistance = vlen(world_max - world_min) * CVAR_OR(g_waypointsprite_distancefadedistancemultiplier, 1);
-	if not(waypointsprite_initialized) {
-		float dh, n, i, o, f;
-		string s, sname, sframes;
-		dh = search_begin("models/sprites/*_frame*.tga", FALSE, FALSE);
-		n = search_getsize(dh);
-		for (i = 0; i < n; ++i) {
-			s = search_getfilename(dh, i);
-			if (substring(s, 0, 15) != "models/sprites/")
-				continue;
+	float dh, n, i, o, f;
+	string s, sname, sframes;
+	dh = search_begin("models/sprites/*_frame*.tga", FALSE, FALSE);
+	n = search_getsize(dh);
+	for (i = 0; i < n; ++i) {
+		s = search_getfilename(dh, i);
+		if (substring(s, 0, 15) != "models/sprites/")
+			continue;
 
-			if (substring(s, strlen(s) - 4, 4) != ".tga")
-				continue;
+		if (substring(s, strlen(s) - 4, 4) != ".tga")
+			continue;
 
-			s = substring(s, 15, strlen(s) - 19);
-			o = strstrofs(s, "_frame", 0);
-			sname = strcat("/spriteframes/", substring(s, 0, o));
-			sframes = substring(s, o + 6, strlen(s) - o - 6);
-			f = stof(sframes) + 1;
-			db_put(db_temp, sname, ftos(max(f, stof(db_get(db_temp, sname)))));
-		}
-		search_end(dh);
-		waypointsprite_initialized = 1;
+		s = substring(s, 15, strlen(s) - 19);
+		o = strstrofs(s, "_frame", 0);
+		sname = strcat("/spriteframes/", substring(s, 0, o));
+		sframes = substring(s, o + 6, strlen(s) - o - 6);
+		f = stof(sframes) + 1;
+		db_put(db_temp, sname, ftos(max(f, stof(db_get(db_temp, sname)))));
 	}
+	search_end(dh);
 }
