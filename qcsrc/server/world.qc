@@ -304,6 +304,7 @@ void(void) world_init {
  	addstat(STAT_DAMAGE_FIRED, STAT_INT, maxdamage_fired);
 	addstat(STAT_LEADLIMIT, STAT_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, STAT_INT, ammoclip);
+	addstat(STAT_BULLETS_LOADED_MAX, STAT_INT, ammoclipmax);
 	addstat(STAT_PLAYER_STATE, STAT_INT, deadflag);
 	addstat(STAT_SPECSTATUS, STAT_INT, spectatee_status);
 	addstat(STAT_WEAPONS_EXTRA, STAT_INT, weapons_extra);

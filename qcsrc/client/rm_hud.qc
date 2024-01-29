@@ -550,8 +550,8 @@ void(void) rm_hud_draw {
 				if not(CVAR(sbar_showcurrentammo))
 					a_none = FALSE;
 			}
-			if (isclip && (rm_hud_get_ammo_item_code(i) & sbar_stat_items)) {
-				rm_hud_ammo_progress = max(0, isclip / getstati(STAT_BULLETS_LOADED_MAX));
+			if (isclip && ((rm_hud_get_ammo_item_code(i) & sbar_stat_items))) {
+				rm_hud_ammo_progress = bound(0, (1 - isclip / getstati(STAT_BULLETS_LOADED_MAX)), 1);
 			}
 		}
 	}
