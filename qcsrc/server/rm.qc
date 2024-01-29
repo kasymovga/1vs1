@@ -15,7 +15,6 @@ entity rm_findfilter(entity e, float(entity) filter) {
 	return NULL;
 }
 
-.float heal_next_particle;
 
 /*
 void(entity targ, entity healer, float heal) rm_heal_score {
@@ -26,6 +25,48 @@ void(entity targ, entity healer, float heal) rm_heal_score {
 	PlayerScore_Add(healer, SP_SCORE, heal * cvar(strcat("g_healing_score_", gametype_ID_to_Name(game))));
 }
 */
+
+.entity heal_emitter;
+float(entity to, float sf) rm_effect_heal_emitter_send {
+	net_write_byte(MSG_ENTITY, NET_CSQC_RM_EFFECT_HEAL_EMITTER);
+	net_write_int24(MSG_ENTITY, self.origin_x);
+	net_write_int24(MSG_ENTITY, self.origin_y);
+	net_write_int24(MSG_ENTITY, self.origin_z);
+	return TRUE;
+}
+
+float(void) rm_effect_heal_emitter_customize {
+	if (other == self.owner || (team_mode && other.team == self.owner.team))
+		return TRUE;
+
+	return FALSE;
+}
+
+void(void) rm_effect_heal_emitter_think {
+	if (wasfreed(self.enemy) || self.enemy.heal_emitter != self || !Buffs_Present(self.owner, BUFF_MEDIC)) {
+		remove(self);
+		return;
+	}
+	self.nextthink = time;
+	self.oldorigin = self.origin;
+	setorigin(self, ENTITY_CENTER(self.enemy));
+	if (self.origin != self.oldorigin) {
+		self.SendFlags |= 1;
+	}
+}
+
+void(entity e, entity own) rm_effect_heal_emitter {
+	if not(Buffs_Present(own, BUFF_MEDIC)) return;
+	entity emitter = spawn();
+	emitter.owner = own;
+	emitter.enemy = e;
+	e.heal_emitter = emitter;
+	setorigin(emitter, ENTITY_CENTER(e));
+	self.oldorigin = self.origin;
+	emitter.think = rm_effect_heal_emitter_think;
+	emitter.nextthink = time;
+	net_link_entity(emitter, FALSE, 0, rm_effect_heal_emitter_send);
+}
 
 void(entity e) rm_effect_heal {
 	entity c;
@@ -45,6 +86,7 @@ void(entity e) rm_effect_heal {
 	}
 }
 
+.float heal_next_particle;
 float(entity targ, entity inflictor, entity healer, float heal, float aheal, float hlimit, float alimit, float healtype, float pauserot, float pausearot, vector hitloc, vector force) rm_heal {
 	if (targ.classname == "player") {
 		if(hlimit)

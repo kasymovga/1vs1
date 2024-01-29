@@ -647,8 +647,9 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.angles = vectoangles(gren.velocity);
     gren.hg_nadesused = self.hg_nadesused;
     Buffs_MEODP_Point_Attach(gren, nadget_GenericProjectile_MEODP_Death);
+	rm_effect_heal_emitter(gren, self);
     if(hgtype == NADGET_NAPALM && self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face")) {
-        damage(self, self, self, GV("kamikaze_damage") /* * Buffs_NadgetPower(self) */, NADGET_NAPALM, self.origin, '0 0 0');
+        damage(self, self, self, GV("kamikaze_damage") * Buffs_NadgetPower(self), NADGET_NAPALM, self.origin, '0 0 0');
     }
 
     if(hgtype == NADGET_TRANSLOC) {

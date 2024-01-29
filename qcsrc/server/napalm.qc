@@ -59,14 +59,12 @@ void Napalm_Think(void) {
 		remove(self);
 		return;
 	}
-
-#if 0
-    if(self.projectiledeathtype != DEATH_HURTTRIGGER)
-        HealParticleEmitter(self.realowner);
-#endif
-
+	RM({
+		if(self.projectiledeathtype != DEATH_HURTTRIGGER) {
+			rm_effect_heal_emitter(self, self.realowner);
+		}
+	})
     Napalm_Burn();
-
     self.nextthink = time + NAPALM_BURN_INTERVAL;
 }
 

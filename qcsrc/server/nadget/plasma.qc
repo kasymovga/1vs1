@@ -107,9 +107,7 @@ void nadget_Plasma_Shard(float kickangle) {
     PROJECTILE_MAKETRIGGER(proj);
     proj.projectiledeathtype = (NADGET_PLASMA | HITTYPE_SECONDARY);
     setorigin(proj, self.origin);
-
     proj.movetype = MOVETYPE_BOUNCE;
-
     if(cvar("g_nadgets_plasma_spread_circle")) {
 		float side = cvar("g_nadgets_plasma_spread_xy");
 		kick = side * v_forward * cos(kickangle) + side * v_right * sin(kickangle) + cvar("g_nadgets_plasma_spread_z_min") * v_up;
@@ -141,7 +139,7 @@ void nadget_Plasma_Shard(float kickangle) {
 #endif
     Buffs_MEODP_Point_Attach(proj, Buffs_MEODP_Death_Use_Multiple);
     proj.meodp_point_offs = '0 0 16';
-
+	rm_effect_heal_emitter(proj, proj.realowner);
     sound(proj, CHAN_WEAPON, "weapons/electro_fire2.wav", VOL_BASE, ATTN_NORM);
 }
 

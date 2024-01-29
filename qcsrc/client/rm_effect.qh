@@ -1,1 +1,2 @@
 void(void) rm_effect_heal_read;
+void(float ignore) rm_effect_heal_emitter_read;
