@@ -27,6 +27,24 @@ void(entity targ, entity healer, float heal) rm_heal_score {
 }
 */
 
+void(entity e) rm_effect_heal {
+	entity c;
+	vector o = e.origin + e.view_ofs;
+	FOR_EACH_REALCLIENT(c) if(c != e && c.enemy != e) {
+		if (c.classname == "player")
+		if (team_is_different_teams(c, e))
+		if (e.hg_stealth || player_alpha(e, c) < 0.15)
+			continue;
+
+		msg_entity = c;
+		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+		net_write_byte(MSG_ONE, NET_TE_CSQC_RM_EFFECT_HEAL);
+		net_write_coord(MSG_ONE, o_x);
+		net_write_coord(MSG_ONE, o_y);
+		net_write_coord(MSG_ONE, o_z);
+	}
+}
+
 float(entity targ, entity inflictor, entity healer, float heal, float aheal, float hlimit, float alimit, float healtype, float pauserot, float pausearot, vector hitloc, vector force) rm_heal {
 	if (targ.classname == "player") {
 		if(hlimit)
@@ -85,7 +103,7 @@ float(entity targ, entity inflictor, entity healer, float heal, float aheal, flo
 		//rm_heal_score(targ, healer, heal + aheal);
 		if not(silent) {
 			if (time > targ.heal_next_particle) {
-				//te_heal(targ); //FIXME
+				rm_effect_heal(targ);
 				targ.heal_next_particle = time + 0.2;
 			}
 			if (heal) 
