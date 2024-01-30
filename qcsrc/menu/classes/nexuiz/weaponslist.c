@@ -56,7 +56,7 @@ void drawNexuizWeaponsList(entity me)
 	t = weapon_fix_order(s, 1);
 	if(t != s)
 	{
-		print("AUTOFIXED\n");
+		print("Weapon priority list fixed\n");
 		cvar_set("cl_weaponpriority", t);
 	}
 	me.nItems = tokenize_console(t);
