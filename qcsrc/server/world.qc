@@ -272,9 +272,9 @@ void(void) world_init {
 	world.mins = world_min;
 	world.maxs = world_max;
 	game_type_init();
-	rm_init();
 	map_mark_as_recent(mapname);
 	dlc_init();
+	rm_init();
 	// needs to be done so early as they would still spawn
 	weapon_register_weapons();
 	world_static_init();
