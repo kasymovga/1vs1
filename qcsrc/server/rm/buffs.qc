@@ -1445,7 +1445,9 @@ float Buffs_BuffPickup_Waypoint_VisibleForPlayer(entity plr) {
 
 void Buffs_BuffPickup_SpawnWaypoint(entity e) {
     vector c = Buffs_TypeToColor(e.buffs);
-    WaypointSprite_Spawn(Buffs_TypeToExpandedName(e.buffs, " + ", 0), 0, 0, e, '0 0 40', NULL, e.team, e, buff_waypoint, TRUE);
+    str_unzone_ifneeded(e.netname);
+    e.netname = str_zone_ifneeded(Buffs_TypeToExpandedName(e.buffs, "+", 0));
+    WaypointSprite_Spawn(e.netname, 0, 0, e, '0 0 40', NULL, e.team, e, buff_waypoint, TRUE);
     //WaypointSprite_UpdateTextColors(e.buff_waypoint,c, '0 0 0', '0 0 0');
     WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_FLAG, c);
     e.buff_waypoint.waypointsprite_visible_for_player = Buffs_BuffPickup_Waypoint_VisibleForPlayer;
