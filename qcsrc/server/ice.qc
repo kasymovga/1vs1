@@ -151,6 +151,7 @@ void(entity frozen, entity unfrozer) ice_unfroze {
 	self = frozen.ice;
 	ice_hook_unfroze(unfrozer);
 	frozen.deadflag = DEAD_NO;
+	player_physics_setup(frozen);
 	self = frozen;
 	ice_remove();
 	self = oldself;
