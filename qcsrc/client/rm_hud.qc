@@ -407,6 +407,7 @@ void(string s) rm_hud_draw_name {
 
 float rm_hud_draw_server_info_movealpha;
 void(void) rm_hud_draw_server_info {
+	if (sbar_showscores) return;
 	if(pmove_vel_x || pmove_vel_y || pmove_vel_z)
 		rm_hud_draw_server_info_movealpha = approach(rm_hud_draw_server_info_movealpha, 1, 3 * frametime);
 	else
