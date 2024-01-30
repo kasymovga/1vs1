@@ -11,9 +11,11 @@ string buff_modelnames[BUFF_COUNT];
 .entity buff_ring;
 
 void Buffs_LoadModels(void) {
+	if not(g_buffs_enabled) return;
 	precache_model("models/buffs/buff_ring.md3");
 	float i, b;
 	for (i = 0, b = 1; i < BUFF_COUNT; ++i, b *= 2) if(b & g_buffs_enabled) {
+		str_unzone_ifneeded(buff_modelnames[i]);
 		string n = Buffs_TypeToName(b);
 		string s = strcat("models/buffs/buff_", n, ".md3");
 		if not(file_exists(s)) {
