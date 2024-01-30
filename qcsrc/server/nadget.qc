@@ -98,6 +98,9 @@ void(float killed) nadget_player_clear {
 	self.hg_shield = 0;
 	self.hg_stealth = 0;
 	self.hg_stealthalpha = 0;
+	self.hg_plasmalock = 0;
+	self.hg_plasmalock_owner = NULL;
+	self.hg_plasmalock_nexteffect = 0;
 	nadget_UpdateDetonables();
 	nadget_player_clear_next(killed);
 }
