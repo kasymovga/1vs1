@@ -138,6 +138,7 @@ rm/hud_flash.qh
 rm/damage.qh
 rm/game_type_vote.qh
 rm/buffs.qh
+rm/bigprint.qh
 ../client-server/progs.qc
 ../menu-server/progs.qc
 weapon/two_weapons.qh
@@ -400,4 +401,5 @@ rm/hud_flash.qc
 rm/damage.qc
 rm/game_type_vote.qc
 rm/buffs.qc
+rm/bigprint.qc
 rm.qc

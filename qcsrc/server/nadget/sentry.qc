@@ -530,8 +530,8 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
 
     if(!entity_move_out_of_solid(e)) {
         remove(e);
-        //bigprint_spec(self, "Can't put a sentry here!", "", 1);
-        centerprint(self, "Can't put a sentry here!");
+		RM_ELSE({rm_bigprint_spec(self, "Can't put a sentry here!", "", 1);},
+				{centerprint(self, "Can't put a sentry here!");})
         return NADGET_ATTACK_FAIL_COOLDOWN;
     }
 

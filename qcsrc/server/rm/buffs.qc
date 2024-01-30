@@ -615,8 +615,7 @@ void Buffs_Notify(entity plr, float bfs, float tm) {
 		tn = "";
 
     bprint("^3", plr.netname, " ^7got the ", tn, bname, "\n");
-    //FIXME
-    //bigprint_spec(plr, strcat("You got the ", bname), Buffs_Description(bfs), 4);
+    rm_bigprint_spec(plr, strcat("You got the ", bname), Buffs_Description(bfs), 4);
     sound(plr, CHAN_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 }
 

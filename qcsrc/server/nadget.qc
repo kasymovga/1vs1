@@ -550,16 +550,15 @@ void nadget_GiveBonus(entity p, float hgtype, float amount, string reason) {
         if(!e.iscreature)
             check = e.enemy;
 
-        if(check == p)
-            //bigprint(e, strcat("^7You got a ^3", n, "^7 bonus!"), reason, 3);
-            centerprint(e, strcat("^7You got a ^3", n, "^7 bonus!", "\n", reason));
-        else if(team_is_different_teams(check, p))
-            //bigprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!"), strcat("Given to ^3", p.netname, " ^7(", reason, ")"), 3);
-            centerprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!\nGiven to ^3", p.netname, " ^7(", reason, ")"));
-        else
-            centerprint(e, strcat("^3", p.netname, "^7 got a ^3", n, " ^7bonus (", reason, ")"));
-    }
-
+		if(check == p) {
+			RM_ELSE({rm_bigprint(e, strcat("^7You got a ^3", n, "^7 bonus!"), reason, 3);},
+					{centerprint(e, strcat("^7You got a ^3", n, "^7 bonus!", "\n", reason));})
+		} else if(team_is_different_teams(check, p)) {
+			RM_ELSE({rm_bigprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!"), strcat("Given to ^3", p.netname, " ^7(", reason, ")"), 3);},
+					{centerprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!\nGiven to ^3", p.netname, " ^7(", reason, ")"));})
+		} else
+			centerprint(e, strcat("^3", p.netname, "^7 got a ^3", n, " ^7bonus (", reason, ")"));
+	}
 	bprint(strcat("^3", p.netname, " ^7got a ^3", n, "^7 bonus (", reason, ")\n"));
     sound_play2all("kh/alarm.wav");
 }

@@ -38,7 +38,7 @@ NADGET_HOOKFUNCTION(gg, Attack) {
         sound(self, CHAN_AUTO, "misc/gg.wav", 1, ATTN_NORM);
         return NADGET_ATTACK_OK;
     } else {
-        //bigprint_spec(self, "Nobody to win against!", "", 1);
+        RM({rm_bigprint_spec(self, "Nobody to win against!", "", 1);})
         return NADGET_ATTACK_FAIL_COOLDOWN;
     }
 }

@@ -266,6 +266,7 @@ void(float ignore) main_init_read {
 			rm_skin_load(cvar_string("cl_rm_skin"));
 			g_buffs_enabled = net_read_coord();
 			Buffs_LoadModels();
+			rm_bigprint_enable();
 		});
 	}
 }

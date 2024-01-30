@@ -65,6 +65,7 @@ rm_flak.qh
 rm_game_type_vote.qh
 rm_buffs.qh
 rm_effect.qh
+rm_bigprint.qh
 porto.qh
 ../client-server/progs.qc
 cvar.qc
@@ -177,3 +178,4 @@ rm_flak.qc
 rm_game_type_vote.qc
 rm_buffs.qc
 rm_effect.qc
+rm_bigprint.qc
