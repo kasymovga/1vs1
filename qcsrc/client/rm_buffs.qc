@@ -144,6 +144,10 @@ void Buffs_Model_UpdateColor(entity ment) {
 void Buffs_Model_Set(entity ment, float thebuffs) {
 	float idx = Buffs_TypeToIndex(thebuffs);
 	float i, j, b;
+	if not(g_buffs_enabled & thebuffs) {
+		g_buffs_enabled |= thebuffs;
+		Buffs_LoadModels();
+	}
 	ment.buffs = thebuffs;
 	if(idx >= 0) {
 		// single model - use ment to display it
