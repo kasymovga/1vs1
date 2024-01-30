@@ -32,7 +32,7 @@ enum {
 };
 
 const float BUFF_FIRST = 1;
-const float BUFF_LAST  = BUFF_INVALID / 2;
+const float BUFF_LAST  = BUFF_INVALID - 1;
 
 string Buffs_TypeToName(float);
 float Buffs_NameToType(string);

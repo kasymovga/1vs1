@@ -64,7 +64,6 @@ string Buffs_TypeToExpandedName(float buff, string sep, float colorfactor) {
 
     string r = "";
     float o, first = TRUE;
-
     for(o = BUFF_FIRST; o <= BUFF_LAST; o *= 2) {
         if(buff & o) {
             if(first) {
