@@ -12,6 +12,10 @@ void(void) announce_draw {
 }
 
 void(void) announce_print {
+	RM({
+		rm_bigprint(net_read_string(), "", CVAR(cl_announcer_print));
+		return;
+	})
 	if not(announce) {
 		announce = spawn();
 		announce.draw2d = announce_draw;
