@@ -105,12 +105,9 @@ void(void) roundbased_world_frame_start {
 
 				RM_ELSE({
 					if (roundbased_result_not_announced) {
-						if (roundbased_winner_team > 0) {
+						if (roundbased_winner_team > 0)
 							rm_bigprint_all_player_spec(strcat(team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " team ^7Scores!"), "All opponents are down", 5);
-							FOR_EACH_REALCLIENT(plr)
-								if (plr.team == roundbased_winner_team)
-									rm_hud_flash_teamcolor_default_spec(plr);
-						} else
+						else
 							rm_bigprint_all_player_spec("Round Draw!", "", 5);
 
 						roundbased_result_not_announced = FALSE;
