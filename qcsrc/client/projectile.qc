@@ -341,6 +341,9 @@ void(float ignore) projectile_read {
 		case PROJECTILE_HG_NAPALM:
 			setmodel(self, "models/handgrenade.iqm");
 			projectile_colormap_setup(COLOR_TEAM1);
+			if (self.cnt == PROJECTILE_HG_NAPALM)
+				self.trail_effect = particles_rm_effectnum_team("RM_HG_NAPALM_TRAIL", self.team, 1);
+
 			break;
 		case PROJECTILE_HG_PLASMA:
 			setmodel(self, "models/plasmabomb.iqm");
