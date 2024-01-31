@@ -18,10 +18,14 @@ void(entity player, string msg, string txt) announce_force {
 
 	if (txt != "")
 	if (g_announcer_print) {
-		msg_entity = player;
-		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
-		net_write_byte(MSG_ONE, NET_TE_CSQC_ANNOUNCE_PRINT);
-		net_write_string(MSG_ONE, txt);
+		RM_ELSE({
+			rm_bigprint(player, txt, "", 2);
+		},{
+			msg_entity = player;
+			net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+			net_write_byte(MSG_ONE, NET_TE_CSQC_ANNOUNCE_PRINT);
+			net_write_string(MSG_ONE, txt);
+		})
 	}
 }
 
