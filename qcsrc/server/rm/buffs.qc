@@ -130,7 +130,10 @@ void Buffs_Random_Spawn(void) {
     setsize(self, omins + BUFFS_MARGIN_MINS, omaxs + BUFFS_MARGIN_MAXS);
 
 	float i;
-    for(i = 0; i < a; ++i) {
+	float fails = 0;
+	float failed = 1;
+	for(i = 0; i < a && fails < 10; ++i) {
+		failed = 0;
         entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_WATER | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 128, 1024, 256);
 
 		//FIXME
@@ -138,7 +141,7 @@ void Buffs_Random_Spawn(void) {
         //snap_to_entity(self, 1024, Buffs_Random_Spawn_EntFilter);
 
         setsize(self, '-1 -1 0' + '0 0 1' * self.mins_z, '1 1 0' + '0 0 1' * self.maxs_z);
-        entity_droptofloor();
+		builtin_droptofloor();
         setsize(self, omins + BUFFS_MARGIN_MINS, omaxs + BUFFS_MARGIN_MAXS);
         entity_move_out_of_solid_with_type(self, TRACE_MOVE_WORLDONLY);
 
@@ -168,16 +171,20 @@ void Buffs_Random_Spawn(void) {
             org = self.origin;
             mx = d;
         }
-
-        continue;
-    :fail
-        --i;
+		break;
+:fail
+		failed = 1;
+		--i;
+		fails++;
     }
-
-    setorigin(self, org);
-    setsize(self, omins, omaxs);
-    entity_move_out_of_solid_with_type(self, TRACE_MOVE_WORLDONLY);
-
+	if (failed) {
+		print("Failed to spawn buff: no place found\n");
+		remove(self);
+	} else {
+		setorigin(self, org);
+		setsize(self, omins, omaxs);
+		entity_move_out_of_solid_with_type(self, TRACE_MOVE_WORLDONLY);
+	}
     self = o;
 }
 
@@ -1650,8 +1657,7 @@ void Buffs_BuffPickup_Setup(void) {
     setsize(self, '-15 -15 -40', '15 15 40');
     
     entity_move_out_of_solid_with_type(self, TRACE_MOVE_WORLDONLY);
-    entity_droptofloor();
-    
+	builtin_droptofloor();
     net_link_entity(self, FALSE, 0, Buffs_Model_Send);
 
     ++g_buffs_count;
