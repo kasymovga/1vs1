@@ -11,6 +11,7 @@ float roundbased_score_field;
 float roundbased_warmup;
 float roundbased_active;
 float roundbased_restart_time;
+float roundbased_result_not_announced;
 
 var float(entity plr, float wep) roundbased_player_can_fire_next;
 float(entity plr, float wep) roundbased_player_can_fire {
@@ -91,22 +92,40 @@ void(void) roundbased_world_frame_start {
 			roundbased_countdown_last = 0;
 			roundbased_active = 1;
 			sound_play2all("announcer/robotic/begin.wav");
-			game_status_set("^2New round started\n", 3);
+			RM_ELSE({
+				rm_bigprint_all("^xFB0Begin!", "It's time to kick some ass!", 1);
+			}, {
+				game_status_set("^2New round started\n", 3);
+			})
 		} else {
-			string winner_message;
-			if (roundbased_winner_team > 0)
-				winner_message = strcat("^2Round finished!\n", team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " Team^2 wins!\n");
-			else if (roundbased_winner_team < 0)
-				winner_message = "^1Round aborted!\n";
-			else
-				winner_message = "";
-
 			float countdown = ceil(roundbased_warmup - time);
 			if (roundbased_countdown_last != countdown) {
 				if (countdown <= 3)
 					sound_play2all(strcat("announcer/robotic/", ftos(countdown), ".wav"));
 
-				game_status_set(strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"), 3);
+				RM_ELSE({
+					if (roundbased_result_not_announced) {
+						if (roundbased_winner_team > 0)
+							rm_bigprint_all_player_spec(strcat(team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " team ^7Scores!"), "All opponents are down", 5);
+						else
+							rm_bigprint_all_player_spec("Round Draw!", "", 5);
+
+						roundbased_result_not_announced = FALSE;
+					} else if not(roundbased_restart_time) {
+						rm_bigprint_all(" ", "", 1);
+						rm_bigprint_all(strcat(game_type_name_long(game_type), " starts in: ", ftos(countdown)), "", 1);
+					}
+				}, {
+					string winner_message;
+					if (roundbased_winner_team > 0)
+						winner_message = strcat("^2Round finished!\n", team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " Team^2 wins!\n");
+					else if (roundbased_winner_team < 0)
+						winner_message = "^1Round aborted!\n";
+					else
+						winner_message = "";
+
+					game_status_set(strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"), 3);
+				})
 				roundbased_countdown_last = countdown;
 			}
 		}
@@ -138,6 +157,7 @@ void(void) roundbased_world_frame_start {
 
 	if (roundbased_have_death_players) {
 		roundbased_winner_team = roundbased_team_alive;
+		roundbased_result_not_announced = TRUE;
 		string announce_sound = ((roundbased_winner_team == COLOR_TEAM1) ?
 				"ctf/red_capture.wav" :
 				((roundbased_winner_team == COLOR_TEAM2) ?

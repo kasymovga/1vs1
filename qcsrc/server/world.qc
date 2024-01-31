@@ -607,11 +607,20 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 					if (f < 4)
 						sound_play2all(strcat("announcer/robotic/", ftos(floor(f)), ".wav"));
 
-					game_status_set(strcat("^1Game starts in ", ftos(floor(f)), " seconds"), 2);
+					RM_ELSE({
+						rm_bigprint_all(" ", "", 1);
+						rm_bigprint_all(strcat(game_type_name_long(game_type), " starts in: ", ftos(floor(f))), "", 1);
+					}, {
+						game_status_set(strcat("^1Game starts in ", ftos(floor(f)), " seconds"), 2);
+					})
 				}
 			}
 			if (time >= map_starttime) {
-				game_status_set("^1Begin!", 1);
+				RM_ELSE({
+					rm_bigprint_all("^xFB0Begin!", "It's time to kick some ass!", 1);
+				}, {
+					game_status_set("^1Begin!", 1);
+				})
 				sound_play2all("announcer/robotic/begin.wav");
 				world_check_time_remaining = world_check_5min_remaining;
 			}
