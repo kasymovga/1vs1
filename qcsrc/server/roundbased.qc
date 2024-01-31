@@ -104,12 +104,7 @@ void(void) roundbased_world_frame_start {
 					sound_play2all(strcat("announcer/robotic/", ftos(countdown), ".wav"));
 
 				RM_ELSE({
-					if (roundbased_result_not_announced) {
-						if (roundbased_winner_team > 0)
-							rm_bigprint_all_player_spec(strcat(team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " team ^7Scores!"), "All opponents are down", 5);
-						else
-							rm_bigprint_all_player_spec("Round Draw!", "", 5);
-
+					if (roundbased_result_not_announced) { //skip counting for winner message
 						roundbased_result_not_announced = FALSE;
 					} else if not(roundbased_restart_time) {
 						rm_bigprint_all(" ", "", 1);
@@ -157,7 +152,6 @@ void(void) roundbased_world_frame_start {
 
 	if (roundbased_have_death_players) {
 		roundbased_winner_team = roundbased_team_alive;
-		roundbased_result_not_announced = TRUE;
 		string announce_sound = ((roundbased_winner_team == COLOR_TEAM1) ?
 				"ctf/red_capture.wav" :
 				((roundbased_winner_team == COLOR_TEAM2) ?
@@ -171,13 +165,18 @@ void(void) roundbased_world_frame_start {
 			}
 		}
 		roundbased_round_start();
-		if (rm_active) {
+		RM({
+			roundbased_result_not_announced = TRUE;
 			if (roundbased_winner_team > 0) {
 				FOR_EACH_REALCLIENT(plr)
 					if (plr.team == roundbased_winner_team)
 						rm_hud_flash_teamcolor_default_spec(plr);
 			}
-		}
+			if (roundbased_winner_team > 0)
+				rm_bigprint_all_player_spec(strcat(team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " team ^7Scores!"), "All opponents are down", 5);
+			else
+				rm_bigprint_all_player_spec("Round Draw!", "", 5);
+		})
 	}
 }
 

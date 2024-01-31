@@ -475,7 +475,14 @@ void() ctf_flag_touch {
 			}
 		}
 		sound (other, CHAN_AUTO, self.noise2, VOL_BASE, ATTN_NONE);
-		game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores"), 1);
+		RM_ELSE({
+			string t = ftos(time - other.flagcarried.flagpickuptime);
+			float dot = strstrofs(t, ".", 0);
+			if (dot > 0) t = substring(t, 0, dot + 2);
+			rm_bigprint_all(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores!"), strcat("^7Captured by ^3", other.netname, " ^7in ", t, "s"), 2);
+		}, {
+			game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores"), 1);
+		})
 		WaypointSprite_DetachCarrier(other);
 		ctf_flag_regen (other.flagcarried);
 		other.flagcarried = world;
