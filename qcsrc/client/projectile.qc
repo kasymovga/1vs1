@@ -25,7 +25,7 @@ void projectile_colormap_setup(float default_team) {
 
 .float nextparticle;
 void(vector to) projectile_trail_draw {
-	vector from;
+	vector from, v;
 	float t0;
 	from = self.trail_oldorigin;
 	t0 = self.trail_oldtime;
@@ -34,7 +34,13 @@ void(vector to) projectile_trail_draw {
 	if (from == to) {
 		switch (self.cnt) {
 		case PROJECTILE_HG_NAPALMSHARD:
-			goto flame;
+			v = randomvec();
+			v_z = (v_z + 1) * 0.25;
+			if (time >= self.nextparticle) {
+				pointparticles(particles_rm_effectnum_team("RM_HG_NAPALM_FIRE", self.team, 1), self.origin + v/* * self.extradata * 0.7 */, '0 0 0', 1);
+				self.nextparticle = time + 0.15 + random() * 0.10;
+			}
+			return;
 		case PROJECTILE_HG_NAPALM:
 		case PROJECTILE_FIREMINE:
 			to_z += 1;
@@ -43,31 +49,13 @@ void(vector to) projectile_trail_draw {
 			to = from = self.origin;
 			to_z += 1;
 			break;
-		case PROJECTILE_ELECTRO:
-			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
-			return;
-		case PROJECTILE_HG_PLASMA_SHARD:
-			trailparticles(self, particles_rm_effectnum_team("RM_HG_PLASMA", self.team, 2), from, to);
-			return;
 		case PROJECTILE_HG_RAZE:
 		case PROJECTILE_HG_PLASMA:
 			break;
-		default:
-			return;
 		}
 	}
 	if (self.trail_effect >= 0)
 		trailparticles(self, self.trail_effect, from, to);
-
-	if (self.cnt == PROJECTILE_HG_NAPALMSHARD) {
-:flame
-		vector v = randomvec();
-		v_z = (v_z + 1) * 0.25;
-		if (time >= self.nextparticle) {
-			pointparticles(particles_rm_effectnum_team("RM_HG_NAPALM_FIRE", self.team, 1), self.origin + v/* * self.extradata * 0.7 */, '0 0 0', 1);
-			self.nextparticle = time + 0.15 + random() * 0.10;
-		}
-	}
 }
 
 void(void) projectile_draw {
