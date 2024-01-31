@@ -659,6 +659,8 @@ float(float req) weapon_zapper {
 				self = e;
 			}
 		}
+		if (self.zapper_heat >= 0)
+			self.ammoclip = 100 * (1 - self.zapper_heat);
 	} else if (req == WEAPON_REQUEST_PRECACHE) {
 		precache_model("models/vhshield.md3");
 		precache_model("models/weapons/rtzapper_hyperhonker.iqm");
@@ -682,6 +684,8 @@ float(float req) weapon_zapper {
 			plugin_chain_teleport_origin_set = weapon_zapper_teleport_origin_set;
 			weapon_zapper_init_done = TRUE;
 		}
+		if (g_balance_zapper_primary_heatup || (g_balance_zapper_secondary_shield && g_balance_zapper_secondary_shield_heatup))
+			self.ammoclipmax = 100;
 	} else if (req == WEAPON_REQUEST_CLEAR) {
 		if (self.zapper_spinner) {
 			remove(self.zapper_spinner);
