@@ -240,7 +240,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_tint_effect();
 	// draw 2D entities
 	e = self;
-	for (self = findchainfloat(draw2dflag, 1); self; self = self.chain)
+	for (self = findfloat(self, draw2dflag, 1); self; self = findfloat(self, draw2dflag, 1))
 		self.draw2d();
 
 	self = e;
