@@ -267,6 +267,7 @@ void(float ignore) main_init_read {
 			g_buffs_enabled = net_read_coord();
 			Buffs_LoadModels();
 			rm_bigprint_enable();
+			sbar_bigfont = FONT_USER+4;
 		});
 	}
 }
