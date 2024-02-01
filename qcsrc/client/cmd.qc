@@ -94,17 +94,15 @@ void(string msg) GameCommand { //called by engine
 	} else if (cmd == "rm_game_type_vote_picture_check") {
 		rm_game_type_vote_picture_check();
 	} else if (cmd == "rm_font_setup") {
-		RM({
-			if (argc >= 2 && argv(1) == "done")
-				sbar_bigfont = FONT_USER + 4;
-			else {
-				if (cvar("utf8_enable") && !cvar("r_font_disable_freetype")) { //assuming rexuiz
-					localcmd("loadfont user4 gfx/iceland,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907.ttf; cl_cmd rm_font_setup done\n");
-				} else {
-					localcmd("loadfont user4 gfx/iceland; cl_cmd rm_font_setup done\n");
-				}
+		if (argc >= 2 && argv(1) == "done")
+			sbar_bigfont = FONT_USER + 4;
+		else {
+			if (cvar("utf8_enable") && !cvar("r_font_disable_freetype")) { //assuming rexuiz
+				localcmd("loadfont user4 gfx/iceland,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907.ttf; cl_cmd rm_font_setup done\n");
+			} else {
+				localcmd("loadfont user4 gfx/iceland; cl_cmd rm_font_setup done\n");
 			}
-		})
+		}
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}
