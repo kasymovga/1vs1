@@ -98,7 +98,7 @@ void(string msg) GameCommand { //called by engine
 			if (argc >= 2 && argv(1) == "done")
 				sbar_bigfont = FONT_USER + 4;
 			else {
-				if (cvar("utf8_enable")) { //assuming rexuiz
+				if (cvar("utf8_enable") && !cvar("r_font_disable_freetype")) { //assuming rexuiz
 					localcmd("loadfont user4 gfx/iceland,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907.ttf; cl_cmd rm_font_setup done\n");
 				} else {
 					localcmd("loadfont user4 gfx/iceland; cl_cmd rm_font_setup done\n");
