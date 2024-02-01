@@ -559,7 +559,7 @@ void Buffs_Init_Delayed(void) {
 
         blist = findchain(classname, "item_buff");
         for(b = blist; b; b = b.chain) if(b.team) {
-            idx = ((b.team == COLOR_TEAM1) ? 0 : ((b.team == COLOR_TEAM2) ? 1 : ((b.team == COLOR_TEAM3) ? 2 : 3)));
+            idx = team_index(b.team);
             if(!buff_teamfound[idx]) {
                 buff_teamfound[idx] = TRUE;
                 ++teams_found;
