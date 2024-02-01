@@ -1,1 +1,1 @@
-void(vector wcross_origin, float wcross_sizefloat, vector wcross_color, float wcross_alpha) rm_crosshair_ring_draw;
+void(vector wcross_origin, vector wcross_color, float wcross_alpha) rm_crosshair_ring_draw;

@@ -5,7 +5,7 @@ float rm_crosshair_ring_in_alpha;
 float rm_crosshair_ring_in_expand;
 #endif
 
-void(vector wcross_origin, float wcross_sizefloat, vector wcross_color, float wcross_alpha) rm_crosshair_ring_draw {
+void(vector wcross_origin, vector wcross_color, float wcross_alpha) rm_crosshair_ring_draw {
 	float bullets, maxbullets;
 	maxbullets = getstati(STAT_BULLETS_LOADED_MAX);
 	string s;
@@ -30,7 +30,7 @@ void(vector wcross_origin, float wcross_sizefloat, vector wcross_color, float wc
 		if (rm_crosshair_ring_fill < 0)
 			rm_crosshair_ring_fill = 0;
 	}
-	float ringsize = CVAR(rm_hud_crosshair_ring_size) * 24 * wcross_sizefloat;
+	float ringsize = CVAR(rm_hud_crosshair_ring_size) * 24;
 	float ringalpha = CVAR(rm_hud_crosshair_ring_alpha) * wcross_alpha;
 	float ringexpand = 0.25; // TODO: cvar for this?
 	if (ringsize > 0 && ringalpha > 0) {

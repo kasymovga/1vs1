@@ -324,7 +324,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 						wcross_color_z = CVAR(crosshair_color_blue);
 					}
 				}
-				RM(rm_crosshair_ring_draw(weapon_cross_origin, wcross_sizefloat, wcross_color, wcross_alpha);)
+				RM(rm_crosshair_ring_draw(weapon_cross_origin, wcross_color, wcross_alpha);)
 				wcross_name = strcat("gfx/crosshair", wcross_style);
 				wcross_size = drawgetimagesize(wcross_name);
 				wcross_size_x *= wcross_sizefloat;
