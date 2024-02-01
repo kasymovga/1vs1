@@ -5,7 +5,7 @@ void(void) rm_init {
 	rm_flak = cvar("g_rm_flak");
 	rm_pryaxe = cvar("g_rm_pryaxe");
 	Buffs_Init();
-	dlc_require("rm_gfx");
+	dlc_require("rm_ui");
 }
 
 entity rm_findfilter(entity e, float(entity) filter) {
