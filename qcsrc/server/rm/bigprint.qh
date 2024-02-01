@@ -1,0 +1,4 @@
+void(entity pl, string msg, string comment, float staytime) rm_bigprint_spec;
+void(entity e, string bigstring, string comment, float staytime) rm_bigprint;
+void(string bigstring, string comment, float staytime) rm_bigprint_all;
+void(string bigstring, string comment, float staytime) rm_bigprint_all_player_spec;
