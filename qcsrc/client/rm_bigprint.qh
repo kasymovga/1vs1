@@ -1,0 +1,3 @@
+void(void) rm_bigprint_read;
+void(void) rm_bigprint_enable;
+void(string bigstr, string comment, float staytime) rm_bigprint;
