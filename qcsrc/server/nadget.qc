@@ -530,7 +530,7 @@ void nadget_SetContext(float isalt) {
 }
 
 void nadget_GiveBonus(entity p, float hgtype, float amount, string reason) {
-    amount *= GRENVAR(hgtype, "bonus_amount_multiplier") /* * Buffs_NadgetBonusMultiplier(p) */;
+    amount *= GRENVAR(hgtype, "bonus_amount_multiplier") * Buffs_NadgetBonusMultiplier(p);
 
     if(amount < 1)
         return;
