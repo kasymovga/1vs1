@@ -73,10 +73,12 @@ void(void) jb_think {
 			score_team_add_to(COLOR_TEAM1, ST_SCORE, 1);
 			sound_play2all("ctf/red_capture.wav");
 			roundbased_round_start_with_winner(COLOR_TEAM1);
+			RM(rm_bigprint_all_player_spec("^1Red^7 Scores!", "All opponents are imprisoned", 10);)
 		} else if (!red_free && blue_free && red_jailed) { //blue wins
 			score_team_add_to(COLOR_TEAM2, ST_SCORE, 1);
 			sound_play2all("ctf/blue_capture.wav");
 			roundbased_round_start_with_winner(COLOR_TEAM2);
+			RM(rm_bigprint_all_player_spec("^4Blue^7 Scores!", "All opponents are imprisoned", 10);)
 		} else if (red_free && blue_free) { //Still playing
 		} else { //Draw
 			roundbased_round_start_with_winner(0);
