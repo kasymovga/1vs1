@@ -3,11 +3,14 @@ float jb_open_blue;
 float jb_open_red;
 entity jb_controller;
 float g_jb_capture_time;
+var .float jb_player_jailed;
+#define JB_PLAYER_JAILED(plr) (plr.scorekeeper.jb_player_jailed)
+#define JB_PLAYER_JAIL_SET(plr, x) score_player_set(plr, SP_STATUS, x);
 
 entity(void) jb_client_put_spawn_point {
 	if not(warmup_active)
 	if ((self.team == COLOR_TEAM1 && time > jb_open_red) || (self.team == COLOR_TEAM2 && time > jb_open_blue))
-	if ((roundbased_active || roundbased_restart_time)) {
+	if (roundbased_active) {
 		entity e;
 		random_selection_init();
 		for (e = NULL; (e = find(e, classname, "jb_spawn")); ) {
@@ -50,7 +53,7 @@ void(void) jb_think {
 				if (e.team == COLOR_TEAM1) red_jailed++;
 				if (e.team == COLOR_TEAM2) blue_jailed++;
 			} else {
-				score_player_set(e, SP_STATUS, 0);
+				JB_PLAYER_JAIL_SET(e, 0);
 				if (roundbased_active)
 					bprint(player_name(e), "^7 escaped from jail!\n");
 
@@ -85,6 +88,7 @@ void(void) jb_init {
 	jb = TRUE;
 	score_generic();
 	SP_STATUS = score_register("status", 0);
+	jb_player_jailed = scores[SP_STATUS];
 	team_teams_set_count(2);
 	roundbased_init(cvar("g_jb_enddelay"), cvar("g_jb_startdelay"));
 	plugin_client_put_spawn_point = jb_client_put_spawn_point;
@@ -128,8 +132,8 @@ void(void) jb_room_touch {
 	if (other.classname != "player") return;
 	if (self.team == COLOR_TEAM1 && jb_open_red >= time) return; //open state
 	if (self.team == COLOR_TEAM2 && jb_open_blue >= time) return; //open state
-	if (other.scorekeeper.scores[SP_STATUS] == 0) {
-		score_player_set(other, SP_STATUS, 1);
+	if (!JB_PLAYER_JAILED(other)) {
+		JB_PLAYER_JAIL_SET(other, 1);
 		bprint(player_name(other), "^7 jailed!\n");
 	}
 }
@@ -173,6 +177,13 @@ void(void) jb_controlpoint_model_setup {
 	setsize(self, '-32 -32 -32', '32 32 32');
 }
 
+float(entity cp) jb_controlpoint_active {
+	if (cp.team == COLOR_TEAM1 && jb_open_red >= time) return FALSE;
+	if (cp.team == COLOR_TEAM2 && jb_open_blue >= time) return FALSE;
+	if not(roundbased_active) return FALSE;
+	return TRUE;
+}
+
 void(void) jb_controlpoint_think {
 	entity e, capturer, e2;
 	vector min1, min2, max1, max2;
@@ -182,9 +193,9 @@ void(void) jb_controlpoint_think {
 		capturer = self.killindicator.enemy;
 		min1 = capturer.mins + capturer.origin;
 		max1 = capturer.maxs + capturer.origin;
-		if (capturer.team == self.team || capturer.playerid != self.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
+		if (!jb_controlpoint_active(self) || capturer.team == self.team || capturer.playerid != self.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
 			e = self.killindicator.killindicator;
-			remove(self.killindicator.sprite);
+			progressbar_remove(self.killindicator.sprite);
 			remove(self.killindicator);
 			self.killindicator = e;
 		}
@@ -195,9 +206,9 @@ void(void) jb_controlpoint_think {
 			capturer = e.killindicator.enemy;
 			min1 = capturer.mins + capturer.origin;
 			max1 = capturer.maxs + capturer.origin;
-			if (capturer.team == e.team || capturer.playerid != e.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
+			if (!jb_controlpoint_active(self) || capturer.team == e.team || capturer.playerid != e.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
 				e2 = e.killindicator.killindicator;
-				remove(e.killindicator.sprite);
+				progressbar_remove(e.killindicator.sprite);
 				remove(e.killindicator);
 				e.killindicator = e2;
 			}
