@@ -1,0 +1,7 @@
+set g_jb_enddelay 10
+set g_jb_startdelay 5
+set g_jb_scorelimit 10
+set g_jb_timelimit 15
+set g_jb_leadlimit 0
+set g_jb_start_delay 0
+set g_jb_capture_time 15
