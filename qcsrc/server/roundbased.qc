@@ -91,12 +91,14 @@ void(void) roundbased_world_frame_start {
 		if (time >= roundbased_warmup) {
 			roundbased_countdown_last = 0;
 			roundbased_active = 1;
-			sound_play2all("announcer/robotic/begin.wav");
-			RM_ELSE({
-				rm_bigprint_all("^xFB0Begin!", "It's time to kick some ass!", 1);
-			}, {
-				game_status_set("^2New round started\n", 3);
-			})
+			if (roundbased_warmup > map_starttime + 0.1) {
+				sound_play2all("announcer/robotic/begin.wav");
+				RM_ELSE({
+					rm_bigprint_all("^xFB0Begin!", "It's time to kick some ass!", 1);
+				}, {
+					game_status_set("^2New round started\n", 3);
+				})
+			}
 		} else {
 			float countdown = ceil(roundbased_warmup - time);
 			if (roundbased_countdown_last != countdown) {
