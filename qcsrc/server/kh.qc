@@ -609,7 +609,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 		}
 	bprint("^7 captured the keys for the ", team_colored_name(teem), "\n");
 	if (kh_roundbased)
-		roundbased_round_start_with_winner(other.team);
+		roundbased_round_start_with_winner(other.team, "");
 
 	first = TRUE;
 	midpoint = '0 0 0';

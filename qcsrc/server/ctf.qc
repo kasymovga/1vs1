@@ -460,7 +460,11 @@ void() ctf_flag_touch {
 
 		score_player_team_add(other, CTF_SCORE_CAPS, CTF_SCORE_TEAM_CAPS, 1);
 		if (game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT)
-			roundbased_round_start_with_winner(other.team);
+			RM_ELSE({
+				roundbased_round_start_with_winner(other.team, "");
+			}, {
+				roundbased_round_start_with_winner(other.team, strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores"));
+			})
 
 		// give credit to the individual player
 		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(other.flagcarried.team, CTF_SCORE_VALUE(score_capture)));
@@ -481,7 +485,8 @@ void() ctf_flag_touch {
 			if (dot > 0) t = substring(t, 0, dot + 2);
 			rm_bigprint_all(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores!"), strcat("^7Captured by ^3", other.netname, " ^7in ", t, "s"), 2);
 		}, {
-			game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores"), 1);
+			if (game_type == GAME_TYPE_CTF)
+				game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores"), 1);
 		})
 		WaypointSprite_DetachCarrier(other);
 		ctf_flag_regen (other.flagcarried);

@@ -12,6 +12,7 @@ float roundbased_warmup;
 float roundbased_active;
 float roundbased_restart_time;
 float roundbased_result_not_announced;
+string roundbased_winner_message;
 
 var float(entity plr, float wep) roundbased_player_can_fire_next;
 float(entity plr, float wep) roundbased_player_can_fire {
@@ -31,11 +32,17 @@ void(void) roundbased_round_start {
 	roundbased_warmup = roundbased_restart_time + roundbased_startdelay;
 }
 
-void(float winner) roundbased_round_start_with_winner {
+void(float winner, string winmessage) roundbased_round_start_with_winner {
 	roundbased_winner_team = winner;
 	roundbased_active = 0;
 	roundbased_restart_time = time + roundbased_enddelay;
 	roundbased_warmup = roundbased_restart_time + roundbased_startdelay;
+	str_unzone_ifneeded(roundbased_winner_message);
+	roundbased_winner_message = str_zone_ifneeded(winmessage);
+	RM({
+		if (roundbased_winner_message != "")
+			roundbased_result_not_announced = TRUE;
+	})
 }
 
 var void(void) roundbased_world_frame_start_next;
@@ -65,7 +72,7 @@ void(void) roundbased_world_frame_start {
 	}
 	if (roundbased_team_check >= 0) {
 		game_status_set("^2Awaiting players...\n", 1);
-		roundbased_round_start_with_winner(0);
+		roundbased_round_start_with_winner(0, "");
 		roundbased_need_check_teams = -1;
 		return;
 	}
@@ -89,6 +96,8 @@ void(void) roundbased_world_frame_start {
 			self = oldself;
 		}
 		if (time >= roundbased_warmup) {
+			str_unzone_ifneeded(roundbased_winner_message);
+			roundbased_winner_message = "";
 			roundbased_countdown_last = 0;
 			roundbased_active = 1;
 			if (roundbased_warmup > map_starttime + 0.1) {
@@ -107,6 +116,14 @@ void(void) roundbased_world_frame_start {
 
 				RM_ELSE({
 					if (roundbased_result_not_announced) { //skip counting for winner message
+						if (roundbased_winner_message != "") {
+							rm_bigprint_all(" ", "", 1);
+							float nl = strstrofs(roundbased_winner_message, "\n", 0);
+							if (nl > 0)
+								rm_bigprint_all(substring(roundbased_winner_message, 0, nl), substring(roundbased_winner_message, nl + 1, -1), roundbased_restart_time - time);
+							else
+								rm_bigprint_all(roundbased_winner_message, "", roundbased_restart_time - time);
+						}
 						roundbased_result_not_announced = FALSE;
 					} else if not(roundbased_restart_time) {
 						rm_bigprint_all(" ", "", 1);
@@ -114,14 +131,16 @@ void(void) roundbased_world_frame_start {
 					}
 				}, {
 					string winner_message;
-					if (roundbased_winner_team > 0)
-						winner_message = strcat("^2Round finished!\n", team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " Team^2 wins!\n");
+					if (roundbased_winner_message != "") {
+						winner_message = roundbased_winner_message;
+					} else if (roundbased_winner_team > 0)
+						winner_message = strcat("^2Round finished!\n", team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " Team^2 wins!");
 					else if (roundbased_winner_team < 0)
-						winner_message = "^1Round aborted!\n";
+						winner_message = "^1Round aborted!";
 					else
 						winner_message = "";
 
-					game_status_set(strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"), 3);
+					game_status_set(strcat(winner_message, "\n^2Starting in ", ftos(countdown), "\n"), 3);
 				})
 				roundbased_countdown_last = countdown;
 			}
@@ -207,7 +226,7 @@ var float(string cmd, float tokens) Roundbased_cmd_game_handle_NextLink;
 float(string cmd, float tokens) Roundbased_cmd_game_handle {
 	if (cmd == "endround") {
 		if (roundbased_active)
-			roundbased_round_start_with_winner(-1);
+			roundbased_round_start_with_winner(-1, "");
 
 		return TRUE;
 	}
