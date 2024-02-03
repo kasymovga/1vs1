@@ -251,7 +251,7 @@ void(void) jb_controlpoint_touch {
 	}
 	float somebodyjailed = FALSE;
 	FOR_EACH_PLAYER(e)
-		if (e.team == self.team) {
+		if (e.team == self.team && JB_PLAYER_JAILED(e)) {
 			somebodyjailed = TRUE;
 			break;
 		}
