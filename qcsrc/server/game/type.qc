@@ -96,6 +96,9 @@ void() game_type_init {
 	} else if (game_type == GAME_TYPE_CHESS) {
 		team_play_activate();
 		chess_init();
+	} else if (game_type == GAME_TYPE_JAILBREAK) {
+		team_play_activate();
+		jb_init();
 	}
 	// enforce the server's universal frag/time limits
 	entity_initialize(world, game_type_default_delayed_init, INITPRIO_GAMETYPE_FALLBACK);

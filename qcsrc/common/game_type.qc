@@ -21,6 +21,7 @@ string(float g) game_type_name {
 	if (g == GAME_TYPE_COOP) return "coop";
 	if (g == GAME_TYPE_SHOOTINGRANGE) return "sr";
 	if (g == GAME_TYPE_CHESS) return "chess";
+	if (g == GAME_TYPE_JAILBREAK) return "jb";
 	return "dm";
 }
 
@@ -69,6 +70,8 @@ string(float t) game_type_name_long {
 		return "Shooting Range";
 	} else if (t == GAME_TYPE_CHESS) {
 		return "Chess";
+	} else if (t == GAME_TYPE_JAILBREAK) {
+		return "Jail Break";
 	}
 	return "WTF";
 }

@@ -40,6 +40,7 @@ trigger.qh
 func.qh
 race.qh
 kh.qh
+jb.qh
 model.qh
 antilag.qh
 math.qh
@@ -403,3 +404,4 @@ rm/game_type_vote.qc
 rm/buffs.qc
 rm/bigprint.qc
 rm.qc
+jb.qc

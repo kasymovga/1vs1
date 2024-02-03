@@ -1553,9 +1553,12 @@ void(void) func_door_reset {
 
 .float jaildoormode;
 void(void) func_door_rm_hack {
+	if (game_type != GAME_TYPE_JAILBREAK)
 	if (self.targetname == "jail_red" || self.targetname == "jail_blue")
-	if (self.jaildoormode != 2)
+	if (self.jaildoormode != 2) {
+		print("Jailbreak door force open\n");
 		self.spawnflags |= DOOR_START_OPEN;
+	}
 }
 
 void(void) spawnfunc_func_door {

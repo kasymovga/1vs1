@@ -31,6 +31,8 @@ float(string t) game_type_from_name {
 	if (t == "coop") return GAME_TYPE_COOP;
 	if (t == "shootingrange" || t == "sr") return GAME_TYPE_SHOOTINGRANGE;
 	if (t == "chess") return GAME_TYPE_CHESS;
+	if (t == "jb" ||
+			t == "jailbreak") return GAME_TYPE_JAILBREAK;
 	return 0;
 }
 

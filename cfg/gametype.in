@@ -36,4 +36,6 @@ alias gametype_survival gametype_surv
 alias gametype_lms "reset_gametype; _gametype lms; bprint_gtswitch ^3Last Man Standing"
 alias gametype_coop "reset_gametype; _gametype coop; bprint_gtswitch ^3Cooperative"
 alias gametype_chess "reset_gametype; _gametype chess; bprint_gtswitch ^3Chess"
+alias gametype_jb "reset_gametype; _gametype jb; bprint_gtswitch ^3Jailbreak"
+alias gametype_jailbreak gametype_jb
 alias gametype "gametype_$1"

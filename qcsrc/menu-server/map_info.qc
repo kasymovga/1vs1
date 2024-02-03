@@ -12,6 +12,7 @@ float MAP_INFO_TYPE_CTS = 4096;
 float MAP_INFO_TYPE_CHESS = 8192;
 float MAP_INFO_TYPE_SURVIVE = 32768;
 float MAP_INFO_TYPE_SINGLE = 65536;
+float MAP_INFO_TYPE_JAILBREAK = 131072;
 
 typedef void(float i1, float i2, entity pass) swapfunc_t; // is only ever called for i1 < i2
 typedef float(float i1, float i2, entity pass) comparefunc_t; // <0 for <, ==0 for ==, >0 for > (like strcmp)
@@ -777,6 +778,7 @@ float(float t) map_info_type_from_game_type {
 	case GAME_TYPE_NEXBALL:         return MAP_INFO_TYPE_NEXBALL;
 	case GAME_TYPE_SHOOTINGRANGE:   return MAP_INFO_TYPE_SHOOTINGRANGE;
 	case GAME_TYPE_CHESS:           return MAP_INFO_TYPE_CHESS;
+	case GAME_TYPE_JAILBREAK:       return MAP_INFO_TYPE_JAILBREAK;
 	}
 	return 0;
 }
