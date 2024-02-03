@@ -2,6 +2,7 @@ float jb;
 float jb_open_blue;
 float jb_open_red;
 entity jb_controller;
+float g_jb_capture_time;
 
 entity(void) jb_client_put_spawn_point {
 	if not(warmup_active)
@@ -92,14 +93,34 @@ void(void) jb_init {
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_model("models/domination/dom_red.md3");
 	precache_model("models/domination/dom_blue.md3");
+	precache_sound("kh/alarm.wav");
 	jb_controller = spawn();
 	jb_controller.think = jb_think;
 	jb_controller.nextthink = time;
+	CVAR_CACHE(g_jb_capture_time);
 }
 
-void(float t) jb_open {
-	if (t == COLOR_TEAM1) jb_open_red = time + 10;
-	if (t == COLOR_TEAM2) jb_open_blue = time + 10;
+void(float t, entity by) jb_open {
+	string s = "";
+	if (t == COLOR_TEAM1) {
+		game_status_set(strcat("Jailbreak! The ^1REDS^7 are escaping!\nControl point captured by ", by.netname), 2);
+		jb_open_red = time + 10;
+		s = "jail_red";
+	}
+	if (t == COLOR_TEAM2) {
+		game_status_set(strcat("Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by ", by.netname), 2);
+		jb_open_blue = time + 10;
+		s = "jail_blue";
+	}
+	if (s == "") {
+		print("attempt to open unknown jail\n");
+		return;
+	}
+	sound_play2all("kh/alarm.wav");
+	entity e;
+	for (e = NULL; (e = find(e, targetname, s)); ) {
+		e.use();
+	}
 }
 
 void(void) jb_room_touch {
@@ -137,12 +158,122 @@ void(void) jb_controlpoint_model_setup {
 		setmodel(self, "models/domination/dom_unclaimed.md3");
 		self.team = 0;
 	}
+	switch(self.team) {
+	case COLOR_TEAM1:
+		WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
+		break;
+	case COLOR_TEAM2:
+		WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
+		break;
+	default:
+		WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
+	}
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color(self.team, 0));
+	WaypointSprite_Ping(self.sprite);
 	setsize(self, '-32 -32 -32', '32 32 32');
+}
+
+void(void) jb_controlpoint_think {
+	entity e, capturer, e2;
+	vector min1, min2, max1, max2;
+	min2 = self.mins + self.origin;
+	max2 = self.maxs + self.origin;
+	while (self.killindicator) { //make first capturer valid or NULL
+		capturer = self.killindicator.enemy;
+		min1 = capturer.mins + capturer.origin;
+		max1 = capturer.maxs + capturer.origin;
+		if (capturer.team == self.team || capturer.playerid != self.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
+			e = self.killindicator.killindicator;
+			remove(self.killindicator.sprite);
+			remove(self.killindicator);
+			self.killindicator = e;
+		}
+		break;
+	}
+	if (self.killindicator) //check other capturers in chain
+		for (e = self.killindicator; e.killindicator; e = e.killindicator) {
+			capturer = e.killindicator.enemy;
+			min1 = capturer.mins + capturer.origin;
+			max1 = capturer.maxs + capturer.origin;
+			if (capturer.team == e.team || capturer.playerid != e.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
+				e2 = e.killindicator.killindicator;
+				remove(e.killindicator.sprite);
+				remove(e.killindicator);
+				e.killindicator = e2;
+			}
+		}
+	if not(self.killindicator) {
+		self.state = 0;
+		WaypointSprite_UpdateMaxHealth(self.sprite, 0);
+		WaypointSprite_UpdateHealth(self.sprite, self.state);
+		return;
+	}
+	self.nextthink = time;
+	for (e = self.killindicator; e; e = e.killindicator) {
+		self.state += frametime / g_jb_capture_time;
+	}
+	WaypointSprite_UpdateHealth(self.sprite, self.state);
+	if (self.state >= 1) {
+		self.state = 1;
+	}
+	for (e = self.killindicator; e; e = e.killindicator) {
+		progressbar_set(self.killindicator.sprite, self.state);
+	}
+	if (self.state == 1) {
+		self.team = self.killindicator.enemy.team;
+		jb_controlpoint_model_setup();
+		//Alternative escape mode?
+		//for (e = NULL; (e = find(e, classname, "jb_controlpoint")); ) {
+		//	if (e.team != self.team) return;
+		//}
+		jb_open(self.team, self.killindicator.enemy);
+	}
+}
+
+void(void) jb_controlpoint_touch {
+	if (other.team == self.team) return;
+	if (other.classname != "player") return;
+	//capture
+	entity e;
+	for (e = self.killindicator; e; e = e.killindicator) {
+		if (e.enemy == other) return;
+	}
+	float somebodyjailed = FALSE;
+	FOR_EACH_PLAYER(e)
+		if (e.team == self.team) {
+			somebodyjailed = TRUE;
+			break;
+		}
+	if not(somebodyjailed) {
+		centerprint(other, "Nobody jailed\n");
+		return;
+	}
+	e = spawn();
+	WaypointSprite_UpdateMaxHealth(self.sprite, 1);
+	e.enemy = other;
+	e.playerid = other.playerid;
+	e.killindicator = self.killindicator;
+	e.sprite = progressbar_create("Capturing...", other);
+	self.killindicator = e;
+	self.nextthink = time;
+}
+
+void(void) jb_controlpoint_reset {
+	self.team = self.cnt;
+	self.nextthink = 0;
+	jb_controlpoint_model_setup();
 }
 
 void(void) jb_controlpoint {
 	self.classname = "jb_controlpoint";
+	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
+	self.cnt = self.team;
 	jb_controlpoint_model_setup();
+	builtin_droptofloor();
+	self.touch = jb_controlpoint_touch;
+	self.reset = jb_controlpoint_reset;
+	self.think = jb_controlpoint_think;
+	self.solid = SOLID_TRIGGER;
 }
 
 void(void) spawnfunc_func_jailbreak_jail_red {

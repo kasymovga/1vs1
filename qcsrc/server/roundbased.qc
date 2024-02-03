@@ -66,7 +66,7 @@ void(void) roundbased_world_frame_start {
 	if (roundbased_team_check >= 0) {
 		game_status_set("^2Awaiting players...\n", 1);
 		roundbased_round_start_with_winner(0);
-		roundbased_need_check_teams = 0;
+		roundbased_need_check_teams = -1;
 		return;
 	}
 	if not(roundbased_active) {
@@ -126,7 +126,7 @@ void(void) roundbased_world_frame_start {
 		}
 		return;
 	}
-	if (roundbased_need_check_teams) {
+	if (roundbased_need_check_teams > 0) {
 		roundbased_team_alive = 0;
 		roundbased_have_death_players = 0;
 		FOR_EACH_TEAMPLAYER(plr) {
@@ -181,7 +181,7 @@ void(void) roundbased_world_frame_start {
 }
 
 void(void) roundbased_check_teams {
-	roundbased_need_check_teams = TRUE;
+	roundbased_need_check_teams = 1;
 }
 
 var void(entity targ, entity attacker, float deathtype) roundbased_damage_mods_set_next;
