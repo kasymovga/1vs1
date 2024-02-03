@@ -244,6 +244,7 @@ void(void) jb_controlpoint_think {
 }
 
 void(void) jb_controlpoint_touch {
+	if (roundbased_active) return;
 	if (other.team == self.team) return;
 	if (other.classname != "player") return;
 	//capture
