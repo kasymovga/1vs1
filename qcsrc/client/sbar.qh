@@ -15,6 +15,7 @@ void(void) sbar_game_init;
 vector sbar_position(vector pos, vector sz, float bg);
 vector(vector pos, vector sz, vector sz_to) sbar_scale_for_position;
 float scoreboard_bottom;
+void(vector pos, float num, float digits, float showminusplus, float lettersize, vector rgb, float stroke, float alpha, float dflags) sbar_draw_num;
 
 #define SBAR_FIELDS_MAX 16
 float sbar_field[SBAR_FIELDS_MAX + 1];
