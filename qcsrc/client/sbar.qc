@@ -138,9 +138,9 @@ vector(vector pos, vector sz, vector sz_to) sbar_scale_for_position {
 	float f1 = sz_to_x / sz_x;
 	float f2 = sz_to_y / sz_y;
 	vector v = '0 0 0';
-	if (f1 < f2) {
+	if (f1 < f2)
 		v_y = (sz_to_y - sz_y * f1) / 2;
-	} else
+	else
 		v_x = (sz_to_x - sz_x * f2) / 2;
 
 	v_z = min(f1, f2);
@@ -1738,6 +1738,8 @@ void(void) sbar_game_init {
 	} else if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP) {
 		sbar_game_hud = single_hud;
 		sbar_score_draw = sbar_score_nothing_draw;
+	} else if (game_type == GAME_TYPE_FREEZETAG || game_type == GAME_TYPE_CLANARENA || game_type == GAME_TYPE_JAILBREAK) {
+		sbar_game_hud = ft_hud;
 	} else if (game_type == GAME_TYPE_RACE || game_type == GAME_TYPE_CTS) {
 		sbar_game_hud = sbar_game_hud_nothing;
 		sbar_score_draw = sbar_score_draw_race;

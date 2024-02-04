@@ -954,7 +954,7 @@ void(void) rm_hud_draw {
 		}
 	}
 	// draw scores and timer
-	sbar_score_draw(scoresector_pos + '2 0 0', scoresector_size - '4 0 0', 1);
+	sbar_score_draw(scoresector_pos, scoresector_size, 1);
 	sbar_timer();
 	// draw strength/invincibility icon and timer
 	sbar_powerups_draw(SBAR_POWERUPS_POSITION_DEFAULT, 1);
@@ -962,6 +962,6 @@ void(void) rm_hud_draw {
 	if (game_info_size == '0 0 0')
 		sbar_game_hud(SBAR_GAMEINFO_POSITION_DEFAULT, '0 0 0', 1);
 	else {
-		sbar_game_hud(game_info_pos + '0 -8 0', game_info_size + '0 16 0', 1);
+		sbar_game_hud(game_info_pos, game_info_size, 1);
 	}
 }
