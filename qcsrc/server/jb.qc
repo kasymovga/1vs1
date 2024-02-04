@@ -342,6 +342,11 @@ void(void) spawnfunc_jailbreak_controlpoint_blue {
 	jb_controlpoint();
 }
 
+void(void) spawnfunc_jailbreak_controlpoint_neut {
+	self.team = 0;
+	jb_controlpoint();
+}
+
 void(void) jb_torture {
 	if (game_type != GAME_TYPE_JAILBREAK) {
 		remove(self);
@@ -356,6 +361,23 @@ void(void) info_jailbreak_torturespawn_red {
 }
 
 void(void) info_jailbreak_torturespawn_blue {
-	self.team = COLOR_TEAM1;
+	self.team = COLOR_TEAM2;
 	jb_torture();
+}
+
+void(void) jb_camera {
+	if (game_type != GAME_TYPE_JAILBREAK) {
+		remove(self);
+		return;
+	}
+}
+
+void(void) info_jailbreak_jailcamera_red {
+	self.team = COLOR_TEAM1;
+	jb_camera();
+}
+
+void(void) info_jailbreak_jailcamera_blue {
+	self.team = COLOR_TEAM2;
+	jb_camera();
 }
