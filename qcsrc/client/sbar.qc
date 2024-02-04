@@ -1328,7 +1328,7 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 	vector secondary_score_pos, distribution_color;
 	entity tm, pl, me;
 	me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
-	SBAR_POSITION_AND_SCALE(score_pos, score_scale, '196 34 0', score_size, CVAR(sbar_score_background))
+	SBAR_POSITION_AND_SCALE(score_pos, score_scale, '204 34 0', score_size, CVAR(sbar_score_background))
 	secondary_score_pos = score_pos + '132 0 0' * score_scale;
 	if not(team_mode) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
@@ -1368,16 +1368,25 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 				max_fragcount = score;
 
 			if (tm.team == team_my) {
-				if (max_fragcount == score)
-					leader = 1;
-
 				sbar_draw_num(score_pos, score, 4, 0, 34 * score_scale, sbar_team_rgb * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			} else if (team_my == TEAM_COLOR_SPECTATOR && team_count_no_spectator > 2) {
+				switch (tm.team) {
+				case COLOR_TEAM1:
+					sbar_draw_num(score_pos, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					break;
+				case COLOR_TEAM2:
+					sbar_draw_num(score_pos + '0 18 0' * score_scale, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					break;
+				case COLOR_TEAM3:
+					sbar_draw_num(score_pos + '98 0 0' * score_scale, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					break;
+				case COLOR_TEAM4:
+					sbar_draw_num(score_pos + '98 18 0' * score_scale, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					break;
+				}
 			} else {
-				if (max_fragcount == score)
-					leader = 1;
-
-				sbar_draw_num(secondary_score_pos, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				secondary_score_pos = secondary_score_pos + '0 16 0' * score_scale;
+				sbar_draw_num(secondary_score_pos, score, 4, 0, ((team_count_no_spectator <= 3) ? 16 : 10) * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				secondary_score_pos = secondary_score_pos + ((team_count_no_spectator <= 3) ? '0 18 0' : '0 12 0') * score_scale;
 			}
 		}
 	}
