@@ -9,7 +9,7 @@ var .float jb_player_jailed;
 
 entity(void) jb_client_put_spawn_point {
 	if not(warmup_active)
-	if ((self.team == COLOR_TEAM1 && time > jb_open_red) || (self.team == COLOR_TEAM2 && time > jb_open_blue))
+	//if ((self.team == COLOR_TEAM1 && time > jb_open_red) || (self.team == COLOR_TEAM2 && time > jb_open_blue))
 	if (roundbased_active) {
 		entity e;
 		random_selection_init();
@@ -84,6 +84,17 @@ void(void) jb_think {
 	}
 }
 
+float(entity attacker, entity inflictor, float deathtype) jb_player_death_handle {
+	if not(roundbased_active) return FALSE;
+	pointparticles(particleeffectnum("teleport"), ENTITY_CENTER(self), '0 0 0', 1);
+	if (deathtype)
+		player_obituary(attacker, inflictor, self, deathtype);
+
+	player_clear(TRUE);
+	player_spawn(jb_client_put_spawn_point());
+	return TRUE;
+}
+
 void(void) jb_init {
 	jb = TRUE;
 	score_generic();
@@ -94,6 +105,7 @@ void(void) jb_init {
 	plugin_client_put_spawn_point = jb_client_put_spawn_point;
 	plugin_score_give_frag_mod = clanarena_HandleFrags;
 	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
+	plugin_player_death_handle = jb_player_death_handle;
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_model("models/domination/dom_red.md3");
 	precache_model("models/domination/dom_blue.md3");
