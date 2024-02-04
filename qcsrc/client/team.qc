@@ -77,7 +77,7 @@ float(entity o, float Team) team_set {
 			tm = team_get(o.team, FALSE);
 			tm.team_size -= 1;
 			o.has_team = 0;
-			o.team = -1;
+			o.team = TEAM_COLOR_SPECTATOR;
 			return TRUE;
 		}
 	} else {
