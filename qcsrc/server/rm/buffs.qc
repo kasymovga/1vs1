@@ -263,6 +263,12 @@ float(float f) rm_buffs_weapon_clip_capacity_mod {
 	return rm_buffs_weapon_clip_capacity_mod_next(f);
 }
 
+var void(entity e) rm_buffs_spectator_copy_next;
+void(entity e) rm_buffs_spectator_copy {
+	self.buffstat = e.buffstat;
+	rm_buffs_spectator_copy_next(e);
+}
+
 void Buffs_Init(void) {
     float i, b;
     CVAR_CACHE(g_buffs);
@@ -296,6 +302,8 @@ void Buffs_Init(void) {
 	plugin_chain_player_spawn = rm_buffs_player_spawn;
 	rm_buffs_weapon_clip_capacity_mod_next = plugin_chain_weapon_clip_capacity_mod;
 	plugin_chain_weapon_clip_capacity_mod = rm_buffs_weapon_clip_capacity_mod;
+	rm_buffs_spectator_copy_next = plugin_chain_spectator_copy;
+	plugin_chain_spectator_copy = rm_buffs_spectator_copy;
 	CVAR_CACHE(g_buffs_random_spawns_distant);
 	CVAR_CACHE(g_buffs_random_spawns_min);
 	CVAR_CACHE(g_buffs_random_spawns_max);
