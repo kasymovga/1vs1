@@ -102,6 +102,40 @@ void view_tint_effect(void) {
 	}
 }
 
+vector(float x) view_healthcolor {
+	vector c;
+	c_z = 0;
+	x = 200 * (x / sbar_health_nice);
+	if(x > 600) {
+		c_x = 0;
+		c_y = 1;
+		c_z = 1;
+	} else if(x > 200) {
+		c_x = 0;
+		c_y = 1;
+		c_z = (x-200)*0.0025;
+	} else if(x > 150) {
+		c_x = 0.4 - (x-150)*0.02 * 0.4;
+		c_y = 0.9 + (x-150)*0.02 * 0.1;
+	} else if(x > 100) {
+		c_x = 1 - (x-100)*0.02 * 0.6;
+		c_y = 1 - (x-100)*0.02 * 0.1;
+		c_z = 1 - (x-100)*0.02;
+	} else if(x > 50) {
+		c_x = 1;
+		c_y = 1;
+		c_z = 0.2 + (x-50)*0.02 * 0.8;
+	} else if(x > 20) {
+		c_x = 1;
+		c_y = (x-20)*90/27/100;
+		c_z = (x-20)*90/27/100 * 0.2;
+	} else {
+		c_x = 1;
+		c_y = 0;
+	}
+	return c;
+}
+
 void(float w, float h) CSQC_UpdateView { //called by engine
 	entity e;
 	view_vehicle = FALSE;
@@ -324,7 +358,13 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 						wcross_color_z = CVAR(crosshair_color_blue);
 					}
 				}
-				RM(rm_crosshair_ring_draw(weapon_cross_origin, wcross_color, wcross_alpha);)
+				RM(
+					if (CVAR(rm_crosshealth)) {
+						vector x = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), sbar_armor_block_percentage);
+						wcross_color = view_healthcolor(x_x);
+					}
+					rm_crosshair_ring_draw(weapon_cross_origin, wcross_color, wcross_alpha);
+				)
 				wcross_name = strcat("gfx/crosshair", wcross_style);
 				wcross_size = drawgetimagesize(wcross_name);
 				wcross_size_x *= wcross_sizefloat;
