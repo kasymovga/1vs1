@@ -954,7 +954,7 @@ void(void) rm_hud_draw {
 		}
 	}
 	// draw scores and timer
-	sbar_score_draw(scoresector_pos, scoresector_size, 1);
+	sbar_score_draw(scoresector_pos + '2 0 0', scoresector_size - '4 0 0', 1);
 	sbar_timer();
 	// draw strength/invincibility icon and timer
 	sbar_powerups_draw(SBAR_POWERUPS_POSITION_DEFAULT, 1);
