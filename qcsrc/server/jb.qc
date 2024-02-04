@@ -151,12 +151,20 @@ void(void) jb_room_touch {
 }
 
 void(void) jb_room {
+	if (game_type != GAME_TYPE_JAILBREAK) {
+		remove(self);
+		return;
+	}
 	self.classname = "jb_room";
 	trigger_solid_brush_init();
 	self.touch = jb_room_touch;
 }
 
 void(void) jb_spawn {
+	if (game_type != GAME_TYPE_JAILBREAK) {
+		remove(self);
+		return;
+	}
 	spawnfunc_info_player_deathmatch();
 	if (wasfreed(self)) return; //just in case
 	self.classname = "jb_spawn";
@@ -289,6 +297,10 @@ void(void) jb_controlpoint_reset {
 }
 
 void(void) jb_controlpoint {
+	if (game_type != GAME_TYPE_JAILBREAK) {
+		remove(self);
+		return;
+	}
 	self.classname = "jb_controlpoint";
 	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
 	self.cnt = self.team;
@@ -328,4 +340,22 @@ void(void) spawnfunc_jailbreak_controlpoint_red {
 void(void) spawnfunc_jailbreak_controlpoint_blue {
 	self.team = COLOR_TEAM2;
 	jb_controlpoint();
+}
+
+void(void) jb_torture {
+	if (game_type != GAME_TYPE_JAILBREAK) {
+		remove(self);
+		return;
+	}
+	self.classname = "jb_torture";
+}
+
+void(void) info_jailbreak_torturespawn_red {
+	self.team = COLOR_TEAM1;
+	jb_torture();
+}
+
+void(void) info_jailbreak_torturespawn_blue {
+	self.team = COLOR_TEAM1;
+	jb_torture();
 }
