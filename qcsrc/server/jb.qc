@@ -11,6 +11,7 @@ enum {
 	JB_TORTURE_FIRST = 0,
 	JB_TORTURE_GRENADES = 0,
 	JB_TORTURE_PLASMA,
+	JB_TORTURE_NAPALM,
 	JB_TORTURE_COUNT,
 };
 
@@ -53,6 +54,27 @@ void(void) jb_torture_grenade_touch {
 	}
 }
 
+entity(float t) jb_torture_target {
+	entity e;
+	random_selection_init();
+	FOR_EACH_PLAYER(e) {
+		if (e.team == t) {
+			random_selection_add(e, 0, "", max(0, e.health), 1);
+		}
+	}
+	return random_selection_chosen_ent;
+}
+
+void(void) jb_torture_napalm_think {
+	self.nextthink = time + 2 + random();
+	entity e = jb_torture_target(self.team);
+	if not(e) return;
+	vector vd = ENTITY_CENTER(e) - self.origin;
+	vector v = normalize(normalize(vd) + randomvec() * 0.1);
+	entity proj = Napalm_Spawn(NULL, self.origin, 3, 4, DEATH_HURTTRIGGER, 100, 100, 50, 5);
+    proj.velocity = v * (vlen(vd) + random() * 500);
+}
+
 void(void) jb_torture_plasma_touch {
 	PROJECTILE_TOUCH;
 	if (other && (other.takedamage == DAMAGE_AIM)) {
@@ -64,14 +86,7 @@ void(void) jb_torture_plasma_touch {
 
 void(void) jb_torture_grenades_think {
 	self.nextthink = time + 2 + random();
-	entity e;
-	random_selection_init();
-	FOR_EACH_PLAYER(e) {
-		if (e.team == self.team) {
-			random_selection_add(e, 0, "", max(0, e.health), 1);
-		}
-	}
-	e = random_selection_chosen_ent;
+	entity e = jb_torture_target(self.team);
 	if not(e) return;
 	sound(self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 	vector vd = ENTITY_CENTER(e) - self.origin;
@@ -89,14 +104,7 @@ void(void) jb_torture_grenades_think {
 
 void(void) jb_torture_plasma_think {
 	self.nextthink = time + 2 + random();
-	entity e;
-	random_selection_init();
-	FOR_EACH_PLAYER(e) {
-		if (e.team == self.team) {
-			random_selection_add(e, 0, "", max(0, e.health), 1);
-		}
-	}
-	e = random_selection_chosen_ent;
+	entity e = jb_torture_target(self.team);
 	if not(e) return;
 	if (random() < 0.5) {
 		sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
@@ -143,6 +151,7 @@ void(float victim) jb_torture_start {
 	entity e;
 	float even = 0;
 	for (e = NULL; (e = find(e, classname, "jb_torture")); ) {
+		if (e.team != victim) continue;
 		e.nextthink = time + 1;
 		if (even) {
 			e.think = jb_torture_thinks[t1];
@@ -279,6 +288,8 @@ void(void) jb_init {
 	CVAR_CACHE(g_jb_capture_time);
 	jb_torture_thinks[JB_TORTURE_GRENADES] = jb_torture_grenades_think;
 	jb_torture_thinks[JB_TORTURE_PLASMA] = jb_torture_plasma_think;
+	jb_torture_thinks[JB_TORTURE_NAPALM] = jb_torture_napalm_think;
+	Napalm_Init();
 	projectile_init(PROJECTILE_GRENADE_BOUNCING);
 	projectile_init(PROJECTILE_ELECTRO);
 	projectile_init(PROJECTILE_ELECTRO_BEAM);
