@@ -164,21 +164,23 @@ void(void) jb_think {
 	entity oldself = self, oldother = other;
 	if (jb_open_red) {
 		for (e = NULL; (e = find(e, targetname, "jail_red")); ) {
-			if (substring(e.classname, 0, 9) == "func_door")
-			if (e.state == FUNC_STATE_BOTTOM) {
-				bprint("^1Red jail^7 closed\n");
-				jb_open_red = FALSE;
-				break;
+			if (substring(e.classname, 0, 4) == "door") {
+				if (e.state == FUNC_STATE_BOTTOM) {
+					bprint("^1Red jail^7 closed\n");
+					jb_open_red = FALSE;
+					break;
+				}
 			}
 		}
 	}
 	if (jb_open_blue) {
 		for (e = NULL; (e = find(e, targetname, "jail_blue")); ) {
-			if (substring(e.classname, 0, 9) == "func_door")
-			if (e.state == FUNC_STATE_BOTTOM) {
-				bprint("^4Blue jail^7 closed\n");
-				jb_open_blue = FALSE;
-				break;
+			if (substring(e.classname, 0, 4) == "door") {
+				if (e.state == FUNC_STATE_BOTTOM) {
+					bprint("^4Blue jail^7 closed\n");
+					jb_open_blue = FALSE;
+					break;
+				}
 			}
 		}
 	}
@@ -299,10 +301,12 @@ void(float t, entity by) jb_open {
 		return;
 	}
 	sound_play2all("kh/alarm.wav");
-	entity e;
-	for (e = NULL; (e = find(e, targetname, s)); ) {
-		e.use();
-	}
+	entity e, tmpself;
+	entity oldself = self;
+	self = spawn();
+	self.target = s;
+	trigger_use_targets();
+	self = oldself;
 }
 
 void(void) jb_room_touch {
