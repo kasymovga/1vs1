@@ -7,10 +7,19 @@ var .float jb_player_jailed;
 #define JB_PLAYER_JAILED(plr) (plr.scorekeeper.jb_player_jailed)
 #define JB_PLAYER_JAIL_SET(plr, x) score_player_set(plr, SP_STATUS, x);
 
+enum {
+	JB_TORTURE_FIRST = 0,
+	JB_TORTURE_GRENADES = 0,
+	JB_TORTURE_PLASMA,
+	JB_TORTURE_COUNT,
+};
+
+var void(void) jb_torture_thinks[JB_TORTURE_COUNT];
+
 entity(void) jb_client_put_spawn_point {
 	if not(warmup_active)
 	//if ((self.team == COLOR_TEAM1 && time > jb_open_red) || (self.team == COLOR_TEAM2 && time > jb_open_blue))
-	if (roundbased_active) {
+	if (roundbased_active || roundbased_restart_time) {
 		entity e;
 		random_selection_init();
 		for (e = NULL; (e = find(e, classname, "jb_spawn")); ) {
@@ -20,6 +29,127 @@ entity(void) jb_client_put_spawn_point {
 		return random_selection_chosen_ent;
 	}
 	return spawn_select(FALSE);
+}
+
+void(void) jb_torture_grenade_touch {
+	PROJECTILE_TOUCH;
+	if (other && (other.takedamage == DAMAGE_AIM)) {
+		projectile_explode();
+	} else {
+		float r;
+		r = random() * 6;
+		if(r < 1)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 2)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 3)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 4)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 5)
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+		else
+			sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+	}
+}
+
+void(void) jb_torture_plasma_touch {
+	PROJECTILE_TOUCH;
+	if (other && (other.takedamage == DAMAGE_AIM)) {
+		projectile_explode();
+	} else {
+		sound_spam(self, CHAN_PROJECTILE, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
+	}
+}
+
+void(void) jb_torture_grenades_think {
+	self.nextthink = time + 2 + random();
+	entity e;
+	random_selection_init();
+	FOR_EACH_PLAYER(e) {
+		if (e.team == self.team) {
+			random_selection_add(e, 0, "", max(0, e.health), 1);
+		}
+	}
+	e = random_selection_chosen_ent;
+	sound(self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
+	vector vd = ENTITY_CENTER(e) - self.origin;
+	vector v = normalize(normalize(vd) + randomvec() * 0.1);
+	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), self.origin, v * 1000, 1);
+	entity proj = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, NULL);
+	proj.owner = NULL;
+	projectile_setup(proj, self.origin, EFFECT_IMPACT_ROCKET, WEAPON_GRENADE_LAUNCHER, 400,
+			50, 400, 800, 0, MOVETYPE_BOUNCE);
+    proj.velocity = v * (vlen(vd) + random() * 500);
+	proj.touch = jb_torture_grenade_touch;
+	proj.think = stdproc_remove;
+    proj.nextthink = time + 2;
+}
+
+void(void) jb_torture_plasma_think {
+	self.nextthink = time + 2 + random();
+	entity e;
+	random_selection_init();
+	FOR_EACH_PLAYER(e) {
+		if (e.team == self.team) {
+			random_selection_add(e, 0, "", max(0, e.health), 1);
+		}
+	}
+	e = random_selection_chosen_ent;
+	if (random() < 0.5) {
+		sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
+		vector vd = ENTITY_CENTER(e) - self.origin;
+		vector v = normalize(normalize(vd) + randomvec() * 0.1);
+		//pointparticles(particleeffectnum("electro_muzzleflash"), self.origin, v * 1000, 1);
+		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, NULL);
+		proj.owner = NULL;
+		projectile_setup(proj, self.origin, EFFECT_IMPACT_PLASMA_COMBO, WEAPON_ELECTRO, 200,
+				25, 400, 800, 0, MOVETYPE_BOUNCE);
+		proj.velocity = v * (vlen(vd) + random() * 500);
+		proj.touch = jb_torture_plasma_touch;
+		proj.think = stdproc_remove;
+		proj.nextthink = time + 2;
+	} else {
+		sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
+		vector vd = ENTITY_CENTER(e) - self.origin;
+		vector v = normalize(normalize(vd) + randomvec() * 0.1);
+		pointparticles(particleeffectnum("electro_muzzleflash"), self.origin, v * 1000, 1);
+		entity proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, NULL);
+		proj.owner = NULL;
+		projectile_setup(proj, self.origin, EFFECT_IMPACT_PLASMA_COMBO, WEAPON_ELECTRO, 200,
+				25, 400, 800, 0, MOVETYPE_FLY);
+		proj.velocity = v * (vlen(vd) + random() * 500);
+		proj.touch = projectile_touch_explode;
+		proj.think = stdproc_remove;
+		proj.nextthink = time + 2;
+	}
+}
+
+void(float victim) jb_torture_start {
+	float i;
+	random_selection_init();
+	for (i = JB_TORTURE_FIRST; i < JB_TORTURE_COUNT; i++)
+		random_selection_add(NULL, i, "", 1, 1);
+
+	float t1 = random_selection_chosen_float;
+	random_selection_init();
+	for (i = JB_TORTURE_FIRST; i < JB_TORTURE_COUNT; i++)
+		if (i != t1)
+			random_selection_add(NULL, i, "", 1, 1);
+
+	float t2 = random_selection_chosen_float;
+	entity e;
+	float even = 0;
+	for (e = NULL; (e = find(e, classname, "jb_torture")); ) {
+		e.nextthink = time + 1;
+		if (even) {
+			e.think = jb_torture_thinks[t1];
+			even = FALSE;
+		} else {
+			e.think = jb_torture_thinks[t2];
+			even = TRUE;
+		}
+	}
 }
 
 void(void) jb_think {
@@ -73,10 +203,12 @@ void(void) jb_think {
 			score_team_add_to(COLOR_TEAM1, ST_SCORE, 1);
 			sound_play2all("ctf/red_capture.wav");
 			roundbased_round_start_with_winner(COLOR_TEAM1, "^1Red^7 Scores!\nAll opponents are imprisoned");
+			jb_torture_start(COLOR_TEAM2);
 		} else if (!red_free && blue_free && red_jailed) { //blue wins
 			score_team_add_to(COLOR_TEAM2, ST_SCORE, 1);
 			sound_play2all("ctf/blue_capture.wav");
 			roundbased_round_start_with_winner(COLOR_TEAM2, "^4Blue^7 Scores!\nAll opponents are imprisoned");
+			jb_torture_start(COLOR_TEAM1);
 		} else if (red_free && blue_free) { //Still playing
 		} else { //Draw
 			roundbased_round_start_with_winner(0, "Round Draw!");
@@ -110,10 +242,22 @@ void(void) jb_init {
 	precache_model("models/domination/dom_red.md3");
 	precache_model("models/domination/dom_blue.md3");
 	precache_sound("kh/alarm.wav");
+	precache_sound("weapons/electro_bounce.wav");
+	precache_sound("weapons/grenade_bounce1");
+	precache_sound("weapons/grenade_bounce2");
+	precache_sound("weapons/grenade_bounce3");
+	precache_sound("weapons/grenade_bounce4");
+	precache_sound("weapons/grenade_bounce5");
+	precache_sound("weapons/grenade_bounce6");
 	jb_controller = spawn();
 	jb_controller.think = jb_think;
 	jb_controller.nextthink = time;
 	CVAR_CACHE(g_jb_capture_time);
+	jb_torture_thinks[JB_TORTURE_GRENADES] = jb_torture_grenades_think;
+	jb_torture_thinks[JB_TORTURE_PLASMA] = jb_torture_plasma_think;
+	projectile_init(PROJECTILE_GRENADE_BOUNCING);
+	projectile_init(PROJECTILE_ELECTRO);
+	projectile_init(PROJECTILE_ELECTRO_BEAM);
 }
 
 void(float t, entity by) jb_open {
@@ -347,12 +491,18 @@ void(void) spawnfunc_jailbreak_controlpoint_neut {
 	jb_controlpoint();
 }
 
+void(void) jb_torture_reset {
+	self.nextthink = 0;
+	self.think = NULL;
+}
+
 void(void) jb_torture {
 	if (game_type != GAME_TYPE_JAILBREAK) {
 		remove(self);
 		return;
 	}
 	self.classname = "jb_torture";
+	self.reset = jb_torture_reset;
 }
 
 void(void) info_jailbreak_torturespawn_red {
