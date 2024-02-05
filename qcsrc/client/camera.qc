@@ -11,7 +11,7 @@ void(void) camera_draw {
 	if not(CVAR(chase_active))
 		cvar_set("chase_active", "1");
 
-	view_fixangle = 1;
+	view_fixangle = -1;
 	view_fixed_angles = self.angles;
 	physics_plug_adjust_view = camera_adjust_view;
 	view_crosshair = FALSE;
