@@ -449,7 +449,7 @@ void(void) jb_controlpoint_model_setup {
 	default:
 		WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
 	}
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color(self.team, 0));
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color((self.team ? self.team - 1 : 6), 0));
 	WaypointSprite_Ping(self.sprite);
 	setsize(self, '-32 -32 -32', '32 32 32');
 }
