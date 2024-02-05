@@ -335,6 +335,8 @@ void(void) jb_init {
 	precache_sound("weapons/grenade_bounce4");
 	precache_sound("weapons/grenade_bounce5");
 	precache_sound("weapons/grenade_bounce6");
+	precache_sound("weapons/electro_fire.wav");
+	precache_sound("weapons/grenade_fire.wav");
 	jb_controller = spawn();
 	jb_controller.think = jb_think;
 	//jb_controller.reset = jb_reset;
