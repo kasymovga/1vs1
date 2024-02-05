@@ -1378,9 +1378,9 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 	entity tm, pl, me;
 	me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
 	SBAR_POSITION_AND_SCALE(score_pos, score_scale, '196 34 0', score_size, CVAR(sbar_score_background))
-	secondary_score_pos = score_pos + '164 0 0' * score_scale;
-	score_pos += '66 0 0' * score_scale;
 	if not(team_mode) { // non-teamgames, except race/cts
+		secondary_score_pos = score_pos + '164 0 0' * score_scale;
+		score_pos += '100 0 0' * score_scale;
 		// me vector := [team/connected frags id]
 		pl = player_list.sort_next;
 		if (pl == me)
@@ -1406,6 +1406,8 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 		sbar_draw_num_centered(secondary_score_pos, distribution, 1, 16 * score_scale, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		sbar_draw_num_centered(score_pos, score, 0, 34 * score_scale, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else { // teamgames
+		secondary_score_pos = score_pos + '164 0 0' * score_scale;
+		score_pos += '66 0 0' * score_scale;
 		float max_fragcount;
 		max_fragcount = -999;
 		for (tm = team_list.sort_next; tm; tm = tm.sort_next) {
