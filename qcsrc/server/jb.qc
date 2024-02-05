@@ -313,6 +313,15 @@ float(entity attacker, entity inflictor, float deathtype) jb_player_death_handle
 //	jb_camera_disable();
 //}
 
+var float(entity plr, float w) jb_player_can_fire_next;
+float(entity plr, float w) jb_player_can_fire {
+	float r = jb_player_can_fire_next(plr, w);
+	if (JB_PLAYER_JAILED(plr))
+		return FALSE;
+
+	return r;
+}
+
 void(void) jb_init {
 	jb = TRUE;
 	score_generic();
@@ -324,6 +333,8 @@ void(void) jb_init {
 	plugin_score_give_frag_mod = clanarena_HandleFrags;
 	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	plugin_player_death_handle = jb_player_death_handle;
+	jb_player_can_fire_next = plugin_chain_player_can_fire;
+	plugin_chain_player_can_fire = jb_player_can_fire;
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_model("models/domination/dom_red.md3");
 	precache_model("models/domination/dom_blue.md3");
