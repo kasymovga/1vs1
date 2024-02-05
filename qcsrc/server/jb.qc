@@ -71,7 +71,7 @@ void(void) jb_torture_napalm_think {
 	if not(e) return;
 	vector vd = ENTITY_CENTER(e) - self.origin;
 	vector v = normalize(normalize(vd) + randomvec() * 0.1);
-	entity proj = Napalm_Spawn(NULL, self.origin, 3, 4, DEATH_HURTTRIGGER, 100, 100, 50, 5);
+	entity proj = Napalm_Spawn(self.enemy, self.origin, 3, 4, DEATH_HURTTRIGGER, 100, 100, 50, 5);
     proj.velocity = v * (vlen(vd) + random() * 500);
 }
 
@@ -92,9 +92,8 @@ void(void) jb_torture_grenades_think {
 	vector vd = ENTITY_CENTER(e) - self.origin;
 	vector v = normalize(normalize(vd) + randomvec() * 0.1);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), self.origin, v * 1000, 1);
-	entity proj = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, NULL);
-	proj.owner = NULL;
-	projectile_setup(proj, self.origin, EFFECT_IMPACT_ROCKET, WEAPON_GRENADE_LAUNCHER, 400,
+	entity proj = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self.enemy);
+	projectile_setup(proj, self.origin, EFFECT_IMPACT_ROCKET, DEATH_HURTTRIGGER, 400,
 			50, 400, 800, 0, MOVETYPE_BOUNCE);
     proj.velocity = v * (vlen(vd) + random() * 500);
 	proj.touch = jb_torture_grenade_touch;
@@ -112,9 +111,8 @@ void(void) jb_torture_plasma_think {
 		vector vd = ENTITY_CENTER(e) - self.origin;
 		vector v = normalize(normalize(vd) + randomvec() * 0.1);
 		//pointparticles(particleeffectnum("electro_muzzleflash"), self.origin, v * 1000, 1);
-		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, NULL);
-		proj.owner = NULL;
-		projectile_setup(proj, self.origin, EFFECT_IMPACT_PLASMA_COMBO, WEAPON_ELECTRO, 200,
+		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self.enemy);
+		projectile_setup(proj, self.origin, EFFECT_IMPACT_PLASMA_COMBO, DEATH_HURTTRIGGER, 200,
 				25, 400, 800, 0, MOVETYPE_BOUNCE);
 		proj.velocity = v * (vlen(vd) + random() * 500);
 		proj.touch = jb_torture_plasma_touch;
@@ -125,9 +123,8 @@ void(void) jb_torture_plasma_think {
 		vector vd = ENTITY_CENTER(e) - self.origin;
 		vector v = normalize(normalize(vd) + randomvec() * 0.1);
 		pointparticles(particleeffectnum("electro_muzzleflash"), self.origin, v * 1000, 1);
-		entity proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, NULL);
-		proj.owner = NULL;
-		projectile_setup(proj, self.origin, EFFECT_IMPACT_PLASMA_COMBO, WEAPON_ELECTRO, 200,
+		entity proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self.enemy);
+		projectile_setup(proj, self.origin, EFFECT_IMPACT_PLASMA_COMBO, DEATH_HURTTRIGGER, 200,
 				25, 400, 800, 0, MOVETYPE_FLY);
 		proj.velocity = v * (vlen(vd) + random() * 500);
 		proj.touch = projectile_touch_explode;
@@ -201,6 +198,11 @@ void(float victim) jb_torture_start {
 	for (e = NULL; (e = find(e, classname, "jb_torture")); ) {
 		if (e.team != victim) continue;
 		e.nextthink = time + 1 + random();;
+		if (e.enemy) remove(e.enemy);
+		e.enemy = spawn();
+		e.enemy.netname = e.netname;
+		setorigin(e.enemy, e.origin);
+		e.enemy.team = team_next(e.team);
 		if (even) {
 			e.think = jb_torture_thinks[t1];
 			even = FALSE;
@@ -299,9 +301,9 @@ void(void) jb_think {
 }
 
 float(entity attacker, entity inflictor, float deathtype) jb_player_death_handle {
-	if not(roundbased_active) return FALSE;
+	if (!roundbased_active) return FALSE;
 	pointparticles(particleeffectnum("teleport"), ENTITY_CENTER(self), '0 0 0', 1);
-	if (deathtype)
+	if (deathtype && !JB_PLAYER_JAILED(self))
 		player_obituary(attacker, inflictor, self, deathtype);
 
 	player_clear(TRUE);
@@ -322,6 +324,13 @@ float(entity plr, float w) jb_player_can_fire {
 	return r;
 }
 
+float(entity attacker, entity targ, float f) jb_score_give_frag_mod {
+	if (roundbased_active && !JB_PLAYER_JAILED(targ)) {
+		score_player_add(attacker, SP_SCORE, f);
+	}
+	return 0;
+}
+
 void(void) jb_init {
 	jb = TRUE;
 	score_generic();
@@ -330,7 +339,7 @@ void(void) jb_init {
 	team_teams_set_count(2);
 	roundbased_init(cvar("g_jb_enddelay"), cvar("g_jb_startdelay"));
 	plugin_client_put_spawn_point = jb_client_put_spawn_point;
-	plugin_score_give_frag_mod = clanarena_HandleFrags;
+	plugin_score_give_frag_mod = jb_score_give_frag_mod;
 	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	plugin_player_death_handle = jb_player_death_handle;
 	jb_player_can_fire_next = plugin_chain_player_can_fire;
@@ -598,6 +607,10 @@ void(void) spawnfunc_jailbreak_controlpoint_neut {
 void(void) jb_torture_reset {
 	self.nextthink = 0;
 	self.think = NULL;
+	if (self.enemy) {
+		remove(self.enemy);
+		self.enemy = NULL;
+	}
 }
 
 void(void) jb_torture {
@@ -605,6 +618,7 @@ void(void) jb_torture {
 		remove(self);
 		return;
 	}
+	if (self.netname == "") self.netname = "Torture Device";
 	self.classname = "jb_torture";
 	self.reset = jb_torture_reset;
 }
