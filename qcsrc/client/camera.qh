@@ -1,0 +1,2 @@
+void(float ignore) camera_read;
+void(void) camera_shutdown;
