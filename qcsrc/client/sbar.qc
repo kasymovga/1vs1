@@ -246,6 +246,55 @@ void(vector weapons_pos, float weapons_scale) sbar_weapons_draw {
 	}
 }
 
+void(vector pos, float num, float showplus, float lettersize, vector rgb, float stroke, float alpha, float dflags) sbar_draw_num_centered  {
+	float digits = 1;
+	float sign = 0;
+	vector vsize, num_color;
+	vsize_x = vsize_y = lettersize;
+	vsize_z = 0;
+	if (stroke == 1)
+		num_color = '1 1 1';
+	else
+		num_color = rgb;
+
+	if (num < 0 || showplus) {
+		if (num < 0) {
+			sign = -1;
+			num = -num;
+		} else
+			sign = 1;
+
+		digits++;
+	}
+	float pow;
+	for (pow = 10; num >= pow; pow *= 10) digits++;
+	pos_x -= digits * 0.5 * lettersize;
+	if (sign) digits--;
+	if (sign < 0) {
+		if (stroke == 1)
+			drawpic(pos, "gfx/hud/num_minus_stroke", vsize, rgb, alpha, dflags);
+
+		drawpic(pos, "gfx/hud/num_minus", vsize, num_color, alpha, dflags);
+		pos_x += lettersize;
+	} else if (sign > 0) {
+		if (stroke == 1)
+			drawpic(pos, "gfx/hud/num_plus_stroke", vsize, rgb, alpha, dflags);
+
+		drawpic(pos, "gfx/hud/num_plus", vsize, num_color, alpha, dflags);
+		pos_x += lettersize;
+	}
+	string str = ftos(num), tmp;
+	float i;
+	for (i = 0; i < digits; ++i) {
+		tmp = substring(str, i, 1);
+		if (stroke == 1)
+			drawpic(pos, strcat("gfx/hud/num_", tmp, "_stroke"), vsize, rgb, alpha, dflags);
+
+		drawpic(pos, strcat("gfx/hud/num_", tmp), vsize, num_color, alpha, dflags);
+		pos_x += lettersize;
+	}
+}
+
 void(vector pos, float num, float digits, float showminusplus, float lettersize, vector rgb, float stroke, float alpha, float dflags) sbar_draw_num  {
 	float l, i;
 	string str, tmp;
@@ -1328,8 +1377,9 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 	vector secondary_score_pos, distribution_color;
 	entity tm, pl, me;
 	me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
-	SBAR_POSITION_AND_SCALE(score_pos, score_scale, '204 34 0', score_size, CVAR(sbar_score_background))
-	secondary_score_pos = score_pos + '132 0 0' * score_scale;
+	SBAR_POSITION_AND_SCALE(score_pos, score_scale, '196 34 0', score_size, CVAR(sbar_score_background))
+	secondary_score_pos = score_pos + '164 0 0' * score_scale;
+	score_pos += '66 0 0' * score_scale;
 	if not(team_mode) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
 		pl = player_list.sort_next;
@@ -1353,8 +1403,8 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 		else
 			distribution_color = '1 0 0';
 
-		sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16 * score_scale, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		sbar_draw_num(score_pos, score, 4, 0, 34 * score_scale, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num_centered(secondary_score_pos, distribution, 1, 16 * score_scale, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num_centered(score_pos, score, 0, 34 * score_scale, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float max_fragcount;
 		max_fragcount = -999;
@@ -1368,24 +1418,24 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 				max_fragcount = score;
 
 			if (tm.team == team_my) {
-				sbar_draw_num(score_pos, score, 4, 0, 34 * score_scale, sbar_team_rgb * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num_centered(score_pos, score, 0, 34 * score_scale, sbar_team_rgb * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			} else if (team_my == TEAM_COLOR_SPECTATOR && team_count_no_spectator > 2) {
 				switch (tm.team) {
 				case COLOR_TEAM1:
-					sbar_draw_num(score_pos, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					sbar_draw_num_centered(score_pos, score, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					break;
 				case COLOR_TEAM2:
-					sbar_draw_num(score_pos + '0 18 0' * score_scale, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					sbar_draw_num_centered(score_pos + '0 18 0' * score_scale, score, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					break;
 				case COLOR_TEAM3:
-					sbar_draw_num(score_pos + '98 0 0' * score_scale, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					sbar_draw_num_centered(score_pos + '98 0 0' * score_scale, score, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					break;
 				case COLOR_TEAM4:
-					sbar_draw_num(score_pos + '98 18 0' * score_scale, score, 4, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					sbar_draw_num_centered(score_pos + '98 18 0' * score_scale, score, 0, 16 * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					break;
 				}
 			} else {
-				sbar_draw_num(secondary_score_pos, score, 4, 0, ((team_count_no_spectator <= 3) ? 16 : 10) * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num_centered(secondary_score_pos, score, 0, ((team_count_no_spectator <= 3) ? 16 : 10) * score_scale, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				secondary_score_pos = secondary_score_pos + ((team_count_no_spectator <= 3) ? '0 18 0' : '0 12 0') * score_scale;
 			}
 		}
