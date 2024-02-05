@@ -599,7 +599,7 @@ void(void) spawnfunc_jailbreak_controlpoint_blue {
 	jb_controlpoint();
 }
 
-void(void) spawnfunc_jailbreak_controlpoint_neut {
+void(void) spawnfunc_jailbreak_controlpoint_neutral {
 	self.team = 0;
 	jb_controlpoint();
 }
