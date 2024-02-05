@@ -36,8 +36,8 @@ string(float id) rm_game_type_vote_description {
 		return "Frag your opponents to turn them into ice blocks.\nFreeze the entire opposite team to win the round.\nYou can unfreeze your frozen teammates by standing next to them.";
 	case GAME_TYPE_DOMINATION:
 		return "Several control points are placed around the map.\nWalk over a control point to capture it.\nWhile captured, control points keep adding to your score until the limit is reached.";
-	//case GAME_TYPE_JAILBREAK;
-	//	return "Frag the enemy team to send them into a jail!\nCapture their controlpoint to release your imprisoned teammates.\nLock all of your opponents to win the round.";
+	case GAME_TYPE_JAILBREAK:
+		return "Frag the enemy team to send them into a jail!\nCapture their controlpoint to release your imprisoned teammates.\nLock all of your opponents to win the round.";
 	case GAME_TYPE_DEATHMATCH:
 		return "Free-for-all: the player who gets the most frags wins.";
 	case GAME_TYPE_TEAM_DEATHMATCH:
