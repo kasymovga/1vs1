@@ -72,6 +72,7 @@ void(void) jb_torture_grenades_think {
 		}
 	}
 	e = random_selection_chosen_ent;
+	if not(e) return;
 	sound(self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 	vector vd = ENTITY_CENTER(e) - self.origin;
 	vector v = normalize(normalize(vd) + randomvec() * 0.1);
@@ -96,6 +97,7 @@ void(void) jb_torture_plasma_think {
 		}
 	}
 	e = random_selection_chosen_ent;
+	if not(e) return;
 	if (random() < 0.5) {
 		sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		vector vd = ENTITY_CENTER(e) - self.origin;
