@@ -136,6 +136,53 @@ void(void) jb_torture_plasma_think {
 	}
 }
 
+float(void) jb_camera_customize {
+	if (other.team == self.team) return FALSE;
+	if (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2) return FALSE;
+	//HACK, player respawn will fix it
+	other.stand_view_ofs = self.origin - other.origin;
+	other.crouch_view_ofs = self.origin - other.origin;
+	other.view_ofs = self.origin - other.origin;
+	return TRUE;
+}
+
+float(entity to, float sf) jb_camera_send {
+	net_write_byte(MSG_ENTITY, NET_CSQC_CAMERA);
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
+	net_write_coord(MSG_ENTITY, self.angles_x);
+	net_write_coord(MSG_ENTITY, self.angles_y);
+	net_write_coord(MSG_ENTITY, self.angles_z);
+	return TRUE;
+}
+
+void(float t) jb_camera_enable {
+	entity where = NULL;
+	random_selection_init();
+	for (; (where = find(where, classname, "jb_camera")); ) {
+		if (t == where.team)
+			random_selection_add(where, 0, "", 1, 1);
+	}
+	where = random_selection_chosen_ent;
+	if not(where) return;
+	entity e = spawn();
+	e.classname = "jb_camera_view";
+	e.team = t;
+	setorigin(e, where.origin);
+	e.angles = where.angles;
+	e.reset = stdproc_remove;
+	net_link_entity(e, FALSE, 0, jb_camera_send);
+	e.customizeentityforclient = jb_camera_customize;
+}
+
+//void(void) jb_camera_disable {
+//	entity e;
+//	for (e = NULL; (e = find(e, classname, "jb_camera_view")); ) {
+//		remove(e);
+//	}
+//}
+
 void(float victim) jb_torture_start {
 	float i;
 	random_selection_init();
@@ -162,6 +209,7 @@ void(float victim) jb_torture_start {
 			even = TRUE;
 		}
 	}
+	jb_camera_enable(victim);
 }
 
 void(void) jb_think {
@@ -261,6 +309,10 @@ float(entity attacker, entity inflictor, float deathtype) jb_player_death_handle
 	return TRUE;
 }
 
+//void(void) jb_reset {
+//	jb_camera_disable();
+//}
+
 void(void) jb_init {
 	jb = TRUE;
 	score_generic();
@@ -285,6 +337,7 @@ void(void) jb_init {
 	precache_sound("weapons/grenade_bounce6");
 	jb_controller = spawn();
 	jb_controller.think = jb_think;
+	//jb_controller.reset = jb_reset;
 	jb_controller.nextthink = time;
 	CVAR_CACHE(g_jb_capture_time);
 	jb_torture_thinks[JB_TORTURE_GRENADES] = jb_torture_grenades_think;
@@ -558,6 +611,7 @@ void(void) jb_camera {
 		remove(self);
 		return;
 	}
+	self.classname = "jb_camera";
 }
 
 void(void) info_jailbreak_jailcamera_red {

@@ -181,6 +181,7 @@ void(void) CSQC_Shutdown {
 	trip_shutdown();
 	mute_shutdown();
 	translate_shutdown();
+	camera_shutdown();
 }
 
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
