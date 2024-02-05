@@ -5,3 +5,4 @@ set g_jb_timelimit 15
 set g_jb_leadlimit 0
 set g_jb_start_delay 0
 set g_jb_capture_time 15
+set jb_inherit ft
