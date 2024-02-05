@@ -98,8 +98,9 @@ void(void) jb_torture_grenades_think {
 			50, 400, 800, 0, MOVETYPE_BOUNCE);
     proj.velocity = v * (vlen(vd) + random() * 500);
 	proj.touch = jb_torture_grenade_touch;
-	proj.think = stdproc_remove;
-    proj.nextthink = time + 2;
+	proj.use = projectile_explode;
+	proj.think = projectile_think2use;
+    proj.nextthink = time + 2 + random();
 }
 
 void(void) jb_torture_plasma_think {
@@ -152,7 +153,7 @@ void(float victim) jb_torture_start {
 	float even = 0;
 	for (e = NULL; (e = find(e, classname, "jb_torture")); ) {
 		if (e.team != victim) continue;
-		e.nextthink = time + 1;
+		e.nextthink = time + 1 + random();;
 		if (even) {
 			e.think = jb_torture_thinks[t1];
 			even = FALSE;
