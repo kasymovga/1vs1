@@ -18,7 +18,7 @@ var void(void) jb_torture_thinks[JB_TORTURE_COUNT];
 
 entity(void) jb_client_put_spawn_point {
 	if not(warmup_active)
-	//if ((self.team == COLOR_TEAM1 && time > jb_open_red) || (self.team == COLOR_TEAM2 && time > jb_open_blue))
+	//if ((self.team == COLOR_TEAM1 && !jb_open_red) || (self.team == COLOR_TEAM2 && !jb_open_blue))
 	if (roundbased_active || roundbased_restart_time) {
 		entity e;
 		random_selection_init();
@@ -162,12 +162,32 @@ void(void) jb_think {
 	float red_jailed = 0, blue_jailed = 0;
 	float injail;
 	entity oldself = self, oldother = other;
+	if (jb_open_red) {
+		for (e = NULL; (e = find(e, targetname, "jail_red")); ) {
+			if (substring(e.classname, 0, 9) == "func_door")
+			if (e.state == FUNC_STATE_BOTTOM) {
+				bprint("^1Red jail^7 closed\n");
+				jb_open_red = FALSE;
+				break;
+			}
+		}
+	}
+	if (jb_open_blue) {
+		for (e = NULL; (e = find(e, targetname, "jail_blue")); ) {
+			if (substring(e.classname, 0, 9) == "func_door")
+			if (e.state == FUNC_STATE_BOTTOM) {
+				bprint("^4Blue jail^7 closed\n");
+				jb_open_blue = FALSE;
+				break;
+			}
+		}
+	}
 	FOR_EACH_PLAYER(e) {
 		if (e.scorekeeper.scores[SP_STATUS]) {
 			injail = e.deadflag;
 			if not(e.deadflag)
-			if ((e.team == COLOR_TEAM1 && time > jb_open_red) ||
-					(e.team == COLOR_TEAM2 && time > jb_open_blue))
+			if ((e.team == COLOR_TEAM1 && !jb_open_red) ||
+					(e.team == COLOR_TEAM2 && !jb_open_blue))
 				for (jail = NULL; (jail = find(jail, classname, "jb_room")); ) {
 					if (math_boxes_overlap(jail.absmin, jail.absmax, e.absmin, e.absmax)) {
 						oldself = self;
@@ -266,12 +286,12 @@ void(float t, entity by) jb_open {
 	string s = "";
 	if (t == COLOR_TEAM1) {
 		game_status_set(strcat("Jailbreak! The ^1REDS^7 are escaping!\nControl point captured by ", by.netname), 2);
-		jb_open_red = time + 10;
+		jb_open_red = TRUE;
 		s = "jail_red";
 	}
 	if (t == COLOR_TEAM2) {
 		game_status_set(strcat("Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by ", by.netname), 2);
-		jb_open_blue = time + 10;
+		jb_open_blue = TRUE;
 		s = "jail_blue";
 	}
 	if (s == "") {
@@ -288,8 +308,8 @@ void(float t, entity by) jb_open {
 void(void) jb_room_touch {
 	if (warmup_active) return;
 	if (other.classname != "player") return;
-	if (self.team == COLOR_TEAM1 && jb_open_red >= time) return; //open state
-	if (self.team == COLOR_TEAM2 && jb_open_blue >= time) return; //open state
+	if (self.team == COLOR_TEAM1 && jb_open_red) return; //open state
+	if (self.team == COLOR_TEAM2 && jb_open_blue) return; //open state
 	if (!JB_PLAYER_JAILED(other)) {
 		JB_PLAYER_JAIL_SET(other, 1);
 		bprint(player_name(other), "^7 jailed!\n");
@@ -344,8 +364,8 @@ void(void) jb_controlpoint_model_setup {
 }
 
 float(entity cp) jb_controlpoint_active {
-	if (cp.team == COLOR_TEAM1 && jb_open_red >= time) return FALSE;
-	if (cp.team == COLOR_TEAM2 && jb_open_blue >= time) return FALSE;
+	if (cp.team == COLOR_TEAM1 && jb_open_red) return FALSE;
+	if (cp.team == COLOR_TEAM2 && jb_open_blue) return FALSE;
 	if not(roundbased_active) return FALSE;
 	return TRUE;
 }
@@ -418,7 +438,7 @@ void(void) jb_controlpoint_touch {
 	}
 	float somebodyjailed = FALSE;
 	FOR_EACH_PLAYER(e)
-		if (e.team == self.team && JB_PLAYER_JAILED(e)) {
+		if (e.team == other.team && JB_PLAYER_JAILED(e)) {
 			somebodyjailed = TRUE;
 			break;
 		}
