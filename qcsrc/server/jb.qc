@@ -475,12 +475,12 @@ float(entity cp, entity plr) jb_controlpoint_active {
 void(void) jb_controlpoint_think {
 	entity e, capturer, e2;
 	vector min1, min2, max1, max2;
-	min2 = self.mins + self.origin;
-	max2 = self.maxs + self.origin;
+	min2 = self.absmin;
+	max2 = self.absmax;
 	while (self.killindicator) { //make first capturer valid or NULL
 		capturer = self.killindicator.enemy;
-		min1 = capturer.mins + capturer.origin;
-		max1 = capturer.maxs + capturer.origin;
+		min1 = capturer.absmin;
+		max1 = capturer.absmax;
 		if (!jb_controlpoint_active(self, capturer) || capturer.playerid != self.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
 			e = self.killindicator.killindicator;
 			progressbar_remove(self.killindicator.sprite);
@@ -493,8 +493,8 @@ void(void) jb_controlpoint_think {
 	if (self.killindicator) //check other capturers in chain
 		for (e = self.killindicator; e.killindicator; ) {
 			capturer = e.killindicator.enemy;
-			min1 = capturer.mins + capturer.origin;
-			max1 = capturer.maxs + capturer.origin;
+			min1 = capturer.absmin;
+			max1 = capturer.absmax;
 			if (!jb_controlpoint_active(self, capturer) || capturer.playerid != e.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
 				e2 = e.killindicator.killindicator;
 				progressbar_remove(e.killindicator.sprite);
