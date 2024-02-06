@@ -17,6 +17,10 @@ void ShowGameSettings(entity ignore, entity ignore2) {
 	GUI_Show(GUI_GAMESETTINGS);
 }
 
+void ShowRMSettings(entity ignore, entity ignore2) {
+	GUI_Show(GUI_RMSETTINGS);
+}
+
 void ShowVcall(entity ignore, entity ignore2) {
 	GUI_Show(GUI_VCALL);
 }
@@ -55,6 +59,10 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 
 		if (main_campaign)
 			me.rows = me.rows - 1; //mute
+
+		RM({
+			me.rows++; //RM Settings
+		})
 	}
 	configureDialogNexuizDialog(me); //Parent method
 }
@@ -71,6 +79,11 @@ void fillNexuizGameMenuDialog(entity me)
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Game settings"), '0 0 0'));
 		e.onClick = ShowGameSettings;
+	RM({
+		me.TR(me);
+			me.TD(me, 1, me.columns, e = makeNexuizButton(_("RM settings"), '0 0 0'));
+			e.onClick = ShowRMSettings;
+	})
 	if not(main_isdemo) {
 		me.TR(me);
 		if not(main_campaign) {

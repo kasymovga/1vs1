@@ -50,6 +50,9 @@ void configureMainWindowMainWindow(entity me)
 	gui_hud = i = spawnNexuizHudDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	gui_rmSettings = i = spawnNexuizRMSettingsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.initializeDialog(me, me);
 }
 #endif
