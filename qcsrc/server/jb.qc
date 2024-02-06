@@ -473,6 +473,12 @@ float(entity cp, entity plr) jb_controlpoint_active {
 	return TRUE;
 }
 
+float(entity e) jb_controlpoint_danger_visible {
+	if not(self.owner.killindicator) return FALSE;
+	if (e.classname == "player" && e.team != self.owner.killindicator.enemy.team) return TRUE;
+	return FALSE;
+}
+
 void(void) jb_controlpoint_think {
 	entity e, capturer, e2;
 	vector min1, min2, max1, max2;
@@ -510,6 +516,8 @@ void(void) jb_controlpoint_think {
 		self.state = 0;
 		WaypointSprite_UpdateMaxHealth(self.sprite, 0);
 		WaypointSprite_UpdateHealth(self.sprite, self.state);
+		remove(self.weaponentity);
+		self.weaponentity = NULL;
 		return;
 	}
 	self.nextthink = time;
@@ -535,7 +543,12 @@ void(void) jb_controlpoint_think {
 
 void(void) jb_controlpoint_touch {
 	if not(roundbased_active) return;
-	if (other.team == self.team) return;
+	if (other.team == self.team) {
+		if (clienttype(other) == CLIENTTYPE_REAL)
+			centerprint(other, "Point already captured\n");
+
+		return;
+	}
 	if (other.classname != "player") return;
 	//capture
 	entity e;
@@ -549,11 +562,17 @@ void(void) jb_controlpoint_touch {
 			break;
 		}
 	if not(somebodyjailed) {
-		centerprint(other, "Nobody jailed\n");
+		if (clienttype(other) == CLIENTTYPE_REAL)
+			centerprint(other, "Jail is empty\n");
+
 		return;
 	}
 	e = spawn();
 	WaypointSprite_UpdateMaxHealth(self.sprite, 1);
+	if not(self.weaponentity) {
+		self.weaponentity = WaypointSprite_SpawnFixed("defend", self.origin + '0 0 32', self, weaponentity);
+		self.weaponentity.waypointsprite_visible_for_player = jb_controlpoint_danger_visible;
+	}
 	e.enemy = other;
 	e.playerid = other.playerid;
 	e.killindicator = self.killindicator;
