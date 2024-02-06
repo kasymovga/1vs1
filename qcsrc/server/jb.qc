@@ -466,6 +466,7 @@ void(void) jb_controlpoint_model_setup {
 }
 
 float(entity cp, entity plr) jb_controlpoint_active {
+	if (PLAYER_DEAD(plr)) return FALSE;
 	if (plr.team == cp.team) return FALSE;
 	if (plr.team == COLOR_TEAM1 && jb_open_red) return FALSE;
 	if (plr.team == COLOR_TEAM2 && jb_open_blue) return FALSE;
@@ -549,7 +550,7 @@ void(void) jb_controlpoint_touch {
 
 		return;
 	}
-	if (other.classname != "player") return;
+	if (other.classname != "player" || PLAYER_DEAD(other)) return;
 	//capture
 	entity e;
 	for (e = self.killindicator; e; e = e.killindicator) {
