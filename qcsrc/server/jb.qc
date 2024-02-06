@@ -454,9 +454,10 @@ void(void) jb_controlpoint_model_setup {
 	setsize(self, '-32 -32 -32', '32 32 32');
 }
 
-float(entity cp) jb_controlpoint_active {
-	if (cp.team == COLOR_TEAM1 && jb_open_red) return FALSE;
-	if (cp.team == COLOR_TEAM2 && jb_open_blue) return FALSE;
+float(entity cp, entity plr) jb_controlpoint_active {
+	if (plr.team == cp.team) return FALSE;
+	if (plr.team == COLOR_TEAM1 && jb_open_red) return FALSE;
+	if (plr.team == COLOR_TEAM2 && jb_open_blue) return FALSE;
 	if not(roundbased_active) return FALSE;
 	return TRUE;
 }
@@ -470,7 +471,7 @@ void(void) jb_controlpoint_think {
 		capturer = self.killindicator.enemy;
 		min1 = capturer.mins + capturer.origin;
 		max1 = capturer.maxs + capturer.origin;
-		if (!jb_controlpoint_active(self) || capturer.team == self.team || capturer.playerid != self.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
+		if (!jb_controlpoint_active(self, capturer) || capturer.playerid != self.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
 			e = self.killindicator.killindicator;
 			progressbar_remove(self.killindicator.sprite);
 			remove(self.killindicator);
@@ -483,7 +484,7 @@ void(void) jb_controlpoint_think {
 			capturer = e.killindicator.enemy;
 			min1 = capturer.mins + capturer.origin;
 			max1 = capturer.maxs + capturer.origin;
-			if (!jb_controlpoint_active(self) || capturer.team == e.team || capturer.playerid != e.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
+			if (!jb_controlpoint_active(self, capturer) || capturer.playerid != e.killindicator.playerid || !math_boxes_overlap(min1, max1, min2, max2)) {
 				e2 = e.killindicator.killindicator;
 				progressbar_remove(e.killindicator.sprite);
 				remove(e.killindicator);
