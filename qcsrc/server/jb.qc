@@ -511,6 +511,7 @@ void(void) jb_controlpoint_think {
 	}
 	for (e = self.killindicator; e; e = e.killindicator) {
 		progressbar_set(self.killindicator.sprite, self.state);
+		if (clienttype(e.enemy) == CLIENTTYPE_BOT) bot_stay(e.enemy, 0.1);
 	}
 	if (self.state == 1) {
 		self.team = self.killindicator.enemy.team;
