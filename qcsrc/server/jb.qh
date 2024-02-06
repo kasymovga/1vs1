@@ -1,1 +1,2 @@
 void(void) jb_init;
+void(void) jb_role_choose;

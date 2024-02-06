@@ -353,6 +353,7 @@ void(void) jb_init {
 	plugin_player_death_handle = jb_player_death_handle;
 	jb_player_can_fire_next = plugin_chain_player_can_fire;
 	plugin_chain_player_can_fire = jb_player_can_fire;
+	plugin_havocbot_role_choose = jb_role_choose;
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_model("models/domination/dom_red.md3");
 	precache_model("models/domination/dom_blue.md3");
