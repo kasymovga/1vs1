@@ -3,6 +3,7 @@ float jb_open_blue;
 float jb_open_red;
 entity jb_controller;
 float g_jb_capture_time;
+float g_jb_capture_multi_factor;
 var .float jb_player_jailed;
 #define JB_PLAYER_JAILED(plr) (plr.scorekeeper.jb_player_jailed)
 #define JB_PLAYER_JAIL_SET(plr, x) score_player_set(plr, SP_STATUS, x);
@@ -362,6 +363,7 @@ void(void) jb_init {
 	//jb_controller.reset = jb_reset;
 	jb_controller.nextthink = time;
 	CVAR_CACHE(g_jb_capture_time);
+	CVAR_CACHE(g_jb_capture_multi_factor);
 	jb_torture_thinks[JB_TORTURE_GRENADES] = jb_torture_grenades_think;
 	jb_torture_thinks[JB_TORTURE_PLASMA] = jb_torture_plasma_think;
 	jb_torture_thinks[JB_TORTURE_NAPALM] = jb_torture_napalm_think;
@@ -479,8 +481,9 @@ void(void) jb_controlpoint_think {
 		}
 		break;
 	}
+	float capturers_count = 1;
 	if (self.killindicator) //check other capturers in chain
-		for (e = self.killindicator; e.killindicator; e = e.killindicator) {
+		for (e = self.killindicator; e.killindicator; ) {
 			capturer = e.killindicator.enemy;
 			min1 = capturer.mins + capturer.origin;
 			max1 = capturer.maxs + capturer.origin;
@@ -489,6 +492,9 @@ void(void) jb_controlpoint_think {
 				progressbar_remove(e.killindicator.sprite);
 				remove(e.killindicator);
 				e.killindicator = e2;
+			} else {
+				e = e.killindicator;
+				capturers_count++;
 			}
 		}
 	if not(self.killindicator) {
@@ -498,9 +504,7 @@ void(void) jb_controlpoint_think {
 		return;
 	}
 	self.nextthink = time;
-	for (e = self.killindicator; e; e = e.killindicator) {
-		self.state += frametime / g_jb_capture_time;
-	}
+	self.state += (frametime / g_jb_capture_time) * (1 + (capturers_count - 1) * g_jb_capture_multi_factor);
 	WaypointSprite_UpdateHealth(self.sprite, self.state);
 	if (self.state >= 1) {
 		self.state = 1;
