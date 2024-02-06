@@ -270,7 +270,7 @@ void(void) jb_think {
 			} else {
 				JB_PLAYER_JAIL_SET(e, 0);
 				if (roundbased_active)
-					bprint(player_name(e), "^7 escaped from jail!\n");
+					bprint(e.netname, "^7 escaped from jail!\n");
 
 				if (e.team == COLOR_TEAM1) red_free++;
 				if (e.team == COLOR_TEAM2) blue_free++;
@@ -308,6 +308,14 @@ float(entity attacker, entity inflictor, float deathtype) jb_player_death_handle
 		player_obituary(attacker, inflictor, self, deathtype);
 
 	player_clear(TRUE);
+	RM({
+		//announce(self, "jailbreak/imprison.wav"); //TODO
+		string s = "";
+		if (attacker && attacker != self)
+			s = strcat("You've been imprisoned by ^7", attacker.netname);
+
+		rm_bigprint_spec(self, "You're in a jail, prisoner!", s, 10);
+	})
 	player_spawn(jb_client_put_spawn_point());
 	return TRUE;
 }
@@ -405,7 +413,7 @@ void(void) jb_room_touch {
 	if (self.team == COLOR_TEAM2 && jb_open_blue) return; //open state
 	if (!JB_PLAYER_JAILED(other)) {
 		JB_PLAYER_JAIL_SET(other, 1);
-		bprint(player_name(other), "^7 jailed!\n");
+		bprint(other.netname, "^7 jailed!\n");
 	}
 }
 
