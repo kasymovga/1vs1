@@ -4,6 +4,8 @@ float jb_open_red;
 entity jb_controller;
 float g_jb_capture_time;
 float g_jb_capture_multi_factor;
+float g_jb_score_jbreak;
+float g_jb_score_jbreak_perplayer;
 var .float jb_player_jailed;
 #define JB_PLAYER_JAILED(plr) (plr.scorekeeper.jb_player_jailed)
 #define JB_PLAYER_JAIL_SET(plr, x) score_player_set(plr, SP_STATUS, x);
@@ -378,6 +380,8 @@ void(void) jb_init {
 	jb_controller.nextthink = time;
 	CVAR_CACHE(g_jb_capture_time);
 	CVAR_CACHE(g_jb_capture_multi_factor);
+	CVAR_CACHE(g_jb_score_jbreak);
+	CVAR_CACHE(g_jb_score_jbreak_perplayer);
 	jb_torture_thinks[JB_TORTURE_GRENADES] = jb_torture_grenades_think;
 	jb_torture_thinks[JB_TORTURE_PLASMA] = jb_torture_plasma_think;
 	jb_torture_thinks[JB_TORTURE_NAPALM] = jb_torture_napalm_think;
@@ -539,10 +543,14 @@ void(void) jb_controlpoint_think {
 	if (self.state == 1) {
 		self.team = self.killindicator.enemy.team;
 		jb_controlpoint_model_setup();
-		//Alternative escape mode?
-		//for (e = NULL; (e = find(e, classname, "jb_controlpoint")); ) {
-		//	if (e.team != self.team) return;
-		//}
+		float prisoners_count = 0;
+		FOR_EACH_PLAYER(e)
+			if (e.team == self.killindicator.enemy.team && JB_PLAYER_JAILED(e))
+				prisoners_count++;
+
+		for (e = self.killindicator; e; e = e.killindicator) {
+			score_player_add(e.enemy, SP_SCORE, g_jb_score_jbreak + g_jb_score_jbreak_perplayer * prisoners_count);
+		}
 		jb_open(self.team, self.killindicator.enemy);
 	}
 }

@@ -6,4 +6,6 @@ set g_jb_leadlimit 0
 set g_jb_start_delay 0
 set g_jb_capture_time 5
 set g_jb_capture_multi_factor 0.2
+set g_jb_score_jbreak 1
+set g_jb_score_jbreak_perplayer 1
 set jb_inherit ft
