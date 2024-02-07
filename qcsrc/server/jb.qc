@@ -340,6 +340,11 @@ float(entity attacker, entity targ, float f) jb_score_give_frag_mod {
 	return 0;
 }
 
+void(void) jb_init_delayed {
+	// must be delayed for dlc packages
+	Napalm_Init();
+}
+
 void(void) jb_init {
 	jb = TRUE;
 	score_generic();
@@ -376,10 +381,10 @@ void(void) jb_init {
 	jb_torture_thinks[JB_TORTURE_GRENADES] = jb_torture_grenades_think;
 	jb_torture_thinks[JB_TORTURE_PLASMA] = jb_torture_plasma_think;
 	jb_torture_thinks[JB_TORTURE_NAPALM] = jb_torture_napalm_think;
-	Napalm_Init();
 	projectile_init(PROJECTILE_GRENADE_BOUNCING);
 	projectile_init(PROJECTILE_ELECTRO);
 	projectile_init(PROJECTILE_ELECTRO_BEAM);
+	entity_initialize(self, jb_init_delayed, INITPRIO_FIRST);
 }
 
 void(float t, entity by) jb_open {
