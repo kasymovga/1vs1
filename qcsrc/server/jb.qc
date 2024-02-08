@@ -2,10 +2,17 @@ float jb;
 float jb_open_blue;
 float jb_open_red;
 entity jb_controller;
+float g_jb_controlpoint_idletime;
+float g_jb_controlpoint_idletime_global;
+float g_jb_controlpoint_idletime_global_neutral;
+float g_jb_controlpoint_idletime_global_own;
+float g_jb_controlpoint_claim;
+float g_jb_controlpoint_claim_noneutral;
 float g_jb_capture_time;
 float g_jb_capture_multi_factor;
 float g_jb_score_jbreak;
 float g_jb_score_jbreak_perplayer;
+
 var .float jb_player_jailed;
 #define JB_PLAYER_JAILED(plr) (plr.scorekeeper.jb_player_jailed)
 #define JB_PLAYER_JAIL_SET(plr, x) score_player_set(plr, SP_STATUS, x);
@@ -378,6 +385,12 @@ void(void) jb_init {
 	jb_controller.think = jb_think;
 	//jb_controller.reset = jb_reset;
 	jb_controller.nextthink = time;
+	CVAR_CACHE(g_jb_controlpoint_idletime);
+	CVAR_CACHE(g_jb_controlpoint_idletime_global);
+	CVAR_CACHE(g_jb_controlpoint_idletime_global_neutral);
+	CVAR_CACHE(g_jb_controlpoint_idletime_global_own);
+	CVAR_CACHE(g_jb_controlpoint_claim);
+	CVAR_CACHE(g_jb_controlpoint_claim_noneutral);
 	CVAR_CACHE(g_jb_capture_time);
 	CVAR_CACHE(g_jb_capture_multi_factor);
 	CVAR_CACHE(g_jb_score_jbreak);
@@ -475,6 +488,7 @@ void(void) jb_controlpoint_model_setup {
 }
 
 float(entity cp, entity plr) jb_controlpoint_active {
+	if (self.wait) return FALSE;
 	if (PLAYER_DEAD(plr)) return FALSE;
 	if (plr.team == cp.team) return FALSE;
 	if (plr.team == COLOR_TEAM1 && jb_open_red) return FALSE;
@@ -487,6 +501,15 @@ float(entity e) jb_controlpoint_danger_visible {
 	if not(self.owner.killindicator) return FALSE;
 	if (e.classname == "player" && e.team != self.owner.killindicator.enemy.team) return TRUE;
 	return FALSE;
+}
+
+void(entity e, float t) jb_controlpoint_cooldown {
+	if not(t) return;
+	e.wait = t;
+	WaypointSprite_UpdateMaxHealth(e.sprite, t);
+	WaypointSprite_UpdateHealth(e.sprite, t);
+	e.nextthink = time;
+	e.state = 0;
 }
 
 void(void) jb_controlpoint_think {
@@ -522,10 +545,20 @@ void(void) jb_controlpoint_think {
 				capturers_count++;
 			}
 		}
+	if (self.wait) {
+		self.wait -= frametime;
+		if (self.wait <= 0) {
+			self.wait = 0;
+			WaypointSprite_UpdateMaxHealth(self.sprite, 0);
+		}
+		WaypointSprite_UpdateHealth(self.sprite, self.wait);
+		self.nextthink = time;
+		return;
+	}
 	if not(self.killindicator) {
 		self.state = 0;
 		WaypointSprite_UpdateMaxHealth(self.sprite, 0);
-		WaypointSprite_UpdateHealth(self.sprite, self.state);
+		WaypointSprite_UpdateHealth(self.sprite, 0);
 		remove(self.weaponentity);
 		self.weaponentity = NULL;
 		return;
@@ -541,7 +574,21 @@ void(void) jb_controlpoint_think {
 		if (clienttype(e.enemy) == CLIENTTYPE_BOT) bot_stay(e.enemy, 0.1);
 	}
 	if (self.state == 1) {
-		self.team = self.killindicator.enemy.team;
+		if (g_jb_controlpoint_claim && (self.team || !g_jb_controlpoint_claim_noneutral)) {
+			self.team = self.killindicator.enemy.team;
+		}
+		jb_controlpoint_cooldown(self, g_jb_controlpoint_idletime);
+		for (e = NULL; (e = find(e, classname, "jb_controlpoint")); ) {
+			if (e != self) {
+				if (e.team != self.team) {
+					if (e.team)
+						jb_controlpoint_cooldown(e, g_jb_controlpoint_idletime_global);
+					else
+						jb_controlpoint_cooldown(e, g_jb_controlpoint_idletime_global_neutral);
+				} else
+					jb_controlpoint_cooldown(e, g_jb_controlpoint_idletime_global_own);
+			}
+		}
 		jb_controlpoint_model_setup();
 		float prisoners_count = 0;
 		FOR_EACH_PLAYER(e)
@@ -551,7 +598,7 @@ void(void) jb_controlpoint_think {
 		for (e = self.killindicator; e; e = e.killindicator) {
 			score_player_add(e.enemy, SP_SCORE, g_jb_score_jbreak + g_jb_score_jbreak_perplayer * prisoners_count);
 		}
-		jb_open(self.team, self.killindicator.enemy);
+		jb_open(self.killindicator.enemy.team, self.killindicator.enemy);
 	}
 }
 
@@ -561,6 +608,10 @@ void(void) jb_controlpoint_touch {
 		if (clienttype(other) == CLIENTTYPE_REAL)
 			centerprint(other, "Point already captured\n");
 
+		return;
+	}
+	if (self.wait) {
+		centerprint(other, "Point is not ready\n");
 		return;
 	}
 	if (other.classname != "player" || PLAYER_DEAD(other)) return;

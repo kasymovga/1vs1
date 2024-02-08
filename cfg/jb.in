@@ -1,3 +1,9 @@
+set g_jb_controlpoint_idletime 15 "For how long a controlpoint becomes inactive after it's been captured"
+set g_jb_controlpoint_idletime_global 10 "For how long all team's controlpoints become inactive after the opposite team successfully jailbreaks"
+set g_jb_controlpoint_idletime_global_own 0 "Same as idletime_global, but for the capturer's team"
+set g_jb_controlpoint_idletime_global_neutral 0 "Same as idletime_global, but for the neutral controlpoints"
+set g_jb_controlpoint_claim 1 "If enabled, controlpoints will change their team whenever they are triggered"
+set g_jb_controlpoint_claim_noneutral 1 "If enabled, neutral controlpoints will not be claimed"
 set g_jb_enddelay 10
 set g_jb_startdelay 5
 set g_jb_scorelimit 10
