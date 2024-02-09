@@ -168,6 +168,61 @@ void(vector sectorpos, vector sectorsize) rm_hud_get_sector_full_clip_area {
 	rm_hud_sector_clip_pos  = p;
 }
 
+void (vector pos, vector mySize) rm_hud_draw_ranking  {
+	if not(CVAR(rm_showrankings))
+		return;
+	
+	entity me;
+	if (view_spectatee_status > 0)
+		me = player_slots[view_spectatee_status - 1];
+	else
+		me = player_slots[player_localentnum - 1];
+
+	//pos_y -= sbar_info_pos;
+	entity pl, tm;
+#define SCOREPANEL_MAX_ENTRIES 6
+#define SCOREPANEL_ASPECTRATIO 2
+	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
+	if (team_mode)
+		entries = entries / 2;
+
+	const vector fontsize = '8 8 0'; //'1 1 0' * (mySize_y/entries);
+	vector score_color;
+	score_color = '1 1 1';
+	float name_size = mySize_x*0.75;
+	float spacing_size = mySize_x*0.04;
+	const float highlight_alpha = 0.2;
+	string s;
+	float j, i;
+	j = 0;
+	for (tm = team_list.sort_next; tm && j < 2; tm = tm.sort_next) {
+		if (tm.team == TEAM_COLOR_SPECTATOR)
+			continue;
+		
+		i = 0;
+		for (pl = player_list.sort_next; pl && i < entries; pl = pl.sort_next) {
+			if (pl.team != tm.team)
+				continue;
+
+			if (pl == me)
+				drawfill(pos, eX * mySize_x + eY * fontsize_y, '1 1 1', highlight_alpha * sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+			if (team_mode)
+				score_color = team_rgb(pl.team) * 0.8;
+
+			s = str_shorten_to_width(player_name(pl.sv_entnum), name_size / fontsize_x, str_width_colors);
+			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE) * fontsize_x), s, fontsize, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			pos_y += fontsize_y;
+			++i;
+		}
+		pos_y += 3;
+		++j;
+	}
+#undef SCOREPANEL_MAX_ENTRIES
+#undef SCOREPANEL_ASPECTRATIO
+}
+
 void(float prog, vector hud_sector_pos, vector hud_sector, vector c_sector, vector c_border, float a_sector, float a_border, vector c_sector_p, vector c_border_p, float a_sector_p, float a_border_p, float sector_alphamod, float hud_sector_drawflag, float transition) rm_hud_draw_progress_bar_sector {
 	float invert = 0;
 	float overcharge = 0;
@@ -955,6 +1010,7 @@ void(void) rm_hud_draw {
 	}
 	// draw scores and timer
 	sbar_score_draw(scoresector_pos, scoresector_size, 1);
+	rm_hud_draw_ranking(sbar_bottomright - '150 105 0', '100 100 0');
 	sbar_timer();
 	// draw strength/invincibility icon and timer
 	sbar_powerups_draw(SBAR_POWERUPS_POSITION_DEFAULT, 1);
