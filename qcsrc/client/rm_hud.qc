@@ -169,7 +169,7 @@ void(vector sectorpos, vector sectorsize) rm_hud_get_sector_full_clip_area {
 }
 
 void (vector pos, vector mySize) rm_hud_draw_ranking  {
-	if not(CVAR(rm_showrankings))
+	if (!CVAR(rm_showrankings) || !rm_active)
 		return;
 	
 	entity me;
