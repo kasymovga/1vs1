@@ -1046,6 +1046,7 @@ void(entity spot) player_spawn {
 	if ((self.debris = g_player_debris) != "")
 		debris_setup();
 
+	self.triggerhurttime = 0;
 	self.iscreature = TRUE;
 	self.delay = FALSE;
 	player_physics_setup(self);
