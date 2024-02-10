@@ -33,8 +33,10 @@ float SP_NADGET_FIELD;
 float SP_NADGET_SECONDARY_FIELD;
 float SP_VOIP_FIELD;
 float SP_VOIP_BIT;
+float SP_SCORE_FIELD;
 #define SP_SEPARATOR -100
 
 void(float ignore) score_info_read;
 void(float ignore) score_player_read;
 void(float ignore) score_team_read;
+void(void) score_init;

@@ -157,6 +157,7 @@ void(void) CSQC_Init {
 	registercvar("cl_rm_skin", "", CVAR_SAVE);
 	rm_skin_load(cvar_string("cl_rm_skin"));
 	translate_init();
+	score_init();
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)

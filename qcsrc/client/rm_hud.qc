@@ -730,6 +730,7 @@ void(void) rm_hud_draw {
 			scoresector_size = hud_sector;
 			sector_mod = '0 0 0';
 		}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
+		rm_hud_scoresorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
 		// post-scores
 		RM_HUD_LINE_SLICE({
 			hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
@@ -866,6 +867,7 @@ void(void) rm_hud_draw {
 			scoresector_size = hud_sector;
 			sector_mod = '0 0 0';
 		}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
+		rm_hud_scoresorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
 		// post-scores
 		RM_HUD_LINE_SLICE({
 			hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;

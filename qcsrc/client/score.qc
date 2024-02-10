@@ -1,15 +1,20 @@
-void(float ignore) score_info_read {
-	float i, j, t;
-	entity o;
-	self.classname = "ent_client_scores_info";
-	game_type = net_read_byte();
-	string s;
+void(void) score_init {
 	SP_CLIENTVERSION_FIELD = -1;
 	SP_COUNTRY_FIELD = -1;
 	SP_STATUS_FIELD = -1;
 	SP_NADGET_FIELD = -1;
 	SP_NADGET_SECONDARY_FIELD = -1;
 	SP_BESTWEP_FIELD = -1;
+	SP_SCORE_FIELD = -1;
+}
+
+void(float ignore) score_info_read {
+	float i, j, t;
+	entity o;
+	self.classname = "ent_client_scores_info";
+	game_type = net_read_byte();
+	string s;
+	score_init();
 	for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
 		s = strzone(net_read_string());
 		if (s == "country")
@@ -26,6 +31,8 @@ void(float ignore) score_info_read {
 			SP_NADGET_FIELD = i;
 		else if (s == "nade2")
 			SP_NADGET_SECONDARY_FIELD = i;
+		else if (s == "score")
+			SP_SCORE_FIELD = i;
 		else if (s == "team") {
 			SP_TEAM_BIT = 1;
 			SP_TEAM_FIELD = i;
@@ -153,6 +160,11 @@ void(float ignore) score_player_read {
 			else
 				o.(scores[i]) = net_read_char();
 
+			RM({
+				if (i == SP_SCORE_FIELD && self.sv_entnum == player_localentnum - 1) {
+					rm_score(o.scores[i]);
+				}
+			})
 			if (i == SP_STATUS_FIELD) {
 				if not(o.scores[i]) {
 					if (o.team == COLOR_TEAM1) team_alive_red++;

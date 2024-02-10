@@ -5,3 +5,4 @@ float rm_hud_game_info_enabled;
 void(void) rm_hud_flash_team_read;
 void(void) rm_hud_flash_read;
 vector rm_hud_dmgtakenorigin;
+vector rm_hud_scoresorigin;
