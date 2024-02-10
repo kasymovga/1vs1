@@ -93,7 +93,7 @@ void(void) score_player_remove {
 			if (e.entremove == score_player_remove)
 				return;
 
-		if (o.team > 0 && SP_STATUS_FIELD >= 0) {
+		if (SP_STATUS_FIELD >= 0 && o.gotscores && o.team > 0 && SP_STATUS_FIELD >= 0) {
 			if not(o.scores[SP_STATUS_FIELD]) {
 				if (o.team == COLOR_TEAM1) team_alive_red--;
 				else if (o.team == COLOR_TEAM2) team_alive_blue--;
