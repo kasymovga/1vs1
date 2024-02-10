@@ -1,6 +1,22 @@
 void(vector pos, vector gameinfo_size, float gameinfo_scale) ft_hud {
 	rm_hud_game_info_enabled = TRUE;
 	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '144 32 0', gameinfo_size, CVAR(sbar_gameinfo_background))
+	if (team_alive_update) {
+		team_alive_red = 0;
+		team_alive_blue = 0;
+		team_alive_yellow = 0;
+		team_alive_pink = 0;
+		entity o;
+		for (o = player_list.sort_next; o; o = o.sort_next)
+			if (o.gotscores)
+			if not(o.scores[SP_STATUS_FIELD]) {
+				if (o.team == COLOR_TEAM1) team_alive_red++;
+				else if (o.team == COLOR_TEAM2) team_alive_blue++;
+				else if (o.team == COLOR_TEAM3) team_alive_yellow++;
+				else if (o.team == COLOR_TEAM4) team_alive_pink++;
+			}
+		team_alive_update = 0;
+	}
 	if not(team_count_no_spectator) return;
 	RM({
 		float i = 0;

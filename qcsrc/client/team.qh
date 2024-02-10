@@ -2,4 +2,8 @@ float team_mode;
 const float TEAM_COLOR_SPECTATOR = 1337;
 .float team;
 .float team_size;
-
+float team_alive_red;
+float team_alive_blue;
+float team_alive_yellow;
+float team_alive_pink;
+float team_alive_update;

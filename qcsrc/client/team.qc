@@ -3,11 +3,6 @@ float team_count_no_spectator;
 entity team_list;
 entity team_slots[17];    // 17 teams (including "spectator team")
 
-float team_alive_red;
-float team_alive_blue;
-float team_alive_yellow;
-float team_alive_pink;
-
 float(float t, float d) team_index_def {
 	switch(t) {
 		case COLOR_TEAM1: return 1;

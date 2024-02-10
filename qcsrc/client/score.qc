@@ -66,18 +66,7 @@ void(float ignore) score_info_read {
 		teamscores_flags[i] = net_read_byte();
 	}
 	if (SP_STATUS_FIELD >= 0 && SP_TEAM_FIELD >= 0) {
-		team_alive_red = 0;
-		team_alive_blue = 0;
-		team_alive_yellow = 0;
-		team_alive_pink = 0;
-		for (o = player_list.sort_next; o; o = o.sort_next)
-			if (o.gotscores)
-			if not(o.scores[SP_STATUS_FIELD]) {
-				if (o.team == COLOR_TEAM1) team_alive_red++;
-				else if (o.team == COLOR_TEAM2) team_alive_blue++;
-				else if (o.team == COLOR_TEAM3) team_alive_yellow++;
-				else if (o.team == COLOR_TEAM4) team_alive_pink++;
-			}
+		team_alive_update = 1;
 	}
 	sbar_scores_init();
 	game_type_init();
@@ -93,13 +82,8 @@ void(void) score_player_remove {
 			if (e.entremove == score_player_remove)
 				return;
 
-		if (SP_STATUS_FIELD >= 0 && o.gotscores && o.team > 0 && SP_STATUS_FIELD >= 0) {
-			if not(o.scores[SP_STATUS_FIELD]) {
-				if (o.team == COLOR_TEAM1) team_alive_red--;
-				else if (o.team == COLOR_TEAM2) team_alive_blue--;
-				else if (o.team == COLOR_TEAM3) team_alive_yellow--;
-				else if (o.team == COLOR_TEAM4) team_alive_pink--;
-			}
+		if (SP_STATUS_FIELD >= 0 && SP_TEAM_FIELD >= 0) {
+			team_alive_update = 1;
 		}
 		team_set(o, -1);
 		player_remove(o);
@@ -148,12 +132,7 @@ void(float ignore) score_player_read {
 	for (i = 0, p = 1; i < n; ++i, p *= 2)
 		if (sf & p) {
 			if (i == SP_STATUS_FIELD) {
-				if not(o.scores[i]) {
-					if (o.team == COLOR_TEAM1) team_alive_red--;
-					else if (o.team == COLOR_TEAM2) team_alive_blue--;
-					else if (o.team == COLOR_TEAM3) team_alive_yellow--;
-					else if (o.team == COLOR_TEAM4) team_alive_pink--;
-				}
+				team_alive_update = 1;
 			}
 			if (lf & p)
 				o.(scores[i]) = net_read_int24();
@@ -165,14 +144,6 @@ void(float ignore) score_player_read {
 					rm_score(o.scores[i]);
 				}
 			})
-			if (i == SP_STATUS_FIELD) {
-				if not(o.scores[i]) {
-					if (o.team == COLOR_TEAM1) team_alive_red++;
-					else if (o.team == COLOR_TEAM2) team_alive_blue++;
-					else if (o.team == COLOR_TEAM3) team_alive_yellow++;
-					else if (o.team == COLOR_TEAM4) team_alive_pink++;
-				}
-			}
 		}
 	if (sf & SP_TEAM_BIT) {
 		float t = o.scores[SP_TEAM_FIELD];
@@ -180,22 +151,9 @@ void(float ignore) score_player_read {
 			t = TEAM_COLOR_SPECTATOR;
 
 		if (SP_STATUS_FIELD >= 0) {
-			if not(o.scores[SP_STATUS_FIELD]) {
-				if (o.team == COLOR_TEAM1) team_alive_red--;
-				else if (o.team == COLOR_TEAM2) team_alive_blue--;
-				else if (o.team == COLOR_TEAM3) team_alive_yellow--;
-				else if (o.team == COLOR_TEAM4) team_alive_pink--;
-			}
+			team_alive_update = 1;
 		}
 		team_set(o, t);
-		if (SP_STATUS_FIELD >= 0) {
-			if not(o.scores[SP_STATUS_FIELD]) {
-				if (o.team == COLOR_TEAM1) team_alive_red++;
-				else if (o.team == COLOR_TEAM2) team_alive_blue++;
-				else if (o.team == COLOR_TEAM3) team_alive_yellow++;
-				else if (o.team == COLOR_TEAM4) team_alive_pink++;
-			}
-		}
 	}
 	if (o.sort_prev)
 		sbar_scores_player_position_update(o); // if not registered, we cannot do this yet!
