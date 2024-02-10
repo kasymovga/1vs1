@@ -1,9 +1,7 @@
 void(void) rm_init {
-	rm_active = cvar("g_rm");
+	rm_active = cvar("rm");
 	if not(rm_active) return;
 	print("RM mode active\n");
-	rm_flak = cvar("g_rm_flak");
-	rm_pryaxe = cvar("g_rm_pryaxe");
 	Buffs_Init();
 	dlc_require("rm_ui");
 }

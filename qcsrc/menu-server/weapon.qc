@@ -59,7 +59,7 @@ void(void) weapon_register_weapons {
 	WEAPON_REGISTER(WEAPON_CAMPINGRIFLE, weapon_campingrifle, IT_NAILS, 3, 1, 0, BOT_PICKUP_RATING_MID, "campingrifle", "campingrifle", "Rifle");
 	WEAPON_REGISTER(WEAPON_FIREBALL, weapon_fireball, IT_ROCKETS, 9, 1, 0, BOT_PICKUP_RATING_MID, "fireball", "fireball", "Fireball");
 	#ifdef SVQC
-	if (rm_active && rm_flak)
+	if (rm_active)
 		WEAPON_REGISTER(WEAPON_SUPERSHOTGUN, weapon_flak, IT_SHELLS, 8, 1, 0, BOT_PICKUP_RATING_MID, "rtzflak", "flak", "Flak Cannon");
 	else
 	#endif
@@ -67,7 +67,7 @@ void(void) weapon_register_weapons {
 
 	WEAPON_REGISTER(WEAPON_ZAPPER, weapon_zapper, IT_CELLS, 5, 1, 0, BOT_PICKUP_RATING_MID, "zapper", "zapper", "Zapper");
 	#ifdef SVQC
-	if (rm_active && rm_pryaxe)
+	if (rm_active)
 		WEAPON_REGISTER(WEAPON_MELEE, weapon_pryaxe, 0, 1, 1, 0, BOT_PICKUP_RATING_MID, "pryaxe2", "pryaxe", "PryAxe");
 	else
 	#endif

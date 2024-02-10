@@ -1,5 +1,3 @@
-set g_rm 0
-set g_rm_pryaxe 0
-set g_rm_flak 0
+set rm 0
 set sv_rm_gametypevote ""
 set sv_rm_gametypevote_timeout 10

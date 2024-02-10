@@ -28,7 +28,7 @@ set cra_g_balance_grapplehook_speed_fly 1000
 set cra_g_shootfromeye 1
 set cra_g_footsteps 1
 set cra_g_buttons_hookuse_swap 1
-set cra_g_runes 0
+set cra_g_runes 1
 set cra_g_runes_count 7
 set cra_g_runes_hacker 0
 set cra_g_runes_carried_runes_max 2
@@ -68,15 +68,12 @@ set cra_g_spawnreplace_item_nails item_health_small
 set cra_g_spawnreplace_item_rockets item_armor_small
 set cra_g_spawnreplace_item_shells item_armor_small
 set cra_g_nadgets_show_in_sbar 1
-set cra_g_rm 1
-set cra_g_rm_pryaxe 1
-set cra_g_rm_flak 1
 set cra_g_projectile_use_clipgroup 0
 set cra_two_weapons_profile "Camping Rifle Arena with secondary weapon"
 set cra_two_weapons_inherit cra
 set cra_two_weapons_g_twoweapons campingrifle
 set cra_two_weapons_g_balance_weaponswitchdelay 0.05
-set cra_two_weapons_g_start_weapon_selectable "uzi zapper flak pryaxe"
+set cra_two_weapons_g_start_weapon_selectable "uzi zapper flak pryaxe supershotgun chainsaw"
 set cra_two_weapons_g_balance_zapper_swap_buttons 1
 set cra_two_weapons_g_balance_uzi_swap_buttons 1
 set cra_two_weapons_g_balance_uzi_magazinecapacity 30

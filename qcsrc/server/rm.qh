@@ -3,6 +3,3 @@ entity rm_findfilter(entity e, float(entity) filter);
 float(entity targ, entity inflictor, entity healer, float heal, float aheal, float hlimit, float alimit, float healtype, float pauserot, float pausearot, vector hitloc, vector force) rm_heal;
 float(float bits, float k, float error_return) rm_randombits;
 void(entity e, entity own) rm_effect_heal_emitter;
-
-float rm_pryaxe;
-float rm_flak;
