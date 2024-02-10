@@ -27,7 +27,6 @@ void(float n) rm_score {
 	entity e = spawn();
 	e.alpha = 1;
 	e.cnt = n - rm_score_last;
-	print("rm_score ", ftos(e.cnt), "\n");
 	e.draw2dflag = 1;
 	e.draw2d = rm_score_draw;
 	e.origin = rm_hud_scoresorigin;
