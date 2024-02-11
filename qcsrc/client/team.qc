@@ -3,6 +3,32 @@ float team_count_no_spectator;
 entity team_list;
 entity team_slots[17];    // 17 teams (including "spectator team")
 
+entity team_alive_update_ent;
+void(void) team_alive_update_draw {
+	team_alive_red = 0;
+	team_alive_blue = 0;
+	team_alive_yellow = 0;
+	team_alive_pink = 0;
+	entity o;
+	var .float score_status = scores[SP_STATUS_FIELD];
+	for (o = player_list.sort_next; o; o = o.sort_next)
+		if (o.team > 0)
+		if not(o.score_status) {
+			if (o.team == COLOR_TEAM1) team_alive_red++;
+			else if (o.team == COLOR_TEAM2) team_alive_blue++;
+			else if (o.team == COLOR_TEAM3) team_alive_yellow++;
+			else if (o.team == COLOR_TEAM4) team_alive_pink++;
+		}
+	remove(self);
+	team_alive_update_ent = NULL;
+}
+
+void(void) team_alive_update {
+	if (team_alive_update_ent) return;
+	team_alive_update_ent = spawn();
+	team_alive_update_ent.draw = team_alive_update_draw;
+}
+
 float(float t, float d) team_index_def {
 	switch(t) {
 		case COLOR_TEAM1: return 1;
@@ -12,7 +38,6 @@ float(float t, float d) team_index_def {
 	}
 	return d;
 }
-
 
 vector(float color) team_rgb {
 	switch(color)

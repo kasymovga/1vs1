@@ -6,4 +6,3 @@ float team_alive_red;
 float team_alive_blue;
 float team_alive_yellow;
 float team_alive_pink;
-float team_alive_update;

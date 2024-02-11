@@ -66,7 +66,7 @@ void(float ignore) score_info_read {
 		teamscores_flags[i] = net_read_byte();
 	}
 	if (SP_STATUS_FIELD >= 0 && SP_TEAM_FIELD >= 0) {
-		team_alive_update = 1;
+		team_alive_update();
 	}
 	sbar_scores_init();
 	game_type_init();
@@ -83,7 +83,7 @@ void(void) score_player_remove {
 				return;
 
 		if (SP_STATUS_FIELD >= 0 && SP_TEAM_FIELD >= 0) {
-			team_alive_update = 1;
+			team_alive_update();
 		}
 		team_set(o, -1);
 		player_remove(o);
@@ -132,7 +132,7 @@ void(float ignore) score_player_read {
 	for (i = 0, p = 1; i < n; ++i, p *= 2)
 		if (sf & p) {
 			if (i == SP_STATUS_FIELD) {
-				team_alive_update = 1;
+				team_alive_update();
 			}
 			if (lf & p)
 				o.(scores[i]) = net_read_int24();
@@ -151,7 +151,7 @@ void(float ignore) score_player_read {
 			t = TEAM_COLOR_SPECTATOR;
 
 		if (SP_STATUS_FIELD >= 0) {
-			team_alive_update = 1;
+			team_alive_update();
 		}
 		team_set(o, t);
 	}
