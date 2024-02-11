@@ -2,6 +2,8 @@ void(string f) player_sound_precache;
 void() player_sound_update;
 void(string type, string message) player_sound_voice_message;
 void(entity to, entity from) player_sound_copy;
+void(entity e, float chan, string s, float vol, float attn) player_sound;
+void(entity e, float chan) player_sound_stop;
 void(void) player_sound_init;
 #define PLAYER_SOUND_ALL \
 		PLAYER_SOUND(death) \

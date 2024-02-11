@@ -1245,24 +1245,6 @@ entity(entity pl) player_entity {
 	return pl;
 }
 
-void(entity e, float chan) player_sound_stop {
-	FOR_EACH_REALCLIENT(msg_entity) {
-		if (msg_entity == e)
-			sound_stop_to(MSG_ONE, e, chan);
-		else
-			sound_stop_to(MSG_ONE, e.body.body, chan);
-	}
-}
-
-void(entity e, float chan, string s, float vol, float attn) player_sound {
-	FOR_EACH_REALCLIENT(msg_entity) {
-		if (msg_entity == e)
-			sound_to_at(MSG_ONE, e, e.origin, chan, s, vol, attn);
-		else
-			sound_to_at(MSG_ONE, e.body.body, e.origin, chan, s, vol, attn);
-	}
-}
-
 float player_init_done;
 void() player_init {
 	player_sound_init();
