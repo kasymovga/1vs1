@@ -8,11 +8,6 @@ enum {
 
 void nadget_Waypoint_Update(void) {
 	string wpname = "";
-#if 0
-    string hgname = nadget_TypeToName(self.hg_type);
-    if(fexists(pickfile("models/sprites/pointers/" + hgname + "_" + wpname, "tga", "jpg", "png", NULL)))
-        wpname = hgname + "_" + wpname;
-#endif
 #define POINTER_PICK(X, Y) \
 	case NADGET_##X: \
 		switch (self.hg_wp_state) { \
@@ -46,6 +41,7 @@ void nadget_Waypoint_Update(void) {
 		case WPCOLOR_CYAN: wpname = "pointers/cyan"; break;
         }
 	}
+#undef POINTER_PICK
     if(!self.hg_waypoint) {
         float ownerhack = (self.hg_type == NADGET_SENTRY);
         float teamwp = (team_mode && GRENVAR(self.hg_type, "detect_enemies_teamwide"));
