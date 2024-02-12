@@ -6,16 +6,46 @@ enum {
     WPCOLOR_ORANGE,
 };
 
-void nadget_Waypoint_Update(string wpname) {
-    string hgname = nadget_TypeToName(self.hg_type);
-
+void nadget_Waypoint_Update(void) {
+	string wpname = "";
 #if 0
+    string hgname = nadget_TypeToName(self.hg_type);
     if(fexists(pickfile("models/sprites/pointers/" + hgname + "_" + wpname, "tga", "jpg", "png", NULL)))
         wpname = hgname + "_" + wpname;
 #endif
-
-    //wpname = strcat("pointers/", wpname);
-
+#define POINTER_PICK(X, Y) \
+	case NADGET_##X: \
+		switch (self.hg_wp_state) { \
+		case WPCOLOR_RED: \
+			wpname = "pointers/" Y "_red";\
+			break; \
+		case WPCOLOR_ORANGE: \
+			wpname = "pointers/" Y "_orange";\
+			break; \
+		case WPCOLOR_CYAN: \
+			wpname = "pointers/" Y "_cyan";\
+			break; \
+		default: \
+			wpname = "pointers/" Y;\
+			break; \
+		} \
+		break;
+	switch (self.hg_type) {
+	POINTER_PICK(LASER, "laser");
+	POINTER_PICK(LINKER, "linker");
+	POINTER_PICK(NAPALM, "napalm");
+	POINTER_PICK(PLASMA, "plasma");
+	POINTER_PICK(RAZE, "raze");
+	POINTER_PICK(REMOTE, "remote");
+	POINTER_PICK(SENTRY, "sentry");
+	POINTER_PICK(TRANSLOC, "transloc");
+	default:
+		switch (self.hg_wp_state) {
+		case WPCOLOR_RED: wpname = "pointers/red"; break;
+		case WPCOLOR_ORANGE: wpname = "pointers/orange"; break;
+		case WPCOLOR_CYAN: wpname = "pointers/cyan"; break;
+        }
+	}
     if(!self.hg_waypoint) {
         float ownerhack = (self.hg_type == NADGET_SENTRY);
         float teamwp = (team_mode && GRENVAR(self.hg_type, "detect_enemies_teamwide"));
@@ -52,14 +82,7 @@ void nadget_Waypoint_Update(string wpname) {
 void nadget_Waypoint_SetColor(float wpcolor) {
     if(self.hg_wp_state != wpcolor) {
         self.hg_wp_state = wpcolor;
-		string wpcolor_string;
-		switch(wpcolor) {
-			case WPCOLOR_RED:    wpcolor_string = "pointers/red"; break;
-			case WPCOLOR_ORANGE: wpcolor_string = "pointers/orange"; break;
-			case WPCOLOR_CYAN:   wpcolor_string = "pointers/cyan"; break;
-			default:             wpcolor_string = "";
-        }
-        nadget_Waypoint_Update(wpcolor_string);
+        nadget_Waypoint_Update();
     }
 }
 
