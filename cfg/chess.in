@@ -11,5 +11,6 @@ set chess_g_start_weapon_laser 0
 set chess_g_start_weapon_shotgun 0
 set chess_g_maxplayers 2
 set chess_g_rank_type "chess"
+set chess_g_score_bestweapon 0
 alias sv_hook_gamestart_chess
 alias cl_hook_gamestart_chess
