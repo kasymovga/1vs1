@@ -318,12 +318,12 @@ float(entity attacker, entity inflictor, float deathtype) jb_player_death_handle
 
 	player_clear(TRUE);
 	RM({
-		//announce(self, "jailbreak/imprison.wav"); //TODO
 		string s = "";
 		if (attacker && attacker != self)
 			s = strcat("You've been imprisoned by ^7", attacker.netname);
 
 		rm_bigprint_spec(self, "You're in a jail, prisoner!", s, 10);
+		announce(self, "jailbreak/imprison.wav", "");
 	})
 	player_spawn(jb_client_put_spawn_point());
 	return TRUE;
@@ -352,6 +352,19 @@ float(entity attacker, entity targ, float f) jb_score_give_frag_mod {
 void(void) jb_init_delayed {
 	// must be delayed for dlc packages
 	Napalm_Init();
+	RM_ELSE({
+		dlc_require("rm_jb");
+		precache_model("models/domination/dom_unclaimed_baseless.md3");
+		precache_model("models/domination/dom_red_baseless.md3");
+		precache_model("models/domination/dom_blue_baseless.md3");
+		dlc_precache_sound("jailbreak/imprison.wav");
+		dlc_precache_sound("jailbreak/jb_blue.wav");
+		dlc_precache_sound("jailbreak/jb_red.wav");
+	}, {
+		precache_model("models/domination/dom_unclaimed.md3");
+		precache_model("models/domination/dom_red.md3");
+		precache_model("models/domination/dom_blue.md3");
+	})
 }
 
 void(void) jb_init {
@@ -368,9 +381,6 @@ void(void) jb_init {
 	jb_player_can_fire_next = plugin_chain_player_can_fire;
 	plugin_chain_player_can_fire = jb_player_can_fire;
 	plugin_havocbot_role_choose = jb_role_choose;
-	precache_model("models/domination/dom_unclaimed.md3");
-	precache_model("models/domination/dom_red.md3");
-	precache_model("models/domination/dom_blue.md3");
 	precache_sound("kh/alarm.wav");
 	precache_sound("weapons/electro_bounce.wav");
 	precache_sound("weapons/grenade_bounce1");
@@ -408,11 +418,13 @@ void(float t, entity by) jb_open {
 	string s = "";
 	if (t == COLOR_TEAM1) {
 		game_status_set(strcat("Jailbreak! The ^1REDS^7 are escaping!\nControl point captured by ", by.netname), 2);
+		sound_play2all("jailbreak/jb_red.wav");
 		jb_open_red = TRUE;
 		s = "jail_red";
 	}
 	if (t == COLOR_TEAM2) {
 		game_status_set(strcat("Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by ", by.netname), 2);
+		sound_play2all("jailbreak/jb_blue.wav");
 		jb_open_blue = TRUE;
 		s = "jail_blue";
 	}
@@ -463,13 +475,25 @@ void(void) jb_spawn {
 void(void) jb_controlpoint_model_setup {
 	switch (self.team) {
 	case COLOR_TEAM1:
-		setmodel(self, "models/domination/dom_red.md3");
+		RM_ELSE({
+			setmodel(self, "models/domination/dom_red_baseless.md3");
+		}, {
+			setmodel(self, "models/domination/dom_red.md3");
+		})
 		break;
 	case COLOR_TEAM2:
-		setmodel(self, "models/domination/dom_blue.md3");
+		RM_ELSE({
+			setmodel(self, "models/domination/dom_blue_baseless.md3");
+		}, {
+			setmodel(self, "models/domination/dom_blue.md3");
+		})
 		break;
 	default:
-		setmodel(self, "models/domination/dom_unclaimed.md3");
+		RM_ELSE({
+			setmodel(self, "models/domination/dom_unclaimed_baseless.md3");
+		}, {
+			setmodel(self, "models/domination/dom_unclaimed.md3");
+		})
 		self.team = 0;
 	}
 	switch(self.team) {
