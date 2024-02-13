@@ -436,7 +436,7 @@ vector(float h, float a, float armorblock) rm_hud_healtharmor_maxdamage {
 }
 
 void(vector pos, float hgtype, float hgammo, float regen, float regenrate, float regenmax, float regenpaused, float hgcd, float hgcdmax) rm_hud_draw_nadget_regen_sector {
-	string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
+	string hgicon = nadget_TypeToIcon(hgtype, TRUE, (rm_active && (getstati(STAT_RUNES) & BUFF_ADEPT)));
 	vector hgcolor = '1 1 1' - '0.3 0.8 0.8' * regenpaused;
 	vector hgsize = '32 32 0';
 	if (hgcd > 0) {
