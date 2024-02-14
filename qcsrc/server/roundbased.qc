@@ -12,6 +12,7 @@ float roundbased_warmup;
 float roundbased_active;
 float roundbased_restart_time;
 float roundbased_result_not_announced;
+float roundbased_awaiting_players;
 string roundbased_winner_message;
 
 var float(entity plr, float wep) roundbased_player_can_fire_next;
@@ -69,11 +70,19 @@ void(void) roundbased_world_frame_start {
 				break;
 			}
 		}
+		if (roundbased_team_check < 0 && roundbased_awaiting_players) { //awaiting players finished
+			roundbased_awaiting_players = 0;
+			RM({
+				sound_play2all("announcer/robotic/prepareforbattle.wav");
+				rm_bigprint_all("^3Game will start soon!", "", roundbased_enddelay);
+			})
+		}
 	}
-	if (roundbased_team_check >= 0) {
+	if (roundbased_team_check >= 0) { //less than 2 teams have players
 		game_status_set("^2Awaiting players...\n", 1);
 		roundbased_round_start_with_winner(0, "");
 		roundbased_need_check_teams = -1;
+		roundbased_awaiting_players = 1;
 		return;
 	}
 	if not(roundbased_active) {
@@ -194,9 +203,9 @@ void(void) roundbased_world_frame_start {
 						rm_hud_flash_teamcolor_default_spec(plr);
 			}
 			if (roundbased_winner_team > 0)
-				rm_bigprint_all_player_spec(strcat(team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " team ^7Scores!"), "All opponents are down", 5);
+				rm_bigprint_all(strcat(team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " team ^7Scores!"), "All opponents are down", 5);
 			else
-				rm_bigprint_all_player_spec("Round Draw!", "", 5);
+				rm_bigprint_all("Round Draw!", "", 5);
 		})
 	}
 }

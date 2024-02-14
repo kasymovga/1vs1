@@ -349,6 +349,12 @@ float(entity attacker, entity targ, float f) jb_score_give_frag_mod {
 	return 0;
 }
 
+var void(float killed) jb_player_clear_next;
+void jb_player_clear(float killed) {
+	roundbased_check_teams();
+	jb_player_clear_next(killed);
+}
+
 void(void) jb_init_delayed {
 	// must be delayed for dlc packages
 	Napalm_Init();
@@ -381,6 +387,8 @@ void(void) jb_init {
 	jb_player_can_fire_next = plugin_chain_player_can_fire;
 	plugin_chain_player_can_fire = jb_player_can_fire;
 	plugin_havocbot_role_choose = jb_role_choose;
+	jb_player_clear_next = plugin_chain_player_clear;
+	plugin_chain_player_clear = jb_player_clear;
 	precache_sound("kh/alarm.wav");
 	precache_sound("weapons/electro_bounce.wav");
 	precache_sound("weapons/grenade_bounce1");
