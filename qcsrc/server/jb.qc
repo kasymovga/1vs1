@@ -601,8 +601,13 @@ void(void) jb_controlpoint_think {
 	if (self.state >= 1) {
 		self.state = 1;
 	}
+	entity oldself;
 	for (e = self.killindicator; e; e = e.killindicator) {
 		progressbar_set(self.killindicator.sprite, self.state);
+		oldself = self;
+		self = e;
+		plugin_chain_WeaponPrepareAttack(FALSE, FALSE); //for trigger cloak and stealth
+		self = oldself;
 		if (clienttype(e.enemy) == CLIENTTYPE_BOT) bot_stay(e.enemy, 0.1);
 	}
 	if (self.state == 1) {
