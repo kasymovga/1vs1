@@ -10,7 +10,8 @@ void(float ratingscale, vector org, float sradius) jb_role_goalrating_controlpoi
 void(float ratingscale, vector org, float sradius) jb_role_goalrating_enemyplayers {
 	entity head;
 	float t, distance;
-	entity e;
+	entity e, e2;
+	vector o;
 	if (bot_nofire)
 		return;
 
@@ -30,9 +31,10 @@ void(float ratingscale, vector org, float sradius) jb_role_goalrating_enemyplaye
 			if ((e.flags & FL_INWATER) || (e.flags & FL_PARTIALGROUND))
 				continue;
 
+			o = ENTITY_CENTER(e);
 			// not falling
 			if not(e.flags & FL_ONGROUND) {
-				trace_line(e.origin, e.origin + '0 0 -1500', TRUE, world);
+				trace_line(o, o + '0 0 -1500', TRUE, world);
 				t = pointcontents(trace_endpos + '0 0 1');
 				if (t != CONTENT_SOLID)
 				if ((t == CONTENT_WATER) || (t == CONTENT_SLIME) || (t == CONTENT_LAVA))
@@ -41,6 +43,10 @@ void(float ratingscale, vector org, float sradius) jb_role_goalrating_enemyplaye
 				if (trigger_tracebox_hits_hurt(e.origin, e.mins, e.maxs, trace_endpos))
 					continue;
 			}
+			for (e2 = findradius(o, 1); e2; e2 = e2.chain) {
+				if (e2.classname == "jb_room") break;
+			};
+			if (e2) continue;
 			t = (self.health + self.armorvalue ) / (head.health + head.armorvalue );
 			navigation_routerating(e, t * ratingscale, 2000);
 		}
@@ -60,12 +66,13 @@ void() jb_role {
 		navigation_goalrating_start();
 		entity head;
 		float somebodyjailed = FALSE;
-		FOR_EACH_PLAYER (head) {
-			if (head.team == self.team && JB_PLAYER_JAILED(head)) {
-				somebodyjailed = TRUE;
-				break;
+		if ((self.team == COLOR_TEAM1 && !jb_open_red) || (self.team == COLOR_TEAM2 && !jb_open_blue))
+			FOR_EACH_PLAYER (head) {
+				if (head.team == self.team && JB_PLAYER_JAILED(head)) {
+					somebodyjailed = TRUE;
+					break;
+				}
 			}
-		}
 		if (somebodyjailed) {
 			jb_role_goalrating_controlpoints(10000, self.origin, 15000);
 		} else {
