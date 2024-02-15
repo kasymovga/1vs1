@@ -192,9 +192,6 @@ void() spectator_to_player {
 			if (self.classname == "player") {
 				bprint ("^4", self.netname, "^4 is playing now\n");
 			}
-			if not(g_campaign)
-				centerprint(self,""); // clear MOTD
-
 			return;
 		} else {
 			msg_entity = self;
