@@ -20,6 +20,7 @@ float teamscores_flags[SCORE_FILEDS_MAX];
 #define SP_BESTWEP -12
 #define SP_NADGET -13
 #define SP_NADGET_SECONDARY -14
+#define SP_PLAYTIME -15
 float SP_COUNTRY_FIELD;
 float SP_TEAM_FIELD;
 float SP_TEAM_BIT;
@@ -34,6 +35,7 @@ float SP_NADGET_SECONDARY_FIELD;
 float SP_VOIP_FIELD;
 float SP_VOIP_BIT;
 float SP_SCORE_FIELD;
+float SP_PLAYTIME_FIELD;
 #define SP_SEPARATOR -100
 
 void(float ignore) score_info_read;

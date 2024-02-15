@@ -6,6 +6,7 @@ void(void) score_init {
 	SP_NADGET_SECONDARY_FIELD = -1;
 	SP_BESTWEP_FIELD = -1;
 	SP_SCORE_FIELD = -1;
+	SP_PLAYTIME_FIELD = -1;
 }
 
 void(float ignore) score_info_read {
@@ -33,6 +34,8 @@ void(float ignore) score_info_read {
 			SP_NADGET_SECONDARY_FIELD = i;
 		else if (s == "score")
 			SP_SCORE_FIELD = i;
+		else if (s == "playtime")
+			SP_PLAYTIME_FIELD = i;
 		else if (s == "team") {
 			SP_TEAM_BIT = 1;
 			SP_TEAM_FIELD = i;

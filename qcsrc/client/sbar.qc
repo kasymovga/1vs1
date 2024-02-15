@@ -563,6 +563,7 @@ string sbar_scoreboard_default_layout =
 		"?caps ?pickups ?fckills ?returns "
 		"?caps ?pushes ?destroyed "
 		"?laps ?time ?fastest "
+		"?playtime "
 		"?faults ?goals "
 		"?revs -race,nexball/score ?lives";
 
@@ -639,6 +640,8 @@ void(float argc) sbar_field_set {
 			have_name = 1;
 		} else if (str == "status" && SP_STATUS_FIELD >= 0) {
 			sbar_field[sbar_num_fields] = SP_STATUS;
+		} else if (str == "playtime" && SP_PLAYTIME_FIELD >= 0) {
+			sbar_field[sbar_num_fields] = SP_PLAYTIME;
 		} else if (str == "|") {
 			sbar_field[sbar_num_fields] = SP_SEPARATOR;
 			have_separator = 1;
@@ -833,6 +836,14 @@ string(entity pl, float field) sbar_field_get {
 			sbar_field_rgb = '0.25 0.25 0.25';
 			return "\x15";
 		}
+	case SP_PLAYTIME:
+		f = server_time - pl.(scores[SP_PLAYTIME_FIELD]);
+		num = floor(f / 60);
+		f = floor(f - num * 60);
+		if (f > 9)
+			return strcat(ftos(num), ":", ftos(f));
+		else
+			return strcat(ftos(num), ":0", ftos(f));
 	case SP_FRAGS:
 		f = pl.(scores[SP_KILLS_FIELD]);
 		f -= pl.(scores[SP_SUICIDES_FIELD]);

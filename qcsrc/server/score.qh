@@ -129,4 +129,5 @@ float SP_SUICIDES;
 float SP_SCORE;
 float SP_STATUS;
 float SP_TEAM;
+float SP_PLAYTIME;
 float ST_SCORE;

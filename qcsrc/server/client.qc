@@ -449,6 +449,7 @@ void(void) client_connect { //called by engine
 	if not(self.scorekeeper.rank)
 		self.scorekeeper.rank = 1000;
 
+	score_player_set(self, SP_PLAYTIME, time);
 	score_touch(self);
 	self.play_time = 0;
 	bot_clientconnect();
