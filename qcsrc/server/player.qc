@@ -796,11 +796,6 @@ void() player_regen {
 }
 
 void() player_think {
-	if (self.deadflag == DEAD_NO)
-	if not(map_finished)
-	if not(warmup_active)
-		self.play_time = self.play_time + frametime;
-
 	//don't allow the player to turn around while game is paused!
 	if (timeout_status == 2) {
 		self.v_angle = self.lastV_angle;
@@ -809,6 +804,12 @@ void() player_think {
 	}
 	plugin_chain_player_think();
 	if (frametime) {
+		if (self.deadflag == DEAD_NO)
+		if not(map_finished)
+		if not(warmup_active)
+		if (time > map_starttime)
+			self.play_time = self.play_time + frametime;
+
 		player_effects();
 	}
 	if (PLAYER_REALLY_DEAD(self)) {

@@ -8,6 +8,7 @@ float sbar_alpha_bg;
 float sbar_border_thickness;
 vector sbar_team_rgb;
 float sbar_scoreboard_fade;
+float sbar_starttime;
 
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
@@ -837,7 +838,7 @@ string(entity pl, float field) sbar_field_get {
 			return "\x15";
 		}
 	case SP_PLAYTIME:
-		f = server_time - pl.(scores[SP_PLAYTIME_FIELD]);
+		f = max(0, server_time - max(sbar_starttime, pl.(scores[SP_PLAYTIME_FIELD])));
 		num = floor(f / 60);
 		f = floor(f - num * 60);
 		if (f > 9)
@@ -1515,7 +1516,6 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_rac
 
 float sbar_timelimit;
 float sbar_timeleft;
-float sbar_starttime;
 void(void) sbar_timer {
 	float elapsedTime, minutes, seconds, hideminutes;
 	hideminutes = FALSE;
