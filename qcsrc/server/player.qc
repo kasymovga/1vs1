@@ -804,12 +804,6 @@ void() player_think {
 	}
 	plugin_chain_player_think();
 	if (frametime) {
-		if (self.deadflag == DEAD_NO)
-		if not(map_finished)
-		if not(warmup_active)
-		if (time > map_starttime)
-			self.play_time = self.play_time + frametime;
-
 		player_effects();
 	}
 	if (PLAYER_REALLY_DEAD(self)) {

@@ -449,9 +449,9 @@ void(void) client_connect { //called by engine
 	if not(self.scorekeeper.rank)
 		self.scorekeeper.rank = 1000;
 
+	self.play_time = 0;
 	score_player_set(self, SP_PLAYTIME, time);
 	score_touch(self);
-	self.play_time = 0;
 	bot_clientconnect();
 	if (g_campaign) {
 		self.classname = "player";
@@ -611,6 +611,15 @@ void(void) client_pre_think { //called by engine
 
 	if (map_intermission_running) {
 		return;
+	}
+	if (frametime && (self.classname == "player" || self.team > 0)) {
+		if (self.deadflag == DEAD_NO)
+		if not(map_finished)
+		if not(warmup_active)
+		if (time > map_starttime)
+			self.play_time = self.play_time + frametime;
+
+		player_effects();
 	}
 	if (self.classname == "player") {
 		player_think();
