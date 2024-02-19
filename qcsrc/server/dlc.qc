@@ -509,7 +509,6 @@ void(void) dlc_init {
 	if not(file_exists("effectinfo.txt")) { //check presence of data.pk3
 		dlc_require_server_only("base-gfx");
 	}
-	cvar_profile_dlc_load();
 }
 
 void(void) dlc_finish {

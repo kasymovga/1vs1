@@ -1,5 +1,5 @@
 set cra_profile "Camping Rifle Arena"
-set cra_dlc rm_skins
+set cra_dlc ""
 set cra_ca_g_buffs 0
 set cra_g_rank_type "cra"
 set cra_g_start_weapon_laser 0

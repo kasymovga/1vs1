@@ -276,6 +276,7 @@ void(string profile) cvar_init {
 	}
 	cvar = cvar_ext;
 	cvar_string = cvar_string_ext;
+	cvar_profile_dlc_load();
 }
 
 void(void) cvar_preinit {

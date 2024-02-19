@@ -34,7 +34,12 @@ void fillNexuizRMSettingsDialog(entity me) {
 		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, _("Crosshair ring opacity:")));
 		me.TD(me, 1, 3, e = makeNexuizSlider(0, 1, 0.05, "rm_hud_crosshair_ring_alpha"));
 	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, _("Crosshair ring opacity:")));
+		me.TD(me, 1, 3, e = makeNexuizSlider(0, 1, 0.05, "rm_hud_crosshair_ring_alpha"));
 	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(1, "rm_notimer", _("\"time\" column in scoreboard")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Close"), '0 0 0'));

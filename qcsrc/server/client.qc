@@ -450,7 +450,7 @@ void(void) client_connect { //called by engine
 		self.scorekeeper.rank = 1000;
 
 	self.play_time = 0;
-	score_player_set(self, SP_PLAYTIME, time);
+	RM(score_player_set(self, SP_PLAYTIME, time);)
 	score_touch(self);
 	bot_clientconnect();
 	if (g_campaign) {

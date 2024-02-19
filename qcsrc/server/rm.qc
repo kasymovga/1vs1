@@ -4,6 +4,7 @@ void(void) rm_init {
 	print("RM mode active\n");
 	Buffs_Init();
 	dlc_require("rm_ui");
+	dlc_require("rm_skins");
 }
 
 entity rm_findfilter(entity e, float(entity) filter) {

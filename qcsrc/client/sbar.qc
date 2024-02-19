@@ -642,6 +642,7 @@ void(float argc) sbar_field_set {
 		} else if (str == "status" && SP_STATUS_FIELD >= 0) {
 			sbar_field[sbar_num_fields] = SP_STATUS;
 		} else if (str == "playtime" && SP_PLAYTIME_FIELD >= 0) {
+			if (CVAR(rm_notimer)) continue;
 			sbar_field[sbar_num_fields] = SP_PLAYTIME;
 		} else if (str == "|") {
 			sbar_field[sbar_num_fields] = SP_SEPARATOR;

@@ -879,7 +879,7 @@ void(float sprio, float stprio, float score_enabled) score_basics {
 	if (score_enabled)
 		SP_SCORE = score_register("score", sprio);
 
-	SP_PLAYTIME = score_register("playtime", 0);
+	RM(SP_PLAYTIME = score_register("playtime", 0);)
 }
 
 void() score_basics_end {
