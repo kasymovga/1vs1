@@ -65,7 +65,7 @@ float g_buffs_count;
 typedef void(entity, entity) meodp_death_f;
 .meodp_death_f meodp_death;
 
-void Buffs_Init(void);
+void(void) rm_buffs_init;
 void Buffs_Init_Delayed(void);
 void Buffs_ClientFrame(void);
 void Buffs_ArcDamage(entity, entity, float, float);

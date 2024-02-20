@@ -269,7 +269,7 @@ void(entity e) rm_buffs_spectator_copy {
 	rm_buffs_spectator_copy_next(e);
 }
 
-void Buffs_Init(void) {
+void(void) rm_buffs_init {
     float i, b;
     if not(rm_active) return;
     CVAR_CACHE(g_buffs);
