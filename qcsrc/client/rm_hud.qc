@@ -450,6 +450,36 @@ void(vector pos, float hgtype, float hgammo, float regen, float regenrate, float
 		drawpic(pos, hgicon, hgsize, hgcolor, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	}
 	sbar_draw_num(pos + '26 5 0', hgammo, 3, 0, 24, '1 1 1' - '0 1 1' * (!hgammo), 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	if (CVAR(rm_shownadgetregen)) {
+		string hgtxt;
+		float rtime;
+		if (regenrate) {
+			rtime = regen * regenmax / regenrate;
+			hgtxt = ftos(rtime);
+			float dotpos = strstrofs(hgtxt, ".", 0);
+			if (dotpos >= 0)
+				hgtxt = substring(hgtxt, 0, dotpos + 2);
+			else
+				hgtxt = strcat(hgtxt, ".0");
+		} else {
+			float rpercent = 1 - regen;
+			if (rpercent <= 0)
+				return;
+
+			if (rpercent >= 0.7)
+				rtime = 0;
+			else if(rpercent >= 0.5)
+				rtime = 5;
+			else
+				rtime = 10;
+
+			hgtxt = strcat(ftos(rint(rpercent * 100)), "%");
+		}
+		drawfont = sbar_bigfont;
+		float tsize = hgsize_x / stringwidth(hgtxt, FALSE);
+		drawstring(pos + '0.5 0 0' * (RM_HUD_SECWIDTH_NORMAL - hgsize_x) + '0 0.5 0' * (hgsize_y - tsize), hgtxt, '1 1 0' * tsize, '1 0 0' + '0 1 0' * (rtime >= 5) + '0 0 1' * (rtime >= 10), 1, DRAWFLAG_NORMAL);
+		drawfont = sbar_font;
+	}
 }
 
 void(string s) rm_hud_draw_name {
@@ -499,7 +529,6 @@ void(void) rm_hud_draw_server_info {
 		draw_string_colorcoded_center(pos, argv(i), sz_norm, a, DRAWFLAG_NORMAL);
 		pos_y += sz_norm_y;
 	}
-	drawfont = sbar_font;
 }
 
 float rm_hud_vhealth = 0;

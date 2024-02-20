@@ -23,6 +23,7 @@ void(void) rm_score_draw {
 float rm_score_last;
 void(float n) rm_score {
 	if not(rm_skin_loaded) return;
+	if not(CVAR(rm_visualscore)) return;
 	if (n == rm_score_last) return;
 	entity e = spawn();
 	e.alpha = 1;
