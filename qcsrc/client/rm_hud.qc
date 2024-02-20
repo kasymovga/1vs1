@@ -450,7 +450,7 @@ void(vector pos, float hgtype, float hgammo, float regen, float regenrate, float
 		drawpic(pos, hgicon, hgsize, hgcolor, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	}
 	sbar_draw_num(pos + '26 5 0', hgammo, 3, 0, 24, '1 1 1' - '0 1 1' * (!hgammo), 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-	if (CVAR(rm_shownadgetregen)) {
+	if (CVAR(rm_shownadgetregen) && rm_active) {
 		string hgtxt;
 		float rtime;
 		if (regenrate) {
