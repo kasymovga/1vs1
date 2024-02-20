@@ -111,7 +111,6 @@ void Buffs_MEODP_Death_Remove(entity attacker, entity inflictor);
 void Buffs_MEODP_Death_Use(entity attacker, entity inflictor);
 void Buffs_MEODP_Death_Remove_Multiple(entity attacker, entity inflictor);
 void Buffs_MEODP_Death_Use_Multiple(entity attacker, entity inflictor);
-void Buffs_MEODP_Antilag(entity plr, float t);
 
 float g_buffs_meodp;
 
