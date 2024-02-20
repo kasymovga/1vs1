@@ -2,7 +2,6 @@ void(void) rm_init {
 	rm_active = cvar("rm");
 	if not(rm_active) return;
 	print("RM mode active\n");
-	Buffs_Init();
 	dlc_require("rm_ui");
 	dlc_require("rm_skins");
 }

@@ -271,6 +271,7 @@ void(entity e) rm_buffs_spectator_copy {
 
 void Buffs_Init(void) {
     float i, b;
+    if not(rm_active) return;
     CVAR_CACHE(g_buffs);
     //if(g_clanarena)
     //    g_buffs = (g_buffs && CVAR(g_clanarena_buffs));

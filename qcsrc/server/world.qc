@@ -274,6 +274,7 @@ void(void) world_init {
 	dlc_init();
 	rm_init();
 	game_type_init();
+	Buffs_Init();
 	map_mark_as_recent(mapname);
 	// needs to be done so early as they would still spawn
 	weapon_register_weapons();
