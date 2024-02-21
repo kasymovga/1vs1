@@ -1,9 +1,10 @@
-#define ICE_FRAME_TIME 0.2
+#define ICE_FRAME_TIME sys_ticrate
 string sv_model_ice;
 string sv_sound_ice_frag;
 string sv_sound_ice_revive;
 float g_ice_unfroze_time;
 float g_ice_unfroze_interruption;
+float g_ice_unfroze_multi_factor;
 float g_ice_slowdown;
 float g_ice_autorevive_delay;
 float g_ice_autorevive_time;
@@ -12,26 +13,26 @@ float sv_model_ice_z;
 float sv_model_ice_alpha;
 float sv_model_ice_use_skins;
 .entity ice;
-.entity last_unfrozer;
-.float unfroze_progress;
-.entity unfroze_pb;
 
 void(void) ice_think;
 
 void(void) ice_remove {
+	if (self.ice.weaponentity)
+		progressbar_remove(self.ice.weaponentity);
+
 	if (self.ice) {
 		Buffs_MEODP_Point_Detach(self);
 		remove(self.ice.ice);
 		remove(self.ice);
 	}
-	if (self.unfroze_pb)
-		progressbar_remove(self.unfroze_pb);
-
-	if (self.ice.unfroze_pb)
-		progressbar_remove(self.ice.unfroze_pb);
-
-	self.unfroze_pb = world;
-	self.ice = world;
+	entity e, e2;
+	for (e = self.ice.enemy; e;) {
+		e2 = e;
+		e = e.enemy;
+		progressbar_remove(e2.weaponentity);
+		remove(e2);
+	}
+	self.ice = NULL;
 	WaypointSprite_DetachCarrier(self);
 }
 
@@ -158,13 +159,53 @@ void(entity frozen, entity unfrozer) ice_unfroze {
 	Buffs_MEODP_Point_Attach(frozen, Buffs_MEODP_Death_Player);
 }
 
+void(entity _ice, entity unfrozer) ice_unfrozer_add {
+	entity e;
+	for (e = _ice.enemy; e; e = e.enemy) {
+		if (e.owner == unfrozer)
+			return;
+
+		if not(e.enemy) {
+			e.enemy = spawn();
+			e.enemy.owner = unfrozer;
+			e.enemy.weaponentity = progressbar_create("Reviving", unfrozer);
+			return;
+		}
+	}
+	e = spawn();
+	e.enemy = _ice.enemy;
+	e.owner = unfrozer;
+	e.weaponentity = progressbar_create("Reviving", unfrozer);
+	_ice.enemy = e;
+}
+
+void(entity _ice, entity unfrozer) ice_unfrozer_remove {
+	entity e, e2;
+	if (_ice.enemy.owner == unfrozer) {
+		progressbar_remove(_ice.enemy.weaponentity);
+		e = _ice.enemy.enemy;
+		remove(_ice.enemy);
+		_ice.enemy = e;
+	} else {
+		for (e = _ice.enemy; e.enemy; e = e.enemy) {
+			if (e.enemy.owner == unfrozer) {
+				e2 = e.enemy;
+				e.enemy = e.enemy.enemy;
+				progressbar_remove(e2.weaponentity);
+				remove(e2);
+				break;
+			}
+		}
+	}
+}
+
 void(void) ice_think {
 	self.nextthink = time + ICE_FRAME_TIME;
 	if (self.owner.deadflag != DEAD_FREEZE || self.owner.ice != self) {
-		if (self.unfroze_pb) //for self.owner.ice != self case
-			remove(self.unfroze_pb);
+		if (self.weaponentity) //for self.owner.ice != self case
+			remove(self.weaponentity);
 
-		self.unfroze_pb = world;
+		self.weaponentity = NULL;
 		entity oldself = self;
 		self = self.owner;
 		ice_remove();
@@ -175,77 +216,76 @@ void(void) ice_think {
 	if (ice_hook_skip_think())
 		return;
 
-	float oldprogress = self.unfroze_progress;
+	float oldprogress = self.cnt;
 	if (self.team != self.owner.team) {
 		self.team = self.owner.team;
 		self.colormod = team_color(self.team);
 	}
 	entity e, unfrozer;
-	unfrozer = world;
-	if (self.last_unfrozer && self.last_unfrozer.deadflag == DEAD_NO && vlen(self.last_unfrozer.origin - self.owner.origin) <= 100 && player_entity(self.last_unfrozer) == self.last_unfrozer) {
-		unfrozer = self.last_unfrozer;
-	} else FOR_EACH_PLAYER(e) {
+	unfrozer = NULL;
+	for (e = self.enemy; e; e = e.enemy) {
+		if (e.owner.classname != "player" ||
+				e.owner.deadflag != DEAD_NO ||
+				e.owner.team != self.team ||
+				vlen(e.owner.origin - self.owner.origin) > 100 ||
+				player_entity(e.owner) != e.owner) {
+			ice_unfrozer_remove(self, e.owner);
+		}
+	}
+	float unfrozers_count = 0;
+	FOR_EACH_PLAYER(e) {
 		if (e == self.owner || e.team != self.owner.team || e.deadflag != DEAD_NO || vlen(e.origin - self.owner.origin) > 100 || player_entity(e) != e)
 			continue;
 
-		unfrozer = e;
-		break;
+		ice_unfrozer_add(self, e);
+		unfrozers_count++;
 	}
-	if not(unfrozer)
-	if (g_ice_autorevive_delay > 0)
-	if (time > self.fade_time)
-		unfrozer = self;
-
-	if (unfrozer != self.last_unfrozer) {
-		if (self.unfroze_pb)
-			remove(self.unfroze_pb);
-
-		if (unfrozer) {
-			self.unfroze_pb = progressbar_create("Reviving", unfrozer);
-			if not(self.owner.unfroze_pb)
-				self.owner.unfroze_pb = progressbar_create("Reviving", self.owner);
-		} else {
-			if (self.owner.unfroze_pb)
-				progressbar_remove(self.owner.unfroze_pb);
-
-			self.owner.unfroze_pb = world;
-			self.unfroze_pb = world;
-		}
+	if (self.enemy) {
+		unfrozer = self.enemy.owner;
+	} else { //no unfrozers
+		if (g_ice_autorevive_delay > 0)
+		if (time > self.fade_time)
+			unfrozer = self;
 	}
 	float unfroze_scale;
 	if (unfrozer.classname == "player") {
-		self.last_unfrozer = unfrozer;
-		unfroze_scale = 1;
+		unfroze_scale = 1 + (unfrozers_count - 1) * g_ice_unfroze_multi_factor;
 	} else {
-		self.last_unfrozer = world;
-		unfroze_scale = g_ice_unfroze_time / g_ice_autorevive_time;
+		if (g_ice_autorevive_time)
+			unfroze_scale = g_ice_unfroze_time / g_ice_autorevive_time;
+		else
+			unfroze_scale = 0;
 	}
 	if (unfrozer) {
-		self.unfroze_progress += ICE_FRAME_TIME * unfroze_scale;
-		if (clienttype(unfrozer) == CLIENTTYPE_REAL) {
-			if (self.unfroze_pb)
-				progressbar_set(self.unfroze_pb, self.unfroze_progress / g_ice_unfroze_time);
-		} else
-			bot_stay(unfrozer, ICE_FRAME_TIME);
-
-		if (clienttype(self.owner) == CLIENTTYPE_REAL) {
-			if (self.owner.unfroze_pb)
-				progressbar_set(self.owner.unfroze_pb, self.unfroze_progress / g_ice_unfroze_time);
-		} else {
+		if not(self.weaponentity) {
+			self.weaponentity = progressbar_create("Reviving", self.owner);
+		}
+		self.cnt += ICE_FRAME_TIME * unfroze_scale;
+		float p = self.cnt / g_ice_unfroze_time;
+		progressbar_set(self.weaponentity, p);
+		if (clienttype(self.owner) == CLIENTTYPE_BOT) {
 			self.owner.movement = '0 0 0';
 			bot_stay(self.owner, ICE_FRAME_TIME);
 		}
-	}
-	if (self.unfroze_progress >= g_ice_unfroze_time) {
+		for (e = self.enemy; e; e = e.enemy) {
+			progressbar_set(e.weaponentity, p);
+			if (clienttype(e.owner) == CLIENTTYPE_BOT) {
+				e.owner.movement = '0 0 0';
+				bot_stay(e.owner, ICE_FRAME_TIME);
+			}
+		}
+	} else
+		self.cnt = 0;
+
+	if (self.cnt >= g_ice_unfroze_time) {
 		ice_unfroze(self.owner, unfrozer);
 		return;
 	}
-	if (self.unfroze_progress == oldprogress)
-	if (oldprogress != 0)
-		self.unfroze_progress = max(0, oldprogress - ICE_FRAME_TIME);
-
-	if (self.unfroze_progress != oldprogress) {
-		self.alpha = sv_model_ice_alpha * max(0.01, 1 - (self.unfroze_progress / g_ice_unfroze_time));
+	if (self.cnt == oldprogress) {
+		self.cnt = max(0, self.cnt - ICE_FRAME_TIME);
+	}
+	if (self.cnt != oldprogress) {
+		self.alpha = sv_model_ice_alpha * max(0.01, 1 - (self.cnt / g_ice_unfroze_time));
 		self.ice.SendFlags |= 2;
 	}
 }
@@ -259,7 +299,7 @@ void ice_player_clear(float killed) {
 var void(entity spot) ice_player_spawn_next;
 void(entity spot) ice_player_spawn {
 	ice_player_spawn_next(spot);
-	ice_player_death_handle(world, world, 0);
+	ice_player_death_handle(NULL, NULL, 0);
 }
 
 var float() ice_physics_max_speed_mod_next;
@@ -295,7 +335,7 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 			self.ice.fade_time = time + g_ice_autorevive_delay;
 
 		self.ice.alpha = sv_model_ice_alpha;
-		self.ice.unfroze_progress = 0;
+		self.ice.cnt = 0;
 	}
 	if (deathtype == DEATH_SLIME ||
 			deathtype == DEATH_LAVA ||
@@ -303,8 +343,6 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 			deathtype == DEATH_TEAMCHANGE
 			)
 		client_put();
-
-	self.unfroze_progress = 0;
 	return TRUE;
 }
 

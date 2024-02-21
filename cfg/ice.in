@@ -8,5 +8,6 @@ set sv_sound_ice_revive ""
 set g_ice_slowdown 0.1
 set g_ice_unfroze_time 3
 set g_ice_unfroze_interruption 1
+set g_ice_unfroze_multi_factor 0.2
 set g_ice_autorevive_delay 0 "Delay before autorevive starting. 0 or negative value mean no autorevive"
 set g_ice_autorevive_time 10
