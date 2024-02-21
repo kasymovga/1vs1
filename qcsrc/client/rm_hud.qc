@@ -570,7 +570,11 @@ void(void) rm_hud_draw {
 	float hgtype2 = getstati(STAT_HGTYPE2);
 	if (hgtype2)
 		hgregen2 = sbar_nadget_regen(STAT_HGREGEN2, STAT_HGREGENMAX2);
-	if (team_mode) {
+
+	if (CVAR(rm_hud_healthcolor)) {
+		base_teamcolor = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), sbar_armor_block_percentage);
+		base_teamcolor = view_healthcolor(base_teamcolor_x);
+	} else if (team_mode) {
 		base_teamcolor = team_rgb(team_my);
 	} else {
 		base_teamcolor_x = CVAR(sbar_color_bg_r);

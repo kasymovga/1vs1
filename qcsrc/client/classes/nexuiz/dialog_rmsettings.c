@@ -4,7 +4,7 @@ CLASS(NexuizRMSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizRMSettingsDialog, title, string, "RM Settings")
 	ATTRIB(NexuizRMSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizRMSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizRMSettingsDialog, rows, float, 11)
+	ATTRIB(NexuizRMSettingsDialog, rows, float, 13)
 	ATTRIB(NexuizRMSettingsDialog, columns, float, 5.5)
 	ATTRIB(NexuizRMSettingsDialog, name, string, "RMSettings")
 ENDCLASS(NexuizRMSettingsDialog)
@@ -46,6 +46,12 @@ void fillNexuizRMSettingsDialog(entity me) {
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_shownadgetregen", _("Show Nadget regeneration in seconds")));
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_hud_healthcolor", _("Health-colored HUD")));
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(1, "rm_noflags", _("Country flags in scoreboard")));
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Close"), '0 0 0'));
 			e.onClick = Dialog_Close;

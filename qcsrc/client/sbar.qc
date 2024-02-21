@@ -629,6 +629,7 @@ void(float argc) sbar_field_set {
 		} else if (str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			sbar_field[sbar_num_fields] = SP_KDRATIO;
 		} else if (str == "cn" && SP_COUNTRY_FIELD >= 0) {
+			if (CVAR(rm_noflags)) continue;
 			sbar_field[sbar_num_fields] = SP_COUNTRY;
 		} else if (str == "nade" && SP_NADGET_FIELD >= 0) {
 			sbar_field[sbar_num_fields] = SP_NADGET;
