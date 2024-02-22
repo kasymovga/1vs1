@@ -270,15 +270,23 @@ void(void) ice_think {
 				bot_stay(e.owner, ICE_FRAME_TIME);
 			}
 		}
-	} else
-		self.cnt = 0;
-
+	}
 	if (self.cnt >= g_ice_unfroze_time) {
 		ice_unfroze(self.owner, unfrozer);
 		return;
 	}
 	if (self.cnt == oldprogress) {
 		self.cnt = max(0, self.cnt - ICE_FRAME_TIME);
+		if (self.cnt) {
+			if (self.weaponentity) {
+				progressbar_set(self.weaponentity, self.cnt / g_ice_unfroze_time);
+			}
+		} else {
+			if (self.weaponentity) {
+				progressbar_remove(self.weaponentity);
+				self.weaponentity = NULL;
+			}
+		}
 	}
 	if (self.cnt != oldprogress) {
 		self.alpha = sv_model_ice_alpha * max(0.01, 1 - (self.cnt / g_ice_unfroze_time));
