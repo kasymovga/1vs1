@@ -116,10 +116,10 @@ void() coop_ice_frozen_status {
 }
 
 void(void) coop_init_delayed {
-	ice_hook_frozen_status = coop_ice_frozen_status;
-	ice_hook_skip_death_handle = coop_ice_skip_death_handle;
-	coop_ice_unfroze_next = ice_hook_unfroze;
-	ice_hook_unfroze = coop_ice_unfroze;
+	plugin_ice_frozen_status = coop_ice_frozen_status;
+	plugin_ice_skip_death_handle = coop_ice_skip_death_handle;
+	coop_ice_unfroze_next = plugin_chain_ice_unfroze;
+	plugin_chain_ice_unfroze = coop_ice_unfroze;
 	ice_init();
 }
 

@@ -121,3 +121,7 @@ var string(string l) plugin_chain_player_body_model_list_allowed_mod = { return 
 var float(float fr) plugin_chain_weapon_animation_is_melee = { return 0; }
 var float(entity to, float f) plugin_chain_item_give_factor = { return f; }
 var float(float f) plugin_chain_weapon_clip_capacity_mod = { return f; }
+var float() plugin_ice_skip_think = { return 0; }
+var float() plugin_ice_skip_death_handle = { return 0; }
+var void(entity unfrozer) plugin_chain_ice_unfroze = {}
+var void() plugin_ice_frozen_status = {}

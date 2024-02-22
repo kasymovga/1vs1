@@ -39,11 +39,11 @@ float(entity attacker, entity targ, float f) freeze_shared_score_give_frag_mod {
 void(string gt) freeze_shared_init {
 	hint_add("You can revive frozen teammates standing close to him");
 	roundbased_init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
-	ice_hook_skip_think = freeze_shared_ice_skip_think;
-	ice_hook_skip_death_handle = freeze_shared_ice_skip_think;
-	freeze_shared_ice_unfroze_next = ice_hook_unfroze;
-	ice_hook_unfroze = freeze_shared_ice_unfroze;
-	ice_hook_frozen_status = freeze_shared_ice_frozen_status;
+	plugin_ice_skip_think = freeze_shared_ice_skip_think;
+	plugin_ice_skip_death_handle = freeze_shared_ice_skip_think;
+	freeze_shared_ice_unfroze_next = plugin_chain_ice_unfroze;
+	plugin_chain_ice_unfroze = freeze_shared_ice_unfroze;
+	plugin_ice_frozen_status = freeze_shared_ice_frozen_status;
 	ice_init();
 	freeze_shared_player_spawn_next = plugin_chain_player_spawn;
 	plugin_chain_player_spawn = freeze_shared_player_spawn;

@@ -72,8 +72,7 @@ void(entity attacker, entity inflictor) ice_meodp_hit {
 }
 
 float(entity attacker, entity inflictor, float deathtype) ice_player_death_handle {
-	if (ice_hook_skip_death_handle)
-	if (ice_hook_skip_death_handle())
+	if (plugin_ice_skip_death_handle())
 		return FALSE;
 
 	if (deathtype)
@@ -87,9 +86,7 @@ float(entity attacker, entity inflictor, float deathtype) ice_player_death_handl
 	self.deadflag = DEAD_FREEZE;
 	self.clipgroup = 0;
 	self.health = player_start_health;
-	if (ice_hook_frozen_status)
-		ice_hook_frozen_status();
-
+	plugin_ice_frozen_status();
 	if (self.ice)
 		return TRUE;
 
@@ -150,7 +147,7 @@ void(entity frozen, entity unfrozer) ice_unfroze {
 	}
 	entity oldself = self;
 	self = frozen.ice;
-	ice_hook_unfroze(unfrozer);
+	plugin_chain_ice_unfroze(unfrozer);
 	frozen.deadflag = DEAD_NO;
 	player_physics_setup(frozen);
 	self = frozen;
@@ -212,8 +209,7 @@ void(void) ice_think {
 		self = oldself;
 		return;
 	}
-	if (ice_hook_skip_think)
-	if (ice_hook_skip_think())
+	if (plugin_ice_skip_think())
 		return;
 
 	float oldprogress = self.cnt;

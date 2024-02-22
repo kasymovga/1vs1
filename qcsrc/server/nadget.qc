@@ -352,8 +352,8 @@ void(void) nadget_init_common {
 	plugin_chain_bot_aim = nadget_bot_aim;
 	nadget_player_obituary_frag_next = plugin_chain_player_obituary_frag;
 	plugin_chain_player_obituary_frag = nadget_player_obituary_frag;
-	nadget_ice_unfroze_next = ice_hook_unfroze; //sort of hack
-	ice_hook_unfroze = nadget_ice_unfroze;
+	nadget_ice_unfroze_next = plugin_chain_ice_unfroze; //sort of hack
+	plugin_chain_ice_unfroze = nadget_ice_unfroze;
 	nadget_player_effects_next = plugin_chain_player_effects;
 	plugin_chain_player_effects = nadget_player_effects;
 	nadget_JumpVelocityMod_next = plugin_chain_JumpVelocityMod;

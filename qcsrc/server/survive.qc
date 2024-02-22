@@ -251,11 +251,11 @@ string(string s) survive_map_finish_message_mod {
 
 void survive_init_delayed() {
 	if (g_surv_freeze) {
-		ice_hook_skip_think = survive_ice_skip_think;
-		ice_hook_skip_death_handle = survive_ice_skip_think;
-		survive_ice_unfroze_next = ice_hook_unfroze;
-		ice_hook_unfroze = survive_ice_unfroze;
-		ice_hook_frozen_status = survive_ice_frozen_status;
+		plugin_ice_skip_think = survive_ice_skip_think;
+		plugin_ice_skip_death_handle = survive_ice_skip_think;
+		survive_ice_unfroze_next = plugin_chain_ice_unfroze;
+		plugin_chain_ice_unfroze = survive_ice_unfroze;
+		plugin_ice_frozen_status = survive_ice_frozen_status;
 		ice_init();
 	} else {
 		plugin_player_death_handle = survive_death_handle;
