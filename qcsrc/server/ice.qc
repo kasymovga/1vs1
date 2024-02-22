@@ -277,12 +277,9 @@ void(void) ice_think {
 	}
 	if (self.cnt == oldprogress) {
 		self.cnt = max(0, self.cnt - ICE_FRAME_TIME);
-		if (self.cnt) {
-			if (self.weaponentity) {
-				progressbar_set(self.weaponentity, self.cnt / g_ice_unfroze_time);
-			}
-		} else {
-			if (self.weaponentity) {
+		if (self.weaponentity) {
+			progressbar_set(self.weaponentity, self.cnt / g_ice_unfroze_time);
+			if not(self.cnt) {
 				progressbar_remove(self.weaponentity);
 				self.weaponentity = NULL;
 			}
