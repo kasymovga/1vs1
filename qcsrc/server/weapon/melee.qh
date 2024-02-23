@@ -1,3 +1,3 @@
 void(void) weapon_melee_attack_check;
-float(void) weapon_melee_possible;
+float(float reload) weapon_melee_possible;
 void(void) weapon_melee_init;

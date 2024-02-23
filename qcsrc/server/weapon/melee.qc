@@ -13,6 +13,9 @@ float g_balance_melee_kick_force_up;
 float g_balance_melee_kick_onehit;
 float g_balance_melee_onehit;
 float g_balance_melee_refire;
+float g_balance_melee_button_hook;
+float g_balance_melee_button_use;
+float g_balance_melee_button_reload;
 string sv_sound_melee;
 float bot_melee_love;
 float WEAPON_MELEE_ABILITY;
@@ -82,7 +85,8 @@ void(float melee_type, float extradmg, string snd) weapon_melee_attack {
 		thirdview_set(self, g_balance_melee_animtime, 100, 10);
 }
 
-float(void) weapon_melee_possible {
+float(float reload) weapon_melee_possible {
+	if (reload && !g_balance_melee_button_reload) return FALSE;
 	entity ao = akimbo_owner(self);
 	if not(ao.crouch && !g_balance_melee_allow_crouched)
 	if (g_balance_melee || (ao.abilities & WEAPON_MELEE_ABILITY))
@@ -108,7 +112,7 @@ void(void) weapon_melee_attack_check {
 
 var float(void) weapon_melee_bot_aim_next;
 float(void) weapon_melee_bot_aim {
-	if (weapon_melee_possible())
+	if (weapon_melee_possible(TRUE))
 	if (random() < bot_melee_love)
 	if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2) {
 		if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE)) {
@@ -118,6 +122,14 @@ float(void) weapon_melee_bot_aim {
 			return FALSE;
 	}
 	return weapon_melee_bot_aim_next();
+}
+
+var void(void) weapon_melee_player_think_next;
+void(void) weapon_melee_player_think {
+	weapon_melee_player_think_next();
+	if ((g_balance_melee_button_hook && self.BUTTON_HOOK) || (g_balance_melee_button_use && self.BUTTON_USE))
+		if (weapon_melee_possible(FALSE))
+			weapon_melee_attack_check();
 }
 
 float weapon_melee_init_done;
@@ -139,11 +151,16 @@ void(void) weapon_melee_init {
 	CVAR_CACHE(g_balance_melee_kick_onehit);
 	CVAR_CACHE(g_balance_melee_onehit);
 	CVAR_CACHE(g_balance_melee_refire);
+	CVAR_CACHE(g_balance_melee_button_hook);
+	CVAR_CACHE(g_balance_melee_button_use);
+	CVAR_CACHE(g_balance_melee_button_reload);
 	bot_melee_love = cvar("bot_melee");
 	if not(weapon_melee_init_done) {
 		WEAPON_MELEE_ABILITY = ability_register("melee", NULL);
 		weapon_melee_init_done = 1;
 		weapon_melee_bot_aim_next = plugin_chain_bot_aim;
 		plugin_chain_bot_aim = weapon_melee_bot_aim;
+		weapon_melee_player_think_next = plugin_chain_player_think;
+		plugin_chain_player_think = weapon_melee_player_think;
 	}
 }

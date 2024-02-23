@@ -124,7 +124,7 @@ void(void) weapon_reload {
 	if (self.switchweapon == self.weapon)
 	if (self.weaponentity.state == WEAPON_STATE_READY) {
 		weapon_action(self.weapon, WEAPON_REQUEST_RELOAD);
-		if (weapon_melee_possible())
+		if (weapon_melee_possible(TRUE))
 			weapon_melee_attack_check();
 	}
 	akimbo_reload(self);

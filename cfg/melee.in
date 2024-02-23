@@ -14,6 +14,9 @@ set g_balance_melee_onehit 0 ""
 set g_balance_melee_time 0.4 ""
 set g_balance_melee_ticrate 0.1 ""
 set g_balance_melee_refire 1.2 ""
+set g_balance_melee_button_hook 0
+set g_balance_melee_button_use 0
+set g_balance_melee_button_reload 1
 set sv_qcanimation_melee_morph1angles "90 -60 30"
 set sv_qcanimation_melee_morph1origin "10 0 -20"
 set sv_qcanimation_melee_morph2angles "0 60 0"
