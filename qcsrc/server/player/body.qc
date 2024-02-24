@@ -174,47 +174,46 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 		return NULL;
 
 	fire_move(self, e);
-	e.owner = e;
 	e.skinindex = self.skinindex;
-	player_body_spawn(e.body);
+	player_body_spawn(NULL);
 	player_body_copy(self.body, e, FALSE);
-	setattachment(e, world, "");
-	e.body = e;
-	e.enemy = self;
-	e.iscreature = self.iscreature;
-	e.angles = self.angles;
-	e.avelocity = self.avelocity;
-	e.classname = "body";
-	e.damageforcescale = self.damageforcescale;
-	e.event_damage = self.event_damage;
-	e.pain_finished = self.pain_finished;
-	e.health = self.health;
-	e.armorvalue = self.armorvalue;
-	e.armortype = self.armortype;
-	e.species = self.species;
-	e.movetype = _movetype;
-	e.solid = self.solid;
-	e.takedamage = self.takedamage;
-	e.scale = self.scale;
-	e.deadflag = self.deadflag;
+	entity _body = e.body;
+	e.owner = _body;
+	_body.body = e;
+	_body.enemy = self;
+	_body.iscreature = self.iscreature;
+	_body.angles = self.angles;
+	_body.avelocity = self.avelocity;
+	_body.classname = "body_detached";
+	_body.damageforcescale = self.damageforcescale;
+	_body.event_damage = self.event_damage;
+	_body.pain_finished = self.pain_finished;
+	_body.health = self.health;
+	_body.armorvalue = self.armorvalue;
+	_body.armortype = self.armortype;
+	_body.species = self.species;
+	_body.movetype = _movetype;
+	_body.solid = self.solid;
+	_body.takedamage = self.takedamage;
+	_body.scale = self.scale;
+	_body.deadflag = self.deadflag;
 	if (keepvelocity == 1)
-		e.velocity = self.velocity;
+		_body.velocity = self.velocity;
 
-	e.oldvelocity = self.velocity;
-	//e.weapon = self.weapon;
-	setorigin(e, self.origin);
-	e.stand_maxs = self.stand_maxs;
-	e.stand_mins = self.stand_mins;
-	e.crouch_maxs = self.crouch_maxs;
-	e.crouch_mins = self.crouch_mins;
-	setsize(e, self.mins, self.maxs);
+	_body.oldvelocity = self.velocity;
+	_body.stand_maxs = self.stand_maxs;
+	_body.stand_mins = self.stand_mins;
+	_body.crouch_maxs = self.crouch_maxs;
+	_body.crouch_mins = self.crouch_mins;
+	setsize(_body, self.mins, self.maxs);
+	_body.reset = stdproc_remove;
 	e.reset = stdproc_remove;
 	if (e.weaponentity) {
-		e.weaponentity.owner = e;
+		e.weaponentity.owner = _body;
 		e.weaponentity.reset = stdproc_remove;
 	}
 	if (e.exteriorweaponentity) {
-		e.exteriorweaponentity.owner = e;
+		e.exteriorweaponentity.owner = _body;
 		e.exteriorweaponentity.reset = stdproc_remove;
 	}
 	return e;

@@ -141,9 +141,12 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	o.health = o.health - _damage;
 	if (o.health <= -75) {
 		violence_gib_splash(self, 1, 1, attacker);
-		if (self == b) { //detached body
-			if (self.weaponentity) remove(self.weaponentity);
-			if (self.exteriorweaponentity) remove(self.exteriorweaponentity);
+		if (self.classname == "body_detached") { //detached body
+			if (self.body) {
+				if (self.body.weaponentity) remove(self.body.weaponentity);
+				if (self.body.exteriorweaponentity) remove(self.body.exteriorweaponentity);
+				remove(self.body);
+			}
 			self.nextthink = time;
 			self.think = stdproc_remove;
 		} else { //player
