@@ -316,7 +316,7 @@ void(void) trigger_multiple_use {
 }
 
 void(void) trigger_multiple_touch {
-	if (self.spawnflags & TRIGGER_SPAWNFLAG_PLAYERONLY || !(self.spawnflags & TRIGGER_SPAWNFLAG_NOCREATUREONLY)) {
+	if ((self.spawnflags & TRIGGER_SPAWNFLAG_PLAYERONLY) || !(self.spawnflags & TRIGGER_SPAWNFLAG_NOCREATUREONLY)) {
 		if not(self.spawnflags & TRIGGER_SPAWNFLAG_NOCREATUREONLY) {
 			if not(other.iscreature)
 				return;
