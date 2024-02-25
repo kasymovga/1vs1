@@ -99,12 +99,14 @@ void(void) weapon_melee_attack_check {
 	if (self.weapon != self.switchweapon)
 		return;
 
+	if (!self.weapon && g_balance_melee != 2) return;
 	float w_save = self.weapon;
 	self.switchweapon = self.weapon = WEAPON_MELEE;
-	if (self.weapon_think == weapon_ready)
-	if (weapon_prepareattack(0, g_balance_melee_refire)) {
-		weapon_melee_attack(g_balance_melee, 0, sv_sound_melee);
-		weapon_thinkf(((g_balance_melee == 2) ? WEAPON_FRAME_MELEE2 : WEAPON_FRAME_MELEE), g_balance_melee_animtime, weapon_ready);
+	if (!w_save || self.weapon_think == weapon_ready) {
+		if (!w_save || weapon_prepareattack(0, g_balance_melee_refire)) {
+			weapon_melee_attack(g_balance_melee, 0, sv_sound_melee);
+			weapon_thinkf(((g_balance_melee == 2) ? WEAPON_FRAME_MELEE2 : WEAPON_FRAME_MELEE), g_balance_melee_animtime, weapon_ready);
+		}
 	}
 	self.weapon = w_save;
 	self.switchweapon = w_save;
