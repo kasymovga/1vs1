@@ -48,7 +48,7 @@ void(void) noteline_draw {
 				noteline_line_draw(tail);
 				break;
 			}
-			head = substring(tail, 0, n + 1);
+			head = substring(tail, 0, n);
 			tail = substring(tail, n + 1, -1);
 			noteline_line_draw(head);
 		}
