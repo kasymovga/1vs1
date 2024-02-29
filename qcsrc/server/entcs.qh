@@ -1,2 +1,4 @@
 entity() entcs_attach;
 void() entcs_detach;
+
+float sv_showspec;

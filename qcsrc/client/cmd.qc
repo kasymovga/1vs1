@@ -164,6 +164,17 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 	} else if(strCmd == "-showaccuracy") {
 		sbar_showaccuracy = FALSE;
 		return TRUE;
+	} else if(strCmd == "showspec") {
+		if (argc > 1) {
+			cvar_set("rm_showspec", argv(1));
+			localcmd("sendcvar rm_showspec\n");
+		}
+		if (cvar("rm_showspec"))
+			print("Enabled\n");
+		else
+			print("Disabled\n");
+
+		return TRUE;
 	}
 	if(view_camera_free_active)
 	if(strCmd == "+forward" || strCmd == "-back") {

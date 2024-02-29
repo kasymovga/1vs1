@@ -1,18 +1,3 @@
-/**
- * The point of these entities is to avoid the problems
- * with clientprediction.
- * If you add SendEntity to players, the engine will not
- * do any prediction anymore, and you'd have to write the whole
- * prediction code in CSQC, you want that? :P
- * Data can depend on gamemode. For now, it serves as GPS entities
- * in onslaught... YAY ;)
- */
-
-// Beware: do not redefine those in other files
-// and NO, you cannot use ".version", which already exists (at least
-// it did when I added this) But you have to use .Version
-// Capital V
-
 float() entcs_customize {
 	entity o;
 	o = self.owner;
@@ -118,9 +103,48 @@ void() entcs_think {
 	}
 }
 
+void(entity plr) entcs_spec_update {
+	if (plr.entcs.weaponentity) {
+		plr.entcs.weaponentity.SendFlags = 1;
+	}
+}
+
+void(void) entcs_spec_message {
+	float isspec = (other.enemy == self.owner);
+	string s = (isspec ? "^2Spectating this player:" : "^2Spectating you:");
+	if not(isspec)
+		s = strcat(s, "\n^9type ^7showspec 0^9 to hide\n");
+
+	entity e;
+	float spectators = 0, hidden = 0;
+	FOR_EACH_REALCLIENT(e)
+		if (e.enemy == self.owner && !(e.client_flags & CLIENT_FLAG_RM_ANONSPEC)) {
+			spectators++;
+			if (spectators < 8) {
+				s = strcat(s, "\n", strreplace("\n", "", e.netname));
+			} else
+				hidden++;
+		}
+	if (hidden)
+		s = strcat(s, "\n^9(", ftos(hidden), " more)");
+
+	s = strcat(s, "\n");
+	str_unzone_ifneeded(self.message);
+	if (spectators)
+		self.message = strzone(s);
+	else
+		self.message = "";
+}
+
+float(void) entcs_spec_customize {
+	if (self.owner.classname != "player") return FALSE;
+	if not(other.client_flags & CLIENT_FLAG_RM_SHOWSPEC) return FALSE;
+	if (other == self.owner || other.enemy == self.owner) return TRUE;
+	return FALSE;
+}
+
 entity() entcs_attach {
-	local entity ent;
-	ent = spawn();
+	entity ent = spawn();
 	self.entcs = ent;
 	ent.classname = "entcs_sender_v2";
 	ent.cnt = 1;
@@ -129,12 +153,20 @@ entity() entcs_attach {
 	ent.nextthink = time;
 	net_link_entity(ent, FALSE, 0, entcs_send);
 	ent.customizeentityforclient = entcs_customize;
+	RM({
+		ent.weaponentity = noteline_new(entcs_spec_message);
+		ent.weaponentity.owner = self;
+		ent.weaponentity.customizeentityforclient = entcs_spec_customize;
+	})
 	return ent;
 }
 
 void() entcs_detach {
 	if (self.entcs) {
+		if (self.entcs.weaponentity)
+			remove(self.entcs.weaponentity);
+
 		remove(self.entcs);
-		self.entcs = world;
+		self.entcs = NULL;
 	}
 }

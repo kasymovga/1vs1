@@ -760,6 +760,9 @@ void client_cvars_request() {
 			"sendcvar cl_damage_screen_effects\n"
 			"sendcvar _cl_id\n"
 	);
+	RM({
+		stuffcmd(self, "sendcvar rm_showspec; sendcvar rm_anonspec\n");
+	})
 }
 
 void() client_cvars_parse {
@@ -872,6 +875,16 @@ void() client_cvars_parse {
 			voip_enable(self);
 		} else
 			voip_disable(self);
+	} else if (s == "rm_showspec") {
+		if (stof(val))
+			self.client_flags |= CLIENT_FLAG_RM_SHOWSPEC;
+		else
+			self.client_flags &= ~CLIENT_FLAG_RM_SHOWSPEC;
+	} else if (s == "rm_anonspec") {
+		if (stof(val))
+			self.client_flags |= CLIENT_FLAG_RM_ANONSPEC;
+		else
+			self.client_flags &= ~CLIENT_FLAG_RM_ANONSPEC;
 	}
 }
 

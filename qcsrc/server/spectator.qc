@@ -96,8 +96,10 @@ float() spectator_spectate_next {
 				other = find(other, classname, "player");
 		while (other && self.team > 0 && other.team != self.team);
 	}
+	if (self.enemy) entcs_spec_update(self.enemy);
 	if (other) {
 		self.enemy = other;
+		entcs_spec_update(other);
 	}
 	if (self.enemy.classname == "player") {
 		client_set_view(self.enemy);
