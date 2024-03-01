@@ -188,9 +188,6 @@ void GUI_Show(float window) {
 	case GUI_HUD:
 		e = gui_hud;
 		break;
-	case GUI_RMSETTINGS:
-		e = gui_rmSettings;
-		break;
 	}
 	if not(e) {
 		GUI_Hide();

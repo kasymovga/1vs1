@@ -13,7 +13,6 @@ entity gui_report;
 entity gui_muteList;
 entity gui_recordList;
 entity gui_hud;
-entity gui_rmSettings;
 
 enum {
 	GUI_TEAMSELECT,
@@ -28,7 +27,6 @@ enum {
 	GUI_MUTELIST,
 	GUI_RECORDLIST,
 	GUI_HUD,
-	GUI_RMSETTINGS,
 };
 
 string gui_available_maps;

@@ -19,6 +19,10 @@ void configureDialogNexuizGameSettingsDialog(entity me) {
 	if (game_type == GAME_TYPE_SINGLE)
 		me.rows = me.rows - 2;
 
+	RM({
+		me.columns += 5;
+		me.intendedWidth += 0.4;
+	})
 	configureDialogNexuizDialog(me); //Parent method
 }
 
@@ -43,13 +47,12 @@ void(entity me) saveCvarsNexuizGameSettingsDialogGunAlpha {
 void fillNexuizGameSettingsDialog(entity me)
 {
 	entity e;
+	me.gotoRC(me, -1, 0.25); me.setFirstColumn(me, me.currentColumn);
 	if (game_type == GAME_TYPE_SINGLE) {
 		me.TR(me);
-			me.TDempty(me, 0.25);
 			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_weapon_wheel", _("Weapon wheel")));
 	} else {
 		me.TR(me);
-			me.TDempty(me, 0.25);
 			me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Show names:")));
 			if not(extension_DP_CSQC_QUERYRENDERENTITY)
 				e.disabled = 1;
@@ -65,7 +68,6 @@ void fillNexuizGameSettingsDialog(entity me)
 				e.colorL = SKINCOLOR_TEXT_WARNING;
 			}
 		me.TR(me);
-			me.TDempty(me, 0.25);
 			me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Show names view sector:")));
 			if not(extension_DP_CSQC_QUERYRENDERENTITY)
 				e.disabled = 1;
@@ -76,23 +78,20 @@ void fillNexuizGameSettingsDialog(entity me)
 				e.configureNexuizTextSliderValues(e);
 			if not(extension_DP_CSQC_QUERYRENDERENTITY) {
 				e.disabled = 1;
-				me.TDempty(me, 0.5);
+				me.TDempty(me, 0.25);
 				me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
 				e.colorL = SKINCOLOR_TEXT_WARNING;
 			}
 		me.TR(me);
-			me.TDempty(me, 0.25);
 			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_voice", _("Player voices")));
 	}
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Weapon opacity:")));
 		me.TD(me, 1, 2.5, e = makeNexuizSlider(0, 1, 0.05, "cl_gunalpha"));
 		e.saveCvars = saveCvarsNexuizGameSettingsDialogGunAlpha;
 		e.loadCvars = loadCvarsNexuizGameSettingsDialogGunAlpha;
 		e.loadCvars(e); //cvar must be reloaded with custom loadCvars function
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Weapon position:")));
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_gunalign"));
 			e.addValue(e, _("Right"), "1");
@@ -101,22 +100,16 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.addValue(e, _("Center or Left"), "4");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.5);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_gunalign_force_center", _("Force center position")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_nex_secondary_zoom_disable", _("Disable nex zoom with secondary attack")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_showweaponspawns", _("Weapon location hint")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_recoil", _("Recoil from shots")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_damage_screen_effects", _("Force screen effect on damage")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Damage indicator:")));
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_damageindicator"));
 			e.addValue(e, _("Hidden"), "0");
@@ -125,7 +118,6 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.addValue(e, _("Slow"), "2.5");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Announcer print:")));
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_announcer_print"));
 			e.addValue(e, _("Hidden"), "0");
@@ -134,7 +126,6 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.addValue(e, _("Slow"), "2");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Weapon bar fade time:")));
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("sbar_weapons_fadetime"));
 			e.addValue(e, _("Always hidden"), "0");
@@ -143,13 +134,10 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.addValue(e, _("Long"), "3");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_weapons_show_ammo", _("Show ammo in weapon bar")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_weapons_order", _("Reverse weapon order")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Weapon bar fade speed:")));
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("sbar_weapons_fadespeed"));
 			e.addValue(e, _("Fast"), "4");
@@ -158,48 +146,71 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.addValue(e, _("Stopped"), "0");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_autoswitch", _("Auto switch weapons on pickup")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, (g_velocity_rounding ? 2.5 : 5), e = makeNexuizCheckBox(0, "cl_cts_strafe_helper", _("Show strafe helper in CTS")));
 		if (g_velocity_rounding)
 			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_snap_helper", _("and snap zones")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_cts_position_helper", _("Show position helper in CTS")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showacceleration", _("Show acceleration")));
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showacceleration", _("Auto enable in CTS")));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showspeed", _("Show speed")));
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showspeed", _("Auto enable in CTS")));
 	if not(extension_DP_CSQC_QUERYRENDERENTITY) {
 		me.TR(me);
-			me.TDempty(me, 0.25);
 			me.TD(me, 1, 4, e = makeNexuizTextLabel(0, _("(*) Some features are unavailable. Your client is outdated.")));
 			e.colorL = SKINCOLOR_TEXT_WARNING;
 		me.TR(me);
-			me.TDempty(me, 0.25);
 			me.TD(me, 1, 3, e = makeNexuizTextLabel(0, _("Download Rexuiz client here:")));
 			e.colorL = SKINCOLOR_TEXT_WARNING;
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "http://rexuiz.com"));
 			e.colorL = SKINCOLOR_TEXT_LINK;
 	}
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_increment_maptime", "Incremental timer"));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_showcurrentammo", "Show only current ammo"));
 	me.TR(me);
-		me.TDempty(me, 0.25);
 		me.TD(me, 1, 5, e = makeNexuizButton(_("HUD Selection..."), '0 0 0'));
 			e.onClick = showHudDialogGameSettingsDialog;
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_voice;sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;sendcvar cl_damage_screen_effects;menu_cmd sync", COMMANDBUTTON_CLOSE));
+	RM({
+		me.gotoRC(me, -1, 6); me.setFirstColumn(me, me.currentColumn);
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizTextLabel(0, _("RM Settings:")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_nobigtext", _("No big text")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_hidebigcomments", _("Hide big commentaries")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_showrankings", _("Show top players in the HUD")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_crosshealth", _("Crosshair health color")));
+		me.TR(me);
+			me.TD(me, 1, 2, e = makeNexuizTextLabel(0, _("Crosshair ring size:")));
+			me.TD(me, 1, 3, e = makeNexuizSlider(0, 10, 0.05, "rm_hud_crosshair_ring_size"));
+		me.TR(me);
+			me.TD(me, 1, 2, e = makeNexuizTextLabel(0, _("Crosshair ring opacity:")));
+			me.TD(me, 1, 3, e = makeNexuizSlider(0, 1, 0.05, "rm_hud_crosshair_ring_alpha"));
+		me.TR(me);
+			me.TD(me, 1, 2, e = makeNexuizTextLabel(0, _("Crosshair ring opacity:")));
+			me.TD(me, 1, 3, e = makeNexuizSlider(0, 1, 0.05, "rm_hud_crosshair_ring_alpha"));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(1, "rm_notimer", _("\"time\" column in scoreboard")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_visualscore", _("Scoring notifications in the HUD")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_shownadgetregen", _("Show Nadget regeneration in seconds")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_hud_healthcolor", _("Health-colored HUD")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_showspec", _("Show spectators")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_anonspec", _("Spectate anonymously")));
+	})
+	me.gotoRC(me, me.rows - 1, 0);
+		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_voice;sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;sendcvar cl_damage_screen_effects;menu_cmd sync;sendcvar rm_showspec;sendcvar rm_anonspec", COMMANDBUTTON_CLOSE));
 }
 #endif

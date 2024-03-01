@@ -22,6 +22,5 @@
 #include "classes/nexuiz/dialog_hud.c"
 #include "classes/nexuiz/hudlist.c"
 #include "classes/nexuiz/skinlist.c"
-#include "classes/nexuiz/dialog_rmsettings.c"
 #undef draw
 #undef frame
