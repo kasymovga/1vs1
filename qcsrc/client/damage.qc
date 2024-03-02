@@ -10,7 +10,7 @@ void(void) damage_indicator_draw {
 		return;
 
 	o_z = 0;
-	drawstring(o, NET_UNBOUND_FROM_BYTE(self.cnt), '12 12 0', '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
+	drawstring(o, NET_UNBOUND_FROM_BYTE(self.cnt), '12 12 0', '1 0.5 0', self.alpha * CVAR(cl_damageindicator_alpha), DRAWFLAG_NORMAL);
 	drawfont = sbar_font;
 }
 
@@ -31,7 +31,7 @@ void(float bisnew) damage_indicator_read {
 	self.origin_y = net_read_short();
 	self.origin_z = net_read_short();
 	if (CVAR(cl_damageindicator) > 0) {
-		self.alpha = CVAR(sbar_alpha_fg);
+		self.alpha = 1;
 		self.draw2d = damage_indicator_draw;
 		self.draw2dflag = 1;
 		self.entremove = damage_indicator_remove;
