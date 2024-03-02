@@ -31,7 +31,7 @@ void() monster_ewheel_hunt {
 			sound(self, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 			float i;
 			for (i = -1; i < 2; i += 2) {
-				entity proj = projectile(TRUE, PROJECTILE_LASER, TRUE, self);
+				entity proj = monster_projectile(TRUE, PROJECTILE_LASER, TRUE, self);
 				projectile_setup(proj, _shotorg + v_right * i * 16, EFFECT_IMPACT_LASER, WEAPON_LASER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 				proj.nextthink = time + 5;
 				proj.think = projectile_think2use;

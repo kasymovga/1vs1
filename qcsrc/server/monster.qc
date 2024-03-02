@@ -149,7 +149,6 @@ void monster_drop_item(float item_code, string _model, string _sound, string _na
 }
 
 void monster_die() {
-	//self.view_ofs = self.mins_z  + (self.maxs_z - self.mins_z) * 0.25;
 	violence_gib_splash(self, 1, 1, self.enemy);
 	self.solid = SOLID_NOT;
 	self.alpha = -1;
@@ -181,9 +180,7 @@ void monster_die() {
 }
 
 void monster_corpse_event_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
-	if (attacker.classname != "monster")
-		self.health = self.health - _damage;
-
+	self.health = self.health - _damage;
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < -200)
 		monster_die();
@@ -237,7 +234,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 	} else if (deathtype == DEATH_FALL)
 		return;
 
-	float isenemy = (!attacker || attacker.team != self.team || (!team_mode && attacker.classname != "monster"));
+	float isenemy = (!attacker || attacker.team != self.team || (!team_mode && substring(attacker.classname, 0, 7) != "monster"));
 	if (!isenemy) {
 		if (g_friendlyfire)
 			_damage = _damage * g_friendlyfire;
@@ -269,6 +266,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 			self = oldself;
 		}
 		self.enemy = attacker;
+		if (self.use) self.use();
 		if (self.anim_die1 != '0 0 0')
 			monster_die_animated();
 		else
@@ -505,7 +503,7 @@ void monster_spawn_think() {
 	sound (self, CHAN_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
 	self.owner = oldself;
-	self.reset = monster_die;
+	self.reset = stdproc_remove;
 	oldself.weapon_think();
 	self.pushfactor = self.damageforcescale * g_monster_pushfactor;
 	if (self.pushfactor) {
@@ -832,4 +830,13 @@ float(entity _enemy) monster_look_to {
 		return TRUE;
 
 	return FALSE;
+}
+
+entity(float clientanimate, float type, float docull, entity _owner) monster_projectile {
+	entity proj = projectile(clientanimate, type, docull, _owner);
+	proj.realowner = proj;
+	proj.team = _owner.team;
+	proj.netname = _owner.netname;
+	proj.classname = "monster_projectile";
+	return proj;
 }

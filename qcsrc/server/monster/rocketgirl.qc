@@ -31,7 +31,7 @@ void() monster_rlgirl_hunt {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-		entity missile = projectile(TRUE, PROJECTILE_ROCKET, TRUE, self);
+		entity missile = monster_projectile(TRUE, PROJECTILE_ROCKET, TRUE, self);
 		projectile_setup(missile,_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 		missile.nextthink = time + 5;
 		missile.think = projectile_think2use;

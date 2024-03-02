@@ -24,7 +24,7 @@ void() monster_boss3_hunt {
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		float i;
 		for (i = 0; i < 6; i++) {
-			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
+			entity proj = monster_projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
 			projectile_setup(proj, _shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 			proj.touch = projectile_touch_explode;
 			proj.velocity = normalize(normalize(_shotdir) + randomvec() * 0.1) * 1600;

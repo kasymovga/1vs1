@@ -41,7 +41,7 @@ void() monster_arachna_hunt {
 			vector _shotdir = monster_look_to_end - self.origin;
 			vector _shotorg = self.origin + v_forward * 16;
 			sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
-			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
+			entity proj = monster_projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
 			projectile_setup(proj,_shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 			proj.touch = projectile_touch_explode;
 			proj.velocity = normalize(_shotdir) * 1600;

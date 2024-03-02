@@ -55,13 +55,13 @@ void() monster_heavysoldier_hunt {
 		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 		entity gren;
 		if (random() > 0.5 || vlen(monster_look_to_end - self.origin) > 1000) {
-			gren = projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
+			gren = monster_projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
 			projectile_setup(gren,_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0.01, MOVETYPE_TOSS);
 			gren.touch = projectile_touch_explode;
 			gren.velocity = normalize(_shotdir) * 3200;
 			self.attack_finished_single = time + 3 + random();
 		} else {
-			gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
+			gren = monster_projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
 			projectile_setup(gren,_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 1, MOVETYPE_BOUNCE);
 			gren.touch = monster_heavysoldier_projectile_bounce_touch;
 			gren.velocity = normalize(_shotdir) * 1000 + 200 * '0 0 1';

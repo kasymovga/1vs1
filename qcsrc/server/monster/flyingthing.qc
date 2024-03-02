@@ -35,7 +35,7 @@ void() monster_flyingthing_hunt {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
-		entity gren = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
+		entity gren = monster_projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
 		projectile_setup(gren,_shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
 		gren.nextthink = time + 5;
 		gren.think = projectile_think2use;
@@ -69,6 +69,21 @@ void() monster_flyingthing_walk {
 	self.angles_x = approach_angle(self.angles_x, v_x, 90 * frametime);
 }
 
+void(void) monster_flyingthing_die {
+	vector o = ENTITY_CENTER(self);
+	float i;
+	entity gren;
+	for (i = 0; i < 4; i++) {
+		gren = monster_projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, NULL);
+		projectile_setup(gren,o, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_TOSS);
+		gren.nextthink = time + 5;
+		gren.think = projectile_think2use;
+		gren.use = projectile_explode;
+		gren.touch = projectile_touch_explode;
+		gren.velocity = randomvec() * 500;
+	}
+}
+
 void() monster_flyingthing_spawn {
 	self.movetype = MOVETYPE_FLY;
 	self.species = SPECIES_ROBOT_SOLID;
@@ -84,6 +99,7 @@ void() monster_flyingthing_spawn {
 	self.view_ofs = '0 0 -16';
 	self.damageforcescale = 1;
 	self.ammo_cells = 10;
+	self.use = monster_flyingthing_die;
 }
 
 void(void) monster_flyingthing_init {

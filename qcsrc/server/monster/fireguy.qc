@@ -57,7 +57,7 @@ void() monster_fireguy_hunt {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 12;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
-		entity proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
+		entity proj = monster_projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
 		projectile_setup(proj, _shotorg, 0, WEAPON_FIREBALL, self.dmg_edge, self.dmg_edge, self.dmg_radius, self.dmg_force, 1, MOVETYPE_BOUNCE);
 		proj.touch = monster_fireguy_mine_touch;
 		proj.think = monster_fireguy_mine_think;
