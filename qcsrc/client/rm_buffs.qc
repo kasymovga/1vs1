@@ -6,28 +6,30 @@
 .vector lightcolor;
 .vector buff_offset;
 
-string buff_modelnames[RM_BUFFS_COUNT];
+string rm_buffs_modelnames[RM_BUFFS_COUNT];
 .entity buffmdl[RM_BUFFS_COUNT];
 .entity buff_ring;
 
-void Buffs_LoadModels(void) {
+void(entity ment, float thebuffs) rm_buffs_model_set;
+
+void(void) rm_buffs_models_load {
 	if not(g_buffs_enabled) return;
 	precache_model("models/buffs/buff_ring.md3");
 	float i, b;
 	for (i = 0, b = 1; i < RM_BUFFS_COUNT; ++i, b *= 2) if(b & g_buffs_enabled) {
-		str_unzone_ifneeded(buff_modelnames[i]);
+		str_unzone_ifneeded(rm_buffs_modelnames[i]);
 		string n = rm_buffs_TypeToName(b);
 		string s = strcat("models/buffs/buff_", n, ".md3");
 		if not(file_exists(s)) {
 			s = "models/buffs/buff.md3";
 			print("No model found for the ", rm_buffs_TypeToName(b), " Buff! Falling back to default.\n");
 		}
-		buff_modelnames[i] = strzone(s);
-		precache_model(buff_modelnames[i]);
+		rm_buffs_modelnames[i] = strzone(s);
+		precache_model(rm_buffs_modelnames[i]);
 	}
 }
 
-void Buffs_Model_Draw(void) {
+void(void) rm_buffs_model_draw {
 	vector org;
 	float rendermodel = FALSE;
 	if (!(self.effects & EFFECT_NODRAW))
@@ -59,7 +61,7 @@ void Buffs_Model_Draw(void) {
 		pointparticles(particleeffectnum("EF_STARDUST"), org, '0 0 0', frametime);
 }
 
-void Buffs_Model_Multi_Think(void) {
+void(void) rm_buffs_model_multi_think {
 	if (!self.owner || wasfreed(self.owner) || self.owner.buffs != self.buffstat) {
 		remove(self);
 		return;
@@ -82,7 +84,7 @@ void Buffs_Model_Multi_Think(void) {
 	self.nextthink = time;
 }
 
-void Buffs_Model_Think(void) {
+void(void) rm_buffs_model_think {
 	if(self.sv_entnum) {
 		// this is an overhead buff model
 
@@ -118,21 +120,21 @@ void Buffs_Model_Think(void) {
 	self.nextthink = time;
 }
 
-void Buffs_Model_Multi_Set(entity bmdl, entity parent, float offs) {
+void(entity bmdl, entity parent, float offs) rm_buffs_model_multi_set {
 	bmdl.owner = parent;
 	float bi = rm_buffs_TypeToIndex(bmdl.buffs);
-	Buffs_Model_Set(bmdl, bmdl.buffs);
+	rm_buffs_model_set(bmdl, bmdl.buffs);
 	bmdl.owner = parent;
-	bmdl.draw = Buffs_Model_Draw;
+	bmdl.draw = rm_buffs_model_draw;
 	bmdl.scale = (parent.scale ? parent.scale : 1); // * 0.90;
 	bmdl.cnt = offs;
-	bmdl.think = Buffs_Model_Multi_Think;
+	bmdl.think = rm_buffs_model_multi_think;
 	bmdl.buffstat = parent.buffs;
 	bmdl.sv_entnum = parent.sv_entnum;
 	bmdl.nextthink = time;
 }
 
-void Buffs_Model_UpdateColor(entity ment) {
+void(entity ment) rm_buffs_model_color_update {
 	ment.lightcolor = ment.colormod = rm_buffs_TypeToColor(ment.buffs);
 	if(ment.buffs == RM_BUFFS_MEODP)
 		ment.lightcolor = '1 0 0';
@@ -141,12 +143,12 @@ void Buffs_Model_UpdateColor(entity ment) {
 		ment.buff_ring.colormod = (ment.team ? (team_rgb(ment.team) + '0.1 0.1 0.1') : ment.colormod);
 }
 
-void Buffs_Model_Set(entity ment, float thebuffs) {
+void(entity ment, float thebuffs) rm_buffs_model_set {
 	float idx = rm_buffs_TypeToIndex(thebuffs);
 	float i, j, b;
 	if not(g_buffs_enabled & thebuffs) {
 		g_buffs_enabled |= thebuffs;
-		Buffs_LoadModels();
+		rm_buffs_models_load();
 	}
 	ment.buffs = thebuffs;
 	if(idx >= 0) {
@@ -160,7 +162,7 @@ void Buffs_Model_Set(entity ment, float thebuffs) {
 		ment.effects &= ~EFFECT_NODRAW;
 		vector omins = ment.mins;
 		vector omaxs = ment.maxs;
-		setmodel(ment, buff_modelnames[rm_buffs_TypeToIndex(thebuffs)]);
+		setmodel(ment, rm_buffs_modelnames[rm_buffs_TypeToIndex(thebuffs)]);
 		setsize(ment, omins, omaxs);
 	} else {
 		// multiple buffs - hide ment and use additional models
@@ -177,25 +179,26 @@ void Buffs_Model_Set(entity ment, float thebuffs) {
 					remove(ment.(buffmdl[j]));
 					ment.(buffmdl[j]) = world;
 				}
-			} else Buffs_Model_Multi_Set(ment.(buffmdl[j]), ment, (j/i)*360);
+			} else rm_buffs_model_multi_set(ment.(buffmdl[j]), ment, (j/i)*360);
 		}
 	}
-	Buffs_Model_UpdateColor(ment);
+	rm_buffs_model_color_update(ment);
 }
 
-void Buffs_Model_Remove(void) {
-	float i; for(i = 0; i < RM_BUFFS_COUNT; ++i) {
-		if(self.(buffmdl[i])) {
+void(void) rm_buffs_model_remove {
+	float i;
+	for (i = 0; i < RM_BUFFS_COUNT; ++i) {
+		if (self.(buffmdl[i])) {
 			remove(self.(buffmdl[i]));
 			self.(buffmdl[i]) = world;
 		}
 	}
-	if(self.buff_ring) {
+	if (self.buff_ring) {
 		remove(self.buff_ring);
 	}
 }
 
-void Buffs_Model_Ring_Think(void) {
+void(void) rm_buffs_model_ring_think {
 	self.nextthink = time;
 	self.angles_y = time * -110.1;
 	self.alpha = self.owner.alpha;
@@ -207,7 +210,7 @@ void Buffs_Model_Ring_Think(void) {
 	setorigin(self, self.owner.origin + '0 0 15');
 }
 
-void Buffs_Model_AttachRing(entity bmdl) {
+void(entity bmdl) rm_buffs_model_ring_attach {
 	if (bmdl.buff_ring)
 		return;
 
@@ -216,8 +219,8 @@ void Buffs_Model_AttachRing(entity bmdl) {
 	e.effects = bmdl.effects;
 	e.alpha = bmdl.alpha;
 	e.scale = bmdl.scale * 1.2;
-	e.draw = Buffs_Model_Draw;
-	e.think = Buffs_Model_Ring_Think;
+	e.draw = rm_buffs_model_draw;
+	e.think = rm_buffs_model_ring_think;
 	e.nextthink = time;
 	setsize(e, bmdl.mins, bmdl.maxs);
 	setorigin(e, bmdl.origin + bmdl.maxs * 0.5 * bmdl.scale);
@@ -225,13 +228,13 @@ void Buffs_Model_AttachRing(entity bmdl) {
 	bmdl.buff_ring = e;
 }
 
-void Buffs_Model_Read(float ignore) {
+void(float ignore) rm_buffs_model_read {
 	float sf = net_read_byte();
 	if (sf & 1) {
 		self.sv_entnum = net_read_byte(); // the buff owner
-		self.entremove = Buffs_Model_Remove;
-		self.draw = Buffs_Model_Draw;
-		self.think = Buffs_Model_Think;
+		self.entremove = rm_buffs_model_remove;
+		self.draw = rm_buffs_model_draw;
+		self.think = rm_buffs_model_think;
 		self.effects = (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_NOSHADOW);
 		self.lightlev = 200;
 		self.nextthink = time;
@@ -254,14 +257,14 @@ void Buffs_Model_Read(float ignore) {
 			//FIXME
 			//if(!CVAR(gl_flashblend))
 			//    self.lightflags |= PFLAGS_CORONA;
-			Buffs_Model_AttachRing(self);
+			rm_buffs_model_ring_attach(self);
 		}
 	}
 	if (sf & 2) {
 		self.buff_active = net_read_byte();
 	}
 	if (sf & 4) {
-		Buffs_Model_Set(self, net_read_coord());
+		rm_buffs_model_set(self, net_read_coord());
 	}
 	if (sf & 8) {
 		vector o;
@@ -272,7 +275,7 @@ void Buffs_Model_Read(float ignore) {
 	}
 	if (sf & 16) {
 		self.team = max(0, net_read_byte()-1);
-		Buffs_Model_UpdateColor(self);
+		rm_buffs_model_color_update(self);
 	}
 	interpolate_note();
 }

@@ -267,7 +267,7 @@ void(float ignore) main_init_read {
 			main_rexuiz_info = str_zone_ifneeded(net_read_string());
 			rm_skin_load(cvar_string("cl_rm_skin"));
 			g_buffs_enabled = net_read_coord();
-			Buffs_LoadModels();
+			rm_buffs_models_load();
 			rm_bigprint_enable();
 			registercmd("showspec");
 		});

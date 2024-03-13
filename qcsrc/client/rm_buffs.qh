@@ -1,6 +1,5 @@
 float g_buffs_enabled;
 
-void Buffs_Model_Set(entity ment, float thebuffs);
-void Buffs_Model_Read(float);
-void Buffs_LoadModels(void);
+void(float) rm_buffs_model_read;
+void(void) rm_buffs_models_load;
 void(float buffs) rm_buffs_draw;
