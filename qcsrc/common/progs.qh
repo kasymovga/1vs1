@@ -8,6 +8,7 @@
 #include "extensions.qh"
 #include "file.qh"
 #include "game_type.qh"
+#include "rgb.qh"
 #include "stdproc.qh"
 #include "str.qh"
 #include "uri.qh"

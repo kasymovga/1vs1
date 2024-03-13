@@ -6,21 +6,21 @@
 .vector lightcolor;
 .vector buff_offset;
 
-string buff_modelnames[BUFF_COUNT];
-.entity buffmdl[BUFF_COUNT];
+string buff_modelnames[RM_BUFFS_COUNT];
+.entity buffmdl[RM_BUFFS_COUNT];
 .entity buff_ring;
 
 void Buffs_LoadModels(void) {
 	if not(g_buffs_enabled) return;
 	precache_model("models/buffs/buff_ring.md3");
 	float i, b;
-	for (i = 0, b = 1; i < BUFF_COUNT; ++i, b *= 2) if(b & g_buffs_enabled) {
+	for (i = 0, b = 1; i < RM_BUFFS_COUNT; ++i, b *= 2) if(b & g_buffs_enabled) {
 		str_unzone_ifneeded(buff_modelnames[i]);
-		string n = Buffs_TypeToName(b);
+		string n = rm_buffs_TypeToName(b);
 		string s = strcat("models/buffs/buff_", n, ".md3");
 		if not(file_exists(s)) {
 			s = "models/buffs/buff.md3";
-			print("No model found for the ", Buffs_TypeToName(b), " Buff! Falling back to default.\n");
+			print("No model found for the ", rm_buffs_TypeToName(b), " Buff! Falling back to default.\n");
 		}
 		buff_modelnames[i] = strzone(s);
 		precache_model(buff_modelnames[i]);
@@ -68,7 +68,7 @@ void Buffs_Model_Multi_Think(void) {
 	self.effects &= ~EFFECT_NODRAW;
 	self.lightlev = self.owner.lightlev * 0.7;
 	self.alpha = self.owner.alpha;
-	if (self.buffs == BUFF_MEODP) {
+	if (self.buffs == RM_BUFFS_MEODP) {
 		self.lightcolor = '1 0 0';
 		self.effects &= ~EFFECT_ADDITIVE;
 	}
@@ -112,7 +112,7 @@ void Buffs_Model_Think(void) {
 		self.angles_y = time * 110.1;
 	}
 
-	if (self.buffs == BUFF_MEODP)
+	if (self.buffs == RM_BUFFS_MEODP)
 		self.effects &= ~EFFECT_ADDITIVE;
 			
 	self.nextthink = time;
@@ -120,7 +120,7 @@ void Buffs_Model_Think(void) {
 
 void Buffs_Model_Multi_Set(entity bmdl, entity parent, float offs) {
 	bmdl.owner = parent;
-	float bi = Buffs_TypeToIndex(bmdl.buffs);
+	float bi = rm_buffs_TypeToIndex(bmdl.buffs);
 	Buffs_Model_Set(bmdl, bmdl.buffs);
 	bmdl.owner = parent;
 	bmdl.draw = Buffs_Model_Draw;
@@ -133,8 +133,8 @@ void Buffs_Model_Multi_Set(entity bmdl, entity parent, float offs) {
 }
 
 void Buffs_Model_UpdateColor(entity ment) {
-	ment.lightcolor = ment.colormod = Buffs_TypeToColor(ment.buffs);
-	if(ment.buffs == BUFF_MEODP)
+	ment.lightcolor = ment.colormod = rm_buffs_TypeToColor(ment.buffs);
+	if(ment.buffs == RM_BUFFS_MEODP)
 		ment.lightcolor = '1 0 0';
 
 	if(ment.buff_ring)
@@ -142,7 +142,7 @@ void Buffs_Model_UpdateColor(entity ment) {
 }
 
 void Buffs_Model_Set(entity ment, float thebuffs) {
-	float idx = Buffs_TypeToIndex(thebuffs);
+	float idx = rm_buffs_TypeToIndex(thebuffs);
 	float i, j, b;
 	if not(g_buffs_enabled & thebuffs) {
 		g_buffs_enabled |= thebuffs;
@@ -151,7 +151,7 @@ void Buffs_Model_Set(entity ment, float thebuffs) {
 	ment.buffs = thebuffs;
 	if(idx >= 0) {
 		// single model - use ment to display it
-		for(i = 0; i < BUFF_COUNT; ++i) {
+		for(i = 0; i < RM_BUFFS_COUNT; ++i) {
 			if(ment.(buffmdl[i])) {
 				remove(ment.(buffmdl[i]));
 				ment.(buffmdl[i]) = NULL;
@@ -160,18 +160,18 @@ void Buffs_Model_Set(entity ment, float thebuffs) {
 		ment.effects &= ~EFFECT_NODRAW;
 		vector omins = ment.mins;
 		vector omaxs = ment.maxs;
-		setmodel(ment, buff_modelnames[Buffs_TypeToIndex(thebuffs)]);
+		setmodel(ment, buff_modelnames[rm_buffs_TypeToIndex(thebuffs)]);
 		setsize(ment, omins, omaxs);
 	} else {
 		// multiple buffs - hide ment and use additional models
 		ment.effects |= EFFECT_NODRAW;
-		for(i = 0, b = 1; b <= BUFF_LAST; b *= 2) if(thebuffs & b) {
+		for(i = 0, b = 1; b <= RM_BUFFS_LAST; b *= 2) if(thebuffs & b) {
 			if(!ment.(buffmdl[i]) || wasfreed(ment.(buffmdl[i])))
 				ment.(buffmdl[i]) = spawn();
 			ment.(buffmdl[i]).buffs = b;
 			++i;
 		}
-		for(j = 0; j < BUFF_COUNT; ++j) {
+		for(j = 0; j < RM_BUFFS_COUNT; ++j) {
 			if(j >= i) {
 				if(ment.(buffmdl[j])) {
 					remove(ment.(buffmdl[j]));
@@ -184,7 +184,7 @@ void Buffs_Model_Set(entity ment, float thebuffs) {
 }
 
 void Buffs_Model_Remove(void) {
-	float i; for(i = 0; i < BUFF_COUNT; ++i) {
+	float i; for(i = 0; i < RM_BUFFS_COUNT; ++i) {
 		if(self.(buffmdl[i])) {
 			remove(self.(buffmdl[i]));
 			self.(buffmdl[i]) = world;
@@ -240,7 +240,7 @@ void Buffs_Model_Read(float ignore) {
 		if (self.sv_entnum) {
 			// this is an overhead buff model
 
-			self.buff_offset = BUFFMODEL_OVERHEAD_OFFSET;
+			self.buff_offset = RM_BUFFS_MODEL_OVERHEAD_OFFSET;
 			setsize(self, '0 0 -40', '0 0 40');
 		} else {
 			// this is a buff pickup model
@@ -290,7 +290,7 @@ void(float buffs) rm_buffs_draw {
 		str_unzone_ifneeded(rm_buffs_draw_str);
 		rm_buffs_draw_str = NULL;
 		if (buffs) {
-			rm_buffs_draw_str = str_zone_ifneeded(Buffs_TypeToExpandedName(buffs, " ", 1));
+			rm_buffs_draw_str = str_zone_ifneeded(rm_buffs_TypeToExpandedName(buffs, " ", 1));
 			sw = stringwidth(rm_buffs_draw_str, TRUE) * sbar_fontsize_x;
 			rm_draw_buffs_pos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 7 - sbar_fontsize_y;
 			rm_draw_buffs_pos_x = (CVAR(vid_conwidth) - sw) * 0.5;

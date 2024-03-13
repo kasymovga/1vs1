@@ -1,46 +1,46 @@
 
-#define BUFFDEFS \
-    BUFFDEF(BUFF_ARC,       arc,       "Arc",                             '0.20  0.70  1.00') \
-    BUFFDEF(BUFF_SUPPLY,    supply,    "Supply",                          '0.20  1.00  0.20') \
-    BUFFDEF(BUFF_GUARD,     guard,     "Guard",                           '0.30  0.20  1.00') \
-    BUFFDEF(BUFF_HASTE,     haste,     "Haste",                           '1.00  1.00  0.20') \
-    BUFFDEF(BUFF_MEDIC,     medic,     "Medic",                           '1.00  0.30  1.00') \
-    BUFFDEF(BUFF_IGNITE,    ignite,    "Ignite",                          '1.00  0.40  0.00') \
-    BUFFDEF(BUFF_VAMPIRE,   vampire,   "Vampire",                         '1.00  0.15  0.00') \
-    BUFFDEF(BUFF_TENACITY,  tenacity,  "Tenacity",                        '0.66  0.66  0.73') \
-    BUFFDEF(BUFF_WRATH,     wrath,     "Wrath",                           '0.55  0.50  1.00') \
-    BUFFDEF(BUFF_ADEPT,     adept,     "Adept",                           '0.57  0.00  1.00') \
-    BUFFDEF(BUFF_MEODP,     meodp,     "Shiki",                           '0.10  0.10  0.10') \
-    BUFFDEF(BUFF_CONDUIT,   conduit,   "Conduit",                         '0.50  1.00  0.80') \
-    BUFFDEF(BUFF_REAPER,    reaper,    "Reaper",                          '0.65  0.20  0.00') \
-    BUFFDEF(BUFF_ENDURANCE, endurance, "Endurance",                       '0.83  1.00  0.36') \
-    BUFFDEF(BUFF_STEALTH,   stealth,   "Stealth",                         '0.25  0.25  0.25') \
+#define RM_BUFFS_DEFS \
+    RM_BUFFS_DEF(RM_BUFFS_ARC,       arc,       "Arc",                             '0.20  0.70  1.00') \
+    RM_BUFFS_DEF(RM_BUFFS_SUPPLY,    supply,    "Supply",                          '0.20  1.00  0.20') \
+    RM_BUFFS_DEF(RM_BUFFS_GUARD,     guard,     "Guard",                           '0.30  0.20  1.00') \
+    RM_BUFFS_DEF(RM_BUFFS_HASTE,     haste,     "Haste",                           '1.00  1.00  0.20') \
+    RM_BUFFS_DEF(RM_BUFFS_MEDIC,     medic,     "Medic",                           '1.00  0.30  1.00') \
+    RM_BUFFS_DEF(RM_BUFFS_IGNITE,    ignite,    "Ignite",                          '1.00  0.40  0.00') \
+    RM_BUFFS_DEF(RM_BUFFS_VAMPIRE,   vampire,   "Vampire",                         '1.00  0.15  0.00') \
+    RM_BUFFS_DEF(RM_BUFFS_TENACITY,  tenacity,  "Tenacity",                        '0.66  0.66  0.73') \
+    RM_BUFFS_DEF(RM_BUFFS_WRATH,     wrath,     "Wrath",                           '0.55  0.50  1.00') \
+    RM_BUFFS_DEF(RM_BUFFS_ADEPT,     adept,     "Adept",                           '0.57  0.00  1.00') \
+    RM_BUFFS_DEF(RM_BUFFS_MEODP,     meodp,     "Shiki",                           '0.10  0.10  0.10') \
+    RM_BUFFS_DEF(RM_BUFFS_CONDUIT,   conduit,   "Conduit",                         '0.50  1.00  0.80') \
+    RM_BUFFS_DEF(RM_BUFFS_REAPER,    reaper,    "Reaper",                          '0.65  0.20  0.00') \
+    RM_BUFFS_DEF(RM_BUFFS_ENDURANCE, endurance, "Endurance",                       '0.83  1.00  0.36') \
+    RM_BUFFS_DEF(RM_BUFFS_STEALTH,   stealth,   "Stealth",                         '0.25  0.25  0.25') \
 
 
 enum {
-    #define BUFFDEF(id,shortname,longname,color) id##_ID,
-    BUFFDEFS
-    #undef BUFFDEF
-    BUFF_COUNT
+    #define RM_BUFFS_DEF(id,shortname,longname,color) id##_ID,
+    RM_BUFFS_DEFS
+    #undef RM_BUFFS_DEF
+    RM_BUFFS_COUNT
 };
 
 enum {
-    #define BUFFDEF(id,shortname,longname,color) id = (1 << id##_ID),
-    BUFFDEFS
-    #undef BUFFDEF
-    BUFF_INVALID
+    #define RM_BUFFS_DEF(id,shortname,longname,color) id = (1 << id##_ID),
+    RM_BUFFS_DEFS
+    #undef RM_BUFFS_DEF
+    RM_BUFFS_INVALID
 };
 
-const float BUFF_FIRST = 1;
-const float BUFF_LAST  = BUFF_INVALID - 1;
+const float RM_BUFFS_FIRST = 1;
+const float RM_BUFFS_LAST  = RM_BUFFS_INVALID - 1;
 
-string Buffs_TypeToName(float);
-float Buffs_NameToType(string);
-string Buffs_TypeToFullName(float);
-string Buffs_NameToFullName(string);
-string Buffs_TypeToExpandedName(float, string, float);
-vector Buffs_TypeToColor(float);
-float Buffs_TypeToIndex(float);
-float Buffs_ParseList(string); // WARNING: tokenizes!
-string Buffs_TypeToList(float);
-const vector BUFFMODEL_OVERHEAD_OFFSET = '0 0 70';
+string(float) rm_buffs_TypeToName;
+float(string) rm_buffs_NameToType;
+string(float) rm_buffs_TypeToFullName;
+string(string) rm_buffs_NameToFullName;
+string(float, string, float) rm_buffs_TypeToExpandedName;
+vector(float) rm_buffs_TypeToColor;
+float(float) rm_buffs_TypeToIndex;
+float(string) rm_buffs_ParseList; // WARNING: tokenizes!
+string(float) rm_buffrm_buffseToList;
+const vector RM_BUFFS_MODEL_OVERHEAD_OFFSET = '0 0 70';

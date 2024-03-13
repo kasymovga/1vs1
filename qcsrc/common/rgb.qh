@@ -1,0 +1,1 @@
+string(vector rgb) rgb_to_hexcolor;

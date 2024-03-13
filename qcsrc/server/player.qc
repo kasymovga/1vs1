@@ -447,7 +447,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 				(deathtype & HITTYPE_SECONDARY) &&
 				attacker.hg_shield &&
 				team_is_different_teams(self, attacker) &&
-				Buffs_Present(attacker, BUFF_ADEPT)
+				Buffs_Present(attacker, RM_BUFFS_ADEPT)
 				)
 			nadget_Shield_Adept_ExtendRenew(attacker);
 	})

@@ -9,7 +9,7 @@ NADGET_HOOKFUNCTION(gg, Attack) {
     FOR_EACH_PLAYER(p)
     if (p != self)
     if (!PLAYER_DEAD(p))
-    if (!team_mode || p.team != self.team || Buffs_Present(self, BUFF_MEDIC) || Buffs_Present(self, BUFF_ADEPT))
+    if (!team_mode || p.team != self.team || Buffs_Present(self, RM_BUFFS_MEDIC) || Buffs_Present(self, RM_BUFFS_ADEPT))
     if (vlen(self.origin - p.origin) < g_nadgets_gg_range) {
         vector o = self.origin + self.view_ofs;
         vector e = p.origin + p.view_ofs;
@@ -25,7 +25,7 @@ NADGET_HOOKFUNCTION(gg, Attack) {
             trailparticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), o, e + randomvec() * 10);
             trailparticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), o, e + randomvec() * 10);
             trailparticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), o, e + randomvec() * 10);
-			if (Buffs_Present(self, BUFF_ADEPT)) {
+			if (Buffs_Present(self, RM_BUFFS_ADEPT)) {
 				//float i; for(i = 0; i < 4; ++i)
 				//	te_csqc_lightningarc(o, e + randomvec() * 10, TRUE, Team_FromIndex(i));
 				effect_lightningarc(o, e + randomvec() * 10/*, TRUE, Team_FromIndex(i)*/); //FIXME

@@ -48,7 +48,7 @@ float nadget_Sentry_TargetIsValid(entity emitter, entity e) {
     if(PLAYER_DEAD(e))
         return FALSE;
 
-    if(!team_is_different_teams(e, sentry.realowner) && !Buffs_Present(sentry.realowner, BUFF_MEDIC))
+    if(!team_is_different_teams(e, sentry.realowner) && !Buffs_Present(sentry.realowner, RM_BUFFS_MEDIC))
         return FALSE;
 
     if(nadget_Sentry_TargetIsTaken(emitter, e))
@@ -81,7 +81,7 @@ entity nadget_Sentry_FindTarget(entity emitter) {
     if(!sentry.realowner)
         return world;
 
-	medicflag = Buffs_Present(sentry.realowner, BUFF_MEDIC);
+	medicflag = Buffs_Present(sentry.realowner, RM_BUFFS_MEDIC);
     FOR_EACH_PLAYER(p) if not(PLAYER_DEAD(p)) {
         diffteam = (p != sentry.realowner && team_is_different_teams(sentry, p));
 		if (!diffteam && !medicflag)
@@ -455,7 +455,7 @@ void nadget_Sentry_Trigger(void) {
     float c_dmg = g_nadgets_sentry_shock_damage;
     float c_frc = g_nadgets_sentry_shock_force;
     float c_cost;
-	if(Buffs_Present(self, BUFF_ADEPT))
+	if(Buffs_Present(self, RM_BUFFS_ADEPT))
 		c_cost = g_nadgets_sentry_adept_shock_energy_cost;
 	else
 		c_cost = g_nadgets_sentry_shock_energy_cost;
@@ -495,7 +495,7 @@ void nadget_Sentry_Trigger(void) {
 
             sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
             weapon_zapper_attack2_effect((team_mode ? self.team : COLOR_TEAM3), o, end_visual);
-			if(targ.takedamage && Buffs_Present(self, BUFF_ADEPT)) {
+			if(targ.takedamage && Buffs_Present(self, RM_BUFFS_ADEPT)) {
 				if(g_nadgets_sentry_adept_shock_arc) {
 					arc_damage(targ, self, c_dmg, NADGET_SENTRY | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
 						g_nadgets_sentry_adept_shock_arc_range, g_nadgets_sentry_adept_shock_arc,

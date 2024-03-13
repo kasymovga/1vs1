@@ -20,7 +20,7 @@ void nadget_Cloak(void) {
 }
 
 void nadget_Cloak_Trigger(void) {
-	if (!Buffs_Present(self, BUFF_ADEPT)) {
+	if (!Buffs_Present(self, RM_BUFFS_ADEPT)) {
 		self.hg_stealth = 0;
 		return;
 	}

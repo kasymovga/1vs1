@@ -17,9 +17,9 @@ float g_buffs_supply_hg_extra_regen_limit;
 float g_buffs_enabled;
 float g_buffs_baseline;
 
-float g_buffs_replacements[BUFF_COUNT];
-float g_buffs_used[BUFF_COUNT];
-float g_buffs_used_dual[BUFF_COUNT];
+float g_buffs_replacements[RM_BUFFS_COUNT];
+float g_buffs_used[RM_BUFFS_COUNT];
+float g_buffs_used_dual[RM_BUFFS_COUNT];
 
 float g_buffs_randomize_ulevel;
 float g_buffs_randomize_ulevel_dual;
@@ -60,7 +60,7 @@ float g_buffs_count;
 
 .float nobuffs;
 
-#define BUFF_RANDOM -1337
+#define RM_BUFFS_RANDOM -1337
 
 typedef void(entity, entity) meodp_death_f;
 .meodp_death_f meodp_death;

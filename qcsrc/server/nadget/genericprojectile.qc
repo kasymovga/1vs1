@@ -187,8 +187,8 @@ void nadget_GenericProjectile_Touch(void) {
             return;
 
         if(self.hg_type == NADGET_TRANSLOC && team_mode && other.team == self.owner.team) {
-            float adeptRev = (Buffs_Present(self.owner, BUFF_ADEPT) && g_nadgets_transloc_adept_revive);
-			if(adeptRev || Buffs_Present(self.owner, BUFF_MEDIC)) {
+            float adeptRev = (Buffs_Present(self.owner, RM_BUFFS_ADEPT) && g_nadgets_transloc_adept_revive);
+			if(adeptRev || Buffs_Present(self.owner, RM_BUFFS_MEDIC)) {
 				if (other.deadflag == DEAD_FREEZE) {
 					self.owner.chain = world;
 					ice_unfroze(other, self);
@@ -438,7 +438,7 @@ void nadget_GenericProjectile_Think(void) {
 }
 
 float nadget_GenericProjectile_Attack(float hgtype) {
-	if(Buffs_Present(self, BUFF_ADEPT) && (GRENVAR(hgtype, "adept_split") > 0 ||
+	if(Buffs_Present(self, RM_BUFFS_ADEPT) && (GRENVAR(hgtype, "adept_split") > 0 ||
 	   (hgtype == NADGET_LASER && self.hg_detonatepressed))) {
 		float split = GRENVAR(hgtype, "adept_split");
 		float spread = GRENVAR(hgtype, "adept_split_spread");
@@ -548,7 +548,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.spawnorigin = self.origin;
     gren.hg_spawntime = time;
 	if(hgtype != NADGET_NAPALM) {
-		gren.hg_adept = Buffs_Present(self, BUFF_ADEPT);
+		gren.hg_adept = Buffs_Present(self, RM_BUFFS_ADEPT);
 	}
 	if(gren.hg_adept && GV("adept_detonable")) {
 		gren.hg_detonable = GV("adept_detonable");

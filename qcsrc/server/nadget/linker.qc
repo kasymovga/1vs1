@@ -131,7 +131,7 @@ NADGET_HOOKFUNCTION(linker, Attack) {
     setmodel(e, "models/ctf/shield.md3");
     e.scale = g_nadgets_linker_range / e.maxs_x;
     e.glow_color = 0xF5;
-    e.hg_adept = Buffs_Present(self, BUFF_ADEPT);
+    e.hg_adept = Buffs_Present(self, RM_BUFFS_ADEPT);
     e.movetype = MOVETYPE_TOSS;
     e.hg_type = NADGET_LINKER;
     e.entremove = nadget_linker_on_remove;

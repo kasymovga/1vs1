@@ -42,7 +42,7 @@ float(void) rm_effect_heal_emitter_customize {
 }
 
 void(void) rm_effect_heal_emitter_think {
-	if (wasfreed(self.enemy) || self.enemy.heal_emitter != self || !Buffs_Present(self.owner, BUFF_MEDIC)) {
+	if (wasfreed(self.enemy) || self.enemy.heal_emitter != self || !Buffs_Present(self.owner, RM_BUFFS_MEDIC)) {
 		remove(self);
 		return;
 	}
@@ -55,7 +55,7 @@ void(void) rm_effect_heal_emitter_think {
 }
 
 void(entity e, entity own) rm_effect_heal_emitter {
-	if not(Buffs_Present(own, BUFF_MEDIC)) return;
+	if not(Buffs_Present(own, RM_BUFFS_MEDIC)) return;
 	entity emitter = spawn();
 	emitter.owner = own;
 	emitter.enemy = e;

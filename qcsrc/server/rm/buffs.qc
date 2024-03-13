@@ -112,7 +112,7 @@ entity Buffs_Random_Spawn_Test_Overlap(entity buff) {
 void Buffs_Random_Spawn(void) {
     entity o = self;
     self = spawn();
-    self.buffs = BUFF_RANDOM;
+    self.buffs = RM_BUFFS_RANDOM;
     self.classname = "item_buff_randomspawn";
     Buffs_BuffPickup_Setup();
 
@@ -191,7 +191,7 @@ void Buffs_Random_Spawn(void) {
 var float() rm_buffs_weapon_rate_factor_next;
 float() rm_buffs_weapon_rate_factor {
 	float f = rm_buffs_weapon_rate_factor_next();
-	if (Buffs_Present(self, BUFF_HASTE))
+	if (Buffs_Present(self, RM_BUFFS_HASTE))
 		return f * g_buffs_haste_refire_rate;
 
 	return f;
@@ -200,7 +200,7 @@ float() rm_buffs_weapon_rate_factor {
 var float() rm_buffs_physics_max_speed_mod_next;
 float() rm_buffs_physics_max_speed_mod {
 	float f = rm_buffs_physics_max_speed_mod_next();
-	if (Buffs_Present(self, BUFF_HASTE))
+	if (Buffs_Present(self, RM_BUFFS_HASTE))
 		return f * g_buffs_haste_move_rate;
 
 	return f;
@@ -213,7 +213,7 @@ float() rm_buffs_physics_max_speed_mod {
 
 var float(entity to, float f) rm_buffs_item_give_factor_next;
 float(entity to, float f) rm_buffs_item_give_factor {
-	if(Buffs_Present(to, BUFF_SUPPLY))
+	if(Buffs_Present(to, RM_BUFFS_SUPPLY))
 		f *= g_buffs_supply_pickup_multiplier;
 
 	return rm_buffs_item_give_factor_next(to, f);
@@ -221,7 +221,7 @@ float(entity to, float f) rm_buffs_item_give_factor {
 
 var float(entity plr, entity viewer, float a) rm_buffs_player_alpha_mod_next;
 float(entity plr, entity viewer, float a) rm_buffs_player_alpha_mod {
-    if (Buffs_Present(plr, BUFF_STEALTH))
+    if (Buffs_Present(plr, RM_BUFFS_STEALTH))
         a *= (1 - (1 - g_buffs_stealth_alpha) * bound(0, (time - plr.buff_stealth_time) / g_buffs_stealth_regaintime, 1));
 
 	return rm_buffs_player_alpha_mod_next(plr, viewer, a);
@@ -236,7 +236,7 @@ float rm_buffs_WeaponPrepareAttack(float secondary, float attacktime) {
 var void() rm_buffs_player_health_armor_mods_set_next;
 void() rm_buffs_player_health_armor_mods_set {
 	rm_buffs_player_health_armor_mods_set_next();
-	if not(Buffs_Present(self, BUFF_GUARD)) return;
+	if not(Buffs_Present(self, RM_BUFFS_GUARD)) return;
 	plugin_player_health_armor_rot_regen = FALSE;
 	float limith = g_balance_health_limit * plugin_player_armor_health_limit_mod;
 	float maxh = g_buffs_guard_health * plugin_player_health_max_mod;
@@ -257,7 +257,7 @@ void(entity spot) rm_buffs_player_spawn {
 
 var float(float f) rm_buffs_weapon_clip_capacity_mod_next;
 float(float f) rm_buffs_weapon_clip_capacity_mod {
-	if (Buffs_Present(self, BUFF_SUPPLY)) {
+	if (Buffs_Present(self, RM_BUFFS_SUPPLY)) {
 		f = floor(f * 1.5);
 	}
 	return rm_buffs_weapon_clip_capacity_mod_next(f);
@@ -395,35 +395,34 @@ void(void) rm_buffs_init {
     addstat(STAT_RM_BUFFS, STAT_INT, buffstat);
     
     float enabled = 0;
-    for(i = 0, b = 1; i < BUFF_COUNT; ++i, b *= 2) {
-        if(b == BUFF_MEDIC || b == BUFF_CONDUIT)
+    for(i = 0, b = 1; i < RM_BUFFS_COUNT; ++i, b *= 2) {
+        if(b == RM_BUFFS_MEDIC || b == RM_BUFFS_CONDUIT)
         if(!team_mode)
             continue;
         
-        if(b == BUFF_WRATH || b == BUFF_ADEPT)
+        if(b == RM_BUFFS_WRATH || b == RM_BUFFS_ADEPT)
 		if(!cvar("g_nadgets"))
 			continue;
         
-        if(cvar(strcat("g_buffs_", Buffs_TypeToName(b)))) {
+		if(cvar(strcat("g_buffs_", rm_buffs_TypeToName(b)))) {
             g_buffs_enabled |= b;
             ++enabled;
         }
-        
-        if(cvar(strcat("g_buffs_", Buffs_TypeToName(b), "_baseline")))
+		if(cvar(strcat("g_buffs_", rm_buffs_TypeToName(b), "_baseline")))
             g_buffs_baseline |= b;
     }
     
     if(enabled < 2)
         g_buffs_randomize_dual = 0;
     
-    g_buffs_meodp = ((g_buffs_enabled & BUFF_MEODP) || (g_buffs_baseline & BUFF_MEODP));
+    g_buffs_meodp = ((g_buffs_enabled & RM_BUFFS_MEODP) || (g_buffs_baseline & RM_BUFFS_MEODP));
 
     float havebuffs = (g_buffs_enabled | g_buffs_baseline);
     
-    if(havebuffs & BUFF_ENDURANCE)
+    if(havebuffs & RM_BUFFS_ENDURANCE)
         addstat(STAT_RM_DMGINCOMING, STAT_INT, buff_endur_dmgpool);
 
-    if(havebuffs & BUFF_VAMPIRE)
+    if(havebuffs & RM_BUFFS_VAMPIRE)
         addstat(STAT_RM_HEALINCOMING, STAT_INT, buff_vamp_healthpool);
 
     entity_initialize(NULL, Buffs_Init_Delayed, INITPRIO_LAST);
@@ -432,7 +431,7 @@ void(void) rm_buffs_init {
 void Buffs_Randomize_Reset(void) {
     float i;
     
-    for(i = 0; i < BUFF_COUNT; ++i) {
+    for(i = 0; i < RM_BUFFS_COUNT; ++i) {
         g_buffs_replacements[i] = 0;
         g_buffs_used[i] = 0;
         g_buffs_used_dual[i] = 0;
@@ -444,66 +443,56 @@ void Buffs_Randomize_Reset(void) {
 float Buffs_Randomize_Yield(void) {
     float found = 0, sub, choosen, j, b;
     random_selection_init();
-    
-    while(!found) {
-        for(j = 0, b = 1; j < BUFF_COUNT; ++j, b *= 2)
-            if((g_buffs_enabled & b) && (g_buffs_used[j] < g_buffs_randomize_ulevel || g_buffs_randomize_chaos)) {
-                random_selection_add(NULL, j, NULL, cvar(strcat("g_buffs_", Buffs_TypeToName(b), "_randomspawn_weight")), 1);
-                ++found;
-            }
-        
+	while(!found) {
+		for(j = 0, b = 1; j < RM_BUFFS_COUNT; ++j, b *= 2)
+			if((g_buffs_enabled & b) && (g_buffs_used[j] < g_buffs_randomize_ulevel || g_buffs_randomize_chaos)) {
+				random_selection_add(NULL, j, NULL, cvar(strcat("g_buffs_", rm_buffs_TypeToName(b), "_randomspawn_weight")), 1);
+				++found;
+			}
         if(!found)
             ++g_buffs_randomize_ulevel;
     }
-    
     choosen = random_selection_chosen_float;
     g_buffs_used[choosen] = g_buffs_randomize_ulevel;
     sub = pow(2, choosen);
-    
     if(g_buffs_randomize_dual >= 1 || random() < g_buffs_randomize_dual) {
         random_selection_init();
         found = 0;
-        
-        while(!found) {
-            for(j = 0, b = 1; j < BUFF_COUNT; ++j, b *= 2)
-                if((g_buffs_enabled & b) && j != choosen && (g_buffs_used_dual[j] < g_buffs_randomize_ulevel_dual || g_buffs_randomize_chaos)) {
-                    random_selection_add(NULL, j, NULL, cvar(strcat("g_buffs_", Buffs_TypeToName(b), "_randomspawn_weight")), 1);
-                    ++found;
-                }
-            
+		while(!found) {
+			for(j = 0, b = 1; j < RM_BUFFS_COUNT; ++j, b *= 2)
+				if((g_buffs_enabled & b) && j != choosen && (g_buffs_used_dual[j] < g_buffs_randomize_ulevel_dual || g_buffs_randomize_chaos)) {
+					random_selection_add(NULL, j, NULL, cvar(strcat("g_buffs_", rm_buffs_TypeToName(b), "_randomspawn_weight")), 1);
+					++found;
+				}
             if(!found)
                 ++g_buffs_randomize_ulevel_dual;
         }
-        
         g_buffs_used_dual[random_selection_chosen_float] = g_buffs_randomize_ulevel_dual;
         sub = (sub | pow(2, random_selection_chosen_float));
     }
-    
     return sub;
 }
 
 void Buffs_Randomize(entity blist, float force) {
     float i, j;
     entity b;
-    
     if(g_buffs_randomize >= 2)
         force = TRUE;
     
     Buffs_Randomize_Reset();
-    
-    if(force && g_buffs_randomize_byinstance <= 1) for(i = 0; i < BUFF_COUNT; ++i)
+    if(force && g_buffs_randomize_byinstance <= 1) for(i = 0; i < RM_BUFFS_COUNT; ++i)
         g_buffs_replacements[i] = Buffs_Randomize_Yield();
     
     if(!blist)
         blist = findchain(classname, "item_buff");
     
     for(b = blist; b; b = b.chain) {
-        if(b.origbuffs == BUFF_RANDOM || g_buffs_randomize_byinstance > 1 || (g_buffs_randomize_byinstance && !b.team))
+        if(b.origbuffs == RM_BUFFS_RANDOM || g_buffs_randomize_byinstance > 1 || (g_buffs_randomize_byinstance && !b.team))
             b.buffs = Buffs_Randomize_Yield();
         else if(force) {
-            i = Buffs_TypeToIndex(b.origbuffs);
-            j = g_buffs_replacements[i];
-            if(j) b.buffs = j;
+			i = rm_buffs_TypeToIndex(b.origbuffs);
+			j = g_buffs_replacements[i];
+			if(j) b.buffs = j;
         }
         //FIXME
         //if(roundstate != ROUNDSTATE_GAME || roundstate == ROUNDSTATE_INITIAL_WARMUP)
@@ -552,7 +541,7 @@ void Buffs_Init_Delayed(void) {
                 b.think = stdproc_remove;
             } else {
                 self = b;
-                self.buffs = BUFF_RANDOM;
+                self.buffs = RM_BUFFS_RANDOM;
                 Buffs_BuffPickup_Setup();
                 if(self.owner && !wasfreed(self.owner)) {
                     remove(self.owner);
@@ -605,7 +594,7 @@ string Buffs_Description(float bfs) {
         string result = "";
 
 		float b;
-        for(b = BUFF_FIRST; b <= BUFF_LAST; b *= 2) {
+        for(b = RM_BUFFS_FIRST; b <= RM_BUFFS_LAST; b *= 2) {
             if(bfs & b) {
                 string s = Buffs_Description(b);
                 if(result)
@@ -617,14 +606,14 @@ string Buffs_Description(float bfs) {
 
         return result;
     } else {
-        string d = cvar_string(strcat("g_buffs_", Buffs_TypeToName(bfs), "_description"));
-        return strcat(rgb_to_hexcolor(0.5 * Buffs_TypeToColor(bfs) + '0.5 0.5 0.5'), d);
-    }
+		string d = cvar_string(strcat("g_buffs_", rm_buffs_TypeToName(bfs), "_description"));
+		return strcat(rgb_to_hexcolor(0.5 * rm_buffs_TypeToColor(bfs) + '0.5 0.5 0.5'), d);
+	}
 }
 
 void Buffs_Notify(entity plr, float bfs, float tm) {
-    string bname = strcat(Buffs_TypeToExpandedName(bfs, "^7 + ", 1), "^7 Buff!");
-    string tn;
+	string bname = strcat(rm_buffs_TypeToExpandedName(bfs, "^7 + ", 1), "^7 Buff!");
+	string tn;
 	if (tm)
 		tn = strcat(team_color_code(tm), strtoupper(team_color_name(tm)), " ");
 	else
@@ -759,13 +748,12 @@ void Buffs_ApplyConduit(void) {
     if(!doheal && !_damage)
         return;
 
-    if(!Buffs_Present(self, BUFF_CONDUIT)) {
+    if(!Buffs_Present(self, RM_BUFFS_CONDUIT)) {
         self.buff_conduit_hpool = self.buff_conduit_apool = self.buff_conduit_dpool = 0;
         return;
     }
-
-    vector buff_org = self.origin + BUFFMODEL_OVERHEAD_OFFSET;
-    float healed = 0, damaged = 0;
+	vector buff_org = self.origin + RM_BUFFS_MODEL_OVERHEAD_OFFSET;
+	float healed = 0, damaged = 0;
 	entity plr;
     FOR_EACH_PLAYER(plr) if(self != plr && !PLAYER_DEAD(plr)) {
         float sameteam = !team_is_different_teams(self, plr);
@@ -837,7 +825,7 @@ void(void) rm_buffs_player_think {
         self.effective_buffs = (self.buffstat | g_buffs_baseline);
     }
     if(self.buffs != self.oldbuffs) {
-		ON_BUFF_ADDED(BUFF_SUPPLY) {
+		ON_BUFF_ADDED(RM_BUFFS_SUPPLY) {
 			//FIXME: not the best solution
 			float i;
 			self.ammoclipmax = floor(self.ammoclipmax * g_buffs_supply_clip_limit_multiplier);
@@ -856,11 +844,11 @@ void(void) rm_buffs_player_think {
             }
         }
 
-        ON_BUFF_REMOVED(BUFF_SUPPLY) {
+        ON_BUFF_REMOVED(RM_BUFFS_SUPPLY) {
             //W_Clip_ResetAll(FALSE); //FIXME
         }
 
-        ON_BUFF_ADDED(BUFF_GUARD) {
+        ON_BUFF_ADDED(RM_BUFFS_GUARD) {
             //if(g_clanarena)
             //    self.health = max(min(CVAR(g_clanarena_heal_limit), CVAR(g_buffs_guard_pickup_health)), self.health);
             //else {
@@ -869,28 +857,28 @@ void(void) rm_buffs_player_think {
             //}
         }
 
-        ON_BUFF_REMOVED(BUFF_VAMPIRE) {
+        ON_BUFF_REMOVED(RM_BUFFS_VAMPIRE) {
             self.buff_vamp_ticks = self.buff_vamp_healthpool = self.buff_vamp_nexttick = 0;
         }
 
-        ON_BUFF_ADDED(BUFF_VAMPIRE) {
+        ON_BUFF_ADDED(RM_BUFFS_VAMPIRE) {
             self.buff_vamp_ticks = self.buff_vamp_healthpool = self.buff_vamp_nexttick = 0;
         }
 
-        ON_BUFF_REMOVED(BUFF_ADEPT) {
+        ON_BUFF_REMOVED(RM_BUFFS_ADEPT) {
             self.hg_stealth_saved = 0;
         }
 
-        ON_BUFF_ADDED(BUFF_STEALTH) {
+        ON_BUFF_ADDED(RM_BUFFS_STEALTH) {
             self.buff_stealth_time = -1000;
         }
 
-        ON_BUFF_REMOVED(BUFF_CONDUIT) {
+        ON_BUFF_REMOVED(RM_BUFFS_CONDUIT) {
             self.buff_conduit_hpool = 0;
             self.buff_conduit_apool = 0;
         }
 
-        ON_BUFF_REMOVED(BUFF_ENDURANCE) {
+        ON_BUFF_REMOVED(RM_BUFFS_ENDURANCE) {
             self.buff_endur_dmgpool = 0;
         }
 
@@ -900,18 +888,16 @@ void(void) rm_buffs_player_think {
     if(self.buffstat) {
         if(!self.buff_model) {
             entity m = spawn();
-            float bi = Buffs_TypeToIndex(self.buffstat);
+            float bi = rm_buffs_TypeToIndex(self.buffstat);
             setsize(m, '0 0 -40', '0 0 40');
             m.owner = self;
             m.customizeentityforclient = Buffs_Model_Overhead_Customize;
             net_link_entity(m, FALSE, 0, Buffs_Model_Send);
             self.buff_model = m;
         }
-        
-        self.buff_model.buffs = self.buffstat;
-        setorigin(self.buff_model, self.origin + BUFFMODEL_OVERHEAD_OFFSET);
-        Buffs_Model_Update(self.buff_model);
-
+		self.buff_model.buffs = self.buffstat;
+		setorigin(self.buff_model, self.origin + RM_BUFFS_MODEL_OVERHEAD_OFFSET);
+		Buffs_Model_Update(self.buff_model);
     } else if(self.buff_model) {
         remove(self.buff_model);
         self.buff_model = NULL;
@@ -921,8 +907,8 @@ void(void) rm_buffs_player_think {
     Buffs_ApplyConduit();
 
     if(!self.buff_teamwp) {
-        if(Buffs_Present(self, BUFF_MEDIC))
-            Buffs_SetTeamWaypoint(self, "HEALER", Buffs_TypeToColor(BUFF_MEDIC), BUFF_MEDIC);
+        if(Buffs_Present(self, RM_BUFFS_MEDIC))
+            Buffs_SetTeamWaypoint(self, "HEALER", rm_buffs_TypeToColor(RM_BUFFS_MEDIC), RM_BUFFS_MEDIC);
     } else if(!Buffs_Present(self, self.buff_teamwp.buffs))
         Buffs_RemoveTeamWaypoint(self);
     
@@ -934,31 +920,31 @@ void(void) rm_buffs_player_think {
 #undef ON_BUFF_REMOVED
 
 float Buffs_NadgetPower(entity plr) {
-	return (Buffs_Present(plr, BUFF_WRATH) ? g_buffs_wrath_hgpower : 1);
+	return (Buffs_Present(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgpower : 1);
 }
 
 float Buffs_NadgetRegen(entity plr) {
     float rscale = 1;
 
-    if(Buffs_Present(plr, BUFF_SUPPLY))
+    if(Buffs_Present(plr, RM_BUFFS_SUPPLY))
         rscale *= g_buffs_supply_hg_regenscale;
 
-    if(Buffs_Present(plr, BUFF_WRATH))
+    if(Buffs_Present(plr, RM_BUFFS_WRATH))
         rscale *= g_buffs_wrath_hgregen;
 
     return rscale;
 }
 
 float Buffs_NadgetCooldown(entity plr) {
-    return (Buffs_Present(plr, BUFF_WRATH) ? g_buffs_wrath_hgcooldown : 1);
+    return (Buffs_Present(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgcooldown : 1);
 }
 
 float Buffs_NadgetRegenDmgPause(entity plr) {
-    return (Buffs_Present(plr, BUFF_WRATH) ? g_buffs_wrath_hgregen_damagepause : 1);
+    return (Buffs_Present(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgregen_damagepause : 1);
 }
 
 float Buffs_NadgetBonusMultiplier(entity plr) {
-    return (Buffs_Present(plr, BUFF_WRATH) ? g_buffs_wrath_hgbonusmultiplier : 1);
+    return (Buffs_Present(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgbonusmultiplier : 1);
 }
 
 //float Buffs_ClipLimitMultiplier(entity plr) {
@@ -969,7 +955,7 @@ float Buffs_MedicDamage(entity targ, entity attacker, entity inflictor, float da
     if(!targ.iscreature || deathtype == DEATH_RM_ENDURANCE || (DEATH_ISSPECIAL(deathtype) && !DEATH_RM_ISPROJECTED(deathtype)))
         return damage;
 
-    if(!Buffs_Present(attacker, BUFF_MEDIC))
+    if(!Buffs_Present(attacker, RM_BUFFS_MEDIC))
         return damage;
 
     if((team_mode && attacker.team == targ.team) || attacker == targ) {
@@ -1028,8 +1014,8 @@ float Buffs_IgniteDamage(entity targ, entity attacker, entity inflictor, float d
     if(attacker.classname == "player")
     if(DEATH_NADGETTYPE(deathtype) != NADGET_TRANSLOC)
     if(!DEATH_ISSPECIAL(deathtype) || deathtype == DEATH_RM_ARC)
-    if(Buffs_Present(attacker, BUFF_IGNITE))
-    if((diffteam = team_is_different_teams(attacker, targ)) || Buffs_Present(attacker, BUFF_MEDIC)) {
+    if(Buffs_Present(attacker, RM_BUFFS_IGNITE))
+    if((diffteam = team_is_different_teams(attacker, targ)) || Buffs_Present(attacker, RM_BUFFS_MEDIC)) {
         float fdamage = damage * g_buffs_ignite_damage_fire;
 
         if(!diffteam || Buffs_TenacityDamage(targ, attacker, fdamage, DEATH_RM_IGNITE))
@@ -1042,7 +1028,7 @@ float Buffs_IgniteDamage(entity targ, entity attacker, entity inflictor, float d
 }
 
 float Buffs_TenacityDamage(entity targ, entity attacker, float damage, float deathtype) {
-    if(!Buffs_Present(targ, BUFF_TENACITY))
+    if(!Buffs_Present(targ, RM_BUFFS_TENACITY))
         return damage;
     
     // do not use DEATH_ISPROJECTED here, we don't want to mitigate DEATH_ENDURANCE
@@ -1059,7 +1045,7 @@ float Buffs_TenacityDamage(entity targ, entity attacker, float damage, float dea
 }
 
 void Buffs_VampireDamage(entity targ, entity a, float damage, float deathtype) {
-    if(damage <= 0 || !Buffs_Present(a, BUFF_VAMPIRE))
+    if(damage <= 0 || !Buffs_Present(a, RM_BUFFS_VAMPIRE))
         return;
     
     // paranoid sanity check, should not happen
@@ -1081,7 +1067,7 @@ void Buffs_VampireDamage(entity targ, entity a, float damage, float deathtype) {
 }
 
 void Buffs_WrathDamage(entity targ, entity attacker, float damage, float deathtype) {
-    float wrath = Buffs_Present(attacker, BUFF_WRATH) * g_buffs_wrath_hgregen_fromdamage;
+    float wrath = Buffs_Present(attacker, RM_BUFFS_WRATH) * g_buffs_wrath_hgregen_fromdamage;
 
     if(!wrath)
         return;
@@ -1092,7 +1078,7 @@ void Buffs_WrathDamage(entity targ, entity attacker, float damage, float deathty
 }
 
 void Buffs_ArcDamage(entity targ, entity attacker, float damage, float deathtype) {
-    if(!Buffs_Present(attacker, BUFF_ARC))
+    if(!Buffs_Present(attacker, RM_BUFFS_ARC))
         return;
 
     float mul;
@@ -1115,7 +1101,7 @@ void Buffs_ConduitDamage(entity targ, entity attacker, float hdamage, float adam
     if(!(hdamage + adamage))
         return;
 
-    if(!Buffs_Present(targ, BUFF_CONDUIT))
+    if(!Buffs_Present(targ, RM_BUFFS_CONDUIT))
         return;
 
     if(deathtype == DEATH_RM_CONDUIT || DEATH_NADGETTYPE(deathtype) == NADGET_LINKER)
@@ -1201,7 +1187,7 @@ entity Buffs_Endurance_ApplyDOT(entity targ, entity attacker, float ticks, float
 }
 
 float Buffs_EnduranceDamage(entity targ, entity attacker, float damage, float deathtype) {
-    if(deathtype == DEATH_RM_ENDURANCE || damage <= 0 || !Buffs_Present(targ, BUFF_ENDURANCE))
+    if(deathtype == DEATH_RM_ENDURANCE || damage <= 0 || !Buffs_Present(targ, RM_BUFFS_ENDURANCE))
         return damage;
 
     float ticks = g_buffs_endurance_damage_dot_duration;
@@ -1215,11 +1201,11 @@ float Buffs_EnduranceDamage(entity targ, entity attacker, float damage, float de
 }
 
 void Buffs_ReaperFrag(entity targ, entity attacker) {
-    if(!Buffs_Present(attacker, BUFF_REAPER) && !Buffs_Present(targ, BUFF_REAPER))
+    if(!Buffs_Present(attacker, RM_BUFFS_REAPER) && !Buffs_Present(targ, RM_BUFFS_REAPER))
         return;
 
     float newbuffs = targ.buffs;
-    newbuffs &= ~(BUFF_REAPER | g_buffs_reaper_buff_banmask);
+    newbuffs &= ~(RM_BUFFS_REAPER | g_buffs_reaper_buff_banmask);
     Buffs_Give(attacker, newbuffs, 0);
 }
 
@@ -1260,7 +1246,7 @@ void Buffs_MEODP_Point_Think(void) {
 }
 
 float Buffs_MEODP_Point_VisibleForPlayer(entity p, entity plr) {
-    if(!Buffs_Present(plr, BUFF_MEODP))
+    if(!Buffs_Present(plr, RM_BUFFS_MEODP))
         return FALSE;
     
 	if (p.owner.iscreature)
@@ -1390,7 +1376,7 @@ void Buffs_MEODP_Point_Detach(entity e) {
 .entity meodp_chain;
 
 entity Buffs_MEODP_Hitscan_Begin(entity plr) {
-    if(!Buffs_Present(akimbo_owner(plr), BUFF_MEODP))
+    if(!Buffs_Present(akimbo_owner(plr), RM_BUFFS_MEODP))
         return NULL;
     
     entity p, pts = findchain_tofield(classname, "meodp_point", meodp_chain);
@@ -1459,9 +1445,9 @@ float Buffs_BuffPickup_Waypoint_VisibleForPlayer(entity plr) {
 }
 
 void Buffs_BuffPickup_SpawnWaypoint(entity e) {
-    vector c = Buffs_TypeToColor(e.buffs);
+    vector c = rm_buffs_TypeToColor(e.buffs);
     str_unzone_ifneeded(e.netname);
-    e.netname = str_zone_ifneeded(Buffs_TypeToExpandedName(e.buffs, "+", 0));
+    e.netname = str_zone_ifneeded(rm_buffs_TypeToExpandedName(e.buffs, "+", 0));
     WaypointSprite_Spawn(e.netname, 0, 0, e, '0 0 40', NULL, e.team, e, buff_waypoint, TRUE);
     //WaypointSprite_UpdateTextColors(e.buff_waypoint,c, '0 0 0', '0 0 0');
     WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_FLAG, c);
@@ -1632,7 +1618,7 @@ void Buffs_BuffPickup_Setup(void) {
     }
 
     if not(g_buffs_randomize)
-    if((g_buffs_enabled & self.buffs) != self.buffs && self.buffs != BUFF_RANDOM) {
+    if((g_buffs_enabled & self.buffs) != self.buffs && self.buffs != RM_BUFFS_RANDOM) {
         remove(self);
         return;
     }
@@ -1646,7 +1632,7 @@ void Buffs_BuffPickup_Setup(void) {
     self.origbuffs = self.buffs;
     
     if(time > 1)
-    if(self.buffs == BUFF_RANDOM)
+    if(self.buffs == RM_BUFFS_RANDOM)
         self.buffs = Buffs_Randomize_Yield();
     
     self.classname = "item_buff";
@@ -1693,13 +1679,12 @@ void Buffs_BuffPickup_SetupQ3TACompat(string rune) {
         self.team = COLOR_TEAM1;
     else if(self.spawnflags & 4)
         self.team = COLOR_TEAM2;
-    
-    if not((self.buffs = Buffs_NameToType(cvar_string(strcat("g_buffs_q3ta_", rune))))) {
-        remove(self);
-        return;
-    }
-    
-    Buffs_BuffPickup_Setup();
+
+	if not((self.buffs = rm_buffs_NameToType(cvar_string(strcat("g_buffs_q3ta_", rune))))) {
+		remove(self);
+		return;
+	}
+	Buffs_BuffPickup_Setup();
 }
 
 #define BUFF_SPAWNFUNC(e,b,t) void spawnfunc_item_buff_##e() { self.buffs = b; self.team = t; Buffs_BuffPickup_Setup(); }
@@ -1711,18 +1696,18 @@ void Buffs_BuffPickup_SetupQ3TACompat(string rune) {
         BUFF_SPAWNFUNC(e##_team3,   b,  COLOR_TEAM3) \
         BUFF_SPAWNFUNC(e##_team4,   b,  COLOR_TEAM4) 
 
-#define BUFFDEF(id,shortname,longname,color) \
+#define RM_BUFFS_DEF(id,shortname,longname,color) \
         BUFF_SPAWNFUNCS(shortname, id)
 
-BUFFDEFS
+RM_BUFFS_DEFS
 
-#undef BUFFDEF
+#undef RM_BUFFS_DEF
 
-BUFF_SPAWNFUNCS(random,     BUFF_RANDOM)
+BUFF_SPAWNFUNCS(random,     RM_BUFFS_RANDOM)
 
 // older RM compatibility
-BUFF_SPAWNFUNCS(bash,       BUFF_IGNITE)
-BUFF_SPAWNFUNCS(focus,      BUFF_CONDUIT)
+BUFF_SPAWNFUNCS(bash,       RM_BUFFS_IGNITE)
+BUFF_SPAWNFUNCS(focus,      RM_BUFFS_CONDUIT)
 
 // q3ta compatibility
 BUFF_SPAWNFUNC_Q3TA_COMPAT(item_doubler,    "doubler")
@@ -1768,14 +1753,12 @@ void(void) target_buffs_use {
 }
 
 void spawnfunc_target_buffs(void) {
-    self.classname = "target_buffs";
+	self.classname = "target_buffs";
+	if(self.netname)
+		self.buffs = (rm_buffs_ParseList(self.netname) & g_buffs_enabled);
+	else
+		self.buffs = g_buffs_enabled;
 
-    if(self.netname)
-        self.buffs = (Buffs_ParseList(self.netname) & g_buffs_enabled);
-    else
-        self.buffs = g_buffs_enabled;
-
-    self.cnt = floor(max(0, self.cnt));
-
-    self.use = target_buffs_use;
+	self.cnt = floor(max(0, self.cnt));
+	self.use = target_buffs_use;
 }
