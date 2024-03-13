@@ -77,7 +77,7 @@ void nadget_Shield_Discharge_Think(void) {
     //W_SetHitscanVisuals(self.owner, end);
     weapon_zapper_attack2_effect((team_mode ? self.owner.team : COLOR_TEAM3), weapon_shotorg_visual, end_visual);
 
-    if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (team_is_different_teams(self.owner, targ) || Buffs_Present(self.owner, RM_BUFFS_MEDIC))) {
+    if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (team_is_different_teams(self.owner, targ) || RM_BUFFS_PRESENT(self.owner, RM_BUFFS_MEDIC))) {
         nadget_Shield_Discharge_Arc(targ, self.owner, _damage);
     }
 
@@ -107,7 +107,7 @@ void nadget_Shield_Trigger(void) {
         self.think();
 		self = oldself;
     }
-	if(!Buffs_Present(self, RM_BUFFS_ADEPT) || self.hg_shield_stored <= 0) {
+	if(!RM_BUFFS_PRESENT(self, RM_BUFFS_ADEPT) || self.hg_shield_stored <= 0) {
 		self.hg_shield = 0;
 		sound_stop(self, CHAN_AUTO);
 	}
@@ -244,7 +244,7 @@ float nadget_Shield_Damage(entity attacker, float _damage, float deathtype, vect
 NADGET_HOOKFUNCTION(shield, Attack) {
     entity e;
     float d;
-	float adept = Buffs_Present(self, RM_BUFFS_ADEPT);
+	float adept = RM_BUFFS_PRESENT(self, RM_BUFFS_ADEPT);
 	if (adept)
 		d = g_nadgets_shield_adept_duration;
 	else

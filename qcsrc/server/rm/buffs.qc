@@ -74,6 +74,8 @@ float g_buffs_guard_armor_regen;
 const vector BUFFS_MARGIN_MINS = '-4 -4 0';
 const vector BUFFS_MARGIN_MAXS = ' 4  4 0';
 
+void(void) rm_buffs_init_delayed;
+
 var void(void) rm_buffs_player_think_next;
 void(void) rm_buffs_player_think;
 var void(float killed) rm_buffs_player_clear_next;
@@ -191,7 +193,7 @@ void Buffs_Random_Spawn(void) {
 var float() rm_buffs_weapon_rate_factor_next;
 float() rm_buffs_weapon_rate_factor {
 	float f = rm_buffs_weapon_rate_factor_next();
-	if (Buffs_Present(self, RM_BUFFS_HASTE))
+	if (RM_BUFFS_PRESENT(self, RM_BUFFS_HASTE))
 		return f * g_buffs_haste_refire_rate;
 
 	return f;
@@ -200,7 +202,7 @@ float() rm_buffs_weapon_rate_factor {
 var float() rm_buffs_physics_max_speed_mod_next;
 float() rm_buffs_physics_max_speed_mod {
 	float f = rm_buffs_physics_max_speed_mod_next();
-	if (Buffs_Present(self, RM_BUFFS_HASTE))
+	if (RM_BUFFS_PRESENT(self, RM_BUFFS_HASTE))
 		return f * g_buffs_haste_move_rate;
 
 	return f;
@@ -213,7 +215,7 @@ float() rm_buffs_physics_max_speed_mod {
 
 var float(entity to, float f) rm_buffs_item_give_factor_next;
 float(entity to, float f) rm_buffs_item_give_factor {
-	if(Buffs_Present(to, RM_BUFFS_SUPPLY))
+	if(RM_BUFFS_PRESENT(to, RM_BUFFS_SUPPLY))
 		f *= g_buffs_supply_pickup_multiplier;
 
 	return rm_buffs_item_give_factor_next(to, f);
@@ -221,7 +223,7 @@ float(entity to, float f) rm_buffs_item_give_factor {
 
 var float(entity plr, entity viewer, float a) rm_buffs_player_alpha_mod_next;
 float(entity plr, entity viewer, float a) rm_buffs_player_alpha_mod {
-    if (Buffs_Present(plr, RM_BUFFS_STEALTH))
+    if (RM_BUFFS_PRESENT(plr, RM_BUFFS_STEALTH))
         a *= (1 - (1 - g_buffs_stealth_alpha) * bound(0, (time - plr.buff_stealth_time) / g_buffs_stealth_regaintime, 1));
 
 	return rm_buffs_player_alpha_mod_next(plr, viewer, a);
@@ -236,7 +238,7 @@ float rm_buffs_WeaponPrepareAttack(float secondary, float attacktime) {
 var void() rm_buffs_player_health_armor_mods_set_next;
 void() rm_buffs_player_health_armor_mods_set {
 	rm_buffs_player_health_armor_mods_set_next();
-	if not(Buffs_Present(self, RM_BUFFS_GUARD)) return;
+	if not(RM_BUFFS_PRESENT(self, RM_BUFFS_GUARD)) return;
 	plugin_player_health_armor_rot_regen = FALSE;
 	float limith = g_balance_health_limit * plugin_player_armor_health_limit_mod;
 	float maxh = g_buffs_guard_health * plugin_player_health_max_mod;
@@ -257,7 +259,7 @@ void(entity spot) rm_buffs_player_spawn {
 
 var float(float f) rm_buffs_weapon_clip_capacity_mod_next;
 float(float f) rm_buffs_weapon_clip_capacity_mod {
-	if (Buffs_Present(self, RM_BUFFS_SUPPLY)) {
+	if (RM_BUFFS_PRESENT(self, RM_BUFFS_SUPPLY)) {
 		f = floor(f * 1.5);
 	}
 	return rm_buffs_weapon_clip_capacity_mod_next(f);
@@ -425,7 +427,7 @@ void(void) rm_buffs_init {
     if(havebuffs & RM_BUFFS_VAMPIRE)
         addstat(STAT_RM_HEALINCOMING, STAT_INT, buff_vamp_healthpool);
 
-    entity_initialize(NULL, Buffs_Init_Delayed, INITPRIO_LAST);
+    entity_initialize(NULL, rm_buffs_init_delayed, INITPRIO_LAST);
 }
 
 void Buffs_Randomize_Reset(void) {
@@ -516,8 +518,8 @@ void Buffs_Randomizer_Reset(void) {
     Buffs_Randomize_Reset();
 }
 
-float buff_teamfound[4];
-void Buffs_Init_Delayed(void) {
+float rm_buffs_teamfound[4];
+void(void) rm_buffs_init_delayed {
     entity blist = NULL, b, o;
     float idx, teams_found = FALSE, teams_total, bcnt = g_buffs_count, j;
     
@@ -558,8 +560,8 @@ void Buffs_Init_Delayed(void) {
         blist = findchain(classname, "item_buff");
         for(b = blist; b; b = b.chain) if(b.team) {
             idx = team_index(b.team);
-            if(!buff_teamfound[idx]) {
-                buff_teamfound[idx] = TRUE;
+            if(!rm_buffs_teamfound[idx]) {
+                rm_buffs_teamfound[idx] = TRUE;
                 ++teams_found;
             }
             
@@ -748,7 +750,7 @@ void Buffs_ApplyConduit(void) {
     if(!doheal && !_damage)
         return;
 
-    if(!Buffs_Present(self, RM_BUFFS_CONDUIT)) {
+    if(!RM_BUFFS_PRESENT(self, RM_BUFFS_CONDUIT)) {
         self.buff_conduit_hpool = self.buff_conduit_apool = self.buff_conduit_dpool = 0;
         return;
     }
@@ -907,9 +909,9 @@ void(void) rm_buffs_player_think {
     Buffs_ApplyConduit();
 
     if(!self.buff_teamwp) {
-        if(Buffs_Present(self, RM_BUFFS_MEDIC))
+        if(RM_BUFFS_PRESENT(self, RM_BUFFS_MEDIC))
             Buffs_SetTeamWaypoint(self, "HEALER", rm_buffs_TypeToColor(RM_BUFFS_MEDIC), RM_BUFFS_MEDIC);
-    } else if(!Buffs_Present(self, self.buff_teamwp.buffs))
+    } else if(!RM_BUFFS_PRESENT(self, self.buff_teamwp.buffs))
         Buffs_RemoveTeamWaypoint(self);
     
     if(self.buff_endur_dmgpool < 0)
@@ -920,42 +922,42 @@ void(void) rm_buffs_player_think {
 #undef ON_BUFF_REMOVED
 
 float Buffs_NadgetPower(entity plr) {
-	return (Buffs_Present(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgpower : 1);
+	return (RM_BUFFS_PRESENT(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgpower : 1);
 }
 
 float Buffs_NadgetRegen(entity plr) {
     float rscale = 1;
 
-    if(Buffs_Present(plr, RM_BUFFS_SUPPLY))
+    if(RM_BUFFS_PRESENT(plr, RM_BUFFS_SUPPLY))
         rscale *= g_buffs_supply_hg_regenscale;
 
-    if(Buffs_Present(plr, RM_BUFFS_WRATH))
+    if(RM_BUFFS_PRESENT(plr, RM_BUFFS_WRATH))
         rscale *= g_buffs_wrath_hgregen;
 
     return rscale;
 }
 
 float Buffs_NadgetCooldown(entity plr) {
-    return (Buffs_Present(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgcooldown : 1);
+    return (RM_BUFFS_PRESENT(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgcooldown : 1);
 }
 
 float Buffs_NadgetRegenDmgPause(entity plr) {
-    return (Buffs_Present(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgregen_damagepause : 1);
+    return (RM_BUFFS_PRESENT(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgregen_damagepause : 1);
 }
 
 float Buffs_NadgetBonusMultiplier(entity plr) {
-    return (Buffs_Present(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgbonusmultiplier : 1);
+    return (RM_BUFFS_PRESENT(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgbonusmultiplier : 1);
 }
 
 //float Buffs_ClipLimitMultiplier(entity plr) {
-//    return (Buffs_Present(plr, BUFF_SUPPLY) ? g_buffs_supply_clip_limit_multiplier : 1);
+//    return (RM_BUFFS_PRESENT(plr, BUFF_SUPPLY) ? g_buffs_supply_clip_limit_multiplier : 1);
 //}
 
 float Buffs_MedicDamage(entity targ, entity attacker, entity inflictor, float damage, float deathtype, vector hitloc, vector force) {
     if(!targ.iscreature || deathtype == DEATH_RM_ENDURANCE || (DEATH_ISSPECIAL(deathtype) && !DEATH_RM_ISPROJECTED(deathtype)))
         return damage;
 
-    if(!Buffs_Present(attacker, RM_BUFFS_MEDIC))
+    if(!RM_BUFFS_PRESENT(attacker, RM_BUFFS_MEDIC))
         return damage;
 
     if((team_mode && attacker.team == targ.team) || attacker == targ) {
@@ -997,7 +999,7 @@ float Buffs_MedicDamage(entity targ, entity attacker, entity inflictor, float da
             Buffs_VampireDamage(attacker, attacker, heal * g_buffs_medic_selfhealfactor, deathtype);
 
         if(!DEATH_RM_ISPROJECTED(deathtype))
-            Buffs_ArcDamage(targ, attacker, heal, deathtype);
+            rm_buffs_arc_damage(targ, attacker, heal, deathtype);
 
         return -1;
     } else/* if(!g_clanarena)*/ if(!attacker.hg_shield) if(!DEATH_RM_ISPROJECTED(deathtype))
@@ -1014,8 +1016,8 @@ float Buffs_IgniteDamage(entity targ, entity attacker, entity inflictor, float d
     if(attacker.classname == "player")
     if(DEATH_NADGETTYPE(deathtype) != NADGET_TRANSLOC)
     if(!DEATH_ISSPECIAL(deathtype) || deathtype == DEATH_RM_ARC)
-    if(Buffs_Present(attacker, RM_BUFFS_IGNITE))
-    if((diffteam = team_is_different_teams(attacker, targ)) || Buffs_Present(attacker, RM_BUFFS_MEDIC)) {
+    if(RM_BUFFS_PRESENT(attacker, RM_BUFFS_IGNITE))
+    if((diffteam = team_is_different_teams(attacker, targ)) || RM_BUFFS_PRESENT(attacker, RM_BUFFS_MEDIC)) {
         float fdamage = damage * g_buffs_ignite_damage_fire;
 
         if(!diffteam || Buffs_TenacityDamage(targ, attacker, fdamage, DEATH_RM_IGNITE))
@@ -1028,7 +1030,7 @@ float Buffs_IgniteDamage(entity targ, entity attacker, entity inflictor, float d
 }
 
 float Buffs_TenacityDamage(entity targ, entity attacker, float damage, float deathtype) {
-    if(!Buffs_Present(targ, RM_BUFFS_TENACITY))
+    if(!RM_BUFFS_PRESENT(targ, RM_BUFFS_TENACITY))
         return damage;
     
     // do not use DEATH_ISPROJECTED here, we don't want to mitigate DEATH_ENDURANCE
@@ -1045,7 +1047,7 @@ float Buffs_TenacityDamage(entity targ, entity attacker, float damage, float dea
 }
 
 void Buffs_VampireDamage(entity targ, entity a, float damage, float deathtype) {
-    if(damage <= 0 || !Buffs_Present(a, RM_BUFFS_VAMPIRE))
+    if(damage <= 0 || !RM_BUFFS_PRESENT(a, RM_BUFFS_VAMPIRE))
         return;
     
     // paranoid sanity check, should not happen
@@ -1067,7 +1069,7 @@ void Buffs_VampireDamage(entity targ, entity a, float damage, float deathtype) {
 }
 
 void Buffs_WrathDamage(entity targ, entity attacker, float damage, float deathtype) {
-    float wrath = Buffs_Present(attacker, RM_BUFFS_WRATH) * g_buffs_wrath_hgregen_fromdamage;
+    float wrath = RM_BUFFS_PRESENT(attacker, RM_BUFFS_WRATH) * g_buffs_wrath_hgregen_fromdamage;
 
     if(!wrath)
         return;
@@ -1077,8 +1079,8 @@ void Buffs_WrathDamage(entity targ, entity attacker, float damage, float deathty
     }, self.hg_type2)
 }
 
-void Buffs_ArcDamage(entity targ, entity attacker, float damage, float deathtype) {
-    if(!Buffs_Present(attacker, RM_BUFFS_ARC))
+void(entity targ, entity attacker, float damage, float deathtype) rm_buffs_arc_damage {
+    if(!RM_BUFFS_PRESENT(attacker, RM_BUFFS_ARC))
         return;
 
     float mul;
@@ -1101,7 +1103,7 @@ void Buffs_ConduitDamage(entity targ, entity attacker, float hdamage, float adam
     if(!(hdamage + adamage))
         return;
 
-    if(!Buffs_Present(targ, RM_BUFFS_CONDUIT))
+    if(!RM_BUFFS_PRESENT(targ, RM_BUFFS_CONDUIT))
         return;
 
     if(deathtype == DEATH_RM_CONDUIT || DEATH_NADGETTYPE(deathtype) == NADGET_LINKER)
@@ -1187,7 +1189,7 @@ entity Buffs_Endurance_ApplyDOT(entity targ, entity attacker, float ticks, float
 }
 
 float Buffs_EnduranceDamage(entity targ, entity attacker, float damage, float deathtype) {
-    if(deathtype == DEATH_RM_ENDURANCE || damage <= 0 || !Buffs_Present(targ, RM_BUFFS_ENDURANCE))
+    if(deathtype == DEATH_RM_ENDURANCE || damage <= 0 || !RM_BUFFS_PRESENT(targ, RM_BUFFS_ENDURANCE))
         return damage;
 
     float ticks = g_buffs_endurance_damage_dot_duration;
@@ -1201,7 +1203,7 @@ float Buffs_EnduranceDamage(entity targ, entity attacker, float damage, float de
 }
 
 void Buffs_ReaperFrag(entity targ, entity attacker) {
-    if(!Buffs_Present(attacker, RM_BUFFS_REAPER) && !Buffs_Present(targ, RM_BUFFS_REAPER))
+    if(!RM_BUFFS_PRESENT(attacker, RM_BUFFS_REAPER) && !RM_BUFFS_PRESENT(targ, RM_BUFFS_REAPER))
         return;
 
     float newbuffs = targ.buffs;
@@ -1246,7 +1248,7 @@ void Buffs_MEODP_Point_Think(void) {
 }
 
 float Buffs_MEODP_Point_VisibleForPlayer(entity p, entity plr) {
-    if(!Buffs_Present(plr, RM_BUFFS_MEODP))
+    if(!RM_BUFFS_PRESENT(plr, RM_BUFFS_MEODP))
         return FALSE;
     
 	if (p.owner.iscreature)
@@ -1376,7 +1378,7 @@ void Buffs_MEODP_Point_Detach(entity e) {
 .entity meodp_chain;
 
 entity Buffs_MEODP_Hitscan_Begin(entity plr) {
-    if(!Buffs_Present(akimbo_owner(plr), RM_BUFFS_MEODP))
+    if(!RM_BUFFS_PRESENT(akimbo_owner(plr), RM_BUFFS_MEODP))
         return NULL;
     
     entity p, pts = findchain_tofield(classname, "meodp_point", meodp_chain);

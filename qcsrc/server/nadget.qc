@@ -761,10 +761,10 @@ float nadget_RegenLimit(entity plr) {
     if(mx < 1)
         return 0;
 
-		if (Buffs_Present(plr, RM_BUFFS_ADEPT))
+		if (RM_BUFFS_PRESENT(plr, RM_BUFFS_ADEPT))
 			mx += GRENVAR(plr.hg_ctx_type, "adept_regen_limit_extend");
 
-		float supply = Buffs_Present(plr, RM_BUFFS_SUPPLY);
+		float supply = RM_BUFFS_PRESENT(plr, RM_BUFFS_SUPPLY);
 		if (supply)
 			mx += g_buffs_supply_hg_extra_regen_limit * rint(supply);
 
@@ -906,7 +906,7 @@ void nadget_Trigger(void) {
         nadget_Sentry_Trigger();
 		nadget_GenericProjectile_DetonateAll(self, FALSE);
         self.hg_detonatepressed = TRUE;
-		if(Buffs_Present(self, RM_BUFFS_ADEPT)) {
+		if(RM_BUFFS_PRESENT(self, RM_BUFFS_ADEPT)) {
 			NADGET_DO_IN_ALL_CONTEXTS({
 				if(self.hg_ctx_type == NADGET_LASER) {
 					nadget_Attack();

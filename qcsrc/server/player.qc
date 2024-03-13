@@ -426,7 +426,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		if(!DEATH_ISSPECIAL(deathtype) || deathtype == DEATH_RM_MEODP)
 		if(deathtype != DEATH_RM_ARC)
 		if(DEATH_NADGETTYPE(deathtype) != NADGET_SHIELD)
-			Buffs_ArcDamage(self, attacker, _damage, deathtype);
+			rm_buffs_arc_damage(self, attacker, _damage, deathtype);
 
 		if (_damage /*&& deathtype != DEATH_RESOURCE_ARMOR*/) { //FIXME
 			_damage = Buffs_IgniteDamage(self, attacker, inflictor, _damage, deathtype);
@@ -447,7 +447,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 				(deathtype & HITTYPE_SECONDARY) &&
 				attacker.hg_shield &&
 				team_is_different_teams(self, attacker) &&
-				Buffs_Present(attacker, RM_BUFFS_ADEPT)
+				RM_BUFFS_PRESENT(attacker, RM_BUFFS_ADEPT)
 				)
 			nadget_Shield_Adept_ExtendRenew(attacker);
 	})

@@ -66,9 +66,7 @@ typedef void(entity, entity) meodp_death_f;
 .meodp_death_f meodp_death;
 
 void(void) rm_buffs_init;
-void Buffs_Init_Delayed(void);
-void Buffs_ClientFrame(void);
-void Buffs_ArcDamage(entity, entity, float, float);
+void(entity, entity, float, float) rm_buffs_arc_damage;
 float Buffs_MedicDamage(entity, entity, entity, float, float, vector, vector);
 float Buffs_IgniteDamage(entity, entity, entity, float, float);
 void Buffs_VampireDamage(entity, entity, float, float);
@@ -95,7 +93,7 @@ float Buffs_Give(entity, float, float);
 void Buffs_Notify(entity, float, float);
 void Buffs_Endurance_DOT_Think(void);
 
-#define Buffs_Present(p,b) (((p).effective_buffs & (b)) == (b))
+#define RM_BUFFS_PRESENT(p,b) (((p).effective_buffs & (b)) == (b))
 
 .vector meodp_point_offs;
 .entity meodp_point_ref;
