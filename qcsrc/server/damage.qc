@@ -28,7 +28,7 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	mirrordamage = 0;
 	mirrorforce = 0;
 	RM({
-		_damage = Buffs_MedicDamage(targ, attacker, inflictor, _damage, deathtype, hitloc, force);
+		_damage = rm_buffs_medic_damage(targ, attacker, inflictor, _damage, deathtype, hitloc, force);
 		if (_damage < 0) return;
 	})
 	if (targ.flags & FL_GODMODE) {

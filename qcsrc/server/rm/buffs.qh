@@ -1,29 +1,5 @@
-
-float g_buffs;
-float g_buffs_team_only;
-float g_buffs_stack;
-float g_buffs_replace;
-float g_buffs_noteam;
-float g_buffs_randomize;
-float g_buffs_randomize_dual;
-float g_buffs_randomize_byinstance;
-float g_buffs_randomize_chaos;
-float g_buffs_randomize_interval;
-float g_buffs_spawn_on_powerups;
-float g_buffs_random_spawns;
-float g_buffs_lockon;
-float g_buffs_supply_hg_extra_regen_limit;
-
 float g_buffs_enabled;
-float g_buffs_baseline;
-
-float g_buffs_replacements[RM_BUFFS_COUNT];
-float g_buffs_used[RM_BUFFS_COUNT];
-float g_buffs_used_dual[RM_BUFFS_COUNT];
-
-float g_buffs_randomize_ulevel;
-float g_buffs_randomize_ulevel_dual;
-float g_buffs_count;
+float g_buffs_supply_hg_extra_regen_limit;
 
 .float buffs;
 .float oldbuffs;
@@ -67,19 +43,17 @@ typedef void(entity, entity) meodp_death_f;
 
 void(void) rm_buffs_init;
 void(entity, entity, float, float) rm_buffs_arc_damage;
-float Buffs_MedicDamage(entity, entity, entity, float, float, vector, vector);
-float Buffs_IgniteDamage(entity, entity, entity, float, float);
-void Buffs_VampireDamage(entity, entity, float, float);
-float Buffs_TenacityDamage(entity, entity, float, float);
-void Buffs_ConduitDamage(entity, entity, float, float, float, float);
-float Buffs_EnduranceDamage(entity, entity, float, float);
-void Buffs_WrathDamage(entity, entity, float, float);
-void Buffs_ReaperFrag(entity, entity);
-void Buffs_BuffPickup_Remove(void);
-void Buffs_Randomize(entity, float);
+float(entity, entity, entity, float, float, vector, vector) rm_buffs_medic_damage;
+float(entity, entity, entity, float, float) rm_buffs_ignite_damage;
+void(entity, entity, float, float) rm_buffs_vampire_damage;
+float(entity, entity, float, float) rm_buffs_tenacity_damage;
+void(entity, entity, float, float, float, float) rm_buffs_conduit_damage;
+float(entity, entity, float, float) rm_buffs_endurance_damage;
+void(entity, entity, float, float) rm_buffs_wrath_damage;
+void(entity, entity) rm_buffs_reaper_frag;
+void(entity, float) rm_buffs_randomize;
 void Buffs_BuffPickup_Placeholder(void);
 void Buffs_BuffPickup_Setup(void);
-// float Buffs_Present(entity, float);
 float Buffs_NadgetPower(entity);
 float Buffs_NadgetRegen(entity);
 float Buffs_NadgetCooldown(entity);
@@ -90,8 +64,6 @@ void Buffs_BuffPickup_SetInitialCooldown(entity);
 void Buffs_BuffPickup_SetCooldown(entity, float);
 void Buffs_Random_Spawn(void);
 float Buffs_Give(entity, float, float);
-void Buffs_Notify(entity, float, float);
-void Buffs_Endurance_DOT_Think(void);
 
 #define RM_BUFFS_PRESENT(p,b) (((p).effective_buffs & (b)) == (b))
 

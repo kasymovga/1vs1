@@ -126,7 +126,7 @@ float(entity targ, entity inflictor, entity healer, float heal, float aheal, flo
 	targ.armorvalue += aheal;
 	targ.pauserotarmor_finished = max(targ.pauserotarmor_finished, time + pausearot);
 	if (targ.classname == "player")
-		Buffs_ConduitDamage(targ, healer, heal, aheal, healtype, TRUE);
+		rm_buffs_conduit_damage(targ, healer, heal, aheal, healtype, TRUE);
 
 	if (heal || aheal) {
 		//float vdtype = VDMG_TYPE_HEAL;

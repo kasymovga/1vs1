@@ -429,8 +429,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			rm_buffs_arc_damage(self, attacker, _damage, deathtype);
 
 		if (_damage /*&& deathtype != DEATH_RESOURCE_ARMOR*/) { //FIXME
-			_damage = Buffs_IgniteDamage(self, attacker, inflictor, _damage, deathtype);
-			_damage = Buffs_TenacityDamage(self, attacker, _damage, deathtype);
+			_damage = rm_buffs_ignite_damage(self, attacker, inflictor, _damage, deathtype);
+			_damage = rm_buffs_tenacity_damage(self, attacker, _damage, deathtype);
 			//if (DEATH_NADGETTYPE(deathtype) == NADGET_PLASMA && (deathtype & HITTYPE_SECONDARY)) {
 			//	if(time > inflictor.damage_nextarceffect) {
 			//		//te_csqc_lightningarc(inflictor.origin, self.origin + '0 0 0.5' * self.maxs_z, FALSE, attacker.team);
@@ -481,10 +481,10 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		}
 		rm_damage_received_indicator(self, take, save);
 		float cdmg = min(self.health, take);
-		Buffs_VampireDamage(self, attacker, cdmg, deathtype);
-		Buffs_WrathDamage(self, attacker, cdmg + save, deathtype);
-		take = Buffs_EnduranceDamage(self, attacker, take, deathtype);
-		Buffs_ConduitDamage(self, attacker, take, save, deathtype, FALSE);
+		rm_buffs_vampire_damage(self, attacker, cdmg, deathtype);
+		rm_buffs_wrath_damage(self, attacker, cdmg + save, deathtype);
+		take = rm_buffs_endurance_damage(self, attacker, take, deathtype);
+		rm_buffs_conduit_damage(self, attacker, take, save, deathtype, FALSE);
 	});
 	if (time >= self.spawnshieldtime || g_spawnfrags) {
 		self.armorvalue = self.armorvalue - save;
@@ -543,7 +543,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (self.health < 1)
 	if not(plugin_player_death_handle(attacker, inflictor, deathtype)) {
 		RM({
-			Buffs_ReaperFrag(attacker, self);
+			rm_buffs_reaper_frag(attacker, self);
 		})
 		float defer_client_kill_now_team_change;
 		defer_client_kill_now_team_change = FALSE;
