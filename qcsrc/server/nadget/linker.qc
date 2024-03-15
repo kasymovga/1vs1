@@ -140,9 +140,8 @@ NADGET_HOOKFUNCTION(linker, Attack) {
 
     setorigin(e, self.origin + self.view_ofs);
     setsize(e, '-32 -32 0', '32 32 32');
-    Buffs_MEODP_Point_Attach(e, nadget_Linker_MEODP_Death);
+	rm_buffs_meodp_point_attach(e, nadget_Linker_MEODP_Death);
     sound(e, CHAN_PROJECTILE, "misc/powerup.wav", 1, 1.5);
-
     return NADGET_ATTACK_OK;
 }
 

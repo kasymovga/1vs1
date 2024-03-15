@@ -530,7 +530,7 @@ void nadget_SetContext(float isalt) {
 }
 
 void nadget_GiveBonus(entity p, float hgtype, float amount, string reason) {
-    amount *= GRENVAR(hgtype, "bonus_amount_multiplier") * Buffs_NadgetBonusMultiplier(p);
+    amount *= GRENVAR(hgtype, "bonus_amount_multiplier") * rm_buffs_nadget_bonus_multiplier(p);
 
     if(amount < 1)
         return;
@@ -652,12 +652,9 @@ void nadget_SetNadgetType(entity p, float t) {
 }
 
 void nadget_SetCooldown(.float cdfield, float gcd, float cd) {
-#if 0
-    float cdmul = Buffs_NadgetCooldown(self);
+    float cdmul = rm_buffs_nadget_cooldown(self);
     gcd *= cdmul;
     cd *= cdmul;
-#endif
-
     self.hg_next1 = max(self.hg_next1, time + gcd);
     self.hg_next2 = max(self.hg_next2, time + gcd);
     self.hg_bonus_next = max(self.hg_bonus_next, time + gcd);
@@ -876,8 +873,7 @@ void nadget_PlayerPreThink(void) {
 	float mx, dpause;
     if(g_nadgets_regen) NADGET_DO_IN_ALL_CONTEXTS({
         mx = nadget_RegenLimit(self);
-        dpause = g_nadgets_regen_damagepause;
-
+		dpause = g_nadgets_regen_damagepause * rm_buffs_nadget_regen_damage_pause(self);
         self.hg_ctx_regenrate = GRENVAR(self.hg_ctx_type, "regen_scale");
         dpause = min(dpause, dpause / self.hg_ctx_regenrate);
         self.hg_ctx_regenpaused = (((self.hg_stealth || self.hg_stealth_saved) && self.hg_ctx_type == NADGET_CLOAK) || (time - self.lastdamage <= dpause) );

@@ -254,7 +254,7 @@ NADGET_HOOKFUNCTION(shield, Attack) {
 		self.hg_shield_oldmovetype = self.movetype;
 		self.movetype = MOVETYPE_NONE;
 	}
-    self.hg_shieldmax = d * Buffs_NadgetPower(self);
+    self.hg_shieldmax = d * rm_buffs_nadget_power(self);
     self.hg_shield = self.hg_shieldmax;
     self.hg_shieldhealth = g_nadgets_shield_health;
     self.hg_shieldpower = 1;

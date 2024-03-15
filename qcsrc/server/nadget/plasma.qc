@@ -137,7 +137,7 @@ void nadget_Plasma_Shard(float kickangle) {
     proj.heal_emitter_radius = proj.hg_plasma_projrange;
     proj.damage_noinfo = TRUE;
 #endif
-    Buffs_MEODP_Point_Attach(proj, Buffs_MEODP_Death_Use_Multiple);
+	rm_buffs_meodp_point_attach(proj, rm_buffs_meodp_death_use_multiple);
     proj.meodp_point_offs = '0 0 16';
 	rm_effect_heal_emitter(proj, proj.realowner);
     sound(proj, CHAN_WEAPON, "weapons/electro_fire2.wav", VOL_BASE, ATTN_NORM);

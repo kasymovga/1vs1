@@ -53,17 +53,13 @@ void(entity, entity, float, float) rm_buffs_wrath_damage;
 void(entity, entity) rm_buffs_reaper_frag;
 void(entity, float) rm_buffs_randomize;
 void Buffs_BuffPickup_Placeholder(void);
-void Buffs_BuffPickup_Setup(void);
-float Buffs_NadgetPower(entity);
-float Buffs_NadgetRegen(entity);
-float Buffs_NadgetCooldown(entity);
-float Buffs_NadgetRegenDmgPause(entity);
-float Buffs_NadgetBonusMultiplier(entity);
+float(entity) rm_buffs_nadget_power;
+float(entity) rm_buffs_nadget_regen;
+float(entity) rm_buffs_nadget_cooldown;
+float(entity) rm_buffs_nadget_regen_damage_pause;
+float(entity) rm_buffs_nadget_bonus_multiplier;
 //float Buffs_ClipLimitMultiplier(entity);
-void Buffs_BuffPickup_SetInitialCooldown(entity);
-void Buffs_BuffPickup_SetCooldown(entity, float);
 void Buffs_Random_Spawn(void);
-float Buffs_Give(entity, float, float);
 
 #define RM_BUFFS_PRESENT(p,b) (((p).effective_buffs & (b)) == (b))
 
@@ -71,16 +67,14 @@ float Buffs_Give(entity, float, float);
 .entity meodp_point_ref;
 .vector meodp_point_angleoffs;
 
-void Buffs_MEODP_Point_Attach(entity e, meodp_death_f death);
-void Buffs_MEODP_Point_Detach(entity e);
-entity Buffs_MEODP_Hitscan_Begin(entity plr);
-void Buffs_MEODP_Hitscan_End(entity pts);
-void Buffs_MEODP_TriggerDeath(entity targ, entity attacker, entity inflictor);
-void Buffs_MEODP_Death_Player(entity attacker, entity inflictor);
-void Buffs_MEODP_Death_Remove(entity attacker, entity inflictor);
-void Buffs_MEODP_Death_Use(entity attacker, entity inflictor);
-void Buffs_MEODP_Death_Remove_Multiple(entity attacker, entity inflictor);
-void Buffs_MEODP_Death_Use_Multiple(entity attacker, entity inflictor);
+void(entity e, meodp_death_f death) rm_buffs_meodp_point_attach;
+void(entity e) rm_buffs_meodp_point_detach;
+entity(entity plr) rm_buffs_meodp_hitscan_begin;
+void(entity pts) rm_buffs_meodp_hitscan_end;
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_player;
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_remove;
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_remove_multiple;
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_use_multiple;
 
 float g_buffs_meodp;
 

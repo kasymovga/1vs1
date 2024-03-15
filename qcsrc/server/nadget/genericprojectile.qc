@@ -44,7 +44,7 @@ void nadget_GenericProjectile_ThrowNapalm(void) {
 #define GV(v) (GRENVAR(self.hg_type, v))
 
 void nadget_GenericProjectile_RadiusDamage(void) {
-    //float p = Buffs_NadgetPower(self.owner);
+    float p = rm_buffs_nadget_power(self.owner);
     float dmgmod = 1;
     float frcmod = 1;
 	if (self.hg_adept) {
@@ -76,8 +76,8 @@ void nadget_GenericProjectile_RadiusDamage(void) {
     }
     dmgmod *= pow(GV("damage_bouncemultiplier"), GV("bouncelimit") - self.cnt);
     damage_radius(self, self.owner,
-                       GV("damage") * /*p * */ dmgmod,
-                       GV("edgedamage") * /*p * */ dmgmod,
+                       GV("damage") * p * dmgmod,
+                       GV("edgedamage") * p * dmgmod,
                        GV("radius"),
                        world,
                        GV("force") * frcmod,
@@ -577,7 +577,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
 		if (!lt)
 			lt = GV("lifetime");
 		else if(hgtype == NADGET_REMOTE)
-			lt = lt * Buffs_NadgetPower(self);
+			lt = lt * rm_buffs_nadget_power(self);
 	} else
 		lt = GV("lifetime");
 
@@ -589,7 +589,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     if(self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face"))
 		gren.hg_deathtime = time + 0.01;
 	else
-		gren.hg_deathtime = time + lt /* * (if(hgtype == NADGET_TRANSLOC) Buffs_NadgetPower(self) else 1) */;
+		gren.hg_deathtime = time + lt * ((hgtype == NADGET_TRANSLOC) ? rm_buffs_nadget_power(self) : 1);
 
     gren.think = nadget_GenericProjectile_Think;
     gren.nextthink = time;
@@ -646,10 +646,10 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.max_health = gren.health;
     gren.angles = vectoangles(gren.velocity);
     gren.hg_nadesused = self.hg_nadesused;
-    Buffs_MEODP_Point_Attach(gren, nadget_GenericProjectile_MEODP_Death);
+	rm_buffs_meodp_point_attach(gren, nadget_GenericProjectile_MEODP_Death);
 	rm_effect_heal_emitter(gren, self);
     if(hgtype == NADGET_NAPALM && self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face")) {
-        damage(self, self, self, GV("kamikaze_damage") * Buffs_NadgetPower(self), NADGET_NAPALM, self.origin, '0 0 0');
+        damage(self, self, self, GV("kamikaze_damage") * rm_buffs_nadget_power(self), NADGET_NAPALM, self.origin, '0 0 0');
     }
 
     if(hgtype == NADGET_TRANSLOC) {

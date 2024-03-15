@@ -101,6 +101,12 @@ var void(void) rm_buffs_player_think_next;
 void(void) rm_buffs_player_think;
 var void(float killed) rm_buffs_player_clear_next;
 void(float killed) rm_buffs_player_clear;
+void(void) rm_buffs_pickup_setup;
+void(entity) rm_buffs_set_initial_cooldown;
+void(entity, float) rm_buffs_set_cooldown;
+float(entity, float, float) rm_buffs_give;
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_use;
+void(entity targ, entity attacker, entity inflictor) rm_buffs_meodp_trigger_death;
 
 float Buffs_Random_Spawn_EntFilter(entity e) {
     return ((e.flags & FL_ITEM) && e.classname != "item_buff_randomspawn") || e.classname == "info_player_deathmatch";
@@ -137,7 +143,7 @@ void Buffs_Random_Spawn(void) {
     self = spawn();
     self.buffs = RM_BUFFS_RANDOM;
     self.classname = "item_buff_randomspawn";
-    Buffs_BuffPickup_Setup();
+    rm_buffs_pickup_setup();
 
     if(Buffs_Random_Spawn_EntFilter(self)) {
         self.buff_oldsolid = self.solid;
@@ -275,7 +281,7 @@ void() rm_buffs_player_health_armor_mods_set {
 
 var void(entity spot) rm_buffs_player_spawn_next;
 void(entity spot) rm_buffs_player_spawn {
-	Buffs_MEODP_Point_Attach(self, Buffs_MEODP_Death_Player);
+	rm_buffs_meodp_point_attach(self, rm_buffs_meodp_death_player);
 }
 
 var float(float f) rm_buffs_weapon_clip_capacity_mod_next;
@@ -519,7 +525,7 @@ void(entity blist, float force) rm_buffs_randomize {
         }
         //FIXME
         //if(roundstate != ROUNDSTATE_GAME || roundstate == ROUNDSTATE_INITIAL_WARMUP)
-        //    Buffs_BuffPickup_SetInitialCooldown(b);
+        //    rm_buffs_set_initial_cooldown(b);
     }
 }
 
@@ -566,7 +572,7 @@ void(void) rm_buffs_init_delayed {
             } else {
                 self = b;
                 self.buffs = RM_BUFFS_RANDOM;
-                Buffs_BuffPickup_Setup();
+                rm_buffs_pickup_setup();
                 if(self.owner && !wasfreed(self.owner)) {
                     remove(self.owner);
                     self.owner = NULL;
@@ -643,15 +649,13 @@ void(entity plr, float bfs, float tm) rm_buffs_notify {
     sound(plr, CHAN_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 }
 
-float Buffs_Give(entity plr, float bfs, float tm) {
+float(entity plr, float bfs, float tm) rm_buffs_give {
     bfs &= ~plr.buffs;
-
     if(!bfs)
         return 0;
 
     plr.buffs |= bfs;
     rm_buffs_notify(plr, bfs, tm);
-
     return bfs;
 }
 
@@ -829,7 +833,7 @@ void(float killed) rm_buffs_player_clear {
 	self.effective_buffs = 0;
 	self.buffs = 0;
 	rm_buffs_player_clear_next(killed);
-	Buffs_MEODP_Point_Detach(self);
+	rm_buffs_meodp_point_detach(self);
 }
 
 void(void) rm_buffs_player_think {
@@ -938,13 +942,12 @@ void(void) rm_buffs_player_think {
 #undef ON_BUFF_ADDED
 #undef ON_BUFF_REMOVED
 
-float Buffs_NadgetPower(entity plr) {
+float(entity plr) rm_buffs_nadget_power {
 	return (RM_BUFFS_PRESENT(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgpower : 1);
 }
 
-float Buffs_NadgetRegen(entity plr) {
+float(entity plr) rm_buffs_nadget_regen {
     float rscale = 1;
-
     if(RM_BUFFS_PRESENT(plr, RM_BUFFS_SUPPLY))
         rscale *= g_buffs_supply_hg_regenscale;
 
@@ -954,15 +957,15 @@ float Buffs_NadgetRegen(entity plr) {
     return rscale;
 }
 
-float Buffs_NadgetCooldown(entity plr) {
+float(entity plr) rm_buffs_nadget_cooldown {
     return (RM_BUFFS_PRESENT(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgcooldown : 1);
 }
 
-float Buffs_NadgetRegenDmgPause(entity plr) {
+float(entity plr) rm_buffs_nadget_regen_damage_pause {
     return (RM_BUFFS_PRESENT(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgregen_damagepause : 1);
 }
 
-float Buffs_NadgetBonusMultiplier(entity plr) {
+float(entity plr) rm_buffs_nadget_bonus_multiplier {
     return (RM_BUFFS_PRESENT(plr, RM_BUFFS_WRATH) ? g_buffs_wrath_hgbonusmultiplier : 1);
 }
 
@@ -1212,7 +1215,7 @@ void(entity targ, entity attacker) rm_buffs_reaper_frag {
 
     float newbuffs = targ.buffs;
     newbuffs &= ~(RM_BUFFS_REAPER | g_buffs_reaper_buff_banmask);
-    Buffs_Give(attacker, newbuffs, 0);
+    rm_buffs_give(attacker, newbuffs, 0);
 }
 
 #define meodp_rand1 health
@@ -1220,13 +1223,12 @@ void(entity targ, entity attacker) rm_buffs_reaper_frag {
 #define meodp_rand3 cnt
 #define meodp_rand4 armortype
 
-void Buffs_MEODP_Point_Think(void) {
+void(void) rm_buffs_meodp_point_think {
     if(!self.owner || wasfreed(self.owner)) {
 		antilag_remove(self);
         remove(self);
         return;
     }
-
     entity ref = self.owner;
     while(ref.meodp_point_ref)
         ref = ref.meodp_point_ref;
@@ -1251,7 +1253,7 @@ void Buffs_MEODP_Point_Think(void) {
     self.nextthink = time;
 }
 
-float Buffs_MEODP_Point_VisibleForPlayer(entity p, entity plr) {
+float(entity p, entity plr) rm_buffs_meodp_point_visible_for_player {
     if(!RM_BUFFS_PRESENT(plr, RM_BUFFS_MEODP))
         return FALSE;
     
@@ -1262,14 +1264,14 @@ float Buffs_MEODP_Point_VisibleForPlayer(entity p, entity plr) {
     return TRUE;
 }
 
-float Buffs_MEODP_Point_Customize(void) {
+float(void) rm_buffs_meodp_point_customize {
 	if (other.classname == "spectator")
-		return Buffs_MEODP_Point_VisibleForPlayer(self, other);
+		return rm_buffs_meodp_point_visible_for_player(self, other.enemy);
 
-	return Buffs_MEODP_Point_VisibleForPlayer(self, other);
+	return rm_buffs_meodp_point_visible_for_player(self, other);
 }
 
-void Buffs_MEODP_TriggerDeath(entity targ, entity attacker, entity inflictor) {
+void(entity targ, entity attacker, entity inflictor) rm_buffs_meodp_trigger_death {
     float oh = max(0, targ.health);
     float oa = max(0, targ.armorvalue);
     vector point_org = targ.meodp_point.origin;
@@ -1296,9 +1298,9 @@ void Buffs_MEODP_TriggerDeath(entity targ, entity attacker, entity inflictor) {
 
 float buffs_meodp_triggermultiple_running;
 
-void Buffs_MEODP_TriggerDeath_Multiple(entity attacker, entity inflictor, float(entity, entity) filter, entity pass) {
+void(entity attacker, entity inflictor, float(entity, entity) filter, entity pass) rm_buffs_meodp_trigger_death_multiple {
     if(buffs_meodp_triggermultiple_running) {
-        backtrace("Buffs_MEODP_TriggerDeath_Multiple called recursively");
+        backtrace("rm_buffs_meodp_trigger_death_multiple called recursively");
         return;
     }
 
@@ -1307,12 +1309,12 @@ void Buffs_MEODP_TriggerDeath_Multiple(entity attacker, entity inflictor, float(
     entity p = NULL;
     for(;(p = find(p, classname, "meodp_point"));)
         if(filter(p.owner, pass))
-            Buffs_MEODP_TriggerDeath(p.owner, attacker, inflictor);
+            rm_buffs_meodp_trigger_death(p.owner, attacker, inflictor);
 
     buffs_meodp_triggermultiple_running = FALSE;
 }
 
-float Buffs_MEODP_Filter_NearbyRelated(entity ent, entity pass) {
+float(entity ent, entity pass) rm_buffs_meodp_filter_nearby_related {
     if(ent.owner != pass.owner)
         return FALSE;
     
@@ -1325,20 +1327,20 @@ float Buffs_MEODP_Filter_NearbyRelated(entity ent, entity pass) {
     return TRUE;
 }
 
-void Buffs_MEODP_Point_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) rm_buffs_meodp_point_damage {
     if(self.solid == SOLID_NOT || damage_radius_running)
         return; // hitscan only
     
     if(!damage)
         return;
     
-    if(!Buffs_MEODP_Point_VisibleForPlayer(self, attacker))
+    if(!rm_buffs_meodp_point_visible_for_player(self, attacker))
         return;
     
-    Buffs_MEODP_TriggerDeath(self.owner, attacker, inflictor);
+    rm_buffs_meodp_trigger_death(self.owner, attacker, inflictor);
 }
 
-void Buffs_MEODP_Point_Attach(entity e, meodp_death_f death) {
+void(entity e, meodp_death_f death) rm_buffs_meodp_point_attach {
     if(!g_buffs_meodp)
         return;
     
@@ -1348,8 +1350,8 @@ void Buffs_MEODP_Point_Attach(entity e, meodp_death_f death) {
     entity p = spawn();
     p.classname = "meodp_point";
     p.owner = e;
-    p.customizeentityforclient = Buffs_MEODP_Point_Customize;
-    p.think = Buffs_MEODP_Point_Think;
+	p.customizeentityforclient = rm_buffs_meodp_point_customize;
+    p.think = rm_buffs_meodp_point_think;
     p.nextthink = time;
     p.solid = SOLID_NOT;
     p.colormod = '-10 -10 -10';
@@ -1361,7 +1363,7 @@ void Buffs_MEODP_Point_Attach(entity e, meodp_death_f death) {
     p.meodp_rand3 = ((random() < 0.5) ? 1 : -1);
     p.meodp_rand4 = ((random() < 0.5) ? 1 : -1);
     p.takedamage = DAMAGE_NO;
-    p.event_damage = Buffs_MEODP_Point_Damage;
+	p.event_damage = rm_buffs_meodp_point_damage;
     setmodel(p, "models/runematch/rune.mdl");
     setsize(p, '-8 -8 -8', '8 8 8');
 	antilag_add(p);
@@ -1369,7 +1371,7 @@ void Buffs_MEODP_Point_Attach(entity e, meodp_death_f death) {
     e.meodp_death = death;
 }
 
-void Buffs_MEODP_Point_Detach(entity e) {
+void rm_buffs_meodp_point_detach(entity e) {
     if(!e.meodp_point)
         return;
 
@@ -1381,7 +1383,7 @@ void Buffs_MEODP_Point_Detach(entity e) {
 
 .entity meodp_chain;
 
-entity Buffs_MEODP_Hitscan_Begin(entity plr) {
+entity(entity plr) rm_buffs_meodp_hitscan_begin {
     if(!RM_BUFFS_PRESENT(akimbo_owner(plr), RM_BUFFS_MEODP))
         return NULL;
     
@@ -1395,44 +1397,42 @@ entity Buffs_MEODP_Hitscan_Begin(entity plr) {
     return pts;
 }
 
-void Buffs_MEODP_Hitscan_End(entity pts) {
+void(entity pts) rm_buffs_meodp_hitscan_end {
     entity p; for(p = pts; p; p = p.meodp_chain) {
         p.solid = SOLID_NOT;
         p.takedamage = DAMAGE_NO;
     }
 }
 
-void Buffs_MEODP_Death_Player(entity attacker, entity inflictor) {
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_player {
     float d = self.health * g_buffs_meodp_healthfactor + self.armorvalue * g_buffs_meodp_armorfactor;
     damage(self, inflictor, attacker, d, DEATH_RM_MEODP, self.meodp_point.origin, '0 0 0');
 }
 
-void Buffs_MEODP_Death_Remove(entity attacker, entity inflictor) {
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_remove {
     remove(self);
 }
 
-void Buffs_MEODP_Death_Use(entity attacker, entity inflictor) {
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_use {
     self.use();
 }
 
-void Buffs_MEODP_Death_Remove_Multiple(entity attacker, entity inflictor) {
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_remove_multiple {
     if(buffs_meodp_triggermultiple_running) {
-        Buffs_MEODP_Death_Remove(attacker, inflictor);
+		rm_buffs_meodp_death_remove(attacker, inflictor);
         return;
     }
-
-    Buffs_MEODP_TriggerDeath_Multiple(attacker, inflictor,
-                                      Buffs_MEODP_Filter_NearbyRelated, self);
+	rm_buffs_meodp_trigger_death_multiple(attacker, inflictor,
+			rm_buffs_meodp_filter_nearby_related, self);
 }
 
-void Buffs_MEODP_Death_Use_Multiple(entity attacker, entity inflictor) {
+void(entity attacker, entity inflictor) rm_buffs_meodp_death_use_multiple {
     if(buffs_meodp_triggermultiple_running) {
-        Buffs_MEODP_Death_Use(attacker, inflictor);
+        rm_buffs_meodp_death_use(attacker, inflictor);
         return;
     }
-
-    Buffs_MEODP_TriggerDeath_Multiple(attacker, inflictor,
-                                      Buffs_MEODP_Filter_NearbyRelated, self);
+	rm_buffs_meodp_trigger_death_multiple(attacker, inflictor,
+			rm_buffs_meodp_filter_nearby_related, self);
 }
 
 float Buffs_BuffPickup_PickupAllowed(entity buff, entity plr) {
@@ -1463,7 +1463,7 @@ void Buffs_BuffPickup_SpawnWaypoint(entity e) {
         WaypointSprite_UpdateBuildFinished(e.buff_waypoint, time + e.buff_activetime);
 }
 
-void Buffs_BuffPickup_SetCooldown(entity buff, float cd) {
+void(entity buff, float cd) rm_buffs_set_cooldown {
     cd = max(0, cd);
     
     if(!buff.buff_waypoint)
@@ -1482,8 +1482,8 @@ float Buffs_BuffPickup_GetShortestCooldown(void) {
 			g_buffs_reactivate_delay_dual)));
 }
 
-void Buffs_BuffPickup_SetInitialCooldown(entity buff) {
-    Buffs_BuffPickup_SetCooldown(buff,
+void(entity buff) rm_buffs_set_initial_cooldown {
+    rm_buffs_set_cooldown(buff,
         //if(roundstate == ROUNDSTATE_INITIAL_WARMUP)
         //    Buffs_BuffPickup_GetShortestCooldown()
         //else
@@ -1491,7 +1491,7 @@ void Buffs_BuffPickup_SetInitialCooldown(entity buff) {
 }
 
 void Buffs_BuffPickup_SetReactivateCooldown(entity buff) {
-    Buffs_BuffPickup_SetCooldown(buff, (
+    rm_buffs_set_cooldown(buff, (
         //if(roundstate == ROUNDSTATE_INITIAL_WARMUP)
         //    Buffs_BuffPickup_GetShortestCooldown()
         //else
@@ -1508,7 +1508,7 @@ void Buffs_BuffPickup_Think(void) {
     
     //if(roundstate == ROUNDSTATE_GAME || roundstate == ROUNDSTATE_INITIAL_WARMUP)
     if(!self.buff_activetime_updated) {
-        Buffs_BuffPickup_SetCooldown(self, self.buff_activetime);
+        rm_buffs_set_cooldown(self, self.buff_activetime);
         self.buff_activetime_updated = TRUE;
     }
     
@@ -1525,7 +1525,7 @@ void Buffs_BuffPickup_Think(void) {
     if(!self.buff_active && !self.buff_activetime)
     if(/*roundstate == ROUNDSTATE_INITIAL_WARMUP ||*/!((self.owner.buffs & self.buffs) == self.buffs) || PLAYER_DEAD(self.owner)) {
         if(self.owner.buff_cdoverride) {
-            Buffs_BuffPickup_SetCooldown(self, max(0, self.owner.buff_cdoverride) + frametime);
+            rm_buffs_set_cooldown(self, max(0, self.owner.buff_cdoverride) + frametime);
             self.owner.buff_cdoverride = 0;
         } else
             Buffs_BuffPickup_SetReactivateCooldown(self);
@@ -1562,7 +1562,7 @@ void Buffs_BuffPickup_ResetWaypoint(void) {
 
 void Buffs_BuffPickup_Reset(void) {
     self.owner = NULL;
-    Buffs_BuffPickup_SetInitialCooldown(self);
+    rm_buffs_set_initial_cooldown(self);
     Buffs_BuffPickup_ResetWaypoint();
     self.buff_activetime_updated = FALSE;
     Buffs_Model_Update(self);
@@ -1578,7 +1578,7 @@ void Buffs_BuffPickup_GiveTo(entity plr) {
     if(g_buffs_replace)
         plr.buffs = 0;
 
-    Buffs_Give(plr, self.buffs, self.team);
+    rm_buffs_give(plr, self.buffs, self.team);
 }
 
 void Buffs_BuffPickup_Touch(void) {
@@ -1612,7 +1612,7 @@ void Buffs_BuffPickup_TeamSwap(void) {
         self.buff_waypoint.team = self.team;
 }
 
-void Buffs_BuffPickup_Setup(void) {
+void(void) rm_buffs_pickup_setup {
     if(!g_buffs || (self.team && !team_mode) || (g_buffs_team_only && !self.team)) {
         remove(self);
         return;
@@ -1651,7 +1651,7 @@ void Buffs_BuffPickup_Setup(void) {
     self.reset = Buffs_BuffPickup_Reset;
     self.teamswap = Buffs_BuffPickup_TeamSwap;
     self.nextthink = time;
-    Buffs_BuffPickup_SetInitialCooldown(self);
+    rm_buffs_set_initial_cooldown(self);
     self.buff_active = !self.buff_activetime;
     self.gravity = 100;
     
@@ -1691,10 +1691,10 @@ void Buffs_BuffPickup_SetupQ3TACompat(string rune) {
 		remove(self);
 		return;
 	}
-	Buffs_BuffPickup_Setup();
+	rm_buffs_pickup_setup();
 }
 
-#define BUFF_SPAWNFUNC(e,b,t) void spawnfunc_item_buff_##e() { self.buffs = b; self.team = t; Buffs_BuffPickup_Setup(); }
+#define BUFF_SPAWNFUNC(e,b,t) void spawnfunc_item_buff_##e() { self.buffs = b; self.team = t; rm_buffs_pickup_setup(); }
 #define BUFF_SPAWNFUNC_Q3TA_COMPAT(o,r) void spawnfunc_##o() { Buffs_BuffPickup_SetupQ3TACompat(r); }
 #define BUFF_SPAWNFUNCS(e,b)                         \
         BUFF_SPAWNFUNC(e,           b,  0)           \
@@ -1754,8 +1754,7 @@ void(void) target_buffs_use {
 		activator.buffs = 0;
 		cbuffs = mbuffs;
 	}
-
-	Buffs_Give(activator, cbuffs, 0);
+	rm_buffs_give(activator, cbuffs, 0);
 	activator.buffs = cbuffs;
 }
 

@@ -380,7 +380,7 @@ void(void) weapon_zapper_attack2 {
 
 	makevectors(self.v_angle);
 	entity ao = akimbo_owner(self);
-	entity pts = Buffs_MEODP_Hitscan_Begin(self);
+	entity pts = rm_buffs_meodp_hitscan_begin(self);
 	antilag_begin(ao);
 	sound(ao, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
 	weapon_setup_shot(self, g_balance_zapper_secondary_recoil, "", 1);
@@ -388,7 +388,7 @@ void(void) weapon_zapper_attack2 {
 	entity o = akimbo_owner(self);
 	weapon_zapper_attack2_beam(o, weapon_shotorg, weapon_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, _damage, force);
 	antilag_end();
-	Buffs_MEODP_Hitscan_End(pts);
+	rm_buffs_meodp_hitscan_end(pts);
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_zapper_secondary_ammo;
 }

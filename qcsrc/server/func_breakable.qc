@@ -68,7 +68,7 @@ void(void) func_breakable_behave_destroyed {
 	self.event_damage = NULL;
 	self.state = 1;
 	func_breakable_colormod();
-	Buffs_MEODP_Point_Detach(self);
+	rm_buffs_meodp_point_detach(self);
 }
 
 void(void) func_breakable_behave_restore {
@@ -79,7 +79,7 @@ void(void) func_breakable_behave_restore {
 	self.state = 0;
 	func_breakable_colormod();
 	setorigin(self, self.spawnorigin);
-	Buffs_MEODP_Point_Attach(self, func_breakable_meodp_death);
+	rm_buffs_meodp_point_attach(self, func_breakable_meodp_death);
 }
 
 void(void) func_breakable_destroyed {

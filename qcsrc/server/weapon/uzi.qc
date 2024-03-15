@@ -40,11 +40,11 @@ void(float deathtype) weapon_uzi_attack {
 	// this attack_finished just enforces a cooldown at the end of a burst
 	WEAPON_ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
 	if (self.uzi_bulletcounter == 1) {
-		entity pts = Buffs_MEODP_Hitscan_Begin(self);
+		entity pts = rm_buffs_meodp_hitscan_begin(self);
 		bullet(weapon_shotorg, weapon_shotorg_visual, weapon_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed,
 				5, g_balance_uzi_first_damage, g_balance_uzi_first_damage_headshot,
 				g_balance_uzi_first_force, EFFECT_IMPACT_BULLET, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
-		Buffs_MEODP_Hitscan_End(pts);
+		rm_buffs_meodp_hitscan_end(pts);
 	} else
 		bullet(weapon_shotorg, weapon_shotorg_visual, weapon_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed,
 				5, g_balance_uzi_sustained_damage, g_balance_uzi_sustained_damage_headshot,

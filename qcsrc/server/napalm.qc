@@ -85,19 +85,15 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
     proj.napalm_burn_damage = burndamage;
     proj.napalm_burn_edgedamage = burnedgedamage;
     proj.napalm_burn_time = burntime;
-
     //proj.csqcprojectile_extradata = burntime;
     //proj.heal_emitter_radius = burntime;
-
     proj.touch = Napalm_Touch;
     proj.think = Napalm_Think;
     proj.reset = stdproc_remove;
-
     proj.nextthink = time;
-
     PROJECTILE_MAKETRIGGER(proj);
     setorigin(proj, porg);
-    Buffs_MEODP_Point_Attach(proj, Buffs_MEODP_Death_Remove_Multiple);
+	rm_buffs_meodp_point_attach(proj, rm_buffs_meodp_death_remove_multiple);
     return proj;
 }
 

@@ -563,9 +563,8 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
         // also see nadget_Sentry_Levitate
         e.gravity = 0.001;
     }
-
     self.hg_detonables += 1;
-    Buffs_MEODP_Point_Attach(e, nadget_Sentry_MEODP_Death);
+	rm_buffs_meodp_point_attach(e, nadget_Sentry_MEODP_Death);
     entity c = spawn();
     setmodel(c, "models/ebomb.mdl");
     c.skin = 3;

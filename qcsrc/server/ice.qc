@@ -21,7 +21,7 @@ void(void) ice_remove {
 		progressbar_remove(self.ice.weaponentity);
 
 	if (self.ice) {
-		Buffs_MEODP_Point_Detach(self);
+		rm_buffs_meodp_point_detach(self);
 		remove(self.ice.ice);
 		remove(self.ice);
 	}
@@ -96,8 +96,8 @@ float(entity attacker, entity inflictor, float deathtype) ice_player_death_handl
 	if (team_is_different_teams(attacker, self))
 		sound_play2(attacker, sv_sound_ice_frag);
 
-	Buffs_MEODP_Point_Detach(self);
-	Buffs_MEODP_Point_Attach(self, ice_meodp_hit);
+	rm_buffs_meodp_point_detach(self);
+	rm_buffs_meodp_point_attach(self, ice_meodp_hit);
 	self.ice = spawn();
 	self.ice.alpha = sv_model_ice_alpha;
 	self.ice.scale = sv_model_ice_scale;
@@ -153,7 +153,7 @@ void(entity frozen, entity unfrozer) ice_unfroze {
 	self = frozen;
 	ice_remove();
 	self = oldself;
-	Buffs_MEODP_Point_Attach(frozen, Buffs_MEODP_Death_Player);
+	rm_buffs_meodp_point_attach(frozen, rm_buffs_meodp_death_player);
 }
 
 void(entity _ice, entity unfrozer) ice_unfrozer_add {
@@ -321,7 +321,7 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 		if (DEATH_NADGETTYPE(deathtype) == NADGET_PLASMA) {
 			if (self.deadflag == DEAD_FREEZE || (inflictor.hg_adept && g_nadgets_plasma_adept_stun)) {
 				if (self != attacker && (!team_mode || team_is_different_teams(self, attacker))) {
-					self.hg_plasmalock = time + g_nadgets_plasma_projectile_frozenlock * Buffs_NadgetPower(attacker);
+					self.hg_plasmalock = time + g_nadgets_plasma_projectile_frozenlock * rm_buffs_nadget_power(attacker);
 					self.hg_plasmalock_owner = attacker;
 					//te_csqc_lightningarc(inflictor.origin, hitloc, TRUE, attacker.team);
 					effect_lightningarc(inflictor.origin, hitloc/*, TRUE, attacker.team*/); //FIXME
