@@ -183,6 +183,8 @@ void fillNexuizGameSettingsDialog(entity me)
 		me.TR(me);
 			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_nobigtext", _("No big text")));
 		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(1, "rm_simpleeffects", _("Effects for textual notifications")));
+		me.TR(me);
 			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_hidebigcomments", _("Hide big commentaries")));
 		me.TR(me);
 			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_showrankings", _("Show top players in the HUD")));

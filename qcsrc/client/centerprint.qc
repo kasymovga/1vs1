@@ -3,6 +3,7 @@ string centerprint_messages[CENTERPRINT_MAX_LINES];
 float centerprint_width[CENTERPRINT_MAX_LINES];
 vector centerprint_start;
 float centerprint_expire;
+float centerprint_expires[CENTERPRINT_MAX_LINES];
 float centerprint_last;
 float centerprint_offset_hint;
 vector centerprint_fontsize;
@@ -39,7 +40,7 @@ void(string strMessage) centerprint {
 	if (strMessage == "")
 		return;
 
-	if (centerprint_last + 0.5 <= time)
+	if (centerprint_num && centerprint_last + 0.5 <= time && !rm_active && !CVAR(rm_simpleeffects))
 		centerprint_num = 0;
 
 	n = tokenizebyseparator(strMessage, "\n");
@@ -57,6 +58,17 @@ void(string strMessage) centerprint {
 		}
 		if (duplicates == n) { //this centerprint presents already
 			centerprint_expire = time + CVAR(scr_centertime);
+			RM({
+				for (i = 0; i < n; i++) {
+					s = argv(i);
+					for (j = 0; j < centerprint_num; j++) {
+						if (s == centerprint_messages[j]) {
+							centerprint_expires[j] = time + CVAR(scr_centertime);
+							break;
+						}
+					}
+				}
+			})
 			return;
 		}
 	}
@@ -71,11 +83,12 @@ void(string strMessage) centerprint {
 		str_wrapped_line_remaining = argv(j);
 		while (str_wrapped_line_remaining) {
 			s = str_wrapped_line(CVAR(vid_conwidth) * 0.75 / centerprint_fontsize_x, str_width_colors);
-			if (centerprint_messages[i])
-				strunzone(centerprint_messages[i]);
-
-			centerprint_messages[i] = strzone(s);
+			str_unzone_ifneeded(centerprint_messages[i]);
+			centerprint_messages[i] = str_zone_ifneeded(s);
 			centerprint_width[i] = stringwidth(s, TRUE);
+			RM({
+				centerprint_expires[i] = time + CVAR(scr_centertime);
+			})
 			++i;
 			// half height for empty lines looks better
 			if (s == "")
@@ -112,21 +125,48 @@ void(string strMessage) centerprint {
 
 void(void) centerprint_draw {
 	float i;
-	vector pos;
+	vector pos = centerprint_start;
 	string ts;
 	float a;
 	drawfont = sbar_font;
+	if (rm_active && !CVAR(rm_simpleeffects)) {
+		if (centerprint_num) {
+			if (1 - 4 * (time - centerprint_expires[0]) <= 0) {
+				str_unzone_ifneeded(centerprint_messages[0]);
+				for (i = 1; i < centerprint_num; i++) {
+					centerprint_messages[i - 1] = centerprint_messages[i];
+					centerprint_expires[i - 1] = centerprint_expires[i];
+					centerprint_width[i - 1] = centerprint_width[i];
+				}
+				centerprint_num--;
+				centerprint_messages[centerprint_num] = "";
+				centerprint_expires[centerprint_num] = 0;
+				centerprint_width[centerprint_num] = 0;
+			}
+			for (i = 0; i < centerprint_num; i++) {
+				a = bound(0, 1 - 4 * (time - centerprint_expires[i]), 1);
+				if (a <= 0) continue;
+				pos_x = (CVAR(vid_conwidth) - centerprint_fontsize_x * centerprint_width[i] * a) * 0.5;
+				ts = centerprint_messages[i];
+				if (ts != "") {
+					drawcolorcodedstring(pos, ts, centerprint_fontsize * a, a, DRAWFLAG_NORMAL);
+					pos_y = pos_y + centerprint_fontsize_y * a;
+				} else
+					// half height for empty lines looks better
+					pos_y = pos_y + centerprint_fontsize_y * 0.5 * a;
+			}
+		}
+		return;
+	}
 	a = bound(0, 1 - 4 * (time - centerprint_expire), 1);
 	if (a <= 0) {
 		centerprint_num = 0;
 		return;
 	}
-	pos = centerprint_start;
-	for (i=0; i<centerprint_num; i = i + 1) {
+	for (i=0; i<centerprint_num; i++) {
 		pos_x = (CVAR(vid_conwidth) - centerprint_fontsize_x * centerprint_width[i]) * 0.5;
 		ts = centerprint_messages[i];
 		if (ts != "") {
-			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			drawcolorcodedstring(pos, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
 			pos_y = pos_y + centerprint_fontsize_y;
 		} else
