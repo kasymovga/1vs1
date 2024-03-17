@@ -6,6 +6,7 @@ float g_projectiles_newton_style_2_maxfactor;
 float g_projectiles_newton_style_2_minfactor;
 float g_weaponratefactor;
 float g_weapon_throw_mode;
+float g_weapon_throw_noammo;
 float g_showweaponspawns;
 vector sv_qcanimation_melee_morph1angles;
 vector sv_qcanimation_melee_morph2angles;
@@ -321,7 +322,7 @@ string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_th
 	wep.owner = wep.enemy = own;
 	wep.colormap = own.colormap;
 	wa = weapon_ammo_item_code(wpn);
-	if (wa == IT_SUPERWEAPON || wa == 0) {
+	if (wa == IT_SUPERWEAPON || (wa == 0 && !g_weapon_throw_noammo)) {
 		oldself = self;
 		self = wep;
 		weapon_defaultspawnfunc(wpn);
@@ -343,14 +344,16 @@ string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_th
 
 		if (doreduce || g_weapon_throw_mode) {
 			ammofield = item_counter_field(wa);
-			thisammo = min(own.ammofield, wep.ammofield);
-			if (thisammo <= 0)
-				thisammo = own.ammofield;
+			if (ammofield) {
+				thisammo = min(own.ammofield, wep.ammofield);
+				if (thisammo <= 0)
+					thisammo = own.ammofield;
 
-			wep.ammofield = thisammo;
-			own.ammofield -= thisammo;
-			s = strcat(s, " and ", ftos(thisammo), " ", item_counter_field_name(wa));
-			s = substring(s, 5, -1);
+				wep.ammofield = thisammo;
+				own.ammofield -= thisammo;
+				s = strcat(s, " and ", ftos(thisammo), " ", item_counter_field_name(wa));
+				s = substring(s, 5, -1);
+			}
 		}
 		wep.think = weapon_thrown_think;
 		wep.nextthink = time + 0.5;
@@ -374,7 +377,7 @@ float(float w) weapon_throwable {
 			return 0;
 
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
-		if (wa == 0)
+		if (wa == 0 && !g_weapon_throw_noammo)
 			return 0;
 	}
 	return 1;
@@ -691,11 +694,13 @@ void(float wpn) weapon_defaultspawnfunc {
 		for (i = 0, j = 1; i < 24; ++i, j *= 2) {
 			if (e.items & j) {
 				ammofield = item_counter_field(j);
-				if (self.count)
-					self.ammofield = self.count;
+				if (ammofield) {
+					if (self.count)
+						self.ammofield = self.count;
 
-				if (!self.ammofield)
-					self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(j)));
+					if (!self.ammofield)
+						self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(j)));
+				}
 			}
 		}
 	} else {
@@ -1264,6 +1269,7 @@ void(void) weapon_init {
 	CVAR_CACHE(g_recoil_extra);
 	CVAR_CACHE(g_recoil_extra_spread);
 	CVAR_CACHE(g_weapon_throw_mode);
+	CVAR_CACHE(g_weapon_throw_noammo);
 	CVAR_CACHE(g_showweaponspawns);
 	CVAR_CACHE(sv_debug_weapon_tags);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));

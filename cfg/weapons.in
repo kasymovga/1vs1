@@ -1,4 +1,5 @@
 set g_weapon_throw_mode 0 "0 - use default ammo values for dropped weapons from dead players, 1 - always use owner ammo"
+set g_weapon_throw_noammo 0 "throw weapons without ammo (like laser)"
 set g_balance_weaponswitchdelay 0.15
 set g_weaponreplace_laser ""
 set g_weaponreplace_uzi ""

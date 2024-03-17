@@ -114,7 +114,6 @@ floatfield(float it) item_counter_field {
 	case IT_HEALTH:      return health;
 	case IT_ARMOR:       return armorvalue;
 	// add more things here (health, armor)
-	default:             error("requested item has no counter field");
 	}
 	return NULL;
 }
@@ -126,7 +125,6 @@ string(float it) item_counter_field_name {
 	case IT_ROCKETS:     return "rockets";
 	case IT_CELLS:       return "cells";
 	// add more things here (health, armor)
-	default:             error("requested item has no counter field name");
 	}
 	return NULL;
 }
