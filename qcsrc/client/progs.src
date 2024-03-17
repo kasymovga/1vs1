@@ -118,6 +118,7 @@ vote.qh
 game_menu.qh
 entcs.qh
 font.qh
+thirdview.qh
 main.qc
 mute.qc
 input.qc

@@ -169,6 +169,7 @@ void(void) CSQC_Shutdown {
 
 	cvar_clientsettemp_restore();
 	gui_chat_restore();
+	thirdview_shutdown();
 	if(view_camera_free_active)
 		cvar_set("chase_active",ftos(view_chase_active_backup));
 

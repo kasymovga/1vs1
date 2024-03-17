@@ -10,7 +10,7 @@ void(void) thirdview_restore_think {
 	cvar_set("chase_up", ftos(thirdview_save_up));
 	CVAR(chase_up) = thirdview_save_up;
 	remove(self);
-	thirdview_restore = world;
+	thirdview_restore = NULL;
 }
 
 void(float ignore) thirdview_read {
@@ -31,4 +31,13 @@ void(float ignore) thirdview_read {
 	CVAR(chase_back) = back;
 	cvar_set("chase_up", ftos(up));
 	CVAR(chase_up) = up;
+}
+
+void(void) thirdview_shutdown {
+	if (thirdview_restore) {
+		entity oldself = self;
+		self = thirdview_restore;
+		self.think();
+		self = oldself;
+	}
 }
