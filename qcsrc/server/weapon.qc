@@ -7,6 +7,7 @@ float g_projectiles_newton_style_2_minfactor;
 float g_weaponratefactor;
 float g_weapon_throw_mode;
 float g_weapon_throw_noammo;
+float g_weapon_switch_to_empty;
 float g_showweaponspawns;
 vector sv_qcanimation_melee_morph1angles;
 vector sv_qcanimation_melee_morph2angles;
@@ -150,7 +151,7 @@ void(entity e, float w) weapon_switch_force {
 // switch between weapons
 void(float imp) weapon_switch {
 	if (self.switchweapon != imp) {
-		if (weapon_carried(self, imp, TRUE, TRUE))
+		if (weapon_carried(self, imp, !g_weapon_switch_to_empty, TRUE))
 			weapon_switch_force(self, imp);
 		else
 			weapon_show_list(self);
@@ -182,7 +183,7 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 			continue;
 
 		++c;
-		if (weapon_carried(pl, weaponwant, TRUE, FALSE)) {
+		if (weapon_carried(pl, weaponwant, !g_weapon_switch_to_empty, FALSE)) {
 			if (switchtonext)
 				return weaponwant;
 
@@ -222,7 +223,7 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 
 			--c;
 			if (c <= 0) {
-				weapon_carried(pl, weaponwant, TRUE, TRUE);
+				weapon_carried(pl, weaponwant, !g_weapon_switch_to_empty, TRUE);
 				break;
 			}
 		}
@@ -1270,6 +1271,7 @@ void(void) weapon_init {
 	CVAR_CACHE(g_recoil_extra_spread);
 	CVAR_CACHE(g_weapon_throw_mode);
 	CVAR_CACHE(g_weapon_throw_noammo);
+	CVAR_CACHE(g_weapon_switch_to_empty);
 	CVAR_CACHE(g_showweaponspawns);
 	CVAR_CACHE(sv_debug_weapon_tags);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
