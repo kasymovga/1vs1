@@ -1078,6 +1078,31 @@ void(string _model, string defmodel, string snd) item_precache {
 		precache_sound(snd);
 }
 
+float(entity pl) item_drop_required {
+	if not(g_pickup_weapons_max) return FALSE;
+	if not(g_pickup_weapons) return FALSE;
+	if not(g_pickup_weapons) return FALSE;
+	if not(g_pickup_items) return FALSE;
+	if (g_pickup_nodrop) return FALSE;
+	float weapons_count = 0;
+	entity e;
+	WEAPON_INFO_FOR_EACH(e) {
+		if ((pl.weapons & e.weapons) || (pl.weapons_extra & e.weapons_extra)) {
+			weapons_count++;
+		}
+	}
+	if (weapons_count < g_pickup_weapons_max) return FALSE;
+	for (e = findradius(ENTITY_CENTER(pl), vlen(pl.maxs - pl.mins) / 2); e; e = e.chain) {
+		if (e != pl)
+		if (math_boxes_overlap(e.absmin, e.absmax, pl.absmin, pl.absmax))
+		if (e.flags & FL_WEAPON)
+		if ((e.weapons && !(e.weapons & pl.weapons)) || (e.weapons_extra && !(e.weapons_extra & pl.weapons_extra))) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
 void(void) item_init {
 	CVAR_CACHE(g_balance_pause_armor_rot);
 	CVAR_CACHE(g_balance_pause_fuel_rot);

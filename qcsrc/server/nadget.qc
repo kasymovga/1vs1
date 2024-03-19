@@ -159,6 +159,9 @@ void(entity plr) nadget_spectator_copy {
 var float() nadget_weapon_throw_handle_next;
 float() nadget_weapon_throw_handle {
 	nadget_weapon_throw_handle_next();
+	if (item_drop_required(self))
+		return FALSE;
+
 	nadget_Trigger();
 	return TRUE;
 }
