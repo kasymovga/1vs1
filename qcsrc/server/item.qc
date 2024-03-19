@@ -180,8 +180,8 @@ void(void) item_respawn {
 		sound (self, CHAN_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else
 		sound (self, CHAN_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
-	setorigin (self, self.origin);
 
+	setorigin (self, self.origin);
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
 	pointparticles(particleeffectnum("item_respawn"), self.origin + 0.5 * (self.mins + self.maxs), '0 0 0', 1);
 }
@@ -506,7 +506,6 @@ void(void) item_find_team {
 		e = random_selection_chosen_ent;
 		e.state = 0;
 		item_show(e, 1);
-
 		for (head = world; (head = findfloat(head, team, self.team)); ) if (head.flags & FL_ITEM) {
 			if (head != e) {
 				// make it a non-spawned item
@@ -1094,6 +1093,7 @@ float(entity pl) item_drop_required {
 	if (weapons_count < g_pickup_weapons_max) return FALSE;
 	for (e = findradius(ENTITY_CENTER(pl), vlen(pl.maxs - pl.mins) / 2); e; e = e.chain) {
 		if (e != pl)
+		if (e.solid == SOLID_TRIGGER)
 		if (math_boxes_overlap(e.absmin, e.absmax, pl.absmin, pl.absmax))
 		if (e.flags & FL_WEAPON)
 		if ((e.weapons && !(e.weapons & pl.weapons)) || (e.weapons_extra && !(e.weapons_extra & pl.weapons_extra))) {
