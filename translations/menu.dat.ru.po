@@ -997,3 +997,6 @@ msgstr "Использовать старый индикатор клавиш"
 
 msgid "Use \"Iceland\" font for big messages"
 msgstr "Использовать шрифт \"Iceland\" для больших сообщений"
+
+msgid "Lighting intensity:"
+msgstr "Интенсивность освещения:"

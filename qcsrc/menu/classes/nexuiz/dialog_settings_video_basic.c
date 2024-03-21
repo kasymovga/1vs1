@@ -174,8 +174,11 @@ void fillNexuizVideoSettingsBasicTab(entity me)
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_shadow_realtime_world_shadows", _("Shadows")));
 			gui_set_dependent(e, "r_shadow_realtime_world", 1, 1);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeNexuizCheckBox(0, "r_shadow_usenormalmap", _("Use normal maps")));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Lighting intensity:")));
+		me.TD(me, 1, 2, e = makeNexuizSlider(0.01, 2, 0.05, "r_shadow_lightintensityscale"));
+			gui_set_dependent_or(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "r_shadow_usenormalmap", _("Use normal maps")));
 			gui_set_dependent_or(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "r_extra_texture_effects", _("Extra texture effects")));

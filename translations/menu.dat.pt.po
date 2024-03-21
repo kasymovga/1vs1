@@ -999,3 +999,6 @@ msgstr "Use o indicador-chave antigo"
 
 msgid "Use \"Iceland\" font for big messages"
 msgstr "Use a fonte \"Iceland\" para mensagens grandes"
+
+msgid "Lighting intensity:"
+msgstr "Intensidade de iluminação:"

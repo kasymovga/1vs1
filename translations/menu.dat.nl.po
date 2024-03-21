@@ -999,3 +999,6 @@ msgstr "Oude sleutelindicator tonen"
 
 msgid "Use \"Iceland\" font for big messages"
 msgstr "‘Iceland’-lettertype gebruiken in grote berichten"
+
+msgid "Lighting intensity:"
+msgstr "Verlichtingsintensiteit:"

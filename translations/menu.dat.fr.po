@@ -999,3 +999,6 @@ msgstr "Utiliser l'ancien indicateur de clé"
 
 msgid "Use \"Iceland\" font for big messages"
 msgstr "Utilisez la police \"Iceland\" pour les messages volumineux"
+
+msgid "Lighting intensity:"
+msgstr "Intensité lumineuse :"
