@@ -29,6 +29,7 @@
 #include "physics/jetpack.qh"
 #include "physics/spiderbot.qh"
 #include "portal.qh"
+#include "print.qh"
 #include "projectile.qh"
 #include "q3surfaceflag.qh"
 #include "race.qh"

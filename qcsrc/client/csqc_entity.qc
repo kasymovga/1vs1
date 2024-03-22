@@ -181,6 +181,7 @@ void(void) csqc_entity_init {
 	csqc_entity_temp_parsers[NET_TE_CSQC_RM_GAME_TYPE_VOTE_PICTURE - NET_TE_CSQC_FIRST] = rm_game_type_vote_picture_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RM_EFFECT_HEAL - NET_TE_CSQC_FIRST] = rm_effect_heal_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RM_BIGPRINT - NET_TE_CSQC_FIRST] = rm_bigprint_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_PRINT - NET_TE_CSQC_FIRST] = print_read;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

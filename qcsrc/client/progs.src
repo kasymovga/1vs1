@@ -95,6 +95,7 @@ ft.qc
 sbar.qc
 map_vote.qc
 report.qh
+print.qh
 hook.qc
 particles.qc
 laser.qc
@@ -187,3 +188,4 @@ rm_bigprint.qc
 rm_crosshair_ring.qc
 rm_score.qc
 camera.qc
+print.qc

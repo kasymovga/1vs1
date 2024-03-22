@@ -71,6 +71,7 @@ onslaught.qh
 nexball.qh
 timeout.qh
 centerprint.qh
+print.qh
 progressbar.qh
 slowmo.qh
 item.qh
@@ -406,3 +407,4 @@ rm/bigprint.qc
 rm.qc
 jb.qc
 jb_role.qc
+print.qc

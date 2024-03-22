@@ -571,7 +571,7 @@ float() client_join_allowed {
 	if (currentlyPlaying < g_maxplayers)
 		return TRUE;
 
-	centerprint_atprio(self, CENTERPRINT_PRIO_MAPVOTE, "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity.");
+	centerprint(self, "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity.");
 	return FALSE;
 }
 
@@ -672,12 +672,10 @@ void(void) client_post_think { //called by engine
 				return;
 			} else if (timeleft <= 10) {
 				if (timeleft != self.idlekick_lasttimeleft) {
-					centerprint_atprio(self, CENTERPRINT_PRIO_IDLEKICK, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators") , " in ", ftos(timeleft), "..."));
+					centerprint(self, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators") , " in ", ftos(timeleft), "..."));
 					announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"), "");
 				}
-			} else
-				centerprint_expire(self, CENTERPRINT_PRIO_IDLEKICK);
-
+			}
 			self.idlekick_lasttimeleft = timeleft;
 		}
 	}
@@ -734,7 +732,6 @@ void client_cvars_request() {
 	stuffcmd(self,
 			"sendcvar cl_autoswitch\n"
 			"sendcvar cl_playerdetailreduction\n"
-			"sendcvar scr_centertime\n"
 			"sendcvar cl_gunalpha\n"
 			"sendcvar cl_weaponpriority\n"
 			"sendcvar cl_weaponpriority0\n"
@@ -776,8 +773,6 @@ void() client_cvars_parse {
 			self.client_flags &= ~CLIENT_FLAG_AUTOSWITCH;
 	else if (s == "cl_playerdetailreduction")
 		self.cvar_cl_playerdetailreduction = stof(val);
-	else if (s == "scr_centertime")
-		self.cvar_scr_centertime = stof(val);
 	else if (s == "cl_gunalpha")
 		self.cvar_cl_gunalpha = stof(val);
 	else if (s == "cl_weaponpriority") {

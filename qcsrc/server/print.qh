@@ -1,0 +1,2 @@
+void(entity cl, float type, string s, string arg1, string arg2, string arg3) print_to;
+void(float type, string s, string arg1, string arg2, string arg3) print_all;

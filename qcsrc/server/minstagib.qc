@@ -479,7 +479,7 @@ void(entity targ, entity attacker, float deathtype) minstagib_damage_mods_set {
 			plugin_chain_damage_mod = 0;
 			if (targ != attacker) {
 				if (g_minstagib_nolaserdamage)
-					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
+					centerprint(attacker, "Secondary fire inflicts no damage!");
 
 				plugin_chain_damage_mod_force = 0;
 				plugin_chain_damage_mod_mirror = 0;
@@ -505,7 +505,7 @@ float(entity attacker, entity inflictor, float mirrordamage, vector force) minst
 	if (mirrordamage > 0)
 	if (attacker.armorvalue > 0) {// just lose extra LIVES, don't kill the player for mirror damage
 		attacker.armorvalue = attacker.armorvalue - 1;
-		centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
+		centerprint(attacker, strcat("^3Remaining extra lives: ",ftos(attacker.armorvalue)));
 		attacker.hitsound += 1;
 	}
 	damage(attacker, inflictor, attacker, 0, DEATH_MIRRORDAMAGE, attacker.origin, force);

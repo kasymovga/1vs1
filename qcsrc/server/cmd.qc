@@ -114,7 +114,7 @@ void(string command) cmd_game {
 		if (entno <= client_max_count)
 			client = edict_num(entno);
 		if (client.flags & FL_CLIENT) {
-			centerprint_atprio(client, CENTERPRINT_PRIO_ADMIN, strcat("^3SERVER ADMIN:\n\n^7", argv(2)));
+			centerprint(client, strcat("^3SERVER ADMIN:\n\n^7", argv(2)));
 			sprint(client, strcat("\{1}\{13}^3SERVER ADMIN^7: ", argv(2), "\n"));
 			print("Message sent to ", client.netname, "\n");
 		} else

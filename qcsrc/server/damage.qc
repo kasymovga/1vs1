@@ -8,8 +8,6 @@ float g_teamdamage_threshold;
 float g_throughfloor_damage;
 float g_throughfloor_force;
 
-#define DAMAGE_CENTERPRINT_SPACER "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-
 float damage_goodhits;
 float damage_gooddamage;
 float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after use

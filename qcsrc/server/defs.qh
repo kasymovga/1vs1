@@ -157,7 +157,6 @@ typedef void() voidfunc;
 .float() customizeentityforclient;
 .float cvar_cl_gunalpha;
 .float cvar_cl_playerdetailreduction;
-.float cvar_scr_centertime;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
 .float cvar_cl_gunalign;

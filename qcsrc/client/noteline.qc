@@ -55,34 +55,6 @@ void(void) noteline_draw {
 	}
 }
 
-string(string s) noteline_text_prepare {
-	float cmdkey, cmdkey_end;
-	if (main_isdemo) {
-		cmdkey = strstrofs(s, "\n", 0);
-		if (cmdkey >= 0)
-			s = substring(s, 0, cmdkey);
-	}
-	for (cmdkey = 0; (cmdkey = strstrofs(s, "{", cmdkey)) >= 0;) {
-		cmdkey_end = strstrofs(s, "}", cmdkey);
-		if (cmdkey_end < 0)
-			break;
-
-		string s1, s2, s3;
-		s1 = substring(s, 0, cmdkey);
-		if (cmdkey + 1 == cmdkey_end) {
-			s2 = "{";
-		} else {
-			s2 = substring(s, cmdkey + 1, cmdkey_end - cmdkey - 1);
-			if (s2 != "")
-				s2 = input_command_key(s2, s2);
-		}
-		s3 = substring(s, cmdkey_end + 1, -1);
-		cmdkey = strlen(s1) + strlen(s2);
-		s = strcat(s1, s2, s3);
-	}
-	return s;
-}
-
 void(entity e_add) noteline_add {
 	entity e;
 	for (e = noteline; e; e = e.sort_next) {
@@ -112,6 +84,6 @@ void(float bIsNew) noteline_read {
 	if (self.message)
 		strunzone(self.message);
 
-	self.message = strzone(noteline_text_prepare(net_read_string()));
+	self.message = strzone(print_text_prepare(net_read_string(), "", "", ""));
 	noteline_add(self);
 }

@@ -1,0 +1,5 @@
+enum {
+	PRINT_CENTER,
+	PRINT_INFO,
+	PRINT_CHAT,
+};

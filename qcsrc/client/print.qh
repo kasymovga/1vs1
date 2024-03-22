@@ -1,0 +1,2 @@
+string(string s, string arg1, string arg2, string arg3) print_text_prepare;
+void(void) print_read;
