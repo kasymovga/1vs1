@@ -14,6 +14,12 @@ msgstr ""
 msgid "Singleplayer"
 msgstr "Одиночная игра"
 
+msgid "Campaign"
+msgstr "Кампания"
+
+msgid "Custom"
+msgstr "Настраиваемая"
+
 msgid "Classic Campaign"
 msgstr "Классичесая кампания"
 

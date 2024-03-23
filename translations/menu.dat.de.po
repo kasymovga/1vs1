@@ -15,6 +15,12 @@ msgstr ""
 msgid "Singleplayer"
 msgstr "Einzelspieler"
 
+msgid "Campaign"
+msgstr "Kampagne"
+
+msgid "Custom"
+msgstr "Custom"
+
 msgid "Classic Campaign"
 msgstr "Klassische Kampagne"
 
