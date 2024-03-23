@@ -7,7 +7,7 @@ void(void) noteline_remove {
 	if (noteline == self) {
 		noteline = noteline.sort_next;
 		if (noteline) {
-			noteline.draw2dflag = 1;
+			noteline.draw2dflag = 2;
 			noteline.draw2d = noteline_draw;
 		}
 	} else
@@ -67,7 +67,7 @@ void(entity e_add) noteline_add {
 		noteline.draw2d = NULL;
 	}
 	noteline = e_add;
-	noteline.draw2dflag = 1;
+	noteline.draw2dflag = 2;
 	noteline.draw2d = noteline_draw;
 }
 

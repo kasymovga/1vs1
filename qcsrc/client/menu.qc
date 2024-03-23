@@ -23,7 +23,7 @@ void(void) menu_remove {
 		menu = menu.menu_next;
 		if (menu) {
 			menu.draw2d = menu_draw;
-			menu.draw2dflag = 1;
+			menu.draw2dflag = 3;
 		}
 		menu_choiced = -1;
 		input_event_callback = NULL;
@@ -108,7 +108,6 @@ void(void) menu_draw {
 	float size_scale;
 	float subcmd;
 	string item_color;
-	sbar_hidescores = TRUE;
 	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = MENU_ITEM_TOP_MARGIN;
 	pos_z = 0;

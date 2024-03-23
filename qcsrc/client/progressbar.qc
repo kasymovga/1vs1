@@ -73,7 +73,7 @@ void(void) progressbar_remove {
 	entity e;
 	entity fade = spawn();
 	fade.alpha = 1;
-	fade.draw2dflag = 1;
+	fade.draw2dflag = 2;
 	fade.draw2d = progressbar_fade_draw;
 	fade.netname = self.netname;
 	fade.origin_z = self.origin_z;
@@ -83,7 +83,7 @@ void(void) progressbar_remove {
 	if (progressbar == self) {
 		progressbar = progressbar.sort_next;
 		if (progressbar) {
-			progressbar.draw2dflag = 1;
+			progressbar.draw2dflag = 2;
 			progressbar.draw2d = progressbar_draw;
 			progressbar.origin_z += 70 + self.origin_z;
 		}
@@ -130,7 +130,7 @@ void(float bIsNewEntity) progressbar_read {
 			e.sort_next = self;
 		} else {
 			progressbar = self;
-			progressbar.draw2dflag = 1;
+			progressbar.draw2dflag = 2;
 			progressbar.draw2d = progressbar_draw;
 		}
 	}

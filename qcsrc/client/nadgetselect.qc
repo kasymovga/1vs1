@@ -42,7 +42,6 @@ void(void) nadgetselect_draw {
 		remove(self);
 		return;
 	}
-	sbar_hidescores = TRUE;
 	float a = nadgetselect_alpha;
 	drawfont = sbar_bigfont;
 	//drawfill('0 0', '1 0' * CVAR(vid_conwidth) + '0 1' * CVAR(vid_conheight), '0 0 0', 0.5 * a, DRAWFLAG_NORMAL);
@@ -242,6 +241,6 @@ void(void) nadgetselect_read {
 	if not(nadgetselect) {
 		nadgetselect = spawn();
 		nadgetselect.draw2d = nadgetselect_draw;
-		nadgetselect.draw2dflag = 1;
+		nadgetselect.draw2dflag = 3;
 	}
 }

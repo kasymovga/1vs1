@@ -100,7 +100,7 @@ void(void) rm_damage_received_indicator_read {
 		e.float1 = net_read_short();
 		e.origin = rm_hud_dmgtakenorigin;
 		e.draw2d = rm_damage_received_indicator_draw;
-		e.draw2dflag = 1;
+		e.draw2dflag = 2;
 	}
 	if not(rm_skin_loaded) {
 		if (e == rm_damage_received_indicator_last) rm_damage_received_indicator_last = NULL;

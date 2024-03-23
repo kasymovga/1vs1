@@ -30,9 +30,7 @@ float locationrequest_input_event(float input_type, float primary, float seconda
 }
 
 void(void) locationrequest_draw {
-	view_crosshair = FALSE;
 	selected_location = self;
-	sbar_hidescores = TRUE;
 	teamradar_show = FALSE;
 	mouse_enable("");
 	input_event_callback = locationrequest_input_event;
@@ -48,5 +46,5 @@ void(float bNew) locationrequest_read {
 		self.netname = str_zone_ifneeded(net_read_string());
 	}
 	self.draw2d = locationrequest_draw;
-	self.draw2dflag = 1;
+	self.draw2dflag = 3;
 }

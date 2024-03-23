@@ -151,8 +151,6 @@ void(void) map_vote_draw {
 	float tsize;
 	float xmin, xmax, ymin, ymax = 0;
 	vector dist;
-	view_crosshair = FALSE;
-	sbar_hidescores = TRUE;
 	center = (CVAR(vid_conwidth) - 1)/2;
 	xmin = CVAR(vid_conwidth)*0.05; // 5% border must suffice
 	xmax = CVAR(vid_conwidth) - xmin;
@@ -362,7 +360,7 @@ void(float ignore) map_vote_read {
 		map_vote_update_votes();
 
 	self.draw2d = map_vote_draw;
-	self.draw2dflag = 1;
+	self.draw2dflag = 4;
 }
 
 void(void) map_vote_picture_read {

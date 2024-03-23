@@ -48,7 +48,6 @@ void(void) weaponselect_draw {
 		weaponselect = NULL;
 		return;
 	}
-	sbar_hidescores = TRUE;
 	float a = weaponselect_alpha;
 	drawfont = sbar_bigfont;
 	drawfill('0 0 0', '1 0 0' * CVAR(vid_conwidth) + CVAR(vid_conheight) * '0 1 0', '0 0 0', 0.5 * a, DRAWFLAG_NORMAL);
@@ -177,6 +176,6 @@ void(void) weaponselect_read {
 	if not(weaponselect) {
 		weaponselect = spawn();
 		weaponselect.draw2d = weaponselect_draw;
-		weaponselect.draw2dflag = 1;
+		weaponselect.draw2dflag = 3;
 	}
 }

@@ -28,7 +28,7 @@ void(float n) rm_score {
 	entity e = spawn();
 	e.alpha = 1;
 	e.cnt = n - rm_score_last;
-	e.draw2dflag = 1;
+	e.draw2dflag = 2;
 	e.draw2d = rm_score_draw;
 	e.origin = rm_hud_scoresorigin;
 	rm_score_last = n;

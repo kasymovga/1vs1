@@ -48,7 +48,6 @@ void(void) weapon_wheel_draw {
 	}
 	mouse_enable("");
 	float cursor_found = FALSE;
-	sbar_hidescores = TRUE;
 	view_fixangle = 1;
 	view_fixed_angles = view_camera_angles;
 	input_event_callback = weapon_wheel_input_event;
@@ -126,7 +125,7 @@ float(float forward) weapon_wheel {
 	if not(weapon_wheel_control) {
 		weapon_wheel_control = spawn();
 		weapon_wheel_control.draw2d = weapon_wheel_draw;
-		weapon_wheel_control.draw2dflag = TRUE;
+		weapon_wheel_control.draw2dflag = 3;
 		weapon_wheel_under_cursor = getstati(STAT_SWITCHWEAPON);
 		localcmd("cmd slowmostart\n");
 		return TRUE;

@@ -274,9 +274,23 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_tint_effect();
 	// draw 2D entities
 	e = self;
-	for (self = findfloat(NULL, draw2dflag, 1); self; self = findfloat(self, draw2dflag, 1))
-		self.draw2d();
+	float max2dflag = 1;
+	for (self = findflags(NULL, draw2dflag, 63); self; self = findflags(self, draw2dflag, 63)) {
+		if (self.draw2dflag > max2dflag)
+			max2dflag = self.draw2dflag;
+		else if (self.draw2dflag == 1)
+			self.draw2d();
+	}
+	if (max2dflag > 1) {
+		float i;
+		if (max2dflag > 2)
+			sbar_hidescores = TRUE;
 
+		for (i = 2; i <= max2dflag; i++)
+			for (self = findfloat(NULL, draw2dflag, i); self; self = findfloat(self, draw2dflag, i)) {
+				self.draw2d();
+			}
+	}
 	self = e;
 	// draw radar
 	if (teamradar_show)

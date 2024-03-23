@@ -15,7 +15,7 @@ void(void) announce_print {
 	if not(announce) {
 		announce = spawn();
 		announce.draw2d = announce_draw;
-		announce.draw2dflag = 1;
+		announce.draw2dflag = 2;
 	}
 	announce.message = str_zone_ifneeded(net_read_string());
 	if (announce.message == " ")

@@ -137,7 +137,6 @@ float modelselect_draw_last_noviewmodel;
 void(void) modelselect_draw {
 	input_event_callback = modelselect_input_event;
 	mouse_enable("");
-	sbar_hidescores = TRUE;
 	string s = modelselect_list;
 	float noviewmodel = (CVAR(chase_active) || !cvar("r_drawviewmodel"));
 	if (modelselect_list_pos_prev != modelselect_list_pos || noviewmodel != modelselect_draw_last_noviewmodel) {
@@ -334,7 +333,7 @@ void(void) modelselect_read {
 		modelselect = spawn();
 
 	modelselect.draw2d = modelselect_draw;
-	modelselect.draw2dflag = 1;
+	modelselect.draw2dflag = 3;
 	if not(modelselect_current) {
 		modelselect_current = spawn();
 		modelselect_head = spawn();

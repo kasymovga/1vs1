@@ -1,7 +1,4 @@
 void(void) gamestatus_draw {
-	if (sbar_hidescores)
-		return;
-
 	vector pos, _size;
 	drawfont = sbar_bigfont;
 	pos = self.origin;
@@ -29,7 +26,7 @@ void(float isnew) gamestatus_read {
 	self.origin_x = 0;
 	self.origin_y = CVAR(vid_conheight) / 2 - sbar_fontsize_y * 8;
 	self.draw2d = gamestatus_draw;
-	self.draw2dflag = 1;
+	self.draw2dflag = 2;
 	float f = net_read_byte();
 	self.entremove = gamestatus_remove;
 	if (f & 1)

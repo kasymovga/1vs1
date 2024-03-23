@@ -63,7 +63,6 @@ void(void) rm_bigprint_draw {
 	float i;
 	float bp_alpha, bp_ypos;
 	vector bp_pos;
-	if (sbar_hidescores) return;
 	bp_ypos = (CVAR(vid_conheight) / 5) * (1 - sbar_scoreboard_fade_alpha)
 			+ (SBAR_SCOREBOARD_OFFSET) * (sbar_scoreboard_fade_alpha);
 	if (rm_bigprint_old_draw)
@@ -169,5 +168,5 @@ void(void) rm_bigprint_enable {
 	if (rm_bigprint_controller) return;
 	rm_bigprint_controller = spawn();
 	rm_bigprint_controller.draw2d = rm_bigprint_draw;
-	rm_bigprint_controller.draw2dflag = 1;
+	rm_bigprint_controller.draw2dflag = 2;
 }
