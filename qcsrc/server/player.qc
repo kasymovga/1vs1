@@ -290,8 +290,8 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			if (!player_obituary_firstblood) {
 				player_obituary_firstblood = TRUE;
 				player_obituary_print_all("{1} drew first blood", a_red, "", "");
-				centerprint(attacker, "^1First blood");
-				centerprint(targ, "^1First victim");  // or First casualty
+				player_obituary_print_center(attacker, "^1First blood", "", "", "");
+				player_obituary_print_center(targ, "^1First victim", "", "", "");  // or First casualty
 				if (sv_announcer_extra_firstblood != "")
 					announce(attacker, sv_announcer_extra_firstblood, "^5First ^1Blood");
 			}

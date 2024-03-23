@@ -29,6 +29,8 @@ void(void) translate_init {
 				//print("added translation:\n");
 				//print("msgid=", msgid, "\n");
 				//print("msgstr=", msgstr, "\n");
+				msgid = strreplace("\\n", "\n", msgid);
+				msgstr = strreplace("\\n", "\n", msgstr);
 				db_put(translate_db, msgid, msgstr);
 				msgstr = "";
 				msgid = "";
@@ -57,6 +59,8 @@ void(void) translate_init {
 		//print("added translation:\n");
 		//print("msgid=", msgid, "\n");
 		//print("msgstr=", msgstr, "\n");
+		msgid = strreplace("\\n", "\n", msgid);
+		msgstr = strreplace("\\n", "\n", msgstr);
 		db_put(translate_db, msgid, msgstr);
 	}
 }

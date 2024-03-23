@@ -113,3 +113,33 @@ msgstr "Changer de classe de capacité"
 
 msgid "Switch Nadget"
 msgstr "Changer de nadget"
+
+msgid "You are now on: {1}"
+msgstr "You are now on: {1}"
+
+msgid "You have been moved into a different team to improve team balance\nYou are now on: {1}"
+msgstr "You have been moved into a different team to improve team balance\nYou are now on: {1}"
+
+msgid "^1You grew too old without taking your medicine"
+msgstr "^1You grew too old without taking your medicine"
+
+msgid "^1Don't shoot your team mates!"
+msgstr "^1Não atire em seus companheiros de equipe!"
+
+msgid "^1You killed your own dumb self!"
+msgstr "^1You killed your own dumb self!"
+
+msgid "^4You {2}^4fragged ^7{1}"
+msgstr "^4You {2}^4fragged ^7{1}"
+
+msgid "^1You were {2}^1fragged by ^7{1}"
+msgstr "^1You were {2}^1fragged by ^7{1}"
+
+msgid "^1Watch your step!"
+msgstr "^1Watch your step!"
+
+msgid "^1First blood"
+msgstr "^1First blood"
+
+msgid "^1First victim"
+msgstr "^1First victim"
