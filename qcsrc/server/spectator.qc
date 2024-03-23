@@ -12,11 +12,13 @@ float(void) spectator_note_customize {
 void(void) spectator_note_message {
 	string s = "";
 	if (other.classname == "spectator") {
-		s = strcat("^1Spectating ^7", strreplace("{", "{}", other.enemy.netname), "\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe");
+		s = "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe";
+		self.target = other.enemy.netname;
 	} else if (other.classname == "observer")
 		s = "^1Observing\n^1Press ^3{+attack}^1 to spectate";
 
-	s = strcat(s, "\n^1Game type is ^3", game_type_title);
+	s = strcat(s, "\n^1Game type is ^3{2}");
+	self.target2 = game_type_title;
 	if (other.team <= 0)
 		s = strcat(s, "\n^1Press ^3{+jump}^1 to join");
 

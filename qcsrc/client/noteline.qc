@@ -84,6 +84,6 @@ void(float bIsNew) noteline_read {
 	if (self.message)
 		strunzone(self.message);
 
-	self.message = strzone(print_text_prepare(net_read_string(), "", "", ""));
+	self.message = strzone(print_text_prepare(net_read_string(), net_read_string(), net_read_string(), ""));
 	noteline_add(self);
 }

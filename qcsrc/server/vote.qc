@@ -32,6 +32,7 @@ float realplayernocount;
 string vote_note_message1;
 string vote_note_message2;
 string vote_note_message3;
+string vote_note_bar;
 
 string sv_announcer_extra_vote_now;
 string sv_announcer_extra_vote_failed;
@@ -41,6 +42,7 @@ void(void) vote_note_clear {
 	if (vote_note_message1 == "")
 		return;
 
+	strunzone(vote_note_bar);
 	strunzone(vote_note_message1);
 	vote_note_message1 = "";
 	strunzone(vote_note_message2);
@@ -52,28 +54,30 @@ void(void) vote_note_update {
 		return;
 
 	vote_note_clear();
-	string s = strcat("^2A vote has been called for ^1", vote_called_vote_display, "^7\n");
-	string vote_bar;
+	//string s = strcat("^2A vote has been called for ^1", vote_called_vote_display, "^7\n");
+	string s = "^2A vote has been called for ^1{1}^7\n";
 	float i, n;
-	vote_bar = "^2";
+	vote_note_bar = "^2";
 	n = yescount;
 	for (i = 0; i < n; i++)
-		vote_bar = strcat(vote_bar, "Y");
+		vote_note_bar = strcat(vote_note_bar, "Y");
 
 	n = yescount_target - yescount;
 	for (i = 0; i <= n; i++)
-		vote_bar = strcat(vote_bar, ".");
+		vote_note_bar = strcat(vote_note_bar, ".");
 
-	vote_bar = strcat(vote_bar, "^1");
+	vote_note_bar = strcat(vote_note_bar, "^1");
 	n = nocount_target - nocount;
 	for (i = 0; i <= n; i++)
-		vote_bar = strcat(vote_bar, ".");
+		vote_note_bar = strcat(vote_note_bar, ".");
 
 	n = nocount;
 	for (i = 0; i < n; i++)
-		vote_bar = strcat(vote_bar, "N");
+		vote_note_bar = strcat(vote_note_bar, "N");
 
-	s = strcat(s, "^0[", vote_bar, "^0]");
+	//s = strcat(s, "^0[", vote_note_bar, "^0]");
+	vote_note_bar = strzone(vote_note_bar);
+	s = strcat(s, "^0[{2}^0]");
 	vote_note_message1 = strzone(strcat(s, "\nYour vote: ^2Yes"));
 	vote_note_message2 = strzone(strcat(s, "\nYour vote: ^1No"));
 	vote_note_message3 = strzone(strcat(s, "\n^3{vyes} ^2Yes   ^3{vno} ^1No"));
@@ -87,6 +91,9 @@ void(void) vote_note_message {
 		self.message = vote_note_message2;
 	else
 		self.message = vote_note_message3;
+
+	self.target = vote_called_vote_display;
+	self.target2 = vote_note_bar;
 }
 
 float(string cmd) vote_check_nasty {
