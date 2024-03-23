@@ -50,7 +50,7 @@ void(void) translate_init {
 			if (msgstr_reading) {
 				msgstr = strcat(msgstr, arg0);
 			} else {
-				msgid = strcat(msgstr, arg0);
+				msgid = strcat(msgid, arg0);
 			}
 		}
 	}
