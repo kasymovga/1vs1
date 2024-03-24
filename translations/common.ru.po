@@ -139,13 +139,13 @@ msgstr "^1Наблюдение за ^7{1}\n^1Нажмите ^3{+attack}^1 для
 
 msgid "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe"
 "\n^1Game type is ^3{2}"
-msgstr "^1Наблюдение за ^7{1}\n^1Нажмите ^3{+attack}^1 для другого игрока\n^1Нажмите ^3{+attack2}^1 для обозрения"
+msgstr "^1Наблюдение за ^7{1}\n^1Нажмите ^3{+attack}^1 для другого игрока\n^1Нажмите ^3{+attack2}^1 для обзора"
 "\n^1Тип игры ^3{2}"
 
 msgid "^1Observing\n^1Press ^3{+attack}^1 to spectate"
 "\n^1Game type is ^3{2}"
 "\n^1Press ^3{+jump}^1 to join"
-msgstr "^1Обозрение\n^1Нажмите ^3{+attack}^1 для наблюдения"
+msgstr "^1Обзор\n^1Нажмите ^3{+attack}^1 для наблюдения"
 "\n^1Тип игры ^3{2}"
 "\n^1Нажми ^3{+jump}^1 чтобы присоединиться"
 
