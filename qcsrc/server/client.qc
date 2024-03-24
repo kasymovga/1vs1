@@ -21,6 +21,17 @@ void(entity cl, vector a) client_view_angles_set {
 		net_write_angle(MSG_ONE, a_y);
 		net_write_angle(MSG_ONE, a_z);
 	}
+	entity e;
+	FOR_EACH_REALCLIENT(e) {
+		if (e.enemy == cl)
+		if (e.classname == "spectator") {
+			msg_entity = e;
+			net_write_byte(MSG_ONE, SVC_SETANGLE);
+			net_write_angle(MSG_ONE, a_x);
+			net_write_angle(MSG_ONE, a_y);
+			net_write_angle(MSG_ONE, a_z);
+		}
+	}
 }
 
 void(entity to) client_set_view {
