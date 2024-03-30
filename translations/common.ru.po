@@ -113,16 +113,16 @@ msgid "^1Don't shoot your team mates!"
 msgstr "^1Не стреляйте в товарищей по команде!"
 
 msgid "^1You killed your own dumb self!"
-msgstr "^1Ты убил самого себя!"
+msgstr "^1Вы убили самого себя!"
 
 msgid "^4You {2}^4fragged ^7{1}"
-msgstr "^4Ты {2}^4фрагнул ^7{1}"
+msgstr "^4Вы {2}^4фрагнули ^7{1}"
 
 msgid "^1You were {2}^1fragged by ^7{1}"
-msgstr "^1Тебя {2}^1фрагнул ^7{1}"
+msgstr "^1Вас {2}^1фрагнул ^7{1}"
 
 msgid "^1Watch your step!"
-msgstr "^1Смотри куда идёшь!"
+msgstr "^1Смотрити куда идёте!"
 
 msgid "^1First blood"
 msgstr "^1Первая кровь"
@@ -240,3 +240,24 @@ msgstr "{1} was {3}^1fragged by {2}"
 
 msgid "{1} died in {2}'s bullet hail"
 msgstr "{1} died in {2}'s bullet hail"
+
+msgid "^1{1}^1 was revived by {2}"
+msgstr "^1{1}^1 Вас оживил {2}"
+
+msgid "{1} was zapped by {2}"
+msgstr "{1} was zapped by {2}"
+
+msgid "You have the flag!"
+msgstr "Вы подобрали флаг!"
+
+msgid "{1} played with tiny rockets"
+msgstr "{1} played with tiny rockets"
+
+msgid "{1} played with plasma"
+msgstr "{1} played with plasma"
+
+msgid "^4You revive ^7{1}"
+msgstr "^4Вы оживили ^7{1}"
+
+msgid "{1}^7 got the {2}"
+msgstr "{1}^7 got the {2}"
