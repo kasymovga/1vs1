@@ -153,3 +153,90 @@ msgid "^1Observing\n^1Press ^3{+attack}^1 to spectate"
 "\n^1Game type is ^3{2}"
 msgstr "^1Observing\n^1Press ^3{+attack}^1 to spectate"
 "\n^1Game type is ^3{2}"
+
+msgid "{1} was gunned by {2}"
+msgstr "{1} was gunned by {2}"
+
+msgid "{1} detonated"
+msgstr "{1} detonated"
+
+msgid "{1} just noticed {2}'s blue ball"
+msgstr "{1} just noticed {2}'s blue ball"
+
+msgid "{1} has {2} frags in a row"
+msgstr "{1} has {2} frags in a row"
+
+msgid "{1} got too close to {2}'s blue beam"
+msgstr "{1} got too close to {2}'s blue beam"
+
+msgid "{1} was thrown into a world of hurt by {2}"
+msgstr "{1} was thrown into a world of hurt by {2}"
+
+msgid "{1} was lasered to death by {2}"
+msgstr "{1} was lasered to death by {2}"
+
+msgid "{1}'s {3} kill spree was ended by {2}"
+msgstr "{1}'s {3} kill spree was ended by {2}"
+
+msgid "{1} felt the electrifying air of {2}'s combo"
+msgstr "{1} felt the electrifying air of {2}'s combo"
+
+msgid "{1} almost dodged {2}'s grenade"
+msgstr "{1} almost dodged {2}'s grenade"
+
+msgid "{1} was sniped by {2}"
+msgstr "{1} was sniped by {2}"
+
+msgid "{1} drew first blood"
+msgstr "{1} drew first blood"
+
+msgid "{1} was riddled full of holes by {2}"
+msgstr "{1} was riddled full of holes by {2}"
+
+msgid "{1} succeeded at self-destructing himself with the Crylink"
+msgstr "{1} succeeded at self-destructing himself with the Crylink"
+
+msgid "{1} was in the wrong place"
+msgstr "{1} was in the wrong place"
+
+msgid "{1} lasered himself to hell"
+msgstr "{1} lasered himself to hell"
+
+msgid "{1} took a close look at {2}'s Crylink"
+msgstr "{1} took a close look at {2}'s Crylink"
+
+msgid "{1} ended it all after a {2} kill spree"
+msgstr "{1} ended it all after a {2} kill spree"
+
+msgid "{1} has been vaporized by {2}"
+msgstr "{1} has been vaporized by {2}"
+
+msgid "{1} almost dodged {2}'s rocket"
+msgstr "{1} almost dodged {2}'s rocket"
+
+msgid "{1} exploded"
+msgstr "{1} exploded"
+
+msgid "{1} ate {2}'s grenade"
+msgstr "{1} ate {2}'s grenade"
+
+msgid "{1} was cut down by {2}"
+msgstr "{1} was cut down by {2}"
+
+msgid "{1} died of {2}'s great playing on the @!{2}%'n Tuba"
+msgstr "{1} died of {2}'s great playing on the @!{2}%'n Tuba"
+
+msgid "{1} was pummeled by {2}"
+msgstr "{1} was pummeled by {2}"
+
+msgid "{1} got hit in the head by {2}"
+msgstr "{1} got hit in the head by {2}"
+
+msgid "{1} couldn't resist the urge to self-destruct"
+msgstr "{1} couldn't resist the urge to self-destruct"
+
+msgid "{1} was {3}^1fragged by {2}"
+msgstr "{1} was {3}^1fragged by {2}"
+
+msgid "{1} died in {2}'s bullet hail"
+msgstr "{1} died in {2}'s bullet hail"
