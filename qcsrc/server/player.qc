@@ -302,7 +302,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				weapon_fragannounce = "";
 				weapon_action(w, WEAPON_REQUEST_KILLMESSAGE);
 				if (strstrofs(weapon_deathtypestring, "#", 0) >= 0)
-					player_obituary_print_all(strcat("^1{1} ", strreplace("#", "{2}", weapon_deathtypestring)), s_red, a_red, "");
+					player_obituary_print_all(strcat("{1} ", strreplace("#", "{2}", weapon_deathtypestring)), s_red, a_red, "");
 				else if (strstrofs(weapon_deathtypestring, "{", 0) >= 0)
 					player_obituary_print_all(strcat("^1", weapon_deathtypestring), s_red, a_red, "");
 				else
