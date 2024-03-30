@@ -222,9 +222,9 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			weapon_deathtypestring = "couldn't resist the urge to self-destruct";
 			weapon_deathtype = deathtype;
 			weapon_action(w, WEAPON_REQUEST_SUICIDEMESSAGE);
-			if (strstrofs(weapon_deathtypestring, "#", 0))
+			if (strstrofs(weapon_deathtypestring, "#", 0) >= 0)
 				player_obituary_print_all(strreplace("#", "{1}", weapon_deathtypestring), s_red, "", "");
-			else if (strstrofs(weapon_deathtypestring, "{", 0))
+			else if (strstrofs(weapon_deathtypestring, "{", 0) >= 0)
 				player_obituary_print_all(weapon_deathtypestring, s_red, "", "");
 			else
 				player_obituary_print_all(strcat("{1} ", weapon_deathtypestring), s_red, "", "");
