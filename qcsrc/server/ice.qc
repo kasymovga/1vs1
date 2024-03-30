@@ -143,7 +143,7 @@ void(entity frozen, entity unfrozer) ice_unfroze {
 			print_to_spec(frozen, PRINT_CENTER, "^4You revived by ^7{1}", unfrozer.netname, "", "");
 	} else {
 		print_all(PRINT_INFO, "^1{1}^1 was autorevived", frozen.netname, "", "");
-		centerprint(frozen, "^4You autorevived\n");
+		print_to_spec(frozen, PRINT_CENTER, "^4You autorevived", "", "", "");
 	}
 	entity oldself = self;
 	self = frozen.ice;
