@@ -135,14 +135,14 @@ void(entity frozen, entity unfrozer) ice_unfroze {
 	snd.nextthink = time + 2;
 	snd.think = stdproc_remove;
 	if (clienttype(unfrozer) == CLIENTTYPE_REAL)
-		centerprint(unfrozer, strcat("^4You revive ^7", frozen.netname, "\n"));
+		print_to_spec(unfrozer, PRINT_CENTER, "^4You revive ^7{1}", frozen.netname, "", "");
 
 	if (unfrozer.classname == "player") {
-		bprint ("^1", frozen.netname, "^1 was revived by ", unfrozer.netname, "\n");
+		print_all(PRINT_INFO, "^1{1}^1 was revived by {2}", frozen.netname, unfrozer.netname, "");
 		if (clienttype(frozen) == CLIENTTYPE_REAL)
-			centerprint(frozen, strcat("^4You revived by ^7", unfrozer.netname, "\n"));
+			print_to_spec(frozen, PRINT_CENTER, "^4You revived by ^7{1}", unfrozer.netname, "", "");
 	} else {
-		bprint ("^1", frozen.netname, "^1 was autorevived\n");
+		print_all(PRINT_INFO, "^1{1}^1 was autorevived", frozen.netname, "", "");
 		centerprint(frozen, "^4You autorevived\n");
 	}
 	entity oldself = self;
