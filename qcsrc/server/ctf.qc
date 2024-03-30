@@ -139,11 +139,9 @@ void(entity p, float dir) ctf_captureshield_update {
 		should = ctf_captureshield_shielded(p);
 		if (should != dir) {
 			if (should) {
-				centerprint(p, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.");
-				// TODO csqc notifier for this
+				print_to_spec(p, PRINT_CENTER, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.", "", "", "");
 			} else {
-				centerprint(p, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.");
-				// TODO csqc notifier for this
+				print_to_spec(p, PRINT_CENTER, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.", "", "", "");
 			}
 			p.ctf_captureshielded = should;
 		}
@@ -172,7 +170,8 @@ void() ctf_captureshield_touch {
 	mymid = (self.absmin + self.absmax) * 0.5;
 	othermid = (other.absmin + other.absmax) * 0.5;
 	damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * captureshield_force);
-	centerprint(other, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.");
+	if (clienttype(other) == CLIENTTYPE_REAL)
+		print_to(other, PRINT_CENTER, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", "", "", "");
 }
 
 void() ctf_captureshield_spawn {
@@ -292,7 +291,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	if (p.flagcarried != e)
 		return;
 
-	bprint(p.netname, "^7 lost the ", e.netname, "\n");
+	print_all(PRINT_INFO, "{1}^7 lost the {2}", p.netname,  e.netname, "");
 	if (penalty_receiver)
 		score_player_team_add_score(penalty_receiver, -CTF_SCORE_VALUE(penalty_suicidedrop));
 	else
@@ -441,7 +440,7 @@ void() ctf_flag_touch {
 				h0 = strcat(h0, "^7's"); // h0: display text for previous netname
 
 			if (flagcaptimerecord == 0) {
-				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, " seconds\n");
+				print_all(PRINT_INFO, "{1}^7 captured the {2} in {3} seconds", other.netname, other.flagcarried.netname, s);
 				flagcaptimerecord = t;
 				db_put(db_server, strcat(mapname, "/captimerecord/time"), ftos(t));
 				db_put(db_server, strcat(mapname, "/captimerecord/netname"), h1);
@@ -456,7 +455,7 @@ void() ctf_flag_touch {
 				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, ", failing to break ", strcat(h0, " record of ", s0, " seconds\n"));
 			}
 		} else
-			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
+			print_all(PRINT_INFO, "{1}^7 captured the {2}", other.netname, other.flagcarried.netname, "");
 
 		score_player_team_add(other, CTF_SCORE_CAPS, CTF_SCORE_TEAM_CAPS, 1);
 		if (game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT)
@@ -513,16 +512,16 @@ void() ctf_flag_touch {
 		other.flagcarried = self;
 		self.cnt = CTF_FLAG_CARRY;
 		self.angles = '0 0 0';
-		bprint(other.netname, "^7 got the ", self.netname, "\n");
+		print_all(PRINT_INFO, "{1}^7 got the {2}", other.netname, self.netname, "");
 		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(self.team, CTF_SCORE_VALUE(score_pickup_base)));
 		self.dropperid = other.playerid;
 		score_player_add(other, CTF_SCORE_PICKUPS, 1);
 		game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
-		centerprint(other, "You have the flag!");
+		print_to_spec(other, PRINT_CENTER, "You have the flag!", "", "", "");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 		FOR_EACH_PLAYER(player)
 			if (player.team == self.team)
-				centerprint(player, "The enemy got your flag! Retrieve it!");
+				print_to_spec(player, PRINT_CENTER, "The enemy got your flag! Retrieve it!", "", "", "");
 
 		self.movetype = MOVETYPE_NONE;
 		setorigin(self, CTF_FLAG_CARRY_POS);
@@ -540,7 +539,7 @@ void() ctf_flag_touch {
 		self.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
 		if (other.team == self.team || (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2)) {
 			// return flag
-			bprint(other.netname, "^7 returned the ", self.netname, "\n");
+			print_all(PRINT_INFO, "{1}^7 returned the {2}", other.netname,  self.netname, "");
 			// punish the player who last had it
 			FOR_EACH_PLAYER(player)
 				if (player.playerid == self.dropperid) {
@@ -579,7 +578,7 @@ void() ctf_flag_touch {
 			self.owner = other;
 			other.flagcarried = self;
 			self.cnt = CTF_FLAG_CARRY;
-			bprint(other.netname, "^7 picked up the ", self.netname, "\n");
+			print_all(PRINT_INFO, "{1}^7 picked up the {2}", other.netname, self.netname, "");
 			float f;
 			f = bound(0, (self.pain_finished - time) / g_ctf_flag_returntime, 1);
 			//print("factor is ", ftos(f), "\n");
@@ -591,11 +590,11 @@ void() ctf_flag_touch {
 			score_player_team_add_score(other, f);
 			score_player_add(other, CTF_SCORE_PICKUPS, 1);
 			game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
-			centerprint(other, "You have the flag!");
+			print_to_spec(other, PRINT_CENTER, "You have the flag!", "", "", "");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 			FOR_EACH_PLAYER(player)
 				if (player.team == self.team)
-					centerprint(player, "The enemy got your flag! Retrieve it!");
+					print_to_spec(player, PRINT_CENTER, "The enemy got your flag! Retrieve it!", "", "", "");
 
 			self.movetype = MOVETYPE_NONE;	// flag must have MOVETYPE_NONE here, otherwise it will drop through the floor...
 			setorigin(self, CTF_FLAG_CARRY_POS);
