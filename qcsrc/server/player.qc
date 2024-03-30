@@ -223,9 +223,9 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			weapon_deathtype = deathtype;
 			weapon_action(w, WEAPON_REQUEST_SUICIDEMESSAGE);
 			if (strstrofs(weapon_deathtypestring, "#", 0))
-				player_obituary_print_all(strcat("^1", strreplace("#", "{1}", weapon_deathtypestring)), s_red, "", "");
+				player_obituary_print_all(strreplace("#", "{1}", weapon_deathtypestring), s_red, "", "");
 			else if (strstrofs(weapon_deathtypestring, "{", 0))
-				player_obituary_print_all(strcat("^1", weapon_deathtypestring), s_red, "", "");
+				player_obituary_print_all(weapon_deathtypestring, s_red, "", "");
 			else
 				player_obituary_print_all(strcat("{1} ", weapon_deathtypestring), s_red, "", "");
 		} else if (deathtype == DEATH_KILL)
