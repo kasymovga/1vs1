@@ -46,6 +46,6 @@ void(void) print_read {
 	} else if (type == PRINT_INFO) {
 		print(s, "\n");
 	} else if (type == PRINT_CHAT) {
-		print("\{0}", s, "\n");
+		print("\{1}", s, "\n");
 	}
 }
