@@ -143,10 +143,20 @@ float(string cvarname) cvar_ext {
 
 	for (i = 0; i < cvar_profile_prefix_len; i++) {
 		for (j = 0; j < cvar_game_prefix_len; j++) {
+			RM({
+				s = strcat("rm_", cvar_profile_prefix[i], "_", cvar_game_prefix[j], "_", cvarname);
+				if (cvar_string_orig(s) != "")
+					return cvar_orig(s);
+			})
 			s = strcat(cvar_profile_prefix[i], "_", cvar_game_prefix[j], "_", cvarname);
 			if (cvar_string_orig(s) != "")
 				return cvar_orig(s);
 		}
+		RM({
+			s = strcat("rm_", cvar_profile_prefix[i], "_", cvarname);
+			if (cvar_string_orig(s) != "")
+				return cvar_orig(s);
+		})
 		s = strcat(cvar_profile_prefix[i], "_", cvarname);
 		if (cvar_string_orig(s) != "")
 			return cvar_orig(s);
@@ -170,11 +180,23 @@ string(string cvarname) cvar_string_ext {
 
 	for (i = 0; i < cvar_profile_prefix_len; i++) {
 		for (j = 0; j < cvar_game_prefix_len; j++) {
+			RM({
+				s = strcat("rm_", cvar_profile_prefix[i], "_", cvar_game_prefix[j], "_", cvarname);
+				val = cvar_string_orig(s);
+				if (val != "")
+					return val;
+			})
 			s = strcat(cvar_profile_prefix[i], "_", cvar_game_prefix[j], "_", cvarname);
 			val = cvar_string_orig(s);
 			if (val != "")
 				return val;
 		}
+		RM({
+			s = strcat("rm_", cvar_profile_prefix[i], "_", cvarname);
+			val = cvar_string_orig(s);
+			if (val != "")
+				return val;
+		})
 		s = strcat(cvar_profile_prefix[i], "_", cvarname);
 		val = cvar_string_orig(s);
 		if (val != "")

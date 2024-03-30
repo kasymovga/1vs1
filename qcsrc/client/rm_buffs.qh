@@ -2,4 +2,4 @@ float g_buffs_enabled;
 
 void(float) rm_buffs_model_read;
 void(void) rm_buffs_models_load;
-void(float buffs) rm_buffs_draw;
+void(void) rm_buffs_draw;

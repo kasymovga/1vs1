@@ -284,9 +284,8 @@ float rm_buffs_draw_buffval;
 float rm_buffs_draw_updatetime;
 string rm_buffs_draw_str;
 vector rm_draw_buffs_pos;
-void(float buffs) rm_buffs_draw {
-	vector pos;
-	float /*buffs = getstati(STAT_RM_BUFFS),*/sw, a;
+void(void) rm_buffs_draw {
+	float buffs = getstati(STAT_RM_BUFFS), sw, a;
 	if (rm_buffs_draw_buffval != buffs) {
 		rm_buffs_draw_updatetime = time;
 		rm_buffs_draw_buffval =  buffs;

@@ -690,12 +690,6 @@ void(entity e, string args, float set) rune_ability_init {
 }
 
 void(void) rune_init {
-	RM({
-		if (g_buffs_enabled) {
-			if (cvar("g_runes")) print("Runes is incompatible with RocketMinsta mode, disabled\n");
-			return;
-		}
-	})
 	ability_register("runes", rune_ability_init);
 	CVAR_CACHE(g_runes);
 	if not(g_runes)

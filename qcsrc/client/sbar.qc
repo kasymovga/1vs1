@@ -1847,14 +1847,14 @@ void(vector pos, float a, float active, string image) sbar_ammo_draw {
 float sbar_hg_visual, sbar_hg_alpha;
 
 void(void) sbar_runes_draw {
+	RM({
+		if (g_buffs_enabled) {
+			rm_buffs_draw();
+			return;
+		}
+	});
 	float a = getstati(STAT_RUNES);
 	if (a) {
-		RM({
-			if (g_buffs_enabled) {
-				rm_buffs_draw(a);
-				return;
-			}
-		});
 		vector pos = '0 0 0';
 		pos_x = 0;
 		pos_y = CVAR(vid_conheight) - 50 - sbar_fontsize_y;
