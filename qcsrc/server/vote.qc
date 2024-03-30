@@ -203,7 +203,6 @@ float(string vote, string cmd, entity e) vote_remap {
 float(string s, entity e) vote_cmd {
 	float argc;
 	argc = tokenize_console(s);
-	string tmp;
 	if (argv(0) == "help") {
 		cmd_print_to(e, "  vote COMMANDS ARGUMENTS. See 'vhelp' for more info.");
 		return TRUE;
@@ -264,8 +263,7 @@ float(string s, entity e) vote_cmd {
 							e.vote_vote = 1; // of course you vote yes
 							e.vote_next = time + cvar("sv_vote_wait");
 						}
-						tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2 calls a vote for ", vote_called_vote_display, "\n");
-						chat_print(tmp);
+						print_all(PRINT_CHAT, "^2* ^3{1}^2 calls a vote for {2}", vote_netname(vote_caller), vote_called_vote_display, "");
 						vote_count(); // needed if you are the only one
 					} else {
 						cmd_print_to(e, "^1This vote is not ok. See 'vhelp' for more info.");
@@ -305,8 +303,7 @@ float(string s, entity e) vote_cmd {
 						e.vote_vote = 1; // of course you vote yes
 						e.vote_next = time + cvar("sv_vote_wait");
 					}
-					tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2 calls a vote to become ^3master^2\n");
-					chat_print(tmp);
+					print_all(PRINT_CHAT, "^2* ^3{1}^2 calls a vote to become ^3master^2", vote_netname(vote_caller), "", "");
 					vote_count(); // needed if you are the only one
 				}
 			} else {
@@ -321,8 +318,7 @@ float(string s, entity e) vote_cmd {
 				} else if (vote_check_nasty(dovote)) {
 					cmd_print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 				} else if (vote_remap(dovote, "vdo", e)) { // strcat seems to be necessary
-					tmp = strcat("^2* ^3", vote_netname(e), "^2 used his ^3master^2 status to do ^2", vote_remap_display, "^2\n");
-					chat_print(tmp);
+					print_all(PRINT_CHAT, "^2* ^3{1}^2 used his ^3master^2 status to do ^2{2}^2", vote_netname(e), vote_remap_display, "");
 					localcmd(strcat(vote_remap_vote, "\n"));
 				} else {
 					cmd_print_to(e, "^1This command is not ok. See 'vhelp' for more info.");
@@ -340,10 +336,8 @@ float(string s, entity e) vote_cmd {
 					e.vote_master = granted;
 				if (granted) {
 					print("Accepted master login from ", vote_netname(e), "\n");
-					tmp = strcat("^2* ^3", vote_netname(e), "^2 logged in as ^3master^2\n");
-					chat_print(tmp);
-				}
-				else
+					print_all(PRINT_CHAT, "^2* ^3{1}^2 logged in as ^3master^2", vote_netname(e), "", "");
+				} else
 					print("REJECTED master login from ", vote_netname(e), "\n");
 			}
 			else
@@ -528,8 +522,7 @@ void(void) vote_reset {
 }
 
 void(void) vote_accept {
-	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ^1", vote_called_vote_display, "^2 was accepted\n");
-	chat_print(tmp);
+	print_all(PRINT_CHAT, "^2* ^3{1}^2's vote for ^1{2}^2 was accepted", vote_netname(vote_caller), vote_called_vote_display, "");
 	if (vote_called_master) {
 		if (vote_caller) {
 			vote_caller.vote_master = 1;
@@ -547,8 +540,7 @@ void(void) vote_accept {
 }
 
 void(void) vote_reject {
-	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ", vote_called_vote_display, "^2 was rejected\n");
-	chat_print(tmp);
+	print_all(PRINT_CHAT, "^2* ^3{1}^2's vote for {2}^2 was rejected", vote_netname(vote_caller), vote_called_vote_display, "");
 	vote_was_rejected = TRUE;
 	vote_reset();
 	if (sv_announcer_extra_vote_passed)
@@ -556,16 +548,14 @@ void(void) vote_reject {
 }
 
 void(void) vote_timeout {
-	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ", vote_called_vote_display, "^2 timed out\n");
-	chat_print(tmp);
+	print_all(PRINT_CHAT, "^2* ^3{1}^2's vote for {2}^2 timed out", vote_netname(vote_caller), vote_called_vote_display, "");
 	vote_reset();
 	if (sv_announcer_extra_vote_passed)
 		sound_play2all(sv_announcer_extra_vote_failed);
 }
 
 void(entity stopper) vote_stop {
-	string tmp = strcat("^2* ^3", vote_netname(stopper), "^2 stopped ^3", vote_netname(vote_caller), "^2's vote\n");
-	chat_print(tmp);
+	print_all(PRINT_CHAT, "^2* ^3{1}^2 stopped ^3{2}^2's vote", vote_netname(stopper), vote_netname(vote_caller), "");
 	if (stopper == vote_caller) {
 		// no wait for next vote so you can correct your vote
 		if (vote_caller) {
