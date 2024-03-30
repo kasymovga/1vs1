@@ -13,24 +13,14 @@ string(string s) translate {
 	return s;
 }
 
-void(void) translate_init {
+void(float db, string path, float nodata) translate_load {
 	string s;
-	translate_db = -1;
-	translate_db_missed = -1;
-	string lang = cvar_string("prvm_language");
-	if (lang == "" || lang == "en") return;
-	s = strcat("common.", lang, ".po");
-	float pofile = fopen(s, (extension_DP_RM_FILE ? FILE_READ_NODATA : FILE_READ));
-	print("Loading translation\n");
+	float pofile = fopen(path, ((extension_DP_RM_FILE && nodata) ? FILE_READ_NODATA : FILE_READ));
+	if (nodata) print("Loading translation\n");
 	if (pofile < 0) {
-		print("Cannot open ", s, "\n");
+		if (nodata) print("Cannot open ", path, "\n");
 		return;
 	}
-	translate_db = db_create();
-	registercvar("cl_translate_dump_missed", "0", 0);
-	if (cvar("cl_translate_dump_missed"))
-		translate_db_missed = db_create();
-
 	float argc, msgstr_reading = 0;
 	string msgid = "", msgstr = "", arg0;
 	while ((s = fgets(pofile))) {
@@ -42,7 +32,7 @@ void(void) translate_init {
 				//print("msgstr=", msgstr, "\n");
 				msgid = strreplace("\\n", "\n", msgid);
 				msgstr = strreplace("\\n", "\n", msgstr);
-				db_put(translate_db, msgid, msgstr);
+				db_put(db, msgid, msgstr);
 				msgstr = "";
 				msgid = "";
 			}
@@ -72,18 +62,31 @@ void(void) translate_init {
 		//print("msgstr=", msgstr, "\n");
 		msgid = strreplace("\\n", "\n", msgid);
 		msgstr = strreplace("\\n", "\n", msgstr);
-		db_put(translate_db, msgid, msgstr);
+		db_put(db, msgid, msgstr);
 	}
+}
+
+void(void) translate_init {
+	string s;
+	translate_db = -1;
+	translate_db_missed = -1;
+	string lang = cvar_string("prvm_language");
+	if (lang == "" || lang == "en") return;
+	translate_db = db_create();
+	registercvar("cl_translate_dump_missed", "0", 0);
+	if (cvar("cl_translate_dump_missed"))
+		translate_db_missed = db_create();
+
+	s = strcat("common.", lang, ".po");
+	translate_load(translate_db, s, TRUE);
 }
 
 
 void(void) translate_shutdown {
-	if (translate_db >= 0)
-		db_close(translate_db);
-
 	if (translate_db_missed >= 0) {
 		float i, j, n;
 		string s;
+		translate_load(translate_db_missed, "missed_translations.po", FALSE);
 		float out = fopen("missed_translations.po", FILE_WRITE);
 		if (out >= 0) {
 			for (i = 0; i < DB_BUCKETS; i++) {
@@ -92,6 +95,7 @@ void(void) translate_shutdown {
 				for(j = 2; j < n; j += 2) {
 					s = argv(j - 1);
 					if (s == "modified") continue;
+					if (db_get(translate_db, s) != "") continue;
 					s = strreplace("\n", "\\n", s);
 					s = strreplace("\"", "\\\"", s);
 					fputs(out, "msgid \"");
@@ -106,4 +110,7 @@ void(void) translate_shutdown {
 		}
 		db_close(translate_db_missed);
 	}
+	if (translate_db >= 0)
+		db_close(translate_db);
+
 }
