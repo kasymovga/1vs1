@@ -1,15 +1,22 @@
 float translate_db;
+float translate_db_missed;
 
 string(string s) translate {
 	if (translate_db < 0) return s;
 	string r = db_get(translate_db, s);
-	if (r != "") return r;
+	if (r != "") {
+		return r;
+	}
+	if (translate_db_missed >= 0) {
+		db_put(translate_db_missed, s, s);
+	}
 	return s;
 }
 
 void(void) translate_init {
 	string s;
 	translate_db = -1;
+	translate_db_missed = -1;
 	string lang = cvar_string("prvm_language");
 	if (lang == "" || lang == "en") return;
 	s = strcat("common.", lang, ".po");
@@ -20,6 +27,10 @@ void(void) translate_init {
 		return;
 	}
 	translate_db = db_create();
+	registercvar("cl_translate_dump_missed", "0", 0);
+	if (cvar("cl_translate_dump_missed"))
+		translate_db_missed = db_create();
+
 	float argc, msgstr_reading = 0;
 	string msgid = "", msgstr = "", arg0;
 	while ((s = fgets(pofile))) {
@@ -69,4 +80,30 @@ void(void) translate_init {
 void(void) translate_shutdown {
 	if (translate_db >= 0)
 		db_close(translate_db);
+
+	if (translate_db_missed >= 0) {
+		float i, j, n;
+		string s;
+		float out = fopen("missed_translations.po", FILE_WRITE);
+		if (out >= 0) {
+			for (i = 0; i < DB_BUCKETS; i++) {
+				s = bufstr_get(translate_db_missed, i);
+				n = tokenizebyseparator(s, "\\");
+				for(j = 2; j < n; j += 2) {
+					s = argv(j - 1);
+					if (s == "modified") continue;
+					s = strreplace("\n", "\\n", s);
+					s = strreplace("\"", "\\\"", s);
+					fputs(out, "msgid \"");
+					fputs(out, s);
+					fputs(out, "\"\n");
+					fputs(out, "msgstr \"");
+					fputs(out, s);
+					fputs(out, "\"\n\n");
+				}
+			}
+			fclose(out);
+		}
+		db_close(translate_db_missed);
+	}
 }
