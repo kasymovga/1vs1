@@ -400,8 +400,7 @@ void kh_Key_Spawn(entity key, entity initial_owner, float angle, float i)  // ru
 			key.netname = "NETGIER key";
 			break;
 	}
-
-	centerprint(initial_owner, strcat("You are starting with the ", key.netname, "\n"));  // message to player at start of round
+	print_to_spec(initial_owner, PRINT_CENTER, "You are starting with the {1}", key.netname, "", "");  // message to player at start of round
 	kh_Key_AssignTo(key, initial_owner);
 }
 
@@ -565,11 +564,11 @@ void(void) kh_key_think {  // runs all the time
 		FOR_EACH_PLAYER (head) {
 			if (head.team == kh_interferemsg_team)
 				if(head.kh_next)
-					centerprint(head, "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!");
+					print_to_spec(head, PRINT_CENTER, "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!", "", "", "");
 				else
-					centerprint(head, "All keys are in your team's hands!\n\nHelp the key carriers to meet!");
+					print_to_spec(head, PRINT_CENTER, "All keys are in your team's hands!\n\nHelp the key carriers to meet!", "", "", "");
 			else
-				centerprint(head, strcat("All keys are in the ", team_colored_name(kh_interferemsg_team), "^7's hands!\n\nInterfere ^1NOW^7!"));
+				print_to_spec(head, PRINT_CENTER, "All keys are in the {1}^7's hands!\n\nInterfere ^1NOW^7!", team_colored_name(kh_interferemsg_team), "", "");
 		}
 	}
 	self.nextthink = time + 0.05;
@@ -678,7 +677,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			// don't actually GIVE him the -nn points, just log
 		kh_Scores_Event(attacker, world, g_kh_score_push, 0);
 		score_player_add(attacker, SP_KH_PUSHES, 1);
-		centerprint(attacker, "Your push is the best!");
+		print_to_spec(attacker, PRINT_CENTER, "Your push is the best!", "", "", "");
 		bprint("The ", team_colored_name(teem), "^7 could not take care of the ", lostkey.netname, "^7 when ", attacker.netname, "^7 came\n");
 	}
 	else

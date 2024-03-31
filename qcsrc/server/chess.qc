@@ -965,7 +965,7 @@ void(entity piece, float x, float y) chess_move_perform {
 	}
 	if (e) {
 		score_player_team_add_score(self, 1);
-		centerprint(self, strcat("You capture a ", chess_piece_name(e.cnt)));
+		print_to(self, PRINT_CENTER, "You capture a {1}", chess_piece_name(e.cnt), "", "");
 		bprint("\{3}* ", chess_piece_name(e.cnt), " captured\n");
 		chess_history_clean();
 		sound(piece, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NONE);

@@ -1,7 +1,7 @@
 float(entity pl, .float field, float flag, string descr) cheat_assign {
 	if (g_campaign) {
-		centerprint(pl, "^1No cheats allowed in campaign mode!");
-		sprint(pl, "^1No cheats allowed in campaign mode!");
+		print_to(pl, PRINT_CENTER, "^1No cheats allowed in campaign mode!", "", "", "");
+		print_to(pl, PRINT_INFO, "^1No cheats allowed in campaign mode!", "", "", "");
 		announce(pl, "player/marine/coms/taunt3.ogg", "^1LOOSER");
 		pl.field &= ~flag;
 		return FALSE;

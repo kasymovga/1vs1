@@ -642,13 +642,11 @@ void(void) jb_controlpoint_think {
 void(void) jb_controlpoint_touch {
 	if not(roundbased_active) return;
 	if (other.team == self.team) {
-		if (clienttype(other) == CLIENTTYPE_REAL)
-			centerprint(other, "Point already captured\n");
-
+		print_to_spec(other, PRINT_CENTER, "Point already captured", "", "", "");
 		return;
 	}
 	if (self.wait) {
-		centerprint(other, "Point is not ready\n");
+		print_to_spec(other, PRINT_CENTER, "Point is not ready", "", "", "");
 		return;
 	}
 	if (other.classname != "player" || PLAYER_DEAD(other)) return;
@@ -664,9 +662,7 @@ void(void) jb_controlpoint_touch {
 			break;
 		}
 	if not(somebodyjailed) {
-		if (clienttype(other) == CLIENTTYPE_REAL)
-			centerprint(other, "Jail is empty\n");
-
+		print_to_spec(other, PRINT_CENTER, "Jail is empty", "", "", "");
 		return;
 	}
 	e = spawn();
