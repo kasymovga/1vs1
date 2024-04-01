@@ -1281,7 +1281,7 @@ void(void) func_door_trigger_touch {
 				self.attack_finished_single = time + 1;
 				sound_play2(other, "misc/talk.wav");
 			}
-			centerprint(other, strcat("This door required ", s));
+			print_to_spec(other, PRINT_CENTER, "This door required {1}", s, "", "");
 		}
 		return;
 	}
@@ -1315,8 +1315,8 @@ void(void) func_door_touch {
 
 	self.owner.attack_finished_single = time + 2;
 	if (!(self.owner.dmg) && (self.owner.message != "") && self.owner.state == FUNC_STATE_BOTTOM) {
+		print_to_spec(other, PRINT_CENTER, self.owner.message, "", "", "");
 		if (clienttype(other) == CLIENTTYPE_REAL) {
-			centerprint(other, self.owner.message);
 			sound_play2(other, "misc/talk.wav");
 		}
 	}
@@ -1853,8 +1853,8 @@ void(void) func_secret_touch {
 
 	self.attack_finished_single = time + 2;
 	if (self.message) {
+		print_to_spec(other, PRINT_CENTER, self.message, "", "", "");
 		if (clienttype(other) == CLIENTTYPE_REAL) {
-			centerprint(other, self.message);
 			sound_play2(other, "misc/talk.wav");
 		}
 	}

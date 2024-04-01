@@ -1435,7 +1435,7 @@ entity race_target_frags_filter_global;
 float race_frags_max;
 void(void) race_target_score_use {
 	activator.frags += self.count;
-	centerprint(activator, strcat("Score count: ", ftos(activator.frags), "/", ftos(race_frags_max), "\n"));
+	print_to_spec(activator, PRINT_CENTER, "Score count: {1}/{2}", ftos(activator.frags), ftos(race_frags_max), "");
 	entity oldself = self;
 	entity oa = activator;
 	for (entity e = race_target_frags_filter_global; e; e = e.enemy) {
@@ -1471,11 +1471,11 @@ void(void) race_target_frags_filter_use {
 			if (self.spawnflags & 8)
 				activator.frags = 0;
 
-			centerprint(activator, strcat("Score count: ", ftos(activator.frags), "/", ftos(race_frags_max), "\n"));
+			print_to_spec(activator, PRINT_CENTER, "Score count: {1}/{2}", ftos(activator.frags), ftos(race_frags_max), "");
 		}
 	} else if not(self.spawnflags & 4) {
 		if (self.frags > activator.frags)
-			centerprint(activator, strcat(ftos(self.frags - activator.frags), " more score points needed"));
+			print_to_spec(activator, PRINT_CENTER, "{1} more score points needed", ftos(self.frags - activator.frags), "", "");
 	}
 }
 

@@ -71,7 +71,7 @@ void(void) lms_sphere_think {
 			r = lms_sphere_diameter * 0.5;
 			d = 0.5 * g_lms_sphere_damage * ((f - r) / g_lms_sphere_damage_distance_factor);
 			if (f > r) {
-				centerprint(e, "Return to fight area immediately!");
+				print_to_spec(e, PRINT_CENTER, "Return to fight area immediately!", "", "", "");
 				fire_add_damage(e2, world, d, 2, DEATH_FIRE);
 				damage(e2, world, world, d, DEATH_FIRE, e2.origin, (e2.mins + e2.maxs) * 0.5);
 			}

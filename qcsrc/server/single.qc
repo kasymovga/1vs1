@@ -154,7 +154,7 @@ float(void) single_forbid_spectators {
 }
 
 void(void) single_autosave {
-	centerprint(self, "Autosaving...");
+	print_to(self, PRINT_CENTER, "Autosaving...", "", "", "");
 	localcmd(strcat("\nseta _slot_description11 \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 	localcmd(" \"\n");
 	localcmd("save slot11.sav\nsaveconfig\n");
@@ -211,7 +211,7 @@ void(entity attacker) single_monster_killed {
 var float(string cmd, float tokens) single_cmd_client_handle_next;
 float(string cmd, float tokens) single_cmd_client_handle {
 	if (cmd == "quicksave") {
-		centerprint(self, "Quicksaving...");
+		print_to(self, PRINT_CENTER, "Quicksaving...", "", "", "");
 		localcmd(strcat("\nseta _slot_description12 \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 		localcmd(" \"\n");
 		localcmd("save slot12.sav\nsaveconfig\n");

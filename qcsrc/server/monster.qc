@@ -215,9 +215,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 		sh.nextthink = time + 0.2;
 		sh.think = stdproc_remove;
 		setorigin(sh, hitloc + normalize(force) * sh.scale * 100);
-		if (clienttype(attacker) == CLIENTTYPE_REAL)
-			centerprint(attacker, "Enemy protected by shield!");
-
+		print_to_spec(attacker, PRINT_CENTER, "Enemy protected by shield!", "", "", "");
 		return;
 	}
 	if (deathtype == DEATH_LAVA || deathtype == DEATH_FIRE) {
@@ -468,10 +466,8 @@ void monster_shield_restore(void) {
 
 void monster_shield_destroy(void) {
 	self.owner.spawnflags &= ~MONSTER_SPAWN_SHIELDED;
-	if (clienttype(activator) == CLIENTTYPE_REAL) {
-		monster_sound(self.owner, self.owner.noise3, TRUE);
-		centerprint(activator, "Enemy shield is broken!");
-	}
+	monster_sound(self.owner, self.owner.noise3, TRUE);
+	print_to_spec(activator, PRINT_CENTER, "Enemy shield is broken!", "", "", "");
 	self.nextthink = time + 10;
 	self.think = monster_shield_restore;
 }

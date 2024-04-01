@@ -112,21 +112,17 @@ void(void) conquest_cp_think_capture {
 					score_team_add_to(self.owner.team, ST_SCORE, 1);
 				else
 					score_team_add_to(self.team, ST_SCORE, -1);
-				conquest_cp_free();
-				if (clienttype(self.owner) == CLIENTTYPE_REAL)
-					centerprint(self.owner, "Control Point has been freed");
 
+				conquest_cp_free();
+				print_to_spec(self.owner, PRINT_CENTER, "Control Point has been freed", "", "", "");
 			} else {
 				conquest_cp_capture(self.owner.team);
 				score_team_add_to(self.team, ST_SCORE, 1);
-				if (clienttype(self.owner) == CLIENTTYPE_REAL)
-					centerprint(self.owner, "Control Point has been captured");
-
+				print_to_spec(self.owner, PRINT_CENTER, "Control Point has been captured", "", "", "");
 				sound_play2team(self.team, "onslaught/controlpoint_built.ogg");
 			}
 			activator = self;
 			trigger_use_targets();
-
 			if (self.team > 0)
 				team_spawn_players(self.team);
 

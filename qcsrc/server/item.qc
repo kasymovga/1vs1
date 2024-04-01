@@ -329,7 +329,7 @@ float(entity item, entity player) item_give_to {
 					if ((player.weapons & e.weapons) || (player.weapons_extra & e.weapons_extra)) {
 						weapons_count++;
 						if (weapons_count >= g_pickup_weapons_max) {
-							centerprint(player, strcat("You can carry only ", ftos(g_pickup_weapons_max), " weapons.\nDrop extra weapons to take this one."));
+							print_to_spec(player, PRINT_CENTER, "You can carry only {1} weapons.\nDrop extra weapons to take this one.", ftos(g_pickup_weapons_max), "", "");
 							goto skip;
 						}
 					}

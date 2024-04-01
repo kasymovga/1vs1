@@ -598,7 +598,7 @@ void(float source_team) team_shuffle_player_out {
 	if(selected.deadflag == DEAD_NO)
 		damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
 
-	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", team_colored_name(selected.team)));
+	print_to_spec(selected, PRINT_CENTER, "You have been moved into a different team to improve team balance\nYou are now on: {1}", team_colored_name(selected.team), "", "");
 }
 
 entity team_note;
