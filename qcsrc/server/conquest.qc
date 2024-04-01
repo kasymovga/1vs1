@@ -90,19 +90,16 @@ void(void) conquest_cp_reset {
 	conquest_update_waypoint();
 }
 
-.float conquest_delay;
-
 void(void) conquest_cp_think_capture {
 	if (self.owner) {
 		if not(self.capture_progress)
 		if (self.team > 0)
-		if (self.conquest_delay < time) {
+		if (self.wait < time) {
 			sound_play2team(self.team, "onslaught/controlpoint_underattack.ogg");
 			WaypointSprite_Ping(self.sprite);
 			conquest_update_waypoint();
-			self.conquest_delay = time + g_conq_capture_time;
+			self.wait = time + g_conq_capture_time;
 		}
-
 		self.capture_progress = self.capture_progress + (frametime / g_conq_capture_time);
 		if (self.team)
 			self.enemy.alpha = 1 - self.capture_progress;
