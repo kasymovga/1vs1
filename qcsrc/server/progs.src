@@ -70,7 +70,6 @@ rune.qh
 onslaught.qh
 nexball.qh
 timeout.qh
-centerprint.qh
 print.qh
 progressbar.qh
 slowmo.qh
@@ -164,7 +163,6 @@ map_info.qh
 debris.qh
 thirdview.qh
 ability.qh
-centerprint.qc
 sound.qc
 announce.qc
 waypointsprite.qc

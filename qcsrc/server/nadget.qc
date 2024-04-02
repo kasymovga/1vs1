@@ -555,14 +555,14 @@ void nadget_GiveBonus(entity p, float hgtype, float amount, string reason) {
 
 		if(check == p) {
 			RM_ELSE({rm_bigprint(e, strcat("^7You got a ^3", n, "^7 bonus!"), reason, 3);},
-					{centerprint(e, strcat("^7You got a ^3", n, "^7 bonus!", "\n", reason));})
+					{print_to_spec(e, PRINT_CENTER, "^7You got a ^3{1}^7 bonus!\n{2}", n, reason, "");})
 		} else if(team_is_different_teams(check, p)) {
 			RM_ELSE({rm_bigprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!"), strcat("Given to ^3", p.netname, " ^7(", reason, ")"), 3);},
-					{centerprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!\nGiven to ^3", p.netname, " ^7(", reason, ")"));})
+					{print_to_spec(e, PRINT_CENTER, "^3Enemy got a ^1{1} ^3bonus!\nGiven to ^3{2} ^7({3})", n, p.netname, reason);})
 		} else
-			centerprint(e, strcat("^3", p.netname, "^7 got a ^3", n, " ^7bonus (", reason, ")"));
+			print_to_spec(e, PRINT_CENTER, "^3{1}{1}^7 got a ^3{2} ^7bonus ({3})", n, p.netname, reason);
 	}
-	bprint(strcat("^3", p.netname, " ^7got a ^3", n, "^7 bonus (", reason, ")\n"));
+	print_all(PRINT_INFO, "^3{1} ^7got a ^3{2}^7 bonus ({3})", p.netname, n, reason);
     sound_play2all("kh/alarm.wav");
 }
 
@@ -846,7 +846,7 @@ void nadget_PlayerPreThink(void) {
 
     if(held && held != self.hg_state) {
         if(!self.hg_ctx_ammo && self.deadflag == DEAD_NO) {
-            centerprint(self, strcat("Out of ", nadget_TypeToExpandedName(n_type), "s!"));
+			print_to_spec(self, PRINT_CENTER, "Out of {1}s!", nadget_TypeToExpandedName(n_type), "", "");
         }
     }
 
@@ -995,7 +995,9 @@ string nadget_SelectableTypes(float issecondary) {
 
 void nadget_WriteNadgetSelect(void) {
 	if (!g_nadgets && !(self.abilities & NADGET_ABILITY)) {
-		centerprint(self, "You don't have nadget ability\n");
+		if (clienttype(self) == CLIENTTYPE_REAL)
+			print_to(self, PRINT_CENTER, "You don't have nadget ability", "", "", "");
+
 		return;
 	}
 	msg_entity = self;
@@ -1042,7 +1044,9 @@ void nadget_Pick(float tokens) {
 		return;
 
 	if (self.hg_type1_picked & 1024) {
-		centerprint(self, "Your nadget type is forced");
+		if (clienttype(self) == CLIENTTYPE_REAL)
+			print_to(self, PRINT_CENTER, "Your nadget type is forced", "", "", "");
+
 		return;
 	}
 	if(tokens < 2) {

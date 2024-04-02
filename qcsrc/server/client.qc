@@ -82,7 +82,7 @@ void(void) client_put {
 		spot = plugin_client_put_spawn_point();
 		if (!spot) {
 			if (clienttype(self) == CLIENTTYPE_REAL)
-				centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
+				print_to(self, PRINT_CENTER, "Sorry, no spawnpoints available!\nHope your team can fix it...", "", "", "");
 
 			print(self.netname, " not have place to spawn\n");
 			spectator_observer_spawn(FALSE);
@@ -93,7 +93,6 @@ void(void) client_put {
 	}
 	if (self.team != oldteam)
 		score_touch(self);
-
 }
 
 float(entity to, float sf) client_init_send {
@@ -285,18 +284,17 @@ void(void) client_killindicator_think {
 		if (self.cnt <= 10)
 			setmodel(self, strcat("models/sprites/", ftos(self.cnt), ".spr32"));
 
-		if (clienttype(self.owner) == CLIENTTYPE_REAL) {
-			if (self.cnt <= 10)
-				announce(self.owner, strcat("announcer/robotic/", ftos(self.cnt), ".wav"), "");
+		if (self.cnt <= 10)
+			announce(self.owner, strcat("announcer/robotic/", ftos(self.cnt), ".wav"), "");
 
-			if (self.owner.killindicator.team) {
-				if (self.owner.killindicator.team == -1)
-					centerprint(self.owner, strcat("Changing team in ", ftos(self.cnt), " seconds"));
-				else
-					centerprint(self.owner, strcat("Changing to ", team_colored_name(self.owner.killindicator.team), " in ", ftos(self.cnt), " seconds"));
-			} else
-				centerprint(self.owner, strcat("^1Suicide in ", ftos(self.cnt), " seconds"));
-		}
+		if (self.owner.killindicator.team) {
+			if (self.owner.killindicator.team == -1)
+				print_to_spec(self.owner, PRINT_CENTER, "Changing team in {1} seconds", ftos(self.cnt), "", "");
+			else
+				print_to_spec(self.owner, PRINT_CENTER, "Changing to {1} in {2} seconds", team_colored_name(self.owner.killindicator.team), ftos(self.cnt), "");
+		} else
+			print_to_spec(self.owner, PRINT_CENTER, "^1Suicide in {1} seconds", ftos(self.cnt), "", "");
+
 		self.nextthink = time + 1;
 		self.cnt -= 1;
 	}
@@ -582,7 +580,9 @@ float() client_join_allowed {
 	if (currentlyPlaying < g_maxplayers)
 		return TRUE;
 
-	centerprint(self, "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity.");
+	if (clienttype(self) == CLIENTTYPE_REAL)
+		print_to(self, PRINT_CENTER, "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity.", "", "", "");
+
 	return FALSE;
 }
 
@@ -683,7 +683,7 @@ void(void) client_post_think { //called by engine
 				return;
 			} else if (timeleft <= 10) {
 				if (timeleft != self.idlekick_lasttimeleft) {
-					centerprint(self, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators") , " in ", ftos(timeleft), "..."));
+					print_to_spec(self, PRINT_CENTER, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators"), " in {1}..."), ftos(timeleft), "", "");
 					announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"), "");
 				}
 			}

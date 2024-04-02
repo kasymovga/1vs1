@@ -133,7 +133,7 @@ void(float s) ability_class_select {
 		} else if (g_ability_kill_on_change) {
 			client_kill_now(self, 0);
 		} else
-			centerprint(self, cvar_string("g_ability_switch_message"));
+			print_to_spec(self, PRINT_CENTER, cvar_string("g_ability_switch_message"), "", "", "");
 	}
 }
 

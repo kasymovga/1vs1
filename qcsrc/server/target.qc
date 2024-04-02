@@ -319,14 +319,10 @@ void(void) spawnfunc_target_remove_powerups {
 }
 
 void(void) target_print_use {
-	entity e;
 	if (!activator || (self.spawnflags & 8)) { //BROADCAST
-		FOR_EACH_REALPLAYER(e)
-			if (clienttype(e) == CLIENTTYPE_REAL)
-				centerprint(e, self.message);
+		print_all(PRINT_CENTER, self.message, "", "", "");
 	} else {
-		if (clienttype(activator) == CLIENTTYPE_REAL)
-			centerprint(activator, self.message);
+		print_to_spec(activator, PRINT_CENTER, self.message, "", "", "");
 	}
 }
 

@@ -189,11 +189,9 @@ void(float preventReuse) trigger_use_targets_ex {
 	// print the message
 	//
 	if (activator.classname == "player" && self.message != "") {
-		if (clienttype(activator) == CLIENTTYPE_REAL) {
-			centerprint (activator, self.message);
-			if (!self.noise)
-				sound_play2(activator, "misc/talk.wav");
-		}
+		print_to_spec(activator, PRINT_CENTER, self.message, "", "", "");
+		if (!self.noise)
+			sound_play2(activator, "misc/talk.wav");
 	}
 	//
 	// kill the killtagets
@@ -472,19 +470,15 @@ void(void) trigger_counter_use {
 		if (activator.classname == "player"
 				&& (self.spawnflags & TRIGGER_SPAWNFLAG_NOMESSAGE) == 0) {
 			if (self.count >= 4)
-				centerprint (activator, "There are more to go...");
-			else if (self.count == 3)
-				centerprint (activator, "Only 3 more to go...");
-			else if (self.count == 2)
-				centerprint (activator, "Only 2 more to go...");
+				print_to_spec(activator, PRINT_CENTER, "There are more to go...", "", "", "");
 			else
-				centerprint (activator, "Only 1 more to go...");
+				print_to_spec(activator, PRINT_CENTER, "Only {1} more to go...", ftos(self.count), "", "");
 		}
 		return;
 	}
 	if (activator.classname == "player"
 	&& (self.spawnflags & TRIGGER_SPAWNFLAG_NOMESSAGE) == 0)
-		centerprint(activator, "Sequence completed!");
+		print_to_spec(activator, PRINT_CENTER, "Sequence completed!", "", "", "");
 
 	self.enemy = activator;
 	trigger_multiple_fire ();

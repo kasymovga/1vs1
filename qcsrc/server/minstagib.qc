@@ -283,6 +283,11 @@ void(void) minst_remove_item {
 		remove(self);
 }
 
+void(float t) minstagib_countdown {
+	print_to(self, PRINT_CENTER, "{1}{2}^7 second left to find some ammo", ((t <= 5) ? "^1" : "^3"), ftos(t), "");
+	announce(self, strcat("announcer/robotic/", ftos(t), ".wav"), "");
+}
+
 .float minstagib_nextthink;
 var void() minstagib_player_think_next;
 void() minstagib_player_think {
@@ -293,47 +298,38 @@ void() minstagib_player_think {
 	if not(self.items & IT_UNLIMITED_AMMO)
 	if (self.ammo_cells <= 0) {
 		if (self.health <= 5) {
-			centerprint(self, "you're dead now...\n");
+			print_to_spec(self, PRINT_CENTER, "you're dead now...", "", "", "");
 			damage(self, self, self, 5, DEATH_ROT, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/terminated.wav", "^1Terminated");
 		} else if (self.health <= 10) {
-			centerprint(self, "^11^7 second left to find some ammo\n");
+			minstagib_countdown(1);
 			damage(self, self, self, 5, DEATH_ROT, self.origin, '0 0 0');
-			announce(self, "announcer/robotic/1.wav", "^11");
 		} else if (self.health <= 20) {
-			centerprint(self, "^12^7 seconds left to find some ammo\n");
+			minstagib_countdown(2);
 			damage(self, self, self, self.health - 10, DEATH_ROT, self.origin, '0 0 0');
-			announce(self, "announcer/robotic/2.wav", "^12");
 		} else if (self.health <= 30) {
-			centerprint(self, "^13^7 seconds left to find some ammo\n");
+			minstagib_countdown(3);
 			damage(self, self, self, 10, DEATH_ROT, self.origin, '0 0 0');
-			announce(self, "announcer/robotic/3.wav", "^13");
 		} else if (self.health <= 40) {
-			centerprint(self, "^14^7 seconds left to find some ammo\n");
+			minstagib_countdown(4);
 			damage(self, self, self, 10, DEATH_ROT, self.origin, '0 0 0');
-			announce(self, "announcer/robotic/4.wav", "4");
 		} else if (self.health <= 50) {
-			centerprint(self, "^15^7 seconds left to find some ammo\n");
+			minstagib_countdown(5);
 			damage(self, self, self, 10, DEATH_ROT, self.origin, '0 0 0');
-			announce(self, "announcer/robotic/5.wav", "5");
 		} else if (self.health <= 60) {
-			centerprint(self, "^36^7 seconds left to find some ammo\n");
+			minstagib_countdown(6);
 			damage(self, self, self, 10, DEATH_ROT, self.origin, '0 0 0');
-			announce(self, "announcer/robotic/6.wav", "");
 		} else if (self.health <= 70) {
-			centerprint(self, "^37^7 seconds left to find some ammo\n");
+			minstagib_countdown(7);
 			damage(self, self, self, 10, DEATH_ROT, self.origin, '0 0 0');
-			announce(self, "announcer/robotic/7.wav", "");
 		} else if (self.health <= 80) {
-			centerprint(self, "^38^7 seconds left to find some ammo\n");
+			minstagib_countdown(8);
 			damage(self, self, self, 10, DEATH_ROT, self.origin, '0 0 0');
-			announce(self, "announcer/robotic/8.wav", "");
 		} else if (self.health <= 90) {
-			centerprint(self, "^39^7 seconds left to find some ammo\n");
+			minstagib_countdown(9);
 			damage(self, self, self, 10, DEATH_ROT, self.origin, '0 0 0');
-			announce(self, "announcer/robotic/9.wav", "");
 		} else if (self.health <= 100) {
-			centerprint(self, "get some ammo or\nyou'll be dead in ^310^7 seconds...");
+			print_to_spec(self, PRINT_CENTER, "get some ammo or\nyou'll be dead in ^310^7 seconds...", "", "", "");
 			damage(self, self, self, 10, DEATH_ROT, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/10.wav", "");
 		} else {
@@ -479,7 +475,7 @@ void(entity targ, entity attacker, float deathtype) minstagib_damage_mods_set {
 			plugin_chain_damage_mod = 0;
 			if (targ != attacker) {
 				if (g_minstagib_nolaserdamage)
-					centerprint(attacker, "Secondary fire inflicts no damage!");
+					print_to_spec(attacker, PRINT_CENTER, "Secondary fire inflicts no damage!", "", "", "");
 
 				plugin_chain_damage_mod_force = 0;
 				plugin_chain_damage_mod_mirror = 0;
@@ -505,7 +501,7 @@ float(entity attacker, entity inflictor, float mirrordamage, vector force) minst
 	if (mirrordamage > 0)
 	if (attacker.armorvalue > 0) {// just lose extra LIVES, don't kill the player for mirror damage
 		attacker.armorvalue = attacker.armorvalue - 1;
-		centerprint(attacker, strcat("^3Remaining extra lives: ",ftos(attacker.armorvalue)));
+		print_to_spec(attacker, PRINT_CENTER, "^3Remaining extra lives: {1}", ftos(attacker.armorvalue), "", "");
 		attacker.hitsound += 1;
 	}
 	damage(attacker, inflictor, attacker, 0, DEATH_MIRRORDAMAGE, attacker.origin, force);

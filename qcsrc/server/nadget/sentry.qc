@@ -244,8 +244,7 @@ void nadget_Sentry_SetOwner(entity sentry, entity newowner) {
 
     if(newowner) {
         newowner.hg_detonables += 1;
-        //centerprint_spec(newowner, strcat("^3You have claimed a ^1", nadget_TypeToExpandedName(NADGET_SENTRY), "^3!"));
-        centerprint(newowner, strcat("^3You have claimed a ^1", nadget_TypeToExpandedName(NADGET_SENTRY), "^3!"));
+		print_to_spec(newowner, PRINT_CENTER, "^3You have claimed a ^1{1}^3!", nadget_TypeToExpandedName(NADGET_SENTRY), "", "");
     }
 }
 
@@ -531,7 +530,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     if(!entity_move_out_of_solid(e)) {
         remove(e);
 		RM_ELSE({rm_bigprint_spec(self, "Can't put a sentry here!", "", 1);},
-				{centerprint(self, "Can't put a sentry here!");})
+				{print_to_spec(self, PRINT_CENTER, "Can't put a sentry here!", "", "", "");})
         return NADGET_ATTACK_FAIL_COOLDOWN;
     }
 

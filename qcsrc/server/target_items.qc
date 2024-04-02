@@ -218,7 +218,7 @@ void(void) target_items_use {
 		weapon_switch_force(activator, weapon_best(activator));
 
 	if (target_items_changed)
-		centerprint(activator, self.message);
+		print_to_spec(activator, PRINT_CENTER, self.message, "", "", "");
 }
 
 void(void) spawnfunc_target_items {
