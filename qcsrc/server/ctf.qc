@@ -446,13 +446,13 @@ void() ctf_flag_touch {
 				db_put(db_server, strcat(mapname, "/captimerecord/netname"), h1);
 				client_write_recordmarker(other, time - t, t);
 			} else if (t < flagcaptimerecord) {
-				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, ", breaking ", strcat(h0, " previous record of ", s0, " seconds\n"));
+				print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
 				flagcaptimerecord = t;
 				db_put(db_server, strcat(mapname, "/captimerecord/time"), ftos(t));
 				db_put(db_server, strcat(mapname, "/captimerecord/netname"), h1);
 				client_write_recordmarker(other, time - t, t);
 			} else {
-				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, ", failing to break ", strcat(h0, " record of ", s0, " seconds\n"));
+				print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
 			}
 		} else
 			print_all(PRINT_INFO, "{1}^7 captured the {2}", other.netname, other.flagcarried.netname, "");

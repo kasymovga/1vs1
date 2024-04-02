@@ -566,23 +566,11 @@ void(entity stopper) vote_stop {
 }
 
 void(float abstaincount, float notvoters, float mincount, string result) vote_spam {
-	string s;
-	if (mincount >= 0)
-	{
-		s = strcat("^2* vote results: ^1", ftos(yescount), "^2:^1");
-		s = strcat(s, ftos(nocount), "^2 (^1");
-		s = strcat(s, ftos(ceil(mincount)), "^2 needed), ^1");
-		s = strcat(s, ftos(floor(abstaincount)), "^2 didn't care, ^1");
-		s = strcat(s, ftos(ceil(notvoters)), "^2 didn't vote\n");
+	if (mincount >= 0) {
+		print_all_long(PRINT_CHAT, "^2* vote results: ^1{1}^2:^1{2}^2 (^1{3}^2 needed), ^1{4}^2 didn't care, ^1{5}^2 didn't vote", ftos(yescount), ftos(nocount), ftos(ceil(mincount)), ftos(floor(abstaincount)), ftos(ceil(notvoters)), "");
+	} else {
+		print_all_long(PRINT_CHAT, "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote", ftos(yescount), ftos(nocount), ftos(floor(abstaincount)), ftos(ceil(notvoters)), "", "");
 	}
-	else
-	{
-		s = strcat("^2* vote results: ^1", ftos(yescount), "^2:^1");
-		s = strcat(s, ftos(nocount), "^2, ^1");
-		s = strcat(s, ftos(floor(abstaincount)), "^2 didn't care, ^1");
-		s = strcat(s, ftos(ceil(notvoters)), "^2 didn't have to vote\n");
-	}
-	chat_print(s);
 }
 
 float(entity pl, float allowed_dups) vote_check_dup_ip {
