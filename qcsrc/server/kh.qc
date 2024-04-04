@@ -449,8 +449,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 		score_player_add(player, SP_KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
-	bprint(player.netname, "^7 picked up the ", key.netname, "\n");
-
+	print_all(PRINT_INFO, "{1}^7 picked up the {2}", player.netname, key.netname, "");
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 	RM(rm_hud_flash_teamcolor_default_spec(player));
 }
@@ -469,7 +468,7 @@ void kh_Key_DropAll(entity player, float suicide, float died) // runs whenever a
 		{
 			kh_Scores_Event(player, key, 0, 0);
 			score_player_add(player, SP_KH_LOSSES, 1);
-			bprint(player.netname, "^7 ", (died ? "died and " : ""), "lost the ", key.netname, "\n");
+			print_all(PRINT_INFO, strcat("{1}^7 ", (died ? "died and " : ""), "lost the {2}"), player.netname, key.netname, "");
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
 			key.velocity = weapon_calculate_projectile_velocity(player.velocity, g_kh_dropvelocity * v_forward);
@@ -526,7 +525,7 @@ void(void) kh_key_think {  // runs all the time
 			self.enemy = self.owner;
 			self.pusher = world;
 			kh_Scores_Event(self.owner, self, 0, 0);
-			bprint(self.owner.netname, "^7 dropped the ", self.netname, "\n");
+			print_all(PRINT_INFO, "{1}^7 dropped the {2}", self.owner.netname, self.netname, "");
 			sound(self.owner, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
 			makevectors(self.owner.v_angle);
 			self.velocity = weapon_calculate_projectile_velocity(self.owner.velocity, g_kh_throwvelocity * v_forward);
@@ -597,16 +596,18 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 	if (kh_roundbased)
 		score_team_add_to(teem, ST_KH_CAPS, 1);
 
+	string s = "";
 	first = TRUE;
 	FOR_EACH_KH_KEY(key)
 		if(key.owner.kh_next == key)
 		{
 			if(!first)
-				bprint("^7, ");
-			bprint(key.owner.netname);
+				s = strcat(s, "^7, ");
+
+			s = strcat(s, key.owner.netname);
 			first = FALSE;
 		}
-	bprint("^7 captured the keys for the ", team_colored_name(teem), "\n");
+	print_all(PRINT_INFO, "{1}^7 captured the keys for the {2}", s, team_colored_name(teem), "");
 	if (kh_roundbased)
 		roundbased_round_start_with_winner(other.team, "");
 
@@ -647,7 +648,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 void kh_Key_MoveToRandomLocation_Think() {
 	vector v = self.origin;
 	if (entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 30, 1024, 256)) {
-		bprint("The ", self.netname, "^7 respawned\n");
+		print_all(PRINT_INFO, "The {1}^7 respawned", self.netname, "", "");
 		self.pain_finished = time + g_kh_delay_return;
 		self.think = kh_key_think;
 		sound_play2all(kh_sound_destroy);
@@ -678,7 +679,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		kh_Scores_Event(attacker, world, g_kh_score_push, 0);
 		score_player_add(attacker, SP_KH_PUSHES, 1);
 		print_to_spec(attacker, PRINT_CENTER, "Your push is the best!", "", "", "");
-		bprint("The ", team_colored_name(teem), "^7 could not take care of the ", lostkey.netname, "^7 when ", attacker.netname, "^7 came\n");
+		print_all(PRINT_INFO, "The {1}^7 could not take care of the {2}^7 when {3}^7 came", team_colored_name(teem), lostkey.netname, attacker.netname);
 	}
 	else
 	{
@@ -697,7 +698,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
 			score_player_add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
 
-		bprint("The ", team_colored_name(teem), "^7 could not take care of the ", lostkey.netname, "\n");
+		print_all(PRINT_INFO, "The {1}^7 could not take care of the {2}", team_colored_name(teem), lostkey.netname, "");
 	}
 	lostkey.think = kh_Key_MoveToRandomLocation_Think;
 }

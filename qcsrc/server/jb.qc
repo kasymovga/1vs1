@@ -236,7 +236,7 @@ void(void) jb_think {
 		for (e = NULL; (e = find(e, targetname, "jail_red")); ) {
 			if (substring(e.classname, 0, 4) == "door") {
 				if (e.state == FUNC_STATE_BOTTOM) {
-					bprint("^1Red jail^7 closed\n");
+					print_all(PRINT_INFO, "^1Red jail^7 closed", "", "", "");
 					jb_open_red = FALSE;
 					break;
 				}
@@ -247,7 +247,7 @@ void(void) jb_think {
 		for (e = NULL; (e = find(e, targetname, "jail_blue")); ) {
 			if (substring(e.classname, 0, 4) == "door") {
 				if (e.state == FUNC_STATE_BOTTOM) {
-					bprint("^4Blue jail^7 closed\n");
+					print_all(PRINT_INFO, "^4Blue jail^7 closed", "", "", "");
 					jb_open_blue = FALSE;
 					break;
 				}
@@ -279,7 +279,7 @@ void(void) jb_think {
 			} else {
 				JB_PLAYER_JAIL_SET(e, 0);
 				if (roundbased_active)
-					bprint(e.netname, "^7 escaped from jail!\n");
+					print_all(PRINT_INFO, "{1}^7 escaped from jail!", e.netname, "", "");
 
 				if (e.team == COLOR_TEAM1) red_free++;
 				if (e.team == COLOR_TEAM2) blue_free++;
@@ -456,7 +456,7 @@ void(void) jb_room_touch {
 	if (self.team == COLOR_TEAM2 && jb_open_blue) return; //open state
 	if (!JB_PLAYER_JAILED(other)) {
 		JB_PLAYER_JAIL_SET(other, 1);
-		bprint(other.netname, "^7 jailed!\n");
+		print_all(PRINT_INFO, "{1}^7 jailed!", other.netname, "", "");
 	}
 }
 

@@ -183,11 +183,11 @@ void(void) campaign_preintermission {
 	}
 	if (won == 1 && lost == 0 && checkrules_equality == 0) {
 		campaign_won = 1;
-		bprint("The current level has been WON.\n");
+		print_all(PRINT_INFO, "The current level has been WON.", "", "", "");
 		// sound!
 	} else {
 		campaign_won = 0;
-		bprint("The current level has been LOST.\n");
+		print_all(PRINT_INFO, "The current level has been LOST.", "", "", "");
 		// sound!
 	}
 	if (campaign_won && !campaign_map_transition) {

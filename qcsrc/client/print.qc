@@ -99,5 +99,7 @@ void(void) print_read {
 		print(s, "\n");
 	} else if (type == PRINT_CHAT) {
 		print("\{1}", s, "\n");
+	} else if (type == PRINT_CHAT_SILENT) {
+		print("\{3}", s, "\n");
 	}
 }

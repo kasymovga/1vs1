@@ -389,7 +389,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		}
 		if (time > self.pain_finished) {
 			self.pain_finished = time + 10;
-			bprint(team_colored_name(self.team), " generator under attack!\n");
+			print_all(PRINT_INFO, "{1} generator under attack!", team_colored_name(self.team), "", "");
 			sound_play2team(self.team, "onslaught/generator_underattack.wav");
 		}
 	}
@@ -399,21 +399,14 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	self.frame = 10 * bound(0, (1 - self.health / self.max_health), 1);
 	// see if the generator is still functional, or dying
 	if (self.health > 0) {
-#ifdef ONSLAUGHT_SPAM
-		float h, lh;
-		lh = ceil(self.lasthealth / 100) * 100;
-		h = ceil(self.health / 100) * 100;
-		if(lh != h)
-			bprint(team_colored_name(self.team), " generator has less than ", ftos(h), " health remaining\n");
-#endif
 		self.lasthealth = self.health;
 	} else if not(warmup_active) {
 		if (attacker == self)
-			bprint(team_colored_name(self.team), " generator spontaneously exploded due to overtime!\n");
+			print_all(PRINT_INFO, "{1} generator spontaneously exploded due to overtime!", team_colored_name(self.team), "", "");
 		else {
 			string t;
 			t = team_colored_name(attacker.team);
-			bprint(team_colored_name(self.team), " generator destroyed by ", t, "!\n");
+			print_all(PRINT_INFO, "{1} generator destroyed by {2}!", team_colored_name(self.team), t, "");
 		}
 		self.iscaptured = FALSE;
 		self.islinked = FALSE;
@@ -726,7 +719,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 		string t;
 		t = team_colored_name(attacker.team);
-		bprint(team_colored_name(self.team), " ", self.message, " control point destroyed by ", t, "\n");
+		print_all(PRINT_INFO, "{1} {2} control point destroyed by {3}", team_colored_name(self.team), self.message, t);
 		onslaught_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 25, "models/onslaught/controlpoint_icon_gib1.md3", 3, FALSE);
 		onslaught_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 45, "models/onslaught/controlpoint_icon_gib2.md3", 3, FALSE);
 		onslaught_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 45, "models/onslaught/controlpoint_icon_gib2.md3", 3, FALSE);
@@ -843,7 +836,7 @@ void(void) onslaught_controlpoint_icon_buildthink {
 		self.count = g_ons_cp_regen * sys_ticrate; // slow repair rate from now on
 		self.think = onslaught_controlpoint_icon_think;
 		sound(self, CHAN_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
-		bprint(team_colored_name(self.team), " captured ", self.owner.message, " control point\n");
+		print_all(PRINT_INFO, "{1} captured {2} control point", team_colored_name(self.team), self.owner.message, "");
 		self.owner.iscaptured = TRUE;
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);

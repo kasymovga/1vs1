@@ -34,7 +34,7 @@ void(void) dom_controlpoint_captured {
 	self.model = head.mdl;
 	self.modelindex = head.dmg;
 	self.skin = head.skin;
-	bprint("^3", head.netname, "^3", self.message, "\n");
+	print_all(PRINT_INFO, "^3{1}^3{2}", head.netname, self.message, "");
 	if (self.enemy.playerid == self.playerid)
 		score_player_add(self.enemy, SP_DOM_TAKES, 1);
 	else

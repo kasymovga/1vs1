@@ -195,7 +195,7 @@ void() spectator_to_player {
 			client_put();
 			voip_setup(self);
 			if (self.classname == "player") {
-				bprint ("^4", self.netname, "^4 is playing now\n");
+				print_all(PRINT_INFO, "^4{1}^4 is playing now", self.netname, "", "");
 			}
 			return;
 		} else {
@@ -224,7 +224,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 
 	if (frags_team_reset || self.team <= 0)
 	if (self.killcount != -666)
-		bprint ("^4", self.netname, "^4 is spectating now\n");
+		print_all(PRINT_INFO, "^4{1}^4 is spectating now", self.netname, "", "");
 
 	if (self.team >= 0) {
 		score_clear(self); // clear scores when needed
