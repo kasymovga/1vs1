@@ -472,7 +472,7 @@ void(void) client_connect { //called by engine
 	}
 	self.playerid = (client_playerid_last = client_playerid_last + 1);
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
-	bprint ("^4", self.netname, "^4#", ftos(num_for_edict(self)) , " connected\n");
+	print_all(PRINT_INFO, "^4{1}^4 connected", PLAYER_NAME_WITH_SLOT(self), "", "");
 	stuffcmd(self, strcat(client_stuff, "\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n");
 	client_fix_cvars(self);
@@ -503,8 +503,7 @@ void(void) client_disconnect { //called by engine
 	}
 	bot_clientdisconnect();
 	entcs_detach();
-	bprint ("^4",self.netname);
-	bprint ("^4 disconnected\n");
+	print_all(PRINT_INFO, "^4{1}^4 disconnected", PLAYER_NAME_WITH_SLOT(self), "", "");
 	string s;
 	if ((s = cvar_string("g_ragequit_message")) != "")
 	if (clienttype(self) == CLIENTTYPE_REAL)
@@ -674,10 +673,10 @@ void(void) client_post_think { //called by engine
 			if (timeleft <= 0) {
 				announce(self, "announcer/robotic/terminated.wav", "^1Terminated");
 				if (drop) {
-					bprint("^3", self.netname, "^3 was kicked for idling.\n");
+					print_all(PRINT_INFO, "^3{1}#^0{2}^3 was kicked for idling.", self.netname, ftos(num_for_edict(self)), "");
 					dropclient(self);
 				} else {
-					bprint("^3", self.netname, "^3 was moved to spectators for idling.\n");
+					print_all(PRINT_INFO, "^3{1}#^0{2}^3 was moved to spectators for idling.", self.netname, ftos(num_for_edict(self)), "");
 					player_to_spec(self);
 				}
 				return;

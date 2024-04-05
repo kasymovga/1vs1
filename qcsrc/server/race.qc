@@ -325,7 +325,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 				if (race_completing) {
 					e.race_completed = 1;
 					PLAYER_MAKE_INDEPENDENT(e);
-					bprint(e.netname, "^7 has finished the race.\n");
+					print_all(PRINT_INFO, "{1}^7 has finished the race.", e.netname, "", "");
 				}
 			}
 		}
@@ -677,7 +677,7 @@ void(entity p) race_abandon_check {
 	if (race_completing && !p.race_completed) {
 		p.race_completed = 1;
 		PLAYER_MAKE_INDEPENDENT(p);
-		bprint(p.netname, "^7 has abandoned the race.\n");
+		print_all(PRINT_INFO, "{1}^7 has abandoned the race.", p.netname, "", "");
 	}
 }
 

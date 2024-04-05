@@ -525,10 +525,10 @@ void(string s) cmd_client {
 			if (!ready_restart_happened || cvar("sv_ready_restart_repeatable")) {
 				if (self.ready) { // toggle
 					self.ready = FALSE;
-					bprint(self.netname, "^2 is ^1NOT^2 ready\n");
+					print_all(PRINT_INFO, "{1}^2 is ^1NOT^2 ready", self.netname, "", "");
 				} else {
 					self.ready = TRUE;
-					bprint(self.netname, "^2 is ready\n");
+					print_all(PRINT_INFO, "{1}^2 is ready", self.netname, "", "");
 				}
 				warmup_note_update();
 				// cannot reset the game while a timeout is active!

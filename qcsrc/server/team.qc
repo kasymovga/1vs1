@@ -466,7 +466,7 @@ void(float source_team) team_shuffle_player_out {
 	float smallestteam, smallestteam_count, steam = 0;
 	float selected_bot_score = 0, selected_player_score = 0;
 	entity head, selected_bot, selected_player, selected;
-	bprint("Rebalancing Teams\n");
+	print_all(PRINT_INFO, "Rebalancing Teams", "", "", "");
 	smallestteam = 0;
 	smallestteam_count = 999999999;
 	if (team1 >= 0 && team1 < smallestteam_count) {

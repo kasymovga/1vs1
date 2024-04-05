@@ -124,7 +124,7 @@ void() timeout_evaluate_timeout {
 		return sprint(self, "\{1}^1You already used all your timeout calls for this map!\n");
 	//now all required checks are passed
 	self.allowedTimeouts -= 1;
-	bprint("\{1}^2* ^7", self.netname, " ^7called a timeout (", ftos(self.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
+	print_all(PRINT_CHAT, "^2* ^7{1} ^7called a timeout ({2} timeouts left)!", self.netname, ftos(self.allowedTimeouts), ""); //write a bprint who started the timeout (and how many he has left)
 	timeout_remaining_time = cvar("sv_timeout_length");
 	timeout_remaining_leadtime = cvar("sv_timeout_leadtime");
 	timeout_initiator = self;
@@ -146,11 +146,11 @@ void(entity plr) timeout_evaluate_timein {
 	if (timeout_status == 1) {
 		timeout_remaining_time = timeout_status = 0;
 		timeout.nextthink = time; //timeout has to take care of it immediately
-		bprint(strcat("\{1}^2* ^7The timeout was aborted by ", plr.netname, " !\n"));
+		print_all(PRINT_CHAT, "^2* ^7The timeout was aborted by {1}!", plr.netname, "", "");
 	} else if (timeout_status == 2) {
 		//only shorten the timeout_remaining_time if it makes sense
 		if (timeout_remaining_time > (cvar("sv_timeout_resumetime") + 1)) {
-			bprint(strcat("\{1}^2* ^1Attention: ^7", plr.netname, " resumed the game! Prepare for battle!\n"));
+			print_all(PRINT_CHAT, "^2* ^1Attention: ^7{1} resumed the game! Prepare for battle!", plr.netname, "", "");
 			timeout_remaining_time = cvar("sv_timeout_resumetime");
 			timeout.nextthink = time; //timeout has to take care of it immediately
 		}

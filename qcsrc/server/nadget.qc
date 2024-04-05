@@ -233,8 +233,8 @@ var float(float deathtype, entity targ, entity inflictor, entity attacker) nadge
 float(float deathtype, entity targ, entity inflictor, entity attacker) nadget_player_obituary_frag {
 	if (DEATH_ISNADGET(deathtype)) {
 		weapon_fragprefix = "^5NADGET";
-		bprint ("^1", targ.netname, "^1 was nadefragged by ", attacker.netname, "\n");
-		return TRUE;
+		//bprint ("^1", targ.netname, "^1 was nadefragged by ", attacker.netname, "\n");
+		return FALSE;
 	}
 	return nadget_player_obituary_frag_next(deathtype, targ, inflictor, attacker);
 }

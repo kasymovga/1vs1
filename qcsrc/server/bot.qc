@@ -368,13 +368,13 @@ void(void) bot_skill_auto {
 		if (skill < skill_auto_max) {
 			skill = skill + 1;
 			cvar_set("skill", ftos(skill));
-			bprint("^2SKILL UP!^7 Now at level ", ftos(skill), "\n");
+			print_all(PRINT_INFO, "^2SKILL UP!^7 Now at level {1}", ftos(skill), "", "");
 		}
 	} else if (difference > 0 && difference > bot_skill_auto_last_difference) {
 		if (skill > skill_auto_min) {
 			skill = skill - 1;
 			cvar_set("skill", ftos(skill));
-			bprint("^1SKILL DOWN!^7 Now at level ", ftos(skill), "\n");
+			print_all(PRINT_INFO, "^1SKILL DOWN!^7 Now at level {1}", ftos(skill), "", "");
 		}
 	}
 	bot_skill_auto_last_difference = difference;
@@ -474,7 +474,7 @@ void(void) bot_serverframe {
 	if (time > bot_serverframe_nextthink) {
 		while (bot_count < bots) {
 			if (bot_spawn() == world) {
-				bprint("Can not add bot, server full.\n");
+				print_all(PRINT_INFO, "Can not add bot, server full.", "" , "", "");
 				bot_serverframe_nextthink = time + 10;
 				break;
 			}

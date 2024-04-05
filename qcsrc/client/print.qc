@@ -25,6 +25,21 @@ string(string s, string arg1, string arg2, string arg3, string arg4, string arg5
 					s2 = arg5;
 				else if (s2 == "6")
 					s2 = arg6;
+			} else if (cmdkey + 3 == cmdkey_end && substring(s2, 0, 1) == "$") {
+				if (s2 == "$1")
+					s2 = arg1;
+				else if (s2 == "$2")
+					s2 = arg2;
+				else if (s2 == "$3")
+					s2 = arg3;
+				else if (s2 == "$4")
+					s2 = arg4;
+				else if (s2 == "$5")
+					s2 = arg5;
+				else if (s2 == "$6")
+					s2 = arg6;
+
+				s2 = translate(s2);
 			} else
 				s2 = input_command_key(s2, s2);
 		}
@@ -56,6 +71,15 @@ string(string s, string arg1, string arg2, string arg3) print_text_prepare {
 					s2 = arg2;
 				else if (s2 == "3")
 					s2 = arg3;
+			} else if (cmdkey + 3 == cmdkey_end && substring(s2, 0, 1) == "$") {
+				if (s2 == "$1")
+					s2 = arg1;
+				else if (s2 == "$2")
+					s2 = arg2;
+				else if (s2 == "$3")
+					s2 = arg3;
+
+				s2 = translate(s2);
 			} else
 				s2 = input_command_key(s2, s2);
 		}

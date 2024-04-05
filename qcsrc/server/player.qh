@@ -37,6 +37,7 @@ void(void) player_dmg_inflictor_setup;
 #define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == "player")
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == "player")
 #define FOR_EACH_TEAMPLAYER(x) FOR_EACH_CLIENT(x) if (x.team > 0)
+#define PLAYER_NAME_WITH_SLOT(p) strcat(p.netname, "^0#", ftos(num_for_edict(p)))
 float player_count;
 vector PL_VIEW_OFS;
 vector PL_MIN;

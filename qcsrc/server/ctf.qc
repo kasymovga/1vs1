@@ -291,7 +291,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	if (p.flagcarried != e)
 		return;
 
-	print_all(PRINT_INFO, "{1}^7 lost the {2}", p.netname,  e.netname, "");
+	print_all(PRINT_INFO, "{1}^7 lost the {$2}", p.netname,  e.netname, "");
 	if (penalty_receiver)
 		score_player_team_add_score(penalty_receiver, -CTF_SCORE_VALUE(penalty_suicidedrop));
 	else
@@ -440,22 +440,22 @@ void() ctf_flag_touch {
 				h0 = strcat(h0, "^7's"); // h0: display text for previous netname
 
 			if (flagcaptimerecord == 0) {
-				print_all(PRINT_INFO, "{1}^7 captured the {2} in {3} seconds", other.netname, other.flagcarried.netname, s);
+				print_all(PRINT_INFO, "{1}^7 captured the {$2} in {3} seconds", other.netname, other.flagcarried.netname, s);
 				flagcaptimerecord = t;
 				db_put(db_server, strcat(mapname, "/captimerecord/time"), ftos(t));
 				db_put(db_server, strcat(mapname, "/captimerecord/netname"), h1);
 				client_write_recordmarker(other, time - t, t);
 			} else if (t < flagcaptimerecord) {
-				print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
+				print_all_long(PRINT_INFO, "{1}^7 captured the {$2} in {3}, breaking {4} previous record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
 				flagcaptimerecord = t;
 				db_put(db_server, strcat(mapname, "/captimerecord/time"), ftos(t));
 				db_put(db_server, strcat(mapname, "/captimerecord/netname"), h1);
 				client_write_recordmarker(other, time - t, t);
 			} else {
-				print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
+				print_all_long(PRINT_INFO, "{1}^7 captured the {$2} in {3}, failing to break {4}, record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
 			}
 		} else
-			print_all(PRINT_INFO, "{1}^7 captured the {2}", other.netname, other.flagcarried.netname, "");
+			print_all(PRINT_INFO, "{1}^7 captured the {$2}", other.netname, other.flagcarried.netname, "");
 
 		score_player_team_add(other, CTF_SCORE_CAPS, CTF_SCORE_TEAM_CAPS, 1);
 		if (game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT)
@@ -512,7 +512,7 @@ void() ctf_flag_touch {
 		other.flagcarried = self;
 		self.cnt = CTF_FLAG_CARRY;
 		self.angles = '0 0 0';
-		print_all(PRINT_INFO, "{1}^7 got the {2}", other.netname, self.netname, "");
+		print_all(PRINT_INFO, "{1}^7 got the {$2}", other.netname, self.netname, "");
 		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(self.team, CTF_SCORE_VALUE(score_pickup_base)));
 		self.dropperid = other.playerid;
 		score_player_add(other, CTF_SCORE_PICKUPS, 1);
@@ -539,7 +539,7 @@ void() ctf_flag_touch {
 		self.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
 		if (other.team == self.team || (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2)) {
 			// return flag
-			print_all(PRINT_INFO, "{1}^7 returned the {2}", other.netname,  self.netname, "");
+			print_all(PRINT_INFO, "{1}^7 returned the {$2}", other.netname,  self.netname, "");
 			// punish the player who last had it
 			FOR_EACH_PLAYER(player)
 				if (player.playerid == self.dropperid) {
@@ -578,7 +578,7 @@ void() ctf_flag_touch {
 			self.owner = other;
 			other.flagcarried = self;
 			self.cnt = CTF_FLAG_CARRY;
-			print_all(PRINT_INFO, "{1}^7 picked up the {2}", other.netname, self.netname, "");
+			print_all(PRINT_INFO, "{1}^7 picked up the {$2}", other.netname, self.netname, "");
 			float f;
 			f = bound(0, (self.pain_finished - time) / g_ctf_flag_returntime, 1);
 			//print("factor is ", ftos(f), "\n");

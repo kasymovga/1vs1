@@ -208,7 +208,7 @@ void(void) nexball_PlayerPreThink {
 	self.items &= ~IT_KEY1;
 	if (self.ballcarried) {
 		if (self.ballcarried.teamtime && (self.ballcarried.teamtime < time)) {
-			bprint("The ", team_colored_name(self.team), " held the ball for too long.\n");
+			print_all(PRINT_INFO, "The {$1} held the ball for too long.", team_colored_name(self.team), "", "");
 			oldself = self;
 			self = self.ballcarried;
 			nexball_drop_ball(self, self.owner.origin, '0 0 0');
@@ -357,7 +357,8 @@ void(void) nexball_ball_init {
 void(void) nexball_ball_reset {
 	if (self.cnt < 2) { // step 1
 		if (time == self.teamtime)
-			bprint("The ", team_colored_name(self.team), " held the ball for too long.\n");
+			print_all(PRINT_INFO, "The {$1} held the ball for too long.", team_colored_name(self.team), "", "");
+
 		self.touch = stdproc_nothing;
 		self.movetype = MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
@@ -530,24 +531,24 @@ void(void) nexball_goal_touch {
 		pname = "Someone (?)";
 
 	if (ball.team == self.team) {
-		bprint("Boo! ", pname, "^7 scored a goal against his own team!\n");
+		print_all(PRINT_INFO, "Boo! {1}^7 scored a goal against his own team!", pname, "", "");
 		pscore = -1;
 	} else if (self.team == GOAL_FAULT) {
 		if (nexball_teams == 2)
-			bprint(team_colored_name(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
+			print_all(PRINT_INFO, "{$1} gets a point due to {2}^7's silliness.", team_colored_name(otherteam), pname, "");
 		else
-			bprint(team_colored_name(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
+			print_all(PRINT_INFO, "{$1} loses a point due to {2}^7's silliness.", team_colored_name(ball.team), pname, "");
 
 		pscore = -1;
 	} else if (self.team == GOAL_OUT) {
 		if ((self.spawnflags & GOAL_TOUCHPLAYER) && ball.owner)
-			bprint(pname, "^7 went out of bounds.\n");
+			print_all(PRINT_INFO, "{1}^7 went out of bounds.", pname, "", "");
 		else
-			bprint("The ball was returned.\n");
+			print_all(PRINT_INFO, "The ball was returned.", "", "", "");
 
 		pscore = 0;
 	} else {                           //score
-		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", team_colored_name(ball.team), ".\n");
+		print_all(PRINT_INFO, "Goaaaaal! {1}^7 scored a point for the {$2}.", pname, team_colored_name(ball.team), "");
 		pscore = 1;
 	}
 	sound (ball, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
