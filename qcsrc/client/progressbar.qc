@@ -115,7 +115,7 @@ void(float bIsNewEntity) progressbar_read {
 	self.iorigin1_y = time;
 	if (f & 2) {
 		str_unzone_ifneeded(self.netname);
-		self.netname = str_zone_ifneeded(net_read_string());
+		self.netname = str_zone_ifneeded(translate(net_read_string()));
 	}
 	if (bIsNewEntity) {
 		entity e;
