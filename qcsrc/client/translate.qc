@@ -2,7 +2,7 @@ float translate_db;
 float translate_db_missed;
 
 string(string s) translate {
-	if (translate_db < 0) return s;
+	if (translate_db < 0 || s == "") return s;
 	string r = db_get(translate_db, s);
 	if (r != "") {
 		return r;
