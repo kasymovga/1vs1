@@ -652,7 +652,7 @@ void(entity plr, float bfs, float tm) rm_buffs_notify {
 	else
 		tn = "";
 
-	print_all(PRINT_INFO, "^3{1} ^7got the {$1}{2}", plr.netname, tn, bname);
+	print_all(PRINT_INFO, "^3{1} ^7got the {$2}{3}", plr.netname, tn, bname);
     rm_bigprint_spec(plr, strcat("You got the ", bname), Buffs_Description(bfs), 4);
     sound(plr, CHAN_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 }
