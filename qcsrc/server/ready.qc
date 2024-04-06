@@ -51,7 +51,7 @@ void ready_restart_timer_think() {
 void(void) ready_restart_force {
 	entity e;
 	map_restart_active = 1;
-	bprint("^1Server is restarting...\n");
+	print_all(PRINT_INFO, "^1Server is restarting...", "", "", "");
 	vote_reset();
 	// clear overtime
 	float newTL;
@@ -78,7 +78,7 @@ void(void) ready_restart_force {
 	ready_nagger_counted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 	if (cvar("teamplay_lockonrestart") && team_mode) {
 		team_lock = 1;
-		bprint("^1The teams are now locked.\n");
+		print_all(PRINT_INFO, "^1The teams are now locked.", "", "", "");
 	}
 	//initiate the restart-countdown-announcer entity
 	ready_restart_timer = spawn();

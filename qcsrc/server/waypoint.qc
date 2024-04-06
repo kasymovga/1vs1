@@ -825,13 +825,13 @@ float(string s, float argc) waypoint_cmd_client {
 		switch (s) {
 		case "spawn":
 			waypoint_schedulerelink(waypoint_spawn(self.origin, self.origin, 0));
-			bprint(strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
+			sprint(self, strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
 			break;
 		case "remove":
 			e = navigation_findnearestwaypoint(self, FALSE);
 			if (e)
 			if not(e.wpflags & WAYPOINTFLAG_GENERATED) {
-				bprint(strcat("Waypoint removed at ",vtos(e.origin),"\n"));
+				sprint(self, strcat("Waypoint removed at ",vtos(e.origin),"\n"));
 				waypoint_remove(e);
 			}
 			break;
@@ -846,7 +846,7 @@ float(string s, float argc) waypoint_cmd_client {
 			m = 0;
 			for (e = findchain(classname, "waypoint"); e; e = e.chain) {
 				if (e.wpcost >= 10000000) {
-					print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
+					sprint(self, strcat("unreachable: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
 					e.effects |= EFFECT_NODEPTHTEST | EFFECT_BLUE;
 					++i;
@@ -854,13 +854,13 @@ float(string s, float argc) waypoint_cmd_client {
 				}
 			}
 			if (i)
-				print(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
+				sprint(self, strcat(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n"));
 
 			navigation_markroutes_inverted(e2);
 			i = 0;
 			for (e = findchain(classname, "waypoint"); e; e = e.chain) {
 				if (e.wpcost >= 10000000) {
-					print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
+					sprint(self, strcat("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
 					if not(e.effects & EFFECT_NODEPTHTEST) // not already reported before
 						++m;
@@ -869,10 +869,10 @@ float(string s, float argc) waypoint_cmd_client {
 				}
 			}
 			if (i)
-				print(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
+				sprint(self, strcat(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n"));
 
 			if (m)
-				print(ftos(m), " waypoints have been marked total\n");
+				sprint(self, strcat(ftos(m), " waypoints have been marked total\n"));
 
 			i = 0;
 			for (e = findchain(classname, "info_player_deathmatch"); e; e = e.chain) {
@@ -885,7 +885,7 @@ float(string s, float argc) waypoint_cmd_client {
 					e.model = "";
 				} else {
 					setorigin(e, org);
-					print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+					sprint(self, strcat("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.effects |= EFFECT_NODEPTHTEST;
 					setmodel(e, self.body.model);
 					e.frame = self.body.frame;
@@ -895,7 +895,7 @@ float(string s, float argc) waypoint_cmd_client {
 				}
 			}
 			if (i)
-				print(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
+				sprint(self, strcat(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n"));
 
 			break;
 		}

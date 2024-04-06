@@ -191,7 +191,7 @@ void(void) world_getrecords {
 }
 
 void(void) world_end_of_time {
-	bprint("The server has been running for too long. Restart required\n");
+	print_all(PRINT_INFO, "The server has been running for too long. Restart required", "", "", "");
 	localcmd("\nrestart\n");
 }
 
@@ -703,9 +703,9 @@ float(void) world_redirection_think { // returns TRUE if redirecting
 		cvar_set("sv_public", "-2");
 		redirection_timeout = time + 0.6; // this will only try twice... should be able to keep more clients
 		if (redirection_target == "self")
-			bprint("^3SERVER NOTICE:^7 restarting the server\n");
+			print_all(PRINT_INFO, "^3SERVER NOTICE:^7 restarting the server", "", "", "");
 		else
-			bprint("^3SERVER NOTICE:^7 redirecting everyone to ", redirection_target, "\n");
+			print_all(PRINT_INFO, "^3SERVER NOTICE:^7 redirecting everyone to {1}", redirection_target, "", "");
 	}
 	if (time < redirection_nextthink)
 		return TRUE;

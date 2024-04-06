@@ -426,7 +426,7 @@ void() map_finish {
 	world_dump_stats(TRUE);
 	FOR_EACH_CLIENT(other) {
 		if (other.winning)
-			bprint(other.netname, " ^7wins.\n");
+			print_all(PRINT_INFO, "{1} ^7wins.", other.netname, "", "");
 	}
 	net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
 	net_write_byte(MSG_BROADCAST, NET_TE_CSQC_GAMEOVER);
