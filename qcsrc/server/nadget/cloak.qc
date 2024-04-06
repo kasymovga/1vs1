@@ -86,7 +86,7 @@ float(float secondary, float attacktime) nadget_Cloak_WeaponPrepareAttack {
 
 var void(entity capturer) nadget_cloak_capturing_next;
 void(entity capturer) nadget_cloak_capturing {
-    if(self.hg_stealth) {
+    if(capturer.hg_stealth) {
         nadget_Cloak_Trigger();
     }
     return nadget_cloak_capturing_next(capturer);

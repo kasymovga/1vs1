@@ -264,7 +264,7 @@ float(float secondary, float attacktime) rm_buffs_WeaponPrepareAttack {
 
 var void(entity capturer) rm_buffs_capturing_next;
 void(entity capturer) rm_buffs_capturing {
-	self.buff_stealth_time = time;
+	capturer.buff_stealth_time = time;
 	return rm_buffs_capturing_next(capturer);
 }
 
