@@ -89,7 +89,7 @@ void(entity capturer) nadget_cloak_capturing {
     if(self.hg_stealth) {
         nadget_Cloak_Trigger();
     }
-    return nadget_cloak_capturing(capturer);
+    return nadget_cloak_capturing_next(capturer);
 }
 
 NADGET_HOOKFUNCTION(cloak, Attack) {
