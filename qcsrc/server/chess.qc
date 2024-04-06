@@ -504,8 +504,7 @@ float(entity piece, float x, float y, float _checkforcheck) chess_move_is_legal 
 
 void(entity piece, float cellx, float celly, float _print) chess_piece_move {
 	if (_print) {
-		bprint(strcat("\{3}", strcat("* ", ftos(chess_move_number), ". ", (chess_turn ? "^4" : "^1"), chess_piece_name(piece.cnt), " "),
-				strcat(chess_cell_name(piece.pos1_x, piece.pos1_y), " -> ", chess_cell_name(cellx, celly), "\n")));
+		print_all_long(PRINT_CHAT_SILENT, "* {1}. {2}{3} {4} -> {5}", ftos(chess_move_number), (chess_turn ? "^4" : "^1"), chess_piece_name(piece.cnt), chess_cell_name(piece.pos1_x, piece.pos1_y), chess_cell_name(cellx, celly), "");
 	}
 	setorigin(piece, chess_board_pos + chess_cell_width * (cellx + 0.5) * '1 0 0' + chess_cell_height * (celly + 0.5) * '0 1 0');
 	piece.pos1_x = cellx;
@@ -762,17 +761,17 @@ void(void) chess_turn_switch {
 		str_unzone_ifneeded(chess_checkers_move_chain);
 		chess_checkers_move_chain = "";
 		if (chess_checkers_allowed_moves == "") {
-			bprint("\{3}* Win\n");
+			print_all(PRINT_CHAT_SILENT, "* Win", "", "", "");
 			chess_win = (chess_turn ? COLOR_TEAM1 : COLOR_TEAM2);
 			score_player_team_add_score(self, 10);
 		}
 	} else if (chess_position_is_stale((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) {
 		if (chess_position_is_check((chess_turn ? COLOR_TEAM2 : COLOR_TEAM1))) { //checkmate, win
-			bprint("\{3}* Checkmate\n");
+			print_all(PRINT_CHAT_SILENT, "* Checkmate", "", "", "");
 			chess_win = (chess_turn ? COLOR_TEAM1 : COLOR_TEAM2);
 			score_player_team_add_score(self, 10);
 		} else { //stalemate, draw
-			bprint("\{3}* Stalemate\n");
+			print_all(PRINT_CHAT_SILENT, "* Stalemate", "", "", "");
 			chess_win = -1;
 		}
 	}
@@ -822,7 +821,7 @@ void(entity e, float x, float y) chess_history_add {
 void(void) chess_history_check {
 	float n = strlen(chess_history);
 	if (n >= 500) { //10 symbols per move, 50 moves
-		bprint("\{3}* Draw by 50 move rule\n");
+		print_all(PRINT_CHAT_SILENT, "* Draw by 50 move rule", "", "", "");
 		chess_win = -1;
 	} else if (n >= 60) { //Threefold repetition rule, at least 6 move per 10 bytes
 		string s;
@@ -830,7 +829,7 @@ void(void) chess_history_check {
 		for (i = 20; i <= j; i += 10) {
 			s = substring(chess_history, 0, i);
 			if (s == substring(chess_history, i, i) && s == substring(chess_history, i * 2, i)) {
-				bprint("\{3}* Draw by threefold repetition rule\n");
+				print_all(PRINT_CHAT_SILENT, "* Draw by threefold repetition rule", "", "", "");
 				chess_win = -1;
 			}
 		}
@@ -959,14 +958,14 @@ void(entity piece, float x, float y) chess_move_perform {
 	}
 	if (iscastling) {
 		if (x == 6)
-			bprint("\{3}* Short castling\n");
+			print_all(PRINT_CHAT_SILENT, "* Short castling", "", "", "");
 		else if (x == 2)
-			bprint("\{3}* Long castling\n");
+			print_all(PRINT_CHAT_SILENT, "* Long castling", "", "", "");
 	}
 	if (e) {
 		score_player_team_add_score(self, 1);
 		print_to(self, PRINT_CENTER, "You capture a {1}", chess_piece_name(e.cnt), "", "");
-		bprint("\{3}* ", chess_piece_name(e.cnt), " captured\n");
+		print_all(PRINT_CHAT_SILENT, "* {1} captured", chess_piece_name(e.cnt), "", "");
 		chess_history_clean();
 		sound(piece, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NONE);
 		stdproc_remove_entity(e);
@@ -976,7 +975,7 @@ void(entity piece, float x, float y) chess_move_perform {
 			chess_history_clean();
 
 		if (chess_position_is_check(chess_turn ? COLOR_TEAM1 : COLOR_TEAM2)) {
-			bprint("\{3}* Check\n");
+			print_all(PRINT_CHAT_SILENT, "* Check", "", "", "");
 			sound(piece, CHAN_PROJECTILE, "domination/claim.wav", VOL_BASE, ATTN_NONE);
 		} else
 			sound(piece, CHAN_PROJECTILE, "misc/menu1.wav", VOL_BASE, ATTN_NONE);
@@ -1319,7 +1318,7 @@ float(float ignore1, float ignore2) chess_winning_condition {
 	} else if (chess_move_number) {
 		float c = 0;
 		if not(chess_can_mate(0)) {
-			bprint("\{3}* Draw\n");
+			print_all(PRINT_CHAT_SILENT, "* Draw", "", "", "");
 			chess_win = -1;
 			return TRUE;
 		}
@@ -1327,13 +1326,13 @@ float(float ignore1, float ignore2) chess_winning_condition {
 			chess_timer_black -= frametime;
 			chess_info.SendFlags |= 2;
 			if (chess_timer_black < 0) {
-				bprint("\{3}* No time left for blue team\n");
+				print_all(PRINT_CHAT_SILENT, "* No time left for black", "", "", "");
 				if (chess_can_mate(COLOR_TEAM1)) {
-					bprint("\{3}* Red team won by time\n");
+					print_all(PRINT_CHAT_SILENT, "* White won by time", "", "", "");
 					chess_win = COLOR_TEAM1;
 				} else {
 					chess_win = -1;
-					bprint("\{3}* Draw, red team don't have enough material\n");
+					print_all(PRINT_CHAT_SILENT, "* Draw, white don't have enough material", "", "", "");
 				}
 				return TRUE;
 			}
@@ -1343,13 +1342,13 @@ float(float ignore1, float ignore2) chess_winning_condition {
 			chess_timer_white -= frametime;
 			chess_info.SendFlags |= 1;
 			if (chess_timer_white < 0) {
-				bprint("\{3}* No time left for white\n");
+				print_all(PRINT_CHAT_SILENT, "* No time left for white", "", "", "");
 				if (chess_can_mate(COLOR_TEAM2)) {
-					bprint("\{3}* Blue team won by time\n");
+					print_all(PRINT_CHAT_SILENT, "* Black won by time", "", "", "");
 					chess_win = COLOR_TEAM2;
 				} else {
 					chess_win = -1;
-					bprint("\{3}* Draw, blue team don't have enough material\n");
+					print_all(PRINT_CHAT_SILENT, "* Draw, black don't have enough material", "", "", "");
 				}
 				return TRUE;
 			}
