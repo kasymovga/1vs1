@@ -284,7 +284,7 @@ void(void) minst_remove_item {
 }
 
 void(float t) minstagib_countdown {
-	print_to(self, PRINT_CENTER, "{1}{2}^7 second left to find some ammo", ((t <= 5) ? "^1" : "^3"), ftos(t), "");
+	print_to_spec(self, PRINT_CENTER, "{1}{2}^7 second left to find some ammo", ((t <= 5) ? "^1" : "^3"), ftos(t), "");
 	announce(self, strcat("announcer/robotic/", ftos(t), ".wav"), "");
 }
 
