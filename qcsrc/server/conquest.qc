@@ -161,7 +161,8 @@ void(void) conquest_cp_touch {
 	self.owner = other;
 	if not(self.capture_progress_bar)
 		self.capture_progress_bar = progressbar_create(((self.team > 0) ? "Freeing..." : "Capturing..."), other);
-	
+
+	plugin_chain_capturing(other);
 	self.think = conquest_cp_think_capture;
 	self.nextthink = time;
 }

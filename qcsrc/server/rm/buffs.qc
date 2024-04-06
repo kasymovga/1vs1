@@ -257,9 +257,15 @@ float(entity plr, entity viewer, float a) rm_buffs_player_alpha_mod {
 }
 
 var float(float secondary, float attacktime) rm_buffs_WeaponPrepareAttack_next;
-float rm_buffs_WeaponPrepareAttack(float secondary, float attacktime) {
+float(float secondary, float attacktime) rm_buffs_WeaponPrepareAttack {
 	self.buff_stealth_time = time;
 	return rm_buffs_WeaponPrepareAttack_next(secondary, attacktime);
+}
+
+var void(entity capturer) rm_buffs_capturing_next;
+void(entity capturer) rm_buffs_capturing {
+	self.buff_stealth_time = time;
+	return rm_buffs_capturing_next(capturer);
 }
 
 var void() rm_buffs_player_health_armor_mods_set_next;
@@ -334,6 +340,8 @@ void(void) rm_buffs_init {
 	plugin_chain_weapon_clip_capacity_mod = rm_buffs_weapon_clip_capacity_mod;
 	rm_buffs_spectator_copy_next = plugin_chain_spectator_copy;
 	plugin_chain_spectator_copy = rm_buffs_spectator_copy;
+	rm_buffs_capturing_next = plugin_chain_capturing;
+	plugin_chain_capturing = rm_buffs_capturing;
 	CVAR_CACHE(g_buffs_random_spawns_distant);
 	CVAR_CACHE(g_buffs_random_spawns_min);
 	CVAR_CACHE(g_buffs_random_spawns_max);

@@ -74,17 +74,22 @@ float nadget_Cloak_PlayerAlphaMod(entity plr, entity viewer, float palpha) {
 }
 
 var float(float secondary, float attacktime) nadget_Cloak_WeaponPrepareAttack_Next;
-
-float nadget_Cloak_WeaponPrepareAttack(float secondary, float attacktime) {
+float(float secondary, float attacktime) nadget_Cloak_WeaponPrepareAttack {
     if(self.hg_stealth) {
         nadget_Cloak_Trigger();
     }
-
     if(time - self.hg_stealthtime < g_nadgets_cloak_actiondelay) {
         return FALSE;
     }
-
     return nadget_Cloak_WeaponPrepareAttack_Next(secondary, attacktime);
+}
+
+var void(entity capturer) nadget_cloak_capturing_next;
+void(entity capturer) nadget_cloak_capturing {
+    if(self.hg_stealth) {
+        nadget_Cloak_Trigger();
+    }
+    return nadget_cloak_capturing(capturer);
 }
 
 NADGET_HOOKFUNCTION(cloak, Attack) {
@@ -112,16 +117,14 @@ NADGET_HOOKFUNCTION(cloak, Init) {
 	CVAR_CACHE(g_nadgets_cloak_unstealthrate);
     CVAR_CACHE(g_nadgets_cloak_actiondelay);
     CVAR_CACHE(g_nadgets_cloak_spy);
-
     addstat(STAT_STEALTH, STAT_INT, hg_stealth);
     addstat(STAT_STEALTH_SAVED, STAT_INT, hg_stealth_saved);
-
     nadget_Cloak_PlayerAlphaMod_Next = plugin_chain_player_alpha_mod;
     plugin_chain_player_alpha_mod = nadget_Cloak_PlayerAlphaMod;
-
     nadget_Cloak_WeaponPrepareAttack_Next = plugin_chain_WeaponPrepareAttack;
     plugin_chain_WeaponPrepareAttack = nadget_Cloak_WeaponPrepareAttack;
-
+	nadget_cloak_capturing_next = plugin_chain_capturing;
+	plugin_chain_capturing = nadget_cloak_capturing;
 	if (g_nadgets_cloak_spy) {
 		nadget_Cloak_PlayerCanSeeHealthFor_NextLink = plugin_chain_PlayerCanSeeHealthFor;
 		plugin_chain_PlayerCanSeeHealthFor = nadget_Cloak_PlayerCanSeeHealthFor;

@@ -125,3 +125,4 @@ var float() plugin_ice_skip_think = { return 0; }
 var float() plugin_ice_skip_death_handle = { return 0; }
 var void(entity unfrozer) plugin_chain_ice_unfroze = {}
 var void() plugin_ice_frozen_status = {}
+var void(entity capturer) plugin_chain_capturing = {}

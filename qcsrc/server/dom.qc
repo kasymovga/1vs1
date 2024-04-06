@@ -182,6 +182,7 @@ void(void) dom_controlpoint_touch {
 	if (self.killindicator && self.killindicator.playerid != other.playerid) //somebody already capture point
 		return;
 
+	plugin_chain_capturing(other);
 	if not(dom_controlpoint_capture_finished())
 		return;
 
