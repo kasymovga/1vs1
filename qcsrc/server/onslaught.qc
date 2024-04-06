@@ -389,7 +389,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		}
 		if (time > self.pain_finished) {
 			self.pain_finished = time + 10;
-			print_all(PRINT_INFO, "{$1} generator under attack!", team_colored_name(self.team), "", "");
+			print_all(PRINT_INFO, "{1} generator under attack!", team_colored_name(self.team), "", "");
 			sound_play2team(self.team, "onslaught/generator_underattack.wav");
 		}
 	}
@@ -402,11 +402,11 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.lasthealth = self.health;
 	} else if not(warmup_active) {
 		if (attacker == self)
-			print_all(PRINT_INFO, "{$1} generator spontaneously exploded due to overtime!", team_colored_name(self.team), "", "");
+			print_all(PRINT_INFO, "{1} generator spontaneously exploded due to overtime!", team_colored_name(self.team), "", "");
 		else {
 			string t;
 			t = team_colored_name(attacker.team);
-			print_all(PRINT_INFO, "{$1} generator destroyed by {2}!", team_colored_name(self.team), t, "");
+			print_all(PRINT_INFO, "{1} generator destroyed by {2}!", team_colored_name(self.team), t, "");
 		}
 		self.iscaptured = FALSE;
 		self.islinked = FALSE;
@@ -719,7 +719,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 		string t;
 		t = team_colored_name(attacker.team);
-		print_all(PRINT_INFO, "{$1} {2} control point destroyed by {3}", team_colored_name(self.team), self.message, t);
+		print_all(PRINT_INFO, "{1} {2} control point destroyed by {3}", team_colored_name(self.team), self.message, t);
 		onslaught_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 25, "models/onslaught/controlpoint_icon_gib1.md3", 3, FALSE);
 		onslaught_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 45, "models/onslaught/controlpoint_icon_gib2.md3", 3, FALSE);
 		onslaught_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 45, "models/onslaught/controlpoint_icon_gib2.md3", 3, FALSE);
@@ -836,7 +836,7 @@ void(void) onslaught_controlpoint_icon_buildthink {
 		self.count = g_ons_cp_regen * sys_ticrate; // slow repair rate from now on
 		self.think = onslaught_controlpoint_icon_think;
 		sound(self, CHAN_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
-		print_all(PRINT_INFO, "{$1} captured {2} control point", team_colored_name(self.team), self.owner.message, "");
+		print_all(PRINT_INFO, "{1} captured {2} control point", team_colored_name(self.team), self.owner.message, "");
 		self.owner.iscaptured = TRUE;
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);

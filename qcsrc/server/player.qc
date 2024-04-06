@@ -1240,7 +1240,7 @@ void(entity pl, float t, float s, float noprint) player_set_team {
 
 	pl.team = _team;
 	if (!noprint && t != s) {
-		print_all(PRINT_INFO, "{1}^7 has changed from {$2} to {$3}", pl.netname, team_name_by_no(s), team_name_by_no(t));
+		print_all(PRINT_INFO, "{1}^7 has changed from {2} to {3}", pl.netname, team_name_by_no(s), team_name_by_no(t));
 	}
 	score_touch(pl);
 	player_body_reset(pl);

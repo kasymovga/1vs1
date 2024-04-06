@@ -208,7 +208,7 @@ void(void) nexball_PlayerPreThink {
 	self.items &= ~IT_KEY1;
 	if (self.ballcarried) {
 		if (self.ballcarried.teamtime && (self.ballcarried.teamtime < time)) {
-			print_all(PRINT_INFO, "The {$1} held the ball for too long.", team_colored_name(self.team), "", "");
+			print_all(PRINT_INFO, "The {1} held the ball for too long.", team_colored_name(self.team), "", "");
 			oldself = self;
 			self = self.ballcarried;
 			nexball_drop_ball(self, self.owner.origin, '0 0 0');
@@ -357,7 +357,7 @@ void(void) nexball_ball_init {
 void(void) nexball_ball_reset {
 	if (self.cnt < 2) { // step 1
 		if (time == self.teamtime)
-			print_all(PRINT_INFO, "The {$1} held the ball for too long.", team_colored_name(self.team), "", "");
+			print_all(PRINT_INFO, "The {1} held the ball for too long.", team_colored_name(self.team), "", "");
 
 		self.touch = stdproc_nothing;
 		self.movetype = MOVETYPE_NOCLIP;
@@ -535,9 +535,9 @@ void(void) nexball_goal_touch {
 		pscore = -1;
 	} else if (self.team == GOAL_FAULT) {
 		if (nexball_teams == 2)
-			print_all(PRINT_INFO, "{$1} gets a point due to {2}^7's silliness.", team_colored_name(otherteam), pname, "");
+			print_all(PRINT_INFO, "{1} gets a point due to {2}^7's silliness.", team_colored_name(otherteam), pname, "");
 		else
-			print_all(PRINT_INFO, "{$1} loses a point due to {2}^7's silliness.", team_colored_name(ball.team), pname, "");
+			print_all(PRINT_INFO, "{1} loses a point due to {2}^7's silliness.", team_colored_name(ball.team), pname, "");
 
 		pscore = -1;
 	} else if (self.team == GOAL_OUT) {
@@ -548,7 +548,7 @@ void(void) nexball_goal_touch {
 
 		pscore = 0;
 	} else {                           //score
-		print_all(PRINT_INFO, "Goaaaaal! {1}^7 scored a point for the {$2}.", pname, team_colored_name(ball.team), "");
+		print_all(PRINT_INFO, "Goaaaaal! {1}^7 scored a point for the {2}.", pname, team_colored_name(ball.team), "");
 		pscore = 1;
 	}
 	sound (ball, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
