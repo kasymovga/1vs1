@@ -380,7 +380,7 @@ void(entity pl, float dteam, float nobalance) team_change {
 	}
 	float teamchange = (pl.team > 0);
 	if((g_campaign && teamchange) || (g_changeteam_banned && pl.wasplayer)) {
-		sprint(pl, "Team changes not allowed\n");
+		PRINT_TO_INFO_IF_REAL_SHORT(pl, "Team changes not allowed");
 		return; // changing teams is not allowed
 	}
 	if not(nobalance)
@@ -423,11 +423,12 @@ void(entity pl, float dteam, float nobalance) team_change {
 			largeteam = TRUE;
 		}
 		if (largeteam) {
-			if (g_balance_teams_use_rank && rank_available)
-				sprint(pl, "\{1}^1Cannot change to a team with higher rank\n");
-			else
-				sprint(pl, "\{1}^1Cannot change to a larger team\n");
-
+			if (clienttype(pl) == CLIENTTYPE_REAL) {
+				if (g_balance_teams_use_rank && rank_available)
+					print_to(pl, PRINT_CHAT, "^1Cannot change to a team with higher rank", "", "", "");
+				else
+					print_to(pl, PRINT_CHAT, "^1Cannot change to a larger team", "", "", "");
+			}
 			return;
 		}
 	}

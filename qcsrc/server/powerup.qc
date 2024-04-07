@@ -123,12 +123,12 @@ void() powerup_invincible_player_effects {
 		self.effects = self.effects | (EFFECT_RED | EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 		if (time > self.invincible_finished) {
 			self.items = self.items - (self.items & IT_INVINCIBLE);
-			sprint(self, "^3Shield has worn off\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3Shield has worn off");
 		}
 	} else if (self.invincible_finished) {
 		if (time < self.invincible_finished) {
 			self.items = self.items | IT_INVINCIBLE;
-			sprint(self, "^3Shield surrounds you\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3Shield surrounds you");
 		} else if (time > self.invincible_finished + 1) //1 second for fade effect on client
 			self.invincible_finished = 0;
 	}
@@ -172,12 +172,12 @@ void() powerup_strength_player_effects {
 		self.effects = self.effects | (EFFECT_BLUE | EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 		if (time > self.strength_finished) {
 			self.items = self.items - (self.items & IT_STRENGTH);
-			sprint(self, "^3Strength has worn off\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3Strength has worn off");
 		}
 	} else if (self.strength_finished) {
 		if (time < self.strength_finished) {
 			self.items = self.items | IT_STRENGTH;
-			sprint(self, "^3Strength infuses your weapons with devastating power\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3Strength infuses your weapons with devastating power");
 		} else if (time > self.strength_finished + 1) //1 second for fade effect on client
 			self.strength_finished = 0;
 	}
@@ -206,12 +206,12 @@ void() powerup_akimbo_player_effects {
 		powerup_countdown(self.akimbo_finished, "misc/poweroff.wav");
 		if (time > self.akimbo_finished) {
 			self.items = self.items - (self.items & IT_AKIMBO);
-			sprint(self, "^3Akimbo has worn off\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3Akimbo has worn off");
 		}
 	} else if (self.akimbo_finished) {
 		if (time < self.akimbo_finished) {
 			self.items = self.items | IT_AKIMBO;
-			sprint(self, "^3Akimbo: double gun, double fun\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3Akimbo: double gun, double fun");
 		} else if (time > self.akimbo_finished + 1) //1 second for fade effect on client
 			self.akimbo_finished = 0;
 	}
@@ -247,12 +247,12 @@ void() powerup_speed_player_effects {
 		powerup_countdown(self.speed_finished, "misc/poweroff.wav");
 		if (time > self.speed_finished) {
 			self.items = self.items - (self.items & IT_SPEED);
-			sprint(self, "^3Speed has worn off\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3Speed has worn off");
 		}
 	} else if (self.speed_finished) {
 		if (time < self.speed_finished) {
 			self.items = self.items | IT_SPEED;
-			sprint(self, "^3You are on speed\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3You are on speed");
 		} else if (time > self.speed_finished + 1) //1 second for fade effect on client
 			self.speed_finished = 0;
 	}
@@ -291,12 +291,12 @@ void() powerup_invisibility_player_effects {
 		powerup_countdown(self.invisibility_finished, "misc/poweroff.wav");
 		if (time > self.invisibility_finished) {
 			self.items &= ~IT_INVISIBILITY;
-			sprint(self, "^3Invisibility has worn off\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3Invisibility has worn off");
 		}
 	} else if (self.invisibility_finished) {
 		if (time < self.invisibility_finished) {
 			self.items |= IT_INVISIBILITY;
-			sprint(self, "^3You are invisible\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "^3You are invisible");
 		} else if (time > self.invisibility_finished + 1) //1 second for fade effect on client
 			self.invisibility_finished = 0;
 	}

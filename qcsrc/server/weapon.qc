@@ -437,10 +437,12 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 		return;
 
 	if (self.health >= 1) {
-		if (a == "")
-			sprint(self, strcat("You dropped the ^2", weapon_name(w), "\n"));
-		else
-			sprint(self, strcat("You dropped the ^2", weapon_name(w), " with ", a, "\n"));
+		if (clienttype(self) == CLIENTTYPE_REAL) {
+			if (a == "")
+				print_to(self, PRINT_INFO, "You dropped the ^2{1}", weapon_name(w), "", "");
+			else
+				print_to(self, PRINT_INFO, "You dropped the ^2{1} with {2}", weapon_name(w), a, "");
+		}
 	}
 }
 
@@ -457,7 +459,10 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 
 	wi = weapon_info(wpn);
 	if not(wi.weapon) {
-		if (complain) sprint(cl, "Invalid weapon\n");
+		if (complain) {
+			if (clienttype(cl) == CLIENTTYPE_REAL)
+				print_to(cl, PRINT_INFO, "Invalid weapon", "", "", "");
+		}
 		return FALSE;
 	}
 	if ((cl.weapons & wi.weapons) || (cl.weapons_extra & wi.weapons_extra)) {
@@ -474,7 +479,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 				if (complain)
 				if (clienttype(cl) == CLIENTTYPE_REAL) {
 					sound_play2(cl, "weapons/unavailable.wav");
-					sprint(cl, strcat("You don't have any ammo for the ^2", weapon_name(wpn), "\n"));
+					print_to(cl, PRINT_INFO, "You don't have any ammo for the ^2{1}", weapon_name(wpn), "", "");
 				}
 				return FALSE;
 			}
@@ -484,7 +489,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 	if (complain)
 	if (clienttype(cl) == CLIENTTYPE_REAL) {
 		if ((weapon_spawned_list & wi.weapons) || (weapon_spawned_extra_list & wi.weapons_extra)) {
-			sprint(cl, strcat("You do not have the ^2", weapon_name(wpn), "\n") );
+			print_to(cl, PRINT_INFO, "You do not have the ^2{1}", weapon_name(wpn), "", "");
 			if (g_showweaponspawns)
 			if (self.client_flags & CLIENT_FLAG_SHOWWEAPONS) {
 				entity e;
@@ -506,7 +511,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 				}
 			}
 		} else
-			sprint(cl, "Requested weapon is ^1NOT AVAILABLE^7 in this map\n");
+			print_to(cl, PRINT_INFO, "Requested weapon is ^1NOT AVAILABLE^7 in this map", "", "", "");
 
 		sound_play2(cl, "weapons/unavailable.wav");
 	}
@@ -1178,9 +1183,8 @@ void(entity e, float wep, string name) weapon_give {
 	self = e;
 	if (other.classname == "player") {
 		weapon_show_list(other);
-		sprint (other, "You got the ^2");
-		sprint (other, name);
-		sprint (other, "\n");
+		if (clienttype(other) == CLIENTTYPE_REAL)
+			print_to(other, PRINT_INFO, "You got the ^2{1}", name, "", "");
 	}
 	self = oldself;
 }

@@ -1075,7 +1075,7 @@ void nadget_Pick(float tokens) {
 
 		if(argc) for(i = 0; i < argc; ++i) {
 			if(t == nadget_NameToType(argv(i))) {
-				sprint(self, strcat("^1Your ", (g_nadgets_double ? (hg_context_isalt ? "secondary " : "primary ") : ""), "nadget type ", (nr ? "will be" : "has been"), " set to the ^2", nadget_TypeToExpandedName(t), (nr ? "^1 on the next respawn.\n" : "^1.\n")));
+				print_to(self, PRINT_INFO, strcat("^1Your ", (g_nadgets_double ? (hg_context_isalt ? "secondary " : "primary ") : ""), "nadget type ", (nr ? "will be" : "has been"), " set to the ^2{1}", (nr ? "^1 on the next respawn." : "^1.")), nadget_TypeToExpandedName(t), "", "");
 				self.hg_ctx_type_picked_nextround = t;
 				if(!nr) {
 					self.hg_ctx_type_picked = t;

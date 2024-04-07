@@ -354,7 +354,8 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	if ((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK)) {
 		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.items |= it;
-		sprint (player, strcat("You got the ^2", item.netname, "\n"));
+		if (clienttype(player) == CLIENTTYPE_REAL)
+			print_to(player, PRINT_INFO, "You got the ^2{1}", item.netname, "", "");
 	}
 	plugin_chain_ItemGiveToHandle_SwitchWeapon = TRUE;
 	if (item.health) {
@@ -384,7 +385,8 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		// sound not available
 		// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
 		player.armorvalue = min(player.armorvalue + 100, g_minstagib_armor_max);
-		sprint(player, "^3You picked up some extra lives\n");
+		if (clienttype(player) == CLIENTTYPE_REAL)
+			print_to(player, PRINT_INFO, "^3You picked up some extra lives", "", "", "");
 	}
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max) {

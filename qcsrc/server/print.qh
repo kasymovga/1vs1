@@ -3,3 +3,4 @@ void(entity cl, float type, string s, string arg1, string arg2, string arg3) pri
 void(float type, string s, string arg1, string arg2, string arg3) print_all;
 void(float type, string s, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6) print_all_long;
 void(entity cl, float type, string s, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6) print_to_long;
+#define PRINT_TO_INFO_IF_REAL_SHORT(x,y) { if (clienttype(x) == CLIENTTYPE_REAL) print_to(x, PRINT_INFO, y, "", "", ""); }

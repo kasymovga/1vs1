@@ -47,7 +47,7 @@ float(void) jetpack_using {
 
 		if not(self.buttons_old & 2)
 		if (self.items & IT_FUEL_REGEN)
-			sprint(self, "You don't have any fuel for the ^2Jetpack\n");
+			PRINT_TO_INFO_IF_REAL_SHORT(self, "You don't have any fuel for the ^2Jetpack");
 	}
 	return FALSE;
 }

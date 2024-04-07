@@ -378,7 +378,8 @@ float(entity item, entity player) item_give_to {
 		if ((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK)) {
 			pickedup = TRUE;
 			player.items |= it;
-			sprint (player, strcat("You got the ^2", item.netname, "\n"));
+			if (clienttype(player) == CLIENTTYPE_REAL)
+				print_to(player, PRINT_INFO, "You got the ^2{1}", item.netname, "", "");
 		}
 		if (item.spawnshieldtime) {
 			if (item_powerup_give_to(item, player, strength_finished))
