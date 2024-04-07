@@ -2,22 +2,16 @@ entity infomessage;
 
 void(void) infomessages_think {
 	string msg = cvar_string(strcat("sv_infomessage", ftos(self.cnt)));
-	if (msg == "")
-	{
-		if (self.cnt == 1) //sv_infomessage1 was setted to empty string
-		{
+	if (msg == "") {
+		if (self.cnt == 1) { //sv_infomessage1 was setted to empty string
 			self.nextthink = time + self.dmg;
 			return;
 		}
-
 		self.cnt = 1;
 		infomessages_think();
 		return;
 	}
-	entity e;
-	FOR_EACH_REALCLIENT(e)
-		sprint(e, strcat("\{1}^5 * ^7", msg, "\n"));
-
+	bprint(strcat("\{1}^5 * ^7", msg, "\n"));
 	self.cnt++;
 	cvar_set("_sv_infomessage_current", ftos(self.cnt));
 	self.nextthink = time + self.dmg;
@@ -38,8 +32,7 @@ void(void) infomessages_init {
 
 	infomessage = spawn();
 	infomessage.cnt = cvar("_sv_infomessage_current");
-	if (infomessage.cnt <= 0)
-	{
+	if (infomessage.cnt <= 0) {
 		registercvar("_sv_infomessage_current", "1");
 		infomessage.cnt = 1;
 	}
