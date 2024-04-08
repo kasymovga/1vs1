@@ -276,3 +276,162 @@ msgstr "^4You revive ^7{1}"
 
 msgid "{1}^7 got the {2}"
 msgstr "{1}^7 got the {2}"
+
+msgid "^4{1}^4 connected"
+msgstr "^4{1}^4 connected"
+
+msgid "The enemy got your flag! Retrieve it!"
+msgstr "The enemy got your flag! Retrieve it!"
+
+msgid "Blue"
+msgstr "Blue"
+
+msgid "{1}^7 returned the {2}"
+msgstr "{1}^7 returned the {2}"
+
+msgid "^4BLUE^7 flag"
+msgstr "^4BLUE^7 flag"
+
+msgid "^3Strength has worn off"
+msgstr "^3Strength has worn off"
+
+msgid "{1} was blasted by {2}'s blue beam"
+msgstr "{1} was blasted by {2}'s blue beam"
+
+msgid "Red Team"
+msgstr "Red Team"
+
+msgid "Point already captured"
+msgstr "Point already captured"
+
+msgid "{1}^7 lost the {2}"
+msgstr "{1}^7 lost the {2}"
+
+msgid "You dropped the ^2{1} with {2}"
+msgstr "You dropped the ^2{1} with {2}"
+
+msgid "You do not have the ^2{1}"
+msgstr "You do not have the ^2{1}"
+
+msgid "Neutral Team"
+msgstr "Neutral Team"
+
+msgid "Out of {1}s!"
+msgstr "Out of {1}s!"
+
+msgid "{1}^7 captured the {2} in {3} seconds"
+msgstr "{1}^7 captured the {2} in {3} seconds"
+
+msgid "^3{1} ^7got the {2}{3}"
+msgstr "^3{1} ^7got the {2}{3}"
+
+msgid "Jail is empty"
+msgstr "Jail is empty"
+
+msgid "^3Strength infuses your weapons with devastating power"
+msgstr "^3Strength infuses your weapons with devastating power"
+
+msgid "You dropped the ^2{1}"
+msgstr "You dropped the ^2{1}"
+
+msgid " took the downward turn"
+msgstr " took the downward turn"
+
+msgid "Capturing..."
+msgstr "Capturing..."
+
+msgid "^4You revived by ^7{1}"
+msgstr "^4You revived by ^7{1}"
+
+msgid "{1} could not remember where he put plasma"
+msgstr "{1} could not remember where he put plasma"
+
+msgid "{1}^7 picked up the {2}"
+msgstr "{1}^7 picked up the {2}"
+
+msgid "You got the ^2{1}"
+msgstr "You got the ^2{1}"
+
+msgid "{1} died with a {2} kill spree"
+msgstr "{1} died with a {2} kill spree"
+
+msgid "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds"
+msgstr "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds"
+
+msgid "You don't have any ammo for the ^2{1}"
+msgstr "You don't have any ammo for the ^2{1}"
+
+msgid "{1} ^7wins."
+msgstr "{1} ^7wins."
+
+msgid "{1} was grounded by {2}"
+msgstr "{1} was grounded by {2}"
+
+msgid "{1} got too close to {2}'s rocket"
+msgstr "{1} got too close to {2}'s rocket"
+
+msgid "{1}^7 escaped from jail!"
+msgstr "{1}^7 escaped from jail!"
+
+msgid "{1} didn't see {2}'s grenade"
+msgstr "{1} didn't see {2}'s grenade"
+
+msgid "^4{1}^4 is spectating now"
+msgstr "^4{1}^4 is spectating now"
+
+msgid "Reviving"
+msgstr "Reviving"
+
+msgid "^1RED^7 flag"
+msgstr "^1RED^7 flag"
+
+msgid "{1} was telefragged by {2}"
+msgstr "{1} was telefragged by {2}"
+
+msgid "^1Red Team^3"
+msgstr "^1Red Team^3"
+
+msgid "^4Blue jail^7 closed"
+msgstr "^4Blue jail^7 closed"
+
+msgid "{1} got in touch with {2}'s blue ball"
+msgstr "{1} got in touch with {2}'s blue ball"
+
+msgid "{1} tried out his own grenade"
+msgstr "{1} tried out his own grenade"
+
+msgid "{1} ate {2}'s rocket"
+msgstr "{1} ate {2}'s rocket"
+
+msgid "^3{1} ^7got the {1}{2}"
+msgstr "^3{1} ^7got the {1}{2}"
+
+msgid "^4{1}^4 disconnected"
+msgstr "^4{1}^4 disconnected"
+
+msgid "{1}^7 jailed!"
+msgstr "{1}^7 jailed!"
+
+msgid "You got ^4Akimbo ^2{1}"
+msgstr "You got ^4Akimbo ^2{1}"
+
+msgid "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds"
+msgstr "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds"
+
+msgid "^4{1}^4 is playing now"
+msgstr "^4{1}^4 is playing now"
+
+msgid "{1} was butchered by {2}"
+msgstr "{1} was butchered by {2}"
+
+msgid "^4Blue Team^3"
+msgstr "^4Blue Team^3"
+
+msgid "{1} was too close to {2}'s Crylink"
+msgstr "{1} was too close to {2}'s Crylink"
+
+msgid "Blue Team"
+msgstr "Blue Team"
+
+msgid "{1}^7 has changed from {2} to {3}"
+msgstr "{1}^7 has changed from {2} to {3}"
