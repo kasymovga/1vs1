@@ -272,7 +272,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		return;
 
 	if (deathtype == DEATH_HURTTRIGGER) {
-		game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 respawned"), 1);
+		game_status_set("{1} Flag^7 respawned", 1, strcat(team_color_code(self.team), team_color_name(self.team)), "", "");
 		sound(other, CHAN_AUTO, self.noise3, VOL_BASE, ATTN_NONE);
 		ctf_flag_return(self);
 	}
@@ -305,7 +305,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 		WaypointSprite_Ping(p.waypointsprite_attachedforcarrier);
 		WaypointSprite_DetachCarrier(p);
 	}
-	game_status_set(strcat(team_color_code(e.team), team_color_name(e.team), " Flag^7 dropped"), 1);
+	game_status_set("{1} Flag^7 dropped", 1, strcat(team_color_code(e.team), team_color_name(e.team)), "", "");
 	sound (e, CHAN_TRIGGER, e.noise4, VOL_BASE, ATTN_NONE);
 	setattachment(e, world, "");
 	e.damageforcescale = g_ctf_damageforcescale;
@@ -365,7 +365,7 @@ void() ctf_flag_think {
 
 		setattachment(self, world, "");
 		if (time > self.pain_finished) {
-			game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 respawned"), 1);
+			game_status_set("{1} Flag^7 respawned", 1, strcat(team_color_code(self.team), team_color_name(self.team)), "", "");
 			sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
 		}
@@ -485,7 +485,7 @@ void() ctf_flag_touch {
 			rm_bigprint_all(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores!"), strcat("^7Captured by ^3", other.netname, " ^7in ", t, "s"), 2);
 		}, {
 			if (game_type == GAME_TYPE_CTF)
-				game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores"), 1);
+				game_status_set("{1} Team^7 scores", 1, strcat(team_color_code(self.team), team_color_name(self.team)), "", "");
 		})
 		WaypointSprite_DetachCarrier(other);
 		ctf_flag_regen (other.flagcarried);
@@ -516,7 +516,7 @@ void() ctf_flag_touch {
 		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(self.team, CTF_SCORE_VALUE(score_pickup_base)));
 		self.dropperid = other.playerid;
 		score_player_add(other, CTF_SCORE_PICKUPS, 1);
-		game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
+		game_status_set("{1} Flag^7 taken", 1, strcat(team_color_code(self.team), team_color_name(self.team)), "", "");
 		print_to_spec(other, PRINT_CENTER, "You have the flag!", "", "", "");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 		FOR_EACH_PLAYER(player)
@@ -565,7 +565,7 @@ void() ctf_flag_touch {
 					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			score_player_add(other, CTF_SCORE_RETURNS, 1);
-			game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
+			game_status_set("{1} Flag^7 returned", 1, strcat(team_color_code(self.team), team_color_name(self.team)), "", "");
 			sound(other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
 		} else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + g_ctf_delay_collect)) {
@@ -589,7 +589,7 @@ void() ctf_flag_touch {
 			//print("score is ", ftos(f), "\n");
 			score_player_team_add_score(other, f);
 			score_player_add(other, CTF_SCORE_PICKUPS, 1);
-			game_status_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
+			game_status_set("{1} Flag^7 taken", 1, strcat(team_color_code(self.team), team_color_name(self.team)), "", "");
 			print_to_spec(other, PRINT_CENTER, "You have the flag!", "", "", "");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 			FOR_EACH_PLAYER(player)

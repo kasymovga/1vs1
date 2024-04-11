@@ -425,13 +425,13 @@ void(void) jb_init {
 void(float t, entity by) jb_open {
 	string s = "";
 	if (t == COLOR_TEAM1) {
-		game_status_set(strcat("Jailbreak! The ^1REDS^7 are escaping!\nControl point captured by ", by.netname), 2);
+		game_status_set("Jailbreak! The ^1REDS^7 are escaping!\nControl point captured by {1}", 2, by.netname, "", "");
 		RM(sound_play2all("jailbreak/jb_red.wav"));
 		jb_open_red = TRUE;
 		s = "jail_red";
 	}
 	if (t == COLOR_TEAM2) {
-		game_status_set(strcat("Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by ", by.netname), 2);
+		game_status_set("Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by {1}", 2, by.netname, "", "");
 		RM(sound_play2all("jailbreak/jb_blue.wav"));
 		jb_open_blue = TRUE;
 		s = "jail_blue";

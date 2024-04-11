@@ -435,3 +435,72 @@ msgstr "Blue Team"
 
 msgid "{1}^7 has changed from {2} to {3}"
 msgstr "{1}^7 has changed from {2} to {3}"
+
+msgid "^2Game finished!\nThe winner is {1}"
+msgstr "^2Game finished!\nThe winner is {1}"
+
+msgid "Waiting for players to join...\n\nNeed active players for: {2}"
+msgstr "Waiting for players to join...\n\nNeed active players for: {2}"
+
+msgid "{1}^7 died and lost the {2}"
+msgstr "{1}^7 died and lost the {2}"
+
+msgid "\nScanning frequency range..."
+msgstr "\nScanning frequency range..."
+
+msgid "You are starting with the {1}"
+msgstr "You are starting with the {1}"
+
+msgid "{1}^7 captured the keys for the {2}"
+msgstr "{1}^7 captured the keys for the {2}"
+
+msgid "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!"
+msgstr "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!"
+
+msgid "All keys are in the {1}^7's hands!\n\nInterfere ^1NOW^7!"
+msgstr "All keys are in the {1}^7's hands!\n\nInterfere ^1NOW^7!"
+
+msgid "Round starts in {1}"
+msgstr "Round starts in {1}"
+
+msgid "{1} Flag^7 taken"
+msgstr "{1} Flag^7 taken"
+
+msgid "{1} Team^7 scores"
+msgstr "{1} Team^7 scores"
+
+msgid "{1} Flag^7 returned"
+msgstr "{1} Flag^7 returned"
+
+msgid "^2* ^3{1}^2 calls a vote for {2}"
+msgstr "^2* ^3{1}^2 calls a vote for {2}"
+
+msgid "^2* ^3{1}^2's vote for ^1{2}^2 was accepted"
+msgstr "^2* ^3{1}^2's vote for ^1{2}^2 was accepted"
+
+msgid "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
+msgstr "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
+
+msgid "{1} Flag^7 dropped"
+msgstr "{1} Flag^7 dropped"
+
+msgid "^4Blue"
+msgstr "^4Blue"
+
+msgid "^1red key"
+msgstr "^1red key"
+
+msgid "^2Game finished!\n{1} Team^2 wins!"
+msgstr "^2Game finished!\n{1} Team^2 wins!"
+
+msgid "^4blue key"
+msgstr "^4blue key"
+
+msgid "^1Red Team^7"
+msgstr "^1Red Team^7"
+
+msgid "^1Red Team^7, ^4Blue Team^7"
+msgstr "^1Red Team^7, ^4Blue Team^7"
+
+msgid "^4Blue Team^7"
+msgstr "^4Blue Team^7"

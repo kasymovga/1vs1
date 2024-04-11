@@ -266,16 +266,16 @@ msgid "^4{1}^4 connected"
 msgstr "^4{1}^4 connected"
 
 msgid "The enemy got your flag! Retrieve it!"
-msgstr "The enemy got your flag! Retrieve it!"
+msgstr "Враг захватил ваш флаг! Верните его!"
 
 msgid "Blue"
-msgstr "Blue"
+msgstr "Синий"
 
 msgid "{1}^7 returned the {2}"
 msgstr "{1}^7 returned the {2}"
 
 msgid "^4BLUE^7 flag"
-msgstr "^4BLUE^7 flag"
+msgstr "^4СИНИЙ^7 флаг"
 
 msgid "^3Strength has worn off"
 msgstr "^3Strength has worn off"
@@ -284,10 +284,10 @@ msgid "{1} was blasted by {2}'s blue beam"
 msgstr "{1} was blasted by {2}'s blue beam"
 
 msgid "Red Team"
-msgstr "Red Team"
+msgstr "Красная команда"
 
 msgid "Point already captured"
-msgstr "Point already captured"
+msgstr "Точка уже захвачена"
 
 msgid "{1}^7 lost the {2}"
 msgstr "{1}^7 lost the {2}"
@@ -302,7 +302,7 @@ msgid "Neutral Team"
 msgstr "Neutral Team"
 
 msgid "Out of {1}s!"
-msgstr "Out of {1}s!"
+msgstr "Отсутствует {1}!"
 
 msgid "{1}^7 captured the {2} in {3} seconds"
 msgstr "{1}^7 captured the {2} in {3} seconds"
@@ -311,7 +311,7 @@ msgid "^3{1} ^7got the {2}{3}"
 msgstr "^3{1} ^7got the {2}{3}"
 
 msgid "Jail is empty"
-msgstr "Jail is empty"
+msgstr "Тюрьма пустая"
 
 msgid "^3Strength infuses your weapons with devastating power"
 msgstr "^3Strength infuses your weapons with devastating power"
@@ -323,7 +323,7 @@ msgid " took the downward turn"
 msgstr " took the downward turn"
 
 msgid "Capturing..."
-msgstr "Capturing..."
+msgstr "Захват..."
 
 msgid "^4You revived by ^7{1}"
 msgstr "^4You revived by ^7{1}"
@@ -365,16 +365,16 @@ msgid "^4{1}^4 is spectating now"
 msgstr "^4{1}^4 is spectating now"
 
 msgid "Reviving"
-msgstr "Reviving"
+msgstr "Оживление"
 
 msgid "^1RED^7 flag"
-msgstr "^1RED^7 flag"
+msgstr "^1КРАСНЫЙ^7 флаг"
 
 msgid "{1} was telefragged by {2}"
 msgstr "{1} was telefragged by {2}"
 
 msgid "^1Red Team^3"
-msgstr "^1Red Team^3"
+msgstr "^1Красная команда^3"
 
 msgid "^4Blue jail^7 closed"
 msgstr "^4Blue jail^7 closed"
@@ -410,13 +410,82 @@ msgid "{1} was butchered by {2}"
 msgstr "{1} was butchered by {2}"
 
 msgid "^4Blue Team^3"
-msgstr "^4Blue Team^3"
+msgstr "^4Синяя команда^3"
 
 msgid "{1} was too close to {2}'s Crylink"
 msgstr "{1} was too close to {2}'s Crylink"
 
 msgid "Blue Team"
-msgstr "Blue Team"
+msgstr "Синяя команда"
 
 msgid "{1}^7 has changed from {2} to {3}"
 msgstr "{1}^7 has changed from {2} to {3}"
+
+msgid "^2Game finished!\nThe winner is {1}"
+msgstr "^2Игра завершена!\nПобедитель {1}"
+
+msgid "Waiting for players to join...\n\nNeed active players for: {2}"
+msgstr "Ждём присоединения игроков...\n\nНужны игроки для: {$2}"
+
+msgid "{1}^7 died and lost the {2}"
+msgstr "{1}^7 died and lost the {2}"
+
+msgid "\nScanning frequency range..."
+msgstr "\nСканируем частоты..."
+
+msgid "You are starting with the {1}"
+msgstr "Вы получили {$1}"
+
+msgid "{1}^7 captured the keys for the {2}"
+msgstr "{1}^7 captured the keys for the {2}"
+
+msgid "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!"
+msgstr "Ваша команда собрала все ключи!\n\nСоберитесь с другими носителями ключей ^1СЕЙЧАС^7!"
+
+msgid "All keys are in the {1}^7's hands!\n\nInterfere ^1NOW^7!"
+msgstr "{$1}^7 собрала все ключи!\n\nПерехватите ^1СЕЙЧАС^7!"
+
+msgid "Round starts in {1}"
+msgstr "Раунд начнётся через {1}"
+
+msgid "{1} Flag^7 taken"
+msgstr "{$1} флаг^7 взят"
+
+msgid "{1} Team^7 scores"
+msgstr "{$1} комманда^7 получила очко"
+
+msgid "{1} Flag^7 returned"
+msgstr "{$1} флаг^7 возвращён"
+
+msgid "^2* ^3{1}^2 calls a vote for {2}"
+msgstr "^2* ^3{1}^2 создал голосование за {2}"
+
+msgid "^2* ^3{1}^2's vote for ^1{2}^2 was accepted"
+msgstr "^2* ^3 голосование от {1}^2 за ^1{2}^2 было принято"
+
+msgid "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
+msgstr "^2* результат голосования: ^1{1}^2:^1{2}^2, ^1{3}^2 воздержались, ^1{4}^2 исключены из голосования"
+
+msgid "{1} Flag^7 dropped"
+msgstr "{$1} флаг^7 обронён"
+
+msgid "^4Blue"
+msgstr "^4Синий"
+
+msgid "^1red key"
+msgstr "^1красный ключ"
+
+msgid "^2Game finished!\n{1} Team^2 wins!"
+msgstr "^2Игра завершена!\n{$1} команда^2 выиграла!"
+
+msgid "^4blue key"
+msgstr "^4синий ключ"
+
+msgid "^1Red Team^7"
+msgstr "^1Красная команда^7"
+
+msgid "^1Red Team^7, ^4Blue Team^7"
+msgstr "^1Красная команда^7, ^4Синяя команда^7"
+
+msgid "^4Blue Team^7"
+msgstr "^4Синяя команда^7"

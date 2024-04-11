@@ -54,6 +54,7 @@ entity kh_worldkeylist;
 entity kh_controller;
 float kh_tracking_enabled;
 float kh_teams;
+string kh_teams_missed;
 float kh_interferemsg_time, kh_interferemsg_team;
 .entity kh_next, kh_prev; // linked list
 .float kh_droptime;
@@ -96,12 +97,8 @@ void kh_Controller_SetThink(float t, string msg, kh_Think_t func)  // runs occas
 {
 	kh_Controller_Thinkfunc = func;
 	kh_controller.cnt = ceil(t);
-	if(kh_Controller_Waitmsg != "")
-		strunzone(kh_Controller_Waitmsg);
-	if(msg == "")
-		kh_Controller_Waitmsg = "";
-	else
-		kh_Controller_Waitmsg = strzone(msg);
+	str_unzone_ifneeded(kh_Controller_Waitmsg);
+	kh_Controller_Waitmsg = str_zone_ifneeded(msg);
 	if(t == 0)
 		kh_controller.nextthink = time; // force
 }
@@ -114,14 +111,8 @@ void kh_Controller_Think()  // called a lot
 	{
 		if(kh_Controller_Waitmsg != "")
 		{
-			string s;
-			if(substring(kh_Controller_Waitmsg, strlen(kh_Controller_Waitmsg)-1, 1) == " ")
-				s = strcat(kh_Controller_Waitmsg, ftos(self.cnt));
-			else
-				s = kh_Controller_Waitmsg;
-
 			if not(kh_roundbased)
-				game_status_set(s, 2);
+				game_status_set(kh_Controller_Waitmsg, 2, ftos(self.cnt), kh_teams_missed, "");
 		}
 		self.cnt -= 1;
 	}
@@ -714,34 +705,34 @@ void kh_FinishRound()  // runs when a team captures the keys
 		kh_Key_Hide(key);
 	kh_no_radar_circles = FALSE;
 
-	kh_Controller_SetThink(g_kh_delay_round, "Round starts in ", kh_StartRound);
+	kh_Controller_SetThink(g_kh_delay_round, "Round starts in {1}", kh_StartRound);
 }
 
 string kh_CheckEnoughPlayers()  // checks enough player are present, runs after every completed round
 {
 	float i, players, teem;
 	entity player;
-	string result;
-	result = "";
-
 	// find a random player per team
-	for(i = 0; i < kh_teams; ++i)
-	{
+	str_unzone_ifneeded(kh_teams_missed);
+	kh_teams_missed = "";
+	for (i = 0; i < kh_teams; ++i) {
 		teem = kh_Team_ByID(i);
 		players = 0;
 		FOR_EACH_PLAYER(player)
-			if(player.deadflag == DEAD_NO)
-				if(!player.BUTTON_CHAT)
-					if(player.team == teem)
+			if (player.deadflag == DEAD_NO)
+				if( !player.BUTTON_CHAT)
+					if (player.team == teem)
 						++players;
-		if(players == 0)
-		{
-			if(result != "")
-				result = strcat(result, ", ");
-			result = strcat(result, team_colored_name(teem));
+
+		if (players == 0) {
+			if (kh_teams_missed != "")
+				kh_teams_missed = strcat(kh_teams_missed, ", ");
+
+			kh_teams_missed = strcat(kh_teams_missed, team_colored_name(teem));
 		}
 	}
-	return result;
+	kh_teams_missed = str_zone_ifneeded(kh_teams_missed);
+	return kh_teams_missed;;
 }
 
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
@@ -755,10 +746,10 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	}
 
 	teams_missing = kh_CheckEnoughPlayers();
-	if(teams_missing == "")
-		kh_Controller_SetThink((kh_roundbased ? 0 : g_kh_delay_round), "Round starts in ", kh_StartRound);
+	if (teams_missing == "")
+		kh_Controller_SetThink((kh_roundbased ? 0 : g_kh_delay_round), "Round starts in {1}", kh_StartRound);
 	else
-		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), kh_WaitForPlayers);
+		kh_Controller_SetThink(1, "Waiting for players to join...\n\nNeed active players for: {2}", kh_WaitForPlayers);
 }
 
 void kh_StartRound()  // runs at the start of each round
@@ -774,13 +765,12 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	teams_missing = kh_CheckEnoughPlayers();
-	if(teams_missing != "")
-	{
-		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), kh_WaitForPlayers);
+	if (teams_missing != "") {
+		kh_Controller_SetThink(1, "Waiting for players to join...\n\nNeed active players for: {2}", kh_WaitForPlayers);
 		return;
 	}
 	if not(kh_roundbased)
-		game_status_set("", 1);
+		game_status_set("", 1, "", "", "");
 
 	entity key;
 	i = 0;
@@ -810,7 +800,7 @@ void kh_StartRound()  // runs at the start of each round
 void kh_EnableTrackingDevice()  // runs after each round
 {
 	if not(kh_roundbased)
-		game_status_set("", 1);
+		game_status_set("", 1, "", "", "");
 
 	kh_tracking_enabled = TRUE;
 }

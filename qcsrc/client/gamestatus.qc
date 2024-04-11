@@ -29,9 +29,13 @@ void(float isnew) gamestatus_read {
 	self.draw2dflag = 2;
 	float f = net_read_byte();
 	self.entremove = gamestatus_remove;
-	if (f & 1)
-		self.message = str_zone_ifneeded(net_read_string());
-
+	if (f & 1) {
+		self.message = net_read_string();
+		string arg1 = net_read_string();
+		string arg2 = net_read_string();
+		string arg3 = net_read_string();
+		self.message = str_zone_ifneeded(print_text_prepare(self.message, arg1, arg2, arg3));
+	}
 	if (f & 2)
 		self.alpha = net_read_byte() * 0.1;
 }

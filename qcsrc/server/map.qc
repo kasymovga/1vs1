@@ -383,14 +383,20 @@ void() map_finish {
 	string map_finished_message;
 	rank_distribute(world);
 	map_finished_message = "^2Game finished!";
+	string arg;
 	if (team_mode) {
+		arg = strcat(team_color_code(score_winning_condition_helper_winnerteam), team_color_name(score_winning_condition_helper_winnerteam));
 		if (score_winning_condition_helper_winnerteam > 0)
-			map_finished_message = strcat(map_finished_message, "\n", team_color_code(score_winning_condition_helper_winnerteam), team_color_name(score_winning_condition_helper_winnerteam), " Team^2 wins!");
+			map_finished_message = strcat(map_finished_message, "\n{1} Team^2 wins!");
 	} else {
+		arg = score_winning_condition_helper_winner.netname;
 		if (score_winning_condition_helper_winner)
-			map_finished_message = strcat(map_finished_message, "\nThe winner is ", score_winning_condition_helper_winner.netname);
+			map_finished_message = strcat(map_finished_message, "\nThe winner is {1}");
 	}
-	game_status_set(plugin_map_finish_message_mod(map_finished_message), 30);
+	map_finished_message = plugin_map_finish_message_mod(map_finished_message);
+	if (map_finished_message != "")
+		game_status_set(map_finished_message, 30, arg, "", "");
+
 	sound_play2all("misc/menu2.wav");
 	map_intermission_running = 1;
 	FOR_EACH_CLIENT(e) {

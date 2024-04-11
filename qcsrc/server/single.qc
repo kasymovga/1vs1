@@ -58,9 +58,8 @@ float(float ignore, float ignore2) single_winning_condition {
 
 string (string s) single_map_finish_message_mod {
 	if (campaign_won) {
-		string msg = strcat("^2Level finished\nSecrets: ", ftos(single_secrets_found), "/", ftos(single_secrets_total));
-		msg = strcat(msg, "\nMonsters: ", ftos(single_monsters_killed), "/", ftos(single_monsters_total));
-		return msg;
+		game_status_set("^2Level finished\nSecrets: {1}\nMonsters: {2}", 30, strcat(ftos(single_secrets_found), "/", ftos(single_secrets_total)), strcat(ftos(single_monsters_killed), "/", ftos(single_monsters_total)), "");
+		return "";
 	} else
 		return "^1Game over";
 }
@@ -277,7 +276,7 @@ void(void) single_init {
 
 void(void) single_secret_controller_use {
 	single_secrets_found++;
-	game_status_set(strcat("^2Secrets found: ^3", ftos(single_secrets_found), "^2/^3", ftos(single_secrets_total)), 2);
+	game_status_set("^2Secrets found: ^3{1}^2/^3{2}", 2, ftos(single_secrets_found), ftos(single_secrets_total), "");
 }
 
 void(void) single_secret_controller_reset {

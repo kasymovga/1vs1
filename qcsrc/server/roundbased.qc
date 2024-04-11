@@ -79,7 +79,7 @@ void(void) roundbased_world_frame_start {
 		}
 	}
 	if (roundbased_team_check >= 0) { //less than 2 teams have players
-		game_status_set("^2Awaiting players...\n", 1);
+		game_status_set("^2Awaiting players...\n", 1, "", "", "");
 		roundbased_round_start_with_winner(0, "");
 		roundbased_need_check_teams = -1;
 		roundbased_awaiting_players = 1;
@@ -114,7 +114,7 @@ void(void) roundbased_world_frame_start {
 				RM_ELSE({
 					rm_bigprint_all("^xFB0Begin!", "It's time to kick some ass!", 1);
 				}, {
-					game_status_set("^2New round started\n", 3);
+					game_status_set("^2New round started\n", 3, "", "", "");
 				})
 			}
 		} else {
@@ -149,7 +149,7 @@ void(void) roundbased_world_frame_start {
 					else
 						winner_message = "";
 
-					game_status_set(strcat(winner_message, "\n^2Starting in ", ftos(countdown), "\n"), 3);
+					game_status_set(strcat(winner_message, "\n^2Starting in {1}"), 3, ftos(countdown), "", "");
 				})
 				roundbased_countdown_last = countdown;
 			}
