@@ -268,9 +268,6 @@ msgstr "^4{1}^4 connected"
 msgid "The enemy got your flag! Retrieve it!"
 msgstr "The enemy got your flag! Retrieve it!"
 
-msgid "Blue"
-msgstr "Blue"
-
 msgid "{1}^7 returned the {2}"
 msgstr "{1}^7 returned the {2}"
 
@@ -388,9 +385,6 @@ msgstr "{1} tried out his own grenade"
 msgid "{1} ate {2}'s rocket"
 msgstr "{1} ate {2}'s rocket"
 
-msgid "^3{1} ^7got the {1}{2}"
-msgstr "^3{1} ^7got the {1}{2}"
-
 msgid "^4{1}^4 disconnected"
 msgstr "^4{1}^4 disconnected"
 
@@ -448,15 +442,6 @@ msgstr "All keys are in the {1}^7's hands!\n\nInterfere ^1NOW^7!"
 msgid "Round starts in {1}"
 msgstr "Round starts in {1}"
 
-msgid "{1} Flag^7 taken"
-msgstr "{1} Flag^7 taken"
-
-msgid "{1} Team^7 scores"
-msgstr "{1} Team^7 scores"
-
-msgid "{1} Flag^7 returned"
-msgstr "{1} Flag^7 returned"
-
 msgid "^2* ^3{1}^2 calls a vote for {2}"
 msgstr "^2* ^3{1}^2 calls a vote for {2}"
 
@@ -466,17 +451,8 @@ msgstr "^2* ^3{1}^2's vote for ^1{2}^2 was accepted"
 msgid "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
 msgstr "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
 
-msgid "{1} Flag^7 dropped"
-msgstr "{1} Flag^7 dropped"
-
-msgid "^4Blue"
-msgstr "^4Blue"
-
 msgid "^1red key"
 msgstr "^1red key"
-
-msgid "^2Game finished!\n{1} Team^2 wins!"
-msgstr "^2Game finished!\n{1} Team^2 wins!"
 
 msgid "^4blue key"
 msgstr "^4blue key"
@@ -489,3 +465,42 @@ msgstr "^1Red Team^7, ^4Blue Team^7"
 
 msgid "^4Blue Team^7"
 msgstr "^4Blue Team^7"
+
+msgid "^2Awaiting players...\n"
+msgstr "^2Awaiting players...\n"
+
+msgid "^1Red^7 Scores!\nAll opponents are imprisoned\n^2Starting in {1}"
+msgstr "^1Red^7 Scores!\nAll opponents are imprisoned\n^2Starting in {1}"
+
+msgid "Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by {1}"
+msgstr "Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by {1}"
+
+msgid "Point is not ready"
+msgstr "Point is not ready"
+
+msgid "\n^2Starting in {1}"
+msgstr "\n^2Starting in {1}"
+
+msgid "^2Round finished!\n^4Blue Team^2 wins!\n^2Starting in {1}"
+msgstr "^2Round finished!\n^4Blue Team^2 wins!\n^2Starting in {1}"
+
+msgid "^2Round finished!\n^1Red Team^2 wins!\n^2Starting in {1}"
+msgstr "^2Round finished!\n^1Red Team^2 wins!\n^2Starting in {1}"
+
+msgid "^2New round started\n"
+msgstr "^2New round started\n"
+
+msgid "{1}^7 scores"
+msgstr "{1}^7 scores"
+
+msgid "{1}^7 dropped"
+msgstr "{1}^7 dropped"
+
+msgid "{1}^7 taken"
+msgstr "{1}^7 taken"
+
+msgid "Changing to {1} in {2} seconds"
+msgstr "Changing to {1} in {2} seconds"
+
+msgid "{1}^7 returned"
+msgstr "{1}^7 returned"

@@ -143,7 +143,7 @@ void(void) roundbased_world_frame_start {
 					if (roundbased_winner_message != "") {
 						winner_message = roundbased_winner_message;
 					} else if (roundbased_winner_team > 0)
-						winner_message = strcat("^2Round finished!\n", team_color_code(roundbased_winner_team), team_color_name(roundbased_winner_team), " Team^2 wins!");
+						winner_message = strcat("^2Round finished!\n", team_colored_name(roundbased_winner_team), "^2 wins!");
 					else if (roundbased_winner_team < 0)
 						winner_message = "^1Round aborted!";
 					else

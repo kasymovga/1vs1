@@ -385,9 +385,9 @@ void() map_finish {
 	map_finished_message = "^2Game finished!";
 	string arg;
 	if (team_mode) {
-		arg = strcat(team_color_code(score_winning_condition_helper_winnerteam), team_color_name(score_winning_condition_helper_winnerteam));
+		arg = team_colored_name(score_winning_condition_helper_winnerteam);
 		if (score_winning_condition_helper_winnerteam > 0)
-			map_finished_message = strcat(map_finished_message, "\n{1} Team^2 wins!");
+			map_finished_message = strcat(map_finished_message, "\n{1}^2 wins!");
 	} else {
 		arg = score_winning_condition_helper_winner.netname;
 		if (score_winning_condition_helper_winner)

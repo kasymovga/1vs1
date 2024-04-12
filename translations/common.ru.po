@@ -155,133 +155,130 @@ msgstr "^1Обзор\n^1Нажмите ^3{+attack}^1 для наблюдения
 "\n^1Тип игры ^3{2}"
 
 msgid "{1} was gunned by {2}"
-msgstr "{1} was gunned by {2}"
+msgstr "{1} был застрелен игроком {2}"
 
 msgid "{1} detonated"
-msgstr "{1} detonated"
+msgstr "{1} взорвался"
 
 msgid "{1} just noticed {2}'s blue ball"
-msgstr "{1} just noticed {2}'s blue ball"
+msgstr "{1} вдруг заметил синий шар от {2}"
 
 msgid "{1} has {2} frags in a row"
-msgstr "{1} has {2} frags in a row"
+msgstr "{1} сделал {2} фрагов подряд"
 
 msgid "{1} got too close to {2}'s blue beam"
-msgstr "{1} got too close to {2}'s blue beam"
+msgstr "{1} оказался слишком близко к синему лучу от {2}"
 
 msgid "{1} was thrown into a world of hurt by {2}"
-msgstr "{1} was thrown into a world of hurt by {2}"
+msgstr "{1} был выкинут в пустоту с помощью {2}"
 
 msgid "{1} was lasered to death by {2}"
-msgstr "{1} was lasered to death by {2}"
+msgstr "{1} был залазерен до смерти игроком {2}"
 
 msgid "{1}'s {3} kill spree was ended by {2}"
-msgstr "{1}'s {3} kill spree was ended by {2}"
+msgstr "{1} прекратил свою серию из {3} фрагов с помощью {2}"
 
 msgid "{1} felt the electrifying air of {2}'s combo"
-msgstr "{1} felt the electrifying air of {2}'s combo"
+msgstr "{1} ощутил электризованный воздух от сделанного {2} комбо"
 
 msgid "{1} almost dodged {2}'s grenade"
-msgstr "{1} almost dodged {2}'s grenade"
+msgstr "{1} почти увернулся от гранаты, выпущенной {2}"
 
 msgid "{1} was sniped by {2}"
-msgstr "{1} was sniped by {2}"
+msgstr "{1} был снайперски застрелен игроком {2}"
 
 msgid "{1} drew first blood"
-msgstr "{1} drew first blood"
+msgstr "{1} пролил первую кровь"
 
 msgid "{1} was riddled full of holes by {2}"
-msgstr "{1} was riddled full of holes by {2}"
+msgstr "{1} получил много отверстий от {2}"
 
 msgid "{1} succeeded at self-destructing himself with the Crylink"
-msgstr "{1} succeeded at self-destructing himself with the Crylink"
+msgstr "{1} достиг успеха в саморазрушении с помощью Крайлинка"
 
 msgid "{1} was in the wrong place"
-msgstr "{1} was in the wrong place"
+msgstr "{1} оказался в неудачном месте"
 
 msgid "{1} lasered himself to hell"
-msgstr "{1} lasered himself to hell"
+msgstr "{1} залазерил себя в ад"
 
 msgid "{1} took a close look at {2}'s Crylink"
-msgstr "{1} took a close look at {2}'s Crylink"
+msgstr "{1} посмотрел слишком близко в Крайлинк игрока {2}"
 
 msgid "{1} ended it all after a {2} kill spree"
-msgstr "{1} ended it all after a {2} kill spree"
+msgstr "{1} закончил существование после череди из {2} фрагов"
 
 msgid "{1} has been vaporized by {2}"
-msgstr "{1} has been vaporized by {2}"
+msgstr "{1} был испарён игроком {2}"
 
 msgid "{1} almost dodged {2}'s rocket"
-msgstr "{1} almost dodged {2}'s rocket"
+msgstr "{1} почти увернулся от ракеты игрока {2}"
 
 msgid "{1} exploded"
-msgstr "{1} exploded"
+msgstr "{1} взорвался"
 
 msgid "{1} ate {2}'s grenade"
-msgstr "{1} ate {2}'s grenade"
+msgstr "{1} съел гранату игрока {2}"
 
 msgid "{1} was cut down by {2}"
-msgstr "{1} was cut down by {2}"
+msgstr "{1} был подрезан игроком {2}"
 
 msgid "{1} died of {2}'s great playing on the @!{2}%'n Tuba"
-msgstr "{1} died of {2}'s great playing on the @!{2}%'n Tuba"
+msgstr "{1} помер от того, как здорово {2} играет на @!{2}%й Трубе"
 
 msgid "{1} was pummeled by {2}"
-msgstr "{1} was pummeled by {2}"
+msgstr "{1} истолчен игроком {2}"
 
 msgid "{1} got hit in the head by {2}"
-msgstr "{1} got hit in the head by {2}"
+msgstr "{1} получил попадание в голову от {2}"
 
 msgid "{1} couldn't resist the urge to self-destruct"
-msgstr "{1} couldn't resist the urge to self-destruct"
+msgstr "{1} не смог противиться желанию саморазрушения"
 
 msgid "{1} was {3}^1fragged by {2}"
-msgstr "{1} was {3}^1fragged by {2}"
+msgstr "{1} был {$3}^1фрагнут игроком {2}"
 
 msgid "{1} died in {2}'s bullet hail"
-msgstr "{1} died in {2}'s bullet hail"
+msgstr "{1} помер в свинцовом вихре игрока {2}"
 
 msgid "^1{1}^1 was revived by {2}"
 msgstr "^1{1}^1 был оживлён {2}"
 
 msgid "{1} was zapped by {2}"
-msgstr "{1} was zapped by {2}"
+msgstr "{1} был получил удар током от {2}"
 
 msgid "You have the flag!"
 msgstr "Вы подобрали флаг!"
 
 msgid "{1} played with tiny rockets"
-msgstr "{1} played with tiny rockets"
+msgstr "{1} заигрался с маленькими ракетками"
 
 msgid "{1} played with plasma"
-msgstr "{1} played with plasma"
+msgstr "{1} заигрался с плазмой"
 
 msgid "^4You revive ^7{1}"
 msgstr "^4Вы оживили ^7{1}"
 
 msgid "{1}^7 got the {2}"
-msgstr "{1}^7 got the {2}"
+msgstr "{1}^7 подобрал {2}"
 
 msgid "^4{1}^4 connected"
-msgstr "^4{1}^4 connected"
+msgstr "^4{1}^4 подключился"
 
 msgid "The enemy got your flag! Retrieve it!"
 msgstr "Враг захватил ваш флаг! Верните его!"
 
-msgid "Blue"
-msgstr "Синий"
-
 msgid "{1}^7 returned the {2}"
-msgstr "{1}^7 returned the {2}"
+msgstr "{1}^7 вернул {2}"
 
 msgid "^4BLUE^7 flag"
 msgstr "^4СИНИЙ^7 флаг"
 
 msgid "^3Strength has worn off"
-msgstr "^3Strength has worn off"
+msgstr "^3Сила выключена"
 
 msgid "{1} was blasted by {2}'s blue beam"
-msgstr "{1} was blasted by {2}'s blue beam"
+msgstr "{1} был взорван синим лучом от {2}"
 
 msgid "Red Team"
 msgstr "Красная команда"
@@ -290,34 +287,34 @@ msgid "Point already captured"
 msgstr "Точка уже захвачена"
 
 msgid "{1}^7 lost the {2}"
-msgstr "{1}^7 lost the {2}"
+msgstr "{1}^7 потерял {2}"
 
 msgid "You dropped the ^2{1} with {2}"
-msgstr "You dropped the ^2{1} with {2}"
+msgstr "Вы сбросили ^2{1} с {2}"
 
 msgid "You do not have the ^2{1}"
-msgstr "You do not have the ^2{1}"
+msgstr "У вас нет ^2{1}"
 
 msgid "Neutral Team"
-msgstr "Neutral Team"
+msgstr "Нейтральная команда"
 
 msgid "Out of {1}s!"
 msgstr "Отсутствует {1}!"
 
 msgid "{1}^7 captured the {2} in {3} seconds"
-msgstr "{1}^7 captured the {2} in {3} seconds"
+msgstr "{1}^7 захватил {$2} за {3} секунды"
 
 msgid "^3{1} ^7got the {2}{3}"
-msgstr "^3{1} ^7got the {2}{3}"
+msgstr "^3{1} ^7подобрал {2}{3}"
 
 msgid "Jail is empty"
 msgstr "Тюрьма пустая"
 
 msgid "^3Strength infuses your weapons with devastating power"
-msgstr "^3Strength infuses your weapons with devastating power"
+msgstr "^3Сила наполняет ваше оружие разрушительной мощью"
 
 msgid "You dropped the ^2{1}"
-msgstr "You dropped the ^2{1}"
+msgstr "Вы сбросили ^2{1}"
 
 msgid " took the downward turn"
 msgstr " took the downward turn"
@@ -326,43 +323,43 @@ msgid "Capturing..."
 msgstr "Захват..."
 
 msgid "^4You revived by ^7{1}"
-msgstr "^4You revived by ^7{1}"
+msgstr "^4Вы оживлены игроком ^7{1}"
 
 msgid "{1} could not remember where he put plasma"
-msgstr "{1} could not remember where he put plasma"
+msgstr "{1} не запомнил, куда положил плазму"
 
 msgid "{1}^7 picked up the {2}"
-msgstr "{1}^7 picked up the {2}"
+msgstr "{1}^7 подобрал {2}"
 
 msgid "You got the ^2{1}"
-msgstr "You got the ^2{1}"
+msgstr "Вы подобрали ^2{1}"
 
 msgid "{1} died with a {2} kill spree"
-msgstr "{1} died with a {2} kill spree"
+msgstr "{1} погиб с очередью из {2} фрагов"
 
 msgid "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds"
-msgstr "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds"
+msgstr "{1}^7 захватил {$2} за {3}, преодолев предыдущий рекорд от {4} в {5} секунды"
 
 msgid "You don't have any ammo for the ^2{1}"
-msgstr "You don't have any ammo for the ^2{1}"
+msgstr "У вас нет патронов для ^2{1}"
 
 msgid "{1} ^7wins."
-msgstr "{1} ^7wins."
+msgstr "{1} ^7победил."
 
 msgid "{1} was grounded by {2}"
-msgstr "{1} was grounded by {2}"
+msgstr "{1} был впечатан в землю игроком {2}"
 
 msgid "{1} got too close to {2}'s rocket"
-msgstr "{1} got too close to {2}'s rocket"
+msgstr "{1} был слишком близко к ракетам от {2}"
 
 msgid "{1}^7 escaped from jail!"
-msgstr "{1}^7 escaped from jail!"
+msgstr "{1}^7 убежал из тюрьмы!"
 
 msgid "{1} didn't see {2}'s grenade"
-msgstr "{1} didn't see {2}'s grenade"
+msgstr "{1} не заметил гранаты от {2}"
 
 msgid "^4{1}^4 is spectating now"
-msgstr "^4{1}^4 is spectating now"
+msgstr "^4{1}^4 перешёл в наблюдатели"
 
 msgid "Reviving"
 msgstr "Оживление"
@@ -371,55 +368,52 @@ msgid "^1RED^7 flag"
 msgstr "^1КРАСНЫЙ^7 флаг"
 
 msgid "{1} was telefragged by {2}"
-msgstr "{1} was telefragged by {2}"
+msgstr "{1} был телефранут игроком {2}"
 
 msgid "^1Red Team^3"
 msgstr "^1Красная команда^3"
 
 msgid "^4Blue jail^7 closed"
-msgstr "^4Blue jail^7 closed"
+msgstr "^4Синяя тюрьма^7 закрылась"
 
 msgid "{1} got in touch with {2}'s blue ball"
-msgstr "{1} got in touch with {2}'s blue ball"
+msgstr "{1} прикоснулся к синему шару от {2}"
 
 msgid "{1} tried out his own grenade"
-msgstr "{1} tried out his own grenade"
+msgstr "{1} попробовал свою собственную гранату"
 
 msgid "{1} ate {2}'s rocket"
-msgstr "{1} ate {2}'s rocket"
-
-msgid "^3{1} ^7got the {1}{2}"
-msgstr "^3{1} ^7got the {1}{2}"
+msgstr "{1} съел ракету от {2}"
 
 msgid "^4{1}^4 disconnected"
-msgstr "^4{1}^4 disconnected"
+msgstr "^4{1}^4 отключился"
 
 msgid "{1}^7 jailed!"
-msgstr "{1}^7 jailed!"
+msgstr "{1}^7 в тюрьме!"
 
 msgid "You got ^4Akimbo ^2{1}"
-msgstr "You got ^4Akimbo ^2{1}"
+msgstr "Вы получили ^4Акимбо ^2{1}"
 
 msgid "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds"
-msgstr "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds"
+msgstr "{1}^7 захватил {$2} за {3}, не сумев преодолеть рекорд от {4} за {5} секунд"
 
 msgid "^4{1}^4 is playing now"
-msgstr "^4{1}^4 is playing now"
+msgstr "^4{1}^4 начал играть"
 
 msgid "{1} was butchered by {2}"
-msgstr "{1} was butchered by {2}"
+msgstr "{1} был выпотрошен игроком {2}"
 
 msgid "^4Blue Team^3"
 msgstr "^4Синяя команда^3"
 
 msgid "{1} was too close to {2}'s Crylink"
-msgstr "{1} was too close to {2}'s Crylink"
+msgstr "{1} оказался слишком близко к Крайлинку игрока {2}"
 
 msgid "Blue Team"
 msgstr "Синяя команда"
 
 msgid "{1}^7 has changed from {2} to {3}"
-msgstr "{1}^7 has changed from {2} to {3}"
+msgstr "{1}^7 перешёл из {$2} в {$3}"
 
 msgid "^2Game finished!\nThe winner is {1}"
 msgstr "^2Игра завершена!\nПобедитель {1}"
@@ -428,7 +422,7 @@ msgid "Waiting for players to join...\n\nNeed active players for: {2}"
 msgstr "Ждём присоединения игроков...\n\nНужны игроки для: {$2}"
 
 msgid "{1}^7 died and lost the {2}"
-msgstr "{1}^7 died and lost the {2}"
+msgstr "{1}^7 помер и потерял {2}"
 
 msgid "\nScanning frequency range..."
 msgstr "\nСканируем частоты..."
@@ -437,7 +431,7 @@ msgid "You are starting with the {1}"
 msgstr "Вы получили {$1}"
 
 msgid "{1}^7 captured the keys for the {2}"
-msgstr "{1}^7 captured the keys for the {2}"
+msgstr "{1}^7 захватил ключи для {$2}"
 
 msgid "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!"
 msgstr "Ваша команда собрала все ключи!\n\nСоберитесь с другими носителями ключей ^1СЕЙЧАС^7!"
@@ -448,15 +442,6 @@ msgstr "{$1}^7 собрала все ключи!\n\nПерехватите ^1С�
 msgid "Round starts in {1}"
 msgstr "Раунд начнётся через {1}"
 
-msgid "{1} Flag^7 taken"
-msgstr "{$1} флаг^7 взят"
-
-msgid "{1} Team^7 scores"
-msgstr "{$1} комманда^7 получила очко"
-
-msgid "{1} Flag^7 returned"
-msgstr "{$1} флаг^7 возвращён"
-
 msgid "^2* ^3{1}^2 calls a vote for {2}"
 msgstr "^2* ^3{1}^2 создал голосование за {2}"
 
@@ -466,17 +451,8 @@ msgstr "^2* ^3 голосование от {1}^2 за ^1{2}^2 было прин�
 msgid "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
 msgstr "^2* результат голосования: ^1{1}^2:^1{2}^2, ^1{3}^2 воздержались, ^1{4}^2 исключены из голосования"
 
-msgid "{1} Flag^7 dropped"
-msgstr "{$1} флаг^7 обронён"
-
-msgid "^4Blue"
-msgstr "^4Синий"
-
 msgid "^1red key"
 msgstr "^1красный ключ"
-
-msgid "^2Game finished!\n{1} Team^2 wins!"
-msgstr "^2Игра завершена!\n{$1} команда^2 выиграла!"
 
 msgid "^4blue key"
 msgstr "^4синий ключ"
@@ -489,3 +465,42 @@ msgstr "^1Красная команда^7, ^4Синяя команда^7"
 
 msgid "^4Blue Team^7"
 msgstr "^4Синяя команда^7"
+
+msgid "^2Awaiting players...\n"
+msgstr "^2Ожидание игроков...\n"
+
+msgid "^1Red^7 Scores!\nAll opponents are imprisoned\n^2Starting in {1}"
+msgstr "^1Красные^7 выиграли раунд!\nВсе противники в тюрьме\n^2Новый раунд через {1}"
+
+msgid "Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by {1}"
+msgstr "Побег! ^4СИНИИ^7 убегают!\nКонтрольная точка была захвачена игроком {1}"
+
+msgid "Point is not ready"
+msgstr "Точка не готова"
+
+msgid "\n^2Starting in {1}"
+msgstr "\n^2Начнётся через {1}"
+
+msgid "^2Round finished!\n^4Blue Team^2 wins!\n^2Starting in {1}"
+msgstr "^2Раунд завершён!\n^4Синяя команда^2 победила!\n^2Следующий раунд через {1}"
+
+msgid "^2Round finished!\n^1Red Team^2 wins!\n^2Starting in {1}"
+msgstr "^2Раунд завершён!\n^1Красная команда^2 победила!\n^2Следующий раунд через {1}"
+
+msgid "^2New round started\n"
+msgstr "^2Новый раунд начался\n"
+
+msgid "{1}^7 scores"
+msgstr "{1}^7 захватила флаг"
+
+msgid "{1}^7 dropped"
+msgstr "{1}^7 брошен"
+
+msgid "{1}^7 taken"
+msgstr "{1}^7 поднят"
+
+msgid "Changing to {1} in {2} seconds"
+msgstr "Переходим в {1} через {2} секунды"
+
+msgid "{1}^7 returned"
+msgstr "{1}^7 возвращён"
