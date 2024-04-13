@@ -142,6 +142,9 @@ void fillNexuizServerCreateTab(entity me)
 		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, NULL));
 			e.textEntity = main.mutatorsDialog;
 			e.allowCut = 1;
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "rm", _("RocketMinsta")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		//me.TD(me, 1, 2, e = makeNexuizModButton("Multiplayer_Create"));
