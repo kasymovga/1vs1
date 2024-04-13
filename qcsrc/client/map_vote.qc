@@ -143,6 +143,7 @@ vector(vector gridspec, float i, float m) map_vote_grid {
 
 void(void) map_vote_draw {
 	if (sbar_showscores) return;
+	sbar_hidescores = TRUE;
 	string map;
 	float i, tmp;
 	vector pos;
