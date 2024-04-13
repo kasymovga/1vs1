@@ -594,3 +594,39 @@ msgstr "until ^3{2} points^7"
 
 msgid "^7for ^1{1} minutes^7 or until ^3{2} points^7"
 msgstr "^7for ^1{1} minutes^7 or until ^3{2} points^7"
+
+msgid "^3{1}#^0{2}^3 was moved to spectators for idling."
+msgstr "^3{1}#^0{2}^3 was moved to spectators for idling."
+
+msgid "Change model"
+msgstr "Change model"
+
+msgid "Restore position"
+msgstr "Restore position"
+
+msgid "Radio"
+msgstr "Radio"
+
+msgid "Respawn"
+msgstr "Respawn"
+
+msgid "^2Race finished!"
+msgstr "^2Race finished!"
+
+msgid "{1} couldn't take it anymore"
+msgstr "{1} couldn't take it anymore"
+
+msgid "Save position"
+msgstr "Save position"
+
+msgid "Change eye position"
+msgstr "Change eye position"
+
+msgid "{1} died"
+msgstr "{1} died"
+
+msgid "Map records..."
+msgstr "Map records..."
+
+msgid "^7for ^1{1} minutes^7"
+msgstr "^7for ^1{1} minutes^7"

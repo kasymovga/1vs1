@@ -591,3 +591,39 @@ msgstr "до ^3{2} очков^7"
 
 msgid "^7for ^1{1} minutes^7 or until ^3{2} points^7"
 msgstr "^7до ^1{1} минут^7 или ^3{2} очков^7"
+
+msgid "^3{1}#^0{2}^3 was moved to spectators for idling."
+msgstr "^3{1}#^0{2}^3 перешёл в наблюдатели из-за бездействия."
+
+msgid "Change model"
+msgstr "Сменить модель"
+
+msgid "Restore position"
+msgstr "Восстановить позицию"
+
+msgid "Radio"
+msgstr "Радио"
+
+msgid "Respawn"
+msgstr "Респаун"
+
+msgid "^2Race finished!"
+msgstr "^2Гонка завершена!"
+
+msgid "{1} couldn't take it anymore"
+msgstr "{1} не может больше терпеть"
+
+msgid "Save position"
+msgstr "Сохранить позицию"
+
+msgid "Change eye position"
+msgstr "Сменить положение глаз"
+
+msgid "{1} died"
+msgstr "{1} помер"
+
+msgid "Map records..."
+msgstr "Рекорды карты..."
+
+msgid "^7for ^1{1} minutes^7"
+msgstr "^7до ^1{1} минут^7"
