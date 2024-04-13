@@ -438,6 +438,7 @@ void(void) weapon_model_spawn {
 	self.weaponentity.classname = "weaponentity";
 	self.weaponentity.solid = SOLID_NOT;
 	self.weaponentity.owner = self;
+	self.weaponentity.state = WEAPON_STATE_READY;
 	self.weaponentity.realowner = akimbo_owner(self);
 	setmodel(self.weaponentity, ""); // precision set when changed
 	setorigin(self.weaponentity, '0 0 0');

@@ -126,9 +126,10 @@ void(void) weapon_reload {
 	if (self.switchweapon == self.weapon)
 	if (self.weaponentity.state == WEAPON_STATE_READY) {
 		weapon_action(self.weapon, WEAPON_REQUEST_RELOAD);
-		if (weapon_melee_possible(TRUE))
-			weapon_melee_attack_check();
 	}
+	if (weapon_melee_possible(TRUE))
+		weapon_melee_attack_check();
+
 	akimbo_reload(self);
 }
 
@@ -966,7 +967,11 @@ void(void) weapon_clear {
 		self.weapon = 0;
 
 	if (self.weaponentity) {
-		self.weaponentity.state = WEAPON_STATE_CLEAR;
+		if (self.weapon || self.switchweapon)
+			self.weaponentity.state = WEAPON_STATE_CLEAR;
+		else
+			self.weaponentity.state = WEAPON_STATE_READY;
+
 		self.weaponentity.effects = 0;
 	}
 }
