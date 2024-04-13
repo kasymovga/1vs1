@@ -434,11 +434,6 @@ void() ctf_flag_touch {
 			s0 = str_float_decimals(flagcaptimerecord, 2);
 			h0 = db_get(db_server, strcat(mapname, "/captimerecord/netname"));
 			h1 = other.netname;
-			if (h0 == h1)
-				h0 = "their";
-			else
-				h0 = strcat(h0, "^7's"); // h0: display text for previous netname
-
 			if (flagcaptimerecord == 0) {
 				print_all(PRINT_INFO, "{1}^7 captured the {2} in {3} seconds", other.netname, other.flagcarried.netname, s);
 				flagcaptimerecord = t;
@@ -446,13 +441,20 @@ void() ctf_flag_touch {
 				db_put(db_server, strcat(mapname, "/captimerecord/netname"), h1);
 				client_write_recordmarker(other, time - t, t);
 			} else if (t < flagcaptimerecord) {
-				print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
+				if (h0 == h1)
+					print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, breaking their previous record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
+				else
+					print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, breaking {4}^7's previous record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
+
 				flagcaptimerecord = t;
 				db_put(db_server, strcat(mapname, "/captimerecord/time"), ftos(t));
 				db_put(db_server, strcat(mapname, "/captimerecord/netname"), h1);
 				client_write_recordmarker(other, time - t, t);
 			} else {
-				print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
+				if (h0 == h1)
+					print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, failing to break their record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
+				else
+					print_all_long(PRINT_INFO, "{1}^7 captured the {2} in {3}, failing to break {4}^7's record of {5} seconds", other.netname, other.flagcarried.netname, s, h0, s0, "");
 			}
 		} else
 			print_all(PRINT_INFO, "{1}^7 captured the {2}", other.netname, other.flagcarried.netname, "");

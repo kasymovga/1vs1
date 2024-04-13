@@ -260,7 +260,7 @@ msgid "^4You revive ^7{1}"
 msgstr "^4Вы оживили ^7{1}"
 
 msgid "{1}^7 got the {2}"
-msgstr "{1}^7 подобрал {2}"
+msgstr "{1}^7 забрал {$2}"
 
 msgid "^4{1}^4 connected"
 msgstr "^4{1}^4 подключился"
@@ -329,7 +329,7 @@ msgid "{1} could not remember where he put plasma"
 msgstr "{1} не запомнил, куда положил плазму"
 
 msgid "{1}^7 picked up the {2}"
-msgstr "{1}^7 подобрал {2}"
+msgstr "{1}^7 подобрал {$2}"
 
 msgid "You got the ^2{1}"
 msgstr "Вы подобрали ^2{1}"
@@ -337,8 +337,11 @@ msgstr "Вы подобрали ^2{1}"
 msgid "{1} died with a {2} kill spree"
 msgstr "{1} погиб с очередью из {2} фрагов"
 
-msgid "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds"
-msgstr "{1}^7 захватил {$2} за {3}, преодолев предыдущий рекорд от {4} в {5} секунды"
+msgid "{1}^7 captured the {2} in {3}, breaking {4}^7's previous record of {5} seconds"
+msgstr "{1}^7 захватил {$2} за {3}, преодолев предыдущий рекорд от {4}^7 в {5} секунды"
+
+msgid "{1}^7 captured the {2} in {3}, breaking their previous record of {5} seconds"
+msgstr "{1}^7 захватил {$2} за {3}, преодолев свой предыдущий рекорд в {5} секунды"
 
 msgid "You don't have any ammo for the ^2{1}"
 msgstr "У вас нет патронов для ^2{1}"
@@ -394,8 +397,11 @@ msgstr "{1}^7 в тюрьме!"
 msgid "You got ^4Akimbo ^2{1}"
 msgstr "Вы получили ^4Акимбо ^2{1}"
 
-msgid "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds"
-msgstr "{1}^7 захватил {$2} за {3}, не сумев преодолеть рекорд от {4} за {5} секунд"
+msgid "{1}^7 captured the {2} in {3}, failing to break their record of {5} seconds"
+msgstr "{1}^7 захватил {$2} за {3}, не сумев преодолеть свой рекорд за {5} секунд"
+
+msgid "{1}^7 captured the {2} in {3}, failing to break {4}^7's record of {5} seconds"
+msgstr "{1}^7 захватил {$2} за {3}, не сумев преодолеть рекорд от {4}^7 за {5} секунд"
 
 msgid "^4{1}^4 is playing now"
 msgstr "^4{1}^4 начал играть"
@@ -479,28 +485,88 @@ msgid "Point is not ready"
 msgstr "Точка не готова"
 
 msgid "\n^2Starting in {1}"
-msgstr "\n^2Начнётся через {1}"
+msgstr "\n^2Раунд начнётся через {1}"
 
-msgid "^2Round finished!\n^4Blue Team^2 wins!\n^2Starting in {1}"
+msgid "^2Round finished!\n^4Blue Team^7^2 wins!\n^2Starting in {1}"
 msgstr "^2Раунд завершён!\n^4Синяя команда^2 победила!\n^2Следующий раунд через {1}"
 
-msgid "^2Round finished!\n^1Red Team^2 wins!\n^2Starting in {1}"
+msgid "^2Round finished!\n^1Red Team^7^2 wins!\n^2Starting in {1}"
 msgstr "^2Раунд завершён!\n^1Красная команда^2 победила!\n^2Следующий раунд через {1}"
 
 msgid "^2New round started\n"
 msgstr "^2Новый раунд начался\n"
 
 msgid "{1}^7 scores"
-msgstr "{1}^7 захватила флаг"
+msgstr "{$1}^7 захватила флаг"
 
 msgid "{1}^7 dropped"
-msgstr "{1}^7 брошен"
+msgstr "{$1}^7 брошен"
 
 msgid "{1}^7 taken"
-msgstr "{1}^7 поднят"
+msgstr "{$1}^7 поднят"
 
 msgid "Changing to {1} in {2} seconds"
 msgstr "Переходим в {1} через {2} секунды"
 
 msgid "{1}^7 returned"
-msgstr "{1}^7 возвращён"
+msgstr "{$1}^7 возвращён"
+
+msgid "^4Blue Flag"
+msgstr "^4Синий флаг"
+
+msgid "^1Red Flag"
+msgstr "^1Красный флаг"
+
+msgid "The current level has been LOST."
+msgstr "Текущий уровень был ПРОИГРАН."
+
+msgid "You found a secret area!"
+msgstr "Вы нашли секретное место!"
+
+msgid "Only {1} more to go..."
+msgstr "Нужно ещё {1}..."
+
+msgid "^2Game finished!\n{1}^2 wins!"
+msgstr "^2Игра закончена!\n{1}^2 победила!"
+
+msgid "Walk into the slipgate to exit."
+msgstr "Идите в портал для выхода."
+
+msgid "{1} was slimed"
+msgstr "{1} растворился в слизи"
+
+msgid "Sequence completed!"
+msgstr "Последовательность выполнена!"
+
+msgid "^1Game over"
+msgstr "^1Игра закончена"
+
+msgid "^2Level finished\nSecrets: {1}\nMonsters: {2}"
+msgstr "^2Уровень пройден\nСекреты: {1}\nМонстры: {2}"
+
+msgid "^2Secrets found: ^3{1}^2/^3{2}"
+msgstr "^2Найден секрет: ^3{1}^2/^3{2}"
+
+msgid "Autosaving..."
+msgstr "Автосохранение..."
+
+msgid "^3Shield surrounds you"
+msgstr "^3Щит окружает вас"
+
+msgid "The current level has been WON."
+msgstr "Текущий уровень был ВЫИГРАН."
+
+msgid "join 'best' team (auto-select)"
+msgstr "Присоединиться к 'лучшей' команде"
+
+msgid "Team Selection"
+msgstr "Выбор команды"
+
+msgid "Yellow Team"
+msgstr "Жёлтая команда"
+
+msgid "Pink Team"
+msgstr "Розовая команда"
+
+msgid "spectate"
+msgstr "наблюдение"

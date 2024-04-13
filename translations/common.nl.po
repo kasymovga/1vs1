@@ -352,8 +352,11 @@ msgstr "You got the ^2{1}"
 msgid "{1} died with a {2} kill spree"
 msgstr "{1} died with a {2} kill spree"
 
-msgid "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds"
-msgstr "{1}^7 captured the {2} in {3}, breaking {4} previous record of {5} seconds"
+msgid "{1}^7 captured the {2} in {3}, breaking {4}^7's previous record of {5} seconds"
+msgstr "{1}^7 captured the {2} in {3}, breaking {4}^7's previous record of {5} seconds"
+
+msgid "{1}^7 captured the {2} in {3}, breaking their previous record of {5} seconds"
+msgstr "{1}^7 captured the {2} in {3}, breaking their previous record of {5} seconds"
 
 msgid "You don't have any ammo for the ^2{1}"
 msgstr "You don't have any ammo for the ^2{1}"
@@ -409,8 +412,11 @@ msgstr "{1}^7 jailed!"
 msgid "You got ^4Akimbo ^2{1}"
 msgstr "You got ^4Akimbo ^2{1}"
 
-msgid "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds"
-msgstr "{1}^7 captured the {2} in {3}, failing to break {4}, record of {5} seconds"
+msgid "{1}^7 captured the {2} in {3}, failing to break their record of {5} seconds"
+msgstr "{1}^7 captured the {2} in {3}, failing to break their record of {5} seconds"
+
+msgid "{1}^7 captured the {2} in {3}, failing to break {4}^7's record of {5} seconds"
+msgstr "{1}^7 captured the {2} in {3}, failing to break {4}^7's record of {5} seconds"
 
 msgid "^4{1}^4 is playing now"
 msgstr "^4{1}^4 is playing now"
@@ -496,11 +502,11 @@ msgstr "Point is not ready"
 msgid "\n^2Starting in {1}"
 msgstr "\n^2Starting in {1}"
 
-msgid "^2Round finished!\n^4Blue Team^2 wins!\n^2Starting in {1}"
-msgstr "^2Round finished!\n^4Blue Team^2 wins!\n^2Starting in {1}"
+msgid "^2Round finished!\n^4Blue Team^7^2 wins!\n^2Starting in {1}"
+msgstr "^2Round finished!\n^4Blue Team^7^2 wins!\n^2Starting in {1}"
 
-msgid "^2Round finished!\n^1Red Team^2 wins!\n^2Starting in {1}"
-msgstr "^2Round finished!\n^1Red Team^2 wins!\n^2Starting in {1}"
+msgid "^2Round finished!\n^1Red Team^7^2 wins!\n^2Starting in {1}"
+msgstr "^2Round finished!\n^1Red Team^7^2 wins!\n^2Starting in {1}"
 
 msgid "^2New round started\n"
 msgstr "^2New round started\n"
@@ -519,3 +525,63 @@ msgstr "Changing to {1} in {2} seconds"
 
 msgid "{1}^7 returned"
 msgstr "{1}^7 returned"
+
+msgid "^4Blue Flag"
+msgstr "^4Blue Flag"
+
+msgid "^1Red Flag"
+msgstr "^1Red Flag"
+
+msgid "The current level has been LOST."
+msgstr "The current level has been LOST."
+
+msgid "You found a secret area!"
+msgstr "You found a secret area!"
+
+msgid "Only {1} more to go..."
+msgstr "Only {1} more to go..."
+
+msgid "^2Game finished!\n{1}^2 wins!"
+msgstr "^2Game finished!\n{1}^2 wins!"
+
+msgid "Walk into the slipgate to exit."
+msgstr "Walk into the slipgate to exit."
+
+msgid "{1} was slimed"
+msgstr "{1} was slimed"
+
+msgid "Sequence completed!"
+msgstr "Sequence completed!"
+
+msgid "^1Game over"
+msgstr "^1Game over"
+
+msgid "^2Level finished\nSecrets: {1}\nMonsters: {2}"
+msgstr "^2Level finished\nSecrets: {1}\nMonsters: {2}"
+
+msgid "^2Secrets found: ^3{1}^2/^3{2}"
+msgstr "^2Secrets found: ^3{1}^2/^3{2}"
+
+msgid "Autosaving..."
+msgstr "Autosaving..."
+
+msgid "^3Shield surrounds you"
+msgstr "^3Shield surrounds you"
+
+msgid "The current level has been WON."
+msgstr "The current level has been WON."
+
+msgid "join 'best' team (auto-select)"
+msgstr "join 'best' team (auto-select)"
+
+msgid "Team Selection"
+msgstr "Team Selection"
+
+msgid "Yellow Team"
+msgstr "Yellow Team"
+
+msgid "Pink Team"
+msgstr "Pink Team"
+
+msgid "spectate"
+msgstr "spectate"
