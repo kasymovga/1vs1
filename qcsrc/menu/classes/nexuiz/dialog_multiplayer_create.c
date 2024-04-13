@@ -66,7 +66,6 @@ void fillNexuizServerCreateTab(entity me)
 		me.TD(me, 1, 1, e = makeNexuizButton(_("None"), '0 0 0'));
 			e.onClick = MapList_None;
 			e.onClickEntity = me.mapListBox;
-		me.TDempty(me, 0.5);
 
 	me.gotoRC(me, 4, 3.5); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
@@ -95,21 +94,18 @@ void fillNexuizServerCreateTab(entity me)
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Player slots:")));
 			me.TD(me, 1, 2, makeNexuizSlider(1, 64, 1, "menu_maxplayers"));
 		me.TR(me);
-			me.TDempty(me, 0.2);
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Minimal amount of human and bots:")));
 		me.TR(me);
 			me.TDempty(me, 1);
 			me.TD(me, 1, 2, makeNexuizSlider(0, 32, 1, "menu_minplayers"));
 	}
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, (me.isSinglePlayer ? _("Number of bots:") :_("Additional number of bots:"))));
 	me.TR(me);
 		me.TDempty(me, 1);
 		me.TD(me, 1, 2, makeNexuizSlider(0, 32, 1, "bot_number"));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeNexuizTextLabel(0, _("Bot skill:")));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Bot skill:")));
 		me.TD(me, 1, 2, e = makeNexuizTextSlider("skill"));
 			e.addValue(e, _("Botlike"), "0");
 			e.addValue(e, _("Beginner"), "4");
@@ -124,10 +120,9 @@ void fillNexuizServerCreateTab(entity me)
 			e.addValue(e, _("Godlike"), "40");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeNexuizTextLabel(0, _("Teams:")));
-		me.TD(me, 1, 1.7, me.sliderTeams = e = makeNexuizTextSlider("g_tdm_teams"));
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.9, e = makeNexuizTextLabel(0, _("Teams:")));
+		me.TD(me, 1, 2, me.sliderTeams = e = makeNexuizTextSlider("g_tdm_teams"));
 			e.addValue(e, _("Default"), "0");
 			e.addValue(e, _("2 teams"), "2");
 			e.addValue(e, _("3 teams"), "3");
@@ -142,7 +137,6 @@ void fillNexuizServerCreateTab(entity me)
 		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, NULL));
 			e.textEntity = main.mutatorsDialog;
 			e.allowCut = 1;
-	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "rm", _("RocketMinsta")));
 
