@@ -269,7 +269,7 @@ msgid "The enemy got your flag! Retrieve it!"
 msgstr "Враг захватил ваш флаг! Верните его!"
 
 msgid "{1}^7 returned the {2}"
-msgstr "{1}^7 вернул {2}"
+msgstr "{1}^7 вернул {$2}"
 
 msgid "^4BLUE^7 flag"
 msgstr "^4СИНИЙ^7 флаг"
@@ -287,7 +287,7 @@ msgid "Point already captured"
 msgstr "Точка уже захвачена"
 
 msgid "{1}^7 lost the {2}"
-msgstr "{1}^7 потерял {2}"
+msgstr "{1}^7 потерял {$2}"
 
 msgid "You dropped the ^2{1} with {2}"
 msgstr "Вы сбросили ^2{1} с {2}"
@@ -527,7 +527,7 @@ msgid "Only {1} more to go..."
 msgstr "Нужно ещё {1}..."
 
 msgid "^2Game finished!\n{1}^2 wins!"
-msgstr "^2Игра закончена!\n{1}^2 победила!"
+msgstr "^2Игра закончена!\n{$1}^2 победила!"
 
 msgid "Walk into the slipgate to exit."
 msgstr "Идите в портал для выхода."
@@ -570,3 +570,24 @@ msgstr "Розовая команда"
 
 msgid "spectate"
 msgstr "наблюдение"
+
+msgid "^7Playing ^3{1}^7 on ^2{2}"
+msgstr "^7Играем ^3{1}^7 на ^2{2}"
+
+msgid "Vote for a map (^2{1}^7)"
+msgstr "Голосование за карту (^2{1}^7)"
+
+msgid "^7for ^1{1} minutes^7 or until ^3{2} caps"
+msgstr "^7до ^1{1} минут^7 или ^3{2} захватов"
+
+msgid "^3Stop idling!\n^3Moving to spectators in {1}..."
+msgstr "^3Начинайте действовать!\n^3Переход в наблюдатели через {1}..."
+
+msgid "{1} seconds left"
+msgstr "{1} секунд осталось"
+
+msgid "until ^3{2} points^7"
+msgstr "до ^3{2} очков^7"
+
+msgid "^7for ^1{1} minutes^7 or until ^3{2} points^7"
+msgstr "^7до ^1{1} минут^7 или ^3{2} очков^7"

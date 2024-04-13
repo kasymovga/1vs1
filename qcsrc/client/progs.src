@@ -85,6 +85,7 @@ game_type.qh
 ready.qh
 race.qh
 translate.qh
+print.qh
 flag.qc
 ctf.qc
 kh.qc
@@ -95,7 +96,6 @@ ft.qc
 sbar.qc
 map_vote.qc
 report.qh
-print.qh
 hook.qc
 particles.qc
 laser.qc

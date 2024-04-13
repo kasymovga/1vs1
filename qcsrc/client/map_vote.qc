@@ -166,12 +166,14 @@ void(void) map_vote_draw {
 	sbar_fontsize = sbar_font_size(CVAR(sbar_fontsize));
 	pos_y = ymin;
 	pos_z = 0;
-	string s = strcat("Vote for a map (^2", map_vote_gametype, "^7)");
+	string s = //strcat("Vote for a map (^2", map_vote_gametype, "^7)");
+			print_text_prepare("Vote for a map (^2{1}^7)", map_vote_gametype, "", "");
 	pos_x = center - stringwidth(strdecolorize(s), TRUE) * 0.5 * 24;
 	drawcolorcodedstring(pos, s, '24 24 0', 1, DRAWFLAG_NORMAL);
 	pos_y += 26;
 	i = ceil(max(0, map_vote_timeout - time));
-	map = strcat(ftos(i), " seconds left");
+	map = //strcat(ftos(i), " seconds left");
+			print_text_prepare("{1} seconds left", ftos(i), "", "");
 	pos_x = center - stringwidth(map, FALSE) * 0.5 * 16;
 	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	pos_y += 22;

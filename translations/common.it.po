@@ -570,3 +570,27 @@ msgstr "Pink Team"
 
 msgid "spectate"
 msgstr "spectate"
+
+msgid "^7Playing ^3{1}^7 on ^2{2}"
+msgstr "^7Playing ^3{1}^7 on ^2{2}"
+
+msgid "Vote for a map (^2{1}^7)"
+msgstr "Vote for a map (^2{1}^7)"
+
+msgid "^7for ^1{1} minutes^7 or until ^3{2} caps"
+msgstr "^7for ^1{1} minutes^7 or until ^3{2} caps"
+
+msgid "^3{1}^3{2}"
+msgstr "^3{1}^3{2}"
+
+msgid "^3Stop idling!\n^3Moving to spectators in {1}..."
+msgstr "^3Stop idling!\n^3Moving to spectators in {1}..."
+
+msgid "{1} seconds left"
+msgstr "{1} seconds left"
+
+msgid "until ^3{2} points^7"
+msgstr "until ^3{2} points^7"
+
+msgid "^7for ^1{1} minutes^7 or until ^3{2} points^7"
+msgstr "^7for ^1{1} minutes^7 or until ^3{2} points^7"

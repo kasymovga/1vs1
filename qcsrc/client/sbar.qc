@@ -1253,7 +1253,7 @@ void sbar_scoreboard_draw() {
 	// Print info string
 	string str;
 	float tl, fl, ll;
-	str = strcat("^7Playing ^3", strtoupper(game_type_name(game_type)), "^7 on ^2", map_shortname);
+	str = print_text_prepare("^7Playing ^3{1}^7 on ^2{2}", strtoupper(game_type_name(game_type)), map_shortname, "");
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbar_width - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
 	pos_y += sbar_fontsize_y;
 	if (map_description != "") {
@@ -1264,17 +1264,20 @@ void sbar_scoreboard_draw() {
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
 	ll = getstatf(STAT_LEADLIMIT);
-	if (tl > 0)
-		str = strcat("^7for ^1", ftos(tl), " minutes^7");
-	else
+	string arg1 = "", arg2 = "", arg3 = "";
+	if (tl > 0) {
+		str = strcat("^7for ^1{1} minutes^7");
+		arg1 = ftos(tl);
+	} else
 		str = "";
 
 	if (fl > 0) {
 		if (tl > 0)
-			str = strcat(str, " or");
+			str = strcat(str, " or ");
 
 		if (team_mode) {
-			str = strcat(str, " until ^3", score_string(teamscores_flags[ts_primary], fl));
+			arg2 = score_string(teamscores_flags[ts_primary], fl);
+			str = strcat(str, "until ^3{2}");
 			if (teamscores_label[ts_primary] == "score")
 				str = strcat(str, " points^7");
 			else if (teamscores_label[ts_primary] == "fastest")
@@ -1282,7 +1285,8 @@ void sbar_scoreboard_draw() {
 			else
 				str = strcat(str, " ", teamscores_label[ts_primary]);
 		} else {
-			str = strcat(str, " until ^3", score_string(scores_flags[ps_primary], fl));
+			arg2 = score_string(scores_flags[ps_primary], fl);
+			str = strcat(str, "until ^3{2}");
 			if (scores_label[ps_primary] == "score")
 				str = strcat(str, " points^7");
 			else if (scores_label[ps_primary] == "fastest")
@@ -1293,10 +1297,11 @@ void sbar_scoreboard_draw() {
 	}
 	if (ll > 0) {
 		if (tl > 0 || fl > 0)
-			str = strcat(str, " or");
+			str = strcat(str, " or ");
 
 		if (team_mode) {
-			str = strcat(str, " until a lead of ^3", score_string(teamscores_flags[ts_primary], ll));
+			arg3 = score_string(teamscores_flags[ts_primary], ll);
+			str = strcat(str, "until a lead of ^3", arg3);
 			if (teamscores_label[ts_primary] == "score")
 				str = strcat(str, " points^7");
 			else if (teamscores_label[ts_primary] == "fastest")
@@ -1304,7 +1309,8 @@ void sbar_scoreboard_draw() {
 			else
 				str = strcat(str, " ", teamscores_label[ts_primary]);
 		} else {
-			str = strcat(str, " until a lead of ^3", score_string(scores_flags[ps_primary], ll));
+			arg3 = score_string(scores_flags[ps_primary], ll);
+			str = strcat(str, "until a lead of ^3", arg3);
 			if (scores_label[ps_primary] == "score")
 				str = strcat(str, " points^7");
 			else if (scores_label[ps_primary] == "fastest")
@@ -1314,6 +1320,7 @@ void sbar_scoreboard_draw() {
 		}
 	}
 	if (str != "") {
+		str = print_text_prepare(str, arg1, arg2, arg3);
 		drawcolorcodedstring(pos + '0.5 0 0' * (sbar_width - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
 		pos_y += sbar_fontsize_y;
 	}
