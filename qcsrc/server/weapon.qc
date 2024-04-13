@@ -756,7 +756,7 @@ float(float secondary, float attacktime) weapon_prepareattack {
 	}
 	if (attacktime >= 0) {
 		// don't fire if previous attack is not finished
-		if (WEAPON_ATTACK_FINISHED(self) > time + frametime * 0.5)
+		if (WEAPON_ATTACK_FINISHED(self) > time)
 			return FALSE;
 
 		// don't fire while changing weapon
@@ -788,7 +788,7 @@ float(float secondary, float attacktime) weapon_prepareattack {
 	self.weaponentity.state = WEAPON_STATE_INUSE;
 	// if the weapon hasn't been firing continuously, reset the timer
 	if (attacktime >= 0) {
-		if (WEAPON_ATTACK_FINISHED(self) < time - frametime * 1.5) {
+		if (WEAPON_ATTACK_FINISHED(self) <= self.ltime) {
 			WEAPON_ATTACK_FINISHED(self) = time;
 			//dprint("resetting attack finished to ", ftos(time), "\n");
 		}

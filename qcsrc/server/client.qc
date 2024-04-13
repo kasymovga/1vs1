@@ -701,6 +701,8 @@ void(void) client_post_think { //called by engine
 	}
 	if (self.classname == "player")
 		player_post_think();
+
+	self.ltime = time;
 }
 
 void(entity e, string args, float set) client_ability_hookuseswap_init {
