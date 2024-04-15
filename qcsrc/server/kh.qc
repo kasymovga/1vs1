@@ -1,4 +1,4 @@
-#define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
+#define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.weaponentity )
 
 float ST_KH_CAPS;
 float SP_KH_CAPS;
@@ -27,11 +27,8 @@ float kh_roundbased;
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
 .float kh_state;
-.float siren_time;  //  time delay the siren
-//.float stuff_time;  //  time delay to stuffcmd a cvar
 
 entity kh_worldkeylist;
-.entity kh_worldkeynext;
 entity kh_controller;
 float kh_tracking_enabled;
 float kh_teams;
@@ -39,9 +36,6 @@ string kh_teams_missed;
 float kh_interferemsg_time, kh_interferemsg_team;
 .entity kh_next, kh_prev; // linked list
 .float kh_droptime;
-.float kh_dropperteam;
-.entity kh_previous_owner;
-.float kh_previous_owner_playerid;
 
 string kh_sound_capture = "kh/capture.wav";
 string kh_sound_destroy = "kh/destroy.wav";
@@ -143,8 +137,8 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.damageforcescale = g_kh_damageforcescale;
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
-	key.kh_previous_owner = key.owner;
-	key.kh_previous_owner_playerid = key.owner.playerid;
+	key.realowner = key.owner;
+	key.playerid = key.owner.playerid;
 }
 
 void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is picked up or assigned. Runs prior to kh_key_attach
@@ -284,7 +278,7 @@ void kh_Key_Spawn(entity key, entity initial_owner, float angle, float i)  // ru
 	key.event_damage = kh_key_damage;
 	key.takedamage = DAMAGE_YES;
 	setmodel(key, "models/keyhunt/key.md3");
-	key.kh_dropperteam = 0;
+	key.lip = 0;
 	key.effects &= ~EFFECT_NODRAW;
 	key.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
@@ -352,12 +346,12 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 {
 	sound(player, CHAN_AUTO, kh_sound_collect, VOL_BASE, ATTN_NORM);
 
-	if(key.kh_dropperteam != player.team)
+	if(key.lip != player.team)
 	{
 		kh_Scores_Event(player, key, g_kh_score_collect, 0);
 		score_player_add(player, SP_KH_PICKUPS, 1);
 	}
-	key.kh_dropperteam = 0;
+	key.lip = 0;
 	print_all(PRINT_INFO, "{1}^7 picked up the {2}", player.netname, key.netname, "");
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 	RM(rm_hud_flash_teamcolor_default_spec(player));
@@ -384,7 +378,7 @@ void kh_Key_DropAll(entity player, float suicide, float died) // runs whenever a
 			key.pusher = mypusher;
 			key.pushltime = time + g_kh_protecttime;
 			if(suicide)
-				key.kh_dropperteam = player.team;
+				key.lip = player.team;
 		}
 		sound(player, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
 	}
@@ -438,7 +432,7 @@ void(void) kh_key_think {  // runs all the time
 			self.velocity = weapon_calculate_projectile_velocity(self.owner.velocity, g_kh_throwvelocity * v_forward);
 			kh_Key_AssignTo(self, world);
 			self.pushltime = time + g_kh_protecttime;
-			self.kh_dropperteam = self.team;
+			self.lip = self.team;
 		}
 	}
 	// if in nodrop or time over, respawn key
@@ -451,9 +445,9 @@ void(void) kh_key_think {  // runs all the time
 		if (self.watertype == CONTENT_LAVA || self.watertype == CONTENT_SLIME)
 			entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256);
 	} else if (kh_Key_AllOwnedByWhichTeam() != -1) {
-		if (self.siren_time < time) {
+		if (self.nextstep < time) {
 			sound(self.owner, CHAN_AUTO, kh_sound_alarm, VOL_BASE, ATTN_NORM);  // play a simple alarm
-			self.siren_time = time + 2.5;  // repeat every 2.5 seconds
+			self.nextstep = time + 2.5;  // repeat every 2.5 seconds
 		}
 		entity key;
 		vector p;
@@ -580,8 +574,8 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 
 	if(attacker)
 	{
-		if(lostkey.kh_previous_owner)
-			kh_Scores_Event(lostkey.kh_previous_owner, world, 0, - g_kh_score_push);
+		if(lostkey.realowner && lostkey.playerid == lostkey.realowner.playerid)
+			kh_Scores_Event(lostkey.realowner, world, 0, - g_kh_score_push);
 			// don't actually GIVE him the -nn points, just log
 		kh_Scores_Event(attacker, world, g_kh_score_push, 0);
 		score_player_add(attacker, SP_KH_PUSHES, 1);
@@ -598,12 +592,12 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			if(key.owner && key.team != teem)
 				++mykeys;
 
-		if(lostkey.kh_previous_owner)
-			kh_Scores_Event(lostkey.kh_previous_owner, world, 0, - g_kh_score_destroyed);
+		if(lostkey.realowner && lostkey.playerid == lostkey.realowner.playerid)
+			kh_Scores_Event(lostkey.realowner, world, 0, - g_kh_score_destroyed);
 			// don't actually GIVE him the -nn points, just log
 
-		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
-			score_player_add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
+		if(lostkey.realowner.playerid == lostkey.playerid)
+			score_player_add(lostkey.realowner, SP_KH_DESTROYS, 1);
 
 		print_all(PRINT_INFO, "The {1}^7 could not take care of the {2}", team_colored_name(teem), lostkey.netname, "");
 	}
@@ -857,7 +851,7 @@ void kh_init_delayed()  // sets up th KH environment
 	for (i = 0; i < kh_teams; i++) {
 		key = spawn();
 		key.effects = EFFECT_NODRAW;
-		key.kh_worldkeynext = kh_worldkeylist;
+		key.weaponentity = kh_worldkeylist; //use weaponentity field for global key chain
 		kh_worldkeylist = key;
 		key.team = team_from_index(i);
 		WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, 0, key, waypointsprite_attachedforcarrier, FALSE);
