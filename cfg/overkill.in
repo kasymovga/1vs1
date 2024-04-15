@@ -57,7 +57,7 @@ set overkill_g_weapon_extra_0_secondary_ammo 1 //for ammo check
 set overkill_g_weapon_extra_0_primary_refire 1
 set overkill_g_weapon_extra_0_primary_animtime 0.9
 set overkill_g_weapon_extra_0_primary_sound weapons/nexfire.wav
-set overkill_g_weapon_extra_0_primary_message "sniped by"
+set overkill_g_weapon_extra_0_primary_message "was sniped by"
 set overkill_g_weapon_extra_0_reloadtime 2
 set overkill_g_start_weapon_ok_sniper 1
 set overkill_g_weapon_extra_1_model ok_mg

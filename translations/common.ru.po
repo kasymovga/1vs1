@@ -428,7 +428,7 @@ msgid "Waiting for players to join...\n\nNeed active players for: {2}"
 msgstr "Ждём присоединения игроков...\n\nНужны игроки для: {$2}"
 
 msgid "{1}^7 died and lost the {2}"
-msgstr "{1}^7 помер и потерял {2}"
+msgstr "{1}^7 помер и потерял {$2}"
 
 msgid "\nScanning frequency range..."
 msgstr "\nСканируем частоты..."
@@ -627,3 +627,21 @@ msgstr "Рекорды карты..."
 
 msgid "^7for ^1{1} minutes^7"
 msgstr "^7до ^1{1} минут^7"
+
+msgid "^1Begin!"
+msgstr "^1Начали!"
+
+msgid "^1Game starts in {1} seconds"
+msgstr "^1Игра начнётся через {1} секунд"
+
+msgid "{1} was cooked by {2}"
+msgstr "{1} был приготовлен игроком {2}"
+
+msgid "{1} turned into hot slag"
+msgstr "{1} превратился в кипящий шлак"
+
+msgid "Walkie-Talkie"
+msgstr "Рация"
+
+msgid "^3Shield has worn off"
+msgstr "^3Щит закончился"

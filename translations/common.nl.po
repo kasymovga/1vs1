@@ -645,3 +645,21 @@ msgstr "Map records..."
 
 msgid "^7for ^1{1} minutes^7"
 msgstr "^7for ^1{1} minutes^7"
+
+msgid "^1Begin!"
+msgstr "^1Begin!"
+
+msgid "^1Game starts in {1} seconds"
+msgstr "^1Game starts in {1} seconds"
+
+msgid "{1} was cooked by {2}"
+msgstr "{1} was cooked by {2}"
+
+msgid "{1} turned into hot slag"
+msgstr "{1} turned into hot slag"
+
+msgid "Walkie-Talkie"
+msgstr "Walkie-Talkie"
+
+msgid "^3Shield has worn off"
+msgstr "^3Shield has worn off"
