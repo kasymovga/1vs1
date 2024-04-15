@@ -8,19 +8,9 @@ float SP_KH_PICKUPS;
 float SP_KH_KCKILLS;
 float SP_KH_LOSSES;
 
-// #define KH_PLAYER_USE_ATTACHMENT
-
-#ifdef KH_PLAYER_USE_ATTACHMENT
-vector KH_PLAYER_ATTACHMENT_DIST_ROTATED = '0 -4 0';
-vector KH_PLAYER_ATTACHMENT_DIST = '4 0 0';
-vector KH_PLAYER_ATTACHMENT = '0 0 0';
-vector KH_PLAYER_ATTACHMENT_ANGLES = '0 0 0';
-string KH_PLAYER_ATTACHMENT_BONE = "";
-#else
 float KH_KEY_ZSHIFT = 22;
 float KH_KEY_XYDIST = 24;
 float KH_KEY_XYSPEED = 45;
-#endif
 float KH_KEY_WP_ZSHIFT = 20;
 
 vector KH_KEY_MIN = '-10 -10 -46';
@@ -39,15 +29,6 @@ float kh_roundbased;
 .float kh_state;
 .float siren_time;  //  time delay the siren
 //.float stuff_time;  //  time delay to stuffcmd a cvar
-
-float kh_Team_ByID(float t)
-{
-	if(t == 0) return COLOR_TEAM1;
-	if(t == 1) return COLOR_TEAM2;
-	if(t == 2) return COLOR_TEAM3;
-	if(t == 3) return COLOR_TEAM4;
-	return 0;
-}
 
 entity kh_worldkeylist;
 .entity kh_worldkeynext;
@@ -149,37 +130,9 @@ vector kh_AttachedOrigin(entity e)  // runs when a team captures the flag, it ca
 
 void kh_Key_Attach(entity key)  // runs when a player picks up a key and several times when a key is assigned to a player at the start of a round
 {
-#ifdef KH_PLAYER_USE_ATTACHMENT
-	entity first;
-	first = key.owner.kh_next;
-	if(key == first)
-	{
-		setattachment(key, key.owner.body, KH_PLAYER_ATTACHMENT_BONE);
-		if(key.kh_next)
-		{
-			setattachment(key.kh_next, key, "");
-			setorigin(key, key.kh_next.origin - 0.5 * KH_PLAYER_ATTACHMENT_DIST);
-			setorigin(key.kh_next, KH_PLAYER_ATTACHMENT_DIST_ROTATED);
-			key.kh_next.angles = '0 0 0';
-		}
-		else
-			setorigin(key, KH_PLAYER_ATTACHMENT);
-		key.angles = KH_PLAYER_ATTACHMENT_ANGLES;
-	}
-	else
-	{
-		setattachment(key, key.kh_prev, "");
-		if(key.kh_next)
-			setattachment(key.kh_next, key, "");
-		setorigin(key, KH_PLAYER_ATTACHMENT_DIST_ROTATED);
-		setorigin(first, first.origin - 0.5 * KH_PLAYER_ATTACHMENT_DIST);
-		key.angles = '0 0 0';
-	}
-#else
 	setattachment(key, key.owner.body, "");
 	setorigin(key, '0 0 1' * KH_KEY_ZSHIFT);  // fixing x, y in think
 	key.angles_y -= key.owner.angles_y;
-#endif
 	key.flags = 0;
 	key.solid = SOLID_NOT;
 	key.movetype = MOVETYPE_NONE;
@@ -191,33 +144,9 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 
 void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs several times times when all the keys are captured
 {
-#ifdef KH_PLAYER_USE_ATTACHMENT
-	entity first;
-	first = key.owner.kh_next;
-	if(key == first)
-	{
-		if(key.kh_next)
-		{
-			setattachment(key.kh_next, key.owner.body, KH_PLAYER_ATTACHMENT_BONE);
-			setorigin(key.kh_next, key.origin + 0.5 * KH_PLAYER_ATTACHMENT_DIST);
-			key.kh_next.angles = KH_PLAYER_ATTACHMENT_ANGLES;
-		}
-	}
-	else
-	{
-		if(key.kh_next)
-			setattachment(key.kh_next, key.kh_prev, "");
-		setorigin(first, first.origin + 0.5 * KH_PLAYER_ATTACHMENT_DIST);
-	}
-	// in any case:
-	setattachment(key, world, "");
-	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN_z - KH_KEY_MIN_z));
-	key.angles = key.owner.angles;
-#else
 	setorigin(key, key.owner.origin + key.origin_z * '0 0 1');
 	setattachment(key, world, "");
 	key.angles_y += key.owner.angles_y;
-#endif
 	key.flags = FL_ITEM;
 	key.solid = SOLID_TRIGGER;
 	key.movetype = MOVETYPE_TOSS;
@@ -505,10 +434,8 @@ void(void) kh_key_think {  // runs all the time
 		return;
 
 	if (self.owner) {
-#ifndef KH_PLAYER_USE_ATTACHMENT
 		makevectors('0 1 0' * (self.cnt + math_mod(time, 360) * KH_KEY_XYSPEED));
 		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin_z);
-#endif
 		if (self.owner.BUTTON_DROP)
 		if (time >= self.owner.kh_droptime + g_kh_delay_drop) {
 			self.owner.kh_droptime = time;
@@ -699,12 +626,10 @@ void kh_FinishRound()  // runs when a team captures the keys
 	// prepare next round
 	kh_interferemsg_time = 0;
 	entity key;
-
 	kh_no_radar_circles = TRUE;
 	FOR_EACH_KH_KEY(key)
 		kh_Key_Hide(key);
 	kh_no_radar_circles = FALSE;
-
 	kh_Controller_SetThink(g_kh_delay_round, "Round starts in {1}", kh_StartRound);
 }
 
@@ -716,7 +641,7 @@ string kh_CheckEnoughPlayers()  // checks enough player are present, runs after 
 	str_unzone_ifneeded(kh_teams_missed);
 	kh_teams_missed = "";
 	for (i = 0; i < kh_teams; ++i) {
-		teem = kh_Team_ByID(i);
+		teem = team_from_index(i);
 		players = 0;
 		FOR_EACH_PLAYER(player)
 			if (player.deadflag == DEAD_NO)
@@ -738,13 +663,11 @@ string kh_CheckEnoughPlayers()  // checks enough player are present, runs after 
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
 	string teams_missing;
-
 	if(time < map_starttime)
 	{
 		kh_Controller_SetThink(map_starttime - time + 0.1, "", kh_WaitForPlayers);
 		return;
 	}
-
 	teams_missing = kh_CheckEnoughPlayers();
 	if (teams_missing == "")
 		kh_Controller_SetThink((kh_roundbased ? 0 : g_kh_delay_round), "Round starts in {1}", kh_StartRound);
@@ -757,7 +680,6 @@ void kh_StartRound()  // runs at the start of each round
 	string teams_missing;
 	float i, players, teem;
 	entity player;
-
 	if(time < map_starttime)
 	{
 		kh_Controller_SetThink(map_starttime - time + 0.1, "", kh_WaitForPlayers);
@@ -776,7 +698,7 @@ void kh_StartRound()  // runs at the start of each round
 	i = 0;
 	FOR_EACH_KH_KEY(key)
 	{
-		teem = kh_Team_ByID(i);
+		teem = team_from_index(i);
 		players = 0;
 		entity my_player = NULL;
 		FOR_EACH_PLAYER(player)
@@ -853,7 +775,6 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 			// the frag gets added later
 		}
 	}
-
 	return f;
 }
 
@@ -949,7 +870,7 @@ void kh_init_delayed()  // sets up th KH environment
 		key.effects = EFFECT_NODRAW;
 		key.kh_worldkeynext = kh_worldkeylist;
 		kh_worldkeylist = key;
-		key.team = kh_Team_ByID(i);
+		key.team = team_from_index(i);
 		WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, 0, key, waypointsprite_attachedforcarrier, FALSE);
 		key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
 		WaypointSprite_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
@@ -985,7 +906,6 @@ void kh_update_state()
 	entity key;
 	float s;
 	float f;
-
 	s = 0;
 	FOR_EACH_KH_KEY(key)
 	{
@@ -995,16 +915,13 @@ void kh_update_state()
 			f = 30;
 		s |= pow(32, key.count) * f;
 	}
-
 	FOR_EACH_CLIENT(player)
 	{
 		player.kh_state = s;
 	}
-
 	FOR_EACH_KH_KEY(key)
 	{
 		if(key.owner)
 			key.owner.kh_state |= pow(32, key.count) * 31;
 	}
-	//print(ftos((nextent(world)).kh_state), "\n");
 }
