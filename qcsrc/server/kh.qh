@@ -1,22 +1,4 @@
-.float kh_state;
-float kh_teams;
+void kh_init(void);
 float kh_tracking_enabled;
-.entity kh_next, kh_prev;
-
-void kh_Key_Attach(entity key);
-void kh_Key_Detach(entity key);
-void kh_Key_AssignTo(entity key, entity player);
-void kh_Key_Collect(entity key, entity player);
-void kh_Key_Touch();
-void kh_WinnerTeam(float teem);
-void kh_LoserTeam(float teem, entity lostkey);
-void kh_FinishRound();
-void kh_StartRound();
-void kh_EnableTrackingDevice();
-void kh_init();
-float kh_KeyCarrier_waypointsprite_visible_for_player(entity e);
-float kh_Key_waypointsprite_visible_for_player(entity e);
-float kh_HandleFrags(entity attacker, entity targ, float f);
-float kh_Key_AllOwnedByWhichTeam();
-
-void kh_update_state();
+.entity kh_next, kh_prev; // linked list
+float(void) kh_Key_AllOwnedByWhichTeam;
