@@ -117,17 +117,6 @@ void kh_Scores_Event(entity player, entity key, float frags_player, float frags_
 		score_player_team_add_score(key.owner, frags_owner);
 }
 
-vector kh_AttachedOrigin(entity e)  // runs when a team captures the flag, it can run 2 or 3 times.
-{
-	if(e.tag_entity)
-	{
-		makevectors(e.tag_entity.angles);
-		return e.tag_entity.origin + e.origin_x * v_forward - e.origin_y * v_right + e.origin_z * v_up;
-	}
-	else
-		return e.origin;
-}
-
 void kh_Key_Attach(entity key)  // runs when a player picks up a key and several times when a key is assigned to a player at the start of a round
 {
 	setattachment(key, key.owner.body, "");
@@ -535,7 +524,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 	{
 		vector thisorigin;
 
-		thisorigin = kh_AttachedOrigin(key);
+		thisorigin = ENTITY_CENTER(key.owner);
 		//dprint("Key origin: ", vtos(thisorigin), "\n");
 		midpoint += thisorigin;
 
