@@ -3,3 +3,4 @@ void(void) world_winners_clear;
 void(.float field, float value) world_winners_add;
 void(.float field, float value) world_winners_set;
 float world_initialized;
+float world_dedicated;

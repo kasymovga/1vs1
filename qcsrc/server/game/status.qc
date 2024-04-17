@@ -27,9 +27,7 @@ void(string status, float _delay, string arg1, string arg2, string arg3) game_st
 	RM({
 		if (!game_status || game_status.message != status || game_status.nextthink + 1 < time + _delay || game_status.target != arg1 || game_status.target2 != arg2) {
 			float split = strstrofs(status, "\n", 0);
-			if (arg1 != "") status = strreplace("{1}", arg1, status);
-			if (arg2 != "") status = strreplace("{2}", arg2, status);
-			if (arg3 != "") status = strreplace("{3}", arg3, status);
+			status = print_text_prepare(status, arg1, arg2, arg3);
 			rm_bigprint_all(" ", " ", _delay);
 			if (split >= 0) {
 				rm_bigprint_all(substring(status, 0, split), substring(status, split + 1, -1), _delay);

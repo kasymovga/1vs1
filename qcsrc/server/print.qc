@@ -1,3 +1,10 @@
+string(string text, string arg1, string arg2, string arg3) print_text_prepare {
+	if (arg1 != "") text = strreplace("{1}", arg1, text);
+	if (arg2 != "") text = strreplace("{2}", arg2, text);
+	if (arg3 != "") text = strreplace("{3}", arg3, text);
+	return text;
+}
+
 void(entity cl, float type, string s, string arg1, string arg2, string arg3) print_to {
 	msg_entity = cl;
 	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
@@ -78,5 +85,11 @@ void(float type, string s, string arg1, string arg2, string arg3) print_all {
 	entity e;
 	FOR_EACH_REALCLIENT(e) {
 		print_to(e, type, s, arg1, arg2, arg3);
+	}
+	if (world_dedicated) {
+		s = strcat(print_text_prepare(s, arg1, arg2, arg3), "\n");
+		print(s);
+		if (type == PRINT_CHAT)
+			plugin_chain_PublicPlayerChat(NULL, s);
 	}
 }
