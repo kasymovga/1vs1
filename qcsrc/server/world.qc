@@ -84,6 +84,7 @@ void(void) world_precache {
 
 
 void(void) world_static_init {
+	world_dedicated = builtin_cvar("_sv_init");;
 	minstagib_init();
 	weapon_extra_init();
 	item_init();
