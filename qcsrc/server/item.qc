@@ -1045,6 +1045,7 @@ void(void) spawnfunc_item_mushroom {
 }
 
 voidfunc(string s) item_spawnfunc_for {
+	if (s == "nails") s = "bullets";
 	if (plugin_chain_ItemForbidden(strcat("item_", s)))
 		return NULL;
 
