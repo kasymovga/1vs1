@@ -122,7 +122,7 @@ floatfield(float it) item_counter_field {
 string(float it) item_counter_field_name {
 	switch (it) {
 	case IT_SHELLS:      return "shells";
-	case IT_NAILS:       return "nails";
+	case IT_NAILS:       return "bullets";
 	case IT_ROCKETS:     return "rockets";
 	case IT_CELLS:       return "cells";
 	// add more things here (health, armor)
