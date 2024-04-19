@@ -175,52 +175,39 @@ void(entity platform) entity_drop_entities {
 	}
 }
 
-void(entity e, vector by, float t) entity_move_out_of_solid_expand {
-	float eps = 0.0625;
-	trace_box(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, t, e);
+float(entity e, vector m0, vector m1, float t, vector to) entity_move_out_of_solid_to {
+	to_x *= (m1_x - m0_x);
+	to_y *= (m1_y - m0_y);
+	to_z *= (m1_z - m0_z);
+	trace_box(e.origin + to, m0, m1, e.origin, t, e);
 	if (trace_startsolid)
-		return;
+		return FALSE;
 
-	if (trace_fraction < 1) {
-		// hit something
-		// adjust origin in the other direction...
-		setorigin(e,e.origin - by * (1 - trace_fraction));
-	}
+	setorigin(e, trace_endpos);
+	return TRUE;
 }
 
 float(entity e, float t) entity_move_out_of_solid_with_type {
 	vector o, m0, m1;
 	o = e.origin;
-	trace_line(o, o, t, e);
-	if (trace_startsolid)
-		return 0;
-
-	trace_box(o, e.mins, e.maxs, o, t, e);
+	m0 = e.mins;
+	m1 = e.maxs;
+	trace_box(o, m0, m1, o, t, e);
 	if (!trace_startsolid)
 		return 1;
 
-	m0 = e.mins;
-	m1 = e.maxs;
-	e.mins = '0 0 0';
-	e.maxs = '0 0 0';
-	entity_move_out_of_solid_expand(e, '1 0 0' * m0_x, t);
-	e.mins_x = m0_x;
-	entity_move_out_of_solid_expand(e, '1 0 0' * m1_x, t);
-	e.maxs_x = m1_x;
-	entity_move_out_of_solid_expand(e, '0 1 0' * m0_y, t);
-	e.mins_y = m0_y;
-	entity_move_out_of_solid_expand(e, '0 1 0' * m1_y, t);
-	e.maxs_y = m1_y;
-	entity_move_out_of_solid_expand(e, '0 0 1' * m0_z, t);
-	e.mins_z = m0_z;
-	entity_move_out_of_solid_expand(e, '0 0 1' * m1_z, t);
-	e.maxs_z = m1_z;
-	setorigin(e, e.origin);
-	trace_box(e.origin, e.mins, e.maxs, e.origin, TRACE_MOVE_WORLDONLY, e);
-	if (trace_startsolid) {
-		setorigin(e, o);
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '1 0 0'))
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '0 1 0'))
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '-1 0 0'))
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '0 -1 0'))
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '1 1 0'))
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '1 -1 0'))
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '-1 1 0'))
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '-1 -1 0'))
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '0 0 1'))
+	if not(entity_move_out_of_solid_to(e, m0, m1, t, '0 0 -1'))
 		return 0;
-	}
+
 	return 1;
 }
 
