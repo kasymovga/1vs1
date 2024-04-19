@@ -73,6 +73,7 @@ float g_balance_powerup_invisibility_time;
 float g_balance_powerup_invincible_time;
 float g_balance_powerup_speed_time;
 float g_pickup_weapon_ammo_limit;
+float g_pickup_dropped_lifetime;
 string sv_model_powerupstrength;
 string sv_model_powerupinvincible;
 string sv_model_powerupinvisibility;
@@ -654,7 +655,9 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 		self.reset = stdproc_remove;
 		// it's a dropped weapon
 		self.movetype = MOVETYPE_TOSS;
-		entity_fade_setup(self, time + 60, 1);
+		if (g_pickup_dropped_lifetime > 0)
+			entity_fade_setup(self, time + g_pickup_dropped_lifetime, 1);
+
 		trace_line(self.origin, self.origin, TRACE_MOVE_NORMAL, self);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
 			goto item_start_fail;
@@ -1179,6 +1182,7 @@ void(void) item_init {
 	CVAR_CACHE(g_balance_powerup_invincible_time);
 	CVAR_CACHE(g_balance_powerup_speed_time);
 	CVAR_CACHE(g_pickup_weapon_ammo_limit);
+	CVAR_CACHE(g_pickup_dropped_lifetime);
 	CVAR_CACHE(sv_item_tracecull);
 	CVAR_CACHE_STR(sv_model_powerupstrength);
 	CVAR_CACHE_STR(sv_model_powerupinvincible);
