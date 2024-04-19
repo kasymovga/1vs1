@@ -28,6 +28,7 @@ float g_balance_pause_armor_rot_spawn;
 float g_balance_pause_fuel_rot_spawn;
 float g_balance_pause_health_regen_spawn;
 float g_balance_pause_health_rot_spawn;
+float g_player_obituary;
 float g_forced_respawn;
 float g_teamdamage_resetspeed;
 float g_reset_on_join;
@@ -184,6 +185,7 @@ void(float killed) player_clear {
 }
 
 void(string s, string a1, string a2, string a3) player_obituary_print_all {
+	if (g_player_obituary)
 	if not(sv_notification_type) print_all(PRINT_INFO, s, a1, a2, a3);
 }
 
@@ -405,6 +407,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 	if (targ.killcount)
 		targ.killcount = 0;
 
+	if (g_player_obituary)
 	if (sv_notification_type) {
 		notification(attacker, NOTIFICATION_DEATH, deathtype, targ);
 	}
@@ -1292,6 +1295,7 @@ void() player_init {
 	CVAR_CACHE(g_balance_pause_fuel_rot_spawn);
 	CVAR_CACHE(g_balance_pause_health_regen_spawn);
 	CVAR_CACHE(g_balance_pause_health_rot_spawn);
+	CVAR_CACHE(g_player_obituary);
 	CVAR_CACHE(g_forced_respawn);
 	CVAR_CACHE(g_teamdamage_resetspeed);
 	CVAR_CACHE(g_reset_on_join);
