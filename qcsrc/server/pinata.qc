@@ -10,7 +10,7 @@ float() pinata_player_death_weapon_throw_handle {
 	WEAPON_INFO_FOR_EACH(wi) {
 		if ((self.weapons & wi.weapons) || (self.weapons_extra & wi.weapons_extra))
 			if (weapon_throwable(wi.weapon) || g_pinata_drop_all)
-				weapon_throw_new(self, wi.weapon, FALSE, self.origin, randomvec() * 175 + '0 0 325');
+				weapon_throw_new(self, wi.weapon, FALSE, ENTITY_CENTER(self), randomvec() * 175 + '0 0 325');
 	}
 	return TRUE;
 }

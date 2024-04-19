@@ -332,41 +332,32 @@ vector(entity own, float wpn, float doreduce, vector org, vector velo) weapon_th
 	wep.owner = wep.enemy = own;
 	wep.colormap = own.colormap;
 	wa = weapon_ammo_item_code(wpn);
-	if (wa == IT_SUPERWEAPON || (wa == 0 && !g_weapon_throw_noammo)) {
-		oldself = self;
-		self = wep;
-		weapon_defaultspawnfunc(wpn);
-		self = oldself;
-		if (item_start_failed)
-			return '-1 0 0';
+	oldself = self;
+	self = wep;
+	weapon_defaultspawnfunc(wpn);
+	self = oldself;
+	if (item_start_failed)
+		return '-1 0 0';
 
-		wep.think = weapon_thrown_think;
-		wep.nextthink = time + 0.5;
+	entity_move_out_of_solid_with_type(wep, TRACE_MOVE_NORMAL);
+	wep.think = weapon_thrown_think;
+	wep.nextthink = time + 0.5;
+	if (wa == IT_SUPERWEAPON || (wa == 0 && !g_weapon_throw_noammo)) { //probably this code not needed
 		return '0 0 0';
-	} else {
-		oldself = self;
-		self = wep;
-		weapon_defaultspawnfunc(wpn);
-		self = oldself;
-		if (item_start_failed)
-			return '-1 0 0';
-
-		thisammo = 0;
-		if (doreduce || g_weapon_throw_mode) {
-			ammofield = item_counter_field(wa);
-			if (ammofield) {
-				thisammo = min(own.ammofield, wep.ammofield);
-				if (thisammo <= 0)
-					thisammo = own.ammofield;
-
-				wep.ammofield = thisammo;
-				own.ammofield -= thisammo;
-			}
-		}
-		wep.think = weapon_thrown_think;
-		wep.nextthink = time + 0.5;
-		return wa * '1 0 0' + thisammo * '0 1 0';
 	}
+	thisammo = 0;
+	if (doreduce || g_weapon_throw_mode) {
+		ammofield = item_counter_field(wa);
+		if (ammofield) {
+			thisammo = min(own.ammofield, wep.ammofield);
+			if (thisammo <= 0)
+				thisammo = own.ammofield;
+
+			wep.ammofield = thisammo;
+			own.ammofield -= thisammo;
+		}
+	}
+	return wa * '1 0 0' + thisammo * '0 1 0';
 }
 
 float(float w) weapon_throwable {
@@ -392,7 +383,7 @@ float(float w) weapon_throwable {
 }
 
 // toss current weapon
-void(vector velo, vector delta, float doreduce) weapon_throw {
+void(vector velo, float doreduce) weapon_throw {
 	float w;
 	entity wi;
 	vector a;
@@ -430,7 +421,7 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 		self.weapons_extra &= ~wi.weapons_extra;
 		weapon_switch_force(self, weapon_best(self));
 	}
-	a = weapon_throw_new(self, w, doreduce, self.origin + delta, velo);
+	a = weapon_throw_new(self, w, doreduce, ENTITY_CENTER(self), velo);
 	if (a_x < 0)
 		return;
 

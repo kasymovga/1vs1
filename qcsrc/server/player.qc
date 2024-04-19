@@ -582,7 +582,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
         entity_drop_entities(self);
 		// clear selected player display
 		if not(plugin_chain_player_death_weapon_throw_handle())
-			weapon_throw(randomvec() * 125 + '0 0 200', (self.mins + self.maxs) * 0.5, FALSE);
+			weapon_throw(randomvec() * 125 + '0 0 200', FALSE);
 
 		self.switchweapon = switchweapon_save;
 		// print an obituary message
@@ -965,7 +965,7 @@ void(void) player_impulse {
 				if (plugin_chain_weapon_throw_handle())
 					return;
 
-				weapon_throw(weapon_calculate_projectile_velocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
+				weapon_throw(weapon_calculate_projectile_velocity(self.velocity, v_forward * 750), TRUE);
 				break;
 			case 18:
 				weapon_next(1);
