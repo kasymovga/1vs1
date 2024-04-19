@@ -321,10 +321,9 @@ void(void) weapon_thrown_think {
 }
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
-string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_throw_new {
+vector(entity own, float wpn, float doreduce, vector org, vector velo) weapon_throw_new {
 	entity oldself, wep;
 	float wa, thisammo, i;
-	string s;
 	var .float ammofield;
 	wep = spawn();
 	setorigin(wep, org);
@@ -339,20 +338,20 @@ string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_th
 		weapon_defaultspawnfunc(wpn);
 		self = oldself;
 		if (item_start_failed)
-			return NULL;
+			return '-1 0 0';
 
 		wep.think = weapon_thrown_think;
 		wep.nextthink = time + 0.5;
-		return "";
+		return '0 0 0';
 	} else {
-		s = "";
 		oldself = self;
 		self = wep;
 		weapon_defaultspawnfunc(wpn);
 		self = oldself;
 		if (item_start_failed)
-			return NULL;
+			return '-1 0 0';
 
+		thisammo = 0;
 		if (doreduce || g_weapon_throw_mode) {
 			ammofield = item_counter_field(wa);
 			if (ammofield) {
@@ -362,13 +361,11 @@ string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_th
 
 				wep.ammofield = thisammo;
 				own.ammofield -= thisammo;
-				s = strcat(s, " and ", ftos(thisammo), " ", item_counter_field_name(wa));
-				s = substring(s, 5, -1);
 			}
 		}
 		wep.think = weapon_thrown_think;
 		wep.nextthink = time + 0.5;
-		return s;
+		return wa * '1 0 0' + thisammo * '0 1 0';
 	}
 }
 
@@ -398,7 +395,7 @@ float(float w) weapon_throwable {
 void(vector velo, vector delta, float doreduce) weapon_throw {
 	float w;
 	entity wi;
-	string a;
+	vector a;
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
@@ -434,15 +431,15 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 		weapon_switch_force(self, weapon_best(self));
 	}
 	a = weapon_throw_new(self, w, doreduce, self.origin + delta, velo);
-	if not(a)
+	if (a_x < 0)
 		return;
 
 	if (self.health >= 1) {
 		if (clienttype(self) == CLIENTTYPE_REAL) {
-			if (a == "")
+			if not(a_x)
 				print_to(self, PRINT_INFO, "You dropped the ^2{1}", weapon_name(w), "", "");
 			else
-				print_to(self, PRINT_INFO, "You dropped the ^2{1} with {2}", weapon_name(w), a, "");
+				print_to(self, PRINT_INFO, "You dropped the ^2{1} with {2} {3}", weapon_name(w), ftos(a_y), item_counter_field_name(a_x));
 		}
 	}
 }

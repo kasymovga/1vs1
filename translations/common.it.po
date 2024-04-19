@@ -289,8 +289,8 @@ msgstr "Point already captured"
 msgid "{1}^7 lost the {2}"
 msgstr "{1}^7 lost the {2}"
 
-msgid "You dropped the ^2{1} with {2}"
-msgstr "You dropped the ^2{1} with {2}"
+msgid "You dropped the ^2{1} with {2} {3}"
+msgstr "You dropped the ^2{1} with {2} {3}"
 
 msgid "You do not have the ^2{1}"
 msgstr "You do not have the ^2{1}"

@@ -85,7 +85,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 void(float r) weapon_shake;
 float(entity e) weapon_best;
 float(float w) weapon_throwable;
-string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_throw_new;
+vector(entity own, float wpn, float doreduce, vector org, vector velo) weapon_throw_new;
 void(float wpn) weapon_precache;
 void(entity pl) weapon_show_list;
 void(entity e, float w) weapon_switch_force;

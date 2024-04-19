@@ -289,8 +289,8 @@ msgstr "Точка уже захвачена"
 msgid "{1}^7 lost the {2}"
 msgstr "{1}^7 потерял {$2}"
 
-msgid "You dropped the ^2{1} with {2}"
-msgstr "Вы сбросили ^2{1} с {2}"
+msgid "You dropped the ^2{1} with {2} {3}"
+msgstr "Вы сбросили ^2{1} с {2} {3}"
 
 msgid "You do not have the ^2{1}"
 msgstr "У вас нет ^2{1}"
