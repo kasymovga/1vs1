@@ -77,20 +77,20 @@ void(void) havocbot_ai {
 	if (self.bot_aimtarg && self.bot_aimtarg.bot_attack) {
 		self.aistatus |= AI_STATUS_ATTACKING;
 		self.aistatus &= ~AI_STATUS_ROAMING;
-		if (self.weapon) {
-			if not(plugin_chain_bot_aim())
+		if not(plugin_chain_bot_aim()) {
+			if (self.weapon) {
 				weapon_action(self.weapon, WEAPON_REQUEST_AIM);
-
-			if (bot_nofire || PLAYER_IS_INDEPENDENT(self)) {
-				self.BUTTON_ATCK = FALSE;
-				self.BUTTON_ATCK2 = FALSE;
 			} else {
-				if (self.BUTTON_ATCK||self.BUTTON_ATCK2)
-					self.lastfiredweapon = self.weapon;
+				if (self.bot_aimtarg.classname == "player")
+					bot_aim_dir(self.bot_aimtarg.origin + self.bot_aimtarg.view_ofs - self.origin - self.view_ofs , -1);
 			}
+		}
+		if (bot_nofire || PLAYER_IS_INDEPENDENT(self)) {
+			self.BUTTON_ATCK = FALSE;
+			self.BUTTON_ATCK2 = FALSE;
 		} else {
-			if (self.bot_aimtarg.classname=="player")
-				bot_aim_dir(self.bot_aimtarg.origin + self.bot_aimtarg.view_ofs - self.origin - self.view_ofs , -1);
+			if (self.BUTTON_ATCK||self.BUTTON_ATCK2)
+				self.lastfiredweapon = self.weapon;
 		}
 	} else if (self.goalcurrent) {
 		self.aistatus |= AI_STATUS_ROAMING;
