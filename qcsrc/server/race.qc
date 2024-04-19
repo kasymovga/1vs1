@@ -314,7 +314,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 				if (!s || t < s)
 					score_player_set(e, SP_RACE_FASTEST, t);
 
-				print_all(PRINT_INFO, "^1{1}^1 finished lap in {2}", e.netname, TIME_TOSTRING(TIME_DECODE(t)), "");
+				print_all(PRINT_INFO, "^1{1}^1 finished lap in {2}", e.netname, time_mmssss(t), "");
 			} else {
 				s = score_player_add(e, SP_RACE_TIME, 0);
 				snew = TIME_ENCODE(time - map_starttime);
