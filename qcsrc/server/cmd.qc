@@ -380,22 +380,22 @@ void(string command) cmd_game {
 	}
 	if (cmd == "extendmatchtime") {
 		cvar_set("timelimit", ftos(min(cvar("timelimit_max"), cvar("timelimit") + cvar("timelimit_increment"))));
-		bprint("\{1}^2Time limit extended to ", (ftos(cvar("timelimit"))), "\n");
+		print_all(PRINT_CHAT, "^2Time limit extended to {1}", ftos(cvar("timelimit")), "", "");
 		return;
 	}
 	if (cmd == "reducematchtime") {
 		cvar_set("timelimit", ftos(max(cvar("timelimit_min"), cvar("timelimit") - cvar("timelimit_decrement"))));
-		bprint("\{1}^2Time limit reduced to ", (ftos(cvar("timelimit"))), "\n");
+		print_all(PRINT_CHAT, "^2Time limit reduced to {1}", ftos(cvar("timelimit")), "", "");
 		return;
 	}
 	if (cmd == "increasefraglimit") {
 		cvar_set("fraglimit", ftos(min(cvar("fraglimit_max"), cvar("fraglimit") + cvar("fraglimit_increment"))));
-		bprint("\{1}^2Frag limit increased to ", (ftos(cvar("fraglimit"))), "\n");
+		print_all(PRINT_CHAT, "^2Frag limit increased to {1}", ftos(cvar("fraglimit")), "", "");
 		return;
 	}
 	if (cmd == "decreasefraglimit") {
 		cvar_set("fraglimit", ftos(max(cvar("fraglimit_min"), cvar("fraglimit") - cvar("fraglimit_decrement"))));
-		bprint("\{1}^2Frag limit decreased to ", (ftos(cvar("fraglimit"))), "\n");
+		print_all(PRINT_CHAT, "^2Frag limit decreased to {1}", ftos(cvar("fraglimit")), "", "");
 		return;
 	}
 	if (cmd == "stuffcmd") {

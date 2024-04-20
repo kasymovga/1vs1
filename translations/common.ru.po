@@ -669,3 +669,15 @@ msgstr "{1} нуждается в оружии меньшего размера"
 
 msgid "^1Suicide in {1} seconds"
 msgstr "^1Самофраг через {1} секунду"
+
+msgid "{1} could not hide from {2}'s Crylink"
+msgstr "{1} не удаётся спрятаться от Крайлинка игрока {2}"
+
+msgid "^2Time limit extended to {1}"
+msgstr "^2Лимит времени увеличен до {1}"
+
+msgid "You can carry only {1} weapons.\nDrop extra weapons to take this one."
+msgstr "Вы можете нести только {1} оружий.\nСбросьте лишнии чтобы взять это."
+
+msgid "^1Your nadget type has been set to the ^2{1}^1."
+msgstr "^1Ваш типа наджета сменился на ^2{1}^1."

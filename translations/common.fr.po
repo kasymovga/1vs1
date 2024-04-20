@@ -686,3 +686,15 @@ msgstr "{1} should have used a smaller gun"
 
 msgid "^1Suicide in {1} seconds"
 msgstr "^1Suicide in {1} seconds"
+
+msgid "{1} could not hide from {2}'s Crylink"
+msgstr "{1} could not hide from {2}'s Crylink"
+
+msgid "^2Time limit extended to {1}"
+msgstr "^2Time limit extended to {1}"
+
+msgid "You can carry only {1} weapons.\nDrop extra weapons to take this one."
+msgstr "You can carry only {1} weapons.\nDrop extra weapons to take this one."
+
+msgid "^1Your nadget type has been set to the ^2{1}^1."
+msgstr "^1Your nadget type has been set to the ^2{1}^1."
