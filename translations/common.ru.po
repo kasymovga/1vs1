@@ -122,7 +122,7 @@ msgid "^1You were {2}^1fragged by ^7{1}"
 msgstr "^1Вас {2}^1фрагнул ^7{1}"
 
 msgid "^1Watch your step!"
-msgstr "^1Смотрити куда идёте!"
+msgstr "^1Смотрите куда идёте!"
 
 msgid "^1First blood"
 msgstr "^1Первая кровь"
@@ -206,7 +206,7 @@ msgid "{1} took a close look at {2}'s Crylink"
 msgstr "{1} посмотрел слишком близко в Крайлинк игрока {2}"
 
 msgid "{1} ended it all after a {2} kill spree"
-msgstr "{1} закончил существование после череди из {2} фрагов"
+msgstr "{1} закончил существование после очереди из {2} фрагов"
 
 msgid "{1} has been vaporized by {2}"
 msgstr "{1} был испарён игроком {2}"
