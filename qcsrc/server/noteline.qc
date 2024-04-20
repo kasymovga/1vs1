@@ -6,9 +6,11 @@ float noteline_send(entity to, float sf) {
 	net_write_string(MSG_ENTITY, self.message);
 	net_write_string(MSG_ENTITY, self.target);
 	net_write_string(MSG_ENTITY, self.target2);
+	net_write_string(MSG_ENTITY, self.target3);
 	self.message = "";
 	self.target = "";
 	self.target2 = "";
+	self.target3 = "";
 	return TRUE;
 }
 

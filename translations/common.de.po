@@ -662,3 +662,27 @@ msgstr "Walkie-Talkie"
 
 msgid "^3Shield has worn off"
 msgstr "^3Shield has worn off"
+
+msgid "{1} hit the ground with a crunch"
+msgstr "{1} hit the ground with a crunch"
+
+msgid "^3You are on speed"
+msgstr "^3You are on speed"
+
+msgid "^1{1}^1 finished lap in {2}"
+msgstr "^1{1}^1 finished lap in {2}"
+
+msgid "^2* ^3{1}^2's vote for {2}^2 was rejected"
+msgstr "^2* ^3{1}^2's vote for {2}^2 was rejected"
+
+msgid "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\n{3}"
+msgstr "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\n{3}"
+
+msgid "^2Game finished!"
+msgstr "^2Game finished!"
+
+msgid "{1} should have used a smaller gun"
+msgstr "{1} should have used a smaller gun"
+
+msgid "^1Suicide in {1} seconds"
+msgstr "^1Suicide in {1} seconds"

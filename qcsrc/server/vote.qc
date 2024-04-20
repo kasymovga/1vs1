@@ -30,8 +30,6 @@ float realplayeryescount;
 float realplayernocount;
 
 string vote_note_message1;
-string vote_note_message2;
-string vote_note_message3;
 string vote_note_bar;
 
 string sv_announcer_extra_vote_now;
@@ -43,10 +41,7 @@ void(void) vote_note_clear {
 		return;
 
 	strunzone(vote_note_bar);
-	strunzone(vote_note_message1);
 	vote_note_message1 = "";
-	strunzone(vote_note_message2);
-	strunzone(vote_note_message3);
 }
 
 void(void) vote_note_update {
@@ -54,8 +49,7 @@ void(void) vote_note_update {
 		return;
 
 	vote_note_clear();
-	//string s = strcat("^2A vote has been called for ^1", vote_called_vote_display, "^7\n");
-	string s = "^2A vote has been called for ^1{1}^7\n";
+	vote_note_message1 = "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\n{3}";
 	float i, n;
 	vote_note_bar = "^2";
 	n = yescount;
@@ -77,20 +71,17 @@ void(void) vote_note_update {
 
 	//s = strcat(s, "^0[", vote_note_bar, "^0]");
 	vote_note_bar = strzone(vote_note_bar);
-	s = strcat(s, "^0[{2}^0]");
-	vote_note_message1 = strzone(strcat(s, "\nYour vote: ^2Yes"));
-	vote_note_message2 = strzone(strcat(s, "\nYour vote: ^1No"));
-	vote_note_message3 = strzone(strcat(s, "\n^3{vyes} ^2Yes   ^3{vno} ^1No"));
 	vote_note.SendFlags = 1;
 }
 
 void(void) vote_note_message {
+	self.message = vote_note_message1;
 	if (other.vote_vote > 0)
-		self.message = vote_note_message1;
+		self.target3 = "Your vote: ^2Yes";
 	else if (other.vote_vote < 0)
-		self.message = vote_note_message2;
+		self.target3 = "Your vote: ^1No";
 	else
-		self.message = vote_note_message3;
+		self.target3 = "^3{vyes} ^2Yes   ^3{vno} ^1No";
 
 	self.target = vote_called_vote_display;
 	self.target2 = vote_note_bar;
