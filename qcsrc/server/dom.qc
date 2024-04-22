@@ -34,7 +34,15 @@ void(void) dom_controlpoint_captured {
 	self.model = head.mdl;
 	self.modelindex = head.dmg;
 	self.skin = head.skin;
-	print_all(PRINT_INFO, "^3{1}^3{2}", head.netname, self.message, "");
+	if (substring(self.message, 2, 18) == " has captured the ")
+		print_all(PRINT_INFO, "^3{1}^3 has captured the {2}", head.netname, substring(self.message, 20, -1), "");
+	else if (substring(self.message, 0, 18) == " has captured the ")
+		print_all(PRINT_INFO, "^3{1}^3 has captured the {2}", head.netname, substring(self.message, 18, -1), "");
+	else if (substring(self.message, 0, 16) == " has captured a ")
+		print_all(PRINT_INFO, "^3{1}^3 has captured a {2}", head.netname, substring(self.message, 16, -1), "");
+	else
+		print_all(PRINT_INFO, strcat("^3{1}^3", self.message), head.netname, "", "");
+
 	if (self.enemy.playerid == self.playerid)
 		score_player_add(self.enemy, SP_DOM_TAKES, 1);
 	else
