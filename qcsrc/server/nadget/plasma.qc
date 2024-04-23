@@ -58,6 +58,7 @@ void nadget_Plasma_Shard_Think(void) {
 	self.hg_plasma_projdps_next = time + self.hg_plasma_projdps_delay;
 	self.hg_plasma_projdps_last = time;
 	vector o = self.origin;
+	vector o2;
 	float f = cvar("g_nadgets_plasma_projectile_force");
 	for (e = findradius (o, self.hg_plasma_projrange); e; e = e.chain) {
 		if (e == self)
@@ -66,7 +67,8 @@ void nadget_Plasma_Shard_Think(void) {
 		if not(e.takedamage)
 			continue;
 
-		trace_line(o, e.origin, TRACE_MOVE_NOMONSTERS, self);
+		o2 = ENTITY_CENTER(e);
+		trace_line(o, o2, TRACE_MOVE_NOMONSTERS, self);
 		if (trace_fraction < 1)
 		if (trace_ent != e)
 			continue;
@@ -76,7 +78,7 @@ void nadget_Plasma_Shard_Think(void) {
 				NADGET_PLASMA | HITTYPE_BOUNCE, trace_endpos,
 				'0 0 0');
 
-		effect_lightningarc(o, e.origin);
+		effect_lightningarc(o, o2);
 	}
 #if 0
     HealParticleEmitter(self.realowner);
