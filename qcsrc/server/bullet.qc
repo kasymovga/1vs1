@@ -31,7 +31,7 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 	if (entity_per_player_entities)
 		bullet_railgun_projectile.existsonlyfor = self;
 
-	bullet_railgun_projectile.owner = self.owner;
+	bullet_railgun_projectile.owner = akimbo_owner(self);
 	dir = normalize(end - start);
 	// go a little bit into the wall because we need to hit this wall later
 	end = end + dir;
