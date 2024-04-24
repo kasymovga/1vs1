@@ -305,7 +305,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	else if (sbar_hidescores)
 		view_crosshair = FALSE;
 
-	if not(sbar_showscores) {
+	if (!sbar_showscores && !sbar_hidescores) {
 		if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
 			if ((view_spectatee_status > 0 && !view_observer_status) || CVAR(cl_showpressedkeys) >= 2)
 				sbar_pressedkeys_draw();
