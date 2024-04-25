@@ -188,8 +188,13 @@ void(entity e, vector _origin, float impacttype, float deathtype, float _dmg, fl
 			e.gravity = 1;
 	}
 	if (e.owner && e.owner.solid != SOLID_BSP) {
-		trace_box((e.owner.absmax + e.owner.absmin) * 0.5 - (e.mins + e.maxs) * 0.5, e.mins, e.maxs, _origin, TRACE_MOVE_NOMONSTERS, world);
-		setorigin(e, trace_endpos);
+		if (e.mins != e.maxs || e.mins != '0 0 0') {
+			vector v = (e.mins + e.maxs) * 0.5;
+			trace_box((e.owner.absmax + e.owner.absmin) * 0.5 - v, e.mins, e.maxs, _origin - v, TRACE_MOVE_NOMONSTERS, NULL);
+			setorigin(e, trace_endpos);
+		} else {
+			setorigin(e, _origin);
+		}
 	} else
 		setorigin(e, _origin);
 

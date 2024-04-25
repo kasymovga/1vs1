@@ -995,9 +995,10 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	weapon_shotorg = o + v_forward * g_shootforward;
 	weapon_shotorg_visual = weapon_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 48;
 	weapon_shotorg = weapon_shotorg + dv;
-	weapon_shotorg_x = bound(ent.absmin_x + 1.125, weapon_shotorg_x, ent.absmax_x - 1.125);
-	weapon_shotorg_y = bound(ent.absmin_y + 1.125, weapon_shotorg_y, ent.absmax_y - 1.125);
-	weapon_shotorg_z = bound(ent.absmin_z + 1.125, weapon_shotorg_z, ent.absmax_z - 1.125);
+	trace_line(o, weapon_shotorg, TRACE_MOVE_NOMONSTERS, NULL);
+	if (trace_fraction < 1) {
+		weapon_shotorg = trace_endpos + normalize(o - trace_endpos);
+	}
 	// calculate the shotdir from the chosen shotorg
 	if (!g_norecoil) {
 		if (g_recoil_extra && !g_topview) {
@@ -1010,7 +1011,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 		} else
 			ent.punchangle_x = min(ent.punchangle_x, recoil * -1);
 	}
-	if (akimbo_active(ent))
+	if (akimbo_active(ent) || vecs == '0 0 0')
 		weapon_shotdir = s_forward;
 	else {
 		float dphitcontentsmask_save = ent.dphitcontentsmask;
