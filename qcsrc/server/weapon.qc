@@ -991,9 +991,13 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	vecs_visual = ent_orig.weaponentity.shotorg_visual;
 	vecs_visual_y = -vecs_visual_y;
 	dv = v_right * vecs_y + v_up * vecs_z;
-	weapon_shotorg = ent.origin + ent.view_ofs + v_forward * g_shootforward;
+	vector o = ent.origin + ent.view_ofs;
+	weapon_shotorg = o + v_forward * g_shootforward;
 	weapon_shotorg_visual = weapon_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 48;
 	weapon_shotorg = weapon_shotorg + dv;
+	weapon_shotorg_x = bound(ent.absmin_x + 1.125, weapon_shotorg_x, ent.absmax_x - 1.125);
+	weapon_shotorg_y = bound(ent.absmin_y + 1.125, weapon_shotorg_y, ent.absmax_y - 1.125);
+	weapon_shotorg_z = bound(ent.absmin_z + 1.125, weapon_shotorg_z, ent.absmax_z - 1.125);
 	// calculate the shotdir from the chosen shotorg
 	if (!g_norecoil) {
 		if (g_recoil_extra && !g_topview) {
@@ -1011,7 +1015,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	else {
 		float dphitcontentsmask_save = ent.dphitcontentsmask;
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-		warpzone_trace_line(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NOMONSTERS, ent);
+		warpzone_trace_line(o, o + s_forward * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NOMONSTERS, ent);
 		ent.dphitcontentsmask = dphitcontentsmask_save;
 		weapon_shotpoint = warpzone_untransform_origin(warpzone_trace_transform, trace_endpos);
 		weapon_shotdir = normalize(weapon_shotpoint - weapon_shotorg);
