@@ -995,7 +995,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	weapon_shotorg = o + v_forward * g_shootforward;
 	weapon_shotorg_visual = weapon_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 48;
 	weapon_shotorg = weapon_shotorg + dv;
-	trace_line(o, weapon_shotorg, TRACE_MOVE_NOMONSTERS, NULL);
+	trace_line(o, weapon_shotorg, TRACE_MOVE_NORMAL, ent);
 	if (trace_fraction < 1) {
 		weapon_shotorg = trace_endpos + normalize(o - trace_endpos);
 	}
