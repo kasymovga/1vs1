@@ -49,7 +49,7 @@ void(void) vote_note_update {
 		return;
 
 	vote_note_clear();
-	vote_note_message1 = "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\n{3}";
+	vote_note_message1 = "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\n";
 	float i, n;
 	vote_note_bar = "^2";
 	n = yescount;
@@ -77,11 +77,11 @@ void(void) vote_note_update {
 void(void) vote_note_message {
 	self.message = vote_note_message1;
 	if (other.vote_vote > 0)
-		self.target3 = "Your vote: ^2Yes";
+		self.message = strcat(self.message, "Your vote: ^2Yes");
 	else if (other.vote_vote < 0)
-		self.target3 = "Your vote: ^1No";
+		self.message = strcat(self.message, "Your vote: ^1No");
 	else
-		self.target3 = "^3{vyes} ^2Yes   ^3{vno} ^1No";
+		self.message = strcat(self.message, "^3{vyes} ^2Yes   ^3{vno} ^1No");
 
 	self.target = vote_called_vote_display;
 	self.target2 = vote_note_bar;
