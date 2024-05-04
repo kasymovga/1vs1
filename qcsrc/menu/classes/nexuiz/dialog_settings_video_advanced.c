@@ -95,7 +95,6 @@ void fillNexuizVideoSettingsAdvancedTab(entity me)
 	me.TD(me, 1, 1.8, e = makeNexuizCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
 		gui_set_dependent(e, "mod_q3bsp_nolightmaps", 0, 0);
 	me.TD(me, 1, 0.7, e = makeNexuizCheckBox(0, "r_shadow_gloss", _("Gloss")));
-		gui_set_dependent_and(e, "r_glsl_deluxemapping", 1, 2, "mod_q3bsp_nolightmaps", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
 		me.TD(me, 1, 1.5, e = makeNexuizCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
