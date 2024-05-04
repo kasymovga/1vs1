@@ -321,9 +321,6 @@ msgstr "Alle Spieler"
 msgid "Teammates"
 msgstr "Teammates"
 
-msgid "Never"
-msgstr "Niemals"
-
 msgid "Per weapon crosshairs"
 msgstr "Fadenkreuz pro Waffe"
 
@@ -698,9 +695,6 @@ msgstr "Items:"
 
 msgid "Pain:"
 msgstr "Schmerz:"
-
-msgid "Player:"
-msgstr "Spieler:"
 
 msgid "Shots:"
 msgstr "Schüsse:"

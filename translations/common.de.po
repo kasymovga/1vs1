@@ -728,3 +728,9 @@ msgstr "^2* ^3{1}^2 stopped ^3{2}^2's vote"
 
 msgid "{1} drowned"
 msgstr "{1} drowned"
+
+msgid "Player:"
+msgstr "Spieler:"
+
+msgid "Never"
+msgstr "Niemals"

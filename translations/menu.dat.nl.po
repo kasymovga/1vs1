@@ -322,9 +322,6 @@ msgstr "Alle spelers"
 msgid "Teammates"
 msgstr "Teamleden"
 
-msgid "Never"
-msgstr "Nooit"
-
 msgid "Per weapon crosshairs"
 msgstr "Eigen richthulp van wapens gebruiken"
 
@@ -699,9 +696,6 @@ msgstr "Items:"
 
 msgid "Pain:"
 msgstr "Pijn:"
-
-msgid "Player:"
-msgstr "Speler:"
 
 msgid "Shots:"
 msgstr "Schoten:"

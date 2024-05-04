@@ -711,3 +711,9 @@ msgstr "^2* ^3{1}^2 остановил голосование от ^3{2}^2"
 
 msgid "{1} drowned"
 msgstr "{1} утонул"
+
+msgid "Player:"
+msgstr "Игрок:"
+
+msgid "Never"
+msgstr "Никогда"

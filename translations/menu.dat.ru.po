@@ -320,9 +320,6 @@ msgstr "Все игроки"
 msgid "Teammates"
 msgstr "Союзники"
 
-msgid "Never"
-msgstr "Никогда"
-
 msgid "Per weapon crosshairs"
 msgstr "Разные прицелы для оружий"
 
@@ -697,9 +694,6 @@ msgstr "Предметы:"
 
 msgid "Pain:"
 msgstr "Боль:"
-
-msgid "Player:"
-msgstr "Игрок:"
 
 msgid "Shots:"
 msgstr "Выстрелы:"
