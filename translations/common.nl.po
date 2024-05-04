@@ -714,3 +714,18 @@ msgstr "^3{1}^3 has captured the {2}"
 
 msgid "^3Speed has worn off"
 msgstr "^3Speed has worn off"
+
+msgid "^3Akimbo has worn off"
+msgstr "^3Akimbo has worn off"
+
+msgid "{1} fatefully ignored {2}'s firemine"
+msgstr "{1} fatefully ignored {2}'s firemine"
+
+msgid "^3Akimbo: double gun, double fun"
+msgstr "^3Akimbo: double gun, double fun"
+
+msgid "^2* ^3{1}^2 stopped ^3{2}^2's vote"
+msgstr "^2* ^3{1}^2 stopped ^3{2}^2's vote"
+
+msgid "{1} drowned"
+msgstr "{1} drowned"

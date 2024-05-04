@@ -323,7 +323,7 @@ msgid "Capturing..."
 msgstr "Захват..."
 
 msgid "^4You revived by ^7{1}"
-msgstr "^4Вы оживлены игроком ^7{1}"
+msgstr "^4Вас оживил ^7{1}"
 
 msgid "{1} could not remember where he put plasma"
 msgstr "{1} не запомнил, куда положил плазму"
@@ -696,3 +696,18 @@ msgstr "^3{1}^3 захватила {2}"
 
 msgid "^3Speed has worn off"
 msgstr "^3Скорость закончилась"
+
+msgid "^3Akimbo has worn off"
+msgstr "^3Акимбо закончилось"
+
+msgid "{1} fatefully ignored {2}'s firemine"
+msgstr "{1} игнорирует мину от {2}"
+
+msgid "^3Akimbo: double gun, double fun"
+msgstr "^3Акимбо: двойная пушка, двойная веселуха"
+
+msgid "^2* ^3{1}^2 stopped ^3{2}^2's vote"
+msgstr "^2* ^3{1}^2 остановил голосование от ^3{2}^2"
+
+msgid "{1} drowned"
+msgstr "{1} утонул"
