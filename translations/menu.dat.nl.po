@@ -313,9 +313,6 @@ msgstr "Zoomsnelheid"
 msgid "Weapon settings..."
 msgstr "Wapeninstellingen…"
 
-msgid "Show names:"
-msgstr "Namen tonen van:"
-
 msgid "All players"
 msgstr "Alle spelers"
 
@@ -379,9 +376,6 @@ msgstr "Prioriteitenlijst:"
 msgid "Use priority list for weapon cycling"
 msgstr "Prioriteitenlijst gebruiken om van wapen te wisselen"
 
-msgid "Auto switch weapons on pickup"
-msgstr "Automatisch wisselen na oppakken"
-
 msgid "Draw 1st person weapon model"
 msgstr "Wapen in first-personmodus tonen"
 
@@ -391,12 +385,6 @@ msgstr "Wapenalfa:"
 msgid "Align:"
 msgstr "Uitlijning:"
 
-msgid "Left"
-msgstr "Links"
-
-msgid "Right"
-msgstr "Rechts"
-
 msgid "Left or center"
 msgstr "Links of midden"
 
@@ -405,9 +393,6 @@ msgstr "Rechts of midden"
 
 msgid "Force center position"
 msgstr "Positie in midden afdwingen"
-
-msgid "Weapon location hint"
-msgstr "Wapenlocatiehint"
 
 msgid "Flip view horizontally"
 msgstr "Beeld horizontaal spiegelen"
@@ -499,9 +484,6 @@ msgstr "Kleurdiepte:"
 msgid "Texture compression"
 msgstr "Textuurcompressie"
 
-msgid "Fast"
-msgstr "Snel"
-
 msgid "Good"
 msgstr "Goed"
 
@@ -576,9 +558,6 @@ msgstr "Kwaliteitinstellingen:"
 
 msgid "Low"
 msgstr "Laag"
-
-msgid "Normal"
-msgstr "Normaal"
 
 msgid "High"
 msgstr "Hoog"
@@ -733,14 +712,8 @@ msgstr "Beledigingen:"
 msgid "Taunt range:"
 msgstr "Beledigingsbereik:"
 
-msgid "Long"
-msgstr "Ver"
-
 msgid "Very long"
 msgstr "Erg ver"
-
-msgid "Short"
-msgstr "Dichtbij"
 
 msgid "Very short"
 msgstr "Erg dichtbij"
@@ -918,9 +891,6 @@ msgstr "Versnelling:"
 
 msgid "* Keep this set to 0 until you know what this setting does"
 msgstr "* Stel in op 0, tenzij je weet wat je doet"
-
-msgid "Always"
-msgstr "Altijd"
 
 msgid "In spectating"
 msgstr "Tijdens toeschouwen"

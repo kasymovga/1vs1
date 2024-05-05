@@ -735,3 +735,36 @@ msgstr "Speler:"
 
 msgid "Never"
 msgstr "Nooit"
+
+msgid "Left"
+msgstr "Links"
+
+msgid "Right"
+msgstr "Rechts"
+
+msgid "Always"
+msgstr "Altijd"
+
+msgid "Show names:"
+msgstr "Namen tonen van:"
+
+msgid "Long"
+msgstr "Ver"
+
+msgid "Short"
+msgstr "Dichtbij"
+
+msgid "Weapon location hint"
+msgstr "Wapenlocatiehint"
+
+msgid "Normal"
+msgstr "Normaal"
+
+msgid "Fast"
+msgstr "Snel"
+
+msgid "Auto switch weapons on pickup"
+msgstr "Automatisch wisselen na oppakken"
+
+msgid "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
+msgstr "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."

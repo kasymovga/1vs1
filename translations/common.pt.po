@@ -734,3 +734,36 @@ msgstr "Jogador:"
 
 msgid "Never"
 msgstr "Nunca"
+
+msgid "Left"
+msgstr "Esquerda"
+
+msgid "Right"
+msgstr "Direita"
+
+msgid "Always"
+msgstr "Sempre"
+
+msgid "Show names:"
+msgstr "Mostrar os nomes:"
+
+msgid "Long"
+msgstr "Longo"
+
+msgid "Short"
+msgstr "Pequeno"
+
+msgid "Weapon location hint"
+msgstr "Indice de localisação das armas"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "Fast"
+msgstr "Rapido"
+
+msgid "Auto switch weapons on pickup"
+msgstr "Mudar automaticamente a arma quando for pega"
+
+msgid "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
+msgstr "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."

@@ -717,3 +717,36 @@ msgstr "Игрок:"
 
 msgid "Never"
 msgstr "Никогда"
+
+msgid "Left"
+msgstr "Слева"
+
+msgid "Right"
+msgstr "Справа"
+
+msgid "Always"
+msgstr "Всегда"
+
+msgid "Show names:"
+msgstr "Показывать имена:"
+
+msgid "Long"
+msgstr "Длинно"
+
+msgid "Short"
+msgstr "Коротко"
+
+msgid "Weapon location hint"
+msgstr "Подсказки для расположения оружия"
+
+msgid "Normal"
+msgstr "Нормально"
+
+msgid "Fast"
+msgstr "Быстро"
+
+msgid "Auto switch weapons on pickup"
+msgstr "Автоматически менять оружие при подборе"
+
+msgid "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
+msgstr "^2Сейчас в ^1разминочной^2 стадии!\n^2Ждём когда остальные игроки будут готовы..."

@@ -311,9 +311,6 @@ msgstr "Скорость увеличения:"
 msgid "Weapon settings..."
 msgstr "Настройки оружия..."
 
-msgid "Show names:"
-msgstr "Показывать имена:"
-
 msgid "All players"
 msgstr "Все игроки"
 
@@ -377,9 +374,6 @@ msgstr "Приоритет оружий:"
 msgid "Use priority list for weapon cycling"
 msgstr "Использовать список приоритета при переключении оружий"
 
-msgid "Auto switch weapons on pickup"
-msgstr "Автоматически менять оружие при подборе"
-
 msgid "Draw 1st person weapon model"
 msgstr "Рисовать модель оружия при виде от 1го лица"
 
@@ -389,12 +383,6 @@ msgstr "Непрозрачность оружия:"
 msgid "Align:"
 msgstr "Положение:"
 
-msgid "Left"
-msgstr "Слева"
-
-msgid "Right"
-msgstr "Справа"
-
 msgid "Left or center"
 msgstr "Слева/в центре"
 
@@ -403,9 +391,6 @@ msgstr "Справа/в центре"
 
 msgid "Force center position"
 msgstr "Принудительная центральная позиция"
-
-msgid "Weapon location hint"
-msgstr "Подсказки для расположения оружия"
 
 msgid "Flip view horizontally"
 msgstr "Отзеркалить вид"
@@ -497,11 +482,8 @@ msgstr "Глубина цвета:"
 msgid "Texture compression"
 msgstr "Сжатие текстур"
 
-msgid "Fast"
-msgstr "Быстрое"
-
 msgid "Good"
-msgstr "Хорошее"
+msgstr "Хорошо"
 
 msgid "Vertical Synchronization"
 msgstr "Вертикальная синхронизация"
@@ -574,9 +556,6 @@ msgstr "Настройка качества:"
 
 msgid "Low"
 msgstr "Низко"
-
-msgid "Normal"
-msgstr "Нормально"
 
 msgid "High"
 msgstr "Высоко"
@@ -731,14 +710,8 @@ msgstr "Насмешки"
 msgid "Taunt range:"
 msgstr "Дальность насмешек:"
 
-msgid "Long"
-msgstr "Длинно"
-
 msgid "Very long"
 msgstr "Очень длинно"
-
-msgid "Short"
-msgstr "Коротко"
 
 msgid "Very short"
 msgstr "Очень коротко"
@@ -916,9 +889,6 @@ msgstr "Акселерация:"
 
 msgid "* Keep this set to 0 until you know what this setting does"
 msgstr "* Используйте 0, если не знаете, что эта настройка делает"
-
-msgid "Always"
-msgstr "Всегда"
 
 msgid "In spectating"
 msgstr "При наблюдении"

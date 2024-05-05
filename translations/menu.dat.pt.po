@@ -312,9 +312,6 @@ msgstr "Velocidade do Zoom :"
 msgid "Weapon settings..."
 msgstr "Parametros das armas..."
 
-msgid "Show names:"
-msgstr "Mostrar os nomes:"
-
 msgid "All players"
 msgstr "Todos os jogadores"
 
@@ -378,9 +375,6 @@ msgstr "Lista de prioridade das armas:"
 msgid "Use priority list for weapon cycling"
 msgstr "Utilisar a liste de prioridades para o ciclo das armas"
 
-msgid "Auto switch weapons on pickup"
-msgstr "Mudar automaticamente a arma quando for pega"
-
 msgid "Draw 1st person weapon model"
 msgstr "Desenhar o modelo de arma em 1 pessoa"
 
@@ -390,12 +384,6 @@ msgstr "Alpha da arma:"
 msgid "Align:"
 msgstr "Alinhamento:"
 
-msgid "Left"
-msgstr "Esquerda"
-
-msgid "Right"
-msgstr "Direita"
-
 msgid "Left or center"
 msgstr "Esquerda ou centro"
 
@@ -404,9 +392,6 @@ msgstr "Direita ou centro"
 
 msgid "Force center position"
 msgstr "Forçar a posição do centro"
-
-msgid "Weapon location hint"
-msgstr "Indice de localisação das armas"
 
 msgid "Flip view horizontally"
 msgstr "Retournar a vista horizontalmente"
@@ -498,9 +483,6 @@ msgstr "Número de cores:"
 msgid "Texture compression"
 msgstr "Compressão das texturas"
 
-msgid "Fast"
-msgstr "Rapido"
-
 msgid "Good"
 msgstr "Bom"
 
@@ -575,9 +557,6 @@ msgstr "Qualidade de pré-regulagem:"
 
 msgid "Low"
 msgstr "Baixo"
-
-msgid "Normal"
-msgstr "Normal"
 
 msgid "High"
 msgstr "Alto"
@@ -732,14 +711,8 @@ msgstr "Provocação"
 msgid "Taunt range:"
 msgstr "Gama de Provocação:"
 
-msgid "Long"
-msgstr "Longo"
-
 msgid "Very long"
 msgstr "Muito Longo"
-
-msgid "Short"
-msgstr "Pequeno"
 
 msgid "Very short"
 msgstr "Muito pequeno"
@@ -918,9 +891,6 @@ msgstr "Aceleração:"
 
 msgid "* Keep this set to 0 until you know what this setting does"
 msgstr "* Deixe esta opção em 0 até você saber para o que ela serve"
-
-msgid "Always"
-msgstr "Sempre"
 
 msgid "In spectating"
 msgstr "Em espectador"

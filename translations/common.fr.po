@@ -734,3 +734,36 @@ msgstr "Joueur:"
 
 msgid "Never"
 msgstr "Jamais"
+
+msgid "Left"
+msgstr "Gauche"
+
+msgid "Right"
+msgstr "Droite"
+
+msgid "Always"
+msgstr "Toujours"
+
+msgid "Show names:"
+msgstr "Affichage des noms:"
+
+msgid "Long"
+msgstr "Longue"
+
+msgid "Short"
+msgstr "Petite"
+
+msgid "Weapon location hint"
+msgstr "Indice de localisation de l'arme"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "Fast"
+msgstr "Vite"
+
+msgid "Auto switch weapons on pickup"
+msgstr "Changement automatique d'armes lors de l'acquisition"
+
+msgid "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
+msgstr "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
