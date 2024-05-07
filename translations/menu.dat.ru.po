@@ -389,9 +389,6 @@ msgstr "Слева/в центре"
 msgid "Right or center"
 msgstr "Справа/в центре"
 
-msgid "Force center position"
-msgstr "Принудительная центральная позиция"
-
 msgid "Flip view horizontally"
 msgstr "Отзеркалить вид"
 

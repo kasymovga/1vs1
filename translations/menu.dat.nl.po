@@ -391,9 +391,6 @@ msgstr "Links of midden"
 msgid "Right or center"
 msgstr "Rechts of midden"
 
-msgid "Force center position"
-msgstr "Positie in midden afdwingen"
-
 msgid "Flip view horizontally"
 msgstr "Beeld horizontaal spiegelen"
 

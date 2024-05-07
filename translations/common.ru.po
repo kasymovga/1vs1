@@ -750,3 +750,6 @@ msgstr "Автоматически менять оружие при подбор
 
 msgid "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
 msgstr "^2Сейчас в ^1разминочной^2 стадии!\n^2Ждём когда остальные игроки будут готовы..."
+
+msgid "Force center position"
+msgstr "Принудительная центральная позиция"

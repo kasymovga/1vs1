@@ -753,3 +753,6 @@ msgstr "Auto imposta l'arma una volta trovata"
 
 msgid "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
 msgstr "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
+
+msgid "Force center position"
+msgstr "Forza la posizione centrale"

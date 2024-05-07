@@ -390,9 +390,6 @@ msgstr "Links oder Mitte"
 msgid "Right or center"
 msgstr "Rechts oder Mitte"
 
-msgid "Force center position"
-msgstr "Erzwinge mittlere Position"
-
 msgid "Flip view horizontally"
 msgstr "Ansicht horizontal spiegeln"
 

@@ -389,9 +389,6 @@ msgstr "Sinistra o centro"
 msgid "Right or center"
 msgstr "Destra o centro"
 
-msgid "Force center position"
-msgstr "Forza la posizione centrale"
-
 msgid "Flip view horizontally"
 msgstr "Inverti la vista orizzontalmente"
 
