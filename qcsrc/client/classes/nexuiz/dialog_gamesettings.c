@@ -96,8 +96,8 @@ void fillNexuizGameSettingsDialog(entity me)
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_gunalign"));
 			e.addValue(e, _("Right"), "1");
 			e.addValue(e, _("Left"), "2");
-			e.addValue(e, _("Center or Right"), "3");
-			e.addValue(e, _("Center or Left"), "4");
+			e.addValue(e, _("Right or center"), "3");
+			e.addValue(e, _("Left or center"), "4");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_gunalign_force_center", _("Force center position")));

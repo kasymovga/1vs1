@@ -385,12 +385,6 @@ msgstr "Wapenalfa:"
 msgid "Align:"
 msgstr "Uitlijning:"
 
-msgid "Left or center"
-msgstr "Links of midden"
-
-msgid "Right or center"
-msgstr "Rechts of midden"
-
 msgid "Flip view horizontally"
 msgstr "Beeld horizontaal spiegelen"
 

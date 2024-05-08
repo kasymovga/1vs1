@@ -756,3 +756,9 @@ msgstr "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
 
 msgid "Force center position"
 msgstr "Forza la posizione centrale"
+
+msgid "Left or center"
+msgstr "Sinistra o centro"
+
+msgid "Right or center"
+msgstr "Destra o centro"

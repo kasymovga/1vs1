@@ -384,12 +384,6 @@ msgstr "Alpha d'arme:"
 msgid "Align:"
 msgstr "Allignement:"
 
-msgid "Left or center"
-msgstr "Gauche ou centrée"
-
-msgid "Right or center"
-msgstr "Droite ou centrée"
-
 msgid "Flip view horizontally"
 msgstr "Retourner la vue horizontalement"
 

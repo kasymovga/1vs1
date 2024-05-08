@@ -384,12 +384,6 @@ msgstr "Waffen-Alpha:"
 msgid "Align:"
 msgstr "Ausrichtung:"
 
-msgid "Left or center"
-msgstr "Links oder Mitte"
-
-msgid "Right or center"
-msgstr "Rechts oder Mitte"
-
 msgid "Flip view horizontally"
 msgstr "Ansicht horizontal spiegeln"
 

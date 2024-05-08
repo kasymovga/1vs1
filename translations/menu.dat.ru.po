@@ -383,12 +383,6 @@ msgstr "Непрозрачность оружия:"
 msgid "Align:"
 msgstr "Положение:"
 
-msgid "Left or center"
-msgstr "Слева/в центре"
-
-msgid "Right or center"
-msgstr "Справа/в центре"
-
 msgid "Flip view horizontally"
 msgstr "Отзеркалить вид"
 
