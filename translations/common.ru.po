@@ -759,3 +759,171 @@ msgstr "Слева/в центре"
 
 msgid "Right or center"
 msgstr "Справа/в центре"
+
+msgid "Weapon alpha:"
+msgstr "Непрозрачность оружия:"
+
+msgid "Mute list"
+msgstr "Игнор-лист"
+
+msgid "Unmute"
+msgstr "Разигнор"
+
+msgid "Skip start hints"
+msgstr "Пропускать подсказки в начале"
+
+msgid "Next >>"
+msgstr "Дальше >>"
+
+msgid "Show speed"
+msgstr "Показывать скорость"
+
+msgid "Show position helper in CTS"
+msgstr "Позиционная подсказка в CTS"
+
+msgid "HUD selection"
+msgstr "Выбор HUD"
+
+msgid "Disable nex zoom with secondary attack"
+msgstr "Отключить прицеливание у Nex"
+
+msgid "Reverse weapon order"
+msgstr "Обратный порядок оружий"
+
+msgid "Done"
+msgstr "Готово"
+
+msgid "Show strafe helper in CTS"
+msgstr "Подсказка стрейфов в CTS"
+
+msgid "Weapon position:"
+msgstr "Положение оружия:"
+
+msgid "Teamplay"
+msgstr "Командная игра"
+
+msgid "Naughty behaviour:"
+msgstr "Плохое поведение:"
+
+msgid "Damage indicator:"
+msgstr "Индикация урона:"
+
+msgid "Report a player"
+msgstr "Пожаловаться на игрока"
+
+msgid "Show names view sector:"
+msgstr "Область отображения имён:"
+
+msgid "Report"
+msgstr "Жалоба"
+
+msgid "Show acceleration"
+msgstr "Показывать ускорение"
+
+msgid "On"
+msgstr "Вкл"
+
+msgid "Force screen effect on damage"
+msgstr "Принудительный эффект повреждения"
+
+msgid "Game Menu"
+msgstr "Игровое меню"
+
+msgid "Weapon bar fade speed:"
+msgstr "Исчезание панели оружия:"
+
+msgid "Auto enable in CTS"
+msgstr "Включать в CTS"
+
+msgid "Off"
+msgstr "Выкл"
+
+msgid "Slow"
+msgstr "Медленно"
+
+msgid "Apply"
+msgstr "Применить"
+
+msgid "Map records"
+msgstr "Рекорды карты"
+
+msgid "Recoil from shots"
+msgstr "Отдача от выстрелов"
+
+msgid "<< Previous"
+msgstr "<< Дальше"
+
+msgid "Show ammo in weapon bar"
+msgstr "Показывать патроны в панели оружий"
+
+msgid "Available votes:"
+msgstr "Доступные голосования:"
+
+msgid "Only for teammates"
+msgstr "Только для союзников"
+
+msgid "Always hidden"
+msgstr "Всегда скрыто"
+
+msgid "Empty slot"
+msgstr "Пустой слот"
+
+msgid "Player voices"
+msgstr "Голоса игроков"
+
+msgid "Hidden"
+msgstr "Скрыто"
+
+msgid "Very narrow"
+msgstr "Очень узко"
+
+msgid "Possible arguments:"
+msgstr "Возможные параметры:"
+
+msgid "Mute"
+msgstr "Игнор"
+
+msgid "Use RM HUD:"
+msgstr "Использовать RM HUD:"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Play next track"
+msgstr "Играть следующий трек"
+
+msgid "Call the vote"
+msgstr "Вызвать голосование"
+
+msgid "HUD Selection..."
+msgstr "Выбор HUD..."
+
+msgid "Narrow"
+msgstr "Узко"
+
+msgid "Call a vote for this map"
+msgstr "Голосование за эту карту"
+
+msgid "Available HUDs:"
+msgstr "Доступные HUDы:"
+
+msgid "Stopped"
+msgstr "Остановлено"
+
+msgid "Wide"
+msgstr "Широко"
+
+msgid "Announcer print:"
+msgstr "Печатать анонсы:"
+
+msgid "Weapon bar fade time:"
+msgstr "Время показа панели оружий:"
+
+msgid "Game Settings"
+msgstr "Игровые настройки"
+
+msgid "Incremental timer"
+msgstr "Необратный таймер"
+
+msgid "Show only current ammo"
+msgstr "Показывать только текущие патроны"

@@ -777,3 +777,168 @@ msgstr "Links of midden"
 
 msgid "Right or center"
 msgstr "Rechts of midden"
+
+msgid "Weapon alpha:"
+msgstr "Wapenalfa:"
+
+msgid "Mute list"
+msgstr "Mute list"
+
+msgid "Unmute"
+msgstr "Unmute"
+
+msgid "Skip start hints"
+msgstr "Skip start hints"
+
+msgid "Next >>"
+msgstr "Next >>"
+
+msgid "Show speed"
+msgstr "Show speed"
+
+msgid "Show position helper in CTS"
+msgstr "Show position helper in CTS"
+
+msgid "HUD selection"
+msgstr "HUD selection"
+
+msgid "Disable nex zoom with secondary attack"
+msgstr "Disable nex zoom with secondary attack"
+
+msgid "Reverse weapon order"
+msgstr "Reverse weapon order"
+
+msgid "Done"
+msgstr "Done"
+
+msgid "Show strafe helper in CTS"
+msgstr "Show strafe helper in CTS"
+
+msgid "Weapon position:"
+msgstr "Weapon position:"
+
+msgid "Teamplay"
+msgstr "Teamplay"
+
+msgid "Naughty behaviour:"
+msgstr "Naughty behaviour:"
+
+msgid "Damage indicator:"
+msgstr "Damage indicator:"
+
+msgid "Report a player"
+msgstr "Report a player"
+
+msgid "Show names view sector:"
+msgstr "Show names view sector:"
+
+msgid "Report"
+msgstr "Report"
+
+msgid "Show acceleration"
+msgstr "Show acceleration"
+
+msgid "On"
+msgstr "On"
+
+msgid "Force screen effect on damage"
+msgstr "Force screen effect on damage"
+
+msgid "Game Menu"
+msgstr "Game Menu"
+
+msgid "Weapon bar fade speed:"
+msgstr "Weapon bar fade speed:"
+
+msgid "Auto enable in CTS"
+msgstr "Auto enable in CTS"
+
+msgid "Off"
+msgstr "Off"
+
+msgid "Slow"
+msgstr "Slow"
+
+msgid "Apply"
+msgstr "Apply"
+
+msgid "Map records"
+msgstr "Map records"
+
+msgid "Recoil from shots"
+msgstr "Recoil from shots"
+
+msgid "<< Previous"
+msgstr "<< Previous"
+
+msgid "Show ammo in weapon bar"
+msgstr "Show ammo in weapon bar"
+
+msgid "Available votes:"
+msgstr "Available votes:"
+
+msgid "Only for teammates"
+msgstr "Only for teammates"
+
+msgid "Always hidden"
+msgstr "Always hidden"
+
+msgid "Empty slot"
+msgstr "Empty slot"
+
+msgid "Player voices"
+msgstr "Player voices"
+
+msgid "Hidden"
+msgstr "Hidden"
+
+msgid "Very narrow"
+msgstr "Very narrow"
+
+msgid "Possible arguments:"
+msgstr "Possible arguments:"
+
+msgid "Mute"
+msgstr "Mute"
+
+msgid "Use RM HUD:"
+msgstr "Use RM HUD:"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Play next track"
+msgstr "Play next track"
+
+msgid "Call the vote"
+msgstr "Call the vote"
+
+msgid "HUD Selection..."
+msgstr "HUD Selection..."
+
+msgid "Narrow"
+msgstr "Narrow"
+
+msgid "Call a vote for this map"
+msgstr "Call a vote for this map"
+
+msgid "Available HUDs:"
+msgstr "Available HUDs:"
+
+msgid "Stopped"
+msgstr "Stopped"
+
+msgid "Wide"
+msgstr "Wide"
+
+msgid "Announcer print:"
+msgstr "Announcer print:"
+
+msgid "Weapon bar fade time:"
+msgstr "Weapon bar fade time:"
+
+msgid "Game Settings"
+msgstr "Game Settings"
+
+msgid "Show only current ammo"
+msgstr "Show only current ammo"

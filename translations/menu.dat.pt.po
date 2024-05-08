@@ -378,9 +378,6 @@ msgstr "Utilisar a liste de prioridades para o ciclo das armas"
 msgid "Draw 1st person weapon model"
 msgstr "Desenhar o modelo de arma em 1 pessoa"
 
-msgid "Weapon alpha:"
-msgstr "Alpha da arma:"
-
 msgid "Align:"
 msgstr "Alinhamento:"
 

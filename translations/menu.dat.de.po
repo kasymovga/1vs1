@@ -378,9 +378,6 @@ msgstr "Benutze Prioritätenliste zum Waffenwechsel"
 msgid "Draw 1st person weapon model"
 msgstr "Zeichne first-person-Waffe"
 
-msgid "Weapon alpha:"
-msgstr "Waffen-Alpha:"
-
 msgid "Align:"
 msgstr "Ausrichtung:"
 

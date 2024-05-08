@@ -86,7 +86,7 @@ void fillNexuizGameSettingsDialog(entity me)
 			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_voice", _("Player voices")));
 	}
 	me.TR(me);
-		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Weapon opacity:")));
+		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("Weapon alpha:")));
 		me.TD(me, 1, 2.5, e = makeNexuizSlider(0, 1, 0.05, "cl_gunalpha"));
 		e.saveCvars = saveCvarsNexuizGameSettingsDialogGunAlpha;
 		e.loadCvars = loadCvarsNexuizGameSettingsDialogGunAlpha;
@@ -170,9 +170,9 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.colorL = SKINCOLOR_TEXT_LINK;
 	}
 	me.TR(me);
-		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_increment_maptime", "Incremental timer"));
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_increment_maptime", _("Incremental timer")));
 	me.TR(me);
-		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_showcurrentammo", "Show only current ammo"));
+		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "sbar_showcurrentammo", _("Show only current ammo")));
 	me.TR(me);
 		me.TD(me, 1, 5, e = makeNexuizButton(_("HUD Selection..."), '0 0 0'));
 			e.onClick = showHudDialogGameSettingsDialog;

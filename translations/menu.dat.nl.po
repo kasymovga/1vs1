@@ -379,9 +379,6 @@ msgstr "Prioriteitenlijst gebruiken om van wapen te wisselen"
 msgid "Draw 1st person weapon model"
 msgstr "Wapen in first-personmodus tonen"
 
-msgid "Weapon alpha:"
-msgstr "Wapenalfa:"
-
 msgid "Align:"
 msgstr "Uitlijning:"
 

@@ -377,9 +377,6 @@ msgstr "Использовать список приоритета при пер
 msgid "Draw 1st person weapon model"
 msgstr "Рисовать модель оружия при виде от 1го лица"
 
-msgid "Weapon alpha:"
-msgstr "Непрозрачность оружия:"
-
 msgid "Align:"
 msgstr "Положение:"
 
