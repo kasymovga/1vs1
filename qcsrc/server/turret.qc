@@ -392,7 +392,7 @@ float g_turrets_targetscan_maxdelay;
 float g_turrets_targetscan_mindelay;
 float g_turrets_targetscan_playersonly;
 
-void(entity ent, string unitname, float is_reload) load_unit_settings {
+void(entity ent, string unitname, float is_reload) turret_load_unit_settings {
 	string sbase;
 	if (ent == world)
 		return;
@@ -1102,7 +1102,7 @@ float(string cvar_base_name, string base, string head) turret_stdproc_init {
 		//makestatic(tb);
 	}
 	self.cvar_basename = cvar_base_name;
-	load_unit_settings(self,self.cvar_basename,0);
+	turret_load_unit_settings(self,self.cvar_basename,0);
 	/*
 	* Try to guess some reasonaly defaults
 	* for missing params and do sanety checks
@@ -1339,7 +1339,7 @@ float(string cvar_base_name, string base, string head) turret_stdproc_init {
 	return 1;
 }
 
-void turret_readcvars() {
+void() turret_readcvars {
 	entity e;
 	CVAR_CACHE(g_turrets_aimidle_delay);
 	CVAR_CACHE(g_turrets_nofire);
@@ -1348,8 +1348,8 @@ void turret_readcvars() {
 	CVAR_CACHE(g_turrets_targetscan_playersonly);
 	e = nextent(world);
 	while (e) {
-		if (e.tur_head != world) {
-			load_unit_settings(e,e.cvar_basename,1);
+		if (e.tur_head && substring(e.classname, 0, 6) == "turret") {
+			turret_load_unit_settings(e,e.cvar_basename,1);
 			if (e.turret_postthink) {
 				entity oldself = self;
 				self = e;
