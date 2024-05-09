@@ -108,6 +108,7 @@ void(float n) campaign_setup_cvars_only {
 	localcmd(strcat("set _campaign_name \"", campaign_name, "\"\n"));
 	localcmd(strcat("set _campaign_index ", ftos(n), "\n"));
 	localcmd(strcat("set _gametype ", campaign_gametype[n], "\n"));
+	localcmd(strcat("set g_campaign_skill ", builtin_cvar_string("g_campaign_skill"), "\n")); //disconnect can change this so it must be restored
 	game_type_switch(game_type_from_name(campaign_gametype[n])); //for map_info_load_map
 	localcmd(strcat("maxplayers ", ftos(campaign_bots[n] + 1), "\nskill 4\n"));
 }
