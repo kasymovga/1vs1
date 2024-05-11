@@ -927,3 +927,18 @@ msgstr "Необратный таймер"
 
 msgid "Show only current ammo"
 msgstr "Показывать только текущие патроны"
+
+msgid "\n^3New wave starts in {1} seconds"
+msgstr "\n^3Новая волна начнётся через {1} секунды"
+
+msgid "\n^2Awaiting players..."
+msgstr "\n^2Ожидание игроков..."
+
+msgid "Please select your ability class:"
+msgstr "Выберите ваш класс способностей:"
+
+msgid "{1} tried to catch {2}'s firemine"
+msgstr "{1} попытался поймать зажигательный снаряд от {2}"
+
+msgid "^7Your ability class will be changed at next spawn"
+msgstr "^7Ваш класс способностей сменится на следующем спауне"

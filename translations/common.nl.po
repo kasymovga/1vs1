@@ -942,3 +942,18 @@ msgstr "Game Settings"
 
 msgid "Show only current ammo"
 msgstr "Show only current ammo"
+
+msgid "\n^3New wave starts in {1} seconds"
+msgstr "\n^3New wave starts in {1} seconds"
+
+msgid "\n^2Awaiting players..."
+msgstr "\n^2Awaiting players..."
+
+msgid "Please select your ability class:"
+msgstr "Please select your ability class:"
+
+msgid "{1} tried to catch {2}'s firemine"
+msgstr "{1} tried to catch {2}'s firemine"
+
+msgid "^7Your ability class will be changed at next spawn"
+msgstr "^7Your ability class will be changed at next spawn"

@@ -76,7 +76,7 @@ void(float bIsNewEntity) menu_read {
 	}
 	if (f & 2) {
 		str_unzone_ifneeded(self.menu_title);
-		self.menu_title = str_zone_ifneeded(net_read_string());
+		self.menu_title = str_zone_ifneeded(print_text_prepare(net_read_string(), "", "", ""));
 	}
 	if (f & 1) {
 		self.cnt = net_read_byte();
