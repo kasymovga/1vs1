@@ -100,6 +100,7 @@ void(void) menu_draw {
 	if (self.flags & MENU_FLAG_HIDE_AFTER_SELECT) {
 		if (menu_choiced >= 0) return;
 	}
+	sbar_hidescores = TRUE;
 	float i;
 	string menu_string;
 	drawfont = sbar_bigfont;
