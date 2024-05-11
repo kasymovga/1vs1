@@ -289,9 +289,6 @@ msgstr "Spelen"
 msgid "Timedemo"
 msgstr "Tijdsdemo"
 
-msgid "Apply immediately"
-msgstr "Direct toepassen"
-
 msgid "Name:"
 msgstr "Naam:"
 

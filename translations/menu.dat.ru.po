@@ -287,9 +287,6 @@ msgstr "Играть"
 msgid "Timedemo"
 msgstr "Скоростное воспроизведение"
 
-msgid "Apply immediately"
-msgstr "Применить"
-
 msgid "Name:"
 msgstr "Имя:"
 

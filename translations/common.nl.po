@@ -960,3 +960,6 @@ msgstr "^7Your ability class will be changed at next spawn"
 
 msgid "Please select game type for next map:"
 msgstr "Please select game type for next map:"
+
+msgid "Apply immediately"
+msgstr "Direct toepassen"

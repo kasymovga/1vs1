@@ -288,9 +288,6 @@ msgstr "Play"
 msgid "Timedemo"
 msgstr "Timedemo"
 
-msgid "Apply immediately"
-msgstr "Sofort anwenden"
-
 msgid "Name:"
 msgstr "Name:"
 
