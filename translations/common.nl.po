@@ -957,3 +957,6 @@ msgstr "{1} tried to catch {2}'s firemine"
 
 msgid "^7Your ability class will be changed at next spawn"
 msgstr "^7Your ability class will be changed at next spawn"
+
+msgid "Please select game type for next map:"
+msgstr "Please select game type for next map:"
