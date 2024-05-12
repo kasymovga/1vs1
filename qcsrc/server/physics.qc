@@ -99,9 +99,9 @@ float(void) physics_max_speed_mod {
 	float maxspd_mod, spd;
 	string temps;
 	maxspd_mod = plugin_chain_physics_max_speed_mod();
-	if (self.classname != "player")
+	if (self.classname == "observer") {
 		maxspd_mod = self.spectatorspeed * sv_spectator_speed_multiplier;
-
+	}
 	spd = max(sv_maxspeed, sv_maxairspeed) * maxspd_mod;
 	if (self.speed != spd) {
 		self.speed = spd;
@@ -647,7 +647,10 @@ float(entity to, float sf) physics_send {
 	physics_abilities_start();
 	if not(sf & 3) {
 		if (self.classname == "player") sf |= 8;
-		else if (self.classname == "spectator" && (self.enemy.flags & FL_ONGROUND)) sf |= 16;
+		else if (self.classname == "spectator") {
+			self.last_maxspeedmod = self.enemy.last_maxspeedmod;
+			if (self.enemy.flags & FL_ONGROUND) sf |= 16;
+		}
 		if (self.last_physics_ladder) sf |= 32;
 		if (self.ladder_entity.classname == "func_water") sf |= 64;
 		if (self.crouch) sf |= 256;
