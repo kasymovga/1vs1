@@ -39,6 +39,7 @@ void(entity spectatee) spectator_copy {
 	self.items = spectatee.items;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
+	self.weapons_extra = spectatee.weapons_extra;
 	self.switchweapon = spectatee.switchweapon;
 	self.weapon = spectatee.weapon;
 	self.punchangle = spectatee.punchangle;
