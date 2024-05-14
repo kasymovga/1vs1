@@ -113,6 +113,8 @@ void(void) func_pointparticles_reset {
 		self.state = 1;
 	else
 		self.state = 0;
+
+	self.SendFlags |= 2;
 }
 
 void(void) spawnfunc_func_pointparticles {
@@ -156,6 +158,7 @@ void(void) spawnfunc_func_pointparticles {
 	} else
 		self.state = 1;
 
+	self.spawnflags = (self.state ? 1 : 0);
 	self.think = func_pointparticles_think;
 	self.nextthink = time;
 }
