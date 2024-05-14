@@ -98,10 +98,11 @@ void(void) physics_on_crouch_hook {
 float(void) physics_max_speed_mod {
 	float maxspd_mod, spd;
 	string temps;
-	maxspd_mod = plugin_chain_physics_max_speed_mod();
-	if (self.classname == "observer") {
+	if (self.classname == "observer")
 		maxspd_mod = self.spectatorspeed * sv_spectator_speed_multiplier;
-	}
+	else
+		maxspd_mod = plugin_chain_physics_max_speed_mod();
+
 	spd = max(sv_maxspeed, sv_maxairspeed) * maxspd_mod;
 	if (self.speed != spd) {
 		self.speed = spd;
@@ -648,7 +649,9 @@ float(entity to, float sf) physics_send {
 	if not(sf & 3) {
 		if (self.classname == "player") sf |= 8;
 		else if (self.classname == "spectator") {
+			//for strafe helper
 			self.last_maxspeedmod = self.enemy.last_maxspeedmod;
+			self.crouch = self.enemy.crouch;
 			if (self.enemy.flags & FL_ONGROUND) sf |= 16;
 		}
 		if (self.last_physics_ladder) sf |= 32;
