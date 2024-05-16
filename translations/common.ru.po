@@ -948,3 +948,12 @@ msgstr "Выберите тип игры для следующей карты:"
 
 msgid "Apply immediately"
 msgstr "Применить"
+
+msgid "This door required {1}"
+msgstr "Эта дверь требует: {$1}"
+
+msgid "{1} was squished"
+msgstr "{1} was squished"
+
+msgid "Select eye position"
+msgstr "Выберите позицию глаз"

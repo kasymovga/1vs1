@@ -963,3 +963,12 @@ msgstr "Please select game type for next map:"
 
 msgid "Apply immediately"
 msgstr "Direct toepassen"
+
+msgid "This door required {1}"
+msgstr "This door required {1}"
+
+msgid "{1} was squished"
+msgstr "{1} was squished"
+
+msgid "Select eye position"
+msgstr "Select eye position"
