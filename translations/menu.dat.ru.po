@@ -955,3 +955,21 @@ msgstr "Использовать шрифт \"Iceland\" для больших с
 
 msgid "Lighting intensity:"
 msgstr "Интенсивность освещения:"
+
+msgid "Easiest"
+msgstr "Легчайше"
+
+msgid "Extra texture effects"
+msgstr "Дополнительные эффекты текстур"
+
+msgid "Sky"
+msgstr "Небо"
+
+msgid "* Can affect performance when not equal to 1 and GLSL gamma enabled"
+msgstr "* Может ухудшить производительность если не равно 1 и GLSL гамма включена"
+
+msgid "* Can affect performance when not equal to 1"
+msgstr "* Может ухудшить производительность если не равно 1"
+
+msgid "* From water, hurt and powerups"
+msgstr "* От воды, боли и поверапов"

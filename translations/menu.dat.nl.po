@@ -957,3 +957,21 @@ msgstr "‘Iceland’-lettertype gebruiken in grote berichten"
 
 msgid "Lighting intensity:"
 msgstr "Verlichtingsintensiteit:"
+
+msgid "Easiest"
+msgstr "Makkelijkst"
+
+msgid "Extra texture effects"
+msgstr "Extra textuureffecten"
+
+msgid "Sky"
+msgstr "Lucht"
+
+msgid "* Can affect performance when not equal to 1 and GLSL gamma enabled"
+msgstr "* Kan de prestaties beïnvloeden als deze niet gelijk is aan 1 en GLSL-gamma ingeschakeld"
+
+msgid "* Can affect performance when not equal to 1"
+msgstr "* Kan de prestaties beïnvloeden als deze niet gelijk is aan 1"
+
+msgid "* From water, hurt and powerups"
+msgstr "* Van water, pijn en power-ups"

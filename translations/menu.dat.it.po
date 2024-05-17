@@ -956,3 +956,21 @@ msgstr "Usa il carattere \"Iceland\" per i messaggi di grandi dimensioni"
 
 msgid "Lighting intensity:"
 msgstr "Intensità luminosa:"
+
+msgid "Easiest"
+msgstr "Più semplice"
+
+msgid "Extra texture effects"
+msgstr "Effetti di consistenza extra"
+
+msgid "Sky"
+msgstr "Cielo"
+
+msgid "* Can affect performance when not equal to 1 and GLSL gamma enabled"
+msgstr "* Può influire sulle prestazioni quando non è uguale a 1 e la gamma GLSL è abilitata"
+
+msgid "* Can affect performance when not equal to 1"
+msgstr "* Può influenzare le prestazioni quando non è uguale a 1"
+
+msgid "* From water, hurt and powerups"
+msgstr "* Dall'acqua, dal dolore e dai potenziamenti"
