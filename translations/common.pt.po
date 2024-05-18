@@ -971,3 +971,9 @@ msgstr "{1} was squished"
 
 msgid "Select eye position"
 msgstr "Select eye position"
+
+msgid "Silver Key"
+msgstr "Silver Key"
+
+msgid "Gold Key"
+msgstr "Gold Key"

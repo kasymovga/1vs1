@@ -426,6 +426,9 @@ float(entity item, entity player) item_give_to {
 		if ((player.keys & it) == it)
 			goto skip;
 
+		if (clienttype(player) == CLIENTTYPE_REAL)
+			print_to(player, PRINT_INFO, "You got the ^2{1}", item.netname, "", "");
+
 		pickedup = TRUE;
 		player.keys |= it;
 	}
