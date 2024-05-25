@@ -79,6 +79,7 @@ void(void) akimbo_weapon_frame {
 		if (akimbo_weapon && akimbo_weapon_have(pl, akimbo_weapon, i)) {
 			if not(_akimbo_ghost) _akimbo_ghost = akimbo_ghost_get(pl, i);
 			self = _akimbo_ghost;
+			self.ltime = pl.ltime;
 			self.ammo_shells = pl.ammo_shells;
 			self.ammo_cells = pl.ammo_cells;
 			self.ammo_nails = pl.ammo_nails;
