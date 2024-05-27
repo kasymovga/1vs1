@@ -118,7 +118,15 @@ float(void) weapon_melee_bot_aim {
 	if (random() < bot_melee_love)
 	if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2) {
 		if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE)) {
-			self.impulse = 20;
+			if (g_balance_melee_button_reload)
+				self.impulse = 20; //reload impulse
+
+			if (g_balance_melee_button_hook)
+				self.BUTTON_HOOK = TRUE;
+
+			if (g_balance_melee_button_use)
+				self.BUTTON_USE = TRUE;
+
 			return TRUE;
 		} else
 			return FALSE;
