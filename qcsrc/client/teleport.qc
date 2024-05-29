@@ -103,7 +103,9 @@ void(entity e) teleport_predict {
 	if (e.cnt >= 0)
 		vel = min(vel, e.cnt);
 
-	if (g_teleport_keep_velocity > 0)
+	if (e.cnt == -2)
+		vel = min(vel, vlen(physics_velocity_x * '1 0 0' + physics_velocity_y * '0 1 0'));
+	else if (g_teleport_keep_velocity > 0)
 		vel = min(vel, g_teleport_keep_velocity);
 	else if (g_teleport_keep_velocity == 0)
 		vel = 0;

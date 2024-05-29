@@ -116,7 +116,7 @@ void(void) teleport_use {
 
 void(void) teleport_touch {
 	entity oldself, e;
-	vector v;
+	float f;
 	if (other.iscreature)
 	if (other.health < 1)
 		return;
@@ -164,18 +164,18 @@ void(void) teleport_touch {
 		sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
 	}
 	makevectors(e.angles);
+	f = vlen(other.velocity);
 	if (e.speed_str != "" || self.speed)
-		if (vlen(other.velocity) > e.speed)
-			other.velocity = normalize(other.velocity) * max(0, e.speed);
+		f = min(f, max(0, e.speed));
 
-	if (g_teleport_keep_velocity > 0)
-		v = v_forward * min(g_teleport_keep_velocity, vlen(other.velocity));
-	else if (g_teleport_keep_velocity < 0)
-		v = v_forward * vlen(other.velocity);
-	else
-		v = '0 0 0';
+	if (self.spawnflags & 2)
+		f = min(f, vlen(other.velocity_x * '1 0 0' + other.velocity_y * '0 1 0'));
+	else if (g_teleport_keep_velocity > 0)
+		f = min(g_teleport_keep_velocity, vlen(other.velocity));
+	else if (g_teleport_keep_velocity == 0)
+		f = 0;
 
-	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.angles, v, '0 0 0', '0 0 0', 10000);
+	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.angles, v_forward * f, '0 0 0', '0 0 0', 10000);
 	if (e.target) {
 		oldself = self;
 		activator = other;
@@ -199,7 +199,11 @@ float(entity to, float sf) teleport_prediction_send {
 	net_write_coord(MSG_ENTITY, o.maxs_x);
 	net_write_coord(MSG_ENTITY, o.maxs_y);
 	net_write_coord(MSG_ENTITY, o.maxs_z);
-	net_write_coord(MSG_ENTITY, ((o.speed_str == "") ? -1 : o.speed));
+	if (o.spawnflags & 2)
+		net_write_coord(MSG_ENTITY, -2);
+	else
+		net_write_coord(MSG_ENTITY, ((o.speed_str == "") ? -1 : o.speed));
+
 	net_write_coord(MSG_ENTITY, o.enemy.origin_x);
 	net_write_coord(MSG_ENTITY, o.enemy.origin_y);
 	net_write_coord(MSG_ENTITY, o.enemy.origin_z);
