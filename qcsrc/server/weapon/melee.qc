@@ -114,7 +114,7 @@ void(void) weapon_melee_attack_check {
 
 var float(void) weapon_melee_bot_aim_next;
 float(void) weapon_melee_bot_aim {
-	if (weapon_melee_possible(TRUE))
+	if (weapon_melee_possible(FALSE))
 	if (random() < bot_melee_love)
 	if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2) {
 		if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE)) {
