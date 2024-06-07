@@ -340,7 +340,7 @@ float(string s, entity e) vote_cmd {
 				cmd_print_to(e, "^1You can't vote from the server console.");
 			} else if (e.vote_vote == 0
 				  || cvar("sv_vote_change")) {
-				cmd_print_to(e, "^1You accepted the vote.");
+				print_to(e, PRINT_CHAT, "^1You accepted the vote.", "", "", "");
 				e.vote_vote = 1;
 				if (!cvar("sv_vote_singlecount")) {
 					vote_count();
@@ -355,13 +355,13 @@ float(string s, entity e) vote_cmd {
 				cmd_print_to(e, "^1You can't vote from the server console.");
 			} else if (e.vote_vote == 0
 				  || cvar("sv_vote_change")) {
-				cmd_print_to(e, "^1You rejected the vote.");
+				print_to(e, PRINT_CHAT, "^1You rejected the vote.", "", "", "");
 				e.vote_vote = -1;
 				if (!cvar("sv_vote_singlecount")) {
 					vote_count();
 				}
 			} else {
-				cmd_print_to(e, "^1You have already voted.");
+				print_to(e, PRINT_CHAT, "^1You have already voted.", "", "", "");
 			}
 		} else if (argv(1) == "abstain" || argv(1) == "dontcare") {
 			if (!vote_called) {
