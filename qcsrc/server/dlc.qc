@@ -89,8 +89,8 @@ float(string s) dlc_load_settemps_from {
 			if (separator < 0)
 				continue;
 
-			cvar_name = substring(line, 0, separator);
 			string req = cvar_name;
+			cvar_name = substring(line, 0, separator);
 			cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
 			if (req == "require") {
 				if (cvar_name == "g_profile") {
