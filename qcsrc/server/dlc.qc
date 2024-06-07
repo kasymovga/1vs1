@@ -452,7 +452,6 @@ void(void) dlc_init {
 			server_packages_without_dlc = strcat(server_packages_without_dlc, " ", s);
 	}
 	builtin_cvar_set("sv_curl_serverpackages", server_packages_without_dlc);
-	dlc_load_exts();
 	string dlc_extra = cvar_string("sv_dlc_extra");
 	while (dlc_extra != "") {
 		s = str_car(dlc_extra);
@@ -522,7 +521,6 @@ void(void) dlc_wait_reload_think {
 		localcmd("\n");
 		string list = dlc_list;
 		string s;
-		dlc_load_exts();
 		while (list != "") {
 			s = str_car(list);
 			list = str_cdr(list);
