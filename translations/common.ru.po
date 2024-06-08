@@ -963,3 +963,18 @@ msgstr "Серебрянный ключ"
 
 msgid "Gold Key"
 msgstr "Золотой ключ"
+
+msgid "Jailbreak! The ^1REDS^7 are escaping!\nControl point captured by {1}"
+msgstr "Побег! ^1КРАСНЫЕ^7 убегают!\nКонтрольная точка была захвачена игроком {1}"
+
+msgid "^4Blue^7 Scores!\nAll opponents are imprisoned\n^2Starting in {1}"
+msgstr "^4Синии^7 выиграли раунд!\nВсе противники в тюрьме\n^2Новый раунд через {1}"
+
+msgid "^1Red jail^7 closed"
+msgstr "^1Красная тюрьма^7 закрылась"
+
+msgid "^7{1}^7 has lost {2}^7"
+msgstr "^7{1}^7 теряет {2}^7"
+
+msgid "^7{1}^7 has picked up {2}^7"
+msgstr "^7{1}^7 подбирает {2}^7"
