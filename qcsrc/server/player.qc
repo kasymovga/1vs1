@@ -277,7 +277,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					bot_say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
 			}
 		}
-		if (team_mode && attacker.team == targ.team && !targ.saboteur && attacker_is_player) {
+		if (team_mode && attacker.team == targ.team && !targ.saboteur && attacker_is_player && !plugin_team_ignored_for(targ)) {
 			print_to(attacker, PRINT_CENTER, "^1Moron! You fragged {1}, a team mate!", s, "", "");
 			player_obituary_print_all("{1} mows down a team mate", a_red, "", "");
 			if (targ.killcount > 2) {

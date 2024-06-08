@@ -72,7 +72,7 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 			if (attacker.classname == "player" && targ != attacker && (PLAYER_IS_INDEPENDENT(attacker) || PLAYER_IS_INDEPENDENT(targ))) {
 				_damage = 0;
 				force = '0 0 0';
-			} else if (attacker.team == targ.team && !targ.saboteur) {
+			} else if (attacker.team == targ.team && !targ.saboteur && !plugin_team_ignored_for(targ)) {
 				if (attacker != targ) {
 					if (team_mode) {
 						if (targ.deadflag == DEAD_NO) {
@@ -120,7 +120,7 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 				_damage *= 1 + damage_headshotbonus;
 
 			if (targ.classname == "player") {
-				if (team_is_different_teams(targ, attacker)) {
+				if (team_is_different_teams(targ, attacker) || targ.saboteur || plugin_team_ignored_for(targ)) {
 					if (_damage > 0) {
 						if (targ.BUTTON_CHAT)
 							attacker.typehitsound += 1;

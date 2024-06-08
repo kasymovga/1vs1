@@ -14,4 +14,5 @@ set g_jb_capture_time 5
 set g_jb_capture_multi_factor 0.2
 set g_jb_score_jbreak 1
 set g_jb_score_jbreak_perplayer 1
+set g_jb_jail_deathmatch 0
 set jb_inherit ft

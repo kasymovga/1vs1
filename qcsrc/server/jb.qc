@@ -373,6 +373,10 @@ void(void) jb_init_delayed {
 	})
 }
 
+float(entity plr) jb_team_ignored_for {
+	return JB_PLAYER_JAILED(plr);
+}
+
 void(void) jb_init {
 	jb = TRUE;
 	score_generic();
@@ -384,11 +388,15 @@ void(void) jb_init {
 	plugin_score_give_frag_mod = jb_score_give_frag_mod;
 	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	plugin_player_death_handle = jb_player_death_handle;
-	jb_player_can_fire_next = plugin_chain_player_can_fire;
-	plugin_chain_player_can_fire = jb_player_can_fire;
 	plugin_havocbot_role_choose = jb_role_choose;
 	jb_player_clear_next = plugin_chain_player_clear;
 	plugin_chain_player_clear = jb_player_clear;
+	if (cvar("g_jb_jail_deathmatch"))
+		plugin_team_ignored_for = jb_team_ignored_for;
+	else {
+		jb_player_can_fire_next = plugin_chain_player_can_fire;
+		plugin_chain_player_can_fire = jb_player_can_fire;
+	}
 	precache_sound("kh/alarm.wav");
 	precache_sound("weapons/electro_bounce.wav");
 	precache_sound("weapons/grenade_bounce1");
