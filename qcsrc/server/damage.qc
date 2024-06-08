@@ -115,8 +115,6 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 				if (trace_hits_box(bullet_from, bullet_to, headmins, headmaxs)) {
 					deathtype |= HITTYPE_HEADSHOT;
 				}
-			} else if (targ.classname == "turret_head") {
-				deathtype |= HITTYPE_HEADSHOT;
 			}
 			if (deathtype & HITTYPE_HEADSHOT)
 				_damage *= 1 + damage_headshotbonus;
