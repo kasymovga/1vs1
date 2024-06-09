@@ -751,6 +751,9 @@ msgstr "Автоматически менять оружие при подбор
 msgid "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
 msgstr "^2Сейчас в ^1разминочной^2 стадии!\n^2Ждём когда остальные игроки будут готовы..."
 
+msgid "^2Currently in ^1warmup^2 stage!\n^2Press ^3{ready}^2 to finish warmup!"
+msgstr "^2Сейчас в ^1разминочной^2 стадии!\n^2Нажмите ^3{ready}^2 для завершения разминки!"
+
 msgid "Force center position"
 msgstr "Принудительная центральная позиция"
 
@@ -978,3 +981,9 @@ msgstr "^7{1}^7 теряет {2}^7"
 
 msgid "^7{1}^7 has picked up {2}^7"
 msgstr "^7{1}^7 подбирает {2}^7"
+
+msgid "^1You accepted the vote."
+msgstr "^1Вы проголосовали за."
+
+msgid "^1You rejected the vote."
+msgstr "^1Вы проголосовали против."

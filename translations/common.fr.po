@@ -768,6 +768,9 @@ msgstr "Changement automatique d'armes lors de l'acquisition"
 msgid "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
 msgstr "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
 
+msgid "^2Currently in ^1warmup^2 stage!\n^2Press ^3{ready}^2 to finish warmup!"
+msgstr "^2Currently in ^1warmup^2 stage!\n^2Press ^3{ready}^2 to finish warmup!"
+
 msgid "Force center position"
 msgstr "Forcer la position au centre"
 
@@ -995,3 +998,9 @@ msgstr "^7{1}^7 has lost {2}^7"
 
 msgid "^7{1}^7 has picked up {2}^7"
 msgstr "^7{1}^7 has picked up {2}^7"
+
+msgid "^1You accepted the vote."
+msgstr "^1You accepted the vote."
+
+msgid "^1You rejected the vote."
+msgstr "^1You rejected the vote."

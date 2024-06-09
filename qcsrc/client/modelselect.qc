@@ -205,7 +205,7 @@ void(void) modelselect_draw {
 	modelselect_current.angles_y = view_angles_y + (time * 90);
 	vector c = '1 0 0' * (CVAR(vid_conwidth) / 2);
 	drawfont = sbar_bigfont;
-	draw_string_center('0 100 0', "Model select", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	draw_string_center('0 100 0', _("Model select"), '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	draw_string_center('0 125 0', strcat(modelselect_current.model, ":", ftos(modelselect_current.skin)), '18 18 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	vector ca;
 	float button = modelselect_choosen_button();
@@ -223,12 +223,12 @@ void(void) modelselect_draw {
 	if (button == 3) ca = '0.5 0.5 0.5'; else ca = '0 0 0';
 	drawfill(MODELSELECT_OK_POS + c, MODELSELECT_OK_SIZE, '0 0 0' + ca, 0.3, DRAWFLAG_NORMAL);
     draw_borderlines(2, MODELSELECT_OK_POS + c, MODELSELECT_OK_SIZE, '0 0 0' + ca, 1, DRAWFLAG_NORMAL);
-	draw_string_center(MODELSELECT_OK_POS + ('1 0 0' * MODELSELECT_OK_SIZE_x * 0.5), "Ok", '30 30 0', '0 1 0' + ca, 1, DRAWFLAG_NORMAL);
+	draw_string_center(MODELSELECT_OK_POS + ('1 0 0' * MODELSELECT_OK_SIZE_x * 0.5), _("Ok"), '30 30 0', '0 1 0' + ca, 1, DRAWFLAG_NORMAL);
 	//Cancel
 	if (button == 4) ca = '0.5 0.5 0.5'; else ca = '0 0 0';
 	drawfill(MODELSELECT_CANCEL_POS + c, MODELSELECT_CANCEL_SIZE, '0 0 0' + ca, 0.3, DRAWFLAG_NORMAL);
     draw_borderlines(2, MODELSELECT_CANCEL_POS + c, MODELSELECT_CANCEL_SIZE, '0 0 0' + ca, 1, DRAWFLAG_NORMAL);
-	draw_string_center(MODELSELECT_CANCEL_POS + ('1 0 0' * MODELSELECT_CANCEL_SIZE_x * 0.5), "Cancel", '30 30 0', '1 0 0' + ca, 1, DRAWFLAG_NORMAL);
+	draw_string_center(MODELSELECT_CANCEL_POS + ('1 0 0' * MODELSELECT_CANCEL_SIZE_x * 0.5), _("Cancel"), '30 30 0', '1 0 0' + ca, 1, DRAWFLAG_NORMAL);
     drawfont = sbar_font;
 }
 

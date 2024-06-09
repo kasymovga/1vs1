@@ -346,7 +346,7 @@ float(string s, entity e) vote_cmd {
 					vote_count();
 				}
 			} else {
-				cmd_print_to(e, "^1You have already voted.");
+				print_to(e, PRINT_CHAT, "^1You have already voted.", "", "", "");
 			}
 		} else if (argv(1) == "no") {
 			if (!vote_called) {
@@ -376,7 +376,7 @@ float(string s, entity e) vote_cmd {
 					vote_count();
 				}
 			} else {
-				cmd_print_to(e, "^1You have already voted.");
+				print_to(e, PRINT_CHAT, "^1You have already voted.", "", "", "");
 			}
 		} else {
 			// ignore this?
