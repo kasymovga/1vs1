@@ -675,8 +675,6 @@ void(void) spawnfunc_func_plat {
 		self.message2 = "was squished by";
 
 	if (self.sounds == 1) {
-		precache_sound("plats/plat1.wav");
-		precache_sound("plats/plat2.wav");
 		self.noise = "plats/plat1.wav";
 		self.noise1 = "plats/plat2.wav";
 	}
@@ -692,8 +690,8 @@ void(void) spawnfunc_func_plat {
 	if (self.sound2) {
 		self.noise1 = self.sound2;
 	}
+	if (self.noise != "") precache_sound(self.noise);
 	if (self.noise1 != "") precache_sound(self.noise1);
-	if (self.noise2 != "") precache_sound(self.noise2);
 	self.mangle = self.angles;
 	self.angles = '0 0 0';
 	self.classname = "plat";
