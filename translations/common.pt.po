@@ -471,6 +471,12 @@ msgstr "^2* ^3{1}^2's vote for ^1{2}^2 was accepted"
 msgid "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
 msgstr "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
 
+msgid "^2* vote results: ^1{1}^2:^1{2}^2 (^1{3}^2 needed), ^1{4}^2 didn't care, ^1{5}^2 didn't vote"
+msgstr "^2* vote results: ^1{1}^2:^1{2}^2 (^1{3}^2 needed), ^1{4}^2 didn't care, ^1{5}^2 didn't vote"
+
+msgid "^2* ^3{1}^2's vote for {2}^2 timed out"
+msgstr "^2* ^3{1}^2's vote for {2}^2 timed out"
+
 msgid "^1red key"
 msgstr "^1red key"
 
@@ -1001,3 +1007,21 @@ msgstr "^1You accepted the vote."
 
 msgid "^1You rejected the vote."
 msgstr "^1You rejected the vote."
+
+msgid "{1}{2}^7 second left to find some ammo"
+msgstr "{1}{2}^7 second left to find some ammo"
+
+msgid "Timeout/Timein"
+msgstr "Timeout/Timein"
+
+msgid "get some ammo or\nyou'll be dead in ^310^7 seconds..."
+msgstr "get some ammo or\nyou'll be dead in ^310^7 seconds..."
+
+msgid "Secondary fire inflicts no damage!"
+msgstr "Secondary fire inflicts no damage!"
+
+msgid "^1Server is restarting..."
+msgstr "^1Server is restarting..."
+
+msgid "Score count: {1}/{2}"
+msgstr "Score count: {1}/{2}"
