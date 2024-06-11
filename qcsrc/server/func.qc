@@ -440,6 +440,15 @@ self.origin traveling at speed
 */
 void(void) func_calc_move_done {
 	// After moving, set origin to exact final destination
+	vector d = self.finaldest - self.origin;
+	vector o = ENTITY_CENTER(self);
+	entity e = findradius(o, vlen(self.absmax - self.absmin) * 0.5);
+	for (; e; e = e.chain) {
+		if (e.groundentity == self) {
+			setorigin(e, e.origin + d);
+			entity_move_out_of_solid_with_type(e, TRACE_MOVE_NOMONSTERS);
+		}
+	}
 	setorigin (self, self.finaldest);
 	self.velocity = '0 0 0';
 	self.nextthink = -1;
