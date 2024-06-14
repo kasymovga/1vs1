@@ -998,7 +998,7 @@ msgid "{1}{2}^7 second left to find some ammo"
 msgstr "{1}{2}^7 секунд осталось чтобы найти патроны"
 
 msgid "Timeout/Timein"
-msgstr "Timeout/Timein"
+msgstr "Таймаут/Продолжить"
 
 msgid "get some ammo or\nyou'll be dead in ^310^7 seconds..."
 msgstr "найдите патроны\nили будете мертвы через ^310^7 секунд..."
