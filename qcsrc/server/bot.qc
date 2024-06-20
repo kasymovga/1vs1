@@ -287,7 +287,7 @@ void(void) bot_removefromlargestteam {
 	best = head;
 	besttime = head.createdtime;
 	bestcount = 0;
-	while (head) {
+	FOR_EACH_CLIENT(head) if (clienttype(head) == CLIENTTYPE_BOT) {
 		if (head.team == COLOR_TEAM1)
 			thiscount = team1;
 		else if (head.team == COLOR_TEAM2)
@@ -307,7 +307,6 @@ void(void) bot_removefromlargestteam {
 			besttime = head.createdtime;
 			best = head;
 		}
-		head = head.chain;
 	}
 	bot_count = bot_count - 1;
 	dropclient(best);
@@ -328,14 +327,11 @@ void(void) bot_removenewest {
 
 	best = head;
 	besttime = head.createdtime;
-	while (head)
-	{
-		if (besttime < head.createdtime)
-		{
+	FOR_EACH_CLIENT(head) if (clienttype(head) == CLIENTTYPE_BOT) {
+		if (besttime < head.createdtime) {
 			besttime = head.createdtime;
 			best = head;
 		}
-		head = head.chain;
 	}
 	bot_count = bot_count - 1;
 	dropclient(best);
