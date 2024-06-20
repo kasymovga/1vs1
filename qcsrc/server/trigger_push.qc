@@ -52,11 +52,7 @@ void(void) trigger_push_touch {
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 			self.pushltime = time + 0.2;
 		}
-		float ct;
-		ct = clienttype(other);
-		if (ct == CLIENTTYPE_BOT)
-			other.lastteleporttime = time;
-
+		navigation_teleported(other);
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		other.pushltime = 0;
 	}

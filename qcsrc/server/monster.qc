@@ -491,7 +491,7 @@ void monster_spawn_think() {
 			e.velocity += randomvec() * 100 + '0 0 100';
 		}
 	}
-	self.lastteleporttime = time;
+	self.teleport_time = time;
 	entity oldself = self;
 	self = spawn();
 	self.angles = oldself.angles;
@@ -535,8 +535,8 @@ void monster_spawn_use() {
 	if (plugin_monster_team_switchable())
 		self.team = activator.team;
 
-	if (self.lastteleporttime && self.lastteleporttime + self.respawntime > time)
-		self.nextthink = self.lastteleporttime + self.respawntime;
+	if (self.teleport_time && self.teleport_time + self.respawntime > time)
+		self.nextthink = self.teleport_time + self.respawntime;
 	else
 		self.think();
 }

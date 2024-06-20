@@ -506,7 +506,7 @@ void(float source_team) team_shuffle_player_out {
 		random_selection_init();
 		FOR_EACH_CLIENT(head) {
 			if (head.team == steam)
-			if (head.isbot) {
+			if (clienttype(head) == CLIENTTYPE_BOT) {
 				random_selection_add(head, 0, "", 1, 1);
 			}
 		}
@@ -514,7 +514,7 @@ void(float source_team) team_shuffle_player_out {
 		random_selection_init();
 		FOR_EACH_CLIENT(head) {
 			if (head.team == steam)
-			if not(head.isbot) {
+			if not(clienttype(head) == CLIENTTYPE_BOT) {
 				random_selection_add(head, 0, "", 1, 1);
 			}
 		}
@@ -523,7 +523,7 @@ void(float source_team) team_shuffle_player_out {
 		FOR_EACH_CLIENT(head) {
 			player_score = head.scorekeeper.scores[SP_SCORE];
 			if (head.team == steam) {
-				if (head.isbot) {
+				if (clienttype(head) == CLIENTTYPE_BOT) {
 					if (!selected_bot || player_score > selected_bot_score) {
 						selected_bot = head;
 						selected_bot_score = player_score;
@@ -540,7 +540,7 @@ void(float source_team) team_shuffle_player_out {
 		FOR_EACH_CLIENT(head) {
 			player_score = head.scorekeeper.scores[SP_SCORE];
 			if (head.team == steam) {
-				if (head.isbot) {
+				if (clienttype(head) == CLIENTTYPE_BOT) {
 					if (!selected_bot || player_score < selected_bot_score) {
 						selected_bot = head;
 						selected_bot_score = player_score;

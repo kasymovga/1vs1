@@ -23,7 +23,6 @@ entity navigation_bestgoal;
 
 .float nearestwaypointtimeout;
 .float navigation_hasgoals;
-.float lastteleporttime;
 
 .entity navigation_jetpack_goal;
 .vector navigation_jetpack_point;
@@ -64,3 +63,4 @@ void(void) navigation_goalrating_start;
 void(void) navigation_goalrating_end;
 entity(entity ent, float walkfromwp) navigation_findnearestwaypoint;
 void(void) navigation_init;
+void(entity e) navigation_teleported;

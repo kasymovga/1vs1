@@ -95,7 +95,7 @@ void(void) bot_setnameandstuff {
 		s = argv(0);
 		prio = 1;
 		FOR_EACH_CLIENT(p) {
-			if (p.isbot && strcat(prefix, s, suffix) == p.netname) {
+			if (clienttype(p) == CLIENTTYPE_BOT && strcat(prefix, s, suffix) == p.netname) {
 				prio = 0;
 				break;
 			}
@@ -266,7 +266,6 @@ void(void) bot_clientconnect {
 	self.bot_preferredcolors = self.clientcolors;
 	self.bot_nextthink = time - random();
 	self.lag_func = bot_lagfunc;
-	self.isbot = TRUE;
 	self.createdtime = self.bot_nextthink;
 	if (!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches
 		bot_setnameandstuff();
@@ -279,8 +278,10 @@ void(void) bot_removefromlargestteam {
 	entity best, head;
 	team_teams_allowed(world);
 	team_teams_count(world);
-	head = findchainfloat(isbot, TRUE);
-	if (!head)
+	FOR_EACH_CLIENT(head) {
+		if (clienttype(head) == CLIENTTYPE_BOT) break;
+	}
+	if (clienttype(head) != CLIENTTYPE_BOT)
 		return;
 
 	best = head;
@@ -319,9 +320,12 @@ void(void) bot_removenewest {
 		bot_removefromlargestteam();
 		return;
 	}
-	head = findchainfloat(isbot, TRUE);
-	if (!head)
+	FOR_EACH_CLIENT(head) {
+		if (clienttype(head) == CLIENTTYPE_BOT) break;
+	}
+	if (clienttype(head) != CLIENTTYPE_BOT)
 		return;
+
 	best = head;
 	besttime = head.createdtime;
 	while (head)

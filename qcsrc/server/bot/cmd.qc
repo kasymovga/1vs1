@@ -486,13 +486,13 @@ float(void) bot_cmd_barrier {
 		//self.colormod = '4 4 0';
 	}
 	if (self.bot_barrier == 1) { // find other bots
-		FOR_EACH_CLIENT(cl) if (cl.isbot) {
+		FOR_EACH_CLIENT(cl) if (clienttype(cl) == CLIENTTYPE_BOT) {
 			if (cl.bot_cmdqueuebuf_allocated)
 				if (cl.bot_barrier != 1)
 					return BOT_CMD_STATUS_EXECUTING; // not all are at the barrier yet
 		}
 		// all bots hit the barrier!
-		FOR_EACH_CLIENT(cl) if (cl.isbot) {
+		FOR_EACH_CLIENT(cl) if (clienttype(cl) == CLIENTTYPE_BOT) {
 			cl.bot_barrier = 2; // acknowledge barrier
 		}
 		bot_barriertime = time;
@@ -937,7 +937,7 @@ void(void) bot_cmd_setcurrent {
 void(void) bot_cmd_resetqueues {
 	entity cl;
 	float i;
-	FOR_EACH_CLIENT(cl) if (cl.isbot) {
+	FOR_EACH_CLIENT(cl) if (clienttype(cl) == CLIENTTYPE_BOT) {
 		if (cl.bot_cmdqueuebuf_allocated)
 			bot_clearqueue(cl);
 		// also, cancel all barriers

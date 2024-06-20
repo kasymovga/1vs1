@@ -524,6 +524,17 @@ float(entity e, vector startposition) navigation_routetogoal {
 	return FALSE;
 }
 
+void(entity e) navigation_teleported {
+	if (e.goalcurrent)
+	if (e.goalcurrent.classname == "waypoint")
+	if (e.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT) {
+		entity oldself = self;
+		self = e;
+		navigation_poproute();
+		self = oldself;
+	}
+}
+
 // removes any currently touching waypoints from the goal stack
 // (this is how bots detect if they reached a goal)
 void(void) navigation_poptouchedgoals {
@@ -531,14 +542,6 @@ void(void) navigation_poptouchedgoals {
 	org = self.origin;
 	m1 = org + self.mins;
 	m2 = org + self.maxs;
-	if (self.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT) {
-		if (self.lastteleporttime)
-		if (time - self.lastteleporttime < 0.15) {
-			navigation_poproute();
-			self.lastteleporttime = 0;
-			return;
-		}
-	}
 	// Loose goal touching check when running
 	if (self.aistatus & AI_STATUS_RUNNING)
 	if (self.goalcurrent.classname=="waypoint") {

@@ -771,47 +771,43 @@ void(void) waypoint_show_links {
 		return;
 
 	waypoint_editorlightningtime = time + 0.5;
-	player = find(world, classname, "player");
-	while (player) {
-		if (!player.isbot) {
-			head = navigation_findnearestwaypoint(player, FALSE);
-			if (head) {
-				w = head     ;if (w) te_lightning2(world, w.origin, player.origin);
-				w = head.wp00;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp01;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp02;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp03;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp04;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp05;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp06;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp07;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp08;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp09;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp10;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp11;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp12;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp13;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp14;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp15;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp16;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp17;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp18;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp19;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp20;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp21;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp22;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp23;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp24;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp25;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp26;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp27;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp28;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp29;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp30;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp31;if (w) te_lightning2(world, w.origin, head.origin);
-			}
+	FOR_EACH_REALPLAYER(player) {
+		head = navigation_findnearestwaypoint(player, FALSE);
+		if (head) {
+			w = head     ;if (w) te_lightning2(world, w.origin, player.origin);
+			w = head.wp00;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp01;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp02;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp03;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp04;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp05;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp06;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp07;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp08;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp09;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp10;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp11;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp12;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp13;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp14;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp15;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp16;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp17;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp18;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp19;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp20;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp21;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp22;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp23;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp24;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp25;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp26;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp27;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp28;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp29;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp30;if (w) te_lightning2(world, w.origin, head.origin);
+			w = head.wp31;if (w) te_lightning2(world, w.origin, head.origin);
 		}
-		player = find(player, classname, "player");
 	}
 }
 

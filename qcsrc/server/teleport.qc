@@ -13,8 +13,7 @@ void(entity e, vector v, float t) teleport_origin_set {
 	physics_mark_as_teleported(e, t);
 	BITXOR_ASSIGN(e.effects, EFFECT_TELEPORT_BIT);
 	projectile_update_after_teleport(e);
-	if (e.isbot)
-		e.lastteleporttime = time;
+	navigation_teleported(e);
 }
 
 void(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float _damage) teleport_death {
