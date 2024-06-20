@@ -359,13 +359,8 @@ void() map_list_shuffle {
 entity map_intermission;
 void(void) map_intermission_screenshot {
 	entity e;
-	if (cvar("sv_autoscreenshot"))
-	FOR_EACH_CLIENT(e) {
-		if (clienttype(self) == CLIENTTYPE_REAL)
-			stuffcmd(self, "\nscreenshot\necho \"^5A screenshot has been taken at request of the server.\"\n");
-
-		return;
-	}
+	FOR_EACH_REALCLIENT(e)
+		stuffcmd(e, "\nscreenshot\necho \"^5A screenshot has been taken at request of the server.\"\n");
 }
 
 void(void) map_intermission_think {
@@ -424,7 +419,7 @@ void() map_finish {
 	map_intermission.think = map_intermission_think;
 	if (cvar("sv_autoscreenshot")) {
 		defer(0.8, map_intermission_screenshot);
-		map_intermission.nextthink = time + max(1 + time, cvar("sv_mapchange_delay"));
+		map_intermission.nextthink = time + max(1, cvar("sv_mapchange_delay"));
 	} else {
 		map_intermission.nextthink = time + max(frametime, cvar("sv_mapchange_delay"));
 	}
