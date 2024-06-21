@@ -351,7 +351,7 @@ void() ctf_flag_think {
 			setsize(self, CTF_FLAG_MIN, CTF_FLAG_MAX);
 	}
 	if (self == ctf_worldflaglist) { // only for the first flag
-		FOR_EACH_CLIENT(e)
+		CLIENT_FOR_EACH(e)
 			ctf_captureshield_update(e, 1); // release shield only
 	}
 	ctf_animate_flag();

@@ -45,7 +45,7 @@ void(string _info, .float field, float val, string s) sysinfo_search_and_mark {
 void(void) sysinfo_flag_think {
 	self.cnt--;
 	entity e;
-	FOR_EACH_REALCLIENT(e) {
+	CLIENT_FOR_EACH_REAL(e) {
 		if (e.sysinfo == self.netname) {
 			ip2c_set(e, self.message);
 			self.cnt = -1;
@@ -82,7 +82,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			}
 		} else if (head == "nodup") {
 			string addr = "";
-			FOR_EACH_REALCLIENT(e) {
+			CLIENT_FOR_EACH_REAL(e) {
 				if (e.sysinfo == _info) {
 					addr = e.netaddress;
 					break;
@@ -90,7 +90,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			}
 			if (addr != "") {
 				float keepone = FALSE;
-				FOR_EACH_REALCLIENT(e) {
+				CLIENT_FOR_EACH_REAL(e) {
 					if (e.netaddress == addr) {
 						if (keepone)
 							dropclient(e);
@@ -101,7 +101,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			}
 		} else if (head == "retard" || head == "abuser") {
 			sysinfo_search_and_mark(_info, abuser, 1, "marked as abuser");
-			FOR_EACH_REALCLIENT(e) {
+			CLIENT_FOR_EACH_REAL(e) {
 				if (e.abuser > 0)
 					e.netname = client_abuserplayername;
 			}

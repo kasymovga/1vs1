@@ -626,7 +626,7 @@ void(void) physics_init {
 	physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 	if (physics_initiated) {
 		entity e;
-		FOR_EACH_REALCLIENT(e) {
+		CLIENT_FOR_EACH_REAL(e) {
 			e.player_physic.SendFlags |= 3;
 		}
 	} else {

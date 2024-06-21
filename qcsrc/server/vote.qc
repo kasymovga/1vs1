@@ -495,7 +495,7 @@ float(string votecommand, string cmd) vote_allowed {
 
 void(void) vote_reset {
 	entity player;
-	FOR_EACH_CLIENT(player) {
+	CLIENT_FOR_EACH(player) {
 		player.vote_vote = 0;
 	}
 	if (vote_called) {
@@ -566,7 +566,7 @@ void(float abstaincount, float notvoters, float mincount, string result) vote_sp
 
 float(entity pl, float allowed_dups) vote_check_dup_ip {
 	entity e;
-	FOR_EACH_REALCLIENT(e)
+	CLIENT_FOR_EACH_REAL(e)
 		if (e.vote_vote == pl.vote_vote)
 		if (e.netaddress == pl.netaddress) {
 			if (allowed_dups <= 0)
@@ -593,7 +593,7 @@ void(void) vote_count {
 	float realplayerabstaincount;
 	realplayercount = realplayernocount = realplayerabstaincount = realplayeryescount = 0;
 	float allowed_dups = cvar("sv_vote_limit_from_single_address");
-	FOR_EACH_REALCLIENT(player) {
+	CLIENT_FOR_EACH_REAL(player) {
 		if (allowed_dups > 0)
 		if (player != vote_caller)
 		if (vote_check_dup_ip(player, allowed_dups))

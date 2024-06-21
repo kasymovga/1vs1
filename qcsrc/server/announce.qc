@@ -3,7 +3,7 @@ float g_announcer_print;
 void(entity player, string msg, string txt) announce_force {
 	entity e;
 	if (player.classname == "player")
-		FOR_EACH_CLIENT(e) {
+		CLIENT_FOR_EACH(e) {
 			if (e.enemy == player)
 			if (e.classname == "spectator") {
 				announce_force(e, msg, txt);

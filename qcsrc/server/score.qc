@@ -250,7 +250,7 @@ void(entity player) score_clear {
 void() score_clear_all {
 	entity p, sk;
 	float i, t;
-	FOR_EACH_CLIENTSLOT(p) {
+	CLIENT_FOR_EACH_SLOT(p) {
 		p.play_time = 0;
 		sk = p.scorekeeper;
 		if (!sk)
@@ -483,7 +483,7 @@ void() score_winning_condition_helper {
 		strunzone(worldstatus);
 
 	worldstatus = strzone(s);
-	FOR_EACH_CLIENT(p) {
+	CLIENT_FOR_EACH(p) {
 		if (fullstatus) {
 			s = score_player_string(p, 1);
 			if (clienttype(p) == CLIENTTYPE_REAL)
@@ -638,7 +638,7 @@ entity(.float field) score_sort {
 	entity p, plist, pprev, pbest, pbestprev, pfirst, plast;
 	float i;
 	plist = world;
-	FOR_EACH_CLIENT(p)
+	CLIENT_FOR_EACH(p)
 		p.field = 0;
 
 	FOR_EACH_PLAYER(p)
@@ -793,7 +793,7 @@ void(entity to) score_nice_print {
 		p = p.chain;
 	}
 	t = 0;
-	FOR_EACH_CLIENT(p)
+	CLIENT_FOR_EACH(p)
 	if (p.classname != "player") {
 		if not(t)
 			cmd_print_to(to, "Spectators:");

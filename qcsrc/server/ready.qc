@@ -71,7 +71,7 @@ void(void) ready_restart_force {
 	map_starttime = time + RESTART_COUNTDOWN;
 	warmup_finish();
 	//reset the .ready status of all players (also spectators)
-	FOR_EACH_CLIENTSLOT(e)
+	CLIENT_FOR_EACH_SLOT(e)
 		e.ready = 0;
 
 	ready_ready = 0;

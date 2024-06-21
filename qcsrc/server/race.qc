@@ -2,7 +2,7 @@
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
 // sorry, but using \ in macros breaks line numbers
-#define RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == "spectator" && msg_entity.enemy == varname)) statement msg_entity = varname
+#define RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; CLIENT_FOR_EACH_REAL(msg_entity) if(msg_entity == varname || (msg_entity.classname == "spectator" && msg_entity.enemy == varname)) statement msg_entity = varname
 #define RACE_WRITESPECTATABLE_MSG_ONE(statement) RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 
 float g_race;
@@ -796,7 +796,7 @@ void(void) race_checkpoints_records_clear {
 
 		race_checkpoint_recordholders[i] = NULL;
 	}
-	FOR_EACH_CLIENT(e)
+	CLIENT_FOR_EACH(e)
 		race_time_clear(e);
 }
 
@@ -806,7 +806,7 @@ void() race_world_reset {
 	race_checkpoints_records_clear();
 	score_sort(race_place);
 	entity e;
-	FOR_EACH_CLIENT(e) {
+	CLIENT_FOR_EACH(e) {
 		if (e.race_place) {
 			s = score_player_add(e, SP_RACE_FASTEST, 0);
 			if (!s)

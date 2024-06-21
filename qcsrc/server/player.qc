@@ -882,7 +882,7 @@ void() player_think {
 		if (sv_taunt)
 		if (sv_autotaunt) {
 			float tauntrand = random();
-			FOR_EACH_REALCLIENT(msg_entity)
+			CLIENT_FOR_EACH_REAL(msg_entity)
 				if (tauntrand < (msg_entity.client_flags & CLIENT_FLAG_AUTOTAUNT)) {
 					if (msg_entity.cvar_cl_voice_directional >= 1)
 						sound_to(MSG_ONE, self, CHAN_VOICE, sound_random_by_str(self.playersound_taunt), VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));

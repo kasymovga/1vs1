@@ -135,7 +135,7 @@ float() coop_monster_quant {
 	coop_monster_quant_cache_time = time;
 	coop_monster_quant_cache = (g_coop_monster_base - g_coop_monster_factor);
 	entity e;
-	FOR_EACH_CLIENT(e) {
+	CLIENT_FOR_EACH(e) {
 		if (e.classname == "player" && e.deadflag == DEAD_NO) {
 			coop_monster_quant_cache += g_coop_monster_factor;
 		}

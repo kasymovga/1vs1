@@ -22,7 +22,7 @@ entity map_vote_ent;
 void() map_vote_spawn;
 
 void() map_vote_clear_all_votes {
-	FOR_EACH_CLIENT(other) {
+	CLIENT_FOR_EACH(other) {
 		other.impulse = 0;
 		other.mapvote = 0;
 	}
@@ -238,7 +238,7 @@ void(entity voter) map_vote_touch_votes {
 }
 
 float(float mappos) map_vote_finished {
-	FOR_EACH_REALCLIENT(other)
+	CLIENT_FOR_EACH_REAL(other)
 		client_fix_cvars(other);
 
 	remove(map_vote_ent);
@@ -259,7 +259,7 @@ void() map_vote_check_rules1 {
 		map_vote_votes[i] = 0;
 
 	map_vote_voters = 0;
-	FOR_EACH_REALCLIENT(other) {
+	CLIENT_FOR_EACH_REAL(other) {
 		++map_vote_voters;
 		if (other.mapvote) {
 			i = other.mapvote - 1;
@@ -337,7 +337,7 @@ void() map_vote_tick {
 		return;
 
 	totalvotes = 0;
-	FOR_EACH_REALCLIENT(other) {
+	CLIENT_FOR_EACH_REAL(other) {
 		// clear possibly invalid votes
 		if (map_vote_maps[other.mapvote - 1] == "")
 			other.mapvote = 0;

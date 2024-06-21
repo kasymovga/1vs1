@@ -12,20 +12,20 @@ void(entity e, string bigstring, string comment, float staytime) rm_bigprint {
 
 void(entity pl, string msg, string comment, float staytime) rm_bigprint_spec {
 	entity e;
-	FOR_EACH_REALCLIENT(e)
+	CLIENT_FOR_EACH_REAL(e)
 		if (e == pl || e.enemy == pl)
 			rm_bigprint(e, msg, comment, staytime);
 }
 
 void(string bigstring, string comment, float staytime) rm_bigprint_all {
 	entity e;
-	FOR_EACH_REALCLIENT(e)
+	CLIENT_FOR_EACH_REAL(e)
 		rm_bigprint(e, bigstring, comment, staytime);
 }
 
 void(string bigstring, string comment, float staytime) rm_bigprint_all_player_spec {
 	entity e;
-	FOR_EACH_REALCLIENT(e)
+	CLIENT_FOR_EACH_REAL(e)
 		if (e.classname == "player" || e.classname == "spectator")
 		rm_bigprint(e, bigstring, comment, staytime);
 }

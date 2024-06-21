@@ -508,7 +508,7 @@ void(float teem) kh_WinnerTeam { // runs when a team wins
 	kh_FinishRound();
 	if (rm_active) {
 		entity pl;
-		FOR_EACH_REALCLIENT(pl)
+		CLIENT_FOR_EACH_REAL(pl)
 			if (pl.team == teem)
 				rm_hud_flash_teamcolor_default_spec(pl);
 	}
@@ -842,7 +842,7 @@ void kh_update_state(void) {
 
 		s |= pow(32, key.count) * f;
 	}
-	FOR_EACH_CLIENT(player) {
+	CLIENT_FOR_EACH(player) {
 		player.kh_state = s;
 	}
 	FOR_EACH_KH_KEY(key) {

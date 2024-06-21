@@ -34,9 +34,9 @@ void(void) player_dmg_inflictor_setup;
 #define PLAYER_DEAD(x) (x.deadflag)
 #define PLAYER_REALLY_DEAD(x) (x.deadflag > 0 && x.deadflag <= DEAD_RESPAWNING)
 #define PLAYER_REALLY_ALIVE(x) (!x.deadflag)
-#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == "player")
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == "player")
-#define FOR_EACH_TEAMPLAYER(x) FOR_EACH_CLIENT(x) if (x.team > 0)
+#define FOR_EACH_PLAYER(v) CLIENT_FOR_EACH(v) if(v.classname == "player")
+#define FOR_EACH_REALPLAYER(v) CLIENT_FOR_EACH_REAL(v) if(v.classname == "player")
+#define FOR_EACH_TEAMPLAYER(x) CLIENT_FOR_EACH(x) if (x.team > 0)
 #define PLAYER_NAME_WITH_SLOT(p) strcat(p.netname, "^0#", ftos(num_for_edict(p)))
 float player_count;
 vector PL_VIEW_OFS;

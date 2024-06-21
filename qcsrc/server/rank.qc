@@ -23,7 +23,7 @@ void(float id, float status, string data) rank_uri_handler {
 		return;
 
 	entity pl;
-	FOR_EACH_REALCLIENT(pl) {
+	CLIENT_FOR_EACH_REAL(pl) {
 		if (pl.clid == player_id) {
 			score_player_set(pl, RANK_SCORE_PLAYER_FIELD, _rank);
 		}
@@ -73,7 +73,7 @@ void(entity whom) rank_distribute {
 	if not(rank_available)
 		return;
 
-	FOR_EACH_REALCLIENT(pl) {
+	CLIENT_FOR_EACH_REAL(pl) {
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {
@@ -92,7 +92,7 @@ void(entity whom) rank_distribute {
 		return;
 
 	totalrank = totalrank * 0.99 + totalplayers * 10; // slowly normalize to 1000 per player
-	FOR_EACH_REALCLIENT(pl) {
+	CLIENT_FOR_EACH_REAL(pl) {
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {
@@ -106,7 +106,7 @@ void(entity whom) rank_distribute {
 		}
 	}
 	float norm = totalrank / newtotalrank; // keep total rank at same level
-	FOR_EACH_REALCLIENT(pl) {
+	CLIENT_FOR_EACH_REAL(pl) {
 		if (!whom || pl == whom)
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)

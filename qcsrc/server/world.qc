@@ -386,7 +386,7 @@ void(float final) world_dump_stats {
 	if (to_file)
 		fputs(file, strcat(s, "\n"));
 
-	FOR_EACH_CLIENT(other) {
+	CLIENT_FOR_EACH(other) {
 		if ((clienttype(other) == CLIENTTYPE_REAL) || (clienttype(other) == CLIENTTYPE_BOT && cvar("sv_logscore_bots"))) {
 			s = strcat(":player:see-labels:", score_player_string(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
@@ -668,7 +668,7 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 }
 
 void(void) world_frame_end {
-	FOR_EACH_REALCLIENT(self) {
+	CLIENT_FOR_EACH_REAL(self) {
 		if (self.classname == "spectator") {
 			if (self.enemy.typehitsound)
 				sound_play2(self, "misc/typehit.wav");
@@ -687,7 +687,7 @@ void(void) world_frame_end {
 			}
 		}
 	}
-	FOR_EACH_CLIENT(self) {
+	CLIENT_FOR_EACH(self) {
 		self.hitsound = FALSE;
 		self.typehitsound = FALSE;
 	}
@@ -716,7 +716,7 @@ float(void) world_redirection_think { // returns TRUE if redirecting
 
 	redirection_nextthink = time + 1;
 	clients_found = 0;
-	FOR_EACH_REALCLIENT(self) {
+	CLIENT_FOR_EACH_REAL(self) {
 		print("Redirecting: sending connect command to ", self.netname, "\n");
 		if (redirection_target == "self")
 			stuffcmd(self, "\ndisconnect; reconnect\n");
@@ -909,8 +909,7 @@ void(float dorespawn) world_reset {
 		}
 	}
 	if (dorespawn)
-	FOR_EACH_CLIENT(self) {
-		if (self.flags & FL_CLIENT) // reset all players
+	CLIENT_FOR_EACH(self) {
 		if (self.classname == "player") {
 			self.killcount = 0;
 			self.velocity = '0 0 0';

@@ -279,12 +279,12 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 			}
 	} else if(teamsay < 0) {
 		sprint(source, sourcemsgstr);
-		FOR_EACH_REALCLIENT(head) if (head.classname != "player" && head.team <= 0)
+		CLIENT_FOR_EACH_REAL(head) if (head.classname != "player" && head.team <= 0)
 			if (head != source)
 				sprint(head, msgstr);
 	} else if (sourcemsgstr != msgstr) {
 		sprint(source, sourcemsgstr);
-		FOR_EACH_REALCLIENT(head)
+		CLIENT_FOR_EACH_REAL(head)
 			if (head != source)
 				sprint(head, msgstr);
 	} else

@@ -61,7 +61,7 @@ void() timeout_handler_think {
 			//now pause the game:
 			timeout_status = 2;
 			//reset all the flood variables
-			FOR_EACH_CLIENT(plr) {
+			CLIENT_FOR_EACH(plr) {
 				plr.floodcontrol_chat = plr.floodcontrol_chatteam = plr.floodcontrol_chattell = plr.floodcontrol_voice = plr.floodcontrol_voiceteam = 0;
 			}
 			//copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)

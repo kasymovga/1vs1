@@ -71,7 +71,7 @@ void(float n) walkietalkie_menu_select {
 		return;
 
 	entity e;
-	FOR_EACH_REALCLIENT(e)
+	CLIENT_FOR_EACH_REAL(e)
 		if (e.cvar_cl_voice_directional >= 0)
 		if ((self.team == e.team || sv_walkietalkie_public) || (e.classname == "spectator" && e.enemy.team == self.team)) {
 			msg_entity = e;

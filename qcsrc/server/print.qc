@@ -65,7 +65,7 @@ void(entity cl, float type, string s, string arg1, string arg2, string arg3, str
 void(entity cl, float type, string s, string arg1, string arg2, string arg3) print_to_spec {
 	entity spec;
 	if (cl.classname == "player")
-		FOR_EACH_REALCLIENT(spec)
+		CLIENT_FOR_EACH_REAL(spec)
 			if (spec.enemy == cl)
 			if (spec.classname == "spectator")
 				print_to(spec, type, s, arg1, arg2, arg3);
@@ -76,14 +76,14 @@ void(entity cl, float type, string s, string arg1, string arg2, string arg3) pri
 
 void(float type, string s, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6) print_all_long {
 	entity e;
-	FOR_EACH_REALCLIENT(e) {
+	CLIENT_FOR_EACH_REAL(e) {
 		print_to_long(e, type, s, arg1, arg2, arg3, arg4, arg5, arg6);
 	}
 }
 
 void(float type, string s, string arg1, string arg2, string arg3) print_all {
 	entity e;
-	FOR_EACH_REALCLIENT(e) {
+	CLIENT_FOR_EACH_REAL(e) {
 		print_to(e, type, s, arg1, arg2, arg3);
 	}
 	if (world_dedicated) {

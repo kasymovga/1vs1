@@ -154,7 +154,7 @@ void(string type, string msg) player_sound_voice_message {
 		if (!sv_taunt)
 			return;
 
-		FOR_EACH_REALCLIENT(msg_entity) {
+		CLIENT_FOR_EACH_REAL(msg_entity) {
 			if (msg_entity.cvar_cl_voice_directional >= 1) {
 				if (msg_entity == self || !self.body)
 					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
@@ -178,7 +178,7 @@ void(string type, string msg) player_sound_voice_message {
 					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASE, ATTN_NONE);
 			}
 	} else {
-		FOR_EACH_REALCLIENT(msg_entity)
+		CLIENT_FOR_EACH_REAL(msg_entity)
 			if (!team_mode || msg_entity.team == self.team)
 			{
 				if (msg_entity.cvar_cl_voice_directional == 1)
@@ -190,7 +190,7 @@ void(string type, string msg) player_sound_voice_message {
 }
 
 void(entity e, float chan) player_sound_stop {
-	FOR_EACH_REALCLIENT(msg_entity) {
+	CLIENT_FOR_EACH_REAL(msg_entity) {
 		if (msg_entity == e)
 			sound_stop_to(MSG_ONE, e, chan);
 		else
@@ -199,7 +199,7 @@ void(entity e, float chan) player_sound_stop {
 }
 
 void(entity e, float chan, string s, float vol, float attn) player_sound {
-	FOR_EACH_REALCLIENT(msg_entity) {
+	CLIENT_FOR_EACH_REAL(msg_entity) {
 		if (msg_entity == e || (msg_entity.enemy == e && msg_entity.classname == "spectator"))
 			sound_to_at(MSG_ONE, e, e.origin, chan, s, vol, attn);
 		else

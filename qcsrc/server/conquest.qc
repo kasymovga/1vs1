@@ -269,7 +269,7 @@ float(float ignore, float ignore2) conquest_winning_condition {
 			announce_sound = "ctf/blue_capture.wav";
 		}
 		sound_play2all(announce_sound);
-		FOR_EACH_REALCLIENT(head) {
+		CLIENT_FOR_EACH_REAL(head) {
 			LocationRequest_Remove(head);
 		}
 		return TRUE;

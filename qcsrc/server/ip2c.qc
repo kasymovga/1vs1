@@ -23,7 +23,7 @@ void IP2C_SetCountry_Internal(entity player, string cn) {
 
 void IP2C_LookupForPlayer_Callback(string ip, string cn, entity player) {
     entity e;
-    FOR_EACH_REALCLIENT(e) if(e.netaddress == ip && e.scorekeeper && !e.scorekeeper.scores[IP2C_SCORE]) {
+    CLIENT_FOR_EACH_REAL(e) if(e.netaddress == ip && e.scorekeeper && !e.scorekeeper.scores[IP2C_SCORE]) {
         IP2C_SetCountry_Internal(e, cn);
     }
 }

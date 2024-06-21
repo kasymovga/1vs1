@@ -24,7 +24,7 @@ float() survive_has_alive_players {
 
 float() survive_has_players {
 	entity e;
-	FOR_EACH_CLIENT(e)
+	CLIENT_FOR_EACH(e)
 		if (e.team >= 0 || e.classname == "player")
 			return TRUE;
 
@@ -50,7 +50,7 @@ void() survive_trigger {
 	entity oldself = self;
 	_survive_monster_quant = (1 - g_surv_monster_factor);
 	survive_active = FALSE;
-	FOR_EACH_CLIENT(self) {
+	CLIENT_FOR_EACH(self) {
 		if (self.team >= 0) {
 			if (self.classname != "player" || (g_surv_freeze && self.deadflag == DEAD_FREEZE)) {
 				self.classname = "player";
@@ -104,7 +104,7 @@ void() survive_plan {
 
 	survive_active = FALSE;
 	entity oldself = self;
-	FOR_EACH_CLIENT(self) {
+	CLIENT_FOR_EACH(self) {
 		if (self.team >= 0) {
 			if (self.classname != "player" || (g_surv_freeze && self.deadflag == DEAD_FREEZE)) {
 				self.classname = "player";
@@ -135,7 +135,7 @@ float(float ignore, float ignore2) survive_winning_condition {
 	//print("survive_WinningCondition()\n");
 	entity e, oldself, monster;
 	if (wave_not_found) {
-		FOR_EACH_CLIENT(e)
+		CLIENT_FOR_EACH(e)
 			e.winning = TRUE;
 
 		survive_map_finished_message = "^2All enemies destroyed!\n^2You successfully survived\n";

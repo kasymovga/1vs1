@@ -164,7 +164,7 @@ float(void) rm_game_type_vote_think {
 	for (i = 0; i < 10; i++) {
 		rm_game_type_vote_votes[i] = 0;
 	}
-	FOR_EACH_REALCLIENT(e) {
+	CLIENT_FOR_EACH_REAL(e) {
 		n++;
 		if (e.mapvote) {
 			t = rm_game_type_vote_types[e.mapvote - 1];

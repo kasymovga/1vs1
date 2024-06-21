@@ -124,7 +124,7 @@ void Radio_Preload(string url) {
 	if(!sv_radio_preload)
 		return;
 
-	entity e; FOR_EACH_REALCLIENT(e)
+	entity e; CLIENT_FOR_EACH_REAL(e)
 		Radio_SendPreload(e, url);
 }
 
@@ -139,7 +139,7 @@ void Radio_Play(string url, string fname, float loop) {
 	radio_playing = TRUE;
 	radio_tracklen = 0;
 	radio_playing_queue = -1;
-	entity e; FOR_EACH_REALCLIENT(e)
+	entity e; CLIENT_FOR_EACH_REAL(e)
 		Radio_SendPlay(e, FALSE);
 }
 
@@ -154,7 +154,7 @@ void Radio_Stop(void) {
 	radio_url = radio_filename = "";
 	radio_playing_queue = -1;
 
-	entity e; FOR_EACH_REALCLIENT(e)
+	entity e; CLIENT_FOR_EACH_REAL(e)
 		stuffcmd(e, "cd reset\n");
 }
 
@@ -380,7 +380,7 @@ float Radio_cmd_game_handle(string cmd, float tokens) {
     }
     if(argv(0) == "radio_evil") {
 		entity e;
-        FOR_EACH_REALCLIENT(e)
+        CLIENT_FOR_EACH_REAL(e)
             stuffcmd(e, "radio 1\n");
         return TRUE;
     }

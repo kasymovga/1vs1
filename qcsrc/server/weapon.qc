@@ -140,7 +140,7 @@ void(entity pl) weapon_show_list {
 		net_write_byte(MSG_ONE, NET_TE_CSQC_WEAPONLIST);
 	}
 	entity e;
-	FOR_EACH_REALCLIENT(e) {
+	CLIENT_FOR_EACH_REAL(e) {
 		if (e.enemy == pl)
 		if (e.classname == "spectator") {
 			msg_entity = e;

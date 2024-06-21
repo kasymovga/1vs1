@@ -359,7 +359,7 @@ void() map_list_shuffle {
 entity map_intermission;
 void(void) map_intermission_screenshot {
 	entity e;
-	FOR_EACH_REALCLIENT(e)
+	CLIENT_FOR_EACH_REAL(e)
 		stuffcmd(e, "\nscreenshot\necho \"^5A screenshot has been taken at request of the server.\"\n");
 }
 
@@ -394,7 +394,7 @@ void() map_finish {
 
 	sound_play2all("misc/menu2.wav");
 	map_intermission_running = 1;
-	FOR_EACH_CLIENT(e) {
+	CLIENT_FOR_EACH(e) {
 		e.solid = SOLID_NOT;
 		e.movetype = MOVETYPE_NONE;
 		e.takedamage = DAMAGE_NO;
@@ -425,7 +425,7 @@ void() map_finish {
 	}
 	vote_reset();
 	world_dump_stats(TRUE);
-	FOR_EACH_CLIENT(other) {
+	CLIENT_FOR_EACH(other) {
 		if (other.winning)
 			print_all(PRINT_INFO, "{1} ^7wins.", other.netname, "", "");
 	}

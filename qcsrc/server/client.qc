@@ -22,7 +22,7 @@ void(entity cl, vector a) client_view_angles_set {
 		net_write_angle(MSG_ONE, a_z);
 	}
 	entity e;
-	FOR_EACH_REALCLIENT(e) {
+	CLIENT_FOR_EACH_REAL(e) {
 		if (e.enemy == cl)
 		if (e.classname == "spectator") {
 			msg_entity = e;
@@ -402,7 +402,7 @@ float() client_preconnect_abort {
 	if (sv_maxconnects_per_address > 0) {
 		float n;
 		n = 0;
-		FOR_EACH_CLIENT(e)
+		CLIENT_FOR_EACH(e)
 			if (e.netaddress == self.netaddress)
 				n++;
 
@@ -571,7 +571,7 @@ float() client_join_allowed {
 
 	entity e = NULL;
 	float currentlyPlaying = 0;
-	FOR_EACH_REALCLIENT(e) {
+	CLIENT_FOR_EACH_REAL(e) {
 		if (e != self) //avoid wrong self-counting in teamplay
 		if (e.classname == "player" || (team_mode && e.team > 0))
 			currentlyPlaying += 1;
@@ -950,7 +950,7 @@ entity(float tokens, float idx) client_entity_from_argv {
 			++idx;
 			client_entity_from_argv_firsttoken = idx;
 			n = 0;
-			FOR_EACH_CLIENT(head)
+			CLIENT_FOR_EACH(head)
 			if (head.netname == s) {
 				e = head;
 				++n;
@@ -960,7 +960,7 @@ entity(float tokens, float idx) client_entity_from_argv {
 
 			s = strdecolorize(s);
 			n = 0;
-			FOR_EACH_CLIENT(head)
+			CLIENT_FOR_EACH(head)
 			if (strdecolorize(head.netname) == s) {
 				e = head;
 				++n;

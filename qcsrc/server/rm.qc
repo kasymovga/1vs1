@@ -70,7 +70,7 @@ void(entity e, entity own) rm_effect_heal_emitter {
 void(entity e) rm_effect_heal {
 	entity c;
 	vector o = e.origin + e.view_ofs;
-	FOR_EACH_REALCLIENT(c) if(c != e && c.enemy != e) {
+	CLIENT_FOR_EACH_REAL(c) if(c != e && c.enemy != e) {
 		if (c.classname == "player")
 		if (team_is_different_teams(c, e))
 		if (e.hg_stealth || player_alpha(e, c) < 0.15)

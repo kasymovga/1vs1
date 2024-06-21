@@ -31,7 +31,7 @@ void(entity e, float staytime, float intensivity, float alph) rm_hud_flash_teamc
 
 void(entity pl, vector flashcolor, float staytime, float intensivity, float alph) rm_hud_flash_spec {
 	entity e;
-	FOR_EACH_REALCLIENT(e) if (e.classname == "spectator" && e.enemy == pl)
+	CLIENT_FOR_EACH_REAL(e) if (e.classname == "spectator" && e.enemy == pl)
 		rm_hud_flash(e, flashcolor, staytime, intensivity, alph);
 
 	rm_hud_flash(pl, flashcolor, staytime, intensivity, alph);
@@ -39,7 +39,7 @@ void(entity pl, vector flashcolor, float staytime, float intensivity, float alph
 
 void(entity pl, float staytime, float intensivity, float alph) rm_hud_flash_teamcolor_spec {
 	entity e;
-	FOR_EACH_REALCLIENT(e) if (e.classname == "spectator" && e.enemy == pl)
+	CLIENT_FOR_EACH_REAL(e) if (e.classname == "spectator" && e.enemy == pl)
 		rm_hud_flash_teamcolor(e, staytime, intensivity, alph);
 
 	rm_hud_flash_teamcolor(pl, staytime, intensivity, alph);

@@ -188,7 +188,7 @@ void(void) roundbased_world_frame_start {
 				"ctf/blue_capture.wav" :
 				"domination/claim.wav"));
 		sound_play2all(announce_sound);
-		FOR_EACH_CLIENT(plr) {
+		CLIENT_FOR_EACH(plr) {
 			if (plr.classname == "player")
 			if (plr.deadflag == DEAD_NO) {
 				bprint(plr.netname, " - ^1H:", ftos(floor(plr.health)), "^0|^2A:", ftos(floor(plr.armorvalue)), "\n");
@@ -198,7 +198,7 @@ void(void) roundbased_world_frame_start {
 		RM({
 			roundbased_result_not_announced = TRUE;
 			if (roundbased_winner_team > 0) {
-				FOR_EACH_REALCLIENT(plr)
+				CLIENT_FOR_EACH_REAL(plr)
 					if (plr.team == roundbased_winner_team)
 						rm_hud_flash_teamcolor_default_spec(plr);
 			}

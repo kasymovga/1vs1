@@ -548,7 +548,7 @@ void nadget_GiveBonus(entity p, float hgtype, float amount, string reason) {
 	string n = nadget_TypeToExpandedName(hgtype);
 	entity e;
 
-	FOR_EACH_REALCLIENT(e) if(e.iscreature || e.classname == "spectator") {
+	CLIENT_FOR_EACH_REAL(e) if(e.iscreature || e.classname == "spectator") {
         entity check = e;
         if(!e.iscreature)
             check = e.enemy;

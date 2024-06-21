@@ -56,7 +56,7 @@ void(entity pl) voip_enable {
 
 void(void) voip_setup_all {
 	entity e;
-	FOR_EACH_REALCLIENT(e)
+	CLIENT_FOR_EACH_REAL(e)
 		if (e.voipgroup)
 			voip_setup(e);
 }

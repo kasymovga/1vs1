@@ -177,7 +177,7 @@ void(entity ignore) team_teams_count {
 	// now count how many players are on each team already
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
-	FOR_EACH_CLIENT(head) {
+	CLIENT_FOR_EACH(head) {
 		if (head != ignore) {
 			if (g_balance_teams_use_rank && rank_available)
 				value = 1 + (head.scorekeeper.rank * 0.001 - 1) * g_balance_teams_use_rank_compress;
@@ -504,7 +504,7 @@ void(float source_team) team_shuffle_player_out {
 	float player_score;
 	if (g_balance_teams_movetype == 1) { //random
 		random_selection_init();
-		FOR_EACH_CLIENT(head) {
+		CLIENT_FOR_EACH(head) {
 			if (head.team == steam)
 			if (clienttype(head) == CLIENTTYPE_BOT) {
 				random_selection_add(head, 0, "", 1, 1);
@@ -512,7 +512,7 @@ void(float source_team) team_shuffle_player_out {
 		}
 		selected_bot = random_selection_chosen_ent;
 		random_selection_init();
-		FOR_EACH_CLIENT(head) {
+		CLIENT_FOR_EACH(head) {
 			if (head.team == steam)
 			if not(clienttype(head) == CLIENTTYPE_BOT) {
 				random_selection_add(head, 0, "", 1, 1);
@@ -520,7 +520,7 @@ void(float source_team) team_shuffle_player_out {
 		}
 		selected_player = random_selection_chosen_ent;
 	} else if (g_balance_teams_movetype == 2) { //best
-		FOR_EACH_CLIENT(head) {
+		CLIENT_FOR_EACH(head) {
 			player_score = head.scorekeeper.scores[SP_SCORE];
 			if (head.team == steam) {
 				if (clienttype(head) == CLIENTTYPE_BOT) {
@@ -537,7 +537,7 @@ void(float source_team) team_shuffle_player_out {
 			}
 		}
 	} else { //worst
-		FOR_EACH_CLIENT(head) {
+		CLIENT_FOR_EACH(head) {
 			player_score = head.scorekeeper.scores[SP_SCORE];
 			if (head.team == steam) {
 				if (clienttype(head) == CLIENTTYPE_BOT) {
@@ -769,7 +769,7 @@ float(entity a, entity b) team_is_different_teams {
 
 void(float t) team_spawn_players {
 	entity e, oldself;
-	FOR_EACH_CLIENT(e)
+	CLIENT_FOR_EACH(e)
 		if (e.team == t)
 		if (e.classname != "player") {
 			e.classname = "player";

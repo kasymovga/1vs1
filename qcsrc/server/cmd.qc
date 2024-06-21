@@ -142,7 +142,7 @@ void(string command) cmd_game {
 	}
 	if (cmd == "nospectators") {
 		spectator_block = 1;
-		FOR_EACH_CLIENT(plr) { //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
+		CLIENT_FOR_EACH(plr) { //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 			if (plr.classname == "spectator" || plr.classname == "observer") {
 				plr.spectatortime = time;
 				sprint(plr, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
@@ -406,7 +406,7 @@ void(string command) cmd_game {
 		return;
 	}
 	if (cmd == "bprint") {
-		FOR_EACH_REALCLIENT(e) {
+		CLIENT_FOR_EACH_REAL(e) {
 			if (e.netaddress != "local")
 				sprint(e, strcat(substring(command, argv_start_index(1), -1), "\n"));
 		}

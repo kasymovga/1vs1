@@ -318,7 +318,7 @@ string(float i, string reason) ban_enforce {
 	entity e;
 	// Enforce our new ban
 	s = "";
-	FOR_EACH_REALCLIENT(e)
+	CLIENT_FOR_EACH_REAL(e)
 		if (ban_client_banned(e, i)) {
 			if (reason != "") {
 				if (s == "")

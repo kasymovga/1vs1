@@ -94,8 +94,8 @@ void(void) bot_setnameandstuff {
 		tokens = tokenizebyseparator(bot_cfg, " ");
 		s = argv(0);
 		prio = 1;
-		FOR_EACH_CLIENT(p) {
-			if (clienttype(p) == CLIENTTYPE_BOT && strcat(prefix, s, suffix) == p.netname) {
+		CLIENT_FOR_EACH_BOT(p) {
+			if (strcat(prefix, s, suffix) == p.netname) {
 				prio = 0;
 				break;
 			}
@@ -278,16 +278,14 @@ void(void) bot_removefromlargestteam {
 	entity best, head;
 	team_teams_allowed(world);
 	team_teams_count(world);
-	FOR_EACH_CLIENT(head) {
-		if (clienttype(head) == CLIENTTYPE_BOT) break;
-	}
+	CLIENT_FOR_EACH_BOT(head) { break; }
 	if (clienttype(head) != CLIENTTYPE_BOT)
 		return;
 
 	best = head;
 	besttime = head.createdtime;
 	bestcount = 0;
-	FOR_EACH_CLIENT(head) if (clienttype(head) == CLIENTTYPE_BOT) {
+	CLIENT_FOR_EACH_BOT(head) {
 		if (head.team == COLOR_TEAM1)
 			thiscount = team1;
 		else if (head.team == COLOR_TEAM2)
@@ -319,15 +317,13 @@ void(void) bot_removenewest {
 		bot_removefromlargestteam();
 		return;
 	}
-	FOR_EACH_CLIENT(head) {
-		if (clienttype(head) == CLIENTTYPE_BOT) break;
-	}
+	CLIENT_FOR_EACH_BOT(head) { break; }
 	if (clienttype(head) != CLIENTTYPE_BOT)
 		return;
 
 	best = head;
 	besttime = head.createdtime;
-	FOR_EACH_CLIENT(head) if (clienttype(head) == CLIENTTYPE_BOT) {
+	CLIENT_FOR_EACH_BOT(head) {
 		if (besttime < head.createdtime) {
 			besttime = head.createdtime;
 			best = head;
@@ -438,7 +434,7 @@ void(void) bot_serverframe {
 	}
 	activerealplayers = 0;
 	realplayers = 0;
-	FOR_EACH_REALCLIENT(head) {
+	CLIENT_FOR_EACH_REAL(head) {
 		if (head.classname == "player" || head.team >= 0)
 			++activerealplayers;
 		++realplayers;

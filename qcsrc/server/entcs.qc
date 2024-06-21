@@ -117,7 +117,7 @@ void(void) entcs_spec_message {
 
 	entity e;
 	float spectators = 0, hidden = 0;
-	FOR_EACH_REALCLIENT(e)
+	CLIENT_FOR_EACH_REAL(e)
 		if (e.enemy == self.owner && !(e.client_flags & CLIENT_FLAG_RM_ANONSPEC)) {
 			spectators++;
 			if (spectators < 8) {
