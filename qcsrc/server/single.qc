@@ -28,7 +28,7 @@ void(void) single_endlevel {
 
 	single_level_finished = TRUE;
 	entity e;
-	FOR_EACH_PLAYER(e)
+	PLAYER_FOR_EACH(e)
 		e.winning = 1;
 
 	campaign_won = TRUE;

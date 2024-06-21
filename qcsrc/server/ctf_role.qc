@@ -49,7 +49,7 @@ entity(entity bot) ctf_role_find_enemy_flag {
 float(entity bot, vector org, float _radius) ctf_role_teamcount {
 	float c = 0;
 	entity head;
-	FOR_EACH_PLAYER(head) {
+	PLAYER_FOR_EACH(head) {
 		if (head.team!=bot.team || head.deadflag != DEAD_NO || head == bot)
 			continue;
 
@@ -420,7 +420,7 @@ void() ctf_role_defense {
 		entity head, closestplayer = NULL;
 		float distance, bestdistance = 0;
 		distance = 10000;
-		FOR_EACH_PLAYER(head) {
+		PLAYER_FOR_EACH(head) {
 			if (head.deadflag!=DEAD_NO)
 				continue;
 
@@ -490,7 +490,7 @@ void(entity bot) ctf_role_reset {
 	}
 	// if there is only me on the team switch to offense
 	c = 0;
-	FOR_EACH_PLAYER(head)
+	PLAYER_FOR_EACH(head)
 	if (head.team==bot.team)
 		++c;
 

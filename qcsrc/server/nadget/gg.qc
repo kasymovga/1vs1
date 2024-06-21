@@ -6,7 +6,7 @@ NADGET_HOOKFUNCTION(gg, Attack) {
     float pwned = 0;
     float allow;
 
-    FOR_EACH_PLAYER(p)
+    PLAYER_FOR_EACH(p)
     if (p != self)
     if (!PLAYER_DEAD(p))
     if (!team_mode || p.team != self.team || RM_BUFFS_PRESENT(self, RM_BUFFS_MEDIC) || RM_BUFFS_PRESENT(self, RM_BUFFS_ADEPT))

@@ -329,7 +329,7 @@ void(string command) cmd_game {
 		return;
 	}
 	if (cmd == "alltospec") {
-		FOR_EACH_PLAYER(plr) {
+		PLAYER_FOR_EACH(plr) {
 			player_to_spec(plr);
 		}
 		return;
@@ -338,7 +338,7 @@ void(string command) cmd_game {
 	if (cmd == "shuffleteams") {
 		float t = COLOR_TEAM4;
 		random_queue_start();
-		FOR_EACH_TEAMPLAYER(plr)
+		PLAYER_FOR_EACH_TEAM(plr)
 			random_queue_push(plr, 0, "");
 
 		for(; random_queue_next();) {

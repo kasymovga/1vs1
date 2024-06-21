@@ -27,7 +27,7 @@ void(float killed) coop_player_clear {
 		return;
 
 	entity e;
-	FOR_EACH_PLAYER(e) { //last alive player leave
+	PLAYER_FOR_EACH(e) { //last alive player leave
 		if (e != self)
 		if (e.deadflag == DEAD_NO)
 			return;
@@ -80,7 +80,7 @@ void() coop_observer_spawn {
 	entity e;
 	float have_players;
 	have_players = FALSE;
-	FOR_EACH_PLAYER(e) { //last alive player become spectator
+	PLAYER_FOR_EACH(e) { //last alive player become spectator
 		if (e != self) {
 			if (e.deadflag == DEAD_NO)
 				return;
@@ -107,7 +107,7 @@ void(entity ignore) coop_ice_unfroze {
 void() coop_ice_frozen_status {
 	score_player_set(self, SP_STATUS, 1);
 	entity e;
-	FOR_EACH_PLAYER(e) {
+	PLAYER_FOR_EACH(e) {
 		if (e.deadflag == DEAD_NO)
 			return;
 	}
@@ -160,7 +160,7 @@ float(entity to, float f) coop_item_give_factor {
 		coop_item_give_recursion = TRUE;
 		entity e, e2;
 		e2 = spawn();
-		FOR_EACH_PLAYER(e) {
+		PLAYER_FOR_EACH(e) {
 			if (e != to && e.deadflag == DEAD_NO) {
 				copyentity(coop_item_give, e2);
 				item_give_to(e2, e);

@@ -129,7 +129,7 @@ void(entity for_whom) team_teams_allowed {
 	if (for_whom.stacker) {
 		entity e;
 		float st1 = 0, st2 = 0, st3 = 0, st4 = 0;
-		FOR_EACH_TEAMPLAYER(e) {
+		PLAYER_FOR_EACH_TEAM(e) {
 			if (e == for_whom) continue;
 			if (e.stacker) {
 				switch (e.team) {
@@ -450,7 +450,7 @@ void(entity pl, float dteam, float nobalance) team_change {
 	if not(nobalance) {
 		if (teamchange)
 		if (clienttype(pl) == CLIENTTYPE_REAL)
-		FOR_EACH_PLAYER(e)
+		PLAYER_FOR_EACH(e)
 			if (clienttype(e) == CLIENTTYPE_BOT)
 			if (e.team == dteam) {
 				e.team = -1;

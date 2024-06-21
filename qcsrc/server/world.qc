@@ -443,7 +443,7 @@ float(void) world_check_rules_run_out_spawns {
 		return FALSE;
 
 	score_team1 = score_team2 = score_team3 = score_team4 = 0;
-	FOR_EACH_PLAYER(head) if (head.deadflag == DEAD_NO) {
+	PLAYER_FOR_EACH(head) if (head.deadflag == DEAD_NO) {
 		if (head.team == COLOR_TEAM1)
 			score_team1 = 1;
 		else if (head.team == COLOR_TEAM2)
@@ -520,14 +520,14 @@ void(void) world_overtime {
 // set the .winning flag for exactly those players with a given field value
 void(.float field, float value) world_winners_set {
 	entity head;
-	FOR_EACH_PLAYER(head)
+	PLAYER_FOR_EACH(head)
 		head.winning = (head.field == value);
 }
 
 // set the .winning flag for those players with a given field value
 void(.float field, float value) world_winners_add {
 	entity head;
-	FOR_EACH_PLAYER(head)
+	PLAYER_FOR_EACH(head)
 		if (head.field == value)
 			head.winning = 1;
 }
@@ -535,7 +535,7 @@ void(.float field, float value) world_winners_add {
 // clear the .winning flags
 void(void) world_winners_clear {
 	entity head;
-	FOR_EACH_PLAYER(head)
+	PLAYER_FOR_EACH(head)
 		head.winning = 0;
 }
 

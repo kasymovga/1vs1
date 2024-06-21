@@ -432,7 +432,7 @@ void() score_winning_condition_helper {
 		score_winning_condition_helper_second = world;
 		winnerscorekeeper = world;
 		secondscorekeeper = world;
-		FOR_EACH_PLAYER(p) {
+		PLAYER_FOR_EACH(p) {
 			sk = p.scorekeeper;
 			c = score_compare_players(winnerscorekeeper, sk);
 			if (c < 0) {
@@ -641,7 +641,7 @@ entity(.float field) score_sort {
 	CLIENT_FOR_EACH(p)
 		p.field = 0;
 
-	FOR_EACH_PLAYER(p)
+	PLAYER_FOR_EACH(p)
 		if (p.scorekeeper) {
 			p.chain = plist;
 			plist = p;

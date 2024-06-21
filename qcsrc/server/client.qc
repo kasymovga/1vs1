@@ -64,7 +64,7 @@ void(void) client_put {
 			announce(self, "announcer/robotic/prepareforbattle.wav", "^3Prepare for Battle");
 	}
 	entity e;
-	FOR_EACH_PLAYER(e)
+	PLAYER_FOR_EACH(e)
 		e.entcs.SendFlags |= 16;
 
 	float oldteam = self.team;
@@ -512,7 +512,7 @@ void(void) client_disconnect { //called by engine
 	if (!map_finished)
 	if (self.classname == "player") {
 		entity e;
-		FOR_EACH_REALPLAYER(e) {
+		PLAYER_FOR_EACH_REAL(e) {
 			if (e != self) {
 				chat_print(strcat("^3* ", self.netname, " ", s, "\n"));
 				break;

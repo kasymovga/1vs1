@@ -67,7 +67,7 @@ void(float a) shootingrange_activate {
 	}
 	self = e;
 	if (shootingrange_round_active)
-		FOR_EACH_PLAYER(e) {
+		PLAYER_FOR_EACH(e) {
 			score_player_set(e, SHOOTINGRANGE_ROUND_SCORE, 0);
 		}
 }

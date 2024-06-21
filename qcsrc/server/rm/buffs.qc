@@ -786,7 +786,7 @@ void Buffs_ApplyConduit(void) {
 	vector buff_org = self.origin + RM_BUFFS_MODEL_OVERHEAD_OFFSET;
 	float healed = 0, damaged = 0;
 	entity plr;
-    FOR_EACH_PLAYER(plr) if(self != plr && !PLAYER_DEAD(plr)) {
+    PLAYER_FOR_EACH(plr) if(self != plr && !PLAYER_DEAD(plr)) {
         float sameteam = !team_is_different_teams(self, plr);
 
         if((sameteam && !doheal) || (!sameteam && !_damage))

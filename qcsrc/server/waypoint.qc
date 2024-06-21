@@ -771,7 +771,7 @@ void(void) waypoint_show_links {
 		return;
 
 	waypoint_editorlightningtime = time + 0.5;
-	FOR_EACH_REALPLAYER(player) {
+	PLAYER_FOR_EACH_REAL(player) {
 		head = navigation_findnearestwaypoint(player, FALSE);
 		if (head) {
 			w = head     ;if (w) te_lightning2(world, w.origin, player.origin);

@@ -62,7 +62,7 @@ void(void) lms_sphere_think {
 	self.cnt = self.cnt + 1;
 	if (self.cnt >= 10) {
 		self.cnt = 0;
-		FOR_EACH_PLAYER(e) {
+		PLAYER_FOR_EACH(e) {
 			if (e.deadflag)
 				continue;
 
@@ -158,7 +158,7 @@ var void(void) lms_client_connect_next;
 void(void) lms_client_connect {
 	score_player_set(self, SP_LIVES, g_lms_lives);
 	entity e;
-	FOR_EACH_PLAYER(e) {
+	PLAYER_FOR_EACH(e) {
 		if (e.classname == "player")
 		if (e.scorekeeper.lms_lives < self.scorekeeper.lms_lives)
 			score_player_set(self, SP_LIVES, e.scorekeeper.lms_lives);
@@ -175,7 +175,7 @@ float(float ignore, float ignore2) lms_winning_condition {
 	if not(lms_someone_died)
 		return FALSE;
 
-	FOR_EACH_PLAYER(e) {
+	PLAYER_FOR_EACH(e) {
 		if (e.scorekeeper.lms_lives > 0)
 			alive_players++;
 	}

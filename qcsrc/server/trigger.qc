@@ -1157,7 +1157,7 @@ void(void) spawnfunc_trigger_relay_random {
 
 void(void) trigger_relay_foreachplayer_use {
 	entity activatorold = activator;
-	FOR_EACH_PLAYER(activator)
+	PLAYER_FOR_EACH(activator)
 		trigger_use_targets();
 
 	activator = activatorold;

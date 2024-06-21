@@ -15,7 +15,7 @@ void nadget_Cloak(void) {
     sound(self, CHAN_AUTO, "misc/stealth.wav", VOL_BASE, ATTN_NORM);
 	entity e;
 	if (g_nadgets_cloak_spy)
-		FOR_EACH_PLAYER(e)
+		PLAYER_FOR_EACH(e)
 			e.entcs.SendFlags |= 16;
 }
 

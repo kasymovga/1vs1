@@ -106,7 +106,7 @@ void nadget_Waypoint(void) {
         }
 
         if(rng > 0) {
-            FOR_EACH_PLAYER(plr) {
+            PLAYER_FOR_EACH(plr) {
                 if(plr.team != self.team || !team_mode)
                 if(plr != self.owner)
                 if not(PLAYER_DEAD(plr))

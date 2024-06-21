@@ -67,7 +67,7 @@ void(void) jb_torture_grenade_touch {
 entity(float t) jb_torture_target {
 	entity e;
 	random_selection_init();
-	FOR_EACH_PLAYER(e) {
+	PLAYER_FOR_EACH(e) {
 		if (e.team == t) {
 			random_selection_add(e, 0, "", max(0, e.health), 1);
 		}
@@ -254,7 +254,7 @@ void(void) jb_think {
 			}
 		}
 	}
-	FOR_EACH_PLAYER(e) {
+	PLAYER_FOR_EACH(e) {
 		if (e.scorekeeper.scores[SP_STATUS]) {
 			injail = e.deadflag;
 			if not(e.deadflag)
@@ -633,7 +633,7 @@ void(void) jb_controlpoint_think {
 		}
 		jb_controlpoint_model_setup();
 		float prisoners_count = 0;
-		FOR_EACH_PLAYER(e)
+		PLAYER_FOR_EACH(e)
 			if (e.team == self.killindicator.enemy.team && JB_PLAYER_JAILED(e))
 				prisoners_count++;
 
@@ -661,7 +661,7 @@ void(void) jb_controlpoint_touch {
 		if (e.enemy == other) return;
 	}
 	float somebodyjailed = FALSE;
-	FOR_EACH_PLAYER(e)
+	PLAYER_FOR_EACH(e)
 		if (e.team == other.team && JB_PLAYER_JAILED(e)) {
 			somebodyjailed = TRUE;
 			break;

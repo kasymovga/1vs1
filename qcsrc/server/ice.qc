@@ -229,7 +229,7 @@ void(void) ice_think {
 		}
 	}
 	float unfrozers_count = 0;
-	FOR_EACH_PLAYER(e) {
+	PLAYER_FOR_EACH(e) {
 		if (e == self.owner || e.team != self.owner.team || e.deadflag != DEAD_NO || vlen(e.origin - self.owner.origin) > 100 || player_entity(e) != e)
 			continue;
 

@@ -6,7 +6,7 @@ void(float ratingscale, vector org, float sradius) freeze_role_goalrating_frozen
 	if(self.waterlevel>WATER_LEVEL_WETFEET)
 		return;
 
-	FOR_EACH_PLAYER(head)
+	PLAYER_FOR_EACH(head)
 	{
 		if (self != head)
 		if (head.deadflag == DEAD_FREEZE)

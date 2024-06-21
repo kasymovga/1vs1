@@ -65,7 +65,7 @@ void() timeout_handler_think {
 				plr.floodcontrol_chat = plr.floodcontrol_chatteam = plr.floodcontrol_chattell = plr.floodcontrol_voice = plr.floodcontrol_voiceteam = 0;
 			}
 			//copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
-			FOR_EACH_REALPLAYER(plr) {
+			PLAYER_FOR_EACH_REAL(plr) {
 				plr.lastV_angle = plr.v_angle;
 			}
 			self.nextthink = time;
@@ -84,7 +84,7 @@ void() timeout_handler_think {
 			//unpause the game again
 			timeout_remaining_time = timeout_status = 0;
 			//and unlock the fixed view again once there is no timeout active anymore
-			FOR_EACH_REALPLAYER(plr) {
+			PLAYER_FOR_EACH_REAL(plr) {
 				plr.fixangle = FALSE;
 			}
 			//get rid of the countdown message

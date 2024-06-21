@@ -1297,7 +1297,7 @@ void(entity chess_bot) chess_ai_move {
 float(float ignore1, float ignore2) chess_winning_condition {
 	if (time < map_starttime) return FALSE;
 	entity e, wh = NULL, wb = NULL, bh = NULL, bb = NULL;
-	FOR_EACH_PLAYER(e) {
+	PLAYER_FOR_EACH(e) {
 		if (clienttype(e) == CLIENTTYPE_BOT) {
 			if (e.team == COLOR_TEAM1)
 				wb = e;

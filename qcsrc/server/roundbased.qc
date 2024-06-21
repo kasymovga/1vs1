@@ -62,7 +62,7 @@ void(void) roundbased_world_frame_start {
 	entity plr;
 	if (roundbased_need_check_teams) {
 		roundbased_team_check = 0;
-		FOR_EACH_TEAMPLAYER(plr) {
+		PLAYER_FOR_EACH_TEAM(plr) {
 			if not(roundbased_team_check)
 				roundbased_team_check = plr.team;
 			else if (plr.team != roundbased_team_check) {
@@ -96,7 +96,7 @@ void(void) roundbased_world_frame_start {
 			world_reset(FALSE);
 			roundbased_restart_time = 0;
 			oldself = self;
-			FOR_EACH_TEAMPLAYER(plr) {
+			PLAYER_FOR_EACH_TEAM(plr) {
 				self = plr;
 				self.classname = "player";
 				self.parm_idlesince = time;
@@ -159,7 +159,7 @@ void(void) roundbased_world_frame_start {
 	if (roundbased_need_check_teams > 0) {
 		roundbased_team_alive = 0;
 		roundbased_have_death_players = 0;
-		FOR_EACH_TEAMPLAYER(plr) {
+		PLAYER_FOR_EACH_TEAM(plr) {
 			if (plr.classname != "player" || plr.deadflag != DEAD_NO) {
 				roundbased_have_death_players = 1;
 				continue;

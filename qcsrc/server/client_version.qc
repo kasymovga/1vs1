@@ -5,7 +5,7 @@ void(void) client_version_basics_end {
 	clientversion = scores[CLIENT_SCORE_VERSION];
 	if (oldclientversionfield) {
 		entity e;
-		FOR_EACH_REALPLAYER(e) {
+		PLAYER_FOR_EACH_REAL(e) {
 			score_player_set(e, CLIENT_SCORE_VERSION, e.oldclientversionfield);
 			e.clientversion = e.oldclientversionfield;
 		}

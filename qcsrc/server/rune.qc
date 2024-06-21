@@ -180,7 +180,7 @@ void(void) rune_touch {
 	sound (other, CHAN_TRIGGER, "misc/mediumhealth.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	entity e;
 	if (self.runes & RUNE_HACKER)
-		FOR_EACH_PLAYER(e)
+		PLAYER_FOR_EACH(e)
 			e.entcs.SendFlags |= 16;
 }
 

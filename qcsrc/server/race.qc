@@ -357,7 +357,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 					strunzone(race_checkpoint_recordholders[cp]);
 
 				race_checkpoint_recordholders[cp] = strzone(e.netname);
-				FOR_EACH_REALPLAYER(p)
+				PLAYER_FOR_EACH_REAL(p)
 					if (p.race_checkpoint == cp)
 						race_checkpoint_next_send(p, 0);
 			}
@@ -686,7 +686,7 @@ void(entity p) race_abandon_check {
 void(void) race_start_completing {
 	entity p;
 	race_completing = 1;
-	FOR_EACH_PLAYER(p)
+	PLAYER_FOR_EACH(p)
 		if (p.deadflag != DEAD_NO)
 			race_abandon_check(p);
 }
@@ -962,7 +962,7 @@ float(float fraglimit) race_winning_condition_non_qualifying {
 	float n, c;
 	n = 0;
 	c = 0;
-	FOR_EACH_PLAYER(p) {
+	PLAYER_FOR_EACH(p) {
 		++n;
 		if (p.race_completed)
 			++c;
@@ -989,7 +989,7 @@ float() race_OvertimeHandle {
 		float readyplayers;
 		entity head;
 		totalplayers = playerswithlaps = readyplayers = 0;
-		FOR_EACH_PLAYER(head) {
+		PLAYER_FOR_EACH(head) {
 			++totalplayers;
 			if(score_player_add(head, SP_RACE_FASTEST, 0))
 				++playerswithlaps;

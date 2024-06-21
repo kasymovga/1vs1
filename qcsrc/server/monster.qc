@@ -46,7 +46,7 @@ void monster_set_route() {
 	if (self.enemy)
 		navigation_routerating(player_entity(self.enemy), 10000, 10000);
 	else
-		FOR_EACH_PLAYER(p)
+		PLAYER_FOR_EACH(p)
 			if (p.health >= 1)
 			if (p.deadflag == DEAD_NO)
 				navigation_routerating(player_entity(p), 10000, 10000);
@@ -78,7 +78,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	float f;
 	entity p = world;
 	if not(map_finished)
-	FOR_EACH_PLAYER(pl)
+	PLAYER_FOR_EACH(pl)
 	if ((e = player_entity(pl)))
 	if (e.health >= 1)
 	if (e.takedamage)

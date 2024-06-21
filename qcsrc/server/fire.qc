@@ -109,7 +109,7 @@ void(entity e) fire_apply_damage {
 	}
 	e.fire_hitsound = TRUE;
 	if not(PLAYER_IS_INDEPENDENT(e))
-	FOR_EACH_PLAYER(other) if (e != other) {
+	PLAYER_FOR_EACH(other) if (e != other) {
 		if (other.classname == "player")
 		if (other.deadflag == DEAD_NO)
 		if not(PLAYER_IS_INDEPENDENT(other))

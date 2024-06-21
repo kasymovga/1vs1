@@ -63,7 +63,7 @@ void(void) player_dmg_inflictor_fix {
 			remove(e);
 		}
 	}
-	FOR_EACH_PLAYER(e)
+	PLAYER_FOR_EACH(e)
 		if (e.dmg_inflictor && (e.dmg_inflictor.classname != "dmg_inflictor" || e.dmg_inflictor.owner != e || wasfreed(e.dmg_inflictor))) {
 			e.dmg_inflictor = spawn();
 			e.dmg_inflictor.classname = "dmg_inflictor";
@@ -1157,7 +1157,7 @@ void(entity spot) player_spawn {
 	}
 	entity e;
 	float n = 0;
-	FOR_EACH_REALPLAYER(e) n++;
+	PLAYER_FOR_EACH_REAL(e) n++;
 	if not(warmup_active)
 	if not(map_finished)
 	if (n > player_real_count)
@@ -1178,7 +1178,7 @@ void(entity spot) player_spawn {
 void(void) player_leave {
 	float n = 0;
 	entity e;
-	FOR_EACH_REALPLAYER(e) n++;
+	PLAYER_FOR_EACH_REAL(e) n++;
 	if not(warmup_active)
 	if not(map_finished)
 	if (n < player_real_count)

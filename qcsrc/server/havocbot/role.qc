@@ -42,7 +42,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_item
 		}
 		if (team_mode) {
 			discard = FALSE;
-			FOR_EACH_PLAYER(player) {
+			PLAYER_FOR_EACH(player) {
 				if ( self == player || player.deadflag )
 					continue;
 
@@ -115,7 +115,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 	if (self.waterlevel>WATER_LEVEL_WETFEET)
 		return;
 
-	FOR_EACH_PLAYER(head) {
+	PLAYER_FOR_EACH(head) {
 		// TODO: Merge this logic with the bot_shouldattack function
 		if (self != head)
 		if (head.health > 0)

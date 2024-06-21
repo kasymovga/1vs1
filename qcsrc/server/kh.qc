@@ -386,7 +386,7 @@ void(void) kh_Key_Touch { // runs many, many times when a key has been dropped a
 
 void(void) kh_key_think {  // runs all the time
 	entity head;
-	//entity player;  // needed by FOR_EACH_PLAYER
+	//entity player;  // needed by PLAYER_FOR_EACH
 	if (map_intermission_running)
 		return;
 
@@ -435,7 +435,7 @@ void(void) kh_key_think {  // runs all the time
 	}
 	if (kh_interferemsg_time && time > kh_interferemsg_time) {
 		kh_interferemsg_time = 0;
-		FOR_EACH_PLAYER (head) {
+		PLAYER_FOR_EACH (head) {
 			if (head.team == kh_interferemsg_team)
 				if (head.kh_next)
 					print_to_spec(head, PRINT_CENTER, "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!", "", "", "");
@@ -546,7 +546,7 @@ void(float teem, entity lostkey) kh_LoserTeam { // runs when a player pushes a f
 		print_to_spec(attacker, PRINT_CENTER, "Your push is the best!", "", "", "");
 		print_all(PRINT_INFO, "The {1}^7 could not take care of the {2}^7 when {3}^7 came", team_colored_name(teem), lostkey.netname, attacker.netname);
 	} else {
-		FOR_EACH_PLAYER(player)
+		PLAYER_FOR_EACH(player)
 			if (player.team != teem)
 				++players;
 
@@ -587,7 +587,7 @@ string(void) kh_CheckEnoughPlayers { // checks enough player are present, runs a
 	for (i = 0; i < kh_teams; ++i) {
 		teem = team_from_index(i);
 		players = 0;
-		FOR_EACH_PLAYER(player)
+		PLAYER_FOR_EACH(player)
 			if (player.deadflag == DEAD_NO)
 				if ( !player.BUTTON_CHAT)
 					if (player.team == teem)
@@ -639,7 +639,7 @@ void(void) kh_StartRound { // runs at the start of each round
 		teem = team_from_index(i);
 		players = 0;
 		entity my_player = NULL;
-		FOR_EACH_PLAYER(player)
+		PLAYER_FOR_EACH(player)
 			if (player.deadflag == DEAD_NO)
 				if (!player.BUTTON_CHAT)
 					if (player.team == teem) {

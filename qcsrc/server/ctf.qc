@@ -76,7 +76,7 @@ void() ctf_flag_touch;
 float(float enemyteam, float score) ctf_adjust_score_by_enemy_number {
 	entity pl;
 	float n = 0;
-	FOR_EACH_TEAMPLAYER(pl)
+	PLAYER_FOR_EACH_TEAM(pl)
 		if (pl.team == enemyteam)
 			n++;
 
@@ -115,7 +115,7 @@ float(entity p) ctf_captureshield_shielded {
 		return FALSE;
 
 	players_total = players_worseeq = 0;
-	FOR_EACH_PLAYER(e) {
+	PLAYER_FOR_EACH(e) {
 		if (e.team != p.team)
 			continue;
 
@@ -521,7 +521,7 @@ void() ctf_flag_touch {
 		game_status_set("{1}^7 taken", 1, strcat(team_color_code(self.team), team_color_name(self.team), " Flag"), "", "");
 		print_to_spec(other, PRINT_CENTER, "You have the flag!", "", "", "");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
-		FOR_EACH_PLAYER(player)
+		PLAYER_FOR_EACH(player)
 			if (player.team == self.team)
 				print_to_spec(player, PRINT_CENTER, "The enemy got your flag! Retrieve it!", "", "", "");
 
@@ -543,7 +543,7 @@ void() ctf_flag_touch {
 			// return flag
 			print_all(PRINT_INFO, "{1}^7 returned the {2}", other.netname,  self.netname, "");
 			// punish the player who last had it
-			FOR_EACH_PLAYER(player)
+			PLAYER_FOR_EACH(player)
 				if (player.playerid == self.dropperid) {
 					score_player_add(player, SP_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 					ctf_captureshield_update(player, 0); // shield only
@@ -594,7 +594,7 @@ void() ctf_flag_touch {
 			game_status_set("{1}^7 taken", 1, strcat(team_color_code(self.team), team_color_name(self.team), " Flag"), "", "");
 			print_to_spec(other, PRINT_CENTER, "You have the flag!", "", "", "");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
-			FOR_EACH_PLAYER(player)
+			PLAYER_FOR_EACH(player)
 				if (player.team == self.team)
 					print_to_spec(player, PRINT_CENTER, "The enemy got your flag! Retrieve it!", "", "", "");
 

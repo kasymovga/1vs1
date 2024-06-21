@@ -14,7 +14,7 @@ void nadget_Linker_Adept_Push(entity p) {
 
 void(void) nadget_linker_on_remove {
 	entity  p;
-	FOR_EACH_PLAYER(p) {
+	PLAYER_FOR_EACH(p) {
 		if (p.hg_linker == self)
 			p.hg_linker = NULL;
 	}
@@ -39,7 +39,7 @@ void nadget_Linker_Think(void) {
         return;
     }
     float sharingframe = (time > self.hg_linker_nexteffect);
-    FOR_EACH_PLAYER(p) {
+    PLAYER_FOR_EACH(p) {
         if(p.team != self.team || (!team_mode && p != self.owner)) {
             if(p.hg_linker == self)
                 p.hg_linker = world;
@@ -57,7 +57,7 @@ void nadget_Linker_Think(void) {
             thealth += p.health;
             tarmor += p.armorvalue;
             if(time > p.hg_linker_effecttime) {
-                FOR_EACH_PLAYER(e) if(e != p) if(e.hg_linker == self) if(time > e.hg_linker_effecttime) IF_NADGET_LINKER_APPLICABLE(e) {
+                PLAYER_FOR_EACH(e) if(e != p) if(e.hg_linker == self) if(time > e.hg_linker_effecttime) IF_NADGET_LINKER_APPLICABLE(e) {
                     effect_lightningarc(p.origin, e.origin);
                 }
             }
@@ -74,7 +74,7 @@ void nadget_Linker_Think(void) {
         if(denom >= 1) {
             if(denom > 1) sound(self, CHAN_AUTO, "kh/capture.wav", 0.4, 1.5);
 
-            FOR_EACH_PLAYER(p) if(p.hg_linker == self) IF_NADGET_LINKER_APPLICABLE(p) {
+            PLAYER_FOR_EACH(p) if(p.hg_linker == self) IF_NADGET_LINKER_APPLICABLE(p) {
                 if(denom > 1 && g_nadgets_linker_sharefactor) {
                     float newhealth = (1 - g_nadgets_linker_sharefactor) * p.health     + g_nadgets_linker_sharefactor * (thealth / denom);
                     float newarmor  = (1 - g_nadgets_linker_sharefactor) * p.armorvalue + g_nadgets_linker_sharefactor * (tarmor  / denom);

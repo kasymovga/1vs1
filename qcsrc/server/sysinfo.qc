@@ -76,7 +76,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			sysinfo_search_and_mark(_info, saboteur, 1, "marked as saboteur");
 		else if (head == "noteam" && team_mode) {
 			sysinfo_search_and_mark(_info, saboteur, 2, "marked as no team");
-			FOR_EACH_REALPLAYER(e) {
+			PLAYER_FOR_EACH_REAL(e) {
 				if (e.sysinfo == _info)
 					player_to_spec(e);
 			}

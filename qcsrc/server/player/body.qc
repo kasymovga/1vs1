@@ -25,7 +25,7 @@ void(void) player_species_setup {
 	float glob, i, j, fh = -1, len, sk;
 	string fn, l;
 	entity pl;
-	FOR_EACH_PLAYER(pl)
+	PLAYER_FOR_EACH(pl)
 		if (pl != self)
 		if (pl.body)
 		if (pl.body.playermodel == self.body.playermodel)
@@ -617,7 +617,7 @@ void(void) player_body_animation {
 void(string modelname) player_body_setup_lod {
 	string s;
 	entity pl;
-	FOR_EACH_PLAYER(pl)
+	PLAYER_FOR_EACH(pl)
 		if (pl.body)
 		if (pl.body.playermodel == modelname) {
 			player_body_copy(self.body, pl.body, TRUE);

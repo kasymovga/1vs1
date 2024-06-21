@@ -18,7 +18,7 @@ void(float t) antilag_record {
 
 	entity e;
 	antilag_times[antilag_index] = t;
-	FOR_EACH_PLAYER(e)
+	PLAYER_FOR_EACH(e)
 		e.(antilag_origins[antilag_index]) = e.origin;
 
 	for (e = _antilag_chain; e; e = e.antilag_chain)
@@ -102,7 +102,7 @@ void(entity source) antilag_begin {
 	if (antilag_lag) {
 		// take players back into the past
 		entity e;
-		FOR_EACH_PLAYER(e)
+		PLAYER_FOR_EACH(e)
 			if (e != source) {
 				antilag_takeback(e, past);
 			}
@@ -115,7 +115,7 @@ void(void) antilag_end {
 	// restore players to current positions
 	if (antilag_lag) {
 		entity e;
-		FOR_EACH_PLAYER(e)
+		PLAYER_FOR_EACH(e)
 			if (e != antilag_source)
 				antilag_restore(e);
 

@@ -218,14 +218,14 @@ float(float ignore, float ignore2) conquest_winning_condition {
 	if(warmup_active)
 		return FALSE;
 
-	FOR_EACH_TEAMPLAYER(head)
+	PLAYER_FOR_EACH_TEAM(head)
 		if (head.team == COLOR_TEAM1)
 		if (head.classname == "player")
 		if not(head.deadflag) {
 			t1 = 1;
 			break;
 		}
-	FOR_EACH_TEAMPLAYER(head)
+	PLAYER_FOR_EACH_TEAM(head)
 		if (head.team == COLOR_TEAM2)
 		if (head.classname == "player")
 		if not(head.deadflag) {

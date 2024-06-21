@@ -106,7 +106,7 @@ float(entity e, float chan, string samp, float vol, float atten) sound_spam {
 
 void(float t, string filename) sound_play2team {
 	entity head;
-	FOR_EACH_REALPLAYER(head) {
+	PLAYER_FOR_EACH_REAL(head) {
 		if (head.team == t)
 			sound_play2(head, filename);
 	}

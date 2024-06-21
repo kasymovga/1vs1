@@ -106,7 +106,7 @@ void(float ratingscale) onslaught_role_goalrating_controlpoints_attack {
 
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
-		FOR_EACH_PLAYER(pl)
+		PLAYER_FOR_EACH(pl)
 		if(pl.team==self.team)
 		if(pl.havocbot_role_flags & ONS_ROLE_OFFENSE)
 		if(pl.havocbot_ons_target==cp2)
@@ -301,7 +301,7 @@ void(entity bot) onslaught_role_reset {
 
 	// if there is only me on the team switch to offense
 	c = 0;
-	FOR_EACH_PLAYER(head)
+	PLAYER_FOR_EACH(head)
 	if(head.team==self.team)
 		++c;
 

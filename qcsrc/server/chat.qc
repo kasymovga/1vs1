@@ -273,7 +273,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		sprint(privatesay, msgstr);
 	} else if (teamsay > 0) {
 		sprint(source, sourcemsgstr);
-		FOR_EACH_REALPLAYER(head) if(head.team == source.team)
+		PLAYER_FOR_EACH_REAL(head) if(head.team == source.team)
 			if (head != source) {
 				sprint(head, msgstr);
 			}

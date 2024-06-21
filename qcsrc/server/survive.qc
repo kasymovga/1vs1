@@ -15,7 +15,7 @@ string() survive_wave_string {
 
 float() survive_has_alive_players {
 	entity e;
-	FOR_EACH_PLAYER(e)
+	PLAYER_FOR_EACH(e)
 		if (PLAYER_REALLY_ALIVE(e))
 			return TRUE;
 

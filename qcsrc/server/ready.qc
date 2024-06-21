@@ -86,7 +86,7 @@ void(void) ready_restart_force {
 	ready_restart_timer.nextthink = (cvar("sv_ready_restart_after_countdown") ? map_starttime : time);
 	//after a restart every players number of allowed timeouts gets reset, too
 	if (cvar("sv_timeout")) {
-		FOR_EACH_REALPLAYER(e)
+		PLAYER_FOR_EACH_REAL(e)
 			e.allowedTimeouts = cvar("sv_timeout_number");
 	}
 }
@@ -118,7 +118,7 @@ void(void) ready_restart {
 void(void) ready_count {
 	entity e;
 	ready_ready = ready_wait = 0;
-	FOR_EACH_REALPLAYER(e) {
+	PLAYER_FOR_EACH_REAL(e) {
 		++ready_wait;
 		if (e.ready)
 			++ready_ready;

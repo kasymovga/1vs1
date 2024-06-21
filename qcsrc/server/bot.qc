@@ -344,7 +344,7 @@ void(void) bot_skill_auto {
 	bestbot = -100;
 	bestplayer = -100;
 	havebot = haveplayer = 0;
-	FOR_EACH_PLAYER(head) {
+	PLAYER_FOR_EACH(head) {
 		_kills = head.scorekeeper.scores[SP_KILLS];
 		if (clienttype(head) == CLIENTTYPE_REAL) {
 			bestplayer = max(bestplayer, _kills);

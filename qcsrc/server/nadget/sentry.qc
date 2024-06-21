@@ -82,7 +82,7 @@ entity nadget_Sentry_FindTarget(entity emitter) {
         return world;
 
 	medicflag = RM_BUFFS_PRESENT(sentry.realowner, RM_BUFFS_MEDIC);
-    FOR_EACH_PLAYER(p) if not(PLAYER_DEAD(p)) {
+    PLAYER_FOR_EACH(p) if not(PLAYER_DEAD(p)) {
         diffteam = (p != sentry.realowner && team_is_different_teams(sentry, p));
 		if (!diffteam && !medicflag)
 			continue;
@@ -330,7 +330,7 @@ void nadget_Sentry_Orphaned_Think(void) {
         }
     }
 
-    if(!self.hg_sentry_capture_player) FOR_EACH_PLAYER(e) {
+    if(!self.hg_sentry_capture_player) PLAYER_FOR_EACH(e) {
         if(PLAYER_DEAD(e))
             continue;
 

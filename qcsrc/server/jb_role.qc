@@ -19,7 +19,7 @@ void(float ratingscale, vector org, float sradius) jb_role_goalrating_enemyplaye
 	if (self.waterlevel>WATER_LEVEL_WETFEET)
 		return;
 
-	FOR_EACH_PLAYER (head) {
+	PLAYER_FOR_EACH (head) {
 		if (self != head)
 		if (head.health > 0 && !JB_PLAYER_JAILED(head))
 		if ((!bot_ignore_bots || clienttype(head) == CLIENTTYPE_REAL) && head.team != self.team) {
@@ -67,7 +67,7 @@ void() jb_role {
 		entity head;
 		float somebodyjailed = FALSE;
 		if ((self.team == COLOR_TEAM1 && !jb_open_red) || (self.team == COLOR_TEAM2 && !jb_open_blue))
-			FOR_EACH_PLAYER (head) {
+			PLAYER_FOR_EACH (head) {
 				if (head.team == self.team && JB_PLAYER_JAILED(head)) {
 					somebodyjailed = TRUE;
 					break;
