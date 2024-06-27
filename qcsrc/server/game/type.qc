@@ -53,6 +53,10 @@ void() game_type_init {
 	// in case mapinfo switched the type
 	game_type_readcvars();
 	game_type_title = game_type_name_long(game_type_current());
+	print("--- Game started ---\n   Map: ", mapname, "\n  Mode: ", game_type_name_long(game_type), "\n");
+	game_type_writecvars();
+	cvar_init(g_campaign ? strcat("campaign+", cvar_string("g_profile")) : cvar_string("g_profile"));
+	dlc_load_exts();
 	if(game_type == GAME_TYPE_TEAM_DEATHMATCH) {
 		team_play_activate();
 		tdm_init();
@@ -105,9 +109,6 @@ void() game_type_init {
 	if (force_gametype_restore)
 		game_type_switch(force_gametype_restore);
 
-	print("--- Game started ---\n   Map: ", mapname, "\n  Mode: ", game_type_name_long(game_type), "\n");
-	game_type_writecvars();
-	cvar_init(g_campaign ? strcat("campaign+", cvar_string("g_profile")) : cvar_string("g_profile"));
 	cvar_set("timelimit", ftos(game_type_value("timelimit")));
 	cvar_set("fraglimit", ftos(game_type_value("scorelimit")));
 	cvar_set("leadlimit", ftos(game_type_value("leadlimit")));
