@@ -12,10 +12,11 @@ float lms_sphere_diameter_start;
 float lms_sphere_diameter;
 vector lms_sphere_origin_start;
 vector lms_sphere_origin_end;
+#define LMS_ACTIVE() (!warmup_active && time >= map_starttime)
 
 void(void) lms_sphere_update {
 	float tl = cvar("timelimit") * 60;
-	float progress = bound(0, (map_starttime + tl - time) / tl, 1);
+	float progress = (LMS_ACTIVE() ? bound(0, (map_starttime + tl - time) / tl, 1) : 1);
 	lms_sphere_diameter = g_lms_sphere_diameter_min + (lms_sphere_diameter_start - g_lms_sphere_diameter_min) * progress;
 	setorigin(lms_sphere, lms_sphere_origin_start * progress + (1 - progress) * lms_sphere_origin_end);
 	lms_sphere.scale = max(lms_sphere_diameter, g_lms_sphere_diameter_min) / lms_sphere_diameter_unscaled;
@@ -56,7 +57,7 @@ float(entity to, float sf) lms_sphere_send {
 void(void) lms_sphere_think {
 	lms_sphere_update();
 	self.nextthink = time + 0.1;
-	if (warmup_active) return;
+	if not(LMS_ACTIVE()) return;
 	entity e, e2;
 	float f, r;
 	float d;
@@ -116,7 +117,7 @@ void(void) lms_sphere_setup {
 var void(entity spot) lms_player_spawn_next;
 void lms_player_spawn(entity spot) {
 	lms_player_spawn_next(spot);
-	if (warmup_active)
+	if not(LMS_ACTIVE())
 		return;
 
 	if (self.scorekeeper.lms_lives > 0)
@@ -132,7 +133,7 @@ void lms_player_spawn(entity spot) {
 
 var float(void) lms_spectator_to_player_handle_next;
 float(void) lms_spectator_to_player_handle {
-	if not(warmup_active) {
+	if (LMS_ACTIVE()) {
 		if (g_lms_lives <= 0)
 			return TRUE;
 
@@ -143,7 +144,7 @@ float(void) lms_spectator_to_player_handle {
 }
 
 float(entity attacker, entity inflictor, float deathtype) lms_player_death_handle {
-	if (!warmup_active && time >= map_starttime) {
+	if (LMS_ACTIVE()) {
 		score_player_add(self, SP_LIVES, -1);
 		if (self.scorekeeper.lms_lives <= 0)
 			score_player_set(self, SP_STATUS, 1);
@@ -160,7 +161,7 @@ float(entity attacker, entity inflictor, float deathtype) lms_player_death_handl
 var void(void) lms_client_connect_next;
 void(void) lms_client_connect {
 	score_player_set(self, SP_LIVES, g_lms_lives);
-	if not(warmup_active) {
+	if (LMS_ACTIVE()) {
 		entity e;
 		PLAYER_FOR_EACH(e) {
 			if (e.classname == "player")
@@ -172,10 +173,7 @@ void(void) lms_client_connect {
 }
 
 float(float ignore, float ignore2) lms_winning_condition {
-	if (warmup_active)
-		return FALSE;
-
-	if (time < map_starttime)
+	if not(LMS_ACTIVE())
 		return FALSE;
 
 	entity e;
@@ -202,7 +200,7 @@ void(void) lms_init_delayed {
 }
 
 float(entity spot) lms_spawn_score_good {
-	if (warmup_active) return TRUE;
+	if not(LMS_ACTIVE()) return TRUE;
 	float f = vlen(spot.origin - lms_sphere.origin);
 	if (f < (lms_sphere_diameter * 0.5) - 40)
 		return TRUE;
@@ -233,3 +231,5 @@ void(void) lms_init {
 	precache_model("models/sphere/sphere.md3");
 	entity_initialize(world, lms_init_delayed, INITPRIO_GAMETYPE);
 }
+
+#undef LMS_ACTIVE
