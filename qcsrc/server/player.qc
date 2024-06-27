@@ -1154,6 +1154,7 @@ void(entity spot) player_spawn {
 			self.cnt = weaypon_cycle_get(self, self.cvar_cl_weaponpriority, -1, -1, 0);
 		}
 		self.weapon = 0;
+		self.weaponname = "";
 	}
 	entity e;
 	float n = 0;
