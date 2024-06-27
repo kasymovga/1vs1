@@ -64,6 +64,7 @@ void(void) voip_setup_all {
 var void(void) voip_client_connect_next;
 void(void) voip_client_connect {
 	score_player_set(self, VOIP_SCORE, self.voipgroup);
+	voip_client_connect_next();
 }
 
 void(void) voip_init {
