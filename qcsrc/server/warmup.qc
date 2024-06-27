@@ -48,9 +48,10 @@ float(void) warmup_player_equip_handle {
 	self.ammo_fuel = warmup_start_ammo_fuel;
 	self.health = warmup_start_health;
 	self.armorvalue = warmup_start_armorvalue;
-	if (g_warmup_allguns)
-		self.weapons = player_start_weapons | weapon_spawned_list;
-
+	if (g_warmup_allguns) {
+		self.weapons = (player_start_weapons | weapon_spawned_list);
+		self.weapons_extra = (player_start_weapons_extra | weapon_spawned_extra_list);
+	}
 	return TRUE;
 }
 
