@@ -24,7 +24,7 @@ void(void) lms_sphere_update {
 
 float(entity to, float sf) lms_sphere_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_LMS_SPHERE);
-	sf = sf & 63;
+	sf &= 63;
 	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1)
 		net_write_short(MSG_ENTITY, self.modelindex);
@@ -56,6 +56,7 @@ float(entity to, float sf) lms_sphere_send {
 void(void) lms_sphere_think {
 	lms_sphere_update();
 	self.nextthink = time + 0.1;
+	if (warmup_active) return;
 	entity e, e2;
 	float f, r;
 	float d;
@@ -131,16 +132,18 @@ void lms_player_spawn(entity spot) {
 
 var float(void) lms_spectator_to_player_handle_next;
 float(void) lms_spectator_to_player_handle {
-	if (g_lms_lives <= 0)
-		return TRUE;
+	if not(warmup_active) {
+		if (g_lms_lives <= 0)
+			return TRUE;
 
-	score_player_set(self, SP_LIVES, g_lms_lives);
-	self.killcount = 0; //Prevent score reset
+		score_player_set(self, SP_LIVES, g_lms_lives);
+		self.killcount = 0; //Prevent score reset
+	}
 	return lms_spectator_to_player_handle_next();
 }
 
 float(entity attacker, entity inflictor, float deathtype) lms_player_death_handle {
-	if not(warmup_active) {
+	if (!warmup_active && time >= map_starttime) {
 		score_player_add(self, SP_LIVES, -1);
 		if (self.scorekeeper.lms_lives <= 0)
 			score_player_set(self, SP_STATUS, 1);
@@ -157,16 +160,21 @@ float(entity attacker, entity inflictor, float deathtype) lms_player_death_handl
 var void(void) lms_client_connect_next;
 void(void) lms_client_connect {
 	score_player_set(self, SP_LIVES, g_lms_lives);
-	entity e;
-	PLAYER_FOR_EACH(e) {
-		if (e.classname == "player")
-		if (e.scorekeeper.lms_lives < self.scorekeeper.lms_lives)
-			score_player_set(self, SP_LIVES, e.scorekeeper.lms_lives);
+	if not(warmup_active) {
+		entity e;
+		PLAYER_FOR_EACH(e) {
+			if (e.classname == "player")
+			if (e.scorekeeper.lms_lives < self.scorekeeper.lms_lives)
+				score_player_set(self, SP_LIVES, e.scorekeeper.lms_lives);
+		}
 	}
 	lms_client_connect_next();
 }
 
 float(float ignore, float ignore2) lms_winning_condition {
+	if (warmup_active)
+		return FALSE;
+
 	if (time < map_starttime)
 		return FALSE;
 
@@ -194,6 +202,7 @@ void(void) lms_init_delayed {
 }
 
 float(entity spot) lms_spawn_score_good {
+	if (warmup_active) return TRUE;
 	float f = vlen(spot.origin - lms_sphere.origin);
 	if (f < (lms_sphere_diameter * 0.5) - 40)
 		return TRUE;
