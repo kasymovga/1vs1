@@ -28,7 +28,7 @@ void(.float ammofield, .float clipfield, float ammo1, float ammo2, string reload
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (self.ammofield < min(ammo1, ammo2)) {
-		self.clipfield = -1; // reload later
+		//self.clipfield = -1; // reload later
 		if (akimbo_active(self) < 2)
 			weapon_switch_force(self, weapon_best(self));
 
