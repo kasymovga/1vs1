@@ -487,6 +487,7 @@ void(void) item_touch  {
 		if (self.team) {
 			random_selection_init();
 			for (head = world; (head = findfloat(head, team, self.team)); ) {
+				if (head.existsonlyfor == self.existsonlyfor)
 				if (head.flags & FL_ITEM) {
 					item_show(head, -1);
 					random_selection_add(head, 0, NULL, head.cnt, 0);
@@ -505,20 +506,24 @@ void(void) item_find_team {
 	if (self.effects & EFFECT_NODRAW) {
 		// marker for item team search
 		random_selection_init();
-		for (head = world; (head = findfloat(head, team, self.team)); ) if (head.flags & FL_ITEM)
-			random_selection_add(head, 0, NULL, head.cnt, 0);
+		for (head = world; (head = findfloat(head, team, self.team)); )
+			if (head.flags & FL_ITEM)
+			if (head.existsonlyfor == self.existsonlyfor)
+				random_selection_add(head, 0, NULL, head.cnt, 0);
 
 		e = random_selection_chosen_ent;
 		e.state = 0;
 		item_show(e, 1);
-		for (head = world; (head = findfloat(head, team, self.team)); ) if (head.flags & FL_ITEM) {
-			if (head != e) {
-				// make it a non-spawned item
-				item_show(head, -1);
-				head.state = 1; // state 1 = initially hidden item
+		for (head = world; (head = findfloat(head, team, self.team)); )
+			if (head.flags & FL_ITEM)
+			if (head.existsonlyfor == self.existsonlyfor) {
+				if (head != e) {
+					// make it a non-spawned item
+					item_show(head, -1);
+					head.state = 1; // state 1 = initially hidden item
+				}
+				head.effects &= ~EFFECT_NODRAW;
 			}
-			head.effects &= ~EFFECT_NODRAW;
-		}
 		if ((e.flags & FL_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
 			item_schedule_initial_respawn(e);
 	}
@@ -528,7 +533,7 @@ void(void) item_reset {
 	if (self.waypointsprite_attached)
 		WaypointSprite_Kill(self.waypointsprite_attached);
 
-	item_show(self, !self.state);
+	item_show(self, (self.team ? (self.state ? -1 : 1) : !self.state));
 	setorigin (self, self.origin);
 	self.think = stdproc_nothing;
 	self.nextthink = 0;
@@ -766,7 +771,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 		if (!self.cnt)
 			self.cnt = 1; // item probability weight
 
-		self.effects = self.effects | EFFECT_NODRAW; // marker for item team search
+		self.effects |= EFFECT_NODRAW; // marker for item team search
 		entity_initialize(self, item_find_team, INITPRIO_FINDTARGET);
 	} else if ((self.flags & FL_POWERUP) && self.respawntime > 0 && substring(self.classname, 0, 7) != "dropped" && !entity_per_player_entities) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);
