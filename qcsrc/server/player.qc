@@ -1192,6 +1192,8 @@ void(void) player_leave {
 		score_clear(self);
 
 	self.winning = FALSE;
+	self.ready = FALSE;
+	ready_count();
 	if (self.dmg_inflictor) {
 		if (self.dmg_inflictor.classname == "dmg_inflictor" && self.dmg_inflictor.owner == self && !wasfreed(self.dmg_inflictor)) {
 			remove(self.dmg_inflictor);

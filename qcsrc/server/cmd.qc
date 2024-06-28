@@ -518,7 +518,7 @@ void(string s) cmd_client {
 			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
 		}
 	} else if (cmd == "ready") {
-		if not(self.flags & FL_CLIENT)
+		if not(self.classname == "player" || self.team > 0)
 			return;
 
 		if (warmup_active || cvar("sv_ready_restart") || plugin_ReadyAllowed()) {
