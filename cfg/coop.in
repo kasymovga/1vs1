@@ -4,6 +4,7 @@ set g_coop_leadlimit "0" "Dummy cvar, cooperative not have leadlimit"
 set g_coop_monster_factor 0.5
 set g_coop_monster_base 1
 set g_coop_item_share 0.2
+set g_coop_item_share_distance 300
 set coop_inherit "single"
 set coop_g_weapon_stay 2
 set coop_g_pickup_respawntimejitter_powerup 0

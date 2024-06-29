@@ -1,6 +1,7 @@
 float g_coop_monster_factor;
 float g_coop_monster_base;
 float g_coop_item_share;
+float g_coop_item_share_distance;
 
 void(void) coop_teleporter_think {
 	if (self.solid == SOLID_TRIGGER) {
@@ -161,10 +162,15 @@ float(entity to, float f) coop_item_give_factor {
 		coop_item_give_recursion = TRUE;
 		entity e, e2;
 		e2 = spawn();
+		vector o = ENTITY_CENTER(to), o2;
 		PLAYER_FOR_EACH(e) {
 			if (e != to && e.deadflag == DEAD_NO) {
-				copyentity(item, e2);
-				item_give_to(e2, e);
+				o2 = ENTITY_CENTER(e);
+				if (vlen(o - o2) <= g_coop_item_share_distance) {
+					te_lightning2(NULL, o, o2);
+					copyentity(item, e2);
+					item_give_to(e2, e);
+				}
 			}
 		}
 		remove(e2);
