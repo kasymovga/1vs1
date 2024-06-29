@@ -120,6 +120,7 @@ void lms_player_spawn(entity spot) {
 	if not(LMS_ACTIVE())
 		return;
 
+	self.team = 666; //fake team for spectating players
 	if (self.scorekeeper.lms_lives > 0)
 		return;
 
@@ -128,7 +129,7 @@ void lms_player_spawn(entity spot) {
 	self.team = -1; //Prevent score reset
 	spectator_observer_spawn(FALSE);
 	self.killcount = 0; //prevent possible score clear by join
-	self.team = 0;
+	self.team = 666; //fake team for spectating players
 }
 
 var float(void) lms_spectator_to_player_handle_next;
