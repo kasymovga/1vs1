@@ -16,6 +16,7 @@ enum: flag {
 };
 
 float g_weaponspeedfactor;
+float g_weapon_switch_to_empty;
 
 vector weapon_shotorg;
 vector weapon_shotdir;

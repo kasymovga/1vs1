@@ -28,10 +28,13 @@ void(.float ammofield, .float clipfield, float ammo1, float ammo2, string reload
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (self.ammofield < min(ammo1, ammo2)) {
-		//self.clipfield = -1; // reload later
-		if (akimbo_active(self) < 2)
-			weapon_switch_force(self, weapon_best(self));
-
+		if (g_weapon_switch_to_empty)
+			print_to_spec(self, PRINT_CENTER, "No ammo", "", "", "");
+		else {
+			self.clipfield = -1; // reload later
+			if (akimbo_active(self) < 2)
+				weapon_switch_force(self, weapon_best(self));
+		}
 		return;
 	}
 	if (self.weaponentity) {

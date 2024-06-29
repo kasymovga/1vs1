@@ -7,7 +7,6 @@ float g_projectiles_newton_style_2_minfactor;
 float g_weaponratefactor;
 float g_weapon_throw_mode;
 float g_weapon_throw_noammo;
-float g_weapon_switch_to_empty;
 float g_showweaponspawns;
 vector sv_qcanimation_melee_morph1angles;
 vector sv_qcanimation_melee_morph2angles;
