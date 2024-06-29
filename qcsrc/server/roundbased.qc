@@ -17,7 +17,7 @@ string roundbased_winner_message;
 
 var float(entity plr, float wep) roundbased_player_can_fire_next;
 float(entity plr, float wep) roundbased_player_can_fire {
-	if (roundbased_active)
+	if (roundbased_active || warmup_active)
 		return roundbased_player_can_fire_next(plr, wep);
 
 	if (wep) //Always allow shoot with laser (no damage when round not active)
