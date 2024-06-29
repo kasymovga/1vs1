@@ -126,10 +126,8 @@ void lms_player_spawn(entity spot) {
 
 	score_player_set(self, SP_STATUS, 1);
 	self.killcount = -666; //Prevent bprint
-	self.team = -1; //Prevent score reset
 	spectator_observer_spawn(FALSE);
 	self.killcount = 0; //prevent possible score clear by join
-	self.team = 666; //fake team for spectating players
 }
 
 var float(void) lms_spectator_to_player_handle_next;

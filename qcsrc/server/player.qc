@@ -732,7 +732,6 @@ void(entity player) player_to_spec {
 		voip_setup(self);
 		self = oldself;
 		spectator_note_update();
-		score_touch(player);
 		if (team_mode)
 			team_balance_audit(FALSE);
 

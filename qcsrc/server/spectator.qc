@@ -12,11 +12,16 @@ float(void) spectator_note_customize {
 void(void) spectator_note_message {
 	string s = "";
 	if (other.classname == "spectator") {
-		s = "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe";
-		self.target = other.enemy.netname;
-	} else if (other.classname == "observer")
-		s = "^1Observing\n^1Press ^3{+attack}^1 to spectate";
+		s = "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player";
+		if (other.team <= 0 || !team_mode)
+			s = strcat(s, "\n^1Press ^3{+attack2}^1 to observe");
 
+		self.target = other.enemy.netname;
+	} else if (other.classname == "observer") {
+		s = "^1Observing";
+		if (other.team <= 0 || !team_mode)
+			s = strcat(s, "\n^1Press ^3{+attack}^1 to spectate");
+	}
 	s = strcat(s, "\n^1Game type is ^3{2}");
 	self.target2 = game_type_title;
 	if (other.team <= 0)
@@ -90,14 +95,14 @@ float() spectator_spectate_next {
 	other = self.enemy;
 	do
 		other = find(other, classname, "player");
-	while (other && self.team > 0 && other.team != self.team);
+	while (other && team_mode && self.team > 0 && other.team != self.team);
 	if not(other) {
 		do
 			if (other == self.enemy)
 				break;
 			else
 				other = find(other, classname, "player");
-		while (other && self.team > 0 && other.team != self.team);
+		while (other && team_mode && self.team > 0 && other.team != self.team);
 	}
 	if (self.enemy) entcs_spec_update(self.enemy);
 	if (other) {
@@ -119,18 +124,15 @@ void() spectator_think {
 	if (self.BUTTON_JUMP && self.team <= 0) {
 		self.flags |= FL_SPAWNING;
 	} else if (self.BUTTON_ATCK && !self.delay) {
-		if (spectator_spectate_next() == 1) {
-			self.classname = "spectator";
-		} else {
-			self.classname = "observer";
-			self.dmg_inflictor = NULL;
-			client_put();
+		if (spectator_spectate_next() != 1) {
+			spectator_observer_spawn(FALSE);
 		}
-	} else if (self.BUTTON_ATCK2 && self.team <= 0) {
+	} else if (self.BUTTON_ATCK2 && (!team_mode || self.team <= 0)) {
 		spectator_observer_spawn(FALSE);
 	} else {
-		if not(spectator_update())
+		if not(spectator_update()) {
 			spectator_observer_spawn(FALSE);
+		}
 	}
 	if not(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.BUTTON_JUMP) {
 		if (self.team <= 0)
@@ -142,7 +144,7 @@ void() spectator_think {
 	}
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status & 255;
-	self.spectatee_status = num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0);
+	self.spectatee_status = (num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0));
 	if ((self.spectatee_status & 255) != (oldspectatee_status & 255))
 		plugin_InitSpectator();
 
@@ -150,14 +152,14 @@ void() spectator_think {
 }
 
 void() spectator_observer_think {
-	if (self.team > 0) {
+	if (self.team > 0 && team_mode) {
 		if (spectator_spectate_next() == 1) {
 			self.classname = "spectator";
 			spectator_think();
 			return;
 		}
 	}
-	if (self.BUTTON_JUMP) {
+	if (self.BUTTON_JUMP && self.team <= 0) {
 		self.flags |= FL_SPAWNING;
 	} else if (self.BUTTON_ATCK) {
 		if (spectator_spectate_next() == 1) {
@@ -227,9 +229,10 @@ void(float frags_team_reset) spectator_observer_spawn {
 	if (self.killcount != -666)
 		print_all(PRINT_INFO, "^4{1}^4 is spectating now", self.netname, "", "");
 
-	if (self.team >= 0) {
+	if (frags_team_reset) {
 		score_clear(self); // clear scores when needed
 	}
+	self.dmg_inflictor = NULL;
 	self.spectatortime = time;
 	self.classname = "observer";
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
@@ -278,12 +281,9 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.delay = 0;
 	spectator_note.SendFlags = 1;
 	self.customizeentityforclient = NULL;
-	if not(frags_team_reset)
-		return;
-
-	if (self.team != -1) {
+	if (frags_team_reset)
 		self.team = -1;
-	}
+
 	self.touch = NULL;
 }
 
