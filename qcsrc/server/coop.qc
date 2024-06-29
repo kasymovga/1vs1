@@ -157,12 +157,13 @@ float coop_item_give_recursion;
 var float(entity to, float f) coop_item_give_factor_next;
 float(entity to, float f) coop_item_give_factor {
 	if (coop_item_give && !coop_item_give_recursion) {
+		entity item = coop_item_give;
 		coop_item_give_recursion = TRUE;
 		entity e, e2;
 		e2 = spawn();
 		PLAYER_FOR_EACH(e) {
 			if (e != to && e.deadflag == DEAD_NO) {
-				copyentity(coop_item_give, e2);
+				copyentity(item, e2);
 				item_give_to(e2, e);
 			}
 		}
