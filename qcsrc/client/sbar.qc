@@ -1974,7 +1974,17 @@ void(void) sbar_draw {
 	float _health = getstati(STAT_HEALTH);
 	sbar_starttime = getstatf(STAT_GAMESTARTTIME);
 	sbar_timelimit = getstatf(STAT_TIMELIMIT);
-	sbar_timeleft = sbar_timelimit * 60 + sbar_starttime - time;
+	if (sbar_starttime < 0) { //negative start time mean warmup
+		sbar_timeleft = -sbar_starttime - time;
+		if (sbar_starttime == -999999)
+			sbar_timelimit = 0;
+		else
+			sbar_timelimit = -sbar_starttime;
+
+		sbar_starttime = 0;
+	} else
+		sbar_timeleft = sbar_timelimit * 60 + sbar_starttime - time;
+
 	sbar_stat_items = getstati(STAT_ITEMS);
 	if (sbar_timeleft < 0 && sbar_timelimit) { // map voting screen
 		if (sbar_scoreboard_fade_check(sbar_showscores)) {

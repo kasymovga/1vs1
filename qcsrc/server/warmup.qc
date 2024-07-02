@@ -75,6 +75,13 @@ void(void) warmup_init {
 	CVAR_CACHE(g_warmup_limit);
 	CVAR_CACHE(g_warmup_allguns);
 	CVAR_CACHE(g_warmup_allow_timeout);
+	if (g_warmup_limit > 0)
+		warmup_end = g_warmup_limit;
+	else if (g_warmup_limit < 0)
+		warmup_end = 999999; //"infinite"
+	else
+		warmup_end = 0; // timelimit cvar
+
 	warmup_active = cvar("g_warmup");
 	if (!plugin_WarmupAllowed() || g_campaign)
 		warmup_active = 0; // these modes cannot work together, sorry

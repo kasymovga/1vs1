@@ -610,7 +610,7 @@ void(void) client_pre_think { //called by engine
 	}
 	if (frametime) {
 		if (warmup_active)
-			self.stat_map_starttime = time;
+			self.stat_map_starttime = (warmup_end ? -warmup_end : -cvar("timelimit") * 60);
 		else
 			self.stat_map_starttime = map_starttime;
 	}

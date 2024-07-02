@@ -1,4 +1,5 @@
 float warmup_active;
+float warmup_end;
 entity warmup_note;
 void(void) warmup_init;
 void(void) warmup_finish;
