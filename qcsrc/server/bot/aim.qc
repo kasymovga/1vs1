@@ -143,10 +143,6 @@ float(entity e) bot_aim_shouldattack {
 }
 
 void(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4) bot_lagfunc {
-	if(self.flags & FL_INWATER) {
-		self.bot_aimtarg = world;
-		return;
-	}
 	self.bot_aimtarg = e1;
 	self.bot_aimlatency = self.ping; // FIXME?  Shouldn't this be in the lag item?
 	self.bot_aimselforigin = v1;
