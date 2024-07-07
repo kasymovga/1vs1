@@ -6,7 +6,7 @@ void(entity attacker, float deathtype, float shots) weapon_score_fires {
 	float weaponid;
 	weaponid = DEATH_WEAPONOF(deathtype);
 	if not(warmup_active)
-	if (time > map_starttime)
+	if (time >= map_starttime)
 	if (WEAPON_VALID(weaponid)) {
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float f = attacker.bullets_fired[weaponid] + shots;
