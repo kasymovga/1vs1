@@ -251,9 +251,13 @@ void(string s, string curmodel, float curskin) modelselect_list_add_all_skins {
 	float i;
 	modelselect_list_add(strcat(s, ":0"), curmodel, curskin);
 	for (i = 1; i < 16; i++) {
-		if not(file_exists(strcat(s, "_", ftos(i), ".skin")))
-			continue;
-
+		if (strstrofs(s, "/", 0) < 0) {
+			if not(file_exists(strcat("models/player/", s, "_", ftos(i), ".skin")))
+				continue;
+		} else {
+			if not(file_exists(strcat(s, "_", ftos(i), ".skin")))
+				continue;
+		}
 		modelselect_list_add(strcat(s, ":", ftos(i)), curmodel, curskin);
 	}
 }
