@@ -51,6 +51,7 @@ void(float t) weapon_flash_precache {
 		precache_model("models/uziflash.md3");
 		break;
 	case WEAPON_FLASH_ROCKET:
+		precache_model("models/flash.md3");
 		break;
 	}
 }
