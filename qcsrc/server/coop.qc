@@ -204,6 +204,7 @@ void(void) coop_init {
 	CVAR_CACHE(g_coop_monster_factor);
 	CVAR_CACHE(g_coop_monster_base);
 	CVAR_CACHE(g_coop_item_share);
+	CVAR_CACHE(g_coop_item_share_distance);
 	coop_player_clear_next = plugin_chain_player_clear;
 	plugin_chain_player_clear = coop_player_clear;
 	coop_observer_spawn_next = plugin_chain_observer_spawn;
