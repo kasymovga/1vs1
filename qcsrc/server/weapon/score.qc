@@ -32,6 +32,7 @@ void(entity attacker, entity targ, float deathtype, float hits, float _damage) w
 	if (targ != attacker)
 	if (!team_mode || targ.team != attacker.team)
 	if not(warmup_active)
+	if (time >= map_starttime)
 	if (WEAPON_VALID(weaponid)) {
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float h = attacker.bullets_hit[weaponid] + hits;
