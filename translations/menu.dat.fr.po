@@ -13,19 +13,19 @@ msgstr ""
 "Language: fr_FR\n"
 
 msgid "Singleplayer"
-msgstr "Un joueur"
+msgstr "Solo"
 
 msgid "Campaign"
-msgstr "Mode"
+msgstr "Modes de jeu"
 
 msgid "Custom"
-msgstr "Personnaliser"
+msgstr "Personnalisé"
 
 msgid "Classic Campaign"
-msgstr "Mode Classique"
+msgstr "Campagne Classique"
 
 msgid "Survival Campaign"
-msgstr "Mode survie"
+msgstr "Survie"
 
 msgid "Arena Training"
 msgstr "Arène d'entraînement"
@@ -34,13 +34,13 @@ msgid "Single Player (Demo)"
 msgstr "Un joueur (Démo)"
 
 msgid "Difficulty:"
-msgstr "Difficulté:"
+msgstr "Difficulté :"
 
 msgid "Load Game..."
 msgstr "Chargement du jeu..."
 
 msgid "Start Game!"
-msgstr "Commencez à jouer!"
+msgstr "Début de la partie !"
 
 msgid "Easy"
 msgstr "Facile"
@@ -76,7 +76,7 @@ msgid "Ok"
 msgstr "Ok"
 
 msgid "Settings"
-msgstr "Paramétrage"
+msgstr "Paramétres"
 
 msgid "Input"
 msgstr "Entrées"
@@ -94,28 +94,28 @@ msgid "Network"
 msgstr "Réseau"
 
 msgid "Show netgraph"
-msgstr "Montrer netgraph"
+msgstr "Montrer le netgraph"
 
 msgid "Network speed:"
-msgstr "Vitesse du réseau:"
+msgstr "Vitesse du réseau :"
 
 msgid "Input packets/s:"
-msgstr "Entrée des paquets/s:"
+msgstr "Entrée des paquets/s :"
 
 msgid "HTTP downloads:"
-msgstr "Téléchargements HTTP:"
+msgstr "Téléchargements HTTP :"
 
 msgid "Downloads:"
-msgstr "Téléchargements:"
+msgstr "Téléchargements :"
 
 msgid "Speed (kB/s):"
-msgstr "Vitesse (kB/s):"
+msgstr "Vitesse (kB/s) :"
 
 msgid "Client UDP port:"
-msgstr "Port UDP Client:"
+msgstr "Port UDP Client :"
 
 msgid "Map list:"
-msgstr "Liste de maps:"
+msgstr "Liste des cartes :"
 
 msgid "All"
 msgstr "Tout"
@@ -124,7 +124,7 @@ msgid "None"
 msgstr "Rien"
 
 msgid "Match settings:"
-msgstr "Paramètres du match:"
+msgstr "Paramètres de la partie :"
 
 msgid "Clear"
 msgstr "Effacer"
@@ -133,10 +133,10 @@ msgid "Bookmark"
 msgstr "Répertorier"
 
 msgid "Address:"
-msgstr "Adresse:"
+msgstr "Adresse :"
 
 msgid "Join!"
-msgstr "Entrée!"
+msgstr "Rejoindre !"
 
 msgid "Ping"
 msgstr "Ping"
@@ -145,7 +145,7 @@ msgid "Host name"
 msgstr "Nom du host"
 
 msgid "Map"
-msgstr "Map"
+msgstr "Carte"
 
 msgid "Type"
 msgstr "Type"
@@ -154,7 +154,7 @@ msgid "Players"
 msgstr "Joueurs"
 
 msgid "Filter:"
-msgstr "Filtre:"
+msgstr "Filtre :"
 
 msgid "Empty"
 msgstr "Vide"
@@ -166,31 +166,31 @@ msgid "Full"
 msgstr "Plein"
 
 msgid "Start Multiplayer!"
-msgstr "Commencer Multi-joueur!"
+msgstr "Commencer le Multi-joueurs !"
 
 msgid "Time limit:"
-msgstr "Limite de temps:"
+msgstr "Limite de temps :"
 
 msgid "Frag limit:"
-msgstr "Limite de frags:"
+msgstr "Limite de frags :"
 
 msgid "Win limit:"
-msgstr "Nbre max de vict:"
+msgstr "Nbre max de victoires :"
 
 msgid "Player slots:"
-msgstr "Place des joueurs:"
+msgstr "Nombre de joueurs max :"
 
 msgid "Number of bots:"
-msgstr "Nombre de Bots:"
+msgstr "Nombre de Bots :"
 
 msgid "Bot skill:"
-msgstr "Niveau du Bot:"
+msgstr "Niveau du Bot :"
 
 msgid "Bot names:"
-msgstr "Noms des Bots:"
+msgstr "Noms des Bots :"
 
 msgid "Map voting:"
-msgstr "Vote de la map:"
+msgstr "Vote de la carte :"
 
 msgid "Simple majority wins vcall"
 msgstr "La majorité simple gagne le vcall"
@@ -202,7 +202,7 @@ msgid "Advanced settings"
 msgstr "Paramètres avancés"
 
 msgid "Mutators..."
-msgstr "Mutateurs..."
+msgstr "Modificateurs..."
 
 msgid "No voting"
 msgstr "Pas de vote"
@@ -232,19 +232,19 @@ msgid "9 choices"
 msgstr "9 choix"
 
 msgid "Point limit:"
-msgstr "Limite de points:"
+msgstr "Limite de points :"
 
 msgid "Capture limit:"
-msgstr "Limite de captures:"
+msgstr "Limite de captures :"
 
 msgid "Goals:"
-msgstr "Buts:"
+msgstr "Buts :"
 
 msgid "Laps:"
-msgstr "Tours:"
+msgstr "Tours :"
 
 msgid "Mutators"
-msgstr "Mutateurs"
+msgstr "Modificateurs"
 
 msgid "OK"
 msgstr "OK"
@@ -253,58 +253,58 @@ msgid "Advanced server settings"
 msgstr "Paramètres avancés du serveur"
 
 msgid "Game settings:"
-msgstr "Paramètres de jeu:"
+msgstr "Paramètres de jeu :"
 
 msgid "Allow spectating"
 msgstr "Autoriser les spectateurs"
 
 msgid "Spawn shield:"
-msgstr "Protection spawn:"
+msgstr "Immunité à l'apparition :"
 
 msgid "Start delay:"
-msgstr "Délais de départ:"
+msgstr "Délai de départ :"
 
 msgid "AntiLag"
 msgstr "AntiLag"
 
 msgid "Friendly fire scale:"
-msgstr "Distance tir ami:"
+msgstr "Distance tir ami :"
 
 msgid "Friendly fire penalty:"
-msgstr "Pénalité tir ami:"
+msgstr "Pénalité tir ami :"
 
 msgid "Teams:"
-msgstr "Équipes:"
+msgstr "Équipes :"
 
 msgid "Teamplay settings:"
-msgstr "Paramétrage Teamplay:"
+msgstr "Paramétrage des équipes :"
 
 msgid "Record demos while playing"
-msgstr "Enregistrer démos pendant le jeu"
+msgstr "Enregistrer les démos pendant le jeu"
 
 msgid "Play"
-msgstr "Play"
+msgstr "Commencer"
 
 msgid "Timedemo"
 msgstr "Timedemo"
 
 msgid "Name:"
-msgstr "Nom:"
+msgstr "Nom :"
 
 msgid "Model:"
-msgstr "Modèle:"
+msgstr "Modèle :"
 
 msgid "Field of View:"
-msgstr "Champ de vision:"
+msgstr "Champ de vision :"
 
 msgid "Damage kick:"
-msgstr "Dégâts coup de pied:"
+msgstr "Dégâts coup de pied :"
 
 msgid "Zoom Factor:"
-msgstr "Échelle Zoom:"
+msgstr "Échelle du zoom :"
 
 msgid "Zoom speed:"
-msgstr "Vitesse de Zoom :"
+msgstr "Vitesse du zoom :"
 
 msgid "Weapon settings..."
 msgstr "Paramétrage des armes..."
@@ -319,25 +319,25 @@ msgid "Per weapon crosshairs"
 msgstr "Réticule par arme"
 
 msgid "& crosshair colors"
-msgstr "& couleur réticule"
+msgstr "& couleur de la réticule"
 
 msgid "Crosshair:"
-msgstr "Réticule:"
+msgstr "Réticule :"
 
 msgid "Crosshair Size:"
-msgstr "Taille réticule:"
+msgstr "Taille réticule :"
 
 msgid "Crosshair Alpha:"
-msgstr "Réticule Alpha:"
+msgstr "Réticule Alpha :"
 
 msgid "Crosshair Red:"
-msgstr "Réticule Rouge:"
+msgstr "Réticule Rouge :"
 
 msgid "Crosshair Green:"
-msgstr "Réticule Vert:"
+msgstr "Réticule Vert :"
 
 msgid "Crosshair Blue:"
-msgstr "Réticule Bleu:"
+msgstr "Réticule Bleu :"
 
 msgid "Weapon settings"
 msgstr "Paramétrage des armes"
@@ -349,7 +349,7 @@ msgid "Disable gore effects"
 msgstr "Désactiver les effets gores"
 
 msgid "Gibs:"
-msgstr "Gibs:"
+msgstr "Organes :"
 
 msgid "Few"
 msgstr "Un peu"
@@ -367,7 +367,7 @@ msgid "Down"
 msgstr "Bas"
 
 msgid "Weapon priority list:"
-msgstr "Liste des priorités des armes:"
+msgstr "Liste des priorités des armes :"
 
 msgid "Use priority list for weapon cycling"
 msgstr "Utiliser la liste des priorités pour le cycle des armes"
@@ -376,7 +376,7 @@ msgid "Draw 1st person weapon model"
 msgstr "Dessiner un modèle d'arme à la 1ère personne"
 
 msgid "Align:"
-msgstr "Allignement:"
+msgstr "Alignement :"
 
 msgid "Flip view horizontally"
 msgstr "Retourner la vue horizontalement"
@@ -385,67 +385,67 @@ msgid "HUD & Waypoints"
 msgstr "HUD & Waypoints"
 
 msgid "HUD settings:"
-msgstr "Paramétrages HUD:"
+msgstr "Paramétrages de l'interface :"
 
 msgid "Background:"
-msgstr "Fond:"
+msgstr "Fond :"
 
 msgid "Default red:"
-msgstr "Rouge par défaut:"
+msgstr "Rouge par défaut :"
 
 msgid "Default green:"
-msgstr "Vert par défaut:"
+msgstr "Vert par défaut :"
 
 msgid "Default blue:"
-msgstr "Bleu par défaut:"
+msgstr "Bleu par défaut :"
 
 msgid "Team color:"
-msgstr "Couleur de l'équipe:"
+msgstr "Couleur de l'équipe :"
 
 msgid "Waypoint settings:"
-msgstr "Paramètres Waypoint:"
+msgstr "Paramètres Waypoint :"
 
 msgid "Show base waypoints"
 msgstr "Montrer waypoints de la base"
 
 msgid "Waypoint scale:"
-msgstr "Échelle waypoint:"
+msgstr "Échelle waypoint :"
 
 msgid "Waypoint alpha:"
-msgstr "Waypoint alpha:"
+msgstr "Waypoint alpha :"
 
 msgid "Key bindings:"
-msgstr "Raccourcis clavier:"
+msgstr "Raccourcis clavier :"
 
 msgid "Sensitivity:"
 msgstr "Sensibilité:"
 
 msgid "UI mouse speed:"
-msgstr "UI vitesse de la souris:"
+msgstr "Vitesse souris dans l'interface :"
 
 msgid "Invert mouse"
-msgstr "Inverser souris"
+msgstr "Inverser la souris"
 
 msgid "Use joystick input"
 msgstr "Utiliser l'entrée du joystick"
 
 msgid "\"enter console\" also closes"
-msgstr "\"entrer au console\" aussi fermer"
+msgstr "\"Même touche pour ouvrir\"fermer la console"
 
 msgid "Show binds:"
-msgstr "Montrer raccourcis:"
+msgstr "Montrer raccourcis :"
 
 msgid "Actions"
 msgstr "Actions"
 
 msgid "Bound keys"
-msgstr "Touches paramétrées"
+msgstr "Touches config."
 
 msgid "Both"
 msgstr "Les deux"
 
 msgid "Show pressed keys:"
-msgstr "Afficher les touches enfoncées:"
+msgstr "Afficher les touches enfoncées :"
 
 msgid "Change key..."
 msgstr "Changer la touche..."
@@ -460,10 +460,10 @@ msgid "Desktop resolution"
 msgstr "Résolution de l'écran"
 
 msgid "Resolution:"
-msgstr "Résolution:"
+msgstr "Résolution fenêtre :"
 
 msgid "Color depth:"
-msgstr "Profondeur de la couleur:"
+msgstr "Profondeur de la couleur :"
 
 msgid "Texture compression"
 msgstr "Compression de texture"
@@ -496,7 +496,7 @@ msgid "Vertices and Triangles"
 msgstr "Sommets et Triangles"
 
 msgid "Depth first:"
-msgstr "La profondeur d'abord:"
+msgstr "La profondeur d'abord :"
 
 msgid "Disabled"
 msgstr "Désactivé"
@@ -511,34 +511,34 @@ msgid "Wait for GPU to finish each frame"
 msgstr "Attendre le GPU pour finaliser chaque frame"
 
 msgid "Brightness:"
-msgstr "Luminosité:"
+msgstr "Luminosité :"
 
 msgid "Contrast:"
-msgstr "Contraste:"
+msgstr "Contraste :"
 
 msgid "Gamma:"
-msgstr "Gamma:"
+msgstr "Gamma :"
 
 msgid "Contrast boost:"
-msgstr "Renforcer Contraste:"
+msgstr "Renforcer Contraste :"
 
 msgid "Saturation:"
-msgstr "Saturation:"
+msgstr "Saturation :"
 
 msgid "Use GLSL to handle color control"
 msgstr "Utiliser GLSL pour gérer le contrôle des couleurs"
 
 msgid "Ambient light:"
-msgstr "Lumière ambiente:"
+msgstr "Lumière ambiente :"
 
 msgid "Intensity:"
-msgstr "Intensité:"
+msgstr "Intensité :"
 
 msgid "Max FPS:"
-msgstr "Max. FPS:"
+msgstr "Max. FPS :"
 
 msgid "Quality preset:"
-msgstr "Préréglage de qualité:"
+msgstr "Préréglage de qualité :"
 
 msgid "Low"
 msgstr "Bas"
@@ -550,7 +550,7 @@ msgid "Ultra"
 msgstr "Ultra"
 
 msgid "Geometry detail:"
-msgstr "Détail de la géométrie:"
+msgstr "Qualité de géométrie :"
 
 msgid "Best"
 msgstr "Meilleur"
@@ -559,40 +559,40 @@ msgid "Lowest"
 msgstr "Le plus bas"
 
 msgid "Antialiasing:"
-msgstr "Anticrénelage:"
+msgstr "Anticrénelage :"
 
 msgid "Ambient:"
-msgstr "Ambiente:"
+msgstr "Ambience:"
 
 msgid "Texture quality:"
-msgstr "Qualité de texture:"
+msgstr "Qualité des textures :"
 
 msgid "World texture quality:"
-msgstr "Qualité de la texture de la carte:"
+msgstr "Qualité de la carte :"
 
 msgid "Anisotropy:"
-msgstr "Anisotropie:"
+msgstr "Anisotropie :"
 
 msgid "Particle quality:"
-msgstr "Qualité des particules:"
+msgstr "Qualité des particules :"
 
 msgid "Particle dist.:"
-msgstr "Dist. particule:"
+msgstr "Dist. particule :"
 
 msgid "Gibs count:"
-msgstr "Compte de Gibs:"
+msgstr "Compte des organes :"
 
 msgid "Casing count:"
-msgstr "Nombre de boîtiers:"
+msgstr "Nombre de boîtiers :"
 
 msgid "Decals"
 msgstr "Décalcomanies"
 
 msgid "Distance:"
-msgstr "Distance:"
+msgstr "Distance :"
 
 msgid "Time:"
-msgstr "Temps:"
+msgstr "Temps :"
 
 msgid "Use lightmaps"
 msgstr "Utiliser lightmaps"
@@ -610,7 +610,7 @@ msgid "Relief mapping"
 msgstr "Cartographie du relief"
 
 msgid "Reflections:"
-msgstr "Réflexions:"
+msgstr "Réflexions :"
 
 msgid "Blurred"
 msgstr "Flou"
@@ -640,43 +640,43 @@ msgid "Deform vertexes"
 msgstr "Déformer les sommets"
 
 msgid "Motion blur:"
-msgstr "Flou de mouvement:"
+msgstr "Flou de mouvement :"
 
 msgid "Damage blur:"
-msgstr "Flou des dommages:"
+msgstr "Flou des dommages :"
 
 msgid "Music:"
-msgstr "Musique:"
+msgstr "Musique :"
 
 msgid "Master:"
-msgstr "Master:"
+msgstr "Principal :"
 
 msgid "Info:"
-msgstr "Info:"
+msgstr "Info :"
 
 msgid "Items:"
-msgstr "Articles:"
+msgstr "Articles :"
 
 msgid "Pain:"
-msgstr "Douleur:"
+msgstr "Douleur :"
 
 msgid "Shots:"
-msgstr "Tirs:"
+msgstr "Tirs :"
 
 msgid "Voice:"
-msgstr "Voix:"
+msgstr "Voix :"
 
 msgid "Weapons:"
-msgstr "Armes:"
+msgstr "Armes :"
 
 msgid "MAX"
 msgstr "MAX"
 
 msgid "Frequency:"
-msgstr "Fréquence:"
+msgstr "Fréquence :"
 
 msgid "Channels:"
-msgstr "Chaînes:"
+msgstr "Chaînes :"
 
 msgid "Swap Stereo"
 msgstr "Permuter stéréo"
@@ -688,13 +688,13 @@ msgid "Stereo"
 msgstr "Stéreo"
 
 msgid "Spatial voices:"
-msgstr "Voix spatiales:"
+msgstr "Voix spatiales :"
 
 msgid "Taunts"
 msgstr "Provocation"
 
 msgid "Taunt range:"
-msgstr "Gamme de provocation:"
+msgstr "Portée de provocation :"
 
 msgid "Very long"
 msgstr "Très Longue"
@@ -706,7 +706,7 @@ msgid "Automatic taunts"
 msgstr "Provocation automatique"
 
 msgid "Time warning:"
-msgstr "Avertissement de temps:"
+msgstr "Avertissement de temps :"
 
 msgid "1 minute"
 msgstr "1 Minute"
@@ -727,7 +727,7 @@ msgid "OFF"
 msgstr "ÉTEINT"
 
 msgid "Menu skins:"
-msgstr "Skins de menu:"
+msgstr "Skins de menu :"
 
 msgid "Show current time"
 msgstr "Afficher l'heure actuelle"
@@ -748,7 +748,7 @@ msgid "Accelerometer scale:"
 msgstr "Échelle d'accéléromètre:"
 
 msgid "Simple items:"
-msgstr "Objets simples:"
+msgstr "Objets simples :"
 
 msgid "Old nex model"
 msgstr "Ancien modèle Nex"
@@ -757,19 +757,19 @@ msgid "Bright player skins"
 msgstr "Skins de joueur lumineux"
 
 msgid "Cvar filter:"
-msgstr "Filtre cvar:"
+msgstr "Filtre cvar :"
 
 msgid "Setting:"
-msgstr "Paramètre:"
+msgstr "Paramètre :"
 
 msgid "Type:"
-msgstr "Type:"
+msgstr "Type :"
 
 msgid "Value:"
-msgstr "Valeur:"
+msgstr "Valeur :"
 
 msgid "Description:"
-msgstr "Description:"
+msgstr "Description :"
 
 msgid "km/h"
 msgstr "km/h"
@@ -838,22 +838,22 @@ msgid "Server Information"
 msgstr "Information du Serveur"
 
 msgid "Players:"
-msgstr "Joueurs:"
+msgstr "Joueurs :"
 
 msgid "Map:"
-msgstr "Map:"
+msgstr "Map :"
 
 msgid "Bots:"
-msgstr "Bots:"
+msgstr "Bots :"
 
 msgid "Mod:"
-msgstr "Mod:"
+msgstr "Mod :"
 
 msgid "Version:"
-msgstr "Version:"
+msgstr "Version :"
 
 msgid "Ping:"
-msgstr "Ping:"
+msgstr "Ping :"
 
 msgid "Language..."
 msgstr "Langue... / Language..."
@@ -862,17 +862,17 @@ msgid "Language"
 msgstr "Langue / Langauge"
 
 msgid "Disable Nexuiz-compatible symbols"
-msgstr "Désactiver symbole Nexuiz-compatible"
+msgstr "Désactiver les symboles Nexuiz"
 
 msgid ""
 "* Needed for some european characters, player names might be displayed "
 "incorrectly"
 msgstr ""
 "* Nécessaire pour certains caractères européens, les noms des joueurs peuvent "
-"être affichés incorrectement"
+"s'afficher incorrectement"
 
 msgid "Acceleration:"
-msgstr "Accélération:"
+msgstr "Accélération :"
 
 msgid "* Keep this set to 0 until you know what this setting does"
 msgstr "* Laisser cette option à 0 jusqu'à que vous sachiez à quoi ça sert"
@@ -884,31 +884,31 @@ msgid "Game"
 msgstr "Jeu"
 
 msgid "Congratulations!"
-msgstr "Glückwünsche!"
+msgstr "Félicitations !"
 
 msgid "You have successfully completed the Single Player Campaign!"
-msgstr "Vous avez terminé avec succès la campagne solo!"
+msgstr "Vous avez terminé avec succès la campagne solo !"
 
 msgid "Microphone:"
-msgstr "Microphone:"
+msgstr "Microphone :"
 
 msgid "Voice chat:"
-msgstr "Chat vocal:"
+msgstr "Chat vocal :"
 
 msgid "Effects:"
-msgstr "Effets:"
+msgstr "Effets :"
 
 msgid "Deprecated channel control"
-msgstr "Contrôle de canal obsolète"
+msgstr "Contrôle de canal (obsolète)"
 
 msgid "Volume boost:"
-msgstr "Augmentation du volume:"
+msgstr "Boost de volume :"
 
 msgid "Automatic volume boost"
 msgstr "Augmentation automatique du volume"
 
 msgid "Microphone test:"
-msgstr "Essai de micro:"
+msgstr "Essai de micro :"
 
 msgid "Start"
 msgstr "Commencer"
@@ -917,13 +917,13 @@ msgid "Stop"
 msgstr "Arrêt"
 
 msgid "Server mode:"
-msgstr "Mode serveur:"
+msgstr "Mode serveur :"
 
 msgid "Minimal amount of human and bots:"
-msgstr "Quantité minimale d'humains et de Bots:"
+msgstr "Quantité minimale d'humains et de Bots :"
 
 msgid "Additional number of bots:"
-msgstr "Nombre supplémentaire de bots:"
+msgstr "Nombre supplémentaire de bots :"
 
 msgid "Public"
 msgstr "Publique"
@@ -944,7 +944,7 @@ msgid "Interface"
 msgstr "Interface"
 
 msgid "Radar position:"
-msgstr "Positionnement radar:"
+msgstr "Positionnement radar :"
 
 msgid "Swing of the weapon model when walking"
 msgstr "Balancement du modèle d'arme lors de la marche"
@@ -956,7 +956,7 @@ msgid "Use \"Iceland\" font for big messages"
 msgstr "Utilisez la police \"Iceland\" pour les messages volumineux"
 
 msgid "Lighting intensity:"
-msgstr "Intensité lumineuse:"
+msgstr "Intensité lumineuse :"
 
 msgid "Easiest"
 msgstr "Le plus facile"
@@ -975,3 +975,21 @@ msgstr "* Peut affecter les performances lorsqu'il n'est pas égal à 1"
 
 msgid "* From water, hurt and powerups"
 msgstr "* De l'eau, des blessures et des bonus"
+
+msgid "Resolution scale:"
+msgstr "Qualité :"
+
+msgid "Tint effect:"
+msgstr "Niveau de teinte :"
+
+msgid "Deferred shadow"
+msgstr "Ombres reportées"
+
+msgid "Discord status"
+msgstr "Statud Discord"
+
+msgid "Server thread"
+msgstr "Thread pour serveur"
+
+msgid "* Good for local game performance, but may be unstable"
+msgstr "* Améliore les performances locales, mais peut être instable"
