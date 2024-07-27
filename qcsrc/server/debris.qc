@@ -38,7 +38,7 @@ void(void) debris_init {
 			item_spawnfunc(); //for precache
 			remove(self);
 		} else if ((e = weapon_info_by_name(s))) {
-			e.weapon_func(WEAPON_REQUEST_PRECACHE);
+			weapon_precache(e.weapon);
 		} else
 			precache_model(s);
 	}
