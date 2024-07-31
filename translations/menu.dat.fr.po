@@ -142,7 +142,7 @@ msgid "Ping"
 msgstr "Ping"
 
 msgid "Host name"
-msgstr "Nom du host"
+msgstr "Nom du serveur"
 
 msgid "Map"
 msgstr "Carte"
