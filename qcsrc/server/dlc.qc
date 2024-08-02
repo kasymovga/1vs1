@@ -45,7 +45,6 @@ float(string s) dlc_findspace {
 
 void dlc_settemp(string name, string value) {
 	float n = cvar("_dlc_settemps_count");
-	print("DLC set temp: ", name, " = ", value, "\n");
 	string s1 = strcat("_dlc_settemp_name", ftos(n));
 	string s2 = strcat("_dlc_settemp_savevalue", ftos(n));
 	registercvar(s1, "");
@@ -59,6 +58,7 @@ void dlc_settemp(string name, string value) {
 
 float dlc_load_player_model_not_forced;
 float(string s) dlc_load_settemps_from {
+	print("Loading settings from ", s, "\n");
 	float f;
 	string line, c;
 	string cvar_name, cvar_value;
