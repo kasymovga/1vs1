@@ -91,14 +91,12 @@ void GUI_Draw_Remove() {
 	gui_draw_reset();
 	gui_draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	gui_draw_reset();
-	drawfont = sbar_font;
 	gui_draw_alpha *= GUI_alpha;
 	mainWindow.drawGUI(mainWindow);
 }
 
 void GUI_Draw() {
 	float timescale = getstatf(STAT_MOVEVARS_TIMESCALE);
-	drawfont = sbar_font;
 	if (GUI_alpha < 1) {
 		if (timescale < 1 || frametime <= 0)
 			GUI_alpha += 0.05;
@@ -113,7 +111,6 @@ void GUI_Draw() {
 	gui_draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	gui_draw_reset();
 	gui_draw_alpha *= GUI_alpha;
-	drawfont = sbar_font;
 	mainWindow.drawGUI(mainWindow);
 	mouse_enable("");
 	input_event_callback = GUI_InputEvent;
@@ -129,6 +126,7 @@ void GUI_Show(float window) {
 	GUI_mouseButtonsPressed = FALSE;
 	GUI_shiftState = FALSE;
 	GUI_currentWindow = window;
+	gui_font3_is_unicode_compat = cvar("_font3_is_unicode_compat");
 	if not(mainWindow) {
 		if (cvar("_backup_con_chatvars_set")) //avoid conflicts with con_chat_maximize
 			gui_con_chat_save = cvar("_backup_con_chat");
