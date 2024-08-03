@@ -126,7 +126,6 @@ void GUI_Show(float window) {
 	GUI_mouseButtonsPressed = FALSE;
 	GUI_shiftState = FALSE;
 	GUI_currentWindow = window;
-	gui_font3_is_unicode_compat = cvar("_font3_is_unicode_compat");
 	if not(mainWindow) {
 		if (cvar("_backup_con_chatvars_set")) //avoid conflicts with con_chat_maximize
 			gui_con_chat_save = cvar("_backup_con_chat");

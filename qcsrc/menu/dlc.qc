@@ -24,9 +24,8 @@ void(void) dlc_load_fonts {
 		localcmd(";loadfont user1 gfx/vera-sans,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 32"); // csqc font
 		localcmd(";loadfont user2 gfx/vera-sans,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 48"); // csqc bold font
 		localcmd(";loadfont user3 gfx/vera-sans-unicode,fonts/DejaVuSans-Bold.ttf,fonts/unifont-5.1.20080907 32;"); // menu font without nexuiz symbols
-		registercvar("_font3_is_unicode_compat", "", 0);
-		cvar_set("_font3_is_unicode_compat", "1");
-		gui_font3_is_unicode_compat = 1;
+		registercvar("font3_is_unicode_compat", "", 0);
+		cvar_set("font3_is_unicode_compat", "1");
 	} else {
 		print("Loading non-utf8 fonts\n");
 		localcmd(";loadfont console gfx/vera-sans-mono 32");
@@ -38,9 +37,8 @@ void(void) dlc_load_fonts {
 		localcmd(";loadfont user1 gfx/vera-sans 32"); // csqc font
 		localcmd(";loadfont user2 gfx/vera-sans 48"); // csqc bold font
 		localcmd(";loadfont user3 gfx/vera-sans 32;"); // menu font without nexuiz symbols
-		registercvar("_font3_is_unicode_compat", "", 0);
-		cvar_set("_font3_is_unicode_compat", "0");
-		gui_font3_is_unicode_compat = 0;
+		registercvar("font3_is_unicode_compat", "", 0);
+		cvar_set("font3_is_unicode_compat", "0");
 	}
 	if (dlc_ready("font-iceland")) {
 		print("Loading iceland font\n");
