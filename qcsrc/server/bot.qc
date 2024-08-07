@@ -135,6 +135,14 @@ void(void) bot_setnameandstuff {
 	self.netname = self.netname_freeme = strzone(strcat(prefix, name, suffix));
 }
 
+float(string s) bot_custom_weapon_id {
+	float f = stof(s);
+	if (f > 0) return f;
+	entity e = weapon_info_by_name(s);
+	if (e) return e.weapon;
+	return -1;
+}
+
 void(void) bot_custom_weapon_priority_setup {
 	float tokens, i, c, w;
 	bot_custom_weapon = FALSE;
@@ -163,7 +171,7 @@ void(void) bot_custom_weapon_priority_setup {
 	tokens = tokenizebyseparator(cvar_string("bot_ai_custom_weapon_priority_far")," ");
 	c = 0;
 	for (i=0; i < tokens && c < WEAPON_COUNT_EXTRA; ++i){
-		w = stof(argv(i));
+		w = bot_custom_weapon_id(argv(i));
 		if (WEAPON_VALID(w)) {
 			bot_weapons_far[c] = w;
 			++c;
@@ -176,7 +184,7 @@ void(void) bot_custom_weapon_priority_setup {
 	tokens = tokenizebyseparator(cvar_string("bot_ai_custom_weapon_priority_mid")," ");
 	c = 0;
 	for (i=0; i < tokens && c < WEAPON_COUNT_EXTRA; ++i){
-		w = stof(argv(i));
+		w = bot_custom_weapon_id(argv(i));
 		if (WEAPON_VALID(w)) {
 			bot_weapons_mid[c] = w;
 			++c;
@@ -189,7 +197,7 @@ void(void) bot_custom_weapon_priority_setup {
 	tokens = tokenizebyseparator(cvar_string("bot_ai_custom_weapon_priority_close")," ");
 	c = 0;
 	for (i=0; i < tokens && i < WEAPON_COUNT_EXTRA; ++i){
-		w = stof(argv(i));
+		w = bot_custom_weapon_id(argv(i));
 		if (WEAPON_VALID(w)) {
 			bot_weapons_close[c] = w;
 			++c;
