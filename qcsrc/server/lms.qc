@@ -128,6 +128,7 @@ void lms_player_spawn(entity spot) {
 	self.killcount = -666; //Prevent bprint
 	spectator_observer_spawn(FALSE);
 	self.killcount = 0; //prevent possible score clear by join
+	lms_someone_died = TRUE;
 }
 
 var float(void) lms_spectator_to_player_handle_next;
