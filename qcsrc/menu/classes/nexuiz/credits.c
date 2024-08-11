@@ -33,7 +33,7 @@ void configureNexuizCreditsListNexuizCreditsList(entity me)
 	// load the file
 	me.bufferIndex = buf_create();
 	fh = fopen("rexuiz-credits.txt", FILE_READ);
-	if(fh > 0) {
+	if(fh >= 0) {
 		i = 0;
 		while((l = fgets(fh))) {
 			bufstr_set(me.bufferIndex, i, l);
