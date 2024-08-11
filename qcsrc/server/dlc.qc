@@ -58,13 +58,13 @@ void dlc_settemp(string name, string value) {
 
 float dlc_load_player_model_not_forced;
 float(string s) dlc_load_settemps_from {
-	print("Loading settings from ", s, "\n");
 	float f;
 	string line, c;
 	string cvar_name, cvar_value;
 	float separator;
 	f = fopen(s, FILE_READ);
 	if (f < 0) return FALSE;
+	print("Loading settings from ", s, "\n");
 	float r = 1;
 	if not(dlc_load_player_model_not_forced) {
 		string s = cvar_string("g_player_forcemodel");
