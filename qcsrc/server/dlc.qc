@@ -203,7 +203,7 @@ void(void) dlc_reset_all {
 	entity e = self;
 	for (self = nextent(world); self; self = nextent(self)) {
 		if (self.dlc_reset) {
-			print("DLC reset for ", self.classname, "\n");
+			//print("DLC reset for ", self.classname, "\n");
 			self.dlc_reset();
 		}
 	}
