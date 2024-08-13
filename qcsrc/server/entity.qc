@@ -216,7 +216,7 @@ float(string repl) entity_spawn_replace {
 		return FALSE;
 
 	entity e;
-	print("Entity ", self.classname, " replaced with ", repl, "\n");
+	//print("Entity ", self.classname, " replaced with ", repl, "\n");
 	if ((e = find(world, classname, repl))) {
 		self.classname = e.classname;
 	} else
