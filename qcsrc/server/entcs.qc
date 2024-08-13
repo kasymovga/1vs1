@@ -1,3 +1,5 @@
+float g_showenemynames;
+
 float() entcs_customize {
 	entity o;
 	o = self.owner;
@@ -17,6 +19,7 @@ float() entcs_customize {
 	if (team_mode && o.team == other.team) {
 		self.effects |= EFFECT_FULLBRIGHT;
 	} else {
+		if not(g_showenemynames) return FALSE;
 		if (o.body.body == self.enemy)
 		if (player_alpha(o, other) < 0.25)
 			return FALSE;
@@ -143,7 +146,14 @@ float(void) entcs_spec_customize {
 	return FALSE;
 }
 
+float entcs_init_done;
+void(void) entcs_init {
+	CVAR_CACHE(g_showenemynames);
+	entcs_init_done = 1;
+}
+
 entity() entcs_attach {
+	if not(entcs_init_done) entcs_init();
 	entity ent = spawn();
 	self.entcs = ent;
 	ent.classname = "entcs_sender_v2";
