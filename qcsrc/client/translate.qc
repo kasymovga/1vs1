@@ -32,7 +32,9 @@ void(float db, string path, float nodata) translate_load {
 				//print("msgstr=", msgstr, "\n");
 				msgid = strreplace("\\n", "\n", msgid);
 				msgstr = strreplace("\\n", "\n", msgstr);
-				db_put(db, msgid, msgstr);
+				if (msgid != "")
+					db_put(db, msgid, msgstr);
+
 				msgstr = "";
 				msgid = "";
 			}
@@ -62,7 +64,8 @@ void(float db, string path, float nodata) translate_load {
 		//print("msgstr=", msgstr, "\n");
 		msgid = strreplace("\\n", "\n", msgid);
 		msgstr = strreplace("\\n", "\n", msgstr);
-		db_put(db, msgid, msgstr);
+		if (msgid != "")
+			db_put(db, msgid, msgstr);
 	}
 }
 
