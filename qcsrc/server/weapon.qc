@@ -606,7 +606,7 @@ void(float wpn) weapon_precache {
 	self = oldself;
 }
 
-float internalteam;
+float weapon_defaultspawnfunc_internalteam;
 void(float wpn) weapon_defaultspawnfunc {
 	entity e;
 	float t;
@@ -625,7 +625,9 @@ void(float wpn) weapon_defaultspawnfunc {
 		}
 		t = tokenize_console(s);
 		if (t >= 2) {
-			self.team = --internalteam;
+			if not(self.team)
+				self.team = --weapon_defaultspawnfunc_internalteam;
+
 			oldself = self;
 			for (i = 1; i < t; ++i) {
 				s = argv(i);
