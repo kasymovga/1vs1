@@ -7,6 +7,7 @@ float g_nadgets_remove_on_death;
 float g_nadgets_storage_limit_factor;
 float g_nadgets_regen;
 float g_nadgets_ammo;
+float g_nadgets_weapon_drop;
 float g_nadgets_regen_damagepause;
 float g_nadgets_shield_damage_store_allow_cancel_discharge;
 float g_nadgets_initial_regen;
@@ -163,7 +164,7 @@ float() nadget_weapon_throw_handle {
 		return FALSE;
 
 	nadget_Trigger();
-	return TRUE;
+	return g_nadgets_weapon_drop;
 }
 
 float(.float hg_type_field, .float hg_ammo_field) nadget_bot_aim_nadget {
@@ -311,6 +312,7 @@ void(void) nadget_init_common {
 	CVAR_CACHE(g_nadgets_regen_damagepause);
 	CVAR_CACHE(g_nadgets_shield_damage_store_allow_cancel_discharge);
 	CVAR_CACHE(g_nadgets_ammo);
+	CVAR_CACHE(g_nadgets_weapon_drop);
 	CVAR_CACHE(g_nadgets_initial_regen);
 	CVAR_CACHE(g_nadgets_drop_on_death);
 	CVAR_CACHE(g_nadgets_bonus_at_revive);

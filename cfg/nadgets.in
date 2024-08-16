@@ -23,6 +23,7 @@ set g_nadgets_detonatelaunches 0 "Use the detonation (dropweapon) button to laun
 set g_nadgets_storage_limit_factor 2 "How many nadgets can players store overall, based on regen_limit. e.g. a value of 2 means twice as much as regen_limit"
 set g_nadgets_show_in_sbar 0 "Show nadgets in score board"
 set g_nadgets_bonus_at_revive 5 "Give bonus nadget for this amount of revives (0 - disabled)"
+set g_nadgets_weapon_drop 0
 
 // Hand Grenade
 set g_nadgets_normal_regen_time 30
