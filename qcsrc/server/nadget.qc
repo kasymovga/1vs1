@@ -164,7 +164,7 @@ float() nadget_weapon_throw_handle {
 		return FALSE;
 
 	nadget_Trigger();
-	return g_nadgets_weapon_drop;
+	return !g_nadgets_weapon_drop;
 }
 
 float(.float hg_type_field, .float hg_ammo_field) nadget_bot_aim_nadget {
