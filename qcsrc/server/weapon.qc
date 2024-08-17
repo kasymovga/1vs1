@@ -660,7 +660,7 @@ void(float wpn) weapon_defaultspawnfunc {
 			} else {
 				item_spawnfunc = item_spawnfunc_for(s);
 				if (item_spawnfunc) {
-					print("weapon ", self.classname, " replaced with ", s, "\n");
+					//print("weapon ", self.classname, " replaced with ", s, "\n");
 					self.classname = "replaceditem";
 					item_spawnfunc();
 					return;
