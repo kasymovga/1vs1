@@ -501,32 +501,29 @@ void(void) item_touch  {
 	}
 }
 
+entity item_team_linker;
 void(void) item_find_team {
-	entity head, e;
-	if (self.effects & EFFECT_NODRAW) {
-		// marker for item team search
-		random_selection_init();
-		for (head = world; (head = findfloat(head, team, self.team)); )
-			if (head.flags & FL_ITEM)
-			if (head.existsonlyfor == self.existsonlyfor)
-				random_selection_add(head, 0, NULL, head.cnt, 0);
-
-		e = random_selection_chosen_ent;
-		e.state = 0;
-		item_show(e, 1);
-		for (head = world; (head = findfloat(head, team, self.team)); )
-			if (head.flags & FL_ITEM)
-			if (head.existsonlyfor == self.existsonlyfor) {
-				if (head != e) {
-					// make it a non-spawned item
-					item_show(head, -1);
-					head.state = 1; // state 1 = initially hidden item
-				}
-				head.effects &= ~EFFECT_NODRAW;
+	entity e, e2;
+	for (e = NULL; (e = findflags(e, flags, FL_ITEM)); ) {
+		if (e.effects & EFFECT_NODRAW)
+		if (e.team) {
+			random_selection_init();
+			for (e2 = e; e2; e2 = findflags(e2, flags, FL_ITEM)) {
+				if (e2.team != e.team) continue;
+				if (e2.existsonlyfor != e.existsonlyfor) continue;
+				random_selection_add(e2, 0, NULL, e2.cnt, 0);
+				e2.effects &= ~EFFECT_NODRAW;
+				item_show(e2, -1);
+				e2.state = 1;
 			}
-		if ((e.flags & FL_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
-			item_schedule_initial_respawn(e);
+			random_selection_chosen_ent.state = 0;
+			item_show(random_selection_chosen_ent, 1);
+			if ((random_selection_chosen_ent.flags & FL_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
+				item_schedule_initial_respawn(random_selection_chosen_ent);
+		}
 	}
+	remove(item_team_linker);
+	item_team_linker = NULL;
 }
 
 void(void) item_reset {
@@ -785,7 +782,10 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 			self.cnt = 1; // item probability weight
 
 		self.effects |= EFFECT_NODRAW; // marker for item team search
-		entity_initialize(self, item_find_team, INITPRIO_FINDTARGET);
+		if not(item_team_linker) {
+			item_team_linker = spawn();
+			entity_initialize(item_team_linker, item_find_team, INITPRIO_FINDTARGET);
+		}
 	} else if ((self.flags & FL_POWERUP) && self.respawntime > 0 && substring(self.classname, 0, 7) != "dropped" && !entity_per_player_entities) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);
 
