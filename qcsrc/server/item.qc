@@ -534,7 +534,11 @@ void(void) item_reset {
 		WaypointSprite_Kill(self.waypointsprite_attached);
 
 	item_show(self, (self.team ? (self.state ? -1 : 1) : !self.state));
-	setorigin (self, self.origin);
+	if (self.movetype == MOVETYPE_NONE)
+		setorigin (self, self.origin);
+	else
+		setorigin (self, self.spawnorigin);
+
 	self.think = stdproc_nothing;
 	self.nextthink = 0;
 	if ((self.flags & FL_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
@@ -655,6 +659,8 @@ void(void) item_drop_to_floor {
 	setorigin(self, trace_endpos);
 	if (trace_fraction < 1 && !trace_ent) { //static surface
 		self.movetype = MOVETYPE_NONE;
+	} else {
+		self.spawnorigin = self.origin;
 	}
 	waypoint_spawnforitem(self);
 }
@@ -711,7 +717,6 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 			else
 				setsize (self, '-16 -16 0', '16 16 32');
 
-			// note entity_droptofloor returns FALSE if stuck/or would fall too far
 			entity_initialize(self, item_drop_to_floor, INITPRIO_DROPTOFLOOR);
 		}
 		self.reset = item_reset;
