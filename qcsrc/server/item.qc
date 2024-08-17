@@ -650,6 +650,15 @@ float(void) item_customize {
 	return TRUE;
 }
 
+void(void) item_drop_to_floor {
+	trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 4096', TRACE_MOVE_NOMONSTERS, self);
+	setorigin(self, trace_endpos);
+	if (trace_fraction < 1 && !trace_ent) { //static surface
+		self.movetype = MOVETYPE_NONE;
+	}
+	waypoint_spawnforitem(self);
+}
+
 void (string itemmodel, string defitemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue) item_start {
 	item_start_failed = FALSE;
 	if (itemmodel == "")
@@ -703,8 +712,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 				setsize (self, '-16 -16 0', '16 16 32');
 
 			// note entity_droptofloor returns FALSE if stuck/or would fall too far
-			entity_droptofloor();
-			waypoint_spawnforitem(self);
+			entity_initialize(self, item_drop_to_floor, INITPRIO_DROPTOFLOOR);
 		}
 		self.reset = item_reset;
 		weapon_spawned_list |= self.weapons;
