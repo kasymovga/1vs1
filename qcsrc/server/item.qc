@@ -323,18 +323,29 @@ float(entity item, entity player) item_give_to {
 		if not((player.weapons & e.weapons) || (player.weapons_extra & e.weapons_extra))
 			_switchweapon = TRUE;
 
+		float weapons_full = FALSE;
+		float akimbo_picked = FALSE;
 		if (g_pickup_weapons_max) {
 			if (item.flags & FL_WEAPON) {
 				float weapons_count = 0;
 				WEAPON_INFO_FOR_EACH(e) {
 					if ((player.weapons & e.weapons) || (player.weapons_extra & e.weapons_extra)) {
-						weapons_count++;
-						if (weapons_count >= g_pickup_weapons_max) {
-							print_to_spec(player, PRINT_CENTER, "You can carry only {1} weapons.\nDrop extra weapons to take this one.", ftos(g_pickup_weapons_max), "", "");
-							goto skip;
+						if ((item.weapons & e.weapons) || (item.weapons_extra & e.weapons_extra))
+						if (akimbo_weapon_give(player, e.weapon, e.netname)) {
+							akimbo_picked = TRUE;
+						}
+						if not(weapons_full) {
+							weapons_count++;
+							if (weapons_count >= g_pickup_weapons_max && !akimbo_picked) {
+								print_to_spec(player, PRINT_CENTER, "You can carry only {1} weapons.\nDrop extra weapons to take this one.", ftos(g_pickup_weapons_max), "", "");
+								weapons_full = TRUE;
+							}
 						}
 					}
 				}
+				if (weapons_full)
+				if not(akimbo_picked)
+					goto skip;
 			}
 		}
 		if (item.spawnshieldtime)
@@ -364,7 +375,7 @@ float(entity item, entity player) item_give_to {
 				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 			}
 		}
-		if (item.flags & FL_WEAPON)
+		if ((item.flags & FL_WEAPON) && !weapons_full)
 			WEAPON_INFO_FOR_EACH(e) {
 				if not(item.weapons & e.weapons)
 				if not(item.weapons_extra & e.weapons_extra)
