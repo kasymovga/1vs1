@@ -1295,10 +1295,11 @@ void(void) weapon_init {
 	sv_qcanimation_melee2_morph1origin = stov(cvar_string("sv_qcanimation_melee2_morph1origin"));
 	sv_qcanimation_melee2_morph2origin = stov(cvar_string("sv_qcanimation_melee2_morph2origin"));
 	sv_qcanimation_melee_exterior = stov(cvar_string("sv_qcanimation_melee_exterior"));
-	entity e;
-	WEAPON_INFO_FOR_EACH(e) {
-		e.weapon_func(WEAPON_REQUEST_CVAR_CACHE);
+	entity e = self;
+	WEAPON_INFO_FOR_EACH(self) {
+		self.weapon_func(WEAPON_REQUEST_CVAR_CACHE);
 	}
+	self = e;
 	weapon_melee_init();
 	bullet_init();
 	projectile_register_auto(PROJECTILE_BULLET, '0 0 0');
