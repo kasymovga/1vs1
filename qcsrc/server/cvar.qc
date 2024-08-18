@@ -74,7 +74,7 @@ void(void) cvar_changes_init {
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_world");
 		BADPREFIX("sv_infomessage");
-		BADPREFIX("sv_retard_");
+		BADPREFIX("sv_abuser_");
 		BADPREFIX("sv_player_mute_namepattern");
 		BADPREFIX("sv_ircbot");
 		BADPREFIX("sv_udpchat");
