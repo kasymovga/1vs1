@@ -374,6 +374,7 @@ void(void) map_intermission_think {
 void() map_finish {
 	string s;
 	entity e;
+	stat_shutdown();
 	map_finished = TRUE;
 	string map_finished_message;
 	rank_distribute(world);

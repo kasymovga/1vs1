@@ -140,6 +140,7 @@ rm/damage.qh
 rm/game_type_vote.qh
 rm/buffs.qh
 rm/bigprint.qh
+stat.qh
 ../client-server/progs.qc
 ../menu-server/progs.qc
 weapon/two_weapons.qh
@@ -406,3 +407,4 @@ rm.qc
 jb.qc
 jb_role.qc
 print.qc
+stat.qc
