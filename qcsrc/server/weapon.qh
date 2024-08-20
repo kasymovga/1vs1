@@ -9,10 +9,10 @@ enum {
 	WEAPON_FRAME_MELEE2,
 };
 
-enum: flag {
-	WEAPON_FLAG_NORMAL,
-	WEAPON_FLAG_CANCLIMB,
-	WEAPON_FLAG_HIDDEN,
+enum {
+	WEAPON_FLAG_NORMAL = 1,
+	WEAPON_FLAG_CANCLIMB = 2,
+	WEAPON_FLAG_HIDDEN = 4,
 };
 
 float g_weaponspeedfactor;

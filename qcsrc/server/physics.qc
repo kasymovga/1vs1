@@ -15,11 +15,11 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers;
 vector physics_frame_begin_origin;
 entity physics_current_player;
 
-enum: flag {
-	PHYSICS_ABILITY_WALLJUMP,
-	PHYSICS_ABILITY_DODGING,
-	PHYSICS_ABILITY_DOUBLEJUMP,
-	PHYSICS_ABILITY_CLIMB,
+enum {
+	PHYSICS_ABILITY_WALLJUMP = 1,
+	PHYSICS_ABILITY_DODGING = 2,
+	PHYSICS_ABILITY_DOUBLEJUMP = 4,
+	PHYSICS_ABILITY_CLIMB = 8,
 };
 
 float physics_send(entity to, float sf);
