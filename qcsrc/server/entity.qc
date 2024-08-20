@@ -159,8 +159,9 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
 void(entity platform) entity_drop_entities {
 	const vector nudge = '1 1 1';
 	entity e = NULL;
-	while((e = findflags(e, flags, FL_ONGROUND))) {
-		if(math_boxes_overlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
+	while ((e = findentity(e, groundentity, platform))) {
+		if (e.flags & FL_ONGROUND)
+		if (math_boxes_overlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
 			e.flags &= ~FL_ONGROUND;
 			projectile_update_next_frame(e);
 		}
