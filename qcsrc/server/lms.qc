@@ -3,6 +3,7 @@ float g_lms_sphere_damage;
 float g_lms_sphere_damage_distance_factor;
 float g_lms_sphere_diameter_min;
 float g_lms_sphere_diameter_start_indent;
+float g_lms_sphere_permutation_interval;
 float SP_LIVES;
 var .float lms_lives;
 float lms_someone_died;
@@ -14,9 +15,14 @@ vector lms_sphere_origin_start;
 vector lms_sphere_origin_end;
 #define LMS_ACTIVE() (!warmup_active && time >= map_starttime)
 
-void(void) lms_sphere_update {
+float(void) lms_progress { //1 - begin, 0 - finish
 	float tl = cvar("timelimit") * 60;
 	float progress = (LMS_ACTIVE() ? bound(0, (map_starttime + tl - time) / tl, 1) : 1);
+	return progress;
+}
+
+void(void) lms_sphere_update {
+	float progress = lms_progress();
 	lms_sphere_diameter = g_lms_sphere_diameter_min + (lms_sphere_diameter_start - g_lms_sphere_diameter_min) * progress;
 	setorigin(lms_sphere, lms_sphere_origin_start * progress + (1 - progress) * lms_sphere_origin_end);
 	lms_sphere.scale = max(lms_sphere_diameter, g_lms_sphere_diameter_min) / lms_sphere_diameter_unscaled;
@@ -54,10 +60,33 @@ float(entity to, float sf) lms_sphere_send {
 	return TRUE;
 }
 
+void(void) lms_sphere_permutate {
+	entity e;
+	float progress = lms_progress();;
+	if (progress < 0.01 || progress > 0.99) return;
+	random_selection_init();
+	for (e = NULL; (e = find(e, classname, "info_player_deathmatch")); ) {
+		if (e.origin != lms_sphere_origin_end)
+		if (lms_sphere_diameter / 2 - vlen(e.origin - lms_sphere.origin) > 50) {
+			random_selection_add(e, 0, NULL, 1, 0);
+		}
+	}
+	if not(random_selection_chosen_ent) return;
+	vector o = random_selection_chosen_ent.origin;
+	lms_sphere_origin_start = o + (lms_sphere.origin - o) * (1 / progress);
+	lms_sphere_origin_end = o;
+}
+
 void(void) lms_sphere_think {
+	if (map_finished) return;
 	lms_sphere_update();
 	self.nextthink = time + 0.1;
 	if not(LMS_ACTIVE()) return;
+	if (g_lms_sphere_permutation_interval)
+	if (time > self.teleport_time) {
+		lms_sphere_permutate();
+		self.teleport_time = time + g_lms_sphere_permutation_interval;
+	}
 	entity e, e2;
 	float f, r;
 	float d;
@@ -111,6 +140,7 @@ void(void) lms_sphere_setup {
 	lms_sphere_update();
 	lms_sphere.think = lms_sphere_think;
 	lms_sphere.nextthink = time + 0.1;
+	lms_sphere.teleport_time = time + g_lms_sphere_permutation_interval;
 	net_link_entity(lms_sphere, FALSE, 0, lms_sphere_send);
 }
 
@@ -228,6 +258,7 @@ void(void) lms_init {
 	CVAR_CACHE(g_lms_sphere_diameter_start_indent);
 	CVAR_CACHE(g_lms_sphere_damage);
 	CVAR_CACHE(g_lms_sphere_damage_distance_factor);
+	CVAR_CACHE(g_lms_sphere_permutation_interval);
 	precache_model("models/sphere/sphere.md3");
 	entity_initialize(world, lms_init_delayed, INITPRIO_GAMETYPE);
 }
