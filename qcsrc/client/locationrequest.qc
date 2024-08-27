@@ -1,6 +1,7 @@
 entity selected_location;
 
 void(void) locationrequest_remove {
+	teamradar_remove(self);
 	str_unzone_ifneeded(self.netname);
 	if (self == selected_location)
 		selected_location = world;
@@ -22,6 +23,7 @@ float locationrequest_input_event(float input_type, float primary, float seconda
 			selected_location.alpha = 1;
 			selected_location.teamradar_color = '0 1 1';
 			selected_location.teamradar_times[0] = time;
+			teamradar_add(selected_location);
 		}
 		localcmd(strcat("\ncmd location_select ", ftos(loc_x), " ", ftos(loc_y), "\n"));
 		return TRUE;
