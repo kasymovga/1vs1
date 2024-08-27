@@ -217,6 +217,7 @@ void(void) waypointsprite_draw {
 }
 
 void(void) waypointsprite_remove {
+	teamradar_remove(self);
 	if (self.netname)
 		strunzone(self.netname);
 
@@ -227,7 +228,7 @@ void(void) waypointsprite_remove {
 		strunzone(self.netname3);
 }
 
-void(float ignore) waypointsprite_read {
+void(float isnew) waypointsprite_read {
 	float sendflags, f, t;
 	sendflags = net_read_byte();
 	if not(self.spawntime)
@@ -308,6 +309,8 @@ void(float ignore) waypointsprite_read {
 	}
 	interpolate_note();
 	self.entremove = waypointsprite_remove;
+	if (isnew)
+		teamradar_add(self);
 }
 
 void(void) waypointsprite_init {
