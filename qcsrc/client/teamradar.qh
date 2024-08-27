@@ -9,3 +9,5 @@ void(void) teamradar_init;
 void(float ignore) teamradar_link_read;
 string teamradar_minimapname;
 float teamradar_show;
+void(entity e) teamradar_remove;
+void(entity e) teamradar_add;

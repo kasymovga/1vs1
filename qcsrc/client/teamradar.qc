@@ -12,6 +12,46 @@ vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // don't even ask
 float teamradar_size_scale; // 2D scale factor
 float teamradar_scale; // window size = ...qu
 float teamradar_nohudhack;
+entity teamradar_chain;
+.entity teamradar_next;
+
+//void(void) teamradar_dump {
+//	entity e;
+//	for (e = teamradar_chain; e; e = e.teamradar_next) {
+//		print("   ", ftos(num_for_edict(e)), " ", e.classname, "\n");
+//	}
+//}
+
+void(entity e) teamradar_add {
+	//print("teamradar_add ", ftos(num_for_edict(e)), "\n");
+	//teamradar_dump();
+	entity e2;
+	for (e2 = teamradar_chain; e2; e2 = e2.teamradar_next) {
+		if (e == e2) return;
+	}
+	e.teamradar_next = teamradar_chain;
+	teamradar_chain = e;
+	//print("---\n");
+	//teamradar_dump();
+}
+
+void(entity e) teamradar_remove {
+	//print("teamradar_remove ", ftos(num_for_edict(e)), "\n");
+	//teamradar_dump();
+	if (teamradar_chain == e) {
+		teamradar_chain = teamradar_chain.teamradar_next;
+		return;
+	}
+	entity e2;
+	for (e2 = teamradar_chain; e2.teamradar_next; e2 = e2.teamradar_next) {
+		if (e == e2.teamradar_next) {
+			e2.teamradar_next = e.teamradar_next;
+			return;
+		}
+	}
+	//print("---\n");
+	//teamradar_dump();
+}
 
 void(void) teamradar_init {
 	vector extend;
@@ -360,22 +400,25 @@ void(float big, string title) teamradar_view {
 			teamradar_size2d_y
 		);
 	}
-	for (tm = world; (tm = find(tm, classname, "radarlink")); )
-		teamradar_link_draw(tm.origin, tm.velocity, tm.team);
+	for (tm = teamradar_chain; tm; tm = tm.teamradar_next) {
+		if (tm.classname == "entcs_receiver") {
+			if (tm.cnt)
+				continue;
 
-	for (tm = world; (tm = findflags(tm, teamradar_icon, 0xFFFFFF)); )
-		teamradar_icon_draw(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, tm.alpha * sbar_alpha_fg);
-
-	for (tm = world; (tm = find(tm, classname, "entcs_receiver")); ) {
-		if (tm.cnt)
-			continue;
-
-		color2 = player_color(tm.sv_entnum);
-		//if (color == COLOR_SPECTATOR || color == color2)
-		teamradar_player_draw(tm.origin, tm.angles, team_rgb(color2));
+			color2 = player_color(tm.sv_entnum);
+			//if (color == COLOR_SPECTATOR || color == color2)
+			teamradar_player_draw(tm.origin, tm.angles, team_rgb(color2));
+		} else if (tm.teamradar_icon)
+			teamradar_icon_draw(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, tm.alpha * sbar_alpha_fg);
+		else if (tm.classname == "radarlink")
+			teamradar_link_draw(tm.origin, tm.velocity, tm.team);
 	}
 	teamradar_player_draw(view_origin, view_angles, '1 1 1');
 	drawresetcliparea();
+}
+
+void(void) teamradar_link_remove {
+	teamradar_remove(self);
 }
 
 void(float ignore) teamradar_link_read {
@@ -383,7 +426,9 @@ void(float ignore) teamradar_link_read {
 	sendflags = net_read_byte();
 	interpolate_undo();
 	self.iflags = IFLAG_VELOCITY;
+	teamradar_add(self);
 	self.classname = "radarlink";
+	self.entremove = teamradar_link_remove;
 	if (sendflags & 1) {
 		self.origin_x = net_read_coord();
 		self.origin_y = net_read_coord();
