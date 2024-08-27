@@ -49,7 +49,7 @@ float(float i) player_color {
 	else if (team_mode)
 		return pl.team;
 	else
-		return player_color_force(i);
+		return 0;
 }
 
 string(float i) player_name {

@@ -51,6 +51,7 @@ void(vector org, float rot, float h, vector sz, vector hotspot, float width, flo
 	draw_quad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * height, "", hrgb, ha, f);
 }
 
+float waypointsprite_draw_team;
 void(void) waypointsprite_draw {
 	string spriteimage;
 	float t;
@@ -69,25 +70,31 @@ void(void) waypointsprite_draw {
 		if (CVAR(cl_hidewaypoints))
 			return; // fixed waypoint
 
+	if (waypointsprite_draw_team != team_my) {
+		waypointsprite_draw_team = team_my;
+		entity e;
+		for (e = self; e; e = find(e, classname, "waypointsprite")) {
+			e.cnt = 0;
+		}
+	}
 	interpolate_do();
-	t = player_color(player_localentnum - 1);
 	spriteimage = "";
 	// choose the sprite
 	switch (self.rule) {
 		case SPRITERULE_DEFAULT:
 			if (self.team) {
-				if (self.team == t)
+				if (self.team == team_my)
 					spriteimage = self.netname;
 				else
-					spriteimage = "";
+					return;
 			} else
 				spriteimage = self.netname;
 
 			break;
 		case SPRITERULE_TEAMPLAY:
-			if (t == TEAM_COLOR_SPECTATOR + 1)
+			if (team_my == TEAM_COLOR_SPECTATOR) //spectator
 				spriteimage = self.netname3;
-			else if (self.team == t)
+			else if (self.team == team_my)
 				spriteimage = self.netname2;
 			else
 				spriteimage = self.netname;
@@ -99,7 +106,7 @@ void(void) waypointsprite_draw {
 	}
 	if (spriteimage == "")
 		return;
-	
+
 	float dist;
 	dist = vlen(self.origin - view_origin);
 	float a;
@@ -228,6 +235,7 @@ void(float ignore) waypointsprite_read {
 
 	self.draw2d = waypointsprite_draw;
 	self.draw2dflag = 1;
+	self.classname = "waypointsprite";
 	interpolate_undo();
 	if (sendflags & 0x80) {
 		t = net_read_byte();
@@ -332,9 +340,7 @@ void(void) waypointsprite_init {
 	}
 	search_end(dh);
 	entity e = NULL;
-	while ((e = nextent(e))) {
-		if (e.draw2d == waypointsprite_draw) {
-			e.cnt = 0;
-		}
+	while ((e = find(e, classname, "waypointsprite"))) {
+		e.cnt = 0;
 	}
 }
