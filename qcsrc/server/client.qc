@@ -123,6 +123,12 @@ float(entity to, float sf) client_init_send {
 			t |= 64;
 
 		net_write_byte(MSG_ENTITY, t);
+		net_write_coord(MSG_ENTITY, world_min_x);
+		net_write_coord(MSG_ENTITY, world_min_y);
+		net_write_coord(MSG_ENTITY, world_min_z);
+		net_write_coord(MSG_ENTITY, world_max_x);
+		net_write_coord(MSG_ENTITY, world_max_y);
+		net_write_coord(MSG_ENTITY, world_max_z);
 	}
 	if (sf & 4) {
 		if (sv_foginterval && client_fog != "")

@@ -108,7 +108,6 @@ void(void) CSQC_Init {
 	player_list = spawn();
 	team_get(TEAM_COLOR_SPECTATOR, TRUE); // add specs first
 	cvar_clientsettemp("_supports_weaponpriority", "1");
-	world_get_min_max(1); // try the CLEVER way first
 	waypointsprite_init();
 	projectile_precache();
 	gib_precache();
@@ -129,8 +128,6 @@ void(void) CSQC_Init {
 		teamradar_minimapname = strcat("gfx/", map_shortname, "_mini");
 		if (precache_pic(teamradar_minimapname) == "")
 			teamradar_minimapname = ""; // FAIL
-		else
-			world_get_min_max(0); // load new texcoords
 	}
 	teamradar_init();
 	teamradar_minimapname = strzone(teamradar_minimapname);
@@ -217,6 +214,13 @@ void(float ignore) main_init_read {
 		view_recoil_mode = (i & 32);
 		font_extra_symbols = (i & 64);
 		font_load_icons();
+		world_min_x = net_read_coord();
+		world_min_y = net_read_coord();
+		world_min_z = net_read_coord();
+		world_max_x = net_read_coord();
+		world_max_y = net_read_coord();
+		world_max_z = net_read_coord();
+		teamradar_init();
 	}
 	if (sf & 4) {
 		str_unzone_ifneeded(fog_settings);

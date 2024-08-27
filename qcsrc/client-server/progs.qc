@@ -22,4 +22,3 @@
 #include "time.qc"
 #include "trigger_push.qc"
 #include "warpzone.qc"
-#include "world.qc"

@@ -32,6 +32,10 @@ void() game_type_init {
 	else
 		map_description = str_zone_ifneeded(map_info_map_description);
 
+	if (map_info_map_mins != map_info_map_maxs) {
+		world_min = map_info_map_mins;
+		world_max = map_info_map_maxs;
+	}
 	float force_gametype_restore = 0;
 	string force_gametype = cvar_string("force_gametype");
 	if (force_gametype != "") {
