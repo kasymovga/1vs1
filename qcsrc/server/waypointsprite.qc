@@ -249,28 +249,31 @@ entity(
 	wp.teleport_time = time + lifetime;
 	wp.fade_time = lifetime;
 	wp.exteriormodeltoclient = ref;
-	if (ref)
-	{
+	if (ref) {
 		wp.view_ofs = ofs;
 		setorigin(wp, ref.origin + ofs);
-	}
-	else
+	} else
 		setorigin(wp, ofs);
+
 	wp.enemy = showto;
 	wp.team = t;
 	wp.owner = own;
 	wp.currentammo = hideable;
-	if (own)
-	{
+	if (own) {
 		if (own.ownfield)
 			remove(own.ownfield);
+
 		own.ownfield = wp;
 		wp.owned_by_field = ownfield;
 	}
 	wp.fade_rate = maxdistance;
 	wp.think = WaypointSprite_Think;
 	wp.nextthink = time;
-	wp.model1 = spr;
+	if (t)
+		wp.model2 = spr;
+	else
+		wp.model1 = spr;
+
 	wp.customizeentityforclient = WaypointSprite_Customize;
 	wp.waypointsprite_visible_for_player = WaypointSprite_visible_for_player;
 	wp.reset2 = WaypointSprite_Reset;
