@@ -1,21 +1,18 @@
 ..entity owned_by_field;
-.string model1;
-.string model2;
-.string model3;
 
 .float(entity) waypointsprite_visible_for_player;
 
 void(entity e, string m1, string m2, string m3) WaypointSprite_UpdateSprites {
-	if (m1 != e.model1) {
-		e.model1 = m1;
+	if (m1 != e.target) {
+		e.target = m1;
 		e.SendFlags |= 2;
 	}
-	if (m2 != e.model2) {
-		e.model2 = m2;
+	if (m2 != e.target2) {
+		e.target2 = m2;
 		e.SendFlags |= 4;
 	}
-	if (m3 != e.model3) {
-		e.model3 = m3;
+	if (m3 != e.target3) {
+		e.target3 = m3;
 		e.SendFlags |= 8;
 	}
 }
@@ -146,13 +143,13 @@ float(entity e) WaypointSprite_visible_for_player {
 	// team waypoints
 	if (self.team) {
 		if (e.classname == "observer" && e.team <= 0) {
-			if (self.model3 == "") {
+			if (self.target3 == "") {
 				return FALSE;
 			}
 		} else {
-			if (self.team != e.team && self.model1 == "") {
+			if (self.team != e.team && self.target == "") {
 				return FALSE;
-			} else if (self.team == e.team && self.model2 == "") {
+			} else if (self.team == e.team && self.target2 == "") {
 				return FALSE;
 			}
 		}
@@ -198,13 +195,13 @@ float(entity to, float sendflags) WaypointSprite_SendEntity {
 		net_write_byte(MSG_ENTITY, self.team);
 	}
 	if (sendflags & 2)
-		net_write_string(MSG_ENTITY, self.model1);
+		net_write_string(MSG_ENTITY, self.target);
 
 	if (sendflags & 4)
-		net_write_string(MSG_ENTITY, self.model2);
+		net_write_string(MSG_ENTITY, self.target2);
 
 	if (sendflags & 8)
-		net_write_string(MSG_ENTITY, self.model3);
+		net_write_string(MSG_ENTITY, self.target3);
 
 	if (sendflags & 16) {
 		net_write_coord(MSG_ENTITY, self.fade_time);
@@ -270,9 +267,9 @@ entity(
 	wp.think = WaypointSprite_Think;
 	wp.nextthink = time;
 	if (t)
-		wp.model2 = spr;
+		wp.target2 = spr;
 	else
-		wp.model1 = spr;
+		wp.target = spr;
 
 	wp.customizeentityforclient = WaypointSprite_Customize;
 	wp.waypointsprite_visible_for_player = WaypointSprite_visible_for_player;

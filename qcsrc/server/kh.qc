@@ -217,14 +217,14 @@ void kh_Key_AssignTo(entity key, entity player) { // runs every time a key is pi
 			// audit all key carrier sprites, update them to RUN HERE
 			FOR_EACH_KH_KEY(k) {
 				if (k.owner)
-					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.model1, "keycarrier-finish", k.owner.waypointsprite_attachedforcarrier.model3);
+					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.target, "keycarrier-finish", k.owner.waypointsprite_attachedforcarrier.target3);
 			}
 		} else {
 			kh_interferemsg_time = 0;
 			// audit all key carrier sprites, update them to RUN HERE
 			FOR_EACH_KH_KEY(k) {
 				if (k.owner)
-					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.model1, "keycarrier-friend", k.owner.waypointsprite_attachedforcarrier.model3);
+					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.target, "keycarrier-friend", k.owner.waypointsprite_attachedforcarrier.target3);
 			}
 		}
 	}

@@ -17,8 +17,6 @@ void onslaught_link_checkupdate();
 .float lastshielded;
 .float lastcaptured;
 
-.string model1, model2, model3;
-
 float g_ons_gen_health;
 float g_ons_cp_buildhealth;
 float g_ons_cp_buildtime;
