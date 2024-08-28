@@ -168,26 +168,23 @@ void(vector coord3d, vector pangles, vector rgb) radar_player_draw {
 	R_EndPolygon();
 }
 
-void(vector coord, float icon, entity pingdata, vector rgb, float a) radar_icon_draw {
+void(vector coord, float icon, vector rgb, float a) radar_icon_draw {
 	float dt;
 	vector v;
 	float i;
 	coord = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(coord));
 	drawpic(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon)), '8 8 0', rgb, a, 0);
-	if (pingdata) {
-		for (i = 0; i < MAX_TEAMRADAR_TIMES; ++i) {
-			dt = pingdata.(radar_times[i]);
-			if (dt == 0)
-				continue;
+}
 
-			dt = time - dt;
-			if (dt >= 1 || dt <= 0)
-				continue;
-
-			v = '2 2 0' * radar_size_scale * dt;
-			drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
-		}
+void(entity pingdata, float a) radar_ping_draw {
+	float dt = time - pingdata.state;
+	if (dt > 1) {
+		remove(pingdata);
+		return;
 	}
+	vector coord = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(pingdata.origin));
+	vector v = '2 2 0' * radar_size_scale * dt;
+	drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
 }
 
 void(vector start, vector end, float colors) radar_link_draw {
@@ -366,22 +363,30 @@ void(float big, string title) radar_view {
 			color2 = player_color(tm.sv_entnum);
 			//if (color == COLOR_SPECTATOR || color == color2)
 			radar_player_draw(tm.origin, tm.angles, team_rgb(color2));
-		} else if (tm.classname == "radarlink")
+		} else if (tm.radar_icon < 1337)
+			radar_icon_draw(tm.origin, tm.radar_icon, tm.radar_color, tm.alpha * sbar_alpha_fg);
+		else if (tm.classname == "radarping")
+			radar_ping_draw(tm, sbar_alpha_fg);
+		else if (tm.classname == "radarlink")
 			radar_link_draw(tm.origin, tm.velocity, tm.team);
-		else if (tm.radar_icon)
-			radar_icon_draw(tm.origin, tm.radar_icon, tm, tm.radar_color, tm.alpha * sbar_alpha_fg);
 	}
 	radar_player_draw(view_origin, view_angles, '1 1 1');
 	drawresetcliparea();
 }
 
+void(vector org) radar_ping {
+	entity e = spawn();
+	e.classname = "radarping";
+	e.origin = org;
+	e.radar_icon = 1337;
+	e.state = time;
+}
+
 void(float ignore) radar_link_read {
 	float sendflags;
 	sendflags = net_read_byte();
-	interpolate_undo();
-	self.iflags = IFLAG_VELOCITY;
 	self.classname = "radarlink";
-	self.radar_icon = 1;
+	self.radar_icon = 1337;
 	if (sendflags & 1) {
 		self.origin_x = net_read_coord();
 		self.origin_y = net_read_coord();
@@ -395,5 +400,4 @@ void(float ignore) radar_link_read {
 	if (sendflags & 4) {
 		self.team = net_read_byte();
 	}
-	interpolate_note();
 }

@@ -1,9 +1,6 @@
 void(float big, string title) radar_view;
-#define MAX_TEAMRADAR_TIMES 32
 // to make entities have dots on the team radar
 .float radar_icon;
-.float radar_times[MAX_TEAMRADAR_TIMES];
-.float radar_time_index;
 .vector radar_color;
 void(void) radar_init;
 void(float ignore) radar_link_read;

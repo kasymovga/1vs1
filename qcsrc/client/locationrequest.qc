@@ -21,7 +21,7 @@ float locationrequest_input_event(float input_type, float primary, float seconda
 			selected_location.origin = loc;
 			selected_location.alpha = 1;
 			selected_location.radar_color = '0 1 1';
-			selected_location.radar_times[0] = time;
+			radar_ping(loc);
 		}
 		localcmd(strcat("\ncmd location_select ", ftos(loc_x), " ", ftos(loc_y), "\n"));
 		return TRUE;

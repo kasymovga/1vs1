@@ -270,10 +270,9 @@ void(float isnew) waypointsprite_read {
 	if (sendflags & 32) {
 		f = net_read_byte();
 		self.radar_icon = (f & 0x7F);
-		if (f & 0x80) {
-			self.(radar_times[self.radar_time_index]) = time;
-			self.radar_time_index = math_mod(self.radar_time_index + 1, MAX_TEAMRADAR_TIMES);
-		}
+		if (f & 0x80)
+			radar_ping(self.origin);
+
 		self.radar_color_x = net_read_byte() / 255.0;
 		self.radar_color_y = net_read_byte() / 255.0;
 		self.radar_color_z = net_read_byte() / 255.0;
