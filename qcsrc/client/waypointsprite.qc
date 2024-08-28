@@ -7,7 +7,6 @@ float waypointsprite_distancefadealpha;
 float waypointsprite_distancefadescale;
 float waypointsprite_distancefadedistance;
 
-.float rule;
 .string netname; // primary picture
 .string netname2; // secondary picture
 .string netname3; // tertiary picture
@@ -80,33 +79,18 @@ void(void) waypointsprite_draw {
 	interpolate_do();
 	spriteimage = "";
 	// choose the sprite
-	switch (self.rule) {
-		case SPRITERULE_DEFAULT:
-			if (self.team) {
-				if (self.team == team_my)
-					spriteimage = self.netname;
-				else
-					return;
-			} else
-				spriteimage = self.netname;
+	if not(self.team) {
+		spriteimage = self.netname;
+	} else if (team_my == TEAM_COLOR_SPECTATOR) //spectator
+		spriteimage = self.netname3;
+	else if (self.team == team_my)
+		spriteimage = self.netname2;
+	else
+		spriteimage = self.netname;
 
-			break;
-		case SPRITERULE_TEAMPLAY:
-			if (team_my == TEAM_COLOR_SPECTATOR) //spectator
-				spriteimage = self.netname3;
-			else if (self.team == team_my)
-				spriteimage = self.netname2;
-			else
-				spriteimage = self.netname;
-
-			break;
-		default:
-			error("Invalid waypointsprite rule!");
-			break;
-	}
-	if (spriteimage == "")
+	if (spriteimage == "") {
 		return;
-
+	}
 	float dist;
 	dist = vlen(self.origin - view_origin);
 	float a;
@@ -217,14 +201,9 @@ void(void) waypointsprite_draw {
 }
 
 void(void) waypointsprite_remove {
-	if (self.netname)
-		strunzone(self.netname);
-
-	if (self.netname2)
-		strunzone(self.netname2);
-
-	if (self.netname3)
-		strunzone(self.netname3);
+	str_unzone_ifneeded(self.netname);
+	str_unzone_ifneeded(self.netname2);
+	str_unzone_ifneeded(self.netname3);
 }
 
 void(float isnew) waypointsprite_read {
@@ -265,28 +244,21 @@ void(float isnew) waypointsprite_read {
 	}
 	if (sendflags & 1) {
 		self.team = net_read_byte();
-		self.rule = net_read_byte();
 	}
 	if (sendflags & 2) {
-		if (self.netname)
-			strunzone(self.netname);
-
-		self.netname = strzone(net_read_string());
+		str_unzone_ifneeded(self.netname);
+		self.netname = str_zone_ifneeded(net_read_string());
 		self.cnt = 0;
 	}
 	if (sendflags & 4) {
-		if (self.netname2)
-			strunzone(self.netname2);
-
-		self.netname2 = strzone(net_read_string());
+		str_unzone_ifneeded(self.netname2);
+		self.netname2 = str_zone_ifneeded(net_read_string());
 		self.cnt = 0;
 	}
 
 	if (sendflags & 8) {
-		if (self.netname3)
-			strunzone(self.netname3);
-
-		self.netname3 = strzone(net_read_string());
+		str_unzone_ifneeded(self.netname3);
+		self.netname3 = str_zone_ifneeded(net_read_string());
 		self.cnt = 0;
 	}
 	if (sendflags & 16) {

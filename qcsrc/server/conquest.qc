@@ -183,7 +183,7 @@ void(void) spawnfunc_conquest_cp {
 	self.reset = conquest_cp_reset;
 	self.touch = conquest_cp_touch;
 	WaypointSprite_SpawnFixed(NULL, self.origin + '0 0 64', self, sprite);
-	WaypointSprite_UpdateRule(self.sprite, 0, SPRITERULE_DEFAULT);
+	WaypointSprite_UpdateRule(self.sprite, 0);
 	conquest_update_waypoint();
 	self.maxs_z += 16;
 	self.mins_z += 16;

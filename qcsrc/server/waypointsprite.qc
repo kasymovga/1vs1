@@ -1,5 +1,4 @@
 ..entity owned_by_field;
-.float rule;
 .string model1;
 .string model2;
 .string model3;
@@ -53,9 +52,8 @@ void(entity e, vector o) WaypointSprite_UpdateOrigin {
 	}
 }
 
-void(entity e, float t, float r) WaypointSprite_UpdateRule {
+void(entity e, float t) WaypointSprite_UpdateRule {
 	// no check, as this is never called without doing an actual change (usually only once)
-	e.rule = r;
 	e.team = t;
 	e.SendFlags |= 1;
 }
@@ -146,12 +144,18 @@ float(entity e) WaypointSprite_visible_for_player {
 			return FALSE;
 
 	// team waypoints
-	if (self.team && self.rule == SPRITERULE_DEFAULT) {
-		if (self.team != other.team)
-			return FALSE;
-
-		if (other.classname != "player")
-			return FALSE;
+	if (self.team) {
+		if (e.classname == "observer" && e.team <= 0) {
+			if (self.model3 == "") {
+				return FALSE;
+			}
+		} else {
+			if (self.team != e.team && self.model1 == "") {
+				return FALSE;
+			} else if (self.team == e.team && self.model2 == "") {
+				return FALSE;
+			}
+		}
 	}
 	return TRUE;
 }
@@ -192,7 +196,6 @@ float(entity to, float sendflags) WaypointSprite_SendEntity {
 	}
 	if (sendflags & 1) {
 		net_write_byte(MSG_ENTITY, self.team);
-		net_write_byte(MSG_ENTITY, self.rule);
 	}
 	if (sendflags & 2)
 		net_write_string(MSG_ENTITY, self.model1);

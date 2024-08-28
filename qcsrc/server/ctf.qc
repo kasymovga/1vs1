@@ -529,7 +529,7 @@ void() ctf_flag_touch {
 		setorigin(self, CTF_FLAG_CARRY_POS);
 		setattachment(self, other.body, "");
 		WaypointSprite_AttachCarrier("flagcarrier", other);
-		WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team, SPRITERULE_TEAMPLAY);
+		WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team);
 		WaypointSprite_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
 		other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ctf_flagcarrier_visible;
 		WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
@@ -604,7 +604,7 @@ void() ctf_flag_touch {
 			self.damageforcescale = 0;
 			self.takedamage = DAMAGE_NO;
 			WaypointSprite_AttachCarrier("flagcarrier", other);
-			WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team, SPRITERULE_TEAMPLAY);
+			WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team);
 			WaypointSprite_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
 			other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ctf_flagcarrier_visible;
 			WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');

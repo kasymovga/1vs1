@@ -40,7 +40,6 @@
 #include "solid.qh"
 #include "sound.qh"
 #include "species.qh"
-#include "spriterule.qh"
 #include "stat.qh"
 #include "stdproc.qh"
 #include "team.qh"

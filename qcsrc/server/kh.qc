@@ -188,7 +188,7 @@ void kh_Key_AssignTo(entity key, entity player) { // runs every time a key is pi
 			if (g_kh_showenemycarrier) {
 				WaypointSprite_AttachCarrier("", player);
 				player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_KeyCarrier_waypointsprite_visible_for_player;
-				WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, player.team, SPRITERULE_TEAMPLAY);
+				WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, player.team);
 				if (player.team == COLOR_TEAM1)
 					WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-red", "keycarrier-friend", "keycarrier-red");
 				else if (player.team == COLOR_TEAM2)

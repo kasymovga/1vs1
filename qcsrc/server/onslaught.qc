@@ -651,7 +651,7 @@ void(void) spawnfunc_onslaught_generator {
 	self.nextthink = time + 0.2;
 	entity_initialize(self, onslaught_updatelinks, INITPRIO_LAST);
 	WaypointSprite_SpawnFixed(NULL, e.origin + '0 0 1' * e.maxs_z, self, sprite);
-	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2, SPRITERULE_TEAMPLAY);
+	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2);
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 	waypoint_spawnforitem(self);
@@ -958,7 +958,7 @@ void(void) spawnfunc_onslaught_controlpoint {
 	e.colormap = self.colormap;
 	waypoint_spawnforitem(self);
 	WaypointSprite_SpawnFixed(NULL, e.origin + '0 0 1' * e.maxs_z, self, sprite);
-	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2, SPRITERULE_TEAMPLAY);
+	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2);
 	onslaught_updatelinks();
 	self.reset = onslaught_controlpoint_reset;
 }

@@ -289,7 +289,7 @@ void(entity plyr, entity ball) nexball_give_ball {
 	ball.effects |= EFFECT_NOSHADOW;
 	ball.scale = (ball.scale ? (ball.scale * 0.75) : 0.75); // scale down.
 	WaypointSprite_AttachCarrier("nb-ball", plyr);
-	WaypointSprite_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+	WaypointSprite_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0);
 	WaypointSprite_UpdateTeamRadar(plyr.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 	if (g_nexball_basketball_delay_hold) {
 		ball.think = nexball_drop_owner;
@@ -316,7 +316,7 @@ void(entity ball, vector org, vector vel) nexball_drop_ball {
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
 	WaypointSprite_AttachCarrier("nb-ball", ball);
-	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0);
 	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 	remove(ball.owner.pov_ball);
 	ball.owner.pov_ball = world;
