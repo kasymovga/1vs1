@@ -42,7 +42,7 @@ void(vector start, vector dir) monster_boss2_pellet {
 }
 
 void() monster_boss2_hunt {
-	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
 	if (monster_check_target(monster_boss2_walk, monster_boss2_guard))
 		return;
@@ -82,7 +82,7 @@ void() monster_boss2_hunt {
 }
 
 void() monster_boss2_idle {
-	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
@@ -92,7 +92,7 @@ void() monster_boss2_idle {
 }
 
 void() monster_boss2_guard {
-	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
@@ -101,7 +101,7 @@ void() monster_boss2_guard {
 }
 
 void() monster_boss2_walk {
-	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
 	if (monster_look_for_player(1500, 500, 0, 1, 3)) {
 		return;
@@ -118,7 +118,7 @@ void() monster_boss2_walk {
 }
 
 void() monster_boss2_remove {
-	WaypointSprite_DetachCarrier(self);
+	marker_DetachCarrier(self);
 	remove(self.exteriorweaponentity);
 }
 
@@ -138,10 +138,10 @@ void() monster_boss2_spawn {
 	self.anim_die1 = MONSTER_BOSS2_ANIM_DIE;
 	self.frags = 10;
 	self.view_ofs = '0 0 81';
-	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
-	WaypointSprite_UpdateMaxHealth(e, self.health);
-	WaypointSprite_UpdateHealth(e, self.health);
-	WaypointSprite_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
+	entity e = marker_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
+	marker_UpdateMaxHealth(e, self.health);
+	marker_UpdateHealth(e, self.health);
+	marker_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
 }
 
 void(void) monster_boss2_init {

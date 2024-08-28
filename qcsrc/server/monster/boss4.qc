@@ -18,7 +18,7 @@ void monster_boss4_guard();
 void monster_boss4_walk();
 
 float(void) monster_boss4_prethink_skip {
-	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	if (self.owner.spawnflags & MONSTER_SPAWN_SHIELDED)
 	if not(self.spawnflags & MONSTER_SPAWN_SHIELDED) {
 		monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_IDLE, MONSTER_BOSS4_ANIM_TORSO_DROP, '9 1 1', TRUE, FALSE);
@@ -148,7 +148,7 @@ void() monster_boss4_remove {
 	if (self.fire_burner)
 		remove(self.fire_burner);
 
-	WaypointSprite_DetachCarrier(self);
+	marker_DetachCarrier(self);
 }
 
 void() monster_boss4_spawn {
@@ -169,10 +169,10 @@ void() monster_boss4_spawn {
 	self.anim_die1 = MONSTER_BOSS4_ANIM_DIE;
 	self.view_ofs = '0 0 81';
 	self.weaponentity.weaponentity.effects = EFFECT_FLAME;
-	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
-	WaypointSprite_UpdateMaxHealth(e, self.health);
-	WaypointSprite_UpdateHealth(e, self.health);
-	WaypointSprite_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
+	entity e = marker_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
+	marker_UpdateMaxHealth(e, self.health);
+	marker_UpdateHealth(e, self.health);
+	marker_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
 }
 
 void(void) monster_boss4_init {

@@ -390,7 +390,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		}
 	}
 	self.health = self.health - _damage;
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	marker_UpdateHealth(self.sprite, self.health);
 	// choose an animation frame based on health
 	self.frame = 10 * bound(0, (1 - self.health / self.max_health), 1);
 	// see if the generator is still functional, or dying
@@ -413,7 +413,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.think = onslaught_generator_deaththink; // explosion sequence
 		self.nextthink = time; // start exploding immediately
 		self.think(); // do the first explosion now
-		WaypointSprite_UpdateMaxHealth(self.sprite, 0);
+		marker_UpdateMaxHealth(self.sprite, 0);
 		onslaught_updatelinks();
 	}
 	if(self.health <= 0)
@@ -487,25 +487,25 @@ void(entity e) onslaught_generator_updatesprite {
 	s1 = onslaught_generator_waypointsprite_for_team(e, COLOR_TEAM1);
 	s2 = onslaught_generator_waypointsprite_for_team(e, COLOR_TEAM2);
 	s3 = onslaught_generator_waypointsprite_for_team(e, -1);
-	WaypointSprite_UpdateSprites(e.sprite, s1, s2, s3);
+	marker_UpdateSprites(e.sprite, s1, s2, s3);
 	if(e.lastteam != e.team + 2 || e.lastshielded != e.isshielded) {
 		e.lastteam = e.team + 2;
 		e.lastshielded = e.isshielded;
 		if(e.lastshielded)
 		{
 			if(e.team == COLOR_TEAM1 || e.team == COLOR_TEAM2)
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, 0.5 * colormap_palette_color(e.team - 1, FALSE));
+				marker_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, 0.5 * colormap_palette_color(e.team - 1, FALSE));
 			else
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.5 0.5 0.5');
+				marker_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.5 0.5 0.5');
 		}
 		else
 		{
 			if(e.team == COLOR_TEAM1 || e.team == COLOR_TEAM2)
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, colormap_palette_color(e.team - 1, FALSE));
+				marker_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, colormap_palette_color(e.team - 1, FALSE));
 			else
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.75 0.75 0.75');
+				marker_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.75 0.75 0.75');
 		}
-		WaypointSprite_Ping(e.sprite);
+		marker_Ping(e.sprite);
 	}
 }
 
@@ -548,7 +548,7 @@ void(entity e) onslaught_controlpoint_updatesprite {
 	s1 = onslaught_controlpoint_waypointsprite_for_team(e, COLOR_TEAM1);
 	s2 = onslaught_controlpoint_waypointsprite_for_team(e, COLOR_TEAM2);
 	s3 = onslaught_controlpoint_waypointsprite_for_team(e, -1);
-	WaypointSprite_UpdateSprites(e.sprite, s1, s2, s3);
+	marker_UpdateSprites(e.sprite, s1, s2, s3);
 
 	float sh;
 	sh = !(onslaught_controlpoint_can_be_linked(e, COLOR_TEAM1) || onslaught_controlpoint_can_be_linked(e, COLOR_TEAM2));
@@ -556,24 +556,24 @@ void(entity e) onslaught_controlpoint_updatesprite {
 	if(e.lastteam != e.team + 2 || e.lastshielded != sh || e.iscaptured != e.lastcaptured) {
 		if(e.iscaptured) { // don't mess up build bars!
 			if(sh) {
-				WaypointSprite_UpdateMaxHealth(e.sprite, 0);
+				marker_UpdateMaxHealth(e.sprite, 0);
 			} else {
-				WaypointSprite_UpdateMaxHealth(e.sprite, e.goalentity.max_health);
-				WaypointSprite_UpdateHealth(e.sprite, e.goalentity.health);
+				marker_UpdateMaxHealth(e.sprite, e.goalentity.max_health);
+				marker_UpdateHealth(e.sprite, e.goalentity.health);
 			}
 		}
 		if(e.lastshielded) {
 			if(e.team == COLOR_TEAM1 || e.team == COLOR_TEAM2)
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, 0.5 * colormap_palette_color(e.team - 1, FALSE));
+				marker_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, 0.5 * colormap_palette_color(e.team - 1, FALSE));
 			else
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.5 0.5 0.5');
+				marker_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.5 0.5 0.5');
 		} else {
 			if(e.team == COLOR_TEAM1 || e.team == COLOR_TEAM2)
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, colormap_palette_color(e.team - 1, FALSE));
+				marker_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, colormap_palette_color(e.team - 1, FALSE));
 			else
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.75 0.75 0.75');
+				marker_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.75 0.75 0.75');
 		}
-		WaypointSprite_Ping(e.sprite);
+		marker_Ping(e.sprite);
 		e.lastteam = e.team + 2;
 		e.lastshielded = sh;
 		e.lastcaptured = e.iscaptured;
@@ -593,8 +593,8 @@ void onslaught_generator_reset()
 	self.think = onslaught_updatelinks;
 	self.nextthink = time + 0.2;
 	setmodel(self, "models/onslaught/generator.md3");
-	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	marker_UpdateMaxHealth(self.sprite, self.max_health);
+	marker_UpdateHealth(self.sprite, self.health);
 }
 
 /*QUAKED spawnfunc_onslaught_generator (0 .5 .8) (-32 -32 -24) (32 32 64)
@@ -646,10 +646,10 @@ void(void) spawnfunc_onslaught_generator {
 	self.think = onslaught_updatelinks;
 	self.nextthink = time + 0.2;
 	entity_initialize(self, onslaught_updatelinks, INITPRIO_LAST);
-	WaypointSprite_SpawnFixed(NULL, e.origin + '0 0 1' * e.maxs_z, self, sprite);
-	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2);
-	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	marker_SpawnFixed(NULL, e.origin + '0 0 1' * e.maxs_z, self, sprite);
+	marker_UpdateRule(self.sprite, COLOR_TEAM2);
+	marker_UpdateMaxHealth(self.sprite, self.max_health);
+	marker_UpdateHealth(self.sprite, self.health);
 	waypoint_spawnforitem(self);
 	onslaught_updatelinks();
 	self.reset = onslaught_generator_reset;
@@ -694,9 +694,9 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 	}
 	self.health = self.health - _damage;
 	if(self.owner.iscaptured)
-		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
+		marker_UpdateHealth(self.owner.sprite, self.health);
 	else
-		WaypointSprite_UpdateBuildFinished(self.owner.sprite, time + (self.max_health - self.health) / (self.count / sys_ticrate));
+		marker_UpdateBuildFinished(self.owner.sprite, time + (self.max_health - self.health) / (self.count / sys_ticrate));
 
 	self.pain_finished = time + 1;
 	self.punchangle = (2 * randomvec() - '1 1 1') * 45;
@@ -728,7 +728,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		self.owner.iscaptured = FALSE;
 		self.owner.team = 0;
 		self.owner.colormap = 1024;
-		WaypointSprite_UpdateMaxHealth(self.owner.sprite, 0);
+		marker_UpdateMaxHealth(self.owner.sprite, 0);
 		onslaught_updatelinks();
 		// Use targets now (somebody make sure this is in the right place..)
 		oself = self;
@@ -753,7 +753,7 @@ void(void) onslaught_controlpoint_icon_think {
 			if (self.health >= self.max_health)
 				self.health = self.max_health;
 
-			WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
+			marker_UpdateHealth(self.owner.sprite, self.health);
 		}
 	}
 	if (self.health < self.max_health * 0.25)
@@ -834,8 +834,8 @@ void(void) onslaught_controlpoint_icon_buildthink {
 		sound(self, CHAN_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
 		print_all(PRINT_INFO, "{1} captured {2} control point", team_colored_name(self.team), self.owner.message, "");
 		self.owner.iscaptured = TRUE;
-		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
-		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
+		marker_UpdateMaxHealth(self.owner.sprite, self.max_health);
+		marker_UpdateHealth(self.owner.sprite, self.health);
 		onslaught_updatelinks();
 		// Use targets now (somebody make sure this is in the right place..)
 		oself = self;
@@ -891,7 +891,7 @@ void onslaught_controlpoint_touch() {
 	sound(e, CHAN_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTN_NORM);
 	self.team = e.team;
 	self.colormap = e.colormap;
-	WaypointSprite_UpdateBuildFinished(self.sprite, time + (e.max_health - e.health) / (e.count / sys_ticrate));
+	marker_UpdateBuildFinished(self.sprite, time + (e.max_health - e.health) / (e.count / sys_ticrate));
 	onslaught_updatelinks();
 }
 
@@ -910,7 +910,7 @@ void(void) onslaught_controlpoint_reset {
 	self.think = self.enemy.think = NULL;
 	self.nextthink = 0;
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
-	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
+	marker_UpdateMaxHealth(self.sprite, 0);
 	onslaught_updatelinks();
 	activator = self;
 	trigger_use_targets(); // to reset the structures, playerspawns etc.
@@ -953,8 +953,8 @@ void(void) spawnfunc_onslaught_controlpoint {
 	setorigin(e, self.origin);
 	e.colormap = self.colormap;
 	waypoint_spawnforitem(self);
-	WaypointSprite_SpawnFixed(NULL, e.origin + '0 0 1' * e.maxs_z, self, sprite);
-	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2);
+	marker_SpawnFixed(NULL, e.origin + '0 0 1' * e.maxs_z, self, sprite);
+	marker_UpdateRule(self.sprite, COLOR_TEAM2);
 	onslaught_updatelinks();
 	self.reset = onslaught_controlpoint_reset;
 }

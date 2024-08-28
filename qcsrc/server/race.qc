@@ -622,11 +622,11 @@ void(void) race_trigger_checkpoint_verify {
 		for (cp = world; (cp = find(cp, classname, "race_trigger_checkpoint")); )
 			if (cp.sprite) {
 				if (cp.race_checkpoint == 0)
-					WaypointSprite_UpdateSprites(cp.sprite, "race-start", "", "");
+					marker_UpdateSprites(cp.sprite, "race-start", "", "");
 				else if (cp.race_checkpoint == race_timed_checkpoint && !race_defrag)
-					WaypointSprite_UpdateSprites(cp.sprite, "race-finish", "", "");
+					marker_UpdateSprites(cp.sprite, "race-finish", "", "");
 				else if (race_defrag && cp.spawnflags == 9)
-					WaypointSprite_UpdateSprites(cp.sprite, "race-finish", "", "");
+					marker_UpdateSprites(cp.sprite, "race-finish", "", "");
 			}
 	remove(self);
 	self = oldself;
@@ -667,9 +667,9 @@ void(void) spawnfunc_race_trigger_checkpoint {
 	}
 	if (!self.race_penalty) {
 		if (self.race_checkpoint)
-			WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite);
+			marker_SpawnFixed("race-checkpoint", o, self, sprite);
 		else
-			WaypointSprite_SpawnFixed("race-finish", o, self, sprite);
+			marker_SpawnFixed("race-finish", o, self, sprite);
 	}
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 	entity_initialize(self, race_trigger_checkpoint_verify, INITPRIO_FINDTARGET);

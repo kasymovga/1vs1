@@ -49,28 +49,28 @@ void nadget_Waypoint_Update(void) {
         float t = (teamwp ? o.team : 0);
         o = (teamwp ? world : o);
 
-        WaypointSprite_Spawn(wpname, 0, 0, self, '0 0 16',
+        marker_Spawn(wpname, 0, 0, self, '0 0 16',
             o, t, self, hg_waypoint, 1);
 
         if(self.hg_type == NADGET_SENTRY) {
-            WaypointSprite_UpdateMaxHealth(self.hg_waypoint, (self.hg_wp_state == WPCOLOR_RED));
-            WaypointSprite_UpdateTeamRadar(self.hg_waypoint, 0, '1 0.5 0');
+            marker_UpdateMaxHealth(self.hg_waypoint, (self.hg_wp_state == WPCOLOR_RED));
+            marker_UpdateTeamRadar(self.hg_waypoint, 0, '1 0.5 0');
         } else if(self.hg_detonable && self.hg_detonateready > time) {
-            WaypointSprite_UpdateTeamRadar(self.hg_waypoint, 0, '0 1 1');
-            WaypointSprite_UpdateBuildFinished(self.hg_waypoint, self.hg_detonateready);
+            marker_UpdateTeamRadar(self.hg_waypoint, 0, '0 1 1');
+            marker_UpdateBuildFinished(self.hg_waypoint, self.hg_detonateready);
         } else {
-            WaypointSprite_UpdateTeamRadar(self.hg_waypoint, 0, '0 1 1');
-            WaypointSprite_UpdateBuildFinished(self.hg_waypoint, self.hg_deathtime);
+            marker_UpdateTeamRadar(self.hg_waypoint, 0, '0 1 1');
+            marker_UpdateBuildFinished(self.hg_waypoint, self.hg_deathtime);
         }
     } else {
-        WaypointSprite_UpdateSprites(self.hg_waypoint, wpname, "", "");
+        marker_UpdateSprites(self.hg_waypoint, wpname, "", "");
 
         if(self.hg_type == NADGET_SENTRY) {
             if(self.hg_wp_state == WPCOLOR_RED) {
-                WaypointSprite_UpdateMaxHealth(self.hg_waypoint, 1);
-                WaypointSprite_UpdateHealth(self.hg_waypoint, self.hg_sentry_energy);
+                marker_UpdateMaxHealth(self.hg_waypoint, 1);
+                marker_UpdateHealth(self.hg_waypoint, self.hg_sentry_energy);
             } else
-                WaypointSprite_UpdateMaxHealth(self.hg_waypoint, 0);
+                marker_UpdateMaxHealth(self.hg_waypoint, 0);
         }
     }
 }
@@ -93,7 +93,7 @@ void nadget_Waypoint(void) {
 
     if(self.hg_type == NADGET_SENTRY) {
         if(self.hg_waypoint)
-            WaypointSprite_UpdateHealth(self.hg_waypoint, self.hg_sentry_energy);
+            marker_UpdateHealth(self.hg_waypoint, self.hg_sentry_energy);
 
         detected = (self.hg_sentry_energy < 1);
         warn = (self.health < cvar("g_nadgets_sentry_health"));
@@ -101,7 +101,7 @@ void nadget_Waypoint(void) {
 		rng = GRENVAR(self.hg_type, "detect_enemies");
         if(!rng) {
             if(self.hg_waypoint)
-                WaypointSprite_Disown(self.hg_waypoint, 0.5);
+                marker_Disown(self.hg_waypoint, 0.5);
             return;
         }
 
@@ -136,5 +136,5 @@ void nadget_Waypoint(void) {
 
 void nadget_Waypoint_Remove(entity wp) {
     if(wp)
-        WaypointSprite_Disown(wp, 0.5);
+        marker_Disown(wp, 0.5);
 }

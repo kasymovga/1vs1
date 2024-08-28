@@ -33,7 +33,7 @@ void(void) ice_remove {
 		remove(e2);
 	}
 	self.ice = NULL;
-	WaypointSprite_DetachCarrier(self);
+	marker_DetachCarrier(self);
 }
 
 float(void) ice_customize {
@@ -121,7 +121,7 @@ float(entity attacker, entity inflictor, float deathtype) ice_player_death_handl
 	else
 		self.ice.fade_time = 0;
 
-	WaypointSprite_AttachCarrier("helpme", self);
+	marker_AttachCarrier("helpme", self);
 	setattachment(self.ice, self.body, "");
 	setorigin(self.ice, '0 0 1' * sv_model_ice_z);
 	setmodel(self.ice, sv_model_ice);

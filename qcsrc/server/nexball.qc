@@ -254,9 +254,9 @@ void(entity plyr, entity ball) nexball_give_ball {
 		if (ownr.metertime)
 			ownr.metertime_stat = ownr.metertime = 0;
 
-		WaypointSprite_Kill(ownr.waypointsprite_attachedforcarrier);
+		marker_Kill(ownr.waypointsprite_attachedforcarrier);
 	} else {
-		WaypointSprite_Kill(ball.waypointsprite_attachedforcarrier);
+		marker_Kill(ball.waypointsprite_attachedforcarrier);
 	}
 	float tag_found;
 	entity _body = plyr.body;
@@ -288,9 +288,9 @@ void(entity plyr, entity ball) nexball_give_ball {
 	ball.touch = stdproc_nothing;
 	ball.effects |= EFFECT_NOSHADOW;
 	ball.scale = (ball.scale ? (ball.scale * 0.75) : 0.75); // scale down.
-	WaypointSprite_AttachCarrier("nb-ball", plyr);
-	WaypointSprite_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0);
-	WaypointSprite_UpdateTeamRadar(plyr.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
+	marker_AttachCarrier("nb-ball", plyr);
+	marker_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0);
+	marker_UpdateTeamRadar(plyr.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 	if (g_nexball_basketball_delay_hold) {
 		ball.think = nexball_drop_owner;
 		ball.nextthink = time + g_nexball_basketball_delay_hold;
@@ -314,10 +314,10 @@ void(entity ball, vector org, vector vel) nexball_drop_ball {
 	if (ball.owner.metertime)
 		ball.owner.metertime_stat = ball.owner.metertime = 0;
 
-	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
-	WaypointSprite_AttachCarrier("nb-ball", ball);
-	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0);
-	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
+	marker_Kill(ball.owner.waypointsprite_attachedforcarrier);
+	marker_AttachCarrier("nb-ball", ball);
+	marker_UpdateRule(ball.waypointsprite_attachedforcarrier, 0);
+	marker_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 	remove(ball.owner.pov_ball);
 	ball.owner.pov_ball = world;
 	ball.owner.ballcarried = world;
@@ -351,7 +351,7 @@ void(void) nexball_ball_init {
 	self.pusher = world;
 	self.team = FALSE;
 	sound (self, CHAN_PROJECTILE, self.noise1, VOL_BASE, ATTN_NORM);
-	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
+	marker_Ping(self.waypointsprite_attachedforcarrier);
 }
 
 void(void) nexball_ball_reset {
@@ -570,7 +570,7 @@ void(void) nexball_goal_touch {
 	if (ball.owner) // Happens on spawnflag GOAL_TOUCHPLAYER
 		nexball_drop_ball(ball, ball.owner.origin, ball.owner.velocity);
 
-	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
+	marker_Ping(ball.waypointsprite_attachedforcarrier);
 	ball.cnt = 1;
 	ball.think = nexball_ball_reset;
 	if (ball.classname == "nexball_basketball")
@@ -690,8 +690,8 @@ void(void) nexball_spawn_ball {
 
 	precache_sound (self.noise1);
 	precache_sound (self.noise2);
-	WaypointSprite_AttachCarrier("nb-ball", self); // the ball's team is not set yet, no rule update needed
-	WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
+	marker_AttachCarrier("nb-ball", self); // the ball's team is not set yet, no rule update needed
+	marker_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 	self.reset = nexball_ball_restart;
 	self.think = nexball_ball_init;
 	self.nextthink = map_starttime + g_nexball_delay_start;
@@ -865,14 +865,14 @@ float nexball_carrier_think() {
 
 void() spawnfunc_nexball_redbase {
 	if (game_type == GAME_TYPE_NEXBALL)
-		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
+		marker_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
 	else
 		remove(self);
 }
 
 void() spawnfunc_nexball_bluebase {
 	if (game_type == GAME_TYPE_NEXBALL)
-		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
+		marker_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
 	else
 		remove(self);
 }

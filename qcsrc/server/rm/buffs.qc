@@ -745,25 +745,25 @@ float Buffs_Model_Overhead_Customize(void) {
 float Buffs_TeamWaypoint_VisibleForPlayer(entity plr) {
     if(plr == self.owner)
         return FALSE;
-    return WaypointSprite_visible_for_player(plr);
+    return marker_visible_for_player(plr);
 }
 
 void Buffs_SetTeamWaypoint(entity plr, string txt, vector clr, float btype) {
     entity wp = plr.buff_teamwp;
     
     if(!wp) {
-        wp = WaypointSprite_Spawn(txt, 0, 0, plr, '0 0 120', NULL, plr.team, plr, buff_teamwp, TRUE);
+        wp = marker_Spawn(txt, 0, 0, plr, '0 0 120', NULL, plr.team, plr, buff_teamwp, TRUE);
         wp.waypointsprite_visible_for_player = Buffs_TeamWaypoint_VisibleForPlayer;
     } else
-        WaypointSprite_UpdateSprites(wp, txt, "", "");
+        marker_UpdateSprites(wp, txt, "", "");
     
-    WaypointSprite_UpdateTeamRadar(wp, RADARICON_GENERATOR, clr);
-    //WaypointSprite_UpdateTextColors(wp, clr, '0 0 0', '0 0 0');
+    marker_UpdateTeamRadar(wp, RADARICON_GENERATOR, clr);
+    //marker_UpdateTextColors(wp, clr, '0 0 0', '0 0 0');
     wp.buffs = btype;
 }
 
 void Buffs_RemoveTeamWaypoint(entity plr) {
-    WaypointSprite_Disown(plr.buff_teamwp, 0.5);
+    marker_Disown(plr.buff_teamwp, 0.5);
 }
 
 void Buffs_ApplyConduit(void) {
@@ -1455,20 +1455,20 @@ float Buffs_BuffPickup_PickupAllowed(entity buff, entity plr) {
 float Buffs_BuffPickup_Waypoint_VisibleForPlayer(entity plr) {
     if((!self.owner.buff_active && !self.owner.buff_activetime) || !Buffs_BuffPickup_PickupAllowed(self.owner, plr))
         return FALSE;
-    return WaypointSprite_visible_for_player(plr);
+    return marker_visible_for_player(plr);
 }
 
 void Buffs_BuffPickup_SpawnWaypoint(entity e) {
     vector c = rm_buffs_TypeToColor(e.buffs);
     str_unzone_ifneeded(e.netname);
     e.netname = str_zone_ifneeded(rm_buffs_TypeToExpandedName(e.buffs, "+", 0));
-    WaypointSprite_Spawn(e.netname, 0, 0, e, '0 0 40', NULL, e.team, e, buff_waypoint, TRUE);
-    //WaypointSprite_UpdateTextColors(e.buff_waypoint,c, '0 0 0', '0 0 0');
-    WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_FLAG, c);
+    marker_Spawn(e.netname, 0, 0, e, '0 0 40', NULL, e.team, e, buff_waypoint, TRUE);
+    //marker_UpdateTextColors(e.buff_waypoint,c, '0 0 0', '0 0 0');
+    marker_UpdateTeamRadar(e.buff_waypoint, RADARICON_FLAG, c);
     e.buff_waypoint.waypointsprite_visible_for_player = Buffs_BuffPickup_Waypoint_VisibleForPlayer;
     
     if(e.buff_activetime/* && (roundstate == ROUNDSTATE_GAME || roundstate == ROUNDSTATE_INITIAL_WARMUP)*/)
-        WaypointSprite_UpdateBuildFinished(e.buff_waypoint, time + e.buff_activetime);
+        marker_UpdateBuildFinished(e.buff_waypoint, time + e.buff_activetime);
 }
 
 void(entity buff, float cd) rm_buffs_set_cooldown {
@@ -1477,7 +1477,7 @@ void(entity buff, float cd) rm_buffs_set_cooldown {
     if(!buff.buff_waypoint)
         Buffs_BuffPickup_SpawnWaypoint(buff);
     
-    WaypointSprite_UpdateBuildFinished(buff.buff_waypoint, time + cd);
+    marker_UpdateBuildFinished(buff.buff_waypoint, time + cd);
     buff.buff_activetime = cd;
     buff.buff_active = !cd;
 }
@@ -1522,7 +1522,7 @@ void Buffs_BuffPickup_Think(void) {
     
     if(self.buffs != self.oldbuffs) {
         if(self.buff_waypoint) {
-            WaypointSprite_Disown(self.buff_waypoint, 1);
+            marker_Disown(self.buff_waypoint, 1);
             Buffs_BuffPickup_SpawnWaypoint(self);
         }
         
@@ -1562,7 +1562,7 @@ void Buffs_BuffPickup_Think(void) {
 
 void Buffs_BuffPickup_ResetWaypoint(void) {
     if(self.buff_waypoint)
-        WaypointSprite_Kill(self.buff_waypoint);
+        marker_Kill(self.buff_waypoint);
     
     if(self.buff_activetime)
         Buffs_BuffPickup_SpawnWaypoint(self);
@@ -1674,7 +1674,7 @@ void(void) rm_buffs_pickup_setup {
 
 void(void) rm_buffs_pickup_remove {
     if (self.buff_waypoint)
-        WaypointSprite_Kill(self.buff_waypoint);
+        marker_Kill(self.buff_waypoint);
 
     remove(self);
 }

@@ -3,7 +3,7 @@ void() monster_boss3_guard;
 void() monster_boss3_walk;
 
 void() monster_boss3_hunt {
-	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
 	self.colormod = '1 1 1' + '0.125 -0.125 0.125' * sin(time);
 	if (monster_check_target(monster_boss3_walk, monster_boss3_guard))
@@ -46,7 +46,7 @@ void() monster_boss3_hunt {
 }
 
 void() monster_boss3_idle {
-	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.colormod = '1 1 1' + '-0.125 0.125 0.125' * sin(time);
 	self.nextthink = time;
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
@@ -65,7 +65,7 @@ void() monster_boss3_guard {
 
 void() monster_boss3_walk {
 	self.nextthink = time;
-	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.colormod = '1 1 1' + '0.125 0.125 -0.125' * sin(time);
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
@@ -83,7 +83,7 @@ void() monster_boss3_walk {
 }
 
 void() monster_boss3_remove {
-	WaypointSprite_DetachCarrier(self);
+	marker_DetachCarrier(self);
 	remove(self.exteriorweaponentity);
 }
 
@@ -105,10 +105,10 @@ void() monster_boss3_spawn {
 	self.frags = 10;
 	self.anim_die1 = '1 1 1';
 	self.view_ofs = '0 0 48';
-	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
-	WaypointSprite_UpdateMaxHealth(e, self.health);
-	WaypointSprite_UpdateHealth(e, self.health);
-	WaypointSprite_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
+	entity e = marker_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
+	marker_UpdateMaxHealth(e, self.health);
+	marker_UpdateHealth(e, self.health);
+	marker_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
 }
 
 void(void) monster_boss3_init {

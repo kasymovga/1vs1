@@ -145,7 +145,7 @@ void(void) world_dynamic_init {
 	team_init();
 	hook_init(FALSE);
 	turret_readcvars();
-	WaypointSprite_Init();
+	marker_Init();
 	vote_init();
 	push_init();
 	player_init();

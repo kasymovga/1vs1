@@ -49,7 +49,7 @@ void(void) walkietalkie_init {
 
 float walkietalkie_block[4];
 
-void(void) walkietalkie_waypoint_remove { WaypointSprite_DetachCarrier(self); }
+void(void) walkietalkie_waypoint_remove { marker_DetachCarrier(self); }
 
 void(float n) walkietalkie_menu_select {
 	menu_remove_for(self, "walkietalkie");
@@ -77,7 +77,7 @@ void(float n) walkietalkie_menu_select {
 			msg_entity = e;
 			sound_to_at(MSG_ONE, world, '0 0 0', CHAN_VOICE, walkietalkie_sound_path(n), VOL_BASE, ATTN_NONE);
 		}
-	WaypointSprite_Attach("here", 0);
+	marker_Attach("here", 0);
 	defer_for(self, 2, walkietalkie_waypoint_remove);
 	walkietalkie_block[_team_index] = time + 3;
 }

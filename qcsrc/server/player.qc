@@ -177,7 +177,7 @@ void(float killed) player_clear {
 	}
 	plugin_chain_player_clear(killed);
 	//Clear waypoints
-	WaypointSprite_PlayerDead();
+	marker_PlayerDead();
 	if (self.classname == "disconnecting") {
 		str_unzone_ifneeded(self.body.playermodel);
 		player_body_remove();

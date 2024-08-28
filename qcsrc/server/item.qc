@@ -190,7 +190,7 @@ void(void) item_respawn {
 void(void) item_respawn_countdown {
 	if (self.count >= ITEM_RESPAWN_TICKS) {
 		if (self.waypointsprite_attached)
-			WaypointSprite_Kill(self.waypointsprite_attached);
+			marker_Kill(self.waypointsprite_attached);
 
 		item_respawn();
 	} else {
@@ -208,18 +208,18 @@ void(void) item_respawn_countdown {
 			case IT_AKIMBO:       plugin_ItemName = "item-akimbo"; plugin_ItemColor = '0 1 1'; break;
 			}
 			if (plugin_ItemName) {
-				WaypointSprite_Spawn(plugin_ItemName, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
+				marker_Spawn(plugin_ItemName, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
 				if (self.waypointsprite_attached) {
-					WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, plugin_ItemColor);
-					//WaypointSprite_UpdateMaxHealth(self.waypointsprite_attached, ITEM_RESPAWN_TICKS + 1);
-					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+					marker_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, plugin_ItemColor);
+					//marker_UpdateMaxHealth(self.waypointsprite_attached, ITEM_RESPAWN_TICKS + 1);
+					marker_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
 				}
 			}
 		}
 		sound (self, CHAN_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 		if (self.waypointsprite_attached) {
-			WaypointSprite_Ping(self.waypointsprite_attached);
-			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
+			marker_Ping(self.waypointsprite_attached);
+			//marker_UpdateHealth(self.waypointsprite_attached, self.count);
 		}
 	}
 }
@@ -539,7 +539,7 @@ void(void) item_find_team {
 
 void(void) item_reset {
 	if (self.waypointsprite_attached)
-		WaypointSprite_Kill(self.waypointsprite_attached);
+		marker_Kill(self.waypointsprite_attached);
 
 	item_show(self, (self.team ? (self.state ? -1 : 1) : !self.state));
 	if (self.movetype == MOVETYPE_NONE)

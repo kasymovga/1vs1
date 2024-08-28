@@ -165,7 +165,7 @@ thirdview.qh
 ability.qh
 sound.qc
 announce.qc
-waypointsprite.qc
+marker.qc
 slowmo.qc
 bot/aim.qc
 navigation.qc

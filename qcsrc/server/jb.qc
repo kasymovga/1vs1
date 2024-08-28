@@ -514,16 +514,16 @@ void(void) jb_controlpoint_model_setup {
 	}
 	switch(self.team) {
 	case COLOR_TEAM1:
-		WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
+		marker_UpdateSprites(self.sprite, "dom-red", "", "");
 		break;
 	case COLOR_TEAM2:
-		WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
+		marker_UpdateSprites(self.sprite, "dom-blue", "", "");
 		break;
 	default:
-		WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
+		marker_UpdateSprites(self.sprite, "dom-neut", "", "");
 	}
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color((self.team ? self.team - 1 : 6), 0));
-	WaypointSprite_Ping(self.sprite);
+	marker_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color((self.team ? self.team - 1 : 6), 0));
+	marker_Ping(self.sprite);
 	setsize(self, '-32 -32 -32', '32 32 32');
 }
 
@@ -546,8 +546,8 @@ float(entity e) jb_controlpoint_danger_visible {
 void(entity e, float t) jb_controlpoint_cooldown {
 	if not(t) return;
 	e.wait = t;
-	WaypointSprite_UpdateMaxHealth(e.sprite, t);
-	WaypointSprite_UpdateHealth(e.sprite, t);
+	marker_UpdateMaxHealth(e.sprite, t);
+	marker_UpdateHealth(e.sprite, t);
 	e.nextthink = time;
 	e.state = 0;
 }
@@ -589,23 +589,23 @@ void(void) jb_controlpoint_think {
 		self.wait -= frametime;
 		if (self.wait <= 0) {
 			self.wait = 0;
-			WaypointSprite_UpdateMaxHealth(self.sprite, 0);
+			marker_UpdateMaxHealth(self.sprite, 0);
 		}
-		WaypointSprite_UpdateHealth(self.sprite, self.wait);
+		marker_UpdateHealth(self.sprite, self.wait);
 		self.nextthink = time;
 		return;
 	}
 	if not(self.killindicator) {
 		self.state = 0;
-		WaypointSprite_UpdateMaxHealth(self.sprite, 0);
-		WaypointSprite_UpdateHealth(self.sprite, 0);
+		marker_UpdateMaxHealth(self.sprite, 0);
+		marker_UpdateHealth(self.sprite, 0);
 		remove(self.weaponentity);
 		self.weaponentity = NULL;
 		return;
 	}
 	self.nextthink = time;
 	self.state += (frametime / g_jb_capture_time) * (1 + (capturers_count - 1) * g_jb_capture_multi_factor);
-	WaypointSprite_UpdateHealth(self.sprite, self.state);
+	marker_UpdateHealth(self.sprite, self.state);
 	if (self.state >= 1) {
 		self.state = 1;
 	}
@@ -671,9 +671,9 @@ void(void) jb_controlpoint_touch {
 		return;
 	}
 	e = spawn();
-	WaypointSprite_UpdateMaxHealth(self.sprite, 1);
+	marker_UpdateMaxHealth(self.sprite, 1);
 	if not(self.weaponentity) {
-		self.weaponentity = WaypointSprite_SpawnFixed("defend", self.origin + '0 0 32', self, weaponentity);
+		self.weaponentity = marker_SpawnFixed("defend", self.origin + '0 0 32', self, weaponentity);
 		self.weaponentity.waypointsprite_visible_for_player = jb_controlpoint_danger_visible;
 	}
 	e.enemy = other;
@@ -696,7 +696,7 @@ void(void) jb_controlpoint {
 		return;
 	}
 	self.classname = "jb_controlpoint";
-	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
+	marker_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
 	self.cnt = self.team;
 	jb_controlpoint_model_setup();
 	builtin_droptofloor();

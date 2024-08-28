@@ -168,9 +168,9 @@ void kh_Key_AssignTo(entity key, entity player) { // runs every time a key is pi
 			// No longer a key carrier
 			if (!kh_no_radar_circles)
 			if (key.owner.waypointsprite_attachedforcarrier)
-				WaypointSprite_Ping(key.owner.waypointsprite_attachedforcarrier);
+				marker_Ping(key.owner.waypointsprite_attachedforcarrier);
 
-			WaypointSprite_DetachCarrier(key.owner);
+			marker_DetachCarrier(key.owner);
 		}
 	}
 	key.owner = player;
@@ -186,24 +186,24 @@ void kh_Key_AssignTo(entity key, entity player) { // runs every time a key is pi
 		if not(key.kh_next) {
 			// player is now a key carrier
 			if (g_kh_showenemycarrier) {
-				WaypointSprite_AttachCarrier("", player);
+				marker_AttachCarrier("", player);
 				player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_KeyCarrier_waypointsprite_visible_for_player;
-				WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, player.team);
+				marker_UpdateRule(player.waypointsprite_attachedforcarrier, player.team);
 				if (player.team == COLOR_TEAM1)
-					WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-red", "keycarrier-friend", "keycarrier-red");
+					marker_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-red", "keycarrier-friend", "keycarrier-red");
 				else if (player.team == COLOR_TEAM2)
-					WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-blue", "keycarrier-friend", "keycarrier-blue");
+					marker_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-blue", "keycarrier-friend", "keycarrier-blue");
 				else if (player.team == COLOR_TEAM3)
-					WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-yellow", "keycarrier-friend", "keycarrier-yellow");
+					marker_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-yellow", "keycarrier-friend", "keycarrier-yellow");
 				else if (player.team == COLOR_TEAM4)
-					WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-pink", "keycarrier-friend", "keycarrier-pink");
-				WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, colormap_palette_color(player.team - 1, 0));
+					marker_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-pink", "keycarrier-friend", "keycarrier-pink");
+				marker_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, colormap_palette_color(player.team - 1, 0));
 			} else {
-				WaypointSprite_AttachCarrier("keycarrier-friend", player);
-				WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 0');
+				marker_AttachCarrier("keycarrier-friend", player);
+				marker_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 0');
 			}
 			if (!kh_no_radar_circles)
-				WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
+				marker_Ping(player.waypointsprite_attachedforcarrier);
 		}
 	}
 	// moved that here, also update if there's no player
@@ -217,14 +217,14 @@ void kh_Key_AssignTo(entity key, entity player) { // runs every time a key is pi
 			// audit all key carrier sprites, update them to RUN HERE
 			FOR_EACH_KH_KEY(k) {
 				if (k.owner)
-					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.target, "keycarrier-finish", k.owner.waypointsprite_attachedforcarrier.target3);
+					marker_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.target, "keycarrier-finish", k.owner.waypointsprite_attachedforcarrier.target3);
 			}
 		} else {
 			kh_interferemsg_time = 0;
 			// audit all key carrier sprites, update them to RUN HERE
 			FOR_EACH_KH_KEY(k) {
 				if (k.owner)
-					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.target, "keycarrier-friend", k.owner.waypointsprite_attachedforcarrier.target3);
+					marker_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.target, "keycarrier-friend", k.owner.waypointsprite_attachedforcarrier.target3);
 			}
 		}
 	}
@@ -799,9 +799,9 @@ void(void) kh_init_delayed { // sets up th KH environment
 		key.weaponentity = kh_worldkeylist; //use weaponentity field for global key chain
 		kh_worldkeylist = key;
 		key.team = team_from_index(i);
-		WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, NULL, 0, key, waypointsprite_attachedforcarrier, FALSE);
+		marker_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, NULL, 0, key, waypointsprite_attachedforcarrier, FALSE);
 		key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
-		WaypointSprite_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
+		marker_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
 	}
 	plugin_score_give_frag_mod = kh_HandleFrags;
 }

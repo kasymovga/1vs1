@@ -533,7 +533,7 @@ void(void) client_disconnect { //called by engine
 	if (self.killindicator)
 		remove (self.killindicator);
 
-	WaypointSprite_PlayerGone();
+	marker_PlayerGone();
 	bot_relinkplayerlist();
 	score_detach(self);
 	if (self.clientstatus)

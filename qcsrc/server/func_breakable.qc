@@ -147,7 +147,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			return;
 
 	if (self.sprite)
-		WaypointSprite_Ping(self.sprite);
+		marker_Ping(self.sprite);
 
 	self.health = self.health - _damage;
 	func_breakable_colormod();

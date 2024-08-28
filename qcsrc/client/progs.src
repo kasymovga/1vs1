@@ -15,7 +15,7 @@ jetpack.qh
 physics.qh
 interpolate.qh
 radar.qh
-waypointsprite.qh
+marker.qh
 physics/move.qh
 prandom.qh
 bgmscript.qh
@@ -137,7 +137,7 @@ view.qc
 weapon.qc
 interpolate.qc
 radar.qc
-waypointsprite.qc
+marker.qc
 physics/move.qc
 prandom.qc
 bgmscript.qc

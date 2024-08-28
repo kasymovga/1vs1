@@ -255,7 +255,7 @@ void(void) nadget_sentry_on_remove {
 		self.realowner.hg_detonables -= 1;
 
 	if (self.hg_waypoint)
-		WaypointSprite_Disown(self.hg_waypoint, 0.5);
+		marker_Disown(self.hg_waypoint, 0.5);
 
 	if (self.aiment) {
 		sound_stop(self.aiment, CHAN_PROJECTILE);

@@ -260,7 +260,7 @@ void(entity e) ctf_flag_return {
 	}
 	if (e.owner)
 	if (e.owner.flagcarried == e) {
-		WaypointSprite_DetachCarrier(e.owner);
+		marker_DetachCarrier(e.owner);
 		e.owner.flagcarried = world;
 	}
 	e.owner = world;
@@ -302,8 +302,8 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	e.playerid = attacker.playerid;
 	e.ctf_droptime = time;
 	if (p.waypointsprite_attachedforcarrier) {
-		WaypointSprite_Ping(p.waypointsprite_attachedforcarrier);
-		WaypointSprite_DetachCarrier(p);
+		marker_Ping(p.waypointsprite_attachedforcarrier);
+		marker_DetachCarrier(p);
 	}
 	game_status_set("{1}^7 dropped", 1, strcat(team_color_code(e.team), team_color_name(e.team), " Flag"), "", "");
 	sound (e, CHAN_TRIGGER, e.noise4, VOL_BASE, ATTN_NONE);
@@ -489,7 +489,7 @@ void() ctf_flag_touch {
 			if (game_type == GAME_TYPE_CTF)
 				game_status_set("{1}^7 scores", 1, team_colored_name(self.team), "", "");
 		})
-		WaypointSprite_DetachCarrier(other);
+		marker_DetachCarrier(other);
 		ctf_flag_regen (other.flagcarried);
 		other.flagcarried = world;
 		other.next_take_time = time + 1;
@@ -528,12 +528,12 @@ void() ctf_flag_touch {
 		self.movetype = MOVETYPE_NONE;
 		setorigin(self, CTF_FLAG_CARRY_POS);
 		setattachment(self, other.body, "");
-		WaypointSprite_AttachCarrier("flagcarrier", other);
-		WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team);
-		WaypointSprite_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
+		marker_AttachCarrier("flagcarrier", other);
+		marker_UpdateRule(other.waypointsprite_attachedforcarrier, other.team);
+		marker_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
 		other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ctf_flagcarrier_visible;
-		WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
-		WaypointSprite_Ping(self.sprite);
+		marker_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+		marker_Ping(self.sprite);
 		RM(rm_hud_flash_teamcolor_default_spec(other));
 		return;
 	}
@@ -603,11 +603,11 @@ void() ctf_flag_touch {
 			setattachment(self, other.body, "");
 			self.damageforcescale = 0;
 			self.takedamage = DAMAGE_NO;
-			WaypointSprite_AttachCarrier("flagcarrier", other);
-			WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team);
-			WaypointSprite_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
+			marker_AttachCarrier("flagcarrier", other);
+			marker_UpdateRule(other.waypointsprite_attachedforcarrier, other.team);
+			marker_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
 			other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ctf_flagcarrier_visible;
-			WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+			marker_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
 			RM(rm_hud_flash_teamcolor_default_spec(other));
 		}
 	}
@@ -683,14 +683,14 @@ void(string basesprite) ctf_flag_spawn {
 	waypoint_spawnforitem_force(self, self.origin);
 	self.nearestwaypointtimeout = 0; // activate waypointing again
 	self.basewaypoint = self.nearestwaypoint;
-	WaypointSprite_SpawnFixed(basesprite, self.origin + '0 0 37', self, sprite);
+	marker_SpawnFixed(basesprite, self.origin + '0 0 37', self, sprite);
 	self.sprite.waypointsprite_visible_for_player = ctf_base_visibility;
-	WaypointSprite_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_deployed_fixed);
+	marker_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_deployed_fixed);
 	self.waypointsprite_deployed_fixed.waypointsprite_visible_for_player = ctf_runhere_visibility;
-	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 50', world, 0, self, waypointsprite_attached, FALSE);
+	marker_Spawn("flagdropped", 0, 0, self, '0 0 50', world, 0, self, waypointsprite_attached, FALSE);
 	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_flag_visibility;
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormap_palette_color(self.team - 1, FALSE));
-	WaypointSprite_UpdateTeamRadar(self.waypointsprite_deployed_fixed, RADARICON_FLAG, colormap_palette_color(self.team - 1, FALSE));
+	marker_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormap_palette_color(self.team - 1, FALSE));
+	marker_UpdateTeamRadar(self.waypointsprite_deployed_fixed, RADARICON_FLAG, colormap_palette_color(self.team - 1, FALSE));
 	self.reset = ctf_flag_reset;
 }
 

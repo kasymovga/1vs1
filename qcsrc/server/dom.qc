@@ -73,20 +73,20 @@ void(void) dom_controlpoint_captured {
 	self.team = old_team;
 	switch(self.goalentity.team) {
 	case COLOR_TEAM1:
-		WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
+		marker_UpdateSprites(self.sprite, "dom-red", "", "");
 		break;
 	case COLOR_TEAM2:
-		WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
+		marker_UpdateSprites(self.sprite, "dom-blue", "", "");
 		break;
 	case COLOR_TEAM3:
-		WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
+		marker_UpdateSprites(self.sprite, "dom-yellow", "", "");
 		break;
 	case COLOR_TEAM4:
-		WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
+		marker_UpdateSprites(self.sprite, "dom-pink", "", "");
 		break;
 	}
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color(self.goalentity.team - 1, 0));
-	WaypointSprite_Ping(self.sprite);
+	marker_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color(self.goalentity.team - 1, 0));
+	marker_Ping(self.sprite);
 	self.death_time = time;
 	RM(rm_hud_flash_teamcolor_default_spec(self.enemy));
 }
@@ -200,9 +200,9 @@ void(void) dom_controlpoint_touch {
 	self.owner = head; // team to switch to after the delay
 	self.dmg_inflictor = other;
 	head = dom_teams[0];
-	WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
-	WaypointSprite_Ping(self.sprite);
+	marker_UpdateSprites(self.sprite, "dom-neut", "", "");
+	marker_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
+	marker_Ping(self.sprite);
 	self.goalentity = head;
 	self.model = head.mdl;
 	self.modelindex = head.dmg;
@@ -296,8 +296,8 @@ void(void) dom_controlpoint_setup {
 	setorigin(self, self.origin + '0 0 20');
 	entity_droptofloor();
 	waypoint_spawnforitem(self);
-	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
+	marker_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
+	marker_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
 }
 
 /*QUAKED spawnfunc_dom_controlpoint (0 .5 .8) (-16 -16 -24) (16 16 32)

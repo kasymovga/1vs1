@@ -488,7 +488,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 					if (!e.weapons_extra || e.weapons_extra != wi.weapons_extra)
 						continue;
 
-					WaypointSprite_Spawn(
+					marker_Spawn(
 						s,
 						1, 0,
 						world, e.origin,

@@ -37,9 +37,9 @@ void(float byteam) conquest_cp_capture {
 	for (e = world; (e = find(e, targetname, self.target)); )
 		if (e.classname == "info_player_deathmatch") {
 			if not(e.sprite)
-				WaypointSprite_SpawnFixed(NULL, e.origin, e, sprite);
+				marker_SpawnFixed(NULL, e.origin, e, sprite);
 
-			WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormap_palette_color(self.team - 1, FALSE));
+			marker_UpdateTeamRadar(e.sprite, 2, 0.25 * colormap_palette_color(self.team - 1, FALSE));
 		}
 }
 
@@ -55,7 +55,7 @@ void(void) conquest_remove_progress_bar {
 }
 
 void(void) conquest_update_waypoint {
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_CONTROLPOINT, colormap_palette_color(self.team - 1, FALSE));
+	marker_UpdateTeamRadar(self.sprite, RADARICON_CONTROLPOINT, colormap_palette_color(self.team - 1, FALSE));
 	string s;
 	s = "";
 	if (self.owner) {
@@ -70,7 +70,7 @@ void(void) conquest_update_waypoint {
 	else
 		s = "ons-cp-neut";
 
-	WaypointSprite_UpdateSprites(self.sprite, s, s, s);
+	marker_UpdateSprites(self.sprite, s, s, s);
 }
 
 void(void) conquest_cp_reset {
@@ -96,7 +96,7 @@ void(void) conquest_cp_think_capture {
 		if (self.team > 0)
 		if (self.wait < time) {
 			sound_play2team(self.team, "onslaught/controlpoint_underattack.ogg");
-			WaypointSprite_Ping(self.sprite);
+			marker_Ping(self.sprite);
 			conquest_update_waypoint();
 			self.wait = time + g_conq_capture_time;
 		}
@@ -126,7 +126,7 @@ void(void) conquest_cp_think_capture {
 			if (self.team > 0)
 				team_spawn_players(self.team);
 
-			WaypointSprite_Ping(self.sprite);
+			marker_Ping(self.sprite);
 			conquest_update_waypoint();
 			self.owner = world;
 		}
@@ -182,8 +182,8 @@ void(void) spawnfunc_conquest_cp {
 	self.solid = SOLID_TRIGGER;
 	self.reset = conquest_cp_reset;
 	self.touch = conquest_cp_touch;
-	WaypointSprite_SpawnFixed(NULL, self.origin + '0 0 64', self, sprite);
-	WaypointSprite_UpdateRule(self.sprite, 0);
+	marker_SpawnFixed(NULL, self.origin + '0 0 64', self, sprite);
+	marker_UpdateRule(self.sprite, 0);
 	conquest_update_waypoint();
 	self.maxs_z += 16;
 	self.mins_z += 16;
@@ -310,9 +310,9 @@ void conquest_delayedinit() {
 			continue;
 
 		if not(e.sprite)
-			WaypointSprite_SpawnFixed(NULL, e.origin, e, sprite);
+			marker_SpawnFixed(NULL, e.origin, e, sprite);
 
-		WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormap_palette_color(e.team - 1, FALSE));
+		marker_UpdateTeamRadar(e.sprite, 2, 0.25 * colormap_palette_color(e.team - 1, FALSE));
 	}
 	conquest_world_reset();
 }
