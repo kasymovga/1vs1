@@ -107,7 +107,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_LASER] = laser_read;
 	csqc_entity_parsers[NET_CSQC_NAGGER] = ready_read;
 	csqc_entity_parsers[NET_CSQC_WAYPOINT] = waypointsprite_read;
-	csqc_entity_parsers[NET_CSQC_RADARLINK] = teamradar_link_read;
+	csqc_entity_parsers[NET_CSQC_RADARLINK] = radar_link_read;
 	csqc_entity_parsers[NET_CSQC_PROJECTILE] = projectile_read;
 	csqc_entity_parsers[NET_CSQC_INIT] = main_init_read;
 	csqc_entity_parsers[NET_CSQC_MAPVOTE] = map_vote_read;

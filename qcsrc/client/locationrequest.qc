@@ -1,12 +1,12 @@
 entity selected_location;
 
 void(void) locationrequest_remove {
-	teamradar_remove(self);
+	radar_remove(self);
 	str_unzone_ifneeded(self.netname);
 	if (self == selected_location)
 		selected_location = world;
 
-	self.teamradar_icon = 0;
+	self.radar_icon = 0;
 }
 
 float locationrequest_input_event(float input_type, float primary, float secondary) {
@@ -15,15 +15,15 @@ float locationrequest_input_event(float input_type, float primary, float seconda
 
 	if (primary == K_MOUSE1) {
 		vector loc;
-		loc = teamradar_2dcoord_to_texcoord(mouse_position());
-		loc = teamradar_texcoord_to_3dcoord(loc);
+		loc = radar_2dcoord_to_texcoord(mouse_position());
+		loc = radar_texcoord_to_3dcoord(loc);
 		if (selected_location) {
-			selected_location.teamradar_icon = 1;
+			selected_location.radar_icon = 1;
 			selected_location.origin = loc;
 			selected_location.alpha = 1;
-			selected_location.teamradar_color = '0 1 1';
-			selected_location.teamradar_times[0] = time;
-			teamradar_add(selected_location);
+			selected_location.radar_color = '0 1 1';
+			selected_location.radar_times[0] = time;
+			radar_add(selected_location);
 		}
 		localcmd(strcat("\ncmd location_select ", ftos(loc_x), " ", ftos(loc_y), "\n"));
 		return TRUE;
@@ -33,10 +33,10 @@ float locationrequest_input_event(float input_type, float primary, float seconda
 
 void(void) locationrequest_draw {
 	selected_location = self;
-	teamradar_show = FALSE;
+	radar_show = FALSE;
 	mouse_enable("");
 	input_event_callback = locationrequest_input_event;
-	teamradar_view(1.8, self.netname);
+	radar_view(1.8, self.netname);
 	self.chain = world;
 }
 

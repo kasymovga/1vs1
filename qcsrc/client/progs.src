@@ -14,7 +14,7 @@ modelselect.qh
 jetpack.qh
 physics.qh
 interpolate.qh
-teamradar.qh
+radar.qh
 waypointsprite.qh
 physics/move.qh
 prandom.qh
@@ -136,7 +136,7 @@ view_camera_script.qc
 view.qc
 weapon.qc
 interpolate.qc
-teamradar.qc
+radar.qc
 waypointsprite.qc
 physics/move.qc
 prandom.qc

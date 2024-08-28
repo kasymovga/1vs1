@@ -212,12 +212,12 @@ void(void) waypointsprite_draw {
 		else
 			align = 0;
 
-		waypointsprite_healthbar_draw(o, rot * 90 * MATH_DEG2RAD, self.health, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t, SPRITE_HEALTHBAR_MARGIN * t, SPRITE_HEALTHBAR_BORDER * t, align, self.teamradar_color, a * SPRITE_HEALTHBAR_BORDERALPHA, self.teamradar_color, a * SPRITE_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
+		waypointsprite_healthbar_draw(o, rot * 90 * MATH_DEG2RAD, self.health, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t, SPRITE_HEALTHBAR_MARGIN * t, SPRITE_HEALTHBAR_BORDER * t, align, self.radar_color, a * SPRITE_HEALTHBAR_BORDERALPHA, self.radar_color, a * SPRITE_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
 	}
 }
 
 void(void) waypointsprite_remove {
-	teamradar_remove(self);
+	radar_remove(self);
 	if (self.netname)
 		strunzone(self.netname);
 
@@ -298,19 +298,19 @@ void(float isnew) waypointsprite_read {
 	}
 	if (sendflags & 32) {
 		f = net_read_byte();
-		self.teamradar_icon = (f & 0x7F);
+		self.radar_icon = (f & 0x7F);
 		if (f & 0x80) {
-			self.(teamradar_times[self.teamradar_time_index]) = time;
-			self.teamradar_time_index = math_mod(self.teamradar_time_index + 1, MAX_TEAMRADAR_TIMES);
+			self.(radar_times[self.radar_time_index]) = time;
+			self.radar_time_index = math_mod(self.radar_time_index + 1, MAX_TEAMRADAR_TIMES);
 		}
-		self.teamradar_color_x = net_read_byte() / 255.0;
-		self.teamradar_color_y = net_read_byte() / 255.0;
-		self.teamradar_color_z = net_read_byte() / 255.0;
+		self.radar_color_x = net_read_byte() / 255.0;
+		self.radar_color_y = net_read_byte() / 255.0;
+		self.radar_color_z = net_read_byte() / 255.0;
 	}
 	interpolate_note();
 	self.entremove = waypointsprite_remove;
 	if (isnew)
-		teamradar_add(self);
+		radar_add(self);
 }
 
 void(void) waypointsprite_init {

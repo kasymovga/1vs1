@@ -22,7 +22,7 @@ void(string msg) GameCommand { //called by engine
 	} else if (cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
 	} else if (cmd == "radar") {
-		teamradar_show = !teamradar_show;
+		radar_show = !radar_show;
 	} else if (cmd == "sbar_columns_set") {
 		sbar_field_set(argc);
 	} else if (cmd == "sbar_columns_help") {

@@ -1,5 +1,5 @@
 void (void) entcs_remove {
-	teamradar_remove(self);
+	radar_remove(self);
 	self.draw2dflag = 0;
 }
 
@@ -20,12 +20,12 @@ void(float bIsNewEntity) entcs_read {
 		}
 		if (self.cnt) {
 			self.cnt = FALSE;
-			teamradar_add(self);
+			radar_add(self);
 		}
 	} else {
 		if not(self.cnt) {
 			self.cnt = TRUE;
-			teamradar_remove(self);
+			radar_remove(self);
 		}
 	}
 	if (f & 8) {
@@ -47,7 +47,7 @@ void(float bIsNewEntity) entcs_read {
 	self.entremove = entcs_remove;
 	if (bIsNewEntity) {
 		Shownames_Init(self);
-		teamradar_add(self);
+		radar_add(self);
 	}
 }
 

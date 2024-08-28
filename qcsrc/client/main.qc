@@ -122,15 +122,14 @@ void(void) CSQC_Init {
 		map_shortname = substring(map_shortname, 0, strlen(map_shortname) - 4);
 
 	map_shortname = strzone(map_shortname);
-	teamradar_minimapname = strcat("gfx/", map_shortname, "_radar");
-	if (precache_pic(teamradar_minimapname) == "") {
+	radar_minimapname = strcat("gfx/", map_shortname, "_radar");
+	if (precache_pic(radar_minimapname) == "") {
 		// but maybe we have a non-clever minimap
-		teamradar_minimapname = strcat("gfx/", map_shortname, "_mini");
-		if (precache_pic(teamradar_minimapname) == "")
-			teamradar_minimapname = ""; // FAIL
+		radar_minimapname = strcat("gfx/", map_shortname, "_mini");
+		if (precache_pic(radar_minimapname) == "")
+			radar_minimapname = ""; // FAIL
 	}
-	teamradar_init();
-	teamradar_minimapname = strzone(teamradar_minimapname);
+	radar_minimapname = strzone(radar_minimapname);
 	csqc_entity_init();
 	draw_init();
 	ui_con_width_height_set();
@@ -220,7 +219,7 @@ void(float ignore) main_init_read {
 		world_max_x = net_read_coord();
 		world_max_y = net_read_coord();
 		world_max_z = net_read_coord();
-		teamradar_init();
+		radar_init();
 	}
 	if (sf & 4) {
 		str_unzone_ifneeded(fog_settings);
