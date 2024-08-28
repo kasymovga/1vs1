@@ -9,19 +9,9 @@ void(void) csqc_entity_temp_error {
 	error(strcat("unknown entity type in CSQC_Parse_TempEntity: ", ftos(self.enttype), "\n"));
 }
 
-void(void) csqc_entity_clean {
+void CSQC_Ent_Remove() { //called by engine
 	if (self.entremove)
 		self.entremove();
-
-	self.enttype = 0;
-	self.classname = "";
-	self.draw = NULL;
-	self.entremove = NULL;
-}
-
-void CSQC_Ent_Remove() { //called by engine
-	if (self.enttype)
-		csqc_entity_clean();
 
 	remove(self);
 }
@@ -44,7 +34,12 @@ void(float bIsNewEntity) CSQC_Ent_Update { //called by engine
 	if (self.enttype)
 		if (t != self.enttype) {
 			//print("A CSQC entity changed its type!\n");
-			csqc_entity_clean();
+			if (self.entremove)
+				self.entremove();
+
+			entity e = spawn();
+			builtin_copyentity(e, self); //force clean entity fields
+			remove(e);
 			bIsNewEntity = 1;
 		}
 	if (t >= NET_CSQC_COUNT)
