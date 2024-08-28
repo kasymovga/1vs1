@@ -3,8 +3,6 @@ void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);
 void onslaught_link_checkupdate();
 
-.entity sprite;
-.string target2;
 .float iscaptured;
 .float islinked;
 .float isgenneighbor_red;
