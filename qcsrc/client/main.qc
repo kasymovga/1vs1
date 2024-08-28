@@ -108,7 +108,7 @@ void(void) CSQC_Init {
 	player_list = spawn();
 	team_get(TEAM_COLOR_SPECTATOR, TRUE); // add specs first
 	cvar_clientsettemp("_supports_weaponpriority", "1");
-	waypointsprite_init();
+	marker_init();
 	projectile_precache();
 	gib_precache();
 	casing_precache();

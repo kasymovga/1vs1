@@ -62,7 +62,7 @@ void(string msg) GameCommand { //called by engine
 	} else if (cmd == "recordlist") {
 		GUI_Show(GUI_RECORDLIST);
 	} else if (cmd == "r_restart") {
-		waypointsprite_init();
+		marker_init();
 		draw_init();
 		weapon_update_icons();
 		rm_buffs_models_load();

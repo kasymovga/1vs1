@@ -101,7 +101,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_RAINSNOW] = particles_rain_or_snow_read;
 	csqc_entity_parsers[NET_CSQC_LASER] = laser_read;
 	csqc_entity_parsers[NET_CSQC_NAGGER] = ready_read;
-	csqc_entity_parsers[NET_CSQC_WAYPOINT] = waypointsprite_read;
+	csqc_entity_parsers[NET_CSQC_WAYPOINT] = marker_read;
 	csqc_entity_parsers[NET_CSQC_RADARLINK] = radar_link_read;
 	csqc_entity_parsers[NET_CSQC_PROJECTILE] = projectile_read;
 	csqc_entity_parsers[NET_CSQC_INIT] = main_init_read;

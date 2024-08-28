@@ -1,11 +1,11 @@
-float waypointsprite_fadedistance;
-float waypointsprite_edgefadealpha;
-float waypointsprite_edgefadescale;
-float waypointsprite_crosshairfadealpha;
-float waypointsprite_crosshairfadescale;
-float waypointsprite_distancefadealpha;
-float waypointsprite_distancefadescale;
-float waypointsprite_distancefadedistance;
+float marker_fadedistance;
+float marker_edgefadealpha;
+float marker_edgefadescale;
+float marker_crosshairfadealpha;
+float marker_crosshairfadescale;
+float marker_distancefadealpha;
+float marker_distancefadescale;
+float marker_distancefadedistance;
 
 .string netname; // primary picture
 .string netname2; // secondary picture
@@ -20,16 +20,16 @@ float waypointsprite_distancefadedistance;
 .float build_starthealth;
 .float build_finished;
 
-vector SPRITE_SIZE = '288 36 0';
-vector SPRITE_HOTSPOT = '144 36 0';
-float SPRITE_HEALTHBAR_WIDTH = 144;
-float SPRITE_HEALTHBAR_HEIGHT = 9;
-float SPRITE_HEALTHBAR_MARGIN = 6;
-float SPRITE_HEALTHBAR_BORDER = 2;
-float SPRITE_HEALTHBAR_BORDERALPHA = 1;
-float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
+const vector MARKER_SIZE = '288 36 0';
+const vector MARKER_HOTSPOT = '144 36 0';
+const float MARKER_HEALTHBAR_WIDTH = 144;
+const float MARKER_HEALTHBAR_HEIGHT = 9;
+const float MARKER_HEALTHBAR_MARGIN = 6;
+const float MARKER_HEALTHBAR_BORDER = 2;
+const float MARKER_HEALTHBAR_BORDERALPHA = 1;
+const float MARKER_HEALTHBAR_HEALTHALPHA = 0.5;
 
-void(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f) waypointsprite_healthbar_draw {
+void(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f) marker_healthbar_draw {
 	vector o, ri, up;
 	float owidth; // outer width
 	hotspot = -1 * hotspot;
@@ -50,8 +50,8 @@ void(vector org, float rot, float h, vector sz, vector hotspot, float width, flo
 	draw_quad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * height, "", hrgb, ha, f);
 }
 
-float waypointsprite_draw_team;
-void(void) waypointsprite_draw {
+float marker_draw_team;
+void(void) marker_draw {
 	string spriteimage;
 	float t;
 	if (self.lifetime)
@@ -69,8 +69,8 @@ void(void) waypointsprite_draw {
 		if (CVAR(cl_hidewaypoints))
 			return; // fixed waypoint
 
-	if (waypointsprite_draw_team != team_my) {
-		waypointsprite_draw_team = team_my;
+	if (marker_draw_team != team_my) {
+		marker_draw_team = team_my;
 		entity e;
 		for (e = self; e; e = find(e, classname, "waypointsprite")) {
 			e.cnt = 0;
@@ -98,7 +98,7 @@ void(void) waypointsprite_draw {
 	if (self.maxdistance > CVAR(g_waypointsprite_normdistance))
 		a *= pow(bound(0, (self.maxdistance - dist) / (self.maxdistance - CVAR(g_waypointsprite_normdistance)), 1), CVAR(g_waypointsprite_distancealphaexponent));
 	else if (self.maxdistance > 0)
-		a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - CVAR(g_waypointsprite_normdistance)), 1), CVAR(g_waypointsprite_distancealphaexponent)) * (1 - CVAR(g_waypointsprite_minalpha)) + CVAR(g_waypointsprite_minalpha);
+		a *= pow(bound(0, (marker_fadedistance - dist) / (marker_fadedistance - CVAR(g_waypointsprite_normdistance)), 1), CVAR(g_waypointsprite_distancealphaexponent)) * (1 - CVAR(g_waypointsprite_minalpha)) + CVAR(g_waypointsprite_minalpha);
 
 	if (a <= 0)
 		return;
@@ -166,17 +166,17 @@ void(void) waypointsprite_draw {
 	edgedistance_min = min4(o_y, o_x,CVAR(vid_conwidth) - o_x, CVAR(vid_conheight) - o_y);
 	crosshairdistance = sqrt( pow(o_x - CVAR(vid_conwidth)/2, 2) + pow(o_y - CVAR(vid_conheight)/2, 2) );
 	t = CVAR_OR(g_waypointsprite_scale, 1) * (1 - CVAR(_menu_alpha)) * vidscale;
-	a = a * (1 - (1 - waypointsprite_distancefadealpha) * (bound(0, dist/waypointsprite_distancefadedistance, 1)));
-	t = t * (1 - (1 - waypointsprite_distancefadescale) * (bound(0, dist/waypointsprite_distancefadedistance, 1)));
+	a = a * (1 - (1 - marker_distancefadealpha) * (bound(0, dist/marker_distancefadedistance, 1)));
+	t = t * (1 - (1 - marker_distancefadescale) * (bound(0, dist/marker_distancefadedistance, 1)));
 	if (edgedistance_min < CVAR(g_waypointsprite_edgefadedistance)) {
-		a = a * (1 - (1 - waypointsprite_edgefadealpha) * (1 - bound(0, edgedistance_min/CVAR(g_waypointsprite_edgefadedistance), 1)));
-		t = t * (1 - (1 - waypointsprite_edgefadescale) * (1 - bound(0, edgedistance_min/CVAR(g_waypointsprite_edgefadedistance), 1)));
+		a = a * (1 - (1 - marker_edgefadealpha) * (1 - bound(0, edgedistance_min/CVAR(g_waypointsprite_edgefadedistance), 1)));
+		t = t * (1 - (1 - marker_edgefadescale) * (1 - bound(0, edgedistance_min/CVAR(g_waypointsprite_edgefadedistance), 1)));
 	}
 	if (crosshairdistance < CVAR(g_waypointsprite_crosshairfadedistance)) {
-		a = a * (1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
-		t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
+		a = a * (1 - (1 - marker_crosshairfadealpha) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
+		t = t * (1 - (1 - marker_crosshairfadescale) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
 	}
-	draw_picture_rotate(o, rot * 90 * MATH_DEG2RAD, spriteimage, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
+	draw_picture_rotate(o, rot * 90 * MATH_DEG2RAD, spriteimage, MARKER_SIZE * t, MARKER_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
 	if (self.build_finished) {
 		if (time < self.build_finished + 0.25) {
 			if (time < self.build_started)
@@ -196,23 +196,23 @@ void(void) waypointsprite_draw {
 		else
 			align = 0;
 
-		waypointsprite_healthbar_draw(o, rot * 90 * MATH_DEG2RAD, self.health, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t, SPRITE_HEALTHBAR_MARGIN * t, SPRITE_HEALTHBAR_BORDER * t, align, self.radar_color, a * SPRITE_HEALTHBAR_BORDERALPHA, self.radar_color, a * SPRITE_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
+		marker_healthbar_draw(o, rot * 90 * MATH_DEG2RAD, self.health, MARKER_SIZE * t, MARKER_HOTSPOT * t, MARKER_HEALTHBAR_WIDTH * t, MARKER_HEALTHBAR_HEIGHT * t, MARKER_HEALTHBAR_MARGIN * t, MARKER_HEALTHBAR_BORDER * t, align, self.radar_color, a * MARKER_HEALTHBAR_BORDERALPHA, self.radar_color, a * MARKER_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
 	}
 }
 
-void(void) waypointsprite_remove {
+void(void) marker_remove {
 	str_unzone_ifneeded(self.netname);
 	str_unzone_ifneeded(self.netname2);
 	str_unzone_ifneeded(self.netname3);
 }
 
-void(float isnew) waypointsprite_read {
+void(float isnew) marker_read {
 	float sendflags, f, t;
 	sendflags = net_read_byte();
 	if not(self.spawntime)
 		self.spawntime = time;
 
-	self.draw2d = waypointsprite_draw;
+	self.draw2d = marker_draw;
 	self.draw2dflag = 1;
 	self.classname = "waypointsprite";
 	interpolate_undo();
@@ -278,18 +278,18 @@ void(float isnew) waypointsprite_read {
 		self.radar_color_z = net_read_byte() / 255.0;
 	}
 	interpolate_note();
-	self.entremove = waypointsprite_remove;
+	self.entremove = marker_remove;
 }
 
-void(void) waypointsprite_init {
-	waypointsprite_fadedistance = vlen(world_max - world_min);
-	waypointsprite_edgefadealpha = CVAR_OR(g_waypointsprite_edgefadealpha, 1);
-	waypointsprite_edgefadescale = CVAR_OR(g_waypointsprite_edgefadescale, 1);
-	waypointsprite_crosshairfadealpha = CVAR_OR(g_waypointsprite_crosshairfadealpha, 1);
-	waypointsprite_crosshairfadescale = CVAR_OR(g_waypointsprite_crosshairfadescale, 1);
-	waypointsprite_distancefadealpha = CVAR_OR(g_waypointsprite_distancefadealpha, 1);
-	waypointsprite_distancefadescale = CVAR_OR(g_waypointsprite_distancefadescale, 1);
-	waypointsprite_distancefadedistance = vlen(world_max - world_min) * CVAR_OR(g_waypointsprite_distancefadedistancemultiplier, 1);
+void(void) marker_init {
+	marker_fadedistance = vlen(world_max - world_min);
+	marker_edgefadealpha = CVAR_OR(g_waypointsprite_edgefadealpha, 1);
+	marker_edgefadescale = CVAR_OR(g_waypointsprite_edgefadescale, 1);
+	marker_crosshairfadealpha = CVAR_OR(g_waypointsprite_crosshairfadealpha, 1);
+	marker_crosshairfadescale = CVAR_OR(g_waypointsprite_crosshairfadescale, 1);
+	marker_distancefadealpha = CVAR_OR(g_waypointsprite_distancefadealpha, 1);
+	marker_distancefadescale = CVAR_OR(g_waypointsprite_distancefadescale, 1);
+	marker_distancefadedistance = vlen(world_max - world_min) * CVAR_OR(g_waypointsprite_distancefadedistancemultiplier, 1);
 	float dh, n, i, o, f;
 	string s, sname, sframes;
 	dh = search_begin("models/sprites/*_frame*.tga", FALSE, FALSE);

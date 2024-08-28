@@ -1,4 +1,3 @@
-// they are drawn using a .draw function
-void(float) waypointsprite_read;
-void(void) waypointsprite_remove;
-void(void) waypointsprite_init;
+void(float) marker_read;
+void(void) marker_remove;
+void(void) marker_init;
