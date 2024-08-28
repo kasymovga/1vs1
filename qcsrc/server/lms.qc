@@ -4,6 +4,7 @@ float g_lms_sphere_damage_distance_factor;
 float g_lms_sphere_diameter_min;
 float g_lms_sphere_diameter_start_indent;
 float g_lms_sphere_permutation_interval;
+vector g_lms_sphere_color;
 float SP_LIVES;
 var .float lms_lives;
 float lms_someone_died;
@@ -115,7 +116,7 @@ void(void) lms_sphere_setup {
 	lms_sphere = spawn();
 	setmodel(lms_sphere, "models/sphere/sphere.md3");
 	lms_sphere_diameter_unscaled = lms_sphere.maxs_x - lms_sphere.mins_x;
-	lms_sphere.colormod = '1 0.25 0.5';
+	lms_sphere.colormod = g_lms_sphere_color;
 	random_selection_init();
 	entity e;
 	entity spawns = findchain(classname, "info_player_deathmatch");
@@ -260,6 +261,7 @@ void(void) lms_init {
 	CVAR_CACHE(g_lms_sphere_damage);
 	CVAR_CACHE(g_lms_sphere_damage_distance_factor);
 	CVAR_CACHE(g_lms_sphere_permutation_interval);
+	g_lms_sphere_color = stov(cvar_string("g_lms_sphere_color"));
 	precache_model("models/sphere/sphere.md3");
 	entity_initialize(NULL, lms_init_delayed, INITPRIO_GAMETYPE);
 }
