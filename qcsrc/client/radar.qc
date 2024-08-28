@@ -13,30 +13,6 @@ float radar_size_scale; // 2D scale factor
 float radar_scale; // window size = ...qu
 float radar_nohudhack;
 entity radar_chain;
-.entity radar_next;
-
-void(entity e) radar_add {
-	entity e2;
-	for (e2 = radar_chain; e2; e2 = e2.radar_next) {
-		if (e == e2) return;
-	}
-	e.radar_next = radar_chain;
-	radar_chain = e;
-}
-
-void(entity e) radar_remove {
-	if (radar_chain == e) {
-		radar_chain = radar_chain.radar_next;
-		return;
-	}
-	entity e2;
-	for (e2 = radar_chain; e2.radar_next; e2 = e2.radar_next) {
-		if (e == e2.radar_next) {
-			e2.radar_next = e.radar_next;
-			return;
-		}
-	}
-}
 
 void(void) radar_init {
 	vector extend;
@@ -382,7 +358,7 @@ void(float big, string title) radar_view {
 				radar_size2d_y
 		);
 	}
-	for (tm = radar_chain; tm; tm = tm.radar_next) {
+	for (tm = NULL; (tm = findflags(tm, radar_icon, 0xFFFF)); ) {
 		if (tm.classname == "entcs_receiver") {
 			if (tm.cnt)
 				continue;
@@ -390,17 +366,17 @@ void(float big, string title) radar_view {
 			color2 = player_color(tm.sv_entnum);
 			//if (color == COLOR_SPECTATOR || color == color2)
 			radar_player_draw(tm.origin, tm.angles, team_rgb(color2));
-		} else if (tm.radar_icon)
-			radar_icon_draw(tm.origin, tm.radar_icon, tm, tm.radar_color, tm.alpha * sbar_alpha_fg);
-		else if (tm.classname == "radarlink")
+		} else if (tm.classname == "radarlink")
 			radar_link_draw(tm.origin, tm.velocity, tm.team);
+		else if (tm.radar_icon)
+			radar_icon_draw(tm.origin, tm.radar_icon, tm, tm.radar_color, tm.alpha * sbar_alpha_fg);
 	}
 	radar_player_draw(view_origin, view_angles, '1 1 1');
 	drawresetcliparea();
 }
 
 void(void) radar_link_remove {
-	radar_remove(self);
+	self.radar_icon = 0;
 }
 
 void(float ignore) radar_link_read {
@@ -408,9 +384,9 @@ void(float ignore) radar_link_read {
 	sendflags = net_read_byte();
 	interpolate_undo();
 	self.iflags = IFLAG_VELOCITY;
-	radar_add(self);
 	self.classname = "radarlink";
 	self.entremove = radar_link_remove;
+	self.radar_icon = 1;
 	if (sendflags & 1) {
 		self.origin_x = net_read_coord();
 		self.origin_y = net_read_coord();

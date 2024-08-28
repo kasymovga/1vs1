@@ -217,7 +217,6 @@ void(void) waypointsprite_draw {
 }
 
 void(void) waypointsprite_remove {
-	radar_remove(self);
 	if (self.netname)
 		strunzone(self.netname);
 
@@ -309,8 +308,6 @@ void(float isnew) waypointsprite_read {
 	}
 	interpolate_note();
 	self.entremove = waypointsprite_remove;
-	if (isnew)
-		radar_add(self);
 }
 
 void(void) waypointsprite_init {

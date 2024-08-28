@@ -1,8 +1,3 @@
-void (void) entcs_remove {
-	radar_remove(self);
-	self.draw2dflag = 0;
-}
-
 void(float bIsNewEntity) entcs_read {
 	float f = net_read_byte();
 	if (f & 1) {
@@ -18,15 +13,11 @@ void(float bIsNewEntity) entcs_read {
 			self.origin_z = net_read_short();
 			self.angles_y = net_read_short();
 		}
-		if (self.cnt) {
+		if (self.cnt)
 			self.cnt = FALSE;
-			radar_add(self);
-		}
 	} else {
-		if not(self.cnt) {
+		if not(self.cnt)
 			self.cnt = TRUE;
-			radar_remove(self);
-		}
 	}
 	if (f & 8) {
 		self.maxs_x = self.maxs_y = 0;
@@ -44,11 +35,9 @@ void(float bIsNewEntity) entcs_read {
 		self.health = 0;
 
 	self.classname = "entcs_receiver";
-	self.entremove = entcs_remove;
-	if (bIsNewEntity) {
+	self.radar_icon = 1;
+	if (bIsNewEntity)
 		Shownames_Init(self);
-		radar_add(self);
-	}
 }
 
 

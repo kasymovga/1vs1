@@ -9,5 +9,3 @@ void(void) radar_init;
 void(float ignore) radar_link_read;
 string radar_minimapname;
 float radar_show;
-void(entity e) radar_remove;
-void(entity e) radar_add;
