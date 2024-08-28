@@ -375,17 +375,12 @@ void(float big, string title) radar_view {
 	drawresetcliparea();
 }
 
-void(void) radar_link_remove {
-	self.radar_icon = 0;
-}
-
 void(float ignore) radar_link_read {
 	float sendflags;
 	sendflags = net_read_byte();
 	interpolate_undo();
 	self.iflags = IFLAG_VELOCITY;
 	self.classname = "radarlink";
-	self.entremove = radar_link_remove;
 	self.radar_icon = 1;
 	if (sendflags & 1) {
 		self.origin_x = net_read_coord();
