@@ -187,6 +187,20 @@ void(entity pingdata, float a) radar_ping_draw {
 	drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
 }
 
+void(entity e, float a) radar_circle_draw {
+	vector coord = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(e.origin));
+	vector v1 = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(e.origin + '-0.6 -0.6 0' * e.cnt * e.scale));
+	vector v2 = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(e.origin + '-0.6  0.6 0' * e.cnt * e.scale));
+	vector v3 = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(e.origin +  '0.6  0.6 0' * e.cnt * e.scale));
+	vector v4 = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(e.origin +  '0.6 -0.6 0' * e.cnt * e.scale));
+	R_BeginPolygon("gfx/teamradar_ping", DRAWFLAG_ADDITIVE);
+	R_PolygonVertex(v1, '0 0 0', e.colormod, a);
+	R_PolygonVertex(v2, '0 1 0', e.colormod, a);
+	R_PolygonVertex(v3, '1 1 0', e.colormod, a);
+	R_PolygonVertex(v4, '1 0 0', e.colormod, a);
+	R_EndPolygon();
+}
+
 void(vector start, vector end, float colors) radar_link_draw {
 	vector c0, c1, norm;
 	start = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(start));
@@ -206,7 +220,6 @@ void(vector start, vector end, float colors) radar_link_draw {
 	R_EndPolygon();
 }
 
-float radar_scale;
 float radar_background_alpha;
 float radar_foreground_alpha;
 float radar_rotation;
@@ -369,6 +382,8 @@ void(float big, string title) radar_view {
 			radar_ping_draw(tm, sbar_alpha_fg);
 		else if (tm.classname == "radarlink")
 			radar_link_draw(tm.origin, tm.velocity, tm.team);
+		else if (tm.classname == "lms_sphere")
+			radar_circle_draw(tm, sbar_alpha_fg);
 	}
 	radar_player_draw(view_origin, view_angles, '1 1 1');
 	drawresetcliparea();

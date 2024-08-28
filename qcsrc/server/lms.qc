@@ -33,9 +33,10 @@ float(entity to, float sf) lms_sphere_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_LMS_SPHERE);
 	sf &= 63;
 	net_write_byte(MSG_ENTITY, sf);
-	if (sf & 1)
+	if (sf & 1) {
 		net_write_short(MSG_ENTITY, self.modelindex);
-
+		net_write_coord(MSG_ENTITY, lms_sphere_diameter_unscaled);
+	}
 	if (sf & 2)
 		net_write_coord(MSG_ENTITY, self.scale);
 
@@ -103,8 +104,8 @@ void(void) lms_sphere_think {
 			d = 0.5 * g_lms_sphere_damage * ((f - r) / g_lms_sphere_damage_distance_factor);
 			if (f > r) {
 				print_to_spec(e, PRINT_CENTER, "Return to fight area immediately!", "", "", "");
-				fire_add_damage(e2, world, d, 2, DEATH_FIRE);
-				damage(e2, world, world, d, DEATH_FIRE, e2.origin, (e2.mins + e2.maxs) * 0.5);
+				fire_add_damage(e2, NULL, d, 2, DEATH_FIRE);
+				damage(e2, NULL, NULL, d, DEATH_FIRE, ENTITY_CENTER(e), '0 0 0');
 			}
 		}
 	}
@@ -260,7 +261,7 @@ void(void) lms_init {
 	CVAR_CACHE(g_lms_sphere_damage_distance_factor);
 	CVAR_CACHE(g_lms_sphere_permutation_interval);
 	precache_model("models/sphere/sphere.md3");
-	entity_initialize(world, lms_init_delayed, INITPRIO_GAMETYPE);
+	entity_initialize(NULL, lms_init_delayed, INITPRIO_GAMETYPE);
 }
 
 #undef LMS_ACTIVE

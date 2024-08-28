@@ -9,6 +9,9 @@ void(float isnew) sphere_read {
 
 	if (f & 1) {
 		self.modelindex = net_read_short();
+		self.cnt = net_read_coord();
+		self.radar_icon = 1337;
+		self.classname = "lms_sphere";
 	}
 	if (f & 2)
 		self.scale = net_read_coord();
