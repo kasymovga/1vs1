@@ -446,6 +446,7 @@ float(string s) minstagib_ItemForbidden {
 	if (s != "minstagib")
 	if (s != "item_speed")
 	if (s != "item_invisibility")
+	if (substring(s, 0, 8) != "item_key")
 		return TRUE;
 
 	return minstagib_ItemForbidden_next(s);
