@@ -1,11 +1,11 @@
-void(void) sphere_draw {
+void(void) lms_sphere_draw {
 	R_AddEntity(self);
 }
 
-void(float isnew) sphere_read {
+void(float isnew) lms_sphere_read {
 	float f = net_read_byte();
 	if (isnew)
-		self.draw = sphere_draw;
+		self.draw = lms_sphere_draw;
 
 	if (f & 1) {
 		self.modelindex = net_read_short();

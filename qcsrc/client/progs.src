@@ -49,7 +49,7 @@ warpzone.qh
 gui.qh
 noteline.qh
 hint.qh
-sphere.qh
+lms_sphere.qh
 ice.qh
 team.qh
 recordlist.qh
@@ -162,7 +162,7 @@ classes.qc
 ../client-menu/progs.qc
 gui.qc
 hint.qc
-sphere.qc
+lms_sphere.qc
 ice.qc
 fog.qc
 net.qc
