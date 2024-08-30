@@ -566,14 +566,14 @@ void(void) waypoint_path_generator_think {
 
 	for (e = findradius(v, 500); e; e = e.chain) {
 		if (e != self)
-		if ((e.classname == "waypoint_path_generator" && e.cnt != self.cnt) || (e.classname == "waypoint" && !e.wpflags))
+		if ((e.classname == "waypoint_path_generator") || (e.classname == "waypoint" && !e.wpflags))
 		if (dirv * (e.origin - v) > 0.5)
 		if (trace_walk(self, v, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
 		if (trace_walk(self, e.origin, PL_MIN, PL_MAX, v, TRACE_MOVE_NOMONSTERS)) {
 			if not(trace_walk(self, self.pos1, PL_MIN, PL_MAX, e.origin, TRACE_MOVE_NOMONSTERS))
 			if not(trace_walk(self, e.origin, PL_MIN, PL_MAX, self.pos1, TRACE_MOVE_NOMONSTERS)) {
 				for (entity e2 = findradius(v, 50); e2; e2 = e2.chain) {
-					if (e2.classname == "waypoint" && !e2.wpflags) goto removegenerator;
+					if (e2.classname == "waypoint") goto removegenerator;
 				}
 				waypoint_spawn(v, v, 0);
 			}
