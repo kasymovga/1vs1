@@ -483,6 +483,7 @@ float(string s) weapon_extra_projectile_type_from_name {
 	case "hagar": return PROJECTILE_HAGAR;
 	case "hagar_stick": return PROJECTILE_HAGAR_STICK;
 	case "crylink": return PROJECTILE_CRYLINK;
+	case "hlac": return PROJECTILE_HLAC;
 	}
 	return 0;
 }
