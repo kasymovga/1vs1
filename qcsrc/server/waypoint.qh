@@ -18,7 +18,6 @@ float g_waypointeditor;
 .float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
 
 .float wpfire, wpcost, wpconsidered, wpisbox, wpflags, wplinked;
-.vector wpnearestpoint;
 
 void(entity from, entity to) waypoint_addlink;
 void(void) waypoint_init;

@@ -213,7 +213,6 @@ float(entity waylist, float maxdist) navigation_markroutes_nearestwaypoints {
 			if (vlen(diff) < maxdist) {
 				head.wpconsidered = TRUE;
 				if (trace_walk(self, self.origin, self.mins, self.maxs, v, bot_navigation_movemode)) {
-					head.wpnearestpoint = v;
 					head.wpcost = vlen(v - self.origin) + head.dmg;
 					head.wpfire = 1;
 					head.enemy = world;
@@ -227,25 +226,17 @@ float(entity waylist, float maxdist) navigation_markroutes_nearestwaypoints {
 }
 
 // updates a path link if a spawnfunc_waypoint link is better than the current one
-void(entity w, entity wp, float cost2, vector p) navigation_markroutes_checkwaypoint {
-	vector m1;
-	vector m2;
+void(entity w, entity wp, float cost2) navigation_markroutes_checkwaypoint {
 	vector v;
-	if (wp.wpisbox) {
-		m1 = wp.absmin;
-		m2 = wp.absmax;
-		v_x = bound(m1_x, p_x, m2_x);
-		v_y = bound(m1_y, p_y, m2_y);
-		v_z = bound(m1_z, p_z, m2_z);
-	} else
+	if (wp.wpisbox)
+		v = (wp.absmin + wp.absmax) * 0.5;
+	else
 		v = wp.origin;
 
-	cost2 = cost2 + vlen(v - p);
 	if (wp.wpcost > cost2) {
 		wp.wpcost = cost2;
 		wp.enemy = w;
 		wp.wpfire = 1;
-		wp.wpnearestpoint = v;
 	}
 }
 
@@ -253,11 +244,9 @@ void(entity w, entity wp, float cost2, vector p) navigation_markroutes_checkwayp
 void(entity fixed_source_waypoint) navigation_markroutes {
 	entity w, wp, waylist;
 	float searching, cost, cost2;
-	vector p;
 	w = waylist = findchain(classname, "waypoint");
 	while (w) {
 		w.wpconsidered = FALSE;
-		w.wpnearestpoint = '0 0 0';
 		w.wpcost = 10000000;
 		w.wpfire = 0;
 		w.enemy = world;
@@ -265,7 +254,6 @@ void(entity fixed_source_waypoint) navigation_markroutes {
 	}
 	if (fixed_source_waypoint) {
 		fixed_source_waypoint.wpconsidered = TRUE;
-		fixed_source_waypoint.wpnearestpoint = fixed_source_waypoint.origin + 0.5 * (fixed_source_waypoint.mins + fixed_source_waypoint.maxs);
 		fixed_source_waypoint.wpcost = fixed_source_waypoint.dmg;
 		fixed_source_waypoint.wpfire = 1;
 		fixed_source_waypoint.enemy = world;
@@ -281,39 +269,38 @@ void(entity fixed_source_waypoint) navigation_markroutes {
 				searching = TRUE;
 				w.wpfire = 0;
 				cost = w.wpcost;
-				p = w.wpnearestpoint;
-				wp = w.wp00;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp00mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp01;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp01mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp02;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp02mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp03;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp03mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp04;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp04mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp05;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp05mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp06;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp06mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp07;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp07mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp08;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp08mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp09;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp09mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp10;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp10mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp11;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp11mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp12;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp12mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp13;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp13mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp14;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp14mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp15;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp15mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp16;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp16mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp17;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp17mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp18;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp18mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp19;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp19mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp20;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp20mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp21;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp21mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp22;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp22mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp23;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp23mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp24;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp24mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp25;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp25mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp26;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp26mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp27;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp27mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp28;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp28mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp29;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp29mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp30;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp30mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp31;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp31mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
+				wp = w.wp00;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp00mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp01;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp01mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp02;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp02mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp03;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp03mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp04;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp04mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp05;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp05mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp06;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp06mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp07;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp07mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp08;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp08mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp09;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp09mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp10;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp10mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp11;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp11mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp12;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp12mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp13;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp13mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp14;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp14mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp15;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp15mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp16;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp16mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp17;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp17mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp18;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp18mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp19;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp19mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp20;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp20mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp21;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp21mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp22;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp22mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp23;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp23mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp24;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp24mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp25;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp25mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp26;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp26mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp27;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp27mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp28;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp28mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp29;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp29mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp30;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp30mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
+				wp = w.wp31;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp31mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
 				}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 			}
 			w = w.chain;
@@ -325,11 +312,9 @@ void(entity fixed_source_waypoint) navigation_markroutes {
 void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 	entity w, wp, waylist;
 	float searching, cost, cost2;
-	vector p;
 	w = waylist = findchain(classname, "waypoint");
 	while (w) {
 		w.wpconsidered = FALSE;
-		w.wpnearestpoint = '0 0 0';
 		w.wpcost = 10000000;
 		w.wpfire = 0;
 		w.enemy = world;
@@ -337,7 +322,6 @@ void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 	}
 	if (fixed_source_waypoint) {
 		fixed_source_waypoint.wpconsidered = TRUE;
-		fixed_source_waypoint.wpnearestpoint = fixed_source_waypoint.origin + 0.5 * (fixed_source_waypoint.mins + fixed_source_waypoint.maxs);
 		fixed_source_waypoint.wpcost = fixed_source_waypoint.dmg; // the cost to get from X to fixed_source_waypoint
 		fixed_source_waypoint.wpfire = 1;
 		fixed_source_waypoint.enemy = world;
@@ -353,7 +337,6 @@ void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 				searching = TRUE;
 				w.wpfire = 0;
 				cost = w.wpcost; // cost to walk from w to home
-				p = w.wpnearestpoint;
 				for (wp = waylist; wp; wp = wp.chain) {
 					if (w != wp.wp00) if (w != wp.wp01) if (w != wp.wp02) if (w != wp.wp03)
 					if (w != wp.wp04) if (w != wp.wp05) if (w != wp.wp06) if (w != wp.wp07)
@@ -366,7 +349,7 @@ void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 						continue;
 
 					cost2 = cost + wp.dmg;
-					navigation_markroutes_checkwaypoint(w, wp, cost2, p);
+					navigation_markroutes_checkwaypoint(w, wp, cost2);
 				}
 			}
 			w = w.chain;
@@ -461,7 +444,7 @@ void(entity e, float f, float rangebias) navigation_routerating {
 		nwp = e.nearestwaypoint;
 	}
 	if (nwp && nwp.wpcost < 10000000)
-		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint)));
+		f = f * rangebias / (rangebias + nwp.wpcost);
 	else
 		f = 0;
 

@@ -54,7 +54,7 @@ float navigation_routetogoal(entity e, vector startposition);
 void(void) navigation_clearroute;
 void(entity e) navigation_pushroute;
 void(void) navigation_poproute;
-void(entity w, entity wp, float cost2, vector p) navigation_markroutes_checkwaypoint;
+void(entity w, entity wp, float cost2) navigation_markroutes_checkwaypoint;
 void(entity fixed_source_waypoint) navigation_markroutes;
 void(entity fixed_source_waypoint) navigation_markroutes_inverted;
 void(entity e, float f, float rangebias) navigation_routerating;
