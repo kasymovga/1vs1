@@ -629,7 +629,7 @@ msgid "{1} died"
 msgstr "{1} помер"
 
 msgid "Map records..."
-msgstr "Рекорды карты..."
+msgstr "Рекорды карт..."
 
 msgid "^7for ^1{1} minutes^7"
 msgstr "^7до ^1{1} минут^7"
