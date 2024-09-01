@@ -11,7 +11,7 @@ CLASS(NexuizSaveLoadDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizSaveLoadDialog, title, string, _(SAVELOADTITLE))
 	ATTRIB(NexuizSaveLoadDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizSaveLoadDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizSaveLoadDialog, rows, float, 9)
+	ATTRIB(NexuizSaveLoadDialog, rows, float, 10)
 	ATTRIB(NexuizSaveLoadDialog, columns, float, 6)
 	ATTRIB(NexuizSaveLoadDialog, name, string, SAVELOADTITLE)
 ENDCLASS(NexuizSaveLoadDialog)
@@ -19,9 +19,9 @@ ENDCLASS(NexuizSaveLoadDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-string slotdescr[12];
+string descriptionsNexuizSaveLoadDialog[14];
 
-float SaveSlotNotEmpty(float n) {
+float slotNotEmptyNexuizSaveLoadDialog(float n) {
 	return file_exists(strcat("slot", ftos(n), ".sav"));
 }
 
@@ -30,20 +30,20 @@ float SaveSlotNotEmpty(float n) {
 void loadCvarsNexuizSaveLoadDialog(entity me) {
 	entity e;
 	float i;
-	for (i = 0; i < 12; i++) {
-		str_unzone_ifneeded(slotdescr[i]);
-		if (SaveSlotNotEmpty(i + 1)) {
-			slotdescr[i] = cvar_string_zone_ifneeded(strcat("_slot_description", ftos(i + 1)));
+	for (i = 0; i < 14; i++) {
+		str_unzone_ifneeded(descriptionsNexuizSaveLoadDialog[i]);
+		if (slotNotEmptyNexuizSaveLoadDialog(i + 1)) {
+			descriptionsNexuizSaveLoadDialog[i] = cvar_string_zone_ifneeded(strcat("_slot_description", ftos(i + 1)));
 		} else if (i < 10)
-			slotdescr[i] = strzone(strcat(_("Empty slot"), ftos(i + 1)));
-		else if (i == 10)
-			slotdescr[i] = strzone(_("Autosave"));
+			descriptionsNexuizSaveLoadDialog[i] = strzone(strcat(_("Empty slot"), ftos(i + 1)));
+		else if (i == 10 || i == 12)
+			descriptionsNexuizSaveLoadDialog[i] = strzone(_("Autosave"));
 		else
-			slotdescr[i] = strzone(_("Quicksave"));
+			descriptionsNexuizSaveLoadDialog[i] = strzone(_("Quicksave"));
 	}
 	i = 0;
 	for (e = me.saveSlot; e; e = e.saveSlot) {
-		e.setText(e, slotdescr[i]);
+		e.setText(e, descriptionsNexuizSaveLoadDialog[i]);
 		i++;
 	}
 }
@@ -64,9 +64,9 @@ float GetSlotNumber(entity e) {
 	return 0;
 }
 
-void LoadGame(entity btn, entity me) {
+void loadGameNexuizSaveLoadDialog(entity btn, entity me) {
 	float slot = GetSlotNumber(me);
-	if (SaveSlotNotEmpty(slot)) {
+	if (slotNotEmptyNexuizSaveLoadDialog(slot)) {
 		localcmd(strcat("\nset _restore_game 1; maxplayers 1; load slot", ftos(slot), "\n"));
 		localcmd(strcat("menu_cmd loadfallback slot", ftos(slot), ".sav\n"));
 		me.close(me);
@@ -74,7 +74,7 @@ void LoadGame(entity btn, entity me) {
 }
 
 #ifdef CSQC
-void SaveGame(entity btn, entity me) {
+void saveGameNexuizSaveLoadDialog(entity btn, entity me) {
 	float slot = GetSlotNumber(me);
 	localcmd(strcat("\nseta _slot_description", ftos(slot), " \""));
 	localcmd(strcat(map_shortname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
@@ -103,7 +103,7 @@ void SlotSelect(entity btn, entity me) {
 
 #ifdef MENUQC
 float mouseDoubleClickNexuizSaveLoadDialogSlot(entity btn, vector v) {
-	LoadGame(btn, btn.onClickEntity);
+	loadGameNexuizSaveLoadDialog(btn, btn.onClickEntity);
 	return TRUE;
 }
 #endif
@@ -113,7 +113,7 @@ void fillNexuizSaveLoadDialog(entity me)
 	entity e;
 	float i, j;
 	e = me;
-	for (i = 0; i < 12; i += 2) {
+	for (i = 0; i < 14; i += 2) {
 		me.TR(me);
 			if (i == 10) {
 				me.TD(me, 1, 3, makeNexuizTextLabel(0, _("Autosave:")));
@@ -121,7 +121,7 @@ void fillNexuizSaveLoadDialog(entity me)
 				me.TR(me);
 			}
 			for (j = 0; j < 2; j++) {
-				me.TD(me, 1, 3, e.saveSlot = makeNexuizButton(slotdescr[i + j], '0 0 0'));
+				me.TD(me, 1, 3, e.saveSlot = makeNexuizButton(descriptionsNexuizSaveLoadDialog[i + j], '0 0 0'));
 				e = e.saveSlot;
 				e.onClick = SlotSelect;
 				e.onClickEntity = me;
@@ -140,11 +140,11 @@ void fillNexuizSaveLoadDialog(entity me)
 #ifdef CSQC
 		me.TD(me, 1, button_width, e = makeNexuizButton(_("Save"), '0 0 0'));
 		buttonSave = e;
-		e.onClick = SaveGame;
+		e.onClick = saveGameNexuizSaveLoadDialog;
 		e.onClickEntity = me;
 #endif
 		me.TD(me, 1, button_width, e = makeNexuizButton(_("Load"), '0 0 0'));
-		e.onClick = LoadGame;
+		e.onClick = loadGameNexuizSaveLoadDialog;
 		e.onClickEntity = me;
 }
 #endif

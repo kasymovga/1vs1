@@ -153,10 +153,13 @@ float(void) single_forbid_spectators {
 }
 
 void(void) single_autosave {
+	float slot_auto_secondary = builtin_cvar("_slot_auto_secondary"); //last time saved on secondary slot
+	string slotnum = (slot_auto_secondary ? "11" : "13");
 	print_to(self, PRINT_CENTER, "Autosaving...", "", "", "");
-	localcmd(strcat("\nseta _slot_description11 \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
+	localcmd(strcat("\nseta _slot_description", slotnum, " \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 	localcmd(" \"\n");
-	localcmd("save slot11.sav\nsaveconfig\n");
+	localcmd(strcat("seta _slot_auto_secondary ", ftos(!slot_auto_secondary), ";"));
+	localcmd(strcat("save slot", slotnum, ".sav\nsaveconfig\n"));
 }
 
 var float(void) single_player_equip_handle_next;
@@ -209,11 +212,14 @@ void(entity attacker) single_monster_killed {
 
 var float(string cmd, float tokens) single_cmd_client_handle_next;
 float(string cmd, float tokens) single_cmd_client_handle {
+	float slot_quick_secondary = builtin_cvar("_slot_quick_secondary"); //last time saved on secondary slot
+	string slotnum = (slot_quick_secondary ? "12" : "14");
 	if (cmd == "quicksave") {
 		print_to(self, PRINT_CENTER, "Quicksaving...", "", "", "");
-		localcmd(strcat("\nseta _slot_description12 \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
+		localcmd(strcat("\nseta _slot_description", slotnum, " \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 		localcmd(" \"\n");
-		localcmd("save slot12.sav\nsaveconfig\n");
+		localcmd("seta _slot_quick_secondary ", ftos(!slot_quick_secondary), "\n");
+		localcmd(strcat("save slot", slotnum, ".sav\nsaveconfig\n"));
 		return TRUE;
 	}
 	if (cmd == "slowmostart") {
