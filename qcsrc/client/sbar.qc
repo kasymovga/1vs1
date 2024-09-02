@@ -1429,17 +1429,11 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 	} else { // teamgames
 		secondary_score_pos = score_pos + '164 0 0' * score_scale;
 		score_pos += '66 0 0' * score_scale;
-		float max_fragcount;
-		max_fragcount = -999;
 		for (tm = team_list.sort_next; tm; tm = tm.sort_next) {
 			if (tm.team == TEAM_COLOR_SPECTATOR || !tm.team_size) // no players? don't display
 				continue;
 
 			score = tm.(teamscores[ts_primary]);
-			leader = 0;
-			if (score > max_fragcount)
-				max_fragcount = score;
-
 			if (tm.team == team_my) {
 				sbar_draw_num_centered(score_pos, score, 0, 34 * score_scale, sbar_team_rgb * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			} else if (team_my == TEAM_COLOR_SPECTATOR && team_count_no_spectator > 2) {
