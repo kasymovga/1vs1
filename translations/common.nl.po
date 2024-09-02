@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-04-23 14:50+0200\n"
+"PO-Revision-Date: 2024-09-02 19:39+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4.2\n"
 
 msgid "Quit"
 msgstr "Afsluiten"
@@ -113,628 +113,741 @@ msgid "Switch Ability Class"
 msgstr "Andere vaardigheidsklasse kiezen"
 
 msgid "Switch Nadget"
-msgstr "Andere Nadget kiezen"
+msgstr "Andere nadget kiezen"
 
 msgid "You are now on: {1}"
-msgstr "You are now on: {1}"
+msgstr "Je maakt nu deel uit van: {1}"
 
-msgid "You have been moved into a different team to improve team balance\nYou are now on: {1}"
-msgstr "You have been moved into a different team to improve team balance\nYou are now on: {1}"
+msgid ""
+"You have been moved into a different team to improve team balance\n"
+"You are now on: {1}"
+msgstr ""
+"Je bent van team gewisseld om de balans te verbeteren.\n"
+"Je maakt nu deel uit van: {1}"
 
 msgid "^1You grew too old without taking your medicine"
-msgstr "^1You grew too old without taking your medicine"
+msgstr "^1Je bent te oud geworden zonder medicijn te gebruiken"
 
 msgid "^1Don't shoot your team mates!"
-msgstr "^1Não atire em seus companheiros de equipe!"
+msgstr "^1Laat je teamgenoten met rust!"
 
 msgid "^1You killed your own dumb self!"
-msgstr "^1You killed your own dumb self!"
+msgstr "^1Je hebt jezelf om het leven gebracht, dombo!"
 
 msgid "^4You {2}^4fragged ^7{1}"
-msgstr "^4You {2}^4fragged ^7{1}"
+msgstr "^4Je hebt ^7{1} {2}^1gedood"
 
 msgid "^1You were {2}^1fragged by ^7{1}"
-msgstr "^1You were {2}^1fragged by ^7{1}"
+msgstr "^1Je bent door ^7{1} {2}^1gedood"
 
 msgid "^1Watch your step!"
-msgstr "^1Watch your step!"
+msgstr "^1Let op het afstapje!"
 
 msgid "^1First blood"
-msgstr "^1First blood"
+msgstr "^1Het eerste bloed is gevloeid"
 
 msgid "^1First victim"
-msgstr "^1First victim"
+msgstr "^1Het eerste slachtoffer is gemaakt"
 
-msgid "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe"
-"\n^1Game type is ^3{2}"
-"\n^1Press ^3{+jump}^1 to join"
-msgstr "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe"
-"\n^1Game type is ^3{2}"
-"\n^1Press ^3{+jump}^1 to join"
+msgid ""
+"^1Spectating ^7{1}\n"
+"^1Press ^3{+attack}^1 for another player\n"
+"^1Press ^3{+attack2}^1 to observe\n"
+"^1Game type is ^3{2}\n"
+"^1Press ^3{+jump}^1 to join"
+msgstr ""
+"^1Je volgt ^7{1}\n"
+"^1Druk op ^3{+attack}^1 om een andere speler te volgen\n"
+"^1Druk op ^3{+attack2}^1 om te observeren\n"
+"^1Het gametype is ^3{2}\n"
+"^1Druk op ^3{+jump}^1 om mee te doen"
 
-msgid "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe"
-"\n^1Game type is ^3{2}"
-msgstr "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe"
-"\n^1Game type is ^3{2}"
+msgid ""
+"^1Spectating ^7{1}\n"
+"^1Press ^3{+attack}^1 for another player\n"
+"^1Press ^3{+attack2}^1 to observe\n"
+"^1Game type is ^3{2}"
+msgstr ""
+"^1Je volgt ^7{1}\n"
+"^1Druk op ^3{+attack}^1 om een andere speler te volgen\n"
+"^1Druk op ^3{+attack2}^1 om te observeren\n"
+"^1Het gametype is ^3{2}"
 
-msgid "^1Observing\n^1Press ^3{+attack}^1 to spectate"
-"\n^1Game type is ^3{2}"
-"\n^1Press ^3{+jump}^1 to join"
-msgstr "^1Observing\n^1Press ^3{+attack}^1 to spectate"
-"\n^1Game type is ^3{2}"
-"\n^1Press ^3{+jump}^1 to join"
+msgid ""
+"^1Observing\n"
+"^1Press ^3{+attack}^1 to spectate\n"
+"^1Game type is ^3{2}\n"
+"^1Press ^3{+jump}^1 to join"
+msgstr ""
+"^1Je bent aan het observeren\n"
+"^1Druk op ^3{+attack}^1 om een speler te volgen\n"
+"^1Het gametype is ^3{2}\n"
+"^1Druk op ^3{+jump}^1 om mee te doen"
 
-msgid "^1Observing\n^1Press ^3{+attack}^1 to spectate"
-"\n^1Game type is ^3{2}"
-msgstr "^1Observing\n^1Press ^3{+attack}^1 to spectate"
-"\n^1Game type is ^3{2}"
+msgid ""
+"^1Observing\n"
+"^1Press ^3{+attack}^1 to spectate\n"
+"^1Game type is ^3{2}"
+msgstr ""
+"^1Je bent aan het observeren\n"
+"^1Druk op ^3{+attack}^1 om een speler te volgen\n"
+"^1Het gametype is ^3{2}"
 
 msgid "{1} was gunned by {2}"
-msgstr "{1} was gunned by {2}"
+msgstr "{1} werd beschoten door {2}"
 
 msgid "{1} detonated"
-msgstr "{1} detonated"
+msgstr "{1} is ontploft"
 
 msgid "{1} just noticed {2}'s blue ball"
-msgstr "{1} just noticed {2}'s blue ball"
+msgstr "{1} heeft zojuist de blauwe bal van {2} ontdekt"
 
 msgid "{1} has {2} frags in a row"
-msgstr "{1} has {2} frags in a row"
+msgstr "{1} heeft {2} slachtoffers achter elkaar gemaakt"
 
 msgid "{1} got too close to {2}'s blue beam"
-msgstr "{1} got too close to {2}'s blue beam"
+msgstr "{1} stond te dicht op {2}'s blauwe laserstraal"
 
 msgid "{1} was thrown into a world of hurt by {2}"
-msgstr "{1} was thrown into a world of hurt by {2}"
+msgstr "{1} werd in de put der verdoemenis gegooid door {2}"
 
 msgid "{1} was lasered to death by {2}"
-msgstr "{1} was lasered to death by {2}"
+msgstr "{1} werd omgebracht door de laserstraal van {2}"
 
 msgid "{1}'s {3} kill spree was ended by {2}"
-msgstr "{1}'s {3} kill spree was ended by {2}"
+msgstr "{1}'s {3} moordreeks werd gestopt door {2}"
 
 msgid "{1} felt the electrifying air of {2}'s combo"
-msgstr "{1} felt the electrifying air of {2}'s combo"
+msgstr "{1} voelde de elektrische lucht van {2}'s combo"
 
 msgid "{1} almost dodged {2}'s grenade"
-msgstr "{1} almost dodged {2}'s grenade"
+msgstr "{1} ontweek ternauwernood de granaat van {2}"
 
 msgid "{1} was sniped by {2}"
-msgstr "{1} was sniped by {2}"
+msgstr "{1} werd neergeschoten door {2}"
 
 msgid "{1} drew first blood"
-msgstr "{1} drew first blood"
+msgstr "{1} liet het eerste bloed vloeien"
 
 msgid "{1} was riddled full of holes by {2}"
-msgstr "{1} was riddled full of holes by {2}"
+msgstr "{1} werd lekgeschoten door {2}"
 
 msgid "{1} succeeded at self-destructing himself with the Crylink"
-msgstr "{1} succeeded at self-destructing himself with the Crylink"
+msgstr "{1} heeft zichzelf omgebracht met behulp van de Crylink"
 
 msgid "{1} was in the wrong place"
-msgstr "{1} was in the wrong place"
+msgstr "{1} was op de verkeerde plek"
 
 msgid "{1} lasered himself to hell"
-msgstr "{1} lasered himself to hell"
+msgstr "{1} heeft zichzelf naar de hel gelaserd"
 
 msgid "{1} took a close look at {2}'s Crylink"
-msgstr "{1} took a close look at {2}'s Crylink"
+msgstr "{1} bekeek {2}'s Crylink van dichtbij"
 
 msgid "{1} ended it all after a {2} kill spree"
-msgstr "{1} ended it all after a {2} kill spree"
+msgstr "{1} heeft zichzelf omgebracht na een {2} moordreeks"
 
 msgid "{1} has been vaporized by {2}"
-msgstr "{1} has been vaporized by {2}"
+msgstr "{1} is in rook opgegaan dankzij {2}"
 
 msgid "{1} almost dodged {2}'s rocket"
-msgstr "{1} almost dodged {2}'s rocket"
+msgstr "{1} ontweek ternauwernood de raket van {2}"
 
 msgid "{1} exploded"
-msgstr "{1} exploded"
+msgstr "{1} explodeerde"
 
 msgid "{1} ate {2}'s grenade"
-msgstr "{1} ate {2}'s grenade"
+msgstr "{1} at {2}'s granaat op"
 
 msgid "{1} was cut down by {2}"
-msgstr "{1} was cut down by {2}"
+msgstr "{1} werd in mootjes gehakt door {2}"
 
 msgid "{1} died of {2}'s great playing on the @!{2}%'n Tuba"
-msgstr "{1} died of {2}'s great playing on the @!{2}%'n Tuba"
+msgstr "{1} kwam om het leven door {2}, die een geweldige solo op de @!{2}%'n-tuba speelde"
 
 msgid "{1} was pummeled by {2}"
-msgstr "{1} was pummeled by {2}"
+msgstr "{1} werd in elkaar geslagen door {2}"
 
 msgid "{1} got hit in the head by {2}"
-msgstr "{1} got hit in the head by {2}"
+msgstr "{1} werd in het hoofd geraakt door {2}"
 
 msgid "{1} couldn't resist the urge to self-destruct"
-msgstr "{1} couldn't resist the urge to self-destruct"
+msgstr "{1} kon het niet laten om zichzelf van het leven te beroven"
 
 msgid "{1} was {3}^1fragged by {2}"
-msgstr "{1} was {3}^1fragged by {2}"
+msgstr "{1} werd {3}^1gedood door {2}"
 
 msgid "{1} died in {2}'s bullet hail"
-msgstr "{1} died in {2}'s bullet hail"
+msgstr "{1} kwam om in de kogelregen van {2}"
 
 msgid "^1{1}^1 was revived by {2}"
-msgstr "^1{1}^1 was revived by {2}"
+msgstr "^1{1}^1 werd gereanimeerd door {2}"
 
 msgid "{1} was zapped by {2}"
-msgstr "{1} was zapped by {2}"
+msgstr "{1} werd beschoten door {2}"
 
 msgid "You have the flag!"
-msgstr "You have the flag!"
+msgstr "Je hebt de vlag in handen!"
 
 msgid "{1} played with tiny rockets"
-msgstr "{1} played with tiny rockets"
+msgstr "{1} speelde met kleine raketten"
 
 msgid "{1} played with plasma"
-msgstr "{1} played with plasma"
+msgstr "{1} speelde met plasma"
 
 msgid "^4You revive ^7{1}"
-msgstr "^4You revive ^7{1}"
+msgstr "^4Je hebt ^7{1} gereanimeerd"
 
 msgid "{1}^7 got the {2}"
-msgstr "{1}^7 got the {2}"
+msgstr "{1}^7 heeft de {2}"
 
 msgid "^4{1}^4 connected"
-msgstr "^4{1}^4 connected"
+msgstr "^4{1}^4 is verbonden"
 
 msgid "The enemy got your flag! Retrieve it!"
-msgstr "The enemy got your flag! Retrieve it!"
+msgstr "De vijand heeft je vlag in handen - ga erachteraan!"
 
 msgid "{1}^7 returned the {2}"
-msgstr "{1}^7 returned the {2}"
+msgstr "{1}^7 heeft de {2} teruggebracht"
 
 msgid "^4BLUE^7 flag"
-msgstr "^4BLUE^7 flag"
+msgstr "^4BLAUWE^7 vlag"
 
 msgid "^3Strength has worn off"
-msgstr "^3Strength has worn off"
+msgstr "^3De testosteron is uitgewerkt"
 
 msgid "{1} was blasted by {2}'s blue beam"
-msgstr "{1} was blasted by {2}'s blue beam"
+msgstr "{1} werd omgebracht door de blauwe laserstraal van {2}"
 
 msgid "Red Team"
-msgstr "Red Team"
+msgstr "Rode team"
 
 msgid "Point already captured"
-msgstr "Point already captured"
+msgstr "Dit punt is al veroverd"
 
 msgid "{1}^7 lost the {2}"
-msgstr "{1}^7 lost the {2}"
+msgstr "{1}^7 is de {2} kwijtgeraakt"
 
 msgid "You dropped the ^2{1} with {2} {3}"
-msgstr "You dropped the ^2{1} with {2} {3}"
+msgstr "Je hebt de ^2{1} laten vallen met {2} {3}"
 
 msgid "You do not have the ^2{1}"
-msgstr "You do not have the ^2{1}"
+msgstr "Je beschikt niet over de ^2{1}"
 
 msgid "Neutral Team"
-msgstr "Neutral Team"
+msgstr "Neutrale team"
 
 msgid "Out of {1}s!"
-msgstr "Out of {1}s!"
+msgstr "De voorraad {1}s is op!"
 
 msgid "{1}^7 captured the {2} in {3} seconds"
-msgstr "{1}^7 captured the {2} in {3} seconds"
+msgstr "{1}^7 heeft de {2} in {3} seconden veroverd"
 
 msgid "^3{1} ^7got the {2}{3}"
-msgstr "^3{1} ^7got the {2}{3}"
+msgstr "^3{1} ^7heeft de {2}{3}"
 
 msgid "Jail is empty"
-msgstr "Jail is empty"
+msgstr "De gevangenis is leeg"
 
 msgid "^3Strength infuses your weapons with devastating power"
-msgstr "^3Strength infuses your weapons with devastating power"
+msgstr "^3Testosteron voorziet je wapens van bovenmenselijke kracht"
 
 msgid "You dropped the ^2{1}"
-msgstr "You dropped the ^2{1}"
+msgstr "Je hebt de ^2{1} laten vallen"
 
 msgid " took the downward turn"
-msgstr " took the downward turn"
+msgstr " nam een duikvlucht"
 
 msgid "Capturing..."
-msgstr "Capturing..."
+msgstr "Bezig met veroveren…"
 
 msgid "^4You revived by ^7{1}"
-msgstr "^4You revived by ^7{1}"
+msgstr "^4Je bent gereanimeerd door ^7{1}"
 
 msgid "{1} could not remember where he put plasma"
-msgstr "{1} could not remember where he put plasma"
+msgstr "{1} kon zich niet herinneren waar hij de plasma had achtergelaten"
 
 msgid "{1}^7 picked up the {2}"
-msgstr "{1}^7 picked up the {2}"
+msgstr "{1}^7 heeft de {2} gepakt"
 
 msgid "You got the ^2{1}"
-msgstr "You got the ^2{1}"
+msgstr "Je hebt de ^2{1}"
 
 msgid "{1} died with a {2} kill spree"
-msgstr "{1} died with a {2} kill spree"
+msgstr "{1} kwam om het leven door een kogelregen van de {2}"
 
 msgid "{1}^7 captured the {2} in {3}, breaking {4}^7's previous record of {5} seconds"
-msgstr "{1}^7 captured the {2} in {3}, breaking {4}^7's previous record of {5} seconds"
+msgstr "{1}^7 heeft de {2} in {3} veroverd, waardoor het record van {4}^7 ({5} seconden) verbroken is"
 
 msgid "{1}^7 captured the {2} in {3}, breaking their previous record of {5} seconds"
-msgstr "{1}^7 captured the {2} in {3}, breaking their previous record of {5} seconds"
+msgstr "{1}^7 heeft de {2} in {3} veroverd, waardoor het eigen record van {5} seconden verbroken is"
 
 msgid "You don't have any ammo for the ^2{1}"
-msgstr "You don't have any ammo for the ^2{1}"
+msgstr "Je hebt geen ammunitie van de ^2{1} op voorraad"
 
 msgid "{1} ^7wins."
-msgstr "{1} ^7wins."
+msgstr "{1} ^7wint."
 
 msgid "{1} was grounded by {2}"
-msgstr "{1} was grounded by {2}"
+msgstr "{1} werd geschorst door {2}"
 
 msgid "{1} got too close to {2}'s rocket"
-msgstr "{1} got too close to {2}'s rocket"
+msgstr "{1} stond te dichtbij de raket van {2}"
 
 msgid "{1}^7 escaped from jail!"
-msgstr "{1}^7 escaped from jail!"
+msgstr "{1}^7 is uitgebroken!"
 
 msgid "{1} didn't see {2}'s grenade"
-msgstr "{1} didn't see {2}'s grenade"
+msgstr "{1} zag de granaat van {2} over het hoofd"
 
 msgid "^4{1}^4 is spectating now"
-msgstr "^4{1}^4 is spectating now"
+msgstr "^4{1}^4 is nu een toeschouwer"
 
 msgid "Reviving"
-msgstr "Reviving"
+msgstr "Bezig met reanimeren"
 
 msgid "^1RED^7 flag"
-msgstr "^1RED^7 flag"
+msgstr "^1RODE^7 vlag"
 
 msgid "{1} was telefragged by {2}"
-msgstr "{1} was telefragged by {2}"
+msgstr "{1} werd geteledood door {2}"
 
 msgid "^1Red Team^3"
-msgstr "^1Red Team^3"
+msgstr "^1Rode team^3"
 
 msgid "^4Blue jail^7 closed"
-msgstr "^4Blue jail^7 closed"
+msgstr "^4De blauwe gevangenis is^7 gesloten"
 
 msgid "{1} got in touch with {2}'s blue ball"
-msgstr "{1} got in touch with {2}'s blue ball"
+msgstr "{1} kwam in aanraking met de blauwe bal van {2}"
 
 msgid "{1} tried out his own grenade"
-msgstr "{1} tried out his own grenade"
+msgstr "{1} probeerde zijn eigen granaat uit"
 
 msgid "{1} ate {2}'s rocket"
-msgstr "{1} ate {2}'s rocket"
+msgstr "{1} at {2}'s raket op"
 
 msgid "^4{1}^4 disconnected"
-msgstr "^4{1}^4 disconnected"
+msgstr "^4{1}^4 is niet meer verbonden"
 
 msgid "{1}^7 jailed!"
-msgstr "{1}^7 jailed!"
+msgstr "{1}^7 is in de gevangenis gegooid!"
 
 msgid "You got ^4Akimbo ^2{1}"
-msgstr "You got ^4Akimbo ^2{1}"
+msgstr "Je hebt ^4Akimbo ^2{1}"
 
 msgid "{1}^7 captured the {2} in {3}, failing to break their record of {5} seconds"
-msgstr "{1}^7 captured the {2} in {3}, failing to break their record of {5} seconds"
+msgstr "{1}^7 heeft de {2} in {3} veroverd, waarmee het record van {5} seconden niet verbroken is"
 
 msgid "{1}^7 captured the {2} in {3}, failing to break {4}^7's record of {5} seconds"
-msgstr "{1}^7 captured the {2} in {3}, failing to break {4}^7's record of {5} seconds"
+msgstr "{1}^7 heeft de {2} in {3} veroverd, waarmee {4}^7's record van {5} seconden niet is verbroken"
 
 msgid "^4{1}^4 is playing now"
-msgstr "^4{1}^4 is playing now"
+msgstr "^4{1}^4 doet nu mee"
 
 msgid "{1} was butchered by {2}"
-msgstr "{1} was butchered by {2}"
+msgstr "{1} is afgeslacht door {2}"
 
 msgid "^4Blue Team^3"
-msgstr "^4Blue Team^3"
+msgstr "^4Blauwe team^3"
 
 msgid "{1} was too close to {2}'s Crylink"
-msgstr "{1} was too close to {2}'s Crylink"
+msgstr "{1} stond te dichtbij {2}'s Crylink"
 
 msgid "Blue Team"
-msgstr "Blue Team"
+msgstr "Blauwe team"
 
 msgid "{1}^7 has changed from {2} to {3}"
-msgstr "{1}^7 has changed from {2} to {3}"
+msgstr "{1}^7 is van het {2} naar het {3} gegaan"
 
-msgid "^2Game finished!\nThe winner is {1}"
-msgstr "^2Game finished!\nThe winner is {1}"
+msgid ""
+"^2Game finished!\n"
+"The winner is {1}"
+msgstr ""
+"^2Het toernooi zit erop!\n"
+"De winnaar is {1}"
 
-msgid "Waiting for players to join...\n\nNeed active players for: {2}"
-msgstr "Waiting for players to join...\n\nNeed active players for: {2}"
+msgid ""
+"Waiting for players to join...\n"
+"\n"
+"Need active players for: {2}"
+msgstr ""
+"Bezig met wachten op deelnemers…\n"
+"\n"
+"Actieve spelers benodigd voor: {2}"
 
 msgid "{1}^7 died and lost the {2}"
-msgstr "{1}^7 died and lost the {2}"
+msgstr "{1}^7 is overleden en verloor de {2}"
 
-msgid "\nScanning frequency range..."
-msgstr "\nScanning frequency range..."
+msgid ""
+"\n"
+"Scanning frequency range..."
+msgstr ""
+"\n"
+"Bezig met scannen van frequentiebereik…"
 
 msgid "You are starting with the {1}"
-msgstr "You are starting with the {1}"
+msgstr "Je begint met de {1}"
 
 msgid "{1}^7 captured the keys for the {2}"
-msgstr "{1}^7 captured the keys for the {2}"
+msgstr "{1}^7 heeft de sleutels voor het {2} veroverd"
 
-msgid "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!"
-msgstr "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!"
+msgid ""
+"All keys are in your team's hands!\n"
+"\n"
+"Meet the other key carriers ^1NOW^7!"
+msgstr ""
+"Alle sleutels zijn in handen van jouw team!\n"
+"\n"
+"Begeef je ^1NU^7 naar de andere sleuteldragers!"
 
-msgid "All keys are in the {1}^7's hands!\n\nInterfere ^1NOW^7!"
-msgstr "All keys are in the {1}^7's hands!\n\nInterfere ^1NOW^7!"
+msgid ""
+"All keys are in the {1}^7's hands!\n"
+"\n"
+"Interfere ^1NOW^7!"
+msgstr ""
+"Alle sleutels zijn in handen van {1}^7!\n"
+"\n"
+"Grijp ^1NU^7 in!"
 
 msgid "Round starts in {1}"
-msgstr "Round starts in {1}"
+msgstr "De ronde start over {1}"
 
 msgid "^2* ^3{1}^2 calls a vote for {2}"
-msgstr "^2* ^3{1}^2 calls a vote for {2}"
+msgstr "^2* ^3{1}^2 houdt een stemming voor {2}"
 
 msgid "^2* ^3{1}^2's vote for ^1{2}^2 was accepted"
-msgstr "^2* ^3{1}^2's vote for ^1{2}^2 was accepted"
+msgstr "^2* ^3{1}^2's stem ^1{2}^2 is aangenomen"
 
 msgid "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
-msgstr "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
+msgstr "^2* stemresultaten: ^1{1}^2:^1{2}^2; ^1{3}^2 stemden blanco; ^1{4}^2 hoefden niet te stemmen"
 
 msgid "^2* vote results: ^1{1}^2:^1{2}^2 (^1{3}^2 needed), ^1{4}^2 didn't care, ^1{5}^2 didn't vote"
-msgstr "^2* vote results: ^1{1}^2:^1{2}^2 (^1{3}^2 needed), ^1{4}^2 didn't care, ^1{5}^2 didn't vote"
+msgstr ""
+"^2* stemresultaten: ^1{1}^2:^1{2}^2 (^1{3}^2 benodigd); ^1{4}^2 stemden blanco; ^1{5}^2 stemden niet"
 
 msgid "^2* ^3{1}^2's vote for {2}^2 timed out"
-msgstr "^2* ^3{1}^2's vote for {2}^2 timed out"
+msgstr "^2* ^3{1}^2's stemming voor {2}^2 is verlopen"
 
 msgid "^1red key"
-msgstr "^1red key"
+msgstr "^1rode sleutel"
 
 msgid "^4blue key"
-msgstr "^4blue key"
+msgstr "^4blauwe sleutel"
 
 msgid "^1Red Team^7"
-msgstr "^1Red Team^7"
+msgstr "^1Rode team^7"
 
 msgid "^1Red Team^7, ^4Blue Team^7"
-msgstr "^1Red Team^7, ^4Blue Team^7"
+msgstr "^1Rode team^7, ^4Blauwe team^7"
 
 msgid "^4Blue Team^7"
-msgstr "^4Blue Team^7"
+msgstr "^4Blauwe team^7"
 
 msgid "^2Awaiting players...\n"
-msgstr "^2Awaiting players...\n"
+msgstr "^2Bezig met wachten op spelers…\n"
 
-msgid "^1Red^7 Scores!\nAll opponents are imprisoned\n^2Starting in {1}"
-msgstr "^1Red^7 Scores!\nAll opponents are imprisoned\n^2Starting in {1}"
+msgid ""
+"^1Red^7 Scores!\n"
+"All opponents are imprisoned\n"
+"^2Starting in {1}"
+msgstr ""
+"^1Rood^7 heeft gescoord!\n"
+"Alle tegenstanders zijn gevangengezet.\n"
+"^2De ronde begint over {1}"
 
-msgid "Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by {1}"
-msgstr "Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by {1}"
+msgid ""
+"Jailbreak! The ^4BLUES^7 are escaping!\n"
+"Control point captured by {1}"
+msgstr ""
+"Uitbraak! De ^4BLAUWEN^7 ontsnappen!\n"
+"Controlepunt veroverd door {1}"
 
 msgid "Point is not ready"
-msgstr "Point is not ready"
+msgstr "Het punt is nog niet gereed"
 
-msgid "\n^2Starting in {1}"
-msgstr "\n^2Starting in {1}"
+msgid ""
+"\n"
+"^2Starting in {1}"
+msgstr ""
+"\n"
+"^2De ronde start over {1}"
 
-msgid "^2Round finished!\n^4Blue Team^7^2 wins!\n^2Starting in {1}"
-msgstr "^2Round finished!\n^4Blue Team^7^2 wins!\n^2Starting in {1}"
+msgid ""
+"^2Round finished!\n"
+"^4Blue Team^7^2 wins!\n"
+"^2Starting in {1}"
+msgstr ""
+"^2De ronde is afgelopen!\n"
+"^4Het blauwe team heeft^7^2 gewonnen!\n"
+"^2De nieuwe ronde begint over {1}"
 
-msgid "^2Round finished!\n^1Red Team^7^2 wins!\n^2Starting in {1}"
-msgstr "^2Round finished!\n^1Red Team^7^2 wins!\n^2Starting in {1}"
+msgid ""
+"^2Round finished!\n"
+"^1Red Team^7^2 wins!\n"
+"^2Starting in {1}"
+msgstr ""
+"^2De ronde is afgelopen!\n"
+"^1Het rodee team heeft^7^2 gewonnen!\n"
+"^2De nieuwe ronde begint over {1}"
 
 msgid "^2New round started\n"
-msgstr "^2New round started\n"
+msgstr "^2Er is een nieuwe ronde gestart\n"
 
 msgid "{1}^7 scores"
-msgstr "{1}^7 scores"
+msgstr "{1}^7 heeft gescoord"
 
 msgid "{1}^7 dropped"
-msgstr "{1}^7 dropped"
+msgstr "{1}^7 is gevallen"
 
 msgid "{1}^7 taken"
-msgstr "{1}^7 taken"
+msgstr "{1}^7 is gepakt"
 
 msgid "Changing to {1} in {2} seconds"
-msgstr "Changing to {1} in {2} seconds"
+msgstr "Overschakelen {1} in {2} seconden"
 
 msgid "{1}^7 returned"
-msgstr "{1}^7 returned"
+msgstr "{1}^7 is teruggebracht"
 
 msgid "^4Blue Flag"
-msgstr "^4Blue Flag"
+msgstr "^4Blauwe vlag"
 
 msgid "^1Red Flag"
-msgstr "^1Red Flag"
+msgstr "^1Rode vlag"
 
 msgid "The current level has been LOST."
-msgstr "The current level has been LOST."
+msgstr "Het huidige level is VERLOREN."
 
 msgid "You found a secret area!"
-msgstr "You found a secret area!"
+msgstr "Je hebt een geheime ruimte ontdekt!"
 
 msgid "Only {1} more to go..."
-msgstr "Only {1} more to go..."
+msgstr "Nog {1} te gaan…"
 
-msgid "^2Game finished!\n{1}^2 wins!"
-msgstr "^2Game finished!\n{1}^2 wins!"
+msgid ""
+"^2Game finished!\n"
+"{1}^2 wins!"
+msgstr ""
+"^2Het toernooi is afgelopen!\n"
+"{1}^2 heeft gewonnen!"
 
 msgid "Walk into the slipgate to exit."
-msgstr "Walk into the slipgate to exit."
+msgstr "Wandel naar de poort om te verlaten."
 
 msgid "{1} was slimed"
-msgstr "{1} was slimed"
+msgstr "{1} zit onder het slijm"
 
 msgid "Sequence completed!"
-msgstr "Sequence completed!"
+msgstr "De reeks is voltooid!"
 
 msgid "^1Game over"
-msgstr "^1Game over"
+msgstr "^1Toernooi afgelopen"
 
-msgid "^2Level finished\nSecrets: {1}\nMonsters: {2}"
-msgstr "^2Level finished\nSecrets: {1}\nMonsters: {2}"
+msgid ""
+"^2Level finished\n"
+"Secrets: {1}\n"
+"Monsters: {2}"
+msgstr ""
+"^2Level afgerond\n"
+"Geheimen: {1}\n"
+"Monsters: {2}"
 
 msgid "^2Secrets found: ^3{1}^2/^3{2}"
-msgstr "^2Secrets found: ^3{1}^2/^3{2}"
+msgstr "^2Gevonden geheimen: ^3{1}^2/^3{2}"
 
 msgid "Autosaving..."
-msgstr "Autosaving..."
+msgstr "Bezig met opslaan…"
 
 msgid "^3Shield surrounds you"
-msgstr "^3Shield surrounds you"
+msgstr "^3Het schild beschermt je"
 
 msgid "The current level has been WON."
-msgstr "The current level has been WON."
+msgstr "Het huidige level is GEWONNEN."
 
 msgid "join 'best' team (auto-select)"
-msgstr "join 'best' team (auto-select)"
+msgstr "Indelen bij ‘beste’ team (automatisch)"
 
 msgid "Team Selection"
-msgstr "Team Selection"
+msgstr "Teamkeuze"
 
 msgid "Yellow Team"
-msgstr "Yellow Team"
+msgstr "Geel team"
 
 msgid "Pink Team"
-msgstr "Pink Team"
+msgstr "Roze team"
 
 msgid "spectate"
-msgstr "spectate"
+msgstr "Toeschouwen"
 
 msgid "^7Playing ^3{1}^7 on ^2{2}"
-msgstr "^7Playing ^3{1}^7 on ^2{2}"
+msgstr "^7Huidige kaart: ^3{1}^7 op ^2{2}"
 
 msgid "Vote for a map (^2{1}^7)"
-msgstr "Vote for a map (^2{1}^7)"
+msgstr "Stem op een kaart (^2{1}^7)"
 
 msgid "^7for ^1{1} minutes^7 or until ^3{2} caps"
-msgstr "^7for ^1{1} minutes^7 or until ^3{2} caps"
+msgstr "^7gedurende ^1{1} minuten^7 of tot aan ^3{2} veroveringen"
 
 msgid "^3{1}^3{2}"
 msgstr "^3{1}^3{2}"
 
-msgid "^3Stop idling!\n^3Moving to spectators in {1}..."
-msgstr "^3Stop idling!\n^3Moving to spectators in {1}..."
+msgid ""
+"^3Stop idling!\n"
+"^3Moving to spectators in {1}..."
+msgstr ""
+"^3Stop met luieren!\n"
+"^3Over {1} ga je naar de tribune…"
 
 msgid "{1} seconds left"
-msgstr "{1} seconds left"
+msgstr "Nog {1} seconden te gaan"
 
 msgid "until ^3{2} points^7"
-msgstr "until ^3{2} points^7"
+msgstr "tot ^3{2} punten^7"
 
 msgid "^7for ^1{1} minutes^7 or until ^3{2} points^7"
-msgstr "^7for ^1{1} minutes^7 or until ^3{2} points^7"
+msgstr "^7gedurende ^1{1} minuten^7 of tot aan ^3{2} punten^7"
 
 msgid "^3{1}#^0{2}^3 was moved to spectators for idling."
-msgstr "^3{1}#^0{2}^3 was moved to spectators for idling."
+msgstr "^3{1}#^0{2}^3 luierde teveel en is daarom op de bank gezet."
 
 msgid "Change model"
-msgstr "Change model"
+msgstr "Model kiezen"
 
 msgid "Restore position"
-msgstr "Restore position"
+msgstr "Positie herstellen"
 
 msgid "Radio"
 msgstr "Radio"
 
 msgid "Respawn"
-msgstr "Respawn"
+msgstr "Herstellen"
 
 msgid "^2Race finished!"
-msgstr "^2Race finished!"
+msgstr "^2De race is afgelopen!"
 
 msgid "{1} couldn't take it anymore"
-msgstr "{1} couldn't take it anymore"
+msgstr "{1} kon het niet meer aan"
 
 msgid "Save position"
-msgstr "Save position"
+msgstr "Positie opslaan"
 
 msgid "Change eye position"
-msgstr "Change eye position"
+msgstr "Gezichtspositie veranderen"
 
 msgid "{1} died"
-msgstr "{1} died"
+msgstr "{1} is gestorven"
 
 msgid "Map records..."
-msgstr "Map records..."
+msgstr "Kaartrecords…"
 
 msgid "^7for ^1{1} minutes^7"
-msgstr "^7for ^1{1} minutes^7"
+msgstr "^7gedurende ^1{1} minuten^7"
 
 msgid "^1Begin!"
-msgstr "^1Begin!"
+msgstr "^1Af!"
 
 msgid "^1Game starts in {1} seconds"
-msgstr "^1Game starts in {1} seconds"
+msgstr "^1Het toernooi begint over {1} seconden"
 
 msgid "{1} was cooked by {2}"
-msgstr "{1} was cooked by {2}"
+msgstr "{1} werd gefrituurd door {2}"
 
 msgid "{1} turned into hot slag"
-msgstr "{1} turned into hot slag"
+msgstr "{1} is in een hete brei veranderd"
 
 msgid "Walkie-Talkie"
-msgstr "Walkie-Talkie"
+msgstr "Walkietalkie"
 
 msgid "^3Shield has worn off"
-msgstr "^3Shield has worn off"
+msgstr "^3Het schild is uitgewerkt"
 
 msgid "{1} hit the ground with a crunch"
-msgstr "{1} hit the ground with a crunch"
+msgstr "{1} is te pletter gestort"
 
 msgid "^3You are on speed"
-msgstr "^3You are on speed"
+msgstr "^3Je zit aan de speed"
 
 msgid "^1{1}^1 finished lap in {2}"
-msgstr "^1{1}^1 finished lap in {2}"
+msgstr "^1{1}^1 heeft de ronde in {2} afgelegd"
 
 msgid "^2* ^3{1}^2's vote for {2}^2 was rejected"
-msgstr "^2* ^3{1}^2's vote for {2}^2 was rejected"
+msgstr "^2* ^3{1}^2's stem voor {2}^2 is afgewezen"
 
-msgid "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\nYour vote: ^2Yes"
-msgstr "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\nYour vote: ^2Yes"
+msgid ""
+"^2A vote has been called for ^1{1}^7\n"
+"^0[{2}^0]\n"
+"Your vote: ^2Yes"
+msgstr ""
+"^2Er is een stemming gestart voor ^1{1}^7\n"
+"^0[{2}^0]\n"
+"Mijn stem: ^2ja"
 
-msgid "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\nYour vote: ^1No"
-msgstr "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\nYour vote: ^1No"
+msgid ""
+"^2A vote has been called for ^1{1}^7\n"
+"^0[{2}^0]\n"
+"Your vote: ^1No"
+msgstr ""
+"^2Er is een stemming gestart voor ^1{1}^7\n"
+"^0[{2}^0]\n"
+"Mijn stem: ^2nee"
 
-msgid "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\n^3{vyes} ^2Yes   ^3{vno} ^1No"
-msgstr "^2A vote has been called for ^1{1}^7\n^0[{2}^0]\n^3{vyes} ^2Yes   ^3{vno} ^1No"
+msgid ""
+"^2A vote has been called for ^1{1}^7\n"
+"^0[{2}^0]\n"
+"^3{vyes} ^2Yes   ^3{vno} ^1No"
+msgstr ""
+"^2Er is een stemming gestart voor ^1{1}^7\n"
+"^0[{2}^0]\n"
+"^3{vyes} ^2ja   ^3{vno} ^1nee"
 
 msgid "^2Game finished!"
-msgstr "^2Game finished!"
+msgstr "^2Het toernooi is afgelopen!"
 
 msgid "{1} should have used a smaller gun"
-msgstr "{1} should have used a smaller gun"
+msgstr "{1} had een kleiner pistool moeten gebruiken"
 
 msgid "^1Suicide in {1} seconds"
-msgstr "^1Suicide in {1} seconds"
+msgstr "^1Zelfdestructie over {1} seconden"
 
 msgid "{1} could not hide from {2}'s Crylink"
-msgstr "{1} could not hide from {2}'s Crylink"
+msgstr "{1} kon zich niet verschuilen voor {2}'s Crylink"
 
 msgid "^2Time limit extended to {1}"
-msgstr "^2Time limit extended to {1}"
+msgstr "^2Het tijdslimiet is opgehoogd naar {1}"
 
-msgid "You can carry only {1} weapons.\nDrop extra weapons to take this one."
-msgstr "You can carry only {1} weapons.\nDrop extra weapons to take this one."
+msgid ""
+"You can carry only {1} weapons.\n"
+"Drop extra weapons to take this one."
+msgstr ""
+"Je kunt slechts {1} wapens bij je dragen.\n"
+"Gooi wat wapens weg om dit wapen te kunnen pakken."
 
 msgid "^1Your nadget type has been set to the ^2{1}^1."
-msgstr "^1Your nadget type has been set to the ^2{1}^1."
+msgstr "^1Je nadget-type is ingesteld op ^2{1}^1."
 
 msgid "^3Yellow Team^7"
-msgstr "^3Yellow Team^7"
+msgstr "^3Gele team^7"
 
 msgid "^3{1}^3 has captured the {2}"
-msgstr "^3{1}^3 has captured the {2}"
+msgstr "^3{1}^3 heeft de {2} veroverd"
 
 msgid "^3Speed has worn off"
-msgstr "^3Speed has worn off"
+msgstr "^3De speed is uitgewerkt"
 
 msgid "^3Akimbo has worn off"
-msgstr "^3Akimbo has worn off"
+msgstr "^3De akimbo is uitgewerkt"
 
 msgid "{1} fatefully ignored {2}'s firemine"
-msgstr "{1} fatefully ignored {2}'s firemine"
+msgstr "{1} negeerde willens en wetens {2}'s vuurlinie"
 
 msgid "^3Akimbo: double gun, double fun"
-msgstr "^3Akimbo: double gun, double fun"
+msgstr "^3Akimbo: dubbel zoveel wapens, dubbel zoveel plezier"
 
 msgid "^2* ^3{1}^2 stopped ^3{2}^2's vote"
-msgstr "^2* ^3{1}^2 stopped ^3{2}^2's vote"
+msgstr "^2* ^3{1}^2 heeft ^3{2}^2's stemming afgebroken"
 
 msgid "{1} drowned"
-msgstr "{1} drowned"
+msgstr "{1} is verdronken"
 
 msgid "Player:"
 msgstr "Speler:"
@@ -772,11 +885,19 @@ msgstr "Snel"
 msgid "Auto switch weapons on pickup"
 msgstr "Automatisch wisselen na oppakken"
 
-msgid "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
-msgstr "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up..."
+msgid ""
+"^2Currently in ^1warmup^2 stage!\n"
+"^2Waiting for others to ready up..."
+msgstr ""
+"^2Momenteel is de ^1opwarm^2fase bezig!\n"
+"^2Je bent aan het wachten op anderen…"
 
-msgid "^2Currently in ^1warmup^2 stage!\n^2Press ^3{ready}^2 to finish warmup!"
-msgstr "^2Currently in ^1warmup^2 stage!\n^2Press ^3{ready}^2 to finish warmup!"
+msgid ""
+"^2Currently in ^1warmup^2 stage!\n"
+"^2Press ^3{ready}^2 to finish warmup!"
+msgstr ""
+"^2Momenteel is de ^1opwarmfase^2 bezig!\n"
+"^2Druk op ^3{ready}^2 als je zover bent!"
 
 msgid "Force center position"
 msgstr "Positie in midden afdwingen"
@@ -791,238 +912,260 @@ msgid "Weapon alpha:"
 msgstr "Wapenalfa:"
 
 msgid "Mute list"
-msgstr "Mute list"
+msgstr "Demplijst"
 
 msgid "Unmute"
-msgstr "Unmute"
+msgstr "Ontdempen"
 
 msgid "Skip start hints"
-msgstr "Skip start hints"
+msgstr "Hints aan begin verbergen"
 
 msgid "Next >>"
-msgstr "Next >>"
+msgstr "Volgende →"
 
 msgid "Show speed"
-msgstr "Show speed"
+msgstr "Snelheid tonen"
 
 msgid "Show position helper in CTS"
-msgstr "Show position helper in CTS"
+msgstr "Locatiebepaling in CTS tonen"
 
 msgid "HUD selection"
-msgstr "HUD selection"
+msgstr "HUD-keuze"
 
 msgid "Disable nex zoom with secondary attack"
-msgstr "Disable nex zoom with secondary attack"
+msgstr "Nex-zoom met secundaire aanval uitschakelen"
 
 msgid "Reverse weapon order"
-msgstr "Reverse weapon order"
+msgstr "Wapenvolgorde omkeren"
 
 msgid "Done"
-msgstr "Done"
+msgstr "Klaar"
 
 msgid "Show strafe helper in CTS"
-msgstr "Show strafe helper in CTS"
+msgstr "Richthulp in CTS tonen"
 
 msgid "Weapon position:"
-msgstr "Weapon position:"
+msgstr "Wapenpositie:"
 
 msgid "Teamplay"
-msgstr "Teamplay"
+msgstr "Teamwork"
 
 msgid "Naughty behaviour:"
-msgstr "Naughty behaviour:"
+msgstr "Slecht gedrag:"
 
 msgid "Damage indicator:"
-msgstr "Damage indicator:"
+msgstr "Schadeberekening:"
 
 msgid "Report a player"
-msgstr "Report a player"
+msgstr "Speler rapporteren"
 
 msgid "Show names view sector:"
-msgstr "Show names view sector:"
+msgstr "Sector met namen tonen:"
 
 msgid "Report"
-msgstr "Report"
+msgstr "Melding maken"
 
 msgid "Show acceleration"
-msgstr "Show acceleration"
+msgstr "Versnelling tonen"
 
 msgid "On"
-msgstr "On"
+msgstr "Aan"
 
 msgid "Force screen effect on damage"
-msgstr "Force screen effect on damage"
+msgstr "Schermeffect na schade tonen"
 
 msgid "Game Menu"
-msgstr "Game Menu"
+msgstr "Gamemenu"
 
 msgid "Weapon bar fade speed:"
-msgstr "Weapon bar fade speed:"
+msgstr "Vervaagsnelheid van wapenbalk:"
 
 msgid "Auto enable in CTS"
-msgstr "Auto enable in CTS"
+msgstr "Automatisch inschakelen in CTS"
 
 msgid "Off"
-msgstr "Off"
+msgstr "Uit"
 
 msgid "Slow"
-msgstr "Slow"
+msgstr "Langzaam"
 
 msgid "Apply"
-msgstr "Apply"
+msgstr "Toepassen"
 
 msgid "Map records"
-msgstr "Map records"
+msgstr "Kaartrecords"
 
 msgid "Recoil from shots"
-msgstr "Recoil from shots"
+msgstr "Terugslag van schoten"
 
 msgid "<< Previous"
-msgstr "<< Previous"
+msgstr "← Vorige"
 
 msgid "Show ammo in weapon bar"
-msgstr "Show ammo in weapon bar"
+msgstr "Ammunitievoorraad op wapenbalk tonen"
 
 msgid "Available votes:"
-msgstr "Available votes:"
+msgstr "Stemmogelijkheden:"
 
 msgid "Only for teammates"
-msgstr "Only for teammates"
+msgstr "Alleen voor teamgenoten"
 
 msgid "Always hidden"
-msgstr "Always hidden"
+msgstr "Altijd verbergen"
 
 msgid "Empty slot"
-msgstr "Empty slot"
+msgstr "Leeg slot"
 
 msgid "Player voices"
-msgstr "Player voices"
+msgstr "Stemmen van spelers"
 
 msgid "Hidden"
-msgstr "Hidden"
+msgstr "Verbergen"
 
 msgid "Very narrow"
-msgstr "Very narrow"
+msgstr "Erg smal"
 
 msgid "Possible arguments:"
-msgstr "Possible arguments:"
+msgstr "Opties:"
 
 msgid "Mute"
-msgstr "Mute"
+msgstr "Dempen"
 
 msgid "Use RM HUD:"
-msgstr "Use RM HUD:"
+msgstr "RM HUD-gebruiken:"
 
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "Annuleren"
 
 msgid "Play next track"
-msgstr "Play next track"
+msgstr "Volgend nummer afspelen"
 
 msgid "Call the vote"
-msgstr "Call the vote"
+msgstr "Stemronde starten"
 
 msgid "HUD Selection..."
-msgstr "HUD Selection..."
+msgstr "HUD-keuze…"
 
 msgid "Narrow"
-msgstr "Narrow"
+msgstr "Smal"
 
 msgid "Call a vote for this map"
-msgstr "Call a vote for this map"
+msgstr "Stemronde voor deze kaart starten"
 
 msgid "Available HUDs:"
-msgstr "Available HUDs:"
+msgstr "Beschikbare HUDs:"
 
 msgid "Stopped"
-msgstr "Stopped"
+msgstr "Gestopt"
 
 msgid "Wide"
-msgstr "Wide"
+msgstr "Breed"
 
 msgid "Announcer print:"
-msgstr "Announcer print:"
+msgstr "Verslaggeving tonen:"
 
 msgid "Weapon bar fade time:"
-msgstr "Weapon bar fade time:"
+msgstr "Vervaagduur van wapenbalk:"
 
 msgid "Game Settings"
-msgstr "Game Settings"
+msgstr "Game-instellingen"
 
 msgid "Show only current ammo"
-msgstr "Show only current ammo"
+msgstr "Alleen huidige ammunitievoorraad tonen"
 
-msgid "\n^3New wave starts in {1} seconds"
-msgstr "\n^3New wave starts in {1} seconds"
+msgid ""
+"\n"
+"^3New wave starts in {1} seconds"
+msgstr ""
+"\n"
+"^3De nieuwe golf begint over {1} seconden"
 
-msgid "\n^2Awaiting players..."
-msgstr "\n^2Awaiting players..."
+msgid ""
+"\n"
+"^2Awaiting players..."
+msgstr ""
+"\n"
+"^2Bezig met wachten op spelers…"
 
 msgid "Please select your ability class:"
-msgstr "Please select your ability class:"
+msgstr "Kies je bekwaamheidsklasse:"
 
 msgid "{1} tried to catch {2}'s firemine"
-msgstr "{1} tried to catch {2}'s firemine"
+msgstr "{1} probeerde om de vuurmijn van {2} op te vangen"
 
 msgid "^7Your ability class will be changed at next spawn"
-msgstr "^7Your ability class will be changed at next spawn"
+msgstr "^7Je bekwaamheidsklasse wordt na je volgende herstel gewijzigd"
 
 msgid "Please select game type for next map:"
-msgstr "Please select game type for next map:"
+msgstr "Kies het gametype van de volgende kaart:"
 
 msgid "Apply immediately"
 msgstr "Direct toepassen"
 
 msgid "This door required {1}"
-msgstr "This door required {1}"
+msgstr "Deze deur vereist {1}"
 
 msgid "{1} was squished"
-msgstr "{1} was squished"
+msgstr "{1} is platgedrukt"
 
 msgid "Select eye position"
-msgstr "Select eye position"
+msgstr "Kies een gezichtspositie"
 
 msgid "Silver Key"
-msgstr "Silver Key"
+msgstr "Zilveren sleutel"
 
 msgid "Gold Key"
-msgstr "Gold Key"
+msgstr "Goudensleutel"
 
-msgid "Jailbreak! The ^1REDS^7 are escaping!\nControl point captured by {1}"
-msgstr "Jailbreak! The ^1REDS^7 are escaping!\nControl point captured by {1}"
+msgid ""
+"Jailbreak! The ^1REDS^7 are escaping!\n"
+"Control point captured by {1}"
+msgstr ""
+"Uitbraak! De ^1RODEN^7 ontsnappen!\n"
+"Controlepunt veroverd door {1}"
 
-msgid "^4Blue^7 Scores!\nAll opponents are imprisoned\n^2Starting in {1}"
-msgstr "^4Blue^7 Scores!\nAll opponents are imprisoned\n^2Starting in {1}"
+msgid ""
+"^4Blue^7 Scores!\n"
+"All opponents are imprisoned\n"
+"^2Starting in {1}"
+msgstr ""
+"^4Blauw heeft^7 gescoord!\n"
+"Alle tegenstanders zijn in de cel gegooid\n"
+"^2De volgende ronde begint over {1}"
 
 msgid "^1Red jail^7 closed"
-msgstr "^1Red jail^7 closed"
+msgstr "^1De rode gevangenis is^7 gesloten"
 
 msgid "^7{1}^7 has lost {2}^7"
-msgstr "^7{1}^7 has lost {2}^7"
+msgstr "^7{1}^7 heeft de {2}^7 verloren"
 
 msgid "^7{1}^7 has picked up {2}^7"
-msgstr "^7{1}^7 has picked up {2}^7"
+msgstr "^7{1}^7 heeft de {2}^7 gepakt"
 
 msgid "^1You accepted the vote."
-msgstr "^1You accepted the vote."
+msgstr "^1Je hebt voorgestemd."
 
 msgid "^1You rejected the vote."
-msgstr "^1You rejected the vote."
+msgstr "^1Je hebt tegengestemd."
 
 msgid "{1}{2}^7 second left to find some ammo"
-msgstr "{1}{2}^7 second left to find some ammo"
+msgstr "Nog {1}{2}^7 seconden om ammunitie te vinden"
 
 msgid "Timeout/Timein"
 msgstr "Timeout/Timein"
 
-msgid "get some ammo or\nyou'll be dead in ^310^7 seconds..."
-msgstr "get some ammo or\nyou'll be dead in ^310^7 seconds..."
+msgid ""
+"get some ammo or\n"
+"you'll be dead in ^310^7 seconds..."
+msgstr ""
+"Vind ammunitie of\n"
+"accepteer het doodvonnis over ^310^7 seconden…"
 
 msgid "Secondary fire inflicts no damage!"
-msgstr "Secondary fire inflicts no damage!"
+msgstr "De secundaire aanval berokkent geen schade!"
 
 msgid "^1Server is restarting..."
-msgstr "^1Server is restarting..."
+msgstr "^1De server wordt herstart…"
 
 msgid "Score count: {1}/{2}"
-msgstr "Score count: {1}/{2}"
+msgstr "Score: {1}/{2}"
