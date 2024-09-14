@@ -1,9 +1,11 @@
 // QUALIFYING
 float race_checkpoint;
 float race_time;
+float race_speed;
 float race_laptime;
 float race_checkpointtime;
 float race_previousbesttime;
+float race_previousbestspeed;
 string race_previousbestname;
 float race_nextcheckpoint;
 float race_nextbesttime;
@@ -31,80 +33,70 @@ void(void) race_read {
 	float b;
 	b = net_read_byte();
 	switch(b) {
-		case RACE_NET_CHECKPOINT_HIT_QUALIFYING:
-			race_checkpoint = net_read_byte();
-			race_time = TIME_DECODE(net_read_int24());
-			race_previousbesttime = TIME_DECODE(net_read_int24());
-			if (race_previousbestname)
-				strunzone(race_previousbestname);
+	case RACE_NET_CHECKPOINT_HIT_QUALIFYING: // current checkpoint
+		race_checkpoint = net_read_byte();
+		race_time = TIME_DECODE(net_read_int24());
+		race_previousbesttime = TIME_DECODE(net_read_int24());
+		str_unzone_ifneeded(race_previousbestname);
+		race_previousbestname = str_zone_ifneeded(net_read_string());
+		race_speed = net_read_short();
+		race_previousbestspeed = net_read_short();
+		race_checkpointtime = max(time, 0.001);
+		if (race_checkpoint == 0 || race_checkpoint == 254) {
+			race_penaltyaccumulator = 0;
+			race_laptime = max(time, 0.001); // valid
+		}
+		break;
+	case RACE_NET_CHECKPOINT_CLEAR:
+		race_laptime = 0;
+		race_checkpointtime = 0;
+		break;
+	case RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING: //information about next checkpoint
+		race_laptime = net_read_coord();
+		race_checkpointtime = -99999;
+		// fall through
+	case RACE_NET_CHECKPOINT_NEXT_QUALIFYING:
+		race_nextcheckpoint = net_read_byte();
+		race_nextbesttime = TIME_DECODE(net_read_int24());
+		str_unzone_ifneeded(race_nextbestname);
+		race_nextbestname = str_zone_ifneeded(net_read_string());
+		break;
+	case RACE_NET_CHECKPOINT_HIT_RACE:
+		race_mycheckpoint = net_read_byte();
+		race_mycheckpointtime = time;
+		race_mycheckpointdelta = TIME_DECODE(net_read_int24());
+		race_mycheckpointlapsdelta = net_read_byte();
+		if (race_mycheckpointlapsdelta >= 128)
+			race_mycheckpointlapsdelta -= 256;
 
-			race_previousbestname = strzone(net_read_string());
-			race_checkpointtime = max(time, 0.001);
-			if (race_checkpoint == 0 || race_checkpoint == 254) {
-				race_penaltyaccumulator = 0;
-				race_laptime = max(time, 0.001); // valid
-			}
-			break;
-		case RACE_NET_CHECKPOINT_CLEAR:
-			race_laptime = 0;
-			race_checkpointtime = 0;
-			break;
-		case RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING:
-			race_laptime = net_read_coord();
-			race_checkpointtime = -99999;
-			// fall through
-		case RACE_NET_CHECKPOINT_NEXT_QUALIFYING:
-			race_nextcheckpoint = net_read_byte();
-			race_nextbesttime = TIME_DECODE(net_read_int24());
-			if (race_nextbestname)
-				strunzone(race_nextbestname);
+		str_unzone_ifneeded(race_mycheckpointenemy);
+		race_mycheckpointenemy = str_zone_ifneeded(net_read_string());
+		break;
+	case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
+		race_othercheckpoint = net_read_byte();
+		race_othercheckpointtime = time;
+		race_othercheckpointdelta = TIME_DECODE(net_read_int24());
+		race_othercheckpointlapsdelta = net_read_byte();
+		if (race_othercheckpointlapsdelta >= 128)
+			race_othercheckpointlapsdelta -= 256;
 
-			race_nextbestname = strzone(net_read_string());
-			break;
-		case RACE_NET_CHECKPOINT_HIT_RACE:
-			race_mycheckpoint = net_read_byte();
-			race_mycheckpointtime = time;
-			race_mycheckpointdelta = TIME_DECODE(net_read_int24());
-			race_mycheckpointlapsdelta = net_read_byte();
-			if (race_mycheckpointlapsdelta >= 128)
-				race_mycheckpointlapsdelta -= 256;
-
-			if (race_mycheckpointenemy)
-				strunzone(race_mycheckpointenemy);
-
-			race_mycheckpointenemy = strzone(net_read_string());
-			break;
-		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
-			race_othercheckpoint = net_read_byte();
-			race_othercheckpointtime = time;
-			race_othercheckpointdelta = TIME_DECODE(net_read_int24());
-			race_othercheckpointlapsdelta = net_read_byte();
-			if (race_othercheckpointlapsdelta >= 128)
-				race_othercheckpointlapsdelta -= 256;
-
-			if (race_othercheckpointenemy)
-				strunzone(race_othercheckpointenemy);
-
-			race_othercheckpointenemy = strzone(net_read_string());
-			break;
-		case RACE_NET_PENALTY_RACE:
-			race_penaltyeventtime = time;
-			race_penaltytime = TIME_DECODE(net_read_short());
-			//race_penaltyaccumulator += race_penaltytime;
-			if (race_penaltyreason)
-				strunzone(race_penaltyreason);
-
-			race_penaltyreason = strzone(net_read_string());
-			break;
-		case RACE_NET_PENALTY_QUALIFYING:
-			race_penaltyeventtime = time;
-			race_penaltytime = TIME_DECODE(net_read_short());
-			race_penaltyaccumulator += race_penaltytime;
-			if (race_penaltyreason)
-				strunzone(race_penaltyreason);
-
-			race_penaltyreason = strzone(net_read_string());
-			break;
+		str_unzone_ifneeded(race_othercheckpointenemy);
+		race_othercheckpointenemy = str_zone_ifneeded(net_read_string());
+		break;
+	case RACE_NET_PENALTY_RACE:
+		race_penaltyeventtime = time;
+		race_penaltytime = TIME_DECODE(net_read_short());
+		//race_penaltyaccumulator += race_penaltytime;
+		str_unzone_ifneeded(race_penaltyreason);
+		race_penaltyreason = str_zone_ifneeded(net_read_string());
+		break;
+	case RACE_NET_PENALTY_QUALIFYING:
+		race_penaltyeventtime = time;
+		race_penaltytime = TIME_DECODE(net_read_short());
+		race_penaltyaccumulator += race_penaltytime;
+		str_unzone_ifneeded(race_penaltyreason);
+		race_penaltyreason = str_zone_ifneeded(net_read_string());
+		break;
 	}
 }
 
@@ -115,6 +107,22 @@ void(float unused) race_records_read {
 		race_records_speed[i] = net_read_short();
 		race_records_name[i] = str_zone_ifneeded(net_read_string());
 	}
+}
+
+string(float myspeed, float hisspeed) race_speed_string {
+	if (myspeed) {
+		if (hisspeed) {
+			if (hisspeed > myspeed)
+				return strcat(ftos(myspeed), "^1(", ftos(myspeed - hisspeed), ")^7ups");
+			else if (hisspeed == myspeed)
+				return strcat(ftos(myspeed), "ups");
+			else
+				return strcat(ftos(myspeed), "^2(+", ftos(myspeed - hisspeed), ")^7ups");
+		} else {
+			return strcat(ftos(myspeed), "ups");
+		}
+	}
+	return "";
 }
 
 string(float cp, float mytime, float histime, float lapdelta, string hisname) race_checkpoint_string {
@@ -241,7 +249,7 @@ void(void) race_sbar_draw {
 	drawfont = sbar_bigfont;
 	float a, t;
 	vector m;
-	string s, forcetime;
+	string s, s2, forcetime;
 	if (view_spectatee_status || main_isdemo) {
 		float keys = getstatf(STAT_PRESSED_KEYS);
 		race_movement = '0 0 0';
@@ -364,13 +372,15 @@ void(void) race_sbar_draw {
 	if (race_checkpointtime) {
 		a = bound(0, 2 - (time - race_checkpointtime), 1);
 		s = "";
+		s2 = "";
 		forcetime = "";
+		s2 = race_speed_string(race_speed, race_previousbestspeed);
 		if (a > 0) { // just hit a checkpoint?
-			if (race_time && race_previousbesttime)
+			if (race_time && race_previousbesttime) {
 				s = race_checkpoint_string(race_checkpoint, race_time - race_previousbesttime, 0, 0, race_previousbestname);
-			else
+			} else {
 				s = race_checkpoint_string(race_checkpoint, 0, -1, 0, race_previousbestname);
-
+			}
 			if (race_time)
 				forcetime = time_mmssss(race_time);
 		} else {
@@ -381,14 +391,16 @@ void(void) race_sbar_draw {
 			}
 		}
 		if (s != "" && a > 0) {
-			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-			drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+			if (s2 != "") {
+				drawcolorcodedstring(m - '0 28 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(m - '0 12 0' - '6 0 0' * stringwidth(s2, TRUE), s2, '12 12 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+			} else
+				drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
 		if (race_penaltytime) {
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 			if (a > 0) {
 				s = strcat("^1PENALTY: ", str_float_decimals(race_penaltytime, 1), " (", race_penaltyreason, ")");
-				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 				drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
 			}
 		}
@@ -406,13 +418,11 @@ void(void) race_sbar_draw {
 		if (race_mycheckpointtime) {
 			a = bound(0, 2 - (time - race_mycheckpointtime), 1);
 			s = race_checkpoint_string(race_mycheckpoint, race_mycheckpointdelta, -!race_mycheckpointenemy, race_mycheckpointlapsdelta, race_mycheckpointenemy);
-			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
 		if (race_othercheckpointtime && race_othercheckpointenemy != "") {
 			a = bound(0, 2 - (time - race_othercheckpointtime), 1);
 			s = race_checkpoint_string(race_othercheckpoint, -race_othercheckpointdelta, -!race_othercheckpointenemy, race_othercheckpointlapsdelta, race_othercheckpointenemy);
-			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			drawcolorcodedstring(m - '0 0 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
 		if (race_penaltytime && !race_penaltyaccumulator) {
@@ -424,7 +434,6 @@ void(void) race_sbar_draw {
 				else
 					s = strcat("^2PENALTY: 0.0 (", race_penaltyreason, ")");
 
-				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 				drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
 			}
 		}

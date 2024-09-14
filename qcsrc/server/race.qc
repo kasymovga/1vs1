@@ -33,6 +33,7 @@ string race_records_path;
 .entity sprite;
 
 float race_checkpoint_records[MAX_CHECKPOINTS];
+float race_checkpoint_speeds[MAX_CHECKPOINTS];
 string race_checkpoint_recordholders[MAX_CHECKPOINTS];
 float race_checkpoint_lasttimes[MAX_CHECKPOINTS];
 float race_checkpoint_lastlaps[MAX_CHECKPOINTS];
@@ -297,7 +298,7 @@ void(void) race_respawn_delayed {
 	remove(self);
 }
 
-void(entity e, float cp, float t, float tvalid) race_time_send {
+void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 	float snew, l;
 	entity p;
 	if (g_race_qualifying)
@@ -340,11 +341,12 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			e2.playerid = e.playerid;
 		}
 	}
-	float recordtime;
+	float recordtime, recordspeed;
 	string recordholder;
 	if (g_race_qualifying) {
 		if (tvalid) {
 			recordtime = race_checkpoint_records[cp];
+			recordspeed = race_checkpoint_speeds[cp];
 			recordholder = strcat1(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
 			if (recordholder == e.netname)
 				recordholder = "";
@@ -353,6 +355,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			if (cp)
 			if (t < recordtime || recordtime == 0) {
 				race_checkpoint_records[cp] = t;
+				race_checkpoint_speeds[cp] = spd;
 				if (race_checkpoint_recordholders[cp])
 					strunzone(race_checkpoint_recordholders[cp]);
 
@@ -386,6 +389,14 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			// dummies
 			t = 0;
 			recordtime = 0;
+			if (cp == 0) {//this is start checkpoint
+				recordspeed = race_checkpoint_speeds[cp];
+				if (spd > recordspeed) {
+					race_checkpoint_speeds[cp] = spd;
+				}
+			} else
+				recordspeed = 0;
+
 			recordholder = "";
 		}
 		msg_entity = e;
@@ -397,6 +408,8 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			net_write_int24(MSG_ONE, TIME_ENCODE(t)); // time to that intermediate
 			net_write_int24(MSG_ONE, TIME_ENCODE(recordtime)); // previously best time
 			net_write_string(MSG_ONE, recordholder); // record holder
+			net_write_short(MSG_ONE, spd);
+			net_write_short(MSG_ONE, recordspeed);
 		});
 	} else { // RACE! Not Qualifying
 		float lself, lother, othtime;
@@ -517,18 +530,18 @@ void(void) race_checkpoint_passed {
 					}
 				}
 			}
-			if (shift_required) {
+			if (shift_required && race_highest_checkpoint < 253) {
 				for (e = find(world, classname, "race_trigger_checkpoint"); e; e = find(e, classname, "race_trigger_checkpoint")) {
 					if (e != self)
 					if (e.race_checkpoint >= self.race_checkpoint)
 						e.race_checkpoint = e.race_checkpoint + 1;
 				}
-				race_timed_checkpoint += 1;
-				race_highest_checkpoint += 1;
+				race_timed_checkpoint++;
+				race_highest_checkpoint++;
 			}
 		}
 		other.race_checkpoint = race_checkpoint_next(self.race_checkpoint);
-		race_time_send(other, self.race_checkpoint, other.race_movetime, !!other.race_laptime);
+		race_time_send(other, self.race_checkpoint, other.race_movetime, vlen(other.velocity - other.velocity_z * '0 0 1'), !!other.race_laptime);
 		if(!self.race_checkpoint) { // start line
 			other.race_laptime = time;
 			other.race_movetime = other.race_movetime_frac = other.race_movetime_count = 0;
@@ -791,6 +804,7 @@ void(void) race_checkpoints_records_clear {
 	entity e;
 	for (i = 0; i < MAX_CHECKPOINTS; ++i) {
 		race_checkpoint_records[i] = 0;
+		race_checkpoint_speeds[i] = 0;
 		if (race_checkpoint_recordholders[i])
 			strunzone(race_checkpoint_recordholders[i]);
 
