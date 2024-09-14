@@ -120,7 +120,6 @@ void(void) rm_bigprint_draw {
 							offset_y = 3 * cos(bp_pos_x + 5 * time) * (if(mod(j, 2)) 1 else -1);
 							offset_x = offset_y * (if(mod(j, 2)) -1 else 1);
 							string resultstr = strcat(mycolor, mychar);
-							dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 							sz = '24 24 0' * (1.0 + (1.0 - bp_alpha));
 							bp_pos_x += stringwidth(resultstr, TRUE, sz);
 							drawcolorcodedstring(bp_pos + offset, resultstr, sz, bp_alpha, DRAWFLAG_NORMAL);

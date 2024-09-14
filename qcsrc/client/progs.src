@@ -75,7 +75,6 @@ str.qc
 score.qh
 camera.qh
 player.qc
-dummyfunction.qc
 math.qc
 ../common/progs.qc
 draw.qc

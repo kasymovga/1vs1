@@ -63,7 +63,6 @@ void(vector position, string pic, vector scale, vector rgb, float alpha, float f
 void(vector position, string text, vector scale, vector rgb, float alpha, float flag, float fadelerp) draw_string_expanding {
 	float sz;
 	sz = draw_expandingbox_sizefactor_from_fadelerp(fadelerp);
-	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
 	drawstring(position + draw_expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, FALSE)), text, scale * sz, rgb, alpha * (1 - fadelerp), flag);
 }
 
