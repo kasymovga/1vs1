@@ -287,6 +287,12 @@ float(string pFilename) map_info_generate { // 0: failure, 1: ok ent, 2: ok bsp
 		return 0;
 
 	print("Analyzing ", fn, " to generate initial mapinfo; please edit that file later\n");
+	if (file_exists(strcat("scripts/", pFilename, ".defi"))) { //defrag map
+		print(pFilename, " is a defrag map\n");
+		map_info_map_supported_game_types |= MAP_INFO_TYPE_CTS;
+		fclose(fh);
+		return r;
+	}
 	inWorldspawn = 2;
 	map_info_map_flags = 0;
 	map_info_map_supported_game_types = 0;
@@ -366,10 +372,9 @@ float(string pFilename) map_info_generate { // 0: failure, 1: ok ent, 2: ok bsp
 			}
 		}
 	}
-	if (inWorldspawn && loopprotect != MAP_INFO_GENERATE_LOOP_PROTECT_VALUE) {
+	if (inWorldspawn && loopprotect != MAP_INFO_GENERATE_LOOP_PROTECT_VALUE)
 		print(fn, " ended still in worldspawn, BUG\n");
-		return 0;
-	}
+
 	if (loopprotect == MAP_INFO_GENERATE_LOOP_PROTECT_VALUE)
 		print(fn, " is too big, analyzing skipped\n");
 
