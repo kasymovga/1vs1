@@ -315,8 +315,14 @@ void(entity proj, float delta) projectile_premove {
 		g = (proj.gravity ? proj.gravity : 1) * sv_gravity;
 		proj.velocity_z -= 0.5 * g * delta;
 	}
-	trace_box(proj.origin, proj.mins, proj.maxs, proj.origin + proj.velocity * delta, TRACE_MOVE_NORMAL, proj);
+	vector v = proj.origin + proj.velocity * delta;
+	trace_box(proj.origin, proj.mins, proj.maxs, v, TRACE_MOVE_NOMONSTERS, proj);
 	setorigin(proj, trace_endpos);
+	if (trace_fraction < 1) { //check if we "inside" a surface
+		trace_box(proj.origin, proj.mins, proj.maxs, v, TRACE_MOVE_NOMONSTERS, proj);
+		if (trace_endpos != proj.origin) //move back to prevent projectile fall trough surfaces
+			setorigin(proj, proj.origin - 0.125 * normalize(proj.velocity));
+	}
 	if (g) {
 		proj.velocity_z -= 0.5 * g * delta;
 	}
