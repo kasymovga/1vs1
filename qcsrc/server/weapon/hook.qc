@@ -4,6 +4,7 @@ float g_balance_hook_primary_hooked_fuel;
 float g_balance_hook_primary_hooked_time_free;
 float g_balance_hook_primary_hooked_time_max;
 float g_balance_hook_primary_refire;
+float g_balance_hook_secondary;
 float g_balance_hook_secondary_ammo;
 float g_balance_hook_secondary_animtime;
 float g_balance_hook_secondary_damage;
@@ -91,13 +92,13 @@ float(float req) weapon_hook {
 				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hook_primary_animtime, weapon_ready);
 			}
 		}
-		if (self.BUTTON_ATCK2) {
+		if (self.BUTTON_ATCK2 && g_balance_hook_secondary) {
 			if (weapon_prepareattack(1, g_balance_hook_secondary_refire)) {
 				weapon_hook_attack2();
 				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_hook_secondary_animtime, weapon_ready);
 			}
 		}
-		if (self.hook) // if hooked, no bombs, and increase the timer
+		if (self.hook) // if hooked then increase the timer
 			self.hook_refire = max(self.hook_refire, time + g_balance_hook_primary_refire);
 
 		if (self.hook && self.hook.state == 1) {
@@ -168,6 +169,7 @@ float(float req) weapon_hook {
 		CVAR_CACHE(g_balance_hook_primary_hooked_time_free);
 		CVAR_CACHE(g_balance_hook_primary_hooked_time_max);
 		CVAR_CACHE(g_balance_hook_primary_refire);
+		CVAR_CACHE(g_balance_hook_secondary);
 		CVAR_CACHE(g_balance_hook_secondary_ammo);
 		CVAR_CACHE(g_balance_hook_secondary_animtime);
 		CVAR_CACHE(g_balance_hook_secondary_damage);
