@@ -854,7 +854,7 @@ msgid "Apply"
 msgstr "Применить"
 
 msgid "Map records"
-msgstr "Рекорды карты"
+msgstr "Рекорды карт"
 
 msgid "Recoil from shots"
 msgstr "Отдача от выстрелов"
