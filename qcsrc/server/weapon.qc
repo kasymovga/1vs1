@@ -700,8 +700,10 @@ void(float wpn) weapon_defaultspawnfunc {
 			if (e.items & j) {
 				ammofield = item_counter_field(j);
 				if (ammofield) {
-					if (self.count)
+					if (self.count > 0)
 						self.ammofield = self.count;
+					else if (self.count < 0)
+						self.ammofield = 999999;
 
 					if (!self.ammofield)
 						self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(j)));

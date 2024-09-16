@@ -352,7 +352,7 @@ float(entity item, entity player) item_give_to {
 		if (g_use_ammunition) {
 			#define PICK_AMMO(x, maxx) \
 			if (item.x) \
-			if (player.x < maxx) { \
+			if (player.x < max(maxx, item.x)) { \
 				float amount = plugin_chain_item_give_factor(player, 1) * item.x;\
 				if ((item.flags & FL_WEAPON) && g_pickup_weapon_ammo_limit && ((player.weapons & self.weapons) || (player.weapons_extra & self.weapons_extra))) { \
 					if (player.x < amount) { \
@@ -360,7 +360,7 @@ float(entity item, entity player) item_give_to {
 						pickedup = TRUE; \
 					} \
 				} else { \
-					player.x = min(player.x + max(0, amount), maxx); \
+					player.x = min(player.x + max(0, amount), max(maxx, item.x)); \
 					pickedup = TRUE; \
 				} \
 			}
