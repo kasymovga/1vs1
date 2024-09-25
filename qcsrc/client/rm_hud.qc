@@ -29,6 +29,8 @@ float rm_hud_flash_appeartime;
 float rm_hud_flash_fadetime;
 float rm_hud_flash_enabled;
 
+void(float p) rm_hud_score_draw;
+
 void(void) rm_hud_flash_read {
 	float a, i, t;
 	vector c;
@@ -1044,7 +1046,11 @@ void(void) rm_hud_draw {
 		}
 	}
 	// draw scores and timer
-	sbar_score_draw(scoresector_pos, scoresector_size, 1);
+	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && !team_mode) { // race/cts record display on HUD
+		sbar_score_draw(scoresector_pos, scoresector_size, 1);
+	} else {
+		rm_hud_score_draw(scoresector_pos_x);
+	}
 	rm_hud_draw_ranking(sbar_bottomright - '150 105 0', '100 100 0');
 	sbar_timer();
 	// draw strength/invincibility icon and timer
@@ -1054,5 +1060,98 @@ void(void) rm_hud_draw {
 		sbar_game_hud(SBAR_GAMEINFO_POSITION_DEFAULT, '0 0 0', 1);
 	else {
 		sbar_game_hud(game_info_pos, game_info_size, 1);
+	}
+}
+
+void(float p) rm_hud_score_draw {
+	float score, distribution, leader = 0;
+	vector score_pos, secondary_score_pos, distribution_color;
+	entity tm, pl, me;
+	if (view_spectatee_status > 0)
+		me = player_slots[view_spectatee_status - 1];
+	else
+		me = player_slots[player_localentnum - 1];
+
+	vector bottomright;
+	bottomright_x = CVAR(vid_conwidth);
+	bottomright_y = CVAR(vid_conheight);
+	bottomright_z = 0;
+	vector rpos, rsize = '100 100 0';
+	rpos = bottomright;
+	rpos_y -= 150;
+	rpos_x -= 105;
+	//if (rm_oldhud) {
+	//	score_pos = bottomright - '196 42 0';
+	//	secondary_score_pos = score_pos + '132 -6 0';
+	//} else {
+		bottomright_x = p + RM_HUD_SECWIDTH_NORMAL + 8;
+		score_pos = bottomright - '178 38 0';
+		secondary_score_pos = score_pos + '72 0 0';
+	//}
+	if (!team_mode) { // non-teamgames, except race/cts
+		// me vector := [team/connected frags id]
+		pl = player_list.sort_next;
+		if (pl == me)
+			pl = pl.sort_next;
+
+		if (pl)
+			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
+		else
+			distribution = 0;
+
+		score = me.(scores[ps_primary]);
+		if (distribution >= 5) {
+			distribution_color = '0 1 0';
+			leader = 1;
+		} else if(distribution >= 0) {
+			distribution_color = '1 1 1';
+			leader = 1;
+		} else if(distribution >= -5)
+			distribution_color = '1 1 0';
+		else
+			distribution_color = '1 0 0';
+
+		//if (rm_oldhud) {
+		//	Sbar_DrawXNum(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		//	Sbar_DrawXNum(score_pos, score, 4, 0, 34, distribution_color, leader, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		//} else {
+			score_pos = score_pos + ((score > 9) ? '24 0 0' : '0 0 0');
+			secondary_score_pos = score_pos + '24 0 0' * 2.7 + '16 0 0' * (distribution > 9);
+			sbar_draw_num(score_pos, score, 4, 0, 24, '1 1 1' * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		//}
+	} else { // teamgames
+		float max_fragcount;
+		max_fragcount = -999;
+		for (tm = team_list.sort_next; tm; tm = tm.sort_next) {
+			if (tm.team == TEAM_COLOR_SPECTATOR || !tm.team_size) // no players? don't display
+				continue;
+
+			score = tm.(teamscores[ts_primary]);
+			leader = 0;
+			if (score > max_fragcount)
+				max_fragcount = score;
+
+			if (tm.team == team_my) {
+				if (max_fragcount == score)
+					leader = 1;
+
+				//if (rm_oldhud)
+				//	Sbar_DrawXNum(score_pos, score, 4, 0, 34, GetTeamRGB(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				//else
+					sbar_draw_num(score_pos + ((score > 9) ? '24 0 0' : '0 0 0'), score, 4, 0, 24, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			} else {
+				if (max_fragcount == score)
+					leader = 1;
+
+				//if (rm_oldhud) {
+				//	Sbar_DrawXNum(secondary_score_pos, score, 4, 0, 16, GetTeamRGB(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				//	secondary_score_pos = secondary_score_pos + '0 16 0';
+				//} else {
+					sbar_draw_num(secondary_score_pos, score, 4, 0, 16, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					secondary_score_pos = secondary_score_pos + '18 0 0';
+				//}
+			}
+		}
 	}
 }
