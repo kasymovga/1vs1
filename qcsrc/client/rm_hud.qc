@@ -173,7 +173,7 @@ void(vector sectorpos, vector sectorsize) rm_hud_get_sector_full_clip_area {
 void (vector pos, vector mySize) rm_hud_draw_ranking  {
 	if (!CVAR(rm_showrankings) || !rm_active)
 		return;
-	
+
 	entity me;
 	if (view_spectatee_status > 0)
 		me = player_slots[view_spectatee_status - 1];
@@ -200,7 +200,7 @@ void (vector pos, vector mySize) rm_hud_draw_ranking  {
 	for (tm = team_list.sort_next; tm && j < 2; tm = tm.sort_next) {
 		if (tm.team == TEAM_COLOR_SPECTATOR)
 			continue;
-		
+
 		i = 0;
 		for (pl = player_list.sort_next; pl && i < entries; pl = pl.sort_next) {
 			if (pl.team != tm.team)
@@ -283,7 +283,7 @@ void(float prog, vector hud_sector_pos, vector hud_sector, vector c_sector, vect
 
 		rm_hud_get_sector_border_clip_area(hud_sector_pos, hud_sector);
 		drawsetcliparea(rm_hud_sector_clip_pos_x + rm_hud_sector_clip_size_x * (1-prog) * invert, rm_hud_sector_clip_pos_y, rm_hud_sector_clip_size_x * prog, rm_hud_sector_clip_size_y);
-		if (overcharge) { 
+		if (overcharge) {
 			if (rm_skin_progress_border_overcharge_alpha)
 				rm_skin_draw_borders(hud_sector_pos, hud_sector,
 								a_border_p * sector_alphamod * rm_skin_progress_border_overcharge_alpha,
@@ -533,7 +533,97 @@ void(void) rm_hud_draw_server_info {
 	}
 }
 
+float rm_hud_powerups_enabled;
+
+void(vector sectorpos) rm_hud_powerups_draw {
+	string str_icon = "gfx/hud/sb_str", inv_icon = "gfx/hud/sb_invinc";
+	vector pos, numpos;
+	vector bottom;
+	bottom_x = CVAR(vid_conwidth) / 2;
+	bottom_y = CVAR(vid_conheight);
+	bottom_z = 0;
+	float stat_items, dt;
+	stat_items = getstati(STAT_ITEMS);
+	if not(rm_hud_powerups_enabled)
+		return;
+
+	vector picsize;
+	float strength_time, invincibility_time, countdown_fontsize;
+	picsize = '22 22 0';
+	pos = sectorpos;
+	pos_y -= 1;
+	numpos = pos + '8 10 0';
+	countdown_fontsize = 14;
+	strength_time = getstatf(STAT_STRENGTH_FINISHED);
+	invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
+	if not(strength_time) {
+		strength_time = getstatf(STAT_INVISIBILITY_FINISHED);
+		if (strength_time)
+			str_icon = "gfx/hud/sb_invisibility";
+		else {
+			strength_time = getstatf(STAT_AKIMBO_FINISHED);
+			if (strength_time)
+				str_icon = "gfx/hud/sb_akimbo";
+		}
+	}
+	if not(invincibility_time) {
+		invincibility_time = getstatf(STAT_SPEED_FINISHED);
+		if (invincibility_time)
+			inv_icon = "gfx/hud/sb_speed";
+		else {
+			invincibility_time = getstati(STAT_FUEL);
+			if (invincibility_time) {
+				inv_icon = "gfx/hud/sb_fuel";
+			}
+		}
+	}
+	if (strength_time) {
+		dt = strength_time - time;
+		if (dt > 0) {
+			if (dt < 5) {
+				draw_pic_expanding_two(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+					bound(0, (ceil(dt) - dt) / 0.5, 1));
+			} else {
+				drawpic(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			}
+			if (ceil(dt) < 10)
+				numpos_x -= countdown_fontsize;
+
+			sbar_draw_num(numpos, ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		} else if(dt > -1) {
+			draw_pic_expanding(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+				bound(0, -dt / 0.5, 1));
+		}
+	}
+	pos_x += 80;
+	numpos = pos - '16 -10 0';
+	//invincibility
+	if (invincibility_time) {
+		if (inv_icon == "gfx/hud/sb_fuel")
+			dt = invincibility_time;
+		else
+			dt = invincibility_time - time;
+
+		if (dt > 0) {
+			if (dt < 5) {
+				draw_pic_expanding_two(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+					bound(0, (ceil(dt) - dt) / 0.5, 1));
+			} else {
+				drawpic(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			}
+			sbar_draw_num(numpos, ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		} else if(dt > -1) {
+			draw_pic_expanding(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+				bound(0, -dt / 0.5, 1));
+		}
+	}
+}
+
 float rm_hud_vhealth = 0;
+float rm_hud_powerups_fadetime;
+float rm_hud_powerups_appeartime;
+float rm_hud_powerups_finalstate;
+float rm_hud_powerups_state;
 void(void) rm_hud_draw {
 	float hgregen = 0;
 	float hgregen2 = 0;
@@ -557,6 +647,7 @@ void(void) rm_hud_draw {
 	float ammosector_pos = 0, nadesector_pos = 0, nadesector2_pos = 0, next_sector;
 	vector scoresector_pos = SBAR_SCORE_POSITION_DEFAULT, scoresector_size = '0 0 0';
 	vector game_info_pos = '0 0 0', game_info_size = '0 0 0';
+	vector powerup_pos = '0 0 0';
 	vector base_teamcolor;
 	float hgbonus = getstati(STAT_HGBONUSTYPE);
 	float hgtype = (hgbonus ? hgbonus : getstati(STAT_HGTYPE));
@@ -649,6 +740,29 @@ void(void) rm_hud_draw {
 			}
 		}
 	}
+	float pw_alpha = 0;
+	rm_hud_powerups_enabled = ((sbar_stat_items & IT_POWERUPS) ? 1 : 0);
+	if (rm_hud_powerups_enabled != rm_hud_powerups_state) {
+		if (rm_hud_powerups_enabled)
+			rm_hud_powerups_appeartime = time;
+		else
+			rm_hud_powerups_fadetime = time;
+
+		rm_hud_powerups_state = rm_hud_powerups_enabled;
+	}
+	if (rm_hud_powerups_state != rm_hud_powerups_finalstate) {
+		if (rm_hud_powerups_state) {
+			pw_alpha = 1 - bound(0, 1 - 4 * (time - rm_hud_powerups_appeartime), 1);
+			if(pw_alpha >= 1)
+				rm_hud_powerups_finalstate = rm_hud_powerups_state;
+		} else {
+			pw_alpha = bound(0, 1 - 4 * (time - rm_hud_powerups_fadetime), 1);
+			if (!pw_alpha)
+				rm_hud_powerups_finalstate = rm_hud_powerups_state;
+		}
+	} else
+		pw_alpha = rm_hud_powerups_finalstate;
+
 	if (CVAR(cl_rm_hud_alt)) {/// RM hud layout
 		if (rm_skin_line_full) {
 			RM_HUD_LINE_SLICE({
@@ -731,6 +845,15 @@ void(void) rm_hud_draw {
 		// separator slice:
 		float thwidth = (rm_hud_game_info_wide ? RM_HUD_SECWIDTH_WIDE : RM_HUD_SECWIDTH_NORMAL);
 		next_sector = sbar_bottom_x - thwidth * 0.5;
+		float low = (hud_sector_x + hud_sector_pos_x + sector_gap > next_sector);
+		if (low) {
+			next_sector = sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL - thwidth - sector_sgap - sector_gap;
+			if (next_sector < thlimit) {
+				thwidth = RM_HUD_SECWIDTH_NORMAL;
+				rm_hud_game_info_wide = 0;
+				next_sector = sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL - thwidth - sector_sgap - sector_gap;
+			}
+		}
 		RM_HUD_LINE_SLICE({
 			hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
 			hudline_x = sbar_topright_x - hudline_pos_x - (sbar_bottomright_x - next_sector) - bw_left;
@@ -748,24 +871,68 @@ void(void) rm_hud_draw {
 			hud_sector_pos_x = next_sector;
 			hud_sector_x = -bw_right - bw_left;
 		}
-		// teamhud | scores
-		next_sector = sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL * 2 - sector_gap - sector_sgap;
-		RM_HUD_LINE_SLICE({
-			hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
-			hudline_x = sbar_topright_x - hudline_pos_x - (sbar_bottomright_x -
-					(sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL - sector_sgap)) - bw_left;
-		})
-		sector_alphamod = 1;
-		// scores
-		RM_HUD_LINE_SECTOR({
-			hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
-			scoresector_pos_x = hud_sector_pos_x = next_sector + RM_HUD_SECWIDTH_NORMAL + sector_gap;
-			scoresector_pos_y = hud_sector_pos_y;
-			scoresector_pos_z = 0;
-			scoresector_size = hud_sector;
-			sector_mod = '0 0 0';
-		}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
-		rm_hud_scoresorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
+		if (!low) {
+			// teamhud | powerups
+			next_sector = sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL * 2 - sector_gap - sector_sgap;
+			RM_HUD_LINE_SLICE({
+				hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
+				hudline_x = sbar_topright_x - hudline_pos_x - (sbar_bottomright_x -
+						(sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL - sector_sgap)) - bw_left;
+			})
+			// powerups
+			if (pw_alpha) {
+				RM_HUD_LINE_SECTOR({
+					hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
+					hud_sector_pos_x = next_sector;
+					powerup_pos = hud_sector_pos;
+					sector_mod = '0 0 0';
+					sector_alphamod = pw_alpha;
+				}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
+			}
+			sector_alphamod = 1;
+			// powerups | scores
+			if not(!rm_hud_powerups_enabled || rm_hud_powerups_enabled != rm_hud_powerups_finalstate) {
+				RM_HUD_LINE_SLICE({
+					hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
+					hudline_x = sector_gap - bw_right - bw_left;
+				})
+			}
+			// scores
+			RM_HUD_LINE_SECTOR({
+				hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
+				scoresector_pos_x = hud_sector_pos_x = next_sector + RM_HUD_SECWIDTH_NORMAL + sector_gap;
+				scoresector_pos_y = hud_sector_pos_y;
+				scoresector_pos_z = 0;
+				scoresector_size = hud_sector;
+				sector_mod = '0 0 0';
+			}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
+			rm_hud_scoresorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
+		} else { // If we don't have enough space, display powerups above the scores sector
+			// teamhud | scores
+			next_sector = sbar_bottomright_x - RM_HUD_SECWIDTH_NORMAL - sector_sgap;
+			RM_HUD_LINE_SLICE({
+				hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
+				hudline_x = sbar_topright_x - hudline_pos_x - (sbar_bottomright_x - next_sector) - bw_left;
+			})
+			// scores
+			RM_HUD_LINE_SECTOR({
+				hud_sector_x = RM_HUD_SECWIDTH_NORMAL;
+				scoresector_pos_x = hud_sector_pos_x = next_sector;
+				scoresector_pos_y = hud_sector_pos_y;
+				scoresector_pos_z = 0;
+				scoresector_size = hud_sector;
+				sector_mod = '0 0 0';
+			}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
+			if (pw_alpha) {
+				// powerups (drawn above scores)
+				RM_HUD_LINE_SECTOR({
+					hud_sector_pos_y = hud_sector_pos_y - hud_sector_y - sector_vgap;
+					powerup_pos = hud_sector_pos;
+					sector_alphamod = pw_alpha;
+				}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
+				sector_alphamod = 1;
+			}
+		}
 		// post-scores
 		RM_HUD_LINE_SLICE({
 			hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
@@ -903,6 +1070,15 @@ void(void) rm_hud_draw {
 			sector_mod = '0 0 0';
 		}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
 		rm_hud_scoresorigin = '1 0 0' * (hud_sector_pos_x + 0.5 * hud_sector_x) + '0 1 0' * hud_sector_pos_y;
+		if (pw_alpha) {
+			// powerups (drawn above scores)
+			RM_HUD_LINE_SECTOR({
+				hud_sector_pos_y = hud_sector_pos_y - hud_sector_y - sector_vgap;
+				powerup_pos = hud_sector_pos;
+				sector_alphamod = pw_alpha;
+			}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
+			sector_alphamod = 1;
+		}
 		// post-scores
 		RM_HUD_LINE_SLICE({
 			hudline_pos_x = hud_sector_pos_x + hud_sector_x + bw_right;
@@ -1017,7 +1193,7 @@ void(void) rm_hud_draw {
 					draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype), "s: ^3", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 				else
 					draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-				
+
 				if (hgregen && hgregen != 1) {
 					vector hgrsize = '70 3 0';
 					hgapos_y += 10;
@@ -1054,7 +1230,7 @@ void(void) rm_hud_draw {
 	rm_hud_draw_ranking(sbar_bottomright - '150 105 0', '100 100 0');
 	sbar_timer();
 	// draw strength/invincibility icon and timer
-	sbar_powerups_draw(SBAR_POWERUPS_POSITION_DEFAULT, 1);
+	rm_hud_powerups_draw(powerup_pos);
 	sbar_runes_draw();
 	if (game_info_size == '0 0 0')
 		sbar_game_hud(SBAR_GAMEINFO_POSITION_DEFAULT, '0 0 0', 1);
@@ -1080,14 +1256,9 @@ void(float p) rm_hud_score_draw {
 	rpos = bottomright;
 	rpos_y -= 150;
 	rpos_x -= 105;
-	//if (rm_oldhud) {
-	//	score_pos = bottomright - '196 42 0';
-	//	secondary_score_pos = score_pos + '132 -6 0';
-	//} else {
-		bottomright_x = p + RM_HUD_SECWIDTH_NORMAL + 8;
-		score_pos = bottomright - '178 38 0';
-		secondary_score_pos = score_pos + '72 0 0';
-	//}
+	bottomright_x = p + RM_HUD_SECWIDTH_NORMAL + 8;
+	score_pos = bottomright - '178 38 0';
+	secondary_score_pos = score_pos + '72 0 0';
 	if (!team_mode) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
 		pl = player_list.sort_next;
@@ -1111,15 +1282,10 @@ void(float p) rm_hud_score_draw {
 		else
 			distribution_color = '1 0 0';
 
-		//if (rm_oldhud) {
-		//	Sbar_DrawXNum(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		//	Sbar_DrawXNum(score_pos, score, 4, 0, 34, distribution_color, leader, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		//} else {
-			score_pos = score_pos + ((score > 9) ? '24 0 0' : '0 0 0');
-			secondary_score_pos = score_pos + '24 0 0' * 2.7 + '16 0 0' * (distribution > 9);
-			sbar_draw_num(score_pos, score, 4, 0, 24, '1 1 1' * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
-			sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		//}
+		score_pos = score_pos + ((score > 9) ? '24 0 0' : '0 0 0');
+		secondary_score_pos = score_pos + '24 0 0' * 2.7 + '16 0 0' * (distribution > 9);
+		sbar_draw_num(score_pos, score, 4, 0, 24, '1 1 1' * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float max_fragcount;
 		max_fragcount = -999;
@@ -1136,21 +1302,13 @@ void(float p) rm_hud_score_draw {
 				if (max_fragcount == score)
 					leader = 1;
 
-				//if (rm_oldhud)
-				//	Sbar_DrawXNum(score_pos, score, 4, 0, 34, GetTeamRGB(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				//else
-					sbar_draw_num(score_pos + ((score > 9) ? '24 0 0' : '0 0 0'), score, 4, 0, 24, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(score_pos + ((score > 9) ? '24 0 0' : '0 0 0'), score, 4, 0, 24, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
 
-				//if (rm_oldhud) {
-				//	Sbar_DrawXNum(secondary_score_pos, score, 4, 0, 16, GetTeamRGB(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				//	secondary_score_pos = secondary_score_pos + '0 16 0';
-				//} else {
-					sbar_draw_num(secondary_score_pos, score, 4, 0, 16, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
-					secondary_score_pos = secondary_score_pos + '18 0 0';
-				//}
+				sbar_draw_num(secondary_score_pos, score, 4, 0, 16, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				secondary_score_pos = secondary_score_pos + '18 0 0';
 			}
 		}
 	}
