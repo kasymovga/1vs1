@@ -967,7 +967,7 @@ msgid "^7Your ability class will be changed at next spawn"
 msgstr "^7Votre capacité sera changée à votre prochaine mort"
 
 msgid "Please select game type for next map:"
-msgstr "Choisis le type de jeu pour la prochaine carte :
+msgstr "Choisis le type de jeu pour la prochaine carte :"
 
 msgid "Apply immediately"
 msgstr "Effectuer immédiatement"
