@@ -227,6 +227,7 @@ void(void) weapon_fireball_attack1 {
 		self.ammo_rockets = self.ammo_rockets - g_balance_fireball_primary_ammo;
 
 	c = math_mod(self.bulletcounter, 4);
+	self.bulletcounter += 1;
 	switch(c) {
 	case 0:
 		f_diff = '-1.25 -3.75 0';
@@ -294,6 +295,7 @@ float(float req) weapon_fireball {
 		precache_sound("weapons/fireball_fire2.wav");
 		precache_sound("weapons/fireball_prefire2.wav");
 	} else if (req == WEAPON_REQUEST_SETUP) {
+		self.bulletcounter = 0;
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 		if(weapon_deathtype & HITTYPE_SECONDARY)
 			weapon_deathtypestring = "should have used a smaller gun";

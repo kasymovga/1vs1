@@ -33,7 +33,6 @@ float g_balance_hlac_reloadtime;
 var .float hlac_buttonatck1 = BUTTON_ATCK;
 var .float hlac_buttonatck2 = BUTTON_ATCK2;
 
-.float HLAC_bulletcounter;
 .float hlac_ammoclip;
 
 void(void) weapon_hlac_attack {
@@ -42,7 +41,7 @@ void(void) weapon_hlac_attack {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
 		self.ammo_cells = self.ammo_cells - g_balance_hlac_primary_ammo;
 	}
-	spread = g_balance_hlac_primary_spread_min + (g_balance_hlac_primary_spread_add * self.HLAC_bulletcounter);
+	spread = g_balance_hlac_primary_spread_min + (g_balance_hlac_primary_spread_add * self.bulletcounter);
 	spread = min(spread,g_balance_hlac_primary_spread_max);
 	if (self.crouch)
 	if (self.flags & FL_ONGROUND_OR_SLICK)
@@ -121,7 +120,7 @@ void(void) weapon_hlack_fire1_02 {
 		}
 		WEAPON_ATTACK_FINISHED(self) = time + g_balance_hlac_primary_refire * weapon_rate_factor();
 		weapon_hlac_attack();
-		self.HLAC_bulletcounter = self.HLAC_bulletcounter + 1;
+		self.bulletcounter += 1;
 		weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
 	} else {
 		weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hlac_primary_animtime, weapon_ready);
@@ -154,7 +153,7 @@ float(float req) weapon_hlac {
 		} else if (!g_balance_hlac_magazinecapacity || self.hlac_ammoclip > 0) {
 			if (self.hlac_buttonatck1)
 			if (weapon_prepareattack(0, g_balance_hlac_primary_refire)) {
-				self.HLAC_bulletcounter = 0;
+				self.bulletcounter = 0;
 				weapon_hlac_attack();
 				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
 			}

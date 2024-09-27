@@ -735,7 +735,6 @@ void(float windex) weapon_setup {
 	// the two weapon entities will notice this has changed and update their models
 	self.weapon = windex;
 	self.weaponname = e.mdl;
-	self.bulletcounter = 0;
 	self.ammoclip = 0;
 	self.ammoclipmax = 0;
 	weapon_action(windex, WEAPON_REQUEST_SETUP);
@@ -786,7 +785,6 @@ float(float secondary, float attacktime) weapon_prepareattack {
 		}
 		WEAPON_ATTACK_FINISHED(self) = WEAPON_ATTACK_FINISHED(self) + attacktime * weapon_rate_factor();
 	}
-	self.bulletcounter += 1;
 	return TRUE;
 }
 

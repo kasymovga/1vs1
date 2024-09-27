@@ -22,10 +22,10 @@ float g_balance_uzi_recoil;
 
 var .float uzi_buttonatck1 = BUTTON_ATCK;
 var .float uzi_buttonatck2 = BUTTON_ATCK2;
-.float uzi_bulletcounter;
+
 void(float deathtype) weapon_uzi_attack {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
-		if (self.uzi_bulletcounter == 1)
+		if (self.bulletcounter == 1)
 			self.ammo_nails = self.ammo_nails - g_balance_uzi_first_ammo;
 		else
 			self.ammo_nails = self.ammo_nails - g_balance_uzi_sustained_ammo;
@@ -39,7 +39,7 @@ void(float deathtype) weapon_uzi_attack {
 	weapon_shake(1);
 	// this attack_finished just enforces a cooldown at the end of a burst
 	WEAPON_ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
-	if (self.uzi_bulletcounter == 1) {
+	if (self.bulletcounter == 1) {
 		entity pts = rm_buffs_meodp_hitscan_begin(self);
 		bullet(weapon_shotorg, weapon_shotorg_visual, weapon_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed,
 				5, g_balance_uzi_first_damage, g_balance_uzi_first_damage_headshot,
@@ -70,7 +70,7 @@ void(void) weapon_uzi_fire1_02 {
 			weapon_ready();
 			return;
 		}
-		self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
+		self.bulletcounter += 1;
 		weapon_uzi_attack(WEAPON_UZI);
 		weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
 	} else
@@ -102,14 +102,14 @@ float(float req) weapon_uzi {
 		} else if (!g_balance_uzi_magazinecapacity || self.uzi_ammoclip > 0) {
 			if (self.uzi_buttonatck1)
 			if (weapon_prepareattack(0, 0)) {
-				self.uzi_bulletcounter = 1;
+				self.bulletcounter = 1;
 				weapon_uzi_attack(WEAPON_UZI); // sets attack_finished
 				weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
 			}
 			if (self.uzi_buttonatck2)
 			if (g_balance_uzi_first)
 			if (weapon_prepareattack(1, 0)) {
-				self.uzi_bulletcounter = 1;
+				self.bulletcounter = 1;
 				weapon_uzi_attack(WEAPON_UZI | HITTYPE_SECONDARY); // sets attack_finished
 				weapon_thinkf(WEAPON_FRAME_FIRE2, g_balance_uzi_first_refire, weapon_ready);
 			}
