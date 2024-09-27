@@ -536,19 +536,17 @@ void(void) rm_hud_draw_server_info {
 float rm_hud_powerups_enabled;
 
 void(vector sectorpos) rm_hud_powerups_draw {
-	string str_icon = "gfx/hud/sb_str", inv_icon = "gfx/hud/sb_invinc";
+	if not(rm_hud_powerups_enabled)
+		return;
+
+	string str_icon = "gfx/hud/sb_str", inv_icon = "gfx/hud/sb_invinc", str_icon2 = "", str_icon3 = "", inv_icon2 = "", inv_icon3 = "";
 	vector pos, numpos;
 	vector bottom;
 	bottom_x = CVAR(vid_conwidth) / 2;
 	bottom_y = CVAR(vid_conheight);
 	bottom_z = 0;
-	float stat_items, dt;
-	stat_items = getstati(STAT_ITEMS);
-	if not(rm_hud_powerups_enabled)
-		return;
-
 	vector picsize;
-	float strength_time, invincibility_time, countdown_fontsize;
+	float strength_time, strength_time2 = 0, strength_time3 = 0, invincibility_time, invincibility_time2 = 0, invincibility_time3 = 0, countdown_fontsize;
 	picsize = '22 22 0';
 	pos = sectorpos;
 	pos_y -= 1;
@@ -558,63 +556,118 @@ void(vector sectorpos) rm_hud_powerups_draw {
 	invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
 	if not(strength_time) {
 		strength_time = getstatf(STAT_INVISIBILITY_FINISHED);
-		if (strength_time)
+		if (strength_time) {
+			strength_time -= time;
 			str_icon = "gfx/hud/sb_invisibility";
-		else {
+			strength_time2 = getstatf(STAT_AKIMBO_FINISHED);
+			if (strength_time2) {
+				strength_time2 -= time;
+				str_icon2 = "gfx/hud/sb_akimbo";
+			}
+		} else {
 			strength_time = getstatf(STAT_AKIMBO_FINISHED);
-			if (strength_time)
+			if (strength_time) {
+				strength_time -= time;
 				str_icon = "gfx/hud/sb_akimbo";
+			}
+		}
+	} else {
+		strength_time -= time;
+		strength_time2 = getstatf(STAT_INVISIBILITY_FINISHED);
+		if (strength_time2) {
+			strength_time2 -= time;
+			str_icon2 = "gfx/hud/sb_invisibility";
+			strength_time3 = getstatf(STAT_AKIMBO_FINISHED);
+			if (strength_time3) {
+				strength_time3 -= time;
+				str_icon3 = "gfx/hud/sb_akimbo";
+			}
+		} else {
+			strength_time2 = getstatf(STAT_AKIMBO_FINISHED);
+			if (strength_time2) {
+				strength_time2 -= time;
+				str_icon2 = "gfx/hud/sb_akimbo";
+			}
 		}
 	}
 	if not(invincibility_time) {
 		invincibility_time = getstatf(STAT_SPEED_FINISHED);
-		if (invincibility_time)
+		if (invincibility_time) {
+			invincibility_time -= time;
 			inv_icon = "gfx/hud/sb_speed";
-		else {
-			invincibility_time = getstati(STAT_FUEL);
-			if (invincibility_time) {
-				inv_icon = "gfx/hud/sb_fuel";
+			invincibility_time2 = getstati(STAT_FUEL);
+			if (invincibility_time2) {
+				inv_icon2 = "gfx/hud/sb_fuel";
 			}
+		} else {
+			invincibility_time = getstati(STAT_FUEL);
+			if (invincibility_time)
+				inv_icon = "gfx/hud/sb_fuel";
+		}
+	} else {
+		invincibility_time -= time;
+		invincibility_time2 = getstatf(STAT_SPEED_FINISHED);
+		if (invincibility_time2) {
+			invincibility_time2 -= time;
+			inv_icon2 = "gfx/hud/sb_speed";
+			invincibility_time3 = getstati(STAT_FUEL);
+			if (invincibility_time3) {
+				inv_icon3 = "gfx/hud/sb_fuel";
+			}
+		} else {
+			invincibility_time2 = getstati(STAT_FUEL);
+			if (invincibility_time2)
+				inv_icon2 = "gfx/hud/sb_fuel";
 		}
 	}
 	if (strength_time) {
-		dt = strength_time - time;
-		if (dt > 0) {
-			if (dt < 5) {
+		if (strength_time > 0) {
+			if (strength_time < 5) {
 				draw_pic_expanding_two(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
-					bound(0, (ceil(dt) - dt) / 0.5, 1));
+					bound(0, (ceil(strength_time) - strength_time) / 0.5, 1));
 			} else {
 				drawpic(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 			}
-			if (ceil(dt) < 10)
+			if (ceil(strength_time) < 10)
 				numpos_x -= countdown_fontsize;
 
-			sbar_draw_num(numpos, ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		} else if(dt > -1) {
+			sbar_draw_num(numpos, ceil(strength_time), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		} else if(strength_time > -1) {
 			draw_pic_expanding(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
-				bound(0, -dt / 0.5, 1));
+				bound(0, -strength_time / 0.5, 1));
+		}
+		if (strength_time2) {
+			drawpic(pos + '30 0 0', str_icon2, '12 12 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			sbar_draw_num(pos + '30 2 0', ceil(strength_time2), 2, 0, 8, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			if (strength_time3) {
+				drawpic(pos + '36 16 0', str_icon3, '6 6 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+				sbar_draw_num(pos + '34 14 0', ceil(strength_time3), 2, 0, 6, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			}
 		}
 	}
 	pos_x += 80;
 	numpos = pos - '16 -10 0';
 	//invincibility
 	if (invincibility_time) {
-		if (inv_icon == "gfx/hud/sb_fuel")
-			dt = invincibility_time;
-		else
-			dt = invincibility_time - time;
-
-		if (dt > 0) {
-			if (dt < 5) {
+		if (invincibility_time > 0) {
+			if (invincibility_time < 5) {
 				draw_pic_expanding_two(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
-					bound(0, (ceil(dt) - dt) / 0.5, 1));
+					bound(0, (ceil(invincibility_time) - invincibility_time) / 0.5, 1));
 			} else {
 				drawpic(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 			}
-			sbar_draw_num(numpos, ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		} else if(dt > -1) {
+			sbar_draw_num(numpos, ceil(invincibility_time), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		} else if(invincibility_time > -1) {
 			draw_pic_expanding(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
-				bound(0, -dt / 0.5, 1));
+				bound(0, -invincibility_time / 0.5, 1));
+		}
+		if (invincibility_time2) {
+			drawpic(pos + '-30 0 0', inv_icon2, '12 12 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			sbar_draw_num(pos + '-30 2 0', ceil(invincibility_time2), 2, 0, 8, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			if (invincibility_time3) {
+				drawpic(pos + '-30 16 0', inv_icon3, '6 6 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+				sbar_draw_num(pos + '-30 14 0', ceil(invincibility_time3), 2, 0, 6, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			}
 		}
 	}
 }
