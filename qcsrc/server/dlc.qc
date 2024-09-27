@@ -5,6 +5,41 @@ string dlc_sounds;
 string dlc_extra_pk3_list;
 string dlc_rexext_forcemodel;
 
+string(string s) dlc_trimquotes {
+	if (substring(s, 0, 1) == "\"")
+	if (substring(s, strlen(s) - 1, 1) == "\"")
+		s = substring(s, 1, strlen(s) - 2);
+
+	return s;
+}
+
+string(string s) dlc_trimcommentary {
+	float n = -1;
+	float doubleslash = -1;
+	float hash = -1;
+	float quote = strstrofs(s, "\"", 0);
+	while ((n = strstrofs(s, "//", n + 1)) > 0) {
+		if (quote < 0 || strstrofs(s, "\"", n) < 0 || quote > n ) {
+			doubleslash = n;
+			break;
+		}
+	}
+	n = -1;
+	while ((n = strstrofs(s, "#", n + 1)) > 0) {
+		if (quote < 0 || strstrofs(s, "\"", n) < 0 || quote > n ) {
+			hash = n;
+			break;
+		}
+	}
+	if (doubleslash > 0)
+		s = substring(s, 0, doubleslash);
+
+	if (hash > 0 && (doubleslash < 0 || hash < doubleslash))
+		s = substring(s, 0, hash);
+
+	return s;
+}
+
 string(string s) dlc_trimspaces {
 	string c;
 	for (;;) {
@@ -91,7 +126,7 @@ float(string s) dlc_load_settemps_from {
 
 			string req = cvar_name;
 			cvar_name = substring(line, 0, separator);
-			cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
+			cvar_value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(substring(line, separator + 1, -1))));
 			if (req == "require") {
 				if (cvar_name == "g_profile") {
 					if not(cvar_profile_presents(cvar_value)) {
@@ -125,7 +160,7 @@ float(string s) dlc_load_settemps_from {
 			}
 			continue;
 		}
-		cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
+		cvar_value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(substring(line, separator + 1, -1))));
 		if (cvar_name == "g_player_forcemodel" && cvar_value != "0") {
 			if (dlc_load_player_model_not_forced > 0) continue;
 			if (strstrofs(strcat(" ", dlc_rexext_forcemodel, " "), strcat(" ", cvar_value, " "), 0) >= 0) continue;
