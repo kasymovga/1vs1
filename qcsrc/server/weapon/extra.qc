@@ -316,6 +316,9 @@ float(float req) weapon_extra_think {
 		float pt = weapon_extra_primary_type[extra_num];
 		float st = weapon_extra_secondary_type[extra_num];
 		float secondary = 0;
+		if (self.bulletcounter) {
+			return TRUE;
+		}
 		if (!st) {
 			if (!pt) return TRUE; //weapon broken
 			secondary = 0;
@@ -364,9 +367,25 @@ float(float req) weapon_extra_think {
 			}
 		}
 	} else if (req == WEAPON_REQUEST_THINK) {
+		float ba = self.BUTTON_ATCK;
+		float ba2 = self.BUTTON_ATCK2;
+		if (self.bulletcounter) {
+			if (self.bulletcounter & 1) {
+				if (ba)
+					ba = 0;
+				else
+					self.bulletcounter &= ~1;
+			}
+			if (self.bulletcounter & 2) {
+				if (ba2)
+					ba2 = 0;
+				else
+					self.bulletcounter &= ~2;
+			}
+		}
 		float magazinecapacity = weapon_extra_magazinecapacity[extra_num];
 		var .float extra_ammoclip = weapon_extra_clip[extra_num];
-		if (magazinecapacity && (self.extra_ammoclip < 0 || (!self.extra_ammoclip && (self.BUTTON_ATCK || self.BUTTON_ATCK2)))) { // forced reload (e.g. because interrupted)
+		if (magazinecapacity && (self.extra_ammoclip < 0 || (!self.extra_ammoclip && (ba || ba2)))) { // forced reload (e.g. because interrupted)
 			if (self.switchweapon == self.weapon)
 			if (self.weaponentity.state == WEAPON_STATE_READY)
 				weapon_extra_reload(extra_num);
@@ -374,7 +393,7 @@ float(float req) weapon_extra_think {
 			float t = 0;
 			float burst;
 			void(void) ready_func;
-			if (self.BUTTON_ATCK && (t = weapon_extra_primary_type[extra_num])) {
+			if (ba && (t = weapon_extra_primary_type[extra_num])) {
 				if (weapon_prepareattack(0, weapon_extra_primary_refire[extra_num])) {
 					weapon_extra_attack(extra_num, FALSE, t);
 					burst = weapon_extra_primary_burst[extra_num];
@@ -385,12 +404,14 @@ float(float req) weapon_extra_think {
 							ready_func = weapon_extra_primary_burst_1;
 						else
 							ready_func = weapon_ready;
-					} else
+					} else {
 						ready_func = weapon_ready;
-
+						if (burst < 0)
+							self.bulletcounter |= 1;
+					}
 					weapon_thinkf(WEAPON_FRAME_FIRE1, weapon_extra_primary_animtime[extra_num], ready_func);
 				}
-			} else if (self.BUTTON_ATCK2 && (t = weapon_extra_secondary_type[extra_num])) {
+			} else if (ba2 && (t = weapon_extra_secondary_type[extra_num])) {
 				if (weapon_prepareattack(1, weapon_extra_secondary_refire[extra_num])) {
 					weapon_extra_attack(extra_num, TRUE, t);
 					burst = weapon_extra_secondary_burst[extra_num];
@@ -401,9 +422,10 @@ float(float req) weapon_extra_think {
 							ready_func = weapon_extra_secondary_burst_1;
 						else
 							ready_func = weapon_ready;
-					} else
+					} else {
 						ready_func = weapon_ready;
-
+						if (burst < 0) self.bulletcounter |= 2;
+					}
 					weapon_thinkf(WEAPON_FRAME_FIRE2, weapon_extra_secondary_animtime[extra_num], ready_func);
 				}
 			}
@@ -439,6 +461,7 @@ float(float req) weapon_extra_think {
 		if (mc && at) {
 			weapon_clip_setup(mc, item_counter_field(at), weapon_extra_clip[extra_num], weapon_extra_primary_ammo[extra_num], weapon_extra_secondary_ammo[extra_num]);
 		}
+		self.bulletcounter = 0;
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		weapon_clip_reset(weapon_extra_magazinecapacity[extra_num], weapon_extra_clip[extra_num]);
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
