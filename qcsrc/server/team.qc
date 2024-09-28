@@ -13,58 +13,45 @@ void team_balance_audit(float force);
 // # of bots on those teams
 float team1_bots, team2_bots, team3_bots, team4_bots;
 
-string team_color_name(float t)
-{
-    // fixme: Search for team entities and get their .netname's!
-    if (t == COLOR_TEAM1)
-        return "Red";
-    if (t == COLOR_TEAM2)
-        return "Blue";
-    if (t == COLOR_TEAM3)
-        return "Yellow";
-    if (t == COLOR_TEAM4)
-        return "Pink";
+string(float t) team_color_name {
+	// fixme: Search for team entities and get their .netname's!
+	if (t == COLOR_TEAM1) return "Red";
+	if (t == COLOR_TEAM2) return "Blue";
+	if (t == COLOR_TEAM3) return "Yellow";
+	if (t == COLOR_TEAM4) return "Pink";
     return "Neutral";
 }
 
-vector team_colormod(float teamcolor) {
-    if (teamcolor == COLOR_TEAM1)
-		return '1.8 0.6 0.6';
-    else if (teamcolor == COLOR_TEAM2)
-		return '0.6 0.6 1.8';
-    else if (teamcolor == COLOR_TEAM3)
-		return '1.4 1.4 0.2';
-    else if (teamcolor == COLOR_TEAM4)
-		return '1.4 0.2 1.4';
-
+vector(float teamcolor) team_colormod {
+	if (teamcolor == COLOR_TEAM1) return '1.8 0.6 0.6';
+	if (teamcolor == COLOR_TEAM2) return '0.6 0.6 1.8';
+	if (teamcolor == COLOR_TEAM3) return '1.4 1.4 0.2';
+	if (teamcolor == COLOR_TEAM4) return '1.4 0.2 1.4';
 	return '0 0 0';
 }
 
 float team_from_index(float i) {
-    switch(i) {
-        case 0: return COLOR_TEAM1;
-        case 1: return COLOR_TEAM2;
-        case 2: return COLOR_TEAM3;
-        case 3: return COLOR_TEAM4;
-    }
-
-    return 0;
+	switch (i) {
+	case 0: return COLOR_TEAM1;
+	case 1: return COLOR_TEAM2;
+	case 2: return COLOR_TEAM3;
+	case 3: return COLOR_TEAM4;
+	}
+	return 0;
 }
 
 vector(float teem) team_color {
-	switch(teem)
-	{
-		case COLOR_TEAM1:
-			return '1 0.0625 0.0625';
-		case COLOR_TEAM2:
-			return '0.0625 0.0625 1';
-		case COLOR_TEAM3:
-			return '1 1 0.0625';
-		case COLOR_TEAM4:
-			return '1 0.0625 1';
-		default:
-			return '1 1 1';
+	switch(teem) {
+	case COLOR_TEAM1:
+		return '1 0.0625 0.0625';
+	case COLOR_TEAM2:
+		return '0.0625 0.0625 1';
+	case COLOR_TEAM3:
+		return '1 1 0.0625';
+	case COLOR_TEAM4:
+		return '1 0.0625 1';
 	}
+	return '1 1 1';
 }
 
 string(float t) team_name {
@@ -77,14 +64,10 @@ string(float t) team_colored_name {
 
 string(float t) team_name_by_no {
 	// fixme: Search for team entities and get their .netname's!
-	if(t == 1)
-		return "Red Team";
-	if(t == 2)
-		return "Blue Team";
-	if(t == 3)
-		return "Yellow Team";
-	if(t == 4)
-		return "Pink Team";
+	if (t == 1) return "Red Team";
+	if (t == 2) return "Blue Team";
+	if (t == 3) return "Yellow Team";
+	if (t == 4) return "Pink Team";
 	return "Neutral Team";
 }
 
