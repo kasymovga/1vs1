@@ -124,6 +124,7 @@ void(void) world_static_init {
 	weapon_score_init();
 	IP2C_InitSV();
 	cheat_init();
+	soulmates_init();
 }
 
 void(void) world_dynamic_init {

@@ -229,6 +229,7 @@ void(void) soulmates_controller_think {
 						pl2 = soulmates_last_attached(pl2);
 						pl.movetype = MOVETYPE_FOLLOW;
 						pl.velocity = '0 0 0';
+						pl.flags |= FL_ONGROUND;
 						pl.soulmates_gem.aiment = spawn();
 						pl.aiment = pl.soulmates_gem.aiment;
 						pl.soulmates_gem.aiment.aiment = pl2;

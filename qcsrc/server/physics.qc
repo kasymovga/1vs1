@@ -289,6 +289,7 @@ void(void) physics_player_pre { //called by engine
 			self.flags &= ~FL_SWIM;
 			cheat_assign(self, flags, FL_FLY, "FLY");
 			self.movetype = MOVETYPE_QCWALK;
+		} else if (self.movetype == MOVETYPE_FOLLOW) {
 		} else if (allowed_to_move) {
 			self.movetype = MOVETYPE_QCWALK;
 		} else {

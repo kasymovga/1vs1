@@ -726,9 +726,10 @@ void(void) physics_player_frame {
 		physics_movement = m;
 	}
 	physics_frame_begin_hook();
-	if (physics_movetype == MOVETYPE_NONE)
+	if (physics_movetype == MOVETYPE_NONE || physics_movetype == MOVETYPE_FOLLOW) {
+		physics_frame_end_hook();
 		return;
-
+	}
 	maxspd_mod = physics_max_speed_mod();
 	if (physics_is_player) {
 		if (physics_plug)

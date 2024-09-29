@@ -103,7 +103,7 @@ void(entity source) antilag_begin {
 		// take players back into the past
 		entity e;
 		PLAYER_FOR_EACH(e)
-			if (e != source) {
+			if (e != source || e.movetype == MOVETYPE_FOLLOW) {
 				antilag_takeback(e, past);
 			}
 		for (e = _antilag_chain; e; e = e.antilag_chain)
@@ -116,7 +116,7 @@ void(void) antilag_end {
 	if (antilag_lag) {
 		entity e;
 		PLAYER_FOR_EACH(e)
-			if (e != antilag_source)
+			if (e != antilag_source || e.movetype == MOVETYPE_FOLLOW)
 				antilag_restore(e);
 
 		for (e = _antilag_chain; e; e = e.antilag_chain)

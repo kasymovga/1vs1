@@ -163,6 +163,7 @@ map_info.qh
 debris.qh
 thirdview.qh
 ability.qh
+soulmates.qh
 sound.qc
 announce.qc
 marker.qc
@@ -406,3 +407,4 @@ rm.qc
 jb.qc
 jb_role.qc
 print.qc
+soulmates.qc
