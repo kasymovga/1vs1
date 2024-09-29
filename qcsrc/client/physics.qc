@@ -16,6 +16,7 @@ float physics_ground_lastent;
 float physics_skimming_start;
 float physics_cpmdoublejump_time_start;
 float physics_command_frame;
+float physics_predicted;
 
 vector(void) physics_side_adjust_view {
 	makevectors('0 90 0');
@@ -175,7 +176,8 @@ float physics_last_RIGHT_KEY_time;
 float physics_last_LEFT_KEY_time;
 vector(void) physics_view_origin {
 	vector v;
-	if (physics && servercommandframe && clientcommandframe && (!view_spectatee_status || view_observer_status) && physics_movetype != MOVETYPE_FOLLOW) {
+	physics_predicted = (physics && servercommandframe && clientcommandframe && physics_movetype != MOVETYPE_NONE && physics_movetype != MOVETYPE_FOLLOW);
+	if (physics_predicted) {
 		float frametime_save = frametime;
 		float n = clientcommandframe;
 		physics_skimming = physics_skimming_start;
@@ -290,8 +292,7 @@ void(void) physics_camera_setup {
 			view_camera_origin = view_origin;
 
 		if not(view_camera_free_active) {
-			if not(view_spectatee_status)
-			if (physics_movetype != MOVETYPE_FOLLOW)
+			if (physics_predicted)
 			if not(physics_player_ent) {
 				if (extension_DP_RM_SETRENDERENTITY) {
 					if not(main_isdemo)

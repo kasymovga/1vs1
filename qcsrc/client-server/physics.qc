@@ -726,17 +726,12 @@ void(void) physics_player_frame {
 		physics_movement = m;
 	}
 	physics_frame_begin_hook();
-	if (physics_movetype == MOVETYPE_NONE || physics_movetype == MOVETYPE_FOLLOW) {
-		physics_frame_end_hook();
-		return;
-	}
 	maxspd_mod = physics_max_speed_mod();
 	if (physics_is_player) {
 		if (physics_plug)
-		if (physics_plug()) {
-			physics_frame_end_hook();
-			return;
-		}
+		if (physics_plug())
+			goto finish;
+
 		physics_update_status();
 		if (physics_button_crouch) {
 			if not(sv_disable_crouch)
@@ -785,6 +780,7 @@ void(void) physics_player_frame {
 		if (physics_player_plug(maxspd_mod))
 			goto end;
 	}
+	if (physics_movetype == MOVETYPE_NONE || physics_movetype == MOVETYPE_FOLLOW) goto finish;
 	if (physics_flags & FL_WATERJUMP) {
 		physics_velocity_x = self.movedir_x;
 		physics_velocity_y = self.movedir_y;
@@ -1008,6 +1004,7 @@ void(void) physics_player_frame {
 		if (trace_fraction < 1)
 			self.view_ofs = trace_endpos - self.origin - '0 0 2';
 	}
+:finish
 	physics_frame_end_hook();
 }
 
