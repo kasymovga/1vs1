@@ -81,6 +81,16 @@ void(void) soulmates_gem_touch {
 	if (other.classname != "player") return;
 	if (PLAYER_DEAD(other)) return;
 	if (self.spawnshieldtime > time) return;
+	RM_ELSE({
+		rm_bigprint_spec(other, "You've got a Soul Gem!", "Collide with a teammate to connect!", 2);
+	}, {
+		print_to_spec(other, PRINT_CENTER, "You've got a Soul Gem!\nCollide with a teammate to connect!", "", "", "");
+	})
+	print_all(PRINT_INFO, "{1}^2 picked up a soul gem!", other.netname, "", "");
+	entity e;
+	CLIENT_FOR_EACH_REAL(e) if (e != other)
+		print_to(e, PRINT_CENTER, "{1}^2 picked up a soul gem!", other.netname, "", "");
+
 	other.soulmates_gem = self;
 	sound_play2all("kh/capture.wav");
 	self.solid = SOLID_NOT;
@@ -220,7 +230,7 @@ void(float before, float after, float t) soulmates_gems_adjust {
 
 void(void) soulmates_controller_think {
 	self.nextthink = time;
-	entity pl, pl2;
+	entity pl, pl2, e;
 	PLAYER_FOR_EACH(pl) {
 		if (pl.soulmates_gem && pl.movetype != MOVETYPE_FOLLOW) {
 			PLAYER_FOR_EACH(pl2) {
@@ -234,6 +244,15 @@ void(void) soulmates_controller_think {
 						pl.aiment = pl.soulmates_gem.aiment;
 						pl.soulmates_gem.aiment.aiment = pl2;
 						setorigin(pl.soulmates_gem.aiment, pl2.origin + pl2.size_z * '0 0 0.82');
+						RM_ELSE({
+							PLAYER_FOR_EACH(e) if (e.team != pl2.team)
+								rm_bigprint_spec(other, "^1Warning!", strcat(pl.netname, " ^7 is now ", pl2.netname, "^7's soulmate!"), 2);
+						}, {
+							print_all(PRINT_INFO, "{1}^7 is now {2}^7's soulmate!", pl.netname, pl2.netname, "");
+						})
+						print_to_spec(pl, PRINT_CENTER, "You are now {1}^7's soulmate!", pl2.netname, "", "");
+						print_to_spec(pl2, PRINT_CENTER, "{1}^7 is now your soulmate!", pl.netname, "", "");
+						sound_play2all("kh/capture.wav");
 						goto next_player;
 					}
 				}
