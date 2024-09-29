@@ -27,5 +27,5 @@ void(string bigstring, string comment, float staytime) rm_bigprint_all_player_sp
 	entity e;
 	CLIENT_FOR_EACH_REAL(e)
 		if (e.classname == "player" || e.classname == "spectator")
-		rm_bigprint(e, bigstring, comment, staytime);
+			rm_bigprint(e, bigstring, comment, staytime);
 }
