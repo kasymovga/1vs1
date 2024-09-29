@@ -173,26 +173,22 @@ void(entity ignore) team_teams_count {
 				bvalue = 0;
 
 			if (head.team == COLOR_TEAM1) {
-				if(team1 >= 0)
-				{
+				if (team1 >= 0) {
 					team1 = team1 + value;
 					team1_bots = team1_bots + bvalue;
 				}
 			} else if (head.team == COLOR_TEAM2) {
-				if(team2 >= 0)
-				{
+				if (team2 >= 0) {
 					team2 = team2 + value;
 					team2_bots = team2_bots + bvalue;
 				}
 			} else if (head.team == COLOR_TEAM3) {
-				if(team3 >= 0)
-				{
+				if (team3 >= 0) {
 					team3 = team3 + value;
 					team3_bots = team3_bots + bvalue;
 				}
 			} else if (head.team == COLOR_TEAM4) {
-				if(team4 >= 0)
-				{
+				if (team4 >= 0) {
 					team4 = team4 + value;
 					team4_bots = team4_bots + bvalue;
 				}
@@ -310,8 +306,7 @@ void (entity pl, float forcebestteam) team_join_best {
 	team_teams_allowed(pl);
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team
-	if(!forcebestteam)
-	{
+	if (!forcebestteam) {
 		if (team1 >= 0 && pl.team == COLOR_TEAM1)
 			selectedteam = pl.team;
 		else if (team2 >= 0 && pl.team == COLOR_TEAM2)
@@ -323,20 +318,20 @@ void (entity pl, float forcebestteam) team_join_best {
 		else
 			selectedteam = -1;
 
-		if(selectedteam > 0) {
+		if (selectedteam > 0) {
 			player_set_team(pl, team_index(selectedteam), team_index(pl.team), FALSE);
 			return;
 		}
 		// otherwise end up on the smallest team (handled below)
 	}
 	smallest = team_find_smallest(pl);
-	if(smallest == 1)
+	if (smallest == 1)
 		player_set_team(pl, team_index(COLOR_TEAM1), team_index(pl.team), FALSE);
-	else if(smallest == 2)
+	else if (smallest == 2)
 		player_set_team(pl, team_index(COLOR_TEAM2), team_index(pl.team), FALSE);
-	else if(smallest == 3)
+	else if (smallest == 3)
 		player_set_team(pl, team_index(COLOR_TEAM3), team_index(pl.team), FALSE);
-	else if(smallest == 4)
+	else if (smallest == 4)
 		player_set_team(pl, team_index(COLOR_TEAM4), team_index(pl.team), FALSE);
 	else
 		error("smallest team: invalid team\n");
