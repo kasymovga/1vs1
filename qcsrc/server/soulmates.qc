@@ -103,7 +103,9 @@ void(void) soulmates_gem_touch {
 void(void) soulmates_gem_think {
 	self.glow_size = 256 + cos(time * 2) * 64;
 	if (self.aiment) {
-		setorigin(self.aiment, self.aiment.aiment.origin + '0 0 0.82' * self.aiment.aiment.size_z);
+		entity pl = self.aiment.aiment;
+		entity ple = player_entity(pl);
+		setorigin(self.aiment, ple.origin + '0 0 1' * (ple.maxs_z - self.owner.mins_z) - self.owner.view_ofs);
 	}
 	if (self.owner) {
 		vector ang = '0 0 0';
@@ -243,7 +245,7 @@ void(void) soulmates_controller_think {
 						pl.soulmates_gem.aiment = spawn();
 						pl.aiment = pl.soulmates_gem.aiment;
 						pl.soulmates_gem.aiment.aiment = pl2;
-						setorigin(pl.soulmates_gem.aiment, pl2.origin + pl2.size_z * '0 0 0.82');
+						setorigin(pl.soulmates_gem.aiment, pl2.origin + '0 0 1' * (pl2.maxs_z - pl.mins_z) - pl.view_ofs);
 						RM_ELSE({
 							PLAYER_FOR_EACH(e) if (e.team != pl2.team)
 								rm_bigprint_spec(other, "^1Warning!", strcat(pl.netname, " ^7 is now ", pl2.netname, "^7's soulmate!"), 2);

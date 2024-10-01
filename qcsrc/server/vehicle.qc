@@ -269,6 +269,9 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	if (other.classname != "player")
 		return FALSE;
 
+	if (other.movetype == MOVETYPE_FOLLOW || other.movetype == MOVETYPE_NONE)
+		return FALSE;
+
 	if not(player_can_fire(other, FALSE))
 		return FALSE;
 
