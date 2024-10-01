@@ -232,9 +232,9 @@ void(void) soulmates_controller_think {
 	self.nextthink = time;
 	entity pl, pl2, e;
 	PLAYER_FOR_EACH(pl) {
-		if (pl.soulmates_gem && pl.movetype != MOVETYPE_FOLLOW) {
+		if (pl.soulmates_gem && pl.movetype != MOVETYPE_FOLLOW && player_entity(pl) == pl) {
 			PLAYER_FOR_EACH(pl2) {
-				if (pl2 != pl && PLAYER_REALLY_ALIVE(pl2) && pl2.movetype != MOVETYPE_FOLLOW && pl.team == pl2.team) {
+				if (pl2 != pl && PLAYER_REALLY_ALIVE(pl2) && pl2.movetype != MOVETYPE_FOLLOW && pl.team == pl2.team && player_entity(pl2) == pl2) {
 					if (math_boxes_overlap(pl.absmin - '10 10 10', pl.absmax + '10 10 10', pl2.absmin, pl2.absmax)) {
 						pl2 = soulmates_last_attached(pl2);
 						pl.movetype = MOVETYPE_FOLLOW;
