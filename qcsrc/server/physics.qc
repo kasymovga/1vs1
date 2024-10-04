@@ -549,9 +549,11 @@ void(void) physics_init {
 	sv_disable_crouch = cvar("g_disable_crouch");
 	CVAR_CACHE(g_walljump);
 	CVAR_CACHE(g_walljump_delay);
+	CVAR_CACHE(g_walljump_delay_other_plane);
 	CVAR_CACHE(g_walljump_force);
 	CVAR_CACHE(g_walljump_velocity_xy_factor);
 	CVAR_CACHE(g_walljump_velocity_z_factor);
+	CVAR_CACHE(g_walljump_velocity_reflection);
 	CVAR_CACHE(g_dodging);
 	CVAR_CACHE(g_physics_fixed);
 	if (g_physics_fixed)
@@ -768,9 +770,11 @@ float(entity to, float sf) physics_send {
 		net_write_byte(MSG_ENTITY, switches);
 		if (g_walljump) {
 			net_write_coord(MSG_ENTITY, g_walljump_delay);
+			net_write_coord(MSG_ENTITY, g_walljump_delay_other_plane);
 			net_write_coord(MSG_ENTITY, g_walljump_force);
 			net_write_coord(MSG_ENTITY, g_walljump_velocity_xy_factor);
 			net_write_coord(MSG_ENTITY, g_walljump_velocity_z_factor);
+			net_write_coord(MSG_ENTITY, g_walljump_velocity_reflection);
 		}
 		if (g_dodging || g_dodging_frozen) {
 			net_write_coord(MSG_ENTITY, g_dodging_horiz_speed);

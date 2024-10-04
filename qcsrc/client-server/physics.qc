@@ -542,36 +542,47 @@ void(void) physics_dodging {
 }
 
 vector(void) physics_player_touch_wall {
-	float dist, max_normal;
-	vector start, end;
-	dist = 10;
+	float max_normal;
+	vector start;
 	max_normal = 0.2;
 	start = self.origin;
-	end = start + v_forward * 100;
 	vector _mins = self.mins;
 	_mins_z = _mins_z + sv_stepheight;
-	trace_box (start, _mins, self.maxs, end, TRUE, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	//trace_box(start, _mins - '10 10 0', self.maxs + '10 10 0', start, TRACE_MOVE_NOMONSTERS, self); //this works only with collision_triangle_directional <= 0
+	//if not(trace_startsolid) return '0 0 0';
+	if (physics_velocity_x || physics_velocity_y) {
+		trace_box(start, _mins, self.maxs, start + 10 * normalize(physics_velocity - '0 0 1' * physics_velocity_z), TRACE_MOVE_NOMONSTERS, self);
+		if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
+		if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
+			return trace_plane_normal;
+	}
+	trace_box(start, _mins, self.maxs, start + '10 0 0', TRACE_MOVE_NOMONSTERS, self);
+	if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+	if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
 		return trace_plane_normal;
-	end = start - v_forward * 100;
-	trace_box (start, _mins, self.maxs, end, TRUE, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+
+	trace_box(start, _mins, self.maxs, start + '-10 0 0', TRACE_MOVE_NOMONSTERS, self);
+	if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+	if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
 		return trace_plane_normal;
-	end = start + v_right * 100;
-	trace_box (start, _mins, self.maxs, end, TRUE, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+
+	trace_box(start, _mins, self.maxs, start + '0 10 0', TRACE_MOVE_NOMONSTERS, self);
+	if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+	if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
 		return trace_plane_normal;
-	end = start - v_right * 100;
-	trace_box (start, _mins, self.maxs, end, TRUE, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+
+	trace_box(start, _mins, self.maxs, start + '0 -10 0', TRACE_MOVE_NOMONSTERS, self);
+	if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+	if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
 		return trace_plane_normal;
+
 	return '0 0 0';
 }
-
 
 void(void) physics_player_jump {
 	if (physics_waterlevel >= WATER_LEVEL_SWIMMING)
@@ -586,25 +597,24 @@ void(void) physics_player_jump {
 
 	if (g_walljump)
 	if not(physics_flags & FL_ONGROUND)
-	if (self.lastwj <= 0) {
-		makevectors(self.angles);
-		vector plane_normal;
-		plane_normal = physics_player_touch_wall();
+	if (self.lastwj <= (g_walljump_delay_other_plane ? (g_walljump_delay - g_walljump_delay_other_plane) : 0)) {
+		vector plane_normal = physics_player_touch_wall();
 		if (plane_normal != '0 0 0') {
-			self.lastwj = g_walljump_delay;
-			float wj_force = g_walljump_force;
-			float wj_xy_factor = g_walljump_velocity_xy_factor;
-			float wj_z_factor = g_walljump_velocity_z_factor;
-			physics_velocity_x += plane_normal_x * wj_force;
-			physics_velocity_x /= wj_xy_factor;
-			physics_velocity_y += plane_normal_y * wj_force;
-			physics_velocity_y /= wj_xy_factor;
-			physics_velocity_z = sv_jumpvelocity * wj_z_factor;
-			if (physics_crouch) physics_velocity_z *= -1; // thanks Synap for the idea
-			#ifdef SVQC
-			pointparticles (particleeffectnum("smoke_ring"), trace_endpos, plane_normal, g_walljump_smokeparticle_num);
-			player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
-			#endif
+			if (self.lastwj <= 0 || vlen(self.lastwjplane - plane_normal) > 0.5) {
+				self.lastwj = g_walljump_delay;
+				self.lastwjplane = plane_normal;
+				physics_velocity -= plane_normal * (physics_velocity * plane_normal) * g_walljump_velocity_reflection;
+				physics_velocity_x += plane_normal_x * g_walljump_force;
+				physics_velocity_x /= g_walljump_velocity_xy_factor;
+				physics_velocity_y += plane_normal_y * g_walljump_force;
+				physics_velocity_y /= g_walljump_velocity_xy_factor;
+				physics_velocity_z = sv_jumpvelocity * g_walljump_velocity_z_factor;
+				if (physics_crouch) physics_velocity_z *= -1; // thanks Synap for the idea
+				#ifdef SVQC
+				pointparticles (particleeffectnum("smoke_ring"), trace_endpos, plane_normal, g_walljump_smokeparticle_num);
+				player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
+				#endif
+			}
 		}
 	}
 	if (g_doublejump)

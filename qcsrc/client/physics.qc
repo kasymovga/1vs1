@@ -416,9 +416,11 @@ void(float isnew) physics_read {
 		physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 		if (g_walljump) {
 			g_walljump_delay = net_read_coord();
+			g_walljump_delay_other_plane = net_read_coord();
 			g_walljump_force = net_read_coord();
 			g_walljump_velocity_xy_factor = net_read_coord();
 			g_walljump_velocity_z_factor = net_read_coord();
+			g_walljump_velocity_reflection = net_read_coord();
 		}
 		if (g_dodging || g_dodging_frozen) {
 			g_dodging_horiz_speed = net_read_coord();
