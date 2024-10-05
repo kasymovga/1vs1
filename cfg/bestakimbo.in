@@ -21,3 +21,5 @@ set bestakimbo_g_spawnshieldtime 2
 set bestakimbo_ctf_g_akimbo_weapons ""
 set bestakimbo_g_balance_rocketlauncher_damage 84
 set bestakimbo_g_balance_rocketlauncher_edgedamage 32
+set bestakimbo_g_balance_hlac_secondary_refire 0.9
+set bestakimbo_g_balance_hlac_secondary_spread 0.1
