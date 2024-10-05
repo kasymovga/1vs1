@@ -421,6 +421,7 @@ void(float isnew) physics_read {
 			g_walljump_velocity_xy_factor = net_read_coord();
 			g_walljump_velocity_z_factor = net_read_coord();
 			g_walljump_velocity_reflection = net_read_coord();
+			g_walljump_other_plane_cos = net_read_coord();
 		}
 		if (g_dodging || g_dodging_frozen) {
 			g_dodging_horiz_speed = net_read_coord();

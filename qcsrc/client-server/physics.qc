@@ -554,31 +554,31 @@ vector(void) physics_player_touch_wall {
 		trace_box(start, _mins, self.maxs, start + 10 * normalize(physics_velocity - '0 0 1' * physics_velocity_z), TRACE_MOVE_NOMONSTERS, self);
 		if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
 		if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
+		if (self.lastwj <= 0 || self.lastwjplane * trace_plane_normal <= g_walljump_other_plane_cos)
 			return trace_plane_normal;
 	}
 	trace_box(start, _mins, self.maxs, start + '10 0 0', TRACE_MOVE_NOMONSTERS, self);
 	if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-	if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
+	if (self.lastwj <= 0 || self.lastwjplane * trace_plane_normal <= g_walljump_other_plane_cos)
 		return trace_plane_normal;
 
 	trace_box(start, _mins, self.maxs, start + '-10 0 0', TRACE_MOVE_NOMONSTERS, self);
 	if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-	if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
+	if (self.lastwj <= 0 || self.lastwjplane * trace_plane_normal <= g_walljump_other_plane_cos)
 		return trace_plane_normal;
 
 	trace_box(start, _mins, self.maxs, start + '0 10 0', TRACE_MOVE_NOMONSTERS, self);
 	if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-	if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
+	if (self.lastwj <= 0 || self.lastwjplane * trace_plane_normal <= g_walljump_other_plane_cos)
 		return trace_plane_normal;
 
 	trace_box(start, _mins, self.maxs, start + '0 -10 0', TRACE_MOVE_NOMONSTERS, self);
 	if (trace_fraction < 1 && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-	if (self.lastwj <= 0 || vlen(self.lastwjplane - trace_plane_normal) > 0.5)
+	if (self.lastwj <= 0 || self.lastwjplane * trace_plane_normal <= g_walljump_other_plane_cos)
 		return trace_plane_normal;
 
 	return '0 0 0';
@@ -600,7 +600,7 @@ void(void) physics_player_jump {
 	if (self.lastwj <= (g_walljump_delay_other_plane ? (g_walljump_delay - g_walljump_delay_other_plane) : 0)) {
 		vector plane_normal = physics_player_touch_wall();
 		if (plane_normal != '0 0 0') {
-			if (self.lastwj <= 0 || vlen(self.lastwjplane - plane_normal) > 0.5) {
+			if (self.lastwj <= 0 || self.lastwjplane * plane_normal <= g_walljump_other_plane_cos) {
 				self.lastwj = g_walljump_delay;
 				self.lastwjplane = plane_normal;
 				physics_velocity -= plane_normal * (physics_velocity * plane_normal) * g_walljump_velocity_reflection;

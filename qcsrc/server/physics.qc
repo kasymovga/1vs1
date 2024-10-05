@@ -554,6 +554,7 @@ void(void) physics_init {
 	CVAR_CACHE(g_walljump_velocity_xy_factor);
 	CVAR_CACHE(g_walljump_velocity_z_factor);
 	CVAR_CACHE(g_walljump_velocity_reflection);
+	CVAR_CACHE(g_walljump_other_plane_cos);
 	CVAR_CACHE(g_dodging);
 	CVAR_CACHE(g_physics_fixed);
 	if (g_physics_fixed)
@@ -775,6 +776,7 @@ float(entity to, float sf) physics_send {
 			net_write_coord(MSG_ENTITY, g_walljump_velocity_xy_factor);
 			net_write_coord(MSG_ENTITY, g_walljump_velocity_z_factor);
 			net_write_coord(MSG_ENTITY, g_walljump_velocity_reflection);
+			net_write_coord(MSG_ENTITY, g_walljump_other_plane_cos);
 		}
 		if (g_dodging || g_dodging_frozen) {
 			net_write_coord(MSG_ENTITY, g_dodging_horiz_speed);

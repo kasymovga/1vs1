@@ -37,6 +37,7 @@ float g_walljump_force;
 float g_walljump_velocity_xy_factor;
 float g_walljump_velocity_z_factor;
 float g_walljump_velocity_reflection;
+float g_walljump_other_plane_cos;
 float g_dodging;
 float g_dodging_horiz_speed;
 float g_dodging_up_speed;
