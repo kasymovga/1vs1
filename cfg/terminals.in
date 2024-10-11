@@ -1,0 +1,5 @@
+set g_terminals 0 "Enables terminals for maps that support them. Players may change their nadget type and drop their buffs using a terminal"
+set g_terminals_auth_time 3 "Time that it takes to authenticate into a terminal"
+set g_terminals_auth_range 100 "Maximum authentication distance"
+set g_terminals_auth_damage_delay 1 "Prevents authentication for this much seconds after taking damage"
+set g_terminals_auth_cooldown 15 "Minimum delay before next authentication after changing/refilling the nadget"

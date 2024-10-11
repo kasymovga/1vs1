@@ -92,3 +92,4 @@ set cra_two_weapons_g_balance_zapper_primary_refire 0.1
 set cra_two_nadgets_profile "Camping Rifle Arena with secondary nadget"
 set cra_two_nadgets_inherit cra
 set cra_two_nadgets_g_nadgets_double 1
+set rm_cra_g_terminals 1
