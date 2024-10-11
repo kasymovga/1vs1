@@ -101,6 +101,12 @@ void(float t, vector v) net_write_vector {
 	net_write_coord(t, v_z);
 }
 
+void(float t, vector v) net_write_color {
+	net_write_byte(t, bound(0, v_x * 255, 255));
+	net_write_byte(t, bound(0, v_y * 255, 255));
+	net_write_byte(t, bound(0, v_z * 255, 255));
+}
+
 float(string s) net_ip_parse_v4 {
 	float dot1, dot2, dot3;
 	dot1 = strstrofs(s, ".", 0);

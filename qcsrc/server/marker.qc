@@ -57,7 +57,7 @@ void(entity e, float t) marker_UpdateRule {
 
 void(entity e, float icon, vector col) marker_UpdateTeamRadar {
 	// no check, as this is never called without doing an actual change (usually only once)
-	e.cnt = (icon & 0x7F) | (e.cnt & 0x80);
+	e.cnt = (icon & 0xFF);
 	e.colormod = col;
 	e.SendFlags |= 32;
 }
@@ -219,9 +219,10 @@ float(entity to, float sendflags) marker_SendEntity {
 	}
 	if (sendflags & 32) {
 		net_write_byte(MSG_ENTITY, self.cnt); // icon on radar
-		net_write_byte(MSG_ENTITY, self.colormod_x * 255.0);
-		net_write_byte(MSG_ENTITY, self.colormod_y * 255.0);
-		net_write_byte(MSG_ENTITY, self.colormod_z * 255.0);
+		net_write_color(MSG_ENTITY, self.colormod);
+		net_write_color(MSG_ENTITY, self.color);
+		net_write_color(MSG_ENTITY, self.pos1);
+		net_write_color(MSG_ENTITY, self.pos2);
 	}
 	return TRUE;
 }
@@ -374,7 +375,7 @@ void(void) marker_PlayerGone {
 	marker_DetachCarrier(self);
 }
 
-void(float imp) waypointsprite_impulse {
+void(float imp) marker_impulse {
 	entity wp;
 	switch (imp) {
 	case 30:
@@ -475,5 +476,14 @@ void(float imp) waypointsprite_impulse {
 		marker_ClearOwned();
 		sprint(self, "all waypoints cleared\n");
 		break;
+	}
+}
+
+void(entity m, vector clr1, vector clr2, vector clr3) marker_text_update {
+	if (m.color != clr1 || m.pos1 != clr2 || m.pos2 != clr3) {
+		m.color = clr1;
+		m.pos1 = clr2;
+		m.pos2 = clr3;
+		m.SendFlags |= 32;
 	}
 }

@@ -758,7 +758,7 @@ void Buffs_SetTeamWaypoint(entity plr, string txt, vector clr, float btype) {
         marker_UpdateSprites(wp, txt, "", "");
     
     marker_UpdateTeamRadar(wp, RADARICON_GENERATOR, clr);
-    //marker_UpdateTextColors(wp, clr, '0 0 0', '0 0 0');
+    marker_text_update(wp, clr, '0 0 0', '0 0 0');
     wp.buffs = btype;
 }
 
@@ -1463,7 +1463,7 @@ void Buffs_BuffPickup_SpawnWaypoint(entity e) {
     str_unzone_ifneeded(e.netname);
     e.netname = str_zone_ifneeded(rm_buffs_TypeToExpandedName(e.buffs, "+", 0));
     marker_Spawn(e.netname, 0, 0, e, '0 0 40', NULL, e.team, e, buff_waypoint, TRUE);
-    //marker_UpdateTextColors(e.buff_waypoint,c, '0 0 0', '0 0 0');
+    marker_text_update(e.buff_waypoint, c, '0 0 0', '0 0 0');
     marker_UpdateTeamRadar(e.buff_waypoint, RADARICON_FLAG, c);
     e.buff_waypoint.waypointsprite_visible_for_player = Buffs_BuffPickup_Waypoint_VisibleForPlayer;
     

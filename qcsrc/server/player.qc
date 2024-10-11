@@ -993,7 +993,7 @@ void(void) player_impulse {
 		} else
 			self.impulse = imp; // retry in next frame
 	} else if (imp >= 30 && imp <= 49) { // deploy waypoints
-		waypointsprite_impulse(imp);
+		marker_impulse(imp);
 	}
 }
 

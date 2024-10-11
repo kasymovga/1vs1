@@ -19,6 +19,9 @@ float marker_distancefadedistance;
 .float build_started;
 .float build_starthealth;
 .float build_finished;
+.vector text_color1;
+.vector text_color2;
+.vector text_color3;
 
 const vector MARKER_SIZE = '288 36 0';
 const vector MARKER_HOTSPOT = '144 36 0';
@@ -53,7 +56,7 @@ void(vector org, float rot, float h, vector sz, vector hotspot, float width, flo
 float marker_draw_team;
 void(void) marker_draw {
 	string spriteimage;
-	float t;
+	float t = 0;
 	if (self.lifetime)
 		self.alpha = pow(bound(0, (self.fadetime - time) / self.lifetime, 1), CVAR(g_waypointsprite_timealphaexponent));
 	else
@@ -81,13 +84,13 @@ void(void) marker_draw {
 	// choose the sprite
 	if not(self.team) {
 		spriteimage = self.netname;
-	} else if (team_my == TEAM_COLOR_SPECTATOR) //spectator
+	} else if (team_my == TEAM_COLOR_SPECTATOR) { //spectator
 		spriteimage = self.netname3;
-	else if (self.team == team_my)
+	} else if (self.team == team_my) {
 		spriteimage = self.netname2;
-	else
+	} else {
 		spriteimage = self.netname;
-
+	}
 	if (spriteimage == "") {
 		return;
 	}
@@ -152,14 +155,28 @@ void(void) marker_draw {
 	float vidscale;
 	vidscale = max(CVAR(vid_conwidth) / view_width, CVAR(vid_conheight) / view_height);
 	if (!self.cnt) {
-		t = stof(db_get(db_temp, strcat("/spriteframes/", spriteimage)));
-		self.cnt = t + 1;
+		if (self.text_color1 != '0 0 0') {
+			t = -1;
+			self.cnt = -1;
+			if not(self.team) {
+				self.colormod = self.text_color1;
+			} else if (team_my == TEAM_COLOR_SPECTATOR) { //spectator
+				self.colormod = self.text_color3;
+			} else if (self.team == team_my) {
+				self.colormod = self.text_color2;
+			} else {
+				self.colormod = self.text_color1;
+			}
+		} else {
+			t = stof(db_get(db_temp, strcat("/spriteframes/", spriteimage)));
+			self.cnt = t + 1;
+		}
 	} else
 		t = self.cnt - 1;
 
 	if (t == 0)
 		spriteimage = strcat("models/sprites/", spriteimage);
-	else
+	else if (t > 0)
 		spriteimage = strcat("models/sprites/", spriteimage, "_frame", ftos(math_mod(floor((max(0, time - self.spawntime)) * 2), t)));
 
 	float edgedistance_min, crosshairdistance;
@@ -176,7 +193,27 @@ void(void) marker_draw {
 		a = a * (1 - (1 - marker_crosshairfadealpha) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
 		t = t * (1 - (1 - marker_crosshairfadescale) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
 	}
-	draw_picture_rotate(o, rot * 90 * MATH_DEG2RAD, spriteimage, MARKER_SIZE * t, MARKER_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
+	float txty = 0;
+	if (self.cnt < 0) {
+		drawfont = sbar_bigfont;
+		vector fs = '30 30 0' * t;
+		float sw = stringwidth(spriteimage, FALSE) * fs_x;
+		vector oc = o - '0.5 0 0' * sw + '0 -20 0';
+		oc_x = bound(10, oc_x, CVAR(vid_conwidth) - sw - 10);
+		oc_y = bound(10, oc_y, CVAR(vid_conheight) - fs_y - 10);
+		txty = oc_y;
+		drawstring(oc, spriteimage, fs, self.colormod, a, DRAWFLAG_NORMAL);
+		//if (self.toptext) {
+		//	fs += '1 1 0' * 2 * sin(time*3);
+		//	sw = stringwidth(self.toptext, FALSE, fs);
+		//	oc_y = bound(m + fs_y*1.5, oc_y - fs_y*1.5, vid_conheight - fs_y*3 - m);
+		//	oc_x = bound(m, o_x - sw * 0.5, vid_conwidth - sw - m);
+		//	drawstring(oc, self.toptext, fs, if(self.toptextmode == 1) self.clr2 else self.clr3, a * self.topalpha, DRAWFLAG_NORMAL);
+		//}
+		drawfont = sbar_font;
+    } else
+		draw_picture_rotate(o, rot * 90 * MATH_DEG2RAD, spriteimage, MARKER_SIZE * t, MARKER_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
+
 	if (self.build_finished) {
 		if (time < self.build_finished + 0.25) {
 			if (time < self.build_started)
@@ -196,6 +233,13 @@ void(void) marker_draw {
 		else
 			align = 0;
 
+		if (self.cnt < 0) {
+			float w = MARKER_HEALTHBAR_WIDTH * t;
+			float h = MARKER_HEALTHBAR_HEIGHT * t;
+			rot = 0;
+			o_x = bound(10 + w * 0.5, o_x, CVAR(vid_conwidth) - w * 0.5 - 10);
+			o_y = bound(10 + h * 0.5, txty + h*5, CVAR(vid_conheight) - h * 0.5);
+		}
 		marker_healthbar_draw(o, rot * 90 * MATH_DEG2RAD, self.health, MARKER_SIZE * t, MARKER_HOTSPOT * t, MARKER_HEALTHBAR_WIDTH * t, MARKER_HEALTHBAR_HEIGHT * t, MARKER_HEALTHBAR_MARGIN * t, MARKER_HEALTHBAR_BORDER * t, align, self.radar_color, a * MARKER_HEALTHBAR_BORDERALPHA, self.radar_color, a * MARKER_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
 	}
 }
@@ -273,9 +317,15 @@ void(float isnew) marker_read {
 		if (f & 0x80)
 			radar_ping(self.origin);
 
-		self.radar_color_x = net_read_byte() / 255.0;
-		self.radar_color_y = net_read_byte() / 255.0;
-		self.radar_color_z = net_read_byte() / 255.0;
+		self.radar_color = net_read_color();
+		self.text_color1 = net_read_color();
+		self.text_color2 = net_read_color();
+		self.text_color3 = net_read_color();
+		if (self.text_color1 != '0 0 0'
+				|| self.text_color2 != '0 0 0'
+				|| self.text_color3 != '0 0 0') {
+			self.cnt = 0;
+		}
 	}
 	interpolate_note();
 	self.entremove = marker_remove;

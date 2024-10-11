@@ -1,6 +1,7 @@
 vector(float data) net_decompress_vec;
 float(void) net_read_int24;
 vector(void) net_read_vector;
+vector(void) net_read_color;
 #define NET_UNBOUND_FROM_BYTE(x) ((x < 251) ? ftos(x) : ((x == 251) ? "250+" : ((x == 252) ? "500+" : ((x == 253) ? "1K+" : ((x == 254) ? "2K+" : "5K+")))))
 #define net_read_byte builtin_ReadByte
 #define net_read_char builtin_ReadChar
