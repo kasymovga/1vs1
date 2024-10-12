@@ -68,7 +68,7 @@ void(void) havocbot_ai {
 		return;
 
 	havocbot_chooseenemy();
-	if (self.bot_chooseweapontime < time ) {
+	if (self.bot_chooseweapontime < time && self.weaponentity.wframe != WEAPON_FRAME_RELOAD) {
 		self.bot_chooseweapontime = time + bot_ai_chooseweaponinterval;
 		havocbot_chooseweapon();
 	}
@@ -680,28 +680,8 @@ void(void) havocbot_chooseweapon {
 	if (i < 1)
 		return;
 
-	// Workaround for rifle reloading (..)
-	if (self.weapon == WEAPON_CAMPINGRIFLE)
-	if (i < g_balance_campingrifle_reloadtime + 1)
-		return;
-
 	float w;
-	float rocket  ; rocket   =-1000;
-	float nex     ; nex      =-1000;
-	float hagar   ; hagar    =-1000;
-	float grenade ; grenade  =-1000;
-	float electro ; electro  =-1000;
-	float crylink ; crylink  =-1000;
-	float uzi     ; uzi      =-1000;
-	float shotgun ; shotgun  =-1000;
-	float campingrifle ; campingrifle  =-1000;
-	float laser   ; laser    =-1000;
-	float minstanex ; minstanex =-1000;
-	float bestscore; bestscore = 0;
-	float bestweapon; bestweapon=self.switchweapon;
-	float distance; distance=bound(10,vlen(self.origin-self.enemy.origin)-200,10000);
-	float maxdelaytime=0.5;
-	float spreadpenalty=10;
+	float distance = bound(10,vlen(self.origin-self.enemy.origin)-200,10000);
 	// Should it do a weapon combo?
 	float af, ct, combo_time, combo;
 	af = WEAPON_ATTACK_FINISHED(self);
