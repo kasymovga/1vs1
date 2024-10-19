@@ -597,7 +597,7 @@ void(void) weapon_extra_init {
 
 		weapon_extra_secondary_impact_type[i] = weapon_extra_impact_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_impact_type")));
 		print("Registering extra weapon: ", modelname, " (", name, ")\n");
-		weapon_register(WEAPON_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, 1, modelname, modelname, name);
+		weapon_register(WEAPON_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, BOT_PICKUP_RATING_MID, modelname, modelname, name);
 	}
 	if (havemelee && !weapon_extra_melee_init_done) {
 		weapon_extra_melee_init_done = TRUE;
