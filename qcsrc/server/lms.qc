@@ -240,6 +240,14 @@ float(entity spot) lms_spawn_score_good {
 	return FALSE;
 }
 
+float(entity plr, entity item, float f) lms_havocbot_role_goalrating_items_mod {
+	vector o = ENTITY_CENTER(item);
+	if (vlen(o - lms_sphere.origin) > (lms_sphere_diameter / 2))
+		return 0;
+
+	return f;
+}
+
 void(void) lms_init {
 	lms_player_spawn_next = plugin_chain_player_spawn;
 	plugin_chain_player_spawn = lms_player_spawn;
@@ -255,6 +263,7 @@ void(void) lms_init {
 	SP_STATUS = score_register("status", 0);
 	SP_LIVES = score_register("lives", SCORE_FLAG_SORT_PRIO_PRIMARY | SCORE_FLAG_NOCLEAR);
 	lms_lives = scores[SP_LIVES];
+	plugin_havocbot_role_goalrating_items_mod = lms_havocbot_role_goalrating_items_mod;
 	CVAR_CACHE(g_lms_lives);
 	CVAR_CACHE(g_lms_sphere_diameter_min);
 	CVAR_CACHE(g_lms_sphere_diameter_start_indent);

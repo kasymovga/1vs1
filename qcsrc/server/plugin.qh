@@ -127,3 +127,4 @@ var void(entity unfrozer) plugin_chain_ice_unfroze = {}
 var void() plugin_ice_frozen_status = {}
 var void(entity capturer) plugin_chain_capturing = {}
 var float(entity plr) plugin_team_ignored_for = { return FALSE; }
+var float(entity plr, entity item, float f) plugin_havocbot_role_goalrating_items_mod = { return f; }
