@@ -77,23 +77,13 @@ void(void) marker_draw {
 		entity e;
 		for (e = self; e; e = find(e, classname, "waypointsprite")) {
 			e.cnt = 0;
+			e.model = "";
 		}
 	}
 	interpolate_do();
 	spriteimage = "";
+	string toptext = "";
 	// choose the sprite
-	if not(self.team) {
-		spriteimage = self.netname;
-	} else if (team_my == TEAM_COLOR_SPECTATOR) { //spectator
-		spriteimage = self.netname3;
-	} else if (self.team == team_my) {
-		spriteimage = self.netname2;
-	} else {
-		spriteimage = self.netname;
-	}
-	if (spriteimage == "") {
-		return;
-	}
 	float dist;
 	dist = vlen(self.origin - view_origin);
 	float a;
@@ -155,29 +145,42 @@ void(void) marker_draw {
 	float vidscale;
 	vidscale = max(CVAR(vid_conwidth) / view_width, CVAR(vid_conheight) / view_height);
 	if (!self.cnt) {
+		if not(self.team) {
+			self.model = self.netname;
+		} else if (team_my == TEAM_COLOR_SPECTATOR) { //spectator
+			self.model = self.netname3;
+		} else if (self.team == team_my) {
+			if (self.text_color1 != '0 0 0') {
+				self.model = self.netname3;
+			} else
+				self.model = self.netname2;
+		} else {
+			if (self.text_color1 != '0 0 0') {
+				self.model = self.netname3;
+			} else
+				self.model = self.netname;
+		}
 		if (self.text_color1 != '0 0 0') {
 			t = -1;
 			self.cnt = -1;
-			if not(self.team) {
+			if not(self.team)
 				self.colormod = self.text_color1;
-			} else if (team_my == TEAM_COLOR_SPECTATOR) { //spectator
+			else
 				self.colormod = self.text_color3;
-			} else if (self.team == team_my) {
-				self.colormod = self.text_color2;
-			} else {
-				self.colormod = self.text_color1;
-			}
 		} else {
-			t = stof(db_get(db_temp, strcat("/spriteframes/", spriteimage)));
+			t = stof(db_get(db_temp, strcat("/spriteframes/", self.model)));
 			self.cnt = t + 1;
 		}
 	} else
 		t = self.cnt - 1;
 
+	if (self.model == "")
+		return;
+
 	if (t == 0)
-		spriteimage = strcat("models/sprites/", spriteimage);
+		spriteimage = strcat("models/sprites/", self.model);
 	else if (t > 0)
-		spriteimage = strcat("models/sprites/", spriteimage, "_frame", ftos(math_mod(floor((max(0, time - self.spawntime)) * 2), t)));
+		spriteimage = strcat("models/sprites/", self.model, "_frame", ftos(math_mod(floor((max(0, time - self.spawntime)) * 2), t)));
 
 	float edgedistance_min, crosshairdistance;
 	edgedistance_min = min4(o_y, o_x,CVAR(vid_conwidth) - o_x, CVAR(vid_conheight) - o_y);
@@ -202,14 +205,15 @@ void(void) marker_draw {
 		oc_x = bound(10, oc_x, CVAR(vid_conwidth) - sw - 10);
 		oc_y = bound(10, oc_y, CVAR(vid_conheight) - fs_y - 10);
 		txty = oc_y;
-		drawstring(oc, spriteimage, fs, self.colormod, a, DRAWFLAG_NORMAL);
-		//if (self.toptext) {
-		//	fs += '1 1 0' * 2 * sin(time*3);
-		//	sw = stringwidth(self.toptext, FALSE, fs);
-		//	oc_y = bound(m + fs_y*1.5, oc_y - fs_y*1.5, vid_conheight - fs_y*3 - m);
-		//	oc_x = bound(m, o_x - sw * 0.5, vid_conwidth - sw - m);
-		//	drawstring(oc, self.toptext, fs, if(self.toptextmode == 1) self.clr2 else self.clr3, a * self.topalpha, DRAWFLAG_NORMAL);
-		//}
+		drawstring(oc, self.model, fs, self.colormod, a, DRAWFLAG_NORMAL);
+		toptext = (self.team ? ((self.team == team_my) ? self.netname2 : self.netname3) : "");
+		if (toptext != "") {
+			fs += '1 1 0' * 2 * sin(time*3);
+			sw = stringwidth(toptext, FALSE) * fs_x;
+			oc_y = bound(10 + fs_y*1.5, oc_y - fs_y*1.5, CVAR(vid_conheight) - fs_y*3 - 10);
+			oc_x = bound(10, o_x - sw * 0.5, CVAR(vid_conwidth) - sw - 10);
+			drawstring(oc, toptext, fs, ((self.team == team_my) ? self.text_color2 : self.text_color3), a/* * self.topalpha*/, DRAWFLAG_NORMAL);
+		}
 		drawfont = sbar_font;
     } else
 		draw_picture_rotate(o, rot * 90 * MATH_DEG2RAD, spriteimage, MARKER_SIZE * t, MARKER_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
@@ -293,17 +297,20 @@ void(float isnew) marker_read {
 		str_unzone_ifneeded(self.netname);
 		self.netname = str_zone_ifneeded(net_read_string());
 		self.cnt = 0;
+		self.model = "";
 	}
 	if (sendflags & 4) {
 		str_unzone_ifneeded(self.netname2);
 		self.netname2 = str_zone_ifneeded(net_read_string());
 		self.cnt = 0;
+		self.model = "";
 	}
 
 	if (sendflags & 8) {
 		str_unzone_ifneeded(self.netname3);
 		self.netname3 = str_zone_ifneeded(net_read_string());
 		self.cnt = 0;
+		self.model = "";
 	}
 	if (sendflags & 16) {
 		self.lifetime = net_read_coord();
@@ -325,6 +332,7 @@ void(float isnew) marker_read {
 				|| self.text_color2 != '0 0 0'
 				|| self.text_color3 != '0 0 0') {
 			self.cnt = 0;
+			self.model = "";
 		}
 	}
 	interpolate_note();
@@ -363,5 +371,6 @@ void(void) marker_init {
 	entity e = NULL;
 	while ((e = find(e, classname, "waypointsprite"))) {
 		e.cnt = 0;
+		e.model = "";
 	}
 }
