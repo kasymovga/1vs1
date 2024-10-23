@@ -147,26 +147,30 @@ void(void) marker_draw {
 	if (!self.cnt) {
 		if not(self.team) {
 			self.model = self.netname;
+			self.colormod = self.text_color1;
 		} else if (team_my == TEAM_COLOR_SPECTATOR) { //spectator
 			self.model = self.netname3;
+			self.colormod = self.text_color3;
 		} else if (self.team == team_my) {
-			if (self.text_color1 != '0 0 0') {
+			if (self.text_color1 != '0 0 0' && self.netname3 != "") {
 				self.model = self.netname3;
-			} else
+				self.colormod = self.text_color3;
+			} else {
 				self.model = self.netname2;
+				self.colormod = self.text_color2;
+			}
 		} else {
-			if (self.text_color1 != '0 0 0') {
+			if (self.text_color1 != '0 0 0' && self.netname3 != "") {
 				self.model = self.netname3;
-			} else
+				self.colormod = self.text_color3;
+			} else {
 				self.model = self.netname;
+				self.colormod = self.text_color1;
+			}
 		}
 		if (self.text_color1 != '0 0 0') {
 			t = -1;
 			self.cnt = -1;
-			if not(self.team)
-				self.colormod = self.text_color1;
-			else
-				self.colormod = self.text_color3;
 		} else {
 			t = stof(db_get(db_temp, strcat("/spriteframes/", self.model)));
 			self.cnt = t + 1;
@@ -200,19 +204,19 @@ void(void) marker_draw {
 	if (self.cnt < 0) {
 		drawfont = sbar_bigfont;
 		vector fs = '30 30 0' * t;
-		float sw = stringwidth(spriteimage, FALSE) * fs_x;
+		float sw = stringwidth(self.model, FALSE) * fs_x;
 		vector oc = o - '0.5 0 0' * sw + '0 -20 0';
 		oc_x = bound(10, oc_x, CVAR(vid_conwidth) - sw - 10);
 		oc_y = bound(10, oc_y, CVAR(vid_conheight) - fs_y - 10);
 		txty = oc_y;
 		drawstring(oc, self.model, fs, self.colormod, a, DRAWFLAG_NORMAL);
-		toptext = (self.team ? ((self.team == team_my) ? self.netname2 : self.netname3) : "");
-		if (toptext != "") {
+		toptext = (self.team ? ((self.team == team_my) ? self.netname2 : self.netname) : "");
+		if (toptext != "" && toptext != self.model) {
 			fs += '1 1 0' * 2 * sin(time*3);
 			sw = stringwidth(toptext, FALSE) * fs_x;
 			oc_y = bound(10 + fs_y*1.5, oc_y - fs_y*1.5, CVAR(vid_conheight) - fs_y*3 - 10);
 			oc_x = bound(10, o_x - sw * 0.5, CVAR(vid_conwidth) - sw - 10);
-			drawstring(oc, toptext, fs, ((self.team == team_my) ? self.text_color2 : self.text_color3), a/* * self.topalpha*/, DRAWFLAG_NORMAL);
+			drawstring(oc, toptext, fs, ((self.team == team_my) ? self.text_color2 : self.text_color1), a/* * self.topalpha*/, DRAWFLAG_NORMAL);
 		}
 		drawfont = sbar_font;
     } else

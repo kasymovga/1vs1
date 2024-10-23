@@ -750,15 +750,12 @@ float Buffs_TeamWaypoint_VisibleForPlayer(entity plr) {
 
 void Buffs_SetTeamWaypoint(entity plr, string txt, vector clr, float btype) {
     entity wp = plr.buff_teamwp;
-    
-    if(!wp) {
+    if (!wp) {
         wp = marker_Spawn(txt, 0, 0, plr, '0 0 120', NULL, plr.team, plr, buff_teamwp, TRUE);
         wp.waypointsprite_visible_for_player = Buffs_TeamWaypoint_VisibleForPlayer;
-    } else
-        marker_UpdateSprites(wp, txt, "", "");
-    
+    }
     marker_UpdateTeamRadar(wp, RADARICON_GENERATOR, clr);
-    marker_text_update(wp, clr, clr, clr);
+	marker_text_update(wp, clr, clr, clr);
     wp.buffs = btype;
 }
 
@@ -1463,13 +1460,9 @@ void Buffs_BuffPickup_SpawnWaypoint(entity e) {
     str_unzone_ifneeded(e.netname);
     e.netname = str_zone_ifneeded(rm_buffs_TypeToExpandedName(e.buffs, "+", 0));
     marker_Spawn(e.netname, 0, 0, e, '0 0 40', NULL, e.team, e, buff_waypoint, TRUE);
-	if (e.team)
-		marker_UpdateSprites(e.sprite, e.netname, "", "");
-
-    marker_text_update(e.buff_waypoint, c, c, c);
+	marker_text_update(e.buff_waypoint, c, c, c);
     marker_UpdateTeamRadar(e.buff_waypoint, RADARICON_FLAG, c);
     e.buff_waypoint.waypointsprite_visible_for_player = Buffs_BuffPickup_Waypoint_VisibleForPlayer;
-    
     if(e.buff_activetime/* && (roundstate == ROUNDSTATE_GAME || roundstate == ROUNDSTATE_INITIAL_WARMUP)*/)
         marker_UpdateBuildFinished(e.buff_waypoint, time + e.buff_activetime);
 }
