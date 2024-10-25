@@ -147,7 +147,7 @@ float(entity e) marker_visible_for_player {
 				return FALSE;
 			}
 		} else {
-			if (self.team != e.team && self.target == "") {
+			if (self.team != e.team && self.target == "" && (self.color == '0 0 0' || self.target3 == "")) {
 				return FALSE;
 			} else if (self.team == e.team && self.target2 == "" && (self.color == '0 0 0' || self.target3 == "")) {
 				return FALSE;

@@ -27,6 +27,40 @@ enum {
 
 var void(void) jb_torture_thinks[JB_TORTURE_COUNT];
 
+string(entity cp) jb_marker_name {
+	string id = chr2str(str2chr("A", 0) + cp.dmg);
+	if (cp.netname)
+		return strcat(id, ": ", strdecolorize(cp.netname));
+
+	return strcat("Point ", id);
+}
+
+void(entity cp, float defend) jb_marker_update {
+	RM_ELSE({
+		marker_UpdateRule(cp.sprite, cp.team);
+		if (cp.team) {
+			marker_UpdateSprites(cp.sprite, "", (defend ? "DEFEND" : ""), self.message);
+			vector clrn = team_color(cp.team);
+			marker_text_update(cp.sprite, clrn, '1 0.5 0', clrn);
+		} else {
+			marker_UpdateSprites(cp.sprite, self.message, "", "");
+			vector clrn = team_color(0);
+			marker_text_update(cp.sprite, clrn, clrn, clrn);
+		}
+	}, {
+		switch(self.team) {
+		case COLOR_TEAM1:
+			marker_UpdateSprites(cp.sprite, "dom-red", "", "");
+			break;
+		case COLOR_TEAM2:
+			marker_UpdateSprites(cp.sprite, "dom-blue", "", "");
+			break;
+		default:
+			marker_UpdateSprites(cp.sprite, "dom-neut", "", "");
+		}
+	});
+}
+
 entity(void) jb_client_put_spawn_point {
 	if not(warmup_active)
 	//if ((self.team == COLOR_TEAM1 && !jb_open_red) || (self.team == COLOR_TEAM2 && !jb_open_blue))
@@ -512,16 +546,7 @@ void(void) jb_controlpoint_model_setup {
 		})
 		self.team = 0;
 	}
-	switch(self.team) {
-	case COLOR_TEAM1:
-		marker_UpdateSprites(self.sprite, "dom-red", "", "");
-		break;
-	case COLOR_TEAM2:
-		marker_UpdateSprites(self.sprite, "dom-blue", "", "");
-		break;
-	default:
-		marker_UpdateSprites(self.sprite, "dom-neut", "", "");
-	}
+	jb_marker_update(self, FALSE);
 	marker_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color((self.team ? self.team - 1 : 6), 0));
 	marker_Ping(self.sprite);
 	setsize(self, '-32 -32 -32', '32 32 32');
@@ -599,8 +624,12 @@ void(void) jb_controlpoint_think {
 		self.state = 0;
 		marker_UpdateMaxHealth(self.sprite, 0);
 		marker_UpdateHealth(self.sprite, 0);
-		remove(self.weaponentity);
-		self.weaponentity = NULL;
+		RM_ELSE({
+			jb_marker_update(self, FALSE);
+		}, {
+			remove(self.weaponentity);
+			self.weaponentity = NULL;
+		});
 		return;
 	}
 	self.nextthink = time;
@@ -672,10 +701,14 @@ void(void) jb_controlpoint_touch {
 	}
 	e = spawn();
 	marker_UpdateMaxHealth(self.sprite, 1);
-	if not(self.weaponentity) {
-		self.weaponentity = marker_SpawnFixed("defend", self.origin + '0 0 32', self, weaponentity);
-		self.weaponentity.waypointsprite_visible_for_player = jb_controlpoint_danger_visible;
-	}
+	RM_ELSE({
+		jb_marker_update(self, TRUE);
+	}, {
+		if not(self.weaponentity) {
+			self.weaponentity = marker_SpawnFixed("defend", self.origin + '0 0 32', self, weaponentity);
+			self.weaponentity.waypointsprite_visible_for_player = jb_controlpoint_danger_visible;
+		}
+	});
 	e.enemy = other;
 	e.playerid = other.playerid;
 	e.killindicator = self.killindicator;
@@ -690,11 +723,15 @@ void(void) jb_controlpoint_reset {
 	jb_controlpoint_model_setup();
 }
 
+float jb_controlpoint_index;
 void(void) jb_controlpoint {
 	if (game_type != GAME_TYPE_JAILBREAK) {
 		remove(self);
 		return;
 	}
+	self.dmg = jb_controlpoint_index;
+	self.message = str_zone_ifneeded(jb_marker_name(self));
+	jb_controlpoint_index++;
 	self.classname = "jb_controlpoint";
 	marker_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
 	self.cnt = self.team;
