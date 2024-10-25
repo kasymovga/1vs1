@@ -39,7 +39,7 @@ void(entity cp, float defend) jb_marker_update {
 	RM_ELSE({
 		marker_UpdateRule(cp.sprite, cp.team);
 		if (cp.team) {
-			marker_UpdateSprites(cp.sprite, "", (defend ? "DEFEND" : ""), self.message);
+			marker_UpdateSprites(cp.sprite, "", (defend ? "DEFEND!" : ""), self.message);
 			vector clrn = team_color(cp.team);
 			marker_text_update(cp.sprite, clrn, '1 0.5 0', clrn);
 		} else {
