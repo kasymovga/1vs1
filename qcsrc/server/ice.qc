@@ -121,7 +121,12 @@ float(entity attacker, entity inflictor, float deathtype) ice_player_death_handl
 	else
 		self.ice.fade_time = 0;
 
-	marker_AttachCarrier("helpme", self);
+	RM_ELSE({
+		marker_AttachCarrier("Frozen!", self);
+		marker_text_update(self.waypointsprite_attachedforcarrier, '0.2 1 1', '0.2 1 1', '0.2 1 1');
+	}, {
+		marker_AttachCarrier("helpme", self);
+	});
 	setattachment(self.ice, self.body, "");
 	setorigin(self.ice, '0 0 1' * sv_model_ice_z);
 	setmodel(self.ice, sv_model_ice);
