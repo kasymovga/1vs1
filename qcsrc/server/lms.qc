@@ -4,6 +4,7 @@ float g_lms_sphere_damage_distance_factor;
 float g_lms_sphere_diameter_min;
 float g_lms_sphere_diameter_start_indent;
 float g_lms_sphere_permutation_interval;
+float g_lms_sphere_permutation_damage_increment;
 vector g_lms_sphere_color;
 float SP_LIVES;
 var .float lms_lives;
@@ -12,6 +13,7 @@ entity lms_sphere;
 float lms_sphere_diameter_unscaled;
 float lms_sphere_diameter_start;
 float lms_sphere_diameter;
+float lms_sphere_permutations;
 vector lms_sphere_origin_start;
 vector lms_sphere_origin_end;
 #define LMS_ACTIVE() (!warmup_active && time >= map_starttime)
@@ -73,6 +75,7 @@ void(void) lms_sphere_permutate {
 			random_selection_add(e, 0, NULL, 1, 0);
 		}
 	}
+	lms_sphere_permutations++;
 	if not(random_selection_chosen_ent) return;
 	vector o = random_selection_chosen_ent.origin;
 	lms_sphere_origin_start = o + (lms_sphere.origin - o) * (1 / progress);
@@ -102,7 +105,7 @@ void(void) lms_sphere_think {
 			e2 = player_entity(e);
 			f = vlen(e2.origin - lms_sphere.origin);
 			r = lms_sphere_diameter * 0.5;
-			d = 0.5 * g_lms_sphere_damage * ((f - r) / g_lms_sphere_damage_distance_factor);
+			d = 0.5 * (g_lms_sphere_damage * ((f - r) / g_lms_sphere_damage_distance_factor) + g_lms_sphere_permutation_damage_increment * lms_sphere_permutations);
 			if (f > r) {
 				print_to_spec(e, PRINT_CENTER, "Return to fight area immediately!", "", "", "");
 				fire_add_damage(e2, NULL, d, 2, DEATH_FIRE);
@@ -270,6 +273,7 @@ void(void) lms_init {
 	CVAR_CACHE(g_lms_sphere_damage);
 	CVAR_CACHE(g_lms_sphere_damage_distance_factor);
 	CVAR_CACHE(g_lms_sphere_permutation_interval);
+	CVAR_CACHE(g_lms_sphere_permutation_damage_increment);
 	g_lms_sphere_color = stov(cvar_string("g_lms_sphere_color"));
 	precache_model("models/sphere/sphere.md3");
 	entity_initialize(NULL, lms_init_delayed, INITPRIO_GAMETYPE);

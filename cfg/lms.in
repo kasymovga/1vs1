@@ -7,6 +7,7 @@ set g_lms_sphere_diameter_start_indent 100 "Extra size for lms sphere"
 set g_lms_sphere_damage 50
 set g_lms_sphere_damage_distance_factor 100
 set g_lms_sphere_permutation_interval 0
+set g_lms_sphere_permutation_damage_increment 0
 set g_lms_sphere_color "1 0.25 0.5"
 set lms_inherit dm
 set lms_g_start_weapon_shotgun 1
