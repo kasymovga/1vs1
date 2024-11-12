@@ -588,7 +588,7 @@ msgid ""
 "^2Starting in {1}"
 msgstr ""
 "^2De ronde is afgelopen!\n"
-"^1Het rodee team heeft^7^2 gewonnen!\n"
+"^1Het rode team heeft^7^2 gewonnen!\n"
 "^2De nieuwe ronde begint over {1}"
 
 msgid "^2New round started\n"
@@ -1115,7 +1115,7 @@ msgid "Silver Key"
 msgstr "Zilveren sleutel"
 
 msgid "Gold Key"
-msgstr "Goudensleutel"
+msgstr "Gouden sleutel"
 
 msgid ""
 "Jailbreak! The ^1REDS^7 are escaping!\n"
@@ -1162,7 +1162,7 @@ msgstr ""
 "accepteer het doodvonnis over ^310^7 seconden…"
 
 msgid "Secondary fire inflicts no damage!"
-msgstr "De secundaire aanval berokkent geen schade!"
+msgstr "Secundaire aanval berokkent geen schade!"
 
 msgid "^1Server is restarting..."
 msgstr "^1De server wordt herstart…"
