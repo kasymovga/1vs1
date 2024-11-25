@@ -113,7 +113,7 @@ set _defrag_g_balance_rocketlauncher_health 0
 set _defrag_g_balance_rocketlauncher_refire 0.8
 set _defrag_g_balance_rocketlauncher_speed 900
 set _defrag_g_balance_rocketlauncher_speedaccel 0
-set _defrag_g_balance_rocketlauncher_speedstart 1260
+set _defrag_g_balance_rocketlauncher_speedstart 900
 set _defrag_g_balance_rocketlauncher_damage 100
 set _defrag_g_balance_rocketlauncher_force 400
 set _defrag_g_balance_rocketlauncher_edgedamage 0
