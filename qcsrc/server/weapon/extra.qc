@@ -143,7 +143,13 @@ void(float num, float secondary, float t) weapon_extra_attack {
 	if (c < 1) c = 1;
 	switch (t) {
 	case WEAPON_EXTRA_TYPE_BULLET:
-		bullet_begin(sp, PROJECTILE_BULLET, e);
+		float projtype;
+		if (secondary) {
+			projtype = weapon_extra_secondary_bounces[num];
+		} else {
+			projtype = weapon_extra_primary_bounces[num];
+		}
+		bullet_begin(sp, projtype, e);
 		weapon_setup_shot(self, rec, s, c);
 		pointparticles(m, weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 		//weapon_shake(1); //TODO: shake effect
@@ -584,6 +590,14 @@ void(void) weapon_extra_init {
 		else
 			weapon_extra_primary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_effect")));
 
+		if (t == WEAPON_EXTRA_TYPE_BULLET) {
+			float bp = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_effect2")));
+			if (!bp) bp = PROJECTILE_BULLET;
+			weapon_extra_primary_bounces[i] = bp;
+			if (!weapon_extra_primary_radius[i]) {
+				weapon_extra_primary_radius[i] = cvar(strcat("g_weapon_extra_", ftos(i), "_primary_bulletconstant"));
+			}
+		}
 		weapon_extra_primary_impact_type[i] = weapon_extra_impact_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_impact_type")));
 		weapon_extra_secondary_sound[i] = str_zone_ifneeded(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_sound")));
 		weapon_extra_secondary_muzzle[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_muzzle")));
@@ -595,6 +609,14 @@ void(void) weapon_extra_init {
 		else
 			weapon_extra_secondary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 
+		if (t == WEAPON_EXTRA_TYPE_BULLET) {
+			float bp = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect2")));
+			if (!bp) bp = PROJECTILE_BULLET;
+			weapon_extra_secondary_bounces[i] = bp;
+			if (!weapon_extra_secondary_radius[i]) {
+				weapon_extra_secondary_radius[i] = cvar(strcat("g_weapon_extra_", ftos(i), "_secondary_bulletconstant"));
+			}
+		}
 		weapon_extra_secondary_impact_type[i] = weapon_extra_impact_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_impact_type")));
 		print("Registering extra weapon: ", modelname, " (", name, ")\n");
 		weapon_register(WEAPON_LAST + i + 1, weapon_extra_think, at, imp, 1, 0, BOT_PICKUP_RATING_MID, modelname, modelname, name);
