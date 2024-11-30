@@ -38,12 +38,12 @@ void(void) weapon_shotgun_attack {
 		}
 		self.sg_ammoclip -= 1;
 	}
-	bullet_begin(g_balance_shotgun_primary_speed);
+	bullet_begin(g_balance_shotgun_primary_speed, PROJECTILE_BULLET, particleeffectnum("tr_bullet"));
 	weapon_setup_shot(self, g_balance_shotgun_recoil, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
 		bullet(weapon_shotorg, weapon_shotorg_visual, weapon_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
 				g_balance_shotgun_primary_damage, g_balance_shotgun_primary_damage_headshot, g_balance_shotgun_primary_force,
-				EFFECT_IMPACT_PELLET, WEAPON_SHOTGUN, particleeffectnum("tr_bullet"), g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
+				EFFECT_IMPACT_PELLET, WEAPON_SHOTGUN, g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
 
 	bullet_end();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -71,12 +71,12 @@ void(void) weapon_shotgun_attack2 {
 		}
 		self.ammo_shells = self.ammo_shells - g_balance_shotgun_secondary_ammo;
 	}
-	bullet_begin(g_balance_shotgun_secondary_speed);
+	bullet_begin(g_balance_shotgun_secondary_speed, PROJECTILE_BULLET, particleeffectnum("tr_bullet"));
 	weapon_setup_shot (self, g_balance_shotgun_recoil, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
 		bullet(weapon_shotorg, weapon_shotorg_visual, weapon_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
 				g_balance_shotgun_secondary_damage, g_balance_shotgun_secondary_damage_headshot, g_balance_shotgun_secondary_force,
-				EFFECT_IMPACT_PELLET, WEAPON_SHOTGUN | HITTYPE_SECONDARY, particleeffectnum("tr_bullet"), g_balance_shotgun_secondary_gravityfactor,
+				EFFECT_IMPACT_PELLET, WEAPON_SHOTGUN | HITTYPE_SECONDARY, g_balance_shotgun_secondary_gravityfactor,
 				g_balance_shotgun_secondary_bulletconstant);
 
 	bullet_end();

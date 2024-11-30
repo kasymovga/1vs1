@@ -89,7 +89,7 @@ void(float secondary, float barrels, float ballistic) weapon_supershotgun_attack
 		bounces = g_balance_supershotgun_primary_bounces;
 	}
 	if (ballistic)
-		bullet_begin(s);
+		bullet_begin(s, PROJECTILE_BULLET_BIG, particleeffectnum("tr_bullet"));
 
 	weapon_setup_shot (self, (secondary ? g_balance_supershotgun_secondary_recoil : g_balance_supershotgun_primary_recoil), "weapons/shotgun_fire.wav", b);
 	if (barrels == 3) {
@@ -106,7 +106,7 @@ void(float secondary, float barrels, float ballistic) weapon_supershotgun_attack
 	if (ballistic) {
 		for (sc = 0; sc < b; sc = sc + 1)
 			bullet(weapon_shotorg, weapon_shotorg_visual, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s, 5,
-					d, 0, f, EFFECT_IMPACT_PELLET, dtype, particleeffectnum("tr_bullet"), g, bc);
+					d, 0, f, EFFECT_IMPACT_PELLET, dtype, g, bc);
 		bullet_end();
 	} else {
 		for (sc = 0; sc < b; sc = sc + 1)

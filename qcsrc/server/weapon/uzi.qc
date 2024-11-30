@@ -34,7 +34,7 @@ void(float deathtype) weapon_uzi_attack {
 	if (g_balance_uzi_magazinecapacity)
 		self.uzi_ammoclip -= 1;
 
-	bullet_begin(g_balance_uzi_speed);
+	bullet_begin(g_balance_uzi_speed, PROJECTILE_BULLET, particleeffectnum("tr_bullet"));
 	weapon_setup_shot(self, g_balance_uzi_recoil, "weapons/uzi_fire.wav", 1);
 	weapon_shake(1);
 	// this attack_finished just enforces a cooldown at the end of a burst
@@ -43,12 +43,12 @@ void(float deathtype) weapon_uzi_attack {
 		entity pts = rm_buffs_meodp_hitscan_begin(self);
 		bullet(weapon_shotorg, weapon_shotorg_visual, weapon_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed,
 				5, g_balance_uzi_first_damage, g_balance_uzi_first_damage_headshot,
-				g_balance_uzi_first_force, EFFECT_IMPACT_BULLET, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
+				g_balance_uzi_first_force, EFFECT_IMPACT_BULLET, deathtype, g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
 		rm_buffs_meodp_hitscan_end(pts);
 	} else
 		bullet(weapon_shotorg, weapon_shotorg_visual, weapon_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed,
 				5, g_balance_uzi_sustained_damage, g_balance_uzi_sustained_damage_headshot,
-				g_balance_uzi_sustained_force, EFFECT_IMPACT_BULLET, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
+				g_balance_uzi_sustained_force, EFFECT_IMPACT_BULLET, deathtype, g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
 
 	bullet_end();
 	pointparticles(particleeffectnum("uzi_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);

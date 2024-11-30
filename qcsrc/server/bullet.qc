@@ -216,6 +216,7 @@ void(void) bullet_touch {
 }
 
 float bullet_hit_scan;
+float bullet_projectile;
 void() bullet_end {
 	effect_curveparticles_end();
 	if (bullet_hit_scan) {
@@ -235,15 +236,17 @@ void(vector start, vector hit, vector end) bullet_trace_callback {
 	}
 }
 
-void(float pSpeed) bullet_begin {
+void(float pSpeed, float projectiletype, float traceeffects) bullet_begin {
 	bullet_hit_scan = (g_antilag_bullets && pSpeed >= g_antilag_bullets);
+	bullet_projectile = projectiletype;
+	bullet_trace_callback_eff = traceeffects;
 	if (bullet_hit_scan) {
 		entity o = akimbo_owner(self);
 		antilag_begin(o);
 	}
 }
 
-void(vector start, vector start_visual, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float impacttype, float dtype, float tracereffects, float gravityfactor, float bulletconstant) bullet {
+void(vector start, vector start_visual, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float impacttype, float dtype, float gravityfactor, float bulletconstant) bullet {
 	entity oldself, oldself_akimbo = self;
 	entity proj;
 	if (bullet_hit_scan) {
@@ -261,7 +264,7 @@ void(vector start, vector start_visual, vector dir, float spread, float pSpeed, 
 		}
 		proj.movetype = MOVETYPE_FLY;
 	} else {
-		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE, self);
+		proj = projectile(TRUE, bullet_projectile, TRUE, self);
 		proj.classname = "bullet";
 		proj.think = stdproc_remove;
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
@@ -279,7 +282,6 @@ void(vector start, vector start_visual, vector dir, float spread, float pSpeed, 
 		float i;
 		for (i = 0; i < 100; i++) {
 			bullet_trace_callback_ent = self;
-			bullet_trace_callback_eff = tracereffects;
 			if (proj.gravity) {
 				warpzone_trace_toss_trough_zone(self, oldself, (lifetime / 200), 200, world, bullet_trace_callback); // life time distance
 				self.velocity = warpzone_trace_toss_velocity;
