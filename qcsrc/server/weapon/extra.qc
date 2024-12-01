@@ -591,7 +591,7 @@ void(void) weapon_extra_init {
 			weapon_extra_primary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_effect")));
 
 		if (t == WEAPON_EXTRA_TYPE_BULLET) {
-			float bp = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_effect2")));
+			float bp = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_effect2")));
 			if (!bp) bp = PROJECTILE_BULLET;
 			weapon_extra_primary_bounces[i] = bp;
 			if (!weapon_extra_primary_radius[i]) {
@@ -610,7 +610,7 @@ void(void) weapon_extra_init {
 			weapon_extra_secondary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 
 		if (t == WEAPON_EXTRA_TYPE_BULLET) {
-			float bp = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect2")));
+			float bp = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect2")));
 			if (!bp) bp = PROJECTILE_BULLET;
 			weapon_extra_secondary_bounces[i] = bp;
 			if (!weapon_extra_secondary_radius[i]) {
