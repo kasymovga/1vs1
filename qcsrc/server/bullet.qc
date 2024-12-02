@@ -145,10 +145,6 @@ float(entity e, vector vel, float constant) bullet_leave_solid {
 	float dt, dst, velfactor, v0, vs;
 	float maxdist;
 	float E0_m, Es_m;
-	// outside the world? forget it
-	if (self.origin_x > world.maxs_x || self.origin_y > world.maxs_y || self.origin_z > world.maxs_z || self.origin_x < world.mins_x || self.origin_y < world.mins_y || self.origin_z < world.mins_z)
-		return 0;
-
 	// E(s) = E0 - constant * s, constant = area of bullet circle * material constant / mass
 	v0 = vlen(vel);
 	E0_m = 0.5 * v0 * v0;
