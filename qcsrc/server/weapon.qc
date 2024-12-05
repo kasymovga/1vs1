@@ -7,6 +7,7 @@ float g_projectiles_newton_style_2_minfactor;
 float g_weaponratefactor;
 float g_weapon_throw_mode;
 float g_weapon_throw_noammo;
+float g_weapon_pickup_no_ammo;
 float g_showweaponspawns;
 vector sv_qcanimation_melee_morph1angles;
 vector sv_qcanimation_melee_morph2angles;
@@ -696,17 +697,19 @@ void(float wpn) weapon_defaultspawnfunc {
 	self.weapons = e.weapons;
 	self.weapons_extra = e.weapons_extra;
 	if (e.items && e.items != IT_SUPERWEAPON) {
-		for (i = 0, j = 1; i < 24; ++i, j *= 2) {
-			if (e.items & j) {
-				ammofield = item_counter_field(j);
-				if (ammofield) {
-					if (self.count > 0)
-						self.ammofield = self.count;
-					else if (self.count < 0)
-						self.ammofield = 999999;
+		if not(g_weapon_pickup_no_ammo) {
+			for (i = 0, j = 1; i < 24; ++i, j *= 2) {
+				if (e.items & j) {
+					ammofield = item_counter_field(j);
+					if (ammofield) {
+						if (self.count > 0)
+							self.ammofield = self.count;
+						else if (self.count < 0)
+							self.ammofield = 999999;
 
-					if (!self.ammofield)
-						self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(j)));
+						if (!self.ammofield)
+							self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(j)));
+					}
 				}
 			}
 		}
@@ -1283,6 +1286,7 @@ void(void) weapon_init {
 	CVAR_CACHE(g_recoil_extra_spread);
 	CVAR_CACHE(g_weapon_throw_mode);
 	CVAR_CACHE(g_weapon_throw_noammo);
+	CVAR_CACHE(g_weapon_pickup_no_ammo);
 	CVAR_CACHE(g_weapon_switch_to_empty);
 	CVAR_CACHE(g_showweaponspawns);
 	CVAR_CACHE(sv_debug_weapon_tags);
