@@ -697,7 +697,7 @@ void(float wpn) weapon_defaultspawnfunc {
 	self.weapons = e.weapons;
 	self.weapons_extra = e.weapons_extra;
 	if (e.items && e.items != IT_SUPERWEAPON) {
-		if not(g_weapon_pickup_no_ammo) {
+		if (!g_weapon_pickup_no_ammo || self.classname == "droppedweapon") {
 			for (i = 0, j = 1; i < 24; ++i, j *= 2) {
 				if (e.items & j) {
 					ammofield = item_counter_field(j);
