@@ -24,7 +24,9 @@ float g_shootfromeye;
 float g_shootforward;
 float g_norecoil;
 float g_recoil_extra;
+float g_recoil_extra_crouch_factor;
 float g_recoil_extra_spread;
+float g_recoil_extra_spread_crouch_factor;
 float sv_debug_weapon_tags;
 
 vector weapon_offset = '0 -10 0';
@@ -1006,12 +1008,12 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	// calculate the shotdir from the chosen shotorg
 	if (!g_norecoil) {
 		if (g_recoil_extra && !g_topview && !g_sideview) {
-			vector a = vectoangles(s_forward + randomvec() * g_recoil_extra_spread * ent.punchangle_x);
+			vector a = vectoangles(s_forward + randomvec() * g_recoil_extra_spread * (ent.crouch ? g_recoil_extra_spread_crouch_factor : 1) * ent.punchangle_x);
 			a_x = -a_x;
 			makevectors(a + ent.punchangle_x * '1 0 0');
 			s_forward = v_forward;
 			float f = max(0, 1 - fabs(sin(ent.punchangle_x * MATH_DEG2RAD)));
-			ent.punchangle_x -= recoil * f * g_recoil_extra;
+			ent.punchangle_x -= recoil * f * g_recoil_extra * (ent.crouch ? g_recoil_extra_crouch_factor : 1);
 		} else
 			ent.punchangle_x = min(ent.punchangle_x, recoil * -1);
 	}
@@ -1283,7 +1285,9 @@ void(void) weapon_init {
 	CVAR_CACHE(g_projectiles_newton_style);
 	CVAR_CACHE(g_norecoil);
 	CVAR_CACHE(g_recoil_extra);
+	CVAR_CACHE(g_recoil_extra_crouch_factor);
 	CVAR_CACHE(g_recoil_extra_spread);
+	CVAR_CACHE(g_recoil_extra_spread_crouch_factor);
 	CVAR_CACHE(g_weapon_throw_mode);
 	CVAR_CACHE(g_weapon_throw_noammo);
 	CVAR_CACHE(g_weapon_pickup_no_ammo);
