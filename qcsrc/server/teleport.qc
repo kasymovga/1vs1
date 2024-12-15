@@ -1,5 +1,6 @@
 float g_teleport_projectiles;
 float g_teleport_keep_velocity;
+float g_teleport_keep_velocity_crouch;
 float g_teleport_time;
 float g_teleport_prediction;
 float g_telefrags;
@@ -167,11 +168,12 @@ void(void) teleport_touch {
 	if (e.speed_str != "" || self.speed)
 		f = min(f, max(0, e.speed));
 
+	float keep_velocity = (other.crouch ? g_teleport_keep_velocity_crouch : g_teleport_keep_velocity);
 	if (self.spawnflags & 2)
 		f = min(f, vlen(other.velocity_x * '1 0 0' + other.velocity_y * '0 1 0'));
-	else if (g_teleport_keep_velocity > 0)
-		f = min(g_teleport_keep_velocity, vlen(other.velocity));
-	else if (g_teleport_keep_velocity == 0)
+	else if (keep_velocity > 0)
+		f = min(keep_velocity, vlen(other.velocity));
+	else if (keep_velocity == 0)
 		f = 0;
 
 	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.angles, v_forward * f, '0 0 0', '0 0 0', 10000);
@@ -209,6 +211,7 @@ float(entity to, float sf) teleport_prediction_send {
 	net_write_coord(MSG_ENTITY, o.enemy.angles_x);
 	net_write_coord(MSG_ENTITY, o.enemy.angles_y);
 	net_write_coord(MSG_ENTITY, g_teleport_keep_velocity);
+	net_write_coord(MSG_ENTITY, g_teleport_keep_velocity_crouch);
 	net_write_coord(MSG_ENTITY, g_teleport_time);
 	return TRUE;
 }
@@ -248,6 +251,7 @@ void(void) teleport_findtarget {
 
 void(void) teleport_init {
 	CVAR_CACHE(g_teleport_keep_velocity);
+	CVAR_CACHE(g_teleport_keep_velocity_crouch);
 	CVAR_CACHE(g_teleport_projectiles);
 	CVAR_CACHE(g_teleport_time);
 	CVAR_CACHE(g_telefrags);

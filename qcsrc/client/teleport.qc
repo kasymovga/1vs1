@@ -2,6 +2,7 @@ float teleport_predicted_last;
 float teleport_predicted_last_time;
 float teleport_prediction_init_done;
 float g_teleport_keep_velocity;
+float g_teleport_keep_velocity_crouch;
 float g_teleport_time;
 var void(entity e) teleport_predict_next;
 
@@ -42,6 +43,7 @@ void(float isnew) teleport_prediction_read {
 	self.iorigin1 = v;
 	setorigin(self, self.origin);
 	g_teleport_keep_velocity = net_read_coord();
+	g_teleport_keep_velocity_crouch = net_read_coord();
 	g_teleport_time = net_read_coord();
 }
 
@@ -103,11 +105,12 @@ void(entity e) teleport_predict {
 	if (e.cnt >= 0)
 		vel = min(vel, e.cnt);
 
+	float keep_velocity = (physics_crouch ? g_teleport_keep_velocity_crouch : g_teleport_keep_velocity);
 	if (e.cnt == -2)
 		vel = min(vel, vlen(physics_velocity_x * '1 0 0' + physics_velocity_y * '0 1 0'));
-	else if (g_teleport_keep_velocity > 0)
-		vel = min(vel, g_teleport_keep_velocity);
-	else if (g_teleport_keep_velocity == 0)
+	else if (keep_velocity > 0)
+		vel = min(vel, keep_velocity);
+	else if (keep_velocity == 0)
 		vel = 0;
 
 	makevectors(e.iorigin1);

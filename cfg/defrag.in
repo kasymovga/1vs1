@@ -62,6 +62,7 @@ set _defrag_g_start_weapon_laser 0
 set _defrag_g_start_weapon_shotgun 0
 set _defrag_g_shootfromeye 1
 set _defrag_g_teleport_keep_velocity 600
+set _defrag_g_teleport_keep_velocity_crouch 400
 set _defrag_g_weapon_stay 0
 set _defrag_g_weaponreplace_fireball hagar
 set _defrag_g_spawnpoints_auto_move_out_of_solid 1
