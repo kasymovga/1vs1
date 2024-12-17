@@ -279,7 +279,7 @@ void(vector start, vector start_visual, vector dir, float spread, float pSpeed, 
 		for (i = 0; i < 100; i++) {
 			bullet_trace_callback_ent = self;
 			if (proj.gravity) {
-				warpzone_trace_toss_trough_zone(self, oldself, (lifetime / 200), 200, world, bullet_trace_callback); // life time distance
+				warpzone_trace_toss_trough_zone(self, oldself, (lifetime / 200), 200, NULL, (bullet_trace_callback_eff >= 0 ? bullet_trace_callback : NULL)); // life time distance
 				self.velocity = warpzone_trace_toss_velocity;
 			} else {
 				warpzone_trace_line_trough_zone(self.origin, start + proj.velocity * lifetime, FALSE, self, world, bullet_trace_callback); // life time distance
