@@ -1,4 +1,5 @@
 float g_antilag_bullets;
+float g_antilag_bullets_time;
 float g_ballistics_mindistance;
 float g_ballistics_materialconstant;
 
@@ -245,7 +246,7 @@ void(float pSpeed, float projectiletype, float traceeffects) bullet_begin {
 void(vector start, vector start_visual, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float impacttype, float dtype, float gravityfactor, float bulletconstant) bullet {
 	entity oldself, oldself_akimbo = self;
 	entity proj;
-	if (bullet_hit_scan) {
+	if (bullet_hit_scan && g_antilag_bullets_time <= 0) {
 		proj = spawn();
 		self = akimbo_owner(self);
 		proj.owner = self;
@@ -258,59 +259,73 @@ void(vector start, vector start_visual, vector dir, float spread, float pSpeed, 
 			else
 				proj.existsonlyfor = self;
 		}
-		proj.movetype = MOVETYPE_FLY;
 	} else {
 		proj = projectile(TRUE, bullet_projectile, TRUE, self);
 		proj.classname = "bullet";
 		proj.think = stdproc_remove;
-		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
+		proj.nextthink = time + lifetime - g_antilag_bullets_time; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 		proj.touch = bullet_touch;
 	}
 	projectile_setup(proj, start, impacttype, dtype, _damage, headshotbonus, g_ballistics_materialconstant / bulletconstant, force, gravityfactor, (gravityfactor ? MOVETYPE_TOSS : MOVETYPE_FLY));
 	proj.velocity = (dir + randomvec() * spread) * pSpeed;
 	weapon_setup_projectile_velocity(proj);
 	proj.oldvelocity = proj.velocity;
+	oldself = self;
 	if (bullet_hit_scan) {
 		proj.oldorigin = start_visual;
 		proj.wframe = 1;
-		oldself = self;
 		self = proj;
 		float i;
-		for (i = 0; i < 100; i++) {
+		float hit_scan_time;
+		float checks;
+		float proj_remove;
+		if (g_antilag_bullets_time > 0) {
+			hit_scan_time = g_antilag_bullets_time;
+			checks = 1;
+			proj_remove = FALSE;
+		} else {
+			hit_scan_time = lifetime;
+			checks = 100;
+			proj_remove = TRUE;
+		}
+		for (i = 0; i < checks; i++) {
 			bullet_trace_callback_ent = self;
 			if (proj.gravity) {
-				warpzone_trace_toss_trough_zone(self, oldself, (lifetime / 200), 200, NULL, (bullet_trace_callback_eff >= 0 ? bullet_trace_callback : NULL)); // life time distance
+				warpzone_trace_toss_trough_zone(self, oldself, hit_scan_time / 200, 200, NULL, (bullet_trace_callback_eff >= 0 ? bullet_trace_callback : NULL)); // life time distance
 				self.velocity = warpzone_trace_toss_velocity;
 			} else {
-				warpzone_trace_line_trough_zone(self.origin, start + proj.velocity * lifetime, FALSE, self, world, bullet_trace_callback); // life time distance
+				warpzone_trace_line_trough_zone(self.origin, start + proj.velocity * hit_scan_time, FALSE, self, world, bullet_trace_callback); // life time distance
 				self.velocity = warpzone_transform_velocity(warpzone_trace_transform, self.velocity);
 			}
-			if (trace_fraction == 1)
+			if (trace_fraction == 1) {
+				if not(proj_remove) setorigin(self, trace_endpos);
 				break; // won't hit anything anytime soon
-
-			other = trace_ent;
+			}
 			setorigin(self, trace_endpos);
+			other = trace_ent;
 			if (!PROJECTILE_OWNER_CHECK()) {
-				if (projectile_no_impact_check())
+				if (projectile_no_impact_check()) {
+					proj_remove = TRUE;
 					break;
-
+				}
 				// hit the player
 				bullet_hit();
 			}
 			// go through solid!
-			if (other && other.armorvalue > 0)
+			if (other && other.armorvalue > 0) {
+				proj_remove = TRUE;
 				break;
-
-			if (!bullet_leave_solid(self, self.velocity, self.dmg_radius))
+			}
+			if (!bullet_leave_solid(self, self.velocity, self.dmg_radius)) {
+				proj_remove = TRUE;
 				break;
-
+			}
 			bullet_leave_solid_think();
 		}
-		self = oldself;
-		remove(proj);
-		self = oldself_akimbo;
-		return;
+		if (proj_remove)
+			remove(proj);
 	}
+:finish
 	self = oldself_akimbo;
 }
 
@@ -318,6 +333,7 @@ void bullet_init(void) {
 	CVAR_CACHE(g_ballistics_materialconstant);
 	CVAR_CACHE(g_ballistics_mindistance);
 	CVAR_CACHE(g_antilag_bullets);
+	CVAR_CACHE(g_antilag_bullets_time);
 	if not(bullet_railgun_projectile)
 		bullet_railgun_projectile = spawn();
 }
