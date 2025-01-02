@@ -162,7 +162,6 @@ void(void) CSQC_Shutdown {
 	remove(player_list);
 	db_close(db_binds);
 	db_close(db_temp);
-
 	cvar_clientsettemp_restore();
 	gui_chat_restore();
 	thirdview_shutdown();
@@ -180,6 +179,7 @@ void(void) CSQC_Shutdown {
 	mute_shutdown();
 	translate_shutdown();
 	camera_shutdown();
+	localcmd("\n_restore_con_chatvars\n");
 }
 
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.

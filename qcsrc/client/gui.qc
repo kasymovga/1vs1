@@ -208,6 +208,7 @@ void GUI_Hide() {
 
 void(void) gui_chat_restore {
 	if (gui_con_chat_was_changed) {
+		gui_con_chat_was_changed = FALSE;
 		cvar_set("con_chat", ftos(gui_con_chat_save));
 		if (cvar_string("_backup_con_chat") != "")
 			cvar_set("_backup_con_chat", ftos(gui_con_chat_save)); //avoid conflicts with con_chat_maximize
