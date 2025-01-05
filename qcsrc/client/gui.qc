@@ -11,11 +11,11 @@ float gui_doubleclick_time;
 vector gui_doubleclick_position;
 
 void GUI_RemoveRecursive(entity me) {
-	entity e;
-	for(e = me.firstChild; e; e = e.nextSibling)
-		if(e.Container_alpha > 0)
-			e.showNotify(e);
-
+	entity e, e_next;
+	for(e = me.firstChild; e; e = e_next) {
+		e_next = e.nextSibling;
+		GUI_RemoveRecursive(e);
+	}
 	me.destroy(me);
 	remove(me);
 }
@@ -79,7 +79,7 @@ void GUI_Draw_Remove() {
 			GUI_alpha -= frametime * 5;
 	} else {
 		GUI_RemoveRecursive(mainWindow);
-		mainWindow = world;
+		mainWindow = NULL;
 		if (input_event_callback == GUI_InputEvent)
 			input_event_callback = NULL;
 
