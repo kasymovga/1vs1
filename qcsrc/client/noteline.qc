@@ -81,9 +81,7 @@ entity(string m) noteline_new {
 
 void(float bIsNew) noteline_read {
 	self.entremove = noteline_remove;
-	if (self.message)
-		strunzone(self.message);
-
-	self.message = strzone(print_text_prepare(net_read_string(), net_read_string(), net_read_string(), net_read_string()));
+	str_unzone_ifneeded(self.message);
+	self.message = str_zone_ifneeded(print_text_prepare(net_read_string(), net_read_string(), net_read_string(), net_read_string()));
 	noteline_add(self);
 }
