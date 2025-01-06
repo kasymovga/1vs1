@@ -17,7 +17,7 @@ void(void) noteline_remove {
 				break;
 			}
 		}
-	strunzone(self.message);
+	str_unzone_ifneeded(self.message);
 }
 
 vector noteline_pos;
@@ -73,7 +73,7 @@ void(entity e_add) noteline_add {
 
 entity(string m) noteline_new {
 	entity e = spawn();
-	e.message = strzone(m);
+	e.message = str_zone_ifneeded(m);
 	e.entremove = noteline_remove;
 	noteline_add(e);
 	return e;
