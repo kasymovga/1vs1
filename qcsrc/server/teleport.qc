@@ -187,29 +187,28 @@ void(void) teleport_touch {
 }
 
 float(entity to, float sf) teleport_prediction_send {
-	entity o = self.owner;
 	net_write_byte(MSG_ENTITY, NET_CSQC_TELEPORT_PREDICTION);
-	net_write_coord(MSG_ENTITY, num_for_edict(o));
-	net_write_coord(MSG_ENTITY, o.modelindex);
-	net_write_coord(MSG_ENTITY, o.origin_x);
-	net_write_coord(MSG_ENTITY, o.origin_y);
-	net_write_coord(MSG_ENTITY, o.origin_z);
-	net_write_coord(MSG_ENTITY, o.mins_x);
-	net_write_coord(MSG_ENTITY, o.mins_y);
-	net_write_coord(MSG_ENTITY, o.mins_z);
-	net_write_coord(MSG_ENTITY, o.maxs_x);
-	net_write_coord(MSG_ENTITY, o.maxs_y);
-	net_write_coord(MSG_ENTITY, o.maxs_z);
-	if (o.spawnflags & 2)
+	net_write_coord(MSG_ENTITY, num_for_edict(self));
+	net_write_coord(MSG_ENTITY, self.modelindex);
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
+	net_write_coord(MSG_ENTITY, self.mins_x);
+	net_write_coord(MSG_ENTITY, self.mins_y);
+	net_write_coord(MSG_ENTITY, self.mins_z);
+	net_write_coord(MSG_ENTITY, self.maxs_x);
+	net_write_coord(MSG_ENTITY, self.maxs_y);
+	net_write_coord(MSG_ENTITY, self.maxs_z);
+	if (self.spawnflags & 2)
 		net_write_coord(MSG_ENTITY, -2);
 	else
-		net_write_coord(MSG_ENTITY, ((o.speed_str == "") ? -1 : o.speed));
+		net_write_coord(MSG_ENTITY, ((self.speed_str == "") ? -1 : self.speed));
 
-	net_write_coord(MSG_ENTITY, o.enemy.origin_x);
-	net_write_coord(MSG_ENTITY, o.enemy.origin_y);
-	net_write_coord(MSG_ENTITY, o.enemy.origin_z);
-	net_write_coord(MSG_ENTITY, o.enemy.angles_x);
-	net_write_coord(MSG_ENTITY, o.enemy.angles_y);
+	net_write_coord(MSG_ENTITY, self.enemy.origin_x);
+	net_write_coord(MSG_ENTITY, self.enemy.origin_y);
+	net_write_coord(MSG_ENTITY, self.enemy.origin_z);
+	net_write_coord(MSG_ENTITY, self.enemy.angles_x);
+	net_write_coord(MSG_ENTITY, self.enemy.angles_y);
 	net_write_coord(MSG_ENTITY, g_teleport_keep_velocity);
 	net_write_coord(MSG_ENTITY, g_teleport_keep_velocity_crouch);
 	net_write_coord(MSG_ENTITY, g_teleport_time);
@@ -244,12 +243,7 @@ void(void) teleport_findtarget {
 	// now enable touch
 	self.touch = teleport_touch;
 	if (g_teleport_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE) {
-		entity e = spawn();
-		e.owner = self;
-		e.existsonlyfor = self.existsonlyfor;
-		setsize(e, e.owner.mins, e.owner.maxs);
-		net_link_entity(e, TRUE, 0, teleport_prediction_send);
-		e.culltracemode = CULLTRACEMODE_NONE;
+		net_link_entity(self, TRUE, 0, teleport_prediction_send);
 	}
 }
 

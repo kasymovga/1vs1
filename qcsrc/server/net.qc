@@ -3,11 +3,13 @@ void(entity e, float docull, float dt, float(entity, float) sendfunc) net_link_e
 	if (e.classname == "")
 		e.classname = "net_linked";
 
-	if (e.model == "" || self.modelindex == 0) {
+	if (e.modelindex == 0) {
 		mi = e.mins;
 		ma = e.maxs;
 		setmodel(e, "null");
 		setsize(e, mi, ma);
+	} else if (e.model == "") {
+		e.model = "null";
 	}
 	e.SendEntity = sendfunc;
 	e.SendFlags = 0xFFFFFF;

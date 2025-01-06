@@ -89,28 +89,27 @@ void(void) trigger_push_touch {
 }
 
 float(entity to, float sf) trigger_push_prediction_send {
-	entity o = self.owner;
 	net_write_byte(MSG_ENTITY, NET_CSQC_TRIGGER_PUSH_PREDICTION);
-	net_write_coord(MSG_ENTITY, o.modelindex);
-	net_write_coord(MSG_ENTITY, o.origin_x);
-	net_write_coord(MSG_ENTITY, o.origin_y);
-	net_write_coord(MSG_ENTITY, o.origin_z);
-	net_write_coord(MSG_ENTITY, o.mins_x);
-	net_write_coord(MSG_ENTITY, o.mins_y);
-	net_write_coord(MSG_ENTITY, o.mins_z);
-	net_write_coord(MSG_ENTITY, o.maxs_x);
-	net_write_coord(MSG_ENTITY, o.maxs_y);
-	net_write_coord(MSG_ENTITY, o.maxs_z);
-	vector v = o.enemy.origin + (o.enemy.mins + o.enemy.maxs) * 0.5;
+	net_write_coord(MSG_ENTITY, self.modelindex);
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
+	net_write_coord(MSG_ENTITY, self.mins_x);
+	net_write_coord(MSG_ENTITY, self.mins_y);
+	net_write_coord(MSG_ENTITY, self.mins_z);
+	net_write_coord(MSG_ENTITY, self.maxs_x);
+	net_write_coord(MSG_ENTITY, self.maxs_y);
+	net_write_coord(MSG_ENTITY, self.maxs_z);
+	vector v = self.enemy.origin + (self.enemy.mins + self.enemy.maxs) * 0.5;
 	net_write_coord(MSG_ENTITY, v_x);
 	net_write_coord(MSG_ENTITY, v_y);
 	net_write_coord(MSG_ENTITY, v_z);
-	net_write_coord(MSG_ENTITY, o.height);
-	if (o.classname == "trigger_push_velocity") {
+	net_write_coord(MSG_ENTITY, self.height);
+	if (self.classname == "trigger_push_velocity") {
 		net_write_byte(MSG_ENTITY, 1);
-		net_write_coord(MSG_ENTITY, o.spawnflags);
-		net_write_coord(MSG_ENTITY, o.count);
-		net_write_coord(MSG_ENTITY, o.speed);
+		net_write_coord(MSG_ENTITY, self.spawnflags);
+		net_write_coord(MSG_ENTITY, self.count);
+		net_write_coord(MSG_ENTITY, self.speed);
 	} else
 		net_write_byte(MSG_ENTITY, 0);
 
@@ -150,11 +149,7 @@ void(void) trigger_push_findtarget {
 		}
 	}
 	if (g_trigger_push_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE) {
-		entity e = spawn();
-		e.owner = self;
-		setsize(e, e.owner.mins, e.owner.maxs);
-		net_link_entity(e, TRUE, 0, trigger_push_prediction_send);
-		e.culltracemode = CULLTRACEMODE_NONE;
+		net_link_entity(self, TRUE, 0, trigger_push_prediction_send);
 	}
 }
 
