@@ -460,7 +460,7 @@ void(void) item_touch  {
 	entity e, head;
 	item_touch_picked = FALSE;
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
+	if (trace_fraction < 1 && (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))) {
 		if (self.targetname == "") {
 			remove(self);
 			return;
