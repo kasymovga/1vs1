@@ -92,6 +92,7 @@ string sv_model_armorbig;
 string sv_model_armorlarge;
 string sv_model_mushroom;
 string sv_sound_mushroom;
+float sv_gameplayfix_item_ignore_nodrop;
 float sv_item_tracecull;
 
 void(string itemmodel, string defitemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue) item_start;
@@ -460,7 +461,7 @@ void(void) item_touch  {
 	entity e, head;
 	item_touch_picked = FALSE;
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if (trace_fraction < 1 && (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))) {
+	if (trace_fraction < 1 && ((((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) && !sv_gameplayfix_item_ignore_nodrop) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))) {
 		if (self.targetname == "") {
 			remove(self);
 			return;
@@ -690,7 +691,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 			entity_fade_setup(self, time + g_pickup_dropped_lifetime, 1);
 
 		trace_line(self.origin, self.origin, TRACE_MOVE_NORMAL, self);
-		if (trace_dpstartcontents & DPCONTENTS_NODROP)
+		if ((trace_dpstartcontents & DPCONTENTS_NODROP) && !sv_gameplayfix_item_ignore_nodrop)
 			goto item_start_fail;
 	} else {
 		// it's a level item
@@ -1216,6 +1217,7 @@ void(void) item_init {
 	CVAR_CACHE(g_balance_powerup_speed_time);
 	CVAR_CACHE(g_pickup_weapon_ammo_limit);
 	CVAR_CACHE(g_pickup_dropped_lifetime);
+	CVAR_CACHE(sv_gameplayfix_item_ignore_nodrop);
 	CVAR_CACHE(sv_item_tracecull);
 	CVAR_CACHE_STR(sv_model_powerupstrength);
 	CVAR_CACHE_STR(sv_model_powerupinvincible);
