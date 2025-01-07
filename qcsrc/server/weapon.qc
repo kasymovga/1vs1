@@ -8,6 +8,7 @@ float g_weaponratefactor;
 float g_weapon_throw_mode;
 float g_weapon_throw_noammo;
 float g_weapon_pickup_no_ammo;
+float g_weapon_thrown_lifetime;
 float g_showweaponspawns;
 vector sv_qcanimation_melee_morph1angles;
 vector sv_qcanimation_melee_morph2angles;
@@ -321,7 +322,7 @@ float(float wpn) weapon_ammo_item_code {
 void(void) weapon_thrown_think {
 	self.solid = SOLID_TRIGGER;
 	self.owner = NULL;
-	entity_fade_setup(self, time + 20, 1);
+	entity_fade_setup(self, time + g_weapon_thrown_lifetime, 1);
 }
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
@@ -1296,6 +1297,7 @@ void(void) weapon_init {
 	CVAR_CACHE(g_recoil_extra_spread_fly_factor);
 	CVAR_CACHE(g_weapon_throw_mode);
 	CVAR_CACHE(g_weapon_throw_noammo);
+	CVAR_CACHE(g_weapon_thrown_lifetime);
 	CVAR_CACHE(g_weapon_pickup_no_ammo);
 	CVAR_CACHE(g_weapon_switch_to_empty);
 	CVAR_CACHE(g_showweaponspawns);

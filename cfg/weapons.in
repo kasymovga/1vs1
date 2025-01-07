@@ -1,5 +1,6 @@
 set g_weapon_throw_mode 0 "0 - use default ammo values for dropped weapons from dead players, 1 - always use owner ammo"
 set g_weapon_throw_noammo 0 "throw weapons without ammo (like laser)"
+set g_weapon_thrown_lifetime 20 "time for thrown weapons to disappear"
 set g_weapon_pickup_no_ammo 0 "0 - weapons spawns with default amount of ammo, 1 - weapons spawns without ammo"
 set g_weapon_switch_to_empty 0 "allow switch to empty weapon"
 set g_balance_weaponswitchdelay 0.15
