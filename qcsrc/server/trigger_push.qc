@@ -148,7 +148,7 @@ void(void) trigger_push_findtarget {
 			waypoint_spawnforteleporter(self, self.dest, flighttime);
 		}
 	}
-	if (g_trigger_push_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE) {
+	if (g_trigger_push_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE && self.modelindex) {
 		net_link_entity(self, TRUE, 0, trigger_push_prediction_send);
 	}
 }
