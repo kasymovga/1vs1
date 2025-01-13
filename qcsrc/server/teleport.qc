@@ -162,6 +162,7 @@ void(void) teleport_touch {
 	}
 	if (!e) {
 		sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
+		return;
 	}
 	makevectors(e.angles);
 	f = vlen(other.velocity);
@@ -177,7 +178,7 @@ void(void) teleport_touch {
 		f = 0;
 
 	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.angles, v_forward * f, '0 0 0', '0 0 0', 10000);
-	if (e.target) {
+	if (e.target != "") {
 		oldself = self;
 		activator = other;
 		self = e;
@@ -242,7 +243,7 @@ void(void) teleport_findtarget {
 	}
 	// now enable touch
 	self.touch = teleport_touch;
-	if (g_teleport_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE) {
+	if (g_teleport_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE && self.modelindex) {
 		net_link_entity(self, TRUE, 0, teleport_prediction_send);
 	}
 }
