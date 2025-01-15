@@ -198,7 +198,9 @@ set _defrag_g_ability_class_save 1
 set _defrag_g_steponskydamage 0
 set _defrag_g_balance_health_start 125
 set _defrag_g_balance_health_rotlinear 1
-set _defrag_g_balance_health_rotlinear 0
+set _defrag_g_balance_health_rot 0
+set _defrag_g_balance_armor_rotlinear 1
+set _defrag_g_balance_armor_rot 0
 //set _defrag_g_spawn_znudge -8
 set defragcpm_profile "Defrag CPM"
 set defragcpm_inherit _defrag
