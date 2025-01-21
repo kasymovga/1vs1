@@ -1,10 +1,11 @@
 set prophets_profile ""
+set prophets_g_rank_type "minsta"
 set prophets_g_balance_selfdamagepercent 0
 set prophets_g_score_damage 0
 set prophets_g_grappling_hook 1
 set prophets_g_timelimit 20
 set prophets_g_scorelimit 30
-set prophets_g_balance_kill_dealy 0
+set prophets_g_balance_kill_delay 0
 set prophets_g_balance_minstanex_refire 0.7
 set prophets_g_airaccelerate 6
 set prophets_g_accelerate 6
