@@ -5,7 +5,8 @@ var void(entity e) trigger_push_predict_next;
 void(entity e) trigger_push_predict;
 
 void(float isnew) trigger_push_prediction_read {
-	if not(trigger_push_prediction_init_done) {
+	if not(trigger_push_prediction_init_done)
+	if not(main_isdemo) {
 		trigger_push_predict_next = physics_plug_frame_end;
 		physics_plug_frame_end = trigger_push_predict;
 		trigger_push_prediction_init_done = 1;

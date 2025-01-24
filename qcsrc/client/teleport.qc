@@ -9,7 +9,8 @@ var void(entity e) teleport_predict_next;
 void(entity e) teleport_predict;
 
 void(float isnew) teleport_prediction_read {
-	if not(teleport_prediction_init_done) {
+	if not(teleport_prediction_init_done)
+	if not(main_isdemo) {
 		teleport_predict_next = physics_plug_frame_end;
 		physics_plug_frame_end = teleport_predict;
 		teleport_prediction_init_done = 1;
