@@ -690,17 +690,18 @@ float(entity plr, entity viewer) player_alpha {
 
 void() player_effects {
 	entity b = self.body;
+	float teleport_bit = (self.effects & EFFECT_TELEPORT_BIT);
 	if (!b) return;
-	b.body.effects = self.effects & EFFECT_TELEPORT_BIT; //for teleportation
+	b.body.effects = teleport_bit; //for teleportation
 	fire_apply_effect(self);
 	plugin_chain_player_effects();
 	if (g_fullbrightplayers)
-		self.effects = self.effects | EFFECT_FULLBRIGHT;
+		self.effects = (self.effects | EFFECT_FULLBRIGHT);
 
 	if not(g_spawnfrags)
 	if (time >= map_starttime)
 	if (time < self.spawnshieldtime)
-		self.effects = self.effects | (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
+		self.effects = (self.effects | (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT));
 
 	b.effects = self.effects;
 	if (b.weaponentity) {
@@ -713,7 +714,7 @@ void() player_effects {
 		b.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
 
 	b.body.modelflags = self.modelflags; //for MF_ROCKET effect
-	self.effects = 0;
+	self.effects = teleport_bit;
 }
 
 void(entity player) player_to_spec {
