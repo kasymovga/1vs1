@@ -15,7 +15,7 @@ void(float isnew) teleport_prediction_read {
 		physics_plug_frame_end = teleport_predict;
 		teleport_prediction_init_done = 1;
 	}
-	self.cnt = net_read_coord();
+	self.sv_entnum = net_read_coord();
 	self.classname = "teleport_prediction";
 	self.modelindex = net_read_coord();
 	vector v, v2;
@@ -49,7 +49,7 @@ void(float isnew) teleport_prediction_read {
 }
 
 void(void) teleport_teleported_draw2d {
-	if (server_time != self.cnt) {
+	if (time > self.cnt) {
 		remove(self);
 		return;
 	}
@@ -64,7 +64,7 @@ void(vector a) teleport_fix_angles {
 	e.origin = a;
 	e.draw2dflag = 1;
 	e.draw2d = teleport_teleported_draw2d;
-	e.cnt = server_time;
+	e.cnt = time + server_deltatime * 1.125;
 	view_fixangle = 1;
 	view_fixed_angles = a;
 }
@@ -129,7 +129,7 @@ void(entity e) teleport_predict {
 		return;
 	}
 	teleport_predicted_last_time = time; //yes, it must be this way
-	teleport_predicted_last = e.cnt;
+	teleport_predicted_last = e.sv_entnum;
 	view_angles = e.iorigin1;
 	R_SetView(VF_CL_VIEWANGLES, e.iorigin1);
 	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
