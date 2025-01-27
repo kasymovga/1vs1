@@ -52,12 +52,25 @@ void(entity player, entity teleporter, entity telefragger, vector telefragmin, v
 }
 
 void(entity teleporter, entity to, vector to_angles) teleport_teleportation_send {
-	msg_entity = to;
-	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
-	net_write_byte(MSG_ONE, NET_TE_CSQC_TELEPORTATION);
-	net_write_coord(MSG_ONE, num_for_edict(teleporter));
-	net_write_coord(MSG_ONE, to_angles_x);
-	net_write_coord(MSG_ONE, to_angles_y);
+	if (clienttype(to) == CLIENTTYPE_REAL) {
+		msg_entity = to;
+		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+		net_write_byte(MSG_ONE, NET_TE_CSQC_TELEPORTATION);
+		net_write_coord(MSG_ONE, num_for_edict(teleporter));
+		net_write_coord(MSG_ONE, to_angles_x);
+		net_write_coord(MSG_ONE, to_angles_y);
+	}
+	entity e;
+	CLIENT_FOR_EACH_REAL(e) {
+		if (e.enemy == to)
+		if (e.classname == "spectator") {
+			msg_entity = e;
+			net_write_byte(MSG_ONE, SVC_SETANGLE);
+			net_write_angle(MSG_ONE, to_angles_x);
+			net_write_angle(MSG_ONE, to_angles_y);
+			net_write_angle(MSG_ONE, to_angles_z);
+		}
+	}
 }
 
 void(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float _damage) teleport {
