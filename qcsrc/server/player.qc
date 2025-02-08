@@ -703,14 +703,13 @@ void() player_effects {
 	if (time < self.spawnshieldtime)
 		self.effects = (self.effects | (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT));
 
-	b.effects = self.effects;
+	b.effects = (self.effects | (b.effects & EFFECT_RESTARTANIM_BIT));
 	if (b.weaponentity) {
 		b.weaponentity.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
-		b.weaponentity.effects = self.effects;
+		b.weaponentity.effects = (self.effects | (b.weaponentity.effects & EFFECT_RESTARTANIM_BIT));
 		if (b.exteriorweaponentity)
-			b.exteriorweaponentity.effects = self.effects;
-	}
-	else
+			b.exteriorweaponentity.effects = (self.effects | (b.exteriorweaponentity.effects & EFFECT_RESTARTANIM_BIT));
+	} else
 		b.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
 
 	b.body.modelflags = self.modelflags; //for MF_ROCKET effect
