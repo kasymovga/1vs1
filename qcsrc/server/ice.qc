@@ -347,8 +347,12 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 			deathtype == DEATH_LAVA ||
 			deathtype == DEATH_HURTTRIGGER) {
 		entity spot = player_spawn_spot();
+		pointparticles(particleeffectnum("teleport"), ENTITY_CENTER(self), '0 0 0', 1);
 		client_put_to_spot(spot);
-		self.deadflag = DEAD_FREEZE; //client_put_to_spot reset this
+		self.velocity = '0 0 0';
+		if (physics_current_player == self) physics_velocity = '0 0 0';
+		sound(self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
+		pointparticles(particleeffectnum("teleport"), ENTITY_CENTER(self), '0 0 0', 1);
 	} else if (deathtype == DEATH_TEAMCHANGE) {
 		client_put();
 	}

@@ -46,7 +46,6 @@ void(entity to) client_set_view {
 }
 
 void(entity spot) client_put_to_spot{
-	self.deadflag = DEAD_NO;
 	self.angles = spot.angles;
 	self.angles_z = 0;
 	self.crouch = FALSE;

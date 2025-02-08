@@ -1116,6 +1116,7 @@ void(entity spot) player_spawn {
 	self.think = NULL;
 	self.nextthink = 0;
 	self.dmg_team = 0;
+	self.deadflag = DEAD_NO;
 	client_put_to_spot(spot);
 	self.velocity = '0 0 0';
 	self.avelocity = '0 0 0';
