@@ -418,7 +418,7 @@ void(void) jb_init {
 	jb_player_jailed = scores[SP_STATUS];
 	team_teams_set_count(2);
 	roundbased_init(cvar("g_jb_enddelay"), cvar("g_jb_startdelay"));
-	plugin_client_put_spawn_point = jb_client_put_spawn_point;
+	plugin_player_spawn_spot = jb_client_put_spawn_point;
 	plugin_score_give_frag_mod = jb_score_give_frag_mod;
 	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	plugin_player_death_handle = jb_player_death_handle;

@@ -1148,7 +1148,7 @@ void(void) onslaught_init {
 	plugin_player_death_handle = onslaught_DeathHandle;
 	onslaught_player_spawn_next = plugin_chain_player_spawn;
 	plugin_chain_player_spawn = onslaught_player_spawn;
-	plugin_client_put_spawn_point = onslaught_client_put_spawn_point;
+	plugin_player_spawn_spot = onslaught_client_put_spawn_point;
 	onslaught_PlayerClear_NextLink = plugin_chain_player_clear;
 	plugin_chain_player_clear = onslaught_PlayerClear;
 	plugin_winning_condition = onslaught_WinningCondition;

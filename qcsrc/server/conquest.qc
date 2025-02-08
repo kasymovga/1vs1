@@ -353,7 +353,7 @@ void(void) conquest_init {
 
 	plugin_winning_condition = conquest_winning_condition;
 	plugin_score_give_frag_mod = conquest_score_give_frag_mod;
-	plugin_client_put_spawn_point = conquest_client_put_spawn_point;
+	plugin_player_spawn_spot = conquest_client_put_spawn_point;
 	plugin_player_death_handle = onslaught_DeathHandle;
 	onslaught_player_spawn_next = plugin_chain_player_spawn;
 	plugin_chain_player_spawn = onslaught_player_spawn;

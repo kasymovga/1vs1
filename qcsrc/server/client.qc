@@ -79,7 +79,7 @@ void(void) client_put {
 		if (self.team < 0) {
 			team_join_best(self, FALSE);
 		}
-		spot = plugin_client_put_spawn_point();
+		spot = player_spawn_spot();
 		if (!spot) {
 			if (clienttype(self) == CLIENTTYPE_REAL)
 				print_to(self, PRINT_CENTER, "Sorry, no spawnpoints available!\nHope your team can fix it...", "", "", "");

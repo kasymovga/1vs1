@@ -9,7 +9,7 @@ var float(entity plr, float wep) plugin_chain_player_can_fire = { return TRUE; }
 var float() plugin_physics_player_allowed_to_move = { return TRUE; }
 var void() plugin_physics_frame_begin_hook = {}
 var void(void) plugin_chain_player_think = {}
-var entity() plugin_client_put_spawn_point = {
+var entity() plugin_player_spawn_spot = {
 	entity spot;
 	spot = spawn_select(FALSE);
 	if not(spot)

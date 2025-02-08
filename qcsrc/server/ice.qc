@@ -345,10 +345,13 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 	}
 	if (deathtype == DEATH_SLIME ||
 			deathtype == DEATH_LAVA ||
-			deathtype == DEATH_HURTTRIGGER ||
-			deathtype == DEATH_TEAMCHANGE
-			)
+			deathtype == DEATH_HURTTRIGGER) {
+		entity spot = player_spawn_spot();
+		client_put_to_spot(spot);
+		self.deadflag = DEAD_FREEZE; //client_put_to_spot reset this
+	} else if (deathtype == DEATH_TEAMCHANGE) {
 		client_put();
+	}
 	return TRUE;
 }
 

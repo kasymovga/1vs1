@@ -1052,6 +1052,10 @@ void(entity pl) player_physics_setup {
 		pl.clipgroup = pl.team;
 }
 
+entity() player_spawn_spot {
+	return plugin_player_spawn_spot();
+}
+
 float player_real_count;
 void(entity spot) player_spawn {
 	entity oldself, oldother;

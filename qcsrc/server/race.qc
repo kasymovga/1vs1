@@ -1427,7 +1427,7 @@ void(void) race_init {
 	race_player_can_fire_NextLink = plugin_chain_player_can_fire;
 	plugin_chain_player_can_fire = race_player_can_fire;
 	plugin_physics_frame_begin_hook = race_physics_frame_begin_hook;
-	plugin_client_put_spawn_point = race_client_put_spawn_point;
+	plugin_player_spawn_spot = race_client_put_spawn_point;
 	race_player_spawn_next = plugin_chain_player_spawn;
 	plugin_chain_player_spawn = race_player_spawn;
 	race_player_clear_next = plugin_chain_player_clear;
