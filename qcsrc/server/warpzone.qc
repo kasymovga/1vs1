@@ -3,7 +3,6 @@
 .float warpzone_teleport_finishtime;
 .entity warpzone_teleport_zone;
 void(void) warpzone_init_delayed;
-float(entity e) warpzone_move_out_of_solid;
 void(entity me, entity wz) warpzone_refsys_add;
 
 float warpzone_trace_allsolid_saved;
@@ -127,7 +126,7 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 		trace_box(o1 - e.view_ofs, e.mins, e.maxs, o1 - e.view_ofs, TRACE_MOVE_NOMONSTERS, e);
 		if (trace_startsolid) {
 			setorigin(e, o1 - e.view_ofs);
-			if (warpzone_move_out_of_solid(e)) {
+			if (entity_move_out_of_solid(e)) {
 				o1 = e.origin + e.view_ofs;
 				setorigin(e, o0 - e.view_ofs);
 			} else {
@@ -385,7 +384,7 @@ float(void) warpzone_projectile_impact_check {
 	if (pd < mpd) {
 		dpd = normalize(self.velocity) * self.warpzone_targetforward;
 		setorigin(self, self.origin + normalize(self.velocity) * ((mpd - pd) / dpd));
-		if (!warpzone_move_out_of_solid(self)) {
+		if (!entity_move_out_of_solid(self)) {
 			setorigin(self, o0);
 			self.angles = a0;
 			self.velocity = v0;
@@ -780,55 +779,6 @@ void() warpzone_init_hook {
 }
 
 void() warpzone_shutdown_hook {
-}
-
-void(entity e, vector by) warpzone_move_out_of_solid_expand {
-	float eps = 0.0625;
-	trace_box(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, TRACE_MOVE_WORLDONLY, e);
-	if (trace_startsolid)
-		return;
-
-	if (trace_fraction < 1) {
-		// hit something
-		// adjust origin in the other direction...
-		setorigin(e,e.origin - by * (1 - trace_fraction));
-	}
-}
-
-float(entity e) warpzone_move_out_of_solid {
-	vector o, m0, m1;
-	o = e.origin;
-	trace_line(o, o, TRACE_MOVE_WORLDONLY, e);
-	if (trace_startsolid)
-		return FALSE;
-
-	trace_box(o, e.mins, e.maxs, o, TRACE_MOVE_WORLDONLY, e);
-	if (!trace_startsolid)
-		return TRUE;
-
-	m0 = e.mins;
-	m1 = e.maxs;
-	e.mins = '0 0 0';
-	e.maxs = '0 0 0';
-	warpzone_move_out_of_solid_expand(e, '1 0 0' * m0_x);
-	e.mins_x = m0_x;
-	warpzone_move_out_of_solid_expand(e, '1 0 0' * m1_x);
-	e.maxs_x = m1_x;
-	warpzone_move_out_of_solid_expand(e, '0 1 0' * m0_y);
-	e.mins_y = m0_y;
-	warpzone_move_out_of_solid_expand(e, '0 1 0' * m1_y);
-	e.maxs_y = m1_y;
-	warpzone_move_out_of_solid_expand(e, '0 0 1' * m0_z);
-	e.mins_z = m0_z;
-	warpzone_move_out_of_solid_expand(e, '0 0 1' * m1_z);
-	e.maxs_z = m1_z;
-	setorigin(e, e.origin);
-	trace_box(e.origin, e.mins, e.maxs, e.origin, TRACE_MOVE_WORLDONLY, e);
-	if (trace_startsolid) {
-		setorigin(e, o);
-		return FALSE;
-	}
-	return TRUE;
 }
 
 void(void) warpzone_dlc_load {
