@@ -524,7 +524,11 @@ void(void) warpzone_init_update_transform {
 		}
 	} else if (area > 0) {
 		org = point;
-		ang = vectoangles(norm);
+		if (self.movedir != '0 0 0')
+			ang = vectoangles(norm, self.movedir);
+		else
+			ang = vectoangles(norm);
+
 		ang_x = -ang_x;
 	} else
 		error("cannot infer origin/angles for this warpzone, please use a killtarget or a trigger_warpzone_position");
