@@ -77,9 +77,6 @@ void(void) model_setup {
 		setsize(self, self.mins * self.scale, self.maxs * self.scale);
 	else
 		setsize(self, self.mins, self.maxs);
-
-	if (self.movetype == MOVETYPE_NONE)
-		self.culltracemode = CULLTRACEMODE_NONE;
 }
 
 void(void) model_setup_no_lod {
@@ -218,6 +215,8 @@ void(void) model_movable_init {
 void(void) model_init_common_delayed {
 	model_dropbyspawnflags();
 	model_movable_init();
+	if (self.movetype == MOVETYPE_NONE)
+		self.culltracemode = CULLTRACEMODE_NONE;
 }
 
 void(float sol) model_init_common {
