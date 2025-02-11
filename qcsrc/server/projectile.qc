@@ -169,13 +169,14 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 			e.existsonlyfor = _owner;
 	}
 	e.reset = stdproc_remove;
+	e.solid = SOLID_SLIDEBOX;
+	e.dphitcontentsmask = (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE);
 	return e;
 }
 
 void(entity e, vector _origin, float impacttype, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float _gravity, float _movetype) projectile_setup {
 	e.projectiledeathtype = deathtype;
 	e.species = impacttype;
-	PROJECTILE_MAKETRIGGER(e);
 	e.movetype = _movetype;
 	if (_gravity) {
 		e.gravity = _gravity;
@@ -300,6 +301,7 @@ void(entity e, entity to, vector a) projectile_stick {
 		e.punchangle_y *= -1;
 		e.view_ofs = e.origin - to.origin;
 		e.flags &= ~FL_ONGROUND;
+		e.solid = SOLID_CORPSE;
 	} else
 		e.movetype = MOVETYPE_NONE;
 

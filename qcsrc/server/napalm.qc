@@ -74,10 +74,8 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.gravity = 1;
     proj.classname = "napalm";
-    proj.realowner = proj.owner;
     proj.projectiledeathtype = deathtype;
     proj.pushltime = time + lifetime + random_2() * lifetime_randfactor;
-    proj.team = self.owner.team;
     proj.effects = EFFECT_NODEPTHTEST;
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = burndamage + 100;
@@ -91,7 +89,7 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
     proj.think = Napalm_Think;
     proj.reset = stdproc_remove;
     proj.nextthink = time;
-    PROJECTILE_MAKETRIGGER(proj);
+    proj.solid = SOLID_CORPSE;
     setorigin(proj, porg);
 	rm_buffs_meodp_point_attach(proj, rm_buffs_meodp_death_remove_multiple);
     return proj;

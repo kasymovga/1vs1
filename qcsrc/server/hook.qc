@@ -286,7 +286,8 @@ void(void) hook_fire {
 	self.hook = missile;
 	missile.classname = "grapplinghook";
 	missile.movetype = (g_balance_grapplehook_gravity ? MOVETYPE_TOSS : MOVETYPE_FLY);
-	PROJECTILE_MAKETRIGGER(missile);
+	missile.solid = SOLID_CORPSE;
+	missile.dphitcontentsmask = (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE);
 	setmodel (missile, "models/hook.md3"); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
 	setorigin (missile, weapon_shotorg);

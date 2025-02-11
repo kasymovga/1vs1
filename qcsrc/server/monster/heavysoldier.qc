@@ -67,7 +67,6 @@ void() monster_heavysoldier_hunt {
 			gren.velocity = normalize(_shotdir) * 1000 + 200 * '0 0 1';
 			self.attack_finished_single = time + 1 + random();
 		}
-		PROJECTILE_MAKETRIGGER(gren);
 		gren.nextthink = time + 5;
 		gren.think = projectile_think2use;
 		gren.use = projectile_explode;

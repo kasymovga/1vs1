@@ -135,7 +135,7 @@ void(void) physics_update_status {
 			self.groundentity = trace_ent;
 			physics_impact();
 			if (physics_groundvelocity_dotproduct < 0) {
-				if (!trace_ent || trace_ent.solid != SOLID_NOT)
+				if (!trace_ent || trace_ent.solid <= SOLID_TRIGGER || trace_ent.solid == SOLID_CORPSE)
 					physics_velocity -= physics_groundvelocity_dotproduct * trace_plane_normal;
 			}
 		} else if (physics_skimming > 0 && trace_fraction <= 0.01) {
@@ -198,7 +198,7 @@ void(void) physics_move {
 		if (trace1_fraction < 1) {
 			physics_impact();
 			if (trace_ent) {
-				if (trace_ent.solid == SOLID_NOT) //become non-solid after impact
+				if (trace_ent.solid <= SOLID_TRIGGER || trace_ent.solid == SOLID_CORPSE) //become non-solid after impact
 					continue;
 
 				if (trace1_plane_normal_z > 0.7) {

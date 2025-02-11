@@ -249,6 +249,7 @@ void(void) weapon_fireball_attack1 {
 	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, 0, WEAPON_FIREBALL, g_balance_fireball_primary_damage, 0, 0, 0, 1, MOVETYPE_BOUNCE);
+	proj.solid = SOLID_CORPSE;
 	proj.touch = weapon_fireball_mine_touch;
 	proj.think = weapon_fireball_mine_think;
 	proj.nextthink = time;

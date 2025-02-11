@@ -541,8 +541,6 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.classname = "hg_generic_projectile";
     gren.bot_dodge = TRUE;
     gren.bot_dodgerating = GV("damage") + 300;
-    PROJECTILE_MAKETRIGGER(gren);
-    gren.dphitcontentsmask = hitmask;
     gren.projectiledeathtype = hgtype;
     gren.hg_type = hgtype;
     gren.spawnorigin = self.origin;
@@ -596,7 +594,6 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.use = nadget_GenericProjectile_Explode;
     gren.touch = nadget_GenericProjectile_Touch;
     gren.entremove = nadget_GenericProjectile_Remove;
-    gren.team = self.team;
     gren.hg_isbonus = self.hg_bonus;
     if (gren.hg_adept) {
 		gren.health = GV("adept_health");

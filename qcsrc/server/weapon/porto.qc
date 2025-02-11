@@ -149,7 +149,6 @@ void(float out) weapon_porto_attack {
 	gren.classname = "porto";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = 200;
-	PROJECTILE_MAKETRIGGER(gren);
 	if (out) {
 		self.porto_current_out = gren;
 	} else {
