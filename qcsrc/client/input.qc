@@ -26,6 +26,7 @@ string(string text, string command) input_command_key {
 	if (!CVAR(sbar_showbinds))
 		return text;
 
+	if (command == "") return "";
 	keys = db_get(db_binds, command);
 	if (keys == "") {
 		n = tokenize(findkeysforcommand(command)); // uses '...' strings
