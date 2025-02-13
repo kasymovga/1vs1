@@ -153,7 +153,7 @@ float() builtin_ReadLong = #363;
 float() builtin_ReadCoord = #364;
 float() builtin_ReadAngle = #365;
 string() builtin_ReadString = #366; //warning: this returns a temporary!
-void(entity in, entity out) builtin_copyentity;
+void(entity in, entity out) builtin_copyentity = #400;
 entity(.string fld, string match) findchain = #402;
 entity(.entity fld, entity match) findchainentity = #403;
 entity(.float fld, float match) findchainfloat = #403;
