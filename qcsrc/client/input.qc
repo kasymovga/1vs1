@@ -26,9 +26,17 @@ string(string text, string command) input_command_key {
 	if (!CVAR(sbar_showbinds))
 		return text;
 
-	if (command == "") return "";
+	if (command == "") {
+		backtrace("input_command_key: command is empty");
+		return "";
+	}
 	keys = db_get(db_binds, command);
 	if (keys == "") {
+		float firstchr = str2chr(command, 0);
+		if (firstchr == ' ' || firstchr == '\t' || firstchr == '\r' || firstchr == '\n') {
+			backtrace("input_command_key: command started with whitespace");
+			return "";
+		}
 		n = tokenize(findkeysforcommand(command)); // uses '...' strings
 		for(j = 0; j < n; ++j) {
 			k = stof(argv(j));
