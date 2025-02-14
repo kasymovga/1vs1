@@ -83,16 +83,17 @@ void(float dt, float dist, float _damage, float edgedamage, float burntime) weap
 	entity e;
 	float d;
 	vector p;
+	vector o = ENTITY_CENTER(self);
 	random_selection_init();
-	for (e = findradius(self.origin, dist); e; e = e.chain)
+	for (e = findradius(o, dist); e; e = e.chain)
 	if (e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || team_is_different_teams(e, self)) {
-		p = e.origin;
+		p = ENTITY_CENTER(e);;
 		p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
 		p_y += e.mins_y + random() * (e.maxs_y - e.mins_y);
 		p_z += e.mins_z + random() * (e.maxs_z - e.mins_z);
-		d = vlen(self.origin - p);
+		d = vlen(o - p);
 		if (d < dist) {
-			trace_line(p, self.origin, TRACE_MOVE_NORMAL, e);
+			trace_line(p, o, TRACE_MOVE_NORMAL, self);
 			if (/* trace_startsolid || */ trace_fraction != 1)
 				continue;
 
@@ -101,11 +102,11 @@ void(float dt, float dist, float _damage, float edgedamage, float burntime) weap
 		}
 	}
 	if (random_selection_chosen_ent) {
-		d = vlen(self.origin - random_selection_chosen_ent.fireball_impactvec);
+		d = vlen(o - random_selection_chosen_ent.fireball_impactvec);
 		d = _damage + (edgedamage - _damage) * (d / dist);
 		fire_add_damage(random_selection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
-		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, random_selection_chosen_ent.fireball_impactvec);
-		pointparticles(particleeffectnum("fireball_laser"), self.origin, random_selection_chosen_ent.fireball_impactvec - self.origin, 1);
+		//trailparticles(self, particleeffectnum("fireball_laser"), o, random_selection_chosen_ent.fireball_impactvec);
+		pointparticles(particleeffectnum("fireball_laser"), o, random_selection_chosen_ent.fireball_impactvec - o, 1);
 	}
 }
 
