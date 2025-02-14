@@ -46,29 +46,26 @@ void(void) weapon_fireball_explode {
 	vector dir;
 	// 1. dist damage
 	if (!self.cnt) {
-		effect_model_spawn("models/sphere/sphere.md3", 0, 0, self.origin, '0 0 0', '0 0 0', '0 0 0', 0, g_balance_fireball_secondary_bfgradius, 0.2, 0.05, 0.25);
+		vector o = ENTITY_CENTER(self);
+		effect_model_spawn("models/sphere/sphere.md3", 0, 0, o, '0 0 0', '0 0 0', '0 0 0', 0, g_balance_fireball_secondary_bfgradius, 0.2, 0.05, 0.25);
 		// 2. bfg effect
-		for (e = findradius(self.origin, g_balance_fireball_secondary_bfgradius); e; e = e.chain)
+		vector e_o;
+		for (e = findradius(o, g_balance_fireball_secondary_bfgradius); e; e = e.chain)
 		if (e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || team_is_different_teams(e, self)) {
+			e_o = ENTITY_CENTER(e);
 			// can we see fireball?
-			trace_line(e.origin + e.view_ofs, self.origin, TRACE_MOVE_NORMAL, e);
-			if (/* trace_startsolid || */ trace_fraction != 1) // startsolid should be never happening anyway
+			trace_line(o, e_o, TRACE_MOVE_NORMAL, self);
+			if (/* trace_startsolid || */ trace_fraction != 1 && trace_ent != e) // startsolid should be never happening anyway
 				continue;
 
-			// can we see player who shot fireball?
-			trace_line(e.origin + e.view_ofs, self.realowner.origin + self.realowner.view_ofs, TRACE_MOVE_NORMAL, e);
-			if (trace_ent != self.realowner)
-			if (/* trace_startsolid || */ trace_fraction != 1)
-				continue;
-
-			dist = vlen(self.origin - e.origin - e.view_ofs);
+			dist = vlen(o - e_o);
 			points = (1 - sqrt(dist / g_balance_fireball_secondary_bfgradius));
 			if (points <= 0)
 				continue;
 
-			dir = normalize(e.origin + e.view_ofs - self.origin);
-			damage(e, self, self.realowner, g_balance_fireball_secondary_bfgdamage * points, self.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, g_balance_fireball_secondary_bfgforce * dir);
-			pointparticles(particleeffectnum("fireball_bfgdamage"), e.origin, -1 * dir, 1);
+			dir = normalize(e_o - o);
+			damage(e, self, self.realowner, g_balance_fireball_secondary_bfgdamage * points, self.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e_o, g_balance_fireball_secondary_bfgforce * dir);
+			pointparticles(particleeffectnum("fireball_bfgdamage"), e_o, -1 * dir, 1);
 		}
 	}
 	projectile_explode();
@@ -93,8 +90,8 @@ void(float dt, float dist, float _damage, float edgedamage, float burntime) weap
 		p_z += e.mins_z + random() * (e.maxs_z - e.mins_z);
 		d = vlen(o - p);
 		if (d < dist) {
-			trace_line(p, o, TRACE_MOVE_NORMAL, self);
-			if (/* trace_startsolid || */ trace_fraction != 1)
+			trace_line(o, p, TRACE_MOVE_NORMAL, self);
+			if (/* trace_startsolid || */ trace_fraction < 1 && trace_ent != e)
 				continue;
 
 			e.fireball_impactvec = p;
@@ -198,7 +195,7 @@ void(void) weapon_fireball_mine_think {
 	}
 	// make it "hot" once it leaves its owner
 	if (self.owner) {
-		if (vlen(self.origin - self.owner.origin - self.owner.view_ofs) > g_balance_fireball_primary_laserradius) {
+		if (vlen(ENTITY_CENTER(self) - ENTITY_CENTER(self.owner)) > g_balance_fireball_primary_laserradius) {
 			self.cnt += 1;
 			if(self.cnt == 3)
 				self.owner = world;
