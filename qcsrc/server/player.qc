@@ -39,6 +39,7 @@ float g_player_pushfactor;
 float g_player_body_pitch_maxangle;
 float g_player_team_collisions;
 float g_player_damage_screen_effects;
+float g_player_damage_punchangle;
 float sv_notification_type;
 float g_endmatch_on_leave;
 string sv_announcer_extra_pushfrag;
@@ -528,6 +529,14 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			shake = _damage * 5 / (bound(0,skill,100) + 1);
 			self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 			self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
+		}
+	}
+	if (g_player_damage_punchangle) {
+		if (force_x || force_y) {
+			makevectors('0 1 0' * self.angles_y);
+			vector fdir = normalize(force_x * '1 0 0' + force_y * '0 1 0');
+			self.punchangle_x += fdir * v_forward * g_player_damage_punchangle * _damage;
+			self.punchangle_y -= fdir * v_right * g_player_damage_punchangle * _damage;
 		}
 	}
 	if (self.dmg_inflictor) {
@@ -1311,6 +1320,7 @@ void() player_init {
 	CVAR_CACHE(g_player_body_pitch_maxangle);
 	CVAR_CACHE(g_player_team_collisions);
 	CVAR_CACHE(g_player_damage_screen_effects);
+	CVAR_CACHE(g_player_damage_punchangle);
 	CVAR_CACHE(sv_notification_type);
 	CVAR_CACHE(g_spawnshieldtime);
 	CVAR_CACHE(g_spawnfrags);
