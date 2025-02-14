@@ -14,6 +14,7 @@ set coop_g_maxplayers 8
 set coop_g_pickup_nodrop 0
 set coop_g_spawnreplace_info_player_coop info_player_deathmatch
 set coop_g_player_forcemodel 0
+set coop_g_player_allowed_models "*"
 set coop_g_player_forceskin -1
 alias cl_hook_gamestart_coop ""
 alias sv_hook_gamestart_coop ""
