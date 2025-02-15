@@ -79,6 +79,10 @@ float(string s) dlc_findspace {
 }
 
 void dlc_settemp(string name, string value) {
+	if (g_campaign) {
+		cvar_set(name, value);
+		return;
+	}
 	float n = cvar("_dlc_settemps_count");
 	string s1 = strcat("_dlc_settemp_name", ftos(n));
 	string s2 = strcat("_dlc_settemp_savevalue", ftos(n));
@@ -192,6 +196,7 @@ void(string dlc_name) dlc_exec_cfg {
 }
 
 void(void) dlc_unload_settemps {
+	if (g_campaign) return;
 	float n = cvar("_dlc_settemps_count");
 	float i;
 	for (i = 0; i < n; i++) {
