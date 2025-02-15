@@ -680,7 +680,6 @@ void(string modelname) player_body_setup_lod {
 			self.body.weaponentity = NULL;
 		}
 	}
-	s = whichpack(self.body.model);
 	str_unzone_ifneeded(self.body.playermodel);
 	self.body.playermodel = str_zone_ifneeded(modelname); //need independent copy here
 	self.body.colormap = 0;
@@ -1121,6 +1120,20 @@ string(string s) player_body_find_models {
 	return l;
 }
 
+float(string s) player_body_all_models_allowed {
+	string head, tail;
+	head = str_car(s);
+	tail = str_cdr(s);
+	if (head == "") return TRUE;
+	if (strstrofs(s, "*", 0) < 0) return FALSE;
+	while (head != "") {
+		if (head == "*") return TRUE;
+		head = str_car(tail);
+		tail = str_cdr(tail);
+	}
+	return FALSE;
+}
+
 float player_body_init_done;
 void(void) player_body_init {
 	CVAR_CACHE_STR(g_player_allowed_models);
@@ -1177,7 +1190,7 @@ void(void) player_body_init {
 		g_player_allowed_models_blue = str_zone_ifneeded(g_player_allowed_models_blue);
 		g_player_allowed_models_yellow = str_zone_ifneeded(g_player_allowed_models_yellow);
 		g_player_allowed_models_pink = str_zone_ifneeded(g_player_allowed_models_pink);
-	} else if (g_player_allowed_models == "" && g_player_disabled_models != "") {
+	} else if (player_body_all_models_allowed(g_player_allowed_models) && g_player_disabled_models != "") {
 		g_player_allowed_models = player_body_find_models("models/player/*.zym");
 		g_player_allowed_models = strcat(g_player_allowed_models, player_body_find_models("models/player/*.dpm"));
 		g_player_allowed_models = strcat(g_player_allowed_models, player_body_find_models("models/player/*.md3"));
@@ -1185,7 +1198,7 @@ void(void) player_body_init {
 		g_player_allowed_models = str_zone_ifneeded(strcat(g_player_allowed_models, player_body_find_models("models/player/*.iqm")));
 	}
 	print("Allowed player models: ", g_player_allowed_models, "\n");
-	if (str_car(g_player_allowed_models) == "") {
+	if (player_body_all_models_allowed(g_player_allowed_models)) {
 		player_body_precache_all_models("models/player/*.zym");
 		player_body_precache_all_models("models/player/*.dpm");
 		player_body_precache_all_models("models/player/*.md3");
