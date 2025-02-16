@@ -1,2 +1,5 @@
 string(string s) map_info_fix_name;
 float(string s) map_info_get_game_types; // returns 0 if the map can't be played with the current settings, map_info_map_supported_game_types otherwise
+void(string pFilename, string acl, string s, float recurse) map_info_parse_set_temp;
+float map_info_load_map_settings_processing;
+void(string s) map_info_load_map_settings;

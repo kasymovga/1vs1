@@ -11,3 +11,6 @@ string cvar_changes;
 void(void) cvar_changes_init;
 float(string profile) cvar_profile_presents;
 void(void) cvar_profile_dlc_load;
+float(string s) cvar_value_issafe;
+void(string pKey, string pValue) cvar_settemp;
+void(void) cvar_settemp_restore;

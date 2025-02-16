@@ -141,6 +141,7 @@ rm/game_type_vote.qh
 rm/buffs.qh
 rm/bigprint.qh
 ../client-server/progs.qc
+map_info.qh
 ../menu-server/progs.qc
 weapon/two_weapons.qh
 weapon/flash.qh
@@ -159,7 +160,6 @@ tdm.qh
 map_vote.qh
 casing.qh
 hint.qh
-map_info.qh
 debris.qh
 thirdview.qh
 ability.qh

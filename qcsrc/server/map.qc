@@ -102,7 +102,6 @@ void(float position) map_goto_set_index {
 }
 
 void() map_change {
-	localcmd("\nsettemp_restore\n");
 	print("Loading map: ", map_name_stored, "\n");
 	map_info_load_map(map_name_stored);
 }

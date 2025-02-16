@@ -42,7 +42,6 @@ float(string s) map_info_find_name;
 float(string s) map_info_check_map; // returns 0 if the map can't be played with the current settings
 void(string s) map_info_load_map;
 // list all maps for the current game type
-void(string s) map_info_load_map_settings;
 void(void) map_info_clear_temps; // call this when done with mapinfo for this frame
 void(void) map_info_shutdown; // call this in the shutdown handler
 void(void) map_info_on_restore;

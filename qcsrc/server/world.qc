@@ -854,6 +854,7 @@ void(void) world_shutdown {
 		plugin_chain_shutdown();
 		db_shutdown();
 		campaign_restart();
+		cvar_settemp_restore();
 	} else if (world_initialized == 0) {
 		print("NOTE: crashed before even initializing the world, not saving persistent data\n");
 	}

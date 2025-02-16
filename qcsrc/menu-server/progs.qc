@@ -1,6 +1,5 @@
 #include "campaign.qc"
 #include "cmd.qc"
-#include "cvar.qc"
 #include "extresponse.qc"
 #include "game_type.qc"
 #include "map_info.qc"
