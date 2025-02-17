@@ -1,5 +1,6 @@
 float(void) progressbar_customize {
 	if not(other == self.owner)
+	if not(other.classname == "spectator" && other.enemy == self.owner)
 		return FALSE;
 
 	return TRUE;
