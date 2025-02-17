@@ -270,11 +270,18 @@ void(void) physics_move {
 		}
 		// check if it moved at all
 		if (trace1_endpos == self.origin) {
-			if (blocked_prev && prev_plane_normal * trace1_plane_normal < 0) {
-				trace1_plane_normal = physics_bbox_nearest_normal(prev_plane_normal, trace1_plane_normal);
-			} else {
-				blocked_prev = 1;
+			if (blocked_prev) {
+				if (blocked_prev > 2 && prev_plane_normal * trace1_plane_normal < 0) {
+					trace1_plane_normal = physics_bbox_nearest_normal(prev_plane_normal, trace1_plane_normal);
+				} else if (prev_plane_normal == trace1_plane_normal) { //same plane as in previous attempt, trying bounce from it little bit harder
+					f = (physics_velocity * trace1_plane_normal);
+					if (f < 0.001 && f > -0.001) { //check if slide over this plane
+						physics_velocity += trace1_plane_normal * (0.0001 * (vlen(physics_velocity)));
+						trace1_plane_normal = '0 0 0';
+					}
+				}
 			}
+			blocked_prev++;
 			prev_plane_normal = trace1_plane_normal;
 		} else {
 			setorigin(self, trace1_endpos);
