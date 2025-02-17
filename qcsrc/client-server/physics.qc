@@ -154,22 +154,6 @@ void(void) physics_update_status {
 	}
 }
 
-vector(vector v1, vector v2) physics_bbox_nearest_normal {
-	vector nearest = normalize(v1 + v2);
-	if (nearest_z > 0.7)
-		nearest = '0 0 1';
-	else if (nearest_z < -0.7)
-		nearest = '0 0 -1';
-	else {
-		nearest_z = 0;
-		nearest = normalize(nearest);
-	}
-	if (physics_velocity * nearest <= 0)
-		return nearest;
-	else
-		return v2;
-}
-
 void(void) physics_move {
 	float bump;
 	float t;
@@ -271,8 +255,10 @@ void(void) physics_move {
 		// check if it moved at all
 		if (trace1_endpos == self.origin) {
 			if (blocked_prev) {
-				if (blocked_prev > 2 && prev_plane_normal * trace1_plane_normal < 0) {
-					trace1_plane_normal = physics_bbox_nearest_normal(prev_plane_normal, trace1_plane_normal);
+				if (prev_plane_normal * trace1_plane_normal < 0) {
+					trace1_plane_normal = normalize(math_cross(prev_plane_normal, trace1_plane_normal));
+					physics_velocity = trace1_plane_normal * (physics_velocity * trace1_plane_normal);
+					trace1_plane_normal = '0 0 0';
 				} else if (prev_plane_normal == trace1_plane_normal) { //same plane as in previous attempt, trying bounce from it little bit harder
 					f = (physics_velocity * trace1_plane_normal);
 					if (f < 0.001 && f > -0.001) { //check if slide over this plane
