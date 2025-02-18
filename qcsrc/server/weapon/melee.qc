@@ -95,6 +95,12 @@ float(float reload) weapon_melee_possible {
 	return FALSE;
 }
 
+void(void) weapon_melee_ready {
+	weapon_ready();
+	if (self.weaponentity)
+		self.weaponentity.cnt = 0;
+}
+
 void(void) weapon_melee_attack_check {
 	if (self.weapon != self.switchweapon)
 		return;
@@ -105,7 +111,7 @@ void(void) weapon_melee_attack_check {
 	if (!w_save || self.weapon_think == weapon_ready) {
 		if (weapon_prepareattack(0, g_balance_melee_refire)) {
 			weapon_melee_attack(g_balance_melee, 0, sv_sound_melee);
-			weapon_thinkf(((g_balance_melee == 2) ? WEAPON_FRAME_MELEE2 : WEAPON_FRAME_MELEE), g_balance_melee_animtime, weapon_ready);
+			weapon_thinkf(((g_balance_melee == 2) ? WEAPON_FRAME_MELEE2 : WEAPON_FRAME_MELEE), g_balance_melee_animtime, weapon_melee_ready);
 		}
 	}
 	self.weapon = w_save;
