@@ -240,7 +240,7 @@ void(void) teleport_findtarget {
 	}
 	if (n == 0) {
 		// no dest!
-		print("Teleporter with nonexistant target: ", num_for_edict(self), "\n");
+		print("Teleporter with nonexistant target: ", ftos(num_for_edict(self)), "\n");
 		print("classname = ", self.classname, "\n");
 		print("target = ", self.target, "\n");
 		print("targetname = ", self.targetname, "\n");
