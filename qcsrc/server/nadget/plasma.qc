@@ -1,29 +1,23 @@
 
 void nadget_Plasma_Shard_Explode(void) {
-#if 0
-    if(self.meodp_point.enemy) {
-        self.realowner = self.meodp_point.enemy;
-        self.team = self.meodp_point.enemy.team;
-    }
-#endif
-
+	if (self.meodp_point.enemy) {
+		self.realowner = self.meodp_point.enemy;
+		self.team = self.meodp_point.enemy.team;
+	}
     self.event_damage = NULL;
     self.takedamage = DAMAGE_NO;
     //self.damage_noinfo = FALSE;
-#if 0
-    float p = Buffs_NadgetPower(self.realowner);
-#endif
-
-    damage_radius(self, self.realowner,
-        cvar("g_nadgets_plasma_projectile_damage") /* * p */,
-        cvar("g_nadgets_plasma_projectile_edgedamage") /* * p */,
-        cvar("g_nadgets_plasma_projectile_radius"),
-        world,
-        cvar("g_nadgets_plasma_projectile_force") /* * p */,
-        EFFECT_IMPACT_RM_PLASMA_SHARD,
-        NADGET_PLASMA | HITTYPE_BOUNCE,
-        other
-    );
+	float p = rm_buffs_nadget_power(self.realowner);
+	damage_radius(self, self.realowner,
+			cvar("g_nadgets_plasma_projectile_damage") * p,
+			cvar("g_nadgets_plasma_projectile_edgedamage") * p,
+			cvar("g_nadgets_plasma_projectile_radius"),
+			NULL,
+			cvar("g_nadgets_plasma_projectile_force") * p,
+			EFFECT_IMPACT_RM_PLASMA_SHARD,
+			NADGET_PLASMA | HITTYPE_BOUNCE,
+			other
+	);
 
     remove(self);
 }
@@ -80,9 +74,7 @@ void nadget_Plasma_Shard_Think(void) {
 
 		effect_lightningarc(o, o2);
 	}
-#if 0
-    HealParticleEmitter(self.realowner);
-#endif
+	rm_effect_heal_emitter(self, self.realowner);
     self.nextthink = min(self.hg_plasma_projdps_next, self.hg_detonatetime);
 }
 
@@ -123,7 +115,7 @@ void nadget_Plasma_Shard(float kickangle) {
     proj.touch = nadget_Plasma_Shard_Touch;
     proj.takedamage = DAMAGE_NO;
     proj.hg_plasma_projrange = cvar("g_nadgets_plasma_projectile_dps_range");
-    proj.hg_plasma_projdps = cvar("g_nadgets_plasma_projectile_dps") /* * Buffs_NadgetPower(self.realowner) */;
+	proj.hg_plasma_projdps = cvar("g_nadgets_plasma_projectile_dps") * rm_buffs_nadget_power(self.realowner);
     proj.hg_plasma_projdps_delay = cvar("g_nadgets_plasma_projectile_dps_delay");
 #if 0
     proj.hg_plasma_projdist = cvar("g_nadgets_plasma_projectile_maxdistance");
