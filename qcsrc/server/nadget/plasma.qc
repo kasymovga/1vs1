@@ -86,8 +86,7 @@ void nadget_Plasma_Shard_Touch(void) {
 void nadget_Plasma_Shard(float kickangle) {
     entity proj;
     vector kick;
-
-    proj = projectile(TRUE, PROJECTILE_HG_PLASMA_SHARD, FALSE, self);
+	proj = projectile(TRUE, PROJECTILE_HG_PLASMA_SHARD, FALSE, self.realowner);
 	proj.gravity = 1;
     proj.classname = "hg_plasma";
     proj.use = nadget_Plasma_Shard_Explode;
@@ -144,7 +143,6 @@ void nadget_Plasma_Explode(void) {
 	v = self.hg_lastvel;
 	v_z = 0;
     vectorvectors(normalize(v));
-
     for (c = 0; c < cvar("g_nadgets_plasma_projectile_count"); c ++)
         nadget_Plasma_Shard(2 * MATH_PI * (c / cvar("g_nadgets_plasma_projectile_count")));
 }
