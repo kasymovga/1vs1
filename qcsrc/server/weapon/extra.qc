@@ -120,7 +120,8 @@ void(void) weapon_extra_projectile_guided_think {
 	vector v = o.origin + o.view_ofs;
 	trace_line(v, v + v_forward * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, o);
 	v = trace_endpos - ENTITY_CENTER(self);
-	self.velocity = self.velocity * (1 - self.cnt) + normalize(v) * self.speed * self.cnt;
+	float f = bound(0, self.cnt * frametime, 1);
+	self.velocity = self.velocity * (1 - f) + normalize(v) * self.speed * f;
 }
 
 void(float num, float secondary, float t) weapon_extra_attack {
