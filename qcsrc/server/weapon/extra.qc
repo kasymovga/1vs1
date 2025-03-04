@@ -56,6 +56,7 @@ enum {
 	WEAPON_EXTRA_TYPE_RAIL,
 	WEAPON_EXTRA_TYPE_PROJECTILE,
 	WEAPON_EXTRA_TYPE_MELEE,
+	WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED,
 };
 
 float(entity to, float f) weapon_extra_send {
@@ -71,6 +72,8 @@ float(string s) weapon_extra_type_from_name {
 		return WEAPON_EXTRA_TYPE_RAIL;
 	case "projectile":
 		return WEAPON_EXTRA_TYPE_PROJECTILE;
+	case "projectile_guided":
+		return WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED;
 	case "melee":
 		return WEAPON_EXTRA_TYPE_MELEE;
 	case "":
@@ -98,6 +101,26 @@ float weapon_extra_draw_beam_particles_effect;
 void(vector start, vector end, vector to) weapon_extra_draw_beam_particles {
 	weapon_nex_whoosh(start, end);
 	trailparticles(world, weapon_extra_draw_beam_particles_effect, start, end);
+}
+
+void(void) weapon_extra_projectile_guided_think {
+	if (time >= self.fade_time) {
+		remove(self);
+		return;
+	}
+	self.nextthink = time;
+	entity o = self.owner;
+	if (o.playerid != self.playerid ||
+			o.weapon != self.weapon ||
+			!player_can_fire(o, FALSE)
+			)
+		return;
+
+	makevectors(o.v_angle);
+	vector v = o.origin + o.view_ofs;
+	trace_line(v, v + v_forward * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, o);
+	v = trace_endpos - ENTITY_CENTER(self);
+	self.velocity = self.velocity * (1 - self.cnt) + normalize(v) * self.speed * self.cnt;
 }
 
 void(float num, float secondary, float t) weapon_extra_attack {
@@ -184,6 +207,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		antilag_end();
 		break;
 	case WEAPON_EXTRA_TYPE_PROJECTILE:
+	case WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED:
 		if not(e) return;
 		weapon_setup_shot(self, rec, s, c);
 		pointparticles(m, weapon_shotorg_visual, weapon_shotdir * 1000, 1);
@@ -199,19 +223,30 @@ void(float num, float secondary, float t) weapon_extra_attack {
 			lt = weapon_extra_primary_lifetime[num];
 		}
 		for (float i = 0; i < c; i++) {
-			proj = projectile(TRUE, e, TRUE, self);
+			proj = projectile(t == WEAPON_EXTRA_TYPE_PROJECTILE, e, TRUE, self);
 			projectile_setup(proj, weapon_shotorg, it, hittype, d,
-					0 /* TODO: edgedamage */, r, f, g, (bounces ? MOVETYPE_BOUNCE : MOVETYPE_FLY));
-			proj.touch = (bounces ? weapon_extra_projectile_touch : projectile_touch_explode);
-			proj.cnt = bounces;
+					0 /* TODO: edgedamage */, r, f, ((t == WEAPON_EXTRA_TYPE_PROJECTILE ) ? g : 0), (bounces ? MOVETYPE_BOUNCE : MOVETYPE_FLY));
 			proj.use = projectile_explode;
-			proj.think = projectile_think2use;
-			proj.nextthink = time + lt;
-			if (g)
-				proj.velocity = (v_forward + randomvec() * spr) * sp + v_up * up;
-			else
+			if (t == WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED) {
+				proj.weapon = self.weapon;
+				proj.think= weapon_extra_projectile_guided_think;
+				proj.playerid = self.playerid;
+				proj.nextthink = time;
+				proj.fade_time = time + lt;
+				proj.speed = sp;
+				proj.touch = projectile_touch_explode;
+				proj.cnt = g;
 				proj.velocity = (weapon_shotdir + randomvec() * spr) * sp;
-
+			} else {
+				proj.cnt = bounces;
+				proj.think = projectile_think2use;
+				proj.nextthink = time + lt;
+				proj.touch = (bounces ? weapon_extra_projectile_touch : projectile_touch_explode);
+				if (g)
+					proj.velocity = (v_forward + randomvec() * spr) * sp + v_up * up;
+				else
+					proj.velocity = (weapon_shotdir + randomvec() * spr) * sp;
+			}
 			weapon_setup_projectile_velocity(proj);
 		}
 		break;
@@ -342,6 +377,7 @@ float(float req) weapon_extra_think {
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 1, FALSE);
 				break;
 			case WEAPON_EXTRA_TYPE_PROJECTILE:
+			case WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED:
 				if (bot_aim(weapon_extra_secondary_speed[extra_num], weapon_extra_secondary_up[extra_num], 5, TRUE))
 					self.BUTTON_ATCK2 = TRUE;
 
@@ -361,6 +397,7 @@ float(float req) weapon_extra_think {
 			case WEAPON_EXTRA_TYPE_RAIL:
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 				break;
+			case WEAPON_EXTRA_TYPE_PROJECTILE:
 			case WEAPON_EXTRA_TYPE_PROJECTILE:
 				if (bot_aim(weapon_extra_primary_speed[extra_num], weapon_extra_primary_up[extra_num], 5, TRUE))
 					self.BUTTON_ATCK = TRUE;
@@ -473,10 +510,14 @@ float(float req) weapon_extra_think {
 	} else if (req == WEAPON_REQUEST_RESETPLAYER) {
 		weapon_clip_reset(weapon_extra_magazinecapacity[extra_num], weapon_extra_clip[extra_num]);
 	} else if (req == WEAPON_REQUEST_CVAR_CACHE) {
-		if (weapon_extra_primary_type[extra_num] == WEAPON_EXTRA_TYPE_PROJECTILE)
+		if (weapon_extra_primary_type[extra_num] == WEAPON_EXTRA_TYPE_PROJECTILE ||
+				weapon_extra_primary_type[extra_num] == WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED
+				)
 			projectile_init(weapon_extra_primary_effect[extra_num]);
 
-		if (weapon_extra_secondary_type[extra_num] == WEAPON_EXTRA_TYPE_PROJECTILE)
+		if (weapon_extra_secondary_type[extra_num] == WEAPON_EXTRA_TYPE_PROJECTILE ||
+				weapon_extra_secondary_type[extra_num] == WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED
+				)
 			projectile_init(weapon_extra_secondary_effect[extra_num]);
 
 		weapon_ammo_limits(self.weapon, weapon_extra_primary_ammo[extra_num], weapon_extra_secondary_ammo[extra_num]);
@@ -587,7 +628,7 @@ void(void) weapon_extra_init {
 		t = weapon_extra_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_type")));
 		weapon_extra_primary_type[i] = t;
 		if (t == WEAPON_EXTRA_TYPE_MELEE) havemelee = TRUE;
-		if (t == WEAPON_EXTRA_TYPE_PROJECTILE)
+		if (t == WEAPON_EXTRA_TYPE_PROJECTILE || t == WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED)
 			weapon_extra_primary_effect[i] = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_effect")));
 		else
 			weapon_extra_primary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_primary_effect")));
@@ -606,7 +647,7 @@ void(void) weapon_extra_init {
 		t = weapon_extra_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_type")));
 		weapon_extra_secondary_type[i] = t;
 		if (t == WEAPON_EXTRA_TYPE_MELEE) havemelee = TRUE;
-		if (t == WEAPON_EXTRA_TYPE_PROJECTILE)
+		if (t == WEAPON_EXTRA_TYPE_PROJECTILE || t == WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED)
 			weapon_extra_secondary_effect[i] = weapon_extra_projectile_type_from_name(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
 		else
 			weapon_extra_secondary_effect[i] = particleeffectnum(cvar_string(strcat("g_weapon_extra_", ftos(i), "_secondary_effect")));
