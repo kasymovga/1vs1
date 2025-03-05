@@ -119,9 +119,16 @@ void(void) weapon_extra_projectile_guided_think {
 	makevectors(o.v_angle);
 	vector v = o.origin + o.view_ofs;
 	trace_line(v, v + v_forward * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, o);
-	v = trace_endpos - ENTITY_CENTER(self);
-	float f = bound(0, self.cnt * frametime, 1);
-	self.velocity = self.velocity * (1 - f) + normalize(v) * self.speed * f;
+	float f = bound(0, self.cnt * frametime, 180);
+	vector a1 = vectoangles(self.velocity);
+	vector a2 = vectoangles(trace_endpos - ENTITY_CENTER(self));
+	vector a;
+	a_x = approach_angle(a1_x, a2_x, f);
+	a_y = approach_angle(a1_y, a2_y, f);
+	a_z = approach_angle(a1_z, a2_z, f);
+	a_x = -a_x;
+	makevectors(a);
+	self.velocity = v_forward * self.speed;
 }
 
 void(float num, float secondary, float t) weapon_extra_attack {
