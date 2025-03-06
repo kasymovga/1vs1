@@ -91,9 +91,23 @@ float(void) warpzone_teleported_customize {
 	return FALSE;
 }
 
+vector(entity e) warpzone_entity_origin_offset {
+	vector ofs;
+	if (e.classname == "player") {
+		ofs = e.view_ofs;
+		ofs_x = bound(e.mins_x, ofs_x, e.maxs_x);
+		ofs_y = bound(e.mins_y, ofs_y, e.maxs_y);
+		ofs_z = bound(e.mins_z, ofs_z, e.maxs_z);
+	} else {
+		ofs = (e.mins + e.maxs) * .5;
+	}
+	return ofs;
+}
+
 float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 	vector o0, a0, v0, o1, a1, v1, o10;
-	o0 = e.origin + e.view_ofs;
+	vector ofs = warpzone_entity_origin_offset(e);
+	o0 = e.origin + ofs;
 	v0 = e.velocity;
 	a0 = e.angles;
 	o10 = o1 = warpzone_transform_origin(wz, o0);
@@ -106,14 +120,14 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 	if (f0 != 0 || f1 != 0) {
 		// retry last move but behind the warpzone!
 		// we must first go back as far as we can, then forward again, to not cause double touch events!
-		trace_box(o1 - e.view_ofs + v1 * frametime * f1, e.mins, e.maxs, o1 - e.view_ofs + v1 * frametime * f0, TRACE_MOVE_WORLDONLY, e); {
+		trace_box(o1 - ofs + v1 * frametime * f1, e.mins, e.maxs, o1 - ofs + v1 * frametime * f0, TRACE_MOVE_WORLDONLY, e); {
 			entity own;
 			own = e.owner;
 			e.owner = world;
-			trace_box(trace_endpos, e.mins, e.maxs, o1 - e.view_ofs + v1 * frametime * f1, TRACE_MOVE_NORMAL, e); // this should get us through the warpzone
+			trace_box(trace_endpos, e.mins, e.maxs, o1 - ofs + v1 * frametime * f1, TRACE_MOVE_NORMAL, e); // this should get us through the warpzone
 			e.owner = own;
 		}
-		o1 = trace_endpos + e.view_ofs;
+		o1 = trace_endpos + ofs;
 		float d, dv, md;
 		md = max(vlen(e.mins), vlen(e.maxs));
 		d = warpzone_target_plane_dist(wz, o1);
@@ -123,15 +137,15 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 	}
 	// put him out of solid
 	if (e.movetype != MOVETYPE_NOCLIP) {
-		trace_box(o1 - e.view_ofs, e.mins, e.maxs, o1 - e.view_ofs, TRACE_MOVE_NOMONSTERS, e);
+		trace_box(o1 - ofs, e.mins, e.maxs, o1 - ofs, TRACE_MOVE_NOMONSTERS, e);
 		if (trace_startsolid) {
-			setorigin(e, o1 - e.view_ofs);
+			setorigin(e, o1 - ofs);
 			if (entity_move_out_of_solid(e)) {
-				o1 = e.origin + e.view_ofs;
-				setorigin(e, o0 - e.view_ofs);
+				o1 = e.origin + ofs;
+				setorigin(e, o0 - ofs);
 			} else {
 				print("would have to put entity in solid, won't do that\n");
-				setorigin(e, o0 - e.view_ofs);
+				setorigin(e, o0 - ofs);
 				return 0;
 			}
 		}
@@ -146,7 +160,7 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 			}
 		}
 	}
-	warzpone_teleport_player(wz, e, o1 - e.view_ofs, a1, v1);
+	warzpone_teleport_player(wz, e, o1 - ofs, a1, v1);
 	warpzone_projectile_store(e);
 	e.warpzone_teleport_time = time;
 	e.warpzone_teleport_finishtime = time;
@@ -256,7 +270,7 @@ void(void) warpzone_touch {
 	if (other.movetype == MOVETYPE_FOLLOW || other.tag_entity)
 		return;
 
-	if (warpzone_plane_dist(self, other.origin + other.view_ofs) >= 0) {// wrong side of the trigger_warpzone (don't teleport yet)
+	if (warpzone_plane_dist(self, other.origin + warpzone_entity_origin_offset(other)) >= 0) {// wrong side of the trigger_warpzone (don't teleport yet)
 		if (other.modelindex) {
 			entity e = other.wz_shadow;
 			if (!e || e.enemy != self) {
