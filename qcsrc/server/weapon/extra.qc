@@ -450,16 +450,14 @@ float(float req) weapon_extra_think {
 				if (weapon_prepareattack(0, weapon_extra_primary_refire[extra_num])) {
 					weapon_extra_attack(extra_num, FALSE, t);
 					burst = weapon_extra_primary_burst[extra_num];
-					if (burst > 0) {
+					if (burst > 1) {
 						if (burst > 2)
 							ready_func = weapon_extra_primary_burst_2;
-						else if (burst > 1)
-							ready_func = weapon_extra_primary_burst_1;
 						else
-							ready_func = weapon_ready;
+							ready_func = weapon_extra_primary_burst_1;
 					} else {
 						ready_func = weapon_ready;
-						if (burst < 0)
+						if (burst < 0) // require repressing of fire button for next shot
 							self.bulletcounter |= 1;
 					}
 					weapon_thinkf(WEAPON_FRAME_FIRE1, weapon_extra_primary_animtime[extra_num], ready_func);
@@ -468,16 +466,15 @@ float(float req) weapon_extra_think {
 				if (weapon_prepareattack(1, weapon_extra_secondary_refire[extra_num])) {
 					weapon_extra_attack(extra_num, TRUE, t);
 					burst = weapon_extra_secondary_burst[extra_num];
-					if (burst > 0) {
+					if (burst > 1) {
 						if (burst > 2)
 							ready_func = weapon_extra_secondary_burst_2;
-						else if (burst > 1)
-							ready_func = weapon_extra_secondary_burst_1;
 						else
-							ready_func = weapon_ready;
+							ready_func = weapon_extra_secondary_burst_1;
 					} else {
 						ready_func = weapon_ready;
-						if (burst < 0) self.bulletcounter |= 2;
+						if (burst < 0) // require repressing of fire button for next shot
+							self.bulletcounter |= 2;
 					}
 					weapon_thinkf(WEAPON_FRAME_FIRE2, weapon_extra_secondary_animtime[extra_num], ready_func);
 				}
