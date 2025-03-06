@@ -736,6 +736,16 @@ void(void) physics_player_frame {
 			goto finish;
 
 		physics_update_status();
+		// if dead, behave differently
+		if (physics_deadflag != DEAD_NO)
+		if (physics_deadflag != DEAD_FREEZE) {
+			if (physics_flags & FL_ONGROUND)
+				physics_velocity = '0 0 0';
+			else if (physics_waterlevel >= WATER_LEVEL_SWIMMING)
+				physics_velocity = physics_velocity * (1 - frametime * sv_friction);
+
+			goto end;
+		}
 		if (physics_button_crouch) {
 			if not(sv_disable_crouch)
 			if (!physics_crouch) {
@@ -756,16 +766,6 @@ void(void) physics_player_frame {
 					setsize (self, self.stand_mins, self.stand_maxs);
 				}
 			}
-		}
-		// if dead, behave differently
-		if (physics_deadflag != DEAD_NO)
-		if (physics_deadflag != DEAD_FREEZE) {
-			if (physics_flags & FL_ONGROUND)
-				physics_velocity = '0 0 0';
-			else if (physics_waterlevel >= WATER_LEVEL_SWIMMING)
-				physics_velocity = physics_velocity * (1 - frametime * sv_friction);
-
-			goto end;
 		}
 		physics_check_ground_hook();
 		if (physics_button_jump)

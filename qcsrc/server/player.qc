@@ -650,6 +650,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		vector _crouch_maxs = self.crouch_maxs;
 		_stand_maxs_z = 5;
 		_crouch_maxs_z = 5;
+		self.crouch = FALSE;
 		physics_set_sizes(self, self.stand_mins, _stand_maxs, self.crouch_mins, _crouch_maxs);
 		// set damage function to corpse damage
 		self.event_damage = player_corpse_damage;

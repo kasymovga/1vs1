@@ -91,6 +91,7 @@ void(void) physics_check_ground_hook {
 
 void(void) physics_on_crouch_hook {
 	if (physics_is_player)
+	if (self.body)
 		anim_set(self.body, self.anim_duck, FALSE, TRUE, TRUE);
 }
 
