@@ -68,6 +68,7 @@ rm_effect.qh
 rm_bigprint.qh
 rm_crosshair_ring.qh
 rm_score.qh
+ip2c.qh
 porto.qh
 ../client-server/progs.qc
 cvar.qc

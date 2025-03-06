@@ -220,6 +220,8 @@ void(float ignore) main_init_read {
 		world_max_y = net_read_coord();
 		world_max_z = net_read_coord();
 		radar_init();
+		str_unzone_ifneeded(sv_ip2country_subpath);
+		sv_ip2country_subpath = str_zone_ifneeded(net_read_string());
 	}
 	if (sf & 4) {
 		str_unzone_ifneeded(fog_settings);

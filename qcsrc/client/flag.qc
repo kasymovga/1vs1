@@ -10,16 +10,20 @@ float(string cn) flag_animate {
 
 string(string cn) flag_icon {
 	string i;
-	if (cn == "")
-		return "gfx/flagicons/xx";
+	string path = "gfx/flagicons";
+	if (sv_ip2country_subpath != "")
+		path = strcat(path, "/", sv_ip2country_subpath);
 
-	i = strcat("gfx/flagicons/", cn);
+	if (cn == "")
+		return strcat(path, "/xx");
+
+	i = strcat(path, "/", cn);
 	float aframe = flag_animate(cn);
 	if (aframe >= 0)
 		i = strcat(i, "-", ftos(fabs(rint(aframe))));
 
 	if (drawgetimagesize(i) == '0 0 0')
-		return "gfx/flagicons/xx";
+		return strcat(path, "/xx");
 
 	return i;
 }

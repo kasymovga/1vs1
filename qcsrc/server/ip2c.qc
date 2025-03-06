@@ -1,4 +1,5 @@
 float IP2C_SCORE;
+float IP2C_URI_GET;
 
 float sv_ip2country;
 float sv_ip2country_allow_fakeflag;
@@ -82,6 +83,7 @@ void IP2C_InitSV(void) {
     CVAR_CACHE(sv_ip2country);
     CVAR_CACHE(sv_ip2country_allow_fakeflag);
 	CVAR_CACHE_STR(sv_ip2country_bot_flag);
+	CVAR_CACHE_STR(sv_ip2country_subpath);
     if(!sv_ip2country) {
         return;
     }
@@ -183,7 +185,7 @@ void IP2C_Init(void) {
     if(cvar("sv_ip2country_proxy"))
         extresponse_register_handler("ip2cq", IP2C_ER_Request_Callback, world);
 
-	URI_GET_IP2C = uri_register_handler(IP2C_URI_Get_Callback);
+	IP2C_URI_GET = uri_register_handler(IP2C_URI_Get_Callback);
 }
 
 void IP2C_Shutdown(void) {
@@ -274,7 +276,7 @@ void IP2C_Lookup(string ip, ip2c_callback_t callback, float timeout, entity call
     if(substring(url, 0, strlen(IP2C_UDP_PROTOCOL_PREFIX)) == IP2C_UDP_PROTOCOL_PREFIX) {
         extresponse_query(substring(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url)), strcat("extResponse ip2cq ", ip));
     } else {
-        uri_get(strcat(url, ip), URI_GET_IP2C);
+        uri_get(strcat(url, ip), IP2C_URI_GET);
     }
 }
 

@@ -27,4 +27,4 @@ ip2c_callback_t IP2C_Callback_DumpToConsole;
 #define IP2C_GetQueryURL() cvar_string("sv_ip2country_server")
 
 const string IP2C_UDP_PROTOCOL_PREFIX = "udp://";
-float URI_GET_IP2C;
+string sv_ip2country_subpath;
