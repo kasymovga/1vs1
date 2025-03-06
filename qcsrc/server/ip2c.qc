@@ -1,3 +1,4 @@
+#define IP2C_DBNAME "ipcache.db"
 float IP2C_SCORE;
 float IP2C_URI_GET;
 
@@ -88,7 +89,9 @@ void IP2C_InitSV(void) {
         return;
     }
     IP2C_Init();
-    dlc_require("flagicons_v2");
+	if (sv_ip2country_subpath == "")
+		dlc_require("flagicons_v2");
+
     if(sv_ip2country_allow_fakeflag) {
         IP2C_ClientCommandHandle_NextLink = plugin_chain_cmd_client_handle;
         plugin_chain_cmd_client_handle = IP2C_ClientCommandHandle;
@@ -176,12 +179,9 @@ void IP2C_FreeCallbackEntity(entity e) {
 }
 
 void IP2C_Init(void) {
-    IP2C_REGISTERVARS()
     IP2C_Log("Loading cached IPs");
     IPCacheDB = db_load(IP2C_DBNAME);
-
     extresponse_register_handler("ip2cr", IP2C_ER_Response_Callback, world);
-
     if(cvar("sv_ip2country_proxy"))
         extresponse_register_handler("ip2cq", IP2C_ER_Request_Callback, world);
 
