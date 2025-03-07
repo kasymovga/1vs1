@@ -31,7 +31,6 @@ void(entity acc, entity wz) warpzone_accumulator_add {
 	acc.warpzone_shift = st;
 }
 
-var float autocvar_cl_warpzone_usetrace = 1;
 vector(vector org, vector ang) warpzone_camera_transform {
 	vector vf, vr, vu;
 	vf = v_forward;
@@ -41,11 +40,7 @@ vector(vector org, vector ang) warpzone_camera_transform {
 	vf = warpzone_transform_velocity(self, vf);
 	vr = warpzone_transform_velocity(self, vr);
 	vu = warpzone_transform_velocity(self, vu);
-	if (autocvar_cl_warpzone_usetrace)
-		trace_line(self.warpzone_targetorigin, org, TRACE_MOVE_NOMONSTERS, world);
-	else
-		trace_endpos = self.warpzone_targetorigin;
-
+	trace_endpos = self.warpzone_targetorigin;
 	v_forward = vf;
 	v_right = vr;
 	v_up = vu;
