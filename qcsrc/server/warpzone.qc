@@ -123,7 +123,7 @@ float(entity wz, entity e) warpzone_teleport {
 	entity w2 = warpzone_find(o1, o1);
 	if (w2 && w2 == wz.enemy) {
 		float d = warpzone_target_plane_dist(w2, o1);
-		o1 += w2.warpzone_forward * (0.125 - min(d, 0));
+		o1 += w2.warpzone_targetforward * (0.125 - min(d, 0));
 	}
 	// put him out of solid
 	if (e.movetype != MOVETYPE_NOCLIP) {
@@ -131,26 +131,26 @@ float(entity wz, entity e) warpzone_teleport {
 		trace_box(o, e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 		if (trace_startsolid) {
 			if (wz.enemy) {
-				trace_box(o + wz.enemy.warpzone_forward * vlen(e.maxs - e.mins), e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+				trace_box(o + wz.enemy.warpzone_targetforward * vlen(e.maxs - e.mins), e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 				if (!trace_startsolid && math_boxes_overlap(o + e.mins, o + e.maxs, trace_endpos + e.mins, trace_endpos + e.maxs)) {
 					o1 = trace_endpos + ofs;
 				} else {
-					if (wz.enemy.warpzone_forward * '1 0 0' >= 0) {
+					if (wz.enemy.warpzone_targetforward * '1 0 0' >= 0) {
 						trace_box(o + (e.maxs_x - e.mins_x) * '1 0 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '-1 0 0' >= 0) {
+					if (trace_startsolid && wz.enemy.warpzone_targetforward * '-1 0 0' >= 0) {
 						trace_box(o + (e.maxs_x - e.mins_x) * '-1 0 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '0 1 0' >= 0) {
+					if (trace_startsolid && wz.enemy.warpzone_targetforward * '0 1 0' >= 0) {
 						trace_box(o + (e.maxs_y - e.mins_y) * '0 1 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '0 -1 0' >= 0) {
+					if (trace_startsolid && wz.enemy.warpzone_targetforward * '0 -1 0' >= 0) {
 						trace_box(o + (e.maxs_y - e.mins_y) * '0 -1 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '0 0 1' >= 0) {
+					if (trace_startsolid && wz.enemy.warpzone_targetforward * '0 0 1' >= 0) {
 						trace_box(o + (e.maxs_z - e.mins_z) * '0 0 1', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '0 0 -1' >= 0) {
+					if (trace_startsolid && wz.enemy.warpzone_targetforward * '0 0 -1' >= 0) {
 						trace_box(o + (e.maxs_z - e.mins_z) * '0 0 -1', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 					}
 					if not(trace_startsolid) {
