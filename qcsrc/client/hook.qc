@@ -17,6 +17,9 @@ void(void) hook_draw {
 		physics_hook_old_length = hook_pull_length_readed;
 	}
 	b = self.origin;
+	if (warpzone_predicted_time == time && warpzone_predicted) {
+		b = warpzone_transform_origin(warpzone_predicted, b);
+	}
 	if (!CVAR(chase_active) && (owner_entnum == player_localentnum || owner_entnum == view_spectatee_status)) {
 		vector hook_shotorigin = self.hook_shootorg;
 		a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
@@ -53,11 +56,11 @@ void(void) hook_draw {
 
 void Remove_GrapplingHook() {
 	if (self == hook_pull)
-		hook_pull = world;
+		hook_pull = NULL;
 
 	if (self.enemy) {
 		remove(self.enemy);
-		self.enemy = world;
+		self.enemy = NULL;
 	}
 }
 
@@ -69,9 +72,16 @@ void(entity _hook, vector v, vector v0, vector dir) hook_pull_aiment {
 }
 
 void(entity _hook, entity pl) hook_physics_pre {
+	if (warpzone_predicted_time == time && warpzone_predicted) {
+		_hook.oldorigin = _hook.origin;
+		_hook.origin = warpzone_transform_origin(warpzone_predicted, _hook.origin);
+	}
 }
 
 void(entity _hook, entity pl) hook_physics_post {
+	if (warpzone_predicted_time == time && warpzone_predicted) {
+		_hook.origin = _hook.oldorigin;
+	}
 }
 
 void(float ignore) hook_physics_read {
@@ -129,5 +139,5 @@ void(float ignore) hook_read {
 		hook_pull = self;
 		hook_pull_length_readed = net_read_coord();
 	} else
-		hook_pull = world;
+		hook_pull = NULL;
 }

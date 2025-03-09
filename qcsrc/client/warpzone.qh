@@ -1,3 +1,5 @@
 void(float bisnewentity) warpzone_read;
 void(float isnew) warpzone_teleported_read;
 var void(void) warpzone_view_fix = {}; // this saves the previous values
+entity warpzone_predicted;
+float warpzone_predicted_time;

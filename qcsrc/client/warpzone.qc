@@ -1,6 +1,4 @@
 entity warpzone_passed;
-entity warpzone_predicted;
-float warpzone_predicted_time;
 float warpzone_prediction_init_done;
 var void(entity e) warpzone_predict_next;
 void(entity e) warpzone_predict {
@@ -155,9 +153,11 @@ void(float isnew) warpzone_teleported_read {
 	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
 		teleport_fix_angles(v2);
 	} else if (!warpzone_predicted || time - warpzone_predicted_time > 0.5 || warpzone_predicted.sv_entnum != entnum) {
-		if (warpzone_passed) remove(warpzone_passed);
-		warpzone_passed = spawn();
-		warpzone_passed.warpzone_transform = v;
+		entity w;
+		for (w = warpzone_chain_begin; w; w = w.warpzone_chain) {
+			if (w.sv_entnum == entnum) break;
+		}
+		warpzone_passed = w;
 	}
 	warpzone_predicted = NULL;
 }
@@ -167,7 +167,6 @@ void(void) warpzone_view_fix_real {
 	if (warpzone_passed) {
 		view_angles = warpzone_transform_vangles(warpzone_passed, view_angles);
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
-		remove(warpzone_passed);
 		warpzone_passed = NULL;
 	}
 	float tx = tan(view_fovx);
