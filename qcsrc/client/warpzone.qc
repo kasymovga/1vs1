@@ -33,33 +33,33 @@ void(entity e) warpzone_predict {
 	entity w2 = warpzone_find(org, org);
 	if (w2 && w2 == w.enemy) {
 		float d = warpzone_plane_dist(w2, org);
-		org += w2.warpzone_targetforward * (0.125 - min(d, 0));
+		org += w2.warpzone_forward * (0.125 - min(d, 0));
 	}
 	if not(view_observer_status) {
 		vector o = org - v;
 		trace_box(o, e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 		if (w.enemy) {
 			if (trace_startsolid) {
-				trace_box(o + w.enemy.warpzone_targetforward * vlen(self.maxs - self.mins), self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+				trace_box(o + w.enemy.warpzone_forward * vlen(self.maxs - self.mins), self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
 				if (!trace_startsolid && math_boxes_overlap(o + self.mins, o + self.maxs, trace_endpos + self.mins, trace_endpos + self.maxs)) {
 					org = trace_endpos + v;
 				} else {
-					if (w.enemy.warpzone_targetforward * '1 0 0' >= 0) {
+					if (w.enemy.warpzone_forward * '1 0 0' >= 0) {
 						trace_box(o + (self.maxs_x - self.mins_x) * '1 0 0', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
 					}
-					if (trace_startsolid && w.enemy.warpzone_targetforward * '-1 0 0' >= 0) {
+					if (trace_startsolid && w.enemy.warpzone_forward * '-1 0 0' >= 0) {
 						trace_box(o + (self.maxs_x - self.mins_x) * '-1 0 0', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
 					}
-					if (trace_startsolid && w.enemy.warpzone_targetforward * '0 1 0' >= 0) {
+					if (trace_startsolid && w.enemy.warpzone_forward * '0 1 0' >= 0) {
 						trace_box(o + (self.maxs_y - self.mins_y) * '0 1 0', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
 					}
-					if (trace_startsolid && w.enemy.warpzone_targetforward * '0 -1 0' >= 0) {
+					if (trace_startsolid && w.enemy.warpzone_forward * '0 -1 0' >= 0) {
 						trace_box(o + (self.maxs_y - self.mins_y) * '0 -1 0', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
 					}
-					if (trace_startsolid && w.enemy.warpzone_targetforward * '0 0 1' >= 0) {
+					if (trace_startsolid && w.enemy.warpzone_forward * '0 0 1' >= 0) {
 						trace_box(o + (self.maxs_z - self.mins_z) * '0 0 1', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
 					}
-					if (trace_startsolid && w.enemy.warpzone_targetforward * '0 0 -1' >= 0) {
+					if (trace_startsolid && w.enemy.warpzone_forward * '0 0 -1' >= 0) {
 						trace_box(o + (self.maxs_z - self.mins_z) * '0 0 -1', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
 					}
 					if not(trace_startsolid) {
@@ -176,7 +176,7 @@ void(void) warpzone_view_fix_real {
 	if (w) {
 		float f = warpzone_plane_dist(w, view_origin);
 		if (f < clipdist)
-			view_origin += (clipdist - f) * w.warpzone_targetforward;
+			view_origin += (clipdist - f) * w.warpzone_forward;
 	}
 	if (view_angles_z != 0) {
 		view_angles_z = approach_angle(view_angles_z, 0, frametime * 180);
