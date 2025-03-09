@@ -11,9 +11,11 @@ void(void) physics_impact {
 	self.velocity = physics_velocity;
 	if (self.touch) {
 		entity oldother = other;
+		entity oldself = self;
 		other = trace_ent;
 		self.touch(); //Lets hope there is not trace function in this touch function
 		other = oldother;
+		self = oldself;
 	}
 	if (trace_ent.touch) {
 		entity oldself = self;

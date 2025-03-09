@@ -222,6 +222,7 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 			setorigin(oldself, v2);
 			oldself.velocity = physics_velocity;
 			oldself.v_angle = physics_v_angle;
+			trace_fraction = 1;
 			self.touch();
 			if (oldself.origin == v2)
 				setorigin(oldself, _oldorigin);
