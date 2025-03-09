@@ -48,7 +48,9 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 		// make the entity non-solid so we can hit the next one
 		trace_ent.railgunhit = TRUE;
 		trace_ent.railgunhitloc = trace_endpos;
-		trace_ent.railgunhittransform = warpzone_trace_transform;
+		trace_ent.railgunhittransform = spawn();
+		trace_ent.railgunhittransform.warpzone_shift = warpzone_trace_transform.warpzone_shift;
+		trace_ent.railgunhittransform.warpzone_transform = warpzone_trace_transform.warpzone_transform;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		// stop if this is a wall
 		if (trace_ent.solid == SOLID_BSP)
@@ -61,15 +63,12 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 	endent = trace_ent;
 	endq3surfaceflags = trace_dphitq3surfaceflags;
 	// find all the entities the railgun hit and restore their solid state
-	ent = findfloat(world, railgunhit, TRUE);
-	while (ent) {
+	for (ent = findfloat(NULL, railgunhit, TRUE); ent; ent = findfloat(ent, railgunhit, TRUE)) {
 		// restore their solid type
 		ent.solid = ent.railgunhitsolidbackup;
-		ent = findfloat(ent, railgunhit, TRUE);
 	}
 	// find all the entities the railgun hit and hurt them
-	ent = findfloat(world, railgunhit, TRUE);
-	while (ent) {
+	for (ent = findfloat(NULL, railgunhit, TRUE); ent; ent = findfloat(ent, railgunhit, TRUE)) {
 		// get the details we need to call the damage function
 		hitloc = ent.railgunhitloc;
 		ent.railgunhitloc = '0 0 0';
@@ -78,6 +77,8 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 		//for stats so that team hit will count as a miss
 		bullet_from = warpzone_transform_origin(ent.railgunhittransform, start);
 		bullet_to = warpzone_transform_origin(ent.railgunhittransform, end);
+		remove(ent.railgunhittransform);
+		ent.railgunhittransform = NULL;
 		f = bullet_exponential_falloff(mindist, maxdist, halflifedist, vlen(ent.origin - bullet_from));
 		ffs = bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, vlen(ent.origin - bullet_from));
 		// apply the damage
@@ -86,8 +87,6 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 			weapon_score_hits(self, ent, deathtype, 1, d);
 			damage(ent, self, self, d, deathtype, hitloc, normalize(bullet_to - bullet_from) * bforce * ffs);
 		}
-		// advance to the next entity
-		ent = findfloat(ent, railgunhit, TRUE);
 	}
 	trace_endpos = endpoint;
 	trace_ent = endent;
