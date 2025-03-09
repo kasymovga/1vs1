@@ -228,12 +228,6 @@ vector(void) physics_view_origin {
 			if not(RetrieveMovementFrame(physics_command_frame)) {
 				break;
 			}
-			if (warpzone_view && !warpzone_passed)
-			if (physics_command_frame >= warpzone_view_commandframe) {
-				//print("warp input angles correction ", ftos(physics_command_frame), " ", vtos(input_angles));
-				input_angles = warpzone_untransform_angles(warpzone_view, input_angles);
-				//print(" ", vtos(input_angles), "\n");
-			}
 			frametime = input_timelength;
 			physics_button_crouch = input_buttons & 16;
 			physics_movement = input_movevalues;

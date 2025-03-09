@@ -20,8 +20,6 @@ void(void) hook_draw {
 	if (!CVAR(chase_active) && (owner_entnum == player_localentnum || owner_entnum == view_spectatee_status)) {
 		vector hook_shotorigin = self.hook_shootorg;
 		a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
-		if (warpzone_view)
-			a = warpzone_untransform_origin(warpzone_view, a);
 	} else {
 		entity e = self;
 		self = self.enemy;

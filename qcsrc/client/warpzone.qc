@@ -1,3 +1,89 @@
+entity warpzone_passed;
+entity warpzone_predicted;
+float warpzone_predicted_time;
+float warpzone_prediction_init_done;
+var void(entity e) warpzone_predict_next;
+void(entity e) warpzone_predict {
+	if (e.classname != "trigger_warpzone") {
+		if (warpzone_predict_next)
+			warpzone_predict_next(e);
+
+		return;
+	}
+	e.solid = SOLID_BSP;
+	float ss = self.solid;
+	self.solid = SOLID_NOT;
+	trace_box(self.origin, self.mins, self.maxs, self.origin, TRACE_MOVE_NORMAL, NULL);
+	self.solid = ss;
+	e.solid = SOLID_NOT;
+	if not(trace_ent == e) return;
+	vector v = '0 0 0';
+	if (physics_is_player) {
+		v = self.view_ofs;
+	} else if (view_observer_status) {
+		v = self.view_ofs;
+	} else {
+		v = (self.mins + self.maxs) * .5;
+	}
+	vector org = self.origin + v;
+	entity w = warpzone_find(org, org);
+	if not(w) {
+		return;
+	}
+	//this code must be synced with warpzone_teleport in server code
+	org = warpzone_transform_origin(w, org);
+	entity w2 = warpzone_find(org, org);
+	if (w2 && w2 == w.enemy) {
+		float d = warpzone_plane_dist(w2, org);
+		org += w2.warpzone_forward * (0.125 - min(d, 0));
+	}
+	if not(view_observer_status) {
+		vector o = org - v;
+		trace_box(o, e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+		if (w.enemy) {
+			if (trace_startsolid) {
+				trace_box(o + w.enemy.warpzone_forward * vlen(self.maxs - self.mins), self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+				if (!trace_startsolid && math_boxes_overlap(o + self.mins, o + self.maxs, trace_endpos + self.mins, trace_endpos + self.maxs)) {
+					org = trace_endpos + v;
+				} else {
+					if (w.enemy.warpzone_forward * '1 0 0' >= 0) {
+						trace_box(o + (self.maxs_x - self.mins_x) * '1 0 0', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+					}
+					if (trace_startsolid && w.enemy.warpzone_forward * '-1 0 0' >= 0) {
+						trace_box(o + (self.maxs_x - self.mins_x) * '-1 0 0', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+					}
+					if (trace_startsolid && w.enemy.warpzone_forward * '0 1 0' >= 0) {
+						trace_box(o + (self.maxs_y - self.mins_y) * '0 1 0', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+					}
+					if (trace_startsolid && w.enemy.warpzone_forward * '0 -1 0' >= 0) {
+						trace_box(o + (self.maxs_y - self.mins_y) * '0 -1 0', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+					}
+					if (trace_startsolid && w.enemy.warpzone_forward * '0 0 1' >= 0) {
+						trace_box(o + (self.maxs_z - self.mins_z) * '0 0 1', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+					}
+					if (trace_startsolid && w.enemy.warpzone_forward * '0 0 -1' >= 0) {
+						trace_box(o + (self.maxs_z - self.mins_z) * '0 0 -1', self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
+					}
+					if not(trace_startsolid) {
+						org = trace_endpos + v;
+					} else
+						return;
+				}
+			}
+		}
+	}
+	physics_velocity = warpzone_transform_velocity(w, physics_velocity);
+	self.velocity = warpzone_transform_velocity(w, self.velocity);
+	setorigin(self, org - v);
+	physics_was_teleported = TRUE;
+	if (warpzone_predicted != w || time - warpzone_predicted_time > 0.5) {
+		warpzone_predicted = w;
+		view_angles = warpzone_transform_vangles(w, view_angles);
+		R_SetView(VF_CL_VIEWANGLES, view_angles);
+	}
+	warpzone_predicted_time = time;
+}
+
 void(float isnew) warpzone_read {
 	if not(self.enemy) {
 		self.enemy = spawn();
@@ -27,6 +113,7 @@ void(float isnew) warpzone_read {
 	self.avelocity_x = net_read_coord();
 	self.avelocity_y = net_read_coord();
 	self.avelocity_z = net_read_coord();
+	self.sv_entnum = net_read_coord();
 	// common stuff
 	warpzone_setup(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
 	// engine currently wants this
@@ -44,6 +131,12 @@ void(float isnew) warpzone_read {
 		cvar_clientsettemp("r_water_resolutionmultiplier", "1");
 
 	warpzone_enable();
+	if not(warpzone_prediction_init_done)
+	if not(main_isdemo) {
+		warpzone_predict_next = physics_plug_frame_end;
+		physics_plug_frame_end = warpzone_predict;
+		warpzone_prediction_init_done = 1;
+	}
 }
 
 void(float isnew) warpzone_teleported_read {
@@ -54,150 +147,41 @@ void(float isnew) warpzone_teleported_read {
 	v2_x = net_read_coord();
 	v2_y = net_read_coord();
 	v2_z = 0;
+	float entnum = net_read_coord();
 	if (!isnew)
 		return;
 
-	if (warpzone_passed)
-		remove(warpzone_passed);
-
 	physics_was_teleported = TRUE;
-	warpzone_passed = spawn();
-	warpzone_passed.warpzone_transform = v;
 	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
 		teleport_fix_angles(v2);
-		remove(warpzone_passed);
-		warpzone_passed = NULL;
-		return;
+	} else if (!warpzone_predicted || time - warpzone_predicted_time > 0.5 || warpzone_predicted.sv_entnum != entnum) {
+		if (warpzone_passed) remove(warpzone_passed);
+		warpzone_passed = spawn();
+		warpzone_passed.warpzone_transform = v;
 	}
-}
-
-float warpzone_fixingview;
-float warpzone_fixingview_drawexteriormodel;
-//float warpzone_fixingview_sidespeed;
-//float warpzone_fixingview_forwardspeed;
-void WarpZone_Inside()
-{
-	if(warpzone_fixingview)
-		return;
-	warpzone_fixingview = 1;
-	warpzone_fixingview_drawexteriormodel = cvar("r_drawexteriormodel");
-	//warpzone_fixingview_sidespeed = cvar("cl_sidespeed");
-	//warpzone_fixingview_forwardspeed = cvar("cl_forwardspeed");
-	cvar_set("r_drawexteriormodel", "0");
-	//cvar_set("cl_sidespeed", ftos(warpzone_fixingview_sidespeed / 100)); // just keep a bit of it in case player gets stuck
-	//cvar_set("cl_forwardspeed", ftos(warpzone_fixingview_forwardspeed / 100)); // just keep a bit of it in case player gets stuck
-}
-
-void WarpZone_Outside()
-{
-	if(!warpzone_fixingview)
-		return;
-	warpzone_fixingview = 0;
-	cvar_set("r_drawexteriormodel", ftos(warpzone_fixingview_drawexteriormodel));
-	//cvar_set("cl_sidespeed", ftos(warpzone_fixingview_sidespeed));
-	//cvar_set("cl_forwardspeed", ftos(warpzone_fixingview_forwardspeed));
-}
-
-vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3)
-{
-	vector mi, ma;
-	entity e;
-	float pd;
-	mi_x = min(o_x, min(c0_x, min(c1_x, min(c2_x, c3_x))));
-	ma_x = max(o_x, max(c0_x, max(c1_x, max(c2_x, c3_x))));
-	mi_y = min(o_y, min(c0_y, min(c1_y, min(c2_y, c3_y))));
-	ma_y = max(o_y, max(c0_y, max(c1_y, max(c2_y, c3_y))));
-	mi_z = min(o_z, min(c0_z, min(c1_z, min(c2_z, c3_z))));
-	ma_z = max(o_z, max(c0_z, max(c1_z, max(c2_z, c3_z))));
-	e = warpzone_find(mi, ma);
-	if(e) {
-		if (warpzone_plane_dist(e, o) < 0)
-			return '0 0 0'; // can't really be, though, but if it is, this is not my warpzone, but a random different one in the same mins/maxs
-
-		pd = min(
-				warpzone_plane_dist(e, c0), min(
-				warpzone_plane_dist(e, c1), min(
-				warpzone_plane_dist(e, c2),
-				warpzone_plane_dist(e, c3)))
-			);
-		if (pd < 0)
-			return e.warpzone_forward * -pd;
-	}
-	return '0 0 0';
+	warpzone_predicted = NULL;
 }
 
 float warpzone_fixangles;
 void(void) warpzone_view_fix_real {
-	entity e;
-	vector org, nearclip, corner0, corner1, corner2, corner3;
-	float f;
-	vector orig_angles = view_angles;
-	org = view_origin;
-	e = warpzone_find(org, org);
-	if (e) {
-		org = warpzone_transform_origin(e, org);
-		if (warpzone_view != e) {
-			if (warpzone_view)
-				view_angles = warpzone_untransform_vangles(warpzone_view, view_angles);
-
-			view_angles = warpzone_transform_vangles(e, view_angles);
-		}
-		WarpZone_Inside();
-		if not(warpzone_view)
-			warpzone_view_commandframe = physics_lastcommandframe;
-	} else {
-		WarpZone_Outside();
-		if (warpzone_view) {
-			if not(warpzone_passed) {
-				view_angles = warpzone_untransform_vangles(warpzone_view, view_angles);
-				warpzone_fixangles = TRUE;
-			} else
-				view_angles = view_angles;
-		} else
-			view_angles = view_angles;
-
-		if (warpzone_passed) {
-			if not(warpzone_view)
-				view_angles = warpzone_transform_vangles(warpzone_passed, view_angles);
-
-			warpzone_fixangles = TRUE;
-			remove(warpzone_passed);
-			warpzone_passed = NULL;
-		}
-	}
-	warpzone_view = e;
-	if (warpzone_fixangles || orig_angles != view_angles) {
-		if not(e) {
-			f = max(0, (1 - frametime * 10));
-
-			if (view_angles_z > 180)
-				view_angles_z -= 360;
-			else if (view_angles_z < -180)
-				view_angles_z += 360;
-
-			view_angles_z = view_angles_z * f;
-			if (view_angles_z < 1)
-			if (view_angles_z > -1)
-				view_angles_z = 0;
-		}
-		warpzone_fixangles = view_angles_z;
-		R_SetView(VF_ANGLES, view_angles);
+	if (warpzone_passed) {
+		view_angles = warpzone_transform_vangles(warpzone_passed, view_angles);
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
+		remove(warpzone_passed);
+		warpzone_passed = NULL;
 	}
-	if (view_origin != org) { //This code MUST be duplicated for cs_unproject
-		R_SetView(VF_ORIGIN, org);
-		view_origin = org;
+	float tx = tan(view_fovx);
+	float ty = tan(view_fovy);
+	float clipdist = sqrt(tx * tx + ty * ty + CVAR(r_nearclip) * CVAR(r_nearclip)) * 1.125;
+	entity w = warpzone_find(view_origin - '1 1 1' * clipdist, view_origin + '1 1 1' * clipdist);
+	if (w) {
+		float f = warpzone_plane_dist(w, view_origin);
+		if (f < clipdist)
+			view_origin += (clipdist - f) * w.warpzone_forward;
 	}
-	nearclip = '0 0 1' * (CVAR(r_nearclip) * 1.125);
-	corner0 = cs_unproject('0 0 0' + nearclip);
-	corner1 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + nearclip);
-	corner2 = cs_unproject('0 1 0' * CVAR(vid_conheight) + nearclip);
-	corner3 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + '0 1 0' * CVAR(vid_conheight) + nearclip);
-	vector v = WarpZone_FixNearClip(org, corner0, corner1, corner2, corner3);
-	if (v != '0 0 0') {
-		org = org + v;
-		R_SetView(VF_ORIGIN, org); //This code MUST be duplicated for cs_unproject
-		view_origin = org;
+	if (view_angles_z != 0) {
+		view_angles_z = approach_angle(view_angles_z, 0, frametime * 180);
+		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
 }
 
@@ -206,10 +190,8 @@ void() warpzone_init_hook {
 }
 
 void() warpzone_shutdown_hook {
-	WarpZone_Outside();
 }
 
 void() warpzone_enable_hook {
 	warpzone_view_fix = warpzone_view_fix_real;
-	WarpZone_Outside();
 }

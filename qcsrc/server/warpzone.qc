@@ -78,6 +78,7 @@ float(entity to, float sf) warpzone_teleported_send {
 	net_write_coord(MSG_ENTITY, self.angles_z);
 	net_write_coord(MSG_ENTITY, self.owner.v_angle_x);
 	net_write_coord(MSG_ENTITY, self.owner.v_angle_y);
+	net_write_coord(MSG_ENTITY, num_for_edict(self.enemy));
 	return TRUE;
 }
 
@@ -106,7 +107,7 @@ vector(entity e) warpzone_entity_origin_offset {
 	return ofs;
 }
 
-float(entity wz, entity e, float f0, float f1) warpzone_teleport {
+float(entity wz, entity e) warpzone_teleport {
 	vector o0, a0, v0, o1, a1, v1, o10;
 	vector ofs = warpzone_entity_origin_offset(e);
 	o0 = e.origin + ofs;
@@ -119,36 +120,54 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 	else
 		a1 = warpzone_transform_angles(wz, a0);
 
-	if (f0 != 0 || f1 != 0) {
-		// retry last move but behind the warpzone!
-		// we must first go back as far as we can, then forward again, to not cause double touch events!
-		trace_box(o1 - ofs + v1 * frametime * f1, e.mins, e.maxs, o1 - ofs + v1 * frametime * f0, TRACE_MOVE_WORLDONLY, e); {
-			entity own;
-			own = e.owner;
-			e.owner = world;
-			trace_box(trace_endpos, e.mins, e.maxs, o1 - ofs + v1 * frametime * f1, TRACE_MOVE_NORMAL, e); // this should get us through the warpzone
-			e.owner = own;
-		}
-		o1 = trace_endpos + ofs;
-		float d, dv, md;
-		md = max(vlen(e.mins), vlen(e.maxs));
-		d = warpzone_target_plane_dist(wz, o1);
-		dv = warpzone_target_plane_dist(wz, v1);
-		if (d < 0)
-			o1 = o1 - v1 * (d / dv);
+	entity w2 = warpzone_find(o1, o1);
+	if (w2 && w2 == wz.enemy) {
+		float d = warpzone_target_plane_dist(w2, o1);
+		o1 += w2.warpzone_forward * (0.125 - min(d, 0));
 	}
 	// put him out of solid
 	if (e.movetype != MOVETYPE_NOCLIP) {
-		trace_box(o1 - ofs, e.mins, e.maxs, o1 - ofs, TRACE_MOVE_NOMONSTERS, e);
+		vector o = o1 - ofs;
+		trace_box(o, e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
 		if (trace_startsolid) {
-			setorigin(e, o1 - ofs);
-			if (entity_move_out_of_solid(e)) {
-				o1 = e.origin + ofs;
-				setorigin(e, o0 - ofs);
+			if (wz.enemy) {
+				trace_box(o + wz.enemy.warpzone_forward * vlen(e.maxs - e.mins), e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+				if (!trace_startsolid && math_boxes_overlap(o + e.mins, o + e.maxs, trace_endpos + e.mins, trace_endpos + e.maxs)) {
+					o1 = trace_endpos + ofs;
+				} else {
+					if (wz.enemy.warpzone_forward * '1 0 0' >= 0) {
+						trace_box(o + (e.maxs_x - e.mins_x) * '1 0 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+					}
+					if (trace_startsolid && wz.enemy.warpzone_forward * '-1 0 0' >= 0) {
+						trace_box(o + (e.maxs_x - e.mins_x) * '-1 0 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+					}
+					if (trace_startsolid && wz.enemy.warpzone_forward * '0 1 0' >= 0) {
+						trace_box(o + (e.maxs_y - e.mins_y) * '0 1 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+					}
+					if (trace_startsolid && wz.enemy.warpzone_forward * '0 -1 0' >= 0) {
+						trace_box(o + (e.maxs_y - e.mins_y) * '0 -1 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+					}
+					if (trace_startsolid && wz.enemy.warpzone_forward * '0 0 1' >= 0) {
+						trace_box(o + (e.maxs_z - e.mins_z) * '0 0 1', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+					}
+					if (trace_startsolid && wz.enemy.warpzone_forward * '0 0 -1' >= 0) {
+						trace_box(o + (e.maxs_z - e.mins_z) * '0 0 -1', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+					}
+					if not(trace_startsolid) {
+						o1 = trace_endpos + ofs;
+					} else
+						return 0;
+				}
 			} else {
-				print("would have to put entity in solid, won't do that\n");
-				setorigin(e, o0 - ofs);
-				return 0;
+				setorigin(e, o1 - ofs);
+				if (entity_move_out_of_solid(e)) {
+					o1 = e.origin + ofs;
+					setorigin(e, o0 - ofs);
+				} else {
+					print("would have to put entity in solid, won't do that\n");
+					setorigin(e, o0 - ofs);
+					return 0;
+				}
 			}
 		}
 	}
@@ -298,29 +317,11 @@ void(void) warpzone_touch {
 	if (other.movetype == MOVETYPE_NONE)
 		return;
 
-	float f;
-	// number of frames we need to go back:
-	//   dist = 16*sqrt(2) qu
-	//   dist ~ 24 qu
-	//   24 qu = v*t
-	//   24 qu = v*frametime*n
-	//       n = 24 qu/(v*frametime)
-	// for clients go only one frame though, may be too irritating otherwise
-	// but max 0.25 sec = 0.25/frametime frames
-	//       24/(0.25/frametime)
-	//       96*frametime
-	float d;
-	d = 24 + max(vlen(other.mins), vlen(other.maxs));
-	if (clienttype(other) == CLIENTTYPE_NOTACLIENT)
-		f = -d / bound(frametime * d * 1, frametime * vlen(other.velocity), d);
-	else
-		f = -1;
-
 	if (other.classname == "observer") {
-		warpzone_teleport(self, other, f, 0);
+		warpzone_teleport(self, other);
 		return;
 	}
-	if (warpzone_teleport(self, other, f, 0)) {
+	if (warpzone_teleport(self, other)) {
 		string save1, save2;
 		activator = other;
 		save1 = self.target; self.target = NULL;
@@ -366,6 +367,7 @@ float(entity to, float sendflags) warpzone_send {
 	net_write_coord(MSG_ENTITY, self.warpzone_targetangles_x);
 	net_write_coord(MSG_ENTITY, self.warpzone_targetangles_y);
 	net_write_coord(MSG_ENTITY, self.warpzone_targetangles_z);
+	net_write_coord(MSG_ENTITY, num_for_edict(self));
 	return TRUE;
 }
 
