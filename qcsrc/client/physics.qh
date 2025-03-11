@@ -9,6 +9,7 @@ float vehicle_adjust_view_back;
 float vehicle_adjust_view_start_offs;
 vector(void) physics_vehicle_adjust_view;
 void(entity e) physics_vehicle_common_post;
+void(void) physics_triggers_predict;
 
 vector(void) physics_view_origin;
 void(void) physics_camera_setup;

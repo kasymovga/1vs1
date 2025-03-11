@@ -7,6 +7,7 @@ float(void) physics_aircraft_hook {
 	entity e = self;
 	self = physics_aircraft_entity;
 	physics_aircraft();
+	physics_triggers_predict();
 	self = e;
 	return 1;
 }

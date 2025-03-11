@@ -7,6 +7,7 @@ float(void) physics_spiderbot_hook {
 	entity e = self;
 	self = physics_spiderbot_entity;
 	physics_spiderbot();
+	physics_triggers_predict();
 	self = e;
 	return 1;
 }

@@ -7,6 +7,7 @@ float(void) physics_car_hook {
 	entity e = self;
 	self = physics_car_entity;
 	physics_car();
+	physics_triggers_predict();
 	self = e;
 	return 1;
 }

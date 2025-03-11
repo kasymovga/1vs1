@@ -135,9 +135,8 @@ void(void) physics_frame_begin_hook {
 	physics_velocity_frame_begin = physics_velocity;
 }
 
-void(void) physics_frame_end_hook {
-	//last command frame skipped, because it's probably not sended to server and change of angles in prediction function will cause desyncronization
-	//same thing with not full frames with g_physics_fixed 1
+float physics_triggers_predicted;
+void(void) physics_triggers_predict {
 	if (physics_plug_frame_end && (!g_physics_fixed || frametime == 0.008) && physics_command_frame < clientcommandframe) {
 		vector mins1, mins2, maxs1, maxs2;
 		mins2 = self.origin + self.mins;
@@ -161,6 +160,16 @@ void(void) physics_frame_end_hook {
 			physics_plug_frame_end(e);
 		}
 	}
+	physics_triggers_predicted = TRUE;
+}
+
+void(void) physics_frame_end_hook {
+	//last command frame skipped, because it's probably not sended to server and change of angles in prediction function will cause desyncronization
+	//same thing with not full frames with g_physics_fixed 1
+	if not(physics_triggers_predicted)
+		physics_triggers_predict();
+
+	physics_triggers_predicted = FALSE;
 	physics_teleport_time -= frametime;
 	physics_velocity_frame_end = physics_velocity;
 	physics_frametime = frametime;
@@ -322,6 +331,7 @@ void(float isnew) physics_read {
 
 	physics = self;
 	if (f & 1) {
+		self.classname = "physics_player";
 		if (cvar("cl_movement_replay"))
 			cvar_clientsettemp("cl_movement_replay", "0");
 

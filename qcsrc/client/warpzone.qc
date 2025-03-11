@@ -16,8 +16,9 @@ void(entity e) warpzone_predict {
 	e.solid = SOLID_NOT;
 	if not(trace_ent == e) return;
 	vector v = '0 0 0';
-	if (physics_is_player) {
+	if (physics_is_player && self.classname == "physics_player") {
 		v = self.view_ofs;
+		v_z = bound(self.mins_z, v_z, self.maxs_z);
 	} else if (view_observer_status) {
 		v = self.view_ofs;
 	} else {
@@ -73,6 +74,7 @@ void(entity e) warpzone_predict {
 	physics_velocity = warpzone_transform_velocity(w, physics_velocity);
 	self.velocity = warpzone_transform_velocity(w, self.velocity);
 	setorigin(self, org - v);
+	self.angles = warpzone_transform_angles(w, self.angles); //for vehicles
 	physics_was_teleported = TRUE;
 	if (warpzone_predicted != w || time - warpzone_predicted_time > 0.5) {
 		warpzone_predicted = w;

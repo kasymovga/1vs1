@@ -164,6 +164,8 @@ float(void) vehicle_aircraft_physics_hook {
 
 	float az = aircraft.angles_z;
 	aircraft.angles_z = 0;
+	while (az > 180) az -= 360;
+	while (az < -180) az += 360;
 	physics_aircraft();
 	if (physics_movement_y > 0)
 		aircraft.angles_z = approach(az, 15, frametime * 30);
