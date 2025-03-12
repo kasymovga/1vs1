@@ -101,9 +101,10 @@ void(void) physics_vehicle_read_common {
 }
 
 void(entity e) physics_vehicle_common_post {
-	if (extension_DP_RM_SETRENDERENTITY)
+	if (extension_DP_RM_SETRENDERENTITY) {
 		setentityvec(physics_player_ent, E_ORIGIN, e.origin);
-
+		setentityvec(physics_player_ent, E_ANGLES, e.angles);
+	}
 	physics_flags = self.flags;
 	setorigin(physics, e.origin + '0 0 1' * vehicle_adjust_view_start_offs - physics.view_ofs);
 }
@@ -298,8 +299,15 @@ void(void) physics_camera_setup {
 			if (physics_predicted)
 			if not(physics_player_ent) {
 				if (extension_DP_RM_SETRENDERENTITY) {
-					if not(main_isdemo)
+					if not(main_isdemo) {
 						setentityvec(player_localentnum, E_ORIGIN, physics.origin);
+						vector v;
+						v_x = 0;
+						v_z = 0;
+						v_y = view_angles_y;
+						if (physics_deadflag == DEAD_NO)
+							setentityvec(player_localentnum, E_ANGLES, v);
+					}
 				} else {
 					if (CVAR(chase_active))
 						physics_end_origin = physics_start_origin;

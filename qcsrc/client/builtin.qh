@@ -233,6 +233,7 @@ float(float entitynum, float fldnum, vector v) setentityvec = #504;
 float(string varname, float setflags, float unsetflags) cvar_altertype = #505;
 float E_ACTIVE = 0; // float 0/1
 float E_ORIGIN = 1; // vector
+float E_ANGLES = 17; // vector
 string(string in) uri_escape = #510;
 string(string in) uri_unescape = #511;
 float(entity ent) num_for_edict = #512;
