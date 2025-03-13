@@ -1,14 +1,14 @@
-float thirdview_save_back;
-float thirdview_save_up;
-float thirdview_save_chase;
 entity thirdview_restore;
+
+vector(void) thirdview_adjust_view {
+	return chase_adjust_view(thirdview_restore.origin_x, thirdview_restore.origin_y);
+}
+
 void(void) thirdview_restore_think {
-	cvar_set("chase_active", ftos(thirdview_save_chase));
-	CVAR(chase_active) = thirdview_save_chase;
-	cvar_set("chase_back", ftos(thirdview_save_back));
-	CVAR(chase_back) = thirdview_save_back;
-	cvar_set("chase_up", ftos(thirdview_save_up));
-	CVAR(chase_up) = thirdview_save_up;
+	chase_unlock();
+	if (physics_plug_adjust_view == thirdview_adjust_view)
+		physics_plug_adjust_view = NULL;
+
 	remove(self);
 	thirdview_restore = NULL;
 }
@@ -19,18 +19,15 @@ void(float ignore) thirdview_read {
 	float t = net_read_coord();
 	if not(thirdview_restore) {
 		thirdview_restore = spawn();
-		thirdview_save_back = CVAR(chase_back);
-		thirdview_save_up = CVAR(chase_up);
-		thirdview_save_chase = CVAR(chase_active);
 		thirdview_restore.think = thirdview_restore_think;
+		chase_lock();
 	}
 	thirdview_restore.nextthink = time + t;
-	cvar_set("chase_active", "1");
-	CVAR(chase_active) = 1;
-	cvar_set("chase_back", ftos(back));
-	CVAR(chase_back) = back;
-	cvar_set("chase_up", ftos(up));
-	CVAR(chase_up) = up;
+	thirdview_restore.origin_x = back;
+	thirdview_restore.origin_y = up;
+	if not(physics_plug_adjust_view)
+		physics_plug_adjust_view = thirdview_adjust_view;
+
 }
 
 void(void) thirdview_shutdown {

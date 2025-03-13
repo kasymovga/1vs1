@@ -86,6 +86,7 @@ ready.qh
 race.qh
 translate.qh
 print.qh
+chase.qh
 flag.qc
 ctf.qc
 kh.qc
@@ -189,3 +190,4 @@ rm_crosshair_ring.qc
 rm_score.qc
 camera.qc
 print.qc
+chase.qc

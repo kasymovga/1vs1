@@ -1,0 +1,4 @@
+void(void) chase_lock;
+void(void) chase_unlock;
+void(void) chase_unlock_all;
+vector(float back, float up) chase_adjust_view;

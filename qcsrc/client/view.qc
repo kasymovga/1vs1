@@ -240,7 +240,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 				)
 			view_camera_setup();
 		else {
-			cvar_set("chase_active", ftos(view_chase_active_backup));
+			chase_unlock();
 			cvar_set("cl_demo_mousegrab", "0");
 			view_camera_free_active = FALSE;
 		}
@@ -250,8 +250,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 #endif
 			) {
 		// Enable required Darkplaces cvars
-		view_chase_active_backup = cvar("chase_active");
-		cvar_set("chase_active", "2");
+		chase_lock();
 		cvar_set("cl_demo_mousegrab", "1");
 		view_camera_free_active = TRUE;
 		view_camera_mode = FALSE;

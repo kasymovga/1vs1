@@ -165,9 +165,6 @@ void(void) CSQC_Shutdown {
 	cvar_clientsettemp_restore();
 	gui_chat_restore();
 	thirdview_shutdown();
-	if(view_camera_free_active)
-		cvar_set("chase_active",ftos(view_chase_active_backup));
-
 	if not(main_isdemo) {
 		if not(main_calledhooks & MAIN_HOOK_START)
 			localcmd("\n_cl_hook_gamestart nop;");
@@ -178,7 +175,7 @@ void(void) CSQC_Shutdown {
 	trip_shutdown();
 	mute_shutdown();
 	translate_shutdown();
-	camera_shutdown();
+	chase_unlock_all();
 	localcmd("\n_restore_con_chatvars\n");
 }
 
