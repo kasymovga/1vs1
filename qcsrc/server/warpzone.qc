@@ -111,6 +111,7 @@ float(entity wz, entity e) warpzone_teleport {
 	vector o0, a0, v0, o1, a1, v1, o10;
 	vector ofs = warpzone_entity_origin_offset(e);
 	o0 = e.origin + ofs;
+	if not(warpzone_find(o0, o0)) return 0;
 	v0 = e.velocity;
 	a0 = e.angles;
 	o10 = o1 = warpzone_transform_origin(wz, o0);
