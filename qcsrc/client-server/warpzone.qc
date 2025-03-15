@@ -101,12 +101,12 @@ float(vector mi, vector ma, entity e, entity ig) warpzone_box_touches_brush {
 }
 
 entity(vector mi, vector ma) warpzone_find {
-	// if we are near any warpzone planes - MOVE AWAY (work around nearclip)
 	entity e;
-	for (e = warpzone_chain_begin; e; e  = e.warpzone_chain)
+	for (e = warpzone_chain_begin; e; e  = e.warpzone_chain) {
+		if (math_boxes_overlap(mi, ma, e.mins + e.origin, e.maxs + e.origin))
 		if (warpzone_box_touches_brush(mi, ma, e, world))
 			return e;
-
+	}
 	return world;
 }
 
@@ -563,6 +563,77 @@ void() warpzone_enable {
 
 void() warpzone_shutdown {
 	warpzone_shutdown_hook();
+}
+
+float(entity w, entity e, vector o, vector ofs) warpzone_move_out_of_solid {
+	vector o2 = o + ofs;
+	trace_line(o2, o2, TRACE_MOVE_NOMONSTERS, e);
+	if (trace_startsolid) return 0; // NOPE
+	trace_box(o, e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
+	if (!trace_startsolid) {
+		warpzone_move_out_of_solid_origin = o;
+		return 1;
+	}
+	float s = vlen(-e.mins + e.maxs);
+	#define CHECKDIR(x) { \
+		trace_box(o + (x) * s, e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e); \
+		if (!trace_startsolid) { \
+			warpzone_move_out_of_solid_origin = trace_endpos; \
+			trace_line(o2 + (x) * s, o2, TRACE_MOVE_NOMONSTERS, e); \
+			if (trace_fraction == 1) { \
+				return 1; \
+			} \
+		} \
+	}
+	vector outdir = (w.enemy ? w.enemy.warpzone_forward : '0 0 0');
+	if (outdir == '0 0 0') {
+		CHECKDIR('0 0 1');
+		CHECKDIR('0 1 0');
+		CHECKDIR('1 0 0');
+		CHECKDIR('0 0 -1');
+		CHECKDIR('0 -1 0');
+		CHECKDIR('-1 0 0');
+		CHECKDIR('0 1 1');
+		CHECKDIR('1 1 0');
+		CHECKDIR('1 0 1');
+		CHECKDIR('0 -1 -1');
+		CHECKDIR('-1 -1 0');
+		CHECKDIR('-1 0 -1');
+		CHECKDIR('0 -1 1');
+		CHECKDIR('-1 1 0');
+		CHECKDIR('1 0 -1');
+		CHECKDIR('0 1 -1');
+		CHECKDIR('1 -1 0');
+		CHECKDIR('-1 0 1');
+		CHECKDIR('-1 -1 -1');
+		CHECKDIR('-1 -1 1');
+		CHECKDIR('-1 1 -1');
+		CHECKDIR('1 -1 -1');
+		CHECKDIR('-1 1 1');
+		CHECKDIR('1 1 -1');
+		CHECKDIR('1 -1 1');
+		CHECKDIR('1 1 1');
+	} else {
+		makevectors(vectoangles(outdir));
+		CHECKDIR(v_up);
+		CHECKDIR(-v_up);
+		CHECKDIR(v_right);
+		CHECKDIR(-v_right);
+		CHECKDIR(v_up + v_right);
+		CHECKDIR(-v_up - v_right);
+		CHECKDIR(v_right - v_up);
+		CHECKDIR(-v_right + v_up);
+		CHECKDIR(v_up + v_forward);
+		CHECKDIR(-v_up + v_forward);
+		CHECKDIR(v_right + v_forward);
+		CHECKDIR(-v_right + v_forward);
+		CHECKDIR(v_up + v_right + v_forward);
+		CHECKDIR(-v_up - v_right + v_forward);
+		CHECKDIR(v_right - v_up + v_forward);
+		CHECKDIR(-v_right + v_up + v_forward);
+	}
+	#undef CHECKDIR
+	return 0;
 }
 
 #if 0

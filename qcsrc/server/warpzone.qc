@@ -128,50 +128,16 @@ float(entity wz, entity e) warpzone_teleport {
 	}
 	// put him out of solid
 	if (e.movetype != MOVETYPE_NOCLIP) {
-		vector o = o1 - ofs;
-		trace_box(o, e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
-		if (trace_startsolid) {
-			if (wz.enemy) {
-				trace_box(o + wz.enemy.warpzone_forward * vlen(e.maxs - e.mins), e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
-				if (!trace_startsolid && math_boxes_overlap(o + e.mins, o + e.maxs, trace_endpos + e.mins, trace_endpos + e.maxs)) {
-					o1 = trace_endpos + ofs;
-				} else {
-					if (wz.enemy.warpzone_forward * '1 0 0' >= 0) {
-						trace_box(o + (e.maxs_x - e.mins_x) * '1 0 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
-					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '-1 0 0' >= 0) {
-						trace_box(o + (e.maxs_x - e.mins_x) * '-1 0 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
-					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '0 1 0' >= 0) {
-						trace_box(o + (e.maxs_y - e.mins_y) * '0 1 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
-					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '0 -1 0' >= 0) {
-						trace_box(o + (e.maxs_y - e.mins_y) * '0 -1 0', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
-					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '0 0 1' >= 0) {
-						trace_box(o + (e.maxs_z - e.mins_z) * '0 0 1', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
-					}
-					if (trace_startsolid && wz.enemy.warpzone_forward * '0 0 -1' >= 0) {
-						trace_box(o + (e.maxs_z - e.mins_z) * '0 0 -1', e.mins, e.maxs, o, TRACE_MOVE_NOMONSTERS, e);
-					}
-					if not(trace_startsolid) {
-						o1 = trace_endpos + ofs;
-					} else
-						return 0;
-				}
-			} else {
-				setorigin(e, o1 - ofs);
-				if (entity_move_out_of_solid(e)) {
-					o1 = e.origin + ofs;
-					setorigin(e, o0 - ofs);
-				} else {
-					print("would have to put entity in solid, won't do that\n");
-					setorigin(e, o0 - ofs);
-					return 0;
-				}
-			}
-		}
+		if (warpzone_move_out_of_solid(wz, e, o1 - ofs, ofs)) {
+			o1 = warpzone_move_out_of_solid_origin + ofs;
+		} else
+			return 0;
 	}
+	//if (wz.enemy) {
+	//	if (wz.enemy.warpzone_forward_z != 0) {
+	//		v1 += wz.enemy.warpzone_forward * 100;
+	//	}
+	//}
 	// do the teleport
 	warpzone_refsys_add(e, wz);
 	if not(e.flags & FL_PROJECTILE) {

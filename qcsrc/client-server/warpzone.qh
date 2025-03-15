@@ -62,3 +62,5 @@ vector(vector fwd, vector viewer, vector viewee, float traceflag, entity traceen
 void() warpzone_init_hook;
 void() warpzone_enable_hook;
 void() warpzone_shutdown_hook;
+vector warpzone_move_out_of_solid_origin;
+float(entity w, entity e, vector o, vector ofs) warpzone_move_out_of_solid;
