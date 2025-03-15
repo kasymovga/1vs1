@@ -133,11 +133,14 @@ float(entity wz, entity e) warpzone_teleport {
 		} else
 			return 0;
 	}
-	//if (wz.enemy) {
-	//	if (wz.enemy.warpzone_forward_z != 0) {
-	//		v1 += wz.enemy.warpzone_forward * 100;
-	//	}
-	//}
+	if (wz.enemy) {
+		if (wz.enemy.warpzone_forward_z != 0) {
+			float s = sv_gravity * .5;
+			float s2 = v1 * wz.enemy.warpzone_forward;
+			if (s2 < s)
+				v1 += wz.enemy.warpzone_forward * (s - s2);
+		}
+	}
 	// do the teleport
 	warpzone_refsys_add(e, wz);
 	if not(e.flags & FL_PROJECTILE) {

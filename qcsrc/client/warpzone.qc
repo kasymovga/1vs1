@@ -44,12 +44,19 @@ void(entity e) warpzone_predict {
 	}
 	physics_velocity = warpzone_transform_velocity(w, physics_velocity);
 	self.velocity = warpzone_transform_velocity(w, self.velocity);
-	//if (w.enemy) {
-	//	if (w.enemy.warpzone_forward_z != 0) {
-	//		physics_velocity += w.enemy.warpzone_forward * 100;
-	//		self.velocity += w.enemy.warpzone_forward * 100;
-	//	}
-	//}
+	if (w.enemy) {
+		if (w.enemy.warpzone_forward_z != 0) {
+			float s = sv_gravity * .5;
+			float s2 = physics_velocity * w.enemy.warpzone_forward;
+			if (s2 < s) {
+				physics_velocity += w.enemy.warpzone_forward * (s - s2);
+			}
+			s2 = self.velocity * w.enemy.warpzone_forward;
+			if (s2 < s) {
+				self.velocity += w.enemy.warpzone_forward * (s - s2);
+			}
+		}
+	}
 	self.angles = warpzone_transform_angles(w, self.angles); //for vehicles
 	physics_was_teleported = TRUE;
 	if (warpzone_predicted != w || time - warpzone_predicted_time > 0.5) {
@@ -157,7 +164,7 @@ void(void) warpzone_view_fix_real {
 			view_origin += (clipdist - f) * w.warpzone_forward;
 	}
 	if (view_angles_z != 0) {
-		view_angles_z = approach_angle(view_angles_z, 0, frametime * 180);
+		view_angles_z = approach_angle(view_angles_z, 0, frametime * 360);
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
 }
