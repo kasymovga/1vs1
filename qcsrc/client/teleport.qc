@@ -115,7 +115,7 @@ void(entity e) teleport_predict {
 		vel = 0;
 
 	makevectors(e.iorigin1);
-	physics_velocity = vel * v_forward;
+	self.velocity = physics_velocity = vel * v_forward;
 	//Must be synced with similar code in server physics code
 	if (g_teleport_time) {
 		if (g_nofriction_cpm_hacks)

@@ -57,7 +57,9 @@ float vehicle_car_physics_hook() {
 	vehicle_stdproc_regen();
 	player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
 	g_vehicle_car_align = 1;
+	vector o = self.origin;
 	physics_car();
+	physics_triggers(o, self.origin, vlen(self.maxs - self.mins) / 2, 0);
 	makevectors(mycar.angles);
 	v1 = v_forward;
 	v1_z = 0;

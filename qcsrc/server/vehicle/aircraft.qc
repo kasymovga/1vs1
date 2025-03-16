@@ -166,7 +166,9 @@ float(void) vehicle_aircraft_physics_hook {
 	aircraft.angles_z = 0;
 	while (az > 180) az -= 360;
 	while (az < -180) az += 360;
+	vector o = self.origin;
 	physics_aircraft();
+	physics_triggers(o, self.origin, vlen(self.maxs - self.mins) / 2, 0);
 	if (physics_movement_y > 0)
 		aircraft.angles_z = approach(az, 15, frametime * 30);
 	else if (physics_movement_y < 0)

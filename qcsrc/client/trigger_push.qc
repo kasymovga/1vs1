@@ -54,9 +54,9 @@ void(entity e) trigger_push_predict {
 	if not(trace_ent == e) return;
 	//Must be synced with similar code in server physics code
 	if (e.state) {
-		physics_velocity = trigger_push_velocity_calculate_velocity(physics_velocity,
+		self.velocity = physics_velocity = trigger_push_velocity_calculate_velocity(physics_velocity,
 				(trigger_push_use_trigger_origin ? (e.origin + (e.mins + e.maxs) * 0.5) : self.origin), e.movedir, e.cnt,
 				e.iorigin1_z/*speed*/, e.iorigin1_x/*spawnflags*/, e.iorigin1_y/*count*/);
 	} else
-		physics_velocity = trigger_push_calculate_velocity((trigger_push_use_trigger_origin ? (e.origin + (e.mins + e.maxs) * 0.5) : self.origin), e.movedir, e.cnt);
+		self.velocity = physics_velocity = trigger_push_calculate_velocity((trigger_push_use_trigger_origin ? (e.origin + (e.mins + e.maxs) * 0.5) : self.origin), e.movedir, e.cnt);
 }

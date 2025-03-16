@@ -200,7 +200,9 @@ float(void) vehicle_spiderbot_physics_hook {
 	else
 		player.rockets_reload = 1 - ((spider.gun2.cnt - time) /spider.attack_finished_single);
 
+	vector o = self.origin;
 	physics_spiderbot();
+	physics_triggers(o, self.origin, vlen(self.maxs - self.mins) / 2, 0);
 	spider.tur_head.angles_x *= -1;
 	spider.angles_x *= -1;
 	//player.angles_x *= -1;

@@ -102,7 +102,9 @@ float vehicle_bigwheel_physics_hook() {
 	g_vehicle_car_turnspeed = g_vehicle_bigwheel_turnspeed;
 	g_vehicle_car_movement_inertia = g_vehicle_bigwheel_movement_inertia;
 	g_vehicle_car_align = 0;
+	vector o = self.origin;
 	physics_car();
+	physics_triggers(o, self.origin, vlen(self.maxs - self.mins) / 2, 0);
 	g_vehicle_car_speed = s1;
 	g_vehicle_car_speed_stop = s2;
 	g_vehicle_car_speed_drift = s3;
