@@ -68,6 +68,17 @@ float(void) physics_aircraft {
 	}
 	self.angles_x = -self.angles_x;
 	physics_velocity = self.velocity;
+	float az = self.angles_z;
+	self.angles_z = 0;
+	while (az > 180) az -= 360;
+	while (az < -180) az += 360;
+	if (physics_movement_y > 0)
+		self.angles_z = approach(az, 15, frametime * 30);
+	else if (physics_movement_y < 0)
+		self.angles_z = approach(az, -15, frametime * 30);
+	else
+		self.angles_z = approach(az, 0, frametime * 30);
+
 	physics_move();
 	self.velocity = physics_velocity;
 	self.waterlevel = physics_waterlevel;
