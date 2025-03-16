@@ -123,7 +123,7 @@ float(entity wz, entity e) warpzone_teleport {
 
 	entity w2 = warpzone_find(o1, o1);
 	if (w2 && w2 == wz.enemy) {
-		float d = warpzone_target_plane_dist(w2, o1);
+		float d = warpzone_plane_dist(w2, o1);
 		o1 += w2.warpzone_forward * (0.125 - min(d, 0));
 	}
 	// put him out of solid

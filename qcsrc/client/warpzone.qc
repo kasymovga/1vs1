@@ -1,20 +1,20 @@
 entity warpzone_passed;
 float warpzone_prediction_init_done;
-var void(entity e) warpzone_predict_next;
-void(entity e) warpzone_predict {
-	if (e.classname != "trigger_warpzone") {
+var void(entity w) warpzone_predict_next;
+void(entity w) warpzone_predict {
+	if (w.classname != "trigger_warpzone") {
 		if (warpzone_predict_next)
-			warpzone_predict_next(e);
+			warpzone_predict_next(w);
 
 		return;
 	}
-	e.solid = SOLID_BSP;
+	w.solid = SOLID_BSP;
 	float ss = self.solid;
 	self.solid = SOLID_NOT;
 	trace_box(self.origin, self.mins, self.maxs, self.origin, TRACE_MOVE_NORMAL, NULL);
 	self.solid = ss;
-	e.solid = SOLID_NOT;
-	if not(trace_ent == e) return;
+	w.solid = SOLID_NOT;
+	if not(trace_ent == w) return;
 	vector v = '0 0 0';
 	if (physics_is_player && self.classname == "physics_player") {
 		v = self.view_ofs;
@@ -25,10 +25,9 @@ void(entity e) warpzone_predict {
 		v = (self.mins + self.maxs) * .5;
 	}
 	vector org = self.origin + v;
-	entity w = warpzone_find(org, org);
-	if not(w) {
+	if (warpzone_plane_dist(w, org) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
 		return;
-	}
+
 	//this code must be synced with warpzone_teleport in server code
 	org = warpzone_transform_origin(w, org);
 	entity w2 = warpzone_find(org, org);
