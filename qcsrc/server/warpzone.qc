@@ -125,7 +125,7 @@ float(entity wz, entity e) warpzone_teleport {
 		o1 += w2.warpzone_forward * (0.125 - min(d, 0));
 	}
 	// put him out of solid
-	if (e.movetype != MOVETYPE_NOCLIP) {
+	if (e.movetype != MOVETYPE_NOCLIP && e.classname != "observer") {
 		if (warpzone_move_out_of_solid(wz, e, o1 - ofs, ofs)) {
 			o1 = warpzone_move_out_of_solid_origin + ofs;
 		} else

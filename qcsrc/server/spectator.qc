@@ -236,7 +236,6 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.spectatortime = time;
 	self.classname = "observer";
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
-	physics_set_sizes(self, PL_MIN, PL_MAX, PL_MIN, PL_MAX);
 	self.spectatorspeed = 1;
 	self.iscreature = FALSE;
 	self.health = 1;
@@ -263,11 +262,11 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.clipgroup = 0;
 	self.deadflag = DEAD_NO;
 	client_put_to_spot(spot);
-	setsize (self, '0 0 0', '0 0 0');
 	self.items = 0;
 	self.weapons = 0;
 	player_body_remove();
 	setmodel(self, "null");
+	physics_set_sizes(self, PL_MIN, PL_MAX, PL_MIN, PL_MAX);
 	self.modelindex = 0;
 	self.weapon = 0;
 	self.weaponmodel = "";
