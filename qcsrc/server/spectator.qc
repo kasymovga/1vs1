@@ -236,6 +236,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.spectatortime = time;
 	self.classname = "observer";
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
+	physics_set_sizes(self, PL_MIN, PL_MAX, PL_MIN, PL_MAX);
 	self.spectatorspeed = 1;
 	self.iscreature = FALSE;
 	self.health = 1;

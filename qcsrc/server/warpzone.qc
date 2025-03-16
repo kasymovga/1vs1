@@ -94,13 +94,11 @@ float(void) warpzone_teleported_customize {
 
 vector(entity e) warpzone_entity_origin_offset {
 	vector ofs;
-	if (e.classname == "player") {
+	if (e.classname == "player" || e.classname == "observer") {
 		ofs = e.view_ofs;
 		ofs_x = bound(e.mins_x, ofs_x, e.maxs_x);
 		ofs_y = bound(e.mins_y, ofs_y, e.maxs_y);
 		ofs_z = bound(e.mins_z, ofs_z, e.maxs_z);
-	} else if (e.classname == "observer") {
-		ofs = e.view_ofs;
 	} else {
 		ofs = (e.mins + e.maxs) * .5;
 	}

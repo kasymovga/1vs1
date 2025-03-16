@@ -16,11 +16,9 @@ void(entity w) warpzone_predict {
 	w.solid = SOLID_NOT;
 	if not(trace_ent == w) return;
 	vector v = '0 0 0';
-	if (physics_is_player && self.classname == "physics_player") {
+	if ((view_observer_status || physics_is_player) && self.classname == "physics_player") {
 		v = self.view_ofs;
 		v_z = bound(self.mins_z, v_z, self.maxs_z);
-	} else if (view_observer_status) {
-		v = self.view_ofs;
 	} else {
 		v = (self.mins + self.maxs) * .5;
 	}
@@ -35,7 +33,9 @@ void(entity w) warpzone_predict {
 		float d = warpzone_plane_dist(w2, org);
 		org += w2.warpzone_forward * (0.125 - min(d, 0));
 	}
-	if not(view_observer_status) {
+	if (view_observer_status) {
+		setorigin(self, org - v);
+	} else {
 		if (warpzone_move_out_of_solid(w, self, org - v, v)) {
 			setorigin(self, warpzone_move_out_of_solid_origin);
 		} else
