@@ -291,7 +291,6 @@ float(entity item, entity player) item_give_to {
 				if ((e.weapons & item.weapons & player.weapons) || (e.weapons_extra & item.weapons_extra & player.weapons_extra))
 					if (akimbo_weapon_give(player, e.weapon, item.netname)) {
 						pickedup = TRUE;
-						sound (player, CHAN_AUTO, item.noise, VOL_BASE, ATTN_NORM);
 					}
 			if not(pickedup) {
 				if ((player.weapons & item.weapons) || (player.weapons_extra & item.weapons_extra)) {
@@ -335,6 +334,7 @@ float(entity item, entity player) item_give_to {
 						if ((item.weapons & e.weapons) || (item.weapons_extra & e.weapons_extra))
 						if (akimbo_weapon_give(player, e.weapon, e.netname)) {
 							akimbo_picked = TRUE;
+							pickedup = TRUE;
 						}
 						if not(weapons_full) {
 							weapons_count++;
