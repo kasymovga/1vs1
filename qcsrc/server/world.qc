@@ -807,6 +807,17 @@ float(void) world_redirection_think { // returns TRUE if redirecting
 	return TRUE;
 }
 
+void(void) world_wait_local_client {
+	entity e;
+	CLIENT_FOR_EACH_REAL(e)
+		if (e.netaddress == "local") {
+			client_send_stuff(e);
+			remove(self);
+			return;
+		}
+	self.nextthink = time;
+}
+
 //NEH_RESTOREGAME
 //idea: Nehahra
 //darkplaces implementation: LordHavoc
@@ -827,6 +838,9 @@ void(void) world_restore {
 
 	game_type_switch(game_type_from_name("single"));
 	game_type_readcvars();
+	entity e = spawn();
+	e.nextthink = time;
+	e.think = world_wait_local_client;
 }
 
 //DP_SV_SHUTDOWN

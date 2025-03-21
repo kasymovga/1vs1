@@ -29,6 +29,7 @@ var .float clientversion;
 .string clid;
 string client_abuserplayername;
 void(entity cl, vector a) client_view_angles_set;
+void(entity cl) client_send_stuff;
 
 .float client_flags;
 enum {

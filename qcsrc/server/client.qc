@@ -435,11 +435,17 @@ float() client_preconnect_abort {
 
 		if (strstrofs(address_check, head, 0) == 0) {
 			self.abuser = 1;
-			print("Retard connected with address ", address_check, " and pattern ", head, "\n");
+			print("Abuser connected with address ", address_check, " and pattern ", head, "\n");
 			break;
 		}
 	}
 	return FALSE;
+}
+
+void(entity cl) client_send_stuff {
+	stuffcmd(cl, strcat(client_stuff, "\n"));
+	stuffcmd(cl, "cl_particles_reloadeffects\n");
+	client_fix_cvars(cl);
 }
 
 float client_playerid_last;
@@ -479,9 +485,7 @@ void(void) client_connect { //called by engine
 	self.playerid = (client_playerid_last = client_playerid_last + 1);
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
 	print_all(PRINT_INFO, "^4{1}^4 connected", PLAYER_NAME_WITH_SLOT(self), "", "");
-	stuffcmd(self, strcat(client_stuff, "\n"));
-	stuffcmd(self, "cl_particles_reloadeffects\n");
-	client_fix_cvars(self);
+	client_send_stuff(self);
 	// get other cvars from player
 	client_cvars_request();
 	entcs_attach();
