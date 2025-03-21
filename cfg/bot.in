@@ -82,7 +82,7 @@ set bot14 "Mystery pyria 0 9 14"
 set bot15 "Lion shock 0 0 4"
 set bot16 "Sensible skadi 0 9 9"
 set bot17 "Shadow specop 0 4 8"
-set bot18 "Resurrection visitant 0 1 1 0 1 1 1 1 1 1 1 1 2 2 0.5 1
+set bot18 "Resurrection visitant 0 1 1"
 
 set havocbot_keyboardskill 0.5
 set bot_moveskill 2
