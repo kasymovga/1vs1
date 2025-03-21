@@ -245,3 +245,5 @@ float(float timer) gettime = #519;
 #define GETTIME_CDTRACK 4
 string keynumtostring(float keynum) = #520;
 string findkeysforcommand(string command) = #521;
+//DP_RM_REGEX2
+float(string regex, string input, float offset, float size, float flags) regex_match = #800;

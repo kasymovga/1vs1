@@ -13,6 +13,20 @@ string(string s) translate {
 	return s;
 }
 
+string(string s) translate_skip_accents {
+	string accent_chars =             "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ";
+	string accent_chars_replacement = "AAAAAAACEEEEIIIIDNOOOOOx0UUUUYPBaaaaaaaceeeeiiiionooooo:ouuuuypy";
+	float r = regex_match("[ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]", s, 0, strlen(s), 0);
+	if (r >= 0) {
+		float i;
+		for (i = 0; i < 64; i++) {
+			if (strstrofs(s, substring(accent_chars, i, 1), 0) >= 0)
+				s = strreplace(substring(accent_chars, i, 1), substring(accent_chars_replacement, i, 1), s);
+		}
+	}
+	return s;
+}
+
 void(float db, string path, float nodata) translate_load {
 	string s;
 	float pofile = fopen(path, ((extension_DP_RM_FILE && nodata) ? FILE_READ_NODATA : FILE_READ));
@@ -22,6 +36,7 @@ void(float db, string path, float nodata) translate_load {
 		return;
 	}
 	float argc, msgstr_reading = 0;
+	float skipaccents = (cvar("utf8_oldfont_for_oldchars") && extension_DP_RM_REGEX2);
 	string msgid = "", msgstr = "", arg0;
 	while ((s = fgets(pofile))) {
 		argc = tokenize_console(s);
@@ -32,6 +47,7 @@ void(float db, string path, float nodata) translate_load {
 				//print("msgstr=", msgstr, "\n");
 				msgid = strreplace("\\n", "\n", msgid);
 				msgstr = strreplace("\\n", "\n", msgstr);
+				if (skipaccents) msgstr = translate_skip_accents(msgstr);
 				if (msgid != "")
 					db_put(db, msgid, msgstr);
 
@@ -64,6 +80,7 @@ void(float db, string path, float nodata) translate_load {
 		//print("msgstr=", msgstr, "\n");
 		msgid = strreplace("\\n", "\n", msgid);
 		msgstr = strreplace("\\n", "\n", msgstr);
+		if (skipaccents) msgstr = translate_skip_accents(msgstr);
 		if (msgid != "")
 			db_put(db, msgid, msgstr);
 	}
