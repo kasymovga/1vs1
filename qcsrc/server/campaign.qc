@@ -106,6 +106,11 @@ void(void) campaign_preinit {
 	cvar_set("g_campaign", "1");
 	cvar_set("skill", ftos(baseskill));
 	cvar_set("bot_number", ftos(campaign_bots[campaign_level]));
+	string pm = builtin_cvar_string("_cl_playermodel");
+	if (pm != "") {
+		cvar_set("campaign_single_g_player_forcemodel", pm);
+		cvar_set("campaign_surv_g_player_forcemodel", pm);
+	}
 	game_type_switch(game_type_from_name(campaign_gametype[campaign_level]));
 	if (campaign_invalid())
 		return;
