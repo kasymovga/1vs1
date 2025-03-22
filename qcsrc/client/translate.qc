@@ -16,7 +16,7 @@ string(string s) translate {
 string(string s) translate_skip_accents {
 	string accent_chars =             "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ";
 	string accent_chars_replacement = "AAAAAAACEEEEIIIIDNOOOOOx0UUUUYPBaaaaaaaceeeeiiiionooooo:ouuuuypy";
-	float r = regex_match("[ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]", s, 0, strlen(s), 0);
+	float r = regex_match("[À-ÿ]", s, 0, strlen(s), 0);
 	if (r >= 0) {
 		float i;
 		for (i = 0; i < 64; i++) {
