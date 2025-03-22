@@ -153,9 +153,11 @@ void(void) warpzone_view_fix_real {
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
 		warpzone_passed = NULL;
 	}
-	float tx = tan(view_fovx);
-	float ty = tan(view_fovy);
-	float clipdist = sqrt(tx * tx + ty * ty + CVAR(r_nearclip) * CVAR(r_nearclip)) * 1.125;
+	vector v;
+	v_x = tan(view_fovx);
+	v_y = tan(view_fovy);
+	v_z = CVAR(r_nearclip);
+	float clipdist = vlen(v) * 1.125;
 	entity w = warpzone_find(view_origin - '1 1 1' * clipdist, view_origin + '1 1 1' * clipdist);
 	if (w) {
 		float f = warpzone_plane_dist(w, view_origin);
