@@ -128,6 +128,9 @@ void(void) physics_update_status {
 			} else
 				physics_flags |= FL_ONGROUND;
 
+			if (!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND) && physics_velocity_z < -0.125 * sv_jumpvelocity) {
+				physics_skimming = g_skimming_time;
+			}
 			if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) && g_steponskydamage) { //step on sky, usually this is map error
 				#ifdef SVQC
 				physics_step_on_sky();
@@ -635,10 +638,6 @@ void(void) physics_player_jump {
 		if (!(physics_flags & FL_JUMPRELEASED))
 			return;
 
-	if (!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND)) {
-		physics_skimming = g_skimming_time;
-		physics_landing_hook();
-	}
 	if (g_cpmdoublejump && physics_cpmdoublejump_time > 0 && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))) {
 		if (physics_groundvelocity_dotproduct > 0)
 			physics_velocity_z = max(sv_jumpvelocity * 1.3704, physics_velocity_z);
@@ -797,12 +796,8 @@ void(void) physics_player_frame {
 		// walking
 		makevectors(physics_v_angle_y * '0 1 0');
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
-		if not((physics_lastflags & FL_ONGROUND)) {
-			physics_skimming = g_skimming_time;
-			if (g_nofriction_cpm_hacks && physics_nofriction && physics_skimming) {
-				physics_nofriction = physics_skimming;
-			}
-			physics_landing_hook();
+		if (g_nofriction_cpm_hacks && physics_nofriction && physics_skimming) {
+			physics_nofriction = physics_skimming;
 		}
 		v = physics_velocity;
 		v_z = 0;

@@ -1,5 +1,6 @@
 .entity player_physic;
 .float frametime_accumulator;
+.float skimming_time;
 
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
@@ -40,10 +41,6 @@ void(void) physics_check_water_jump_hook {
 
 float(void) physics_jump_velocity_mod {
 	return plugin_chain_JumpVelocityMod();
-}
-
-void(void) physics_landing_hook {
-	self.lastground = time;
 }
 
 float(entity a) physics_is_flying {
@@ -87,6 +84,9 @@ void(void) physics_check_ground_hook {
 	if (sv_pogostick || (physics_flags & FL_JUMPRELEASED))
 	if (g_jump_nofalldamage)
 		self.oldvelocity_z = 0;
+
+	if not(self.wasFlying)
+		self.lastground = time;
 }
 
 void(void) physics_on_crouch_hook {
@@ -359,8 +359,7 @@ void(void) physics_player_pre { //called by engine
 	physics_waterlevel = self.waterlevel;
 	physics_watertype = self.watertype;
 	if (g_skimming_time)
-	if not(physics_flags & FL_ONGROUND_OR_SLICK)
-		physics_skimming = max(0, g_skimming_time + self.lastground - time);
+		physics_skimming = self.skimming_time;
 
 	physics_nofriction = self.physics_nofriction_time;
 	physics_cpmdoublejump_time = self.cpmdoublejump;
@@ -390,6 +389,7 @@ void(void) physics_player_pre { //called by engine
 	self.waterlevel = physics_waterlevel;
 	self.watertype = physics_watertype;
 	self.cpmdoublejump = physics_cpmdoublejump_time;
+	self.skimming_time = physics_skimming;
 	physics_current_player = NULL;
 }
 
@@ -647,7 +647,7 @@ float(entity to, float sf) physics_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_PHYSICS);
 	entity oldself = self;
 	self = self.owner;
-	float dodging_flags = 0, skimming = 0;
+	float dodging_flags = 0;
 	float sf2 = 0;
 	physics_abilities_start();
 	if not(sf & 3) {
@@ -682,12 +682,7 @@ float(entity to, float sf) physics_send {
 		if (self.groundentity.solid == SOLID_BSP) {
 			sf |= 32768;
 		}
-		if (g_skimming_time)
-		if not(self.flags & FL_ONGROUND_OR_SLICK) {
-			skimming = g_skimming_time + self.lastground - time;
-			if (skimming > 0)
-				sf2 |= 1;
-		}
+		if (self.skimming_time > 0) sf |= 1;
 		if (g_cpmdoublejump)
 		if (self.cpmdoublejump)
 			sf2 |= 2;
@@ -871,7 +866,7 @@ float(entity to, float sf) physics_send {
 			net_write_byte(MSG_ENTITY, (self.groundentity.effects & EFFECT_TELEPORT_BIT) == 0);
 		}
 		if (sf2 & 1) {
-			net_write_coord(MSG_ENTITY, skimming);
+			net_write_coord(MSG_ENTITY, self.skimming_time);
 		}
 		if (sf2 & 2) {
 			net_write_coord(MSG_ENTITY, self.cpmdoublejump);

@@ -123,9 +123,6 @@ void(void) physics_on_jump_hook {
 void(void) physics_on_crouch_hook {
 }
 
-void(void) physics_landing_hook {
-}
-
 void(void) physics_frame_begin_hook {
 	physics_velocity_frame_begin = physics_velocity;
 }
