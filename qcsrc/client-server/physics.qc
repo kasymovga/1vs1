@@ -128,6 +128,7 @@ void(void) physics_update_status {
 			} else
 				physics_flags |= FL_ONGROUND;
 
+			if (g_skimming_time)
 			if (!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND) && physics_velocity_z < -0.125 * sv_jumpvelocity) {
 				physics_skimming = g_skimming_time;
 			}
@@ -140,7 +141,7 @@ void(void) physics_update_status {
 			self.groundentity = trace_ent;
 			physics_impact();
 			if (physics_groundvelocity_dotproduct < 0) {
-				if (!trace_ent || trace_ent.solid <= SOLID_TRIGGER || trace_ent.solid == SOLID_CORPSE)
+				if (!trace_ent || (trace_ent.solid > SOLID_TRIGGER && trace_ent.solid < SOLID_CORPSE))
 					physics_velocity -= physics_groundvelocity_dotproduct * trace_plane_normal;
 			}
 		} else if (physics_skimming > 0 && trace_fraction <= 0.01) {
@@ -195,6 +196,13 @@ void(void) physics_move {
 					physics_flags |= FL_ONGROUND; //exact flags will be set on next frame. this one needed for engine
 					physics_check_ground_hook();
 				}
+			}
+			if (g_skimming_time)
+			if (!(physics_lastflags & FL_ONGROUND) && (trace1_plane_normal_z > 0.7) && physics_velocity_z < -0.125 * sv_jumpvelocity) {
+				if not(physics_skimming)
+					primalvelocity = physics_velocity - (trace1_plane_normal * physics_velocity) * trace1_plane_normal;
+
+				physics_skimming = g_skimming_time + t * (1 - trace_fraction);
 			}
 			if (trace1_plane_normal_z > 0 && trace1_plane_normal_z < 1 && (physics_flags & FL_ONGROUND) && self.mins_z + 0.03125 < self.maxs_z) { //prevent collision with wrong plane on stairs
 				trace_box(self.origin, self.mins + '0 0 0.03125', self.maxs, neworigin, TRACE_MOVE_NORMAL, self);

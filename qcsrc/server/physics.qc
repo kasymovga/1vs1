@@ -358,9 +358,7 @@ void(void) physics_player_pre { //called by engine
 	physics_movetype = self.movetype;
 	physics_waterlevel = self.waterlevel;
 	physics_watertype = self.watertype;
-	if (g_skimming_time)
-		physics_skimming = self.skimming_time;
-
+	physics_skimming = self.skimming_time;
 	physics_nofriction = self.physics_nofriction_time;
 	physics_cpmdoublejump_time = self.cpmdoublejump;
 	if (self.client_flags & CLIENT_FLAG_NOPOGOSTICK) {
