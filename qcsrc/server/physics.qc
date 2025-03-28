@@ -680,7 +680,7 @@ float(entity to, float sf) physics_send {
 		if (self.groundentity.solid == SOLID_BSP) {
 			sf |= 32768;
 		}
-		if (self.skimming_time > 0) sf |= 1;
+		if (self.skimming_time > 0) sf2 |= 1;
 		if (g_cpmdoublejump)
 		if (self.cpmdoublejump)
 			sf2 |= 2;
