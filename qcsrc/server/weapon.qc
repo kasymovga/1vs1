@@ -1240,6 +1240,8 @@ void(float id,
 	string s = cvar_string(strcat("sv_model_", modelname));
 	if (s == "")
 		s = modelname;
+	else
+		dlc_add_dlc_or_pk3_by_file(s);
 
 	e.model = strzone(strcat("models/weapons/g_", s, ".md3"));
 	e.mdl = strzone(s);
