@@ -1011,3 +1011,9 @@ msgstr "^1Server is restarting..."
 
 msgid "Score count: {1}/{2}"
 msgstr "Score count: {1}/{2}"
+
+msgid "^3Invisibility has worn off"
+msgstr "^3Invisibility has worn off"
+
+msgid "^3You are invisible"
+msgstr "^3You are invisible"

@@ -1169,3 +1169,9 @@ msgstr "^1De server wordt herstart…"
 
 msgid "Score count: {1}/{2}"
 msgstr "Score: {1}/{2}"
+
+msgid "^3Invisibility has worn off"
+msgstr "^3De onzichtbaarheid is verdwenen"
+
+msgid "^3You are invisible"
+msgstr "^3Je bent onzichtbaar"

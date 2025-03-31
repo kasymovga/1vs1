@@ -1025,3 +1025,9 @@ msgstr "^1Le serveur redémarre..."
 
 msgid "Score count: {1}/{2}"
 msgstr "Tableau des scores : {1}/{2}"
+
+msgid "^3Invisibility has worn off"
+msgstr "^3L'invisibilité a disparu"
+
+msgid "^3You are invisible"
+msgstr "^3Tu es invisible"

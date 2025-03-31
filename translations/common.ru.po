@@ -1011,3 +1011,9 @@ msgstr "^1Сервер перезапускается..."
 
 msgid "Score count: {1}/{2}"
 msgstr "Количество очков: {1}/{2}"
+
+msgid "^3Invisibility has worn off"
+msgstr "^3Невидимость выключена"
+
+msgid "^3You are invisible"
+msgstr "^3Вы невидимы"
