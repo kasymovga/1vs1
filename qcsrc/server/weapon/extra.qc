@@ -25,7 +25,6 @@ float weapon_extra_primary_up[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_bounces[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_burst[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_primary_sound[WEAPON_EXTRA_COUNT_MAX];
-string weapon_extra_primary_message[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_primary_recoil[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_ammo[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_type[WEAPON_EXTRA_COUNT_MAX];
@@ -49,7 +48,6 @@ float weapon_extra_secondary_bounces[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_burst[WEAPON_EXTRA_COUNT_MAX];
 float weapon_extra_secondary_recoil[WEAPON_EXTRA_COUNT_MAX];
 string weapon_extra_secondary_sound[WEAPON_EXTRA_COUNT_MAX];
-string weapon_extra_secondary_message[WEAPON_EXTRA_COUNT_MAX];
 enum {
 	WEAPON_EXTRA_TYPE_NONE = 0,
 	WEAPON_EXTRA_TYPE_BULLET,
@@ -498,13 +496,21 @@ float(float req) weapon_extra_think {
 		}
 	} else if (req == WEAPON_REQUEST_SUICIDEMESSAGE) {
 	} else if (req == WEAPON_REQUEST_KILLMESSAGE) {
+		string s = "";
 		if (weapon_deathtype & HITTYPE_SECONDARY) {
-			weapon_deathtypestring = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_secondary_message"));
-			weapon_fragprefix = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_secondary_fragprefix"));
+			if (weapon_deathtype & HITTYPE_HEADSHOT)
+				s = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_secondary_message_headshot"));
+
+			if (s == "")
+				s = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_secondary_message"));
 		} else {
-			weapon_deathtypestring = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_primary_message"));
-			weapon_fragprefix = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_primary_fragprefix"));
+			if (weapon_deathtype & HITTYPE_HEADSHOT)
+				s = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_primary_message_headshot"));
+
+			if (s == "")
+				s = cvar_string(strcat("g_weapon_extra_", ftos(extra_num), "_primary_message"));
 		}
+		if (s != "") weapon_deathtypestring = s;
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		mc = weapon_extra_magazinecapacity[extra_num];
 		at = weapon_extra_ammo_type[extra_num];
