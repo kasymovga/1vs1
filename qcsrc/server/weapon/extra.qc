@@ -187,7 +187,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		for (float i = 0; i < c; i++)
 			bullet(weapon_shotorg, weapon_shotorg_visual, weapon_shotdir, spr, sp,
 					5, d, hs,
-					f, it, self.weapon, g, r);
+					f, it, hittype, g, r);
 
 		bullet_end();
 		break;
