@@ -396,7 +396,7 @@ void(void) nadget_init_common {
 	plugin_chain_weapon_throw_handle = nadget_weapon_throw_handle;
 	nadget_score_basics_end_next = plugin_chain_score_basics_end;
 	plugin_chain_score_basics_end = nadget_score_basics_end;
-	Napalm_Init();
+	napalm_init();
 	hint_add("You can detonate FireTrap of enemy shooting on it");
 	hint_add("Translocator nadget can be used as teleporting or killing enemy shooting directly on enemy");
 	hint_add("You can increase speed using laser nadget, you can jump higher with laser nadget aiming to ground or wall with laser nadget");

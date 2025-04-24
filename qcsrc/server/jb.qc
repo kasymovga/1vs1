@@ -115,7 +115,7 @@ void(void) jb_torture_napalm_think {
 	if not(e) return;
 	vector vd = ENTITY_CENTER(e) - self.origin;
 	vector v = normalize(normalize(vd) + randomvec() * 0.1);
-	entity proj = Napalm_Spawn(self.enemy, self.origin, 3, 4, DEATH_HURTTRIGGER, 100, 100, 50, 5);
+	entity proj = napalm_spawn(self.enemy, self.origin, 3, 4, DEATH_HURTTRIGGER, 100, 100, 50, 5);
     proj.velocity = v * (vlen(vd) + random() * 500);
 }
 
@@ -391,7 +391,7 @@ void jb_player_clear(float killed) {
 
 void(void) jb_init_delayed {
 	// must be delayed for dlc packages
-	Napalm_Init();
+	napalm_init();
 	RM_ELSE({
 		dlc_require("rm_jb");
 		precache_model("models/domination/dom_unclaimed_baseless.md3");

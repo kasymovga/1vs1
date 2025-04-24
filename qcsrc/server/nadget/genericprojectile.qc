@@ -20,7 +20,7 @@ void nadget_GenericProjectile_ThrowNapalm(void) {
 	float c;
 	entity e;
     for(c = 0; c < GRENVAR(self.hg_type, "numparticles"); c++) {
-        e = Napalm_Spawn(
+        e = napalm_spawn(
             self.owner,
             self.origin,
             GRENVAR(self.hg_type, "fire_lifetime"),

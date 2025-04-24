@@ -104,7 +104,7 @@ void(void) func_breakable_launch_napalm {
 	float c;
 	entity e;
 	for(c = 0; c < nc; ++c) {
-		e = Napalm_Spawn(self.owner, self.origin, 3, 0.15, DEATH_HURTTRIGGER, 180, 80, 20, 1.5);
+		e = napalm_spawn(self.owner, self.origin, 3, 0.15, DEATH_HURTTRIGGER, 180, 80, 20, 1.5);
 		e.velocity = random_spread_vector(70, 300, 300, 10);
 	}
 	self.owner.team = saveteam;
@@ -219,6 +219,6 @@ void(void) spawnfunc_func_breakable {
 	self.spawnorigin = self.origin;
 	func_breakable_reset();
 	if (self.napalm_count > 0) {
-		Napalm_Init();
+		napalm_init();
 	}
 }
