@@ -125,6 +125,7 @@ void(void) world_static_init {
 	IP2C_InitSV();
 	cheat_init();
 	soulmates_init();
+	pin_init();
 }
 
 void(void) world_dynamic_init {

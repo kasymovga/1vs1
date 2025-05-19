@@ -162,6 +162,7 @@ casing.qh
 hint.qh
 debris.qh
 thirdview.qh
+pin.qh
 ability.qh
 soulmates.qh
 sound.qc
@@ -409,3 +410,4 @@ jb_role.qc
 print.qc
 soulmates.qc
 misc_terminal.qc
+pin.qc

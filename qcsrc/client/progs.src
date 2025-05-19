@@ -70,6 +70,7 @@ rm_crosshair_ring.qh
 rm_score.qh
 ip2c.qh
 porto.qh
+pin.qh
 ../client-server/progs.qc
 cvar.qc
 str.qc
@@ -191,3 +192,4 @@ rm_score.qc
 camera.qc
 print.qc
 chase.qc
+pin.qc
