@@ -26,9 +26,10 @@ float pin_input_event(float bInputType, float nPrimary, float nSecondary) {
 		str_unzone_ifneeded(pin_code);
 		pin_code = str_zone_ifneeded(pin_code_new);
 	}
-	if (pin_try)
+	if (pin_try) {
 		localcmd(strcat("cmd pin_code ", pin_code, "\n"));
-
+		return TRUE;
+	}
 	return FALSE;
 }
 
@@ -110,14 +111,13 @@ void(void) pin_remove {
 	e.alpha = 1;
 }
 
-void(float ignore) pin_read {
-	print(_("\{1}^1* This server required PIN-code to play\n"));
+void(float isnew) pin_read {
 	self.draw2dflag = 3;
 	self.draw2d = pin_draw;
 	self.entremove = pin_remove;
 	self.cnt = net_read_coord();
 	self.alpha = 1;
 	string s = cvar_string("_cl_pin_code");
-	if (s != "")
+	if (s != "" && isnew)
 		localcmd(strcat("cmd pin_code ", s, "\n"));
 }

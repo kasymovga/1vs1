@@ -21,11 +21,27 @@ void(entity e) pin_checker_remove {
 	}
 }
 
-void(void) pin_checker_think {
+float(entity e) pin_checker_presents {
+	entity pin;
+	for (pin = pin_checkers; pin; pin = pin.enemy) {
+		if (pin.owner == e) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+void(void) pin_checker_think2 {
 	entity o = self.owner;
 	pin_checker_remove(o);
+	print_to(self.owner, PRINT_CHAT, "^1No correct PIN code in {1} seconds, disconnecting...\n", ftos(sv_pin_timeout), "", "");
 	dropclient(o);
-	sprint(o, strcat("^1No correct PIN code in ", ftos(sv_pin_timeout), " seconds, disconnecting...\n"));
+}
+
+void(void) pin_checker_think {
+	print_to(self.owner, PRINT_CHAT, "^1* This server required PIN-code to play\n", "", "", "");
+	self.nextthink = max(self.cnt, time);
+	self.think = pin_checker_think2;
 }
 
 var float(string cmd, float tokens) pin_cmd_client_handle_next;
@@ -42,7 +58,7 @@ float(string cmd, float tokens) pin_cmd_client_handle {
 
 float(entity to, float sf) pin_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_PIN_CODE_REQUEST);
-	net_write_coord(MSG_ENTITY, self.nextthink - time);
+	net_write_coord(MSG_ENTITY, self.cnt - time);
 	return TRUE;
 }
 
@@ -54,7 +70,8 @@ void() pin_client_connect_real {
 	e.enemy = pin_checkers;
 	e.owner = self;
 	e.think = pin_checker_think;
-	e.nextthink = time + sv_pin_timeout;
+	e.nextthink = time + 1;
+	e.cnt = time + sv_pin_timeout;
 	e.viewmodelforclient = e.owner;
 	net_link_entity(e, FALSE, 0, pin_send);
 	pin_checkers = e;
@@ -65,6 +82,15 @@ var void() pin_client_disconnect_real_next;
 var void() pin_client_disconnect_real {
 	pin_checker_remove(self);
 	pin_client_disconnect_real_next();
+}
+
+var float() pin_spectator_to_player_handle_next;
+float() pin_spectator_to_player_handle {
+	if (clienttype(self) == CLIENTTYPE_REAL) {
+		if (pin_checker_presents(self))
+			return TRUE;
+	}
+	return pin_spectator_to_player_handle_next();
 }
 
 void(void) pin_init {
@@ -83,4 +109,6 @@ void(void) pin_init {
 	plugin_chain_client_disconnect_real = pin_client_disconnect_real;
 	pin_cmd_client_handle_next = plugin_chain_cmd_client_handle;
 	plugin_chain_cmd_client_handle = pin_cmd_client_handle;
+	pin_spectator_to_player_handle_next = plugin_chain_spectator_to_player_handle;
+	plugin_chain_spectator_to_player_handle = pin_spectator_to_player_handle;
 }
