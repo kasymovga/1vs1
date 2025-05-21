@@ -65,16 +65,18 @@ float(entity to, float sf) pin_send {
 var void() pin_client_connect_real_next;
 void() pin_client_connect_real {
 	pin_checker_remove(self);
-	entity e = spawn();
-	e.classname = "pin_checker";
-	e.enemy = pin_checkers;
-	e.owner = self;
-	e.think = pin_checker_think;
-	e.nextthink = time + 1;
-	e.cnt = time + sv_pin_timeout;
-	e.viewmodelforclient = e.owner;
-	net_link_entity(e, FALSE, 0, pin_send);
-	pin_checkers = e;
+	if (self.netaddress != "local") {
+		entity e = spawn();
+		e.classname = "pin_checker";
+		e.enemy = pin_checkers;
+		e.owner = self;
+		e.think = pin_checker_think;
+		e.nextthink = time + 1;
+		e.cnt = time + sv_pin_timeout;
+		e.viewmodelforclient = e.owner;
+		net_link_entity(e, FALSE, 0, pin_send);
+		pin_checkers = e;
+	}
 	pin_client_connect_real_next();
 }
 

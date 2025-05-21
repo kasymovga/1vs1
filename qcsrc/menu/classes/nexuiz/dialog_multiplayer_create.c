@@ -28,6 +28,17 @@ entity makeNexuizServerCreateTab(float single)
 	return me;
 }
 
+void(entity input, entity ignore) nexuizServerCreateTabPINCodeOnChange {
+	float i, n = strlen(input.text);
+	for (i = 0; i < n; i++) {
+		if (strstrofs("0123456789", substring(input.text, i, 1), 0) < 0) {
+			setTextInputBox(input, strcat(substring(input.text, 0, i), substring(input.text, i + 1, -1)));
+			n = strlen(input.text);
+			i--;
+		}
+	}
+}
+
 void fillNexuizServerCreateTab(entity me)
 {
 	entity e, selected;
@@ -78,6 +89,13 @@ void fillNexuizServerCreateTab(entity me)
 				e.addValue(e, _("Private"), "0");
 				e.addValue(e, _("Public"), "1");
 				e.configureNexuizTextSliderValues(e);
+		me.TR(me);
+			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("PIN-code:")));
+			me.TD(me, 1, 1, e = makeNexuizInputBox(0, "sv_pin_code"));
+			e.onChange = nexuizServerCreateTabPINCodeOnChange;
+			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("* Digits only")));
+			e.colorL = SKINCOLOR_TEXT_WARNING;
+			e.fontSize = e.fontSize * 0.6;
 	}
 	me.TR(me);
 		me.sliderTimelimit = makeNexuizSlider(1.0, 60.0, 0.5, "g_timelimit");
@@ -88,7 +106,6 @@ void fillNexuizServerCreateTab(entity me)
 		me.TD(me, 1, 1, e = makeNexuizSliderCheckBox(0, 1, me.sliderFraglimit, _("Point limit:")));
 			me.checkboxFraglimit = e;
 		me.TD(me, 1, 2, me.sliderFraglimit);
-	me.TR(me);
 	if not(me.isSinglePlayer) {
 		me.TR(me);
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Player slots:")));
