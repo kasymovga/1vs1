@@ -2,6 +2,7 @@
 CLASS(MainWindow) EXTENDS(ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity))
 	ATTRIB(MainWindow, mutatorsDialog, entity, NULL)
+	ATTRIB(MainWindow, oldMutatorsDialog, entity, NULL)
 	ATTRIB(MainWindow, weaponsDialog, entity, NULL)
 	ATTRIB(MainWindow, mapInfoDialog, entity, NULL)
 	ATTRIB(MainWindow, userbindEditDialog, entity, NULL)
@@ -26,6 +27,10 @@ void configureMainWindowMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.mutatorsDialog = i = spawnNexuizMutatorsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.oldMutatorsDialog = i = spawnNexuizOldMutatorsDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 

@@ -24,6 +24,7 @@
 #include "classes/nexuiz/serverlist.c"
 #include "classes/nexuiz/dialog_multiplayer_create.c"
 #include "classes/nexuiz/dialog_multiplayer_create_mutators.c"
+#include "classes/nexuiz/dialog_multiplayer_create_mutators_old.c"
 #include "classes/nexuiz/dialog_multiplayer_create_mapinfo.c"
 #include "classes/nexuiz/gametypebutton.c"
 #include "classes/nexuiz/maplist.c"
