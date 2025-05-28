@@ -114,6 +114,7 @@ float(string name) race_record_delete {
 		n = race_records_name[i];
 		if (n == name) {
 			str_unzone_ifneeded(n);
+			race_records_name[i] = "";
 			for (j = i; j < 9; j++) {
 				n = race_records_name[j + 1];
 				t = race_records_time[j + 1];
@@ -1238,6 +1239,7 @@ float(string cmd, float argc) race_cmd_game_handle {
 	if (cmd == "clear_record") {
 		if (argc != 2) {
 			sprint(self, "usage: sv_cmd clear_record <position>\n");
+			sprint(self, "       position must be from 1 to 10\n");
 		}
 		float i = stof(argv(1));
 		string n = race_records_name[i - 1];
