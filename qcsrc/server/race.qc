@@ -108,6 +108,7 @@ void(void) race_records_save {
 
 float(string name) race_record_delete {
 	float i, j, t, sp;
+	name = strcat1(name); //be sure that name is temporary string
 	string n;
 	float r = 0;
 	for (i = 0; i < 10; i++) {
@@ -127,6 +128,7 @@ float(string name) race_record_delete {
 			race_records_time[9] = 0;
 			race_records_speed[9] = 0;
 			r = 1;
+			i--;
 		}
 	}
 	return r;

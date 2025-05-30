@@ -134,6 +134,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 				self = oldself;
 				print(e.netname, " have clid forced by sysinfo: ", e.clid, "\n");
 			}
+		} else if (substring(head, 0, 6)  == "model=") {
 		}
 		tail = str_cdr(tail);
 	}
