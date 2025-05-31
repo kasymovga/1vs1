@@ -165,6 +165,10 @@ float(string s) dlc_load_settemps_from {
 			continue;
 		}
 		cvar_value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(substring(line, separator + 1, -1))));
+		if (cvar_name == "player_model_precache") { //forced player model precache
+			player_body_precache(cvar_value);
+			continue;
+		}
 		if (cvar_name == "g_player_forcemodel" && cvar_value != "0") {
 			if (dlc_load_player_model_not_forced > 0) continue;
 			if (strstrofs(strcat(" ", dlc_rexext_forcemodel, " "), strcat(" ", cvar_value, " "), 0) >= 0) continue;

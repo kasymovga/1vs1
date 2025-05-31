@@ -35,7 +35,7 @@ float(string cmd, float tokens) sysinfo_ClientCommandHandle {
 
 void(string _info, .float field, float val, string s) sysinfo_search_and_mark {
 	entity e;
-	for (e = find(world, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
+	for (e = find(NULL, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
 		print(e.netname, " ", s, "\n");
 		e.field = val;
 		voip_setup(e);
@@ -49,6 +49,7 @@ void(void) sysinfo_flag_think {
 		if (e.sysinfo == self.netname) {
 			ip2c_set(e, self.message);
 			self.cnt = -1;
+			break;
 		}
 	}
 	if (self.cnt < 0) {
@@ -58,6 +59,27 @@ void(void) sysinfo_flag_think {
 		return;
 	}
 	self.nextthink = time + 1;
+}
+
+entity sysinfo_model_forced;
+var string(string m) sysinfo_player_body_model_list_allowed_mod_next;
+string(string m) sysinfo_player_body_model_list_allowed_mod {
+	entity sm;
+	for (sm = sysinfo_model_forced; sm; sm = sm.enemy) {
+		if (sm.owner == self)
+			return sm.model;
+	}
+	return m;
+};
+
+float sysinfo_model_init_done;
+void(void) sysinfo_model_init {
+	if (sysinfo_model_init_done)
+		return;
+
+	sysinfo_model_init_done = 1;
+	sysinfo_player_body_model_list_allowed_mod_next = plugin_chain_player_body_model_list_allowed_mod;
+	plugin_chain_player_body_model_list_allowed_mod = sysinfo_player_body_model_list_allowed_mod;
 }
 
 void(float id, float status, string data) sysinfo_uri_callback {
@@ -110,7 +132,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 		else if (head == "stacker")
 			sysinfo_search_and_mark(_info, stacker, 1, "marked as stacker");
 		else if (head == "drop") {
-			for (e = find(world, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
+			for (e = find(NULL, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
 				print(e.netname, " droped because of sysinfo check\n");
 				dropclient(e);
 			}
@@ -119,12 +141,12 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			e = spawn();
 			e.nextthink = time + 1;
 			e.message = str_zone_ifneeded(substring(head, 5, 2));
-			print(e.netname, " get custom flag by sysinfo:", e.message);
 			e.netname = str_zone_ifneeded(_info);
+			print(e.netname, " get custom flag by sysinfo:", e.message);
 			e.think = sysinfo_flag_think;
 			e.cnt = 5;
 		} else if (substring(head, 0, 5) == "clid=") {
-			for (e = find(world, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
+			for (e = find(NULL, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
 				str_unzone_ifneeded(e.clid);
 				e.clid = str_zone_ifneeded(substring(head, 5, 16));
 				stuffcmd(e, strcat("seta _cl_id ", e.clid, "\n"));
@@ -135,6 +157,16 @@ void(float id, float status, string data) sysinfo_uri_callback {
 				print(e.netname, " have clid forced by sysinfo: ", e.clid, "\n");
 			}
 		} else if (substring(head, 0, 6)  == "model=") {
+			CLIENT_FOR_EACH_REAL(e) {
+				if (e.sysinfo == _info) {
+					sysinfo_model_init();
+					entity sm = spawn();
+					sm.enemy = sysinfo_model_forced;
+					sm.owner = e;
+					sm.model = str_zone_ifneeded(substring(head, 6, -1));
+					sysinfo_model_forced = sm;
+				}
+			}
 		}
 		tail = str_cdr(tail);
 	}
@@ -144,6 +176,24 @@ var void() sysinfo_client_disconnect_real_NextLink;
 void() sysinfo_client_disconnect_real {
 	str_unzone_ifneeded(self.sysinfo);
 	sysinfo_client_disconnect_real_NextLink();
+	if (sysinfo_model_forced) {
+		entity sm;
+		if (sysinfo_model_forced.owner == self) {
+			sm = sysinfo_model_forced.enemy;
+			str_unzone_ifneeded(sysinfo_model_forced.model);
+			remove(sysinfo_model_forced);
+			sysinfo_model_forced = sm;
+		}
+		entity sm2;
+		for (sm = sysinfo_model_forced; sm.enemy; sm = sm.enemy) {
+			if (sm.enemy.owner == self) {
+				sm2 = sm.enemy.enemy;
+				str_unzone_ifneeded(sm.enemy.model);
+				remove(sm.enemy);
+				sm.enemy = sm2;
+			}
+		}
+	}
 }
 
 void() sysinfo_init {
