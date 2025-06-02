@@ -1,2 +1,3 @@
 set sv_sysinfo_checker ""
+set sv_sysinfo_precache_player_models ""
 alias sysinfoget "prvm_edictget server $1 sysinfo"

@@ -1,5 +1,6 @@
 .string sysinfo;
 string sv_sysinfo_checker;
+string sv_sysinfo_precache_player_models;
 float URI_SYSINFO_CHECKER;
 
 var float(string cmd, float tokens) sysinfo_ClientCommandHandle_NextLink;
@@ -157,15 +158,18 @@ void(float id, float status, string data) sysinfo_uri_callback {
 				print(e.netname, " have clid forced by sysinfo: ", e.clid, "\n");
 			}
 		} else if (substring(head, 0, 6)  == "model=") {
-			for (e = find(NULL, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
-				sysinfo_model_init();
-				entity sm = spawn();
-				sm.enemy = sysinfo_model_forced;
-				sm.owner = e;
-				sm.model = str_zone_ifneeded(substring(head, 6, -1));
-				print("Forced model ", sm.model, " added for ", self.netname, "\n");
-				sysinfo_model_forced = sm;
-			}
+			string m = substring(head, 6, -1);
+			string precache_list = strcat(" ", sv_sysinfo_precache_player_models, " ");
+			if (strstrofs(precache_list, strcat(" ", m, " "), 0) >= 0)
+				for (e = find(NULL, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
+					sysinfo_model_init();
+					entity sm = spawn();
+					sm.enemy = sysinfo_model_forced;
+					sm.owner = e;
+					sm.model = str_zone_ifneeded(m);
+					print("Forced model ", sm.model, " added for ", self.netname, "\n");
+					sysinfo_model_forced = sm;
+				}
 		}
 		tail = str_cdr(tail);
 	}
@@ -204,4 +208,6 @@ void() sysinfo_init {
 	sysinfo_client_disconnect_real_NextLink = plugin_chain_client_disconnect_real;
 	plugin_chain_client_disconnect_real = sysinfo_client_disconnect_real;
 	URI_SYSINFO_CHECKER = uri_register_handler(sysinfo_uri_callback);
+	CVAR_CACHE_STR(sv_sysinfo_precache_player_models);
+	if (sv_sysinfo_precache_player_models != "") player_body_precache(sv_sysinfo_precache_player_models);
 }
