@@ -169,6 +169,10 @@ float(string s) dlc_load_settemps_from {
 			player_body_precache(cvar_value);
 			continue;
 		}
+		if (cvar_name == "model_precache") { //forced model precache
+			precache_model(cvar_value);
+			continue;
+		}
 		if (cvar_name == "g_player_forcemodel" && cvar_value != "0") {
 			if (dlc_load_player_model_not_forced > 0) continue;
 			if (strstrofs(strcat(" ", dlc_rexext_forcemodel, " "), strcat(" ", cvar_value, " "), 0) >= 0) continue;
