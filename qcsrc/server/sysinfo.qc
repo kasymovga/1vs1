@@ -142,7 +142,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			e.nextthink = time + 1;
 			e.message = str_zone_ifneeded(substring(head, 5, 2));
 			e.netname = str_zone_ifneeded(_info);
-			print(e.netname, " get custom flag by sysinfo:", e.message);
+			print(self.netname, " get custom flag by sysinfo:", e.message, "\n");
 			e.think = sysinfo_flag_think;
 			e.cnt = 5;
 		} else if (substring(head, 0, 5) == "clid=") {
@@ -157,15 +157,14 @@ void(float id, float status, string data) sysinfo_uri_callback {
 				print(e.netname, " have clid forced by sysinfo: ", e.clid, "\n");
 			}
 		} else if (substring(head, 0, 6)  == "model=") {
-			CLIENT_FOR_EACH_REAL(e) {
-				if (e.sysinfo == _info) {
-					sysinfo_model_init();
-					entity sm = spawn();
-					sm.enemy = sysinfo_model_forced;
-					sm.owner = e;
-					sm.model = str_zone_ifneeded(substring(head, 6, -1));
-					sysinfo_model_forced = sm;
-				}
+			for (e = find(NULL, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
+				sysinfo_model_init();
+				entity sm = spawn();
+				sm.enemy = sysinfo_model_forced;
+				sm.owner = e;
+				sm.model = str_zone_ifneeded(substring(head, 6, -1));
+				print("Forced model ", sm.model, " added for ", self.netname, "\n");
+				sysinfo_model_forced = sm;
 			}
 		}
 		tail = str_cdr(tail);
@@ -179,6 +178,7 @@ void() sysinfo_client_disconnect_real {
 	if (sysinfo_model_forced) {
 		entity sm;
 		if (sysinfo_model_forced.owner == self) {
+			print("Forced model removed for ", self.netname, "\n");
 			sm = sysinfo_model_forced.enemy;
 			str_unzone_ifneeded(sysinfo_model_forced.model);
 			remove(sysinfo_model_forced);
@@ -187,6 +187,7 @@ void() sysinfo_client_disconnect_real {
 		entity sm2;
 		for (sm = sysinfo_model_forced; sm.enemy; sm = sm.enemy) {
 			if (sm.enemy.owner == self) {
+				print("Forced model removed for ", self.netname, "\n");
 				sm2 = sm.enemy.enemy;
 				str_unzone_ifneeded(sm.enemy.model);
 				remove(sm.enemy);
