@@ -47,10 +47,6 @@ void() entity_movedir_setup {
 	self.angles = '0 0 0';
 }
 
-void(string s) entity_abort {
-    objerror_builtin(s);
-}
-
 float initialize_entities_done;
 void(entity for_e, void(void) func, float order) entity_initialize {
 	entity e = spawn();
