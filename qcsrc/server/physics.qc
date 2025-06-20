@@ -215,7 +215,7 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 			other = oldself;
 			self = e;
 			vector _oldorigin = oldself.origin;
-			float oldframetime = frametime;
+			float oldframetime = physics_frametime = frametime;
 			frametime = 0;
 			setorigin(oldself, v2);
 			oldself.velocity = physics_velocity;

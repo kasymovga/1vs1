@@ -3,9 +3,12 @@
 .float strength;
 
 float (entity e) trigger_impulse_affected {
-	if not(other.iscreature)
-	if not(other.flags & FL_PROJECTILE)
-	if (other.movetype != MOVETYPE_TOSS)
+	if not(e.iscreature)
+	if not(e.flags & FL_PROJECTILE)
+	if (e.movetype != MOVETYPE_TOSS)
+		return FALSE;
+
+	if (e.deadflag && e.iscreature)
 		return FALSE;
 
 	return TRUE;
@@ -13,68 +16,37 @@ float (entity e) trigger_impulse_affected {
 
 // targeted (directional) mode
 void(void) trigger_impulse_touch1 {
-	float pushdeltatime;
-	float str = 0;
-	// FIXME: Better checking for what to push and not.
+	if (frametime) return;
 	if not(trigger_impulse_affected(other))
 		return;
 
-	if (other.deadflag && other.iscreature)
-		return;
-
 	TRIGGER_EXACT_TOUCH;
-	if (self.falloff == 1)
-		str = (str / self.radius) * self.strength;
-	else if (self.falloff == 2)
-		str = (1 - (str / self.radius)) * self.strength;
-	else
-		str = self.strength;
-
-	pushdeltatime = time - other.lastpushtime;
-	if (pushdeltatime > 0.15) pushdeltatime = 0;
-	other.lastpushtime = time;
-	if (!pushdeltatime) return;
-	other.velocity = other.velocity + normalize(self.enemy.origin - self.origin) * str * pushdeltatime;
+	other.velocity = other.velocity + normalize(self.enemy.origin - self.origin) * self.strength * physics_frametime;
 	other.flags &= ~FL_ONGROUND;
 }
 
 // Directionless (accelerator/decelerator) mode
 void(void) trigger_impulse_touch2 {
-	float pushdeltatime;
-	// FIXME: Better checking for what to push and not.
+	if (frametime) return;
 	if not(trigger_impulse_affected(other))
 		return;
 
-	if (other.deadflag && other.iscreature)
-		return;
-
 	TRIGGER_EXACT_TOUCH;
-	pushdeltatime = time - other.lastpushtime;
-	if (pushdeltatime > 0.15) pushdeltatime = 0;
-	other.lastpushtime = time;
-	if (!pushdeltatime) return;
 	// div0: ticrate independent, 1 = identity (not 20)
-	other.velocity = other.velocity * pow(self.strength, pushdeltatime);
+	other.velocity = other.velocity * pow(self.strength, physics_frametime);
 }
 
 // Spherical (gravity/repulsor) mode
 void(void) trigger_impulse_touch3 {
-	float pushdeltatime;
+	if (frametime) return;
 	float str;
-	// FIXME: Better checking for what to push and not.
+	vector o = ENTITY_CENTER(other);
 	if not(trigger_impulse_affected(other))
 		return;
 
-	if (other.deadflag && other.iscreature)
-		return;
-
 	TRIGGER_EXACT_TOUCH;
-	pushdeltatime = time - other.lastpushtime;
-	if (pushdeltatime > 0.15) pushdeltatime = 0;
-	other.lastpushtime = time;
-	if (!pushdeltatime) return;
 	setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
-	str = min(self.radius, vlen(self.origin - other.origin));
+	str = min(self.radius, vlen(self.origin - o));
 	if (self.falloff == 1)
 		str = (1 - str / self.radius) * self.strength; // 1 in the inside
 	else if (self.falloff == 2)
@@ -82,7 +54,41 @@ void(void) trigger_impulse_touch3 {
 	else
 		str = self.strength;
 
-	other.velocity = other.velocity + normalize(other.origin - self.origin) * str * pushdeltatime;
+	other.velocity = other.velocity + normalize(o - self.origin) * str * physics_frametime;
+}
+
+float(entity to, float sf) trigger_impulse_prediction_send {
+	net_write_byte(MSG_ENTITY, NET_CSQC_TRIGGER_IMPULSE_PREDICTION);
+	net_write_coord(MSG_ENTITY, self.modelindex);
+	net_write_coord(MSG_ENTITY, self.origin_x);
+	net_write_coord(MSG_ENTITY, self.origin_y);
+	net_write_coord(MSG_ENTITY, self.origin_z);
+	net_write_coord(MSG_ENTITY, self.mins_x);
+	net_write_coord(MSG_ENTITY, self.mins_y);
+	net_write_coord(MSG_ENTITY, self.mins_z);
+	net_write_coord(MSG_ENTITY, self.maxs_x);
+	net_write_coord(MSG_ENTITY, self.maxs_y);
+	net_write_coord(MSG_ENTITY, self.maxs_z);
+	if (self.touch == trigger_impulse_touch1) {
+		net_write_byte(MSG_ENTITY, 1);
+		net_write_coord(MSG_ENTITY, self.enemy.origin_x);
+		net_write_coord(MSG_ENTITY, self.enemy.origin_y);
+		net_write_coord(MSG_ENTITY, self.enemy.origin_z);
+	} else if (self.touch == trigger_impulse_touch2) {
+		net_write_byte(MSG_ENTITY, 2);
+	} else {
+		net_write_byte(MSG_ENTITY, 3);
+		net_write_coord(MSG_ENTITY, self.radius);
+		net_write_coord(MSG_ENTITY, self.falloff);
+	}
+	net_write_coord(MSG_ENTITY, self.strength);
+	return TRUE;
+}
+
+void(void) trigger_impulse_finalize {
+	if (cvar("g_trigger_impulse_prediction")) {
+		net_link_entity(self, TRUE, 0, trigger_impulse_prediction_send);
+	}
 }
 
 void(void) trigger_impulse_find_target {
@@ -92,6 +98,7 @@ void(void) trigger_impulse_find_target {
 		return;
 	}
 	self.touch = trigger_impulse_touch1;
+	trigger_impulse_finalize();
 }
 
 /*QUAKED spawnfunc_trigger_impulse (.5 .5 .5) ?
@@ -113,19 +120,21 @@ in directional and sperical mode. For damper/accelerator mode this is not nesses
 */
 void(void) spawnfunc_trigger_impulse {
 	trigger_solid_brush_init();
-	if (self.radius) {
-		if (!self.strength) self.strength = 2000 * cvar("g_triggerimpulse_radial_multiplier");
-		setorigin(self, self.origin);
-		setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
-		self.touch = trigger_impulse_touch3;
+	if (self.target != "") {
+		if (!self.strength) self.strength = 950 * cvar("g_triggerimpulse_directional_multiplier");
+		entity_initialize(self, trigger_impulse_find_target, INITPRIO_FINDTARGET);
 	} else {
-		if (self.target != "") {
-			if (!self.strength) self.strength = 950 * cvar("g_triggerimpulse_directional_multiplier");
-			entity_initialize(self, trigger_impulse_find_target, INITPRIO_FINDTARGET);
+		if (self.radius) {
+			if (!self.strength) self.strength = 2000 * cvar("g_triggerimpulse_radial_multiplier");
+			setorigin(self, self.origin);
+			setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
+			self.touch = trigger_impulse_touch3;
+			trigger_impulse_finalize();
 		} else {
 			if (!self.strength) self.strength = 0.9;
 			self.strength = pow(self.strength, cvar("g_triggerimpulse_accel_power")) * cvar("g_triggerimpulse_accel_multiplier");
 			self.touch = trigger_impulse_touch2;
+			trigger_impulse_finalize();
 		}
 	}
 }

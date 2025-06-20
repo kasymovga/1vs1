@@ -91,6 +91,7 @@ float physics_nofriction;
 float physics_have_doubjejump;
 float physics_cpmdoublejump_time;
 float physics_frametime_accumulator;
+float physics_frametime;
 
 void physics_player();
 

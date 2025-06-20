@@ -129,6 +129,8 @@ void(void) physics_frame_begin_hook {
 
 float physics_triggers_predicted;
 void(void) physics_triggers_predict {
+	//last command frame skipped, because it's probably not sended to server and change of angles in prediction function will cause desyncronization
+	//same thing with not full frames with g_physics_fixed 1
 	if (physics_plug_frame_end && (!g_physics_fixed || frametime == 0.008) && physics_command_frame < clientcommandframe) {
 		vector mins1, mins2, maxs1, maxs2;
 		mins2 = self.origin + self.mins;
@@ -156,15 +158,13 @@ void(void) physics_triggers_predict {
 }
 
 void(void) physics_frame_end_hook {
-	//last command frame skipped, because it's probably not sended to server and change of angles in prediction function will cause desyncronization
-	//same thing with not full frames with g_physics_fixed 1
+	physics_frametime = frametime;
 	if not(physics_triggers_predicted)
 		physics_triggers_predict();
 
 	physics_triggers_predicted = FALSE;
 	physics_teleport_time -= frametime;
 	physics_velocity_frame_end = physics_velocity;
-	physics_frametime = frametime;
 }
 
 .vector pmove_velocity;

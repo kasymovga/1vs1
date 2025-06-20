@@ -117,6 +117,7 @@ portal.qc
 announce.qc
 teleport.qc
 trigger_push.qc
+trigger_impulse.qc
 vote.qh
 game_menu.qh
 entcs.qh
