@@ -261,3 +261,4 @@ typedef .float floatfield;
 
 typedef .string stringfield;
 .float lastshot_time;
+.float radius;

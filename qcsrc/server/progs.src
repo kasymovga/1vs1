@@ -202,6 +202,7 @@ casing.qc
 target.qc
 info.qc
 trigger_push.qc
+trigger_impulse.qc
 target_push.qc
 trigger_warpzone.qc
 trigger.qc
