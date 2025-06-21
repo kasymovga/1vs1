@@ -975,3 +975,6 @@ msgstr "* Kan de prestaties beïnvloeden als deze niet gelijk is aan 1"
 
 msgid "* From water, hurt and powerups"
 msgstr "* Van water, pijn en power-ups"
+
+msgid "* Digits only"
+msgstr "* Alleen cijfers"

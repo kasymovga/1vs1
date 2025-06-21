@@ -993,3 +993,6 @@ msgstr "Thread pour serveur"
 
 msgid "* Good for local game performance, but may be unstable"
 msgstr "* Améliore les performances locales, mais peut être instable"
+
+msgid "* Digits only"
+msgstr "* Chiffres seulement"

@@ -975,3 +975,6 @@ msgstr "* Pode afetar o desempenho quando não for igual a 1"
 
 msgid "* From water, hurt and powerups"
 msgstr "* De água, ferimentos e upgrades"
+
+msgid "* Digits only"
+msgstr "* Apenas dígitos"
