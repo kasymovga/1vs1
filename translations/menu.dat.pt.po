@@ -976,5 +976,23 @@ msgstr "* Pode afetar o desempenho quando não for igual a 1"
 msgid "* From water, hurt and powerups"
 msgstr "* De água, ferimentos e upgrades"
 
+msgid "Resolution scale:"
+msgstr "Escala de resolução:"
+
+msgid "Tint effect:"
+msgstr "Efeito de matiz:"
+
+msgid "Deferred shadow"
+msgstr "Sombra diferida"
+
+msgid "Discord status"
+msgstr "Status do Discord"
+
+msgid "Server thread"
+msgstr "Tópico do servidor"
+
 msgid "* Digits only"
 msgstr "* Apenas dígitos"
+
+msgid "PIN-code:"
+msgstr "Código PIN:"

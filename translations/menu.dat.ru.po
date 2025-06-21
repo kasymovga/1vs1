@@ -974,5 +974,23 @@ msgstr "* Может ухудшить производительность ес�
 msgid "* From water, hurt and powerups"
 msgstr "* От воды, боли и поверапов"
 
+msgid "Resolution scale:"
+msgstr "Масштаб разрешения:"
+
+msgid "Tint effect:"
+msgstr "Цветовой эффект:"
+
+msgid "Deferred shadow"
+msgstr "Отложенные тени"
+
+msgid "Discord status"
+msgstr "Статус Discord"
+
+msgid "Server thread"
+msgstr "Серверный тред"
+
 msgid "* Digits only"
 msgstr "* Только цифры"
+
+msgid "PIN-code:"
+msgstr "PIN-код:"

@@ -996,3 +996,6 @@ msgstr "* Améliore les performances locales, mais peut être instable"
 
 msgid "* Digits only"
 msgstr "* Chiffres seulement"
+
+msgid "PIN-code:"
+msgstr "code PIN :"
