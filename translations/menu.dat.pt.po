@@ -991,6 +991,9 @@ msgstr "Status do Discord"
 msgid "Server thread"
 msgstr "Tópico do servidor"
 
+msgid "* Good for local game performance, but may be unstable"
+msgstr "* Bom para desempenho de jogos locais, mas pode ser instável"
+
 msgid "* Digits only"
 msgstr "* Apenas dígitos"
 

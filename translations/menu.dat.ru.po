@@ -989,6 +989,9 @@ msgstr "Статус Discord"
 msgid "Server thread"
 msgstr "Серверный тред"
 
+msgid "* Good for local game performance, but may be unstable"
+msgstr "* Улучшает производительность локальной игры, но может влиять на стабильность"
+
 msgid "* Digits only"
 msgstr "* Только цифры"
 
