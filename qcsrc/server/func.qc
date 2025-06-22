@@ -878,7 +878,6 @@ void(void) spawnfunc_func_rotating {
 	// TODO make a reset function for this one
 }
 
-.float height;
 void func_bobbing_controller_think() {
 	vector v;
 	self.nextthink = time + 0.1;

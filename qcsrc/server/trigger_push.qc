@@ -1,8 +1,6 @@
 #define PUSH_ONCE 1
 #define PUSH_SILENT 2
 
-.float height;
-
 void() trigger_use_targets;
 
 float g_trigger_push_use_trigger_origin;
