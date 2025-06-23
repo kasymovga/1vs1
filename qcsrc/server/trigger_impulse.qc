@@ -2,6 +2,7 @@
 .float falloff;
 .float strength;
 
+float trigger_impulse_frametime;
 float (entity e) trigger_impulse_affected {
 	if not(e.iscreature)
 	if not(e.flags & FL_PROJECTILE)
@@ -11,39 +12,43 @@ float (entity e) trigger_impulse_affected {
 	if (e.deadflag && e.iscreature)
 		return FALSE;
 
-	return TRUE;
+	if (clienttype(other) == CLIENTTYPE_REAL ||
+			(other.owner && player_entity(other.owner) == other &&
+			clienttype(other.owner) == CLIENTTYPE_REAL)) { // real player or vehicle with real player
+		trigger_impulse_frametime = (physics_current_player ? physics_frametime : 0);
+	} else
+		trigger_impulse_frametime = frametime;
+
+	return trigger_impulse_frametime > 0;
 }
 
 // targeted (directional) mode
 void(void) trigger_impulse_touch1 {
-	if (frametime) return;
 	if not(trigger_impulse_affected(other))
 		return;
 
 	TRIGGER_EXACT_TOUCH;
-	other.velocity = other.velocity + normalize(self.enemy.origin - self.origin) * self.strength * physics_frametime;
+	other.velocity = other.velocity + normalize(self.enemy.origin - self.origin) * self.strength * trigger_impulse_frametime;
 	other.flags &= ~FL_ONGROUND;
 }
 
 // Directionless (accelerator/decelerator) mode
 void(void) trigger_impulse_touch2 {
-	if (frametime) return;
 	if not(trigger_impulse_affected(other))
 		return;
 
 	TRIGGER_EXACT_TOUCH;
 	// div0: ticrate independent, 1 = identity (not 20)
-	other.velocity = other.velocity * pow(self.strength, physics_frametime);
+	other.velocity = other.velocity * pow(self.strength, trigger_impulse_frametime);
 }
 
 // Spherical (gravity/repulsor) mode
 void(void) trigger_impulse_touch3 {
-	if (frametime) return;
 	float str;
-	vector o = ENTITY_CENTER(other);
 	if not(trigger_impulse_affected(other))
 		return;
 
+	vector o = ENTITY_CENTER(other);
 	TRIGGER_EXACT_TOUCH;
 	setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
 	str = min(self.radius, vlen(self.origin - o));
@@ -54,7 +59,7 @@ void(void) trigger_impulse_touch3 {
 	else
 		str = self.strength;
 
-	other.velocity = other.velocity + normalize(o - self.origin) * str * physics_frametime;
+	other.velocity = other.velocity + normalize(o - self.origin) * str * trigger_impulse_frametime;
 }
 
 float(entity to, float sf) trigger_impulse_prediction_send {

@@ -158,10 +158,10 @@ void(void) physics_triggers_predict {
 }
 
 void(void) physics_frame_end_hook {
-	physics_frametime = frametime;
 	if not(physics_triggers_predicted)
 		physics_triggers_predict();
 
+	physics_frametime = frametime;
 	physics_triggers_predicted = FALSE;
 	physics_teleport_time -= frametime;
 	physics_velocity_frame_end = physics_velocity;

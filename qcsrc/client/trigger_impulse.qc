@@ -52,9 +52,9 @@ void(entity e) trigger_impulse_predict {
 	if not(trace_ent == e) return;
 	//Must be synced with similar code in server physics code
 	if (e.cnt == 1) { //directional
-		self.velocity = physics_velocity = physics_velocity + normalize(e.iorigin1 - e.origin) * e.iorigin2_x * physics_frametime;
+		self.velocity = physics_velocity = physics_velocity + normalize(e.iorigin1 - e.origin) * e.iorigin2_x * frametime;
 	} else if (e.cnt == 2) {
-		self.velocity = physics_velocity = physics_velocity * pow(e.iorigin2_x, physics_frametime);
+		self.velocity = physics_velocity = physics_velocity * pow(e.iorigin2_x, frametime);
 	} else {
 		vector o = self.origin + (self.mins + self.maxs) * .5;
 		//setsize(e, '-1 -1 -1' * e.radius,'1 1 1' * e.radius);
@@ -66,6 +66,6 @@ void(entity e) trigger_impulse_predict {
 		else
 			str = e.iorigin2_x;
 
-		self.velocity = physics_velocity = physics_velocity + normalize(o - e.origin) * str * physics_frametime;
+		self.velocity = physics_velocity = physics_velocity + normalize(o - e.origin) * str * frametime;
 	}
 }
