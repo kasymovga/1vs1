@@ -50,7 +50,11 @@ void(void) particles_point_draw {
 	vector o;
 	o = self.origin;
 	sz = self.maxs - self.mins;
-	n = BGMScript(self);
+	if (self.bgmscript != "") {
+		n = BGMScript(self);
+	} else {
+		n = 1;
+	}
 	if (self.absolute == 2) {
 		if(n >= 0)
 			n = self.just_toggled ? self.impulse : 0;

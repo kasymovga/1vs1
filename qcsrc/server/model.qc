@@ -153,7 +153,8 @@ float(entity to, float sf) model_client_send {
 	if (sf & 8) {
 		net_write_short(MSG_ENTITY, self.modelindex);
 		net_write_byte(MSG_ENTITY, self.solid);
-		net_write_byte(MSG_ENTITY, floor(self.scale * 16));
+		net_write_coord(MSG_ENTITY, self.alpha);
+		net_write_coord(MSG_ENTITY, self.scale);
 		if (sf & 0x20) {
 			net_write_coord(MSG_ENTITY, self.mins_x);
 			net_write_coord(MSG_ENTITY, self.mins_y);

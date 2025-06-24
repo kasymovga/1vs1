@@ -169,10 +169,6 @@ float BGMScript(entity e)
 {
 	float t;
 	float amp, vel;
-
-	if(e.bgmscript == "")
-		return 1;
-	
 	if(cvar("bgmvolume") <= 0)
 		return -1;
 

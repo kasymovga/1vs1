@@ -12,17 +12,18 @@ void(void) model_draw {
 		fld = origin;
 	
 	save = self.fld;
-	f = BGMScript(self);
-	if (f >= 0) {
-		if (self.lip < 0) // < 0: alpha goes from 1 to 1-|lip| when toggled (toggling subtracts lip)
-			self.alpha = 1 + self.lip * f;
-		else // > 0: alpha goes from 1-|lip| to 1 when toggled (toggling adds lip)
-			self.alpha = 1 - self.lip * (1 - f);
+	if (self.bgmscript != "") {
+		f = BGMScript(self);
+		if (f >= 0) {
+			if (self.lip < 0) // < 0: alpha goes from 1 to 1-|lip| when toggled (toggling subtracts lip)
+				self.alpha = self.cnt + self.lip * f;
+			else // > 0: alpha goes from 1-|lip| to 1 when toggled (toggling adds lip)
+				self.alpha = self.cnt - self.lip * (1 - f);
 
-		self.fld = self.fld + self.movedir * f;
-	} else
-		self.alpha = 1;
-
+			self.fld = self.fld + self.movedir * f;
+		} else
+			self.alpha = self.cnt;
+	}
 	if (self.alpha >= EFFECT_ALPHA_MIN_VISIBLE)
 		R_AddEntity(self);
 
@@ -63,7 +64,8 @@ void(float ignore) model_read {
 	if (f & 8) {
 		self.modelindex = net_read_short();
 		self.solid = net_read_byte();
-		self.scale = net_read_byte() / 16.0;
+		self.alpha = self.cnt = net_read_coord();
+		self.scale = net_read_coord();
 		if (f & 0x20) {
 			self.mins_x = net_read_coord();
 			self.mins_y = net_read_coord();
@@ -74,15 +76,13 @@ void(float ignore) model_read {
 		} else
 			self.mins = self.maxs = '0 0 0';
 
-		if (self.bgmscript)
-			strunzone(self.bgmscript);
-
+		str_unzone_ifneeded(self.bgmscript);
 		self.bgmscript = net_read_string();
 		if (substring(self.bgmscript, 0, 1) == "<") {
-			self.bgmscript = strzone(substring(self.bgmscript, 1, -1));
+			self.bgmscript = str_zone_ifneeded(substring(self.bgmscript, 1, -1));
 			self.bgmscriptangular = 1;
 		} else {
-			self.bgmscript = strzone(self.bgmscript);
+			self.bgmscript = str_zone_ifneeded(self.bgmscript);
 			self.bgmscriptangular = 0;
 		}
 		if (self.bgmscript != "") {
