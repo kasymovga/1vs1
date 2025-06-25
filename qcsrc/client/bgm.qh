@@ -6,5 +6,5 @@
 
 .float just_toggled;
 
-void BGMScript_InitEntity(entity e);
-float BGMScript(entity e);
+void(entity e) bgm_script_init_entity;
+float(entity e) bgm_script;

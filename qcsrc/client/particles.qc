@@ -51,7 +51,7 @@ void(void) particles_point_draw {
 	o = self.origin;
 	sz = self.maxs - self.mins;
 	if (self.bgmscript != "") {
-		n = BGMScript(self);
+		n = bgm_script(self);
 	} else {
 		n = 1;
 	}
@@ -165,7 +165,7 @@ void(float ignore) particles_point_read {
 			self.bgmscriptsustain = net_read_byte() / 255.0;
 			self.bgmscriptrelease = net_read_byte() / 64.0;
 		}
-		BGMScript_InitEntity(self);
+		bgm_script_init_entity(self);
 	}
 	if (f & 2) {
 		self.absolute = (self.impulse >= 0);

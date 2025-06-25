@@ -13,7 +13,7 @@ void(void) model_draw {
 	
 	save = self.fld;
 	if (self.bgmscript != "") {
-		f = BGMScript(self);
+		f = bgm_script(self);
 		if (f >= 0) {
 			if (self.lip < 0) // < 0: alpha goes from 1 to 1-|lip| when toggled (toggling subtracts lip)
 				self.alpha = self.cnt + self.lip * f;
@@ -95,7 +95,7 @@ void(float ignore) model_read {
 			self.movedir_z = net_read_coord();
 			self.lip = net_read_byte() / 255.0;
 		}
-		BGMScript_InitEntity(self);
+		bgm_script_init_entity(self);
 	}
 	interpolate_note();
 	setorigin(self, self.origin);
