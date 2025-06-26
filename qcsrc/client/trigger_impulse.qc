@@ -38,8 +38,8 @@ void(float isnew) trigger_impulse_prediction_read {
 void(entity e) trigger_impulse_predict {
 	float ss, vel;
 	if (e.classname != "trigger_impulse_prediction") {
-		if (trigger_push_predict_next)
-			trigger_push_predict_next(e);
+		if (trigger_impulse_predict_next)
+			trigger_impulse_predict_next(e);
 
 		return;
 	}
