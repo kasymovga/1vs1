@@ -31,9 +31,7 @@ void(void) model_draw {
 }
 
 void(void) model_remove {
-	if (self.bgmscript)
-		strunzone(self.bgmscript);
-
+	str_unzone_ifneeded(self.bgmscript);
 	self.bgmscript = NULL;
 }
 
