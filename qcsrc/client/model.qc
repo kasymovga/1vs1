@@ -24,7 +24,7 @@ void(void) model_draw {
 		} else
 			self.alpha = self.cnt;
 	}
-	if (self.alpha >= EFFECT_ALPHA_MIN_VISIBLE)
+	if (!self.alpha || self.alpha >= EFFECT_ALPHA_MIN_VISIBLE)
 		R_AddEntity(self);
 
 	self.fld = save;
