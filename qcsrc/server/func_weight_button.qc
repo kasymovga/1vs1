@@ -13,7 +13,7 @@ void(void) func_weight_button_unpressed {
 	activator = self.pusher;
 	trigger_use_targets();
 	activator = oldactivator;
-	func_calc_move(self.pos1, self.speed, NULL);
+	func_calc_move(self.pos1, self.angles, self.speed, NULL);
 }
 
 void(void) func_weight_button_wait {
@@ -66,7 +66,7 @@ void(void) func_weight_button_touch {
 	//if not(other.flags & FL_ONGROUND_OR_SLICK) return;
 	if not(other.movetype == MOVETYPE_TOSS || other.movetype == MOVETYPE_QCWALK || other.movetype == MOVETYPE_WALK) return;
 	self.pusher = other;
-	func_calc_move(self.pos2, self.speed, func_weight_button_pressed);
+	func_calc_move(self.pos2, self.angles, self.speed, func_weight_button_pressed);
 }
 
 void(void) spawnfunc_func_weight_button {

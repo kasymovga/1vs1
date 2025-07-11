@@ -439,82 +439,72 @@ self.origin traveling at speed
 ===============
 */
 void(void) func_calc_move_done {
-	// After moving, set origin to exact final destination
-	vector d = self.finaldest - self.origin;
-	vector o = ENTITY_CENTER(self);
-	entity e = findradius(o, vlen(self.absmax - self.absmin) * 0.5);
-	for (; e; e = e.chain) {
-		if (e.groundentity == self) {
-			setorigin(e, e.origin + d);
-			entity_move_out_of_solid_with_type(e, TRACE_MOVE_NOMONSTERS);
+	if (self.velocity != '0 0 0') {
+		// After moving, set origin to exact final destination
+		vector d = self.finaldest - self.origin;
+		vector o = ENTITY_CENTER(self);
+		entity e = findradius(o, vlen(self.absmax - self.absmin) * 0.5);
+		for (; e; e = e.chain) {
+			if (e.groundentity == self) {
+				setorigin(e, e.origin + d);
+				entity_move_out_of_solid_with_type(e, TRACE_MOVE_NOMONSTERS);
+			}
 		}
+		setorigin(self, self.finaldest);
+		self.velocity = '0 0 0';
 	}
-	setorigin (self, self.finaldest);
-	self.velocity = '0 0 0';
+	if (self.avelocity != '0 0 0') {
+		self.angles = self.v_angle;
+		self.avelocity = '0 0 0';
+		setorigin(self, self.origin);
+		self.v_angle = '0 0 0';
+		self.nextthink = -1;
+	}
 	self.nextthink = -1;
 	if (self.think1)
-		self.think1 ();
+		self.think1();
 }
 
-void(vector tdest, float tspeed, void() func) func_calc_move {
+void(vector tdest, vector adest, float tspeed, void() func) func_calc_move {
 	vector delta;
 	float traveltime;
-	if (!tspeed) {
+	if (tspeed <= 0) {
 		entity_abort("No speed is defined!");
 		return;
 	}
 	self.think1 = func;
 	self.finaldest = tdest;
+	self.v_angle = adest;
 	self.think = func_calc_move_done;
-	if (tdest == self.origin) {
-		self.velocity = '0 0 0';
-		self.nextthink = self.ltime + sys_ticrate;
-		return;
+	if (adest != self.angles) {
+		self.angles_x -= 360 * floor((self.angles_x - adest_x) / 360 + 0.5);
+		self.angles_y -= 360 * floor((self.angles_y - adest_y) / 360 + 0.5);
+		self.angles_z -= 360 * floor((self.angles_z - adest_z) / 360 + 0.5);
 	}
-	delta = tdest - self.origin;
-	traveltime = vlen (delta) / tspeed;
+	if (tdest == self.origin) {
+		if (self.angles == adest) {
+			self.velocity = '0 0 0';
+			self.avelocity = '0 0 0';
+			self.nextthink = self.ltime + sys_ticrate;
+			return;
+		} else {
+			delta = adest - self.angles;
+			traveltime = vlen(delta) / tspeed;
+			self.velocity = '0 0 0';
+			self.avelocity = (adest - self.angles) * (1 / traveltime);
+		}
+	} else {
+		delta = tdest - self.origin;
+		traveltime = vlen(delta) / tspeed;
+		self.velocity = delta * (1 / traveltime); // QuakeC doesn't allow vector/float division
+		self.avelocity = (adest - self.angles) * (1 / traveltime);
+	}
 	if (traveltime < sys_ticrate) {
 		self.velocity = '0 0 0';
+		self.avelocity = '0 0 0';
 		self.nextthink = self.ltime  + sys_ticrate;
 		return;
 	}
-	self.velocity = delta * (1/traveltime); // QuakeC doesn't allow vector/float division
-	self.nextthink = self.ltime + traveltime;
-}
-
-void(void) func_calc_angle_move_done {
-	// After rotating, set angle to exact final angle
-	self.angles = self.finalangle;
-	self.avelocity = '0 0 0';
-	self.nextthink = -1;
-	if (self.think1)
-		self.think1 ();
-}
-
-// FIXME: I fixed this function only for rotation around the main axes
-void(vector destangle, float tspeed, void() func) func_calc_angle_move {
-	vector delta;
-	float traveltime;
-
-	if (!tspeed) {
-		entity_abort("No speed is defined!");
-		return;
-	}
-	// take the shortest distance for the angles
-	self.angles_x -= 360 * floor((self.angles_x - destangle_x) / 360 + 0.5);
-	self.angles_y -= 360 * floor((self.angles_y - destangle_y) / 360 + 0.5);
-	self.angles_z -= 360 * floor((self.angles_z - destangle_z) / 360 + 0.5);
-	delta = destangle - self.angles;
-	traveltime = vlen (delta) / tspeed;
-	self.think1 = func;
-	self.finalangle = destangle;
-	self.think = func_calc_angle_move_done;
-	if (traveltime < sys_ticrate) {
-		self.avelocity = '0 0 0';
-		self.nextthink = self.ltime + sys_ticrate;
-		return;
-	}
-	self.avelocity = delta * (1 / traveltime);
 	self.nextthink = self.ltime + traveltime;
 }
 
@@ -572,13 +562,13 @@ void(void) func_plat_hit_bottom {
 void(void) func_plat_go_down {
 	sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 3;
-	func_calc_move (self.pos2, self.speed, func_plat_hit_bottom);
+	func_calc_move(self.pos2, self.angles, self.speed, func_plat_hit_bottom);
 }
 
 void(void) func_plat_go_up {
 	sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 4;
-	func_calc_move (self.pos1, self.speed, func_plat_hit_top);
+	func_calc_move(self.pos1, self.angles, self.speed, func_plat_hit_top);
 }
 
 void(void) func_plat_center_touch {
@@ -758,11 +748,11 @@ void(void) func_train_next {
 	}
 	if (self.wait < 0) {
 		if (self.targetname != "" && !sv_gameplayfix_trainnowait)
-			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, stdproc_nothing);
+			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), targ.angles, _speed, stdproc_nothing);
 		else
-			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, func_train_next);
+			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), targ.angles, _speed, func_train_next);
 	} else
-		func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, func_train_wait);
+		func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), targ.angles, _speed, func_train_wait);
 
 	if (self.noise != "")
 		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
@@ -777,6 +767,7 @@ void(void) func_train_find {
 	}
 	self.target = targ.target;
 	setorigin(self, targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins));
+	self.angles = targ.angles;
 	if (self.target == "") {
 		print("func_train_find: no next target\n");
 		return;
@@ -805,7 +796,7 @@ void(void) spawnfunc_func_train {
 	if (self.noise != "")
 		precache_sound(self.noise);
 
-	if (!self.target) {
+	if (self.target == "") {
 		entity_abort("func_train without a target");
 		return;
 	}
@@ -966,7 +957,7 @@ void(void) func_button_done {
 
 void(void) func_button_return {
 	self.state = FUNC_STATE_DOWN;
-	func_calc_move (self.pos1, self.speed, func_button_done);
+	func_calc_move(self.pos1, self.angles, self.speed, func_button_done);
 	self.frame = 0; // use normal textures
 	if (self.health)
 		self.takedamage = DAMAGE_YES; // can be shot again
@@ -991,7 +982,7 @@ void(void) func_button_fire {
 		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 	self.state = FUNC_STATE_UP;
-	func_calc_move (self.pos2, self.speed, func_button_wait);
+	func_calc_move(self.pos2, self.angles, self.speed, func_button_wait);
 }
 
 void(void) func_button_reset {
@@ -1180,7 +1171,7 @@ void(void) func_door_go_down {
 		self.health = self.max_health;
 	}
 	self.state = FUNC_STATE_DOWN;
-	func_calc_move (self.pos1, self.speed, func_door_hit_bottom);
+	func_calc_move(self.pos1, self.angles, self.speed, func_door_hit_bottom);
 }
 
 void(void) func_door_go_up {
@@ -1195,7 +1186,7 @@ void(void) func_door_go_up {
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
 
 	self.state = FUNC_STATE_UP;
-	func_calc_move (self.pos2, self.speed, func_door_hit_top);
+	func_calc_move(self.pos2, self.angles, self.speed, func_door_hit_top);
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
@@ -1362,7 +1353,7 @@ void(void) func_door_rotating_go_down {
 		self.health = self.max_health;
 	}
 	self.state = FUNC_STATE_DOWN;
-	func_calc_angle_move(self.pos1, self.speed, func_door_rotating_hit_bottom);
+	func_calc_move(self.origin, self.pos1, self.speed, func_door_rotating_hit_bottom);
 }
 
 void(void) func_door_rotating_go_up {
@@ -1377,7 +1368,7 @@ void(void) func_door_rotating_go_up {
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
 
 	self.state = FUNC_STATE_UP;
-	func_calc_angle_move(self.pos2, self.speed, func_door_rotating_hit_top);
+	func_calc_move(self.origin, self.pos2, self.speed, func_door_rotating_hit_top);
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
@@ -1690,9 +1681,10 @@ void(void) spawnfunc_func_door_rotating {
 	if (self.spawnflags & 8)
 		self.dmg = 10000;
 
-	if (self.dmg && (!self.message))
+	if (self.dmg && self.message == "")
 		self.message = "was squished";
-	if (self.dmg && (!self.message2))
+
+	if (self.dmg && self.message2 == "")
 		self.message2 = "was squished by";
 
 	if (self.sounds > 0) {
@@ -1781,7 +1773,7 @@ void(void) func_door_secret_use {
 		self.dest1 = self.origin + v_right * (self.t_width * temp);
 
 	self.dest2 = self.dest1 + v_forward * self.t_length;
-	func_calc_move(self.dest1, self.speed, func_door_secret_move1);
+	func_calc_move(self.dest1, self.angles, self.speed, func_door_secret_move1);
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
 }
@@ -1799,7 +1791,7 @@ void(void) func_door_secret_move2 {
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
 
-	func_calc_move(self.dest2, self.speed, func_door_secret_move3);
+	func_calc_move(self.dest2, self.angles, self.speed, func_door_secret_move3);
 }
 
 // Wait here until time to go back...
@@ -1818,7 +1810,7 @@ void(void) func_door_secret_move4 {
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
 
-	func_calc_move(self.dest1, self.speed, func_door_secret_move5);
+	func_calc_move(self.dest1, self.angles, self.speed, func_door_secret_move5);
 }
 
 // Wait 1 second...
@@ -1833,7 +1825,7 @@ void(void) func_door_secret_move6 {
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
 
-	func_calc_move(self.oldorigin, self.speed, func_door_secret_done);
+	func_calc_move(self.oldorigin, self.angles, self.speed, func_door_secret_done);
 }
 
 void(void) func_door_secret_done {
