@@ -1031,3 +1031,9 @@ msgstr "^3L'invisibilité a disparu"
 
 msgid "^3You are invisible"
 msgstr "^3Tu es invisible"
+
+msgid "Success!"
+msgstr "Succès !"
+
+msgid "Enter PIN-code:"
+msgstr "Entrez le code PIN :"

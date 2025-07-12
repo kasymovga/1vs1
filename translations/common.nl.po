@@ -1175,3 +1175,9 @@ msgstr "^3De onzichtbaarheid is verdwenen"
 
 msgid "^3You are invisible"
 msgstr "^3Je bent onzichtbaar"
+
+msgid "Success!"
+msgstr "Succes!"
+
+msgid "Enter PIN-code:"
+msgstr "Voer pincode in:"

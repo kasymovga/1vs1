@@ -89,7 +89,9 @@ void(void) pin_draw {
 	draw_string_center('0 1 0' * numpad_center_y * 0.15, _("Enter PIN-code:"), numpad_center * 0.05, '1 1 1', self.alpha, DRAWFLAG_NORMAL);
 	self.cnt -= frametime;
 	if (self.alpha >= 1)
-		draw_string_center('0 1 0' * numpad_center_y * 0.2, strcat(ftos(max(1, ceil(self.cnt))), " seconds left"), numpad_center * 0.025, '1 1 1', self.alpha, DRAWFLAG_NORMAL);
+		draw_string_center('0 1 0' * numpad_center_y * 0.2,
+				print_text_prepare("{1} seconds left", ftos(max(1, ceil(self.cnt))), "", ""),
+				numpad_center * 0.025, '1 1 1', self.alpha, DRAWFLAG_NORMAL);
 
 	draw_string_center('0 1 0' * numpad_center_y * 0.3, pin_code, numpad_center * 0.2, '1 1 1', self.alpha, DRAWFLAG_NORMAL);
 	if (self.alpha < 0.9)

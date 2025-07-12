@@ -1017,3 +1017,9 @@ msgstr "^3Невидимость выключена"
 
 msgid "^3You are invisible"
 msgstr "^3Вы невидимы"
+
+msgid "Success!"
+msgstr "Успешно!"
+
+msgid "Enter PIN-code:"
+msgstr "Введите PIN-код"

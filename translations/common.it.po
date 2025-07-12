@@ -1017,3 +1017,9 @@ msgstr "^3Invisibility has worn off"
 
 msgid "^3You are invisible"
 msgstr "^3You are invisible"
+
+msgid "Success!"
+msgstr "Success!"
+
+msgid "Enter PIN-code:"
+msgstr "Enter PIN-code"
