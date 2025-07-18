@@ -146,7 +146,7 @@ void(void) CSQC_Init {
 	s = strreplace("\"", "", s);
 	localcmd(strcat("\ncmd sysinfo ", s, "\n"));
 	if not(cvar("cl_movement")) {
-		localcmd("seta cl_movement 1\n"); //Some people disable it because their don't understand what is it. Fixing.
+		localcmd("seta cl_movement 1\n"); //Some people disable it because they don't understand what is it. Fixing.
 	}
 	precache_sound("misc/hit.wav");
 	mute_init();
@@ -154,6 +154,7 @@ void(void) CSQC_Init {
 	rm_skin_load(cvar_string("cl_rm_skin"));
 	translate_init();
 	score_init();
+	localcmd("cmd lsmaps2\n");
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
