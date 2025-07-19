@@ -70,7 +70,7 @@ string(string m) sysinfo_player_body_model_list_allowed_mod {
 		if (sm.owner == self)
 			return sm.model;
 	}
-	return m;
+	return sysinfo_player_body_model_list_allowed_mod_next(m);
 };
 
 float sysinfo_model_init_done;
