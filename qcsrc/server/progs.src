@@ -165,6 +165,7 @@ thirdview.qh
 pin.qh
 ability.qh
 soulmates.qh
+handover.qh
 sound.qc
 announce.qc
 marker.qc
@@ -412,3 +413,4 @@ print.qc
 soulmates.qc
 misc_terminal.qc
 pin.qc
+handover.qc
