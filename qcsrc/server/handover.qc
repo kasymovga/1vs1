@@ -25,7 +25,7 @@ void(void) handover_controller_think {
 		}
 		if (random_selection_chosen_ent) {
 			handover_player = random_selection_chosen_ent;
-			print_all(PRINT_INFO, "{1}^7 get special model", handover_player.netname, "", "");
+			print_all(PRINT_INFO, "{1}^7 got special model", handover_player.netname, "", "");
 			player_body_reset(handover_player);
 		}
 	}
