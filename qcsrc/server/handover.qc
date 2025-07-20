@@ -26,6 +26,7 @@ void(void) handover_controller_think {
 		if (random_selection_chosen_ent) {
 			handover_player = random_selection_chosen_ent;
 			print_all(PRINT_INFO, "{1}^7 get special model", handover_player.netname, "", "");
+			player_body_reset(handover_player);
 		}
 	}
 	self.nextthink = time + 1;
@@ -34,10 +35,14 @@ void(void) handover_controller_think {
 var float(entity attacker, entity targ, float f) handover_score_give_frag_mod_save;
 float(entity attacker, entity targ, float f) handover_score_give_frag_mod {
 	if (targ == handover_player)
+	if (attacker != targ)
 	if (attacker.classname == "player") {
-		print_all(PRINT_INFO, "{1}^7 steal special model from {2}", attacker.netname, handover_player.netname, "");
+		print_all(PRINT_INFO, "{1}^7 steal special model from {2}", attacker.netname, targ.netname, "");
 		handover_player = attacker;
-		handover_player.playermodel = g_handover_model;
+		print_to_spec(attacker, PRINT_CENTER, "^7You steal special model from {1}", targ.netname, "", "");
+		print_to_spec(targ, PRINT_CENTER, "^7{1}^7 steal special model from you", attacker.netname, "", "");
+		player_body_reset(attacker);
+		player_body_reset(targ);
 	}
 	return handover_score_give_frag_mod_save(attacker, targ, f);
 }
