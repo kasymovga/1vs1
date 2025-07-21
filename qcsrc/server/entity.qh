@@ -29,3 +29,4 @@ float entity_per_player_force;
 #define ENTITY_PER_PLAYER_FORCE() do { entity_per_player_force = TRUE; } while (0)
 float entity_per_player_entities;
 #define entity_abort builtin_objerror
+void(entity e, vector v) entity_angles_normalize;

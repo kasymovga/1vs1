@@ -477,9 +477,7 @@ void(vector tdest, vector adest, float tspeed, void() func) func_calc_move {
 	self.v_angle = adest;
 	self.think = func_calc_move_done;
 	if (adest != self.angles) {
-		self.angles_x -= 360 * floor((self.angles_x - adest_x) / 360 + 0.5);
-		self.angles_y -= 360 * floor((self.angles_y - adest_y) / 360 + 0.5);
-		self.angles_z -= 360 * floor((self.angles_z - adest_z) / 360 + 0.5);
+		entity_angles_normalize(self, adest);
 	}
 	if (tdest == self.origin) {
 		if (self.angles == adest) {

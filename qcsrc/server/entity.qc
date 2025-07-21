@@ -446,3 +446,9 @@ void(void) entity_spawn_post {
 		self = oldself;
 	}
 }
+
+void(entity e, vector v) entity_angles_normalize {
+	e.angles_x -= 360 * floor((e.angles_x - v_x) / 360 + 0.5);
+	e.angles_y -= 360 * floor((e.angles_y - v_y) / 360 + 0.5);
+	e.angles_z -= 360 * floor((e.angles_z - v_z) / 360 + 0.5);
+}
