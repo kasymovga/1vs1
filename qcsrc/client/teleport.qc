@@ -93,7 +93,7 @@ void(entity e) teleport_predict {
 
 		return;
 	}
-	if (!physics_is_player || (physics_deadflag && physics_deadflag != DEAD_FREEZE)) return;
+	if (!physics_is_player || (physics_deadflag && physics_deadflag != DEAD_FREEZE) || self.classname != "physics_player") return;
 	e.solid = SOLID_BSP;
 	ss = self.solid;
 	self.solid = SOLID_NOT;
