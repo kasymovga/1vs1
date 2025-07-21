@@ -603,12 +603,13 @@ void(void) vote_count {
 			++nocount;
 		} else if (player.vote_vote == 1) {
 			++yescount;
-		} else if (player.vote_vote == -2 || (time > vote_finished && player.classname == "spectator" && player.team < 0)) {
+		} else if (player.vote_vote == -2 ||
+				(time > vote_finished && player.classname != "player" && player.team < 0)) { //auto abstain for not voting spectator
 			++abstaincount;
 		}
 		++playercount;
 		//do the same for real players
-		if (player.classname == "player") {
+		if (player.classname == "player" || player.team > 0) {
 			if (player.vote_vote == -1) {
 				++realplayernocount;
 			} else if (player.vote_vote == 1) {
