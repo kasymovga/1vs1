@@ -45,6 +45,7 @@ void(entity e) trigger_push_predict {
 
 		return;
 	}
+	if (!physics_is_player || (physics_deadflag && physics_deadflag != DEAD_FREEZE)) return;
 	e.solid = SOLID_BSP;
 	ss = self.solid;
 	self.solid = SOLID_NOT;

@@ -43,6 +43,7 @@ void(entity e) trigger_impulse_predict {
 
 		return;
 	}
+	if (!physics_is_player || physics_deadflag) return;
 	e.solid = SOLID_BSP;
 	ss = self.solid;
 	self.solid = SOLID_NOT;
