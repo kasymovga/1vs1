@@ -23,6 +23,7 @@ float g_balance_hagar_secondary_radius;
 float g_balance_hagar_secondary_refire;
 float g_balance_hagar_secondary_speed;
 float g_balance_hagar_secondary_spread;
+float g_balance_hagar_secondary_sticked_lifetime;
 float g_balance_hagar_secondary_up;
 float g_balance_hagar_secondary;
 
@@ -41,12 +42,34 @@ void(void) weapon_hagar_touch2 {
 	}
 }
 
+void(void) weapon_hagar_sticked_think {
+	if (time > self.cnt) {
+		projectile_explode();
+		return;
+	} else {
+		entity e = findradius(self.origin, g_balance_hagar_secondary_radius / 2);
+		for (; e; e = e.chain) {
+			if (e != self)
+			if (e.takedamage)
+			if not(e.flags & FL_PROJECTILE)
+			if (e.solid != SOLID_CORPSE) {
+				projectile_explode();
+				return;
+			}
+		}
+	}
+	self.nextthink = time;
+}
+
 void(void) weapon_hagar_touch_stick {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
 		projectile_explode();
 	else {
 		projectile_stick(self, other, vectoangles(self.velocity));
+		self.nextthink = time;
+		self.think = weapon_hagar_sticked_think;
+		self.cnt = time + g_balance_hagar_secondary_sticked_lifetime;
 	}
 }
 
@@ -171,6 +194,7 @@ float(float req) weapon_hagar {
 		CVAR_CACHE(g_balance_hagar_secondary_refire);
 		CVAR_CACHE(g_balance_hagar_secondary_speed);
 		CVAR_CACHE(g_balance_hagar_secondary_spread);
+		CVAR_CACHE(g_balance_hagar_secondary_sticked_lifetime);
 		CVAR_CACHE(g_balance_hagar_secondary_up);
 		projectile_init(PROJECTILE_HAGAR);
 		if (cvar("g_balance_hagar_swap_buttons")) {

@@ -362,6 +362,7 @@ set g_balance_hagar_secondary_mode 1
 set g_balance_hagar_secondary_lifetime_min 0.5
 set g_balance_hagar_secondary_lifetime_rand 0
 set g_balance_hagar_secondary_refire 0.2
+set g_balance_hagar_secondary_sticked_lifetime 1
 set g_balance_hagar_secondary_ammo 2
 set g_balance_hagar_secondary_up 100
 set g_balance_hagar_swap_buttons 0
