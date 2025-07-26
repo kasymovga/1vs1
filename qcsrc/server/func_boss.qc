@@ -1,11 +1,50 @@
 void(string t) func_boss_controller_switch_target {
 	entity boss = self.enemy;
-	self.aiment = find(NULL, targetname, t);
+	self.aiment = NULL;
+	while ((self.aiment = find(self.aiment, targetname, t))) {
+		if (self.aiment.cnt == boss.cnt)
+			break;
+	}
 	if (self.aiment) {
 		entity_angles_normalize(boss, self.aiment.angles);
 		self.speed = (self.aiment.speed ? self.aiment.speed : boss.speed);
 	} else
 		self.speed = boss.speed;
+}
+
+void(entity shooter) func_boss_shooter_think {
+	entity e = NULL, pl;
+	if (shooter.attack_finished_single > time)
+		return;
+
+	if (shooter.enemy &&
+			(shooter.enemy.health < 1 || shooter.enemy.solid == SOLID_NOT || !shooter.enemy.takedamage || shooter.enemy.deadflag != DEAD_NO)) {
+		shooter.enemy = NULL;
+	}
+	if not(shooter.enemy) {
+		PLAYER_FOR_EACH(pl)
+		if ((e = player_entity(pl)))
+		if (e.health >= 1)
+		if (e.takedamage)
+		if not(e.flags & FL_NOTARGET)
+		if (e.deadflag == DEAD_NO) {
+			trace_line(shooter.origin, ENTITY_CENTER(e), TRACE_MOVE_NORMAL, shooter);
+			if (trace_ent == e)
+				break;
+		}
+		shooter.enemy = e;
+	}
+	if (shooter.enemy) {
+		trace_line(shooter.origin, ENTITY_CENTER(e), TRACE_MOVE_NORMAL, shooter);
+		if (trace_ent == e) {
+			shooter.angles = vectoangles((ENTITY_CENTER(shooter.enemy) - shooter.origin));
+			shooter.angles_x = -shooter.angles_x;
+		} else {
+			shooter.angles = shooter.owner.angles;
+		}
+	} else {
+		shooter.angles = shooter.owner.angles;
+	}
 }
 
 void(void) func_boss_controller_think {
@@ -40,8 +79,13 @@ void(void) func_boss_controller_think {
 		for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
 			if (e.classname != "func_boss_part" && e.classname != "func_boss_shooter") continue;
 			makevectors(boss.angles);
-			e.angles = boss.angles;
 			setorigin(e, boss.origin + v_forward * e.pos1_x - v_right * e.pos1_y + v_up * e.pos1_z);
+			if (e.classname == "func_boss_part")
+				e.angles = boss.angles;
+
+			if (e.classname == "func_boss_shooter") {
+				func_boss_shooter_think(e);
+			}
 		}
 	}
 }
@@ -58,6 +102,7 @@ void(void) func_boss_init_delayed {
 		for (e = find(NULL, target, self.targetname); e; e = find(e, target, self.targetname)) {
 			if (e.classname != "func_boss_part" && e.classname != "func_boss_shooter") continue;
 			e.owner = self;
+			e.netname = self.netname;
 			e.pos1 = e.origin - self.origin;
 		}
 	}
@@ -82,10 +127,16 @@ void(void) spawnfunc_func_boss {
 	self.use = func_boss_use;
 	self.state = 0;
 	if (self.speed <= 0) self.speed = 1000;
+	if (self.netname == "") self.netname = "Level Boss";
+}
+
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_boss_part_damage {
+	if not(self.owner.state) return;
 }
 
 void(void) spawnfunc_func_boss_part {
 	model_init(SOLID_BSP);
+	self.event_damage = func_boss_part_damage;
 }
 
 void(void) spawnfunc_func_boss_shooter {
