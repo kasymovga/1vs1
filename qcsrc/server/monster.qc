@@ -76,7 +76,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	vector v;
 	vector checkpoint;
 	float f;
-	entity p = world;
+	entity p = NULL;
 	if not(map_finished)
 	PLAYER_FOR_EACH(pl)
 	if ((e = player_entity(pl)))
@@ -94,7 +94,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 		f = vlen(e.origin - self.origin);
 		if (f <= heardistance) {
 			checkpoint = monster_checkpoint(e);
-			trace_line(self.origin + self.view_ofs, checkpoint, TRACE_MOVE_NOMONSTERS, world);
+			trace_line(self.origin + self.view_ofs, checkpoint, TRACE_MOVE_NOMONSTERS, NULL);
 			if (trace_fraction == 1) {
 				p = e;
 				break;
@@ -104,7 +104,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 			v = normalize(e.origin - self.origin);
 			makevectors(self.angles);
 			if (v * normalize(v_forward) >= fov_factor) {
-				trace_line(self.origin + self.view_ofs, checkpoint, TRACE_MOVE_NOMONSTERS, world);
+				trace_line(self.origin + self.view_ofs, checkpoint, TRACE_MOVE_NOMONSTERS, NULL);
 				if (trace_fraction == 1) {
 					distance = f;
 					p = e;
@@ -157,7 +157,7 @@ void monster_die() {
 	self.takedamage = FALSE;
 	if (self.spawnflags & MONSTER_SPAWN_SHIELDED) {
 		entity e;
-		e = world;
+		e = NULL;
 		while ((e = find(e, targetname, "monster_shield_destroy"))) {
 			if (e.owner == self) {
 				remove(e);
@@ -179,7 +179,7 @@ void monster_die() {
 		monster_drop_item(IT_CELLS, "models/items/a_cells.md3", "misc/itempickup.wav", "Cells", ammo_cells, self.ammo_cells);
 }
 
-void monster_corpse_event_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) monster_corpse_event_damage {
 	self.health = self.health - _damage;
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < -200)
@@ -561,9 +561,9 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 		t = self.target;
 
 	if (t != "") {
-		self.enemy = find(world, targetname, t);
+		self.enemy = find(NULL, targetname, t);
 		if (self.enemy.classname != "monster_walk_path" && self.enemy.classname != "path_corner")
-			self.enemy = world;
+			self.enemy = NULL;
 	}
 	if (self.enemy || self.owner.spawnflags & 2) {
 		self.think = walk;
@@ -588,9 +588,9 @@ float monster_walk_finished(void() idle, float dist) {
 	v_z = 0;
 	if (vlen(v) < dist) {
 		if (self.enemy.target != "")
-			self.enemy = find(world, targetname, self.enemy.target);
+			self.enemy = find(NULL, targetname, self.enemy.target);
 		else
-			self.enemy = world;
+			self.enemy = NULL;
 
 		if not(self.enemy) {
 			self.think = idle;
@@ -608,9 +608,9 @@ float monster_walk_finished(void() idle, float dist) {
 float monster_check_target(void() walk, void() guard) {
 	entity e = self.enemy;
 	if (e.health < 1 || e.deadflag != DEAD_NO || !e.takedamage) {
-		self.enemy = world;
+		self.enemy = NULL;
 		if (self.message2 != "")
-			self.enemy = find(world, targetname, self.message2);
+			self.enemy = find(NULL, targetname, self.message2);
 
 		if (self.enemy || self.owner.spawnflags & 2) {
 			self.think = walk;
@@ -645,7 +645,7 @@ void monster_init(void() init_func) {
 		monster_common_init_done = TRUE;
 	}
 	entity_move_out_of_solid(self);
-	if (find(world, classname, self.classname) != self)
+	if (find(NULL, classname, self.classname) != self)
 		return;
 
 	init_func();
@@ -691,7 +691,7 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 
 	if not(self.spawnflags & MONSTER_SPAWN_STAYSTILL) {
 		vector org = ENTITY_CENTER(self);
-		trace_line(org, org - '0 0 64', TRACE_MOVE_WORLDONLY, world);
+		trace_line(org, org - '0 0 64', TRACE_MOVE_WORLDONLY, NULL);
 		if not(trace_startsolid)
 		if (trace_fraction < 1)
 			waypoint_spawn(trace_endpos + '0 0 32', trace_endpos + '0 0 32', WAYPOINTFLAG_GENERATED);
@@ -749,7 +749,7 @@ void(void) monster_monsters_init_delayed {
 }
 
 void(void) monster_monsters_init {
-	entity_initialize(world, monster_monsters_init_delayed, INITPRIO_LAST);
+	entity_initialize(NULL, monster_monsters_init_delayed, INITPRIO_LAST);
 	precache_model("models/items/a_bullets.mdl");
 	precache_model("models/items/a_shells.md3");
 	precache_model("models/items/a_rockets.md3");
@@ -761,7 +761,7 @@ void monster_group_reset() {
 }
 
 void monster_group_counter_remove() {
-	self.owner.enemy = world;
+	self.owner.enemy = NULL;
 	entity e = NULL;
 	while ((e = find(e, target2, self.targetname))) {
 		e.target2 = "";
@@ -784,7 +784,7 @@ void monster_group_use() {
 	if (self.enemy)
 		return;
 
-	entity e = world;
+	entity e = NULL;
 	entity group = spawn();
 	group.targetname = strzone(strcat("_monster_group", ftos(self.cnt)));
 	while ((e = find(e, targetname, self.target))) {
@@ -821,7 +821,7 @@ void spawnfunc_monster_group() {
 vector monster_look_to_end;
 float(entity _enemy) monster_look_to {
 	monster_look_to_end = monster_checkpoint(self.enemy);
-	trace_line(self.origin + self.view_ofs, monster_look_to_end, TRACE_MOVE_WORLDONLY, world);
+	trace_line(self.origin + self.view_ofs, monster_look_to_end, TRACE_MOVE_WORLDONLY, NULL);
 	if (trace_fraction == 1)
 		return TRUE;
 
