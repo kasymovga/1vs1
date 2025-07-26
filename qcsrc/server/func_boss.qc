@@ -14,9 +14,17 @@ void(string t) func_boss_controller_switch_target {
 
 void(entity shooter) func_boss_shooter_think {
 	entity e = NULL, pl;
-	if (shooter.attack_finished_single > time)
-		return;
+	float traceok = FALSE;
+	if (shooter.attack_finished_single > time) {
+		if (shooter.enemy) {
+			shooter.angles = vectoangles(ENTITY_CENTER(shooter.enemy) - shooter.origin);
+			shooter.angles_y += 180; //WTF?
+			shooter.angles_x += 180; //WTF?
+		} else
+			shooter.angles = shooter.owner.angles;
 
+		return;
+	}
 	if (shooter.enemy &&
 			(shooter.enemy.health < 1 || shooter.enemy.solid == SOLID_NOT || !shooter.enemy.takedamage || shooter.enemy.deadflag != DEAD_NO)) {
 		shooter.enemy = NULL;
@@ -29,16 +37,33 @@ void(entity shooter) func_boss_shooter_think {
 		if not(e.flags & FL_NOTARGET)
 		if (e.deadflag == DEAD_NO) {
 			trace_line(shooter.origin, ENTITY_CENTER(e), TRACE_MOVE_NORMAL, shooter);
-			if (trace_ent == e)
+			if (trace_ent == e) {
+				traceok = TRUE;
 				break;
+			}
 		}
 		shooter.enemy = e;
 	}
 	if (shooter.enemy) {
-		trace_line(shooter.origin, ENTITY_CENTER(e), TRACE_MOVE_NORMAL, shooter);
-		if (trace_ent == e) {
-			shooter.angles = vectoangles((ENTITY_CENTER(shooter.enemy) - shooter.origin));
-			shooter.angles_x = -shooter.angles_x;
+		if not(traceok) {
+			trace_line(shooter.origin, ENTITY_CENTER(shooter.enemy), TRACE_MOVE_NORMAL, shooter);
+			traceok = (trace_ent == shooter.enemy);
+		}
+		if (traceok) {
+			shooter.angles = vectoangles(ENTITY_CENTER(shooter.enemy) - shooter.origin);
+			shooter.angles_y += 180; //WTF?
+			shooter.angles_x += 180; //WTF?
+			entity proj = projectile(TRUE, PROJECTILE_ROCKET, FALSE, shooter);
+			proj.realowner = proj;
+			proj.netname = proj.netname;
+			proj.classname = "monster_projectile";
+			projectile_setup(proj, shooter.origin, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, 100, 0, 200, 1000, 0, MOVETYPE_FLY);
+			proj.nextthink = time + 20;
+			proj.think = projectile_think2use;
+			proj.use = projectile_explode;
+			proj.touch = projectile_touch_explode;
+			proj.velocity = normalize(ENTITY_CENTER(shooter.enemy) - shooter.origin) * 1000;
+			shooter.attack_finished_single = time + 1;
 		} else {
 			shooter.angles = shooter.owner.angles;
 		}
