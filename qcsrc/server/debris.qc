@@ -9,6 +9,7 @@ float sv_breakable_debris;
 .float debrisfadetime;
 .float debrisdamageforcescale;
 .float debrisskin;
+#define DEBRIS_CLIPGROUP 2000
 
 void(void) debris_setup {
 	if not(self.debrismovetype) self.debrismovetype = MOVETYPE_BOUNCE;
@@ -90,15 +91,7 @@ void(string debrisname, vector force) debris_launch {
 		dbr.avelocity_x = random() * self.debrisavelocityjitter_x;
 		dbr.avelocity_y = random() * self.debrisavelocityjitter_y;
 		dbr.avelocity_z = random() * self.debrisavelocityjitter_z;
-		vector v;
-		if (dbr.avelocity_x || dbr.avelocity_y) {
-			v = (dbr.mins + dbr.maxs) * 0.5;
-		} else {
-			v_x = (dbr.mins_x + dbr.maxs_x) * 0.5;
-			v_y = (dbr.mins_y + dbr.maxs_y) * 0.5;
-			v_z = dbr.mins_z;
-		}
-		setsize(dbr, v, v); // needed for performance, until engine can deal better with it
+		dbr.clipgroup = DEBRIS_CLIPGROUP;
 		dbr.damageforcescale = self.debrisdamageforcescale;
 		dbr.reset = stdproc_remove;
 		entity_fade_setup(dbr, time + self.debristime + random_2() * self.debristimejitter, self.debrisfadetime);
