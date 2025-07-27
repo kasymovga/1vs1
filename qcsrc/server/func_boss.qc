@@ -1,3 +1,8 @@
+enum {
+	FUNC_BOSS_STATE_ACTIVE = 1,
+	FUNC_BOSS_STATE_TAKEDAMAGE = 2
+};
+
 void(string t) func_boss_controller_switch_target {
 	entity boss = self.enemy;
 	self.aiment = NULL;
@@ -13,7 +18,9 @@ void(string t) func_boss_controller_switch_target {
 }
 
 void(entity shooter, float _speed, float damage, float force, float radius, float projtype, float deathtype, float impact, float muzzleflash, float refire) func_boss_shooter_projectile_fire {
-	vector dir = normalize(ENTITY_CENTER(shooter.enemy) - shooter.origin);
+	vector torg = ENTITY_CENTER(shooter.enemy);
+	float expected_time = vlen(torg - shooter.origin) / _speed;
+	vector dir = normalize(torg - shooter.origin + shooter.enemy.velocity * expected_time + randomvec() * radius);
 	entity proj = projectile(TRUE, projtype, FALSE, shooter);
 	proj.realowner = proj;
 	proj.netname = shooter.netname;
@@ -88,7 +95,7 @@ void(entity shooter) func_boss_shooter_think {
 }
 
 void(entity e) func_boss_part_colorize {
-	if (e.cnt == e.owner.cnt)
+	if (e.cnt == e.owner.cnt && (e.owner.state & FUNC_BOSS_STATE_TAKEDAMAGE))
 		e.colormod = '1 1 1' + (sin(time * 3) + 1) * '.25 .25 0' + max(0, e.lastdamage - (time - 0.5)) * '1 0 0';
 	else
 		e.colormod = '0 0 0';
@@ -116,10 +123,15 @@ void(void) func_boss_controller_think {
 			setorigin(boss, self.aiment.origin);
 			boss.angles = self.aiment.angles;
 			boss.dmg = self.aiment.dmg;
+			boss.state |= FUNC_BOSS_STATE_TAKEDAMAGE;
+			if (self.aiment.noise)
+				sound(self, CHAN_WEAPON, self.aiment.noise, VOL_BASE, ATTN_MIN);
+
 			if (self.aiment.target != "")
 				func_boss_controller_switch_target(self.aiment.target);
-			else
+			else {
 				self.aiment = NULL;
+			}
 		} else {
 			setorigin(boss, boss.origin + step);
 			float f = stepl / dl;
@@ -198,7 +210,7 @@ void(void) func_boss_init_delayed {
 }
 
 void(void) func_boss_use {
-	self.state = 1;
+	self.state = FUNC_BOSS_STATE_ACTIVE;
 }
 
 void(void) spawnfunc_func_boss {
@@ -215,7 +227,7 @@ void(void) spawnfunc_func_boss {
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_boss_part_damage {
-	if not(self.owner.state) return;
+	if not(self.owner.state & FUNC_BOSS_STATE_TAKEDAMAGE) return;
 	if not(self.owner.cnt == self.cnt) return;
 	self.health -= _damage;
 	self.lastdamage = time;
