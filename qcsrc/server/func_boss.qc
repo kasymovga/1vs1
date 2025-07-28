@@ -111,7 +111,7 @@ void(entity shooter) func_boss_shooter_think {
 }
 
 void(entity e) func_boss_part_colorize {
-	if (e.health >= 1 && e.cnt == e.owner.cnt && (e.owner.state & FUNC_BOSS_STATE_TAKEDAMAGE) && !(e.spawnflags & 1)) {
+	if (e.health > 0 && e.cnt == e.owner.cnt && (e.owner.state & FUNC_BOSS_STATE_TAKEDAMAGE) && !(e.spawnflags & 1)) {
 		e.takedamage = DAMAGE_YES;
 		e.colormod = '1 1 1' + (sin(time * 3) + 1) * '.25 .25 0' + max(0, e.lastdamage - (time - 0.5)) * '1 0 0';
 	} else {
@@ -244,6 +244,11 @@ void(void) func_boss_init_delayed {
 
 void(void) func_boss_use {
 	self.state = FUNC_BOSS_STATE_ACTIVE;
+	entity e;
+	for (e = find(NULL, target, self.targetname); e; e = find(e, target, self.targetname)) {
+		if (e.classname != "func_boss_part") continue;
+		if (e.health) e.health /= plugin_monster_quant();
+	}
 }
 
 void(void) spawnfunc_func_boss {
