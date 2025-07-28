@@ -1,7 +1,23 @@
 enum {
 	FUNC_BOSS_STATE_ACTIVE = 1,
-	FUNC_BOSS_STATE_TAKEDAMAGE = 2
+	FUNC_BOSS_STATE_TAKEDAMAGE = 2,
+	FUNC_BOSS_STATE_DEAD = 4
 };
+
+void(entity e) func_boss_volume_explode {
+	float c = ((e.maxs_x - e.mins_x) / 200 + 1) *
+			((e.maxs_y - e.mins_y) / 200 + 1) *
+			((e.maxs_z - e.mins_z) / 200 + 1);
+	float i;
+	makevectors(e.angles);
+	vector v;
+	for (i = 0; i < c; i++) {
+		v = e.origin + v_forward * (e.mins_x + random() * (e.maxs_x - e.mins_x))
+				- v_right * (e.mins_y + random() * (e.maxs_y - e.mins_y))
+				+ v_up * (e.mins_z + random() * (e.maxs_z - e.mins_z));
+		pointparticles(particleeffectnum("rocket_explode"), v, '0 0 0', 1);
+	}
+}
 
 void(string t) func_boss_controller_switch_target {
 	entity boss = self.enemy;
@@ -95,17 +111,20 @@ void(entity shooter) func_boss_shooter_think {
 }
 
 void(entity e) func_boss_part_colorize {
-	if (e.cnt == e.owner.cnt && (e.owner.state & FUNC_BOSS_STATE_TAKEDAMAGE))
+	if (e.health >= 1 && e.cnt == e.owner.cnt && (e.owner.state & FUNC_BOSS_STATE_TAKEDAMAGE) && !(e.spawnflags & 1)) {
+		e.takedamage = DAMAGE_YES;
 		e.colormod = '1 1 1' + (sin(time * 3) + 1) * '.25 .25 0' + max(0, e.lastdamage - (time - 0.5)) * '1 0 0';
-	else
+	} else {
+		e.takedamage = DAMAGE_NO;
 		e.colormod = '0 0 0';
+	}
 }
 
 void(void) func_boss_controller_think {
 	entity e;
 	self.nextthink = time;
 	entity boss = self.enemy;
-	if not(boss.state)
+	if (!boss.state || (boss.state & FUNC_BOSS_STATE_DEAD))
 		return;
 
 	if not(self.aiment) {
@@ -123,14 +142,27 @@ void(void) func_boss_controller_think {
 			setorigin(boss, self.aiment.origin);
 			boss.angles = self.aiment.angles;
 			boss.dmg = self.aiment.dmg;
-			boss.state |= FUNC_BOSS_STATE_TAKEDAMAGE;
-			if (self.aiment.noise)
-				sound(self, CHAN_WEAPON, self.aiment.noise, VOL_BASE, ATTN_MIN);
-
+			if not(boss.state & FUNC_BOSS_STATE_TAKEDAMAGE) {
+				boss.state |= FUNC_BOSS_STATE_TAKEDAMAGE;
+			}
 			if (self.aiment.target != "")
 				func_boss_controller_switch_target(self.aiment.target);
 			else {
 				self.aiment = NULL;
+				func_boss_volume_explode(boss);
+				sound(boss, CHAN_WEAPON, boss.noise, VOL_BASE, ATTN_MIN);
+				entity oldself = self;
+				self = boss;
+				debris_throw('0 0 0');
+				self = oldself;
+				boss.state |= FUNC_BOSS_STATE_DEAD;
+				boss.effects |= EFFECT_NODRAW;
+				boss.solid = SOLID_NOT;
+				for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
+					if (e.classname == "func_boss_part" && (e.spawnflags & 1)) {
+						e.effects &= ~EFFECT_NODRAW;
+					}
+				}
 			}
 		} else {
 			setorigin(boss, boss.origin + step);
@@ -163,13 +195,14 @@ void(entity boss) func_boss_check_parts {
 	}
 	for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
 		if (e.classname == "func_boss_shooter" && e.cnt == boss.cnt) {
-			e.alpha = -1;
+			e.effects |= EFFECT_NODRAW;
 			e.solid = SOLID_NOT;
 			continue;
 		}
 	}
 	//boss switched to next phase
 	boss.cnt++;
+	boss.state &= ~FUNC_BOSS_STATE_TAKEDAMAGE;
 	boss.dmg = FALSE;
 	entity oldself = self;
 	self = boss.enemy;
@@ -224,6 +257,14 @@ void(void) spawnfunc_func_boss {
 	self.state = 0;
 	if (self.speed <= 0) self.speed = 1000;
 	if (self.netname == "") self.netname = "Level Boss";
+	if (self.noise == "")
+		self.noise = "weapons/rocket_impact.wav";
+
+	precache_sound(self.noise);
+	if (self.debris == "")
+		self.debris = "models/onslaught/gen_gib1.md3 models/onslaught/gen_gib2.md3 models/onslaught/gen_gib3.md3 models/onslaught/gen_gib1.md3 models/onslaught/gen_gib2.md3 models/onslaught/gen_gib3.md3 models/onslaught/gen_gib1.md3 models/onslaught/gen_gib2.md3 models/onslaught/gen_gib3.md3";
+
+	debris_init();
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_boss_part_damage {
@@ -232,11 +273,14 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	self.health -= _damage;
 	self.lastdamage = time;
 	if (self.health <= 0) {
-		self.alpha = -1;
+		self.effects |= EFFECT_NODRAW;
 		self.solid = SOLID_NOT;
 		self.takedamage = FALSE;
 		self.event_damage = NULL;
+		func_boss_volume_explode(self);
 		func_boss_check_parts(self.owner);
+		debris_throw('0 0 0');
+		sound(self, CHAN_WEAPON, self.noise, VOL_BASE, ATTN_MIN);
 	}
 }
 
@@ -251,12 +295,23 @@ void(void) func_boss_part_init_delayed {
 void(void) spawnfunc_func_boss_part {
 	model_init(SOLID_BSP);
 	self.event_damage = func_boss_part_damage;
-	self.takedamage = TRUE;
 	if (self.target == "") {
 		entity_abort("missed target property");
 		return;
 	}
+	if (self.noise == "")
+		self.noise = "weapons/rocket_impact.wav";
+
+	precache_sound(self.noise);
+	if (self.debris == "")
+		self.debris = "models/onslaught/gen_gib1.md3 models/onslaught/gen_gib2.md3 models/onslaught/gen_gib3.md3";
+
+	debris_init();
 	entity_initialize(self, func_boss_part_init_delayed, INITPRIO_LAST);
+	if (self.spawnflags & 1) {
+		self.effects |= EFFECT_NODRAW;
+		self.solid = SOLID_NOT;
+	}
 }
 
 void(void) spawnfunc_func_boss_shooter {
