@@ -184,7 +184,7 @@ void(void) func_boss_controller_think {
 	}
 }
 
-void(entity boss) func_boss_check_parts {
+void(entity boss, entity attacker) func_boss_check_parts {
 	entity e;
 	if (boss.targetname != "") {
 		for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
@@ -219,7 +219,10 @@ void(entity boss) func_boss_check_parts {
 			if (e.use) {
 				oldself = self;
 				self = e;
+				entity oldactivator = activator;
+				activator = attacker;
 				self.use();
+				activator = oldactivator;
 				self = oldself;
 			}
 		}
@@ -283,7 +286,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.takedamage = FALSE;
 		self.event_damage = NULL;
 		func_boss_volume_explode(self);
-		func_boss_check_parts(self.owner);
+		func_boss_check_parts(self.owner, attacker);
 		debris_throw('0 0 0');
 		sound(self, CHAN_WEAPON, self.noise, VOL_BASE, ATTN_MIN);
 	}
