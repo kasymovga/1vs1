@@ -52,7 +52,7 @@ void(entity shooter, float _speed, float damage, float force, float radius, floa
 }
 
 void(entity shooter) func_boss_shooter_think {
-	entity e = NULL, pl;
+	entity pl;
 	float traceok = FALSE;
 	if (shooter.attack_finished_single > time || shooter.cnt != shooter.owner.cnt) {
 		if (shooter.enemy) {
@@ -68,28 +68,31 @@ void(entity shooter) func_boss_shooter_think {
 			(shooter.enemy.health < 1 || shooter.enemy.solid == SOLID_NOT || !shooter.enemy.takedamage || shooter.enemy.deadflag != DEAD_NO)) {
 		shooter.enemy = NULL;
 	}
+	entity ple;
 	if not(shooter.enemy) {
 		PLAYER_FOR_EACH(pl)
-		if ((e = player_entity(pl)))
-		if (e.health >= 1)
-		if (e.takedamage)
-		if not(e.flags & FL_NOTARGET)
-		if (e.deadflag == DEAD_NO) {
-			trace_line(shooter.origin, ENTITY_CENTER(e), TRACE_MOVE_NORMAL, shooter);
-			if (trace_ent == e) {
+		if (pl.health >= 1)
+		if (pl.takedamage)
+		if not(pl.flags & FL_NOTARGET)
+		if (pl.deadflag == DEAD_NO) {
+			ple = player_entity(pl);
+			trace_line(shooter.origin, ENTITY_CENTER(ple), TRACE_MOVE_NORMAL, shooter);
+			if (trace_ent == ple) {
 				traceok = TRUE;
 				break;
 			}
 		}
-		shooter.enemy = e;
+		shooter.enemy = pl;
 	}
 	if (shooter.enemy) {
+		ple = player_entity(shooter.enemy);
+		vector plo = ENTITY_CENTER(ple);
 		if not(traceok) {
-			trace_line(shooter.origin, ENTITY_CENTER(shooter.enemy), TRACE_MOVE_NORMAL, shooter);
-			traceok = (trace_ent == shooter.enemy);
+			trace_line(shooter.origin, plo, TRACE_MOVE_NORMAL, shooter);
+			traceok = (trace_ent == ple);
 		}
 		if (traceok) {
-			shooter.angles = vectoangles(ENTITY_CENTER(shooter.enemy) - shooter.origin);
+			shooter.angles = vectoangles(plo - shooter.origin);
 			shooter.angles_y += 180; //WTF?
 			shooter.angles_x += 180; //WTF?
 			if (shooter.owner.dmg) {
