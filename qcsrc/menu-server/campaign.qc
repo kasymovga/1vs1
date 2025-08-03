@@ -85,6 +85,7 @@ float(string name) campaign_file_load {
 		campaign_entry("single", "rexsp03_snowbase", 0, 1, 0, "", "Demo Level 3", "");
 		campaign_entry("single", "rexsp04_deepspace", 0, 1, 0, "", "Demo Level 4", "");
 		campaign_entry("single", "rexsp05_brokenplace", 0, 1, 0, "", "Demo Level 5", "");
+		campaign_entry("single", "rexsp06_ruines", 0, 1, 0, "", "Demo Level 6", "");
 	}
 	return campaign_entries;
 }
