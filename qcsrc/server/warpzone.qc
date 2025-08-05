@@ -183,8 +183,6 @@ float(void) warpzone_shadow_customizeentity {
 
 	entity o = self.owner;
 	if (o.body) o = o.body;
-	self.alpha = o.alpha;
-	self.effects = o.effects;
 	if (o.customizeentityforclient) {
 		entity e = self;
 		self = o;
@@ -193,6 +191,10 @@ float(void) warpzone_shadow_customizeentity {
 		if not(f)
 			return FALSE;
 	}
+	//copy alpha and effects from customized owner model
+	self.modelindex = o.modelindex;
+	self.alpha = o.alpha;
+	self.effects = o.effects;
 	return TRUE;
 }
 
