@@ -241,6 +241,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (damage_radius_running) //No need proxy splash damage
 		return;
 
+	if not(self.owner.takedamage) return;
 	damage(self.owner, inflictor, attacker, _damage, deathtype, warpzone_untransform_origin(self.enemy, hitloc), warpzone_untransform_velocity(self.enemy, force));
 	self.velocity = '0 0 0';
 }
