@@ -29,7 +29,7 @@ void(void) player_species_setup {
 		if (pl != self)
 		if (pl.body)
 		if (pl.body.playermodel == self.body.playermodel)
-		if (pl.body.skinindex == self.body.skinindex) {
+		if (pl.skinindex == self.skinindex) {
 			self.species = pl.species;
 			player_sound_copy(self, pl);
 			return;
@@ -174,7 +174,6 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 		return NULL;
 
 	fire_move(self, e);
-	e.skinindex = self.skinindex;
 	player_body_spawn(NULL);
 	player_body_copy(self.body, e, FALSE);
 	entity _body = e.body;
@@ -888,6 +887,13 @@ void() player_body_model_setup {
 		if (self.clientcolors != colors)
 			player_set_colors(self, colors);
 	}
+	if (self.body.skin != self.skinindex) {
+		self.body.skin = self.skinindex;
+		if (self.body.weaponentity) {
+			self.body.weaponentity.skin = self.skinindex;
+			if (self.body.exteriorweaponentity) self.body.exteriorweaponentity.skin = self.skinindex;
+		}
+	}
 	if (self.body.colormap != self.colormap) {
 		self.body.colormap = self.colormap;
 		if (team_mode &&  self.body.usecolormod) {
@@ -925,7 +931,6 @@ float(void) player_body_torso_customize {
 }
 
 float(void) player_body_customize {
-	entity modelsource;
 	entity o = self.owner;
 	self.alpha = player_alpha(o, other);
 	if (self.alpha < 0)
@@ -942,14 +947,6 @@ float(void) player_body_customize {
 	else
 		self.effects &= ~EFFECT_NODEPTHTEST;
 
-	modelsource = self;
-	if (self.skin != modelsource.owner.skinindex) {
-		self.skin = modelsource.owner.skinindex;
-		if (self.weaponentity) {
-			self.weaponentity.skin = self.skin;
-			if (self.exteriorweaponentity) self.exteriorweaponentity.skin = self.skin;
-		}
-	}
 	if (self.weaponentity) {
 		self.weaponentity.alpha = self.alpha;
 		if (self.exteriorweaponentity)
@@ -959,20 +956,20 @@ float(void) player_body_customize {
 	float f;
 	if (other.cvar_cl_playerdetailreduction <= 0) {
 		if (other.cvar_cl_playerdetailreduction <= -2)
-			self.modelindex = modelsource.modelindex_lod2;
+			self.modelindex = self.modelindex_lod2;
 		else if (other.cvar_cl_playerdetailreduction <= -1)
-			self.modelindex = modelsource.modelindex_lod1;
+			self.modelindex = self.modelindex_lod1;
 		else
-			self.modelindex = modelsource.modelindex_lod0;
+			self.modelindex = self.modelindex_lod0;
 	} else {
 		distance = vlen(o.origin - other.origin);
 		f = (distance + 100.0) * other.cvar_cl_playerdetailreduction;
 		if (f > sv_loddistance2)
-			self.modelindex = modelsource.modelindex_lod2;
+			self.modelindex = self.modelindex_lod2;
 		else if (f > sv_loddistance1)
-			self.modelindex = modelsource.modelindex_lod1;
+			self.modelindex = self.modelindex_lod1;
 		else
-			self.modelindex = modelsource.modelindex_lod0;
+			self.modelindex = self.modelindex_lod0;
 	}
 	return TRUE;
 }
