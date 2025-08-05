@@ -182,7 +182,9 @@ float(void) warpzone_shadow_customizeentity {
 		return FALSE;
 
 	entity o = self.owner;
-	if (o.body.body) o = o.body.body;
+	if (o.body) o = o.body;
+	self.alpha = o.alpha;
+	self.effects = o.effects;
 	if (o.customizeentityforclient) {
 		entity e = self;
 		self = o;
@@ -191,8 +193,6 @@ float(void) warpzone_shadow_customizeentity {
 		if not(f)
 			return FALSE;
 	}
-	self.alpha = o.alpha;
-	self.effects = o.effects;
 	return TRUE;
 }
 
@@ -217,16 +217,48 @@ void(void) warpzone_shadow_think {
 		remove_needed = TRUE;
 	}
 	if (remove_needed) {
-		if (self.takedamage)
+		if (antilag_have(self))
 			antilag_remove(self);
 
+		if (self.weaponentity) remove(self.weaponentity);
 		remove(self);
 		return;
 	}
 	self.nextthink = time;
-	if (self.modelindex != b.modelindex)
+	if (self.modelindex != b.modelindex) {
 		setmodel(self, b.model);
-
+		self.modelindex = b.modelindex;
+	}
+	if (b.weaponentity && b.weaponentity.tag_entity == b) { //torso of composite model
+		if not(self.weaponentity) {
+			self.weaponentity = spawn();
+			self.weaponentity.tag_entity = self;
+			self.weaponentity.customizeentityforclient = warpzone_shadow_customizeentity;
+		}
+		entity we = self.weaponentity;
+		entity bwe = b.weaponentity;
+		we.tag_index = bwe.tag_index;
+		setmodel(we, bwe.model);
+		we.modelindex = bwe.modelindex;
+		we.modelindex_lod0 = bwe.modelindex_lod0;
+		we.modelindex_lod1 = bwe.modelindex_lod1;
+		we.modelindex_lod2 = bwe.modelindex_lod2;
+		we.frame = bwe.frame;
+		we.colormap = bwe.colormap;
+		we.color = bwe.color;
+		we.angles = bwe.angles;
+		we.skin = bwe.skin;
+		we.scale = bwe.scale;
+		setorigin(we, bwe.origin);
+	} else {
+		if (self.weaponentity) {
+			remove(self.weaponentity);
+			self.weaponentity = NULL;
+		}
+	}
+	self.modelindex_lod0 = b.modelindex_lod0;
+	self.modelindex_lod1 = b.modelindex_lod1;
+	self.modelindex_lod2 = b.modelindex_lod2;
 	setsize(self, o.mins, o.maxs);
 	self.frame = b.frame;
 	self.colormap = b.colormap;
@@ -234,7 +266,14 @@ void(void) warpzone_shadow_think {
 	self.angles = warpzone_transform_angles(self.enemy, a);
 	self.skin = b.skin;
 	self.solid = o.solid;
-	setorigin(self, warpzone_transform_origin(self.enemy, o.origin));
+	if (o == b) {
+		self.scale = o.scale;
+		setorigin(self, warpzone_transform_origin(self.enemy, o.origin));
+	} else { // separate body
+		self.scale = (o.scale ? o.scale : 1) * (b.scale ? b.scale : 1);
+		setorigin(self, warpzone_transform_origin(self.enemy, ((o == b) ? o.origin : o.origin + b.origin)));
+	}
+
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) warpzone_shadow_event_damage {
@@ -276,7 +315,7 @@ void(void) warpzone_touch {
 					e.takedamage = other.takedamage;
 					e.event_damage = warpzone_shadow_event_damage;
 				}
-				if (antilag_have(e))
+				if (antilag_have(other))
 					antilag_add(e);
 			}
 		}
