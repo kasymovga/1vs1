@@ -177,8 +177,9 @@ float(entity wz, entity e) warpzone_teleport {
 	return 1;
 }
 
+.entity wz_shadow;
 float(void) warpzone_shadow_customizeentity {
-	if (other == self.owner)
+	if (other == self.owner || self.owner.wz_shadow != self)
 		return FALSE;
 
 	entity o = self.owner;
@@ -198,7 +199,6 @@ float(void) warpzone_shadow_customizeentity {
 	return TRUE;
 }
 
-.entity wz_shadow;
 void(void) warpzone_shadow_think {
 	float remove_needed;
 	remove_needed = FALSE;
