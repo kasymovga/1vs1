@@ -130,7 +130,9 @@ void(void) antilag_end {
 void(entity e) antilag_remove {
 	if (_antilag_chain == e) {
 		_antilag_chain = e.antilag_chain;
+		return;
 	}
+	if not(_antilag_chain) return;
 	entity e0;
 	for (e0 = _antilag_chain; e0.antilag_chain; e0 = e0.antilag_chain)
 		if (e0.antilag_chain == e) {
@@ -151,8 +153,8 @@ float(entity e) antilag_have {
 		return TRUE;
 
 	entity e0;
-	for (e0 = _antilag_chain; e0.antilag_chain; e0 = e0.antilag_chain)
-		if (e0.antilag_chain == e)
+	for (e0 = _antilag_chain; e0; e0 = e0.antilag_chain)
+		if (e0 == e)
 			return TRUE;
 
 	return FALSE;
