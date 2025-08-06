@@ -147,6 +147,20 @@ void(void) func_boss_controller_think {
 			boss.dmg = self.aiment.dmg;
 			if not(boss.state & FUNC_BOSS_STATE_TAKEDAMAGE) {
 				boss.state |= FUNC_BOSS_STATE_TAKEDAMAGE;
+				if (self.aiment.target != "") {
+					e = marker_Spawn(boss.netname, 0, 0, boss, '0 0 1' * boss.maxs_z, NULL, 0, boss, sprite, FALSE);
+					marker_text_update(e, '1 0.5 0', '1 0.5 0', '1 0.5 0');
+					marker_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
+					boss.max_health = 1;
+					for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
+						if (e.classname != "func_boss_part") continue;
+						if (e.cnt != boss.cnt) continue;
+						if (e.max_health > 1) boss.max_health += (e.max_health - 1);
+					}
+					boss.health = boss.max_health;
+					marker_UpdateMaxHealth(boss.sprite, boss.health);
+					marker_UpdateHealth(boss.sprite, boss.health);
+				}
 			}
 			if (self.aiment.target != "")
 				func_boss_controller_switch_target(self.aiment.target);
@@ -206,6 +220,10 @@ void(entity boss, entity attacker) func_boss_check_parts {
 	//boss switched to next phase
 	boss.cnt++;
 	boss.state &= ~FUNC_BOSS_STATE_TAKEDAMAGE;
+	if (boss.sprite) {
+		marker_FadeOutIn(boss.sprite, 1);
+		boss.sprite = NULL;
+	}
 	boss.dmg = FALSE;
 	entity oldself = self;
 	self = boss.enemy;
@@ -276,12 +294,27 @@ void(void) spawnfunc_func_boss {
 		self.debris = "models/onslaught/gen_gib1.md3 models/onslaught/gen_gib2.md3 models/onslaught/gen_gib3.md3 models/onslaught/gen_gib1.md3 models/onslaught/gen_gib2.md3 models/onslaught/gen_gib3.md3 models/onslaught/gen_gib1.md3 models/onslaught/gen_gib2.md3 models/onslaught/gen_gib3.md3";
 
 	debris_init();
+	self.spawnorigin = self.origin;
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_boss_part_damage {
-	if not(self.owner.state & FUNC_BOSS_STATE_TAKEDAMAGE) return;
-	if not(self.owner.cnt == self.cnt) return;
+	entity boss = self.owner;
+	if not(boss.state & FUNC_BOSS_STATE_TAKEDAMAGE) return;
+	if not(boss.cnt == self.cnt) return;
 	self.health -= _damage;
+	entity e;
+	boss.health = 0;
+	float hp1 = FALSE;
+	for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
+		if (e.classname != "func_boss_part") continue;
+		if (e.cnt != boss.cnt) continue;
+		if (e.health >= 1) {
+			if (e.health > 1) boss.health += (e.health - 1);
+			hp1 = TRUE;
+		}
+	}
+	if (hp1) boss.health += 1;
+	marker_UpdateHealth(boss.sprite, boss.health);
 	self.lastdamage = time;
 	if (self.health <= 0) {
 		self.effects |= EFFECT_NODRAW;
@@ -323,6 +356,8 @@ void(void) spawnfunc_func_boss_part {
 		self.effects |= EFFECT_NODRAW;
 		self.solid = SOLID_NOT;
 	}
+	self.max_health = self.health;
+	self.spawnorigin = self.origin;
 }
 
 void(void) spawnfunc_func_boss_shooter {
@@ -332,4 +367,5 @@ void(void) spawnfunc_func_boss_shooter {
 		return;
 	}
 	entity_initialize(self, func_boss_part_init_delayed, INITPRIO_LAST);
+	self.spawnorigin = self.origin;
 }
