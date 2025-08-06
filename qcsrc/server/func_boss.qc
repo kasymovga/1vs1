@@ -41,7 +41,7 @@ void(entity shooter, float _speed, float damage, float force, float radius, floa
 	proj.realowner = proj;
 	proj.netname = shooter.netname;
 	proj.classname = "monster_projectile";
-	projectile_setup(proj, shooter.origin, impact, deathtype, damage, 0, radius, force, 0, MOVETYPE_FLY);
+	projectile_setup(proj, shooter.origin, impact, deathtype, damage * monster_difficulty, 0, radius, force, 0, MOVETYPE_FLY);
 	proj.nextthink = time + 10;
 	proj.think = projectile_think2use;
 	proj.use = projectile_explode;
@@ -272,6 +272,7 @@ void(void) func_boss_use {
 	for (e = find(NULL, target, self.targetname); e; e = find(e, target, self.targetname)) {
 		if (e.classname != "func_boss_part") continue;
 		if (e.health) e.health /= plugin_monster_quant();
+		if (e.health) e.health *= monster_difficulty;
 	}
 }
 
@@ -291,6 +292,7 @@ void(void) func_boss_reset {
 
 void(void) spawnfunc_func_boss {
 	model_init(SOLID_BSP);
+	monster_common_init(); // for monster_difficulty
 	if (self.targetname == "") {
 		entity_abort("missed targetname property");
 		return;
