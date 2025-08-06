@@ -275,6 +275,20 @@ void(void) func_boss_use {
 	}
 }
 
+void(void) func_boss_reset {
+	self.origin = self.spawnorigin;
+	self.angles = '0 0 0';
+	self.effects &= ~EFFECT_NODRAW;
+	setorigin(self, self.spawnorigin);
+	if (self.sprite) {
+		marker_Kill(self.sprite);
+		self.sprite = NULL;
+	}
+	self.state = 0;
+	self.aiment = NULL;
+	self.cnt = 0;
+}
+
 void(void) spawnfunc_func_boss {
 	model_init(SOLID_BSP);
 	if (self.targetname == "") {
@@ -283,7 +297,6 @@ void(void) spawnfunc_func_boss {
 	}
 	entity_initialize(self, func_boss_init_delayed, INITPRIO_FINDTARGET);
 	self.use = func_boss_use;
-	self.state = 0;
 	if (self.speed <= 0) self.speed = 1000;
 	if (self.netname == "") self.netname = "Level Boss";
 	if (self.noise == "")
@@ -295,6 +308,8 @@ void(void) spawnfunc_func_boss {
 
 	debris_init();
 	self.spawnorigin = self.origin;
+	self.reset = func_boss_reset;
+	self.reset();
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_boss_part_damage {
@@ -336,6 +351,21 @@ void(void) func_boss_part_init_delayed {
 	}
 }
 
+void(void) func_boss_part_reset {
+	self.angles = '0 0 0';
+	if (self.spawnflags & 1) {
+		self.solid = SOLID_NOT;
+		self.effects |= EFFECT_NODRAW;
+	} else {
+		self.solid = SOLID_BSP;
+		self.effects &= ~EFFECT_NODRAW;
+	}
+	self.health = self.max_health;
+	self.colormod = '0 0 0';
+	self.takedamage = DAMAGE_NO;
+	setorigin(self, self.spawnorigin);
+}
+
 void(void) spawnfunc_func_boss_part {
 	model_init(SOLID_BSP);
 	self.event_damage = func_boss_part_damage;
@@ -352,12 +382,18 @@ void(void) spawnfunc_func_boss_part {
 
 	debris_init();
 	entity_initialize(self, func_boss_part_init_delayed, INITPRIO_LAST);
-	if (self.spawnflags & 1) {
-		self.effects |= EFFECT_NODRAW;
-		self.solid = SOLID_NOT;
-	}
 	self.max_health = self.health;
 	self.spawnorigin = self.origin;
+	self.reset = func_boss_part_reset;
+	self.reset();
+}
+
+void(void) func_boss_shooter_reset {
+	self.solid = SOLID_BSP;
+	self.angles = '0 0 0';
+	self.effects &= ~EFFECT_NODRAW;
+	self.enemy = NULL;
+	setorigin(self, self.spawnorigin);
 }
 
 void(void) spawnfunc_func_boss_shooter {
@@ -368,4 +404,6 @@ void(void) spawnfunc_func_boss_shooter {
 	}
 	entity_initialize(self, func_boss_part_init_delayed, INITPRIO_LAST);
 	self.spawnorigin = self.origin;
+	self.reset = func_boss_shooter_reset;
+	self.reset();
 }
