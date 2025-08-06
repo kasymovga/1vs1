@@ -57,6 +57,12 @@ void(void) coop_teleporter_touch {
 		teleport(self, other, t.origin, t.angles, '0 0 0', '0 0 0', '0 0 0', 0);
 }
 
+void(void) coop_teleporter_reset {
+	self.solid = SOLID_TRIGGER;
+	self.alpha = -1;
+	self.use();
+}
+
 void(void) spawnfunc_coop_teleporter {
 	if (game_type != GAME_TYPE_COOP) {
 		remove(self);
@@ -67,12 +73,11 @@ void(void) spawnfunc_coop_teleporter {
 	setsize(self, '-32 -32 0', '32 32 40');
 	self.angles_x = 90;
 	self.angles_z = 0;
-	self.alpha = -1;
 	self.think = coop_teleporter_think;
 	self.use = coop_teleporter_use;
 	self.touch = coop_teleporter_touch;
-	self.solid = SOLID_TRIGGER;
-	self.use();
+	self.reset = coop_teleporter_reset;
+	self.reset();
 }
 
 var void() coop_observer_spawn_next;
