@@ -285,7 +285,7 @@ void(void) func_boss_reset {
 		self.sprite = NULL;
 	}
 	self.state = 0;
-	self.aiment = NULL;
+	self.enemy.aiment = NULL;
 	self.cnt = 0;
 }
 
