@@ -73,7 +73,7 @@ void(float n) walkietalkie_menu_select {
 	entity e;
 	CLIENT_FOR_EACH_REAL(e)
 		if (e.cvar_cl_voice_directional >= 0)
-		if ((self.team == e.team || sv_walkietalkie_public) || (e.classname == "spectator" && e.enemy.team == self.team)) {
+		if (self.team == e.team || sv_walkietalkie_public || (SPECTATOR_IS_SPECTATOR(e) && e.clientcamera.team == self.team)) {
 			msg_entity = e;
 			sound_to_at(MSG_ONE, world, '0 0 0', CHAN_VOICE, walkietalkie_sound_path(n), VOL_BASE, ATTN_NONE);
 		}

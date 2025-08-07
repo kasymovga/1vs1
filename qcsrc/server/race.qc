@@ -2,7 +2,7 @@
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
 // sorry, but using \ in macros breaks line numbers
-#define RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; CLIENT_FOR_EACH_REAL(msg_entity) if(msg_entity == varname || (msg_entity.classname == "spectator" && msg_entity.enemy == varname)) statement msg_entity = varname
+#define RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; CLIENT_FOR_EACH_REAL(msg_entity) if (SPECTATOR_IS_SPECTATING_OR_ITSELF(msg_entity, varname)) statement msg_entity = varname
 #define RACE_WRITESPECTATABLE_MSG_ONE(statement) RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 
 float g_race;

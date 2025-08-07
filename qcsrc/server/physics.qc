@@ -649,13 +649,12 @@ float(entity to, float sf) physics_send {
 	float sf2 = 0;
 	physics_abilities_start();
 	if not(sf & 3) {
-		if (self.classname == "player") sf |= 8;
-		else if (self.classname == "spectator") {
+		if (SPECTATOR_IS_SPECTATOR(self)) {
 			//for strafe helper
 			self.last_maxspeedmod = self.enemy.last_maxspeedmod;
 			self.crouch = self.enemy.crouch;
 			if (self.enemy.flags & FL_ONGROUND) sf |= 16;
-		}
+		} else if (self.classname == "player") sf |= 8;
 		if (self.last_physics_ladder) sf |= 32;
 		if (self.ladder_entity.classname == "func_water") sf |= 64;
 		if (self.crouch) sf |= 256;

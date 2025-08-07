@@ -679,7 +679,7 @@ float(entity plr, entity viewer) player_alpha {
 	if (plr.deadflag) {
 		return dalpha;
 	}
-	if (viewer.classname == "spectator") {
+	if (SPECTATOR_IS_SPECTATOR(viewer)) {
 		viewer = viewer.enemy;
 	}
 	if (plr.clipgroup && plr.clipgroup == viewer.clipgroup && plr != viewer) {
@@ -1035,8 +1035,7 @@ void() player_post_think {
 }
 
 float(void) player_real_customize {
-	if (other.enemy == self)
-	if (other.classname == "spectator")
+	if (SPECTATOR_IS_SPECTATING(other, self))
 		return TRUE;
 
 	if (other == self)
@@ -1071,6 +1070,8 @@ void(entity spot) player_spawn {
 	if ((self.debris = g_player_debris) != "")
 		debris_setup();
 
+	self.clientcamera = self;
+	self.clientdataent = self;
 	self.triggerhurttime = 0;
 	self.iscreature = TRUE;
 	self.delay = FALSE;

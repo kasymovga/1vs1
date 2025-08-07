@@ -50,7 +50,6 @@ var float() plugin_ready_restart_hard = { return FALSE; }
 var float() plugin_chain_weapon_frame_handle = { return FALSE; }
 var float() plugin_ReloadAllowed = { return TRUE; }
 var float(float dropped) plugin_chain_weapon_throw_allowed = { return TRUE; }
-var void(entity e) plugin_chain_spectator_copy = {}
 float plugin_chain_damage_mod;
 float plugin_chain_damage_mod_force;
 float plugin_chain_damage_mod_mirror;

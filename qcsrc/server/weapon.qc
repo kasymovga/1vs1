@@ -139,15 +139,9 @@ void(void) weapon_reload {
 }
 
 void(entity pl) weapon_show_list {
-	if (clienttype(pl) == CLIENTTYPE_REAL) {
-		msg_entity = pl;
-		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
-		net_write_byte(MSG_ONE, NET_TE_CSQC_WEAPONLIST);
-	}
 	entity e;
 	CLIENT_FOR_EACH_REAL(e) {
-		if (e.enemy == pl)
-		if (e.classname == "spectator") {
+		if (SPECTATOR_IS_SPECTATING_OR_ITSELF(e, pl)) {
 			msg_entity = e;
 			net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 			net_write_byte(MSG_ONE, NET_TE_CSQC_WEAPONLIST);

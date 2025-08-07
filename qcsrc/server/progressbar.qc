@@ -1,9 +1,5 @@
 float(void) progressbar_customize {
-	if not(other == self.owner)
-	if not(other.classname == "spectator" && other.enemy == self.owner)
-		return FALSE;
-
-	return TRUE;
+	return (SPECTATOR_IS_SPECTATING_OR_ITSELF(other, self.owner));
 }
 
 float(entity to, float sf) progressbar_send {

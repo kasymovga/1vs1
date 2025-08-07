@@ -3,13 +3,15 @@ float g_announcer_print;
 void(entity player, string msg, string txt) announce_force {
 	entity e;
 	if (player.classname == "player")
-		CLIENT_FOR_EACH(e) {
-			if (e.enemy == player)
-			if (e.classname == "spectator") {
+		CLIENT_FOR_EACH_REAL(e) {
+			if (SPECTATOR_IS_SPECTATING(e, player)) {
 				announce_force(e, msg, txt);
 			}
 		}
 	if (clienttype(player) != CLIENTTYPE_REAL)
+		return;
+
+	if (SPECTATOR_IS_SPECTATOR(player))
 		return;
 
 	player.announcetime = time + 0.8;

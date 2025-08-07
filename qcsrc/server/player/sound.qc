@@ -200,7 +200,7 @@ void(entity e, float chan) player_sound_stop {
 
 void(entity e, float chan, string s, float vol, float attn) player_sound {
 	CLIENT_FOR_EACH_REAL(msg_entity) {
-		if (msg_entity == e || (msg_entity.enemy == e && msg_entity.classname == "spectator"))
+		if (SPECTATOR_IS_SPECTATING_OR_ITSELF(msg_entity, e))
 			sound_to_at(MSG_ONE, e, e.origin, chan, s, vol, attn);
 		else
 			sound_to_at(MSG_ONE, e.body.body, e.origin, chan, s, vol, attn);

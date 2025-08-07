@@ -177,7 +177,7 @@ float physics_last_RIGHT_KEY_time;
 float physics_last_LEFT_KEY_time;
 vector(void) physics_view_origin {
 	vector v;
-	physics_predicted = (physics && servercommandframe && clientcommandframe && physics_movetype != MOVETYPE_NONE && physics_movetype != MOVETYPE_FOLLOW);
+	physics_predicted = (physics && servercommandframe && clientcommandframe && physics_movetype != MOVETYPE_NONE && physics_movetype != MOVETYPE_FOLLOW && !view_spectatee_status);
 	if (physics_predicted) {
 		float frametime_save = frametime;
 		float n = clientcommandframe;

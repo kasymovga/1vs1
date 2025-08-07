@@ -133,30 +133,6 @@ float(entity plr) nadget_PlayerCanBeCarrier {
 	return FALSE;
 }
 
-var void(entity plr) nadget_spectator_copy_next;
-void(entity plr) nadget_spectator_copy {
-	self.hg_power = plr.hg_power;
-	self.hg_type1 = plr.hg_type1;
-	self.hg_type2 = plr.hg_type2;
-	self.hg_next1 = plr.hg_next1;
-	self.hg_next2 = plr.hg_next2;
-	self.hg_ammo1 = plr.hg_ammo1;
-	self.hg_ammo2 = plr.hg_ammo2;
-	self.hg_regentime1 = plr.hg_regentime1;
-	self.hg_regentime2 = plr.hg_regentime2;
-	self.hg_maxregentime1 = plr.hg_maxregentime1;
-	self.hg_maxregentime2 = plr.hg_maxregentime2;
-	self.hg_regenpaused1 = plr.hg_regenpaused1;
-	self.hg_regenpaused2 = plr.hg_regenpaused2;
-	self.hg_regenrate1 = plr.hg_regenrate1;
-	self.hg_regenrate2 = plr.hg_regenrate2;
-	self.hg_bonus = plr.hg_bonus;
-	self.hg_bonustype = plr.hg_bonustype;
-	self.hg_detonables = plr.hg_detonables;
-	self.hg_launchspeed = plr.hg_launchspeed;
-	nadget_spectator_copy_next(plr);
-}
-
 var float() nadget_weapon_throw_handle_next;
 float() nadget_weapon_throw_handle {
 	nadget_weapon_throw_handle_next();
@@ -351,8 +327,6 @@ void(void) nadget_init_common {
 	plugin_chain_spectator_to_player_handle = nadget_spectator_to_player_handle;
 	nadget_PlayerCanBeCarrier_next = plugin_chain_PlayerCanBeCarrier;
 	plugin_chain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
-	nadget_spectator_copy_next = plugin_chain_spectator_copy;
-	plugin_chain_spectator_copy = nadget_spectator_copy;
 	nadget_bot_aim_next = plugin_chain_bot_aim;
 	plugin_chain_bot_aim = nadget_bot_aim;
 	nadget_player_obituary_frag_next = plugin_chain_player_obituary_frag;
@@ -550,10 +524,10 @@ void nadget_GiveBonus(entity p, float hgtype, float amount, string reason) {
 	string n = nadget_TypeToExpandedName(hgtype);
 	entity e;
 
-	CLIENT_FOR_EACH_REAL(e) if(e.iscreature || e.classname == "spectator") {
+	CLIENT_FOR_EACH_REAL(e) if (e.classname == "player" || e.classname == "spectator") {
         entity check = e;
-        if(!e.iscreature)
-            check = e.enemy;
+        if (SPECTATOR_IS_SPECTATOR(e))
+            check = e.clientcamera;
 
 		if(check == p) {
 			RM_ELSE({rm_bigprint(e, strcat("^7You got a ^3", n, "^7 bonus!"), reason, 3);},
@@ -1056,7 +1030,7 @@ void nadget_Pick(float tokens) {
 		return;
 	}
 
-	float isplayer = self.classname != "spectator" && self.classname != "observer";
+	float isplayer = (self.classname != "spectator" && self.classname != "observer");
 
 	float t1 = nadget_NameToType(argv(1));
 	float t2 = nadget_NameToType(argv(2));

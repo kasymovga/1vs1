@@ -736,12 +736,6 @@ void(void) kh_Reset {
 		kh_Controller_SetThink(g_kh_delay_round + max(0, map_starttime - time), "", kh_WaitForPlayers);
 }
 
-var void(entity e) kh_SpectateCopy_NextLink;
-void(entity e) kh_SpectateCopy {
-	self.kh_state = e.kh_state;
-	kh_SpectateCopy_NextLink(e);
-}
-
 float(entity plr) kh_player_is_carrier { return (plr.kh_next ? TRUE :FALSE); }
 void(entity plr) kh_player_drop_carried { kh_Key_DropAll(plr, FALSE, FALSE); }
 float(entity e) kh_portal_forbidden_for { return e.classname == STR_ITEM_KH_KEY; }
@@ -817,8 +811,6 @@ void(void) kh_init {
 	kh_PlayerClear_NextLink = plugin_chain_player_clear;
 	plugin_chain_player_clear = kh_PlayerClear;
 	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
-	kh_SpectateCopy_NextLink = plugin_chain_spectator_copy;
-	plugin_chain_spectator_copy = kh_SpectateCopy;
 	plugin_player_is_carrier = kh_player_is_carrier;
 	plugin_player_drop_carried = kh_player_drop_carried;
 	plugin_portal_forbidden_for = kh_portal_forbidden_for;

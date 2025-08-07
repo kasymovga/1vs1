@@ -83,13 +83,7 @@ float(entity to, float sf) warpzone_teleported_send {
 }
 
 float(void) warpzone_teleported_customize {
-	if (other == self.owner)
-		return TRUE;
-
-	if (other.enemy == self.owner && other.classname == "spectator")
-		return TRUE;
-
-	return FALSE;
+	return (SPECTATOR_IS_SPECTATING_OR_ITSELF(other, self.owner));
 }
 
 vector(entity e) warpzone_entity_origin_offset {

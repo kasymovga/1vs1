@@ -547,12 +547,6 @@ void(float killed) rune_PlayerClear {
 	rune_PlayerClear_NextLink(killed);
 }
 
-var void(entity e) rune_SpectateCopy_NextLink;
-void(entity e) rune_SpectateCopy {
-	self.runes = e.runes;
-	rune_SpectateCopy_NextLink(e);
-}
-
 var float(entity plr, entity targ) rune_PlayerVisibleThroughWallFor_NextLink;
 float(entity plr, entity targ) rune_PlayerVisibleThroughWallFor {
 	if (targ.runes & RUNE_HACKER)
@@ -640,8 +634,6 @@ void(void) rune_init_common {
 	plugin_chain_damage_force_done = rune_DamageForceDone;
 	rune_PlayerClear_NextLink = plugin_chain_player_clear;
 	plugin_chain_player_clear = rune_PlayerClear;
-	rune_SpectateCopy_NextLink = plugin_chain_spectator_copy;
-	plugin_chain_spectator_copy = rune_SpectateCopy;
 	rune_PlayerVisibleThroughWallFor_NextLink = plugin_chain_PlayerVisibleThroughWallFor;
 	plugin_chain_PlayerVisibleThroughWallFor = rune_PlayerVisibleThroughWallFor;
 	rune_PlayerCanSeeHealthFor_NextLink = plugin_chain_PlayerCanSeeHealthFor;

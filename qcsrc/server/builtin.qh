@@ -794,3 +794,9 @@ float(string addr, string data) net_sendpacket = #801;
 //description:
 //A QC builtin equivalent of the "packet" command
 //
+//DP_RM_CLIENTDATAENT
+//idea: Akari
+//darkplaces implementation: Akari
+//builtin definitions:
+.entity clientcamera;
+.entity clientdataent;

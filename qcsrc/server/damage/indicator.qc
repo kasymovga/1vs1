@@ -28,14 +28,7 @@ void(void) damage_indicator_remove {
 }
 
 float(void) damage_indicator_customize {
-	if (self.enemy == other)
-		return TRUE;
-
-	if (other.classname == "spectator")
-		if (other.enemy == self.enemy)
-			return TRUE;
-
-	return FALSE;
+	return (SPECTATOR_IS_SPECTATING_OR_ITSELF(other, self.enemy));
 }
 
 var void(entity targ, entity attacker, float _damage, vector ignore) damage_indicator_damage_force_done_next;

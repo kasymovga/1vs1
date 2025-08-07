@@ -11,7 +11,6 @@ void() client_init_spawn;
 void() client_cvars_request;
 void() client_cvars_parse;
 void() client_cvars_free;
-void(entity to) client_set_view;
 void(entity spot) client_put_to_spot;
 void(string _name) client_mute_ifneeded;
 float() client_join_allowed;

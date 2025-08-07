@@ -32,9 +32,10 @@
 
 float(void) weapon_model_customize {
 	self.viewmodelforclient = akimbo_owner(self.owner);
-	if (other.classname == "spectator")
-		if (other.enemy == self.viewmodelforclient)
-			self.viewmodelforclient = other;
+	if (SPECTATOR_IS_SPECTATING(other, self.viewmodelforclient)) //spectator
+		self.viewmodelforclient = other;
+	else if (SPECTATOR_IS_SPECTATOR(self.viewmodelforclient)) //weapon owner spectating someone
+		return FALSE;
 
 	return TRUE;
 }

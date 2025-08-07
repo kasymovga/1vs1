@@ -354,12 +354,13 @@ void(void) portal_think {
 }
 
 float(void) portal_customize {
-	if (other.classname == "spectator")
-		other = other.enemy;
+	entity e = other;
+	if (SPECTATOR_IS_SPECTATOR(e))
+		e = e.clientcamera;
 
-	if (other == self.aiment) {
+	if (e == self.aiment) {
 		self.modelindex = self.modelindex_lod0;
-	} else if (PLAYER_IS_INDEPENDENT(other) || PLAYER_IS_INDEPENDENT(self.aiment)) {
+	} else if (PLAYER_IS_INDEPENDENT(e) || PLAYER_IS_INDEPENDENT(self.aiment)) {
 		self.modelindex = 0;
 	} else {
 		self.modelindex = self.modelindex_lod0;

@@ -981,7 +981,7 @@ float(void) player_body_base_customize {
 
 	if (self.owner == other)
 		return FALSE;
-	else if (self.owner == other.enemy && other.classname == "spectator")
+	else if (SPECTATOR_IS_SPECTATING(other, self.owner))
 		self.exteriormodeltoclient = other;
 	else
 		self.exteriormodeltoclient = world;

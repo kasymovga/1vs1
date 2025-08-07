@@ -9,11 +9,7 @@ float() entcs_customize {
 	if (o.classname != "player")
 		return FALSE;
 
-	if(other == o)
-		return FALSE;
-
-	if(other.classname == "spectator")
-	if(other.enemy == o)
+	if (SPECTATOR_IS_SPECTATING_OR_ITSELF(other, o))
 		return FALSE;
 
 	if (team_mode && o.team == other.team) {

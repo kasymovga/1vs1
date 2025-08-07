@@ -2,7 +2,7 @@ entity spectator_note;
 
 #define spectator_note_customize Spectator_Note_Customize //compatibility with old save files
 float(void) spectator_note_customize {
-	if (other.classname == "player")
+	if (other.classname == "player" && other.clientcamera == other)
 		return FALSE;
 
 	return TRUE;
@@ -13,7 +13,9 @@ void(void) spectator_note_message {
 	string s = "";
 	if (other.classname == "spectator") {
 		s = "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player";
-		if (other.team <= 0 || !team_mode)
+		if (self.classname == "player")
+			s = strcat(s, "\n^1Press ^3{+jump}^1 to stop spectating");
+		else if (other.team <= 0 || !team_mode)
 			s = strcat(s, "\n^1Press ^3{+attack2}^1 to observe");
 
 		self.target = other.enemy.netname;
@@ -31,35 +33,8 @@ void(void) spectator_note_message {
 }
 
 void(entity spectatee) spectator_copy {
-	plugin_chain_spectator_copy(spectatee);
-	self.armortype = spectatee.armortype;
-	self.armorvalue = spectatee.armorvalue;
-	self.ammo_cells = spectatee.ammo_cells;
-	self.ammo_shells = spectatee.ammo_shells;
-	self.ammo_nails = spectatee.ammo_nails;
-	self.ammo_rockets = spectatee.ammo_rockets;
-	self.ammo_fuel = spectatee.ammo_fuel;
-	self.effects = spectatee.effects & EFFECT_MASK_CHEAP; // eat performance
-	self.health = spectatee.health;
-	self.items = spectatee.items;
-	self.pressedkeys = spectatee.pressedkeys;
-	self.weapons = spectatee.weapons;
-	self.weapons_extra = spectatee.weapons_extra;
-	self.switchweapon = spectatee.switchweapon;
-	self.weapon = spectatee.weapon;
-	self.punchangle = spectatee.punchangle;
-	self.view_ofs = spectatee.view_ofs;
-	self.v_angle = spectatee.v_angle;
-	self.velocity = spectatee.velocity;
-	self.dmg_take = spectatee.dmg_take;
-	self.dmg_save = spectatee.dmg_save;
-	self.dmg_inflictor = spectatee.dmg_inflictor;
-	self.ammoclip = spectatee.ammoclip;
-	self.angles = spectatee.v_angle;
-	//client_view_angles_set(self, spectatee.v_angle); // cause broken interpolation
-	self.fixangle = TRUE;
-	setorigin(self, spectatee.origin);
-	setsize(self, spectatee.mins, spectatee.maxs);
+	//if (self.classname != "player")
+	//	setorigin(self, spectatee.origin);
 }
 
 void(void) spectator_impulse {
@@ -95,23 +70,21 @@ float() spectator_spectate_next {
 	other = self.enemy;
 	do
 		other = find(other, classname, "player");
-	while (other && team_mode && self.team > 0 && other.team != self.team);
+	while ((other == self) || (other && team_mode && self.team > 0 && other.team != self.team));
 	if not(other) {
 		do
 			if (other == self.enemy)
 				break;
 			else
 				other = find(other, classname, "player");
-		while (other && team_mode && self.team > 0 && other.team != self.team);
+		while ((other == self) || (other && team_mode && self.team > 0 && other.team != self.team));
 	}
 	if (self.enemy) entcs_spec_update(self.enemy);
 	if (other) {
-		self.enemy = other;
+		self.enemy = self.clientcamera = self.clientdataent = other;
 		entcs_spec_update(other);
 	}
-	if (self.enemy.classname == "player") {
-		client_set_view(self.enemy);
-		self.movetype = MOVETYPE_NONE;
+	if (self.enemy) {
 		spectator_copy(self.enemy);
 		spectator_note.SendFlags = 1;
 		return 1;
@@ -120,7 +93,40 @@ float() spectator_spectate_next {
 	}
 }
 
+void(void) spectator_player_stop {
+	if (self.clientcamera == self) return;
+	if (self.enemy)
+		entcs_spec_update(self.enemy);
+
+	self.enemy = NULL;
+	self.clientcamera = self.clientdataent = self;
+}
+
+void(void) spectator_player_start {
+	if (self.clientcamera != self) return;
+	spectator_spectate_next();
+}
+
+void(void) spectator_player_think {
+	if (self.clientcamera == self) return;
+	entity oldenemy = self.enemy;
+	if (self.BUTTON_ATCK && !self.delay) {
+		if (spectator_spectate_next() != 1) {
+			spectator_player_stop();
+		}
+	} else if (self.BUTTON_JUMP) {
+		spectator_player_stop();
+	} else if not(spectator_update()) {
+		spectator_player_stop();
+	}
+	if (self.enemy != oldenemy)
+		plugin_InitSpectator();
+
+	self.delay = self.BUTTON_ATCK;
+}
+
 void() spectator_think {
+	entity oldenemy = self.enemy;
 	if (self.BUTTON_JUMP && self.team <= 0) {
 		self.flags |= FL_SPAWNING;
 	} else if (self.BUTTON_ATCK && !self.delay) {
@@ -142,10 +148,7 @@ void() spectator_think {
 			return;
 		}
 	}
-	float oldspectatee_status;
-	oldspectatee_status = self.spectatee_status & 255;
-	self.spectatee_status = (num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0));
-	if ((self.spectatee_status & 255) != (oldspectatee_status & 255))
+	if (self.enemy != oldenemy)
 		plugin_InitSpectator();
 
 	self.delay = self.BUTTON_ATCK;
@@ -216,6 +219,8 @@ void() spectator_note_update {
 
 void(float frags_team_reset) spectator_observer_spawn {
 	entity spot;
+	self.clientcamera = self;
+	self.clientdataent = self;
 	plugin_chain_observer_spawn();
 	player_clear(FALSE);
 	spot = find(world, classname, "info_intermission");

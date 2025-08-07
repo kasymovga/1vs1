@@ -66,8 +66,7 @@ void(entity cl, float type, string s, string arg1, string arg2, string arg3) pri
 	entity spec;
 	if (cl.classname == "player")
 		CLIENT_FOR_EACH_REAL(spec)
-			if (spec.enemy == cl)
-			if (spec.classname == "spectator")
+			if (SPECTATOR_IS_SPECTATING(spec, cl))
 				print_to(spec, type, s, arg1, arg2, arg3);
 
 	if (clienttype(cl) == CLIENTTYPE_REAL)

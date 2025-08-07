@@ -746,10 +746,10 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 
 void(void) world_frame_end {
 	CLIENT_FOR_EACH_REAL(self) {
-		if (self.classname == "spectator") {
-			if (self.enemy.typehitsound)
+		if (SPECTATOR_IS_SPECTATOR(self)) {
+			if (self.clientcamera.typehitsound)
 				sound_play2(self, "misc/typehit.wav");
-			else if (self.enemy.hitsound) {
+			else if (self.clientcamera.hitsound) {
 				msg_entity = self;
 				net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 				net_write_byte(MSG_ONE, NET_TE_CSQC_HIT);

@@ -156,6 +156,7 @@ void(entity frozen, entity unfrozer) ice_unfroze {
 	frozen.deadflag = DEAD_NO;
 	player_physics_setup(frozen);
 	self = frozen;
+	spectator_player_stop();
 	ice_remove();
 	self = oldself;
 	rm_buffs_meodp_point_attach(frozen, rm_buffs_meodp_death_player);
@@ -359,17 +360,15 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 	return TRUE;
 }
 
-var void(entity spectatee) ice_spectator_copy_next;
-void ice_spectator_copy(entity spectatee) {
-	self.deadflag = spectatee.deadflag;
-	ice_spectator_copy_next(spectatee);
-}
-
 var void(void) ice_player_think_next;
 void(void) ice_player_think {
 	if (self.deadflag == DEAD_FREEZE)
 	if (self.BUTTON_ATCK)
 		self.impulse = 38;
+
+	if (self.deadflag == DEAD_FREEZE)
+	if (self.BUTTON_ATCK2)
+		spectator_player_start(); //force spectating
 
 	ice_player_think_next();
 }
@@ -412,8 +411,6 @@ void(void) ice_init {
 	plugin_chain_player_spawn = ice_player_spawn;
 	ice_player_damage_handle_next = plugin_chain_player_damage_handle;
 	plugin_chain_player_damage_handle = ice_player_damage_handle;
-	ice_spectator_copy_next = plugin_chain_spectator_copy;
-	plugin_chain_spectator_copy = ice_spectator_copy;
 	ice_player_think_next = plugin_chain_player_think;
 	plugin_chain_player_think = ice_player_think;
 }

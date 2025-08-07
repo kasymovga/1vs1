@@ -110,11 +110,6 @@ float() nexball_RadarShowEnemiesAllowed {
 	return TRUE;
 }
 
-var void(entity e) nexball_SpectateCopy_NextLink;
-void(entity e) nexball_SpectateCopy {
-	self.metertime = e.metertime;
-}
-
 float(entity plr) nexball_player_is_carrier { return plr.ballcarried != world; }
 void(entity plr) nexball_player_drop_carried { nexball_drop_ball(plr.ballcarried, plr.origin, plr.velocity); }
 float(entity e) nexball_portal_forbidden_for { return e.classname == "nexball_football" || e.classname == "nexball_basketball" || e.classname == "nexball_hockey"; }
@@ -175,8 +170,6 @@ void() nexball_init {
 	plugin_ReloadAllowed = nexball_ReloadAllowed;
 	nexball_weapon_throw_allowed_NextLink = plugin_chain_weapon_throw_allowed;
 	plugin_chain_weapon_throw_allowed = nexball_weapon_throw_allowed;
-	nexball_SpectateCopy_NextLink = plugin_chain_spectator_copy;
-	plugin_chain_spectator_copy = nexball_SpectateCopy;
 	plugin_player_is_carrier = nexball_player_is_carrier;
 	plugin_player_drop_carried = nexball_player_drop_carried;
 	plugin_portal_forbidden_for = nexball_portal_forbidden_for;

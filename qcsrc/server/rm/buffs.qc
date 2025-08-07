@@ -298,12 +298,6 @@ float(float f) rm_buffs_weapon_clip_capacity_mod {
 	return rm_buffs_weapon_clip_capacity_mod_next(f);
 }
 
-var void(entity e) rm_buffs_spectator_copy_next;
-void(entity e) rm_buffs_spectator_copy {
-	self.buffstat = e.buffstat;
-	rm_buffs_spectator_copy_next(e);
-}
-
 void(void) rm_buffs_init {
     float i, b;
     if not(rm_active) return;
@@ -338,8 +332,6 @@ void(void) rm_buffs_init {
 	plugin_chain_player_spawn = rm_buffs_player_spawn;
 	rm_buffs_weapon_clip_capacity_mod_next = plugin_chain_weapon_clip_capacity_mod;
 	plugin_chain_weapon_clip_capacity_mod = rm_buffs_weapon_clip_capacity_mod;
-	rm_buffs_spectator_copy_next = plugin_chain_spectator_copy;
-	plugin_chain_spectator_copy = rm_buffs_spectator_copy;
 	rm_buffs_capturing_next = plugin_chain_capturing;
 	plugin_chain_capturing = rm_buffs_capturing;
 	CVAR_CACHE(g_buffs_random_spawns_distant);
@@ -1270,8 +1262,8 @@ float(entity p, entity plr) rm_buffs_meodp_point_visible_for_player {
 }
 
 float(void) rm_buffs_meodp_point_customize {
-	if (other.classname == "spectator")
-		return rm_buffs_meodp_point_visible_for_player(self, other.enemy);
+	if (SPECTATOR_IS_SPECTATOR(other))
+		return rm_buffs_meodp_point_visible_for_player(self, other.clientcamera);
 
 	return rm_buffs_meodp_point_visible_for_player(self, other);
 }

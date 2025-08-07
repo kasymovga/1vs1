@@ -23,7 +23,10 @@ void(vector start, vector end) weapon_nex_whoosh {
 	string snd;
 	float length = vlen(start - end);
 	float f;
-	CLIENT_FOR_EACH_REAL(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) { // we use realclient, so spectators can hear the whoosh too
+	CLIENT_FOR_EACH_REAL(msg_entity)
+	if (msg_entity != self)
+	if not(msg_entity.railgunhit)
+	if not(SPECTATOR_IS_SPECTATING(msg_entity, self)) { // we use realclient, so spectators can hear the whoosh too
 		// nearest point on the beam
 		beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
 		f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);

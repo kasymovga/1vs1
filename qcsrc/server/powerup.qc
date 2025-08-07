@@ -64,16 +64,6 @@ void(float killed) powerup_player_clear {
 	powerup_player_clear_next(killed);
 }
 
-var void(entity e) powerup_spectator_copy_next;
-void(entity e) powerup_spectator_copy {
-	self.strength_finished = e.strength_finished;
-	self.invincible_finished = e.invincible_finished;
-	self.speed_finished = e.speed_finished;
-	self.invisibility_finished = e.invisibility_finished;
-	self.akimbo_finished = e.akimbo_finished;
-	powerup_spectator_copy_next(e);
-}
-
 float powerup_init_done;
 void() powerup_init {
 	if (powerup_init_done)
@@ -94,8 +84,6 @@ void() powerup_init {
 	CVAR_CACHE(g_balance_powerup_strength_selfforce);
 	powerup_player_clear_next = plugin_chain_player_clear;
 	plugin_chain_player_clear = powerup_player_clear;
-	powerup_spectator_copy_next = plugin_chain_spectator_copy;
-	plugin_chain_spectator_copy = powerup_spectator_copy;
 }
 
 var void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mods_set_next;

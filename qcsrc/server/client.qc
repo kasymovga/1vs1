@@ -14,17 +14,9 @@ float client_ability_hookuseswap;
 
 void(entity cl, vector a) client_view_angles_set {
 	cl.v_angle = a;
-	if (clienttype(cl) == CLIENTTYPE_REAL) {
-		msg_entity = cl;
-		net_write_byte(MSG_ONE, SVC_SETANGLE);
-		net_write_angle(MSG_ONE, a_x);
-		net_write_angle(MSG_ONE, a_y);
-		net_write_angle(MSG_ONE, a_z);
-	}
 	entity e;
 	CLIENT_FOR_EACH_REAL(e) {
-		if (e.enemy == cl)
-		if (e.classname == "spectator") {
+		if (SPECTATOR_IS_SPECTATING_OR_ITSELF(e, cl)) {
 			msg_entity = e;
 			net_write_byte(MSG_ONE, SVC_SETANGLE);
 			net_write_angle(MSG_ONE, a_x);
@@ -34,24 +26,12 @@ void(entity cl, vector a) client_view_angles_set {
 	}
 }
 
-void(entity to) client_set_view {
-	vector a = to.angles;
-	a_z = 0;
-	if not(clienttype(self) == CLIENTTYPE_REAL)
-		return;
-
-	msg_entity = self;
-	net_write_byte(MSG_ONE, SVC_SETVIEW);
-	net_write_entity(MSG_ONE, to);
-}
-
 void(entity spot) client_put_to_spot{
 	self.angles = spot.angles;
 	self.angles_z = 0;
 	self.crouch = FALSE;
 	teleport_origin_set(self, spot.origin, 0);
 	client_view_angles_set(self, self.angles);
-	client_set_view(self);
 }
 
 .float just_connected;
@@ -456,6 +436,7 @@ void(void) client_connect { //called by engine
 
 		self.flags = FL_CLIENT;
 	}
+	self.spectatee_status = num_for_edict(self);
 	if (self.abuser > 0)
 		self.netname = client_abuserplayername;
 
@@ -632,21 +613,23 @@ void(void) client_pre_think { //called by engine
 	if (map_intermission_running) {
 		return;
 	}
-	if (frametime && (self.classname == "player" || self.team > 0)) {
-		if (self.deadflag == DEAD_NO)
-		if not(map_finished)
-		if not(warmup_active)
-		if (time > map_starttime)
-			self.play_time = self.play_time + frametime;
-
-		player_effects();
+	if (frametime) {
+		if (self.classname == "player" || self.team > 0) {
+			if (self.deadflag == DEAD_NO)
+			if not(map_finished)
+			if not(warmup_active)
+			if (time > map_starttime)
+				self.play_time = self.play_time + frametime;
+		}
 	}
+	self.spectatee_status &= 255;
 	if (self.classname == "player") {
+		self.spectatee_status |= (self.BUTTON_ZOOM ? 256 : 0);
 		player_think();
-		self.spectatee_status = (self.BUTTON_ZOOM ? 256 : 0);
+		spectator_player_think();
 	} else if (self.classname == "observer") {
+		self.spectatee_status |= 512;
 		spectator_observer_think();
-		self.spectatee_status = num_for_edict(self);
 	} else if (self.classname == "spectator") {
 		spectator_think();
 	}

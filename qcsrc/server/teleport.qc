@@ -62,8 +62,7 @@ void(entity teleporter, entity to, vector to_angles) teleport_teleportation_send
 	}
 	entity e;
 	CLIENT_FOR_EACH_REAL(e) {
-		if (e.enemy == to)
-		if (e.classname == "spectator") {
+		if (SPECTATOR_IS_SPECTATING(e, to)) {
 			msg_entity = e;
 			net_write_byte(MSG_ONE, SVC_SETANGLE);
 			net_write_angle(MSG_ONE, to_angles_x);

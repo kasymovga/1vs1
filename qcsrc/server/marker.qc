@@ -160,10 +160,9 @@ float(entity e) marker_visible_for_player {
 float(void) marker_Customize {
 	// this is not in SendEntity because it shall run every frame, not just every update
 	// make spectators see what the player would see
-	entity e;
-	e = other;
-	if (e.classname == "spectator")
-		e = e.enemy;
+	entity e = other;
+	if (SPECTATOR_IS_SPECTATOR(e))
+		e = e.clientcamera;
 
 	return self.waypointsprite_visible_for_player(e);
 }

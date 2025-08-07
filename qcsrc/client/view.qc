@@ -142,13 +142,18 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	read_cvars();
 	view_spectatee_status = getstati(STAT_SPECSTATUS);
 	player_deadflag = getstati(STAT_PLAYER_STATE);
-	view_spectatorbutton_zoom = view_spectatee_status & 256;
-	view_spectatee_status = view_spectatee_status & 255;
-	view_observer_status = (view_spectatee_status ? (view_spectatee_status == player_localentnum) : 0);
+	view_spectatorbutton_zoom = (view_spectatee_status & 256);
+	if ((view_spectatee_status & 255) == player_localnum + 1) {
+		view_observer_status = (view_spectatee_status & 512);
+		view_spectatee_status = 0;
+	} else {
+		view_spectatee_status = (view_spectatee_status & 255);
+		view_observer_status = 0;
+	}
 	if (view_spectatee_status)
 		team_my = player_color(view_spectatee_status - 1);
 	else
-		team_my = player_color(player_localentnum - 1);
+		team_my = player_color(player_localnum);
 
 	server_ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 	// Render the Scene
