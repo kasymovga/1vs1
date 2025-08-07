@@ -1286,12 +1286,7 @@ void() player_init {
 	CVAR_CACHE(g_fullbrightplayers);
 	if not(player_init_done) {
 		CVAR_CACHE_STR(g_player_debris);
-		entity oldself = self;
-		self = spawn();
-		self.debris = g_player_debris;
-		debris_init();
-		remove(self);
-		self = oldself;
+		debris_precache(g_player_debris);
 	}
 	CVAR_CACHE(g_player_death_sound);
 	CVAR_CACHE(g_balance_armor_blockpercent);

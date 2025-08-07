@@ -22,17 +22,12 @@ void(void) debris_setup {
 	if not(self.debrisfadetime) self.debrisfadetime = 1;
 }
 
-void(void) debris_init {
-	float n, i;
+void(string _debris) debris_precache {
 	entity e = NULL;
-	CVAR_CACHE(sv_breakable_debris);
-	debris_setup();
-	n = tokenize_console(self.debris);
 	string s;
 	var void(void) item_spawnfunc;
 	entity oldself = self;
-	for(i = 0; i < n; ++i) {
-		s = argv(i);
+	for (; (s = str_car(_debris)) != ""; _debris = str_cdr(_debris)) {
 		if ((item_spawnfunc = item_spawnfunc_for(s))) {
 			self = spawn();
 			self.noalign = 1;
@@ -44,6 +39,12 @@ void(void) debris_init {
 			precache_model(s);
 	}
 	self = oldself;
+}
+
+void(void) debris_init {
+	CVAR_CACHE(sv_breakable_debris);
+	debris_setup();
+	debris_precache(self.debris);
 }
 
 void(string debrisname, vector force) debris_launch {

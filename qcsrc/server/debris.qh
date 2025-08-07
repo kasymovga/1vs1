@@ -3,3 +3,4 @@ void(vector force) debris_throw;
 .string debris; // space separated list of debris models
 void(void) debris_setup;
 void(void) debris_disable;
+void(string _debris) debris_precache;
