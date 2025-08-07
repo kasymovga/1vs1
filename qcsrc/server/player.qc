@@ -192,7 +192,6 @@ void(string s, string a1, string a2, string a3) player_obituary_print_all {
 
 void(entity to, string s, string a1, string a2, string a3) player_obituary_print_center {
 	if not(sv_notification_type)
-	if (clienttype(to) == CLIENTTYPE_REAL)
 		print_to_spec(to, PRINT_CENTER, s, a1, a2, a3);
 }
 
