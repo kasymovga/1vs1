@@ -14,6 +14,18 @@ float sv_model_ice_alpha;
 float sv_model_ice_use_skins;
 .entity ice;
 
+entity ice_note;
+
+float(void) ice_note_customize {
+	if not(other.ice) return FALSE;
+	if (SPECTATOR_IS_SPECTATOR(other)) return FALSE;
+	return TRUE;
+}
+
+void(void) ice_note_message {
+	self.message = "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger^1\n^1Press ^3{+attack2}^1 to spectate";
+}
+
 void(void) ice_think;
 
 void(void) ice_remove {
@@ -362,14 +374,13 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 
 var void(void) ice_player_think_next;
 void(void) ice_player_think {
-	if (self.deadflag == DEAD_FREEZE)
-	if (self.BUTTON_ATCK)
-		self.impulse = 38;
+	if (self.deadflag == DEAD_FREEZE && !SPECTATOR_IS_SPECTATOR(self)) {
+		if (self.BUTTON_ATCK)
+			self.impulse = 38;
 
-	if (self.deadflag == DEAD_FREEZE)
-	if (self.BUTTON_ATCK2)
-		spectator_player_start(); //force spectating
-
+		if (self.BUTTON_ATCK2)
+			spectator_player_start(); //force spectating
+	}
 	ice_player_think_next();
 }
 
@@ -413,4 +424,6 @@ void(void) ice_init {
 	plugin_chain_player_damage_handle = ice_player_damage_handle;
 	ice_player_think_next = plugin_chain_player_think;
 	plugin_chain_player_think = ice_player_think;
+	ice_note = noteline_new(ice_note_message);
+	ice_note.customizeentityforclient = ice_note_customize;
 }
