@@ -406,9 +406,9 @@ void(void) weapon_model_exterior_think {
 		self.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.body.modelindex_lod0 || self.deadflag != self.owner.deadflag) {
+	if (self.cnt != self.owner.weapon || self.dmg != akimbo_owner(self.owner).body.modelindex_lod0 || self.deadflag != self.owner.deadflag) {
 		self.cnt = self.owner.weapon;
-		self.dmg = self.owner.body.modelindex_lod0;
+		self.dmg = akimbo_owner(self.owner).body.modelindex_lod0;
 		self.deadflag = self.owner.deadflag;
 		self.dlc_reset = weapon_model_exterior_dlc_reset;
 		self.dlc_reset();
