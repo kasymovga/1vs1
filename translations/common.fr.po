@@ -1037,3 +1037,6 @@ msgstr "Succès !"
 
 msgid "Enter PIN-code:"
 msgstr "Entrez le code PIN :"
+
+msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+attack2}^1 to spectate"
+msgstr "^1Vous êtes gelés\n^1Utilisez ^3{+attack}^1 pour signaler le danger\n^1Appuyez sur ^3{+attack2}^1 pour observer"

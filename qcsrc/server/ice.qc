@@ -23,7 +23,7 @@ float(void) ice_note_customize {
 }
 
 void(void) ice_note_message {
-	self.message = "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger^1\n^1Press ^3{+attack2}^1 to spectate";
+	self.message = "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+attack2}^1 to spectate";
 }
 
 void(void) ice_think;
