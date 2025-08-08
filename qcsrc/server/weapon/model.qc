@@ -406,19 +406,19 @@ void(void) weapon_model_exterior_think {
 		self.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != akimbo_owner(self.owner).body.modelindex_lod0 || self.deadflag != self.owner.deadflag) {
-		self.cnt = self.owner.weapon;
-		self.dmg = akimbo_owner(self.owner).body.modelindex_lod0;
-		self.deadflag = self.owner.deadflag;
+	entity o = self.owner;
+	entity ao = akimbo_owner(o);
+	if (self.cnt != o.weapon || self.dmg != ao.body.modelindex_lod0 || self.deadflag != o.deadflag) {
+		self.cnt = o.weapon;
+		self.dmg = ao.body.modelindex_lod0;
+		self.deadflag = o.deadflag;
 		self.dlc_reset = weapon_model_exterior_dlc_reset;
 		self.dlc_reset();
 	}
-	self.effects = self.realowner.body.effects & (EFFECT_ADDITIVE | EFFECT_RED | EFFECT_BLUE | EFFECT_LOWPRECISION | EFFECT_FULLBRIGHT);
-	self.colormap = self.owner.colormap;
-	entity wi = self.owner.weaponentity;
-	entity o = self.owner;
+	self.effects = (self.realowner.body.effects & (EFFECT_ADDITIVE | EFFECT_RED | EFFECT_BLUE | EFFECT_LOWPRECISION | EFFECT_FULLBRIGHT));
+	self.colormap = o.colormap;
+	entity wi = o.weaponentity;
 	if (wi.wframe == WEAPON_FRAME_MELEE || (o.weapon == WEAPON_MELEE && wi.frame == WEAPON_FRAME_FIRE2)) {
-		entity ao = akimbo_owner(o);
 		if (ao.anim_melee == ao.anim_shoot) {
 			float f;
 			if (time < o.weapon_morph1time)
