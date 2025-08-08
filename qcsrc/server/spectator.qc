@@ -11,9 +11,9 @@ float(void) spectator_note_customize {
 #define spectator_note_message Spectator_Note_Message //compatibility with old save files
 void(void) spectator_note_message {
 	string s = "";
-	if (other.classname == "spectator") {
+	if (SPECTATOR_IS_SPECTATOR(other)) {
 		s = "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player";
-		if (self.classname == "player")
+		if (other.classname == "player")
 			s = strcat(s, "\n^1Press ^3{+jump}^1 to stop spectating");
 		else if (other.team <= 0 || !team_mode)
 			s = strcat(s, "\n^1Press ^3{+attack2}^1 to observe");
