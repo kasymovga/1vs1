@@ -89,7 +89,7 @@ msgid "Return to game"
 msgstr "Продолжить играть"
 
 msgid "Quit to desktop"
-msgstr "Выход их игры"
+msgstr "Выход из игры"
 
 msgid "Hints"
 msgstr "Подсказки"
