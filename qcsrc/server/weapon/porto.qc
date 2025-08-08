@@ -111,7 +111,7 @@ void(void) weapon_porto_touch {
 		if (portal_spawn_in_portal_at_trace(self.owner, self.right_vector)) {
 			self.portal_id = self.owner.portal_in.portal_id;
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
-			print_to_spec(self.owner, PRINT_CENTER, "^1In^7-portal created.", "", "", "");
+			print_to_spec(self.owner, PRINT_CENTER, "^1In^7-portal created", "", "", "");
 			weapon_porto_success();
 		} else {
 			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
@@ -123,7 +123,7 @@ void(void) weapon_porto_touch {
 			//self.portal_id = self.owner.portal_out.portal_id;
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
-			print_to_spec(self.owner, PRINT_CENTER, "^4Out^7-portal created.", "", "", "");
+			print_to_spec(self.owner, PRINT_CENTER, "^4Out^7-portal created", "", "", "");
 			weapon_porto_success();
 		} else {
 			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);

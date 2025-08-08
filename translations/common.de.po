@@ -1040,3 +1040,117 @@ msgstr "Enter PIN-code"
 
 msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+attack2}^1 to spectate"
 msgstr "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+attack2}^1 to spectate"
+
+msgid "Control Point has been freed"
+msgstr "Control Point has been freed"
+
+msgid "{1} got too close to {2}'s fireball"
+msgstr "{1} got too close to {2}'s fireball"
+
+msgid "You don't have any fuel for the ^2Jetpack"
+msgstr "You don't have any fuel for the ^2Jetpack"
+
+msgid "^7You steal special model from {1}"
+msgstr "^7You steal special model from {1}"
+
+msgid "^1No cheats allowed in campaign mode!"
+msgstr "^1No cheats allowed in campaign mode!"
+
+msgid "{1} generator under attack!"
+msgstr "{1} generator under attack!"
+
+msgid "^2All enemies destroyed!\n^2You successfully survived\n"
+msgstr "^2All enemies destroyed!\n^2You successfully survived\n"
+
+msgid "Enemy shield is broken!"
+msgstr "Enemy shield is broken!"
+
+msgid "^1No correct PIN code in {1} seconds, disconnecting...\n"
+msgstr "^1No correct PIN code in {1} seconds, disconnecting...\n"
+
+msgid "^1New wave incoming!\n^1Try to survive"
+msgstr "^1New wave incoming!\n^1Try to survive"
+
+msgid "^1In^7-portal created"
+msgstr "^1In^7-portal created"
+
+msgid "^4Out^7-portal created"
+msgstr "^4Out^7-portal created"
+
+msgid "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+jump}^1 to stop spectating\n^1Game type is ^3{2}"
+msgstr "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+jump}^1 to stop spectating\n^1Game type is ^3{2}"
+
+msgid "^1* This server required PIN-code to play\n"
+msgstr "^1* This server required PIN-code to play\n"
+
+msgid "^3Starting in {1}"
+msgstr "^3Starting in {1}"
+
+msgid "{1} burnt to death"
+msgstr "{1} burnt to death"
+
+msgid "{1}^2 is ready"
+msgstr "{1}^2 is ready"
+
+msgid "^3Round over"
+msgstr "^3Round over"
+
+msgid "{1} forgot about some firemine"
+msgstr "{1} forgot about some firemine"
+
+msgid "Quicksaving..."
+msgstr "Quicksaving..."
+
+msgid "^1No alive players left!\n^1Nobody survived\n"
+msgstr "^1No alive players left!\n^1Nobody survived\n"
+
+msgid "{1} {2} control point destroyed by {3}"
+msgstr "{1} {2} control point destroyed by {3}"
+
+msgid "{1} saw the pretty lights of {2}'s fireball"
+msgstr "{1} saw the pretty lights of {2}'s fireball"
+
+msgid "^3Begin!"
+msgstr "^3Begin!"
+
+msgid "{1}^7 steal special model from {2}"
+msgstr "{1}^7 steal special model from {2}"
+
+msgid "{1} used C++ and shot the leg out"
+msgstr "{1} used C++ and shot the leg out"
+
+msgid "{1}^7 got special model"
+msgstr "{1}^7 got special model"
+
+msgid "Enemy protected by shield!"
+msgstr "Enemy protected by shield!"
+
+msgid "Freeing..."
+msgstr "Freeing..."
+
+msgid "{1}^2 is ^1NOT^2 ready"
+msgstr "{1}^2 is ^1NOT^2 ready"
+
+msgid "^7{1}^7 steal special model from you"
+msgstr "^7{1}^7 steal special model from you"
+
+msgid "{1} was burnt to death by {2}"
+msgstr "{1} was burnt to death by {2}"
+
+msgid "^2Wave cleared!\n^3New wave starts in {1} seconds"
+msgstr "^2Wave cleared!\n^3New wave starts in {1} seconds"
+
+msgid "^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"
+msgstr "^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"
+
+msgid "{1} captured {2} control point"
+msgstr "{1} captured {2} control point"
+
+msgid "Return to fight area immediately!"
+msgstr "Return to fight area immediately!"
+
+msgid "{1} tasted {2}'s fireball"
+msgstr "{1} tasted {2}'s fireball"
+
+msgid "{1} could not hide from {2}'s fireball"
+msgstr "{1} could not hide from {2}'s fireball"

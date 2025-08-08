@@ -1040,3 +1040,117 @@ msgstr "Entrez le code PIN :"
 
 msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+attack2}^1 to spectate"
 msgstr "^1Vous êtes gelés\n^1Utilisez ^3{+attack}^1 pour signaler le danger\n^1Appuyez sur ^3{+attack2}^1 pour observer"
+
+msgid "Control Point has been freed"
+msgstr "Le point de contrôle a été libéré"
+
+msgid "{1} got too close to {2}'s fireball"
+msgstr "{1} s'est trop approché de la boule de feu de {2}"
+
+msgid "You don't have any fuel for the ^2Jetpack"
+msgstr "Vous n'avez plus de carburant pour le ^2Jetpack"
+
+msgid "^7You steal special model from {1}"
+msgstr "^7Vous volez le modèle spécial de {1}"
+
+msgid "^1No cheats allowed in campaign mode!"
+msgstr "^1Tricherie interdite en mode campagne !"
+
+msgid "{1} generator under attack!"
+msgstr "^7Le générateur {1} est attaqué !"
+
+msgid "^2All enemies destroyed!\n^2You successfully survived\n"
+msgstr "^2Tous les ennemis détruits !\n^2Vous avez survécu\n"
+
+msgid "Enemy shield is broken!"
+msgstr "Bouclier ennemi brisé !"
+
+msgid "^1No correct PIN code in {1} seconds, disconnecting..."
+msgstr "^1Pas de code PIN correct en {1} secondes, déconnexion…"
+
+msgid "^1New wave incoming!\n^1Try to survive"
+msgstr "Nouvelle vague en approche !\n^1Tentez de survivre"
+
+msgid "^1In^7-portal created"
+msgstr "^7Portail ^1d'entrée^7 créé"
+
+msgid "^4Out^7-portal created"
+msgstr "^7Portail ^4de sortie^7 créé"
+
+msgid "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+jump}^1 to stop spectating\n^1Game type is ^3{2}"
+msgstr "^1Tu regardes ^7{1}\n^1Appuies sur ^3{+attack}^1 pour suivre un autre joueur\n^1Appuyez sur ^3{+jump}^1 pour arrêter de regarder\n^1Mode de jeu : ^3{$2}"
+
+msgid "^1* This server required PIN-code to play"
+msgstr "^1* Ce serveur nécessite un code PIN pour jouer"
+
+msgid "^3Starting in {1}"
+msgstr "^3Début dans {1}"
+
+msgid "{1} burnt to death"
+msgstr "{1} brûlé vif"
+
+msgid "{1}^2 is ready"
+msgstr "{1}^2 est prêt"
+
+msgid "^3Round over"
+msgstr "^3Fin de la manche"
+
+msgid "{1} forgot about some firemine"
+msgstr "{1} j'ai oublié une mine incendiaire"
+
+msgid "Quicksaving..."
+msgstr "Sauvegarde rapide..."
+
+msgid "^1No alive players left!\n^1Nobody survived\n"
+msgstr "^1Plus aucun joueur en vie !\n^1Personne n'a survécu\n"
+
+msgid "{1} {2} control point destroyed by {3}"
+msgstr "Point de contrôle {1} {2} détruit par {3}"
+
+msgid "{1} saw the pretty lights of {2}'s fireball"
+msgstr "{1} a vu les jolies lumières de la boule de feu de {2}"
+
+msgid "^3Begin!"
+msgstr "^3Commencez !"
+
+msgid "{1}^7 steal special model from {2}"
+msgstr "{1}^7 vole un modèle spécial à {2}"
+
+msgid "{1} used C++ and shot the leg out"
+msgstr "{1} a utilisé C++ et a tiré sur la jambe"
+
+msgid "{1}^7 got special model"
+msgstr "{1}^7 obtient le modèle spécial"
+
+msgid "Enemy protected by shield!"
+msgstr "Ennemi protégé par un bouclier !"
+
+msgid "Freeing..."
+msgstr "Libération…"
+
+msgid "{1}^2 is ^1NOT^2 ready"
+msgstr "{1}^2 n'est ^1PAS^2 prêt"
+
+msgid "^7{1}^7 steal special model from you"
+msgstr "^7{1}^7 te vole le modèle spécial"
+
+msgid "{1} was burnt to death by {2}"
+msgstr "{1} a été brûlé vif par {2}"
+
+msgid "^2Wave cleared!\n^3New wave starts in {1} seconds"
+msgstr "^2Vague éliminée !\n^3Une nouvelle vague commence dans {1} secondes."
+
+msgid "^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"
+msgstr "^3Jouez maintenant ^1PROLONGATIONS^3 !\n\n^3Continuez à fragmenter jusqu'à ce qu'on ait un ^1gagnant^3 !"
+
+msgid "{1} captured {2} control point"
+msgstr "{1} a capturé le point de contrôle de {2}"
+
+msgid "Return to fight area immediately!"
+msgstr "Retournez immédiatement à la zone de combat !"
+
+msgid "{1} tasted {2}'s fireball"
+msgstr "{1} a goûté à la boule de feu de {2}"
+
+msgid "{1} could not hide from {2}'s fireball"
+msgstr "{1} n'a pas pu se cacher de la boule de feu de {2}"

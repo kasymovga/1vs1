@@ -1184,3 +1184,117 @@ msgstr "Voer pincode in:"
 
 msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+attack2}^1 to spectate"
 msgstr "^1Je bent bevroren\n^1Gebruik ^3{+attack2}^1 om gevaar te markeren\n^1Druk op ^3{+attack2}^1 om te kijken"
+
+msgid "Control Point has been freed"
+msgstr "Controlepost is bevrijd"
+
+msgid "{1} got too close to {2}'s fireball"
+msgstr "{1} kwam te dicht bij de vuurbal van {2}"
+
+msgid "You don't have any fuel for the ^2Jetpack"
+msgstr "Je hebt geen brandstof voor de ^2Jetpack"
+
+msgid "^7You steal special model from {1}"
+msgstr "^7Je steelt een speciaal model van {1}"
+
+msgid "^1No cheats allowed in campaign mode!"
+msgstr "^1Cheats zijn niet toegestaan in de campagnemodus!"
+
+msgid "{1} generator under attack!"
+msgstr "^7Generator van {1} wordt aangevallen!"
+
+msgid "^2All enemies destroyed!\n^2You successfully survived\n"
+msgstr "^2Alle vijanden vernietigd!\n^2Je hebt het overleefd\n"
+
+msgid "Enemy shield is broken!"
+msgstr "Vijandelijk schild is kapot!"
+
+msgid "^1No correct PIN code in {1} seconds, disconnecting..."
+msgstr "^1Geen correcte pincode in {1} seconden, verbinding verbroken..."
+
+msgid "^1New wave incoming!\n^1Try to survive"
+msgstr "^1Nieuwe golf komt eraan!\n^1 Probeer te overleven"
+
+msgid "^1In^7-portal created"
+msgstr "^1In^7-portaal gecreëerd"
+
+msgid "^4Out^7-portal created"
+msgstr "^4Out^7-portaal gecreëerd"
+
+msgid "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+jump}^1 to stop spectating\n^1Game type is ^3{2}"
+msgstr "^1^1Je volgt ^7{1}\n^1^1Druk op ^3{+attack}^1 om een andere speler te volgen\n^1Druk op ^3{+jump}^1 om te stoppen met toekijken\n^1Het gametype is ^3{2}"
+
+msgid "^1* This server required PIN-code to play"
+msgstr "^1* Deze server vereist een pincode om te spelen"
+
+msgid "^3Starting in {1}"
+msgstr "^3Beginnend in {1}"
+
+msgid "{1} burnt to death"
+msgstr "{1} levend verbrand"
+
+msgid "{1}^2 is ready"
+msgstr "{1}^2 is klaar"
+
+msgid "^3Round over"
+msgstr "^3Ronde om"
+
+msgid "{1} forgot about some firemine"
+msgstr "{1} vergat een vuurmijn"
+
+msgid "Quicksaving..."
+msgstr "Snel redden..."
+
+msgid "^1No alive players left!\n^1Nobody survived\n"
+msgstr "^1Geen levende spelers meer!\n^1Niemand heeft het overleefd\n"
+
+msgid "{1} {2} control point destroyed by {3}"
+msgstr "{1} {2} controlepost vernietigd door {3}"
+
+msgid "{1} saw the pretty lights of {2}'s fireball"
+msgstr "{1} zag de mooie lichtjes van de vuurbal van {2}"
+
+msgid "^3Begin!"
+msgstr "^3Begin!"
+
+msgid "{1}^7 steal special model from {2}"
+msgstr "{1}^7 steelt speciaal model van {2}"
+
+msgid "{1} used C++ and shot the leg out"
+msgstr "{1} gebruikte C++ en schoot het been eruit"
+
+msgid "{1}^7 got special model"
+msgstr "{1}^7 kreeg speciaal model"
+
+msgid "Enemy protected by shield!"
+msgstr "Vijand beschermd door schild!"
+
+msgid "Freeing..."
+msgstr "Bevrijden..."
+
+msgid "{1}^2 is ^1NOT^2 ready"
+msgstr "{1}^2 is NIET klaar"
+
+msgid "^7{1}^7 steal special model from you"
+msgstr "^7{1}^7 steelt speciaal model van je"
+
+msgid "{1} was burnt to death by {2}"
+msgstr "{1} is levend verbrand door {2}"
+
+msgid "^2Wave cleared!\n^3New wave starts in {1} seconds"
+msgstr "^2Golf voltooid! Nieuwe golf begint over {1} seconden"
+
+msgid "^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"
+msgstr "^3Nu spelen we ^1OVERTIME^3!\n\n^3Blijf fraggen tot we een ^1winnaar^3 hebben!"
+
+msgid "{1} captured {2} control point"
+msgstr "{1} veroverde {2} controlepunt"
+
+msgid "Return to fight area immediately!"
+msgstr "Keer onmiddellijk terug naar het gevechtsgebied!"
+
+msgid "{1} tasted {2}'s fireball"
+msgstr "{1} proefde de vuurbal van {2}"
+
+msgid "{1} could not hide from {2}'s fireball"
+msgstr "{1} kon zich niet verbergen voor de vuurbal van {2}"

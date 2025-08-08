@@ -134,13 +134,13 @@ msgid "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{
 "\n^1Game type is ^3{2}"
 "\n^1Press ^3{+jump}^1 to join"
 msgstr "^1Наблюдение за ^7{1}\n^1Нажмите ^3{+attack}^1 для другого игрока\n^1Нажмите ^3{+attack2}^1 для обзора"
-"\n^1Тип игры ^3{2}"
+"\n^1Тип игры: ^3{2}"
 "\n^1Нажми ^3{+jump}^1 чтобы присоединиться"
 
 msgid "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe"
 "\n^1Game type is ^3{2}"
 msgstr "^1Наблюдение за ^7{1}\n^1Нажмите ^3{+attack}^1 для другого игрока\n^1Нажмите ^3{+attack2}^1 для обзора"
-"\n^1Тип игры ^3{2}"
+"\n^1Тип игры: ^3{2}"
 
 msgid "^1Observing\n^1Press ^3{+attack}^1 to spectate"
 "\n^1Game type is ^3{2}"
@@ -1026,3 +1026,117 @@ msgstr "Введите PIN-код"
 
 msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+attack2}^1 to spectate"
 msgstr "^1Вы заморожены\n^1Используйте ^3{+attack}^1 для отметки опасности\n^1Нажмите ^3{+attack2}^1 для наблюдения"
+
+msgid "Control Point has been freed"
+msgstr "Контрольная Точка освобождена"
+
+msgid "{1} got too close to {2}'s fireball"
+msgstr "{1} находится слишком близко к файерболу игрока {2}"
+
+msgid "You don't have any fuel for the ^2Jetpack"
+msgstr "У Вас нет топлива для ^2Jetpack"
+
+msgid "^7You steal special model from {1}"
+msgstr "^7Вы украли специальную модель у {1}"
+
+msgid "^1No cheats allowed in campaign mode!"
+msgstr "^1Читы запрещены в прохождении кампании!"
+
+msgid "{1} generator under attack!"
+msgstr "{1} генератор атакован!"
+
+msgid "^2All enemies destroyed!\n^2You successfully survived\n"
+msgstr "^2Все враги уничтожены!\n^2Вы успешно выжили\n"
+
+msgid "Enemy shield is broken!"
+msgstr "Вражеский щит сломан!"
+
+msgid "^1No correct PIN code in {1} seconds, disconnecting..."
+msgstr "^1Корректный PIN код не введён в течении {1} секунды, отключение..."
+
+msgid "^1New wave incoming!\n^1Try to survive"
+msgstr "^1Новая волна приближается!\n^1Попробуй спастись"
+
+msgid "^1In^7-portal created"
+msgstr "^1Входящий^7-портал создан"
+
+msgid "^4Out^7-portal created"
+msgstr "^4Исходящий^7-портал создан"
+
+msgid "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+jump}^1 to stop spectating\n^1Game type is ^3{2}"
+msgstr "^1Наблюдаем за ^7{1}\n^1Нажми ^3{+attack}^1 для другого игрока\n^1Нажми ^3{+jump}^1 чтобы прекратить наблюдение\n^1Тип игры: ^3{2}"
+
+msgid "^1* This server required PIN-code to play"
+msgstr "^1* Сервер требует PIN-code чтобы играть"
+
+msgid "^3Starting in {1}"
+msgstr "^3Начинаем через {1}"
+
+msgid "{1} burnt to death"
+msgstr "{1} сгорает до смерти"
+
+msgid "{1}^2 is ready"
+msgstr "{1}^2 в готовности"
+
+msgid "^3Round over"
+msgstr "^3Раунд завершён"
+
+msgid "{1} forgot about some firemine"
+msgstr "{1} забывает про свою огненную мину"
+
+msgid "Quicksaving..."
+msgstr "Быстрое сохранение..."
+
+msgid "^1No alive players left!\n^1Nobody survived\n"
+msgstr "^1Живых игроков не осталось!\n^1Никто не спасся\n"
+
+msgid "{1} {2} control point destroyed by {3}"
+msgstr "{3} уничтожила контнольную точку {1} {2}"
+
+msgid "{1} saw the pretty lights of {2}'s fireball"
+msgstr "{1} видит красивыне огоньки файербола от игрока {2}"
+
+msgid "^3Begin!"
+msgstr "^3Начали!"
+
+msgid "{1}^7 steal special model from {2}"
+msgstr "{1}^7 украл специальную модель у игрока {2}"
+
+msgid "{1} used C++ and shot the leg out"
+msgstr "{1} польузется С++ и стреляет себе в ногу"
+
+msgid "{1}^7 got special model"
+msgstr "{1}^7 получает специальную модель"
+
+msgid "Enemy protected by shield!"
+msgstr "Враг защищён щитом!"
+
+msgid "Freeing..."
+msgstr "Особождение..."
+
+msgid "{1}^2 is ^1NOT^2 ready"
+msgstr "{1}^2 ^1НЕ^2 в готовности"
+
+msgid "^7{1}^7 steal special model from you"
+msgstr "^7{1}^7 ворует специальную модель у Вас"
+
+msgid "{1} was burnt to death by {2}"
+msgstr "{1} сгорает с помощью игрока {2}"
+
+msgid "^2Wave cleared!\n^3New wave starts in {1} seconds"
+msgstr "^2Волна очищена!\n^3Новая волна через {1} секунд"
+
+msgid "^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"
+msgstr "^3Теперь играем ^1ОВЕРТАЙМ^3!\n\n^3Продолжайтся сражаться пока не появится ^1победитель^3!"
+
+msgid "{1} captured {2} control point"
+msgstr "{1} захватил {2} контрольную точку"
+
+msgid "Return to fight area immediately!"
+msgstr "Вернитесь в боевую зону немедленно!"
+
+msgid "{1} tasted {2}'s fireball"
+msgstr "{1} пробует на вкус файербол игрока {2}"
+
+msgid "{1} could not hide from {2}'s fireball"
+msgstr "{1} не прячется вовремя от файербола игрока {2}"

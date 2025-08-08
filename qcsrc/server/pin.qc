@@ -34,12 +34,12 @@ float(entity e) pin_checker_presents {
 void(void) pin_checker_think2 {
 	entity o = self.owner;
 	pin_checker_remove(o);
-	print_to(self.owner, PRINT_CHAT, "^1No correct PIN code in {1} seconds, disconnecting...\n", ftos(sv_pin_timeout), "", "");
+	print_to(self.owner, PRINT_CHAT, "^1No correct PIN code in {1} seconds, disconnecting...", ftos(sv_pin_timeout), "", "");
 	dropclient(o);
 }
 
 void(void) pin_checker_think {
-	print_to(self.owner, PRINT_CHAT, "^1* This server required PIN-code to play\n", "", "", "");
+	print_to(self.owner, PRINT_CHAT, "^1* This server required PIN-code to play", "", "", "");
 	self.nextthink = max(self.cnt, time);
 	self.think = pin_checker_think2;
 }
