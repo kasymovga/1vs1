@@ -1070,8 +1070,6 @@ void(entity spot) player_spawn {
 	if ((self.debris = g_player_debris) != "")
 		debris_setup();
 
-	self.clientcamera = self;
-	self.clientdataent = self;
 	self.triggerhurttime = 0;
 	self.iscreature = TRUE;
 	self.delay = FALSE;
@@ -1158,6 +1156,7 @@ void(entity spot) player_spawn {
 	player_effects();
 	plugin_chain_player_spawn(spot);
 	if (self.classname == "player") { //spawn can be aborted by game hook
+		spectator_camera_setup();
 		if (g_spawnsound)
 			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 

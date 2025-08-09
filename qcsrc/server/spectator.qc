@@ -1,8 +1,9 @@
 entity spectator_note;
+var entity(entity e) spectator_camera_adjust_func;
 
 #define spectator_note_customize Spectator_Note_Customize //compatibility with old save files
 float(void) spectator_note_customize {
-	if (other.classname == "player" && other.clientcamera == other)
+	if (other.classname == "player" && (other.clientcamera == other || clienttype(other.clientcamera) == CLIENTTYPE_NOTACLIENT))
 		return FALSE;
 
 	return TRUE;
@@ -32,11 +33,6 @@ void(void) spectator_note_message {
 	self.message = s;
 }
 
-void(entity spectatee) spectator_copy {
-	//if (self.classname != "player")
-	//	setorigin(self, spectatee.origin);
-}
-
 void(void) spectator_impulse {
 	if (self.impulse && self.impulse <= 19) {
 		if (self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
@@ -60,9 +56,6 @@ float(void) spectator_update {
 	if (self.enemy.classname != "player")
 		return 0;
 
-	if (frametime)
-		spectator_copy(self.enemy);
-
 	return 1;
 }
 
@@ -81,11 +74,16 @@ float() spectator_spectate_next {
 	}
 	if (self.enemy) entcs_spec_update(self.enemy);
 	if (other) {
-		self.enemy = self.clientcamera = self.clientdataent = other;
+		self.enemy = other;
+		self.clientcamera = spectator_camera_adjust_func(other);
+		if (self.clientcamera)
+			self.clientdataent = self.clientcamera;
+		else
+			self.clientcamera = self.clientdataent = self.enemy;
+
 		entcs_spec_update(other);
 	}
 	if (self.enemy) {
-		spectator_copy(self.enemy);
 		spectator_note.SendFlags = 1;
 		return 1;
 	} else {
@@ -107,8 +105,44 @@ void(void) spectator_player_start {
 	spectator_spectate_next();
 }
 
+void(entity(entity e) adjust_func) spectator_camera_adjust {
+	entity cl;
+	spectator_camera_adjust_func = adjust_func;
+	entity camera;
+	CLIENT_FOR_EACH(cl) {
+		if (cl.classname == "spectator")
+			camera = adjust_func(cl.clientcamera);
+		else
+			camera = adjust_func(cl);
+
+		if (camera)
+			cl.clientcamera = cl.clientdataent = camera;
+	}
+}
+
+void(entity(entity e) adjust_func, entity camera) spectator_camera_unadjust {
+	entity cl;
+	if (spectator_camera_adjust_func != adjust_func) return;
+	spectator_camera_adjust_func = NULL;
+	CLIENT_FOR_EACH(cl)
+		if (cl.clientcamera == camera)
+			cl.clientcamera = cl.clientdataent = cl;
+}
+
+void(void) spectator_camera_setup {
+	entity e;
+	if (spectator_camera_adjust_func) {
+		e = spectator_camera_adjust_func(self);
+		if not(e) e = self;
+	} else
+		e = self;
+
+	self.clientcamera = self.clientdataent = e;
+}
+
 void(void) spectator_player_think {
 	if (self.clientcamera == self) return;
+	if (clienttype(self.clientcamera) == CLIENTTYPE_NOTACLIENT) return; //specing some non-player object
 	entity oldenemy = self.enemy;
 	if (self.BUTTON_ATCK && !self.delay) {
 		if (spectator_spectate_next() != 1) {
@@ -219,8 +253,6 @@ void() spectator_note_update {
 
 void(float frags_team_reset) spectator_observer_spawn {
 	entity spot;
-	self.clientcamera = self;
-	self.clientdataent = self;
 	plugin_chain_observer_spawn();
 	player_clear(FALSE);
 	spot = find(world, classname, "info_intermission");
@@ -240,6 +272,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.dmg_inflictor = NULL;
 	self.spectatortime = time;
 	self.classname = "observer";
+	spectator_camera_setup();
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
 	self.spectatorspeed = 1;
 	self.iscreature = FALSE;

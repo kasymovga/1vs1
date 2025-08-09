@@ -4,6 +4,7 @@ void() spectator_note_update;
 void(float frags_team_reset) spectator_observer_spawn;
 float spectator_block; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 void(void) spectator_player_think;
+void(void) spectator_camera_setup;
 #define SPECTATOR_IS_SPECTATING(who,whom) (who.clientcamera == whom && who != whom)
 #define SPECTATOR_IS_SPECTATING_OR_ITSELF(who,whom) (who.clientcamera == whom)
 #define SPECTATOR_IS_SPECTATOR(plr) (plr.clientcamera != plr)

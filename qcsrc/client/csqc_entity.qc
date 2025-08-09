@@ -142,7 +142,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_RM_GAME_TYPE_VOTE] = rm_game_type_vote_read;
 	csqc_entity_parsers[NET_CSQC_RM_BUFFMODEL] = rm_buffs_model_read;
 	csqc_entity_parsers[NET_CSQC_RM_EFFECT_HEAL_EMITTER] = rm_effect_heal_emitter_read;
-	csqc_entity_parsers[NET_CSQC_CAMERA] = camera_read;
+	//csqc_entity_parsers[NET_CSQC_UNUSED] = ;
 	csqc_entity_parsers[NET_CSQC_PIN_CODE_REQUEST] = pin_read;
 	csqc_entity_parsers[NET_CSQC_TRIGGER_IMPULSE_PREDICTION] = trigger_impulse_prediction_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_PICTURE - NET_TE_CSQC_FIRST] = map_vote_picture_read;

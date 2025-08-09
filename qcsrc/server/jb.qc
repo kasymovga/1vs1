@@ -177,25 +177,17 @@ void(void) jb_torture_plasma_think {
 	}
 }
 
-float(void) jb_camera_customize {
-	if (other.team == self.team) return FALSE;
-	if (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2) return FALSE;
-	//HACK, player respawn will fix it
-	other.stand_view_ofs = self.origin - other.origin;
-	other.crouch_view_ofs = self.origin - other.origin;
-	other.view_ofs = self.origin - other.origin;
-	return TRUE;
+entity jb_camera_view;
+entity(entity e) jb_camera_view_adjust {
+	if (e.team == jb_camera_view.team) return NULL;
+	if (e.team != COLOR_TEAM1 && e.team != COLOR_TEAM2) return NULL;
+	return jb_camera_view;
 }
 
-float(entity to, float sf) jb_camera_send {
-	net_write_byte(MSG_ENTITY, NET_CSQC_CAMERA);
-	net_write_coord(MSG_ENTITY, self.origin_x);
-	net_write_coord(MSG_ENTITY, self.origin_y);
-	net_write_coord(MSG_ENTITY, self.origin_z);
-	net_write_coord(MSG_ENTITY, self.angles_x);
-	net_write_coord(MSG_ENTITY, self.angles_y);
-	net_write_coord(MSG_ENTITY, self.angles_z);
-	return TRUE;
+void(void) jb_camera_view_reset {
+	spectator_camera_unadjust(jb_camera_view_adjust, jb_camera_view);
+	remove(jb_camera_view);
+	jb_camera_view = NULL;
 }
 
 void(float t) jb_camera_enable {
@@ -209,20 +201,14 @@ void(float t) jb_camera_enable {
 	if not(where) return;
 	entity e = spawn();
 	e.classname = "jb_camera_view";
+	setmodel(e, "null");
 	e.team = t;
 	setorigin(e, where.origin);
 	e.angles = where.angles;
-	e.reset = stdproc_remove;
-	net_link_entity(e, FALSE, 0, jb_camera_send);
-	e.customizeentityforclient = jb_camera_customize;
+	e.reset = jb_camera_view_reset;
+	jb_camera_view = e;
+	spectator_camera_adjust(jb_camera_view_adjust);
 }
-
-//void(void) jb_camera_disable {
-//	entity e;
-//	for (e = NULL; (e = find(e, classname, "jb_camera_view")); ) {
-//		remove(e);
-//	}
-//}
 
 void(float victim) jb_torture_start {
 	float i;
@@ -362,10 +348,6 @@ float(entity attacker, entity inflictor, float deathtype) jb_player_death_handle
 	player_spawn(jb_client_put_spawn_point());
 	return TRUE;
 }
-
-//void(void) jb_reset {
-//	jb_camera_disable();
-//}
 
 var float(entity plr, float w) jb_player_can_fire_next;
 float(entity plr, float w) jb_player_can_fire {
