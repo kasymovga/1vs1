@@ -204,7 +204,7 @@ void(float t) jb_camera_enable {
 	setmodel(e, "null");
 	e.team = t;
 	setorigin(e, where.origin);
-	e.angles = where.angles;
+	e.v_angle = e.angles = where.angles;
 	e.reset = jb_camera_view_reset;
 	jb_camera_view = e;
 	spectator_camera_adjust(jb_camera_view_adjust);

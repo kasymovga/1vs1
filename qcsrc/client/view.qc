@@ -142,11 +142,13 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	read_cvars();
 	view_spectatee_status = getstati(STAT_SPECSTATUS);
 	player_deadflag = getstati(STAT_PLAYER_STATE);
+	sbar_hidescores = FALSE;
 	if not(view_spectatee_status) {
 		view_spectatee_status = 1;
 		view_observer_status = 0;
 		view_spectatorbutton_zoom = 0;
 		team_my = player_color(player_localnum);
+		sbar_hidescores = TRUE;
 	} else {
 		view_spectatorbutton_zoom = (view_spectatee_status & 256);
 		if ((view_spectatee_status & 255) == player_localnum + 1) {
@@ -266,7 +268,6 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		view_camera_free_active = TRUE;
 		view_camera_mode = FALSE;
 	}
-	sbar_hidescores = FALSE;
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
 	R_SetView(VF_DRAWENGINESBAR, 0);
 	e = self;
