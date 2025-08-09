@@ -1281,6 +1281,30 @@ void(entity pl) race_position_remove {
 	if (e) remove(e);
 }
 
+void(entity src, entity dst) race_copy {
+	setorigin(dst, src.origin);
+	dst.velocity = src.velocity;
+	dst.health = src.health;
+	dst.armorvalue = src.armorvalue;
+	dst.ammo_nails = src.ammo_nails;
+	dst.ammo_cells = src.ammo_cells;
+	dst.ammo_rockets = src.ammo_rockets;
+	dst.ammo_shells = src.ammo_shells;
+	dst.weapons = src.weapons;
+	dst.weapon = src.weapon;
+	dst.race_completed = src.race_completed;
+	dst.race_penalty_accumulator = src.race_penalty_accumulator;
+	dst.race_penalty_reason = src.race_penalty_reason;
+	dst.race_checkpoint = src.race_checkpoint;
+	dst.race_laptime = src.race_laptime;
+	dst.race_lastpenalty = src.race_lastpenalty;
+	dst.race_penalty = src.race_penalty;
+	dst.race_movetime = src.race_movetime;
+	dst.race_movetime_frac = src.race_movetime_frac;
+	dst.race_movetime_count = src.race_movetime_count;
+	dst.race_maxspeed = src.race_maxspeed;
+}
+
 void(entity pl) race_position_create {
 	if (pl.classname != "player") {
 		sprint(pl, "\{1}^1You need join game first!\n");
@@ -1288,23 +1312,9 @@ void(entity pl) race_position_create {
 	}
 	race_position_remove(pl);
 	entity e = spawn();
-	entity oldself = self;
-	self = e;
-	spectator_copy(pl);
-	self = oldself;
+	race_copy(pl, e);
 	e.classname = "race_position";
 	e.owner = pl;
-	e.race_completed = pl.race_completed;
-	e.race_penalty_accumulator = pl.race_penalty_accumulator;
-	e.race_penalty_reason = pl.race_penalty_reason;
-	e.race_checkpoint = pl.race_checkpoint;
-	e.race_laptime = pl.race_laptime;
-	e.race_lastpenalty = pl.race_lastpenalty;
-	e.race_penalty = pl.race_penalty;
-	e.race_movetime = pl.race_movetime;
-	e.race_movetime_frac = pl.race_movetime_frac;
-	e.race_movetime_count = pl.race_movetime_count;
-	e.race_maxspeed = pl.race_maxspeed;
 	e.cnt = 1;
 	sprint(pl, "\{1}^2Position was saved\n");
 }
@@ -1316,22 +1326,7 @@ void(entity pl) race_position_restore {
 	}
 	entity e = race_position_find(pl);
 	if (e) {
-		setorigin(pl, e.origin);
-		entity oldself = self;
-		self = pl;
-		spectator_copy(e);
-		self = oldself;
-		pl.race_completed = e.race_completed;
-		pl.race_penalty_accumulator = e.race_penalty_accumulator;
-		pl.race_penalty_reason = e.race_penalty_reason;
-		pl.race_checkpoint = e.race_checkpoint;
-		pl.race_laptime = e.race_laptime;
-		pl.race_lastpenalty = e.race_lastpenalty;
-		pl.race_penalty = e.race_penalty;
-		pl.race_movetime = e.race_movetime;
-		pl.race_movetime_frac = e.race_movetime_frac;
-		pl.race_movetime_count = e.race_movetime_count;
-		pl.race_maxspeed = e.race_maxspeed;
+		race_copy(e, pl);
 		if (pl.race_laptime)
 			race_checkpoint_next_send(pl, 1);
 		else
