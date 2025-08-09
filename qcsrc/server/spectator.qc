@@ -75,7 +75,11 @@ float() spectator_spectate_next {
 	if (self.enemy) entcs_spec_update(self.enemy);
 	if (other) {
 		self.enemy = other;
-		self.clientcamera = spectator_camera_adjust_func(other);
+		if (spectator_camera_adjust_func)
+			self.clientcamera = spectator_camera_adjust_func(other);
+		else
+			self.clientcamera = other;
+
 		if (self.clientcamera)
 			self.clientdataent = self.clientcamera;
 		else
