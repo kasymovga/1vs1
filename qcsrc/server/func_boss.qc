@@ -155,7 +155,7 @@ void(void) func_boss_controller_think {
 					for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
 						if (e.classname != "func_boss_part") continue;
 						if (e.cnt != boss.cnt) continue;
-						if (e.max_health > 1) boss.max_health += (e.max_health - 1);
+						if (e.health > 1) boss.max_health += (e.health - 1);
 					}
 					boss.health = boss.max_health;
 					marker_UpdateMaxHealth(boss.sprite, boss.health);
