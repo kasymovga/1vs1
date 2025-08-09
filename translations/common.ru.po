@@ -1024,8 +1024,8 @@ msgstr "Успешно!"
 msgid "Enter PIN-code:"
 msgstr "Введите PIN-код"
 
-msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+attack2}^1 to spectate"
-msgstr "^1Вы заморожены\n^1Используйте ^3{+attack}^1 для отметки опасности\n^1Нажмите ^3{+attack2}^1 для наблюдения"
+msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+use}^1 to spectate"
+msgstr "^1Вы заморожены\n^1Используйте ^3{+attack}^1 для отметки опасности\n^1Нажмите ^3{+use}^1 для наблюдения"
 
 msgid "Control Point has been freed"
 msgstr "Контрольная Точка освобождена"

@@ -23,7 +23,7 @@ float(void) ice_note_customize {
 }
 
 void(void) ice_note_message {
-	self.message = "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+attack2}^1 to spectate";
+	self.message = "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+use}^1 to spectate";
 }
 
 void(void) ice_think;
@@ -378,7 +378,7 @@ void(void) ice_player_think {
 		if (self.BUTTON_ATCK)
 			self.impulse = 38;
 
-		if (self.BUTTON_ATCK2)
+		if (self.BUTTON_USE)
 			spectator_player_start(); //force spectating
 	}
 	ice_player_think_next();
