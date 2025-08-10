@@ -109,7 +109,7 @@ void(entity plr) entcs_spec_update {
 }
 
 void(void) entcs_spec_message {
-	float isspec = (other.enemy == self.owner);
+	float isspec = SPECTATOR_IS_SPECTATING(other, self.owner);
 	string s = (isspec ? "^2Spectating this player:" : "^2Spectating you:");
 	if not(isspec)
 		s = strcat(s, "\n^9type ^7showspec 0^9 to hide\n");
@@ -117,7 +117,7 @@ void(void) entcs_spec_message {
 	entity e;
 	float spectators = 0, hidden = 0;
 	CLIENT_FOR_EACH_REAL(e)
-		if (e.enemy == self.owner && !(e.client_flags & CLIENT_FLAG_RM_ANONSPEC)) {
+		if (SPECTATOR_IS_SPECTATING(e, self.owner) && !(e.client_flags & CLIENT_FLAG_RM_ANONSPEC)) {
 			spectators++;
 			if (spectators < 8) {
 				s = strcat(s, "\n", strreplace("\n", "", e.netname));
@@ -138,7 +138,7 @@ void(void) entcs_spec_message {
 float(void) entcs_spec_customize {
 	if (self.owner.classname != "player") return FALSE;
 	if not(other.client_flags & CLIENT_FLAG_RM_SHOWSPEC) return FALSE;
-	if (other == self.owner || other.enemy == self.owner) return TRUE;
+	if (SPECTATOR_IS_SPECTATING_OR_ITSELF(other, self.owner)) return TRUE;
 	return FALSE;
 }
 
