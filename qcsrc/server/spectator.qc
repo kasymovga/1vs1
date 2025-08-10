@@ -126,11 +126,16 @@ void(entity(entity e) adjust_func) spectator_camera_adjust {
 
 void(entity(entity e) adjust_func, entity camera) spectator_camera_unadjust {
 	entity cl;
-	if (spectator_camera_adjust_func != adjust_func) return;
-	spectator_camera_adjust_func = NULL;
+	if (spectator_camera_adjust_func == adjust_func)
+		spectator_camera_adjust_func = NULL;
+
 	CLIENT_FOR_EACH(cl)
-		if (cl.clientcamera == camera)
-			cl.clientcamera = cl.clientdataent = cl;
+		if (cl.clientcamera == camera) {
+			if (cl.classname == "spectator")
+				cl.clientcamera = cl.clientdataent = cl.enemy;
+			else
+				cl.clientcamera = cl.clientdataent = cl;
+		}
 }
 
 void(void) spectator_camera_setup {
