@@ -36,7 +36,7 @@ float(void) jb_note_customize {
 }
 
 void(void) jb_note_message {
-	self.message = "^1Yor are jailed\n^1Press ^3{+use}^1 to spectate";
+	self.message = "^1You are jailed\n^1Press ^3{+use}^1 to spectate";
 }
 
 string(entity cp) jb_marker_name {

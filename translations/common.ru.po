@@ -1024,7 +1024,7 @@ msgstr "Успешно!"
 msgid "Enter PIN-code:"
 msgstr "Введите PIN-код"
 
-msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+use}^1 to spectate"
+msgid "^1You are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+use}^1 to spectate"
 msgstr "^1Вы заморожены\n^1Используйте ^3{+attack}^1 для отметки опасности\n^1Нажмите ^3{+use}^1 для наблюдения"
 
 msgid "Control Point has been freed"
@@ -1140,3 +1140,6 @@ msgstr "{1} пробует на вкус файербол игрока {2}"
 
 msgid "{1} could not hide from {2}'s fireball"
 msgstr "{1} не прячется вовремя от файербола игрока {2}"
+
+msgid "^1You are jailed\n^1Press ^3{+use}^1 to spectate"
+msgstr "^1Вы за решёткой\n^1Нажмите ^3{+use}^1 для наблюдения"

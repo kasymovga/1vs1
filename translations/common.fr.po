@@ -1038,8 +1038,8 @@ msgstr "Succès !"
 msgid "Enter PIN-code:"
 msgstr "Entrez le code PIN :"
 
-msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+use}^1 to spectate"
-msgstr "^1Vous êtes gelés\n^1Utilisez ^3{+attack}^1 pour signaler le danger\n^1Appuyez sur ^3{+use}^1 pour observer"
+msgid "^1You are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+use}^1 to spectate"
+msgstr "^1Tu es gelé\n^1Utilisez ^3{+attack}^1 pour signaler le danger\n^1Appuyez sur ^3{+use}^1 pour observer"
 
 msgid "Control Point has been freed"
 msgstr "Le point de contrôle a été libéré"
@@ -1154,3 +1154,6 @@ msgstr "{1} a goûté à la boule de feu de {2}"
 
 msgid "{1} could not hide from {2}'s fireball"
 msgstr "{1} n'a pas pu se cacher de la boule de feu de {2}"
+
+msgid "^1You are jailed\n^1Press ^3{+use}^1 to spectate"
+msgstr "^1Tu es emprisonné\n^1Appuyez sur ^3{+use}^1 pour observer"

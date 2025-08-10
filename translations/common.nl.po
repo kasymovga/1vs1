@@ -1182,7 +1182,7 @@ msgstr "Succes!"
 msgid "Enter PIN-code:"
 msgstr "Voer pincode in:"
 
-msgid "^1Yor are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+use}^1 to spectate"
+msgid "^1You are frozen\n^1Use ^3{+attack}^1 to mark danger\n^1Press ^3{+use}^1 to spectate"
 msgstr "^1Je bent bevroren\n^1Gebruik ^3{+attack2}^1 om gevaar te markeren\n^1Druk op ^3{+use}^1 om te kijken"
 
 msgid "Control Point has been freed"
@@ -1298,3 +1298,6 @@ msgstr "{1} proefde de vuurbal van {2}"
 
 msgid "{1} could not hide from {2}'s fireball"
 msgstr "{1} kon zich niet verbergen voor de vuurbal van {2}"
+
+msgid "^1You are jailed\n^1Press ^3{+use}^1 to spectate"
+msgstr "^1Je zit gevangen\n^1Druk op ^3{+use}^1 om te kijken"
