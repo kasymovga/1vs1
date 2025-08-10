@@ -1638,7 +1638,6 @@ void(void) rm_buffs_pickup_setup {
         self.buffs = Buffs_Randomize_Yield();
     
     self.classname = "item_buff";
-	self.culltracemode = CULLTRACEMODE_NONE;
     self.flags = FL_ITEM;
     self.solid = SOLID_TRIGGER;
     self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
