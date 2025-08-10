@@ -13,6 +13,8 @@ float g_jb_capture_multi_factor;
 float g_jb_score_jbreak;
 float g_jb_score_jbreak_perplayer;
 
+entity jb_note;
+
 var .float jb_player_jailed;
 #define JB_PLAYER_JAILED(plr) (plr.scorekeeper.jb_player_jailed)
 #define JB_PLAYER_JAIL_SET(plr, x) score_player_set(plr, SP_STATUS, x);
@@ -26,6 +28,16 @@ enum {
 };
 
 var void(void) jb_torture_thinks[JB_TORTURE_COUNT];
+
+float(void) jb_note_customize {
+	if not(JB_PLAYER_JAILED(other)) return FALSE;
+	if (SPECTATOR_IS_SPECTATOR(other)) return FALSE;
+	return TRUE;
+}
+
+void(void) jb_note_message {
+	self.message = "^1Yor are jailed\n^1Press ^3{+use}^1 to spectate";
+}
 
 string(entity cp) jb_marker_name {
 	string id = chr2str(str2chr("A", 0) + cp.dmg);
@@ -393,6 +405,15 @@ float(entity plr) jb_team_ignored_for {
 	return JB_PLAYER_JAILED(plr);
 }
 
+var void(void) jb_player_think_next;
+void(void) jb_player_think {
+	if (JB_PLAYER_JAILED(self) && !SPECTATOR_IS_SPECTATOR(self)) {
+		if (self.BUTTON_USE)
+			spectator_player_start(); //force spectating
+	}
+	jb_player_think_next();
+}
+
 void(void) jb_init {
 	jb = TRUE;
 	score_generic();
@@ -413,6 +434,8 @@ void(void) jb_init {
 		jb_player_can_fire_next = plugin_chain_player_can_fire;
 		plugin_chain_player_can_fire = jb_player_can_fire;
 	}
+	jb_player_think_next = plugin_chain_player_think;
+	plugin_chain_player_think = jb_player_think;
 	precache_sound("kh/alarm.wav");
 	precache_sound("weapons/electro_bounce.wav");
 	precache_sound("weapons/grenade_bounce1");
@@ -444,6 +467,8 @@ void(void) jb_init {
 	projectile_init(PROJECTILE_ELECTRO);
 	projectile_init(PROJECTILE_ELECTRO_BEAM);
 	entity_initialize(self, jb_init_delayed, INITPRIO_FIRST);
+	jb_note = noteline_new(jb_note_message);
+	jb_note.customizeentityforclient = jb_note_customize;
 }
 
 void(float t, entity by) jb_open {
