@@ -408,7 +408,7 @@ float(entity plr) jb_team_ignored_for {
 var void(void) jb_player_think_next;
 void(void) jb_player_think {
 	if (JB_PLAYER_JAILED(self) && !SPECTATOR_IS_SPECTATOR(self)) {
-		if (self.BUTTON_USE)
+		if (self.buttonuse)
 			spectator_player_start(); //force spectating
 	}
 	jb_player_think_next();

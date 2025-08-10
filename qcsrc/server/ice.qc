@@ -378,7 +378,7 @@ void(void) ice_player_think {
 		if (self.BUTTON_ATCK)
 			self.impulse = 38;
 
-		if (self.BUTTON_USE)
+		if (self.buttonuse)
 			spectator_player_start(); //force spectating
 	}
 	ice_player_think_next();
