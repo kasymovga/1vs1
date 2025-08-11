@@ -1282,7 +1282,25 @@ void(entity pl) race_position_remove {
 }
 
 void(entity src, entity dst) race_copy {
-	setorigin(dst, src.origin);
+	float tshift;
+	if (dst.classname == "player") {
+		teleport_origin_set(dst, src.origin, 0);
+		client_view_angles_set(dst, src.v_angle);
+		tshift = time;
+	} else {
+		setorigin(dst, src.origin);
+		dst.v_angle = src.v_angle;
+		tshift = -time;
+	}
+	dst.speed_finished = (src.speed_finished ? src.speed_finished + tshift : 0);
+	dst.invincible_finished = (src.invincible_finished ? src.invincible_finished + tshift : 0);
+	dst.strength_finished = (src.strength_finished ? src.strength_finished + tshift : 0);
+	dst.items = src.items;
+	dst.pauseregen_finished = src.pauseregen_finished + tshift;
+	dst.pauserothealth_finished = src.pauserothealth_finished + tshift;
+	dst.pauserotarmor_finished = src.pauserotarmor_finished + tshift;
+	dst.pauserotfuel_finished = src.pauserotfuel_finished + tshift;
+	dst.ammo_fuel = src.ammo_fuel;
 	dst.velocity = src.velocity;
 	dst.health = src.health;
 	dst.armorvalue = src.armorvalue;
