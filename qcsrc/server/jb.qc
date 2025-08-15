@@ -367,6 +367,9 @@ float(entity plr, float w) jb_player_can_fire {
 	if (JB_PLAYER_JAILED(plr))
 		return FALSE;
 
+	if (SPECTATOR_IS_SPECTATOR(plr))
+		return FALSE;
+
 	return r;
 }
 
