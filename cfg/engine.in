@@ -18,7 +18,7 @@ set cl_maxfps_alwayssleep 0
 set sv_curl_defaulturl ""
 set cl_curl_enabled 1
 set cl_curl_maxdownloads 5
-set cl_curl_maxspeed 1500
+set cl_curl_maxspeed 10000
 set cl_curl_timeout 10
 cl_decals_max 192
 seta r_picmipworld 1
