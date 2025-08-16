@@ -45,7 +45,7 @@ void fillNexuizNetworkSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1.15, e = makeNexuizTextLabel(0, _("Speed (kB/s):")));
-		me.TD(me, 1, 1.75, e = makeNexuizSlider(10, 5000, 10, "cl_curl_maxspeed"));
+		me.TD(me, 1, 1.75, e = makeNexuizSlider(100, 10000, 100, "cl_curl_maxspeed"));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Client UDP port:")));
