@@ -247,8 +247,9 @@ void(void) akimbo_init {
 					break;
 				}
 	}
-	g_akimbo_weapons = g_akimbo_weapons & akimbo_supported_weapons;
+	g_akimbo_weapons = (g_akimbo_weapons & akimbo_supported_weapons);
 	if not(g_akimbo_weapons)
+	if not(g_akimbo_weapons_extra)
 	if not(g_powerup_strength_akimbo)
 		return;
 
