@@ -879,9 +879,10 @@ void() player_body_model_setup {
 	if (team_mode && self.body.playermodel == "models/player/nexus.zym" && self.skinindex >= 3 && self.skinindex <= 5) // nexys.zym have skins 3, 4 and 5 as fbgreen/fbred/fborange
 		self.skinindex = 6;
 
-	if (chmdl || oldskin != self.skinindex)
+	if (chmdl || oldskin != self.skinindex) {
 		player_species_setup();
-
+		hat_attach(self);
+	}
 	if (forcecolor > -2) {
 		float colors = plugin_chain_player_colors_mod(forcecolor);
 		if (self.clientcolors != colors)

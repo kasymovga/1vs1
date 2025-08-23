@@ -1,1 +1,4 @@
 void(void) hat_init;
+void(float(void) cb) hat_init_custom;
+void(entity plr) hat_attach;
+void(entity plr, string m, float s, string at, vector o, vector a) hat_add;
