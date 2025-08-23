@@ -399,7 +399,6 @@ void(void) physics_client_connect_real {
 		self.player_physic.owner = self;
 		net_link_entity(self.player_physic, FALSE, 0, physics_send);
 	}
-	self.player_physic.SendFlags = 3;
 	physics_client_connect_real_next();
 }
 
@@ -647,54 +646,56 @@ float(entity to, float sf) physics_send {
 	self = self.owner;
 	float dodging_flags = 0;
 	float sf2 = 0;
+	vector v;
 	physics_abilities_start();
-	if not(sf & 3) {
-		if (SPECTATOR_IS_SPECTATOR(self)) {
-			//for strafe helper
-			self.last_maxspeedmod = self.enemy.last_maxspeedmod;
-			self.crouch = self.enemy.crouch;
-			if (self.enemy.flags & FL_ONGROUND) sf |= 16;
-		} else if (self.classname == "player") sf |= 8;
-		if (self.last_physics_ladder) sf |= 32;
-		if (self.ladder_entity.classname == "func_water") sf |= 64;
-		if (self.crouch) sf |= 256;
-		if (self.last_maxspeedmod != 1) sf |= 512;
-		if (self.movetype != MOVETYPE_QCWALK) sf |= 1024;
-		if (self.gravity && self.gravity != 1) sf |= 2048;
-		if (self.teleport_time - time >= 0) sf |= 4096;
-		if (self.lastwj > 0) sf |= 8192;
-		if (g_dodging || g_dodging_frozen) {
-			dodging_flags = 0;
-			if (self.last_dodging_time > 0) dodging_flags |= 1;
-			if (self.last_FORWARD_KEY_time > 0) dodging_flags |= 2;
-			if (self.last_BACKWARD_KEY_time > 0) dodging_flags |= 4;
-			if (self.last_LEFT_KEY_time > 0) dodging_flags |= 8;
-			if (self.last_RIGHT_KEY_time > 0) dodging_flags |= 16;
-			if (dodging_flags)
-				sf2 |= 4;
-		}
-		if (self.groundentity)
-		if (self.flags & FL_ONGROUND_OR_SLICK)
-		if (self.groundentity.movetype != MOVETYPE_NONE)
-		if (self.groundentity.solid == SOLID_BSP) {
-			sf |= 32768;
-		}
-		if (self.skimming_time > 0) sf2 |= 1;
-		if (g_cpmdoublejump)
-		if (self.cpmdoublejump)
-			sf2 |= 2;
+	sf &= 7;
+	if (SPECTATOR_IS_SPECTATOR(self)) {
+		//for strafe helper
+		entity spectatee = SPECTATOR_SPECTATEE(self);
+		if (spectatee.flags & FL_ONGROUND) sf |= 16;
+		v = spectatee.velocity;
+	} else {
+		if (self.classname == "player")
+			sf |= 8;
 
-		if (g_physics_fixed)
-			sf2 |= 8;
-
-		if (self.physics_nofriction_time)
-			sf2 |= 16;
-
-		if (sf2) sf |= 16384;
+		v = self.velocity;
 	}
-	else
-		sf = sf & 7;
+	if (self.last_physics_ladder) sf |= 32;
+	if (self.ladder_entity.classname == "func_water") sf |= 64;
+	if (self.crouch) sf |= 256;
+	if (self.last_maxspeedmod != 1) sf |= 512;
+	if (self.movetype != MOVETYPE_QCWALK) sf |= 1024;
+	if (self.gravity && self.gravity != 1) sf |= 2048;
+	if (self.teleport_time - time >= 0) sf |= 4096;
+	if (self.lastwj > 0) sf |= 8192;
+	if (g_dodging || g_dodging_frozen) {
+		dodging_flags = 0;
+		if (self.last_dodging_time > 0) dodging_flags |= 1;
+		if (self.last_FORWARD_KEY_time > 0) dodging_flags |= 2;
+		if (self.last_BACKWARD_KEY_time > 0) dodging_flags |= 4;
+		if (self.last_LEFT_KEY_time > 0) dodging_flags |= 8;
+		if (self.last_RIGHT_KEY_time > 0) dodging_flags |= 16;
+		if (dodging_flags)
+			sf2 |= 4;
+	}
+	if (self.groundentity)
+	if (self.flags & FL_ONGROUND_OR_SLICK)
+	if (self.groundentity.movetype != MOVETYPE_NONE)
+	if (self.groundentity.solid == SOLID_BSP) {
+		sf |= 32768;
+	}
+	if (self.skimming_time > 0) sf2 |= 1;
+	if (g_cpmdoublejump)
+	if (self.cpmdoublejump)
+		sf2 |= 2;
 
+	if (g_physics_fixed)
+		sf2 |= 8;
+
+	if (self.physics_nofriction_time)
+		sf2 |= 16;
+
+	if (sf2) sf |= 16384;
 	net_write_short(MSG_ENTITY, sf);
 	if (sf2)
 		net_write_byte(MSG_ENTITY, sf2);
@@ -816,9 +817,9 @@ float(entity to, float sf) physics_send {
 		net_write_coord(MSG_ENTITY, self.origin_x);
 		net_write_coord(MSG_ENTITY, self.origin_y);
 		net_write_coord(MSG_ENTITY, self.origin_z);
-		net_write_coord(MSG_ENTITY, self.velocity_x);
-		net_write_coord(MSG_ENTITY, self.velocity_y);
-		net_write_coord(MSG_ENTITY, self.velocity_z);
+		net_write_coord(MSG_ENTITY, v_x);
+		net_write_coord(MSG_ENTITY, v_y);
+		net_write_coord(MSG_ENTITY, v_z);
 		net_write_coord(MSG_ENTITY, self.flags);
 		if ((sf & 32) && (sf & 64)) {
 			net_write_coord(MSG_ENTITY, self.ladder_entity.speed);

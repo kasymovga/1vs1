@@ -8,3 +8,4 @@ void(void) spectator_camera_setup;
 #define SPECTATOR_IS_SPECTATING(who,whom) (who.clientcamera == whom && who != whom)
 #define SPECTATOR_IS_SPECTATING_OR_ITSELF(who,whom) (who.clientcamera == whom)
 #define SPECTATOR_IS_SPECTATOR(plr) (plr.clientcamera != plr)
+#define SPECTATOR_SPECTATEE(plr) plr.clientcamera
