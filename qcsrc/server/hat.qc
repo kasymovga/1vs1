@@ -32,6 +32,7 @@ void(float killed) hat_player_clear {
 }
 
 void(entity plr, string m, float s, string at, vector o, vector a) hat_add {
+	if (plr.body)
 	if not(plr.hat) {
 		print("adding hat\n");
 		plr.hat = spawn();
