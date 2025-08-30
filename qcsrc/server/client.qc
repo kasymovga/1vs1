@@ -316,12 +316,6 @@ void(float destteam) client_team_change_kill {
 
 void(float destteam) client_team_change {
 	float t, c0;
-	if not(team_mode) {
-		if (destteam >= 0)
-			player_set_colors(self, destteam);
-
-		return;
-	}
 	if (self.team <= 0)
 	if (destteam > 0)
 	if not(client_join_allowed()) {

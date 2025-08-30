@@ -341,7 +341,7 @@ void (entity pl, float forcebestteam) team_join_best {
 }
 
 void(float _color) SV_ChangeTeam {
-	if (team_mode)
+	if (team_mode && team_teams > 1)
 		return;
 
 	player_set_colors(self, _color);

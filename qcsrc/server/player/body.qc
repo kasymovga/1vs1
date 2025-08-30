@@ -842,7 +842,7 @@ string(string _playermodel) player_body_model_check {
 void() player_body_model_setup {
 	float forcecolor, chmdl = FALSE, oldskin;
 	vector m1, m2;
-	if (team_mode) {
+	if (team_mode && team_teams > 1) {
 		forcecolor =
 				((self.team == COLOR_TEAM1) ? g_player_forcecolor_red :
 				((self.team == COLOR_TEAM2) ? g_player_forcecolor_blue :

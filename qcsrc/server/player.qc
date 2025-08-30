@@ -1245,8 +1245,8 @@ void(entity pl, float _color) player_set_colors {
 	pants = _color & 0x0F;
 	shirt = _color & 0xF0;
 	float t = pl.team;
-	if (team_mode)
-		setcolor(pl, 16*pants + pants);
+	if (team_mode && team_teams > 1)
+		setcolor(pl, 16 * pants + pants);
 	else
 		setcolor(pl, shirt + pants);
 
