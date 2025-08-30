@@ -14,6 +14,7 @@ set surv_g_player_damage_screen_effects 1
 set surv_g_waypoints_auto_generate 1
 set surv_g_score_bestweapon 0
 set surv_g_player_forcemodel 0
+set surv_g_player_allowed_models "*"
 set surv_g_player_forcecolor -2
 alias cl_hook_gamestart_surv ""
 alias sv_hook_gamestart_surv ""
