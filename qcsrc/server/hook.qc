@@ -216,7 +216,7 @@ void(void) hook_touch {
 		hook_remove(self);
 		return;
 	}
-	if (team_mode)
+	if (team_teams)
 	if (g_balance_grapplehook_team_friendly)
 	if (other.team == self.owner.team)
 	if (other.classname == "player")

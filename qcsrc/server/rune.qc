@@ -493,7 +493,7 @@ void(entity targ, entity attacker, float _damage, vector force) rune_DamageForce
 	entity e;
 	if(targ.classname == "player") {
 		if(attacker.classname == "player") {
-			if(attacker != targ && PLAYER_REALLY_ALIVE(attacker) && (!team_mode || attacker.team != targ.team)) {
+			if(attacker != targ && PLAYER_REALLY_ALIVE(attacker) && (!team_teams || attacker.team != targ.team)) {
 				if (attacker.runes & RUNE_STUN) {
 					if not(targ.rune_stun) {
 						e = spawn();

@@ -2,7 +2,7 @@ float DAMAGE_SCORE;
 var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) damage_score_player_damage_handle_next;
 float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) damage_score_player_damage_handle {
 	if (attacker.scorekeeper)
-	if (!team_mode || attacker.team != self.team)
+	if (!team_teams || attacker.team != self.team)
 	if (attacker != self)
 	if (deathtype != WEAPON_PORTO)
 		score_player_add(attacker, DAMAGE_SCORE, _damage);

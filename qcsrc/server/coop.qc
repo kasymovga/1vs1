@@ -222,7 +222,6 @@ void(void) coop_init {
 		coop_item_give_factor_next = plugin_chain_item_give_factor;
 		plugin_chain_item_give_factor = coop_item_give_factor;
 	}
-	team_play_activate();
 	team_teams_set_count(1);
 	entity_initialize(world, coop_init_delayed, INITPRIO_GAMETYPE);
 }

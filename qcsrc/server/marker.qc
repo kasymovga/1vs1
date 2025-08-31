@@ -294,7 +294,7 @@ entity(
 	vector ofs
 ) marker_DeployFixed {
 	float t, maxdistance;
-	if (team_mode)
+	if (team_teams)
 		t = self.team;
 	else
 		t = 0;
@@ -325,7 +325,7 @@ entity(
 	if (self.waypointsprite_attachedforcarrier)
 		return world; // can't attach to FC
 
-	if (team_mode)
+	if (team_teams)
 		t = self.team;
 	else
 		t = 0;
@@ -403,7 +403,7 @@ void(float imp) marker_impulse {
 		}
 		break;
 	case 33:
-		if (self.deadflag == DEAD_NO && team_mode) {
+		if (self.deadflag == DEAD_NO && team_teams) {
 			wp = marker_Attach("helpme", TRUE);
 			if (wp)
 				marker_UpdateTeamRadar(wp, RADARICON_HELPME, '1 0.5 0'); // TODO choose better color

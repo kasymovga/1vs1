@@ -701,7 +701,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 		if (!g_pickup_items || plugin_chain_ItemForbidden(self.classname))
 			goto item_start_fail;
 
-		if (team_mode) {
+		if (team_teams) {
 			if (self.notteam) {
 				print("removed non-teamplay ", self.classname, "\n");
 				goto item_start_fail;

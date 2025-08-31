@@ -43,9 +43,8 @@ void() spawn_relocate {
 	if (!self.cnt)
 		self.cnt = 1;
 
-	if (team_mode)
-		if (self.team)
-			spawn_have_team_spawns = 1;
+	if (self.team)
+		spawn_have_team_spawns = 1;
 
 	if (cvar("r_showbboxes")) {
 		// show where spawnpoints point at too
@@ -60,7 +59,7 @@ void() spawn_relocate {
 }
 
 void() spawnpoint_use {
-	if (team_mode)
+	if (team_teams)
 	if (spawn_have_team_spawns) {
 		self.team = activator.team;
 		spawn_has_been_used = 1;
@@ -182,7 +181,7 @@ entity (float anypoint) spawn_select {
 		return spot;
 
 	teamcheck = 0;
-	if(!anypoint && spawn_have_team_spawns)
+	if(!anypoint && team_teams && spawn_have_team_spawns)
 		teamcheck = self.team;
 
 	// get the list of players

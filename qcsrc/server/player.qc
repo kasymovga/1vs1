@@ -203,7 +203,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 	string s_red = strcat("^1", s, "^1");
 	a = attacker.netname;
 	string a_red = strcat("^1", a, "^1");
-	float attacker_is_player = (attacker.classname == "player" || (team_mode && attacker.classname == "spectator" && attacker.team > 0));
+	float attacker_is_player = (attacker.classname == "player" || (team_teams && attacker.classname == "spectator" && attacker.team > 0));
 	if (targ == attacker) {
 		if (clienttype(attacker) == CLIENTTYPE_BOT)
 			bot_say(attacker, FALSE, world, cvar_string("bot_messages_suicide"), "");
@@ -250,7 +250,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		if (clienttype(attacker) == CLIENTTYPE_BOT) {
 			if (bot_talk)
 			if (random() < bot_talk) {
-				if (team_mode && attacker.team == targ.team)
+				if (team_teams && attacker.team == targ.team)
 					bot_say(attacker, FALSE, world, cvar_string("bot_messages_teamkill"), strcat(targ.netname, "^7: "));
 				else
 					bot_say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, "^7: "));
@@ -268,7 +268,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		if (bot_talk)
 		if (attacker_is_player)
 		if (random() <= bot_talk) {
-			if (team_mode && attacker.team == targ.team) {
+			if (team_teams && attacker.team == targ.team) {
 				bot_say(targ, FALSE, world, cvar_string("bot_messages_teamkilled"), strcat(attacker.netname, "^7: "));
 			} else {
 				if (random() < 0.5)
@@ -277,7 +277,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					bot_say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
 			}
 		}
-		if (team_mode && attacker.team == targ.team && !targ.saboteur && attacker_is_player && !plugin_team_ignored_for(targ)) {
+		if (team_teams && attacker.team == targ.team && !targ.saboteur && attacker_is_player && !plugin_team_ignored_for(targ)) {
 			print_to(attacker, PRINT_CENTER, "^1Moron! You fragged {1}, a team mate!", s, "", "");
 			player_obituary_print_all("{1} mows down a team mate", a_red, "", "");
 			if (targ.killcount > 2) {
@@ -485,7 +485,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 	RM({
 		if (attacker != self) {
-			if (team_mode && attacker.team == self.team)
+			if (team_teams && attacker.team == self.team)
 				rm_damage_indicator(attacker, hitloc, take, save, RM_DAMAGE_FRIENDLY_FIRE);
 			else if (damage_headshot)
 				rm_damage_indicator(attacker, hitloc, take, save, RM_DAMAGE_CRITICAL);
@@ -741,7 +741,7 @@ void(entity player) player_to_spec {
 		voip_setup(self);
 		self = oldself;
 		spectator_note_update();
-		if (team_mode)
+		if (team_teams)
 			team_balance_audit(FALSE);
 
 		player_leave();
@@ -1054,7 +1054,7 @@ void(entity pl) player_physics_setup {
 	else {
 		pl.clipgroup = 0;
 	}
-	if (team_mode)
+	if (team_teams)
 	if (g_sideview || !g_player_team_collisions)
 		pl.clipgroup = pl.team;
 }
@@ -1233,7 +1233,7 @@ float(entity plr, float wep) player_can_fire {
 // decolorizes and team colors the player name when needed
 string(entity p) player_name {
     string t;
-    if (team_mode && !map_intermission_running && p.classname == "player") {
+    if (team_teams && !map_intermission_running && p.classname == "player") {
         t = team_color_code(p.team);
         return strcat(t, strdecolorize(p.netname));
     } else
@@ -1245,7 +1245,7 @@ void(entity pl, float _color) player_set_colors {
 	pants = _color & 0x0F;
 	shirt = _color & 0xF0;
 	float t = pl.team;
-	if (team_mode && team_teams > 1)
+	if (team_teams > 1)
 		setcolor(pl, 16 * pants + pants);
 	else
 		setcolor(pl, shirt + pants);

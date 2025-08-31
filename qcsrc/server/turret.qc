@@ -352,7 +352,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if not(baseent.tur_active)
 		return;
 
-	if (team_mode)
+	if (team_teams)
 	if (self.team == attacker.team) {
 		// This does not happen anymore. Re-enable if you fix that.
 		//if (attacker.flags & FL_CLIENT)
@@ -724,11 +724,11 @@ float(entity e_turret,entity e_target,float validate_flags) turret_validate_targ
 			if (e_turret.team != e_target.owner.team)
 				return -12;
 		} else {
-			if (e_target.team == e_turret.team || (team_mode && !e_target.team))
+			if (e_target.team == e_turret.team || (team_teams && !e_target.team))
 				return -13;
 
 			if (e_target.owner)
-			if (e_turret.team == e_target.owner.team || (team_mode && !e_target.owner.team))
+			if (e_turret.team == e_target.owner.team || (team_teams && !e_target.owner.team))
 				return -14;
 		}
 	}
@@ -839,7 +839,7 @@ void() turret_think {
 		return;
 
 	// ONS uses somewhat backwards linking.
-	if (team_mode) {
+	if (team_teams) {
 		if (self.team != self.tur_head.team)
 			turret_stdproc_setcolormod();
 	}
@@ -1009,7 +1009,7 @@ void() turret_stdproc_fire {
 }
 
 void() turret_activate {
-	if (team_mode)
+	if (team_teams)
 		self.tur_active = self.team;
 	else
 		self.tur_active = 1;
@@ -1048,7 +1048,7 @@ void(void) turret_precache {
 float turret_count;
 void(void) turret_stdproc_init_delayed {
 	entity e;
-	if not(team_mode)
+	if not(team_teams)
 		self.team = -1; // Group all turrets into the same team iso they dont kill eachother.
 	else {
 		if (self.targetname != "") {

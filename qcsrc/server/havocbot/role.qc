@@ -40,7 +40,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_item
 				continue;
 			}
 		}
-		if (team_mode) {
+		if (team_teams) {
 			discard = FALSE;
 			PLAYER_FOR_EACH(player) {
 				if ( self == player || player.deadflag )
@@ -107,7 +107,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 	entity head;
 	float t, noteam, distance;
 	entity e;
-	noteam = ((self.team == 0) || !team_mode); // fteqcc sucks
+	noteam = ((self.team == 0) || !team_teams); // fteqcc sucks
 	if (bot_nofire)
 		return;
 

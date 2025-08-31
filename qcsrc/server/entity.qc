@@ -237,7 +237,7 @@ void(void) entity_spawn_pre {
 	if (entity_gametype_patterns == "") {
 		entity_gametype_patterns = cvar_string("g_gametype_patterns");
 		if (entity_gametype_patterns == "") { //Trying to guess
-			if (team_mode)
+			if (team_teams)
 				entity_gametype_patterns = "team|ctf";
 			else if(cvar("g_maxplayers") == 2)
 				entity_gametype_patterns = "tournament|duel";
@@ -248,7 +248,7 @@ void(void) entity_spawn_pre {
 	string s;
 	float i, n;
 	if(self.gametypefilter != "")
-	if not(game_type_filter(game_type, team_mode, self.gametypefilter)) {
+	if not(game_type_filter(game_type, team_teams, self.gametypefilter)) {
 		remove(self);
 		return;
 	}

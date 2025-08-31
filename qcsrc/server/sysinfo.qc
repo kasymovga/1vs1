@@ -97,7 +97,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 		head = str_car(tail);
 		if (head == "saboteur")
 			sysinfo_search_and_mark(_info, saboteur, 1, "marked as saboteur");
-		else if (head == "noteam" && team_mode) {
+		else if (head == "noteam" && team_teams) {
 			sysinfo_search_and_mark(_info, saboteur, 2, "marked as no team");
 			PLAYER_FOR_EACH_REAL(e) {
 				if (e.sysinfo == _info)

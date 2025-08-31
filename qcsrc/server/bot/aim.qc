@@ -113,11 +113,11 @@ float(entity e) bot_aim_shouldattack {
 		if (e == self)
 			return FALSE;
 
-		if (team_mode)
+		if (team_teams)
 		if (e.team != 0)
 			return FALSE;
 	}
-	if (team_mode) {
+	if (team_teams) {
 		if(e.team==0)
 			return FALSE;
 	} else if(bot_ignore_bots)

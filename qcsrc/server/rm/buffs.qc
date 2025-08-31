@@ -426,7 +426,7 @@ void(void) rm_buffs_init {
     float enabled = 0;
     for(i = 0, b = 1; i < RM_BUFFS_COUNT; ++i, b *= 2) {
         if(b == RM_BUFFS_MEDIC || b == RM_BUFFS_CONDUIT)
-        if(!team_mode)
+        if(!team_teams)
             continue;
         
         if(b == RM_BUFFS_WRATH || b == RM_BUFFS_ADEPT)
@@ -582,7 +582,7 @@ void(void) rm_buffs_init_delayed {
         self = o;
     }
 
-    if(team_mode) {
+    if(team_teams) {
         teams_total = team_teams;
 
         blist = findchain(classname, "item_buff");
@@ -977,7 +977,7 @@ float(entity targ, entity attacker, entity inflictor, float damage, float deatht
     if(!RM_BUFFS_PRESENT(attacker, RM_BUFFS_MEDIC))
         return damage;
 
-    if((team_mode && attacker.team == targ.team) || attacker == targ) {
+    if((team_teams && attacker.team == targ.team) || attacker == targ) {
         float heal;
 
         if(DEATH_RM_ISPROJECTED(deathtype))
@@ -1609,7 +1609,7 @@ void Buffs_BuffPickup_TeamSwap(void) {
 }
 
 void(void) rm_buffs_pickup_setup {
-    if(!g_buffs || (self.team && !team_mode) || (g_buffs_team_only && !self.team)) {
+    if(!g_buffs || (self.team && !team_teams) || (g_buffs_team_only && !self.team)) {
         remove(self);
         return;
     }

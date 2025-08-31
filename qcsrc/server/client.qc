@@ -123,9 +123,9 @@ float(entity to, float sf) client_init_send {
 		game_menu_send();
 
 	if (sf & 32) {
-		net_write_byte(MSG_ENTITY, team_mode);
+		net_write_byte(MSG_ENTITY, team_teams);
 		t = 0;
-		if (team_mode) {
+		if (team_teams) {
 			team_teams_allowed(self);
 			if (team1 >= 0) t |= 1;
 			if (team2 >= 0) t |= 2;
@@ -493,7 +493,7 @@ void(void) client_disconnect { //called by engine
 	if ((s = cvar_string("g_ragequit_message")) != "")
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	if (time > map_starttime)
-	if (!team_mode || team_teams > 1)
+	if (team_teams != 1)
 	if (!map_finished)
 	if (self.classname == "player") {
 		entity e;
@@ -530,7 +530,7 @@ void(void) client_disconnect { //called by engine
 		plugin_chain_client_disconnect_real();
 		vote_client_connect();
 	}
-	if (team_mode) {
+	if (team_teams > 1) {
 		team_balance_audit(FALSE);
 	}
 	player_leave();
@@ -543,7 +543,6 @@ void(void) client_disconnect { //called by engine
  * @return bool TRUE if the player is allowed to join, false otherwise
  */
 float() client_join_allowed {
-	if (team_mode)
 	if (team_teams > 1)
 	if (self.saboteur > 1)
 		return FALSE;
@@ -558,7 +557,7 @@ float() client_join_allowed {
 	float currentlyPlaying = 0;
 	CLIENT_FOR_EACH_REAL(e) {
 		if (e != self) //avoid wrong self-counting in teamplay
-		if (e.classname == "player" || (team_mode && e.team > 0))
+		if (e.classname == "player" || e.team > 0)
 			currentlyPlaying += 1;
 	}
 	if (currentlyPlaying < g_maxplayers)

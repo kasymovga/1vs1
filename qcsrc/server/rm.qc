@@ -35,7 +35,7 @@ float(entity to, float sf) rm_effect_heal_emitter_send {
 }
 
 float(void) rm_effect_heal_emitter_customize {
-	if (other == self.owner || (team_mode && other.team == self.owner.team))
+	if (other == self.owner || (team_teams && other.team == self.owner.team))
 		return TRUE;
 
 	return FALSE;

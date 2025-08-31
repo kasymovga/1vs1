@@ -10,7 +10,7 @@ float g_trigger_push_skip_projectiles;
 float g_trigger_push_prediction;
 
 void(void) trigger_push_use {
-	if(team_mode)
+	if(team_teams)
 		self.team = activator.team;
 }
 

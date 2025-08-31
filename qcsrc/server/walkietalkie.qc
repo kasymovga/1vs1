@@ -63,7 +63,7 @@ void(float n) walkietalkie_menu_select {
 		sprint(self, "\{1}^1Spectators cannot use walkie-talkie\n");
 		return;
 	}
-	float _team_index = ((team_mode && !sv_walkietalkie_public) ? team_index(self.team) : 0);
+	float _team_index = ((team_teams && !sv_walkietalkie_public) ? team_index(self.team) : 0);
 	if (_team_index)
 		_team_index--;
 

@@ -186,7 +186,7 @@ void nadget_GenericProjectile_Touch(void) {
         if(nadget_GenericProjectile_TryStick(other, v))
             return;
 
-        if(self.hg_type == NADGET_TRANSLOC && team_mode && other.team == self.owner.team) {
+        if(self.hg_type == NADGET_TRANSLOC && team_teams && other.team == self.owner.team) {
             float adeptRev = (RM_BUFFS_PRESENT(self.owner, RM_BUFFS_ADEPT) && g_nadgets_transloc_adept_revive);
 			if(adeptRev || RM_BUFFS_PRESENT(self.owner, RM_BUFFS_MEDIC)) {
 				if (other.deadflag == DEAD_FREEZE) {

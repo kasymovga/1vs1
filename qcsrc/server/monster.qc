@@ -84,7 +84,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	if (e.takedamage)
 	if not(e.flags & FL_NOTARGET)
 	if (e.deadflag == DEAD_NO) {
-		if (team_mode) {
+		if (team_teams) {
 			if not(self.team)
 				continue;
 
@@ -232,7 +232,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 	} else if (deathtype == DEATH_FALL)
 		return;
 
-	float isenemy = (!attacker || attacker.team != self.team || (!team_mode && substring(attacker.classname, 0, 7) != "monster"));
+	float isenemy = (!attacker || attacker.team != self.team || (!team_teams && substring(attacker.classname, 0, 7) != "monster"));
 	if (!isenemy) {
 		if (g_friendlyfire)
 			_damage = _damage * g_friendlyfire;
@@ -474,7 +474,7 @@ void monster_shield_destroy(void) {
 
 void monster_spawn_think() {
 	float quant = plugin_monster_quant();
-	if (team_mode)
+	if (team_teams)
 	if not(self.team)
 		return;
 

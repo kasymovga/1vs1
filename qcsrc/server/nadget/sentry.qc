@@ -221,14 +221,14 @@ void nadget_Sentry_Interrupt_Capture(void) {
 void nadget_Sentry_SetOwner(entity sentry, entity newowner) {
     nadget_Waypoint_Remove(sentry.hg_waypoint);
 
-    sentry.team = (team_mode ? newowner.team : 0);
+    sentry.team = (team_teams ? newowner.team : 0);
     sentry.colormap = num_for_edict(newowner);
     sentry.aiment.colormap = sentry.colormap;
 
     if(newowner) {
         sentry.skin = 0;
         sentry.aiment.effects &= ~EFFECT_NODRAW;
-        sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * team_color((team_mode ? sentry.team : COLOR_TEAM3));
+        sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * team_color((team_teams ? sentry.team : COLOR_TEAM3));
         sentry.bot_attack = TRUE;
     } else {
         sentry.skin = 1;
@@ -367,7 +367,7 @@ void nadget_Sentry_Think(void) {
 
     nadget_Sentry_Levitate();
 
-    if(o && ((team_mode && self.team != o.team) || !o.iscreature))
+    if(o && ((team_teams && self.team != o.team) || !o.iscreature))
         o = world;
 
     if(!o || PLAYER_DEAD(o)) {
@@ -493,7 +493,7 @@ void nadget_Sentry_Trigger(void) {
 				damage(targ, self, self, c_dmg, NADGET_SENTRY | HITTYPE_SECONDARY, endpos, force);
 
             sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
-            weapon_zapper_attack2_effect((team_mode ? self.team : COLOR_TEAM3), o, end_visual);
+            weapon_zapper_attack2_effect((team_teams ? self.team : COLOR_TEAM3), o, end_visual);
 			if(targ.takedamage && RM_BUFFS_PRESENT(self, RM_BUFFS_ADEPT)) {
 				if(g_nadgets_sentry_adept_shock_arc) {
 					arc_damage(targ, self, c_dmg, NADGET_SENTRY | HITTYPE_SECONDARY | HITTYPE_BOUNCE,

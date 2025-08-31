@@ -71,10 +71,6 @@ string(float t) team_name_by_no {
 	return "Neutral Team";
 }
 
-void(void) team_play_activate {
-	team_mode = TRUE;
-}
-
 float at1, at2, at3, at4;
 void(float _team) team_teams_set_allowed {
 	if (_team == COLOR_TEAM1)
@@ -298,7 +294,7 @@ float(entity pl) team_find_smallest {
 void (entity pl, float forcebestteam) team_join_best {
 	float smallest, selectedteam;
 	// don't join a team if we're not playing a team game
-	if not(team_mode) {
+	if not(team_teams) {
 		pl.team = 0;
 		return;
 	}
@@ -341,7 +337,7 @@ void (entity pl, float forcebestteam) team_join_best {
 }
 
 void(float _color) SV_ChangeTeam {
-	if (team_mode && team_teams > 1)
+	if (team_teams > 1)
 		return;
 
 	player_set_colors(self, _color);
@@ -735,7 +731,7 @@ void(void) team_init {
 }
 
 float(entity a, entity b) team_is_different_teams {
-	if (team_mode) {
+	if (team_teams) {
 		if (a.team == b.team)
 			return 0;
 	} else {

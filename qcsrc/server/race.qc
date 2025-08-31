@@ -1395,7 +1395,6 @@ void(void) race_init {
 	if (game_type == GAME_TYPE_RACE) {
 		g_race = 1;
 		if (cvar("g_race_teams")) {
-			team_play_activate();
 			race_teams = bound(2, cvar("g_race_teams"), 4);
 			team_teams_set_count(race_teams);
 		} else

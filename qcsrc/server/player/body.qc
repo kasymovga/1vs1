@@ -687,7 +687,7 @@ void(string modelname) player_body_setup_lod {
 
 string() player_body_model_list_allowed {
 	string l = g_player_allowed_models;
-	if (team_mode)
+	if (team_teams)
 	if (self.team > 0) {
 		if (self.team == COLOR_TEAM1) {
 			if (g_player_allowed_models_red != "")
@@ -842,7 +842,7 @@ string(string _playermodel) player_body_model_check {
 void() player_body_model_setup {
 	float forcecolor, chmdl = FALSE, oldskin;
 	vector m1, m2;
-	if (team_mode && team_teams > 1) {
+	if (team_teams > 1) {
 		forcecolor =
 				((self.team == COLOR_TEAM1) ? g_player_forcecolor_red :
 				((self.team == COLOR_TEAM2) ? g_player_forcecolor_blue :
@@ -876,7 +876,7 @@ void() player_body_model_setup {
 		self.skinindex = player_body_allowed_skin(self.playermodel_save, stof(self.playerskin));
 		self.playerskin = "";
 	}
-	if (team_mode && self.body.playermodel == "models/player/nexus.zym" && self.skinindex >= 3 && self.skinindex <= 5) // nexys.zym have skins 3, 4 and 5 as fbgreen/fbred/fborange
+	if (team_teams && self.body.playermodel == "models/player/nexus.zym" && self.skinindex >= 3 && self.skinindex <= 5) // nexys.zym have skins 3, 4 and 5 as fbgreen/fbred/fborange
 		self.skinindex = 6;
 
 	if (chmdl || oldskin != self.skinindex) {
@@ -897,7 +897,7 @@ void() player_body_model_setup {
 	}
 	if (self.body.colormap != self.colormap) {
 		self.body.colormap = self.colormap;
-		if (team_mode &&  self.body.usecolormod) {
+		if (team_teams &&  self.body.usecolormod) {
 			self.body.colormod = team_colormod(self.team);
 			if (self.body.colormod == '0 0 0')
 				self.body.colormod = '1 1 1';

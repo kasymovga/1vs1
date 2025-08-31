@@ -378,7 +378,7 @@ void() map_finish {
 	rank_distribute(world);
 	map_finished_message = "^2Game finished!";
 	string arg;
-	if (team_mode) {
+	if (team_teams) {
 		arg = team_colored_name(score_winning_condition_helper_winnerteam);
 		if (score_winning_condition_helper_winnerteam > 0)
 			map_finished_message = strcat(map_finished_message, "\n{1}^2 wins!");

@@ -30,7 +30,7 @@ void(entity attacker, entity targ, float deathtype, float hits, float _damage) w
 	if (targ.deadflag == DEAD_NO)
 	if (targ.iscreature)
 	if (targ != attacker)
-	if (!team_mode || targ.team != attacker.team)
+	if (!team_teams || targ.team != attacker.team)
 	if not(warmup_active)
 	if (time >= map_starttime)
 	if (WEAPON_VALID(weaponid)) {

@@ -16,13 +16,13 @@ void(void) spectator_note_message {
 		s = "^1Spectating ^7{1}\n^1Press ^3{+attack}^1 for another player";
 		if (other.classname == "player")
 			s = strcat(s, "\n^1Press ^3{+jump}^1 to stop spectating");
-		else if (other.team <= 0 || !team_mode)
+		else if (other.team <= 0 || !team_teams)
 			s = strcat(s, "\n^1Press ^3{+attack2}^1 to observe");
 
 		self.target = other.enemy.netname;
 	} else if (other.classname == "observer") {
 		s = "^1Observing";
-		if (other.team <= 0 || !team_mode)
+		if (other.team <= 0 || !team_teams)
 			s = strcat(s, "\n^1Press ^3{+attack}^1 to spectate");
 	}
 	s = strcat(s, "\n^1Game type is ^3{2}");
@@ -63,14 +63,14 @@ float() spectator_spectate_next {
 	other = self.enemy;
 	do
 		other = find(other, classname, "player");
-	while ((other == self) || (other && team_mode && self.team > 0 && other.team != self.team));
+	while ((other == self) || (other && team_teams && self.team > 0 && other.team != self.team));
 	if not(other) {
 		do
 			if (other == self.enemy)
 				break;
 			else
 				other = find(other, classname, "player");
-		while ((other == self) || (other && team_mode && self.team > 0 && other.team != self.team));
+		while ((other == self) || (other && team_teams && self.team > 0 && other.team != self.team));
 	}
 	if (self.enemy) entcs_spec_update(self.enemy);
 	if (other) {
@@ -176,7 +176,7 @@ void() spectator_think {
 		if (spectator_spectate_next() != 1) {
 			spectator_observer_spawn(FALSE);
 		}
-	} else if (self.BUTTON_ATCK2 && (!team_mode || self.team <= 0)) {
+	} else if (self.BUTTON_ATCK2 && (!team_teams || self.team <= 0)) {
 		spectator_observer_spawn(FALSE);
 	} else {
 		if not(spectator_update()) {
@@ -198,7 +198,7 @@ void() spectator_think {
 }
 
 void() spectator_observer_think {
-	if (self.team > 0 && team_mode) {
+	if (self.team > 0 && team_teams) {
 		if (spectator_spectate_next() == 1) {
 			self.classname = "spectator";
 			spectator_think();
@@ -231,7 +231,7 @@ void() spectator_to_player {
 		if (team1 + team2 + team3 + team4 == -3) {
 			skip_team_select = TRUE;
 		}
-		if (skip_team_select || !team_mode || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
+		if (skip_team_select || !team_teams || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
 			self.dmg_inflictor = NULL;
 			self.classname = "player";
 			RM(score_player_set(self, SP_PLAYTIME, time - self.play_time);)

@@ -67,7 +67,7 @@ float nadget_Cloak_PlayerAlphaMod(entity plr, entity viewer, float palpha) {
     float sa = 1 - plr.hg_stealthalpha;
 
 	if (viewer && viewer != plr)
-	if ((team_mode && viewer.team == plr.team) || viewer.hg_stealth || viewer.classname != "player")
+	if ((team_teams && viewer.team == plr.team) || viewer.hg_stealth || viewer.classname != "player")
 		sa = 0.3 + 0.7 * sa;
 
     return nadget_Cloak_PlayerAlphaMod_Next(plr, viewer, sa * palpha);

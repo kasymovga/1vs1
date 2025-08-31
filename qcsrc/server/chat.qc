@@ -145,7 +145,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		teamsay = FALSE;
 	else if (source.classname != "player" && source.team <= 0)
 		colorstr = "^0"; // black for spectators
-	else if (team_mode)
+	else if (team_teams)
 		colorstr = team_color_code(source.team);
 	else
 		teamsay = FALSE;

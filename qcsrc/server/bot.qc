@@ -321,7 +321,7 @@ void(void) bot_removefromlargestteam {
 void(void) bot_removenewest {
 	float besttime;
 	entity best, head;
-	if (team_mode) {
+	if (team_teams) {
 		bot_removefromlargestteam();
 		return;
 	}
@@ -456,11 +456,11 @@ void(void) bot_serverframe {
 		float realminplayers, minplayers;
 		realminplayers = cvar("minplayers");
 		float realminbots, minbots;
-		if (team_mode && bot_vs_human) {
+		if (team_teams && bot_vs_human) {
 			minbots = realminbots = ceil(fabs(bot_vs_human) * activerealplayers);
 			minplayers = 0;
 		} else {
-			if (team_mode)
+			if (team_teams)
 				realminplayers = ceil(realminplayers * cvar("minplayers_team_factor")) * team_teams;
 
 			realminbots = bot_number;

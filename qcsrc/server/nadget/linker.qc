@@ -24,7 +24,7 @@ void(void) nadget_linker_on_remove {
 var void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet_next;
 void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet {
 	if (targ.hg_linker)
-	if (targ.hg_linker.owner == targ || (team_mode && targ.hg_linker.team == targ.team))
+	if (targ.hg_linker.owner == targ || (team_teams && targ.hg_linker.team == targ.team))
 		plugin_chain_damage_mod = plugin_chain_damage_mod * g_nadgets_linker_damagefactor;
 
 	nadget_linker_DamageForceModsSet_next(targ, attacker, deathtype);
@@ -40,7 +40,7 @@ void nadget_Linker_Think(void) {
     }
     float sharingframe = (time > self.hg_linker_nexteffect);
     PLAYER_FOR_EACH(p) {
-        if(p.team != self.team || (!team_mode && p != self.owner)) {
+        if(p.team != self.team || (!team_teams && p != self.owner)) {
             if(p.hg_linker == self)
                 p.hg_linker = world;
         } else if(p.hg_linker == self) {
@@ -64,7 +64,7 @@ void nadget_Linker_Think(void) {
 
             p.hg_linker_effecttime = time;
 			if(self.hg_adept)
-				if(p != self.owner && p.deadflag != DEAD_FREEZE && (!team_mode || p.team != self.team))
+				if(p != self.owner && p.deadflag != DEAD_FREEZE && (!team_teams || p.team != self.team))
 					nadget_Linker_Adept_Push(p);
         }
     }

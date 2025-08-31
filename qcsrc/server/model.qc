@@ -93,7 +93,7 @@ void(void) model_setup_no_lod {
 
 
 void(void) model_setcolormaptoactivator {
-	if (team_mode) {
+	if (team_teams) {
 		if (activator.team)
 			self.colormap = (activator.team - 1) * 0x11;
 		else

@@ -12,7 +12,7 @@ float() entcs_customize {
 	if (SPECTATOR_IS_SPECTATING_OR_ITSELF(other, o))
 		return FALSE;
 
-	if (team_mode && o.team == other.team) {
+	if (team_teams && o.team == other.team) {
 		self.effects |= EFFECT_FULLBRIGHT;
 	} else {
 		if not(g_showenemynames) return FALSE;
@@ -35,7 +35,7 @@ float(entity to, float sf) entcs_send {
 	if (self.effects & EFFECT_FULLBRIGHT)
 		sf |= 64;
 
-	if (team_mode)
+	if (team_teams)
 	if (o.team == to.team) {
 		sf |= 160;
 	}

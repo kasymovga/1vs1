@@ -103,7 +103,7 @@ void(void) weapon_zapper_spinner_spawn {
 	s.owner = self;
 	s.viewmodelforclient = o;
 	s.colormap = self.colormap;
-	s.color = weapon_zapper_beam_rgb((team_mode ? self.team : COLOR_TEAM2));
+	s.color = weapon_zapper_beam_rgb((team_teams ? self.team : COLOR_TEAM2));
 	s.think = weapon_zapper_spinner_think;
 	s.nextthink = time;
 	s.customizeentityforclient = weapon_zapper_spinner_customize;
@@ -491,7 +491,7 @@ void(void) weapon_zapper_attack3 {
 	e.nextthink = time;
 	e.alpha = 0.01;
 	e.skin = 0;
-	if (team_mode)
+	if (team_teams)
 		e.skin = team_index(self.team);
 
 	if (!e.skin)

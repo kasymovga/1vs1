@@ -76,7 +76,7 @@ void(void) ready_restart_force {
 
 	ready_ready = 0;
 	ready_nagger_counted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
-	if (cvar("teamplay_lockonrestart") && team_mode) {
+	if (cvar("teamplay_lockonrestart") && team_teams) {
 		team_lock = 1;
 		print_all(PRINT_INFO, "^1The teams are now locked.", "", "", "");
 	}

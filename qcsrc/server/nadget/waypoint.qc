@@ -44,7 +44,7 @@ void nadget_Waypoint_Update(void) {
 #undef POINTER_PICK
     if(!self.hg_waypoint) {
         float ownerhack = (self.hg_type == NADGET_SENTRY);
-        float teamwp = (team_mode && GRENVAR(self.hg_type, "detect_enemies_teamwide"));
+        float teamwp = (team_teams && GRENVAR(self.hg_type, "detect_enemies_teamwide"));
         entity o = (ownerhack ? self.realowner : self.owner);
         float t = (teamwp ? o.team : 0);
         o = (teamwp ? world : o);
@@ -107,7 +107,7 @@ void nadget_Waypoint(void) {
 
         if(rng > 0) {
             PLAYER_FOR_EACH(plr) {
-                if(plr.team != self.team || !team_mode)
+                if(plr.team != self.team || !team_teams)
                 if(plr != self.owner)
                 if not(PLAYER_DEAD(plr))
                 if(vlen(self.origin - plr.origin) < rng)

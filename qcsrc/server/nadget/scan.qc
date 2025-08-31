@@ -18,7 +18,7 @@ void(void) nadget_scan_on_remove {
 }
 
 float(void) nadget_scan_wave_customize {
-	if (team_mode) {
+	if (team_teams) {
 		if (other.team == self.team)
 			return TRUE;
 	} else if (other == self.owner)
@@ -31,7 +31,7 @@ var float(entity plr, entity targ) nadget_scan_PlayerVisibleThroughWallFor_NextL
 float(entity plr, entity targ) nadget_scan_PlayerVisibleThroughWallFor {
 	entity e;
 	for (e = nadget_scan_chain; e; e = e.enemy) {
-		if (team_mode) {
+		if (team_teams) {
 			if (e.team != targ.team) continue;
 		} else {
 			if (e.owner == plr) {
@@ -61,7 +61,7 @@ void(void) nadget_scan_wave_think {
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) nadget_scan_damage {
-	if (team_mode) {
+	if (team_teams) {
 		if (attacker.team == self.team)
 			return;
 	} else if (attacker == self.owner)

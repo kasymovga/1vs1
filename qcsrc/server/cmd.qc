@@ -152,7 +152,7 @@ void(string command) cmd_game {
 		return;
 	}
 	if (cmd == "team_lock") {
-		if (team_mode) {
+		if (team_teams) {
 			team_lock = 1;
 			bprint("^1The teams are now locked.\n");
 		} else
@@ -161,7 +161,7 @@ void(string command) cmd_game {
 		return;
 	}
 	if (cmd == "unteam_lock") {
-		if (team_mode) {
+		if (team_teams) {
 			team_lock = 0;
 			bprint("^1The teams are now unlocked.\n");
 		} else
@@ -334,7 +334,7 @@ void(string command) cmd_game {
 		}
 		return;
 	}
-	if (team_mode)
+	if (team_teams)
 	if (cmd == "shuffleteams") {
 		float t = COLOR_TEAM4;
 		random_queue_start();
@@ -499,7 +499,7 @@ void(string s) cmd_client {
 	} else if ( cmd == "selectteam" ) {
 		if not(self.flags & FL_CLIENT)
 			return;
-		if not(team_mode) {
+		if not(team_teams) {
 			sprint( self, "selecteam can only be used in teamgames\n");
 		} else if (g_campaign) {
 		} else if (team_lock) {

@@ -14,7 +14,7 @@ void(entity pl) voip_setup {
 	if (clienttype(pl) == CLIENTTYPE_BOT)
 		pl.voipgroup = 0;
 
-	if (team_mode && g_voice_chat_public < 2 && team_teams > 1) {
+	if (g_voice_chat_public < 2 && team_teams > 1) {
 		pl.voipgroup = pl.team;
 	} else {
 		if (pl.team < 0 || g_voice_chat_public)

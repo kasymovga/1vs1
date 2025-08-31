@@ -11,6 +11,6 @@ void(vector org, float coredamage, float edgedamage, float rad, vector force, fl
 	net_write_coord(MSG_BROADCAST, floor(org_y));
 	net_write_coord(MSG_BROADCAST, floor(org_z));
 	net_write_short(MSG_BROADCAST, net_compress_vec(force));
-	net_write_byte(MSG_BROADCAST, (team_mode ? dmgowner.team : 0));
+	net_write_byte(MSG_BROADCAST, (team_teams ? dmgowner.team : 0));
 }
 

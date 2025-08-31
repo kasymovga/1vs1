@@ -37,14 +37,14 @@ void(void) rank_init {
 	if (rank_available)
 		return;
 
-	if (team_mode && team_teams == 1)
+	if (team_teams == 1)
 		return;
 
 	if (g_maxplayers == 1 || g_campaign) // single player, no rank
 		return;
 
 	string rank_prefix;
-	if (team_mode)
+	if (team_teams)
 		rank_prefix = "team";
 	else if (g_maxplayers == 2)
 		rank_prefix = "duel";

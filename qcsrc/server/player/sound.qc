@@ -179,7 +179,7 @@ void(string type, string msg) player_sound_voice_message {
 			}
 	} else {
 		CLIENT_FOR_EACH_REAL(msg_entity)
-			if (!team_mode || msg_entity.team == self.team)
+			if (!team_teams || msg_entity.team == self.team)
 			{
 				if (msg_entity.cvar_cl_voice_directional == 1)
 					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);

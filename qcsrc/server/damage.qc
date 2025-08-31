@@ -74,7 +74,7 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 				force = '0 0 0';
 			} else if (attacker.team == targ.team && !targ.saboteur && !plugin_team_ignored_for(targ)) {
 				if (attacker != targ) {
-					if (team_mode) {
+					if (team_teams) {
 						if (targ.deadflag == DEAD_NO) {
 							float teamdamage0 = max(attacker.dmg_team, g_teamdamage_threshold);
 							attacker.dmg_team = attacker.dmg_team + _damage;
@@ -169,7 +169,7 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 			rm_damage_indicator(attacker, hitloc, _damage, 0, RM_DAMAGE_NOTPLAYER);
 		}
 		if (_damage > 0 && deathtype != DEATH_RM_ENDURANCE)
-			if (!team_mode || self.team != attacker.team) {
+			if (!team_teams || self.team != attacker.team) {
 				self.buff_stealth_time = time;
 				if (self.hg_stealth && self.hg_stealthalpha > 0.2) {
 					self.hg_stealth = 0;

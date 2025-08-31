@@ -40,7 +40,7 @@ void(entity player, entity teleporter, entity telefragger, vector telefragmin, v
 					if ((player.classname == "player") && (player.health >= 1)) {
 						if(head.classname == "player")
 						if(head.health >= 1)
-						if not(team_mode && head.team == player.team) {
+						if not(team_teams && head.team == player.team) {
 							++teleport_death_hit;
 							damage (head, teleporter, telefragger, _damage, WEAPON_PORTO, head.origin, '0 0 0');
 						}
@@ -122,7 +122,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 }
 
 void(void) teleport_use {
-	if (team_mode)
+	if (team_teams)
 		self.team = activator.team;
 }
 

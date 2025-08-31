@@ -9,7 +9,7 @@ NADGET_HOOKFUNCTION(gg, Attack) {
     PLAYER_FOR_EACH(p)
     if (p != self)
     if (!PLAYER_DEAD(p))
-    if (!team_mode || p.team != self.team || RM_BUFFS_PRESENT(self, RM_BUFFS_MEDIC) || RM_BUFFS_PRESENT(self, RM_BUFFS_ADEPT))
+    if (!team_teams || p.team != self.team || RM_BUFFS_PRESENT(self, RM_BUFFS_MEDIC) || RM_BUFFS_PRESENT(self, RM_BUFFS_ADEPT))
     if (vlen(self.origin - p.origin) < g_nadgets_gg_range) {
         vector o = self.origin + self.view_ofs;
         vector e = p.origin + p.view_ofs;

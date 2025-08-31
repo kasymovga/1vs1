@@ -805,7 +805,7 @@ void(entity to) score_nice_print {
 
 float score_leaderfrags;
 float(float limit, float _leadlimit) score_winning_condition {
-	if (team_mode) {
+	if (team_teams) {
 		score_team1 = score_team_comparable_value(COLOR_TEAM1);
 		score_team2 = score_team_comparable_value(COLOR_TEAM2);
 		score_team3 = score_team_comparable_value(COLOR_TEAM3);

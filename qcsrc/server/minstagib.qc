@@ -61,7 +61,7 @@ void(void) minstagib_weapon_attack {
 	self.minstanex_lasthit = damage_goodhits;
 	pointparticles(particleeffectnum("nex_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	// teamcolor / hit beam effect
-	if (team_mode) {
+	if (team_teams) {
 		switch(self.team) {
 		case COLOR_TEAM1:   // Red
 			if(damage_goodhits)
@@ -484,7 +484,7 @@ void(entity targ, entity attacker, float deathtype) minstagib_damage_mods_set {
 				plugin_chain_damage_mod_mirror = 0;
 			}
 		}
-		if (team_mode)
+		if (team_teams)
 		if (attacker != targ)
 		if (deathtype != DEATH_MIRRORDAMAGE)
 		if (deathtype != DEATH_ROT)

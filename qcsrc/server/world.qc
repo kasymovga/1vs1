@@ -479,7 +479,7 @@ void(float final) world_dump_stats {
 				fputs(file, strcat(s, other.netname, "\n"));
 		}
 	}
-	if (team_mode) {
+	if (team_teams) {
 		s = strcat(":labels:teamscores:", score_team_string(0, 0));
 		if (to_console)
 			print(s, "\n");

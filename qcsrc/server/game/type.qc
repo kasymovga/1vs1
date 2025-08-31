@@ -62,36 +62,26 @@ void() game_type_init {
 	cvar_init(g_campaign ? strcat("campaign+", cvar_string("g_profile")) : cvar_string("g_profile"));
 	dlc_load_exts();
 	if(game_type == GAME_TYPE_TEAM_DEATHMATCH) {
-		team_play_activate();
 		tdm_init();
 	} else if(game_type == GAME_TYPE_FREEZETAG) {
-		team_play_activate();
 		freeze_init();
 	} else if(game_type == GAME_TYPE_CLANARENA) {
-		team_play_activate();
 		clanarena_init();
 	} else if(game_type == GAME_TYPE_DOMINATION) {
-		team_play_activate();
 		dom_init();
 	} else if(game_type == GAME_TYPE_CTF || game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT) {
-		team_play_activate();
 		ctf_init();
 	} else if(game_type == GAME_TYPE_KEYHUNT || game_type == GAME_TYPE_KEYHUNT_CA || game_type == GAME_TYPE_KEYHUNT_FT) {
-		team_play_activate();
 		kh_init();
 	} else if(game_type == GAME_TYPE_ONSLAUGHT) {
-		team_play_activate();
 		onslaught_init();
 	} else if(game_type == GAME_TYPE_RACE || game_type == GAME_TYPE_CTS) {
 		race_init();
 	} else if(game_type == GAME_TYPE_NEXBALL) {
-		team_play_activate();
 		nexball_init();
 	} else if (game_type == GAME_TYPE_CONQUEST) {
-		team_play_activate();
 		conquest_init();
 	} else if (game_type == GAME_TYPE_SURVIVE) {
-		team_play_activate();
 		survive_init();
 	} else if (game_type == GAME_TYPE_SHOOTINGRANGE) {
 		shootingrange_init();
@@ -102,10 +92,8 @@ void() game_type_init {
 	} else if (game_type == GAME_TYPE_LMS) {
 		lms_init();
 	} else if (game_type == GAME_TYPE_CHESS) {
-		team_play_activate();
 		chess_init();
 	} else if (game_type == GAME_TYPE_JAILBREAK) {
-		team_play_activate();
 		jb_init();
 	}
 	// enforce the server's universal frag/time limits

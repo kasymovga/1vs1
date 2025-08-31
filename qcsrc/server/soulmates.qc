@@ -300,7 +300,7 @@ void(float killed) soulmates_player_clear {
 }
 
 void(void) soulmates_init {
-	if not(team_mode) return;
+	if not(team_teams) return;
 	if not(cvar("g_soulmates")) return;
 	CVAR_CACHE(g_soulmates_players_per_gem);
 	precache_model("models/runematch/rune.mdl");

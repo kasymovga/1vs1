@@ -30,7 +30,7 @@ float(entity plr, float eject) vehicle_extract_player {
 
 	entity oldself = self;
 	self = plr.vehicle;
-	self.bot_attack = (self.team && team_mode);
+	self.bot_attack = (self.team && team_teams);
 	vector exit_origin;
 	makevectors(self.angles);
 	float exit_up = self.maxs_z - plr.maxs_z;
@@ -69,7 +69,7 @@ float(entity plr, float eject) vehicle_extract_player {
 	plr.angles_z = 0;
 	client_view_angles_set(plr, plr.angles);
 	plr.takedamage = DAMAGE_AIM;
-	if not(team_mode)
+	if not(team_teams)
 		self.team = 0;
 	else
 		self.team = self.enemy.team;
@@ -129,7 +129,7 @@ void(void) vehicle_shieldhit_think {
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) vehicle_stdproc_damage {
 	float ddmg_take;
-	if (team_mode && self.team == attacker.team && self != attacker) {
+	if (team_teams && self.team == attacker.team && self != attacker) {
 		if (g_friendlyfire)
 			_damage = _damage * g_friendlyfire;
 		else
@@ -278,7 +278,7 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	if (other.vehicle != world)
 		return FALSE;
 
-	if (team_mode)
+	if (team_teams)
 	if (self.team)
 	if (self.team != other.team)
 		return FALSE;
@@ -382,12 +382,12 @@ void(string name, void() delayed_init) vehicle_stdproc_init {
 	self.shield_max = cvar(strcat("g_vehicle_", name, "_shield"));
 	self.shield_regen = cvar(strcat("g_vehicle_", name, "_shield_regen"));
 	self.shield_regen_dmgpause = cvar(strcat("g_vehicle_", name, "_shield_regen_dmgpause"));
-	self.bot_attack = (self.team && team_mode);
+	self.bot_attack = (self.team && team_teams);
 	entity_initialize(self, delayed_init, INITPRIO_DROPTOFLOOR);
 	self.enemy = spawn();
 	self.enemy.angles = self.angles;
 	setorigin(self.enemy, self.origin);
-	if (self.team && !team_mode)
+	if (self.team && !team_teams)
 		self.team = 0;
 	else
 		self.enemy.team = self.team;
