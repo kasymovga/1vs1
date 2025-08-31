@@ -740,7 +740,23 @@ float(entity plr) kh_player_is_carrier { return (plr.kh_next ? TRUE :FALSE); }
 void(entity plr) kh_player_drop_carried { kh_Key_DropAll(plr, FALSE, FALSE); }
 float(entity e) kh_portal_forbidden_for { return e.classname == STR_ITEM_KH_KEY; }
 
-void(void) kh_init_delayed { // sets up th KH environment
+void(void) kh_init {
+	precache_sound(kh_sound_capture);
+	precache_sound(kh_sound_destroy);
+	precache_sound(kh_sound_drop);
+	precache_sound(kh_sound_collect);
+	precache_sound(kh_sound_alarm);  // the new siren
+	plugin_player_death_handle = kh_DeathHandle;
+	kh_PlayerClear_NextLink = plugin_chain_player_clear;
+	plugin_chain_player_clear = kh_PlayerClear;
+	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
+	plugin_player_is_carrier = kh_player_is_carrier;
+	plugin_player_drop_carried = kh_player_drop_carried;
+	plugin_portal_forbidden_for = kh_portal_forbidden_for;
+	plugin_havocbot_role_choose = kh_role_choose;
+	precache_model("models/keyhunt/key.md3");
+	kh_teams = bound(2, cvar("g_kh_teams"), 4);
+	team_teams_set_count(kh_teams);
 	CVAR_CACHE(g_kh_damageforcescale);
 	CVAR_CACHE(g_kh_delay_collect);
 	CVAR_CACHE(g_kh_delay_drop);
@@ -798,26 +814,6 @@ void(void) kh_init_delayed { // sets up th KH environment
 		marker_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
 	}
 	plugin_score_give_frag_mod = kh_HandleFrags;
-}
-
-void(void) kh_init {
-	entity_initialize(NULL, kh_init_delayed, INITPRIO_GAMETYPE);
-	precache_sound(kh_sound_capture);
-	precache_sound(kh_sound_destroy);
-	precache_sound(kh_sound_drop);
-	precache_sound(kh_sound_collect);
-	precache_sound(kh_sound_alarm);  // the new siren
-	plugin_player_death_handle = kh_DeathHandle;
-	kh_PlayerClear_NextLink = plugin_chain_player_clear;
-	plugin_chain_player_clear = kh_PlayerClear;
-	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
-	plugin_player_is_carrier = kh_player_is_carrier;
-	plugin_player_drop_carried = kh_player_drop_carried;
-	plugin_portal_forbidden_for = kh_portal_forbidden_for;
-	plugin_havocbot_role_choose = kh_role_choose;
-	precache_model("models/keyhunt/key.md3");
-	kh_teams = bound(2, cvar("g_kh_teams"), 4);
-	team_teams_set_count(kh_teams);
 }
 
 void kh_update_state(void) {

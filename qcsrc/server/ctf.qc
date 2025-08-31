@@ -810,133 +810,6 @@ void() spawnfunc_ctf_flag_team2 {
 	ctf_flag_spawn("bluebase");
 }
 
-/*QUAKED spawnfunc_ctf_team (0 .5 .8) (-16 -16 -24) (16 16 32)
-Team declaration for CTF gameplay, this allows you to decide what team
-names and control point models are used in your map.
-
-Note: If you use spawnfunc_ctf_team entities you must define at least 2!  However, unlike
-domination, you don't need to make a blank one too.
-
-Keys:
-"netname"
- Name of the team (for example Red, Blue, Green, Yellow, Life, Death, Offense, Defense, etc)
-"cnt"
- Scoreboard color of the team (for example 4 is red and 13 is blue)
-
-*/
-
-void() spawnfunc_ctf_team {
-	if (!g_ctf) {
-		remove(self);
-		return;
-	}
-	self.classname = "ctf_team";
-	self.team = self.cnt + 1;
-	team_teams_set_allowed(self.team);
-}
-
-// code from here on is just to support maps that don't have control point and team entities
-void(string teamname, float teamcolor) ctf_spawnteam {
-	entity oldself;
-	oldself = self;
-	self = spawn();
-	self.classname = "ctf_team";
-	self.netname = teamname;
-	self.cnt = teamcolor;
-	spawnfunc_ctf_team();
-	self = oldself;
-}
-
-// spawn some default teams if the map is not set up for ctf
-void() ctf_spawnteams {
-	float numteams;
-	numteams = 2;//cvar("g_ctf_default_teams");
-	ctf_spawnteam("Red", COLOR_TEAM1 - 1);
-	ctf_spawnteam("Blue", COLOR_TEAM2 - 1);
-}
-
-void() ctf_delayedinit {
-	CVAR_CACHE(g_ctf_damageforcescale);
-	CVAR_CACHE(g_ctf_delay_collect);
-	CVAR_CACHE(g_ctf_allow_drop);
-	CVAR_CACHE(g_ctf_captimerecord_always);
-	CVAR_CACHE(g_ctf_default_teams);
-	CVAR_CACHE(g_ctf_flag_capture_effects);
-	CVAR_CACHE(g_ctf_flag_pickup_effects);
-	CVAR_CACHE(g_ctf_flag_returntime);
-	CVAR_CACHE(g_ctf_personalpenalty_drop);
-	CVAR_CACHE(g_ctf_personalpenalty_returned);
-	CVAR_CACHE(g_ctf_personalpenalty_suicidedrop);
-	CVAR_CACHE(g_ctf_personalscore_capture);
-	CVAR_CACHE(g_ctf_personalscore_pickup_base);
-	CVAR_CACHE(g_ctf_personalscore_pickup_dropped_early);
-	CVAR_CACHE(g_ctf_personalscore_pickup_dropped_late);
-	CVAR_CACHE(g_ctf_personalscore_return);
-	CVAR_CACHE(g_ctf_personalscore_return_by_killer);
-	CVAR_CACHE(g_ctf_personalscore_return_rogue);
-	CVAR_CACHE(g_ctf_personalscore_return_rogue_by_killer);
-	CVAR_CACHE(g_ctf_flagpenalty_drop);
-	CVAR_CACHE(g_ctf_flagpenalty_returned);
-	CVAR_CACHE(g_ctf_flagpenalty_suicidedrop);
-	CVAR_CACHE(g_ctf_flagscore_capture);
-	CVAR_CACHE(g_ctf_flagscore_pickup_base);
-	CVAR_CACHE(g_ctf_flagscore_pickup_dropped_early);
-	CVAR_CACHE(g_ctf_flagscore_pickup_dropped_late);
-	CVAR_CACHE(g_ctf_flagscore_return);
-	CVAR_CACHE(g_ctf_flagscore_return_by_killer);
-	CVAR_CACHE(g_ctf_flagscore_return_rogue);
-	CVAR_CACHE(g_ctf_flagscore_return_rogue_by_killer);
-	CVAR_CACHE(g_ctf_ignore_frags);
-	CVAR_CACHE(g_ctf_flagcarrier_selfdamage);
-	CVAR_CACHE(g_ctf_flagcarrier_selfforce);
-	CVAR_CACHE(g_ctf_flagscore_kill);
-	CVAR_CACHE(g_ctf_personalscore_kill);
-	CVAR_CACHE(g_ctf_showenemycarrier);
-	CVAR_CACHE(g_ctf_showenemycarrier_delay);
-	CVAR_CACHE(g_ctf_adjust_score_by_enemy_number);
-	CVAR_CACHE(g_ctf_count_suicides);
-	// if no teams are found, spawn defaults
-	if (find(world, classname, "ctf_team") == world)
-		ctf_spawnteams();
-
-	float sp_score, sp_caps;
-	sp_score = sp_caps = 0;
-	if (game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT)
-		g_ctf_win_mode = 0;
-	else
-		g_ctf_win_mode = cvar("g_ctf_win_mode");
-
-	switch(g_ctf_win_mode) {
-	case 0: // caps only
-		sp_caps = SCORE_FLAG_SORT_PRIO_PRIMARY;
-		break;
-	case 1: // caps, then score
-		sp_caps = SCORE_FLAG_SORT_PRIO_PRIMARY;
-		sp_score = SCORE_FLAG_SORT_PRIO_SECONDARY;
-		break;
-	case 2: // score only
-	default:
-		sp_caps = SCORE_FLAG_SORT_PRIO_SECONDARY; // looks better ;)
-		sp_score = SCORE_FLAG_SORT_PRIO_PRIMARY;
-		break;
-	}
-	score_basics(SCORE_FLAG_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
-	CTF_SCORE_TEAM_CAPS = score_register_team_score("caps", sp_caps);
-	CTF_SCORE_CAPS = score_register("caps", SCORE_FLAG_SORT_PRIO_SECONDARY);
-	CTF_SCORE_PICKUPS = score_register("pickups", 0);
-	CTF_SCORE_FCKILLS = score_register("fckills", 0);
-	CTF_SCORE_RETURNS = score_register("returns", 0);
-	CTF_SCORE_DROPS = score_register("drops", SCORE_FLAG_LOWER_IS_BETTER);
-	if (game_type == GAME_TYPE_CATF) {
-		clanarena_shared_init("catf");
-		roundbased_score_field_set(CTF_SCORE_TEAM_CAPS);
-	} else if (game_type == GAME_TYPE_CTFT) {
-		freeze_shared_init("ctft");
-		roundbased_score_field_set(CTF_SCORE_TEAM_CAPS);
-	}
-	plugin_score_give_frag_mod = ctf_handle_frags;
-}
-
 var void(float killed) ctf_player_clear_next;
 void(float killed) ctf_player_clear {
 	if (self.flagcarried)
@@ -1029,7 +902,6 @@ void() ctf_player_think {
 void() ctf_init {
 	CVAR_CACHE(g_ctf_reverse);
 	g_ctf = 1;
-	entity_initialize(world, ctf_delayedinit, INITPRIO_GAMETYPE);
 	flagcaptimerecord = stof(db_get(db_server, strcat(mapname, "/captimerecord/time")));
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
@@ -1049,4 +921,80 @@ void() ctf_init {
 	plugin_havocbot_role_choose = ctf_role_choose;
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");
+	CVAR_CACHE(g_ctf_damageforcescale);
+	CVAR_CACHE(g_ctf_delay_collect);
+	CVAR_CACHE(g_ctf_allow_drop);
+	CVAR_CACHE(g_ctf_captimerecord_always);
+	CVAR_CACHE(g_ctf_default_teams);
+	CVAR_CACHE(g_ctf_flag_capture_effects);
+	CVAR_CACHE(g_ctf_flag_pickup_effects);
+	CVAR_CACHE(g_ctf_flag_returntime);
+	CVAR_CACHE(g_ctf_personalpenalty_drop);
+	CVAR_CACHE(g_ctf_personalpenalty_returned);
+	CVAR_CACHE(g_ctf_personalpenalty_suicidedrop);
+	CVAR_CACHE(g_ctf_personalscore_capture);
+	CVAR_CACHE(g_ctf_personalscore_pickup_base);
+	CVAR_CACHE(g_ctf_personalscore_pickup_dropped_early);
+	CVAR_CACHE(g_ctf_personalscore_pickup_dropped_late);
+	CVAR_CACHE(g_ctf_personalscore_return);
+	CVAR_CACHE(g_ctf_personalscore_return_by_killer);
+	CVAR_CACHE(g_ctf_personalscore_return_rogue);
+	CVAR_CACHE(g_ctf_personalscore_return_rogue_by_killer);
+	CVAR_CACHE(g_ctf_flagpenalty_drop);
+	CVAR_CACHE(g_ctf_flagpenalty_returned);
+	CVAR_CACHE(g_ctf_flagpenalty_suicidedrop);
+	CVAR_CACHE(g_ctf_flagscore_capture);
+	CVAR_CACHE(g_ctf_flagscore_pickup_base);
+	CVAR_CACHE(g_ctf_flagscore_pickup_dropped_early);
+	CVAR_CACHE(g_ctf_flagscore_pickup_dropped_late);
+	CVAR_CACHE(g_ctf_flagscore_return);
+	CVAR_CACHE(g_ctf_flagscore_return_by_killer);
+	CVAR_CACHE(g_ctf_flagscore_return_rogue);
+	CVAR_CACHE(g_ctf_flagscore_return_rogue_by_killer);
+	CVAR_CACHE(g_ctf_ignore_frags);
+	CVAR_CACHE(g_ctf_flagcarrier_selfdamage);
+	CVAR_CACHE(g_ctf_flagcarrier_selfforce);
+	CVAR_CACHE(g_ctf_flagscore_kill);
+	CVAR_CACHE(g_ctf_personalscore_kill);
+	CVAR_CACHE(g_ctf_showenemycarrier);
+	CVAR_CACHE(g_ctf_showenemycarrier_delay);
+	CVAR_CACHE(g_ctf_adjust_score_by_enemy_number);
+	CVAR_CACHE(g_ctf_count_suicides);
+	team_teams_set_count(2);
+	float sp_score, sp_caps;
+	sp_score = sp_caps = 0;
+	if (game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT)
+		g_ctf_win_mode = 0;
+	else
+		g_ctf_win_mode = cvar("g_ctf_win_mode");
+
+	switch(g_ctf_win_mode) {
+	case 0: // caps only
+		sp_caps = SCORE_FLAG_SORT_PRIO_PRIMARY;
+		break;
+	case 1: // caps, then score
+		sp_caps = SCORE_FLAG_SORT_PRIO_PRIMARY;
+		sp_score = SCORE_FLAG_SORT_PRIO_SECONDARY;
+		break;
+	case 2: // score only
+	default:
+		sp_caps = SCORE_FLAG_SORT_PRIO_SECONDARY; // looks better ;)
+		sp_score = SCORE_FLAG_SORT_PRIO_PRIMARY;
+		break;
+	}
+	score_basics(SCORE_FLAG_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
+	CTF_SCORE_TEAM_CAPS = score_register_team_score("caps", sp_caps);
+	CTF_SCORE_CAPS = score_register("caps", SCORE_FLAG_SORT_PRIO_SECONDARY);
+	CTF_SCORE_PICKUPS = score_register("pickups", 0);
+	CTF_SCORE_FCKILLS = score_register("fckills", 0);
+	CTF_SCORE_RETURNS = score_register("returns", 0);
+	CTF_SCORE_DROPS = score_register("drops", SCORE_FLAG_LOWER_IS_BETTER);
+	if (game_type == GAME_TYPE_CATF) {
+		clanarena_shared_init("catf");
+		roundbased_score_field_set(CTF_SCORE_TEAM_CAPS);
+	} else if (game_type == GAME_TYPE_CTFT) {
+		freeze_shared_init("ctft");
+		roundbased_score_field_set(CTF_SCORE_TEAM_CAPS);
+	}
+	plugin_score_give_frag_mod = ctf_handle_frags;
 }
