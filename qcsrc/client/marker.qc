@@ -344,15 +344,17 @@ void(float isnew) marker_read {
 }
 
 void(void) marker_init {
-	marker_fadedistance = vlen(world_max - world_min);
+	float f = vlen(world_max - world_min);
+	if (f <= 0) f = 1000; //temporary stub value
+	marker_fadedistance = f;
 	marker_edgefadealpha = CVAR_OR(g_waypointsprite_edgefadealpha, 1);
 	marker_edgefadescale = CVAR_OR(g_waypointsprite_edgefadescale, 1);
 	marker_crosshairfadealpha = CVAR_OR(g_waypointsprite_crosshairfadealpha, 1);
 	marker_crosshairfadescale = CVAR_OR(g_waypointsprite_crosshairfadescale, 1);
 	marker_distancefadealpha = CVAR_OR(g_waypointsprite_distancefadealpha, 1);
 	marker_distancefadescale = CVAR_OR(g_waypointsprite_distancefadescale, 1);
-	marker_distancefadedistance = vlen(world_max - world_min) * CVAR_OR(g_waypointsprite_distancefadedistancemultiplier, 1);
-	float dh, n, i, o, f;
+	marker_distancefadedistance = f * CVAR_OR(g_waypointsprite_distancefadedistancemultiplier, 1);
+	float dh, n, i, o;
 	string s, sname, sframes;
 	dh = search_begin("models/sprites/*_frame*.tga", FALSE, FALSE);
 	n = search_getsize(dh);
