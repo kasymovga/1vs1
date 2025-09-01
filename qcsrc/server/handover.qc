@@ -37,7 +37,7 @@ void(void) handover_controller_think {
 			}
 			if (g_handover_hat != "") {
 				print_all(PRINT_INFO, "{1}^7 got hat", handover_player.netname, "", "");
-				hat_add(self, g_handover_hat, g_handover_hat_scale, g_handover_hat_attachment, g_handover_hat_origin, g_handover_hat_angles);
+				hat_add(handover_player, g_handover_hat, g_handover_hat_scale, g_handover_hat_attachment, g_handover_hat_origin, g_handover_hat_angles);
 			}
 		}
 	}
@@ -61,7 +61,7 @@ float(entity attacker, entity targ, float f) handover_score_give_frag_mod {
 			print_to_spec(attacker, PRINT_CENTER, "^7You steal hat from {1}", targ.netname, "", "");
 			print_to_spec(targ, PRINT_CENTER, "^7{1}^7 steal hat from you", attacker.netname, "", "");
 			hat_remove(targ);
-			hat_add(self, g_handover_hat, g_handover_hat_scale, g_handover_hat_attachment, g_handover_hat_origin, g_handover_hat_angles);
+			hat_add(attacker, g_handover_hat, g_handover_hat_scale, g_handover_hat_attachment, g_handover_hat_origin, g_handover_hat_angles);
 		}
 		handover_player = attacker;
 	}
