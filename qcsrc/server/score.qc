@@ -89,12 +89,12 @@ float(float t, float scorefield, float score) score_team_add_to {
 
 	if (!score_initialized) return 0; // FIXME remove this when everything uses this system
 	if (t <= 0 || t >= 16) {
-		print("Adding score to invalid team!");
+		print("Adding score to invalid team!\n");
 		return 0;
 	}
 	s = score_teem_keepers[t - 1];
 	if (!s) {
-		print("Adding score to unknown team!");
+		print("Adding score to unknown team!\n");
 		return 0;
 	}
 	if (score)
