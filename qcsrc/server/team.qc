@@ -104,7 +104,7 @@ void(entity for_whom) team_teams_allowed {
 	if (at4) team4 = 0;
 	if (team_teams > 1)
 	if (for_whom)
-	if not(bot_vs_human)
+	if not(bot_vs_human && team_teams == 2)
 	if (for_whom.stacker) {
 		entity e;
 		float st1 = 0, st2 = 0, st3 = 0, st4 = 0;
@@ -131,7 +131,7 @@ void(entity for_whom) team_teams_allowed {
 	}
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
 	if (team3 == -1 && team4 == -1)
-	if (bot_vs_human && for_whom) {
+	if (bot_vs_human && team_teams == 2 && for_whom) {
 		if (bot_vs_human > 0) {
 			// bots are all blue
 			if (clienttype(for_whom) == CLIENTTYPE_BOT)
@@ -640,7 +640,7 @@ void(float force) team_balance_audit {
 	if (g_campaign)
 		return;
 
-	if (bot_vs_human)
+	if (bot_vs_human && team_teams == 2)
 		return;
 
 	if (g_balance_teams_use_rank && rank_available) //not supported yet

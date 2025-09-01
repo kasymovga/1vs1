@@ -456,11 +456,11 @@ void(void) bot_serverframe {
 		float realminplayers, minplayers;
 		realminplayers = cvar("minplayers");
 		float realminbots, minbots;
-		if (team_teams && bot_vs_human) {
+		if (team_teams == 2 && bot_vs_human) {
 			minbots = realminbots = ceil(fabs(bot_vs_human) * activerealplayers);
 			minplayers = 0;
 		} else {
-			if (team_teams)
+			if (team_teams > 1)
 				realminplayers = ceil(realminplayers * cvar("minplayers_team_factor")) * team_teams;
 
 			realminbots = bot_number;
