@@ -38,7 +38,7 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 		me.rows = me.rows - 4;
 	else {
 		if not(main_campaign)
-		if (team_mode)
+		if (team_teams > 1)
 			me.rows = me.rows + 1;
 
 		me.rows = me.rows + game_menu_commands_count;
@@ -78,7 +78,7 @@ void fillNexuizGameMenuDialog(entity me)
 				me.TD(me, 1, me.columns, e = makeNexuizCommandButton(_("Join"), '0 0 0', "cmd join;", COMMANDBUTTON_CLOSE));
 		}
 		if not(main_campaign)
-		if (team_mode) {
+		if (team_teams > 1) {
 			me.TR(me);
 				float at = cvar("_teams_available");
 				float tc = 0;

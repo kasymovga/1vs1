@@ -233,8 +233,8 @@ void(float ignore) main_init_read {
 		game_menu_read();
 
 	if (sf & 32) {
-		team_mode = net_read_byte();
-		if not(team_mode) {
+		team_teams = net_read_byte();
+		if not(team_teams) {
 			team_get(0, TRUE);
 		}
 		entity o;

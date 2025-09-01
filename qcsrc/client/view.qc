@@ -307,7 +307,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	if (radar_show)
 		radar_view(TRUE, "");
 	else if (CVAR(cl_teamradar)) {
-		if (CVAR(cl_teamradar) == 2 || team_mode)
+		if (CVAR(cl_teamradar) == 2 || team_teams)
 		if (view_crosshair)
 			radar_view(FALSE, "");
 	}

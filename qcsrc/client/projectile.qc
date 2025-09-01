@@ -17,7 +17,7 @@ void(void) projectile_touch_stop {
 .float silent;
 
 void projectile_colormap_setup(float default_team) {
-    if not(team_mode)
+    if not(team_teams)
         self.team = default_team;
 
     self.colormap = 1024 + (self.team - 1) * 17;

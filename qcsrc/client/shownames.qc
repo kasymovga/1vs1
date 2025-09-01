@@ -30,7 +30,7 @@ float Shownames_PreDrawPlayer_Enabled() {
         return FALSE;
 
 	if (CVAR(cl_shownames < 2))
-	if (team_mode)
+	if (team_teams)
 	if (self.cnt)
 		return FALSE;
 
@@ -77,7 +77,7 @@ void Shownames_DrawPlayer() {
     s = player_name(self.sv_entnum);
     float textsz = SHOWNAMES_FONTSIZE;
 	float _team;
-    if (team_mode) {
+    if (team_teams) {
 		_team = player_color_force(self.sv_entnum);
         s = str_shorten_to_width(strdecolorize(s), namesize, str_width_nocolors);
         s = strcat(team_color_code(_team), s);

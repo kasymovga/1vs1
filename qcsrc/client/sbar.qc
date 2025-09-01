@@ -118,11 +118,11 @@ vector(vector pos, vector sz, float bg) sbar_position {
 	else
 		v_y = pos_y;
 
-	if (bg && sbar_alpha_bg > 0 && (team_mode || bg > 1)) {
+	if (bg && sbar_alpha_bg > 0 && (team_teams || bg > 1)) {
 		pos = v;
 		pos_y -= sz_y * 0.0625;
 		sz_y *= 1.125;
-		if (team_mode) {
+		if (team_teams) {
 			drawpic(pos, "gfx/hud/sb_ammobg", sz, sbar_team_rgb * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL);
 		} else {
 			vector rgb;
@@ -615,7 +615,7 @@ void(float argc) sbar_field_set {
 		if (slash >= 0) {
 			pattern = substring(str, 0, slash);
 			str = substring(str, slash + 1, strlen(str) - (slash + 1));
-			if not(game_type_filter(game_type, team_mode, pattern))
+			if not(game_type_filter(game_type, team_teams, pattern))
 				continue;
 		}
 		strunzone(sbar_title[sbar_num_fields]);
@@ -822,7 +822,7 @@ string(entity pl, float field) sbar_field_get {
 	case SP_NAME:
 		if (pl.ready) {
 			sbar_field_icon0 = "gfx/sb_player_ready";
-		} else if not(team_mode) {
+		} else if (team_teams <= 1) {
 			f = stof(getplayerkey(pl.sv_entnum, "colors"));
 			sbar_field_icon0 = "gfx/sb_playercolor_base";
 			sbar_field_icon1 = "gfx/sb_playercolor_shirt";
@@ -1162,7 +1162,7 @@ vector(vector pos, entity tm, vector rgb, vector bg_size) sbar_scoreboard_table_
 	pos_y += sbar_border_thickness;
 	// fill the table and draw the rows
 	i = 0;
-	if (team_mode)
+	if (team_teams)
 		for (pl = player_list.sort_next; pl; pl = pl.sort_next) {
 			if (pl.team != tm.team)
 				continue;
@@ -1275,7 +1275,7 @@ void sbar_scoreboard_draw() {
 		if (tl > 0)
 			str = strcat(str, " or ");
 
-		if (team_mode) {
+		if (team_teams) {
 			arg2 = score_string(teamscores_flags[ts_primary], fl);
 			str = strcat(str, "until ^3{2}");
 			if (teamscores_label[ts_primary] == "score")
@@ -1299,7 +1299,7 @@ void sbar_scoreboard_draw() {
 		if (tl > 0 || fl > 0)
 			str = strcat(str, " or ");
 
-		if (team_mode) {
+		if (team_teams) {
 			arg3 = score_string(teamscores_flags[ts_primary], ll);
 			str = strcat(str, "until a lead of ^3", arg3);
 			if (teamscores_label[ts_primary] == "score")
@@ -1328,7 +1328,7 @@ void sbar_scoreboard_draw() {
 	// Draw the scoreboard
 	vector bg_size;
 	bg_size = drawgetimagesize("gfx/hud/sb_scoreboard_bg");
-	if (team_mode) {
+	if (team_teams) {
 		for (tm = team_list.sort_next; tm; tm = tm.sort_next) {
 			if (tm.team == TEAM_COLOR_SPECTATOR)
 				continue;
@@ -1399,7 +1399,7 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 	entity tm, pl, me;
 	me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
 	SBAR_POSITION_AND_SCALE(score_pos, score_scale, '196 34 0', score_size, CVAR(sbar_score_background))
-	if not(team_mode) { // non-teamgames, except race/cts
+	if not(team_teams) { // non-teamgames, except race/cts
 		secondary_score_pos = score_pos + '164 0 0' * score_scale;
 		score_pos += '100 0 0' * score_scale;
 		// me vector := [team/connected frags id]
@@ -1460,7 +1460,7 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 }
 
 void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_race {
-	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && !team_mode) { // race/cts record display on HUD
+	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && !team_teams) { // race/cts record display on HUD
 		SBAR_POSITION_AND_SCALE(score_pos, score_scale, '196 34 0', score_size, CVAR(sbar_score_background))
 		float score, distribution;
 		vector distribution_color;
@@ -1930,7 +1930,7 @@ void(float hgtype, vector hgapos, float hgdetons, float hgammo) sbar_nadget_mess
 }
 
 void(void) sbar_draw {
-	if (team_mode)
+	if (team_teams)
 		sbar_team_rgb = team_rgb(team_my);
 
 	sbar_topright_x = CVAR(vid_conwidth);

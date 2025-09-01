@@ -1,4 +1,4 @@
-float team_mode;
+float team_teams;
 const float TEAM_COLOR_SPECTATOR = 1337;
 .float team;
 .float team_size;

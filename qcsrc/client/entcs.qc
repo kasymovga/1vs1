@@ -23,7 +23,7 @@ void(float bIsNewEntity) entcs_read {
 		self.maxs_x = self.maxs_y = 0;
 		self.maxs_z = net_read_short();
 	}
-	if (team_mode)
+	if (team_teams)
 		Shownames_UpdateTeamBubble(self, f & 32);
 
 	if (f & 128) {

@@ -87,7 +87,7 @@ entity(float Team, float add) team_get {
 float(entity o, float Team) team_set {
 	entity tm;
 	if (Team != -1)
-	if (team_mode || Team)
+	if (team_teams || Team)
 	if not(team_get(Team, FALSE))
 		Team = TEAM_COLOR_SPECTATOR;
 

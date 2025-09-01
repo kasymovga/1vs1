@@ -54,7 +54,7 @@ float(string strMessage) mute_check {
 		s1 = str_car(s2);
 		n = stof(s1);
 		pl = player_slots[n - 1];
-		if (team_mode) {
+		if (team_teams) {
 			colorstr = team_color_code(pl.team);
 			if (colorstr == "^7")
 				colorstr = "^0";
@@ -78,7 +78,7 @@ float(string strMessage) mute_check {
 			print("private message from #", s1, " was skipped\n");
 			return TRUE;
 		}
-		if (team_mode) {
+		if (team_teams) {
 			check_name = strcat(colorstr, strdecolorize(base_name), "^0#", ftos(n));
 			prefix = strcat("\{1}", check_name, "^7: ");
 			if (prefix == substring(strMessage, 0, strlen(prefix))) {
