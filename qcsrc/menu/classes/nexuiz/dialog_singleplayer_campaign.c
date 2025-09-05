@@ -2,10 +2,11 @@
 CLASS(NexuizCampaignTab) EXTENDS(NexuizTab)
 	METHOD(NexuizCampaignTab, fill, void(entity))
 	ATTRIB(NexuizCampaignTab, title, string, _("Campaign"))
-	ATTRIB(NexuizSingleplayerDialog, campaignBox, entity, NULL)
-	ATTRIB(NexuizSingleplayerDialog, btnGame, entity, NULL)
-	ATTRIB(NexuizServerCreateTab, rows, float, 22)
-	ATTRIB(NexuizServerCreateTab, columns, float, 5)
+	ATTRIB(NexuizCampaignTab, campaignBox, entity, NULL)
+	ATTRIB(NexuizCampaignTab, btnGame, entity, NULL)
+	ATTRIB(NexuizCampaignTab, rows, float, 22)
+	ATTRIB(NexuizCampaignTab, columns, float, 5)
+	ATTRIB(NexuizCampaignTab, intendedWidth, float, 5)
 ENDCLASS(NexuizCampaignTab)
 entity makeNexuizCampaignTab();
 #endif
