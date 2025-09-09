@@ -57,41 +57,51 @@ void configureLabelLabel(entity me, string txt, float sz, float algn)
 	me.align = algn;
 	me.setText(me, txt);
 }
-void drawLabel(entity me)
-{
+
+void drawLabel(entity me) {
 	string t;
 	vector o;
-	if(me.disabled)
+	if (me.disabled)
 		gui_draw_alpha *= me.disabledAlpha;
 
-	if(me.textEntity)
-	{
+	if (me.textEntity) {
 		t = me.textEntity.toString(me.textEntity);
 		me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(me.realFontSize_x * gui_text_width(t, 0), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
-	}
-	else
+	} else
 		t = me.text;
 	
-	if(me.fontSize)
-		if(t)
-		{
-			if(me.allowCut) // FIXME allowCut incompatible with align != 0
+	if (me.fontSize)
+		if (t != "") {
+			if (me.allowCut) // FIXME allowCut incompatible with align != 0
 				gui_draw_text(me.realOrigin, gui_draw_text_shorten_to_width(t, (1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, me.allowColors), me.realFontSize, me.colorL, me.alpha, me.allowColors);
-			else if(me.allowWrap) // FIXME allowWrap incompatible with align != 0
-			{
-				str_wrapped_line_remaining = t;
+			else if (me.allowWrap) { // FIXME allowWrap incompatible with align != 0
+				float nl = 0;
+				string tl;
 				o = me.realOrigin;
-				while(str_wrapped_line_remaining)
-				{
-					if (me.allowColors)
-						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_with_colors);
-					else
-						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_without_colors);
-					gui_draw_text(o, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
-					o_y += me.realFontSize_y;
+				while (t != "") {
+					nl = strstrofs(t, "\n", 0);
+					if (nl >= 0) {
+						tl = substring(t, 0, nl);
+						t = substring(t, nl + 1, -1);
+					} else {
+						tl = t;
+						t = "";
+					}
+					if (tl == "") {
+						o_y += me.realFontSize_y;
+					} else {
+						str_wrapped_line_remaining = tl;
+						while (str_wrapped_line_remaining != "") {
+							if (me.allowColors)
+								tl = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_with_colors);
+							else
+								tl = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_without_colors);
+							gui_draw_text(o, tl, me.realFontSize, me.colorL, me.alpha, me.allowColors);
+							o_y += me.realFontSize_y;
+						}
+					}
 				}
-			}
-			else
+			} else
 				gui_draw_text(me.realOrigin, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
 		}
 }
