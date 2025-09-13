@@ -6,6 +6,7 @@ set sv_dumprecords 0
 set sv_gameplayfix_useheightforplat 0 "Use height attribute for elevators"
 set sv_gameplayfix_trainnomins 0 "Ignore mins/maxs for func_train"
 set sv_gameplayfix_trainnowait 0 "Old behaviour for func_train"
+set sv_gameplayfix_trainnoangles 0 "Ignore angles in train path_corner"
 set sv_jumppads_target_adjust_height 0
 set sv_abuserplayername "User of RetardNet"
 set sv_sound_frag ""

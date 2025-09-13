@@ -725,6 +725,7 @@ void(void) func_train_wait {
 
 float sv_gameplayfix_trainnomins;
 float sv_gameplayfix_trainnowait;
+float sv_gameplayfix_trainnoangles;
 
 void(void) func_train_next {
 	entity targ;
@@ -746,11 +747,11 @@ void(void) func_train_next {
 	}
 	if (self.wait < 0) {
 		if (self.targetname != "" && !sv_gameplayfix_trainnowait)
-			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), targ.angles, _speed, stdproc_nothing);
+			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), (sv_gameplayfix_trainnoangles ? '0 0 0' : targ.angles), _speed, stdproc_nothing);
 		else
-			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), targ.angles, _speed, func_train_next);
+			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), (sv_gameplayfix_trainnoangles ? '0 0 0' : targ.angles), _speed, func_train_next);
 	} else
-		func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), targ.angles, _speed, func_train_wait);
+		func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), (sv_gameplayfix_trainnoangles ? '0 0 0' : targ.angles), _speed, func_train_wait);
 
 	if (self.noise != "")
 		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
@@ -765,7 +766,7 @@ void(void) func_train_find {
 	}
 	self.target = targ.target;
 	setorigin(self, targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins));
-	self.angles = targ.angles;
+	self.angles = (sv_gameplayfix_trainnoangles ? '0 0 0' : targ.angles);
 	if (self.target == "") {
 		print("func_train_find: no next target\n");
 		return;
@@ -789,6 +790,7 @@ void(void) spawnfunc_func_train {
 	if not(func_train_init_done) {
 		CVAR_CACHE(sv_gameplayfix_trainnomins);
 		CVAR_CACHE(sv_gameplayfix_trainnowait);
+		CVAR_CACHE(sv_gameplayfix_trainnoangles);
 		func_train_init_done = TRUE;
 	}
 	if (self.noise != "")
