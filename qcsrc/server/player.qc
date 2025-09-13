@@ -342,6 +342,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				if (g_spawnfrags && (targ.spawnshieldtime > time || attacker.spawnshieldtime > time)) {
 					weapon_fragprefix = strcat("^3SPAWN", weapon_fragprefix);
 				} else {
+					stat_frag_add(attacker, targ, deathtype);
 					score_give_frag(attacker, targ, 1);
 				}
 				if (targ.killcount > 2) {
@@ -1202,6 +1203,7 @@ void(void) player_leave {
 		cvar_set("timelimit", "-1");
 	}
 	player_real_count = n;
+	stat_player_add(self);
 	if (self.scorekeeper)
 		score_clear(self);
 

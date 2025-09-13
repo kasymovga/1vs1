@@ -1,0 +1,4 @@
+void(void) stat_init;
+void(entity plr) stat_player_add;
+void(entity p1, entity p2, float deathtype) stat_frag_add;
+void(void) stat_shutdown;

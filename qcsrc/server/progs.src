@@ -140,6 +140,7 @@ rm/damage.qh
 rm/game_type_vote.qh
 rm/buffs.qh
 rm/bigprint.qh
+stat.qh
 ../client-server/progs.qc
 map_info.qh
 ../menu-server/progs.qc
@@ -415,3 +416,4 @@ misc_terminal.qc
 pin.qc
 handover.qc
 func_boss.qc
+stat.qc

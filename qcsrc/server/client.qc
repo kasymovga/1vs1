@@ -525,7 +525,6 @@ void(void) client_disconnect { //called by engine
 	self.stacker = 0;
 	self.muted = 0;
 	ready_count();
-	client_cvars_free();
 	if (clienttype(self) == CLIENTTYPE_REAL) {
 		plugin_chain_client_disconnect_real();
 		vote_client_connect();
@@ -534,6 +533,7 @@ void(void) client_disconnect { //called by engine
 		team_balance_audit(FALSE);
 	}
 	player_leave();
+	client_cvars_free();
 }
 
 /**
@@ -845,6 +845,7 @@ void() client_cvars_parse {
 	} else if (s == "_cl_id" && self.clid == "") {
 		if (strlen(val) == 16) {
 			self.clid = strzone(val);
+			stat_player_add(self);
 		} else {
 			self.clid = strftime(TRUE, "%y%m%d%H%M%S");
 			for (f = 0; f < 4; f++) {
@@ -852,6 +853,7 @@ void() client_cvars_parse {
 			}
 			self.clid = strzone(self.clid);
 			stuffcmd(self, strcat("seta _cl_id ", self.clid, "\n"));
+			stat_player_add(self);
 		}
 		if (self.scorekeeper) {
 			rank_load();

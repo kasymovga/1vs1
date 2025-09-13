@@ -127,6 +127,7 @@ void(void) world_static_init {
 	soulmates_init();
 	pin_init();
 	handover_init();
+	stat_init();
 }
 
 void(void) world_dynamic_init {
