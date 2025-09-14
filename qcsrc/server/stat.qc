@@ -147,7 +147,7 @@ string(void) stat_to_json {
 		json = strcat(json, "[", ftos(a), ", ", ftos(t), "]");
 	}
 	json = strcat(json,
-			"\n  ],\n");
+			"\n  ]\n");
 	json = strcat(json,
 			"}\n");
 	return json;
@@ -191,4 +191,7 @@ void(void) stat_shutdown {
 	string json = stat_to_json();
 	if (cvar("sv_stat_debug"))
 		print(json);
+
+	if (stat_url != "")
+		uri_post(stat_url, URI_GET_DISCARD, "application/json", json);
 }

@@ -733,6 +733,7 @@ float(entity num) num_for_edict = #512;
 //  the HTTP response code on server error (e.g. 404)
 //if 1 is returned by uri_get, the callback will be called in the future
 float(string url, float id) uri_get = #513;
+float(string url, float id, string posttype, string postdata) uri_post = #513;
 //
 //DP_QC_TOKENIZE_CONSOLE
 //idea: div0
