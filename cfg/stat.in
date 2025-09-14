@@ -2,3 +2,4 @@ set sv_stat 0
 set sv_stat_url ""
 set sv_stat_debug 0
 set sv_stat_bots 0
+set sv_stat_server_id ""

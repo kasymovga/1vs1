@@ -12,6 +12,9 @@ void(void) stat_client_connect {
 }
 
 void(void) stat_init {
+	if (team_teams == 1 || g_maxplayers == 1 || g_campaign) // single team or single player, no stat
+		return;
+
 	stat_db = -1;
 	if not(cvar("sv_stat"))
 		return;
@@ -123,6 +126,9 @@ string(void) stat_to_json {
 	string json = "{\n";
 	json = strcat(json,
 			"  \"map\": \"", uri_escape(mapname), "\",\n",
+			"  \"server_id\": \"", uri_escape(cvar_string("sv_stat_server_id")), "\",\n",
+			"  \"game_type\": \n", uri_escape(game_type_name(game_type)), "\",\n",
+			"  \"rank_type\": \n", uri_escape(rank_type()), "\",\n",
 			"  \"players\": ");
 	json = strcat(json, stat_player_list());
 	json = strcat(json,

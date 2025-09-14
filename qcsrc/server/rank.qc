@@ -1,3 +1,4 @@
+string rank_id;
 string sv_rank_external_database;
 string sv_rank_external_database_key;
 
@@ -30,6 +31,18 @@ void(float id, float status, string data) rank_uri_handler {
 	}
 }
 
+string(void) rank_type {
+	string rank_prefix;
+	if (team_teams)
+		rank_prefix = "team";
+	else if (g_maxplayers == 2)
+		rank_prefix = "duel";
+	else
+		rank_prefix = "ffa";
+
+	return strzone(strcat(rank_prefix, cvar_string("g_rank_type")));
+}
+
 void(void) rank_init {
 	if not(cvar("sv_rank"))
 		return;
@@ -43,15 +56,7 @@ void(void) rank_init {
 	if (g_maxplayers == 1 || g_campaign) // single player, no rank
 		return;
 
-	string rank_prefix;
-	if (team_teams)
-		rank_prefix = "team";
-	else if (g_maxplayers == 2)
-		rank_prefix = "duel";
-	else
-		rank_prefix = "ffa";
-
-	rank_id = strzone(strcat(rank_prefix, cvar_string("g_rank_type")));
+	rank_id = rank_type();
 	rank_available = 1;
 	RANK_SCORE_PLAYER_FIELD = score_register("rank", (cvar("sv_rank_hide") ? SCORE_FLAG_HIDDEN : 0) | SCORE_FLAG_NOCLEAR);
 	rank = scores[RANK_SCORE_PLAYER_FIELD];
