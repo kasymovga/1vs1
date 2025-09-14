@@ -45,6 +45,7 @@ void(entity plr) stat_player_add {
 	if (plr.scorekeeper && score_have_score) {
 		db_put(stat_db, strcat("player/", ftos(i), "/score"), ftos(plr.scorekeeper.scores[SP_SCORE]));
 	}
+	db_put(stat_db, strcat("player/", ftos(i), "/time"), ftos(plr.play_time));
 	float w;
 	for (w = WEAPON_FIRST; w < WEAPON_COUNT_EXTRA; w++) {
 		if (plr.bullets_fired[w] > 0) {
@@ -116,6 +117,7 @@ string(void) stat_player_list {
 			json = strcat(json, "\n");
 
 		json = strcat(json, "    [\"", uri_escape(db_get(stat_db, strcat("player/", ftos(i), "/id"))), "\", \", ", uri_escape(db_get(stat_db, strcat("player/", ftos(i), "/name"))), "\", ");
+		json = strcat(json, db_get(stat_db, strcat("player/", ftos(i), "/time")), ", ");
 		json = strcat(json, stat_player_score(i), ", ", stat_player_accuracy(i), "]");
 	}
 	json = strcat(json, "\n  ]");
