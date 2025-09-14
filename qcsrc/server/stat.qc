@@ -126,9 +126,11 @@ string(void) stat_to_json {
 	string json = "{\n";
 	json = strcat(json,
 			"  \"map\": \"", uri_escape(mapname), "\",\n",
-			"  \"server_id\": \"", uri_escape(cvar_string("sv_stat_server_id")), "\",\n",
-			"  \"game_type\": \n", uri_escape(game_type_name(game_type)), "\",\n",
-			"  \"rank_type\": \n", uri_escape(rank_type()), "\",\n",
+			"  \"server_id\": \"", uri_escape(cvar_string("sv_stat_server_id")), "\",\n");
+	json = strcat(json,
+			"  \"game_type\": \"", uri_escape(game_type_name(game_type)), "\",\n",
+			"  \"rank_type\": \"", uri_escape(rank_type()), "\",\n");
+	json = strcat(json,
 			"  \"players\": ");
 	json = strcat(json, stat_player_list());
 	json = strcat(json,
