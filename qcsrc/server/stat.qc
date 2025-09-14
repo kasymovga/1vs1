@@ -122,17 +122,17 @@ string(void) stat_player_list {
 string(void) stat_to_json {
 	string json = "{\n";
 	json = strcat(json,
-			"  map: \"", uri_escape(mapname), "\",\n",
-			"  players: ");
+			"  \"map\": \"", uri_escape(mapname), "\",\n",
+			"  \"players\": ");
 	json = strcat(json, stat_player_list());
 	json = strcat(json,
 			",\n");
 	json = strcat(json,
-			"  weapons: ");
+			"  \"weapons\": ");
 	json = strcat(json, stat_weapon_list());
 	json = strcat(json, ",\n");
 	json = strcat(json,
-			"  frags: [\n    ");
+			"  \"frags\": [\n    ");
 	float a, t, i;
 	string s;
 	for (i = 0; i < stat_frags_count; i++) {
