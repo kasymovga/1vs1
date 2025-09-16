@@ -542,7 +542,7 @@ void(string s) cmd_client {
 		sprint(self, cmd_maplist_reply);
 	} else if (cmd == "lsmaps") {
 		sprint(self, cmd_lsmaps_reply);
-	} else if (cmd == "lsmaps2" && !map_finished) { // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
+	} else if (cmd == "lsmaps2" && !map_finished && (self.flags & FL_CLIENT)) { // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
 		msg_entity = self;
 		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 		net_write_byte(MSG_ONE, NET_TE_CSQC_MAPLIST);
