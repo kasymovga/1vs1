@@ -93,7 +93,7 @@ string(float i) stat_player_accuracy {
 			comma = TRUE;
 
 		hits = stof(db_get(stat_db, strcat("player/", ftos(i), "/accuracy_hits/", ftos(w))));
-		json = strcat(json, ftos(w), ", ", ftos(shots), ", ", ftos(hits));
+		json = strcat(json, "[", ftos(w), ", ", ftos(shots), ", ", ftos(hits), "]");
 	}
 	json = strcat(json, "]");
 	return json;
