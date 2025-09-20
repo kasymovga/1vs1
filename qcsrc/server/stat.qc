@@ -116,7 +116,7 @@ string(void) stat_player_list {
 		else
 			json = strcat(json, "\n");
 
-		json = strcat(json, "    [\"", uri_escape(db_get(stat_db, strcat("player/", ftos(i), "/id"))), "\", \", ", uri_escape(db_get(stat_db, strcat("player/", ftos(i), "/name"))), "\", ");
+		json = strcat(json, "    [\"", uri_escape(db_get(stat_db, strcat("player/", ftos(i), "/id"))), "\", \"", uri_escape(db_get(stat_db, strcat("player/", ftos(i), "/name"))), "\", ");
 		json = strcat(json, db_get(stat_db, strcat("player/", ftos(i), "/time")), ", ");
 		json = strcat(json, stat_player_score(i), ", ", stat_player_accuracy(i), "]");
 	}
