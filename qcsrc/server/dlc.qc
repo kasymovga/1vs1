@@ -249,7 +249,7 @@ void(void) dlc_load_exts {
 
 void(void) dlc_reset_all {
 	entity e = self;
-	for (self = nextent(world); self; self = nextent(self)) {
+	for (self = nextent(NULL); self; self = nextent(self)) {
 		if (self.dlc_reset) {
 			//print("DLC reset for ", self.classname, "\n");
 			self.dlc_reset();
@@ -281,7 +281,7 @@ void(void) dlc_wait_think {
 			localcmd("sv_cmd dlc_pause; r_restart; cl_cmd r_restart; sv_cmd dlc_unpause\n");
 
 		remove(self);
-		dlc_wait = world;
+		dlc_wait = NULL;
 		localcmd("sv_cmd dlc_reset\n");
 		return;
 	}
@@ -567,6 +567,7 @@ entity dlc_wait_reload;
 void(void) dlc_wait_reload_think {
 	if (dlc_ready_all()) {
 		localcmd("\n");
+		dlc_load_exts();
 		string list = dlc_list;
 		string s;
 		while (list != "") {
@@ -580,7 +581,7 @@ void(void) dlc_wait_reload_think {
 			localcmd("sv_cmd dlc_pause; r_restart; cl_cmd r_restart; sv_cmd dlc_unpause\n");
 
 		remove(self);
-		dlc_wait_reload = world;
+		dlc_wait_reload = NULL;
 		dlc_extra_pk3_list_build();
 	} else
 		self.nextthink = time + 1;
