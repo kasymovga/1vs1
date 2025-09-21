@@ -4,3 +4,6 @@ set g_handover_hat_scale 1
 set g_handover_hat_attachment "Bip01 Head"
 set g_handover_hat_origin "0 0 0"
 set g_handover_hat_angles "0 0 0"
+set g_handover_hat_q3_scale 0.8
+set g_handover_hat_q3_origin "0 0 8"
+set g_handover_hat_q3_angles "0 0 0"

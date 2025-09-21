@@ -2,6 +2,8 @@ string sv_player_hat;
 string sv_player_hat_attachment;
 float sv_player_hat_scale;
 vector sv_player_hat_origin, sv_player_hat_angles;
+float sv_player_hat_q3_scale;
+vector sv_player_hat_q3_origin, sv_player_hat_q3_angles;
 .entity hat;
 var float(void) hat_custom_callback;
 
@@ -16,10 +18,17 @@ void(entity plr) hat_remove {
 void(entity plr) hat_attach {
 	if not(plr.hat) return;
 	if not(plr.body) return;
+	entity _hat = plr.hat;
 	if (plr.body.exteriorweaponentity) {
-		setattachment(plr.hat, plr.body.exteriorweaponentity, ""); //quake 3 model
+		_hat.scale = _hat.cnt;
+		_hat.angles = _hat.v_angle;
+		setattachment(_hat, plr.body.exteriorweaponentity, ""); //quake 3 model
+		setorigin(_hat, _hat.pos2);
 	} else {
-		setattachment(plr.hat, plr.body, plr.hat.netname);
+		_hat.scale = _hat.count;
+		_hat.angles = _hat.mangle;
+		setattachment(_hat, plr.body, _hat.netname);
+		setorigin(_hat, _hat.pos1);
 	}
 }
 
@@ -31,17 +40,20 @@ void(float killed) hat_player_clear {
 	hat_player_clear_next(killed);
 }
 
-void(entity plr, string m, float s, string at, vector o, vector a) hat_add {
+void(entity plr, string m, float s, string at, vector o, vector a, float s_q3, vector o_q3, vector a_q3) hat_add {
 	if (plr.body)
 	if not(plr.hat) {
 		plr.hat = spawn();
 		setmodel(plr.hat, m);
 		plr.hat.owner = plr;
-		plr.hat.scale = s;
-		plr.hat.angles = a;
 		plr.hat.netname = str_zone_ifneeded(at);
+		plr.hat.pos1 = o;
+		plr.hat.pos2 = o_q3;
+		plr.hat.mangle = a;
+		plr.hat.v_angle = a_q3;
+		plr.hat.count = s;
+		plr.hat.cnt = s_q3;
 		hat_attach(plr);
-		setorigin(plr.hat, o);
 		plr.hat.customizeentityforclient = weapon_model_exterior_customize;
 	}
 }
@@ -50,7 +62,8 @@ var void(entity spot) hat_player_spawn_next;
 void(entity spot) hat_player_spawn {
 	if (hat_custom_callback && hat_custom_callback()) {
 	} else if (sv_player_hat != "")
-		hat_add(self, sv_player_hat, sv_player_hat_scale, sv_player_hat_attachment, sv_player_hat_origin, sv_player_hat_angles);
+		hat_add(self, sv_player_hat, sv_player_hat_scale, sv_player_hat_attachment, sv_player_hat_origin, sv_player_hat_angles,
+				sv_player_hat_q3_scale, sv_player_hat_q3_origin, sv_player_hat_q3_angles);
 
 	hat_player_spawn_next(spot);
 }
@@ -72,6 +85,9 @@ void(void) hat_init {
 		CVAR_CACHE(sv_player_hat_scale);
 		CVAR_CACHE_VEC(sv_player_hat_origin);
 		CVAR_CACHE_VEC(sv_player_hat_angles);
+		CVAR_CACHE(sv_player_hat_q3_scale);
+		CVAR_CACHE_VEC(sv_player_hat_q3_origin);
+		CVAR_CACHE_VEC(sv_player_hat_q3_angles);
 		precache_model(sv_player_hat);
 		hat_init_common();
 	}
