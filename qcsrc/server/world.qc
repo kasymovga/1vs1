@@ -861,7 +861,6 @@ void(void) world_shutdown {
 	map_finished = 2; // 2 = server shutting down
 	if (world_initialized > 0) {
 		world_initialized = 0;
-		print("Saving persistent data...\n");
 		ban_save();
 		print("done!\n");
 		// tell the bot system the game is ending now
@@ -869,6 +868,7 @@ void(void) world_shutdown {
 		map_info_shutdown();
 		infomessages_shutdown();
 		plugin_chain_shutdown();
+		print("Saving persistent data...\n");
 		db_shutdown();
 		campaign_restart();
 		cvar_settemp_restore();

@@ -62,69 +62,125 @@ float SP_RACE_TIME;
 float race_records_time[10];
 float race_records_speed[10];
 string race_records_name[10];
+string race_records_id[10];
 entity race_records_sender;
 
-float(string name, float checktime, float _speed) race_records_put;
+float(string name, string client_id, float checktime, float _speed) race_records_put;
+
+void(string id, string name) race_id_ref_counter_increase {
+	float c;
+	c = stof(db_get(db_server, strcat("raceid2n_rc/", id)));
+	db_put(db_server, strcat("raceid2n_rc/", id), ftos(c + 1));
+	db_put(db_server, strcat("raceid2n/", id), name);
+	//print("refereneces for ", id, "/", name, " increased to ", ftos(c + 1), "\n");
+}
+
+float(string id) race_id_ref_counter_decrease {
+	float c;
+	c = stof(db_get(db_server, strcat("raceid2n_rc/", id)));
+	if (c <= 0) {
+		db_put(db_server, strcat("raceid2n_rc/", id), "");
+		db_put(db_server, strcat("raceid2n/", id), "");
+	} else
+		db_put(db_server, strcat("raceid2n_rc/", id), ftos(c - 1));
+
+	//print("refereneces for ", id, " decreased to ", ftos(c - 1), "\n");
+	return c - 1;
+}
 
 void(void) race_records_load {
 	string s = strcat(mapname, race_records_path);
-	string n;
+	string n, id;
 	float t, sp;
-	n = db_get(db_server, strcat(s, "netname"));
+	id = db_get(db_server, strcat(s, "id"));
+	if (id != "")
+		n = db_get(db_server, strcat("raceid2n/", id));
+	else
+		n = db_get(db_server, strcat(s, "netname"));
+
 	t = stof(db_get(db_server, strcat(s, "time")));
 	sp = stof(db_get(db_server, strcat(s, "speed")));
-	if (t && n != "")
-		race_records_put(n, t, sp);
+	if (t && (n != "" || id != ""))
+		race_records_put(n, id, t, sp);
 
 	float i;
 	for (i = 1; i < 10; i++) {
-		n = db_get(db_server, strcat(s, ftos(i), "/netname"));
+		id = db_get(db_server, strcat(s, ftos(i), "/id"));
+		if (id != "")
+			n = db_get(db_server, strcat("raceid2n/", id));
+		else
+			n = db_get(db_server, strcat(s, ftos(i), "/netname"));
+
 		t = stof(db_get(db_server, strcat(s, ftos(i), "/time")));
 		sp = stof(db_get(db_server, strcat(s, ftos(i), "/speed")));
-		if (t && n != "")
-			race_records_put(n, t, sp);
+		if (t && (n != "" || id != ""))
+			race_records_put(n, id, t, sp);
 	}
 }
 
 void(void) race_records_save {
 	float t, sp;
-	string n;
+	string n, id;
+	print("Saving race records...\n");
 	t = race_records_time[0];
 	n = race_records_name[0];
+	id = race_records_id[0];
 	sp = race_records_speed[0];
 	db_put(db_server, strcat(mapname, race_records_path, "time"), ftos(t));
-	db_put(db_server, strcat(mapname, race_records_path, "netname"), n);
+	if (id != "")
+		db_put(db_server, strcat(mapname, race_records_path, "id"), id);
+	else
+		db_put(db_server, strcat(mapname, race_records_path, "netname"), n);
+
+	print("id=", id, " name=", n, "\n");
 	db_put(db_server, strcat(mapname, race_records_path, "speed"), ftos(sp));
 	float i;
 	for (i = 1; i < 10; i++) {
 		t = race_records_time[i];
 		n = race_records_name[i];
 		sp = race_records_speed[i];
+		id = race_records_id[i];
 		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/time"), ftos(t));
-		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/netname"), n);
+		if (id != "") {
+			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/id"), id);
+			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/netname"), "");
+		} else {
+			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/id"), "");
+			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/netname"), n);
+		}
+		print("id=", id, " name=", n, "\n");
 		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/speed"), ftos(sp));
 	}
 }
 
-float(string name) race_record_delete {
+float(string name, string client_id) race_record_delete {
 	float i, j, t, sp;
 	name = strcat1(name); //be sure that name is temporary string
-	string n;
+	string n, id;
 	float r = 0;
 	for (i = 0; i < 10; i++) {
 		n = race_records_name[i];
-		if (n == name) {
+		id = race_records_id[i];
+		if ((n == name && id == "") || (id != "" && id == client_id)) {
+			if (id != "")
+				race_id_ref_counter_decrease(id);
+
 			str_unzone_ifneeded(n);
 			race_records_name[i] = "";
+			str_unzone_ifneeded(id);
+			race_records_id[i] = "";
 			for (j = i; j < 9; j++) {
 				n = race_records_name[j + 1];
+				id = race_records_id[j + 1];
 				t = race_records_time[j + 1];
 				sp = race_records_speed[j + 1];
 				race_records_name[j] = n;
+				race_records_id[j] = id;
 				race_records_time[j] = t;
 				race_records_speed[j] = sp;
 			}
 			race_records_name[9] = "";
+			race_records_id[9] = "";
 			race_records_time[9] = 0;
 			race_records_speed[9] = 0;
 			r = 1;
@@ -152,9 +208,13 @@ float(entity to, float sf) race_records_send {
 void(string m) race_records_clear {
 	entity e;
 	float i;
+	string id;
 	bprint(strcat("Clearing records for ", m, "\n"));
 	if (m == mapname) {
 		for (i = 0; i < 10; i++) {
+			id = race_records_id[i];
+			if (id != "") race_id_ref_counter_decrease(id);
+			race_records_id[i] = "";
 			race_records_name[i] = "";
 			race_records_time[i] = 0;
 			race_records_speed[i] = 0;
@@ -163,39 +223,50 @@ void(string m) race_records_clear {
 	} else {
 		db_put(db_server, strcat(m, race_records_path, "time"), "");
 		db_put(db_server, strcat(m, race_records_path, "netname"), "");
+		id = db_get(db_server, strcat(m, race_records_path, "id"));
+		db_put(db_server, strcat(m, race_records_path, "id"), "");
+		if (id != "") race_id_ref_counter_decrease(id);
 		db_put(db_server, strcat(m, race_records_path, "speed"), "");
 		for (i = 1; i < 10; i++) {
 			db_put(db_server, strcat(m, race_records_path, ftos(i), "/time"), "");
 			db_put(db_server, strcat(m, race_records_path, ftos(i), "/netname"), "");
+			id = db_get(db_server, strcat(m, race_records_path, ftos(i), "/id"));
+			db_put(db_server, strcat(m, race_records_path, ftos(i), "/id"), "");
+			if (id != "") race_id_ref_counter_decrease(id);
 			db_put(db_server, strcat(m, race_records_path, ftos(i), "/speed"), "");
 		}
 	}
 }
 
-float(string name, float checktime, float _speed) race_records_put {
+float(string name, string client_id, float checktime, float _speed) race_records_put {
 	float t, i, j, sp;
-	string n;
+	string n, id;
 	for (i = 0; i < 10; i++) {
 		t = race_records_time[i];
 		n = race_records_name[i];
+		id = race_records_id[i];
 		sp = race_records_speed[i];
 		if (!t || t > checktime) {
-			race_record_delete(name);
+			race_record_delete(name, client_id);
 			str_unzone_ifneeded(race_records_name[9]);
+			str_unzone_ifneeded(race_records_id[9]);
 			for (j = 8; j >= i; j--) {
 				n = race_records_name[j];
+				id = race_records_id[j];
 				t = race_records_time[j];
 				sp = race_records_speed[j];
 				race_records_name[j + 1] = n;
+				race_records_id[j + 1] = id;
 				race_records_time[j + 1] = t;
 				race_records_speed[j + 1] = sp;
 			}
 			race_records_name[i] = str_zone_ifneeded(name);
+			race_records_id[i] = str_zone_ifneeded(client_id);
 			race_records_time[i] = checktime;
 			race_records_speed[i] = _speed;
 			return i + 1;
 		}
-		if (n == name) return FALSE;
+		if ((n == name && id == "") || (id == client_id)) return FALSE;
 	}
 	return FALSE;
 }
@@ -371,8 +442,9 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 				if (race_position_used(e)) {
 					sprint(e, "\{1}^3Save/retore position was used, time not counted\n");
 				} else {
-					float position = race_records_put(e.netname, t, e.scorekeeper.race_maxspeed);
+					float position = race_records_put(e.netname, e.clid, t, e.scorekeeper.race_maxspeed);
 					if (position) {
+						if (e.clid != "") race_id_ref_counter_increase(e.clid, e.netname);
 						chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), " on ", mapname , "\n"), 0);
 						if (position == 1)
 							announce(e, "announcer/male/amazing.wav", "^31st place!");
@@ -1245,8 +1317,9 @@ float(string cmd, float argc) race_cmd_game_handle {
 		}
 		float i = stof(argv(1));
 		string n = race_records_name[i - 1];
-		if (n != "") {
-			race_record_delete(n);
+		string id = race_records_id[i - 1];
+		if (n != "" || id != "") {
+			race_record_delete(n, id);
 			race_records_sender.SendFlags = 1;
 		}
 		return TRUE;
