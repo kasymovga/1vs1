@@ -273,7 +273,7 @@ float(string name, string client_id, float checktime, float _speed) race_records
 			race_records_speed[i] = _speed;
 			return i + 1;
 		}
-		if ((n == name && id == "") || (id == client_id && n == "")) return FALSE;
+		if ((n == name && id == "") || (id == client_id && id != "")) return FALSE;
 	}
 	return FALSE;
 }
