@@ -93,9 +93,13 @@ void(void) race_records_load {
 	string n, id;
 	float t, sp;
 	id = db_get(db_server, strcat(s, "id"));
-	if (id != "")
+	if (id != "") {
 		n = db_get(db_server, strcat("raceid2n/", id));
-	else
+		if (n == "") {
+			print("Missed name for id\n");
+			n = "<BROKEN>";
+		}
+	} else
 		n = db_get(db_server, strcat(s, "netname"));
 
 	t = stof(db_get(db_server, strcat(s, "time")));
@@ -106,9 +110,13 @@ void(void) race_records_load {
 	float i;
 	for (i = 1; i < 10; i++) {
 		id = db_get(db_server, strcat(s, ftos(i), "/id"));
-		if (id != "")
+		if (id != "") {
 			n = db_get(db_server, strcat("raceid2n/", id));
-		else
+			if (n == "") {
+				print("Missed name for id\n");
+				n = "<BROKEN>";
+			}
+		} else
 			n = db_get(db_server, strcat(s, ftos(i), "/netname"));
 
 		t = stof(db_get(db_server, strcat(s, ftos(i), "/time")));
