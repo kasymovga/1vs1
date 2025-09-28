@@ -155,7 +155,6 @@ void(void) race_records_save {
 			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/id"), "");
 			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/netname"), n);
 		}
-		print("id=", id, " name=", n, "\n");
 		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/speed"), ftos(sp));
 	}
 }
