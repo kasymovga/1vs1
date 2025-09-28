@@ -132,7 +132,6 @@ void(void) race_records_save {
 	else
 		db_put(db_server, strcat(mapname, race_records_path, "netname"), n);
 
-	print("id=", id, " name=", n, "\n");
 	db_put(db_server, strcat(mapname, race_records_path, "speed"), ftos(sp));
 	float i;
 	for (i = 1; i < 10; i++) {
