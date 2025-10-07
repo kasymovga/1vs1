@@ -31,6 +31,10 @@ void(float db, string pFilename) cmd_db_dump {
 	fclose(fh);
 }
 
+void(string k, string v) cmd_db_query_print {
+	print(k, ": ", v, "\n");
+}
+
 void(string command) cmd_game {
 	float argc;
 	entity client, e;
@@ -53,6 +57,7 @@ void(string command) cmd_game {
 		print("  allready\n");
 		print("  cvar_changes\n");
 		print("  find classname\n");
+		print("  db_query <skey> [svalue]\n");
 		print("  records\n");
 		vote_cmd("help", world);
 		ban_cmd("help");
@@ -414,6 +419,14 @@ void(string command) cmd_game {
 	}
 	if (cmd == "rereadcvars") {
 		world_dynamic_init();
+		return;
+	}
+	if (cmd == "db_query" && (argc == 2 || argc == 3)) {
+		if (argc == 2)
+			db_for_each_key_like(db_server, argv(1), "", cmd_db_query_print);
+		else
+			db_for_each_key_like(db_server, argv(1), argv(2), cmd_db_query_print);
+
 		return;
 	}
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
