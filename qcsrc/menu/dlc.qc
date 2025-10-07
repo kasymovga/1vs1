@@ -93,6 +93,50 @@ void(void) dlc_curl_event_listener_think {
 	}
 }
 
+void(void) dlc_load_exts {
+	float search = search_begin("menu_rexext_*.cfg", TRUE, TRUE);
+	if (search < 0)
+		return;
+
+	float n = search_getsize(search);
+	float i;
+	float f;
+	string s;
+	string line;
+	string c;
+	float separator;
+	string k, v;
+	string profile, profile_desc;
+	for (i = 0; i < n; i++) {
+		profile = "";
+		profile_desc = "";
+		s = search_getfilename(search, i);
+		f = fopen(s, FILE_READ);
+		if (f < 0) continue;
+		while ((line = fgets(f))) {
+			line = dlc_trimspaces(dlc_trimcommentary(line));
+			separator = dlc_findspace(line);
+			if (separator < 0)
+				continue;
+
+			k = substring(line, 0, separator);
+			v = dlc_trimspaces(substring(line, separator + 1, -1));
+			if (k == "profile") {
+				profile = v;
+			}
+			if (k == "description") {
+				profile_desc = v;
+			}
+		}
+		fclose(f);
+		if (profile != "") {
+			print("Adding profile: ", profile, "\n");
+			registercvar(strcat(profile, "_profile"), profile_desc, 0);
+		}
+	}
+	search_end(search);
+}
+
 float(float nodownload, float renderrestart) dlc_reload {
 	dlc_failed = FALSE;
 	str_unzone_ifneeded(dlc_expected);
@@ -223,6 +267,7 @@ float(float nodownload, float renderrestart) dlc_reload {
 			remove(dlc_curl_event_listener);
 			dlc_curl_event_listener = NULL;
 		}
+		dlc_load_exts();
 		return TRUE;
 	}
 	dlc_expected = str_zone_ifneeded(dlc_expected);
