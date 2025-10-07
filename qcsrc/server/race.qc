@@ -446,7 +446,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 			}
 			if (cp == race_timed_checkpoint) {
 				if (race_position_used(e)) {
-					sprint(e, "\{1}^3Save/retore position was used, time not counted\n");
+					sprint(e, "\{1}^3Save/restore position was used, time not counted\n");
 				} else {
 					float position = race_records_put(e.netname, e.clid, t, e.scorekeeper.race_maxspeed);
 					if (position) {
