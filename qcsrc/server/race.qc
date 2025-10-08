@@ -159,41 +159,33 @@ void(void) race_records_save {
 	}
 }
 
-float(string name, string client_id) race_record_delete {
-	float i, j, t, sp;
-	name = strcat1(name); //be sure that name is temporary string
+void(float i) race_record_delete {
+	float j;
 	string n, id;
-	float r = 0;
-	for (i = 0; i < 10; i++) {
-		n = race_records_name[i];
-		id = race_records_id[i];
-		if ((n == name && id == "") || (id != "" && id == client_id)) {
-			if (id != "")
-				race_id_ref_counter_decrease(id);
+	float t, sp;
+	id = race_records_name[i];
+	n = race_records_id[i];
+	if (id != "")
+		race_id_ref_counter_decrease(id);
 
-			str_unzone_ifneeded(n);
-			race_records_name[i] = "";
-			str_unzone_ifneeded(id);
-			race_records_id[i] = "";
-			for (j = i; j < 9; j++) {
-				n = race_records_name[j + 1];
-				id = race_records_id[j + 1];
-				t = race_records_time[j + 1];
-				sp = race_records_speed[j + 1];
-				race_records_name[j] = n;
-				race_records_id[j] = id;
-				race_records_time[j] = t;
-				race_records_speed[j] = sp;
-			}
-			race_records_name[9] = "";
-			race_records_id[9] = "";
-			race_records_time[9] = 0;
-			race_records_speed[9] = 0;
-			r = 1;
-			i--;
-		}
+	str_unzone_ifneeded(n);
+	race_records_name[i] = "";
+	str_unzone_ifneeded(id);
+	race_records_id[i] = "";
+	for (j = i; j < 9; j++) {
+		n = race_records_name[j + 1];
+		id = race_records_id[j + 1];
+		t = race_records_time[j + 1];
+		sp = race_records_speed[j + 1];
+		race_records_name[j] = n;
+		race_records_id[j] = id;
+		race_records_time[j] = t;
+		race_records_speed[j] = sp;
 	}
-	return r;
+	race_records_name[9] = "";
+	race_records_id[9] = "";
+	race_records_time[9] = 0;
+	race_records_speed[9] = 0;
 }
 
 float(entity to, float sf) race_records_send {
@@ -247,15 +239,32 @@ void(string m) race_records_clear {
 float(string name, string client_id, float checktime, float _speed) race_records_put {
 	float t, i, j, sp;
 	string n, id;
+	float have_id = FALSE;
+	if (client_id != "")
+		for (i = 0; i < 10; i++) {
+			if (race_records_id[i] == client_id)
+				have_id = TRUE;
+		}
 	for (i = 0; i < 10; i++) {
 		t = race_records_time[i];
-		n = race_records_name[i];
-		id = race_records_id[i];
-		sp = race_records_speed[i];
 		if (!t || t > checktime) {
-			race_record_delete(name, client_id);
-			str_unzone_ifneeded(race_records_name[9]);
-			str_unzone_ifneeded(race_records_id[9]);
+			for (j = i; j < 10; j++) {
+				n = race_records_name[j];
+				id = race_records_id[j];
+				if (have_id) {
+					if (id == client_id) {
+						race_record_delete(j);
+						j--;
+					}
+				} else {
+					if (n != "" && n == name && id == "") {
+						race_record_delete(j);
+						j--;
+					}
+				}
+			}
+			//clearing last position if it's not empty
+			race_record_delete(9);
 			for (j = 8; j >= i; j--) {
 				n = race_records_name[j];
 				id = race_records_id[j];
@@ -272,7 +281,13 @@ float(string name, string client_id, float checktime, float _speed) race_records
 			race_records_speed[i] = _speed;
 			return i + 1;
 		}
-		if ((n == name && id == "") || (id == client_id && id != "")) return FALSE;
+		n = race_records_name[i];
+		id = race_records_id[i];
+		if (have_id) {
+			if (id == client_id) return FALSE;
+		} else {
+			if (n == name && id == "") return FALSE;
+		}
 	}
 	return FALSE;
 }
@@ -1324,10 +1339,7 @@ float(string cmd, float argc) race_cmd_game_handle {
 		float i = stof(argv(1));
 		string n = race_records_name[i - 1];
 		string id = race_records_id[i - 1];
-		if (n != "" || id != "") {
-			race_record_delete(n, id);
-			race_records_sender.SendFlags = 1;
-		}
+		race_record_delete(i);
 		return TRUE;
 	}
 	return race_cmd_game_handle_next(cmd, argc);
