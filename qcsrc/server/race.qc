@@ -236,6 +236,35 @@ void(string m) race_records_clear {
 	}
 }
 
+string race_records_link_name_to_id_cb_arg1;
+string race_records_link_name_to_id_cb_arg2;
+void(string k, string v) race_records_link_name_to_id_cb {
+	if (substring(k, strlen(k) - 8, 8) != "/netname") return;
+	float slash = strstrofs(k, "/", 0);
+	if (slash < 0) return; //impossible but...
+	if (substring(k, 0, slash) == mapname) return;
+	if (strstrofs(k, race_records_path, 0) == slash) {
+		if (v == race_records_link_name_to_id_cb_arg1) {
+			string k_id = strcat(substring(k, 0, strlen(k) - 7), "id");
+			if (db_get(db_server, k_id) == "") {
+				db_put(db_server, k, "");
+				db_put(db_server, k_id, race_records_link_name_to_id_cb_arg2);
+				race_id_ref_counter_increase(race_records_link_name_to_id_cb_arg2,
+						race_records_link_name_to_id_cb_arg1);
+				print("Link ", race_records_link_name_to_id_cb_arg2, " on ", k, " to id\n");
+			}
+		}
+	}
+}
+
+void(string n, string id) race_records_link_name_to_id {
+	race_records_link_name_to_id_cb_arg1 = n;
+	race_records_link_name_to_id_cb_arg2 = id;
+	db_for_each_key_like(db_server, "/netname", n, race_records_link_name_to_id_cb);
+	race_records_link_name_to_id_cb_arg1 = NULL;
+	race_records_link_name_to_id_cb_arg2 = NULL;
+}
+
 float(string name, string client_id, float checktime, float _speed) race_records_put {
 	float t, i, j, sp;
 	string n, id;
@@ -260,6 +289,8 @@ float(string name, string client_id, float checktime, float _speed) race_records
 					if (n != "" && n == name && id == "") {
 						race_record_delete(j);
 						j--;
+						if (cvar("sv_cts_records_link_names_to_ids"))
+							race_records_link_name_to_id(name, client_id);
 					}
 				}
 			}
@@ -1321,6 +1352,12 @@ void(void) race_shutdown {
 
 var float(string cmd, float argc) race_cmd_game_handle_next;
 float(string cmd, float argc) race_cmd_game_handle {
+	if (cmd == "help") {
+		sprint(self, "  clear_records [mapname]\n");
+		sprint(self, "  clear_record <position>\n");
+		sprint(self, "  link_id_to_name <position1> <position2>\n");
+		return FALSE;
+	}
 	if (cmd == "clear_records") {
 		string m;
 		if (argc > 1)
@@ -1335,11 +1372,72 @@ float(string cmd, float argc) race_cmd_game_handle {
 		if (argc != 2) {
 			sprint(self, "usage: sv_cmd clear_record <position>\n");
 			sprint(self, "       position must be from 1 to 10\n");
+			return TRUE;
 		}
 		float i = stof(argv(1));
 		string n = race_records_name[i - 1];
 		string id = race_records_id[i - 1];
 		race_record_delete(i);
+		race_records_sender.SendFlags = 1;
+		return TRUE;
+	}
+	if (cmd == "link_id_to_name") {
+		if (argc != 3) {
+			sprint(self, "usage: sv_cmd link_id_to_name <position1> <position2>\n");
+			sprint(self, "       position1 and position2 must be from 1 to 10 and have different values\n");
+			return TRUE;
+		}
+		float p1 = floor(stof(argv(1)));
+		float p2 = floor(stof(argv(2)));
+		if (p1 < 0 || p1 > 9 || p2 < 0 || p2 > 9 || p1 == p2) {
+			sprint(self, "position1 and position2 must be from 1 to 10 and have different values\n");
+			return TRUE;
+		}
+		string id1 = race_records_id[p1];
+		string id2 = race_records_id[p2];
+		string name1 = race_records_name[p1];
+		string name2 = race_records_name[p2];
+		if (id1 != "" && id2 != "") {
+			sprint(self, "both records linked to different ids\n");
+			return TRUE;
+		}
+		if (id1 == "" && id2 == "") {
+			sprint(self, "both records not linked to any id\n");
+			return TRUE;
+		}
+		if (id1 != "" && p1 < p2) {
+			race_records_link_name_to_id(name2, id1);
+			race_record_delete(p2);
+		}
+		if (id2 != "" && p2 < p1) {
+			race_records_link_name_to_id(name1, id2);
+			race_record_delete(p1);
+		}
+		if (id1 != "" && p2 < p1) {
+			//swaping names and ids
+			string tmp;
+			tmp = race_records_id[p1];
+			race_records_id[p1] = race_records_id[p2];
+			race_records_id[p2] = tmp;
+			tmp = race_records_name[p1];
+			race_records_name[p1] = race_records_name[p2];
+			race_records_name[p2] = tmp;
+			race_records_link_name_to_id(name2, id1);
+			race_record_delete(p1);
+		}
+		if (id2 != "" && p1 < p2) {
+			//swaping names and ids
+			string tmp;
+			tmp = race_records_id[p1];
+			race_records_id[p1] = race_records_id[p2];
+			race_records_id[p2] = tmp;
+			tmp = race_records_name[p1];
+			race_records_name[p1] = race_records_name[p2];
+			race_records_name[p2] = tmp;
+			race_records_link_name_to_id(name1, id2);
+			race_record_delete(p2);
+		}
+		race_records_sender.SendFlags = 1;
 		return TRUE;
 	}
 	return race_cmd_game_handle_next(cmd, argc);

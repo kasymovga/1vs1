@@ -63,6 +63,7 @@ void(string command) cmd_game {
 		ban_cmd("help");
 		cmd_generic("help");
 		IP2C_GameCommand("help", argc);
+		plugin_chain_cmd_game_handle("help", argc);
 		return;
 	}
 	if (vote_cmd(command, world))

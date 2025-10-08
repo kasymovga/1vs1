@@ -5,6 +5,7 @@ void(void) db_init {
 
 void(float db, string s_key, string s_value, void(string k, string v) cb) db_for_each_key_like {
 	float i, n = buf_getsize(db);
+	s_value = uri_escape(s_value);
 	string l, k, v;
 	float k_e, v_e;
 	for (i = 0; i < n; i++) {
@@ -31,7 +32,7 @@ void(float db, string s_key, string s_value, void(string k, string v) cb) db_for
 				if (v == "") break;
 				if ((s_key == "" || strstrofs(k, s_key, 0) >= 0)
 						&& (s_value == "" || strstrofs(v, s_value, 0) >= 0))
-					cb(k, v);
+					cb(k, uri_unescape(v));
 				if (v_e >= 0)
 					l = substring(l, v_e, -1);
 				else

@@ -21,5 +21,6 @@ set cts_g_waypoints_auto_generate 0
 set cts_g_trigger_push_prediction 1
 set cts_g_score_bestweapon 0
 set cts_g_player_obituary 0
+set sv_cts_records_link_names_to_ids 0
 alias cl_hook_gamestart_cts
 alias sv_hook_gamestart_cts
