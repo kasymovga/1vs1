@@ -251,7 +251,7 @@ void(string k, string v) race_records_link_name_to_id_cb {
 				db_put(db_server, k_id, race_records_link_name_to_id_cb_arg2);
 				race_id_ref_counter_increase(race_records_link_name_to_id_cb_arg2,
 						race_records_link_name_to_id_cb_arg1);
-				print("Link ", race_records_link_name_to_id_cb_arg2, " on ", k, " to id\n");
+				print("Link ", race_records_link_name_to_id_cb_arg1, " on ", k, " to id\n");
 			}
 		}
 	}
