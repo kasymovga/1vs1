@@ -1356,9 +1356,7 @@ float(string cmd, float argc) race_cmd_game_handle {
 		sprint(self, "  clear_records [mapname]\n");
 		sprint(self, "  clear_record <position>\n");
 		sprint(self, "  link_id_to_name <position1> <position2>\n");
-		return FALSE;
-	}
-	if (cmd == "clear_records") {
+	} else if (cmd == "clear_records") {
 		string m;
 		if (argc > 1)
 			m = argv(1);
@@ -1367,8 +1365,7 @@ float(string cmd, float argc) race_cmd_game_handle {
 
 		race_records_clear(m);
 		return TRUE;
-	}
-	if (cmd == "clear_record") {
+	} else if (cmd == "clear_record") {
 		if (argc != 2) {
 			sprint(self, "usage: sv_cmd clear_record <position>\n");
 			sprint(self, "       position must be from 1 to 10\n");
@@ -1380,8 +1377,7 @@ float(string cmd, float argc) race_cmd_game_handle {
 		race_record_delete(i);
 		race_records_sender.SendFlags = 1;
 		return TRUE;
-	}
-	if (cmd == "link_id_to_name") {
+	} else if (cmd == "link_id_to_name") {
 		if (argc != 3) {
 			sprint(self, "usage: sv_cmd link_id_to_name <position1> <position2>\n");
 			sprint(self, "       position1 and position2 must be from 1 to 10 and have different values\n");

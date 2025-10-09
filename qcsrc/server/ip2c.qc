@@ -6,6 +6,8 @@ float sv_ip2country;
 float sv_ip2country_allow_fakeflag;
 string sv_ip2country_bot_flag;
 
+void IP2C_CacheIP(string ip, string cn);
+
 void IP2C_Log(string msg) {
     print("IP2C: ", msg, "\n");
 }
@@ -56,9 +58,28 @@ float IP2C_ClientCommandHandle(string cmd, float tokens) {
 
 var float(string cmd, float tokens) IP2C_cmd_game_handle_NextLink;
 float IP2C_cmd_game_handle(string cmd, float tokens) {
-	if(IP2C_GameCommand(cmd, tokens))
+	if (cmd == "help") {
+		print("  ip2c_lookup ipaddress\n");
+		print("  ip2c_status\n");
+		print("  ip2c_clearcache\n");
+		print("  ip2c_putcache ip countrycode\n");
+	} else if (cmd == "ip2c_lookup") {
+		IP2C_Lookup(argv(1), IP2C_Callback_DumpToConsole, 0, NULL);
 		return TRUE;
-
+	} else if (cmd == "ip2c_status") {
+		IP2C_PrintRequests();
+		return TRUE;
+	} else if (cmd == "ip2c_clearcache") {
+		IP2C_ClearCache();
+		return TRUE;
+	} else if (cmd == "ip2c_putcache") {
+		if (tokens < 3) {
+			print("Usage: ip2c_putcache ip countrycode\n");
+			return TRUE;
+		}
+		IP2C_CacheIP(argv(1), argv(2));
+		return TRUE;
+	}
 	return IP2C_cmd_game_handle_NextLink(cmd, tokens);
 }
 
@@ -372,40 +393,6 @@ void IP2C_PrintRequests(void) {
     entity e;
     for(e = world; (e = find(e, classname, "ip2c_callbackprovider")); )
         IP2C_Log(strcat(e.ip2c_callbackip, " : ^5", ftos(time - e.ip2c_requested_at), "s"));
-}
-
-float IP2C_GameCommand(string cmd, float tokens) {
-    switch(cmd) {
-        case "help":
-            print("  ip2c_lookup ipaddress\n");
-            print("  ip2c_status\n");
-            print("  ip2c_clearcache\n");
-            print("  ip2c_putcache ip countrycode\n");
-            return TRUE;
-
-        case "ip2c_lookup":
-            IP2C_Lookup(argv(1), IP2C_Callback_DumpToConsole, 0, world);
-            return TRUE;
-
-        case "ip2c_status":
-            IP2C_PrintRequests();
-            return TRUE;
-
-        case "ip2c_clearcache":
-            IP2C_ClearCache();
-            return TRUE;
-
-        case "ip2c_putcache":
-            if(tokens < 3) {
-                print("Usage: ip2c_putcache ip countrycode\n");
-                return TRUE;
-            }
-
-            IP2C_CacheIP(argv(1), argv(2));
-            return TRUE;
-    }
-
-    return FALSE;
 }
 
 void(entity pl, string cn) ip2c_set {
