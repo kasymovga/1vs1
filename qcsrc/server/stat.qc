@@ -27,6 +27,7 @@ void(void) stat_init {
 
 void(entity plr) stat_player_add {
 	if (stat_db < 0) return;
+	if (map_finished) return;
 	if (plr.clid == "") return;
 	float i = 0;
 	string s;
