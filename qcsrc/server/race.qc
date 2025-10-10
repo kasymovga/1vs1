@@ -1111,7 +1111,7 @@ float(string cmd, float argc) race_cmd_game_handle {
 	if (cmd == "help") {
 		sprint(self, "  clear_records [mapname]\n");
 		sprint(self, "  clear_record <position>\n");
-		sprint(self, "  link_id_to_name <position1> <position2>\n");
+		sprint(self, "  link_id_to_name <position1> [position2]\n");
 	} else if (cmd == "clear_records") {
 		string m;
 		if (argc > 1)
@@ -1136,11 +1136,11 @@ float(string cmd, float argc) race_cmd_game_handle {
 	} else if (cmd == "link_id_to_name") {
 		if (argc < 2 || argc > 3) {
 			sprint(self, "usage: sv_cmd link_id_to_name <position1> [position2]\n");
-			sprint(self, "       position1 and position2 must be from 0 to 9 and have different values\n");
+			sprint(self, "       position1 and position2 must be from 1 to 10 and have different values\n");
 			return TRUE;
 		}
 		if (argc == 2) {
-			float p = floor(stof(argv(1)));
+			float p = floor(stof(argv(1))) - 1;
 			if (p < 0 || p > 9) {
 				sprint(self, "position1 must be from 1 to 10 and have different values\n");
 				return TRUE;
@@ -1154,10 +1154,10 @@ float(string cmd, float argc) race_cmd_game_handle {
 			race_records_link_name_to_id(name, id);
 			return TRUE;
 		}
-		float p1 = floor(stof(argv(1)));
-		float p2 = floor(stof(argv(2)));
+		float p1 = floor(stof(argv(1))) - 1;
+		float p2 = floor(stof(argv(2))) - 1;
 		if (p1 < 0 || p1 > 9 || p2 < 0 || p2 > 9 || p1 == p2) {
-			sprint(self, "position1 and position2 must be from 0 to 9 and have different values\n");
+			sprint(self, "position1 and position2 must be from 1 to 10 and have different values\n");
 			return TRUE;
 		}
 		string id1 = race_records_id[p1];
