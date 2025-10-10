@@ -167,6 +167,7 @@ pin.qh
 ability.qh
 soulmates.qh
 handover.qh
+race_records.qh
 sound.qc
 announce.qc
 marker.qc
@@ -417,3 +418,4 @@ pin.qc
 handover.qc
 func_boss.qc
 stat.qc
+race_records.qc
