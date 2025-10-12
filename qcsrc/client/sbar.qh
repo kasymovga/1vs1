@@ -8,6 +8,7 @@
 #define SBAR_GAMEINFO_POSITION_DEFAULT '0 0 8'
 #define SBAR_NADGET_POSITION_DEFAULT '200 24 9'
 #define SBAR_NADGET2_POSITION_DEFAULT '200 0 9'
+#define SBAR_SECRET_POSITION_DEFAULT '181 0 9'
 void(float) sbar_field_set;
 void(float) sbar_help;
 vector(vector v) sbar_font_size;

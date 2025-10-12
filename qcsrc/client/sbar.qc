@@ -13,6 +13,10 @@ float sbar_starttime;
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
 
+float _secrets;
+float _totalsecrets;
+string _secrets_text;
+
 vector sbar_color;
 float SBAR_SCOREBOARD_OFFSET = 50;
 #define SBAR_TIME_DECIMALS 2
@@ -33,6 +37,7 @@ void(void) sbar_set_defaults {
 	cvar_set_vec("sbar_weapons_position", SBAR_WEAPONS_POSITION_DEFAULT);
 	cvar_set_vec("sbar_gameinfo_position", SBAR_GAMEINFO_POSITION_DEFAULT);
 	cvar_set_vec("sbar_powerups_position", SBAR_POWERUPS_POSITION_DEFAULT);
+	cvar_set_vec("sbar_secret_position", SBAR_SECRET_POSITION_DEFAULT);
 	cvar_set("sbar_timer_scale", "1");
 	cvar_set("sbar_score_scale", "1");
 	cvar_set("sbar_ammo_scale", "1");
@@ -43,6 +48,7 @@ void(void) sbar_set_defaults {
 	cvar_set("sbar_weapons_scale", "1");
 	cvar_set("sbar_gameinfo_scale", "1");
 	cvar_set("sbar_powerups_scale", "1");
+	cvar_set("sbar_secret_scale", "1");
 }
 
 void(string s) sbar_load {
@@ -89,6 +95,7 @@ void(string s) sbar_save {
 		sbar_save_write_line_scale(f, "sbar_nadget2_scale");
 		sbar_save_write_line_scale(f, "sbar_weapons_scale");
 		sbar_save_write_line_scale(f, "sbar_gameinfo_scale");
+		sbar_save_write_line_scale(f, "sbar_secret_scale");
 		sbar_save_write_line_position(f, "sbar_timer_position", SBAR_TIMER_POSITION_DEFAULT);
 		sbar_save_write_line_position(f, "sbar_score_position", SBAR_SCORE_POSITION_DEFAULT);
 		sbar_save_write_line_position(f, "sbar_ammo_position", SBAR_AMMO_POSITION_DEFAULT);
@@ -98,6 +105,7 @@ void(string s) sbar_save {
 		sbar_save_write_line_position(f, "sbar_nadget2_position", SBAR_NADGET2_POSITION_DEFAULT);
 		sbar_save_write_line_position(f, "sbar_weapons_position", SBAR_WEAPONS_POSITION_DEFAULT);
 		sbar_save_write_line_position(f, "sbar_gameinfo_position", SBAR_GAMEINFO_POSITION_DEFAULT);
+		sbar_save_write_line_position(f, "sbar_secret_position", SBAR_SECRET_POSITION_DEFAULT);
 		fclose(f);
 	}
 }
@@ -1966,6 +1974,13 @@ void(void) sbar_draw {
 	sbar_fontsize = sbar_font_size(CVAR(sbar_fontsize));
 	sbar_fontsize_spec = sbar_font_size(CVAR(sbar_fontsize_spec));
 	float _health = getstati(STAT_HEALTH);
+
+	if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP) {
+		_secrets = getstati(STAT_SECRETS);
+		_totalsecrets = getstati(STAT_TOTALSECRETS);
+		_secrets_text = strcat(" ", ftos(_secrets), "/", ftos(_totalsecrets));
+	}
+
 	sbar_starttime = getstatf(STAT_GAMESTARTTIME);
 	sbar_timelimit = getstatf(STAT_TIMELIMIT);
 	if (sbar_starttime < 0) { //negative start time mean warmup
@@ -2026,6 +2041,14 @@ void(void) sbar_draw {
 		pos = sbar_position(CVAR(sbar_health_position), '110 32 0' * CVAR(sbar_health_scale), CVAR(sbar_health_background));
 		drawpic(pos + '78 0 0' * CVAR(sbar_health_scale), "gfx/hud/sb_health", '32 32 0' * CVAR(sbar_health_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		sbar_draw_num_colored(pos + '6 4 0' * CVAR(sbar_health_scale), _health, 24 * CVAR(sbar_health_scale), sbar_alpha_fg);
+
+		// secrets in coop hud
+		if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP) {
+			pos = sbar_position(CVAR(sbar_secret_position), '110 32 0' * CVAR(sbar_secret_scale), CVAR(sbar_secret_background));
+			drawpic(pos + '76 0 0' * CVAR(sbar_secret_scale), "gfx/hud/sb_secret", '32 32 0' * CVAR(sbar_secret_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(pos + '6 4 0' * CVAR(sbar_secret_scale), _secrets_text, '1 1 0' * 24 * CVAR(sbar_secret_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		}
+
 		// weapon icons
 		sbar_weapons_draw(CVAR(sbar_weapons_position), CVAR(sbar_weapons_scale));
 		// ammo
