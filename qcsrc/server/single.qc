@@ -1,8 +1,6 @@
 float single_level_finished;
 float _single_transit_weapons;
 float _single_transit_weapons_extra;
-float single_secrets_found;
-float single_secrets_total;
 float single_monsters_killed;
 float single_monsters_total;
 float single_skill_save;
@@ -58,7 +56,7 @@ float(float ignore, float ignore2) single_winning_condition {
 
 string (string s) single_map_finish_message_mod {
 	if (campaign_won) {
-		game_status_set("^2Level finished\nSecrets: {1}\nMonsters: {2}", 30, strcat(ftos(single_secrets_found), "/", ftos(single_secrets_total)), strcat(ftos(single_monsters_killed), "/", ftos(single_monsters_total)), "");
+		game_status_set("^2Level finished\nSecrets: {1}\nMonsters: {2}", 30, strcat(ftos(found_secrets), "/", ftos(total_secrets)), strcat(ftos(single_monsters_killed), "/", ftos(single_monsters_total)), "");
 		return "";
 	} else
 		return "^1Game over";
@@ -281,17 +279,18 @@ void(void) single_init {
 }
 
 void(void) single_secret_controller_use {
-	single_secrets_found++;
-	game_status_set("^2Secrets found: ^3{1}^2/^3{2}", 2, ftos(single_secrets_found), ftos(single_secrets_total), "");
+	found_secrets++;
+	game_status_set("^2Secrets found: ^3{1}^2/^3{2}", 2, ftos(found_secrets), ftos(total_secrets), "");
+	net_write_byte(MSG_ALL, SVC_FOUNDSECRET);
 }
 
 void(void) single_secret_controller_reset {
-	single_secrets_found = 0;
+	found_secrets = 0;
 	single_monsters_killed = 0;
 }
 
 void(void) spawnfunc_single_secret {
-	single_secrets_total++;
+	total_secrets++;
 	self.noise = "misc/strength_respawn.wav";
 	if (self.message == "") {
 		self.message = "You found a secret area!";
