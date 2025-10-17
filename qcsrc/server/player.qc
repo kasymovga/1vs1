@@ -40,6 +40,8 @@ float g_player_body_pitch_maxangle;
 float g_player_team_collisions;
 float g_player_damage_screen_effects;
 float g_player_damage_punchangle;
+float g_player_corpse_health_limit;
+float g_player_corpse_fade_time;
 float sv_notification_type;
 float g_endmatch_on_leave;
 string sv_announcer_extra_pushfrag;
@@ -142,7 +144,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
 	o.health = o.health - _damage;
-	if (o.health <= -75) {
+	if (o.health <= g_player_corpse_health_limit) {
 		violence_gib_splash(self, 1, 1, attacker);
 		if (self.classname == "body_detached") { //detached body
 			if (self.body) {
@@ -658,7 +660,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
 		if (self.body) {
 			self.body.think = player_corpse_think;
-			self.body.fade_time = time + 15;
+			self.body.fade_time = time + g_player_corpse_fade_time;
 			self.body.nextthink = time;
 		}
 		if (defer_client_kill_now_team_change)
@@ -1318,6 +1320,8 @@ void() player_init {
 	CVAR_CACHE(g_player_team_collisions);
 	CVAR_CACHE(g_player_damage_screen_effects);
 	CVAR_CACHE(g_player_damage_punchangle);
+	CVAR_CACHE(g_player_corpse_health_limit);
+	CVAR_CACHE(g_player_corpse_fade_time);
 	CVAR_CACHE(sv_notification_type);
 	CVAR_CACHE(g_spawnshieldtime);
 	CVAR_CACHE(g_spawnfrags);

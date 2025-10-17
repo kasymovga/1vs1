@@ -101,3 +101,5 @@ set sv_player_killcount_30_announce_message "^1ARMAGEDDON!!!"
 set g_player_damage_screen_effects 0
 set g_player_damage_punchangle 0
 set g_player_obituary 1
+set g_player_corpse_health_limit -75
+set g_player_corpse_fade_time 15
