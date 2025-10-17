@@ -1352,7 +1352,9 @@ string(string s) race_map_vote_send_map_name_mod {
 	if (id != "") {
 		n = db_get(db_server, strcat("raceid2n/", id));
 	}
-	n = db_get(db_server, strcat(s, CTS_RECORD, "netname"));
+	if (n == "")
+		n = db_get(db_server, strcat(s, CTS_RECORD, "netname"));
+
 	if (n != "")
 		return strcat(s, " ^0(^7", n, "^0)^7");
 
