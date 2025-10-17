@@ -990,7 +990,14 @@ string(string bspname) race_world_record_for_map {
 	if (r == 0)
 		return strcat(strpad(16, bspname), " ", "--:--.-- -\n");
 
-	string n = strreplace("\n", " ", db_get(db_server, strcat(bspname, recid, "netname")));
+	string n = "";
+	string id = db_get(db_server, strcat(bspname, recid, "id"));
+	if (id != "") {
+		n = strreplace("\n", " ", db_get(db_server, strcat("raceid2n/", id)));
+	}
+	if (n == "") {
+		n = strreplace("\n", " ", db_get(db_server, strcat(bspname, recid, "netname")));
+	}
 	return strcat(strpad(16, bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", n, "\n");
 }
 
@@ -1340,7 +1347,12 @@ string(string s) race_map_finish_message_mod {
 }
 
 string(string s) race_map_vote_send_map_name_mod {
-	string n = db_get(db_server, strcat(s, CTS_RECORD, "netname"));
+	string id = db_get(db_server, strcat(s, CTS_RECORD, "id"));
+	string n = "";
+	if (id != "") {
+		n = db_get(db_server, strcat("raceid2n/", id));
+	}
+	n = db_get(db_server, strcat(s, CTS_RECORD, "netname"));
 	if (n != "")
 		return strcat(s, " ^0(^7", n, "^0)^7");
 
