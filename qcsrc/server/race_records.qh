@@ -12,3 +12,4 @@ float(string name, string client_id, float checktime, float _speed) race_records
 float(entity to, float sf) race_records_send;
 void(string m) race_records_clear;
 void(string n, string id) race_records_link_name_to_id;
+float(string cmd, float argc) race_records_cmd;
