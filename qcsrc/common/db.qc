@@ -16,10 +16,6 @@ void(float db, string pKey, string pValue) db_put {
 	float h;
 	h = math_mod(crc16(FALSE, pKey), DB_BUCKETS);
 	string s = bufstr_get(db, h);
-	if (strlen(s) > 4096) {
-		print("Database field keep too much data! Truncating.\n");
-		s = "";
-	}
 	bufstr_set(db, h, infoadd(s, pKey, uri_escape(pValue)));
 	bufstr_set(db, 0, infoadd(bufstr_get(db, 0), "modified", "1"));
 }
