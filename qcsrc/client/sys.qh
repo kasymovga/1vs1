@@ -140,3 +140,4 @@ noref float pmove_onground;
 noref float intermission;
 float dmg_take, dmg_save;
 vector dmg_origin;
+#define CSQC 1
