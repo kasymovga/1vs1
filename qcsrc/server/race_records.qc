@@ -235,9 +235,9 @@ float(string name, string client_id, float checktime, float _speed) race_records
 
 float(string cmd, float argc) race_records_cmd {
 	if (cmd == "help") {
-		sprint(self, "  clear_records [mapname]\n");
-		sprint(self, "  clear_record <position>\n");
-		sprint(self, "  link_id_to_name <position1> [position2]\n");
+		print("  clear_records [mapname]\n");
+		print("  clear_record <position>\n");
+		print("  link_id_to_name <position1> [position2]\n");
 	} else if (cmd == "clear_records") {
 		string m;
 		if (argc > 1)
@@ -249,8 +249,8 @@ float(string cmd, float argc) race_records_cmd {
 		return TRUE;
 	} else if (cmd == "clear_record") {
 		if (argc != 2) {
-			sprint(self, "usage: sv_cmd clear_record <position>\n");
-			sprint(self, "       position must be from 1 to 10\n");
+			print("usage: sv_cmd clear_record <position>\n");
+			print("       position must be from 1 to 10\n");
 			return TRUE;
 		}
 		float i = stof(argv(1));
@@ -261,20 +261,20 @@ float(string cmd, float argc) race_records_cmd {
 		return TRUE;
 	} else if (cmd == "link_id_to_name") {
 		if (argc < 2 || argc > 3) {
-			sprint(self, "usage: sv_cmd link_id_to_name <position1> [position2]\n");
-			sprint(self, "       position1 and position2 must be from 1 to 10 and have different values\n");
+			print("usage: sv_cmd link_id_to_name <position1> [position2]\n");
+			print("       position1 and position2 must be from 1 to 10 and have different values\n");
 			return TRUE;
 		}
 		if (argc == 2) {
 			float p = floor(stof(argv(1))) - 1;
 			if (p < 0 || p > 9) {
-				sprint(self, "position1 must be from 1 to 10 and have different values\n");
+				print("position1 must be from 1 to 10 and have different values\n");
 				return TRUE;
 			}
 			string id = race_records_id[p];
 			string name = race_records_name[p];
 			if (id == "") {
-				sprint(self, strcat("record with position ", ftos(p), " don't have id\n"));
+				print(strcat("record with position ", ftos(p), " don't have id\n"));
 				return TRUE;
 			}
 			race_records_link_name_to_id(name, id);
@@ -283,7 +283,7 @@ float(string cmd, float argc) race_records_cmd {
 		float p1 = floor(stof(argv(1))) - 1;
 		float p2 = floor(stof(argv(2))) - 1;
 		if (p1 < 0 || p1 > 9 || p2 < 0 || p2 > 9 || p1 == p2) {
-			sprint(self, "position1 and position2 must be from 1 to 10 and have different values\n");
+			print("position1 and position2 must be from 1 to 10 and have different values\n");
 			return TRUE;
 		}
 		string id1 = race_records_id[p1];
@@ -291,11 +291,11 @@ float(string cmd, float argc) race_records_cmd {
 		string name1 = race_records_name[p1];
 		string name2 = race_records_name[p2];
 		if (id1 != "" && id2 != "") {
-			sprint(self, "both records linked to different ids\n");
+			print("both records linked to different ids\n");
 			return TRUE;
 		}
 		if (id1 == "" && id2 == "") {
-			sprint(self, "both records not linked to any id\n");
+			print("both records not linked to any id\n");
 			return TRUE;
 		}
 		if (id1 != "" && p1 < p2) {
