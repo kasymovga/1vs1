@@ -14,9 +14,12 @@ void(void) race_records_load {
 
 	t = stof(db_get(db_server, strcat(s, "time")));
 	sp = stof(db_get(db_server, strcat(s, "speed")));
-	if (t && (n != "" || id != ""))
-		race_records_put(n, id, t, sp);
-
+	if (t && (n != "" || id != "")) {
+		if not(race_records_put(n, id, t, sp)) {
+			if (id != "")
+				race_id_ref_counter_decrease(id);
+		}
+	}
 	float i;
 	for (i = 1; i < 10; i++) {
 		id = db_get(db_server, strcat(s, ftos(i), "/id"));
@@ -31,8 +34,12 @@ void(void) race_records_load {
 
 		t = stof(db_get(db_server, strcat(s, ftos(i), "/time")));
 		sp = stof(db_get(db_server, strcat(s, ftos(i), "/speed")));
-		if (t && (n != "" || id != ""))
-			race_records_put(n, id, t, sp);
+		if (t && (n != "" || id != "")) {
+			if not(race_records_put(n, id, t, sp)) {
+				if (id != "")
+					race_id_ref_counter_decrease(id);
+			}
+		}
 	}
 }
 
