@@ -17,7 +17,7 @@ void(float db, string pKey, string pValue) db_put {
 	h = math_mod(crc16(FALSE, pKey), DB_BUCKETS);
 	string s = bufstr_get(db, h);
 	bufstr_set(db, h, infoadd(s, pKey, uri_escape(pValue)));
-	bufstr_set(db, 0, infoadd(bufstr_get(db, 0), "modified", "1"));
+	bufstr_set(db, DB_BUCKETS, infoadd(bufstr_get(db, DB_BUCKETS), "modified", "1"));
 }
 
 float(void) db_create {

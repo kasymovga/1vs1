@@ -1,3 +1,17 @@
+void(float db, string pFilename) db_save {
+	float fh, i, n;
+	fh = fopen(pFilename, FILE_WRITE);
+	if(fh < 0) {
+		print(strcat("^1Can't write DB to ", pFilename));
+		return;
+	}
+	fputs(fh, strcat(ftos(DB_BUCKETS), "\n"));
+	for(i = 0; i < DB_BUCKETS; ++i)
+		fputs(fh, strcat(bufstr_get(db, i), "\n"));
+
+	fclose(fh);
+}
+
 void(void) db_init {
 	db_server = db_load("server.db");
 	db_temp = db_create();
@@ -43,7 +57,9 @@ void(float db, string s_key, string s_value, void(string k, string v) cb) db_for
 }
 
 void(void) db_shutdown {
-	db_save(db_server, "server.db");
+	if (stof(infoget(bufstr_get(db_server, DB_BUCKETS), "modified")))
+		db_save(db_server, "server.db");
+
 	if(cvar("developer"))
 		db_save(db_temp, "server-temp.db");
 
