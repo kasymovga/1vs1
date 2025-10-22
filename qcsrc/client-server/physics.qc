@@ -196,6 +196,10 @@ void(void) physics_move {
 					physics_flags |= FL_ONGROUND; //exact flags will be set on next frame. this one needed for engine
 					physics_check_ground_hook();
 				}
+			} else {
+				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_LADDER) {
+					physics_ladder_normal = trace_plane_normal;
+				}
 			}
 			if (g_skimming_time)
 			if (!(physics_lastflags & FL_ONGROUND) && (trace1_plane_normal_z > 0.7) && physics_velocity_z < -0.125 * sv_jumpvelocity) {
@@ -695,6 +699,18 @@ void(void) physics_check_water_jump {
 	}
 }
 
+float(void) physics_check_ladder_surface {
+	if not(physics_deadflag) {
+		trace_box(self.origin, self.mins, self.maxs, self.origin - physics_ladder_normal, TRACE_MOVE_WORLDONLY, self);
+		if (trace_fraction < 1 && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_LADDER)) {
+			physics_ladder_normal = trace_plane_normal;
+			return TRUE;
+		}
+	}
+	physics_ladder_normal = '0 0 0';
+	return FALSE;
+}
+
 void(void) physics_player_frame {
 	vector wishvel, wishdir, v;
 	float wishspeed, f, maxspd_mod, maxairspd, airaccel;
@@ -892,7 +908,7 @@ void(void) physics_player_frame {
 		physics_velocity = physics_velocity * max(0, 1 - frametime * g_waterfriction);
 		// water acceleration
 		physics_accelerate(wishdir, wishspeed, wishspeed, g_wateraccelerate*maxspd_mod, 1, 0);
-	} else if (physics_ladder) {
+	} else if (physics_ladder || (physics_ladder_normal != '0 0 0' && physics_check_ladder_surface())) {
 		// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
 		physics_flags &= ~FL_ONGROUND;
 		if (g_sideview)

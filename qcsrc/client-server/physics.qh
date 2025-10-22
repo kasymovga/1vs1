@@ -76,6 +76,7 @@ float physics_button_jump;
 vector physics_v_angle;
 float physics_is_player;
 float physics_ladder;
+vector physics_ladder_normal;
 float physics_ladder_iswater;
 float physics_ladder_speed;
 float physics_ladder_watertype;

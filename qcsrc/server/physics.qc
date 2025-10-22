@@ -1,6 +1,7 @@
 .entity player_physic;
 .float frametime_accumulator;
 .float skimming_time;
+.vector ladder_normal;
 
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
@@ -366,7 +367,9 @@ void(void) physics_player_pre { //called by engine
 		sv_pogostick = 0;
 	}
 	physics_abilities_start();
+	physics_ladder_normal = self.ladder_normal;
 	physics_player();
+	self.ladder_normal = physics_ladder_normal;
 	physics_abilities_end();
 	if (sv_pogostick_save)
 		sv_pogostick = sv_pogostick_save;
