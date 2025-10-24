@@ -664,6 +664,7 @@ float(entity to, float sf) physics_send {
 		v = self.velocity;
 	}
 	if (self.last_physics_ladder) sf |= 32;
+	if (self.ladder_normal != '0 0 0') sf |= 128;
 	if (self.ladder_entity.classname == "func_water") sf |= 64;
 	if (self.crouch) sf |= 256;
 	if (self.last_maxspeedmod != 1) sf |= 512;
@@ -828,6 +829,9 @@ float(entity to, float sf) physics_send {
 			net_write_coord(MSG_ENTITY, self.ladder_entity.speed);
 			net_write_coord(MSG_ENTITY, self.ladder_entity.watertype);
 			net_write_coord(MSG_ENTITY, self.ladder_entity.origin_z + self.ladder_entity.maxs_z);
+		}
+		if (sf & 128) {
+			net_write_vector(MSG_ENTITY, self.ladder_normal);
 		}
 		if (sf & 512) {
 			net_write_coord(MSG_ENTITY, self.last_maxspeedmod);

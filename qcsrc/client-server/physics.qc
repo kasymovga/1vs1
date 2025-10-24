@@ -713,6 +713,7 @@ float(void) physics_check_ladder_surface {
 
 void(void) physics_player_frame {
 	vector wishvel, wishdir, v;
+	float gravity_factor_save = physics_gravity_factor;
 	float wishspeed, f, maxspd_mod, maxairspd, airaccel;
 	if (self.lastwj > 0)
 		self.lastwj -= frametime;
@@ -800,7 +801,7 @@ void(void) physics_player_frame {
 			physics_dodging();
 		}
 		if (physics_waterlevel == WATER_LEVEL_SWIMMING)
-		if not(physics_ladder)
+		if not(physics_ladder || (physics_ladder_normal != '0 0 0' && physics_check_ladder_surface()))
 		if (physics_deadflag == DEAD_NO)
 			physics_check_water_jump();
 
@@ -1018,6 +1019,7 @@ void(void) physics_player_frame {
 	} else if (physics_movetype == MOVETYPE_QCWALK)
 		physics_move();
 
+	physics_gravity_factor = gravity_factor_save;
 	if (g_adjust_view_offset)
 	if (physics_is_player) {
 		if (physics_crouch)

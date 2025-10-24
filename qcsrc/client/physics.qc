@@ -6,6 +6,7 @@ float physics_start_crouch;
 float physics_start_flags;
 float physics_start_frametime_accumulator;
 float physics_start_nofriction_time;
+vector physics_start_ladder_normal;
 float physics_ground_time;
 float physics_ground_curtime;
 float physics_ground_oldtime;
@@ -194,6 +195,7 @@ vector(void) physics_view_origin {
 			physics_plug_pre();
 
 		physics_crouch = physics_start_crouch;
+		physics_ladder_normal = physics_start_ladder_normal;
 		if (physics_start_crouch) {
 			setsize(self, self.crouch_mins, self.crouch_maxs);
 			self.view_ofs = self.crouch_view_ofs;
@@ -488,6 +490,11 @@ void(float isnew) physics_read {
 			physics_ladder_watertype = net_read_coord();
 			physics_ladder_top = net_read_coord();
 		}
+		if (f & 128) {
+			physics_start_ladder_normal = net_read_vector();
+		} else
+			physics_start_ladder_normal = '0 0 0';
+
 		if (f & 512) {
 			physics_maxspeedmod = net_read_coord();
 			physics_jump_velocity_factor = net_read_coord();
