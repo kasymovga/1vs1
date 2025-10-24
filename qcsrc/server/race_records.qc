@@ -260,9 +260,11 @@ float(string cmd, float argc) race_records_cmd {
 			print("       position must be from 1 to 10\n");
 			return TRUE;
 		}
-		float i = stof(argv(1));
-		string n = race_records_name[i - 1];
-		string id = race_records_id[i - 1];
+		float i = stof(argv(1)) - 1;
+		if (i < 0 || i > 9) {
+			print("position must be from 1 to 10\n");
+			return TRUE;
+		}
 		race_records_delete(i);
 		race_records_sender.SendFlags = 1;
 		return TRUE;
