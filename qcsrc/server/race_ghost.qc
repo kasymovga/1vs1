@@ -32,8 +32,14 @@ void(entity ghost) race_ghost_refcounter_increase {
 }
 
 float(void) race_ghost_customize {
-	if (self != other.race_ghost) return FALSE;
-	self.alpha = min(0.33, max(vlen(self.origin - other.origin) / 500, 0.05));
+	entity o;
+	if (SPECTATOR_IS_SPECTATOR(other))
+		o = SPECTATOR_SPECTATEE(other);
+	else
+		o = other;
+
+	if not(self != o.race_ghost) return FALSE;
+	self.alpha = min(0.33, max(vlen(self.origin - o.origin) / 500, 0.05));
 	return TRUE;
 }
 
