@@ -250,3 +250,4 @@
 #include "func_boss.qc"
 #include "stat.qc"
 #include "race_records.qc"
+#include "race_ghost.qc"

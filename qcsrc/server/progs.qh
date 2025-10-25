@@ -164,3 +164,4 @@
 #include "soulmates.qh"
 #include "handover.qh"
 #include "race_records.qh"
+#include "race_ghost.qh"

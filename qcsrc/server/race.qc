@@ -190,6 +190,9 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 	// adding just 0.4 so it rounds down in the .5 case (matching the timer display)
 	if (tvalid)
 	if (cp == race_timed_checkpoint) { // finish line
+		if (g_cts) {
+			race_ghost_finish(other);
+		}
 		if not(e.race_completed) {
 			float s;
 			if (g_race_qualifying) {
@@ -426,6 +429,9 @@ void(void) race_checkpoint_passed {
 		other.race_checkpoint = race_checkpoint_next(self.race_checkpoint);
 		race_time_send(other, self.race_checkpoint, other.race_movetime, vlen(other.velocity - other.velocity_z * '0 0 1'), !!other.race_laptime);
 		if(!self.race_checkpoint) { // start line
+			if (g_cts) {
+				race_ghost_start(other);
+			}
 			other.race_laptime = time;
 			other.race_movetime = other.race_movetime_frac = other.race_movetime_count = 0;
 			race_position_used_unset(other);
@@ -844,6 +850,10 @@ void() race_physics_frame_begin_hook {
 	self.race_movetime_frac -= f;
 	self.race_movetime_count += f;
 	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
+	if (g_cts) {
+		if (self.race_checkpoint >= 0)
+			race_ghost_process(self, self.race_movetime);
+	}
 	if (g_race_qualifying) {
 		vector v = self.velocity;
 		v_z = 0;
@@ -1295,6 +1305,7 @@ void(void) race_init {
 		plugin_chain_cmd_client_handle = race_cmd_client_handle;
 		plugin_map_finish_message_mod = race_map_finish_message_mod;
 		plugin_map_vote_send_map_name_mod = race_map_vote_send_map_name_mod;
+		precache_model("models/player/grunt.dpm");
 	}
 	if (g_race_qualifying) {
 		player_independent = 1;
