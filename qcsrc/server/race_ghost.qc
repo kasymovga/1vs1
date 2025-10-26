@@ -38,7 +38,7 @@ float(void) race_ghost_customize {
 	else
 		o = other;
 
-	if not(self != o.race_ghost) return FALSE;
+	if (self != o.race_ghost) return FALSE;
 	self.alpha = min(0.33, max(vlen(self.origin - o.origin) / 500, 0.05));
 	return TRUE;
 }
