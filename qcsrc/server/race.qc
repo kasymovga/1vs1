@@ -358,6 +358,7 @@ void(entity e) race_time_clear {
 		net_write_byte(MSG_ONE, NET_TE_CSQC_RACE);
 		net_write_byte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR); // next
 	});
+	race_ghost_finish(e);
 }
 
 void(void) race_checkpoint_passed {
