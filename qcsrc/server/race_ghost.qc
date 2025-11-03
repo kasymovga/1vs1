@@ -1,5 +1,7 @@
 .entity race_ghost;
 entity race_ghost_best;
+float g_cts_ghost;
+float g_cts_ghost_save;
 #define RACE_GHOST_TIC 0.04
 
 string(string s, float n) race_ghost_pad_right {
@@ -44,6 +46,7 @@ float(void) race_ghost_customize {
 }
 
 void(entity pl) race_ghost_start {
+	if not(g_cts_ghost) return;
 	if (pl.race_ghost) { //just in case
 		race_ghost_refcounter_decrease(pl.race_ghost);
 	}
@@ -93,13 +96,18 @@ void(entity ghost, entity ghost_body, float pos) race_ghost_record_read {
 	setorigin(ghost_body, o);
 }
 
-void(entity pl) race_ghost_finish {
-	if not(pl.race_ghost) return; //just in case
+void(entity pl, float notbest) race_ghost_finish {
+	if not(pl.race_ghost) return;
 	setmodel(pl.race_ghost, "");
 	pl.race_ghost.customizeentityforclient = NULL;
 	if (pl.race_ghost.enemy) {
 		race_ghost_refcounter_decrease(pl.race_ghost.enemy);
 		pl.race_ghost.enemy = NULL;
+	}
+	if (notbest) { //easy
+		race_ghost_refcounter_decrease(pl.race_ghost);
+		pl.race_ghost = NULL;
+		return;
 	}
 	if not(race_ghost_best) { //easy
 		race_ghost_best = pl.race_ghost;
@@ -125,5 +133,37 @@ void(entity pl, float time) race_ghost_process {
 	if (pl.race_ghost.enemy) {
 		float pos_read = (time + sys_ticrate + pl.ping * 0.001) / RACE_GHOST_TIC;
 		race_ghost_record_read(pl.race_ghost.enemy, pl.race_ghost, pos_read);
+	}
+}
+
+void(void) race_ghost_init {
+	CVAR_CACHE(g_cts_ghost);
+	CVAR_CACHE(g_cts_ghost_save);
+	if (g_cts_ghost && g_cts_ghost_save) {
+		float f = fopen(strcat("maps/", mapname, ".ghost"), FILE_READ);
+		if (f >= 0) {
+			race_ghost_best = spawn();
+			race_ghost_best.cnt = 1;
+			string s;
+			race_ghost_best.lip = buf_create();
+			while ((s = fgets(f))) {
+				bufstr_set(race_ghost_best.lip, race_ghost_best.state, s);
+				race_ghost_best.state++;
+			}
+			fclose(f);
+		}
+	}
+}
+
+void(void) race_ghost_save {
+	if (g_cts_ghost && g_cts_ghost_save && race_ghost_best) {
+		float f = fopen(strcat("maps/", mapname, ".ghost"), FILE_WRITE);
+		if (f >= 0) {
+			float i;
+			for (i = 0; i < race_ghost_best.state; i++)
+				fputs(f, strcat(bufstr_get(race_ghost_best.lip, i), "\n"));
+
+			fclose(f);
+		}
 	}
 }

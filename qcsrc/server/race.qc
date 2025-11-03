@@ -191,7 +191,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 	if (tvalid)
 	if (cp == race_timed_checkpoint) { // finish line
 		if (g_cts) {
-			race_ghost_finish(other);
+			race_ghost_finish(other, FALSE);
 		}
 		if not(e.race_completed) {
 			float s;
@@ -358,7 +358,7 @@ void(entity e) race_time_clear {
 		net_write_byte(MSG_ONE, NET_TE_CSQC_RACE);
 		net_write_byte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR); // next
 	});
-	race_ghost_finish(e);
+	race_ghost_finish(e, TRUE);
 }
 
 void(void) race_checkpoint_passed {
@@ -1121,6 +1121,7 @@ void(void) spawnfunc_race_target_checkpoint {
 var void(void) race_shutdown_next;
 void(void) race_shutdown {
 	race_records_save();
+	if (g_cts) race_ghost_save();
 	race_shutdown_next();
 }
 
@@ -1307,6 +1308,7 @@ void(void) race_init {
 		plugin_map_finish_message_mod = race_map_finish_message_mod;
 		plugin_map_vote_send_map_name_mod = race_map_vote_send_map_name_mod;
 		precache_model("models/player/grunt.dpm");
+		race_ghost_init();
 	}
 	if (g_race_qualifying) {
 		player_independent = 1;

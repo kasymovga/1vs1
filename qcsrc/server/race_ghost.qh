@@ -1,4 +1,5 @@
 void(entity pl) race_ghost_start;
-void(entity pl) race_ghost_finish;
+void(entity pl, float notbest) race_ghost_finish;
 void(entity pl, float time) race_ghost_process;
-
+void(void) race_ghost_init;
+void(void) race_ghost_save;
