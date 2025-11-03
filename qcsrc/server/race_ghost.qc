@@ -1,5 +1,6 @@
 .entity race_ghost;
 entity race_ghost_best;
+float race_ghost_best_updated;
 float g_cts_ghost;
 float g_cts_ghost_save;
 #define RACE_GHOST_TIC 0.04
@@ -110,12 +111,14 @@ void(entity pl, float notbest) race_ghost_finish {
 		return;
 	}
 	if not(race_ghost_best) { //easy
+		race_ghost_best_updated = TRUE;
 		race_ghost_best = pl.race_ghost;
 		pl.race_ghost = NULL;
 		return;
 	}
 	if (pl.race_ghost.state < race_ghost_best.state) {
 		race_ghost_refcounter_decrease(race_ghost_best);
+		race_ghost_best_updated = TRUE;
 		race_ghost_best = pl.race_ghost;
 		pl.race_ghost = NULL;
 	} else {
@@ -156,7 +159,7 @@ void(void) race_ghost_init {
 }
 
 void(void) race_ghost_save {
-	if (g_cts_ghost && g_cts_ghost_save && race_ghost_best) {
+	if (g_cts_ghost && g_cts_ghost_save && race_ghost_best && race_ghost_best_updated) {
 		float f = fopen(strcat("maps/", mapname, ".ghost"), FILE_WRITE);
 		if (f >= 0) {
 			float i;
