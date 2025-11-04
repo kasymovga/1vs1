@@ -191,7 +191,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 	if (tvalid)
 	if (cp == race_timed_checkpoint) { // finish line
 		if (g_cts) {
-			race_ghost_finish(other, FALSE);
+			race_ghost_finish(other, t);
 		}
 		if not(e.race_completed) {
 			float s;
@@ -358,7 +358,7 @@ void(entity e) race_time_clear {
 		net_write_byte(MSG_ONE, NET_TE_CSQC_RACE);
 		net_write_byte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR); // next
 	});
-	race_ghost_finish(e, TRUE);
+	race_ghost_finish(e, -1);
 }
 
 void(void) race_checkpoint_passed {
@@ -992,6 +992,7 @@ float() race_WarmupAllowed {
 }
 
 string() race_client_fix_cvars {
+	race_ghost_best_announce(self);
 	return "cl_cmd settemp cl_movecliptokeyboard 2";
 }
 

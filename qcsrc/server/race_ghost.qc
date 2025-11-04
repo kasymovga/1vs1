@@ -23,6 +23,7 @@ void(entity ghost) race_ghost_refcounter_decrease {
 	ghost.cnt--;
 	if (ghost.cnt <= 0) {
 		buf_del(ghost.lip);
+		str_unzone_ifneeded(ghost.message);
 		remove(ghost);
 		if (ghost == race_ghost_best) {
 			race_ghost_best = NULL;
@@ -97,7 +98,37 @@ void(entity ghost, entity ghost_body, float pos) race_ghost_record_read {
 	setorigin(ghost_body, o);
 }
 
-void(entity pl, float notbest) race_ghost_finish {
+void(entity pl) race_ghost_best_announce {
+	if not(race_ghost_best) return;
+	string d, n, id, tail;
+	float t;
+	tail = race_ghost_best.message;
+	d = str_car(tail);
+	tail = str_cdr(tail);
+	id = str_car(tail);
+	tail = str_cdr(tail);
+	n = uri_unescape(str_car(tail));
+	tail = str_cdr(tail);
+	t = stof(str_car(tail));
+	tail = str_cdr(tail);
+	print_to(pl, PRINT_CHAT, "^8* CTS Ghost repeating ^7{1}^8 run with ^7{2}^8 result ({3})", n, TIME_ENCODED_TOSTRING(t), d);
+}
+
+void(entity pl, float t) race_ghost_best_update {
+	race_ghost_best_updated = TRUE;
+	race_ghost_best = pl.race_ghost;
+	race_ghost_best.speed = t;
+	race_ghost_best.message = strcat(
+			strftime(TRUE, "%Y-%m-%d_%H:%M"),
+			" ", uri_escape((pl.clid == "") ? "<ERROR>" : pl.clid),
+			" ", uri_escape((pl.netname == "") ? "<ERROR>" : pl.netname),
+			" ", ftos(t));
+	print_all(PRINT_CHAT, "^8* CTS Ghost updated and will repeat ^7{1}^8 run with ^7{2}^8 result", pl.netname, TIME_ENCODED_TOSTRING(t), "");
+	race_ghost_best.message = str_zone_ifneeded(race_ghost_best.message);
+	pl.race_ghost = NULL;
+}
+
+void(entity pl, float t) race_ghost_finish {
 	if not(pl.race_ghost) return;
 	setmodel(pl.race_ghost, "");
 	pl.race_ghost.customizeentityforclient = NULL;
@@ -105,22 +136,18 @@ void(entity pl, float notbest) race_ghost_finish {
 		race_ghost_refcounter_decrease(pl.race_ghost.enemy);
 		pl.race_ghost.enemy = NULL;
 	}
-	if (notbest) { //easy
+	if (t < 0) { //easy
 		race_ghost_refcounter_decrease(pl.race_ghost);
 		pl.race_ghost = NULL;
 		return;
 	}
 	if not(race_ghost_best) { //easy
-		race_ghost_best_updated = TRUE;
-		race_ghost_best = pl.race_ghost;
-		pl.race_ghost = NULL;
+		race_ghost_best_update(pl, t);
 		return;
 	}
-	if (pl.race_ghost.state < race_ghost_best.state) {
+	if (t < race_ghost_best.speed) {
 		race_ghost_refcounter_decrease(race_ghost_best);
-		race_ghost_best_updated = TRUE;
-		race_ghost_best = pl.race_ghost;
-		pl.race_ghost = NULL;
+		race_ghost_best_update(pl, t);
 	} else {
 		race_ghost_refcounter_decrease(pl.race_ghost);
 		pl.race_ghost = NULL;
@@ -149,11 +176,16 @@ void(void) race_ghost_init {
 			race_ghost_best.cnt = 1;
 			string s;
 			race_ghost_best.lip = buf_create();
+			race_ghost_best.message = str_zone_ifneeded(fgets(f));
+			race_ghost_best.speed = stof(str_car(str_cdr(str_cdr(str_cdr(race_ghost_best.message))))); // 4th argument
 			while ((s = fgets(f))) {
 				bufstr_set(race_ghost_best.lip, race_ghost_best.state, s);
 				race_ghost_best.state++;
 			}
 			fclose(f);
+		}
+		if (race_ghost_best.state <= 0) { //no data readed
+			race_ghost_refcounter_decrease(race_ghost_best);
 		}
 	}
 }
@@ -163,6 +195,7 @@ void(void) race_ghost_save {
 		float f = fopen(strcat("maps/", mapname, ".ghost"), FILE_WRITE);
 		if (f >= 0) {
 			float i;
+			fputs(f, strcat(race_ghost_best.message, "\n"));
 			for (i = 0; i < race_ghost_best.state; i++)
 				fputs(f, strcat(bufstr_get(race_ghost_best.lip, i), "\n"));
 
