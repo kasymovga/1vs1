@@ -2,8 +2,6 @@ set g_cts_scorelimit "0" "Scorelimit for CTS"
 set g_cts_timelimit "" "Timelimit for CTS, when empty, g_timelimit using, <= 0 mean no limit"
 set g_cts_leadlimit "" "Dummy cvar, CTS not have leadlimit"
 set g_cts_use_race_maps 1 "Allow playing race maps in CTS mode"
-set g_cts_ghost 1 "Enable CTS ghost player"
-set g_cts_ghost_save 0 "Save CTS ghost between races"
 set cts_g_balance_kill_delay 0
 set cts_g_start_weapon_laser 0
 set cts_g_respawn_delay 0
@@ -24,5 +22,7 @@ set cts_g_trigger_push_prediction 1
 set cts_g_score_bestweapon 0
 set cts_g_player_obituary 0
 set sv_cts_records_link_names_to_ids 0
+set sv_cts_ghost 1 "Enable CTS ghost player"
+set sv_cts_ghost_save 0 "Save CTS ghost between races"
 alias cl_hook_gamestart_cts
 alias sv_hook_gamestart_cts

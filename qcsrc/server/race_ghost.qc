@@ -1,8 +1,8 @@
 .entity race_ghost;
 entity race_ghost_best;
 float race_ghost_best_updated;
-float g_cts_ghost;
-float g_cts_ghost_save;
+float sv_cts_ghost;
+float sv_cts_ghost_save;
 #define RACE_GHOST_TIC 0.04
 
 string(string s, float n) race_ghost_pad_right {
@@ -47,7 +47,7 @@ float(void) race_ghost_customize {
 }
 
 void(entity pl) race_ghost_start {
-	if not(g_cts_ghost) return;
+	if not(sv_cts_ghost) return;
 	if (pl.race_ghost) { //just in case
 		race_ghost_refcounter_decrease(pl.race_ghost);
 	}
@@ -140,9 +140,9 @@ void(entity pl, float time) race_ghost_process {
 }
 
 void(void) race_ghost_init {
-	CVAR_CACHE(g_cts_ghost);
-	CVAR_CACHE(g_cts_ghost_save);
-	if (g_cts_ghost && g_cts_ghost_save) {
+	CVAR_CACHE(sv_cts_ghost);
+	CVAR_CACHE(sv_cts_ghost_save);
+	if (sv_cts_ghost && sv_cts_ghost_save) {
 		float f = fopen(strcat("maps/", mapname, ".ghost"), FILE_READ);
 		if (f >= 0) {
 			race_ghost_best = spawn();
@@ -159,7 +159,7 @@ void(void) race_ghost_init {
 }
 
 void(void) race_ghost_save {
-	if (g_cts_ghost && g_cts_ghost_save && race_ghost_best && race_ghost_best_updated) {
+	if (sv_cts_ghost && sv_cts_ghost_save && race_ghost_best && race_ghost_best_updated) {
 		float f = fopen(strcat("maps/", mapname, ".ghost"), FILE_WRITE);
 		if (f >= 0) {
 			float i;
