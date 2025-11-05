@@ -111,7 +111,7 @@ void(entity pl) race_ghost_best_announce {
 	tail = str_cdr(tail);
 	t = stof(str_car(tail));
 	tail = str_cdr(tail);
-	print_to(pl, PRINT_CHAT, "^8* CTS Ghost repeating ^7{1}^8 run with ^7{2}^8 result ({3})", n, TIME_ENCODED_TOSTRING(t), d);
+	print_to(pl, PRINT_CHAT, "^8* CTS Ghost repeating ^7{1}^8's run with a result of ^7{2}^8 (recorded at {3})", n, TIME_ENCODED_TOSTRING(t), d);
 }
 
 void(entity pl, float t) race_ghost_best_update {
@@ -125,7 +125,7 @@ void(entity pl, float t) race_ghost_best_update {
 			" ", ftos(t));
 	entity e;
 	CLIENT_FOR_EACH_REAL(e) // print_all will send message to udp chat too, so print_to is better here
-		print_to(e, PRINT_CHAT, "^8* CTS Ghost updated and will repeat ^7{1}^8 run with ^7{2}^8 result", pl.netname, TIME_ENCODED_TOSTRING(t), "");
+		print_to(e, PRINT_CHAT, "^8* CTS Ghost updated and will repeat ^7{1}^8's run with a result of ^7{2}^8", pl.netname, TIME_ENCODED_TOSTRING(t), "");
 
 	race_ghost_best.message = str_zone_ifneeded(race_ghost_best.message);
 	pl.race_ghost = NULL;
