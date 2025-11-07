@@ -125,7 +125,7 @@ void(entity pl, float t) race_ghost_best_update {
 			" ", ftos(t));
 	entity e;
 	CLIENT_FOR_EACH_REAL(e) // print_all will send message to udp chat too, so print_to is better here
-		print_to(e, PRINT_CHAT, "^8* CTS Ghost updated and will repeat ^7{1}^8's run with a result of ^7{2}^8", pl.netname, TIME_ENCODED_TOSTRING(t), "");
+		print_to(e, PRINT_CHAT, "^8* CTS Ghost updated with ^7{1}^8's result of ^7{2}", pl.netname, TIME_ENCODED_TOSTRING(t), "");
 
 	race_ghost_best.message = str_zone_ifneeded(race_ghost_best.message);
 	pl.race_ghost = NULL;
