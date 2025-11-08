@@ -991,8 +991,8 @@ float() race_WarmupAllowed {
 	return TRUE;
 }
 
-string() race_client_fix_cvars {
-	race_ghost_best_announce(self);
+string(entity cl) race_client_fix_cvars {
+	if not(map_finished) race_ghost_best_announce(cl);
 	return "cl_cmd settemp cl_movecliptokeyboard 2";
 }
 

@@ -368,7 +368,7 @@ void(void) client_kill { //called by engine, "kill" command
 }
 
 void(entity e) client_fix_cvars{
-	stuffcmd(e, strcat("\nin_bindmap 0 0\n", plugin_client_fix_cvars(), "\n"));
+	stuffcmd(e, strcat("\nin_bindmap 0 0\n", plugin_client_fix_cvars(e), "\n"));
 }
 
 float() client_preconnect_abort {
