@@ -7,9 +7,11 @@ entity race_records_sender;
 
 void(void) race_records_load;
 void(void) race_records_save;
-void(float i) race_records_delete; // this function call race_id_ref_counter_decrease
-float(string name, string client_id, float checktime, float _speed) race_records_put; // this function NOT call race_id_ref_counter_increase, caller must do it
+void(float i) race_records_delete; // this function call race_records_id_ref_counter_decrease
+float(string name, string client_id, float checktime, float _speed) race_records_put; // this function NOT call race_records_id_ref_counter_increase, caller must do it
 float(entity to, float sf) race_records_send;
 void(string m) race_records_clear;
 void(string n, string id) race_records_link_name_to_id;
 float(string cmd, float argc) race_records_cmd;
+void(string id, string name) race_records_id_ref_counter_increase;
+float(string id) race_records_id_ref_counter_decrease;

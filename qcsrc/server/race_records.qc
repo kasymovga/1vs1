@@ -17,7 +17,7 @@ void(void) race_records_load {
 	if (t && (n != "" || id != "")) {
 		if not(race_records_put(n, id, t, sp)) {
 			if (id != "")
-				race_id_ref_counter_decrease(id);
+				race_records_id_ref_counter_decrease(id);
 		}
 	}
 	float i;
@@ -37,7 +37,7 @@ void(void) race_records_load {
 		if (t && (n != "" || id != "")) {
 			if not(race_records_put(n, id, t, sp)) {
 				if (id != "")
-					race_id_ref_counter_decrease(id);
+					race_records_id_ref_counter_decrease(id);
 			}
 		}
 	}
@@ -83,7 +83,7 @@ void(float i) race_records_delete {
 	id = race_records_name[i];
 	n = race_records_id[i];
 	if (id != "")
-		race_id_ref_counter_decrease(id);
+		race_records_id_ref_counter_decrease(id);
 
 	str_unzone_ifneeded(n);
 	race_records_name[i] = "";
@@ -128,7 +128,7 @@ void(string m) race_records_clear {
 	if (m == mapname) {
 		for (i = 0; i < 10; i++) {
 			id = race_records_id[i];
-			if (id != "") race_id_ref_counter_decrease(id);
+			if (id != "") race_records_id_ref_counter_decrease(id);
 			race_records_id[i] = "";
 			race_records_name[i] = "";
 			race_records_time[i] = 0;
@@ -140,14 +140,14 @@ void(string m) race_records_clear {
 		db_put(db_server, strcat(m, race_records_path, "netname"), "");
 		id = db_get(db_server, strcat(m, race_records_path, "id"));
 		db_put(db_server, strcat(m, race_records_path, "id"), "");
-		if (id != "") race_id_ref_counter_decrease(id);
+		if (id != "") race_records_id_ref_counter_decrease(id);
 		db_put(db_server, strcat(m, race_records_path, "speed"), "");
 		for (i = 1; i < 10; i++) {
 			db_put(db_server, strcat(m, race_records_path, ftos(i), "/time"), "");
 			db_put(db_server, strcat(m, race_records_path, ftos(i), "/netname"), "");
 			id = db_get(db_server, strcat(m, race_records_path, ftos(i), "/id"));
 			db_put(db_server, strcat(m, race_records_path, ftos(i), "/id"), "");
-			if (id != "") race_id_ref_counter_decrease(id);
+			if (id != "") race_records_id_ref_counter_decrease(id);
 			db_put(db_server, strcat(m, race_records_path, ftos(i), "/speed"), "");
 		}
 	}
@@ -166,7 +166,7 @@ void(string k, string v) race_records_link_name_to_id_cb {
 			if (db_get(db_server, k_id) == "") {
 				db_put(db_server, k, "");
 				db_put(db_server, k_id, race_records_link_name_to_id_cb_arg2);
-				race_id_ref_counter_increase(race_records_link_name_to_id_cb_arg2,
+				race_records_id_ref_counter_increase(race_records_link_name_to_id_cb_arg2,
 						race_records_link_name_to_id_cb_arg1);
 				print("Link ", race_records_link_name_to_id_cb_arg1, " on ", k, " to id\n");
 			}
@@ -240,11 +240,45 @@ float(string name, string client_id, float checktime, float _speed) race_records
 	return FALSE;
 }
 
+float race_records_validate_counter;
+void(string k, string v) race_records_validate_cb2 {
+	float slash = strstrofs(k, "/", 0);
+	if (slash < 0) return;
+	if (substring(k, slash, 14) != "/cts100record/")
+	if (substring(k, slash, 15) != "/race100record/")
+		return;
+
+	if (substring(k, strlen(k) - 3, -1) != "/id")
+		return;
+
+	race_records_validate_counter++;
+}
+
+void(string k, string v) race_records_validate_cb1 {
+	if (substring(k, 0, 12) != "raceid2n_rc/") return;
+	string id = substring(k, 12, -1);
+	race_records_validate_counter = 0;
+	db_for_each_key_like(db_server, "/id", id, race_records_validate_cb2);
+	print("Validating reference counter for id: ", id, " - ");
+	if (race_records_validate_counter != stof(v))
+		print("FAILED (", ftos(race_records_validate_counter), "/", v, ")\n");
+	else
+		print("OK (", ftos(race_records_validate_counter), "/", v, ")\n");
+}
+
+void(void) race_records_validate {
+	db_for_each_key_like(db_server, "raceid2n_rc/", "", race_records_validate_cb1);
+}
+
 float(string cmd, float argc) race_records_cmd {
 	if (cmd == "help") {
 		print("  clear_records [mapname]\n");
 		print("  clear_record <position>\n");
 		print("  link_id_to_name <position1> [position2]\n");
+		print("  validate\n");
+	} else if (cmd == "validate") {
+		race_records_validate();
+		return TRUE;
 	} else if (cmd == "clear_records") {
 		string m;
 		if (argc > 1)
@@ -343,4 +377,25 @@ float(string cmd, float argc) race_records_cmd {
 		return TRUE;
 	}
 	return FALSE;
+}
+
+void(string id, string name) race_records_id_ref_counter_increase {
+	float c;
+	c = stof(db_get(db_server, strcat("raceid2n_rc/", id)));
+	db_put(db_server, strcat("raceid2n_rc/", id), ftos(c + 1));
+	db_put(db_server, strcat("raceid2n/", id), name);
+	//print("refereneces for ", id, "/", name, " increased to ", ftos(c + 1), "\n");
+}
+
+float(string id) race_records_id_ref_counter_decrease {
+	float c;
+	c = stof(db_get(db_server, strcat("raceid2n_rc/", id)));
+	if (c <= 0) {
+		db_put(db_server, strcat("raceid2n_rc/", id), "");
+		db_put(db_server, strcat("raceid2n/", id), "");
+	} else
+		db_put(db_server, strcat("raceid2n_rc/", id), ftos(c - 1));
+
+	//print("refereneces for ", id, " decreased to ", ftos(c - 1), "\n");
+	return c - 1;
 }

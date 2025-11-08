@@ -58,27 +58,6 @@ float SP_RACE_FASTEST;
 float SP_RACE_MAXSPEED;
 float SP_RACE_TIME;
 
-void(string id, string name) race_id_ref_counter_increase {
-	float c;
-	c = stof(db_get(db_server, strcat("raceid2n_rc/", id)));
-	db_put(db_server, strcat("raceid2n_rc/", id), ftos(c + 1));
-	db_put(db_server, strcat("raceid2n/", id), name);
-	//print("refereneces for ", id, "/", name, " increased to ", ftos(c + 1), "\n");
-}
-
-float(string id) race_id_ref_counter_decrease {
-	float c;
-	c = stof(db_get(db_server, strcat("raceid2n_rc/", id)));
-	if (c <= 0) {
-		db_put(db_server, strcat("raceid2n_rc/", id), "");
-		db_put(db_server, strcat("raceid2n/", id), "");
-	} else
-		db_put(db_server, strcat("raceid2n_rc/", id), ftos(c - 1));
-
-	//print("refereneces for ", id, " decreased to ", ftos(c - 1), "\n");
-	return c - 1;
-}
-
 void(void) race_score_setup {
 	score_basics(0, 0, FALSE);
 	if (race_teams) {
@@ -255,7 +234,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 				} else {
 					float position = race_records_put(e.netname, e.clid, t, e.scorekeeper.race_maxspeed);
 					if (position) {
-						if (e.clid != "") race_id_ref_counter_increase(e.clid, e.netname);
+						if (e.clid != "") race_records_id_ref_counter_increase(e.clid, e.netname);
 						chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), " on ", mapname , "\n"), 0);
 						if (position == 1)
 							announce(e, "announcer/male/amazing.wav", "^31st place!");
