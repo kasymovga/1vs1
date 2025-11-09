@@ -46,7 +46,6 @@ void(void) race_records_load {
 void(void) race_records_save {
 	float t, sp;
 	string n, id;
-	print("Saving race records...\n");
 	t = race_records_time[0];
 	n = race_records_name[0];
 	id = race_records_id[0];
@@ -254,19 +253,33 @@ void(string k, string v) race_records_validate_cb2 {
 	race_records_validate_counter++;
 }
 
+float race_records_validate_fix;
 void(string k, string v) race_records_validate_cb1 {
 	if (substring(k, 0, 12) != "raceid2n_rc/") return;
 	string id = substring(k, 12, -1);
 	race_records_validate_counter = 0;
 	db_for_each_key_like(db_server, "/id", id, race_records_validate_cb2);
-	print("Validating reference counter for id: ", id, " - ");
-	if (race_records_validate_counter != stof(v))
-		print("FAILED (", ftos(race_records_validate_counter), "/", v, ")\n");
-	else
-		print("OK (", ftos(race_records_validate_counter), "/", v, ")\n");
+	string msg = strcat("Validating reference counter for id: ", id, " - ");
+	if (race_records_validate_counter != stof(v)) {
+		msg = strcat(msg, "FAILED (", ftos(race_records_validate_counter), "/", v, ")");
+		if (race_records_validate_fix) {
+			msg = strcat(msg, " - FIXED");
+			if (race_records_validate_counter)
+				db_put(db_server, strcat("raceid2n_rc/", id), ftos(race_records_validate_counter));
+			else {
+				db_put(db_server, strcat("raceid2n_rc/", id), "");
+				db_put(db_server, strcat("raceid2n/", id), "");
+			}
+		}
+	} else
+		msg = strcat(msg, "OK (", ftos(race_records_validate_counter), "/", v, ")");
+
+	print(msg, "\n");
 }
 
-void(void) race_records_validate {
+void(float fix) race_records_validate {
+	race_records_save();
+	race_records_validate_fix = fix;
 	db_for_each_key_like(db_server, "raceid2n_rc/", "", race_records_validate_cb1);
 }
 
@@ -275,9 +288,14 @@ float(string cmd, float argc) race_records_cmd {
 		print("  clear_records [mapname]\n");
 		print("  clear_record <position>\n");
 		print("  link_id_to_name <position1> [position2]\n");
-		print("  validate\n");
+		print("  validate [fixflag]\n");
 	} else if (cmd == "validate") {
-		race_records_validate();
+		if (argc > 2) {
+			print("usage: sv_cmd validate [fixflag]\n");
+			print("       fixflag must be 0 or 1\n");
+			return TRUE;
+		}
+		race_records_validate((argc > 1 && stof(argv(1))));
 		return TRUE;
 	} else if (cmd == "clear_records") {
 		string m;
