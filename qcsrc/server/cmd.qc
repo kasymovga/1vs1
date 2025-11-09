@@ -555,7 +555,10 @@ void(string s) cmd_client {
 		sprint(self, cmd_maplist_reply);
 	} else if (cmd == "lsmaps") {
 		sprint(self, cmd_lsmaps_reply);
-	} else if (cmd == "lsmaps2" && !map_finished && (self.flags & FL_CLIENT)) { // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
+	} else if (cmd == "lsmaps2") {
+		if not(!map_finished && (self.flags & FL_CLIENT)) // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
+			return;
+
 		msg_entity = self;
 		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 		net_write_byte(MSG_ONE, NET_TE_CSQC_MAPLIST);
@@ -608,7 +611,7 @@ void(string s) cmd_client {
 		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
 	} else if (cmd == "recordlistchunk" && tokens == 3) {
 		float n1 = floor(stof(argv(1))), n2 = floor(stof(argv(2)));
-		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16 && !map_finished) { // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
+		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16 && !map_finished && (self.flags & FL_CLIENT)) { // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
 			msg_entity = self;
 			net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 			net_write_byte(MSG_ONE, NET_TE_CSQC_RECORDLISTCHUNK);
