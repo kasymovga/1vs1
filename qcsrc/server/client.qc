@@ -760,6 +760,19 @@ void client_cvars_request() {
 	})
 }
 
+float(string s) client_id_is_valid {
+	float n = strlen(s);
+	if (n != 16)
+		return FALSE;
+
+	float i;
+	for (i = 0; i < n; i++) {
+		if (strstrofs("0123456789ABCDEF", substring(s, i, 1), 0) < 0)
+			return FALSE;
+	}
+	return TRUE;
+}
+
 void() client_cvars_parse {
 	string s = strcat1(argv(1));
 	string val = strcat1(argv(2));
@@ -843,10 +856,13 @@ void() client_cvars_parse {
 
 		player_dmg_inflictor_setup();
 	} else if (s == "_cl_id" && self.clid == "") {
-		if (strlen(val) == 16) {
+		if (client_id_is_valid(val)) {
 			self.clid = strzone(val);
 			stat_player_add(self);
 		} else {
+			if (val != "")
+				print("Warning, client #", ftos(num_for_edict(self)), " send invalid id ", val, "\n");
+
 			self.clid = strftime(TRUE, "%y%m%d%H%M%S");
 			for (f = 0; f < 4; f++) {
 				self.clid = strcat(self.clid, DIGIT_DEC_TO_HEX(floor(random() * 16)));
