@@ -409,13 +409,12 @@ void(string id, string name) race_records_id_ref_counter_increase {
 
 float(string id) race_records_id_ref_counter_decrease {
 	float c;
-	c = stof(db_get(db_server, strcat("raceid2n_rc/", id)));
+	c = stof(db_get(db_server, strcat("raceid2n_rc/", id))) - 1;
 	if (c <= 0) {
 		db_put(db_server, strcat("raceid2n_rc/", id), "");
 		db_put(db_server, strcat("raceid2n/", id), "");
 	} else
-		db_put(db_server, strcat("raceid2n_rc/", id), ftos(c - 1));
+		db_put(db_server, strcat("raceid2n_rc/", id), ftos(c));
 
-	//print("refereneces for ", id, " decreased to ", ftos(c - 1), "\n");
-	return c - 1;
+	return c;
 }
