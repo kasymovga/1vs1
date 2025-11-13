@@ -50,20 +50,20 @@ void(void) race_records_save {
 	n = race_records_name[0];
 	id = race_records_id[0];
 	sp = race_records_speed[0];
-	db_put(db_server, strcat(mapname, race_records_path, "time"), ftos(t));
+	db_put(db_server, strcat(mapname, race_records_path, "time"),  ((t > 0) ? ftos(t) : ""));
 	if (id != "")
 		db_put(db_server, strcat(mapname, race_records_path, "id"), id);
 	else
 		db_put(db_server, strcat(mapname, race_records_path, "netname"), n);
 
-	db_put(db_server, strcat(mapname, race_records_path, "speed"), ftos(sp));
+	db_put(db_server, strcat(mapname, race_records_path, "speed"), ((sp > 0) ? ftos(sp) : ""));
 	float i;
 	for (i = 1; i < 10; i++) {
 		t = race_records_time[i];
 		n = race_records_name[i];
 		sp = race_records_speed[i];
 		id = race_records_id[i];
-		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/time"), ftos(t));
+		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/time"), ((t > 0) ? ftos(t) : ""));
 		if (id != "") {
 			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/id"), id);
 			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/netname"), "");
@@ -71,7 +71,7 @@ void(void) race_records_save {
 			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/id"), "");
 			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/netname"), n);
 		}
-		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/speed"), ftos(sp));
+		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/speed"), ((sp > 0) ? ftos(sp) : ""));
 	}
 }
 
