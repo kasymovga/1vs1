@@ -172,9 +172,7 @@ void(float key, float ascii) menu_keyup {
 	gui_draw_reset();
 	main.keyUp(main, key, ascii, menu_modkeys_state);
 	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
-		if (menu_mouse_pos)
-			menu_mouse_update();
-
+		menu_mouse_update();
 		--menu_mouse_button_pressed;
 		if (!menu_mouse_button_pressed)
 			main.mouseRelease(main, menu_mouse_pos);
