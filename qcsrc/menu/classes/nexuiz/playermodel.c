@@ -42,7 +42,7 @@ string findImageNexuizPlayerModelSelector(string s) {
 	if not(file_exists(strcat(s, ".jpg")))
 	if not(file_exists(strcat(s, ".png")))
 	if not(file_exists(strcat(s, ".tga"))) {
-		s = "gfx/sbar_overlay";
+		s = "";
 	}
 	return s;
 }
@@ -102,9 +102,6 @@ void loadCvarsNexuizPlayerModelSelector(entity me)
 		}
 		fclose(fh);
 	}
-	if not(me.currentModelImage)
-		me.currentModelImage = strzone("/gfx/sbar_overlay");
-
 	search_end(glob);
 }
 
@@ -188,7 +185,9 @@ void drawNexuizPlayerModelSelector(entity me)
 	float i, n;
 	vector o;
 	me.src = me.currentModelImage;
-	drawImage(me);
+	if (me.src != "")
+		drawImage(me);
+
 	me.src = NULL;
 
 	// draw text on the image, handle \n in the description
