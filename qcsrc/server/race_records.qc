@@ -18,6 +18,8 @@ void(void) race_records_load {
 		if not(race_records_put(n, id, t, sp)) {
 			if (id != "")
 				race_records_id_ref_counter_decrease(id);
+
+			print("Warning: records table line 1 failed\n");
 		}
 	}
 	float i;
@@ -38,6 +40,8 @@ void(void) race_records_load {
 			if not(race_records_put(n, id, t, sp)) {
 				if (id != "")
 					race_records_id_ref_counter_decrease(id);
+
+				print("Warning: records table line ", ftos(i + 1), " failed\n");
 			}
 		}
 	}
