@@ -1034,7 +1034,10 @@ void() player_post_think {
 	else if (self.movement_y < 0)
 		self.pressedkeys |= KEY_LEFT;
 
-	self.pressedkeys = self.pressedkeys + ((self.BUTTON_JUMP ? KEY_JUMP : 0) + (self.BUTTON_CROUCH ? KEY_CROUCH : 0));
+	if (self.BUTTON_JUMP) self.pressedkeys |= KEY_JUMP;
+	if (self.BUTTON_CROUCH) self.pressedkeys |= KEY_CROUCH;
+	if (self.BUTTON_ATCK) self.pressedkeys |= KEY_ATTACK;
+	if (self.BUTTON_ATCK2) self.pressedkeys |= KEY_ATTACK2;
 }
 
 float(void) player_real_customize {

@@ -1628,15 +1628,17 @@ void(void) sbar_pressedkeys_draw {
 	bgsize = '126 75 0';
 	pos = '1 0 0' * (CVAR(vid_conwidth) - bgsize_x) * pos_x
 			+ '0 1 0' * (CVAR(vid_conheight) - bgsize_y) * pos_y;
-	pos -= '-15 -6 0'; // adjust to the origin of these numbers
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
-	drawpic(pos + '-15   -6   0', "gfx/hud/keys/key_bg",           bgsize, '1 1 1', 0.1 * sbar_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' 83.5  9   0', ((pressedkeys & KEY_CROUCH) ? "gfx/hud/keys/key_crouch_inv" : "gfx/hud/keys/key_crouch"), ' 24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' 32   -1.5 0', ((pressedkeys & KEY_FORWARD) ? "gfx/hud/keys/key_forward_inv" : "gfx/hud/keys/key_forward"),  ' 32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + '-11.5  9   0', ((pressedkeys & KEY_JUMP) ? "gfx/hud/keys/key_jump_inv" : "gfx/hud/keys/key_jump"),     ' 24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' -1   32   0', ((pressedkeys & KEY_LEFT) ? "gfx/hud/keys/key_left_inv" : "gfx/hud/keys/key_left"),     ' 32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' 32   32   0', ((pressedkeys & KEY_BACKWARD) ? "gfx/hud/keys/key_backward_inv" : "gfx/hud/keys/key_backward"), ' 32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' 65   32   0', ((pressedkeys & KEY_RIGHT) ? "gfx/hud/keys/key_right_inv" : "gfx/hud/keys/key_right"),    ' 32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos, "gfx/hud/keys/key_bg",           bgsize, '1 1 1', 0.1 * sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + '98.5  15   0', ((pressedkeys & KEY_CROUCH) ? "gfx/hud/keys/key_crouch_inv" : "gfx/hud/keys/key_crouch"), ' 24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + '47   4.5 0', ((pressedkeys & KEY_FORWARD) ? "gfx/hud/keys/key_forward_inv" : "gfx/hud/keys/key_forward"),  ' 32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + '3.5  15   0', ((pressedkeys & KEY_JUMP) ? "gfx/hud/keys/key_jump_inv" : "gfx/hud/keys/key_jump"),     ' 24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + '14   38   0', ((pressedkeys & KEY_LEFT) ? "gfx/hud/keys/key_left_inv" : "gfx/hud/keys/key_left"),     ' 32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + '47   38   0', ((pressedkeys & KEY_BACKWARD) ? "gfx/hud/keys/key_backward_inv" : "gfx/hud/keys/key_backward"), ' 32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + '80   38   0', ((pressedkeys & KEY_RIGHT) ? "gfx/hud/keys/key_right_inv" : "gfx/hud/keys/key_right"),    ' 32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawfont = sbar_font;
+	drawstring(pos + '20 0 0', "M1", sbar_fontsize, (pressedkeys & KEY_ATTACK) ? '1 1 1' : '0.1 0.1 0.1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(pos + '88 0 0', "M2", sbar_fontsize, (pressedkeys & KEY_ATTACK2) ? '1 1 1' : '0.1 0.1 0.1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void(void) sbar_speed_draw {

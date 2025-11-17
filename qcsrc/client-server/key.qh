@@ -4,3 +4,5 @@ const float KEY_LEFT = 4;
 const float KEY_RIGHT = 8;
 const float KEY_JUMP = 16;
 const float KEY_CROUCH = 32;
+const float KEY_ATTACK = 64;
+const float KEY_ATTACK2 = 128;
