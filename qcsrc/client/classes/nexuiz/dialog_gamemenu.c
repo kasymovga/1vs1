@@ -124,7 +124,7 @@ void fillNexuizGameMenuDialog(entity me)
 	me.TR(me);
 	if (main_isdemo) {
 		me.TR(me);
-			me.TD(me, 1, me.columns, e = makeNexuizCommandButton(_("Stop demo"), '0 0 0', "disconnect;", COMMANDBUTTON_CLOSE));
+			me.TD(me, 1, me.columns, e = makeNexuizCommandButton(_("Stop demo"), '0 0 0', "togglemenu;disconnect;", COMMANDBUTTON_CLOSE));
 	} else {
 		me.TR(me);
 			if (main_localgame)
