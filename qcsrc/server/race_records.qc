@@ -85,8 +85,8 @@ void(float i) race_records_delete {
 	float j;
 	string n, id;
 	float t, sp;
-	id = race_records_name[i];
-	n = race_records_id[i];
+	n = race_records_name[i];
+	id = race_records_id[i];
 	if (id != "")
 		race_records_id_ref_counter_decrease(id);
 
@@ -408,7 +408,6 @@ void(string id, string name) race_records_id_ref_counter_increase {
 	c = stof(db_get(db_server, strcat("raceid2n_rc/", id)));
 	db_put(db_server, strcat("raceid2n_rc/", id), ftos(c + 1));
 	db_put(db_server, strcat("raceid2n/", id), name);
-	//print("refereneces for ", id, "/", name, " increased to ", ftos(c + 1), "\n");
 }
 
 float(string id) race_records_id_ref_counter_decrease {
