@@ -1,0 +1,4 @@
+float demo_hud_enabled;
+float(void) demo_hud_draw;
+float(float key, float down) demo_input_event;
+void(string s) demo_play;

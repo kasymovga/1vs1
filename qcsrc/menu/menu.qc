@@ -169,18 +169,23 @@ void(float key, float ascii) menu_keyup {
 	if (!menu_active)
 		return;
 
-	gui_draw_reset();
-	main.keyUp(main, key, ascii, menu_modkeys_state);
 	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
-		menu_mouse_update();
 		--menu_mouse_button_pressed;
-		if (!menu_mouse_button_pressed)
-			main.mouseRelease(main, menu_mouse_pos);
-
 		if (menu_mouse_button_pressed < 0) {
 			menu_mouse_button_pressed = 0;
 			print("Warning: released an already released button\n");
 		}
+	}
+	if (demo_hud_enabled) {
+		if (demo_input_event(key, FALSE))
+			return;
+	}
+	gui_draw_reset();
+	main.keyUp(main, key, ascii, menu_modkeys_state);
+	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
+		menu_mouse_update();
+		if (!menu_mouse_button_pressed)
+			main.mouseRelease(main, menu_mouse_pos);
 	}
 	if (key == K_ALT) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_ALT);
 	if (key == K_CTRL) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_CTRL);
@@ -198,6 +203,17 @@ void(float key, float ascii) menu_keydown {
 	if (!menu_active)
 		return;
 
+	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
+		++menu_mouse_button_pressed;
+		if (menu_mouse_button_pressed > 3) {
+			menu_mouse_button_pressed = 3;
+			print("Warning: pressed an already pressed button\n");
+		}
+	}
+	if (demo_hud_enabled) {
+		if (demo_input_event(key, TRUE))
+			return;
+	}
 	if (keyGrabber) {
 		entity e;
 		e = keyGrabber;
@@ -207,7 +223,7 @@ void(float key, float ascii) menu_keydown {
 		gui_draw_reset();
 		if (key >= K_MOUSE1 && key <= K_MOUSE3) {
 			menu_mouse_update();
-			if (!menu_mouse_button_pressed)
+			if (menu_mouse_button_pressed == 1)
 				main.mousePress(main, menu_mouse_pos);
 
 			if (key == K_MOUSE1) {
@@ -222,13 +238,6 @@ void(float key, float ascii) menu_keydown {
 			if (key == K_ESCAPE)
 				if (menu_gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) // don't back out to console only
 					menu_hide(); // disable menu on unhandled ESC
-	}
-	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
-		++menu_mouse_button_pressed;
-		if (menu_mouse_button_pressed > 10) {
-			menu_mouse_button_pressed = 10;
-			print("Warning: pressed an already pressed button\n");
-		}
 	}
 	if (key == K_ALT) menu_modkeys_state |= GUI_KEY_STATE_ALT;
 	if (key == K_CTRL) menu_modkeys_state |= GUI_KEY_STATE_CTRL;
@@ -332,6 +341,11 @@ void(void) menu_draw {
 		menu_logo_alpha = 2;
 	}
 	gui_draw_reset();
+	if (demo_hud_enabled) {
+		if (demo_hud_draw()) {
+			return;
+		}
+	}
 	if (!(menu_gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) {
 		if (menu_logo_alpha > 0) {
 			gui_draw_background(SKINGFX_BACKGROUND, bound(0, menu_logo_alpha, 1), SKINALIGN_BACKGROUND, TRUE);

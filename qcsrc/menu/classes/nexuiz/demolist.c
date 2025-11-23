@@ -120,11 +120,10 @@ void DemoList_Filter_Change(entity box, entity me)
     me.getDemos(me);
 }
 
-void startDemoNexuizDemoList(entity me)
-{
+void startDemoNexuizDemoList(entity me) {
     string s;
     s = me.demoName(me,me.selectedItem);
-    localcmd("playdemo demos/", s, ".dem\nwait\ntogglemenu\n");	
+	demo_play(strcat("demos/", s, ".dem"));
 }
 
 void StartDemo_Click(entity btn, entity me)

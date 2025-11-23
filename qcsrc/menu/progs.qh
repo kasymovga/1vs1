@@ -11,3 +11,4 @@
 #include "classes.qh"
 #include "serverlist.qh"
 #include "campaign.qh"
+#include "demo.qh"

@@ -10,3 +10,4 @@
 #include "voip.qc"
 #include "serverlist.qc"
 #include "campaign.qc"
+#include "demo.qc"
