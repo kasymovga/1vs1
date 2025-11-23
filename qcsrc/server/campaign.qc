@@ -202,6 +202,7 @@ void(void) campaign_preintermission {
 			campaign_save_cvar(savevar, 1);
 			// advance level (for menu to show it right)
 			campaign_save_cvar(campaign_index_var, campaign_level + 1);
+			localcmd("menu_cmd campaign_won\n");
 		} else if (campaign_level == builtin_cvar(campaign_index_var)) {
 			// advance level
 			campaign_save_cvar(campaign_index_var, campaign_level + 1);

@@ -265,25 +265,6 @@ float() menu_init_pre {
 	return TRUE;
 }
 
-string menu_campaign_name_previous;
-float menu_campaign_won_previous;
-void() menu_draw_pre {
-	if (campaign_name == menu_campaign_name_previous) {
-		if (cvar(strcat("g_campaign", campaign_name, "_won"))) {
-			if (!menu_campaign_won_previous) {
-				menu_display();
-				DialogOpenButton_Click_withCoords(NULL, main.winnerDialog, '0 0 0', eX * gui_conwidth + eY * gui_conheight);
-			}
-			menu_campaign_won_previous = 1;
-		} else
-			menu_campaign_won_previous = 0;
-	} else {
-		str_unzone_ifneeded(menu_campaign_name_previous);
-		menu_campaign_name_previous = str_zone_ifneeded(campaign_name);
-		menu_campaign_won_previous = cvar(strcat("g_campaign", campaign_name, "_won"));
-	}
-}
-
 void(void) menu_draw {
 	if (main)
 		menu_update_width_height();
@@ -362,8 +343,6 @@ void(void) menu_draw {
 	if (menu_alpha != menu_alpha_previous)
 		cvar_set("_menu_alpha", ftos(menu_alpha));
 
-	gui_draw_reset();
-	menu_draw_pre();
 	gui_draw_reset();
 	if (menu_alpha <= 0) {
 		if (menu_alpha_previous > 0)

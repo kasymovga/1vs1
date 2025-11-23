@@ -104,6 +104,9 @@ void(string theCommand) cmd { //called by engine
 			fclose(f);
 		}
 		localcmd(strcat("\n_restore_game 0;maxplayers 1;skill 3;coop 0;deathmatch 0;g_campaign 1;_gametype single;map ", mn, "\n"));
+	} else if (s == "campaign_won") {
+		menu_display();
+		DialogOpenButton_Click_withCoords(NULL, main.winnerDialog, '0 0 0', eX * gui_conwidth + eY * gui_conheight);
 	} else
 		print("Invalid theCommand. For a list of supported theCommands, try menu_cmd help.\n");
 }
