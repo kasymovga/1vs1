@@ -1,5 +1,11 @@
 vector demo_hud_control_pos;
 vector demo_hud_button_size;
+string demo_hud_name;
+#define DEMO_HUD_TITLE_SIZE 0.5
+#define DEMO_HUD_WIDTH 7
+float demo_hud_dragging;
+vector demo_hud_dragging_start;
+vector demo_hud_dragging_mouse_start;
 
 void(string s) demo_play {
 	if (strstrofs(s, "\t", 0) >= 0 || strstrofs(s, "\n", 0) >= 0 ||
@@ -9,6 +15,11 @@ void(string s) demo_play {
 		return;
 	}
 	localcmd("playdemo ", s, "\n");
+	str_unzone_ifneeded(demo_hud_name);
+	if (substring(s, 0, 6) == "demos/") s = substring(s, 6, -1);
+	float n = strlen(s);
+	if (n > 4 && substring(s, n - 4, 4) == ".dem") s = substring(s, 0, n - 4);
+	demo_hud_name = str_zone_ifneeded(s);
 	if (cvar("menu_demo_hud")) {
 		if not(demo_hud_enabled) {
 			localcmd("prvm_globalset menu demo_hud_enabled 1\n");
@@ -55,13 +66,24 @@ float(float key, float down) demo_input_event {
 	} else if (key == K_MOUSE1) {
 		demo_mouse_pressed = down;
 		menu_mouse_update();
-		if not(down) {
-			if (demo_hud_control_pos_y <= menu_mouse_pos_y &&
+		if (down) {
+			if (!demo_hud_dragging &&
+					demo_hud_control_pos_y - demo_hud_button_size_y * DEMO_HUD_TITLE_SIZE <= menu_mouse_pos_y &&
+					menu_mouse_pos_y < demo_hud_control_pos_y &&
+					demo_hud_control_pos_x <= menu_mouse_pos_x &&
+					menu_mouse_pos_x <= demo_hud_control_pos_x + demo_hud_button_size_x * DEMO_HUD_WIDTH) {
+				demo_hud_dragging = TRUE;
+				demo_hud_dragging_start = demo_hud_control_pos;
+				demo_hud_dragging_mouse_start = menu_mouse_pos;
+			}
+		} else {
+			demo_hud_dragging = FALSE;
+			if (!demo_hud_dragging && demo_hud_control_pos_y <= menu_mouse_pos_y &&
 					menu_mouse_pos_y < demo_hud_control_pos_y + demo_hud_button_size_y &&
 					demo_hud_control_pos_x <= menu_mouse_pos_x) {
 				float i;
 				vector pos = demo_hud_control_pos;
-				for (i = 0; i < 7; i++) {
+				for (i = 0; i < DEMO_HUD_WIDTH; i++) {
 					pos_x += demo_hud_button_size_x;
 					if (menu_mouse_pos_x < pos_x) {
 						switch (i) {
@@ -103,23 +125,23 @@ void(vector pos, vector sz, string txt, float rec) demo_hud_button_draw {
 
 	if (rec) {
 		if (selected)
-			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_f"), sz, SKINCOLOR_BUTTON_F, 1);
+			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_f"), sz, SKINCOLOR_BUTTON_F, SKINALPHA_TEXT);
 		else if (cvar("cl_capturevideo"))
-			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_c"), sz, SKINCOLOR_BUTTON_C, 1);
+			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_c"), sz, SKINCOLOR_BUTTON_C, SKINALPHA_TEXT);
 		else
-			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_n"), sz, SKINCOLOR_BUTTON_N, 1);
+			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_n"), sz, SKINCOLOR_BUTTON_N, SKINALPHA_TEXT);
 	} else if (selected) {
 		if (demo_mouse_pressed)
-			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_c"), sz, SKINCOLOR_BUTTON_C, 1);
+			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_c"), sz, SKINCOLOR_BUTTON_C, SKINALPHA_TEXT);
 		else
-			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_f"), sz, SKINCOLOR_BUTTON_F, 1);
+			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_f"), sz, SKINCOLOR_BUTTON_F, SKINALPHA_TEXT);
 	} else {
-		gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_n"), sz, SKINCOLOR_BUTTON_N, 1);
+		gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_n"), sz, SKINCOLOR_BUTTON_N, SKINALPHA_TEXT);
 	}
 	if (rec)
-		gui_draw_picture(pos, txt, sz, SKINCOLOR_TEXT_WARNING, 1);
+		gui_draw_picture(pos, txt, sz, SKINCOLOR_TEXT_WARNING, SKINALPHA_TEXT);
 	else
-		gui_draw_picture(pos, txt, sz, SKINCOLOR_TEXT, 1);
+		gui_draw_picture(pos, txt, sz, SKINCOLOR_TEXT, SKINALPHA_TEXT);
 
 	cvar_set("_menu_alpha", "0");
 	menu_alpha_previous = -1;
@@ -136,9 +158,31 @@ float(void) demo_hud_draw {
 	vector sz = '0.05 0.05 0';
 	sz_x *= cvar("vid_conheight") / cvar("vid_conwidth");
 	demo_hud_button_size = sz;
-	vector pos = '0.5 0 0';
-	pos_x -= sz_x * 3.5;
+	vector pos = demo_hud_control_pos;
+	if (demo_hud_dragging) {
+		pos = demo_hud_dragging_start + (menu_mouse_pos - demo_hud_dragging_mouse_start);
+	}
+	if (pos_y > 1 - sz_y) {
+		pos_y = 1 - sz_y;
+	}
+	if (pos_x > 1 - sz_x * DEMO_HUD_WIDTH) {
+		pos_x = 1 - sz_x * DEMO_HUD_WIDTH;
+	}
+	if (pos_y < sz_y * DEMO_HUD_TITLE_SIZE) {
+		pos_y = sz_y * DEMO_HUD_TITLE_SIZE;
+	}
+	if (pos_x < 0) {
+		pos_x = 0;
+	}
 	demo_hud_control_pos = pos;
+	pos = demo_hud_control_pos - '0 1 0' * sz_y * DEMO_HUD_TITLE_SIZE;
+	gui_draw_picture_border(pos, SKINGFX_DIALOGBORDER,
+			'1 0 0' * DEMO_HUD_WIDTH * sz_x + '0 1.5 0' * sz_y, '1 1 1', 1,
+			SKINHEIGHT_DIALOGBORDER * sz * DEMO_HUD_TITLE_SIZE);
+	gui_draw_text(pos + '1 0 0' * sz_x * DEMO_HUD_TITLE_SIZE + '0 0.2 0' * DEMO_HUD_TITLE_SIZE * sz_y,
+			gui_draw_text_shorten_to_width(demo_hud_name, (DEMO_HUD_WIDTH - DEMO_HUD_TITLE_SIZE * 2) / (DEMO_HUD_TITLE_SIZE * 0.6), FALSE),
+			sz * DEMO_HUD_TITLE_SIZE * 0.6, SKINCOLOR_TEXT, SKINALPHA_TEXT, FALSE);
+	pos = demo_hud_control_pos;
 	demo_hud_button_draw(pos, sz, "/gfx/demo_previoustrack", FALSE);
 	pos_x += sz_x;
 	demo_hud_button_draw(pos, sz, "/gfx/demo_fastbackward", FALSE);
@@ -156,7 +200,6 @@ float(void) demo_hud_draw {
 	demo_hud_button_draw(pos, sz, "/gfx/demo_stop", FALSE);
 	pos_x += sz_x;
 	demo_hud_button_draw(pos, sz, "/gfx/demo_record", TRUE);
-	pos_x += sz_x;
 	gui_draw_mouse_pointer(menu_mouse_pos);
 	return TRUE;
 }
