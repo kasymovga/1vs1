@@ -1,0 +1,2 @@
+#define STAT_TOTALSECRETS 11
+#define STAT_SECRET 13

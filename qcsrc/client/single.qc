@@ -1,14 +1,55 @@
 void(vector pos, vector gameinfo_size, float gameinfo_scale) single_hud {
-	if not((rm_hud_game_info_enabled = (sbar_stat_items & IT_KEYS)))
+	float secrets_total = getstati(STAT_TOTALSECRETS);
+	float have_keys = (sbar_stat_items & IT_KEYS);
+	if not((rm_hud_game_info_enabled = (!view_observer_status && (have_keys || secrets_total))))
 		return;
 
-	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '136 48 0', gameinfo_size, CVAR(sbar_gameinfo_background))
-	if (sbar_stat_items & IT_KEY1)
-		drawpic(pos + '30 4 0' * gameinfo_scale, "gfx/hud/sb_kh_blue", '20 40 0' * gameinfo_scale, '1.125 1.125 0.75', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	if (rm_skin_loaded) {
+		//RM HUD sector size is really thin
+		SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '176 48 0', gameinfo_size, CVAR(sbar_gameinfo_background))
+	} else {
+		SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '88 48 0', gameinfo_size, CVAR(sbar_gameinfo_background))
+	}
+	if (have_keys) {
+		vector v1, v2, v3;
+		if (secrets_total && !rm_skin_loaded) {
+			v1 = '14 4 0' * gameinfo_scale;
+			v2 = '15 30 0' * gameinfo_scale;
+			v3 = '28 0 0' * gameinfo_scale;
+		} else {
+			v1 = '4 4 0' * gameinfo_scale;
+			v2 = '20 40 0' * gameinfo_scale;
+			v3 = '28 0 0' * gameinfo_scale;
+		}
+		if (sbar_stat_items & IT_KEY1)
+			drawpic(pos + v1, "gfx/hud/sb_kh_blue", v2, '1.125 1.125 0.75', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-	if (sbar_stat_items & IT_KEY2)
-		drawpic(pos + '58 4 0' * gameinfo_scale, "gfx/hud/sb_kh_yellow", '20 40 0' * gameinfo_scale, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		if (sbar_stat_items & IT_KEY2)
+			drawpic(pos + (v1 + v3), "gfx/hud/sb_kh_yellow", v2, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-	if (sbar_stat_items & IT_KEY3)
-		drawpic(pos + '86 4 0' * gameinfo_scale, "gfx/hud/sb_kh_red", '20 40 0' * gameinfo_scale, '2 0.5 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		if (sbar_stat_items & IT_KEY3)
+			drawpic(pos + (v1 + v3 * 2), "gfx/hud/sb_kh_red", v2, '2 0.5 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	}
+	if (secrets_total) {
+		vector v1, v2;
+		if (rm_skin_loaded) {
+			if (have_keys) {
+				v1 = '92 18 0';
+				v2 = '12 12 0';
+			} else {
+				v1 = '4 14 0';
+				v2 = '20 20 0';
+			}
+		} else {
+			if (have_keys) {
+				v1 = '4 38 0';
+				v2 = '10 10 0';
+			} else {
+				v1 = '4 18 0';
+				v2 = '12 12 0';
+			}
+		}
+		drawstring(pos + v1 * gameinfo_scale, strcat(
+				_("Secrets:"), " ", ftos(getstati(STAT_SECRET)), "/", ftos(secrets_total)), v2 * gameinfo_scale, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	}
 }

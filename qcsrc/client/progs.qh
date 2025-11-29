@@ -69,6 +69,7 @@
 #include "porto.qh"
 #include "pin.qh"
 #include "score.qh"
+#include "stat.qh"
 #include "game_type.qh"
 #include "ready.qh"
 #include "race.qh"
