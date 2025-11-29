@@ -118,11 +118,11 @@ vector(vector pos, vector sz, float bg) sbar_position {
 	else
 		v_y = pos_y;
 
-	if (bg && sbar_alpha_bg > 0 && (team_teams || bg > 1)) {
+	if (bg && sbar_alpha_bg > 0 && (team_teams > 1 || bg > 1)) {
 		pos = v;
 		pos_y -= sz_y * 0.0625;
 		sz_y *= 1.125;
-		if (team_teams) {
+		if (team_teams > 1) {
 			drawpic(pos, "gfx/hud/sb_ammobg", sz, sbar_team_rgb * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL);
 		} else {
 			vector rgb;
@@ -1932,7 +1932,7 @@ void(float hgtype, vector hgapos, float hgdetons, float hgammo) sbar_nadget_mess
 }
 
 void(void) sbar_draw {
-	if (team_teams)
+	if (team_teams > 1)
 		sbar_team_rgb = team_rgb(team_my);
 
 	sbar_topright_x = CVAR(vid_conwidth);
