@@ -185,7 +185,7 @@ void (vector pos, vector mySize) rm_hud_draw_ranking  {
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
 	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
-	if (team_teams)
+	if (team_teams > 1)
 		entries = entries / 2;
 
 	const vector fontsize = '8 8 0'; //'1 1 0' * (mySize_y/entries);
@@ -209,7 +209,7 @@ void (vector pos, vector mySize) rm_hud_draw_ranking  {
 			if (pl == me)
 				drawfill(pos, eX * mySize_x + eY * fontsize_y, '1 1 1', highlight_alpha * sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-			if (team_teams)
+			if (team_teams > 1)
 				score_color = team_rgb(pl.team) * 0.8;
 
 			s = str_shorten_to_width(player_name(pl.sv_entnum), name_size / fontsize_x, str_width_colors);
@@ -720,7 +720,7 @@ void(void) rm_hud_draw {
 	if (CVAR(rm_hud_healthcolor)) {
 		base_teamcolor = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), sbar_armor_block_percentage);
 		base_teamcolor = view_healthcolor(base_teamcolor_x);
-	} else if (team_teams) {
+	} else if (team_teams > 1) {
 		base_teamcolor = team_rgb(team_my);
 	} else {
 		base_teamcolor_x = CVAR(sbar_color_bg_r);
@@ -1275,7 +1275,7 @@ void(void) rm_hud_draw {
 		}
 	}
 	// draw scores and timer
-	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && !team_teams) { // race/cts record display on HUD
+	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && team_teams <= 1) { // race/cts record display on HUD
 		sbar_score_draw(scoresector_pos, scoresector_size, 1);
 	} else {
 		rm_hud_score_draw(scoresector_pos_x);
@@ -1312,7 +1312,7 @@ void(float p) rm_hud_score_draw {
 	bottomright_x = p + RM_HUD_SECWIDTH_NORMAL + 8;
 	score_pos = bottomright - '178 38 0';
 	secondary_score_pos = score_pos + '72 0 0';
-	if (!team_teams) { // non-teamgames, except race/cts
+	if (team_teams <= 1) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
 		pl = player_list.sort_next;
 		if (pl == me)
