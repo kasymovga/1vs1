@@ -6,6 +6,17 @@ string demo_hud_name;
 float demo_hud_dragging;
 vector demo_hud_dragging_start;
 vector demo_hud_dragging_mouse_start;
+float demo_cvar_save_cl_capturevideo_game;
+
+void(void) demo_stop {
+	if (demo_hud_enabled) {
+		cvar_set("cl_capturevideo", "0");
+		cvar_set("menu_no_hide_chat", "0");;
+		cvar_set("cl_capturevideo_game_only", ftos(demo_cvar_save_cl_capturevideo_game));
+		demo_hud_enabled = FALSE;
+	}
+	localcmd("disconnect\n");
+}
 
 void(string s) demo_play {
 	if (strstrofs(s, "\t", 0) >= 0 || strstrofs(s, "\n", 0) >= 0 ||
@@ -24,6 +35,9 @@ void(string s) demo_play {
 		if not(demo_hud_enabled) {
 			localcmd("prvm_globalset menu demo_hud_enabled 1\n");
 			gui_setpointerfocus(main);
+			demo_cvar_save_cl_capturevideo_game = cvar("cl_capturevideo_game_only");
+			cvar_set("cl_capturevideo_game_only", "1");
+			cvar_set("menu_no_hide_chat", "1");;
 		}
 	} else
 		localcmd("togglemenu\n");
@@ -60,9 +74,7 @@ float(float key, float down) demo_input_event {
 		return FALSE;
 	}
 	if (key == K_ESCAPE && !down) {
-		cvar_set("cl_capturevideo", "0");
-		demo_hud_enabled = FALSE;
-		localcmd("disconnect\n");
+		demo_stop();
 	} else if (key == K_MOUSE1) {
 		demo_mouse_pressed = down;
 		menu_mouse_update();
@@ -88,7 +100,7 @@ float(float key, float down) demo_input_event {
 					if (menu_mouse_pos_x < pos_x) {
 						switch (i) {
 						case 0: demo_track(-1); break;
-						case 1: localcmd("rewind -30\n"); break;
+						case 1: localcmd("snd_startnonloopingsounds 0;rewind -30;wait;snd_startnonloopingsounds 1\n"); break;
 						case 2:
 							if (cvar("slowmo")) {
 								cvar_set("slowmo", "0");
@@ -98,14 +110,18 @@ float(float key, float down) demo_input_event {
 								localcmd("cd resume\n");
 							}
 							break;
-						case 3: localcmd("rewind +30\n"); break;
+						case 3: localcmd("snd_startnonloopingsounds 0;rewind +30;wait;snd_startnonloopingsounds 1\n"); break;
 						case 4: demo_track(1); break;
 						case 5:
-							cvar_set("cl_capturevideo", "0");
-							demo_hud_enabled = FALSE;
-							localcmd("disconnect\n");
+							demo_stop();
 							break;
-						case 6: localcmd("toggle cl_capturevideo 1\n"); break;
+						case 6:
+							if (cvar("cl_capturevideo")) {
+								cvar_set("cl_capturevideo", "0");
+							} else {
+								cvar_set("cl_capturevideo", "1");
+							}
+							break;
 						}
 						break;
 					}
@@ -124,10 +140,10 @@ void(vector pos, vector sz, string txt, float rec) demo_hud_button_draw {
 		selected = TRUE;
 
 	if (rec) {
-		if (selected)
-			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_f"), sz, SKINCOLOR_BUTTON_F, SKINALPHA_TEXT);
-		else if (cvar("cl_capturevideo"))
+		if (cvar("cl_capturevideo"))
 			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_c"), sz, SKINCOLOR_BUTTON_C, SKINALPHA_TEXT);
+		else if (selected)
+			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_f"), sz, SKINCOLOR_BUTTON_F, SKINALPHA_TEXT);
 		else
 			gui_draw_picture(pos, strcat(SKINGFX_BUTTON, "_n"), sz, SKINCOLOR_BUTTON_N, SKINALPHA_TEXT);
 	} else if (selected) {

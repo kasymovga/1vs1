@@ -406,6 +406,7 @@ void() menu_shutdown {
 		if (e.destroy)
 			e.destroy(e);
 	}
+	demo_stop();
 }
 
 void(string itemname) menu_goto {
