@@ -999,3 +999,6 @@ msgstr "* Alleen cijfers"
 
 msgid "PIN-code:"
 msgstr "PIN-code:"
+
+msgid "Enable demo player"
+msgstr "Demospeler inschakelen"

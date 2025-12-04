@@ -999,3 +999,6 @@ msgstr "* Apenas dígitos"
 
 msgid "PIN-code:"
 msgstr "Código PIN:"
+
+msgid "Enable demo player"
+msgstr "Ativar o leitor de demonstração"

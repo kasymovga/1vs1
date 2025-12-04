@@ -997,3 +997,6 @@ msgstr "* Только цифры"
 
 msgid "PIN-code:"
 msgstr "PIN-код:"
+
+msgid "Enable demo player"
+msgstr "Включить демо-проигрыватель"

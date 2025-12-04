@@ -26,7 +26,7 @@ void fillNexuizDemoBrowserTab(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, me.columns / 2, e = makeNexuizCheckBox(0, "cl_autodemo", _("Record demos while playing")));
-		me.TD(me, 1, me.columns / 2, e = makeNexuizCheckBox(0, "menu_demo_hud", _("Enable demo controls")));
+		me.TD(me, 1, me.columns / 2, e = makeNexuizCheckBox(0, "menu_demo_hud", _("Enable demo player")));
 	me.TR(me);
 	dlist = makeNexuizDemoList();
 	me.TR(me);
