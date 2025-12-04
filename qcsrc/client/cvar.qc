@@ -97,6 +97,7 @@ void read_cvars_init() {
 
 void(string cv, string val) cvar_clientsettemp {
 	entity e;
+	registercvar(cv, val, 0);
 	if (cvar_string(cv) == val)
 		return;
 
