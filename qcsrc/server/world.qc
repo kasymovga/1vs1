@@ -613,7 +613,7 @@ void(.float field, float value) world_winners_add {
 // clear the .winning flags
 void(void) world_winners_clear {
 	entity head;
-	PLAYER_FOR_EACH(head)
+	CLIENT_FOR_EACH(head)
 		head.winning = 0;
 }
 
