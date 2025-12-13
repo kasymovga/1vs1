@@ -175,10 +175,21 @@ float(entity to, float sf) client_init_send {
 	return TRUE;
 }
 
+void(void) client_fix_think {
+	entity cl;
+	CLIENT_FOR_EACH_REAL(cl) {
+		stuffcmd(cl, "cl_cmd settemp cl_prydoncursor_notrace 1\n");
+	}
+	self.nextthink = time + 10;
+}
+
 entity client_init;
 void() client_init_spawn {
 	client_init = spawn();
 	net_link_entity(client_init, FALSE, 0, client_init_send);
+	entity ac = spawn();
+	ac.think = client_fix_think;
+	ac.nextthink = time + 10;
 }
 
 void(void) client_parms_new { //called by engine
@@ -368,7 +379,7 @@ void(void) client_kill { //called by engine, "kill" command
 }
 
 void(entity e) client_fix_cvars{
-	stuffcmd(e, strcat("\nin_bindmap 0 0\n", plugin_client_fix_cvars(e), "\n"));
+	stuffcmd(e, strcat("\nin_bindmap 0 0\ncl_cmd settemp cl_prydoncursor_notrace 1\n", plugin_client_fix_cvars(e), "\n"));
 }
 
 float() client_preconnect_abort {

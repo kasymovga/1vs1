@@ -152,11 +152,11 @@ void(void) csqc_entity_init {
 	csqc_entity_temp_parsers[NET_TE_CSQC_LIGHTNINGARC - NET_TE_CSQC_FIRST] = effect_lightningarc_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_BIGLIGHTNINGARC - NET_TE_CSQC_FIRST] = effect_lightningarc_big_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_ZAPPERLIGHTNING - NET_TE_CSQC_FIRST] = zapper_lightning_read;
-	csqc_entity_temp_parsers[NET_TE_CSQC_NADGETSELECT - NET_TE_CSQC_FIRST] = nadgetselect_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_NADGETSELECT - NET_TE_CSQC_FIRST] = nadget_select_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_BLAST - NET_TE_CSQC_FIRST] = effect_blast_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RADIO - NET_TE_CSQC_FIRST] = radio_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_WEAPONLIST - NET_TE_CSQC_FIRST] = csqc_entity_temp_weapon_list_show;
-	csqc_entity_temp_parsers[NET_TE_CSQC_WEAPONSELECT - NET_TE_CSQC_FIRST] = weaponselect_read;
+	csqc_entity_temp_parsers[NET_TE_CSQC_WEAPONSELECT - NET_TE_CSQC_FIRST] = weapon_select_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_TEAMSELECT - NET_TE_CSQC_FIRST] = csqc_entity_temp_team_select_show;
 	csqc_entity_temp_parsers[NET_TE_CSQC_GAMEOVER - NET_TE_CSQC_FIRST] = csqc_entity_temp_game_over;
 	csqc_entity_temp_parsers[NET_TE_CSQC_MAPLIST - NET_TE_CSQC_FIRST] = csqc_entity_temp_map_list_read;
