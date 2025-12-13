@@ -63,7 +63,7 @@
 #include "jetpack.qc"
 #include "menu.qc"
 #include "mouse.qc"
-#include "shownames.qc"
+#include "player_label.qc"
 #include "progressbar.qc"
 #include "locationrequest.qc"
 #include "dlc.qc"

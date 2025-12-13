@@ -1,0 +1,3 @@
+void(entity plr) player_label_enable;
+void(entity plr, float show) player_label_team_bubble_update;
+var .float shownames_entnum = float1;

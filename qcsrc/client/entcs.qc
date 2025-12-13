@@ -24,7 +24,7 @@ void(float bIsNewEntity) entcs_read {
 		self.maxs_z = net_read_short();
 	}
 	if (team_teams)
-		Shownames_UpdateTeamBubble(self, f & 32);
+		player_label_team_bubble_update(self, f & 32);
 
 	if (f & 128) {
 		if (f & 16) {
@@ -37,7 +37,5 @@ void(float bIsNewEntity) entcs_read {
 	self.classname = "entcs_receiver";
 	self.radar_icon = 1;
 	if (bIsNewEntity)
-		Shownames_Init(self);
+		player_label_enable(self);
 }
-
-

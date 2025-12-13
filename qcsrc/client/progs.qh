@@ -37,7 +37,7 @@
 #include "input.qh"
 #include "weapon.qh"
 #include "csqc_entity.qh"
-#include "shownames.qh"
+#include "player_label.qh"
 #include "fog.qh"
 #include "net.qh"
 #include "radio.qh"
