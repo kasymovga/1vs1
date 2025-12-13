@@ -13,6 +13,7 @@ void(void) demo_stop {
 		cvar_set("cl_capturevideo", "0");
 		cvar_set("menu_no_hide_chat", "0");;
 		cvar_set("cl_capturevideo_game_only", ftos(demo_cvar_save_cl_capturevideo_game));
+		cvar_set("slowmo", "1");
 		demo_hud_enabled = FALSE;
 	}
 	localcmd("disconnect\n");
@@ -31,6 +32,7 @@ void(string s) demo_play {
 	float n = strlen(s);
 	if (n > 4 && substring(s, n - 4, 4) == ".dem") s = substring(s, 0, n - 4);
 	demo_hud_name = str_zone_ifneeded(s);
+	cvar_set("slowmo", "1");
 	if (cvar("menu_demo_hud")) {
 		if not(demo_hud_enabled) {
 			localcmd("prvm_globalset menu demo_hud_enabled 1\n");
@@ -62,16 +64,19 @@ void(float dir) demo_track {
 				else
 					demo_play(search_getfilename(s, n - 1));
 			}
+			break;
 		}
 	}
 	search_end(s);
+	if (i == n)
+		demo_stop();
 }
 
 float demo_mouse_pressed;
 float(float key, float down) demo_input_event {
 	if not(isdemo()) {
-		demo_hud_enabled = FALSE;
-		return FALSE;
+		demo_track(1);
+		return TRUE;
 	}
 	if (key == K_ESCAPE && !down) {
 		demo_stop();
@@ -165,8 +170,9 @@ void(vector pos, vector sz, string txt, float rec) demo_hud_button_draw {
 
 float(void) demo_hud_draw {
 	if not(isdemo()) {
-		demo_hud_enabled = FALSE;
-		return FALSE;
+		demo_track(1);
+		if not(demo_hud_enabled)
+			return FALSE;
 	}
 	if (menu_alpha <= 0) return TRUE;
 	gui_draw_reset();
