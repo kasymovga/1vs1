@@ -222,6 +222,11 @@ void(float t) jb_camera_enable {
 	spectator_camera_adjust(jb_camera_view_adjust);
 }
 
+void(void) jb_camera_delay {
+	jb_camera_enable(self.team);
+	remove(self);
+}
+
 void(float victim) jb_torture_start {
 	float i;
 	random_selection_init();
@@ -253,7 +258,11 @@ void(float victim) jb_torture_start {
 			even = TRUE;
 		}
 	}
-	jb_camera_enable(victim);
+	e = spawn();
+	e.think = jb_camera_delay;
+	e.team = victim;
+	e.nextthink = time + 1;
+	e.reset = stdproc_remove;
 }
 
 void(void) jb_think {
@@ -292,7 +301,7 @@ void(void) jb_think {
 			if not(e.deadflag)
 			if ((e.team == COLOR_TEAM1 && !jb_open_red) ||
 					(e.team == COLOR_TEAM2 && !jb_open_blue))
-				for (jail = NULL; (jail = find(jail, classname, "jb_room")); ) {
+				for (jail = NULL; (jail = find(jail, classname, "jb_room")) && !injail; ) {
 					if (math_boxes_overlap(jail.absmin, jail.absmax, e.absmin, e.absmax)) {
 						oldself = self;
 						oldother = other;
@@ -345,6 +354,7 @@ void(void) jb_think {
 float(entity attacker, entity inflictor, float deathtype) jb_player_death_handle {
 	if (!roundbased_active) return FALSE;
 	pointparticles(particleeffectnum("teleport"), ENTITY_CENTER(self), '0 0 0', 1);
+	//pointparticles(particleeffectnum("hookbomb_explode"), ENTITY_CENTER(self), '0 0 0', 1);
 	if (deathtype && !JB_PLAYER_JAILED(self))
 		player_obituary(attacker, inflictor, self, deathtype);
 
