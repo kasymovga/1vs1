@@ -1430,14 +1430,14 @@ void(void) func_doors_link {
 
 	if ((self.spawnflags & DOOR_DONT_LINK) || cvar("sv_gameplayfix_dontlinkdoors")) {
 		self.owner = self.enemy = self;
-		IFTARGETED
-			return;
-
 		if (self.health || (!self.items && cvar("g_door_shootable"))) {
 			self.takedamage = DAMAGE_YES;
 			self.event_damage = func_door_damage;
 		}
 		if (self.health)
+			return;
+
+		IFTARGETED
 			return;
 
 		self.trigger_field = func_spawn_field(self.absmin, self.absmax);
