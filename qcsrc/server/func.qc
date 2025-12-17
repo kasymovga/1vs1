@@ -497,12 +497,6 @@ void(vector tdest, vector adest, float tspeed, void() func) func_calc_move {
 		self.velocity = delta * (1 / traveltime); // QuakeC doesn't allow vector/float division
 		self.avelocity = (adest - self.angles) * (1 / traveltime);
 	}
-	if (traveltime < sys_ticrate) {
-		self.velocity = '0 0 0';
-		self.avelocity = '0 0 0';
-		self.nextthink = self.ltime  + sys_ticrate;
-		return;
-	}
 	self.nextthink = self.ltime + traveltime;
 }
 
