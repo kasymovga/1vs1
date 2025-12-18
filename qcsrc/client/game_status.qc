@@ -1,4 +1,4 @@
-void(void) gamestatus_draw {
+void(void) game_status_draw {
 	vector pos, _size;
 	drawfont = sbar_bigfont;
 	pos = self.origin;
@@ -18,17 +18,17 @@ void(void) gamestatus_draw {
 	self.alpha -= frametime;
 }
 
-void(void) gamestatus_remove {
+void(void) game_status_remove {
 	str_unzone_ifneeded(self.message);
 }
 
-void(float isnew) gamestatus_read {
+void(float isnew) game_status_read {
 	self.origin_x = 0;
 	self.origin_y = CVAR(vid_conheight) / 2 - sbar_fontsize_y * 8;
-	self.draw2d = gamestatus_draw;
+	self.draw2d = game_status_draw;
 	self.draw2dflag = 2;
 	float f = net_read_byte();
-	self.entremove = gamestatus_remove;
+	self.entremove = game_status_remove;
 	if (f & 1) {
 		self.message = net_read_string();
 		string arg1 = net_read_string();

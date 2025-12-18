@@ -25,7 +25,7 @@
 #include "physics/car.qh"
 #include "locationrequest.qh"
 #include "dlc.qh"
-#include "gamestatus.qh"
+#include "game_status.qh"
 #include "weapon_select.qh"
 #include "voip.qh"
 #include "view.qh"

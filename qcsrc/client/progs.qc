@@ -68,7 +68,7 @@
 #include "locationrequest.qc"
 #include "dlc.qc"
 #include "radio.qc"
-#include "gamestatus.qc"
+#include "game_status.qc"
 #include "warpzone.qc"
 #include "weapon_select.qc"
 #include "noteline.qc"
