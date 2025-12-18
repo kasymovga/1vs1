@@ -1369,7 +1369,7 @@ void sbar_scoreboard_draw() {
 		pos_y += 2 * sbar_fontsize_y;
 	}
 	scoreboard_bottom = pos_y;
-	if (centerprint_num < 1) {
+	if (print_center_num < 1) {
 		string tail = server_motd;
 		pos_y = max(CVAR(vid_conheight) * 0.5 + sbar_fontsize_y, pos_y);
 		if (game_type == GAME_TYPE_CTS || game_type == GAME_TYPE_RACE)

@@ -118,7 +118,7 @@ void(void) print_read {
 		s = print_text_prepare(s, "", "", "");
 	}
 	if (type == PRINT_CENTER) {
-		centerprint(s);
+		print_center(s);
 	} else if (type == PRINT_INFO) {
 		print(s, "\n");
 	} else if (type == PRINT_CHAT) {

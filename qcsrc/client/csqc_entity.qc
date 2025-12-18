@@ -196,3 +196,8 @@ float() CSQC_Parse_TempEntity { //called by engine
 	csqc_entity_temp_parsers[n - NET_TE_CSQC_FIRST]();
 	return TRUE;
 }
+
+// CSQC_Parse_CenterPrint : Provides the centerprint string in the first parameter that the server provided.
+void(string strMessage) CSQC_Parse_CenterPrint {
+	print_center(strMessage);
+}

@@ -6,7 +6,7 @@
 #include "../common/progs.qc"
 #include "draw.qc"
 #include "team.qc"
-#include "centerprint.qc"
+#include "print_center.qc"
 #include "flag.qc"
 #include "ctf.qc"
 #include "kh.qc"

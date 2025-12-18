@@ -36,7 +36,7 @@ void(string bigstr, string comment, float staytime) rm_bigprint {
 			else
 				s = strcat(s, "\n", comment);
 		}
-		centerprint(s);
+		print_center(s);
 		return;
 	}
 	if (bigstr != "") {

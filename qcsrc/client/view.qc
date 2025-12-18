@@ -327,7 +327,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		if (CVAR(cl_showacceleration))
 			sbar_acceleration_draw();
 	}
-	centerprint_draw(); // draw centerprint messages even if viewsize >= 120
+	print_center_draw(); // draw centerprint messages even if viewsize >= 120
 	if (view_vehicle) {
 		vector sz;
 		view_vehicle_hud();

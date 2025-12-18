@@ -45,13 +45,13 @@ void(void) notification_read {
 	print(strcat(s, " ", _icon, " ", st, "\n"));
 	if (attacker == player_localentnum) {
 		if (target != attacker)
-			centerprint(strcat("^4You fragged ^7", st));
+			print_center(strcat("^4You fragged ^7", st));
 		else
-			centerprint("^1You killed your own dumb self!");
+			print_center(_("^1You killed your own dumb self!"));
 	} else if (target == player_localentnum) {
 		if (!attacker && !isnotclient)
-			centerprint("^1Watch your step!");
+			print_center(_("^1Watch your step!"));
 		else
-			centerprint(strcat("^1You were fragged by ^7", s));
+			print_center(strcat("^1You were fragged by ^7", s));
 	}
 }
