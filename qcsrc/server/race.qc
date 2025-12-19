@@ -1,6 +1,6 @@
-#define MAX_CHECKPOINTS 255
+#define RACE_MAX_CHECKPOINTS 255
 #define RACE_RECORD "/race100record/"
-#define CTS_RECORD "/cts100record/"
+#define RACE_CTS_RECORD "/cts100record/"
 // sorry, but using \ in macros breaks line numbers
 #define RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; CLIENT_FOR_EACH_REAL(msg_entity) if (SPECTATOR_IS_SPECTATING_OR_ITSELF(msg_entity, varname)) statement msg_entity = varname
 #define RACE_WRITESPECTATABLE_MSG_ONE(statement) RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
@@ -31,12 +31,12 @@ float race_defrag;
 
 .entity sprite;
 
-float race_checkpoint_records[MAX_CHECKPOINTS];
-float race_checkpoint_speeds[MAX_CHECKPOINTS];
-string race_checkpoint_recordholders[MAX_CHECKPOINTS];
-float race_checkpoint_lasttimes[MAX_CHECKPOINTS];
-float race_checkpoint_lastlaps[MAX_CHECKPOINTS];
-entity race_checkpoint_lastplayers[MAX_CHECKPOINTS];
+float race_checkpoint_records[RACE_MAX_CHECKPOINTS];
+float race_checkpoint_speeds[RACE_MAX_CHECKPOINTS];
+string race_checkpoint_recordholders[RACE_MAX_CHECKPOINTS];
+float race_checkpoint_lasttimes[RACE_MAX_CHECKPOINTS];
+float race_checkpoint_lastlaps[RACE_MAX_CHECKPOINTS];
+entity race_checkpoint_lastplayers[RACE_MAX_CHECKPOINTS];
 float race_spawns;
 float race_highest_place_spawn; // number of places; a place higher gets spawned at 0
 float race_lowest_place_spawn; // where to spawn in qualifying
@@ -671,7 +671,7 @@ void(void) spawnfunc_race_info_player {
 void(void) race_checkpoints_records_clear {
 	float i;
 	entity e;
-	for (i = 0; i < MAX_CHECKPOINTS; ++i) {
+	for (i = 0; i < RACE_MAX_CHECKPOINTS; ++i) {
 		race_checkpoint_records[i] = 0;
 		race_checkpoint_speeds[i] = 0;
 		if (race_checkpoint_recordholders[i])
@@ -976,7 +976,7 @@ string(entity cl) race_client_fix_cvars {
 }
 
 string(string bspname) race_world_record_for_map {
-	string recid = (g_race ? RACE_RECORD : CTS_RECORD);
+	string recid = (g_race ? RACE_RECORD : RACE_CTS_RECORD);
 	float r = stof(db_get(db_server, strcat(bspname, recid, "time")));
 	if (r == 0)
 		return strcat(strpad(16, bspname), " ", "--:--.-- -\n");
@@ -1102,6 +1102,7 @@ var void(void) race_shutdown_next;
 void(void) race_shutdown {
 	print("Saving race records...\n");
 	race_records_save();
+	race_records_to_html();
 	if (g_cts) race_ghost_save();
 	race_shutdown_next();
 }
@@ -1244,13 +1245,13 @@ string(string s) race_map_finish_message_mod {
 }
 
 string(string s) race_map_vote_send_map_name_mod {
-	string id = db_get(db_server, strcat(s, CTS_RECORD, "id"));
+	string id = db_get(db_server, strcat(s, RACE_CTS_RECORD, "id"));
 	string n = "";
 	if (id != "") {
 		n = db_get(db_server, strcat("raceid2n/", id));
 	}
 	if (n == "")
-		n = db_get(db_server, strcat(s, CTS_RECORD, "netname"));
+		n = db_get(db_server, strcat(s, RACE_CTS_RECORD, "netname"));
 
 	if (n != "")
 		return strcat(s, " ^0(^7", n, "^0)^7");
@@ -1281,7 +1282,7 @@ void(void) race_init {
 	if (game_type == GAME_TYPE_CTS) {
 		g_cts = 1;
 		g_race_qualifying = 1;
-		race_records_path = CTS_RECORD;
+		race_records_path = RACE_CTS_RECORD;
 		race_gamemenu_send_next = plugin_chain_gamemenu_send;
 		plugin_chain_gamemenu_send = race_gamemenu_send;
 		race_cmd_client_handle_next = plugin_chain_cmd_client_handle;

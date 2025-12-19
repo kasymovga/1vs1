@@ -7,6 +7,7 @@ entity race_records_sender;
 
 void(void) race_records_load;
 void(void) race_records_save;
+void(void) race_records_to_html;
 void(float i) race_records_delete; // this function call race_records_id_ref_counter_decrease
 float(string name, string client_id, float checktime, float _speed) race_records_put; // this function NOT call race_records_id_ref_counter_increase, caller must do it
 float(entity to, float sf) race_records_send;

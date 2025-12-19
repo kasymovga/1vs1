@@ -1,3 +1,180 @@
+float race_records_modified;
+
+string(string s) race_records_html_escape {
+	s = strreplace("<", "&lt;", s);
+	s = strreplace(">", "&gt;", s);
+	s = strreplace("&", "&amp;", s);
+	float c = strstrofs(s, "^", 0); //look for colorcode symbol
+	float spanopened = FALSE;
+	string chr, rgb;
+	if (c >= 0) {
+		string sc = "";
+		for (; s != "";) {
+			sc = strcat(sc, substring(s, 0, c));
+			s = substring(s, c + 1, -1);
+			chr = substring(s, 0, 1);
+			if (chr == "" || chr == "^") { //nothing or secondary ^
+				//print("no color code\n");
+				sc = strcat(sc, "^");
+				s = substring(s, 1, -1); //skip character (if presented)
+			} else if (strstrofs("0123456789", chr, 0) >= 0) { //simple color code
+				//print("simple color code\n");
+				s = substring(s, 1, -1); //skip character
+				if (spanopened) sc = strcat(sc, "</span>");
+				spanopened = TRUE;
+				if (chr == "0") {
+					sc = strcat(sc, "<span style=\"color: #444\">");
+				} else if (chr == "1") {
+					sc = strcat(sc, "<span style=\"color: #F44\">");
+				} else if (chr == "2") {
+					sc = strcat(sc, "<span style=\"color: #4F4\">");
+				} else if (chr == "3") {
+					sc = strcat(sc, "<span style=\"color: #BB4\">");
+				} else if (chr == "4") {
+					sc = strcat(sc, "<span style=\"color: #44F\">");
+				} else if (chr == "5") {
+					sc = strcat(sc, "<span style=\"color: #4DD\">");
+				} else if (chr == "6") {
+					sc = strcat(sc, "<span style=\"color: #D4D\">");
+				} else if (chr == "7") {
+					sc = strcat(sc, "</span>");
+					spanopened = FALSE;
+				} else if (chr == "8") {
+					sc = strcat(sc, "<span style=\"color: #666\">");
+				} else if (chr == "9") {
+					sc = strcat(sc, "<span style=\"color: #888\">");
+				}
+			} else if (chr == "x") { //complex color code
+				//print("complex color code\n");
+				rgb = "";
+				chr = substring(s, 1, 1);
+				if (chr != "" && strstrofs("0123456789abcdefABCDEF", chr, 0) >= 0) {
+					rgb = chr;
+					chr = substring(s, 2, 1);
+					if (chr != "" && strstrofs("0123456789abcdefABCDEF", chr, 0) >= 0) {
+						rgb = strcat(rgb, chr);
+						chr = substring(s, 3, 1);
+						if (chr != "" && strstrofs("0123456789abcdefABCDEF", chr, 0) >= 0) {
+							rgb = strcat(rgb, chr);
+							sc = strcat(sc, "<span style=\"color: #", rgb, "\">");
+							s = substring(s, 4, -1); //skip character
+						} else {
+							sc = strcat(sc, "^x");
+							s = substring(s, 1, -1); //skip character
+						}
+					} else {
+						sc = strcat(sc, "^x");
+						s = substring(s, 1, -1); //skip character
+					}
+				} else {
+					sc = strcat(sc, "^x");
+					s = substring(s, 1, -1); //skip character
+				}
+			} else {
+				sc = strcat(sc, "^", chr);
+				s = substring(s, 1, -1); //skip character
+			}
+			c = strstrofs(s, "^", 0);
+			if (c < 0) {
+				sc = strcat(sc, s);
+				break;
+			}
+		}
+		if (spanopened) sc = strcat(sc, "</span>");
+		return sc;
+	}
+	return s;
+}
+
+void(void) race_records_to_html {
+	if not(cvar_string("sv_cts_records_to_html")) return;
+	if not(race_records_modified) {
+		if (file_exists("cts_records.html")) return; //nothing to do
+	}
+	float f = fopen("cts_records.html", FILE_WRITE);
+	if (f < 0) {
+		print("Saving records to html failed: cannot open cts_records.html\n");
+		return;
+	}
+	fputs(f, "<html>\n");
+	fputs(f, "<head>\n");
+	fputs(f, "<title>CTS record table</title>\n");
+	fputs(f, "<style>\n");
+	fputs(f, "body {\n");
+	fputs(f, "	background-color: black;\n");
+	fputs(f, "	color: white;\n");
+	fputs(f, "}\n");
+	fputs(f, "</style>\n");
+	fputs(f, "</head>\n");
+	fputs(f, "<body>\n");
+	fputs(f, "<script>\n");
+	fputs(f, "function sortTable(column) {\n");
+	fputs(f, "	var x, y;\n");
+	fputs(f, "	var table = document.getElementById(\"recordTable\");\n");
+	fputs(f, "	var rows = table.rows;\n");
+	fputs(f, "	for (var i = rows.length - 2; i > 0; i--) {\n");
+	fputs(f, "		for (var j = i; j < rows.length - 1; j++) {\n");
+	fputs(f, "			x = rows[j].getElementsByTagName(\"TD\")[column];\n");
+	fputs(f, "			y = rows[j + 1].getElementsByTagName(\"TD\")[column];\n");
+	fputs(f, "			if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {\n");
+	fputs(f, "				rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);\n");
+	fputs(f, "			} else {\n");
+	fputs(f, "				break;\n");
+	fputs(f, "			}\n");
+	fputs(f, "		}\n");
+	fputs(f, "	}\n");
+	fputs(f, "}\n");
+	fputs(f, "</script>\n");
+	fputs(f, "<table  id='recordTable'>\n");
+	fputs(f, "<tr>\n");
+	fputs(f, "<th><a href='#' onclick=\"sortTable(0)\">Map</a>\n");
+	string s;
+	float i, j;
+	for (i = 0; i < 10; i++) {
+		j = i * 2 + 1;
+		s = strcat("<th><a href='#' onclick=\"sortTable(", ftos(j), ")\">Time #", ftos(i + 1), "</a>");
+		s = strcat(s, "<th><a href='#' onclick=\"sortTable(", ftos(j + 1), ")\">Player #", ftos(i + 1), "</a>\n");
+		fputs(f, s);
+	}
+	map_info_enumerate();
+	map_info_filter_game_type(MAP_INFO_TYPE_CTS, map_info_required_flags(), map_info_forbidden_flags(), 1);
+	string m, n, id, p;
+	float breaked, t;
+	for (i = 0; i < map_info_count; ++i) {
+		m = map_info_glob_item(map_info_filter_list_lookup(i));
+		s = strcat(m, race_records_path);
+		fputs(f, strcat("<tr><td>", uri_escape(m), "\n"));
+		breaked = FALSE;
+		for (j = 0; j < 10; j++) {
+			n = "";
+			p = "";
+			if not(breaked) {
+				if (j > 0) p = strcat(ftos(j), "/");
+				print(strcat(s, p, "id"), "\n");
+				id = db_get(db_server, strcat(s, p, "id"));
+				print("id=", id, "\n");
+				if (id == "") {
+					n = db_get(db_server, strcat(s, p, "netname"));
+				} else {
+					n = db_get(db_server, strcat("raceid2n/", id));
+				}
+				if (n == "") breaked = TRUE;
+			}
+			if (breaked) {
+				fputs(f, "<td>\n<td>\n");
+			} else {
+				t = stof(db_get(db_server, strcat(s, p, "time")));
+				fputs(f, strcat("<td>", time_mmssss(t), "\n"));
+				fputs(f, strcat("<td>", race_records_html_escape(n), "\n"));
+			}
+		}
+	}
+	fputs(f, "</table>\n");
+	fputs(f, "</body>\n");
+	fputs(f, "</html>\n");
+	fclose(f);
+}
+
 void(void) race_records_load {
 	string s = strcat(mapname, race_records_path);
 	string n, id;
@@ -45,6 +222,7 @@ void(void) race_records_load {
 			}
 		}
 	}
+	race_records_modified = TRUE;
 }
 
 void(void) race_records_save {
@@ -108,6 +286,7 @@ void(float i) race_records_delete {
 	race_records_id[9] = "";
 	race_records_time[9] = 0;
 	race_records_speed[9] = 0;
+	race_records_modified = FALSE;
 }
 
 float(entity to, float sf) race_records_send {
@@ -232,6 +411,7 @@ float(string name, string client_id, float checktime, float _speed) race_records
 			race_records_id[i] = str_zone_ifneeded(client_id);
 			race_records_time[i] = checktime;
 			race_records_speed[i] = _speed;
+			race_records_modified = TRUE;
 			return i + 1;
 		}
 		n = race_records_name[i];
@@ -325,6 +505,9 @@ float(string cmd, float argc) race_records_cmd {
 		}
 		race_records_delete(i);
 		race_records_sender.SendFlags = 1;
+		return TRUE;
+	} else if (cmd == "test_html" && argc == 2) {
+		print(race_records_html_escape(argv(1)), "\n");
 		return TRUE;
 	} else if (cmd == "link_id_to_name") {
 		if (argc < 2 || argc > 3) {
