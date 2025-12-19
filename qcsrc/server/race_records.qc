@@ -156,9 +156,7 @@ void(void) race_records_to_html {
 			p = "";
 			if not(breaked) {
 				if (j > 0) p = strcat(ftos(j), "/");
-				print(strcat(s, p, "id"), "\n");
 				id = db_get(db_server, strcat(s, p, "id"));
-				print("id=", id, "\n");
 				if (id == "") {
 					n = db_get(db_server, strcat(s, p, "netname"));
 				} else {
