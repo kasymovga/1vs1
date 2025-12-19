@@ -142,7 +142,7 @@
 #include "map_info.qh"
 #include "weapon/two_weapons.qh"
 #include "weapon/flash.qh"
-#include "noteline.qh"
+#include "note.qh"
 #include "notification.qh"
 #include "warmup.qh"
 #include "weapon/extra.qh"

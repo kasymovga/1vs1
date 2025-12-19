@@ -424,6 +424,6 @@ void(void) ice_init {
 	plugin_chain_player_damage_handle = ice_player_damage_handle;
 	ice_player_think_next = plugin_chain_player_think;
 	plugin_chain_player_think = ice_player_think;
-	ice_note = noteline_new(ice_note_message);
+	ice_note = note_new(ice_note_message);
 	ice_note.customizeentityforclient = ice_note_customize;
 }

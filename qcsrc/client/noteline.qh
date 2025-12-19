@@ -1,2 +1,0 @@
-void(float bIsNew) noteline_read;
-entity(string m) noteline_new;

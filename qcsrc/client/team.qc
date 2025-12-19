@@ -121,3 +121,8 @@ float(entity o, float Team) team_set {
 	}
 	return FALSE;
 }
+
+void(void) team_select_read {
+	if not(main_isdemo)
+		GUI_Show(GUI_TEAMSELECT);
+}

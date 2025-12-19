@@ -71,7 +71,7 @@
 #include "game_status.qc"
 #include "warpzone.qc"
 #include "weapon_select.qc"
-#include "noteline.qc"
+#include "note.qc"
 #include "classes.qc"
 #include "../client-menu/progs.qc"
 #include "gui.qc"

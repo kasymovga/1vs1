@@ -338,7 +338,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 
 void() spectator_init {
 	if not(spectator_note) {
-		spectator_note = noteline_new(spectator_note_message);
+		spectator_note = note_new(spectator_note_message);
 		spectator_note.customizeentityforclient = spectator_note_customize;
 	}
 }

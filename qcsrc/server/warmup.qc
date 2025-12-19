@@ -95,7 +95,7 @@ void(void) warmup_init {
 	plugin_chain_observer_spawn = warmup_observer_spawn;
 	warmup_server_frame_next = plugin_chain_world_frame_start;
 	plugin_chain_world_frame_start = warmup_server_frame;
-	warmup_note = noteline_new(warmup_note_message);
+	warmup_note = note_new(warmup_note_message);
 	warmup_note_update();
 	warmup_player_equip_handle_next = plugin_chain_player_equip_handle;
 	plugin_chain_player_equip_handle = warmup_player_equip_handle;

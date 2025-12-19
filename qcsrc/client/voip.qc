@@ -54,7 +54,7 @@ void(void) voip_note_update {
 			str_unzone_ifneeded(voip_note.message);
 			voip_note.message = str_zone_ifneeded(voip_note_message());
 		} else
-			voip_note = noteline_new(voip_note_message());
+			voip_note = note_new(voip_note_message());
 	}
 }
 

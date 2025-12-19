@@ -58,15 +58,6 @@ void(void) csqc_entity_temp_hit_read {
 		view_crosshair_hittime = time + CVAR(crosshair_hit_time);
 }
 
-void(void) csqc_entity_temp_weapon_list_show {
-	sbar_weapons_time = time;
-}
-
-void(void) csqc_entity_temp_team_select_show {
-	if not(main_isdemo)
-		GUI_Show(GUI_TEAMSELECT);
-}
-
 void(void) csqc_entity_temp_map_list_read {
 	str_unzone_ifneeded(gui_available_maps);
 	gui_available_maps = str_zone_ifneeded(net_read_string());
@@ -124,7 +115,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_WARPZONE] = warpzone_read;
 	csqc_entity_parsers[NET_CSQC_FUNC_CAMERA] = func_camera_read;
 	csqc_entity_parsers[NET_CSQC_WARPZONE_TELEPORTED] = warpzone_teleported_read;
-	csqc_entity_parsers[NET_CSQC_NOTELINE] = noteline_read;
+	csqc_entity_parsers[NET_CSQC_NOTE] = note_read;
 	csqc_entity_parsers[NET_CSQC_HOOK] = hook_read;
 	csqc_entity_parsers[NET_CSQC_PHYSICS_HOOK] = hook_physics_read;
 	csqc_entity_parsers[NET_CSQC_PHYSICS_JETPACK] = jetpack_read;
@@ -155,9 +146,9 @@ void(void) csqc_entity_init {
 	csqc_entity_temp_parsers[NET_TE_CSQC_NADGETSELECT - NET_TE_CSQC_FIRST] = nadget_select_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_BLAST - NET_TE_CSQC_FIRST] = effect_blast_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_RADIO - NET_TE_CSQC_FIRST] = radio_read;
-	csqc_entity_temp_parsers[NET_TE_CSQC_WEAPONLIST - NET_TE_CSQC_FIRST] = csqc_entity_temp_weapon_list_show;
+	csqc_entity_temp_parsers[NET_TE_CSQC_WEAPONLIST - NET_TE_CSQC_FIRST] = weapon_list_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_WEAPONSELECT - NET_TE_CSQC_FIRST] = weapon_select_read;
-	csqc_entity_temp_parsers[NET_TE_CSQC_TEAMSELECT - NET_TE_CSQC_FIRST] = csqc_entity_temp_team_select_show;
+	csqc_entity_temp_parsers[NET_TE_CSQC_TEAMSELECT - NET_TE_CSQC_FIRST] = team_select_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_GAMEOVER - NET_TE_CSQC_FIRST] = csqc_entity_temp_game_over;
 	csqc_entity_temp_parsers[NET_TE_CSQC_MAPLIST - NET_TE_CSQC_FIRST] = csqc_entity_temp_map_list_read;
 	csqc_entity_temp_parsers[NET_TE_CSQC_TRIP - NET_TE_CSQC_FIRST] = trip_net_read;

@@ -60,3 +60,7 @@ void(void) weapon_info_read {
 	}
 	weapon_update_icons();
 }
+
+void(void) weapon_list_read {
+	sbar_weapons_time = time;
+}

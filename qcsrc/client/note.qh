@@ -1,0 +1,2 @@
+void(float bIsNew) note_read;
+entity(string m) note_new;

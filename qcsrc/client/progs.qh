@@ -44,7 +44,7 @@
 #include "sbar.qh"
 #include "warpzone.qh"
 #include "gui.qh"
-#include "noteline.qh"
+#include "note.qh"
 #include "hint.qh"
 #include "lms_sphere.qh"
 #include "ice.qh"

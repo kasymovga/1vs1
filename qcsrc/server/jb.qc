@@ -480,7 +480,7 @@ void(void) jb_init {
 	projectile_init(PROJECTILE_ELECTRO);
 	projectile_init(PROJECTILE_ELECTRO_BEAM);
 	entity_initialize(self, jb_init_delayed, INITPRIO_FIRST);
-	jb_note = noteline_new(jb_note_message);
+	jb_note = note_new(jb_note_message);
 	jb_note.customizeentityforclient = jb_note_customize;
 }
 

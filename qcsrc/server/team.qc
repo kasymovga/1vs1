@@ -687,7 +687,7 @@ void(float force) team_balance_audit {
 	if (!force && g_balance_teams_force >= 0) {
 		if (team_flags) {
 			if not(team_note) {
-				team_note = noteline_new(team_note_message);
+				team_note = note_new(team_note_message);
 				team_note.customizeentityforclient = team_note_customize;
 				if (g_balance_teams_force) {
 					team_note.dmg = time + g_balance_teams_force;

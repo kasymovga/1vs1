@@ -209,7 +209,7 @@
 #include "damage/indicator.qc"
 #include "warpzone.qc"
 #include "weapon/two_weapons.qc"
-#include "noteline.qc"
+#include "note.qc"
 #include "notification.qc"
 #include "warmup.qc"
 #include "udp_chat.qc"

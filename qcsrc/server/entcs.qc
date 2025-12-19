@@ -160,7 +160,7 @@ entity() entcs_attach {
 	net_link_entity(ent, FALSE, 0, entcs_send);
 	ent.customizeentityforclient = entcs_customize;
 	RM({
-		ent.weaponentity = noteline_new(entcs_spec_message);
+		ent.weaponentity = note_new(entcs_spec_message);
 		ent.weaponentity.owner = self;
 		ent.weaponentity.customizeentityforclient = entcs_spec_customize;
 	})

@@ -23,7 +23,7 @@ void(void) CSQC_Init {
 		}
 	} else {
 		localcmd("\ncmd clientversion oldnexuiz\n");
-		entity e = noteline_new("^1WARNING: ^3Your client is outdated!\n^3Updated client available here: ^2http://rexuiz.com^7");
+		entity e = note_new("^1WARNING: ^3Your client is outdated!\n^3Updated client available here: ^2http://rexuiz.com^7");
 		e.think = stdproc_remove;
 		e.nextthink = time + 30;
 	}
