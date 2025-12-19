@@ -20,29 +20,33 @@ string(string s) race_records_html_escape {
 			} else if (strstrofs("0123456789", chr, 0) >= 0) { //simple color code
 				//print("simple color code\n");
 				s = substring(s, 1, -1); //skip character
+				rgb = "";
 				if (spanopened) sc = strcat(sc, "</span>");
-				spanopened = TRUE;
+				spanopened = FALSE;
 				if (chr == "0") {
-					sc = strcat(sc, "<span style=\"color: #444\">");
+					rgb = "444";
 				} else if (chr == "1") {
-					sc = strcat(sc, "<span style=\"color: #F44\">");
+					rgb = "F44";
 				} else if (chr == "2") {
-					sc = strcat(sc, "<span style=\"color: #4F4\">");
+					rgb = "4F4";
 				} else if (chr == "3") {
-					sc = strcat(sc, "<span style=\"color: #BB4\">");
+					rgb = "BB4";
 				} else if (chr == "4") {
-					sc = strcat(sc, "<span style=\"color: #44F\">");
+					rgb = "44F";
 				} else if (chr == "5") {
-					sc = strcat(sc, "<span style=\"color: #4DD\">");
+					rgb = "4DD";
 				} else if (chr == "6") {
-					sc = strcat(sc, "<span style=\"color: #D4D\">");
+					rgb = "D4D";
 				} else if (chr == "7") {
-					sc = strcat(sc, "</span>");
-					spanopened = FALSE;
+					//default color
 				} else if (chr == "8") {
-					sc = strcat(sc, "<span style=\"color: #666\">");
+					rgb = "666";
 				} else if (chr == "9") {
-					sc = strcat(sc, "<span style=\"color: #888\">");
+					rgb = "888";
+				}
+				if (rgb != "") {
+					sc = strcat(sc, "<span style=\"color: #", rgb, "\">");
+					spanopened = TRUE;
 				}
 			} else if (chr == "x") { //complex color code
 				//print("complex color code\n");
@@ -56,7 +60,9 @@ string(string s) race_records_html_escape {
 						chr = substring(s, 3, 1);
 						if (chr != "" && strstrofs("0123456789abcdefABCDEF", chr, 0) >= 0) {
 							rgb = strcat(rgb, chr);
+							if (spanopened) sc = strcat(sc, "</span>");
 							sc = strcat(sc, "<span style=\"color: #", rgb, "\">");
+							spanopened = TRUE;
 							s = substring(s, 4, -1); //skip character
 						} else {
 							sc = strcat(sc, "^x");
