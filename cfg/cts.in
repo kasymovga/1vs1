@@ -22,8 +22,8 @@ set cts_g_trigger_push_prediction 1
 set cts_g_score_bestweapon 0
 set cts_g_player_obituary 0
 set sv_cts_records_link_names_to_ids 0
+set sv_cts_records_to_html "0" "Save CTS records to html report"
 set sv_cts_ghost 1 "Enable CTS ghost player"
 set sv_cts_ghost_save 0 "Save CTS ghost between races"
-set sv_cts_records_to_html "" "Save CTS records to html report"
 alias cl_hook_gamestart_cts
 alias sv_hook_gamestart_cts
