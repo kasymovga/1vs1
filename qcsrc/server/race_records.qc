@@ -1,14 +1,357 @@
 float race_records_modified;
 
 string(string s) race_records_html_escape {
-	s = strreplace("<", "&lt;", s);
-	s = strreplace(">", "&gt;", s);
-	s = strreplace("&", "&amp;", s);
-	float c = strstrofs(s, "^", 0); //look for colorcode symbol
+	string cache_path = strcat("race_records_html_escape_cache/", uri_escape(s));
+	string cache = db_get(db_temp, cache_path);
+	if (cache != "") {
+		return cache;
+	}
+	float i, n = strlen(s);
+	float c;
+	string sc = "";
+	for (i = 0; i < n; i++) {
+		c = str2chr(s, i);
+		if (c & 0xE000) {
+			c &= ~0xE000;
+		}
+		if (c == '&')
+			sc = strcat(sc, "&amp;");
+		else if (c == '<')
+			sc = strcat(sc, "&lt;");
+		else if (c == '>')
+			sc = strcat(sc, "&gt;");
+		else if ((c >= 32 && c <= 127) || c > 255)
+			sc = strcat(sc, chr2str(c));
+		else if (c == 1)
+			sc = strcat(sc, "&#9588;");
+		else if (c == 2)
+			sc = strcat(sc, "&#9620;");
+		else if (c == 3)
+			sc = strcat(sc, "&#9590;");
+		else if (c == 4)
+			sc = strcat(sc, "&#9601;");
+		else if (c == 5)
+			sc = strcat(sc, "&#9728;");
+		else if (c == 6)
+			sc = strcat(sc, "&#134;");
+		else if (c == 7)
+			sc = strcat(sc, "#");
+		else if (c == 8)
+			sc = strcat(sc, "#");
+		else if (c == 9)
+			sc = strcat(sc, "");
+		else if (c == 10)
+			sc = strcat(sc, "");
+		else if (c == 11)
+			sc = strcat(sc, "#");
+		else if (c == 12)
+			sc = strcat(sc, "&#149;");
+		else if (c == 13)
+			sc = strcat(sc, "&#9657;");
+		else if (c == 14)
+			sc = strcat(sc, "&#9728;");
+		else if (c == 15)
+			sc = strcat(sc, "&#9728;");
+		else if (c == 16)
+			sc = strcat(sc, "[");
+		else if (c == 17)
+			sc = strcat(sc, "]");
+		else if (c == 18)
+			sc = strcat(sc, "0");
+		else if (c == 19)
+			sc = strcat(sc, "1");
+		else if (c == 20)
+			sc = strcat(sc, "2");
+		else if (c == 21)
+			sc = strcat(sc, "3");
+		else if (c == 22)
+			sc = strcat(sc, "4");
+		else if (c == 23)
+			sc = strcat(sc, "5");
+		else if (c == 24)
+			sc = strcat(sc, "6");
+		else if (c == 25)
+			sc = strcat(sc, "7");
+		else if (c == 26)
+			sc = strcat(sc, "&#183;");
+		else if (c == 27)
+			sc = strcat(sc, "9");
+		else if (c == 28)
+			sc = strcat(sc, "&#9728;");
+		else if (c == 29)
+			sc = strcat(sc, "&lt;");
+		else if (c == 30)
+			sc = strcat(sc, "=");
+		else if (c == 31)
+			sc = strcat(sc, "&gt;");
+		//32-126 printable ascii codes
+		//else if (c == '\\')
+		//	sc = strcat(sc, "&#92;");
+		else if (c == 127) // backspace
+			sc = strcat(sc, "&#9618;");
+		else if (c == 128)
+			sc = strcat(sc, "&lt;");
+		else if (c == 129)
+			sc = strcat(sc, "=");
+		else if (c == 130)
+			sc = strcat(sc, "&gt;");
+		else if (c == 131)
+			sc = strcat(sc, "#");
+		else if (c == 132)
+			sc = strcat(sc, "#");
+		else if (c == 133)
+			sc = strcat(sc, ".");
+		else if (c == 134)
+			sc = strcat(sc, "#");
+		else if (c == 135)
+			sc = strcat(sc, "#");
+		else if (c == 136)
+			sc = strcat(sc, "#");
+		else if (c == 137)
+			sc = strcat(sc, "#");
+		else if (c == 138)
+			sc = strcat(sc, "");
+		else if (c == 139)
+			sc = strcat(sc, "#");
+		else if (c == 140)
+			sc = strcat(sc, "&iquest;");
+		else if (c == 141)
+			sc = strcat(sc, "&#9654;");
+		else if (c == 142)
+			sc = strcat(sc, ".");
+		else if (c == 143)
+			sc = strcat(sc, ".");
+		else if (c == 144)
+			sc = strcat(sc, "[");
+		else if (c == 145)
+			sc = strcat(sc, "]");
+		else if (c == 146)
+			sc = strcat(sc, "0");
+		else if (c == 147)
+			sc = strcat(sc, "1");
+		else if (c == 148)
+			sc = strcat(sc, "2");
+		else if (c == 149)
+			sc = strcat(sc, "3");
+		else if (c == 150)
+			sc = strcat(sc, "4");
+		else if (c == 151)
+			sc = strcat(sc, "5");
+		else if (c == 152)
+			sc = strcat(sc, "6");
+		else if (c == 153)
+			sc = strcat(sc, "7");
+		else if (c == 154)
+			sc = strcat(sc, "8");
+		else if (c == 155)
+			sc = strcat(sc, "9");
+		else if (c == 156)
+			sc = strcat(sc, ".");
+		else if (c == 157)
+			sc = strcat(sc, "&#9592;");
+		else if (c == 158)
+			sc = strcat(sc, "$#9473;");
+		else if (c == 159)
+			sc = strcat(sc, "&#9594;");
+		else if (c == 160)
+			sc = strcat(sc, "");
+		else if (c == 161)
+			sc = strcat(sc, "!");
+		else if (c == 162)
+			sc = strcat(sc, "\"");
+		else if (c == 163)
+			sc = strcat(sc, "#");
+		else if (c == 164)
+			sc = strcat(sc, "$");
+		else if (c == 165)
+			sc = strcat(sc, "%");
+		else if (c == 166)
+			sc = strcat(sc, "&");
+		else if (c == 167)
+			sc = strcat(sc, "&#39");
+		else if (c == 168)
+			sc = strcat(sc, "_");
+		else if (c == 169)
+			sc = strcat(sc, "(");
+		else if (c == 170)
+			sc = strcat(sc, ")");
+		else if (c == 171)
+			sc = strcat(sc, "*");
+		else if (c == 172)
+			sc = strcat(sc, "+");
+		else if (c == 173)
+			sc = strcat(sc, ",");
+		else if (c == 174)
+			sc = strcat(sc, "-");
+		else if (c == 175)
+			sc = strcat(sc, "&#47;");
+		else if (c == 176)
+			sc = strcat(sc, "0");
+		else if (c == 177)
+			sc = strcat(sc, "1");
+		else if (c == 178)
+			sc = strcat(sc, "2");
+		else if (c == 179)
+			sc = strcat(sc, "3");
+		else if (c == 180)
+			sc = strcat(sc, "4");
+		else if (c == 181)
+			sc = strcat(sc, "5");
+		else if (c == 182)
+			sc = strcat(sc, "6");
+		else if (c == 183)
+			sc = strcat(sc, "7");
+		else if (c == 184)
+			sc = strcat(sc, "8");
+		else if (c == 185)
+			sc = strcat(sc, "9");
+		else if (c == 186)
+			sc = strcat(sc, ":");
+		else if (c == 187)
+			sc = strcat(sc, ";");
+		else if (c == 188)
+			sc = strcat(sc, "&lt;");
+		else if (c == 189)
+			sc = strcat(sc, "=");
+		else if (c == 190)
+			sc = strcat(sc, "&gt;");
+		else if (c == 191)
+			sc = strcat(sc, "?");
+		else if (c == 192)
+			sc = strcat(sc, "@");
+		else if (c == 193)
+			sc = strcat(sc, "A");
+		else if (c == 194)
+			sc = strcat(sc, "B");
+		else if (c == 195)
+			sc = strcat(sc, "C");
+		else if (c == 196)
+			sc = strcat(sc, "D");
+		else if (c == 197)
+			sc = strcat(sc, "E");
+		else if (c == 198)
+			sc = strcat(sc, "F");
+		else if (c == 199)
+			sc = strcat(sc, "G");
+		else if (c == 200)
+			sc = strcat(sc, "H");
+		else if (c == 201)
+			sc = strcat(sc, "I");
+		else if (c == 202)
+			sc = strcat(sc, "J");
+		else if (c == 203)
+			sc = strcat(sc, "K");
+		else if (c == 204)
+			sc = strcat(sc, "L");
+		else if (c == 205)
+			sc = strcat(sc, "M");
+		else if (c == 206)
+			sc = strcat(sc, "N");
+		else if (c == 207)
+			sc = strcat(sc, "O");
+		else if (c == 208)
+			sc = strcat(sc, "P");
+		else if (c == 209)
+			sc = strcat(sc, "Q");
+		else if (c == 210)
+			sc = strcat(sc, "R");
+		else if (c == 211)
+			sc = strcat(sc, "S");
+		else if (c == 212)
+			sc = strcat(sc, "T");
+		else if (c == 213)
+			sc = strcat(sc, "U");
+		else if (c == 214)
+			sc = strcat(sc, "V");
+		else if (c == 215)
+			sc = strcat(sc, "W");
+		else if (c == 216)
+			sc = strcat(sc, "X");
+		else if (c == 217)
+			sc = strcat(sc, "Y");
+		else if (c == 218)
+			sc = strcat(sc, "Z");
+		else if (c == 219)
+			sc = strcat(sc, "[");
+		else if (c == 220)
+			sc = strcat(sc, "&#92;");
+		else if (c == 221)
+			sc = strcat(sc, "]");
+		else if (c == 222)
+			sc = strcat(sc, "^");
+		else if (c == 223)
+			sc = strcat(sc, "_");
+		else if (c == 224)
+			sc = strcat(sc, "`");
+		else if (c == 225)
+			sc = strcat(sc, "a");
+		else if (c == 226)
+			sc = strcat(sc, "b");
+		else if (c == 227)
+			sc = strcat(sc, "c");
+		else if (c == 228)
+			sc = strcat(sc, "d");
+		else if (c == 229)
+			sc = strcat(sc, "e");
+		else if (c == 230)
+			sc = strcat(sc, "f");
+		else if (c == 231)
+			sc = strcat(sc, "g");
+		else if (c == 232)
+			sc = strcat(sc, "h");
+		else if (c == 233)
+			sc = strcat(sc, "i");
+		else if (c == 234)
+			sc = strcat(sc, "j");
+		else if (c == 235)
+			sc = strcat(sc, "k");
+		else if (c == 236)
+			sc = strcat(sc, "l");
+		else if (c == 237)
+			sc = strcat(sc, "m");
+		else if (c == 238)
+			sc = strcat(sc, "n");
+		else if (c == 239)
+			sc = strcat(sc, "o");
+		else if (c == 240)
+			sc = strcat(sc, "p");
+		else if (c == 241)
+			sc = strcat(sc, "q");
+		else if (c == 242)
+			sc = strcat(sc, "r");
+		else if (c == 243)
+			sc = strcat(sc, "s");
+		else if (c == 244)
+			sc = strcat(sc, "t");
+		else if (c == 245)
+			sc = strcat(sc, "u");
+		else if (c == 246)
+			sc = strcat(sc, "v");
+		else if (c == 247)
+			sc = strcat(sc, "w");
+		else if (c == 248)
+			sc = strcat(sc, "x");
+		else if (c == 249)
+			sc = strcat(sc, "y");
+		else if (c == 250)
+			sc = strcat(sc, "z");
+		else if (c == 251)
+			sc = strcat(sc, "{");
+		else if (c == 252)
+			sc = strcat(sc, "|");
+		else if (c == 253)
+			sc = strcat(sc, "}");
+		else if (c == 254)
+			sc = strcat(sc, "~");
+		else if (c == 255)
+			sc = strcat(sc, "&#9664;");
+	}
+	s = sc;
+	c = strstrofs(s, "^", 0); //look for colorcode symbol
 	float spanopened = FALSE;
 	string chr, rgb;
 	if (c >= 0) {
-		string sc = "";
+		sc = "";
 		for (; s != "";) {
 			sc = strcat(sc, substring(s, 0, c));
 			s = substring(s, c + 1, -1);
@@ -87,8 +430,10 @@ string(string s) race_records_html_escape {
 			}
 		}
 		if (spanopened) sc = strcat(sc, "</span>");
+		db_put(db_temp, cache_path, sc);
 		return sc;
 	}
+	db_put(db_temp, cache_path, s);
 	return s;
 }
 
