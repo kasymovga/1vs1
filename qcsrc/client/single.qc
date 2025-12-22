@@ -12,14 +12,24 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) single_hud {
 	}
 	if (have_keys) {
 		vector v1, v2, v3;
-		if (secrets_total && !rm_skin_loaded) {
-			v1 = '14 4 0' * gameinfo_scale;
-			v2 = '15 30 0' * gameinfo_scale;
-			v3 = '28 0 0' * gameinfo_scale;
-		} else {
-			v1 = '4 4 0' * gameinfo_scale;
+		if (rm_skin_loaded) {
+			if (secrets_total)
+				v1 = '4 4 0' * gameinfo_scale;
+			else
+				v1 = '48 4 0' * gameinfo_scale;
+
 			v2 = '20 40 0' * gameinfo_scale;
 			v3 = '28 0 0' * gameinfo_scale;
+		} else {
+			if (secrets_total) {
+				v1 = '14 4 0' * gameinfo_scale;
+				v2 = '15 30 0' * gameinfo_scale;
+				v3 = '28 0 0' * gameinfo_scale;
+			} else {
+				v1 = '8 4 0' * gameinfo_scale;
+				v2 = '20 40 0' * gameinfo_scale;
+				v3 = '28 0 0' * gameinfo_scale;
+			}
 		}
 		if (sbar_stat_items & IT_KEY1)
 			drawpic(pos + v1, "gfx/hud/sb_kh_blue", v2, '1.125 1.125 0.75', sbar_alpha_fg, DRAWFLAG_NORMAL);
@@ -32,24 +42,32 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) single_hud {
 	}
 	if (secrets_total) {
 		vector v1, v2;
+		float icon_scale;
+		string s = strcat(ftos(getstati(STAT_SECRET)), "/", ftos(secrets_total));
 		if (rm_skin_loaded) {
 			if (have_keys) {
-				v1 = '92 18 0';
-				v2 = '12 12 0';
-			} else {
-				v1 = '4 14 0';
+				icon_scale = 2;
+				v1 = '98 12 0';
 				v2 = '20 20 0';
+			} else {
+				icon_scale = 2;
+				v1 = '40 9 0';
+				v2 = '30 30 0';
 			}
 		} else {
 			if (have_keys) {
-				v1 = '4 38 0';
-				v2 = '10 10 0';
-			} else {
-				v1 = '4 18 0';
+				v1 = '24 36 0';
 				v2 = '12 12 0';
+				icon_scale = 1.5;
+			} else {
+				v1 = '14 18 0';
+				v2 = '16 16 0';
+				icon_scale = 2;
 			}
 		}
-		drawstring(pos + v1 * gameinfo_scale, strcat(
-				_("Secrets:"), " ", ftos(getstati(STAT_SECRET)), "/", ftos(secrets_total)), v2 * gameinfo_scale, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		v1 -= v2_x * '0.4 0 0' * (strlen(s) - 3);
+		drawpic(pos + (v1 - v2_y * '0 0.5 0' * (icon_scale - 1)) * gameinfo_scale, "gfx/hud/single/secret", v2 * gameinfo_scale * icon_scale, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + (v1 + v2_x * '1 0 0' * icon_scale) * gameinfo_scale, strcat(
+				ftos(getstati(STAT_SECRET)), "/", ftos(secrets_total)), v2 * gameinfo_scale, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 	}
 }
