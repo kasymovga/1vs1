@@ -276,6 +276,7 @@ void(void) single_init {
 	e.targetname = "endlevel";
 	e.use = single_endlevel;
 	entity_initialize(world, single_init_delayed, INITPRIO_GAMETYPE);
+	dlc_require("icons");
 }
 
 void(void) single_secret_controller_use {
