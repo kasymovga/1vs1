@@ -1,6 +1,8 @@
 void(entity pl) race_ghost_start;
 void(entity pl, float t) race_ghost_finish;
+void(entity pl) race_ghost_clear;
 void(entity pl, float time) race_ghost_process;
 void(entity pl) race_ghost_best_announce;
+float(string cmd, float argc) race_ghost_cmd;
 void(void) race_ghost_init;
 void(void) race_ghost_save;

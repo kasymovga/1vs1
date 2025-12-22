@@ -1,9 +1,16 @@
 .entity race_ghost;
 entity race_ghost_best;
+entity race_ghost_best_session;
 float race_ghost_best_updated;
 float sv_cts_ghost;
-float sv_cts_ghost_save;
 #define RACE_GHOST_TIC 0.04
+
+entity(void) race_ghost_spawn {
+	entity e = spawn();
+	e.lip = buf_create();
+	e.cnt = 1;
+	return e;
+}
 
 string(string s, float n) race_ghost_pad_right {
 	float l = strlen(s);
@@ -19,20 +26,20 @@ string(vector o) race_ghost_vector_to_string {
 			race_ghost_pad_right(ftos(floor(o_z + 0.5)), 7));
 }
 
-void(entity ghost) race_ghost_refcounter_decrease {
+entity(entity ghost) race_ghost_refcounter_decrease { //always return NULL
+	if not(ghost) return NULL;
 	ghost.cnt--;
 	if (ghost.cnt <= 0) {
 		buf_del(ghost.lip);
 		str_unzone_ifneeded(ghost.message);
 		remove(ghost);
-		if (ghost == race_ghost_best) {
-			race_ghost_best = NULL;
-		}
 	}
+	return NULL;
 }
 
-void(entity ghost) race_ghost_refcounter_increase {
+entity(entity ghost) race_ghost_refcounter_increase {
 	ghost.cnt++;
+	return ghost;
 }
 
 float(void) race_ghost_customize {
@@ -49,19 +56,30 @@ float(void) race_ghost_customize {
 
 void(entity pl) race_ghost_start {
 	if not(sv_cts_ghost) return;
-	if (pl.race_ghost) { //just in case
-		race_ghost_refcounter_decrease(pl.race_ghost);
+	entity pb = NULL;
+	float ghost_type = 0;
+	if (pl.race_ghost) {
+		pb = pl.race_ghost.aiment;
+		ghost_type = pl.race_ghost.weapon;
 	}
-	pl.race_ghost = spawn();
-	pl.race_ghost.lip = buf_create();
-	if (race_ghost_best) {
-		pl.race_ghost.enemy = race_ghost_best;
-		race_ghost_refcounter_increase(race_ghost_best);
+	pl.race_ghost = race_ghost_refcounter_decrease(pl.race_ghost);
+	pl.race_ghost = race_ghost_spawn();
+	pl.race_ghost.aiment = pb;
+	pl.race_ghost.weapon = ghost_type;
+	entity e = NULL;
+	if (ghost_type == 0) {
+		e = race_ghost_best_session;
+	} else if (ghost_type == 1) {
+		e = race_ghost_best;
+	} else {
+		e = pb;
+	}
+	if (e) {
+		pl.race_ghost.enemy = race_ghost_refcounter_increase(e);
 		setmodel(pl.race_ghost, "models/player/grunt.dpm");
 		pl.race_ghost.frame = 8;
 		pl.race_ghost.customizeentityforclient = race_ghost_customize;
 	}
-	pl.race_ghost.cnt = 1;
 }
 
 void(entity pl) race_ghost_record_add {
@@ -99,24 +117,54 @@ void(entity ghost, entity ghost_body, float pos) race_ghost_record_read {
 }
 
 void(entity pl) race_ghost_best_announce {
-	if not(race_ghost_best) return;
 	string d, n, id, tail;
 	float t;
-	tail = race_ghost_best.message;
-	d = str_car(tail);
-	tail = str_cdr(tail);
-	id = str_car(tail);
-	tail = str_cdr(tail);
-	n = uri_unescape(str_car(tail));
-	tail = str_cdr(tail);
-	t = stof(str_car(tail));
-	tail = str_cdr(tail);
-	print_to(pl, PRINT_CHAT, "^8* CTS Ghost repeating ^7{1}^8's run with a result of ^7{2}^8 (recorded at {3})", n, TIME_ENCODED_TOSTRING(t), d);
+	if (race_ghost_best) {
+		tail = race_ghost_best.message;
+		d = str_car(tail);
+		tail = str_cdr(tail);
+		id = str_car(tail);
+		tail = str_cdr(tail);
+		n = uri_unescape(str_car(tail));
+		tail = str_cdr(tail);
+		t = stof(str_car(tail));
+		tail = str_cdr(tail);
+		print_to(pl, PRINT_CHAT, "^8* CTS Ghost repeating ^7{1}^8's run with a result of ^7{2}^8 (recorded at {3})", n, TIME_ENCODED_TOSTRING(t), d);
+	}
+	if (race_ghost_best_session) {
+		tail = race_ghost_best_session.message;
+		d = str_car(tail);
+		tail = str_cdr(tail);
+		id = str_car(tail);
+		tail = str_cdr(tail);
+		n = uri_unescape(str_car(tail));
+		tail = str_cdr(tail);
+		t = stof(str_car(tail));
+		tail = str_cdr(tail);
+		print_to(pl, PRINT_CHAT, "^8* Session CTS Ghost repeating ^7{1}^8's run with a result of ^7{2}^8 (recorded at {3})", n, TIME_ENCODED_TOSTRING(t), d);
+	}
+}
+
+void(entity pl, float t) race_ghost_best_session_update {
+	race_ghost_best_session = race_ghost_refcounter_decrease(race_ghost_best_session);
+	race_ghost_best_session = race_ghost_refcounter_increase(pl.race_ghost);
+	race_ghost_best_session.speed = t;
+	race_ghost_best_session.message = strcat(
+			strftime(TRUE, "%Y-%m-%d_%H:%M"),
+			" ", uri_escape((pl.clid == "") ? "<ERROR>" : pl.clid),
+			" ", uri_escape((pl.netname == "") ? "<ERROR>" : pl.netname),
+			" ", ftos(t));
+	entity e;
+	CLIENT_FOR_EACH_REAL(e) // print_all will send message to udp chat too, so print_to is better here
+		print_to(e, PRINT_CHAT, "^8* Session CTS Ghost updated with ^7{1}^8's result of ^7{2}", pl.netname, TIME_ENCODED_TOSTRING(t), "");
+
+	race_ghost_best_session.message = str_zone_ifneeded(race_ghost_best.message);
 }
 
 void(entity pl, float t) race_ghost_best_update {
 	race_ghost_best_updated = TRUE;
-	race_ghost_best = pl.race_ghost;
+	race_ghost_best = race_ghost_refcounter_decrease(race_ghost_best);
+	race_ghost_best = race_ghost_refcounter_increase(pl.race_ghost); //not needed here
 	race_ghost_best.speed = t;
 	race_ghost_best.message = strcat(
 			strftime(TRUE, "%Y-%m-%d_%H:%M"),
@@ -128,33 +176,41 @@ void(entity pl, float t) race_ghost_best_update {
 		print_to(e, PRINT_CHAT, "^8* CTS Ghost updated with ^7{1}^8's result of ^7{2}", pl.netname, TIME_ENCODED_TOSTRING(t), "");
 
 	race_ghost_best.message = str_zone_ifneeded(race_ghost_best.message);
-	pl.race_ghost = NULL;
 }
 
 void(entity pl, float t) race_ghost_finish {
 	if not(pl.race_ghost) return;
 	setmodel(pl.race_ghost, "");
+	float ghost_type = pl.race_ghost.weapon;
 	pl.race_ghost.customizeentityforclient = NULL;
-	if (pl.race_ghost.enemy) {
-		race_ghost_refcounter_decrease(pl.race_ghost.enemy);
-		pl.race_ghost.enemy = NULL;
-	}
+	pl.race_ghost.enemy = race_ghost_refcounter_decrease(pl.race_ghost.enemy);
 	if (t < 0) { //easy
-		race_ghost_refcounter_decrease(pl.race_ghost);
-		pl.race_ghost = NULL;
 		return;
 	}
-	if not(race_ghost_best) { //easy
+	pl.race_ghost.weapon = 0;
+	entity pb = pl.race_ghost.aiment; //increase
+	pl.race_ghost.aiment = NULL; //decrease
+	if (!race_ghost_best || t < race_ghost_best.speed) {
 		race_ghost_best_update(pl, t);
-		return;
 	}
-	if (t < race_ghost_best.speed) {
-		race_ghost_refcounter_decrease(race_ghost_best);
-		race_ghost_best_update(pl, t);
-	} else {
-		race_ghost_refcounter_decrease(pl.race_ghost);
-		pl.race_ghost = NULL;
+	if (!race_ghost_best_session || t < race_ghost_best_session.speed) {
+		race_ghost_best_session_update(pl, t);
 	}
+	if (!pb || t < pb.speed) {
+		pb = race_ghost_refcounter_decrease(pb);
+		pb = race_ghost_refcounter_increase(pl.race_ghost);
+		pb.speed = t;
+	}
+	pl.race_ghost = race_ghost_refcounter_decrease(pl.race_ghost);
+	pl.race_ghost = race_ghost_spawn();
+	pl.race_ghost.aiment = pb; //increase/decrease
+	pl.race_ghost.weapon = ghost_type;
+}
+
+void(entity pl) race_ghost_clear {
+	if (pl.race_ghost) pl.race_ghost.aiment = race_ghost_refcounter_decrease(pl.race_ghost.aiment);
+	if (pl.race_ghost) pl.race_ghost.enemy = race_ghost_refcounter_decrease(pl.race_ghost.enemy);
+	pl.race_ghost = race_ghost_refcounter_decrease(pl.race_ghost);
 }
 
 void(entity pl, float time) race_ghost_process {
@@ -171,14 +227,11 @@ void(entity pl, float time) race_ghost_process {
 
 void(void) race_ghost_init {
 	CVAR_CACHE(sv_cts_ghost);
-	CVAR_CACHE(sv_cts_ghost_save);
-	if (sv_cts_ghost && sv_cts_ghost_save) {
+	if (sv_cts_ghost) {
 		float f = fopen(strcat("maps/", mapname, ".ghost"), FILE_READ);
 		if (f >= 0) {
-			race_ghost_best = spawn();
-			race_ghost_best.cnt = 1;
+			race_ghost_best = race_ghost_spawn();
 			string s;
-			race_ghost_best.lip = buf_create();
 			race_ghost_best.message = str_zone_ifneeded(fgets(f));
 			race_ghost_best.speed = stof(str_car(str_cdr(str_cdr(str_cdr(race_ghost_best.message))))); // 4th argument
 			while ((s = fgets(f))) {
@@ -188,13 +241,13 @@ void(void) race_ghost_init {
 			fclose(f);
 		}
 		if (race_ghost_best.state <= 0) { //no data readed
-			race_ghost_refcounter_decrease(race_ghost_best);
+			race_ghost_best = race_ghost_refcounter_decrease(race_ghost_best);
 		}
 	}
 }
 
 void(void) race_ghost_save {
-	if (sv_cts_ghost && sv_cts_ghost_save && race_ghost_best && race_ghost_best_updated) {
+	if (sv_cts_ghost && race_ghost_best && race_ghost_best_updated) {
 		float f = fopen(strcat("maps/", mapname, ".ghost"), FILE_WRITE);
 		if (f >= 0) {
 			float i;
@@ -205,4 +258,22 @@ void(void) race_ghost_save {
 			fclose(f);
 		}
 	}
+}
+
+float(string cmd, float argc) race_ghost_cmd {
+	if (cmd == "sentcvar" && argc == 3 && argv(1) == "cl_cts_ghost") {
+		if not(self.race_ghost) { // dummy for keeping settings
+			self.race_ghost = race_ghost_spawn();
+		}
+		self.race_ghost.weapon = stof(argv(2));
+		string s = "Personal";
+		if (self.race_ghost.weapon == 0) {
+			s = "Session";
+		} else if (self.race_ghost.weapon == 1) {
+			s = "Global";
+		}
+		print_to(self, PRINT_CHAT, "^8* You are watching ^7{1}^8 Ghost", s, "", "");
+		return TRUE;
+	}
+	return FALSE;
 }
