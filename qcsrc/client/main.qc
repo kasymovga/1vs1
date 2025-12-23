@@ -130,7 +130,7 @@ void(void) CSQC_Init {
 			radar_minimapname = ""; // FAIL
 	}
 	radar_minimapname = strzone(radar_minimapname);
-	csqc_entity_init();
+	net_csqc_entity_init();
 	draw_init();
 	ui_con_width_height_set();
 	sbar_font = FONT_USER+1;
@@ -276,5 +276,12 @@ void(float ignore) main_init_read {
 			rm_bigprint_enable();
 			registercmd("showspec");
 		});
+	}
+}
+
+void(void) main_game_over {
+	if (main_calledhooks & MAIN_HOOK_START) {
+		localcmd("\ncl_hook_gameend;");
+		main_calledhooks |= MAIN_HOOK_END;
 	}
 }

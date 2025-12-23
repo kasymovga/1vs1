@@ -36,7 +36,6 @@
 #include "sort.qh"
 #include "input.qh"
 #include "weapon.qh"
-#include "csqc_entity.qh"
 #include "player_label.qh"
 #include "fog.qh"
 #include "net.qh"
@@ -83,3 +82,4 @@
 #include "font.qh"
 #include "thirdview.qh"
 #include "classes.qh"
+#include "notification.qh"

@@ -1,1 +1,2 @@
 void(void) thirdview_shutdown;
+void(float ignore) thirdview_read;

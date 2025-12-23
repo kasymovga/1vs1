@@ -10,3 +10,4 @@ vector(void) net_read_color;
 #define net_read_string builtin_ReadString
 #define net_read_angle builtin_ReadAngle
 #define net_read_picture builtin_ReadPicture
+void(void) net_csqc_entity_init;

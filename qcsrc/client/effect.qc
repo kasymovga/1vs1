@@ -132,3 +132,11 @@ void(float isNew) effect_model_read {
 	if (!isNew)
 		remove(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
 }
+
+void(void) effect_hit_read {
+	if (CVAR(cl_hitsound))
+		sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+
+	if (CVAR(crosshair_hit_time) > 0)
+		view_crosshair_hittime = time + CVAR(crosshair_hit_time);
+}
