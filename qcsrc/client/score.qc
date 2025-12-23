@@ -102,7 +102,9 @@ void(float ignore) score_player_read {
 	n = net_read_byte() - 1;
 	if (self.owner && n != self.sv_entnum) { // workaround for DP bug
 		//print("A CSQC entity changed its owner!\n");
-		csqc_entity_clean();
+		entity e = spawn();
+		builtin_copyentity(e, self); //force clean entity fields
+		remove(e);
 		self.enttype = NET_CSQC_SCORES;
 	}
 	self.sv_entnum = n;
