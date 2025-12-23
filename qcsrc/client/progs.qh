@@ -78,7 +78,7 @@
 #include "report.qh"
 #include "vote.qh"
 #include "game_menu.qh"
-#include "entcs.qh"
+#include "player_info.qh"
 #include "font.qh"
 #include "thirdview.qh"
 #include "classes.qh"

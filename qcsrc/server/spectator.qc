@@ -72,7 +72,7 @@ float() spectator_spectate_next {
 				other = find(other, classname, "player");
 		while ((other == self) || (other && team_teams && self.team > 0 && other.team != self.team));
 	}
-	if (self.enemy) entcs_spec_update(self.enemy);
+	if (self.enemy) player_info_spec_update(self.enemy);
 	if (other) {
 		self.enemy = other;
 		if (spectator_camera_adjust_func)
@@ -85,7 +85,7 @@ float() spectator_spectate_next {
 		else
 			self.clientcamera = self.clientdataent = self.enemy;
 
-		entcs_spec_update(other);
+		player_info_spec_update(other);
 	}
 	if (self.enemy) {
 		spectator_note.SendFlags = 1;
@@ -98,7 +98,7 @@ float() spectator_spectate_next {
 void(void) spectator_player_stop {
 	if (self.clientcamera == self) return;
 	if (self.enemy)
-		entcs_spec_update(self.enemy);
+		player_info_spec_update(self.enemy);
 
 	self.enemy = NULL;
 	self.clientcamera = self.clientdataent = self;

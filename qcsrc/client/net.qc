@@ -89,7 +89,7 @@ void(void) net_csqc_entity_init {
 	for (i = 0; i < NET_TE_CSQC_COUNT; i++) {
 		net_csqc_entity_temp_parsers[i] = net_csqc_entity_temp_error;
 	}
-	net_csqc_entity_parsers[NET_CSQC_ENTCS] = entcs_read;
+	net_csqc_entity_parsers[NET_CSQC_ENTCS] = player_info_read;
 	net_csqc_entity_parsers[NET_CSQC_SCORES_INFO] = score_info_read;
 	net_csqc_entity_parsers[NET_CSQC_SCORES] = score_player_read;
 	net_csqc_entity_parsers[NET_CSQC_TEAMSCORES] = score_team_read;

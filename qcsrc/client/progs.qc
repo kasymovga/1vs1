@@ -41,7 +41,7 @@
 #include "input.qc"
 #include "weapon_wheel.qc"
 #include "cmd.qc"
-#include "entcs.qc"
+#include "player_info.qc"
 #include "score.qc"
 #include "game_type.qc"
 #include "ready.qc"

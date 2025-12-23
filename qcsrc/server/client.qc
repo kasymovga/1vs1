@@ -42,10 +42,7 @@ void(void) client_put {
 		if (time + 5 < map_starttime)
 			announce(self, "announcer/robotic/prepareforbattle.wav", "^3Prepare for Battle");
 	}
-	entity e;
-	PLAYER_FOR_EACH(e)
-		e.entcs.SendFlags |= 16;
-
+	player_info_health_armor_update();
 	float oldteam = self.team;
 	if (clienttype(self) == CLIENTTYPE_BOT) {
 		self.classname = "player";
@@ -463,7 +460,7 @@ void(void) client_connect { //called by engine
 	client_send_stuff(self);
 	// get other cvars from player
 	client_cvars_request();
-	entcs_attach();
+	player_info_attach();
 	bot_relinkplayerlist();
 	self.spectatortime = time;
 	if (spectator_block) {
@@ -487,7 +484,7 @@ void(void) client_disconnect { //called by engine
 		return;
 	}
 	bot_clientdisconnect();
-	entcs_detach();
+	player_info_detach();
 	print_all(PRINT_INFO, "^4{1}^4 disconnected", PLAYER_NAME_WITH_SLOT(self), "", "");
 	string s;
 	if ((s = cvar_string("g_ragequit_message")) != "")

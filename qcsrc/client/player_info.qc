@@ -1,4 +1,4 @@
-void(float bIsNewEntity) entcs_read {
+void(float bIsNewEntity) player_info_read {
 	float f = net_read_byte();
 	if (f & 1) {
 		self.sv_entnum = net_read_byte() - 1;

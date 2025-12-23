@@ -1,6 +1,6 @@
 float g_showenemynames;
 
-float() entcs_customize {
+float(void) player_info_customize {
 	entity o;
 	o = self.owner;
 	if(PLAYER_REALLY_DEAD(o))
@@ -28,7 +28,7 @@ float() entcs_customize {
 	return TRUE;
 }
 
-float(entity to, float sf) entcs_send {
+float(entity to, float sf) player_info_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_ENTCS);
 	sf = sf & 31;
 	entity o = self.owner;
@@ -70,7 +70,7 @@ float(entity to, float sf) entcs_send {
 	return TRUE;
 }
 
-void() entcs_think {
+void(void) player_info_think {
 	self.nextthink = time;
 	entity o = player_entity(self.owner);
 	if (o.body)
@@ -102,13 +102,19 @@ void() entcs_think {
 	}
 }
 
-void(entity plr) entcs_spec_update {
+void(entity plr) player_info_spec_update {
 	if (plr.entcs.weaponentity) {
 		plr.entcs.weaponentity.SendFlags = 1;
 	}
 }
 
-void(void) entcs_spec_message {
+void(void) player_info_health_armor_update {
+	entity e;
+	PLAYER_FOR_EACH(e)
+		e.entcs.SendFlags |= 16;
+}
+
+void(void) player_info_spec_message {
 	float isspec = SPECTATOR_IS_SPECTATING(other, self.owner);
 	string s = (isspec ? "^2Spectating this player:" : "^2Spectating you:");
 	if not(isspec)
@@ -135,39 +141,36 @@ void(void) entcs_spec_message {
 		self.message = "";
 }
 
-float(void) entcs_spec_customize {
+float(void) player_info_spec_customize {
 	if (self.owner.classname != "player") return FALSE;
 	if not(other.client_flags & CLIENT_FLAG_RM_SHOWSPEC) return FALSE;
 	if (SPECTATOR_IS_SPECTATING_OR_ITSELF(other, self.owner)) return TRUE;
 	return FALSE;
 }
 
-float entcs_init_done;
-void(void) entcs_init {
+void(void) player_info_init {
 	CVAR_CACHE(g_showenemynames);
-	entcs_init_done = 1;
 }
 
-entity() entcs_attach {
-	if not(entcs_init_done) entcs_init();
+entity(void) player_info_attach {
 	entity ent = spawn();
 	self.entcs = ent;
-	ent.classname = "entcs_sender_v2";
+	ent.classname = "player_info";
 	ent.cnt = 1;
 	ent.owner = self;
-	ent.think = entcs_think;
+	ent.think = player_info_think;
 	ent.nextthink = time;
-	net_link_entity(ent, FALSE, 0, entcs_send);
-	ent.customizeentityforclient = entcs_customize;
+	net_link_entity(ent, FALSE, 0, player_info_send);
+	ent.customizeentityforclient = player_info_customize;
 	RM({
-		ent.weaponentity = note_new(entcs_spec_message);
+		ent.weaponentity = note_new(player_info_spec_message);
 		ent.weaponentity.owner = self;
-		ent.weaponentity.customizeentityforclient = entcs_spec_customize;
+		ent.weaponentity.customizeentityforclient = player_info_spec_customize;
 	})
 	return ent;
 }
 
-void() entcs_detach {
+void(void) player_info_detach {
 	if (self.entcs) {
 		if (self.entcs.weaponentity)
 			remove(self.entcs.weaponentity);

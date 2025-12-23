@@ -1,0 +1,4 @@
+entity(void) player_info_attach;
+void(void) player_info_detach;
+void(void) player_info_init;
+void(void) player_info_health_armor_update;

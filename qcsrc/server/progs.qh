@@ -63,7 +63,7 @@
 #include "ctf.qh"
 #include "lms.qh"
 #include "dom.qh"
-#include "entcs.qh"
+#include "player/info.qh"
 #include "rune.qh"
 #include "onslaught.qh"
 #include "nexball.qh"

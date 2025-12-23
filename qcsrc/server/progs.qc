@@ -80,7 +80,7 @@
 #include "weapon/model.qc"
 #include "weapon/flash.qc"
 #include "weapon/extra.qc"
-#include "entcs.qc"
+#include "player/info.qc"
 #include "player.qc"
 #include "player/sound.qc"
 #include "player/body.qc"
