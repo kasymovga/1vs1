@@ -6,7 +6,7 @@ void(void) hint_net_read {
 
 	hint_num = net_read_byte();
 	str_unzone_ifneeded(hint);
-	hint = str_zone_ifneeded(net_read_string());
+	hint = str_zone_ifneeded(print_text_prepare(net_read_string(), "", "", ""));
 	if (hint_text_label)
 		hint_text_label.setText(hint_text_label, hint);
 	if (!hint_user && CVAR(cl_hints_skip))

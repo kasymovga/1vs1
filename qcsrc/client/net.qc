@@ -160,7 +160,7 @@ void(void) net_csqc_entity_init {
 	net_csqc_entity_temp_parsers[NET_TE_CSQC_ANNOUNCE_PRINT - NET_TE_CSQC_FIRST] = announce_print;
 	net_csqc_entity_temp_parsers[NET_TE_CSQC_HINT - NET_TE_CSQC_FIRST] = hint_net_read;
 	net_csqc_entity_temp_parsers[NET_TE_CSQC_HIT - NET_TE_CSQC_FIRST] = effect_hit_read;
-	net_csqc_entity_temp_parsers[NET_TE_CSQC_MODELSELECT - NET_TE_CSQC_FIRST] = modelselect_read;
+	net_csqc_entity_temp_parsers[NET_TE_CSQC_MODELSELECT - NET_TE_CSQC_FIRST] = player_model_select_read;
 	net_csqc_entity_temp_parsers[NET_TE_CSQC_RECORDLISTCHUNK - NET_TE_CSQC_FIRST] = recordlist_read;
 	net_csqc_entity_temp_parsers[NET_TE_CSQC_EFFECT_IMPACT - NET_TE_CSQC_FIRST] = effect_impact_read;
 	net_csqc_entity_temp_parsers[NET_TE_CSQC_CASING - NET_TE_CSQC_FIRST] = casing_read;

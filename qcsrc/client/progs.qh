@@ -7,7 +7,7 @@
 #include "builtin.qh"
 #include "trace.qh"
 #include "cvar.qh"
-#include "modelselect.qh"
+#include "player_model_select.qh"
 #include "jetpack.qh"
 #include "physics.qh"
 #include "interpolate.qh"

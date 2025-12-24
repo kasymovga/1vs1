@@ -81,7 +81,7 @@
 #include "ice.qc"
 #include "fog.qc"
 #include "net.qc"
-#include "modelselect.qc"
+#include "player_model_select.qc"
 #include "thirdview.qc"
 #include "notification.qc"
 #include "recordlist.qc"
