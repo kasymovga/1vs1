@@ -112,7 +112,7 @@ void(void) net_csqc_entity_init {
 	net_csqc_entity_parsers[NET_CSQC_GAMESTATUS] = game_status_read;
 	net_csqc_entity_parsers[NET_CSQC_MENU] = menu_read;
 	net_csqc_entity_parsers[NET_CSQC_PROGRESSBAR] = progressbar_read;
-	net_csqc_entity_parsers[NET_CSQC_LOCATION_REQUEST] = locationrequest_read;
+	net_csqc_entity_parsers[NET_CSQC_LOCATION_REQUEST] = map_location_request_read;
 	net_csqc_entity_parsers[NET_CSQC_DLC_LIST] = dlc_read;
 	net_csqc_entity_parsers[NET_CSQC_ZAPPER] = zapper_beam_read;
 	net_csqc_entity_parsers[NET_CSQC_ZAPPER_SHIELD] = zapper_shield_read;

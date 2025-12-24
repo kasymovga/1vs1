@@ -152,7 +152,7 @@
 #include "game/type_vote.qc"
 #include "progressbar.qc"
 #include "cvar.qc"
-#include "location_request.qc"
+#include "map_location.qc"
 #include "effect.qc"
 #include "effect_impact.qc"
 #include "vehicle.qc"

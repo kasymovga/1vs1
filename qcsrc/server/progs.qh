@@ -8,7 +8,7 @@
 #include "laser.qh"
 #include "sound.qh"
 #include "announce.qh"
-#include "location_request.qh"
+#include "map_location.qh"
 #include "single.qh"
 #include "coop.qh"
 #include "map.qh"

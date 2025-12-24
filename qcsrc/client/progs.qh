@@ -23,7 +23,7 @@
 #include "physics/spiderbot.qh"
 #include "physics/aircraft.qh"
 #include "physics/car.qh"
-#include "locationrequest.qh"
+#include "map_location.qh"
 #include "dlc.qh"
 #include "game_status.qh"
 #include "weapon_select.qh"

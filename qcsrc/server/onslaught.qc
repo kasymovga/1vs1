@@ -1091,21 +1091,21 @@ entity() onslaught_client_put_spawn_point {
 float(entity attacker, entity inflictor, float deathtype) onslaught_DeathHandle {
 	self.ons_spawn_area = '0 0 0';
 	if(clienttype(self) == CLIENTTYPE_REAL)
-		LocationRequest_Create(self, "Select your spawn area", onslaught_LocationRequest_Callback);
+		map_location_request(self, "Select your spawn area", onslaught_LocationRequest_Callback);
 
 	return FALSE;
 }
 
 var void(entity spot) onslaught_player_spawn_next;
 void(entity spot) onslaught_player_spawn {
-	LocationRequest_Remove(self);
+	map_location_request_clear(self);
 	onslaught_player_spawn_next(spot);
 }
 
 var void(float killed) onslaught_PlayerClear_NextLink;
 void(float killed) onslaught_PlayerClear {
 	if not(killed)
-		LocationRequest_Remove(self);
+		map_location_request_clear(self);
 
 	onslaught_PlayerClear_NextLink(killed);
 }

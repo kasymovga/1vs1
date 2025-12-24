@@ -270,7 +270,7 @@ float(float ignore, float ignore2) conquest_winning_condition {
 		}
 		sound_play2all(announce_sound);
 		CLIENT_FOR_EACH_REAL(head) {
-			LocationRequest_Remove(head);
+			map_location_request_clear(head);
 		}
 		return TRUE;
 	}

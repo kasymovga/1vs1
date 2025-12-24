@@ -1,0 +1,2 @@
+entity(entity plr, string title, void(float x, float y)callback) map_location_request;
+void(entity plr) map_location_request_clear;

@@ -605,8 +605,6 @@ void(string s) cmd_client {
 		sprint(self, cvar_changes);
 	} else if (cmd == "menu_select") {
 		menu_select(argv(1), stof(argv(2)));
-	} else if (cmd == "location_select") {
-		LocationRequest_Select(stof(argv(1)), stof(argv(2)));
 	} else if (cmd == "mylocation") {
 		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
 	} else if (cmd == "recordlistchunk" && tokens == 3) {

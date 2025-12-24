@@ -66,7 +66,7 @@
 #include "mouse.qc"
 #include "player_label.qc"
 #include "progressbar.qc"
-#include "locationrequest.qc"
+#include "map_location.qc"
 #include "dlc.qc"
 #include "radio.qc"
 #include "game_status.qc"
