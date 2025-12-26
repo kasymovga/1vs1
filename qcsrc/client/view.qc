@@ -143,7 +143,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_spectatee_status = getstati(STAT_SPECSTATUS);
 	player_deadflag = getstati(STAT_PLAYER_STATE);
 	sbar_hidescores = FALSE;
-	if not(view_spectatee_status) {
+	if not(view_spectatee_status) { // spectate something but not a player
 		view_spectatee_status = 1;
 		view_observer_status = 0;
 		view_spectatorbutton_zoom = 0;
@@ -151,10 +151,10 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		sbar_hidescores = TRUE;
 	} else {
 		view_spectatorbutton_zoom = (view_spectatee_status & 256);
-		if ((view_spectatee_status & 255) == player_localnum + 1) {
+		if ((view_spectatee_status & 255) == player_localnum + 1) { // not a spectator
 			view_observer_status = (view_spectatee_status & 512);
 			view_spectatee_status = 0;
-		} else {
+		} else { // spectator
 			view_spectatee_status = (view_spectatee_status & 255);
 			view_observer_status = 0;
 		}
