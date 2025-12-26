@@ -18,10 +18,18 @@ float(entity to, float sf) map_location_request_send {
 
 .void(float x, float y) location_request_callback;
 void(entity plr) map_location_request_clear {
-	entity e;
-	for (e = location_request_list; e; e = e.enemy) {
-		if (e.owner == plr) {
-			remove(e);
+	entity e, e2;
+	if (location_request_list.owner == plr) {
+		e = location_request_list;
+		location_request_list = location_request_list.enemy;
+		remove(e);
+		return;
+	}
+	for (e = location_request_list; e.enemy; e = e.enemy) {
+		e2 = e.enemy;
+		if (e2.owner == plr) {
+			e.enemy = e2.enemy;
+			remove(e2);
 			return;
 		}
 	}
