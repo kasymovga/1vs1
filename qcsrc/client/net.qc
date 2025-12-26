@@ -175,6 +175,7 @@ void(void) net_csqc_entity_init {
 	net_csqc_entity_temp_parsers[NET_TE_CSQC_RM_EFFECT_HEAL - NET_TE_CSQC_FIRST] = rm_effect_heal_read;
 	net_csqc_entity_temp_parsers[NET_TE_CSQC_RM_BIGPRINT - NET_TE_CSQC_FIRST] = rm_bigprint_read;
 	net_csqc_entity_temp_parsers[NET_TE_CSQC_PRINT - NET_TE_CSQC_FIRST] = print_read;
+	net_csqc_entity_temp_parsers[NET_TE_CSQC_WEAPON_SCORE - NET_TE_CSQC_FIRST] = weapon_score_read;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

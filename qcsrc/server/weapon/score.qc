@@ -24,6 +24,28 @@ void(entity attacker, float deathtype, float shots) weapon_score_fires {
 	}
 }
 
+void(entity cl) weapon_score_send {
+	if (clienttype(cl) != CLIENTTYPE_REAL) return;
+	msg_entity = cl;
+	float w, fired;
+	entity src;
+	if (SPECTATOR_IS_SPECTATOR(cl))
+		src = SPECTATOR_SPECTATEE(cl);
+	else
+		src = cl;
+
+	net_write_byte(MSG_ONE, SVC_TEMPENTITY);
+	net_write_byte(MSG_ONE, NET_TE_CSQC_WEAPON_SCORE);
+	for (w = WEAPON_FIRST; w < WEAPON_COUNT_EXTRA; w++) {
+		fired = src.bullets_fired[w];
+		if not(fired) continue;
+		net_write_byte(MSG_ONE, w);
+		net_write_short(MSG_ONE, fired);
+		net_write_short(MSG_ONE, src.bullets_hit[w]);
+	}
+	net_write_byte(MSG_ONE, 0);
+}
+
 void(entity attacker, entity targ, float deathtype, float hits, float _damage) weapon_score_hits {
 	float weaponid;
 	weaponid = DEATH_WEAPONOF(deathtype);

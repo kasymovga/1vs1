@@ -64,3 +64,15 @@ void(void) weapon_info_read {
 void(void) weapon_list_read {
 	sbar_weapons_time = time;
 }
+
+void(void) weapon_score_read {
+	float w;
+	for (w = WEAPON_FIRST; w < WEAPON_COUNT_EXTRA; w++) {
+		sbar_weapon_fired[w] = 0;
+		sbar_weapon_hits[w] = 0;
+	}
+	while ((w = net_read_byte())) {
+		sbar_weapon_fired[w] = net_read_short();
+		sbar_weapon_hits[w] = net_read_short();
+	}
+}

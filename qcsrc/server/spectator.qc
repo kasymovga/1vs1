@@ -87,6 +87,7 @@ float() spectator_spectate_next {
 
 		player_info_spec_update(other);
 	}
+	weapon_score_send(self);
 	if (self.enemy) {
 		spectator_note.SendFlags = 1;
 		return 1;
@@ -246,6 +247,7 @@ void() spectator_to_player {
 			if (self.classname == "player") {
 				print_all(PRINT_INFO, "^4{1}^4 is playing now", self.netname, "", "");
 			}
+			weapon_score_send(self);
 			return;
 		} else {
 			msg_entity = self;
