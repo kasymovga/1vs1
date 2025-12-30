@@ -1,4 +1,4 @@
-#define DLC_BASE_LIST "survival_pack survival_pack2 survival_pack3 spdemo_v6 classiccampaign classiccampaign-p1 classiccampaign-p2 classiccampaign-p3 rextutor shootingrange nexball_pack player-rexus players_v3 chess"
+#define DLC_BASE_LIST "survival_pack survival_pack2 survival_pack3 spdemo_v6 classiccampaign classiccampaign-p1 classiccampaign-p2 classiccampaign-p3 rextutor shootingrange nexball_pack player-rexus players_v3 chess map_pack"
 string(string s) dlc_trimquotes;
 string(string s) dlc_trimcommentary;
 string(string s) dlc_trimspaces;
