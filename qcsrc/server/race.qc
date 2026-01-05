@@ -592,9 +592,10 @@ void(float killed) race_player_clear {
 	if (killed)
 		race_abandon_check(self);
 
-	if (self.classname == "disconnecting")
+	if (self.classname == "disconnecting") {
 		race_position_remove(self);
-
+		race_ghost_clear(self);
+	}
 	race_player_clear_next(killed);
 }
 
@@ -971,8 +972,12 @@ float() race_WarmupAllowed {
 }
 
 string(entity cl) race_client_fix_cvars {
-	if not(map_finished) race_ghost_best_announce(cl);
-	return "cl_cmd settemp cl_movecliptokeyboard 2";
+	string s = "cl_cmd settemp cl_movecliptokeyboard 2";
+	if (g_cts && !map_finished) {
+		race_ghost_best_announce(cl);
+		s = strcat(s, ";sendcvar cl_cts_ghost");
+	}
+	return s;
 }
 
 string(string bspname) race_world_record_for_map {
@@ -1228,6 +1233,7 @@ float(string cmd, float argc) race_cmd_client_handle {
 		race_position_restore(self);
 		return TRUE;
 	}
+	if (race_ghost_cmd(cmd, argc)) return TRUE;
 	return race_cmd_client_handle_next(cmd, argc);
 }
 
