@@ -5,7 +5,7 @@ CLASS(NexuizGameSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizGameSettingsDialog, title, string, "Game Settings")
 	ATTRIB(NexuizGameSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizGameSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizGameSettingsDialog, rows, float, 26)
+	ATTRIB(NexuizGameSettingsDialog, rows, float, 24)
 	ATTRIB(NexuizGameSettingsDialog, columns, float, 6)
 	ATTRIB(NexuizGameSettingsDialog, name, string, "GameSettings")
 ENDCLASS(NexuizGameSettingsDialog)
@@ -18,6 +18,9 @@ void configureDialogNexuizGameSettingsDialog(entity me) {
 
 	if (game_type == GAME_TYPE_SINGLE)
 		me.rows = me.rows - 2;
+
+	if (game_type == GAME_TYPE_CTS)
+		me.rows = me.rows + 3;
 
 	RM({
 		me.columns += 5;
@@ -147,12 +150,22 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_autoswitch", _("Auto switch weapons on pickup")));
-	me.TR(me);
-		me.TD(me, 1, (g_velocity_rounding ? 2.5 : 5), e = makeNexuizCheckBox(0, "cl_cts_strafe_helper", _("Show strafe helper in CTS")));
-		if (g_velocity_rounding)
-			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_snap_helper", _("and snap zones")));
-	me.TR(me);
-		me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_cts_position_helper", _("Show position helper in CTS")));
+	if (game_type == GAME_TYPE_CTS) {
+		me.TR(me);
+			me.TD(me, 1, (g_velocity_rounding ? 2.5 : 5), e = makeNexuizCheckBox(0, "cl_cts_strafe_helper", _("Show strafe helper in CTS")));
+			if (g_velocity_rounding)
+				me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_snap_helper", _("and snap zones")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_cts_position_helper", _("Show position helper in CTS")));
+		me.TR(me);
+			me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("CTS Ghost:")));
+			me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_cts_ghost"));
+				e.addValue(e, _("None"), "-1");
+				e.addValue(e, _("Session"), "0");
+				e.addValue(e, _("Global"), "1");
+				e.addValue(e, _("Personal"), "2");
+				e.configureNexuizTextSliderValues(e);
+	}
 	me.TR(me);
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showacceleration", _("Show acceleration")));
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showacceleration", _("Auto enable in CTS")));
@@ -213,6 +226,6 @@ void fillNexuizGameSettingsDialog(entity me)
 			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "rm_anonspec", _("Spectate anonymously")));
 	})
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_voice;sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;sendcvar cl_damage_screen_effects;menu_cmd sync;sendcvar rm_showspec;sendcvar rm_anonspec", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_voice;sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;sendcvar cl_damage_screen_effects;menu_cmd sync;sendcvar rm_showspec;sendcvar rm_anonspec;sendcvar cl_cts_ghost", COMMANDBUTTON_CLOSE));
 }
 #endif

@@ -71,7 +71,7 @@ void(entity pl) race_ghost_start {
 		e = race_ghost_best_session;
 	} else if (ghost_type == 1) {
 		e = race_ghost_best;
-	} else {
+	} else if (ghost_type == 2) {
 		e = pb;
 	}
 	if (e) {
@@ -129,7 +129,7 @@ void(entity pl) race_ghost_best_announce {
 		tail = str_cdr(tail);
 		t = stof(str_car(tail));
 		tail = str_cdr(tail);
-		print_to(pl, PRINT_CHAT, "^8* CTS Ghost repeating ^7{1}^8's run with a result of ^7{2}^8 (recorded at {3})", n, TIME_ENCODED_TOSTRING(t), d);
+		print_to(pl, PRINT_CHAT, "^8* Global CTS Ghost repeating ^7{1}^8's run with a result of ^7{2}^8 (recorded at {3})", n, TIME_ENCODED_TOSTRING(t), d);
 	}
 	if (race_ghost_best_session) {
 		tail = race_ghost_best_session.message;
@@ -156,9 +156,9 @@ void(entity pl, float t) race_ghost_best_session_update {
 			" ", ftos(t));
 	entity e;
 	CLIENT_FOR_EACH_REAL(e) // print_all will send message to udp chat too, so print_to is better here
-		print_to(e, PRINT_CHAT, "^8* Session CTS Ghost updated with ^7{1}^8's result of ^7{2}", pl.netname, TIME_ENCODED_TOSTRING(t), "");
+		print_to(e, PRINT_CHAT, "^8* ^7Session^8 CTS Ghost updated with ^7{1}^8's result of ^7{2}", pl.netname, TIME_ENCODED_TOSTRING(t), "");
 
-	race_ghost_best_session.message = str_zone_ifneeded(race_ghost_best.message);
+	race_ghost_best_session.message = str_zone_ifneeded(race_ghost_best_session.message);
 }
 
 void(entity pl, float t) race_ghost_best_update {
@@ -173,7 +173,7 @@ void(entity pl, float t) race_ghost_best_update {
 			" ", ftos(t));
 	entity e;
 	CLIENT_FOR_EACH_REAL(e) // print_all will send message to udp chat too, so print_to is better here
-		print_to(e, PRINT_CHAT, "^8* CTS Ghost updated with ^7{1}^8's result of ^7{2}", pl.netname, TIME_ENCODED_TOSTRING(t), "");
+		print_to(e, PRINT_CHAT, "^8* ^7Global^8 CTS Ghost updated with ^7{1}^8's result of ^7{2}", pl.netname, TIME_ENCODED_TOSTRING(t), "");
 
 	race_ghost_best.message = str_zone_ifneeded(race_ghost_best.message);
 }
@@ -266,13 +266,17 @@ float(string cmd, float argc) race_ghost_cmd {
 			self.race_ghost = race_ghost_spawn();
 		}
 		self.race_ghost.weapon = stof(argv(2));
-		string s = "Personal";
+		string s = "";
 		if (self.race_ghost.weapon == 0) {
 			s = "Session";
 		} else if (self.race_ghost.weapon == 1) {
 			s = "Global";
+		} else if (self.race_ghost.weapon == 2) {
+			s = "Personal";
 		}
-		print_to(self, PRINT_CHAT, "^8* You are watching ^7{1}^8 Ghost", s, "", "");
+		if (s != "")
+			print_to(self, PRINT_CHAT, "^8* You are watching ^7{1}^8 CTS Ghost", s, "", "");
+
 		return TRUE;
 	}
 	return FALSE;
