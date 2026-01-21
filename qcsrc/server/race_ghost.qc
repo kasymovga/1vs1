@@ -184,7 +184,7 @@ void(entity pl, float t) race_ghost_finish {
 	float ghost_type = pl.race_ghost.weapon;
 	pl.race_ghost.customizeentityforclient = NULL;
 	pl.race_ghost.enemy = race_ghost_refcounter_decrease(pl.race_ghost.enemy);
-	if (t < 0) { //easy
+	if (t < 0 || race_position_used(pl)) { //easy
 		return;
 	}
 	pl.race_ghost.weapon = 0;
