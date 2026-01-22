@@ -1168,6 +1168,7 @@ void(entity src, entity dst) race_copy {
 	dst.pauserotfuel_finished = src.pauserotfuel_finished + tshift;
 	dst.ammo_fuel = src.ammo_fuel;
 	dst.velocity = src.velocity;
+	dst.oldvelocity = src.oldvelocity;
 	dst.health = src.health;
 	dst.armorvalue = src.armorvalue;
 	dst.ammo_nails = src.ammo_nails;
