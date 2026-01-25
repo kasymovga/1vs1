@@ -91,20 +91,22 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 			if (self.team == e.team)
 				continue;
 		}
-		f = vlen(e.origin - self.origin);
+		vector eo = ENTITY_CENTER(e);
+		vector o = self.origin + self.view_ofs;
+		f = vlen(eo - o);
 		if (f <= heardistance) {
 			checkpoint = monster_checkpoint(e);
-			trace_line(self.origin + self.view_ofs, checkpoint, TRACE_MOVE_NOMONSTERS, NULL);
+			trace_line(o, checkpoint, TRACE_MOVE_NOMONSTERS, NULL);
 			if (trace_fraction == 1) {
 				p = e;
 				break;
 			}
 		} else if (f <= distance) {
 			checkpoint = monster_checkpoint(e);
-			v = normalize(e.origin - self.origin);
+			v = normalize(eo - o);
 			makevectors(self.angles);
 			if (v * normalize(v_forward) >= fov_factor) {
-				trace_line(self.origin + self.view_ofs, checkpoint, TRACE_MOVE_NOMONSTERS, NULL);
+				trace_line(o, checkpoint, TRACE_MOVE_NOMONSTERS, NULL);
 				if (trace_fraction == 1) {
 					distance = f;
 					p = e;
@@ -291,15 +293,17 @@ vector monster_get_direction() {
 		navigation_poptouchedgoals();
 
 	vector v;
-	if (self.goalcurrent) {
+	if (self.waterlevel > 0 && !(self.flags & MONSTER_IGNOREDROWN)) {
+		v = '0 0 1';
+	} else if (self.goalcurrent) {
 		//print("self.goalcurrent=", self.goalcurrent.classname, "\n");
 		if (self.navigation_jetpack_goal == self.goalcurrent) {
-			v = self.navigation_jetpack_point - self.origin;
+			v = self.navigation_jetpack_point - ENTITY_CENTER(self);
 			//print("Trying fly\n");
 		} else
-			v = self.goalcurrent.origin - self.origin;
+			v = ENTITY_CENTER(self.goalcurrent) - ENTITY_CENTER(self);
 	} else if (self.enemy) {
-		v = self.enemy.origin - self.origin;
+		v = ENTITY_CENTER(self.enemy) - ENTITY_CENTER(self);
 	} else if (self.movedir == '0 0 0') {
 		makevectors(self.angles);
 		v = v_forward;
@@ -313,12 +317,12 @@ vector monster_get_direction() {
 vector monster_move_swim(float _speed, float blend_factor) {
 	vector v = '0 0 0';
 	if (self.waterlevel < WATER_LEVEL_SWIMMING) {
-		move_beak_simple(blend_factor * frametime);
+		_speed *= 0.25;
 		self.gravity = 1;
-		return v;
-	}
-	self.gravity = 0.01;
-	v = normalize(self.enemy.origin - self.origin);
+	} else
+		self.gravity = 0.01;
+
+	v = normalize(ENTITY_CENTER(self.enemy) - ENTITY_CENTER(self));
 	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
 		v_z = v_z + 0.5 * vlen(v);
 	}
@@ -353,16 +357,19 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 		return normalize(self.velocity);
 
 	if (rushdistance)
-	if (self.enemy)
-	if (rushdistance > vlen(self.origin - self.enemy.origin)) {
-		trace_line(self.origin, self.enemy.origin, TRACE_MOVE_WORLDONLY, self);
-		if (trace_fraction == 1) {
-			v = normalize(self.enemy.origin - self.origin);
-			v_z = 0;
-			vel_z_save = self.velocity_z;
-			move_simple(v, _speed, blend_factor * frametime);
-			self.velocity_z = vel_z_save;
-			return v;
+	if (self.enemy) {
+		vector eo = ENTITY_CENTER(self.enemy);
+		vector o = ENTITY_CENTER(self);
+		if (rushdistance > vlen(o - eo)) {
+			trace_line(o, eo, TRACE_MOVE_WORLDONLY, self);
+			if (trace_fraction == 1) {
+				v = normalize(eo - o);
+				v_z = 0;
+				vel_z_save = self.velocity_z;
+				move_simple(v, _speed, blend_factor * frametime);
+				self.velocity_z = vel_z_save;
+				return v;
+			}
 		}
 	}
 	if (self.bot_strategytime < time)
@@ -485,7 +492,7 @@ void monster_spawn_think() {
 		}
 		return;
 	}
-	entity e = findradius(self.origin, 1);
+	entity e = findradius(ENTITY_CENTER(self), 1);
 	for ( ; e; e = e.chain) {
 		if (e.classname == "monster") {
 			e.velocity += randomvec() * 100 + '0 0 100';
@@ -497,7 +504,7 @@ void monster_spawn_think() {
 	self.angles = oldself.angles;
 	setorigin(self, oldself.origin);
 	sound (self, CHAN_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
-	pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+	pointparticles(particleeffectnum("teleport"), ENTITY_CENTER(self), '0 0 0', 1);
 	self.owner = oldself;
 	self.reset = stdproc_remove;
 	oldself.weapon_think();
@@ -584,7 +591,7 @@ float monster_walk_finished(void() idle, float dist) {
 	if not(self.enemy) //Free walk
 		return FALSE;
 
-	vector v = self.enemy.origin - self.origin;
+	vector v = ENTITY_CENTER(self.enemy) - ENTITY_CENTER(self);
 	v_z = 0;
 	if (vlen(v) < dist) {
 		if (self.enemy.target != "")
@@ -699,7 +706,7 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 }
 
 void spawnfunc_monster_walk_path() {
-	vector org = waypoint_fixorigin(self.origin);
+	vector org = waypoint_fixorigin(ENTITY_CENTER(self));
 	waypoint_spawn(org, org, WAYPOINTFLAG_GENERATED);
 }
 
