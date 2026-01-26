@@ -288,14 +288,12 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 	}
 }
 
-vector monster_get_direction() {
+vector(void) monster_get_direction {
 	if (self.goalcurrent)
 		navigation_poptouchedgoals();
 
 	vector v;
-	if (self.waterlevel > 0 && !(self.flags & MONSTER_IGNOREDROWN)) {
-		v = '0 0 1';
-	} else if (self.goalcurrent) {
+	if (self.goalcurrent) {
 		//print("self.goalcurrent=", self.goalcurrent.classname, "\n");
 		if (self.navigation_jetpack_goal == self.goalcurrent) {
 			v = self.navigation_jetpack_point - ENTITY_CENTER(self);
@@ -344,10 +342,10 @@ void monster_move_fly_idle(float _speed, float blend_factor) {
 	}
 }
 
-vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
+vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 	float vel_z_save;
 	vector v;
-	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
+	if (self.waterlevel == WATER_LEVEL_SUBMERGED && (self.flags & MONSTER_IGNOREDROWN)) {
 		_speed *= 0.5;
 		//if(self.air_finished < time + 6)
 			self.velocity_z += (_speed - self.velocity_z) * frametime;
