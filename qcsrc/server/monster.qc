@@ -322,7 +322,7 @@ vector monster_move_swim(float _speed, float blend_factor) {
 
 	v = normalize(ENTITY_CENTER(self.enemy) - ENTITY_CENTER(self));
 	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
-		v_z = v_z + 0.5 * vlen(v);
+		v_z = v_z + 0.1 * vlen(v);
 	}
 	move_simple(normalize(v), _speed, blend_factor * frametime);
 	return v;
@@ -345,9 +345,10 @@ void monster_move_fly_idle(float _speed, float blend_factor) {
 vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 	float vel_z_save;
 	vector v;
-	if (self.waterlevel == WATER_LEVEL_SUBMERGED && (self.flags & MONSTER_IGNOREDROWN)) {
+	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
 		_speed *= 0.5;
 		//if(self.air_finished < time + 6)
+		if not(self.flags & MONSTER_IGNOREDROWN)
 			self.velocity_z += (_speed - self.velocity_z) * frametime;
 	}
 	if (self.velocity_z > 200)
