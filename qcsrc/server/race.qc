@@ -1047,6 +1047,7 @@ void(void) race_target_init_use {
 	if not(self.spawnflags & 8) {
 		target_remove_powerups_use();
 	}
+	trigger_use_targets();
 }
 
 void(void) spawnfunc_race_target_init {
