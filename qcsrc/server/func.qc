@@ -468,13 +468,13 @@ void(void) func_calc_move_done {
 void(vector tdest, vector adest, float tspeed, void() func) func_calc_move {
 	vector delta;
 	float traveltime;
-	if (tspeed <= 0) {
-		entity_abort("No speed is defined!");
-		return;
-	}
 	self.think1 = func;
 	self.finaldest = tdest;
 	self.v_angle = adest;
+	if (tspeed <= 0) {
+		func_calc_move_done();
+		return;
+	}
 	self.think = func_calc_move_done;
 	if (adest != self.angles) {
 		entity_angles_normalize(self, adest);
