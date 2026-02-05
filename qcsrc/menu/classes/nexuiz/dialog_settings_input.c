@@ -55,6 +55,8 @@ void fillNexuizInputSettingsTab(entity me)
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Sensitivity:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0.05, 10, 0.05, "sensitivity"));
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeNexuizCheckBox(1, "cl_zoomsensitivity", _("Decreased sensitivity when zoomed")));
+	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Acceleration:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 0.1, 0.001, "m_accelerate"));
 		e.loadCvars = accelerationLoadCvarsNexuizInputSettingsTab;
