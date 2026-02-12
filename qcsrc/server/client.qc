@@ -723,8 +723,8 @@ void() client_initialize {
 	client_version_init();
 }
 
-void client_cvars_request() {
-	stuffcmd(self,
+void(entity cl) client_cvars_request_send {
+	stuffcmd(cl,
 			"sendcvar cl_autoswitch\n"
 			"sendcvar cl_playerdetailreduction\n"
 			"sendcvar cl_gunalpha\n"
@@ -753,8 +753,70 @@ void client_cvars_request() {
 			"sendcvar _cl_id\n"
 	);
 	RM({
-		stuffcmd(self, "sendcvar rm_showspec; sendcvar rm_anonspec\n");
+		stuffcmd(cl, "sendcvar rm_showspec; sendcvar rm_anonspec\n");
 	})
+}
+
+entity client_cvars_request_wait_chain;
+void(void) client_cvars_request_wait {
+	self.nextthink = time + 1;
+	self.cnt--;
+	if (self.owner.clid != "" || self.cnt <= 0) {
+		if (self.owner.clid == "" && self.cnt <= 0) {
+			if (self.cnt <= -1) {
+				if (clienttype(self.owner) == CLIENTTYPE_REAL) {
+					print("client #", num_for_edict(self.owner), " don't answer to requests, dropping\n");
+					dropclient(self.owner);
+				}
+			} else {
+				print("requesting reconnect for client #", ftos(num_for_edict(self.owner)), "\n");
+				stuffcmd(self.owner, "disconnect;reconnect\n");
+				return;
+			}
+		}
+		if (client_cvars_request_wait_chain == self) {
+			client_cvars_request_wait_chain = client_cvars_request_wait_chain.enemy;
+		} else {
+			entity e;
+			for (e = client_cvars_request_wait_chain; e.enemy; e = e.enemy) {
+				if (e.enemy == self) {
+					e.enemy = self.enemy;
+					break;
+				}
+			}
+		}
+		remove(self);
+		return;
+	}
+	print("requesting cvars for client #", ftos(num_for_edict(self.owner)), "\n");
+	client_cvars_request_send(self.owner);
+}
+
+void(void) client_cvars_request {
+	entity e = NULL;
+	if (client_cvars_request_wait_chain.owner == self) {
+		e = client_cvars_request_wait_chain;
+		client_cvars_request_wait_chain = client_cvars_request_wait_chain.enemy;
+		remove(e);
+	} else {
+		for (e = client_cvars_request_wait_chain; e.enemy; e = e.enemy) {
+			if (e.enemy.owner == self) {
+				entity e2 = e.enemy;
+				e.enemy = e.enemy.enemy;
+				remove(e2);
+				break;
+			}
+		}
+	}
+	if (clienttype(self) != CLIENTTYPE_REAL) return;
+	client_cvars_request_send(self);
+	e = spawn();
+	e.enemy = client_cvars_request_wait_chain;
+	e.owner = self;
+	client_cvars_request_wait_chain = e;
+	e.think = client_cvars_request_wait;
+	e.cnt = 5;
+	e.nextthink = time + 1;
 }
 
 float(string s) client_id_is_valid {
