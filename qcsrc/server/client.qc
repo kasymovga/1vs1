@@ -793,6 +793,8 @@ void(void) client_cvars_request_wait {
 }
 
 void(void) client_cvars_request {
+	str_unzone_ifneeded(self.cvar_cl_weaponpriority);
+	self.cvar_cl_weaponpriority = str_zone_ifneeded(weapon_fix_order_force_complete(""));
 	entity e = NULL;
 	if (client_cvars_request_wait_chain.owner == self) {
 		e = client_cvars_request_wait_chain;
