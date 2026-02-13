@@ -413,7 +413,8 @@ vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 							if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
 								if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 									v = -v;
-								else if (pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
+								else if (!(self.flags & MONSTER_IGNOREDROWN) &&
+										pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
 									v = -v;
 								}
 							}
@@ -429,7 +430,8 @@ vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 					if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
 						if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 							v = -v;
-						else if (pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
+						else if (!(self.flags & MONSTER_IGNOREDROWN) &&
+								pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
 							v = -v;
 						}
 					}
