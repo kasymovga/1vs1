@@ -674,6 +674,7 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 
 		score_leadlimit = 0; // no leadlimit for now
 	}
+	score_winning_condition_helper();
 	if (timelimit > 0) {
 		timelimit += map_starttime;
 	} else if (timelimit < 0) {
@@ -734,7 +735,6 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 			}
 		}
 	}
-	score_winning_condition_helper();
 	if (plugin_winning_condition(fraglimit, score_leadlimit)) {
 		map_finish();
 		return;
