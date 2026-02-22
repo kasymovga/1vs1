@@ -418,16 +418,21 @@ void(void) spawnfunc_func_magicwall {
 
 .float dmgtime2;
 void(void) func_generic_plat_blocked {
-    if (self.dmg && other.takedamage != DAMAGE_NO) {
-        if (self.dmgtime2 < time) {
-            damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-            self.dmgtime2 = time + self.dmgtime;
-        }
+	if (other.takedamage != DAMAGE_NO) {
+		if (other.deadflag != DEAD_NO)
+			damage(other, self, self, 10000, DEATH_HURTTRIGGER, ENTITY_CENTER(other), '0 0 0');
+		else if (self.dmgtime2 < time) {
+			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, ENTITY_CENTER(other), '0 0 0');
+			self.dmgtime2 = time + self.dmgtime;
+		}
+	}
+}
 
-        // Gib dead/dying stuff
-        if (other.deadflag != DEAD_NO)
-            damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-    }
+void(void) func_generic_squish_setup {
+	if (self.dmg <= 0) return;
+	if (self.message == "") self.message = "was squished";
+	if (self.message2 == "") self.message2 = "was squished by";
+	self.blocked = func_generic_plat_blocked;
 }
 
 /*
@@ -599,12 +604,11 @@ void(void) func_plat_crush {
 		damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 	} else {
 		if ((self.dmg) && (other.takedamage != DAMAGE_NO)) {   // Shall we bite?
-			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-			// Gib dead/dying stuff
 			if (other.deadflag != DEAD_NO)
-				damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+				damage(other, self, self, 10000, DEATH_HURTTRIGGER, ENTITY_CENTER(other), '0 0 0');
+			else
+				damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, ENTITY_CENTER(other), '0 0 0');
 		}
-
 		if (self.state == 4)
 			func_plat_go_down ();
 		else if (self.state == 3)
@@ -659,12 +663,6 @@ void(void) spawnfunc_func_plat {
 	if (self.spawnflags & 4)
 		self.dmg = 10000;
 
-	if (self.dmg && (!self.message))
-		self.message = "was squished";
-
-	if (self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-
 	if (self.sounds == 1) {
 		self.noise = "plats/plat1.wav";
 		self.noise1 = "plats/plat2.wav";
@@ -691,6 +689,7 @@ void(void) spawnfunc_func_plat {
 
 	self.effects |= EFFECT_LOWPRECISION;
 	setsize (self, self.mins , self.maxs);
+	func_generic_squish_setup();
 	self.blocked = func_plat_crush;
 	if (!self.speed)
 		self.speed = 150;
@@ -803,13 +802,7 @@ void(void) spawnfunc_func_train {
 	self.effects |= EFFECT_LOWPRECISION;
 	// wait for targets to spawn
 	entity_initialize(self, func_train_find, INITPRIO_SETLOCATION);
-	self.blocked = func_generic_plat_blocked;
-	if (self.dmg && self.message == "")
-		self.message = " was squished";
-
-    if (self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-
+	func_generic_squish_setup();
 	if (self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
 
@@ -842,12 +835,7 @@ void(void) spawnfunc_func_rotating {
 	else // Z
 		self.avelocity = '0 1 0' * self.speed;
 
-	if (self.dmg & (!self.message))
-		self.message = " was squished";
-
-	if (self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-
+	func_generic_squish_setup();
 	if (self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
 
@@ -856,7 +844,6 @@ void(void) spawnfunc_func_rotating {
 		return;
 
 	// no EFFECT_LOWPRECISION here, as rounding angles is bad
-	self.blocked = func_generic_plat_blocked;
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
 	self.think = stdproc_nothing;
@@ -899,13 +886,7 @@ void spawnfunc_func_bobbing() {
 	// time scale to get degrees
 	self.cnt = 360 / self.speed;
 	// damage when blocked
-	self.blocked = func_generic_plat_blocked;
-	if (self.dmg & (!self.message))
-		self.message = " was squished";
-
-    if (self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-
+	func_generic_squish_setup();
 	if (self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
 
@@ -1099,31 +1080,23 @@ void(void) func_door_rotating_go_down;
 void(void) func_door_rotating_go_up;
 
 void(void) func_door_blocked {
-	if ((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
-		damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-	} else {
-		if ((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-
-		//Dont chamge direction for dead or dying stuff
-		if (other.deadflag != DEAD_NO && (other.takedamage == DAMAGE_NO)) {
-			if (self.wait >= 0) {
-				if (self.state == FUNC_STATE_DOWN) {
-					if (self.classname == "door")
-						func_door_go_up();
-					else
-						func_door_rotating_go_up ();
-				} else {
-					if (self.classname == "door")
-						func_door_go_down();
-					else
-						func_door_rotating_go_down ();
-				}
-			}
+	if (self.dmg && other.takedamage != DAMAGE_NO) {
+		if (other.deadflag != DEAD_NO)
+			damage(other, self, self, 10000, DEATH_HURTTRIGGER, ENTITY_CENTER(other), '0 0 0');
+		else
+			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, ENTITY_CENTER(other), '0 0 0');
+	}
+	if (!self.dmg && self.wait >= 0 && !(self.spawnflags & DOOR_TOGGLE)) {
+		if (self.state == FUNC_STATE_DOWN) {
+			if (self.classname == "door")
+				func_door_go_up();
+			else
+				func_door_rotating_go_up ();
 		} else {
-			//gib dying stuff just to make sure
-			if ((self.dmg) && (other.takedamage != DAMAGE_NO)) // Shall we bite?
-				damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			if (self.classname == "door")
+				func_door_go_down();
+			else
+				func_door_rotating_go_down ();
 		}
 	}
 }
@@ -1233,7 +1206,6 @@ void(void) func_door_fire {
 void(void) func_door_use {
 	entity oself;
 	self.pusher = activator;
-	//dprint("func_door_use (model: ");dprint(self.model);dprint(")\n");
 	if (self.owner) {
 		oself = self;
 		self = self.owner;
@@ -1559,7 +1531,6 @@ void(void) spawnfunc_func_door {
 
 	self.effects |= EFFECT_LOWPRECISION;
 	self.classname = "door";
-	self.blocked = func_door_blocked;
 	self.use = func_door_use;
     if (self.spawnflags & DOOR_KEY_GOLD_OR_CRUSH) {
 		if (self.wait < 0)
@@ -1573,11 +1544,8 @@ void(void) spawnfunc_func_door {
 	if (self.spawnflags & DOOR_KEY_BLOOD)
 		self.items |= IT_KEY3;
 
-	if (self.dmg && (!self.message))
-		self.message = "was squished";
-	if (self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-
+	func_generic_squish_setup();
+	self.blocked = func_door_blocked;
 	if (self.sounds > 0) {
 		self.noise2 = "plats/medplat1.wav";
 		self.noise1 = "plats/medplat2.wav";
@@ -1665,17 +1633,12 @@ void(void) spawnfunc_func_door_rotating {
 
 	//self.effects |= EFFECT_LOWPRECISION;
 	self.classname = "door_rotating";
-	self.blocked = func_door_blocked;
 	self.use = func_door_use;
 	if (self.spawnflags & 8)
 		self.dmg = 10000;
 
-	if (self.dmg && self.message == "")
-		self.message = "was squished";
-
-	if (self.dmg && self.message2 == "")
-		self.message2 = "was squished by";
-
+	func_generic_squish_setup();
+	self.blocked = func_door_blocked;
 	if (self.sounds > 0) {
 		self.noise2 = "plats/medplat1.wav";
 		self.noise1 = "plats/medplat2.wav";
@@ -1952,13 +1915,7 @@ void(void) spawnfunc_func_fourier {
 
 	self.destvec = self.origin;
 	self.cnt = 360 / self.speed;
-	self.blocked = func_generic_plat_blocked;
-	if (self.dmg & (!self.message))
-		self.message = " was squished";
-
-	if (self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-
+	func_generic_squish_setup();
 	if (self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
 
@@ -2089,13 +2046,7 @@ void(void) spawnfunc_func_vectormamamam {
 	if (vlen(self.target4normal))
 		self.target4normal = normalize(self.target4normal);
 
-	self.blocked = func_generic_plat_blocked;
-	if (self.dmg & (!self.message))
-		self.message = " was squished";
-
-    if (self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-
+	func_generic_squish_setup();
 	if (self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
 
