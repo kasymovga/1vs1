@@ -957,10 +957,6 @@ void(void) func_button_return {
 		self.takedamage = DAMAGE_YES; // can be shot again
 }
 
-void(void) func_button_blocked {
-	// do nothing, just don't come all the way back out
-}
-
 void(void) func_button_fire {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;    // will be reset upon return
@@ -1056,7 +1052,6 @@ void(void) spawnfunc_func_button {
 		return;
 
 	self.effects |= EFFECT_LOWPRECISION;
-	self.blocked = func_button_blocked;
 	self.use = func_button_use;
 	self.reset = func_button_reset;
 	if (self.health) {
