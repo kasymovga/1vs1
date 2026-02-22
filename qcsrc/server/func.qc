@@ -804,7 +804,7 @@ void(void) spawnfunc_func_train {
 	// wait for targets to spawn
 	entity_initialize(self, func_train_find, INITPRIO_SETLOCATION);
 	self.blocked = func_generic_plat_blocked;
-	if (self.dmg & (!self.message))
+	if (self.dmg && self.message == "")
 		self.message = " was squished";
 
     if (self.dmg && (!self.message2))
