@@ -375,9 +375,9 @@ float(entity inflictor, entity attacker, float _damage, float deathtype, vector 
 var void(void) ice_player_think_next;
 void(void) ice_player_think {
 	if (self.deadflag == DEAD_FREEZE && !SPECTATOR_IS_SPECTATOR(self)) {
-		if (self.BUTTON_ATCK)
+		if (self.BUTTON_ATCK && !(self.buttons_old & 1)) {
 			self.impulse = 38;
-
+		}
 		if (self.buttonuse)
 			spectator_player_start(); //force spectating
 	}

@@ -128,14 +128,6 @@ void(void) physics_frame_end_hook {
 	if (self.mins != self.maxs) {
 		physics_triggers(physics_frame_begin_origin, self.origin, vlen(self.maxs - self.mins) / 2, 0);
 	}
-	float buttons;
-	buttons = self.BUTTON_ATCK + 2 * self.BUTTON_JUMP + 4 * self.BUTTON_ATCK2 + 8 * self.BUTTON_ZOOM + 16 * self.BUTTON_CROUCH + 32 * self.BUTTON_HOOK + 64 * self.BUTTON_USE + 128 * (self.movement_x < 0) + 256 * (self.movement_x > 0) + 512 * (self.movement_y < 0) + 1024 * (self.movement_y > 0);
-	if (buttons != self.buttons_old || physics_movement != self.movement_old || self.v_angle != self.v_angle_old || self.deadflag != DEAD_NO)
-		self.parm_idlesince = time;
-
-	self.buttons_old = buttons;
-	self.movement_old = physics_movement;
-	self.v_angle_old = self.v_angle;
 }
 
 .float() PlayerPhysplug;
