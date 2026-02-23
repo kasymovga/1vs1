@@ -151,7 +151,7 @@ void(void) marker_draw {
 		} else if (team_my == TEAM_COLOR_SPECTATOR) { //spectator
 			self.model = self.netname3;
 			self.colormod = self.text_color3;
-		} else if (self.team == team_my) {
+		} else if (self.team == team_my || team_teams == 1) {
 			if (self.text_color1 != '0 0 0' && self.netname3 != "") {
 				self.model = self.netname3;
 				self.colormod = self.text_color3;
