@@ -383,7 +383,9 @@ float(entity plr, float w) jb_player_can_fire {
 	return r;
 }
 
+var float(entity attacker, entity targ, float f) jb_score_give_frag_mod_next;
 float(entity attacker, entity targ, float f) jb_score_give_frag_mod {
+	f = jb_score_give_frag_mod_next(attacker, targ, f);
 	if (roundbased_active && !JB_PLAYER_JAILED(targ)) {
 		score_player_add(attacker, SP_SCORE, f);
 	}
@@ -435,7 +437,8 @@ void(void) jb_init {
 	team_teams_set_count(2);
 	roundbased_init(cvar("g_jb_enddelay"), cvar("g_jb_startdelay"));
 	plugin_player_spawn_spot = jb_client_put_spawn_point;
-	plugin_score_give_frag_mod = jb_score_give_frag_mod;
+	jb_score_give_frag_mod_next = plugin_chain_score_give_frag_mod;
+	plugin_chain_score_give_frag_mod = jb_score_give_frag_mod;
 	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	plugin_player_death_handle = jb_player_death_handle;
 	plugin_havocbot_role_choose = jb_role_choose;

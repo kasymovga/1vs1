@@ -278,7 +278,9 @@ float(float ignore, float ignore2) conquest_winning_condition {
 	return FALSE;
 }
 
+var float(entity attacker, entity targ, float f) conquest_score_give_frag_mod_next;
 float(entity attacker, entity targ, float f) conquest_score_give_frag_mod {
+	f = conquest_score_give_frag_mod_next(attacker, targ, f);
 	score_player_add(attacker, SP_SCORE, f);
 	return 0;
 }
@@ -352,7 +354,8 @@ void(void) conquest_init {
 		g_conq_capture_time = 1;
 
 	plugin_winning_condition = conquest_winning_condition;
-	plugin_score_give_frag_mod = conquest_score_give_frag_mod;
+	conquest_score_give_frag_mod_next = plugin_chain_score_give_frag_mod;
+	plugin_chain_score_give_frag_mod = conquest_score_give_frag_mod;
 	plugin_player_spawn_spot = conquest_client_put_spawn_point;
 	plugin_player_death_handle = onslaught_DeathHandle;
 	onslaught_player_spawn_next = plugin_chain_player_spawn;

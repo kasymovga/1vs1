@@ -83,6 +83,66 @@ void(void) sysinfo_model_init {
 	plugin_chain_player_body_model_list_allowed_mod = sysinfo_player_body_model_list_allowed_mod;
 }
 
+entity sysinfo_score_bonus;
+var float(entity attacker, entity targ, float f) sysinfo_score_give_frag_mod_next;
+float(entity attacker, entity targ, float f) sysinfo_score_give_frag_mod {
+	entity e;
+	if (attacker != targ) {
+		for (e = sysinfo_score_bonus; e; e = e.enemy) {
+			if (e.owner == attacker) {
+				f *= e.dmg;
+			} else if (e.owner == targ) {
+				f *= e.dmg_edge;
+			}
+		}
+	}
+	return sysinfo_score_give_frag_mod_next(attacker, targ, f);
+}
+
+void(entity cl, float f1, float f2) sysinfo_score_bonus_add {
+	entity e;
+	for (e = sysinfo_score_bonus; e; e = e.enemy) {
+		if (e.owner == cl) {
+			e.dmg = f1;
+			e.dmg_edge = f2;
+			return;
+		}
+	}
+	e = spawn();
+	e.owner = cl;
+	e.dmg = f1;
+	e.dmg_edge = f2;
+	e.enemy = sysinfo_score_bonus;
+	sysinfo_score_bonus = e;
+}
+
+void(entity cl) sysinfo_score_bonus_remove {
+	entity e, e2;
+	if not(sysinfo_score_bonus) return;
+	if (cl == sysinfo_score_bonus.owner) {
+		e = sysinfo_score_bonus;
+		sysinfo_score_bonus = e.enemy;
+		remove(e);
+		return;
+	}
+	for (e = sysinfo_score_bonus; e.enemy; e = e.enemy) {
+		if (e.enemy.owner == cl) {
+			e2 = e.enemy;
+			e.enemy = e2.enemy;
+			remove(e2);
+			return;
+		}
+	}
+}
+
+float sysinfo_score_bonus_init_done;
+void(void) sysinfo_score_bonus_init {
+	if (sysinfo_score_bonus_init_done) return;
+	sysinfo_score_bonus_init_done = 1;
+	sysinfo_score_give_frag_mod_next = plugin_chain_score_give_frag_mod;
+	plugin_chain_score_give_frag_mod = sysinfo_score_give_frag_mod;
+}
+
 void(float id, float status, string data) sysinfo_uri_callback {
 	if (status) {
 		print("sysinfo checker failed, status: ", ftos(status), "\n");
@@ -91,6 +151,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 	string head, tail, _info;
 	tail = data;
 	_info = str_car(tail);
+	if (_info == "") return;
 	tail = str_cdr(tail);
 	entity e;
 	while (tail != "") {
@@ -170,6 +231,21 @@ void(float id, float status, string data) sysinfo_uri_callback {
 					print("Forced model ", sm.model, " added for ", self.netname, "\n");
 					sysinfo_model_forced = sm;
 				}
+		} else if (substring(head, 0, 11)  == "scorebonus=") {
+			sysinfo_score_bonus_init();
+			string sb = substring(head, 11, -1);
+			float f1, f2;
+			f1 = strstrofs(sb, ",", 0);
+			if (f1 >= 0) {
+				f2 = stof(substring(sb, f1 + 1, -1));
+				f1 = stof(substring(sb, 0, f1));
+			} else {
+				f1 = stof(sb);
+				f2 = 1;
+			}
+			for (e = find(NULL, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
+				sysinfo_score_bonus_add(e, f1, f2);
+			}
 		}
 		tail = str_cdr(tail);
 	}
@@ -189,16 +265,19 @@ void() sysinfo_client_disconnect_real {
 			sysinfo_model_forced = sm;
 		}
 		entity sm2;
-		for (sm = sysinfo_model_forced; sm.enemy; sm = sm.enemy) {
-			if (sm.enemy.owner == self) {
-				print("Forced model removed for ", self.netname, "\n");
-				sm2 = sm.enemy.enemy;
-				str_unzone_ifneeded(sm.enemy.model);
-				remove(sm.enemy);
-				sm.enemy = sm2;
+		if (sysinfo_model_forced) {
+			for (sm = sysinfo_model_forced; sm.enemy; sm = sm.enemy) {
+				if (sm.enemy.owner == self) {
+					print("Forced model removed for ", self.netname, "\n");
+					sm2 = sm.enemy.enemy;
+					str_unzone_ifneeded(sm.enemy.model);
+					remove(sm.enemy);
+					sm.enemy = sm2;
+				}
 			}
 		}
 	}
+	sysinfo_score_bonus_remove(self);
 }
 
 void() sysinfo_init {

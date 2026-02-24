@@ -935,7 +935,7 @@ void(entity attacker, entity targ, float f) score_give_frag {
 		// regular frag
 		score_player_add(attacker, SP_KILLS, 1);
 	}
-	f = plugin_score_give_frag_mod(attacker, targ, f);
+	f = plugin_chain_score_give_frag_mod(attacker, targ, f);
 	if (f)
 	if (score_have_score)
 		score_player_team_add_score(attacker, f);

@@ -73,7 +73,7 @@ void(void) kh_StartRound;
 void(void) kh_EnableTrackingDevice;
 float(entity e) kh_KeyCarrier_waypointsprite_visible_for_player;
 float(entity e) kh_Key_waypointsprite_visible_for_player;
-float(entity attacker, entity targ, float f) kh_HandleFrags;
+float(entity attacker, entity targ, float f) kh_score_give_frag_mod;
 
 #define STR_ITEM_KH_KEY "item_kh_key"
 typedef void(void) kh_Think_t;
@@ -684,7 +684,9 @@ float(entity e) kh_KeyCarrier_waypointsprite_visible_for_player { // runs all th
 	return TRUE;
 }
 
-float(entity attacker, entity targ, float f) kh_HandleFrags { // adds to the player score
+var float(entity attacker, entity targ, float f) kh_score_give_frag_mod_next;
+float(entity attacker, entity targ, float f) kh_score_give_frag_mod { // adds to the player score
+	f = kh_score_give_frag_mod_next(attacker, targ, f);
 	if (attacker == targ)
 		return f;
 
@@ -813,7 +815,8 @@ void(void) kh_init {
 		key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
 		marker_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
 	}
-	plugin_score_give_frag_mod = kh_HandleFrags;
+	kh_score_give_frag_mod_next = plugin_chain_score_give_frag_mod;
+	plugin_chain_score_give_frag_mod = kh_score_give_frag_mod;
 }
 
 void kh_update_state(void) {

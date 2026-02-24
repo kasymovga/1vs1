@@ -49,7 +49,7 @@ void(void) handover_controller_think {
 	self.nextthink = time + 1;
 }
 
-var float(entity attacker, entity targ, float f) handover_score_give_frag_mod_save;
+var float(entity attacker, entity targ, float f) handover_score_give_frag_mod_next;
 float(entity attacker, entity targ, float f) handover_score_give_frag_mod {
 	if (targ == handover_player)
 	if (attacker != targ)
@@ -72,7 +72,7 @@ float(entity attacker, entity targ, float f) handover_score_give_frag_mod {
 		}
 		handover_player = attacker;
 	}
-	return handover_score_give_frag_mod_save(attacker, targ, f);
+	return handover_score_give_frag_mod_next(attacker, targ, f);
 }
 
 float(void) handover_hat_callback {
@@ -112,6 +112,6 @@ void(void) handover_init {
 	handover_controller.classname = "handover_controller";
 	handover_controller.think = handover_controller_think;
 	handover_controller.nextthink = time + 5;
-	handover_score_give_frag_mod_save = plugin_score_give_frag_mod; //hack, use plugin as plugin_chain
-	plugin_score_give_frag_mod = handover_score_give_frag_mod;
+	handover_score_give_frag_mod_next = plugin_chain_score_give_frag_mod;
+	plugin_chain_score_give_frag_mod = handover_score_give_frag_mod;
 }

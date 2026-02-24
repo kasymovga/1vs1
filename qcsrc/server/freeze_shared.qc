@@ -31,7 +31,9 @@ void(float killed) freeze_shared_player_clear {
 	freeze_shared_player_clear_next(killed);
 }
 
+var float(entity attacker, entity targ, float f) freeze_shared_score_give_frag_mod_next;
 float(entity attacker, entity targ, float f) freeze_shared_score_give_frag_mod {
+	f = freeze_shared_score_give_frag_mod_next(attacker, targ, f);
 	score_player_add(attacker, SP_SCORE, f);
 	return 0;
 }
@@ -49,7 +51,8 @@ void(string gt) freeze_shared_init {
 	plugin_chain_player_spawn = freeze_shared_player_spawn;
 	freeze_shared_player_clear_next = plugin_chain_player_clear;
 	plugin_chain_player_clear = freeze_shared_player_clear;
-	plugin_score_give_frag_mod = freeze_shared_score_give_frag_mod;
+	freeze_shared_score_give_frag_mod_next = plugin_chain_score_give_frag_mod;
+	plugin_chain_score_give_frag_mod = freeze_shared_score_give_frag_mod;
 	FREEZE_SHARED_SCORE_REVIVE = score_register("revs", SCORE_FLAG_SORT_PRIO_SECONDARY);
 	SP_STATUS = score_register("status", 0);
 }

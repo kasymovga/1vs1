@@ -83,7 +83,9 @@ float(float enemyteam, float score) ctf_adjust_score_by_enemy_number {
 	return ceil((1 + n * g_ctf_adjust_score_by_enemy_number) * score);
 }
 
-float(entity attacker, entity targ, float f) ctf_handle_frags {
+var float(entity attacker, entity targ, float f) ctf_score_give_frag_mod_next;
+float(entity attacker, entity targ, float f) ctf_score_give_frag_mod {
+	f = ctf_score_give_frag_mod_next(attacker, targ, f);
 	if (g_ctf_ignore_frags)
 		return 0;
 
@@ -996,5 +998,6 @@ void() ctf_init {
 		freeze_shared_init("ctft");
 		roundbased_score_field_set(CTF_SCORE_TEAM_CAPS);
 	}
-	plugin_score_give_frag_mod = ctf_handle_frags;
+	ctf_score_give_frag_mod_next = plugin_chain_score_give_frag_mod;
+	plugin_chain_score_give_frag_mod = ctf_score_give_frag_mod;
 }

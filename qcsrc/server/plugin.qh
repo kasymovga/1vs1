@@ -2,7 +2,7 @@ var float(entity attacker, entity inflictor, float deathtype) plugin_player_deat
 var float() plugin_chain_physics_max_speed_mod = { return 1; }
 var void(entity spot) plugin_chain_player_spawn = {}
 var void(float killed) plugin_chain_player_clear = {}
-var float(entity attacker, entity targ, float f) plugin_score_give_frag_mod = { return f; }
+var float(entity attacker, entity targ, float f) plugin_chain_score_give_frag_mod = { return f; }
 float plugin_chain_player_damage_mod;
 var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) plugin_chain_player_damage_handle = { return FALSE; }
 var float(entity plr, float wep) plugin_chain_player_can_fire = { return TRUE; }
