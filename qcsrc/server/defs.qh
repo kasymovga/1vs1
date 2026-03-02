@@ -263,3 +263,7 @@ typedef .string stringfield;
 .float lastshot_time;
 .float radius;
 .float height;
+
+.float buttons_old;
+.vector v_angle_old;
+.vector movement_old;

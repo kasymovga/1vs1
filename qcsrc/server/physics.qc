@@ -119,9 +119,6 @@ float(void) physics_max_speed_mod {
 }
 
 .float last_physics_ladder;
-.float buttons_old;
-.vector v_angle_old;
-.vector movement_old;
 void(void) physics_frame_end_hook {
 	self.last_physics_ladder = physics_ladder;
 	if ((physics_is_player && self.solid != SOLID_NOT) || self.classname == "observer")
