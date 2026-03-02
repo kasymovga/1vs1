@@ -109,7 +109,7 @@ void(void) turret_phaser_beam_think {
 			0.75,
 			WEAPON_NEX);
 	self = oldself;
-	self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
+	self.scale = (1 / self.owner.scale) * (vlen(self.owner.tur_shotorg - trace_endpos) / 256);
 }
 
 void(void) turret_phaser_attack {
@@ -125,7 +125,7 @@ void(void) turret_phaser_attack {
 	beam.nextthink = time;
 	beam.owner = self;
 	beam.shot_dmg = self.shot_dmg / (self.shot_speed / beam.ticrate);
-	beam.scale = self.target_range / 256;
+	beam.scale = (1 / self.scale) * (self.target_range / 256);
 	beam.movetype = MOVETYPE_NONE;
 	beam.enemy = self.enemy;
 	beam.bot_dodge = TRUE;
