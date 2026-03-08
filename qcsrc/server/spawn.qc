@@ -212,6 +212,15 @@ entity (float anypoint) spawn_select {
 	return spot;
 }
 
+entity(void) spawn_select_simple {
+	entity spot;
+	spot = spawn_select(FALSE);
+	if not(spot)
+		spot = spawn_select(TRUE);
+
+	return spot;
+}
+
 void() spawn_init {
 	CVAR_CACHE(g_spawn_furthest);
 	CVAR_CACHE(g_spawn_znudge);

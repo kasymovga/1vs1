@@ -3,6 +3,8 @@ float g_coop_monster_base;
 float g_coop_item_share;
 float g_coop_item_share_distance;
 
+entity coop_teleporter_latest_active;
+
 void(void) coop_teleporter_think {
 	if (self.solid == SOLID_TRIGGER) {
 		self.alpha = approach(self.alpha, 1, 1);
@@ -39,9 +41,13 @@ void(float killed) coop_player_clear {
 
 void(void) coop_teleporter_use {
 	if (self.solid == SOLID_TRIGGER) {
+		if (self == coop_teleporter_latest_active)
+			coop_teleporter_latest_active = NULL;
+
 		self.solid = SOLID_NOT;
 		self.effects &= ~EFFECT_STARDUST;
 	} else {
+		coop_teleporter_latest_active = self;
 		self.solid = SOLID_TRIGGER;
 		self.effects |= EFFECT_STARDUST;
 		if (self.alpha < 0)
@@ -202,6 +208,17 @@ float(entity item, entity plr) coop_item_give_to_handle {
 	return coop_item_give_to_handle_next(item, plr);
 }
 
+entity(void) coop_player_spawn_spot {
+	if (coop_teleporter_latest_active) {
+		if (self.classname == "player" && self.deadflag == DEAD_FREEZE) { // already frozen, frozen player forced to respawn
+			entity spot = find(NULL, targetname, coop_teleporter_latest_active.target);
+			if (spot)
+				return spot;
+		}
+	}
+	return spawn_select_simple();
+}
+
 void(void) coop_init {
 	single_init();
 	score_generic();
@@ -222,6 +239,7 @@ void(void) coop_init {
 		coop_item_give_factor_next = plugin_chain_item_give_factor;
 		plugin_chain_item_give_factor = coop_item_give_factor;
 	}
+	plugin_player_spawn_spot = coop_player_spawn_spot;
 	team_teams_set_count(1);
 	entity_initialize(world, coop_init_delayed, INITPRIO_GAMETYPE);
 }

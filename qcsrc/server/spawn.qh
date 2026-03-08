@@ -1,4 +1,5 @@
-entity (float anypoint) spawn_select;
+entity(float anypoint) spawn_select;
+entity(void) spawn_select_simple;
 void() spawn_init;
 void() spawn_relocate;
 float spawn_has_been_used;
