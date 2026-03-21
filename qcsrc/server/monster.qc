@@ -573,7 +573,7 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 		if (self.enemy.classname != "monster_walk_path" && self.enemy.classname != "path_corner")
 			self.enemy = NULL;
 	}
-	if (self.enemy || self.owner.spawnflags & 2) {
+	if (self.enemy || (self.owner.spawnflags & 2)) {
 		self.think = walk;
 		//print("Prepare route\n");
 	} else
@@ -620,7 +620,7 @@ float monster_check_target(void() walk, void() guard) {
 		if (self.message2 != "")
 			self.enemy = find(NULL, targetname, self.message2);
 
-		if (self.enemy || self.owner.spawnflags & 2) {
+		if (self.enemy || (self.owner.spawnflags & 2)) {
 			self.think = walk;
 			monster_set_route();
 		} else
