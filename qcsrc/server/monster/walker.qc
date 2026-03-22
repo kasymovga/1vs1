@@ -147,11 +147,7 @@ void() monster_walker_remove {
 }
 
 void() monster_walker_idle {
-	self.nextthink = time;
-	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
-		return;
-	}
-	move_beak_simple(100 * frametime);
+	monster_idle(2500, 500, 0, 1, 3, 100);
 	anim_set(self, '0 0 0', TRUE, TRUE, FALSE);
 	anim_update(self);
 }

@@ -69,11 +69,7 @@ void(void) monster_spider_hunt {
 }
 
 void(void) monster_spider_idle {
-	self.nextthink = time;
-	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
-		return;
-	}
-	move_beak_simple(100 * frametime);
+	monster_idle(2500, 500, 0, 1, 3, 100);
 	self.frame = 5;
 }
 

@@ -50,11 +50,7 @@ void() monster_spearguy_hunt {
 }
 
 void() monster_spearguy_idle {
-	self.nextthink = time;
-	if (monster_look_for_player(1500, 500, 0, 0, 0))
-		return;
-
-	move_beak_simple(100 * frametime);
+	monster_idle(1500, 500, 0, 0, 0, 100);
 	monster_common_composite_anim(MONSTER_SPEARGUY_ANIM_LEGS_IDLE, MONSTER_SPEARGUY_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 

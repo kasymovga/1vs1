@@ -23,6 +23,7 @@ float(void) monster_boss4_prethink_skip {
 	if not(self.spawnflags & MONSTER_SPAWN_SHIELDED) {
 		monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_IDLE, MONSTER_BOSS4_ANIM_TORSO_DROP, '9 1 1', TRUE, FALSE);
 		self.lip = TRUE;
+		self.nextthink = time;
 		return TRUE;
 	}
 	if (self.lip) {
@@ -100,22 +101,17 @@ void() monster_boss4_hunt {
 }
 
 void() monster_boss4_idle {
-	self.nextthink = time;
 	if (monster_boss4_prethink_skip())
 		return;
 
-	if (monster_look_for_player(2000, 500, 0, 1, 3))
-		return;
-
-	move_beak_simple(100 * frametime);
+	monster_idle(2000, 500, 0, 1, 3, 100);
 	monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_IDLE, MONSTER_BOSS4_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
 void() monster_boss4_guard {
-	if (monster_boss4_prethink_skip()) {
-		self.nextthink = time;
+	if (monster_boss4_prethink_skip())
 		return;
-	}
+
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
@@ -124,10 +120,10 @@ void() monster_boss4_guard {
 }
 
 void() monster_boss4_walk {
-	self.nextthink = time;
 	if (monster_boss4_prethink_skip())
 		return;
 
+	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}

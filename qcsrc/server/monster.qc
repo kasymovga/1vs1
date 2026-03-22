@@ -71,7 +71,7 @@ vector monster_checkpoint(entity e) {
 }
 
 float notice_sound_finished;
-entity monster_look_for_player(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter) {
+entity(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter) monster_look_for_player {
 	entity e, pl;
 	vector v;
 	vector checkpoint;
@@ -843,4 +843,12 @@ entity(float clientanimate, float type, float docull, entity _owner) monster_pro
 	proj.netname = _owner.netname;
 	proj.classname = "monster_projectile";
 	return proj;
+}
+
+void(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter, float beakspeed) monster_idle {
+	self.nextthink = time;
+	if (monster_look_for_player(distance, heardistance, fov_factor, attack_delay, attack_delay_jitter)) {
+		return;
+	}
+	move_beak_simple(beakspeed * frametime);
 }

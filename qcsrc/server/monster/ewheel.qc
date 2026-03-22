@@ -1,11 +1,7 @@
 void() monster_ewheel_walk;
 
 void() monster_ewheel_idle {
-	self.nextthink = time;
-	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
-		return;
-	}
-	move_beak_simple(50 * frametime);
+	monster_idle(2500, 500, 0, 1, 3, 50);
 	anim_set(self, '0 0 0', TRUE, TRUE, FALSE);
 	anim_update(self);
 }

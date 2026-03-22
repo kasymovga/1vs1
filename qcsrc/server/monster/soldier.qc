@@ -56,11 +56,7 @@ void soldier_hunt() {
 }
 
 void() monster_soldier_idle {
-	self.nextthink = time;
-	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
-		return;
-	}
-	move_beak_simple(100 * frametime);
+	monster_idle(2500, 500, 0, 1, 3, 100);
 	monster_common_composite_anim(MONSTER_SOLDIER_ANIM_LEGS_IDLE, MONSTER_SOLDIER_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 

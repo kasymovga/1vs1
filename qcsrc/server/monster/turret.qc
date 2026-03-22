@@ -54,11 +54,7 @@ void() monster_turret_walk {
 }
 
 void() monster_turret_idle {
-	self.nextthink = time;
-	if (monster_look_for_player(1500, 1500, 0, 1, 3)) {
-		return;
-	}
-	move_beak_simple(100 * frametime);
+	monster_idle(1500, 1500, 0, 1, 3, 100);
 	self.frame = 5;
 }
 

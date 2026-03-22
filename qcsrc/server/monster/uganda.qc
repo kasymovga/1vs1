@@ -52,18 +52,13 @@ void(void) monster_ugandaknuckles_hunt {
 }
 
 void(void) monster_ugandaknuckles_idle {
-	self.nextthink = time;
-	if (monster_look_for_player(1500, 500, 0, 0, 0))
-		return;
-
-	move_beak_simple(100 * frametime);
+	monster_idle(1500, 500, 0, 0, 0, 100);
 	self.frame = 1;
 }
 
 void(void) monster_ugandaknuckles_guard {
 	self.angles_y = self.angles_y + frametime * 15;
 	monster_ugandaknuckles_idle();
-	self.frame = 1;
 }
 
 void(void) monster_ugandaknuckles_walk {

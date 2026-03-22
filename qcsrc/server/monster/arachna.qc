@@ -65,11 +65,7 @@ void() monster_arachna_hunt {
 }
 
 void() monster_arachna_idle {
-	self.nextthink = time;
-	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
-		return;
-	}
-	move_beak_simple(100 * frametime);
+	monster_idle(2000, 500, 0, 1, 3, 100);
 	anim_set(self, '23 1 1', TRUE, TRUE, FALSE);
 }
 

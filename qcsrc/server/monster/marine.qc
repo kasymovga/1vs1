@@ -80,11 +80,7 @@ void() monster_marine_hunt {
 
 void() monster_marine_idle {
 	if (self.body) anim_update(self.body);
-	self.nextthink = time;
-	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
-		return;
-	}
-	move_beak_simple(100 * frametime);
+	monster_idle(2500, 500, 0, 1, 3, 100);
 	if (self.body)
 		anim_set(self.body, '1 8 20', TRUE, TRUE, FALSE);
 	else

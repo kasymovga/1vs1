@@ -55,11 +55,7 @@ void() monster_rlgirl_hunt {
 }
 
 void() monster_rlgirl_idle {
-	self.nextthink = time;
-	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
-		return;
-	}
-	move_beak_simple(100 * frametime);
+	monster_idle(2000, 500, 0, 1, 3, 100);
 	monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_IDLE, MONSTER_ROCKETGIRL_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 

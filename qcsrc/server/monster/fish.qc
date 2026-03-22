@@ -8,11 +8,7 @@ void() monster_fish_walk;
 
 void() monster_fish_idle {
 	anim_update(self);
-	self.nextthink = time;
-	if (monster_look_for_player(1000, 500, 0, 1, 1)) {
-		return;
-	}
-	move_beak_simple(100 * frametime);
+	monster_idle(1000, 500, 0, 1, 1, 100);
 }
 
 void() monster_fish_hunt {

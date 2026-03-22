@@ -55,11 +55,7 @@ void() monster_butcher_hunt {
 
 void() monster_butcher_idle {
 	anim_update(self);
-	self.nextthink = time;
-	if (monster_look_for_player(1500, 500, 0, 0, 0))
-		return;
-
-	move_beak_simple(100 * frametime);
+	monster_idle(1500, 500, 0, 0, 0, 100);
 	anim_set(self, '1 12 12', TRUE, TRUE, FALSE);
 }
 

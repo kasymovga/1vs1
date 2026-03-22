@@ -83,11 +83,7 @@ void() monster_boss2_hunt {
 
 void() monster_boss2_idle {
 	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
-	self.nextthink = time;
-	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
-		return;
-	}
-	move_beak_simple(100 * frametime);
+	monster_idle(2500, 500, 0, 1, 3, 100);
 	monster_common_composite_anim(MONSTER_BOSS2_ANIM_LEGS_IDLE, MONSTER_BOSS2_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 }
 
