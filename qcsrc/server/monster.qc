@@ -850,5 +850,9 @@ void(float distance, float heardistance, float fov_factor, float attack_delay, f
 	if (monster_look_for_player(distance, heardistance, fov_factor, attack_delay, attack_delay_jitter)) {
 		return;
 	}
+	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
+		if not(self.flags & MONSTER_IGNOREDROWN)
+			self.velocity_z += (beakspeed - self.velocity_z) * frametime;
+	}
 	move_beak_simple(beakspeed * frametime);
 }
