@@ -53,9 +53,7 @@ void(void) monster_spider_hunt {
 				self.lip = 1;
 			}
 		} else if (self.flags & FL_ONGROUND) {
-			v = monster_move_walk(500, 5, 0);
-			v = vectoangles(v);
-			self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+			monster_move_walk_rotate(500, 5, 0, 720);
 		}
 	}
 	if (time > self.bulletcounter) {
@@ -89,13 +87,9 @@ void(void) monster_spider_walk {
 		return;
 
 	self.frame = 0; //walk forward
-	if (self.flags & FL_ONGROUND) {
-		vector v = monster_move_walk(400, 5, 0);
-		//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
-		v = vectoangles(v);
-		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+	if (self.flags & FL_ONGROUND) { // no air control
+		monster_move_walk_rotate(400, 5, 0, 720);
 	}
-
 }
 
 void(void) monster_spider_remove {

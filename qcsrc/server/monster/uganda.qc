@@ -71,10 +71,7 @@ void(void) monster_ugandaknuckles_walk {
 
 	anim_set(self, '1 6 12', TRUE, TRUE, FALSE);
 	anim_update(self);
-	vector v = monster_move_walk(300, 5, 0);
-	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-
+	monster_move_walk_rotate(300, 5, 0, 720);
 }
 
 void(void) monster_ugandaknuckles_spawn {

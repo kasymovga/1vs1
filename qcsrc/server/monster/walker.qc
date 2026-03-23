@@ -133,9 +133,7 @@ void() monster_walker_walk {
 	float onground = (self.flags & FL_ONGROUND);
 	anim_set(self, (onground ? '5 20 25' : '95 5 25'), TRUE, FALSE, FALSE);
 	anim_update(self);
-	vector v = monster_move_walk((onground ? 400 : 100), (onground ? 25 : 5), 0);
-	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 180 * frametime);
+	monster_move_walk_rotate((onground ? 400 : 100), (onground ? 25 : 5), 0, 180);
 }
 
 void() monster_walker_remove {

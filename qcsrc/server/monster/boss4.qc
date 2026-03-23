@@ -89,9 +89,7 @@ void() monster_boss4_hunt {
 			move_beak_simple(2000 * frametime);
 			monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_IDLE, MONSTER_BOSS4_ANIM_TORSO_STAND, '7 1 1', TRUE, TRUE);
 		} else {
-			v = monster_move_walk(750, 5, 0);
-			v = vectoangles(v);
-			self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+			monster_move_walk_rotate(750, 5, 0, 720);
 			monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_WALK, MONSTER_BOSS4_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 		}
 	} else {
@@ -131,12 +129,7 @@ void() monster_boss4_walk {
 		return;
 
 	monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_WALK, MONSTER_BOSS4_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
-	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(450, 5, 0);
-	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
-	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-
+	monster_move_walk_rotate(450, 5, 0, 720);
 }
 
 void() monster_boss4_remove {

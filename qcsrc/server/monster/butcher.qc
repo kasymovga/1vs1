@@ -75,11 +75,7 @@ void() monster_butcher_walk {
 
 	anim_set(self, '14 8 8', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(300, 5, 0);
-	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
-	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-
+	monster_move_walk_rotate(300, 5, 0, 720);
 }
 
 void() monster_butcher_spawn {

@@ -51,9 +51,7 @@ void() monster_arachna_hunt {
 		}
 	}
 	if (time > self.bulletcounter) {
-		v = monster_move_walk(500, 5, 0);
-		v = vectoangles(v);
-		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+		monster_move_walk_rotate(500, 5, 0, 720);
 		anim_set(self, '16 1 1', TRUE, TRUE, FALSE);
 	} else {
 		move_beak_simple(2000 * frametime);
@@ -85,11 +83,7 @@ void() monster_arachna_walk {
 		return;
 
 	anim_set(self, '15 1 1', TRUE, TRUE, FALSE);
-	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(250, 5, 0);
-	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
-	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+	monster_move_walk_rotate(250, 5, 0, 720);
 }
 
 void() monster_arachna_remove {

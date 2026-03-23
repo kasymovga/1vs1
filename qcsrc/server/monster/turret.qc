@@ -10,15 +10,11 @@ void() monster_turret_hunt {
 		vector v = self.enemy.origin - self.origin;
 		float d = vlen(v);
 		if (d < 400) {
-			v = monster_move_walk(-600 * self.scale, 5, 0);
+			monster_move_walk_rotate(-600 * self.scale, 5, 0, 90);
 			self.frame = 1;
-			v = vectoangles(v);
-			self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
 		} else if (d > 500) {
-			vector v = monster_move_walk(600 * self.scale, 5, 0);
+			monster_move_walk_rotate(600 * self.scale, 5, 0, 90);
 			self.frame = 0;
-			v = vectoangles(v);
-			self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
 		} else {
 			move_beak_simple(1000 * frametime);
 			v = vectoangles(v);
@@ -47,9 +43,7 @@ void() monster_turret_walk {
 
 	self.frame = 0;
 	if (self.flags & FL_ONGROUND) {
-		vector v = monster_move_walk(600 * self.scale, 5, 0);
-		v = vectoangles(v);
-		self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+		monster_move_walk_rotate(600 * self.scale, 5, 0, 90);
 	}
 }
 

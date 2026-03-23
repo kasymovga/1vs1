@@ -44,9 +44,7 @@ void() monster_rlgirl_hunt {
 	} else {
 	}
 	if (time > self.bulletcounter) {
-		v = monster_move_walk(400, 25, 0);
-		v = vectoangles(v);
-		self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+		monster_move_walk_rotate(400, 25, 0, 720);
 		monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_WALK, MONSTER_ROCKETGIRL_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	} else {
 		move_beak_simple(2000 * frametime);
@@ -77,10 +75,7 @@ void() monster_rlgirl_walk {
 
 	monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_WALK, MONSTER_ROCKETGIRL_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(300, 25, 0);
-	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
-	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+	monster_move_walk_rotate(300, 25, 0, 720);
 }
 
 void() monster_rlgirl_remove {

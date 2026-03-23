@@ -61,9 +61,7 @@ void() monster_marine_hunt {
 			else
 				anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 		} else {
-			v = monster_move_walk(300, 25, 0);
-			v = vectoangles(v);
-			self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+			monster_move_walk_rotate(300, 25, 0, 720);
 			if (self.body)
 				anim_set(self.body, '74 8 20', TRUE, TRUE, FALSE);
 			else
@@ -109,11 +107,7 @@ void() monster_marine_walk {
 	else
 		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 
-	vector v = monster_move_walk(200, 25, 0);
-	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
-	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-
+	monster_move_walk_rotate(200, 25, 0, 720);
 }
 
 void() monster_marine_remove {

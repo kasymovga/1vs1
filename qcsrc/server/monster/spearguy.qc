@@ -68,12 +68,7 @@ void() monster_spearguy_walk {
 		return;
 
 	monster_common_composite_anim(MONSTER_SPEARGUY_ANIM_LEGS_WALK, MONSTER_SPEARGUY_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
-	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(400, 5, 0);
-	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
-	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
-
+	monster_move_walk_rotate(400, 5, 0, 720);
 }
 
 void() monster_spearguy_remove {

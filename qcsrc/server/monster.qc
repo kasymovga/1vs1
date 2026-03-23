@@ -453,6 +453,11 @@ vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 	return v;
 }
 
+void(float _speed, float blend_factor, float rushdistance, float rspeed) monster_move_walk_rotate {
+	vector a = vectoangles(monster_move_walk(_speed, blend_factor, rushdistance));
+	self.angles_y = approach_angle(self.angles_y, a_y, 720 * frametime);
+}
+
 vector monster_move_fly(float _speed, float blend_factor) {
 	float save_g_jetpack_maxspeed_up = g_jetpack_maxspeed_up;
 	float save_g_jetpack_maxspeed_side = g_jetpack_maxspeed_side;
