@@ -328,18 +328,20 @@ vector monster_move_swim(float _speed, float blend_factor) {
 	return v;
 }
 
-void monster_move_fly_idle(float _speed, float blend_factor) {
-	if (self.waterlevel) {
-		move_simple('0 0 1', _speed, blend_factor * frametime);
+void monster_move_fly_idle(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter, float beakspeed) {
+	self.movetype = MOVETYPE_FLY;
+	self.nextthink = time;
+	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
 	}
-	if (self.velocity != '0 0 0') {
-		float f = max(0,vlen(self.velocity) - _speed * frametime);
-		if (f) {
-			self.velocity = normalize(self.velocity) * f;
-		} else
-			self.velocity = '0 0 0';
-	}
+	if (self.waterlevel) {
+		vector v = self.velocity;
+		v_z -= beakspeed;
+		v = normalize(v) * max(0, vlen(v) - beakspeed * frametime);
+		v_z += beakspeed;
+		self.velocity = v;
+	} else
+		self.velocity = normalize(self.velocity) * max(0, vlen(self.velocity) - beakspeed * frametime);
 }
 
 vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {

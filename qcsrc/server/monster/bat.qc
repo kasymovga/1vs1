@@ -7,13 +7,8 @@
 void monster_bat_walk();
 
 void() monster_bat_idle {
-	self.movetype = MOVETYPE_FLY;
 	anim_update(self);
-	self.nextthink = time;
-	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
-		return;
-	}
-	monster_move_fly_idle(100, 5);
+	monster_move_fly_idle(3000, 500, 0, 1, 1, 100);
 }
 
 void() monster_bat_hunt {

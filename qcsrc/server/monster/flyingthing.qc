@@ -7,12 +7,7 @@
 void() monster_flyingthing_walk;
 
 void() monster_flyingthing_idle {
-	self.movetype = MOVETYPE_FLY;
-	self.nextthink = time;
-	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
-		return;
-	}
-	monster_move_fly_idle(100, 5);
+	monster_move_fly_idle(3000, 500, 0, 1, 1, 100);
 }
 
 void() monster_flyingthing_hunt {
