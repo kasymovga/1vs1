@@ -60,11 +60,7 @@ void() monster_spearguy_guard {
 }
 
 void() monster_spearguy_walk {
-	self.nextthink = time;
-	if(monster_look_for_player(1500, 500, 0, 0, 0))
-		return;
-
-	if (monster_walk_finished(monster_spearguy_idle, 100))
+	if (monster_walk_prepare(1500, 500, 0, 0, 0, monster_spearguy_idle, 100))
 		return;
 
 	monster_common_composite_anim(MONSTER_SPEARGUY_ANIM_LEGS_WALK, MONSTER_SPEARGUY_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);

@@ -44,11 +44,7 @@ void() monster_ewheel_hunt {
 }
 
 void() monster_ewheel_walk {
-	self.nextthink = time;
-	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_ewheel_idle, 100))
+	if (monster_walk_prepare(2500, 500, 0, 1, 3, monster_ewheel_idle, 100))
 		return;
 
 	self.frame = 1;

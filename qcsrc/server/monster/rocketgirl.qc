@@ -66,15 +66,10 @@ void() monster_rlgirl_guard {
 }
 
 void() monster_rlgirl_walk {
-	self.nextthink = time;
-	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_rlgirl_idle, 40))
+	if (monster_walk_prepare(1000, 500, 0, 1, 3, monster_rlgirl_idle, 40))
 		return;
 
 	monster_common_composite_anim(MONSTER_ROCKETGIRL_ANIM_LEGS_WALK, MONSTER_ROCKETGIRL_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
-	//self.velocity = normalize(v) * 400;
 	monster_move_walk_rotate(300, 25, 0, 720);
 }
 

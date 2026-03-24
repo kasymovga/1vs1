@@ -863,3 +863,14 @@ void(float distance, float heardistance, float fov_factor, float attack_delay, f
 	}
 	move_beak_simple(beakspeed * frametime);
 }
+
+float(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter, void() idle, float reachdist) monster_walk_prepare {
+	self.nextthink = time;
+	if (monster_look_for_player(distance, heardistance, fov_factor, attack_delay, attack_delay_jitter)) {
+		return TRUE;
+	}
+	if (monster_walk_finished(idle, reachdist))
+		return TRUE;
+
+	return FALSE;
+}

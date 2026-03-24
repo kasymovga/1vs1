@@ -48,17 +48,11 @@ void() monster_flyingthing_hunt {
 }
 
 void() monster_flyingthing_walk {
-	self.movetype = MOVETYPE_WALK;
-	self.nextthink = time;
-	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
-		return;
-	}
-	if (monster_walk_finished(monster_flyingthing_idle, 100))
+	if (monster_walk_prepare(3000, 500, 0, 1, 1, monster_flyingthing_idle, 100))
 		return;
 
-	//self.velocity = normalize(v) * 400;
+	self.movetype = MOVETYPE_WALK;
 	vector v = monster_move_fly(300, 5);
-	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
 	self.angles_x = approach_angle(self.angles_x, v_x, 90 * frametime);

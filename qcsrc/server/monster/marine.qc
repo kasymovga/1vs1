@@ -94,17 +94,13 @@ void() monster_marine_guard {
 }
 
 void() monster_marine_walk {
-	if (self.body) anim_update(self.body);
-	self.nextthink = time;
-	if (monster_look_for_player(1500, 500, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_marine_idle, 40))
+	if (monster_walk_prepare(1500, 500, 0, 1, 3, monster_marine_idle, 40))
 		return;
 
-	if (self.body)
+	if (self.body) {
+		anim_update(self.body);
 		anim_set(self.body, '91 24 30', TRUE, TRUE, FALSE);
-	else
+	} else
 		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 
 	monster_move_walk_rotate(200, 25, 0, 720);

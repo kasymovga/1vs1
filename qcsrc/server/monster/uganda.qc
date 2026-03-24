@@ -62,11 +62,7 @@ void(void) monster_ugandaknuckles_guard {
 }
 
 void(void) monster_ugandaknuckles_walk {
-	self.nextthink = time;
-	if(monster_look_for_player(1500, 500, 0, 0, 0))
-		return;
-
-	if (monster_walk_finished(monster_ugandaknuckles_idle, 100))
+	if (monster_walk_prepare(1500, 500, 0, 0, 0, monster_ugandaknuckles_idle, 100))
 		return;
 
 	anim_set(self, '1 6 12', TRUE, TRUE, FALSE);

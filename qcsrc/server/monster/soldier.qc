@@ -68,11 +68,7 @@ void() monster_soldier_guard {
 }
 
 void() monster_soldier_walk {
-	self.nextthink = time;
-	if (monster_look_for_player(1500, 500, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_soldier_idle, 40))
+	if (monster_walk_prepare(1500, 500, 0, 1, 3, monster_soldier_idle, 40))
 		return;
 
 	monster_common_composite_anim(MONSTER_SOLDIER_ANIM_LEGS_WALK, MONSTER_SOLDIER_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);

@@ -34,11 +34,7 @@ void() monster_turret_hunt {
 }
 
 void() monster_turret_walk {
-	self.nextthink = time;
-	if (monster_look_for_player(1500, 1500, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_turret_idle, 100))
+	if (monster_walk_prepare(1500, 1500, 0, 1, 3, monster_turret_idle, 100))
 		return;
 
 	self.frame = 0;

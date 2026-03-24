@@ -75,7 +75,6 @@ void() monster_boss1_idle {
 }
 
 void() monster_boss1_guard {
-	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
@@ -84,14 +83,10 @@ void() monster_boss1_guard {
 }
 
 void() monster_boss1_walk {
-	self.nextthink = time;
-	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
-	if (monster_look_for_player(2000, 1000, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_boss1_idle, 100))
+	if (monster_walk_prepare(2000, 1000, 0, 1, 3, monster_boss1_idle, 100))
 		return;
 
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	monster_common_composite_anim(MONSTER_BOSS1_ANIM_LEGS_WALK, MONSTER_BOSS1_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);
 	monster_move_walk_rotate(350, 5, 0, 720);
 

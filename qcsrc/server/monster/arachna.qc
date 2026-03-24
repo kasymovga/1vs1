@@ -75,11 +75,7 @@ void() monster_arachna_guard {
 }
 
 void() monster_arachna_walk {
-	self.nextthink = time;
-	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_arachna_idle, 100))
+	if (monster_walk_prepare(1000, 500, 0, 1, 3, monster_arachna_idle, 100))
 		return;
 
 	anim_set(self, '15 1 1', TRUE, TRUE, FALSE);

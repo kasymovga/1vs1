@@ -43,14 +43,10 @@ void() monster_fish_hunt {
 }
 
 void() monster_fish_walk {
-	anim_update(self);
-	self.nextthink = time;
-	if (monster_look_for_player(1000, 500, 0, 1, 1)) {
-		return;
-	}
-	if (monster_walk_finished(monster_fish_idle, 100))
+	if (monster_walk_prepare(1000, 500, 0, 1, 1, monster_fish_idle, 100))
 		return;
 
+	anim_update(self);
 	vector v = monster_move_swim(300, 5);
 	if (v != '0 0 0') {
 		v = vectoangles(v);

@@ -121,11 +121,7 @@ void() monster_boss4_walk {
 	if (monster_boss4_prethink_skip())
 		return;
 
-	self.nextthink = time;
-	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_boss4_idle, 100))
+	if (monster_walk_prepare(1000, 500, 0, 1, 3, monster_boss4_idle, 100))
 		return;
 
 	monster_common_composite_anim(MONSTER_BOSS4_ANIM_LEGS_WALK, MONSTER_BOSS4_ANIM_TORSO_STAND, '13 1 1', TRUE, TRUE);

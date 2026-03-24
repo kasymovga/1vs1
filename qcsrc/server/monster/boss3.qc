@@ -58,15 +58,11 @@ void() monster_boss3_guard {
 }
 
 void() monster_boss3_walk {
-	self.nextthink = time;
-	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
-	self.colormod = '1 1 1' + '0.125 0.125 -0.125' * sin(time);
-	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_boss3_idle, 100))
+	if (monster_walk_prepare(1000, 500, 0, 1, 3, monster_boss3_idle, 100))
 		return;
 
+	self.colormod = '1 1 1' + '0.125 0.125 -0.125' * sin(time);
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	anim_set(self, '15 1 1', TRUE, TRUE, FALSE);
 	monster_move_walk_rotate(600, 5, 0, 720);
 }

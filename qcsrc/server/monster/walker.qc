@@ -123,11 +123,7 @@ void() monster_walker_hunt {
 }
 
 void() monster_walker_walk {
-	self.nextthink = time;
-	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
-		return;
-	}
-	if (monster_walk_finished(monster_walker_idle, 100))
+	if (monster_walk_prepare(2500, 500, 0, 1, 3, monster_walker_idle, 100))
 		return;
 
 	float onground = (self.flags & FL_ONGROUND);

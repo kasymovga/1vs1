@@ -10,7 +10,6 @@ void() monster_butcher_guard;
 void() monster_butcher_walk;
 
 void() monster_butcher_hunt {
-	anim_update(self);
 	self.nextthink = time;
 	if (monster_check_target(monster_butcher_walk, monster_butcher_guard))
 		return;
@@ -51,6 +50,7 @@ void() monster_butcher_hunt {
 	}
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 720 * frametime);
+	anim_update(self);
 }
 
 void() monster_butcher_idle {
@@ -65,16 +65,11 @@ void() monster_butcher_guard {
 }
 
 void() monster_butcher_walk {
-	anim_update(self);
-	self.nextthink = time;
-	if(monster_look_for_player(1500, 500, 0, 0, 0))
-		return;
-
-	if (monster_walk_finished(monster_butcher_idle, 100))
+	if (monster_walk_prepare(1500, 500, 0, 0, 0, monster_butcher_idle, 100))
 		return;
 
 	anim_set(self, '14 8 8', TRUE, TRUE, FALSE);
-	//self.velocity = normalize(v) * 400;
+	anim_update(self);
 	monster_move_walk_rotate(300, 5, 0, 720);
 }
 
