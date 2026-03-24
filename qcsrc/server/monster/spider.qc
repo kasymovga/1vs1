@@ -10,11 +10,10 @@ void(void) monster_spider_guard;
 void(void) monster_spider_walk;
 
 void(void) monster_spider_hunt {
-	self.nextthink = time;
-	vector org = ENTITY_CENTER(self);
-	if (monster_check_target(monster_spider_walk, monster_spider_guard))
+	if (monster_hunt_prepare(monster_spider_walk, monster_spider_guard))
 		return;
 
+	vector org = ENTITY_CENTER(self);
 	vector v = entity_nearest_point_on_box(self.enemy, org) - org;
 	float f = vlen(v);
 	if (f < 60 && !self.weapon) {

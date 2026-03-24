@@ -3,11 +3,10 @@ void(void) monster_ugandaknuckles_guard;
 void(void) monster_ugandaknuckles_walk;
 
 void(void) monster_ugandaknuckles_hunt {
-	float dofire = FALSE;
-	self.nextthink = time;
-	if (monster_check_target(monster_ugandaknuckles_walk, monster_ugandaknuckles_guard))
+	if (monster_hunt_prepare(monster_ugandaknuckles_walk, monster_ugandaknuckles_guard))
 		return;
 
+	float dofire = FALSE;
 	if (self.attack_finished_single < time)
 	if (vlen(self.enemy.origin - self.origin) <= self.dmg_radius)
 	{

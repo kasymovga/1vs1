@@ -9,8 +9,7 @@ void() monster_ewheel_idle {
 }
 
 void() monster_ewheel_hunt {
-	self.nextthink = time;
-	if (monster_check_target(monster_ewheel_walk, monster_ewheel_idle))
+	if (monster_hunt_prepare(monster_ewheel_walk, monster_ewheel_idle))
 		return;
 
 	vector v;

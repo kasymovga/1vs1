@@ -14,8 +14,7 @@ void() monster_spearguy_guard;
 void() monster_spearguy_walk;
 
 void() monster_spearguy_hunt {
-	self.nextthink = time;
-	if (monster_check_target(monster_spearguy_walk, monster_spearguy_guard)) {
+	if (monster_hunt_prepare(monster_spearguy_walk, monster_spearguy_guard)) {
 		sound_stop(self, CHAN_WEAPON);
 		self.lip = FALSE;
 		return;

@@ -14,8 +14,7 @@ void() monster_rlgirl_guard;
 void() monster_rlgirl_walk;
 
 void() monster_rlgirl_hunt {
-	self.nextthink = time;
-	if (monster_check_target(monster_rlgirl_walk, monster_rlgirl_guard))
+	if (monster_hunt_prepare(monster_rlgirl_walk, monster_rlgirl_guard))
 		return;
 
 	vector v;

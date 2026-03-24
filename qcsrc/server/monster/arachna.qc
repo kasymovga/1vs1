@@ -10,8 +10,7 @@ void() monster_arachna_guard;
 void() monster_arachna_walk;
 
 void() monster_arachna_hunt {
-	self.nextthink = time;
-	if (monster_check_target(monster_arachna_walk, monster_arachna_guard))
+	if (monster_hunt_prepare(monster_arachna_walk, monster_arachna_guard))
 		return;
 
 	vector v;

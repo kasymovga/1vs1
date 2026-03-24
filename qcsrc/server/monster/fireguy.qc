@@ -39,8 +39,7 @@ void() monster_fireguy_mine_think {
 }
 
 void() monster_fireguy_hunt {
-	self.nextthink = time;
-	if (monster_check_target(monster_fireguy_walk, monster_fireguy_guard))
+	if (monster_hunt_prepare(monster_fireguy_walk, monster_fireguy_guard))
 		return;
 
 	vector v;

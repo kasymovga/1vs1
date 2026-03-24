@@ -11,11 +11,10 @@ void() monster_marine_guard;
 void() monster_marine_walk;
 
 void() monster_marine_hunt {
-	if (self.body) anim_update(self.body);
-	self.nextthink = time;
-	if (monster_check_target(monster_marine_walk, monster_marine_guard))
+	if (monster_hunt_prepare(monster_marine_walk, monster_marine_guard))
 		return;
 
+	if (self.body) anim_update(self.body);
 	vector v;
 	float dofire;
 	dofire = FALSE;

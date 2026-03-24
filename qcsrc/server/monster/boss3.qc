@@ -3,12 +3,11 @@ void() monster_boss3_guard;
 void() monster_boss3_walk;
 
 void() monster_boss3_hunt {
-	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
-	self.nextthink = time;
-	self.colormod = '1 1 1' + '0.125 -0.125 0.125' * sin(time);
-	if (monster_check_target(monster_boss3_walk, monster_boss3_guard))
+	if (monster_hunt_prepare(monster_boss3_walk, monster_boss3_guard))
 		return;
 
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	self.colormod = '1 1 1' + '0.125 -0.125 0.125' * sin(time);
 	vector v;
 	float dofire;
 	dofire = FALSE;

@@ -12,11 +12,10 @@ void() monster_fish_idle {
 }
 
 void() monster_fish_hunt {
-	anim_update(self);
-	self.nextthink = time;
-	if (monster_check_target(monster_fish_walk, monster_fish_idle))
+	if (monster_hunt_prepare(monster_fish_walk, monster_fish_idle))
 		return;
 
+	anim_update(self);
 	vector v;
 	float dofire;
 	dofire = FALSE;

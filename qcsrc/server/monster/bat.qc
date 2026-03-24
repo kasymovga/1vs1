@@ -12,12 +12,11 @@ void() monster_bat_idle {
 }
 
 void() monster_bat_hunt {
-	self.movetype = MOVETYPE_WALK;
-	anim_update(self);
-	self.nextthink = time;
-	if (monster_check_target(monster_bat_walk, monster_bat_idle))
+	if (monster_hunt_prepare(monster_bat_walk, monster_bat_idle))
 		return;
 
+	anim_update(self);
+	self.movetype = MOVETYPE_WALK;
 	vector v;
 	float dofire;
 	dofire = FALSE;

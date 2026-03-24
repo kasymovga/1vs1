@@ -14,8 +14,7 @@ void() monster_soldier_guard;
 void() monster_soldier_walk;
 
 void soldier_hunt() {
-	self.nextthink = time;
-	if (monster_check_target(monster_soldier_walk, monster_soldier_guard))
+	if (monster_hunt_prepare(monster_soldier_walk, monster_soldier_guard))
 		return;
 
 	vector v;

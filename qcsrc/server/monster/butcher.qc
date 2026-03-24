@@ -10,8 +10,7 @@ void() monster_butcher_guard;
 void() monster_butcher_walk;
 
 void() monster_butcher_hunt {
-	self.nextthink = time;
-	if (monster_check_target(monster_butcher_walk, monster_butcher_guard))
+	if (monster_hunt_prepare(monster_butcher_walk, monster_butcher_guard))
 		return;
 
 	vector v = '0 0 0';

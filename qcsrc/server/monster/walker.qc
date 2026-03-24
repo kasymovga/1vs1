@@ -57,8 +57,7 @@ void() monster_walker_rocket_think {
 }
 
 void() monster_walker_hunt {
-	self.nextthink = time;
-	if (monster_check_target(monster_walker_walk, monster_walker_idle))
+	if (monster_hunt_prepare(monster_walker_walk, monster_walker_idle))
 		return;
 
 	float dofire;

@@ -16,11 +16,10 @@ void() monster_boss1_guard;
 void() monster_boss1_walk;
 
 void() monster_boss1_hunt {
-	self.nextthink = time;
-	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
-	if (monster_check_target(monster_boss1_walk, monster_boss1_guard))
+	if (monster_hunt_prepare(monster_boss1_walk, monster_boss1_guard))
 		return;
 
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	vector v;
 	float dofire;
 	dofire = FALSE;

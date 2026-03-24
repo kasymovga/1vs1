@@ -36,8 +36,7 @@ void(void) monster_heavysoldier_projectile_bounce_touch {
 }
 
 void() monster_heavysoldier_hunt {
-	self.nextthink = time;
-	if (monster_check_target(monster_heavysoldier_walk, monster_heavysoldier_guard))
+	if (monster_hunt_prepare(monster_heavysoldier_walk, monster_heavysoldier_guard))
 		return;
 
 	vector v;

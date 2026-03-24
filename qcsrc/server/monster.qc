@@ -874,3 +874,11 @@ float(float distance, float heardistance, float fov_factor, float attack_delay, 
 
 	return FALSE;
 }
+
+float(void() guard, void() walk) monster_hunt_prepare {
+	self.nextthink = time;
+	if (monster_check_target(walk, guard))
+		return TRUE;
+
+	return FALSE;
+}

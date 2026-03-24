@@ -48,11 +48,10 @@ void() monster_boss4_mine_think {
 }
 
 void() monster_boss4_hunt {
-	self.nextthink = time;
 	if (monster_boss4_prethink_skip())
 		return;
 
-	if (monster_check_target(monster_boss4_walk, monster_boss4_guard))
+	if (monster_hunt_prepare(monster_boss4_walk, monster_boss4_guard))
 		return;
 
 	vector v;

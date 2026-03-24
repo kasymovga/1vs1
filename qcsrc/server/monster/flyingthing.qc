@@ -11,11 +11,10 @@ void() monster_flyingthing_idle {
 }
 
 void() monster_flyingthing_hunt {
-	self.movetype = MOVETYPE_WALK;
-	self.nextthink = time;
-	if (monster_check_target(monster_flyingthing_walk, monster_flyingthing_idle))
+	if (monster_hunt_prepare(monster_flyingthing_walk, monster_flyingthing_idle))
 		return;
 
+	self.movetype = MOVETYPE_WALK;
 	vector v;
 	float dofire;
 	dofire = FALSE;

@@ -42,11 +42,10 @@ void(vector start, vector dir) monster_boss2_pellet {
 }
 
 void() monster_boss2_hunt {
-	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
-	self.nextthink = time;
-	if (monster_check_target(monster_boss2_walk, monster_boss2_guard))
+	if (monster_hunt_prepare(monster_boss2_walk, monster_boss2_guard))
 		return;
 
+	marker_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	vector v;
 	float dofire;
 	dofire = FALSE;
