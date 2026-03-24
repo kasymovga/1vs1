@@ -2,8 +2,10 @@ void() monster_ewheel_walk;
 
 void() monster_ewheel_idle {
 	monster_idle(2500, 500, 0, 1, 3, 50);
-	anim_set(self, '0 0 0', TRUE, TRUE, FALSE);
-	anim_update(self);
+	if (self.frame) {
+		self.frame = 0;
+		BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
+	}
 }
 
 void() monster_ewheel_hunt {
@@ -40,14 +42,20 @@ void() monster_ewheel_hunt {
 		}
 	}
 	monster_move_walk_rotate(500, 1, 0, 720);
-	self.frame = 2;
+	if (self.frame != 2) {
+		self.frame = 2;
+		BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
+	}
 }
 
 void() monster_ewheel_walk {
 	if (monster_walk_prepare(2500, 500, 0, 1, 3, monster_ewheel_idle, 100))
 		return;
 
-	self.frame = 1;
+	if (self.frame != 1) {
+		self.frame = 1;
+		BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
+	}
 	if (self.flags & FL_ONGROUND) {
 		monster_move_walk_rotate(400, 1, 0, 720);
 	}
