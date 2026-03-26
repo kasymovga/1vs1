@@ -1812,7 +1812,7 @@ void(void) sbar_game_init {
 		sbar_game_hud = ctf_hud;
 	} else if (game_type == GAME_TYPE_NEXBALL) {
 		sbar_game_hud = nb_hud;
-	} else if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP) {
+	} else if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP || game_type == GAME_TYPE_SURVIVE) {
 		sbar_game_hud = single_hud;
 		sbar_score_draw = sbar_score_nothing_draw;
 	} else if (game_type == GAME_TYPE_FREEZETAG || game_type == GAME_TYPE_CLANARENA || game_type == GAME_TYPE_JAILBREAK) {
