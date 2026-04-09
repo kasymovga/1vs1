@@ -210,9 +210,9 @@ void(entity attacker) single_monster_killed {
 
 var float(string cmd, float tokens) single_cmd_client_handle_next;
 float(string cmd, float tokens) single_cmd_client_handle {
-	float slot_quick_secondary = builtin_cvar("_slot_quick_secondary"); //last time saved on secondary slot
-	string slotnum = (slot_quick_secondary ? "12" : "14");
 	if (cmd == "quicksave") {
+		float slot_quick_secondary = builtin_cvar("_slot_quick_secondary"); //last time saved on secondary slot
+		string slotnum = (slot_quick_secondary ? "12" : "14");
 		print_to(self, PRINT_CENTER, "Quicksaving...", "", "", "");
 		localcmd(strcat("\nseta _slot_description", slotnum, " \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 		localcmd(" \"\n");
