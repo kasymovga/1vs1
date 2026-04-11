@@ -1818,7 +1818,7 @@ void(void) sbar_game_init {
 	} else if (game_type == GAME_TYPE_FREEZETAG || game_type == GAME_TYPE_CLANARENA || game_type == GAME_TYPE_JAILBREAK) {
 		sbar_game_hud = ft_hud;
 	} else if (game_type == GAME_TYPE_RACE || game_type == GAME_TYPE_CTS) {
-		sbar_game_hud = sbar_game_hud_nothing;
+		sbar_game_hud = race_hud;
 		sbar_score_draw = sbar_score_draw_race;
 	} else if (game_type == GAME_TYPE_SHOOTINGRANGE) {
 		sbar_game_hud = shootingrange_hud;

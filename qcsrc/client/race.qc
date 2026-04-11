@@ -28,6 +28,11 @@ string race_othercheckpointenemy;
 float race_records_time[10];
 float race_records_speed[10];
 string race_records_name[10];
+float race_checkpoints_times[10];
+float race_checkpoints_delta[10];
+float race_checkpoints_count;
+float race_checkpoints_shift;
+float race_checkpoints_last;
 
 void(void) race_read {
 	float b;
@@ -125,13 +130,43 @@ string(float myspeed, float hisspeed) race_speed_string {
 	return "";
 }
 
+void(float cp, float mytime) race_checkpoints_times_update {
+	if (race_checkpoints_last == cp) return;
+	race_checkpoints_last = cp;
+	if (race_checkpoints_count > 9) {
+		race_checkpoints_count--;
+		race_checkpoints_shift++;
+		race_checkpoints_times[0] = race_checkpoints_times[1];
+		race_checkpoints_delta[0] = race_checkpoints_delta[1];
+		race_checkpoints_times[1] = race_checkpoints_times[2];
+		race_checkpoints_delta[1] = race_checkpoints_delta[2];
+		race_checkpoints_times[2] = race_checkpoints_times[3];
+		race_checkpoints_delta[2] = race_checkpoints_delta[3];
+		race_checkpoints_times[3] = race_checkpoints_times[4];
+		race_checkpoints_delta[3] = race_checkpoints_delta[4];
+		race_checkpoints_times[4] = race_checkpoints_times[5];
+		race_checkpoints_delta[4] = race_checkpoints_delta[5];
+		race_checkpoints_times[5] = race_checkpoints_times[6];
+		race_checkpoints_delta[5] = race_checkpoints_delta[6];
+		race_checkpoints_times[6] = race_checkpoints_times[7];
+		race_checkpoints_delta[6] = race_checkpoints_delta[7];
+		race_checkpoints_times[7] = race_checkpoints_times[8];
+		race_checkpoints_delta[7] = race_checkpoints_delta[8];
+		race_checkpoints_times[8] = race_checkpoints_times[9];
+		race_checkpoints_delta[8] = race_checkpoints_delta[9];
+	}
+	race_checkpoints_times[race_checkpoints_count] = race_time;
+	race_checkpoints_delta[race_checkpoints_count] = mytime;
+	race_checkpoints_count++;
+}
+
 string(float cp, float mytime, float histime, float lapdelta, string hisname) race_checkpoint_string {
 	string col;
 	string timestr = "";
 	string cpname;
 	string lapstr;
 	lapstr = "";
-	if (cp == 254) {
+	if (cp == 254) { //start
 		col = "^7";
 	} else if (histime == 0) { // goal hit
 		if (mytime > 0) {
@@ -161,15 +196,20 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 	} else
 		col = "^7";
 
-	if (cp == 254)
+	if (cp == 254) {
+		race_checkpoints_count = 0;
+		race_checkpoints_shift = 0;
 		cpname = "Start line";
-	else if (cp == 255)
+	} else if (cp == 255) {
+		race_checkpoints_times_update(cp, mytime);
 		cpname = "Finish line";
-	else if (cp)
+	} else if (cp) {
+		race_checkpoints_times_update(cp, mytime);
 		cpname = strcat("Intermediate ", ftos(cp));
-	else
+	} else {
+		race_checkpoints_times_update(cp, mytime);
 		cpname = "Finish line";
-
+	}
 	if (histime < 0 || cp == 254)
 		return strcat(col, cpname);
 	else if (hisname == "")
@@ -439,6 +479,41 @@ void(void) race_sbar_draw {
 		}
 	}
 	drawfont = sbar_font;
+}
+
+void(vector pos, vector gameinfo_size, float gameinfo_scale) race_hud {
+	if (view_observer_status || view_spectatee_status) return;
+	if not(CVAR(cl_cts_time_split)) return;
+	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '120 80 0', gameinfo_size, CVAR(sbar_gameinfo_background))
+	vector pos_text = pos;
+	drawfont = sbar_font;
+	string colorcode;
+	string timecode;
+	float i;
+	float delta;
+	vector shift = '16 0 0' * gameinfo_scale;
+	pos_text_x += 8;
+	for (i = 0; i < race_checkpoints_count; i++) {
+		delta = race_checkpoints_delta[i];
+		if (delta < 0) {
+			colorcode = "^2";
+		} else if (delta > 0) {
+			colorcode = "^1";
+		} else {
+			colorcode = "^3";
+		}
+		timecode = "";
+		if (delta > 0)
+			timecode = strcat("^7 (", colorcode, "+", str_float_decimals(TIME_DECODE(delta), SBAR_TIME_DECIMALS), "^7)");
+		else if (delta < 0)
+			timecode = strcat("^7 (", colorcode, "-", str_float_decimals(TIME_DECODE(-delta), SBAR_TIME_DECIMALS), "^7)");
+
+		drawstring(pos_text,
+				strcat(ftos(race_checkpoints_shift + i + 1), "."), '8 8 0' * gameinfo_scale, '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos_text + shift,
+				strcat(colorcode, TIME_ENCODED_TOSTRING(race_checkpoints_times[i]), timecode), '8 8 0' * gameinfo_scale, 1, DRAWFLAG_NORMAL);
+		pos_text_y += 8;
+	}
 }
 
 string(float posy) race_records_table_string {

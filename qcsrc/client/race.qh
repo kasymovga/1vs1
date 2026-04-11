@@ -2,3 +2,4 @@ void(void) race_read;
 void(void) race_sbar_draw;
 void(void) race_init;
 string(float posy) race_records_table_string;
+void(vector pos, vector gameinfo_size, float gameinfo_scale) race_hud;
