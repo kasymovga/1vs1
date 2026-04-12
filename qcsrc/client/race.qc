@@ -29,8 +29,11 @@ float race_records_time[10];
 float race_records_speed[10];
 string race_records_name[10];
 float race_checkpoints_times[10];
-float race_checkpoints_delta[10];
+float race_checkpoints_deltas[10];
+float race_checkpoints_times_old[10];
+float race_checkpoints_deltas_old[10];
 float race_checkpoints_count;
+float race_checkpoints_count_old;
 float race_checkpoints_shift;
 float race_checkpoints_last;
 
@@ -134,30 +137,35 @@ void(float cp, float mytime) race_checkpoints_times_update {
 	if (race_checkpoints_last == cp) return;
 	race_checkpoints_last = cp;
 	if (race_checkpoints_count > 9) {
-		race_checkpoints_count--;
 		race_checkpoints_shift++;
 		race_checkpoints_times[0] = race_checkpoints_times[1];
-		race_checkpoints_delta[0] = race_checkpoints_delta[1];
+		race_checkpoints_deltas[0] = race_checkpoints_deltas[1];
 		race_checkpoints_times[1] = race_checkpoints_times[2];
-		race_checkpoints_delta[1] = race_checkpoints_delta[2];
+		race_checkpoints_deltas[1] = race_checkpoints_deltas[2];
 		race_checkpoints_times[2] = race_checkpoints_times[3];
-		race_checkpoints_delta[2] = race_checkpoints_delta[3];
+		race_checkpoints_deltas[2] = race_checkpoints_deltas[3];
 		race_checkpoints_times[3] = race_checkpoints_times[4];
-		race_checkpoints_delta[3] = race_checkpoints_delta[4];
+		race_checkpoints_deltas[3] = race_checkpoints_deltas[4];
 		race_checkpoints_times[4] = race_checkpoints_times[5];
-		race_checkpoints_delta[4] = race_checkpoints_delta[5];
+		race_checkpoints_deltas[4] = race_checkpoints_deltas[5];
 		race_checkpoints_times[5] = race_checkpoints_times[6];
-		race_checkpoints_delta[5] = race_checkpoints_delta[6];
+		race_checkpoints_deltas[5] = race_checkpoints_deltas[6];
 		race_checkpoints_times[6] = race_checkpoints_times[7];
-		race_checkpoints_delta[6] = race_checkpoints_delta[7];
+		race_checkpoints_deltas[6] = race_checkpoints_deltas[7];
 		race_checkpoints_times[7] = race_checkpoints_times[8];
-		race_checkpoints_delta[7] = race_checkpoints_delta[8];
+		race_checkpoints_deltas[7] = race_checkpoints_deltas[8];
 		race_checkpoints_times[8] = race_checkpoints_times[9];
-		race_checkpoints_delta[8] = race_checkpoints_delta[9];
+		race_checkpoints_deltas[8] = race_checkpoints_deltas[9];
+		race_checkpoints_times[9] = race_time;
+		race_checkpoints_deltas[9] = mytime;
+		return;
 	}
 	race_checkpoints_times[race_checkpoints_count] = race_time;
-	race_checkpoints_delta[race_checkpoints_count] = mytime;
+	race_checkpoints_deltas[race_checkpoints_count] = mytime;
+	race_checkpoints_times_old[race_checkpoints_count] = race_time;
+	race_checkpoints_deltas_old[race_checkpoints_count] = mytime;
 	race_checkpoints_count++;
+	race_checkpoints_count_old = max(race_checkpoints_count, race_checkpoints_count_old);
 }
 
 string(float cp, float mytime, float histime, float lapdelta, string hisname) race_checkpoint_string {
@@ -202,12 +210,14 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 		cpname = "Start line";
 	} else if (cp == 255) {
 		race_checkpoints_times_update(cp, mytime);
+		race_checkpoints_count_old = race_checkpoints_count;
 		cpname = "Finish line";
 	} else if (cp) {
 		race_checkpoints_times_update(cp, mytime);
 		cpname = strcat("Intermediate ", ftos(cp));
 	} else {
 		race_checkpoints_times_update(cp, mytime);
+		race_checkpoints_count_old = race_checkpoints_count;
 		cpname = "Finish line";
 	}
 	if (histime < 0 || cp == 254)
@@ -492,9 +502,10 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) race_hud {
 	float i;
 	float delta;
 	vector shift = '16 0 0' * gameinfo_scale;
+	vector fontsz = '8 8 0' * gameinfo_scale;
 	pos_text_x += 8;
 	for (i = 0; i < race_checkpoints_count; i++) {
-		delta = race_checkpoints_delta[i];
+		delta = race_checkpoints_deltas[i];
 		if (delta < 0) {
 			colorcode = "^2";
 		} else if (delta > 0) {
@@ -509,10 +520,31 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) race_hud {
 			timecode = strcat("^7 (", colorcode, "-", str_float_decimals(TIME_DECODE(-delta), SBAR_TIME_DECIMALS), "^7)");
 
 		drawstring(pos_text,
-				strcat(ftos(race_checkpoints_shift + i + 1), "."), '8 8 0' * gameinfo_scale, '1 1 1', 1, DRAWFLAG_NORMAL);
+				strcat(ftos(race_checkpoints_shift + i + 1), "."), fontsz, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawcolorcodedstring(pos_text + shift,
-				strcat(colorcode, TIME_ENCODED_TOSTRING(race_checkpoints_times[i]), timecode), '8 8 0' * gameinfo_scale, 1, DRAWFLAG_NORMAL);
-		pos_text_y += 8;
+				strcat(colorcode, TIME_ENCODED_TOSTRING(race_checkpoints_times[i]), timecode), fontsz, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		pos_text_y += fontsz_y;
+	}
+	for (; i < race_checkpoints_count_old; i++) {
+		delta = race_checkpoints_deltas_old[i];
+		if (delta < 0) {
+			colorcode = "^x060";
+		} else if (delta > 0) {
+			colorcode = "^x600";
+		} else {
+			colorcode = "^x330";
+		}
+		timecode = "";
+		if (delta > 0)
+			timecode = strcat("^0 (", colorcode, "+", str_float_decimals(TIME_DECODE(delta), SBAR_TIME_DECIMALS), "^0)");
+		else if (delta < 0)
+			timecode = strcat("^0 (", colorcode, "-", str_float_decimals(TIME_DECODE(-delta), SBAR_TIME_DECIMALS), "^0)");
+
+		drawstring(pos_text,
+				strcat(ftos(i + 1), "."), fontsz, '0.4 0.4 0.4', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos_text + shift,
+				strcat(colorcode, TIME_ENCODED_TOSTRING(race_checkpoints_times_old[i]), timecode), fontsz, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		pos_text_y += fontsz_y;
 	}
 }
 
