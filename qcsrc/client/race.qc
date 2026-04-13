@@ -493,7 +493,7 @@ void(void) race_sbar_draw {
 
 void(vector pos, vector gameinfo_size, float gameinfo_scale) race_hud {
 	if (view_observer_status || view_spectatee_status) return;
-	if not(CVAR(cl_cts_time_split)) return;
+	if not(CVAR(cl_cts_split_timer)) return;
 	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '120 80 0', gameinfo_size, CVAR(sbar_gameinfo_background))
 	vector pos_text = pos;
 	drawfont = sbar_font;

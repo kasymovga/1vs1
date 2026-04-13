@@ -20,7 +20,7 @@ void configureDialogNexuizGameSettingsDialog(entity me) {
 		me.rows = me.rows - 2;
 
 	if (game_type == GAME_TYPE_CTS)
-		me.rows = me.rows + 3;
+		me.rows = me.rows + 4;
 
 	RM({
 		me.columns += 5;
@@ -157,6 +157,8 @@ void fillNexuizGameSettingsDialog(entity me)
 				me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_snap_helper", _("and snap zones")));
 		me.TR(me);
 			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_cts_position_helper", _("Show position helper in CTS")));
+		me.TR(me);
+			me.TD(me, 1, 5, e = makeNexuizCheckBox(0, "cl_cts_split_timer", _("Show split timer in CTS")));
 		me.TR(me);
 			me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, _("CTS Ghost:")));
 			me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_cts_ghost"));
