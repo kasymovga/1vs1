@@ -207,6 +207,7 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 	if (cp == 254) {
 		race_checkpoints_count = 0;
 		race_checkpoints_shift = 0;
+		race_checkpoints_last = cp;
 		cpname = "Start line";
 	} else if (cp == 255) {
 		race_checkpoints_times_update(cp, mytime);
