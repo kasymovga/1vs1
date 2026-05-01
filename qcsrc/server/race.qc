@@ -232,7 +232,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 				if (race_position_used(e)) {
 					sprint(e, "\{1}^3Save/restore position was used, time not counted\n");
 				} else {
-					float position = race_records_put(e.netname, e.clid, t, e.scorekeeper.race_maxspeed);
+					float position = race_records_put(e.netname, e.clid, t, e.scorekeeper.race_maxspeed, -1);
 					if (position) {
 						if (e.clid != "") race_records_id_ref_counter_increase(e.clid, e.netname);
 						chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), " on ", mapname , "\n"), 0);

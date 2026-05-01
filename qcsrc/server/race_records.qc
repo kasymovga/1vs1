@@ -527,7 +527,7 @@ void(void) race_records_to_html {
 void(void) race_records_load {
 	string s = strcat(mapname, race_records_path);
 	string n, id;
-	float t, sp;
+	float t, sp, d;
 	id = db_get(db_server, strcat(s, "id"));
 	if (id != "") {
 		n = db_get(db_server, strcat("raceid2n/", id));
@@ -540,8 +540,9 @@ void(void) race_records_load {
 
 	t = stof(db_get(db_server, strcat(s, "time")));
 	sp = stof(db_get(db_server, strcat(s, "speed")));
+	d = stof(db_get(db_server, strcat(s, "date")));
 	if (t && (n != "" || id != "")) {
-		if not(race_records_put(n, id, t, sp)) {
+		if not(race_records_put(n, id, t, sp, d)) {
 			if (id != "")
 				race_records_id_ref_counter_decrease(id);
 
@@ -562,8 +563,9 @@ void(void) race_records_load {
 
 		t = stof(db_get(db_server, strcat(s, ftos(i), "/time")));
 		sp = stof(db_get(db_server, strcat(s, ftos(i), "/speed")));
+		d = stof(db_get(db_server, strcat(s, ftos(i), "/date")));
 		if (t && (n != "" || id != "")) {
-			if not(race_records_put(n, id, t, sp)) {
+			if not(race_records_put(n, id, t, sp, d)) {
 				if (id != "")
 					race_records_id_ref_counter_decrease(id);
 
@@ -575,12 +577,13 @@ void(void) race_records_load {
 }
 
 void(void) race_records_save {
-	float t, sp;
+	float t, sp, d;
 	string n, id;
 	t = race_records_time[0];
 	n = race_records_name[0];
 	id = race_records_id[0];
 	sp = race_records_speed[0];
+	d = race_records_date[0];
 	db_put(db_server, strcat(mapname, race_records_path, "time"),  ((t > 0) ? ftos(t) : ""));
 	if (id != "") {
 		db_put(db_server, strcat(mapname, race_records_path, "id"), id);
@@ -590,12 +593,14 @@ void(void) race_records_save {
 		db_put(db_server, strcat(mapname, race_records_path, "netname"), n);
 	}
 	db_put(db_server, strcat(mapname, race_records_path, "speed"), ((sp > 0) ? ftos(sp) : ""));
+	db_put(db_server, strcat(mapname, race_records_path, "date"), ftos(d));
 	float i;
 	for (i = 1; i < 10; i++) {
 		t = race_records_time[i];
 		n = race_records_name[i];
 		sp = race_records_speed[i];
 		id = race_records_id[i];
+		d = race_records_date[i];
 		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/time"), ((t > 0) ? ftos(t) : ""));
 		if (id != "") {
 			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/id"), id);
@@ -605,13 +610,14 @@ void(void) race_records_save {
 			db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/netname"), n);
 		}
 		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/speed"), ((sp > 0) ? ftos(sp) : ""));
+		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/date"), ftos(d));
 	}
 }
 
 void(float i) race_records_delete {
 	float j;
 	string n, id;
-	float t, sp;
+	float t, sp, d;
 	n = race_records_name[i];
 	id = race_records_id[i];
 	if (id != "")
@@ -626,15 +632,18 @@ void(float i) race_records_delete {
 		id = race_records_id[j + 1];
 		t = race_records_time[j + 1];
 		sp = race_records_speed[j + 1];
+		d = race_records_date[j + 1];
 		race_records_name[j] = n;
 		race_records_id[j] = id;
 		race_records_time[j] = t;
 		race_records_speed[j] = sp;
+		race_records_date[j] = d;
 	}
 	race_records_name[9] = "";
 	race_records_id[9] = "";
 	race_records_time[9] = 0;
 	race_records_speed[9] = 0;
+	race_records_date[9] = 0;
 	race_records_modified = FALSE;
 }
 
@@ -666,6 +675,7 @@ void(string m) race_records_clear {
 			race_records_name[i] = "";
 			race_records_time[i] = 0;
 			race_records_speed[i] = 0;
+			race_records_date[i] = 0;
 		}
 		race_records_sender.SendFlags = 1;
 	} else {
@@ -715,8 +725,8 @@ void(string n, string id) race_records_link_name_to_id {
 	race_records_link_name_to_id_cb_arg2 = NULL;
 }
 
-float(string name, string client_id, float checktime, float _speed) race_records_put {
-	float t, i, j, sp;
+float(string name, string client_id, float checktime, float _speed, float _date) race_records_put {
+	float t, i, j, sp, d;
 	string n, id;
 	float have_id = FALSE;
 	if (client_id != "")
@@ -751,15 +761,22 @@ float(string name, string client_id, float checktime, float _speed) race_records
 				id = race_records_id[j];
 				t = race_records_time[j];
 				sp = race_records_speed[j];
+				d = race_records_date[j];
 				race_records_name[j + 1] = n;
 				race_records_id[j + 1] = id;
 				race_records_time[j + 1] = t;
 				race_records_speed[j + 1] = sp;
+				race_records_date[j + 1] = d;
 			}
 			race_records_name[i] = str_zone_ifneeded(name);
 			race_records_id[i] = str_zone_ifneeded(client_id);
 			race_records_time[i] = checktime;
 			race_records_speed[i] = _speed;
+			if (_date >= 0)
+				race_records_date[i] = _date;
+			else
+				race_records_date[i] = stof(strftime(TRUE, "%y%m%d%H%M"));
+
 			race_records_modified = TRUE;
 			return i + 1;
 		}
