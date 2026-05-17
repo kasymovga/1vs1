@@ -795,6 +795,9 @@ float(string addr, string data) net_sendpacket = #801;
 //description:
 //A QC builtin equivalent of the "packet" command
 //
+//sv_autodemo_perclient_discardable
+.float discardabledemo;
+//
 //DP_RM_CLIENTDATAENT
 //idea: Akari
 //darkplaces implementation: Akari

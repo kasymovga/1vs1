@@ -7,6 +7,7 @@
 
 float g_race;
 float g_cts;
+float sv_cts_autodemos_discard;
 
 float race_teams;
 .float race_completed;
@@ -236,9 +237,10 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 					if (position) {
 						if (e.clid != "") race_records_id_ref_counter_increase(e.clid, e.netname);
 						chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), " on ", mapname , "\n"), 0);
-						if (position == 1)
+						if (position == 1) {
 							announce(e, "announcer/male/amazing.wav", "^31st place!");
-						else if (position == 2)
+							if (sv_cts_autodemos_discard) self.discardabledemo = FALSE;
+						} else if (position == 2)
 							announce(e, "announcer/male/awesome.wav", "^52st place!");
 						else if (position == 2)
 							announce(e, "announcer/male/impressive.wav", "^23st place!");
@@ -1267,6 +1269,13 @@ string(string s) race_map_vote_send_map_name_mod {
 	return s;
 }
 
+var void(void) race_client_connect_next;
+void(void) race_client_connect {
+	race_client_connect_next();
+	if (sv_cts_autodemos_discard)
+		self.discardabledemo = TRUE;
+}
+
 void(void) race_init {
 	if (game_type == GAME_TYPE_RACE) {
 		g_race = 1;
@@ -1288,6 +1297,7 @@ void(void) race_init {
 		race_records_path = RACE_RECORD;
 	}
 	if (game_type == GAME_TYPE_CTS) {
+		CVAR_CACHE(sv_cts_autodemos_discard);
 		g_cts = 1;
 		g_race_qualifying = 1;
 		race_records_path = RACE_CTS_RECORD;
@@ -1295,6 +1305,8 @@ void(void) race_init {
 		plugin_chain_gamemenu_send = race_gamemenu_send;
 		race_cmd_client_handle_next = plugin_chain_cmd_client_handle;
 		plugin_chain_cmd_client_handle = race_cmd_client_handle;
+		race_client_connect_next = plugin_chain_client_connect;
+		plugin_chain_client_connect = race_client_connect;
 		plugin_map_finish_message_mod = race_map_finish_message_mod;
 		plugin_map_vote_send_map_name_mod = race_map_vote_send_map_name_mod;
 		precache_model("models/player/grunt.dpm");
