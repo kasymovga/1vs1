@@ -189,3 +189,4 @@ r_glsl_postprocess 0
 r_glsl_saturation 1
 v_glslgamma 0
 vid_touchscreen_overlayalpha 0.5
+sv_autodemo_perclient_discardable 1
