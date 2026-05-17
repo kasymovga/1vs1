@@ -9,6 +9,7 @@ void(void) stat_client_connect {
 		self.clid = str_zone_ifneeded(strcat("BOTCLIENTID", ftos(num_for_edict(self))));
 		stat_player_add(self);
 	}
+	stat_client_connect_next();
 }
 
 void(void) stat_init {
