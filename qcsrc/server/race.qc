@@ -239,7 +239,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 						chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), " on ", mapname , "\n"), 0);
 						if (position == 1) {
 							announce(e, "announcer/male/amazing.wav", "^31st place!");
-							if (sv_cts_autodemos_discard) self.discardabledemo = FALSE;
+							if (sv_cts_autodemos_discard) e.discardabledemo = FALSE;
 						} else if (position == 2)
 							announce(e, "announcer/male/awesome.wav", "^52st place!");
 						else if (position == 2)
