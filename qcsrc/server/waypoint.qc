@@ -1,4 +1,3 @@
-float waypoint_count;
 float waypoint_generated_count;
 float waypoint_schedulerelink_count;
 float waypoint_schedulerelink_save;
@@ -830,7 +829,8 @@ float(string s, float argc) waypoint_cmd_client {
 				e.effects &= ~(EFFECT_NODEPTHTEST | EFFECT_RED | EFFECT_BLUE);
 			}
 			e2 = navigation_findnearestwaypoint(self, FALSE);
-			navigation_markroutes(e2);
+			navigation_markroutes_start(e2);
+			navigation_markroutes(NULL);
 			i = 0;
 			m = 0;
 			for (e = waypoint_list; e; e = e.aiment) {
@@ -866,22 +866,24 @@ float(string s, float argc) waypoint_cmd_client {
 			i = 0;
 			for (e = findchain(classname, "info_player_deathmatch"); e; e = e.chain) {
 				org = e.origin;
+				setsize(e, PL_MIN, PL_MAX);
 				trace_box(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', TRACE_MOVE_NOMONSTERS, world);
 				setorigin(e, trace_endpos);
+				e.flags |= FL_ONGROUND;
 				if (navigation_findnearestwaypoint(e, FALSE)) {
-					setorigin(e, org);
 					e.effects &= ~EFFECT_NODEPTHTEST;
 					e.model = "";
 				} else {
-					setorigin(e, org);
 					sprint(self, strcat("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.effects |= EFFECT_NODEPTHTEST;
 					setmodel(e, self.body.model);
 					e.frame = self.body.frame;
 					e.skin = self.body.skin;
-					setsize(e, '0 0 0', '0 0 0');
 					++i;
 				}
+				setorigin(e, org);
+				e.flags &= ~FL_ONGROUND;
+				setsize(e, '0 0 0', '0 0 0');
 			}
 			if (i)
 				sprint(self, strcat(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n"));
