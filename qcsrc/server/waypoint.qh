@@ -30,3 +30,4 @@ entity(vector position) waypoint_spawnpersonal;
 void(void) waypoint_show_links;
 vector(vector position) waypoint_fixorigin;
 void(void) waypoint_generate_waypoints;
+entity waypoint_list; // linked with .aiment

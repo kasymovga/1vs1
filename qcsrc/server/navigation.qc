@@ -122,7 +122,7 @@ void(void) navigation_poproute {
 
 // find the spawnfunc_waypoint near a dynamic goal such as a dropped weapon
 entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
-	entity waylist, w, best;
+	entity w, best;
 	float dist, bestdist;
 	vector v, org, pm1, pm2;
 	if ((ent.flags & FL_ONGROUND) || ent.waterlevel > WATER_LEVEL_NONE) {
@@ -134,15 +134,12 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 		pm1 = trace_endpos + ent.mins;
 		pm2 = trace_endpos + ent.maxs;
 	}
-	waylist = findchain(classname, "waypoint");
 	// do two scans, because box test is cheaper
-	w = waylist;
-	while (w) {
+	for (w = waypoint_list; w; w = w.aiment) {
 		// if object is touching spawnfunc_waypoint
 		if (w != ent)
 			if (math_boxes_overlap(pm1, pm2, w.absmin, w.absmax))
 				return w;
-		w = w.chain;
 	}
 	org = (pm1 + pm2) / 2;
 	vector _mins = self.mins;
@@ -151,8 +148,7 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 	best = world;
 	bestdist = 1050;
 	// box check failed, try walk
-	w = waylist;
-	while (w) {
+	for (w = waypoint_list; w; w = w.aiment) {
 		// if object can walk from spawnfunc_waypoint
 		if (w != ent) {
 			if (w.wpisbox) {
@@ -184,19 +180,17 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 				}
 			}
 		}
-		w = w.chain;
 	}
 	return best;
 }
 
 // finds the waypoints near the bot initiating a navigation query
-float(entity waylist, float maxdist) navigation_markroutes_nearestwaypoints {
+float(float maxdist) navigation_markroutes_nearestwaypoints {
 	entity head;
 	vector v, m1, m2, diff;
 	float c;
 	c = 0;
-	head = waylist;
-	while (head) {
+	for (head = waypoint_list; head; head = head.aiment) {
 		if (!head.wpconsidered) {
 			if (head.wpisbox) {
 				m1 = head.origin + head.mins;
@@ -220,19 +214,12 @@ float(entity waylist, float maxdist) navigation_markroutes_nearestwaypoints {
 				}
 			}
 		}
-		head = head.chain;
 	}
 	return c;
 }
 
 // updates a path link if a spawnfunc_waypoint link is better than the current one
 void(entity w, entity wp, float cost2) navigation_markroutes_checkwaypoint {
-	vector v;
-	if (wp.wpisbox)
-		v = (wp.absmin + wp.absmax) * 0.5;
-	else
-		v = wp.origin;
-
 	if (wp.wpcost > cost2) {
 		wp.wpcost = cost2;
 		wp.enemy = w;
@@ -242,15 +229,13 @@ void(entity w, entity wp, float cost2) navigation_markroutes_checkwaypoint {
 
 // queries the entire spawnfunc_waypoint network for pathes leading away from the bot
 void(entity fixed_source_waypoint) navigation_markroutes {
-	entity w, wp, waylist;
+	entity w, wp;
 	float searching, cost, cost2;
-	w = waylist = findchain(classname, "waypoint");
-	while (w) {
+	for (w = waypoint_list; w; w = w.aiment) {
 		w.wpconsidered = FALSE;
 		w.wpcost = 10000000;
 		w.wpfire = 0;
-		w.enemy = world;
-		w = w.chain;
+		w.enemy = NULL;
 	}
 	if (fixed_source_waypoint) {
 		fixed_source_waypoint.wpconsidered = TRUE;
@@ -258,13 +243,12 @@ void(entity fixed_source_waypoint) navigation_markroutes {
 		fixed_source_waypoint.wpfire = 1;
 		fixed_source_waypoint.enemy = world;
 	} else {
-		if (!navigation_markroutes_nearestwaypoints(waylist, 750)) return;
+		if (!navigation_markroutes_nearestwaypoints(750)) return;
 	}
 	searching = TRUE;
 	while (searching) {
 		searching = FALSE;
-		w = waylist;
-		while (w) {
+		for (w = waypoint_list; w; w = w.aiment) {
 			if (w.wpfire) {
 				searching = TRUE;
 				w.wpfire = 0;
@@ -303,22 +287,19 @@ void(entity fixed_source_waypoint) navigation_markroutes {
 				wp = w.wp31;if (wp) { cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp31mincost) navigation_markroutes_checkwaypoint(w, wp, cost2);
 				}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 			}
-			w = w.chain;
 		}
 	}
 }
 
 // queries the entire spawnfunc_waypoint network for pathes leading to the bot
 void(entity fixed_source_waypoint) navigation_markroutes_inverted {
-	entity w, wp, waylist;
+	entity w, wp;
 	float searching, cost, cost2;
-	w = waylist = findchain(classname, "waypoint");
-	while (w) {
+	for (w = waypoint_list; w; w = w.aiment) {
 		w.wpconsidered = FALSE;
 		w.wpcost = 10000000;
 		w.wpfire = 0;
 		w.enemy = world;
-		w = w.chain;
 	}
 	if (fixed_source_waypoint) {
 		fixed_source_waypoint.wpconsidered = TRUE;
@@ -331,13 +312,12 @@ void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 	searching = TRUE;
 	while (searching) {
 		searching = FALSE;
-		w = waylist;
-		while (w) {
+		for (w = waypoint_list; w; w = w.aiment) {
 			if (w.wpfire) {
 				searching = TRUE;
 				w.wpfire = 0;
 				cost = w.wpcost; // cost to walk from w to home
-				for (wp = waylist; wp; wp = wp.chain) {
+				for (wp = waypoint_list; wp; wp = wp.aiment) {
 					if (w != wp.wp00) if (w != wp.wp01) if (w != wp.wp02) if (w != wp.wp03)
 					if (w != wp.wp04) if (w != wp.wp05) if (w != wp.wp06) if (w != wp.wp07)
 					if (w != wp.wp08) if (w != wp.wp09) if (w != wp.wp10) if (w != wp.wp11)
@@ -352,7 +332,6 @@ void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 					navigation_markroutes_checkwaypoint(w, wp, cost2);
 				}
 			}
-			w = w.chain;
 		}
 	}
 }

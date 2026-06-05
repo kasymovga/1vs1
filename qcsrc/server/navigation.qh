@@ -48,7 +48,6 @@ void debugnodestatus(vector position, float status);
 void debuggoalstack();
 #endif
 
-float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist);
 float navigation_routetogoal(entity e, vector startposition);
 
 void(void) navigation_clearroute;

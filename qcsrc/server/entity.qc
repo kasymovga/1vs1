@@ -452,3 +452,27 @@ void(entity e, vector v) entity_angles_normalize {
 	e.angles_y -= 360 * floor((e.angles_y - v_y) / 360 + 0.5);
 	e.angles_z -= 360 * floor((e.angles_z - v_z) / 360 + 0.5);
 }
+
+entity(entity list, entity item, .entity linkfield) entity_list_remove {
+	if (list == item) {
+		list = list.linkfield;
+		return list;
+	}
+	entity e;
+	for (e = list; e.linkfield; e = e.linkfield) {
+		if (e.linkfield == item) {
+			e.linkfield = item.linkfield;
+			return list;
+		}
+	}
+	return list;
+}
+
+//entity(entity list, entity item, .entity linkfield) entity_list_add {
+//	entity e;
+//	for (e = list; e; e = e.linkfield) {
+//		if (e == item) return list;
+//	}
+//	item.linkfield = list;
+//	return item;
+//}

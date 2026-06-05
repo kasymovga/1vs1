@@ -33,7 +33,7 @@ void(void) havocbot_ai {
 			float bestdistance, distance;
 			newgoal = world;
 			bestdistance = 10000;
-			for (head = findchain(classname, "waypoint"); head; head = head.chain) {
+			for (head = waypoint_list; head; head = head.aiment) {
 				distance = vlen(head.origin - self.origin);
 				if (distance>10000)
 					continue;

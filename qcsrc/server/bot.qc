@@ -391,8 +391,7 @@ void(float maxupdate) bot_updatedangerousobjects {
 	float c, d, danger;
 	c = 0;
 	bot_dodgelist = findchainfloat(bot_dodge, TRUE);
-	bot_dangerwaypoint = find(bot_dangerwaypoint, classname, "waypoint");
-	while (bot_dangerwaypoint != world) {
+	for (bot_dangerwaypoint = waypoint_list; bot_dangerwaypoint; bot_dangerwaypoint = bot_dangerwaypoint.aiment) {
 		danger = 0;
 		m1 = bot_dangerwaypoint.mins;
 		m2 = bot_dangerwaypoint.maxs;
@@ -414,8 +413,6 @@ void(float maxupdate) bot_updatedangerousobjects {
 		c = c + 1;
 		if (c >= maxupdate)
 			break;
-
-		bot_dangerwaypoint = find(bot_dangerwaypoint, classname, "waypoint");
 	}
 }
 
