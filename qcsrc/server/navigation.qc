@@ -533,7 +533,7 @@ void(void) navigation_poptouchedgoals {
 			if (trace_fraction==1) {
 				// Detect personal waypoints
 				if (self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-				if (self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self) {
+				if ((self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && self.goalcurrent.owner==self) {
 					self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 					self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 				}
@@ -544,7 +544,7 @@ void(void) navigation_poptouchedgoals {
 	while (self.goalcurrent && math_boxes_overlap(m1, m2, self.goalcurrent.absmin, self.goalcurrent.absmax)) {
 		// Detect personal waypoints
 		if (self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-		if (self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self) {
+		if ((self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && self.goalcurrent.owner==self) {
 			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 		}
