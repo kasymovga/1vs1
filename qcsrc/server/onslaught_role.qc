@@ -87,7 +87,7 @@ void(float ratingscale) onslaught_role_goalrating_controlpoints_attack {
 	for (; cp2; cp2 = cp2.chain)
 	{
 		cp2.wpcost = c = 0;
-		cp2.wpconsidered = FALSE;
+		cp2.lip = FALSE;
 
 		if(cp2.isshielded)
 			continue;
@@ -114,14 +114,14 @@ void(float ratingscale) onslaught_role_goalrating_controlpoints_attack {
 
 		// NOTE: probably decrease the cost of attackable control points
 		cp2.wpcost = c;
-		cp2.wpconsidered = TRUE;
+		cp2.lip = TRUE;
 	}
 
 	// We'll consider only the best case
 	bestvalue = 99999999999;
 	for (; cp1; cp1 = cp1.chain)
 	{
-		if not(cp1.wpconsidered)
+		if not(cp1.lip)
 			continue;
 
 		if(cp1.wpcost<bestvalue)

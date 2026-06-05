@@ -191,27 +191,24 @@ float(float maxdist) navigation_markroutes_nearestwaypoints {
 	float c;
 	c = 0;
 	for (head = waypoint_list; head; head = head.aiment) {
-		if (!head.wpconsidered) {
-			if (head.wpisbox) {
-				m1 = head.origin + head.mins;
-				m2 = head.origin + head.maxs;
-				v = self.origin;
-				v_x = bound(m1_x, v_x, m2_x);
-				v_y = bound(m1_y, v_y, m2_y);
-				v_z = bound(m1_z, v_z, m2_z);
-			} else
-				v = head.origin;
+		if (head.wpisbox) {
+			m1 = head.origin + head.mins;
+			m2 = head.origin + head.maxs;
+			v = self.origin;
+			v_x = bound(m1_x, v_x, m2_x);
+			v_y = bound(m1_y, v_y, m2_y);
+			v_z = bound(m1_z, v_z, m2_z);
+		} else
+			v = head.origin;
 
-			diff = v - self.origin;
-			diff_z = max(0, diff_z);
-			if (vlen(diff) < maxdist) {
-				head.wpconsidered = TRUE;
-				if (trace_walk(self, self.origin, self.mins, self.maxs, v, bot_navigation_movemode)) {
-					head.wpcost = vlen(v - self.origin) + head.dmg;
-					head.wpfire = 1;
-					head.enemy = world;
-					c = c + 1;
-				}
+		diff = v - self.origin;
+		diff_z = max(0, diff_z);
+		if (vlen(diff) < maxdist) {
+			if (trace_walk(self, self.origin, self.mins, self.maxs, v, bot_navigation_movemode)) {
+				head.wpcost = vlen(v - self.origin) + head.dmg;
+				head.wpfire = 1;
+				head.enemy = world;
+				c = c + 1;
 			}
 		}
 	}
@@ -232,13 +229,11 @@ void(entity fixed_source_waypoint) navigation_markroutes {
 	entity w, wp;
 	float searching, cost, cost2;
 	for (w = waypoint_list; w; w = w.aiment) {
-		w.wpconsidered = FALSE;
 		w.wpcost = 10000000;
 		w.wpfire = 0;
 		w.enemy = NULL;
 	}
 	if (fixed_source_waypoint) {
-		fixed_source_waypoint.wpconsidered = TRUE;
 		fixed_source_waypoint.wpcost = fixed_source_waypoint.dmg;
 		fixed_source_waypoint.wpfire = 1;
 		fixed_source_waypoint.enemy = world;
@@ -296,13 +291,11 @@ void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 	entity w, wp;
 	float searching, cost, cost2;
 	for (w = waypoint_list; w; w = w.aiment) {
-		w.wpconsidered = FALSE;
 		w.wpcost = 10000000;
 		w.wpfire = 0;
 		w.enemy = world;
 	}
 	if (fixed_source_waypoint) {
-		fixed_source_waypoint.wpconsidered = TRUE;
 		fixed_source_waypoint.wpcost = fixed_source_waypoint.dmg; // the cost to get from X to fixed_source_waypoint
 		fixed_source_waypoint.wpfire = 1;
 		fixed_source_waypoint.enemy = world;
