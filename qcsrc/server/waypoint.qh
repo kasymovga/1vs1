@@ -21,7 +21,6 @@ float g_waypointeditor;
 
 void(entity from, entity to) waypoint_addlink;
 void(void) waypoint_init;
-void(float imp) waypoint_impulse;
 void(entity e) waypoint_spawnforitem;
 void(entity e, vector org) waypoint_spawnforitem_force;
 void(entity e, vector destination, float timetaken) waypoint_spawnforteleporter;
