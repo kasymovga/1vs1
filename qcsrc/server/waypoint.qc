@@ -50,10 +50,7 @@ entity(vector m1, vector m2, float f) waypoint_spawn {
 	w.wpflags = f;
 	setorigin(w, (m1 + m2) * 0.5);
 	setsize(w, m1 - w.origin, m2 - w.origin);
-	if (vlen(w.size) > 0)
-		w.wpisbox = TRUE;
-	
-	if (!w.wpisbox) {
+	if (w.size == '0 0 0') {
 		setsize(w, PL_MIN - '1 1 0', PL_MAX + '1 1 0');
 		if (!entity_move_out_of_solid(w)) {
 			if (!(f & WAYPOINTFLAG_GENERATED)) {
@@ -90,7 +87,7 @@ void(entity from, entity to) waypoint_addlink {
 	if (from.wp20 == to) return;if (from.wp21 == to) return;if (from.wp22 == to) return;if (from.wp23 == to) return;
 	if (from.wp24 == to) return;if (from.wp25 == to) return;if (from.wp26 == to) return;if (from.wp27 == to) return;
 	if (from.wp28 == to) return;if (from.wp29 == to) return;if (from.wp30 == to) return;if (from.wp31 == to) return;
-	if (to.wpisbox || from.wpisbox) {
+	if (to.size != '0 0 0' || from.size != '0 0 0') {
 		// if either is a box we have to find the nearest points on them to
 		// calculate the distance properly
 		vector v1, v2, m1, m2;
@@ -182,26 +179,25 @@ void(void) waypoint_think {
 			if (vlen(dv) >= 1050) { // max search distance in XY
 				continue;
 			}
-			if (!self.wpisbox) {
+			if (self.size == '0 0 0') {
 				trace_box(sv - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, sv, FALSE, self);
 				if (!trace_startsolid) {
 					sv = trace_endpos + '0 0 1';
 				}
 			}
-			if (!e.wpisbox) {
+			if (e.size == '0 0 0') {
 				trace_box(ev - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, ev, FALSE, e);
 				if (!trace_startsolid) {
 					ev = trace_endpos + '0 0 1';
 				}
 			}
-			if (!self.wpisbox && trace_walk(self, sv, PL_MIN, PL_MAX, ev, TRACE_MOVE_NOMONSTERS))
+			if (self.size == '0 0 0' && trace_walk(self, sv, PL_MIN, PL_MAX, ev, TRACE_MOVE_NOMONSTERS))
 				waypoint_addlink(self, e);
 
-			if (!e.wpisbox && trace_walk(e, ev, PL_MIN, PL_MAX, sv, TRACE_MOVE_NOMONSTERS))
+			if (e.size == '0 0 0' && trace_walk(e, ev, PL_MIN, PL_MAX, sv, TRACE_MOVE_NOMONSTERS))
 				waypoint_addlink(e, self);
 		}
 	}
-	self.wplinked = TRUE;
 	waypoint_schedulerelink_count--;
 	if not(waypoint_schedulerelink_count) {
 		print("Relinking waypoints finished\n");
@@ -224,7 +220,6 @@ void(entity wp) waypoint_clearlinks {
 	wp.wp08mincost = wp.wp09mincost = wp.wp10mincost = wp.wp11mincost = wp.wp12mincost = wp.wp13mincost = wp.wp14mincost = wp.wp15mincost = f;
 	wp.wp16mincost = wp.wp17mincost = wp.wp18mincost = wp.wp19mincost = wp.wp20mincost = wp.wp21mincost = wp.wp22mincost = wp.wp23mincost = f;
 	wp.wp24mincost = wp.wp25mincost = wp.wp26mincost = wp.wp27mincost = wp.wp28mincost = wp.wp29mincost = wp.wp30mincost = wp.wp31mincost = f;
-	wp.wplinked = FALSE;
 }
 
 // tell a spawnfunc_waypoint to relink
@@ -234,7 +229,6 @@ void(entity wp) waypoint_schedulerelink {
 
 	// TODO: add some sort of visible box in edit mode for box waypoints
 	waypoint_show(wp);
-	wp.wpisbox = vlen(wp.size) > 0;
 	wp.enemy = world;
 	if (!(wp.wpflags & WAYPOINTFLAG_PERSONAL))
 		wp.owner = world;
@@ -706,7 +700,7 @@ void(entity e, vector org) waypoint_spawnforitem_force {
 	org = waypoint_fixorigin(org);
 	// don't spawn an item spawnfunc_waypoint if it already exists
 	for (w = waypoint_list; w; w = w.aiment) {
-		if (w.wpisbox) {
+		if (w.size != '0 0 0') {
 			if (math_boxes_overlap(org, org, w.absmin, w.absmax)) {
 				e.nearestwaypoint = w;
 				return;
@@ -834,7 +828,7 @@ float(string s, float argc) waypoint_cmd_client {
 			i = 0;
 			m = 0;
 			for (e = waypoint_list; e; e = e.aiment) {
-				if (e.wpcost >= 10000000) {
+				if (e.height >= 10000000) {
 					sprint(self, strcat("unreachable: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
 					e.effects |= EFFECT_NODEPTHTEST | EFFECT_BLUE;
@@ -848,7 +842,7 @@ float(string s, float argc) waypoint_cmd_client {
 			navigation_markroutes_inverted(e2);
 			i = 0;
 			for (e = waypoint_list; e; e = e.aiment) {
-				if (e.wpcost >= 10000000) {
+				if (e.height >= 10000000) {
 					sprint(self, strcat("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
 					if not(e.effects & EFFECT_NODEPTHTEST) // not already reported before

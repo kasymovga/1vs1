@@ -151,7 +151,7 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 	for (w = waypoint_list; w; w = w.aiment) {
 		// if object can walk from spawnfunc_waypoint
 		if (w != ent) {
-			if (w.wpisbox) {
+			if (w.size != '0 0 0') {
 				vector wm1, wm2;
 				wm1 = w.origin + w.mins;
 				wm2 = w.origin + w.maxs;
@@ -230,7 +230,7 @@ void(entity w) navigation_markroutes_edge_remove {
 void(void) navigation_markroutes_clear {
 	entity w;
 	for (w = waypoint_list; w; w = w.aiment) {
-		w.wpcost = 10000000;
+		w.height = 10000000;
 		w.enemy = NULL;
 		w.weaponentity = NULL;
 		w.exteriorweaponentity = NULL;
@@ -242,7 +242,7 @@ void(void) navigation_markroutes_clear {
 void(entity fixed_source_waypoint) navigation_markroutes_start {
 	navigation_markroutes_clear();
 	if (fixed_source_waypoint) {
-		fixed_source_waypoint.wpcost = 0;
+		fixed_source_waypoint.height = 0;
 		fixed_source_waypoint.enemy = NULL;
 		navigation_markroutes_edge_current = fixed_source_waypoint;
 		navigation_markroutes_edge_add(fixed_source_waypoint);
@@ -251,7 +251,7 @@ void(entity fixed_source_waypoint) navigation_markroutes_start {
 		vector v, m1, m2, diff;
 		float maxdist = 750;
 		for (w = waypoint_list; w; w = w.aiment) {
-			if (w.wpisbox) {
+			if (w.size != '0 0 0') {
 				m1 = w.origin + w.mins;
 				m2 = w.origin + w.maxs;
 				v = self.origin + self.mins_z * '0 0 1';
@@ -265,10 +265,10 @@ void(entity fixed_source_waypoint) navigation_markroutes_start {
 			diff_z = max(0, diff_z);
 			if (vlen(diff) < maxdist) {
 				if (trace_walk(self, self.origin, self.mins, self.maxs, v, bot_navigation_movemode)) {
-					w.wpcost = vlen(v - self.origin) + w.dmg;
+					w.height = vlen(v - self.origin) + w.dmg;
 				}
 				navigation_markroutes_edge_add(w);
-				if (!navigation_markroutes_edge_current || navigation_markroutes_edge_current.wpcost > w.wpcost)
+				if (!navigation_markroutes_edge_current || navigation_markroutes_edge_current.height > w.height)
 					navigation_markroutes_edge_current = w;
 			}
 		}
@@ -279,50 +279,50 @@ void(entity fixed_source_waypoint) navigation_markroutes_start {
 void(entity target_waypoint) navigation_markroutes {
 	entity w, wp;
 	float cost, cost2;
-	if (target_waypoint && target_waypoint.wpcost < 10000000 &&
+	if (target_waypoint && target_waypoint.height < 10000000 &&
 			!target_waypoint.weaponentity && !target_waypoint.exteriorweaponentity)
 		return; // route is already exists
 
 	while (navigation_markroutes_edge_current && target_waypoint != navigation_markroutes_edge_current) {
 		w = navigation_markroutes_edge_current;
 		navigation_markroutes_edge_remove(w);
-		cost = w.wpcost;
-		if ((wp = w.wp00)) { cost2 = cost + wp.dmg + w.wp00mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp01)) { cost2 = cost + wp.dmg + w.wp01mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp02)) { cost2 = cost + wp.dmg + w.wp02mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp03)) { cost2 = cost + wp.dmg + w.wp03mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp04)) { cost2 = cost + wp.dmg + w.wp04mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp05)) { cost2 = cost + wp.dmg + w.wp05mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp06)) { cost2 = cost + wp.dmg + w.wp06mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp07)) { cost2 = cost + wp.dmg + w.wp07mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp08)) { cost2 = cost + wp.dmg + w.wp08mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp09)) { cost2 = cost + wp.dmg + w.wp09mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp10)) { cost2 = cost + wp.dmg + w.wp10mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp11)) { cost2 = cost + wp.dmg + w.wp11mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp12)) { cost2 = cost + wp.dmg + w.wp12mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp13)) { cost2 = cost + wp.dmg + w.wp13mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp14)) { cost2 = cost + wp.dmg + w.wp14mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp15)) { cost2 = cost + wp.dmg + w.wp15mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp16)) { cost2 = cost + wp.dmg + w.wp16mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp17)) { cost2 = cost + wp.dmg + w.wp17mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp18)) { cost2 = cost + wp.dmg + w.wp18mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp19)) { cost2 = cost + wp.dmg + w.wp19mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp20)) { cost2 = cost + wp.dmg + w.wp20mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp21)) { cost2 = cost + wp.dmg + w.wp21mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp22)) { cost2 = cost + wp.dmg + w.wp22mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp23)) { cost2 = cost + wp.dmg + w.wp23mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp24)) { cost2 = cost + wp.dmg + w.wp24mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp25)) { cost2 = cost + wp.dmg + w.wp25mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp26)) { cost2 = cost + wp.dmg + w.wp26mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp27)) { cost2 = cost + wp.dmg + w.wp27mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp28)) { cost2 = cost + wp.dmg + w.wp28mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp29)) { cost2 = cost + wp.dmg + w.wp29mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp30)) { cost2 = cost + wp.dmg + w.wp30mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
-		if ((wp = w.wp31)) { cost2 = cost + wp.dmg + w.wp31mincost;if (wp.wpcost > cost2) { wp.wpcost = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); };
+		cost = w.height;
+		if ((wp = w.wp00)) { cost2 = cost + wp.dmg + w.wp00mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp01)) { cost2 = cost + wp.dmg + w.wp01mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp02)) { cost2 = cost + wp.dmg + w.wp02mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp03)) { cost2 = cost + wp.dmg + w.wp03mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp04)) { cost2 = cost + wp.dmg + w.wp04mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp05)) { cost2 = cost + wp.dmg + w.wp05mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp06)) { cost2 = cost + wp.dmg + w.wp06mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp07)) { cost2 = cost + wp.dmg + w.wp07mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp08)) { cost2 = cost + wp.dmg + w.wp08mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp09)) { cost2 = cost + wp.dmg + w.wp09mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp10)) { cost2 = cost + wp.dmg + w.wp10mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp11)) { cost2 = cost + wp.dmg + w.wp11mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp12)) { cost2 = cost + wp.dmg + w.wp12mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp13)) { cost2 = cost + wp.dmg + w.wp13mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp14)) { cost2 = cost + wp.dmg + w.wp14mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp15)) { cost2 = cost + wp.dmg + w.wp15mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp16)) { cost2 = cost + wp.dmg + w.wp16mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp17)) { cost2 = cost + wp.dmg + w.wp17mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp18)) { cost2 = cost + wp.dmg + w.wp18mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp19)) { cost2 = cost + wp.dmg + w.wp19mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp20)) { cost2 = cost + wp.dmg + w.wp20mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp21)) { cost2 = cost + wp.dmg + w.wp21mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp22)) { cost2 = cost + wp.dmg + w.wp22mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp23)) { cost2 = cost + wp.dmg + w.wp23mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp24)) { cost2 = cost + wp.dmg + w.wp24mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp25)) { cost2 = cost + wp.dmg + w.wp25mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp26)) { cost2 = cost + wp.dmg + w.wp26mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp27)) { cost2 = cost + wp.dmg + w.wp27mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp28)) { cost2 = cost + wp.dmg + w.wp28mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp29)) { cost2 = cost + wp.dmg + w.wp29mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp30)) { cost2 = cost + wp.dmg + w.wp30mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
+		if ((wp = w.wp31)) { cost2 = cost + wp.dmg + w.wp31mincost; if (wp.height > cost2) { wp.height = cost2; wp.enemy = w; navigation_markroutes_edge_add(wp); }
 		}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 		if ((navigation_markroutes_edge_current = navigation_markroutes_edge_list))
 			for (w = navigation_markroutes_edge_list.weaponentity; w; w = w.weaponentity) {
-				if (navigation_markroutes_edge_current.wpcost > w.wpcost)
+				if (navigation_markroutes_edge_current.height > w.height)
 					navigation_markroutes_edge_current = w;
 			}
 	}
@@ -334,7 +334,7 @@ void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 	float searching;
 	navigation_markroutes_clear();
 	if (fixed_source_waypoint) {
-		fixed_source_waypoint.wpcost = 0; // the cost to get from X to fixed_source_waypoint
+		fixed_source_waypoint.height = 0; // the cost to get from X to fixed_source_waypoint
 		fixed_source_waypoint.enemy = world;
 		navigation_markroutes_edge_current = fixed_source_waypoint;
 		navigation_markroutes_edge_add(fixed_source_waypoint);
@@ -345,7 +345,7 @@ void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 		while ((w = navigation_markroutes_edge_list)) {
 			navigation_markroutes_edge_remove(w);
 			for (wp = waypoint_list; wp; wp = wp.aiment) {
-				if (wp.wpcost == 0) continue;
+				if (wp.height == 0) continue;
 				if (w != wp.wp00) if (w != wp.wp01) if (w != wp.wp02) if (w != wp.wp03)
 				if (w != wp.wp04) if (w != wp.wp05) if (w != wp.wp06) if (w != wp.wp07)
 				if (w != wp.wp08) if (w != wp.wp09) if (w != wp.wp10) if (w != wp.wp11)
@@ -356,7 +356,7 @@ void(entity fixed_source_waypoint) navigation_markroutes_inverted {
 				if (w != wp.wp28) if (w != wp.wp29) if (w != wp.wp30) if (w != wp.wp31)
 					continue;
 
-				wp.wpcost = 0;
+				wp.height = 0;
 				wp.enemy = w;
 				navigation_markroutes_edge_add(wp);
 			}
@@ -452,8 +452,8 @@ void(entity e, float f, float rangebias) navigation_routerating {
 		nwp = e.nearestwaypoint;
 		if (nwp) navigation_markroutes(nwp);
 	}
-	if (nwp && nwp.wpcost < 10000000)
-		f = f * rangebias / (rangebias + nwp.wpcost);
+	if (nwp && nwp.height < 10000000)
+		f = f * rangebias / (rangebias + nwp.height);
 	else
 		f = 0;
 

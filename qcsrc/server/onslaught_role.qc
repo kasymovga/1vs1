@@ -86,7 +86,7 @@ void(float ratingscale) onslaught_role_goalrating_controlpoints_attack {
 	// Filter control points
 	for (; cp2; cp2 = cp2.chain)
 	{
-		cp2.wpcost = c = 0;
+		cp2.height = c = 0;
 		cp2.lip = FALSE;
 
 		if(cp2.isshielded)
@@ -113,7 +113,7 @@ void(float ratingscale) onslaught_role_goalrating_controlpoints_attack {
 			++c;
 
 		// NOTE: probably decrease the cost of attackable control points
-		cp2.wpcost = c;
+		cp2.height = c;
 		cp2.lip = TRUE;
 	}
 
@@ -124,9 +124,9 @@ void(float ratingscale) onslaught_role_goalrating_controlpoints_attack {
 		if not(cp1.lip)
 			continue;
 
-		if(cp1.wpcost<bestvalue)
+		if(cp1.height<bestvalue)
 		{
-			bestvalue = cp1.wpcost;
+			bestvalue = cp1.height;
 			cp = cp1;
 			self.havocbot_ons_target = cp1;
 		}

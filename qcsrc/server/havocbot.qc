@@ -810,7 +810,7 @@ float(vector pos) havocbot_moveto {
 	// Step 2: Linking waypoint
 	if (self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_LINKING) {
 		// Wait until it is linked
-		if (!self.havocbot_personal_waypoint.wplinked)
+		if (self.havocbot_personal_waypoint.nextthink)
 			return BOT_CMD_STATUS_EXECUTING;
 
 		self.havocbot_personal_waypoint_searchtime = time; // so we set the route next frame
