@@ -283,6 +283,38 @@ void(void) cvar_profile_dlc_load {
 	}
 }
 
+string(string cvarname) cvar_name {
+	if (substring(cvarname, 0, 2) != "g_")
+		return cvarname;
+
+	string s;
+	float i, j;
+	if (cvar_string_orig((s = strcat("force_", "_", cvarname))) != "")
+		return s;
+
+	for (i = 0; i < cvar_profile_prefix_len; i++) {
+		for (j = 0; j < cvar_game_prefix_len; j++) {
+			RM({
+				if (cvar_string_orig((s = strcat("rm_", cvar_profile_prefix[i], "_", cvar_game_prefix[j], "_", cvarname))) != "")
+					return s;
+			})
+			if (cvar_string_orig((s = strcat(cvar_profile_prefix[i], "_", cvar_game_prefix[j], "_", cvarname))) != "")
+				return s;
+		}
+		RM({
+			if (cvar_string_orig((s = strcat("rm_", cvar_profile_prefix[i], "_", cvarname))) != "")
+				return s;
+		})
+		if (cvar_string_orig((s = strcat(cvar_profile_prefix[i], "_", cvarname))) != "")
+			return s;
+	}
+	for (j = 0; j < cvar_game_prefix_len; j++) {
+		if (cvar_string_orig((s = strcat(cvar_game_prefix[j], "_", cvarname))) != "")
+			return s;
+	}
+	return cvarname;
+}
+
 void(string profile) cvar_init {
 	string s;
 	cvar_orig = cvar;

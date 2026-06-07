@@ -6,6 +6,7 @@ string dlc_extra_pk3_list;
 string dlc_rexext_forcemodel;
 
 void dlc_settemp(string name, string value) {
+	name = cvar_name(name);
 	if (g_campaign) {
 		cvar_set(name, value);
 		return;
@@ -20,13 +21,14 @@ void dlc_settemp(string name, string value) {
 	registercvar(name, "");
 	cvar_set(name, value);
 	cvar_set("_dlc_settemps_count", ftos(n + 1));
+	//print("Set ", cvar_string(strcat("_dlc_settemp_name", ftos(n))), " ", cvar_string(strcat("_dlc_settemp_savevalue", ftos(n))), "\n");
 }
 
 float dlc_load_player_model_not_forced;
 float(string s) dlc_load_settemps_from {
 	float f;
 	string line, c;
-	string cvar_name, cvar_value;
+	string name, value;
 	float separator;
 	f = fopen(s, FILE_READ);
 	if (f < 0) return FALSE;
@@ -48,25 +50,25 @@ float(string s) dlc_load_settemps_from {
 		if (separator < 0)
 			continue;
 
-		cvar_name = substring(line, 0, separator);
-		if (cvar_name == "require" || cvar_name == "require_ge" || cvar_name == "require_le") {
+		name = substring(line, 0, separator);
+		if (name == "require" || name == "require_ge" || name == "require_le") {
 			line = dlc_trimspaces(substring(line, separator + 1, -1));
 			separator = dlc_findspace(line);
 			if (separator < 0)
 				continue;
 
-			string req = cvar_name;
-			cvar_name = substring(line, 0, separator);
-			cvar_value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(substring(line, separator + 1, -1))));
+			string req = name;
+			name = substring(line, 0, separator);
+			value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(substring(line, separator + 1, -1))));
 			if (req == "require") {
-				if (cvar_name == "g_profile") {
-					if not(cvar_profile_presents(cvar_value)) {
+				if (name == "g_profile") {
+					if not(cvar_profile_presents(value)) {
 						r = 0;
 						break;
 					}
-				} else if (substring(cvar_name, 0, 5) == "date_") {
-					string s1 = cvar_string(cvar_name);
-					string s2 = cvar_value;
+				} else if (substring(name, 0, 5) == "date_") {
+					string s1 = cvar_string(name);
+					string s2 = value;
 					//Remove leading 0 for date
 					if (substring(s1, 0, 1) == "0") s1 = substring(s1, 1, -1);
 					if (substring(s2, 0, 1) == "0") s2 = substring(s2, 1, -1);
@@ -74,51 +76,51 @@ float(string s) dlc_load_settemps_from {
 						r = 0;
 						break;
 					}
-				} else if (cvar_string(cvar_name) != cvar_value) {
+				} else if (cvar_string(name) != value) {
 					r = 0;
 					break;
 				}
 			} else if (req == "require_ge") {
-				if (cvar(cvar_name) < stof(cvar_value)) {
+				if (cvar(name) < stof(value)) {
 					r = 0;
 					break;
 				}
 			} else if (req == "require_le") {
-				if (cvar(cvar_name) > stof(cvar_value)) {
+				if (cvar(name) > stof(value)) {
 					r = 0;
 					break;
 				}
 			}
 			continue;
 		}
-		cvar_value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(substring(line, separator + 1, -1))));
-		if (cvar_name == "player_model_precache") { //forced player model precache
-			player_body_precache(cvar_value);
+		value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(substring(line, separator + 1, -1))));
+		if (name == "player_model_precache") { //forced player model precache
+			player_body_precache(value);
 			continue;
 		}
-		if (cvar_name == "model_precache") { //forced model precache
-			precache_model(cvar_value);
+		if (name == "model_precache") { //forced model precache
+			precache_model(value);
 			continue;
 		}
-		if (cvar_name == "g_player_forcemodel" && cvar_value != "0") {
+		if (name == "g_player_forcemodel" && value != "0") {
 			if (dlc_load_player_model_not_forced > 0) continue;
-			if (strstrofs(strcat(" ", dlc_rexext_forcemodel, " "), strcat(" ", cvar_value, " "), 0) >= 0) continue;
+			if (strstrofs(strcat(" ", dlc_rexext_forcemodel, " "), strcat(" ", value, " "), 0) >= 0) continue;
 			if (dlc_rexext_forcemodel != "") {
-				cvar_name = "g_player_allowed_models";
+				name = "g_player_allowed_models";
 				dlc_settemp("g_player_forcemodel", "0");
-				cvar_value = strcat(dlc_rexext_forcemodel, " ", cvar_value);
+				value = strcat(dlc_rexext_forcemodel, " ", value);
 				str_unzone_ifneeded(dlc_rexext_forcemodel);
 			}
-			dlc_rexext_forcemodel = str_zone_ifneeded(cvar_value);
-		} else if (cvar_name == "g_player_allowed_models") {
+			dlc_rexext_forcemodel = str_zone_ifneeded(value);
+		} else if (name == "g_player_allowed_models") {
 			if (dlc_load_player_model_not_forced > 0) continue;
-			if (strstrofs(strcat(" ", dlc_rexext_forcemodel, " "), strcat(" ", cvar_value, " "), 0) >= 0) continue;
+			if (strstrofs(strcat(" ", dlc_rexext_forcemodel, " "), strcat(" ", value, " "), 0) >= 0) continue;
 			dlc_settemp("g_player_forcemodel", "0");
-			cvar_value = strcat(dlc_rexext_forcemodel, " ", cvar_value);
+			value = strcat(dlc_rexext_forcemodel, " ", value);
 			str_unzone_ifneeded(dlc_rexext_forcemodel);
-			dlc_rexext_forcemodel = str_zone_ifneeded(cvar_value);
+			dlc_rexext_forcemodel = str_zone_ifneeded(value);
 		}
-		dlc_settemp(cvar_name, cvar_value);
+		dlc_settemp(name, value);
 	}
 	fclose(f);
 	return r;
@@ -136,6 +138,7 @@ void(void) dlc_unload_settemps {
 	float i;
 	for (i = 0; i < n; i++) {
 		cvar_set(cvar_string(strcat("_dlc_settemp_name", ftos(i))), cvar_string(strcat("_dlc_settemp_savevalue", ftos(i))));
+		//print("Restore ", cvar_string(strcat("_dlc_settemp_name", ftos(i))), " ", cvar_string(strcat("_dlc_settemp_savevalue", ftos(i))), "\n");
 	}
 	cvar_set("_dlc_settemps_count", "0");
 	str_unzone_ifneeded(dlc_rexext_forcemodel);
