@@ -175,7 +175,7 @@ string(string cvarname) cvar_string_ext {
 
 	string s, val;
 	float i, j;
-	if ((s = cvar_string(strcat("force_", "_", cvarname))) != "")
+	if ((s = cvar_string_orig(strcat("force_", "_", cvarname))) != "")
 		return s;
 
 	for (i = 0; i < cvar_profile_prefix_len; i++) {
