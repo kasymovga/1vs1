@@ -479,22 +479,26 @@ float(entity e, vector startposition) navigation_routetogoal {
 		return TRUE;
 
 	// if it can reach the goal there is nothing more to do
-	vector v1;
-	vector v2;
-	if (e.movetype == MOVETYPE_WALK || e.movetype == MOVETYPE_QCWALK) {
-		trace_box(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', TRACE_MOVE_NORMAL, e);
-		v1 = trace_endpos + e.mins;
-		v2 = trace_endpos + e.maxs;
-	} else {
-		v1 = e.origin + e.mins;
-		v2 = e.origin + e.maxs;
-	}
-	vector v;
-	v_x = bound(v1_x, self.origin_x, v2_x);
-	v_y = bound(v1_y, self.origin_y, v2_y);
-	v_z = bound(v1_z, self.origin_z, v2_z);
-	if (trace_walk(self, startposition, self.mins, self.maxs, v, bot_navigation_movemode)) {
-		return TRUE;
+	vector o = ENTITY_CENTER(self);
+	if (checkpvs(o, e)) {
+		vector v1;
+		vector v2;
+		if (e.movetype == MOVETYPE_WALK || e.movetype == MOVETYPE_QCWALK) {
+			trace_box(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', TRACE_MOVE_NORMAL, e);
+			v1 = trace_endpos + e.mins;
+			v2 = trace_endpos + e.maxs;
+		} else {
+			v1 = e.origin + e.mins;
+			v2 = e.origin + e.maxs;
+		}
+		vector v;
+		v_x = bound(v1_x, self.origin_x, v2_x);
+		v_y = bound(v1_y, self.origin_y, v2_y);
+		v_z = bound(v1_z, self.origin_z, v2_z);
+		if (vlen(v - o) < 1000 + self.maxs_x)
+		if (trace_walk(self, startposition, self.mins, self.maxs, v, bot_navigation_movemode)) {
+			return TRUE;
+		}
 	}
 	// see if there are waypoints describing a path to the item
 	if (e.classname != "waypoint" || (e.wpflags & WAYPOINTFLAG_PERSONAL))
