@@ -192,7 +192,7 @@ void() ctf_role_carrier {
 			ctf_role_goalrating_carrieritems(1000, self.origin, 1000);
 
 		navigation_goalrating_end();
-		if (self.navigation_hasgoals)
+		if (navigation_hasgoals)
 			self.havocbot_cantfindflag = time + 10;
 		else if (time > self.havocbot_cantfindflag) {
 			// Can't navigate to my own base, suicide!

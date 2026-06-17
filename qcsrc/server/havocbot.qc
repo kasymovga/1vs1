@@ -766,7 +766,7 @@ float(void) havocbot_moveto_refresh_route {
 	navigation_goalrating_start();
 	navigation_routerating(wp, 10000, 10000);
 	navigation_goalrating_end();
-	return self.navigation_hasgoals;
+	return navigation_hasgoals;
 }
 
 float(vector pos) havocbot_moveto {

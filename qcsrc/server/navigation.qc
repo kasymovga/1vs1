@@ -4,7 +4,6 @@ float bot_ai_navigation_jetpack_mindistance;
 // completely empty the goal stack, used when deciding where to go
 void(void) navigation_clearroute {
 	//print("bot ", etos(self), " clear\n");
-	self.navigation_hasgoals = FALSE;
 	self.goalcurrent = world;
 	self.goalstack01 = world;
 	self.goalstack02 = world;
@@ -439,10 +438,7 @@ void(entity e, float f, float rangebias) navigation_routerating {
 		navigation_markroutes(nwp);
 	} else {
 		if (time > e.nearestwaypointtimeout) {
-			nwp = navigation_findnearestwaypoint(e, TRUE);
-			if (nwp)
-				e.nearestwaypoint = nwp;
-
+			e.nearestwaypoint = navigation_findnearestwaypoint(e, TRUE);
 			// TODO: Cleaner solution, probably handling this timeout from ctf.qc
 			if (e.classname=="item_flag_team")
 				e.nearestwaypointtimeout = time + 2;
@@ -470,7 +466,7 @@ float(entity e, vector startposition) navigation_routetogoal {
 	if (!e)
 		return FALSE;
 
-	self.navigation_hasgoals = TRUE;
+	navigation_hasgoals = TRUE;
 	// put the entity on the goal stack
 	//print("routetogoal ", etos(e), "\n");
 	navigation_pushroute(e);
@@ -495,7 +491,7 @@ float(entity e, vector startposition) navigation_routetogoal {
 		v_x = bound(v1_x, self.origin_x, v2_x);
 		v_y = bound(v1_y, self.origin_y, v2_y);
 		v_z = bound(v1_z, self.origin_z, v2_z);
-		if (vlen(v - o) < 1000 + self.maxs_x)
+		if (vlen(v - o) < 2000 + self.maxs_x)
 		if (trace_walk(self, startposition, self.mins, self.maxs, v, bot_navigation_movemode)) {
 			return TRUE;
 		}
@@ -569,7 +565,7 @@ void(void) navigation_poptouchedgoals {
 void(void) navigation_goalrating_start {
 	self.navigation_jetpack_goal = world;
 	navigation_bestrating = -1;
-	self.navigation_hasgoals = FALSE;
+	navigation_hasgoals = FALSE;
 	navigation_bestgoal = NULL;
 	navigation_markroutes_start(NULL);
 }
@@ -578,7 +574,7 @@ void(void) navigation_goalrating_start {
 void(void) navigation_goalrating_end {
 	navigation_routetogoal(navigation_bestgoal, self.origin);
 	// Hack: if it can't walk to any goal just move blindly to the first visible waypoint
-	if not (self.navigation_hasgoals) {
+	if not(navigation_hasgoals) {
 		entity head;
 		random_selection_init();
 		head = findradius(self.origin,1000);
@@ -594,7 +590,7 @@ void(void) navigation_goalrating_end {
 		if (random_selection_chosen_ent)
 			navigation_routetogoal(random_selection_chosen_ent, self.origin);
 
-		self.navigation_hasgoals = FALSE; // Reset this value
+		navigation_hasgoals = FALSE;
 	}
 }
 
