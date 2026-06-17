@@ -699,6 +699,7 @@ void(entity e, vector org) waypoint_spawnforitem_force {
 	// Fix the waypoint altitude if necessary
 	org = waypoint_fixorigin(org);
 	// don't spawn an item spawnfunc_waypoint if it already exists
+	e.nearestwaypointtimeout = time + 1000000000;
 	for (w = waypoint_list; w; w = w.aiment) {
 		if (w.size != '0 0 0') {
 			if (math_boxes_overlap(org, org, w.absmin, w.absmax)) {
