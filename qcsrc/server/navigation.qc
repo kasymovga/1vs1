@@ -124,6 +124,7 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 	entity w, best;
 	float dist, bestdist;
 	vector v, org, pm1, pm2;
+	if (ent.classname == "waypoint") return NULL;
 	if ((ent.flags & FL_ONGROUND) || ent.waterlevel > WATER_LEVEL_NONE) {
 		pm1 = ent.origin + ent.mins;
 		pm2 = ent.origin + ent.maxs;
@@ -132,13 +133,6 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 		trace_box(ent.origin, ent.mins, ent.maxs, ent.origin + '0 0 -1000', TRACE_MOVE_NOMONSTERS, ent);
 		pm1 = trace_endpos + ent.mins;
 		pm2 = trace_endpos + ent.maxs;
-	}
-	// do two scans, because box test is cheaper
-	for (w = waypoint_list; w; w = w.aiment) {
-		// if object is touching spawnfunc_waypoint
-		if (w != ent)
-			if (math_boxes_overlap(pm1, pm2, w.absmin, w.absmax))
-				return w;
 	}
 	org = (pm1 + pm2) / 2;
 	vector _mins = ent.mins;
@@ -149,32 +143,33 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 	// box check failed, try walk
 	for (w = waypoint_list; w; w = w.aiment) {
 		// if object can walk from spawnfunc_waypoint
-		if (w != ent) {
-			if (w.size != '0 0 0') {
-				vector wm1, wm2;
-				wm1 = w.origin + w.mins;
-				wm2 = w.origin + w.maxs;
-				v_x = bound(wm1_x, org_x, wm2_x);
-				v_y = bound(wm1_y, org_y, wm2_y);
-				v_z = bound(wm1_z, org_z, wm2_z);
-			} else
-				v = w.origin;
+		if (w.size != '0 0 0') {
+			vector wm1, wm2;
+			wm1 = w.origin + w.mins;
+			wm2 = w.origin + w.maxs;
+			v_x = bound(wm1_x, org_x, wm2_x);
+			v_y = bound(wm1_y, org_y, wm2_y);
+			v_z = bound(wm1_z, org_z, wm2_z);
+		} else
+			v = w.origin;
 
-			dist = vlen(v - org);
-			if (bestdist > dist) {
-				trace_line(v, org, TRUE, ent);
-				if (trace_fraction == 1) {
-					if (walkfromwp) {
-						//print("^1can I reach ", vtos(org), " from ", vtos(v), "?\n");
-						if (trace_walk(ent, v + '0 0 -1' * _mins_z, _mins, _maxs, org, bot_navigation_movemode)) {
-							bestdist = dist;
-							best = w;
-						}
-					} else {
-						if (trace_walk(ent, org, _mins, _maxs, v, bot_navigation_movemode)) {
-							bestdist = dist;
-							best = w;
-						}
+		dist = vlen(v - org);
+		if (bestdist > dist) {
+			if (math_boxes_overlap(pm1, pm2, w.absmin, w.absmax))
+				return w;
+
+			trace_line(v, org, TRUE, ent);
+			if (trace_fraction == 1) {
+				if (walkfromwp) {
+					//print("^1can I reach ", vtos(org), " from ", vtos(v), "?\n");
+					if (trace_walk(ent, v + '0 0 -1' * _mins_z, _mins, _maxs, org, bot_navigation_movemode)) {
+						bestdist = dist;
+						best = w;
+					}
+				} else {
+					if (trace_walk(ent, ent.origin, _mins, _maxs, v, bot_navigation_movemode)) {
+						bestdist = dist;
+						best = w;
 					}
 				}
 			}
@@ -440,10 +435,7 @@ void(entity e, float f, float rangebias) navigation_routerating {
 		if (time > e.nearestwaypointtimeout) {
 			e.nearestwaypoint = navigation_findnearestwaypoint(e, TRUE);
 			// TODO: Cleaner solution, probably handling this timeout from ctf.qc
-			if (e.classname=="item_flag_team")
-				e.nearestwaypointtimeout = time + 2;
-			else
-				e.nearestwaypointtimeout = time + random() * 3 + 5;
+			e.nearestwaypointtimeout = time + random() * 2 + 2;
 		}
 		nwp = e.nearestwaypoint;
 		if (nwp) navigation_markroutes(nwp);
