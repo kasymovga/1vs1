@@ -107,6 +107,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 	entity head;
 	float t, noteam, distance;
 	entity e;
+	vector eo;
 	noteam = ((self.team == 0) || !team_teams); // fteqcc sucks
 	if (bot_nofire)
 		return;
@@ -121,7 +122,8 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 		if (head.health > 0)
 		if ((noteam && (!bot_ignore_bots || clienttype(head) == CLIENTTYPE_REAL)) || head.team != self.team) {
 			e = player_entity(head);
-			distance = vlen(e.origin - org);
+			eo = ENTITY_CENTER(e);
+			distance = vlen(eo - org);
 			if (distance < 100 || distance > sradius)
 				continue;
 
@@ -130,7 +132,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 
 			// not falling
 			if not(e.flags & FL_ONGROUND) {
-				trace_line(e.origin, e.origin + '0 0 -1500', TRUE, world);
+				trace_line(eo, eo + '0 0 -1500', TRUE, NULL);
 				t = pointcontents(trace_endpos + '0 0 1');
 				if (t != CONTENT_SOLID)
 				if ((t == CONTENT_WATER) || (t == CONTENT_SLIME) || (t == CONTENT_LAVA))
@@ -151,14 +153,15 @@ void() havocbot_role_dm;
 //DM:
 //go to best items
 void() havocbot_role_dm {
+	vector o = ENTITY_CENTER(self);
 	if (self.deadflag != DEAD_NO)
 		return;
 
 	if (self.bot_strategytime < time) {
 		self.bot_strategytime = time + bot_ai_strategyinterval;
 		navigation_goalrating_start();
-		havocbot_role_goalrating_items(10000, self.origin, 10000);
-		havocbot_role_goalrating_enemyplayers(20000, self.origin, 10000);
+		havocbot_role_goalrating_items(10000, o, 10000);
+		havocbot_role_goalrating_enemyplayers(20000, o, 10000);
 		//havocbot_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
