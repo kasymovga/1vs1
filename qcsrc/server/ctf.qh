@@ -2,3 +2,5 @@ void() ctf_init;
 float CTF_FLAG_BASE = 1;
 float CTF_FLAG_CARRY = 2;
 float CTF_FLAG_DROPPED = 3;
+entity ctf_worldflaglist; // linked with enemy field
+.entity basewaypoint;

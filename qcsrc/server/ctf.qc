@@ -53,10 +53,7 @@ float g_ctf_count_suicides;
 
 #define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
 
-.entity basewaypoint;
 .entity sprite;
-entity ctf_worldflaglist; // CTF flags in the map
-.entity ctf_worldflagnext;
 .float dropperid;
 .float ctf_droptime;
 
@@ -642,7 +639,7 @@ float(entity ignore) ctf_flag_visibility {
 
 void(string basesprite) ctf_flag_spawn {
 	// link flag into ctf_worldflaglist
-	self.ctf_worldflagnext = ctf_worldflaglist;
+	self.enemy = ctf_worldflaglist;
 	ctf_worldflaglist = self;
 	self.classname = "ctf_flag_team";
 	self.message2 = "###item###";
@@ -876,7 +873,7 @@ void() ctf_player_think {
 
 	redflags = 0;
 	blueflags = 0;
-	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if (flag.cnt != CTF_FLAG_BASE) {
+	for (flag = ctf_worldflaglist; flag; flag = flag.enemy) if (flag.cnt != CTF_FLAG_BASE) {
 		if (flag.items & IT_KEY2) // blue
 			++redflags;
 		else if (flag.items & IT_KEY1) // red
@@ -889,7 +886,7 @@ void() ctf_player_think {
 	if (blueflags)
 		blueflags = math_mod(floor(time * blueflags * 0.75), blueflags);
 
-	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if (flag.cnt != CTF_FLAG_BASE) {
+	for (flag = ctf_worldflaglist; flag; flag = flag.enemy) if (flag.cnt != CTF_FLAG_BASE) {
 		if (flag.items & IT_KEY2) { // blue
 			if (--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times)
 				ctf_setstatus2(flag, IT_RED_FLAG_TAKEN);

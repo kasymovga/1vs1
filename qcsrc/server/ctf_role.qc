@@ -16,34 +16,26 @@ void() ctf_role_escort;
 void(entity bot) ctf_role_reset;
 
 .float havocbot_cantfindflag;
-.entity ctf_worldflagnext;
-.entity basewaypoint;
 
-entity ctf_worldflaglist;
 vector ctf_role_middlepoint;
 float havocbot_ctf_middlepoint_radius;
 
 entity(entity bot) ctf_role_find_flag {
 	entity f;
-	f = ctf_worldflaglist;
-	while (f) {
+	for (f = ctf_worldflaglist; f; f = f.enemy) {
 		if (bot.team == f.team)
 			return f;
-
-		f = f.ctf_worldflagnext;
 	}
-	return world;
+	return NULL;
 }
 
 entity(entity bot) ctf_role_find_enemy_flag {
 	entity f;
-	f = ctf_worldflaglist;
-	while (f) {
+	for (f = ctf_worldflaglist; f; f = f.enemy) {
 		if (bot.team != f.team)
 			return f;
-		f = f.ctf_worldflagnext;
 	}
-	return world;
+	return NULL;
 }
 
 float(entity bot, vector org, float _radius) ctf_role_teamcount {
@@ -60,30 +52,23 @@ float(entity bot, vector org, float _radius) ctf_role_teamcount {
 }
 
 void(float ratingscale) ctf_role_goalrating_ourbase {
-	entity head;
-	head = ctf_worldflaglist;
-	while (head) {
-		if (self.team == head.team)
+	entity f;
+	for (f = ctf_worldflaglist; f; f = f.enemy) {
+		if (self.team == f.team)
 			break;
-		head = head.ctf_worldflagnext;
 	}
-	if not(head)
-		return;
-
-	navigation_routerating(head.basewaypoint, ratingscale, 10000);
+	if (f)
+		navigation_routerating(f.basewaypoint, ratingscale, 10000);
 }
 
 void(float ratingscale) ctf_role_goalrating_enemyflag {
-	entity head;
-	head = ctf_worldflaglist;
-	while (head) {
-		if (self.team != head.team)
+	entity f;
+	for (f = ctf_worldflaglist; f; f = f.enemy) {
+		if (self.team != f.team)
 			break;
-
-		head = head.ctf_worldflagnext;
 	}
-	if (head)
-		navigation_routerating(head, ratingscale, 10000);
+	if (f)
+		navigation_routerating(f, ratingscale, 10000);
 }
 
 void(float ratingscale) ctf_role_goalrating_enemybase {
@@ -109,19 +94,17 @@ void(float ratingscale) ctf_role_goalrating_ourstolenflag {
 }
 
 void(float ratingscale, vector org, float _radius) ctf_role_goalrating_droppedflags {
-	entity head;
-	head = ctf_worldflaglist;
-	while (head) {
+	entity f;
+	for (f = ctf_worldflaglist; f; f = f.enemy) {
 		// flag is out in the field
-		if (head.cnt != CTF_FLAG_BASE)
-		if (head.tag_entity==world) {// dropped
+		if (f.cnt != CTF_FLAG_BASE)
+		if not(f.tag_entity) {// dropped
 			if (_radius) {
-				if (vlen(org-head.origin)<_radius)
-					navigation_routerating(head, ratingscale, 10000);
+				if (vlen(org-f.origin)<_radius)
+					navigation_routerating(f, ratingscale, 10000);
 			} else
-				navigation_routerating(head, ratingscale, 10000);
+				navigation_routerating(f, ratingscale, 10000);
 		}
-		head = head.ctf_worldflagnext;
 	}
 }
 
@@ -448,14 +431,11 @@ void() ctf_role_defense {
 void() ctf_role_calculate_middlepoint {
 	entity f;
 	vector p1 = '0 0 0', p2 = '0 0 0';
-	f = ctf_worldflaglist;
-	while (f) {
+	for (f = ctf_worldflaglist; f; f = f.enemy) {
 		if (p1)
 			p2 = f.origin;
 		else
 			p1 = f.origin;
-
-		f = f.ctf_worldflagnext;
 	}
 	ctf_role_middlepoint = p1 + ((p2-p1) * 0.5);
 	havocbot_ctf_middlepoint_radius	 = vlen(p2-p1) * 0.5;
