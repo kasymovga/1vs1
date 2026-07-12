@@ -630,9 +630,6 @@ void(void) navigation_goalrating_end {
 
 		navigation_hasgoals = FALSE;
 	}
-	if (navigation_markroutes_started) {
-		print("markroutes skipped\n");
-	}
 }
 
 void(entity t) navigation_single {
