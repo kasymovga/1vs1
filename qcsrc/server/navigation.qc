@@ -462,7 +462,7 @@ float(entity e, vector startposition) navigation_routetogoal {
 	// put the entity on the goal stack
 	//print("routetogoal ", etos(e), "\n");
 	navigation_pushroute(e);
-	if (g_jetpack)
+	if (self.items & IT_JETPACK)
 	if (e==self.navigation_jetpack_goal)
 		return TRUE;
 
