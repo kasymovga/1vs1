@@ -1,5 +1,6 @@
 float bot_ai_navigation_jetpack;
 float bot_ai_navigation_jetpack_mindistance;
+float navigation_bestdirect;
 
 // completely empty the goal stack, used when deciding where to go
 void(void) navigation_clearroute {
@@ -221,19 +222,39 @@ void(entity w) navigation_markroutes_edge_remove {
 	w.weaponentity = NULL;
 }
 
+float navigation_markroutes_astar;
+vector navigation_markroutes_astar_origin;
 void(void) navigation_markroutes_clear {
 	entity w;
-	for (w = waypoint_list; w; w = w.aiment) {
-		w.height = 10000000;
-		w.enemy = NULL;
-		w.weaponentity = NULL;
-		w.exteriorweaponentity = NULL;
+	if (navigation_markroutes_astar) {
+		for (w = waypoint_list; w; w = w.aiment) {
+			w.height = 10000000;
+			w.enemy = NULL;
+			w.weaponentity = NULL;
+			w.exteriorweaponentity = NULL;
+			w.dmg_edge = w.dmg;
+			w.dmg += vlen(navigation_markroutes_astar_origin - w.origin) * 10;
+		}
+	} else {
+		for (w = waypoint_list; w; w = w.aiment) {
+			w.height = 10000000;
+			w.enemy = NULL;
+			w.weaponentity = NULL;
+			w.exteriorweaponentity = NULL;
+		}
 	}
 	navigation_markroutes_edge_list = NULL;
 	navigation_markroutes_edge_current = NULL;
 }
 
+float navigation_markroutes_started;
+entity navigation_markroutes_start_from;
 void(entity fixed_source_waypoint) navigation_markroutes_start {
+	navigation_markroutes_started = TRUE;
+	navigation_markroutes_start_from = fixed_source_waypoint;
+}
+
+void(entity fixed_source_waypoint) navigation_markroutes_start_delayed {
 	navigation_markroutes_clear();
 	if (fixed_source_waypoint) {
 		fixed_source_waypoint.height = 0;
@@ -269,14 +290,31 @@ void(entity fixed_source_waypoint) navigation_markroutes_start {
 	}
 }
 
+void(entity t) navigation_markroutes_astar_start {
+	entity w;
+	navigation_markroutes_astar_origin = ENTITY_CENTER(t);
+	navigation_markroutes_astar = TRUE;
+}
+
+void(void) navigation_markroutes_astar_end {
+	entity w;
+	for (w = waypoint_list; w; w = w.aiment) {
+		w.dmg = w.dmg_edge;
+	}
+	navigation_markroutes_astar = FALSE;
+}
+
 // find path to specified waypoint with Dijkstra's algorithm
 void(entity target_waypoint) navigation_markroutes {
 	entity w, wp;
 	float cost, cost2;
+	if (navigation_markroutes_started) {
+		navigation_markroutes_start_delayed(navigation_markroutes_start_from);
+		navigation_markroutes_started = FALSE;
+	}
 	if (target_waypoint && target_waypoint.height < 10000000 &&
 			!target_waypoint.weaponentity && !target_waypoint.exteriorweaponentity)
 		return; // route is already exists
-
 	while (navigation_markroutes_edge_current && target_waypoint != navigation_markroutes_edge_current) {
 		w = navigation_markroutes_edge_current;
 		navigation_markroutes_edge_remove(w);
@@ -420,11 +458,41 @@ void(entity e, float f, float rangebias) navigation_routerating {
 				if (navigation_bestrating < f) {
 					navigation_bestrating = f;
 					navigation_bestgoal = e;
+					navigation_bestdirect = TRUE;
 					self.navigation_jetpack_goal = e;
 					self.navigation_jetpack_point = pointb;
 				}
 				return;
 			}
+		}
+	}
+	// if it can reach the goal there is nothing more to do
+	vector o = ENTITY_CENTER(self);
+	if (checkpvs(o, e)) {
+		vector v1;
+		vector v2;
+		if (e.movetype == MOVETYPE_WALK || e.movetype == MOVETYPE_QCWALK) {
+			trace_box(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', TRACE_MOVE_NORMAL, e);
+			v1 = trace_endpos + e.mins;
+			v2 = trace_endpos + e.maxs;
+		} else {
+			v1 = e.origin + e.mins;
+			v2 = e.origin + e.maxs;
+		}
+		vector v;
+		v_x = bound(v1_x, self.origin_x, v2_x);
+		v_y = bound(v1_y, self.origin_y, v2_y);
+		v_z = bound(v1_z, self.origin_z, v2_z);
+		f = vlen(v - o);
+		if (f < 2000 + self.maxs_x)
+		if (trace_walk(self, self.origin, self.mins, self.maxs, v, bot_navigation_movemode)) {
+			f = f * rangebias / (rangebias + f);
+			if (navigation_bestrating < f) {
+				navigation_bestrating = f;
+				navigation_bestgoal = e;
+				navigation_bestdirect = TRUE;
+			}
+			return;
 		}
 	}
 	// update the cached spawnfunc_waypoint link on a dynamic item entity
@@ -448,11 +516,12 @@ void(entity e, float f, float rangebias) navigation_routerating {
 	if (navigation_bestrating < f) {
 		navigation_bestrating = f;
 		navigation_bestgoal = e;
+		navigation_bestdirect = FALSE;
 	}
 }
 
 // adds an item to the the goal stack with the path to a given item
-float(entity e, vector startposition) navigation_routetogoal {
+float(entity e) navigation_routetogoal {
 	self.goalentity = e;
 	// if there is no goal, just exit
 	if (!e)
@@ -462,36 +531,13 @@ float(entity e, vector startposition) navigation_routetogoal {
 	// put the entity on the goal stack
 	//print("routetogoal ", etos(e), "\n");
 	navigation_pushroute(e);
-	if (self.items & IT_JETPACK)
-	if (e==self.navigation_jetpack_goal)
+	if (navigation_bestdirect)
 		return TRUE;
 
-	// if it can reach the goal there is nothing more to do
-	vector o = ENTITY_CENTER(self);
-	if (checkpvs(o, e)) {
-		vector v1;
-		vector v2;
-		if (e.movetype == MOVETYPE_WALK || e.movetype == MOVETYPE_QCWALK) {
-			trace_box(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', TRACE_MOVE_NORMAL, e);
-			v1 = trace_endpos + e.mins;
-			v2 = trace_endpos + e.maxs;
-		} else {
-			v1 = e.origin + e.mins;
-			v2 = e.origin + e.maxs;
-		}
-		vector v;
-		v_x = bound(v1_x, self.origin_x, v2_x);
-		v_y = bound(v1_y, self.origin_y, v2_y);
-		v_z = bound(v1_z, self.origin_z, v2_z);
-		if (vlen(v - o) < 2000 + self.maxs_x)
-		if (trace_walk(self, startposition, self.mins, self.maxs, v, bot_navigation_movemode)) {
-			return TRUE;
-		}
-	}
 	// see if there are waypoints describing a path to the item
-	if (e.classname != "waypoint" || (e.wpflags & WAYPOINTFLAG_PERSONAL))
+	if (e.classname != "waypoint" || (e.wpflags & WAYPOINTFLAG_PERSONAL)) {
 		e = e.nearestwaypoint;
-	else
+	} else
 		e = e.enemy; // we already have added it, so...
 
 	if (e == world)
@@ -564,7 +610,7 @@ void(void) navigation_goalrating_start {
 
 // ends a goal selection session (updates goal stack to the best goal)
 void(void) navigation_goalrating_end {
-	navigation_routetogoal(navigation_bestgoal, self.origin);
+	navigation_routetogoal(navigation_bestgoal);
 	// Hack: if it can't walk to any goal just move blindly to the first visible waypoint
 	if not(navigation_hasgoals) {
 		entity head;
@@ -580,10 +626,22 @@ void(void) navigation_goalrating_end {
 			head = head.chain;
 		}
 		if (random_selection_chosen_ent)
-			navigation_routetogoal(random_selection_chosen_ent, self.origin);
+			navigation_routetogoal(random_selection_chosen_ent);
 
 		navigation_hasgoals = FALSE;
 	}
+	if (navigation_markroutes_started) {
+		print("markroutes skipped\n");
+	}
+}
+
+void(entity t) navigation_single {
+	navigation_goalrating_start();
+	navigation_markroutes_astar_start(t);
+	navigation_markroutes_start(NULL);
+	navigation_routerating(t, 1, 1);
+	navigation_goalrating_end();
+	navigation_markroutes_astar_end();
 }
 
 void(void) navigation_init {

@@ -42,16 +42,17 @@ void monster_set_route() {
 	}
 	bot_navigation_movemode = TRACE_MOVE_NORMAL;
 	navigation_clearroute();
-	navigation_goalrating_start();
 	if (self.enemy)
-		navigation_routerating(player_entity(self.enemy), 10000, 10000);
-	else
+		navigation_single(player_entity(self.enemy));
+	else {
+		navigation_goalrating_start();
 		PLAYER_FOR_EACH(p)
 			if (p.health >= 1)
 			if (p.deadflag == DEAD_NO)
 				navigation_routerating(player_entity(p), 10000, 10000);
 
-	navigation_goalrating_end();
+		navigation_goalrating_end();
+	}
 	if (self.items & IT_JETPACK) {
 		bot_ai_navigation_jetpack = f1;
 		bot_ai_navigation_jetpack_mindistance = f2;

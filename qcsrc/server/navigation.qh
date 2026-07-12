@@ -48,8 +48,6 @@ void debugnodestatus(vector position, float status);
 void debuggoalstack();
 #endif
 
-float navigation_routetogoal(entity e, vector startposition);
-
 void(void) navigation_clearroute;
 void(entity e) navigation_pushroute;
 void(void) navigation_poproute;
