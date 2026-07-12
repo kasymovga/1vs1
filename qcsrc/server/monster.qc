@@ -11,14 +11,75 @@
 float g_monster_pushfactor;
 float monster_difficulty;
 
-void monster_sound(entity m, string s, float force) {
+void(entity m, string s, float force) monster_sound {
 	if (force)
 		m.watersound_finished = 0;
 
 	if (s != "")
 	if (m.watersound_finished < time) {
-		m.watersound_finished = time + 5;
-		sound(m, CHAN_TRIGGER, s, VOL_BASEVOICE, (m.atten ? m.atten : ATTN_NORM));
+		m.watersound_finished = time + 4 + random() * 2;
+		sound(m, CHAN_VOICE, s, VOL_BASEVOICE, (m.atten ? m.atten : ATTN_NORM));
+	}
+}
+
+var void(void) monster_world_frame_start_next;
+void(void) monster_world_frame_start {
+	monster_world_frame_start_next();
+	entity cl;
+	float voice = 0;
+	CLIENT_FOR_EACH_REAL(cl) {
+		voice  = 0;
+		entity m = findradius(cl.origin + cl.view_ofs, 400);
+		for (; m; m = m.chain) {
+			if (m.classname != "monster") continue;
+			if (m.health < 1) continue;
+			if (m.noise4 != "")
+			if (m.watersound_finished + 4 < time) {
+				if not(voice) {
+					random_selection_init();
+					string s = m.noise4;
+					while (s != "") {
+						random_selection_add(NULL, 0, str_car(s), 1, 1);
+						s = str_cdr(s);
+					}
+					m.watersound_finished = time + 4 + random() * 2;
+					sound(m, CHAN_VOICE, random_selection_chosen_string, VOL_BASEVOICE, ATTN_NORM);
+					voice = 1;
+				} else {
+					m.watersound_finished = time - random() * 3; // prevent ambient sounds
+				}
+			}
+			if (m.nextstep < time) {
+				if (m.waterlevel && m.waterlevel < WATER_LEVEL_SUBMERGED) {
+					m.nextstep = time + 5 + random();
+					sound(m, CHAN_TRIGGER, "misc/outwater.wav", VOL_BASEVOICE * 0.25, ATTN_NORM);
+				} else if ((m.flags & FL_ONGROUND) && m.noise != "") {
+					string s = m.noise;
+					float spd = stof(str_car(s));
+					s = str_cdr(s);
+					if (vlen(m.velocity) >= spd) {
+						float t1 = stof(str_car(s));
+						s = str_cdr(s);
+						float t2 = stof(str_car(s));
+						s = str_cdr(s);
+						float r = stof(str_car(s));
+						s = str_cdr(s);
+						m.nextstep = time + t1 + random() * t2;
+						sound(m, CHAN_PLAYER, sound_random(s, r), VOL_BASEVOICE, 0.1);
+					}
+				} else
+					m.nextstep = time + 1;
+			}
+		}
+		if (voice) {
+			for (m = findradius(cl.origin + cl.view_ofs, 600); m; m = m.chain) {
+				if (m.classname != "monster") continue;
+				if (m.health < 1) continue;
+				if (m.noise4 != "")
+				if (m.watersound_finished + 4 < time)
+					m.watersound_finished = time - random() * 3; // prevent ambient sounds
+			}
+		}
 	}
 }
 
@@ -563,9 +624,12 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.dmg_edge = self.owner.dmg_edge;
 	self.dmg_force = self.owner.dmg_force;
 	self.dmg_radius = self.owner.dmg_radius;
+	self.noise = self.owner.noise;
 	self.noise1 = self.owner.noise1;
 	self.noise2 = self.owner.noise2;
 	self.noise3 = self.owner.noise3;
+	self.noise4 = self.owner.noise4;
+	self.watersound_finished = time - random() * 2; // prevent ambient sounds right after spawn
 	self.iscreature = TRUE;
 	self.bot_attack = TRUE;
 	self.team = self.owner.team;
@@ -653,6 +717,8 @@ void monster_common_init() {
 		g_monster_difficulty = cvar("g_monster_difficulty");
 
 	monster_difficulty = 0.5 + bound(-1.5, g_monster_difficulty, 3) * 0.25;
+	monster_world_frame_start_next = plugin_chain_world_frame_start;
+	plugin_chain_world_frame_start = monster_world_frame_start;
 }
 
 void monster_init(void() init_func) {
@@ -696,6 +762,10 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	if (self.targetname == "") {
 		self.nextthink = time;
 	}
+	if (self.noise != "") {
+		string s = str_cdr(str_cdr(str_cdr(self.noise)));
+		sound_random_precache(str_cdr(s), stof(str_car(s)));
+	}
 	if (self.noise1 != "")
 		precache_sound(self.noise1);
 
@@ -705,6 +775,13 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	if (self.noise3 != "")
 		precache_sound(self.noise3);
 
+	if (self.noise4 != "") {
+		string s = self.noise4;
+		while (s != "") {
+			precache_sound(str_car(s));
+			s = str_cdr(s);
+		}
+	}
 	if not(self.spawnflags & MONSTER_SPAWN_STAYSTILL) {
 		vector org = ENTITY_CENTER(self);
 		trace_line(org, org - '0 0 64', TRACE_MOVE_WORLDONLY, NULL);

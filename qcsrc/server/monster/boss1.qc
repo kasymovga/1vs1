@@ -131,6 +131,7 @@ void(void) spawnfunc_monster_boss1_spawn {
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise2 = "player/torus/death.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
+	self.noise = "300 0.3 0.1 4 misc/hitground";
 	self.atten = 0.1;
 	monster_prepare_spawn(monster_boss1_spawn, spawnfunc_monster_boss1_spawn);
 }

@@ -131,6 +131,8 @@ void(void) spawnfunc_monster_fireguy_spawn {
 	monster_init(monster_fireguy_init);
 	self.noise1 = "player/carni-lycan/coms/incoming.ogg";
 	self.noise3 = "player/carni-lycan/player/pain50.ogg";
+	self.noise4 = "player/carni-lycan/defend.ogg player/carni-lycan/coms/taunt3.ogg player/carni-lycan/coms/taunt2.ogg";
+	self.noise = "200 0.3 0.1 6 misc/metalfootstep0";
 	monster_prepare_spawn(monster_fireguy_spawn, spawnfunc_monster_fireguy_spawn);
 }
 

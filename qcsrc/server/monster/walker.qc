@@ -173,6 +173,8 @@ void(void) monster_walker_init {
 
 void(void) spawnfunc_monster_walker_spawn {
     setsize(self, WALKER_MIN, WALKER_MAX);
+	self.noise4 = "weapons/rocket_det.ogg weapons/rocket_mode.ogg";
+	self.noise = "200 0.3 0.1 6 misc/metalfootstep0";
 	monster_init(monster_walker_init);
 	monster_prepare_spawn(monster_walker_spawn, spawnfunc_monster_walker_spawn);
 }

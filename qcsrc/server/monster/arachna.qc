@@ -130,6 +130,8 @@ void() spawnfunc_monster_arachna_spawn {
 	monster_init(arachna_init);
 	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
 	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
+	self.noise4 = "player/pyria-skadi/coms/taunt2.ogg";
+	self.noise = "200 0.3 0.1 6 misc/footstep0";
 	monster_prepare_spawn(monster_arachna_spawn, spawnfunc_monster_arachna_spawn);
 }
 

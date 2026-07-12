@@ -89,6 +89,7 @@ void(void) monster_ewheel_init {
 }
 
 void(void) spawnfunc_monster_ewheel_spawn {
+	self.noise4 = "weapons/rocket_det.ogg weapons/rocket_mode.ogg";
     setsize(self,'-32 -32 0','32 32 48');
 	monster_init(monster_ewheel_init);
 	monster_prepare_spawn(monster_ewheel_spawn, spawnfunc_monster_ewheel_spawn);

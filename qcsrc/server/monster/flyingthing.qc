@@ -98,6 +98,7 @@ void(void) monster_flyingthing_init {
 
 void(void) spawnfunc_monster_flyingthing_spawn {
 	setsize(self, '-16 -16 -48', '16 16 0');
+	self.noise4 = "weapons/rocket_det.ogg weapons/rocket_mode.ogg";
 	monster_init(monster_flyingthing_init);
 	monster_prepare_spawn(monster_flyingthing_spawn, spawnfunc_monster_flyingthing_spawn);
 }

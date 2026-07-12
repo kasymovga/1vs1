@@ -151,6 +151,7 @@ void(void) spawnfunc_monster_spider_chainsaw_spawn {
 
 float monster_spider_spawn_counter;
 void(void) spawnfunc_monster_spider_spawn {
+	self.noise4 = "weapons/rocket_det.ogg weapons/rocket_mode.ogg";
 	if (monster_spider_spawn_counter) {
 		self.classname = "monster_spider_chainsaw_spawn";
 		spawnfunc_monster_spider_chainsaw_spawn();

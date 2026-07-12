@@ -95,6 +95,8 @@ void(void) spawnfunc_monster_spearguy_spawn {
 	monster_init(monster_spearguy_init);
 	self.noise1 = "player/reptilian/coms/incoming.ogg";
 	self.noise3 = "player/reptilian/player/pain50.ogg";
+	self.noise4 = "player/reptilian/coms/taunt1.ogg player/reptilian/coms/taunt2.ogg player/reptilian/coms/taunt3.ogg";
+	self.noise = "200 0.2 0.1 6 misc/footstep0";
 	monster_prepare_spawn(monster_spearguy_spawn, spawnfunc_monster_spearguy_spawn);
 }
 

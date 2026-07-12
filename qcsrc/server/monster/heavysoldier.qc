@@ -134,6 +134,8 @@ void(void) spawnfunc_monster_heavysoldier_spawn {
 	monster_init(monster_heavysoldier_init);
 	self.noise1 = "player/soldier/coms/incoming.ogg";
 	self.noise3 = "player/soldier/player/pain50.ogg";
+	self.noise4 = "player/soldier/coms/taunt1.ogg player/soldier/coms/taunt2.ogg player/soldier/coms/taunt3.ogg";
+	self.noise = "200 0.3 0.1 6 misc/footstep0";
 	monster_prepare_spawn(monster_heavysoldier_spawn, spawnfunc_monster_heavysoldier_spawn);
 }
 

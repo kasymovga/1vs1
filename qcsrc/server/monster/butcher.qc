@@ -94,6 +94,8 @@ void(void) spawnfunc_monster_butcher_spawn {
 	monster_init(monster_butcher_init);
 	self.noise1 = "player/torus/incoming.ogg";
 	self.noise3 = "player/torus/pain50.ogg";
+	self.noise4 = "player/torus/taunt.ogg player/torus/letsgo.ogg player/torus/hooah.ogg";
+	self.noise = "200 0.3 0.1 6 misc/footstep0";
 	monster_prepare_spawn(monster_butcher_spawn, spawnfunc_monster_butcher_spawn);
 }
 

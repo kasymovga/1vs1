@@ -138,6 +138,8 @@ void() spawnfunc_monster_turret_spawn {
 		return;
 	}
 	setsize(self, '-60 -60 5', '60 60 100');
+	self.noise4 = "weapons/rocket_det.ogg weapons/rocket_mode.ogg";
+	self.noise = "200 0.3 0.1 6 misc/metalfootstep0";
 	monster_init(monster_turret_init);
 	monster_prepare_spawn(monster_turret_spawn, spawnfunc_monster_turret_spawn);
 }
@@ -151,6 +153,8 @@ void() spawnfunc_monster_turret_compact_spawn {
 		return;
 	}
 	setsize(self, '-45 -45 3.75', '45 45 75');
+	self.noise4 = "weapons/rocket_det.ogg weapons/rocket_mode.ogg";
+	self.noise = "200 0.3 0.1 6 misc/metalfootstep0";
 	monster_init(monster_turret_init);
 	monster_prepare_spawn(monster_turret_compact_spawn, spawnfunc_monster_turret_compact_spawn);
 }

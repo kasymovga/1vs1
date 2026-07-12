@@ -173,6 +173,7 @@ void(void) spawnfunc_monster_boss4_spawn {
 	self.noise1 = "player/carni-lycan/coms/incoming.ogg";
 	self.noise2 = "player/carni-lycan/player/death2.ogg";
 	self.noise3 = "player/carni-lycan/player/pain50.ogg";
+	self.noise = "400 0.3 0.1 4 misc/hitground";
 	self.atten = 0.1;
 	monster_prepare_spawn(monster_boss4_spawn, spawnfunc_monster_boss4_spawn);
 }

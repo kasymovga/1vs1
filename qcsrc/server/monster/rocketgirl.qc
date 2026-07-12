@@ -98,6 +98,8 @@ void(void) spawnfunc_monster_rlgirl_spawn {
 	monster_init(monster_rlgirl_init);
 	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
 	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
+	self.noise4 = "player/pyria-skadi/coms/taunt2.ogg player/pyria-skadi/coms/defend.ogg";
+	self.noise = "200 0.3 0.1 6 misc/footstep0";
 	monster_prepare_spawn(monster_rlgirl_spawn, spawnfunc_monster_rlgirl_spawn);
 }
 
