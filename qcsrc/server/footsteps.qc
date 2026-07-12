@@ -1,22 +1,20 @@
-var void() footsteps_ServerFrame_NextLink;
-void() footsteps_ServerFrame {
+var void() footsteps_world_frame_start_next;
+void() footsteps_world_frame_start {
 	entity oldself = self;
 	PLAYER_FOR_EACH(self)
 		if (!map_finished)
 		if (self.flags & FL_ONGROUND)
+		if (self.solid != SOLID_NOT)
 		if (vlen(self.velocity) > sv_maxspeed * 0.6)
 		if (!self.deadflag)
-		if (time < self.lastground + 0.2)
-		{
-			if((time > self.nextstep))
-			{
+		if (time < self.lastground + 0.2) {
+			if ((time > self.nextstep)) {
 				self.nextstep = time + 0.3 + random() * 0.1;
 				if not(self.waterlevel) {
 					trace_dphitq3surfaceflags = 0;
 					trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 1', TRACE_MOVE_NOMONSTERS, self);
-					if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
-					{
-						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+					if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) {
+						if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 							sound(self, CHAN_PLAYER, sound_random("misc/metalfootstep0", 6), VOL_BASE, ATTN_NORM);
 						else
 							sound(self, CHAN_PLAYER, sound_random("misc/footstep0", 6), VOL_BASE, ATTN_NORM);
@@ -25,7 +23,7 @@ void() footsteps_ServerFrame {
 			}
 		}
 	self = oldself;
-	footsteps_ServerFrame_NextLink();
+	footsteps_world_frame_start_next();
 }
 
 void() footsteps_init {
@@ -34,6 +32,6 @@ void() footsteps_init {
 
 	sound_random_precache("misc/footstep0", 6);
 	sound_random_precache("misc/metalfootstep0", 6);
-	footsteps_ServerFrame_NextLink = plugin_chain_world_frame_start;
-	plugin_chain_world_frame_start = footsteps_ServerFrame;
+	footsteps_world_frame_start_next = plugin_chain_world_frame_start;
+	plugin_chain_world_frame_start = footsteps_world_frame_start;
 }
