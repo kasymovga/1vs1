@@ -66,10 +66,16 @@ entity sysinfo_model_forced;
 var string(string m) sysinfo_player_body_model_list_allowed_mod_next;
 string(string m) sysinfo_player_body_model_list_allowed_mod {
 	entity sm;
+	string s = "";
 	for (sm = sysinfo_model_forced; sm; sm = sm.enemy) {
-		if (sm.owner == self)
-			return sm.model;
+		if (sm.owner == self) {
+			if (s == "")
+				s = sm.model;
+			else
+				s = strcat(s, " ", sm.model);
+		}
 	}
+	if (s != "") m = s;
 	return sysinfo_player_body_model_list_allowed_mod_next(m);
 };
 
@@ -227,7 +233,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 					entity sm = spawn();
 					sm.enemy = sysinfo_model_forced;
 					sm.owner = e;
-					sm.model = str_zone_ifneeded(strreplace("|", " ", m));
+					sm.model = str_zone_ifneeded(m);
 					print("Forced model ", sm.model, " added for ", self.netname, "\n");
 					sysinfo_model_forced = sm;
 				}
