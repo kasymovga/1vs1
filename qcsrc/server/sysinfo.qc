@@ -227,7 +227,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 					entity sm = spawn();
 					sm.enemy = sysinfo_model_forced;
 					sm.owner = e;
-					sm.model = str_zone_ifneeded(m);
+					sm.model = str_zone_ifneeded(strreplace("|", " ", m));
 					print("Forced model ", sm.model, " added for ", self.netname, "\n");
 					sysinfo_model_forced = sm;
 				}
