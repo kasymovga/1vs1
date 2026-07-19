@@ -267,6 +267,7 @@ void(void) lms_init {
 	SP_LIVES = score_register("lives", SCORE_FLAG_SORT_PRIO_PRIMARY | SCORE_FLAG_NOCLEAR);
 	lms_lives = scores[SP_LIVES];
 	plugin_havocbot_role_goalrating_items_mod = lms_havocbot_role_goalrating_items_mod;
+	plugin_havocbot_role_choose = lms_role_choose;
 	CVAR_CACHE(g_lms_lives);
 	CVAR_CACHE(g_lms_sphere_diameter_min);
 	CVAR_CACHE(g_lms_sphere_diameter_start_indent);

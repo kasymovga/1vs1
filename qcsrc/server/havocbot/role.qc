@@ -147,17 +147,14 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 	}
 }
 
-// choose a role according to the situation
-void() havocbot_role_dm;
-
 //DM:
 //go to best items
 void() havocbot_role_dm {
-	vector o = ENTITY_CENTER(self);
 	if (self.deadflag != DEAD_NO)
 		return;
 
 	if (self.bot_strategytime < time) {
+		vector o = ENTITY_CENTER(self);
 		self.bot_strategytime = time + bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		havocbot_role_goalrating_items(10000, o, 10000);

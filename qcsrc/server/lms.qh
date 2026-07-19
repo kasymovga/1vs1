@@ -1,1 +1,2 @@
 void(void) lms_init;
+float(void) lms_progress; //1 - begin, 0 - finish

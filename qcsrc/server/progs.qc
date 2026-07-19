@@ -222,6 +222,7 @@
 #include "sysinfo.qc"
 #include "warfog.qc"
 #include "hint.qc"
+#include "lms_role.qc"
 #include "lms.qc"
 #include "report.qc"
 #include "rank.qc"
