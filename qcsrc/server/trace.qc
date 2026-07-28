@@ -139,7 +139,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 					}
 					// check for doors
 					trace_line( org, move, movemode, e);
-					if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door") {
+					if (plugin_chain_trace_walk_skip_entity(trace_ent)) {
 						vector nextmove;
 						move = trace_endpos;
 						while (trace_ent.classname == "door_rotating" || trace_ent.classname == "door") {

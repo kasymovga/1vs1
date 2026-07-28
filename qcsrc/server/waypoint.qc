@@ -200,8 +200,8 @@ void(void) waypoint_think {
 	}
 	waypoint_schedulerelink_count--;
 	if not(waypoint_schedulerelink_count) {
-		print("Relinking waypoints finished\n");
 		if (waypoint_schedulerelink_save) {
+			print("Relinking waypoints finished\n");
 			waypoint_save_links();
 			waypoint_schedulerelink_save = FALSE;
 		}
@@ -223,6 +223,7 @@ void(entity wp) waypoint_clearlinks {
 }
 
 // tell a spawnfunc_waypoint to relink
+float waypoint_schedulerelink_lasttime;
 void(entity wp) waypoint_schedulerelink {
 	if not(wp)
 		return;
@@ -239,8 +240,18 @@ void(entity wp) waypoint_schedulerelink {
 	waypoint_clearlinks(wp);
 	// schedule an actual relink on next frame
 	wp.think = waypoint_think;
-	wp.nextthink = time;
+	waypoint_schedulerelink_lasttime = wp.nextthink = max(time, waypoint_schedulerelink_lasttime + 0.01);
 	waypoint_schedulerelink_count++;
+}
+
+void(entity e) waypoint_relink_near {
+	vector o = ENTITY_CENTER(e);
+	float r = vlen(e.size) * 0.5 + 1050;
+	entity w;
+	for (w = findradius(o, r); w; w = w.chain) {
+		if (w.classname != "waypoint") continue;
+		waypoint_schedulerelink(w);
+	}
 }
 
 void(void) waypoint_target_init {

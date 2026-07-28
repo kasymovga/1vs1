@@ -357,6 +357,7 @@ void(void) func_magicwall_reset {
 
 void(void) func_magicwall_use_toggle {
 	func_magicwall_start_transition(((self.solid == SOLID_BSP) ? SOLID_NOT : SOLID_BSP), NULL);
+	waypoint_relink_near(self);
 }
 
 void(void) func_magicwall_think_transition_start {
@@ -1066,13 +1067,13 @@ void(void) spawnfunc_func_button {
 	func_button_reset();
 }
 
-float DOOR_START_OPEN = 1;
-float DOOR_DONT_LINK = 4;
-float DOOR_TOGGLE = 32;
-float DOOR_KEY_GOLD_OR_CRUSH = 8;
-float DOOR_KEY_SILVER = 16;
-float DOOR_KEY_BLOOD = 64;
-float DOOR_PLAYER_ONLY = 128;
+float FUNC_DOOR_START_OPEN = 1;
+float FUNC_DOOR_DONT_LINK = 4;
+float FUNC_DOOR_TOGGLE = 32;
+float FUNC_DOOR_KEY_GOLD_OR_CRUSH = 8;
+float FUNC_DOOR_KEY_SILVER = 16;
+float FUNC_DOOR_KEY_BLOOD = 64;
+float FUNC_DOOR_PLAYER_ONLY = 128;
 
 void(void) func_door_go_down;
 void(void) func_door_go_up;
@@ -1086,7 +1087,7 @@ void(void) func_door_blocked {
 		else
 			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, ENTITY_CENTER(other), '0 0 0');
 	}
-	if (!self.dmg && self.wait >= 0 && !(self.spawnflags & DOOR_TOGGLE)) {
+	if (!self.dmg && self.wait >= 0 && !(self.spawnflags & FUNC_DOOR_TOGGLE)) {
 		if (self.state == FUNC_STATE_DOWN) {
 			if (self.classname == "door")
 				func_door_go_up();
@@ -1106,9 +1107,10 @@ void(void) func_door_hit_top {
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
 	self.state = FUNC_STATE_TOP;
-	if (self.spawnflags & DOOR_TOGGLE)
+	if ((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) {
+		waypoint_relink_near(self);
 		return; // don't come down automatically
-
+	}
 	if (self.classname == "door")
 		self.think = func_door_go_down;
 	else
@@ -1122,6 +1124,9 @@ void(void) func_door_hit_bottom {
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
 	self.state = FUNC_STATE_BOTTOM;
+	if ((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) {
+		waypoint_relink_near(self);
+	}
 }
 
 void(void) func_door_go_down {
@@ -1166,7 +1171,7 @@ void(void) func_door_fire {
 		return;
 	}
 	oself = self;
-	if (self.spawnflags & DOOR_TOGGLE) {
+	if (self.spawnflags & FUNC_DOOR_TOGGLE) {
 		if (self.state == FUNC_STATE_UP || self.state == FUNC_STATE_TOP) {
 			starte = self;
 			do {
@@ -1220,7 +1225,7 @@ void(void) func_door_trigger_touch {
 	if not(other.iscreature)
 		return;
 
-	if (self.owner.spawnflags & DOOR_PLAYER_ONLY)
+	if (self.owner.spawnflags & FUNC_DOOR_PLAYER_ONLY)
 	if (other.classname != "player")
 		return;
 
@@ -1288,7 +1293,7 @@ void(void) func_door_rotating_hit_top {
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
 	self.state = FUNC_STATE_TOP;
-	if (self.spawnflags & DOOR_TOGGLE)
+	if (self.spawnflags & FUNC_DOOR_TOGGLE)
 		return; // don't come down automatically
 
 	self.think = func_door_rotating_go_down;
@@ -1389,7 +1394,7 @@ void(void) func_doors_link {
 	if (self.enemy)
 		return; // already linked by another door
 
-	if ((self.spawnflags & DOOR_DONT_LINK) || cvar("sv_gameplayfix_dontlinkdoors")) {
+	if ((self.spawnflags & FUNC_DOOR_DONT_LINK) || cvar("sv_gameplayfix_dontlinkdoors")) {
 		self.owner = self.enemy = self;
 		IFTARGETED
 			return;
@@ -1518,11 +1523,29 @@ void(void) func_door_rm_hack {
 	if (self.targetname == "jail_red" || self.targetname == "jail_blue")
 	if (self.jaildoormode != 2) {
 		print("Jailbreak door force open\n");
-		self.spawnflags |= DOOR_START_OPEN;
+		self.spawnflags |= FUNC_DOOR_START_OPEN;
 	}
 }
 
+var float(entity e) func_door_trace_walk_skip_entity_next;
+float(entity e) func_door_trace_walk_skip_entity {
+	if ((trace_ent.classname == "door_rotating" || trace_ent.classname == "door") && !(trace_ent.spawnflags & FUNC_DOOR_TOGGLE)
+			&& (trace_ent.targetname == "" || trace_ent.nottargeted))
+		return TRUE;
+
+	return func_door_trace_walk_skip_entity_next(e);
+}
+
+float func_door_init_done;
+void(void) func_door_init {
+	if (func_door_init_done) return;
+	func_door_init_done = TRUE;
+	func_door_trace_walk_skip_entity_next = plugin_chain_trace_walk_skip_entity;
+	plugin_chain_trace_walk_skip_entity = func_door_trace_walk_skip_entity;
+}
+
 void(void) spawnfunc_func_door {
+	func_door_init();
 	func_door_rm_hack();
 	entity_movedir_setup();
 	self.max_health = self.health;
@@ -1532,16 +1555,16 @@ void(void) spawnfunc_func_door {
 	self.effects |= EFFECT_LOWPRECISION;
 	self.classname = "door";
 	self.use = func_door_use;
-    if (self.spawnflags & DOOR_KEY_GOLD_OR_CRUSH) {
+    if (self.spawnflags & FUNC_DOOR_KEY_GOLD_OR_CRUSH) {
 		if (self.wait < 0)
 			self.items |= IT_KEY2;
 		else
 			self.dmg = 10000;
 	}
-	if (self.spawnflags & DOOR_KEY_SILVER)
+	if (self.spawnflags & FUNC_DOOR_KEY_SILVER)
 		self.items |= IT_KEY1;
 
-	if (self.spawnflags & DOOR_KEY_BLOOD)
+	if (self.spawnflags & FUNC_DOOR_KEY_BLOOD)
 		self.items |= IT_KEY3;
 
 	func_generic_squish_setup();
@@ -1562,9 +1585,9 @@ void(void) spawnfunc_func_door {
 	if (self.noise1 != "") precache_sound(self.noise1);
 	if (self.noise2 != "") precache_sound(self.noise2);
 	func_pos_setup();
-	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
+	// FUNC_DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 	// but spawn in the open position
-	if (self.spawnflags & DOOR_START_OPEN)
+	if (self.spawnflags & FUNC_DOOR_START_OPEN)
 		entity_initialize(self, func_door_init_startopen, INITPRIO_SETLOCATION);
 
 	self.state = FUNC_STATE_BOTTOM;
@@ -1615,6 +1638,7 @@ void(void) func_door_rotating_init_startopen {
 }
 
 void(void) spawnfunc_func_door_rotating {
+	func_door_init();
 	func_door_rm_hack();
 	// I abuse "movedir" for denoting the axis for now
 	if (self.spawnflags & 64) // X (untested)
@@ -1658,9 +1682,9 @@ void(void) spawnfunc_func_door_rotating {
 	self.lip = 0; // self.lip is used to remember reverse opening direction for door_rotating
 	self.pos1 = '0 0 0';
 	self.pos2 = self.movedir;
-	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
+	// FUNC_DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 	// but spawn in the open position
-	if (self.spawnflags & DOOR_START_OPEN)
+	if (self.spawnflags & FUNC_DOOR_START_OPEN)
 		entity_initialize(self, func_door_rotating_init_startopen, INITPRIO_SETLOCATION);
 
 	self.state = FUNC_STATE_BOTTOM;
