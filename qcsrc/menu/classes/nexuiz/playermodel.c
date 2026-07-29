@@ -47,60 +47,52 @@ string findImageNexuizPlayerModelSelector(string s) {
 	return s;
 }
 
-void loadCvarsNexuizPlayerModelSelector(entity me)
-{
+void loadCvarsNexuizPlayerModelSelector(entity me) {
 	float glob, i, fh;
 	string fn;
 	string nm, t, l;
-
-	if(me.currentModel)
-		strunzone(me.currentModel);
-	if(me.currentModelTitle)
-		strunzone(me.currentModelTitle);
-	if(me.currentModelImage)
-		strunzone(me.currentModelImage);
-	if(me.currentModelTxtName)
-		strunzone(me.currentModelTxtName);
-	if(me.currentModelDescription)
-		strunzone(me.currentModelDescription);
+	str_unzone_ifneeded(me.currentModel);
+	str_unzone_ifneeded(me.currentModelTitle);
+	str_unzone_ifneeded(me.currentModelImage);
+	str_unzone_ifneeded(me.currentModelTxtName);
+	str_unzone_ifneeded(me.currentModelDescription);
 	me.currentSkin = cvar("_cl_playerskin");
 	me.currentModel = cvar_string("_cl_playermodel");
 	if (!player_model_path_check(me.currentModel) || !file_exists(me.currentModel)) {
 		me.currentModel = "models/player/rexus.dpm";
 	}
-	me.currentModel = strzone(me.currentModel);
+	me.currentModel = str_zone_ifneeded(me.currentModel);
 	me.currentModelImage = NULL;
 	me.currentModelDescription = NULL;
 	me.currentModelTitle = NULL;
 	me.currentModelTxtName = NULL;
-
 	// lookup model name
 	glob = search_begin("models/player/*.txt", TRUE, TRUE);
-	if(glob < 0)
+	if (glob < 0)
 		return;
-	for(i = 0; i < search_getsize(glob); ++i)
-	{
+
+	for (i = 0; i < search_getsize(glob); ++i) {
 		fn = search_getfilename(glob, i);
 		fh = fopen(fn, FILE_READ);
-		if(fh < 0)
+		if (fh < 0)
 			continue;
+
 		t = fgets(fh);
 		nm = fgets(fh);
-		if(stof(fgets(fh)) == me.currentSkin)
-		if(fgets(fh) == me.currentModel)
-		{
-			me.currentModelImage = strzone(strcat("/", findImageNexuizPlayerModelSelector(nm)));
-			me.currentModelTxtName = strzone(fn);
-			me.currentModelTitle = strzone(t);
+		if (stof(fgets(fh)) == me.currentSkin)
+		if (fgets(fh) == me.currentModel) {
+			me.currentModelImage = str_zone_ifneeded(strcat("/", findImageNexuizPlayerModelSelector(nm)));
+			me.currentModelTxtName = str_zone_ifneeded(fn);
+			me.currentModelTitle = str_zone_ifneeded(t);
 			me.currentModelDescription = "";
 			fgets(fh); // Skip species
-			while((l = fgets(fh)))
-			{
-				if(me.currentModelDescription != "")
+			while ((l = fgets(fh))) {
+				if (me.currentModelDescription != "")
 					me.currentModelDescription = strcat(me.currentModelDescription, "\n");
+
 				me.currentModelDescription = strcat(me.currentModelDescription, l);
 			}
-			me.currentModelDescription = strzone(me.currentModelDescription);
+			me.currentModelDescription = str_zone_ifneeded(me.currentModelDescription);
 			fclose(fh);
 			break;
 		}
@@ -172,17 +164,17 @@ void goNexuizPlayerModelSelector(entity me, float d) {
 		modeldescription = strcat(modeldescription, l);
 	}
 	fclose(fh);
-	if (me.currentModel) strunzone(me.currentModel);
-	if (me.currentModelTitle) strunzone(me.currentModelTitle);
-	if (me.currentModelImage) strunzone(me.currentModelImage);
-	if (me.currentModelTxtName) strunzone(me.currentModelTxtName);
-	if (me.currentModelDescription) strunzone(me.currentModelDescription);
-	me.currentModel = strzone(_model);
-	me.currentModelTxtName = strzone(txtname);
-	me.currentModelTitle = strzone(modeltitle);
-	me.currentModelImage = strzone(modelimage);
+	str_unzone_ifneeded(me.currentModel);
+	str_unzone_ifneeded(me.currentModelTitle);
+	str_unzone_ifneeded(me.currentModelImage);
+	str_unzone_ifneeded(me.currentModelTxtName);
+	str_unzone_ifneeded(me.currentModelDescription);
+	me.currentModel = str_zone_ifneeded(_model);
+	me.currentModelTxtName = str_zone_ifneeded(txtname);
+	me.currentModelTitle = str_zone_ifneeded(modeltitle);
+	me.currentModelImage = str_zone_ifneeded(modelimage);
 	me.currentSkin = currentskin;
-	me.currentModelDescription = strzone(modeldescription);
+	me.currentModelDescription = str_zone_ifneeded(modeldescription);
 }
 
 void PlayerModelSelector_Next_Click(entity btn, entity me)
