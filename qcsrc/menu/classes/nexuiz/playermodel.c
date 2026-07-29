@@ -65,7 +65,7 @@ void loadCvarsNexuizPlayerModelSelector(entity me)
 		strunzone(me.currentModelDescription);
 	me.currentSkin = cvar("_cl_playerskin");
 	me.currentModel = cvar_string("_cl_playermodel");
-	if (!player_model_path_check(me.currentModel) || file_exists(me.currentModel)) {
+	if (!player_model_path_check(me.currentModel) || !file_exists(me.currentModel)) {
 		me.currentModel = "models/player/rexus.dpm";
 	}
 	me.currentModel = strzone(me.currentModel);
