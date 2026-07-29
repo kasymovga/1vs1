@@ -64,7 +64,11 @@ void loadCvarsNexuizPlayerModelSelector(entity me)
 	if(me.currentModelDescription)
 		strunzone(me.currentModelDescription);
 	me.currentSkin = cvar("_cl_playerskin");
-	me.currentModel = strzone(cvar_string("_cl_playermodel"));
+	me.currentModel = cvar_string("_cl_playermodel");
+	if (!player_model_path_check(me.currentModel) || file_exists(me.currentModel)) {
+		me.currentModel = "models/player/rexus.dpm";
+	}
+	me.currentModel = strzone(me.currentModel);
 	me.currentModelImage = NULL;
 	me.currentModelDescription = NULL;
 	me.currentModelTitle = NULL;
@@ -105,61 +109,80 @@ void loadCvarsNexuizPlayerModelSelector(entity me)
 	search_end(glob);
 }
 
-void goNexuizPlayerModelSelector(entity me, float d)
-{
+void goNexuizPlayerModelSelector(entity me, float d) {
 	float glob, i, fh;
 	string l;
-
 	glob = search_begin("models/player/*.txt", TRUE, TRUE);
-	if(glob < 0)
+	if (glob < 0)
 		return;
-	for(i = 0; i < search_getsize(glob); ++i)
-		if(search_getfilename(glob, i) == me.currentModelTxtName)
+
+	for (i = 0; i < search_getsize(glob); ++i)
+		if (search_getfilename(glob, i) == me.currentModelTxtName)
 			break;
+
 	// now i is search_getsize(glob) if not found, and the right index if found.
-	if(i == search_getsize(glob))
-	{
-		if(d < 0)
+	if (i == search_getsize(glob)) {
+		if (d < 0)
 			i = search_getsize(glob) - 1;
 		else
 			i = 0;
-	}
-	else
-	{
+	} else {
 		i = mod(i + d + search_getsize(glob), search_getsize(glob));
 	}
-
-	if(me.currentModel)
-		strunzone(me.currentModel);
-	if(me.currentModelTitle)
-		strunzone(me.currentModelTitle);
-	if(me.currentModelImage)
-		strunzone(me.currentModelImage);
-	if(me.currentModelTxtName)
-		strunzone(me.currentModelTxtName);
-	if(me.currentModelDescription)
-		strunzone(me.currentModelDescription);
-
 	// select model #i!
-	me.currentModelTxtName = strzone(search_getfilename(glob, i));
-	fh = fopen(me.currentModelTxtName, FILE_READ);
-	search_end(glob);
-	if(fh < 0)
-		return;
-	me.currentModelTitle = strzone(fgets(fh));
-	me.currentModelImage = strzone(strcat("/", findImageNexuizPlayerModelSelector(fgets(fh))));
-	me.currentSkin = stof(fgets(fh));
-	me.currentModel = strzone(fgets(fh));
-	me.currentModelDescription = "";
-	fgets(fh); // Skip species
-	while((l = fgets(fh)))
-	{
-		if(me.currentModelDescription != "")
-			me.currentModelDescription = strcat(me.currentModelDescription, "\n");
-		me.currentModelDescription = strcat(me.currentModelDescription, l);
+	string txtname;
+	string modeltitle;
+	string modelimage;
+	float currentskin;
+	string _model;
+	float startedfrom = i;
+	for (;;) {
+		txtname = search_getfilename(glob, i);
+		fh = fopen(txtname, FILE_READ);
+		if (fh < 0) {
+			i = mod(i + d + search_getsize(glob), search_getsize(glob));
+			if (i == startedfrom) {
+				search_end(glob);
+				return; // nothing found
+			}
+			continue;
+		}
+		modeltitle = fgets(fh);
+		modelimage = strcat("/", findImageNexuizPlayerModelSelector(fgets(fh)));
+		currentskin = stof(fgets(fh));
+		_model = strtolower(fgets(fh));
+		if (!player_model_path_check(_model) || !file_exists(_model)) {
+			i = mod(i + d + search_getsize(glob), search_getsize(glob));
+			fclose(fh);
+			if (i == startedfrom) {
+				search_end(glob);
+				return; // nothing found
+			}
+			continue;
+		}
+		break;
 	}
-	me.currentModelDescription = strzone(me.currentModelDescription);
+	search_end(glob);
+	fgets(fh); // Skip species
+	string modeldescription = "";
+	while ((l = fgets(fh))) {
+		if (modeldescription != "")
+			modeldescription = strcat(modeldescription, "\n");
+
+		modeldescription = strcat(modeldescription, l);
+	}
 	fclose(fh);
+	if (me.currentModel) strunzone(me.currentModel);
+	if (me.currentModelTitle) strunzone(me.currentModelTitle);
+	if (me.currentModelImage) strunzone(me.currentModelImage);
+	if (me.currentModelTxtName) strunzone(me.currentModelTxtName);
+	if (me.currentModelDescription) strunzone(me.currentModelDescription);
+	me.currentModel = strzone(_model);
+	me.currentModelTxtName = strzone(txtname);
+	me.currentModelTitle = strzone(modeltitle);
+	me.currentModelImage = strzone(modelimage);
+	me.currentSkin = currentskin;
+	me.currentModelDescription = strzone(modeldescription);
 }
 
 void PlayerModelSelector_Next_Click(entity btn, entity me)

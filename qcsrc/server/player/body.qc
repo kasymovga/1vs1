@@ -783,49 +783,9 @@ float(string _playermodel, float _skin) player_body_allowed_skin {
 	return _skin;
 }
 
-float(string modelpath) player_body_model_path_check {
-	if (modelpath != strtolower(modelpath))
-		return FALSE;
-
-	if (substring(modelpath, -4, 4) != ".zym")
-	if (substring(modelpath, -4, 4) != ".dpm")
-	if (substring(modelpath, -4, 4) != ".md3")
-	if (substring(modelpath, -4, 4) != ".psk")
-	if (substring(modelpath, -4, 4) != ".iqm")
-		return FALSE;
-
-	if (strstrofs(modelpath, " ", 0) >= 0)
-		return FALSE;
-
-	// forbid the LOD models
-	if (substring(modelpath, -9, 5) == "_lod1")
-		return FALSE;
-
-	if (substring(modelpath, -9, 5) == "_lod2")
-		return FALSE;
-
-	// forbid the torso/head models
-	if (substring(modelpath, -10, 6) == "_torso")
-		return FALSE;
-
-	if (substring(modelpath, -9, 5) == "_head")
-		return FALSE;
-
-	if (substring(modelpath, -15, 11) == "_decompiled")
-		return FALSE;
-
-	if (substring(modelpath, -13, 9) == "_compiled")
-		return FALSE;
-
-	if (strstrofs(modelpath, "/", 0) > 0 && substring(modelpath, 0, 14) != "models/player/")
-		return FALSE;
-
-	return TRUE;
-}
-
 string(string _playermodel) player_body_model_check {
 	string fallback = player_body_model_allowed("models/player/rexus.dpm");
-	if not(player_body_model_path_check(_playermodel))
+	if not(player_model_path_check(_playermodel))
 		return fallback;
 
 	_playermodel = player_body_model_allowed(_playermodel);
@@ -1078,7 +1038,7 @@ void(string pattern) player_body_precache_all_models {
 	n = search_getsize(glob);
 	for (i = 0; i < n; ++i) {
 		f = search_getfilename(glob, i);
-		if not(player_body_model_path_check(f))
+		if not(player_model_path_check(f))
 			continue;
 
 		player_body_precache(f);
@@ -1100,7 +1060,7 @@ string(string s) player_body_find_models {
 		if (strstrofs(disabled_models, strcat(" ", m, " "), 0) >= 0)
 			continue;
 
-		if not(player_body_model_path_check(m))
+		if not(player_model_path_check(m))
 			continue;
 
 		d = dlc_by_file(m);

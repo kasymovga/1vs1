@@ -172,7 +172,6 @@ string(string info, string key) infoget = #227;
 float(string s1, string s2, float len) strncmp = #228;
 float(string s1, string s2) strcasecmp = #229;
 float(string s1, string s2, float len) strncasecmp = #230;
-string(string s) strdecolorize = #477;
 //DP_QC_STRINGBUFFERS
 //idea: ??
 //darkplaces implementation: LordHavoc
@@ -187,6 +186,8 @@ string(float bufhandle, float string_index) bufstr_get = #446;
 void(float bufhandle, float string_index, string str) bufstr_set = #447;
 float(float bufhandle, string str, float order) bufstr_add = #448;
 void(float bufhandle, float string_index) bufstr_free = #449;
+string(string s) strdecolorize = #477;
+string(string s) strtolower = #480;
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
 string(string name) cvar_description = #518;
 //DP_QC_CRC16

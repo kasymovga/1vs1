@@ -572,19 +572,17 @@ void(void) navigation_poptouchedgoals {
 	m1 = org + self.mins;
 	m2 = org + self.maxs;
 	// Loose goal touching check when running
-	if (self.aistatus & AI_STATUS_RUNNING)
-	if (self.goalcurrent.classname=="waypoint") {
-		if (vlen(self.origin - self.goalcurrent.origin)<150) {
-			trace_line(self.origin + self.view_ofs , self.goalcurrent.origin, TRUE, world);
-			if (trace_fraction==1) {
-				// Detect personal waypoints
-				if (self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-				if ((self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) && self.goalcurrent.owner==self) {
-					self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
-					self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
-				}
-				navigation_poproute();
-			}
+	entity goal = self.goalcurrent;
+	float extend = 0;
+	if (goal.classname == "waypoint") {
+		vector p;
+		p_x = bound(m1_x, goal.origin_x, m2_x);
+		p_y = bound(m1_y, goal.origin_y, m2_y);
+		p_z = bound(m1_z, goal.origin_z, m2_z);
+		extend = self.velocity * normalize(ENTITY_CENTER(self.goalcurrent) - p) * 0.25;
+		if (extend > 0) {
+			m1 -= '1 1 1' * extend;
+			m2 += '1 1 1' * extend;
 		}
 	}
 	while (self.goalcurrent && math_boxes_overlap(m1, m2, self.goalcurrent.absmin, self.goalcurrent.absmax)) {
