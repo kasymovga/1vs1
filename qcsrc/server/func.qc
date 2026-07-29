@@ -357,7 +357,7 @@ void(void) func_magicwall_reset {
 
 void(void) func_magicwall_use_toggle {
 	func_magicwall_start_transition(((self.solid == SOLID_BSP) ? SOLID_NOT : SOLID_BSP), NULL);
-	waypoint_relink_near(self);
+	waypoint_relink_near(self, self.origin);
 }
 
 void(void) func_magicwall_think_transition_start {
@@ -1108,7 +1108,8 @@ void(void) func_door_hit_top {
 
 	self.state = FUNC_STATE_TOP;
 	if ((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) {
-		waypoint_relink_near(self);
+		waypoint_relink_near(self, self.pos1);
+		waypoint_relink_near(self, self.pos2);
 		return; // don't come down automatically
 	}
 	if (self.classname == "door")
@@ -1125,7 +1126,8 @@ void(void) func_door_hit_bottom {
 
 	self.state = FUNC_STATE_BOTTOM;
 	if ((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) {
-		waypoint_relink_near(self);
+		waypoint_relink_near(self, self.pos1);
+		waypoint_relink_near(self, self.pos2);
 	}
 }
 

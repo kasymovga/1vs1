@@ -228,12 +228,11 @@ void(entity wp) waypoint_schedulerelink {
 	if not(wp)
 		return;
 
+	if (wp.nextthink && wp.think == waypoint_think) // already scheduled
+		return;
+
 	// TODO: add some sort of visible box in edit mode for box waypoints
 	waypoint_show(wp);
-	wp.enemy = world;
-	if (!(wp.wpflags & WAYPOINTFLAG_PERSONAL))
-		wp.owner = world;
-
 	if ((wp.wpflags & WAYPOINTFLAG_NORELINK))
 		return;
 
@@ -244,12 +243,26 @@ void(entity wp) waypoint_schedulerelink {
 	waypoint_schedulerelink_count++;
 }
 
-void(entity e) waypoint_relink_near {
-	vector o = ENTITY_CENTER(e);
+void(entity e, vector org) waypoint_relink_near {
+	vector m1 = org + e.mins;
+	vector m2 = org + e.maxs;
+	vector o = (m1 + m2) * 0.5;
+	vector p1, p2;
 	float r = vlen(e.size) * 0.5 + 1050;
 	entity w;
 	for (w = findradius(o, r); w; w = w.chain) {
 		if (w.classname != "waypoint") continue;
+		if (w.size == '0 0 0')
+			p1 = w.origin;
+		else {
+			p1_x = bound(w.absmin_x, o_x, w.absmax_x);
+			p1_y = bound(w.absmin_y, o_y, w.absmax_y);
+			p1_z = bound(w.absmin_z, o_z, w.absmax_z);
+		}
+		p2_x = bound(m1_x, p1_x, m2_x);
+		p2_y = bound(m1_y, p1_y, m2_y);
+		p2_z = bound(m1_z, p1_z, m2_z);
+		if (vlen(p1 - p2) >= 1050) continue;
 		waypoint_schedulerelink(w);
 	}
 }
@@ -335,18 +348,11 @@ void(void) waypoint_removeall {
 }
 
 // tell all waypoints to relink
-// (is this useful at all?)
 void(void) waypoint_schedulerelinkall {
 	print("Relinking all waypoints\n");
 	entity head;
-	float t = 0;
-	for (head = waypoint_list; head; head = head.aiment) {
+	for (head = waypoint_list; head; head = head.aiment)
 		waypoint_schedulerelink(head);
-		if (head.nextthink) {
-			t += 0.01;
-			head.nextthink += t;
-		}
-	}
 }
 
 string(string mapname) waypoint_link_cache_path {

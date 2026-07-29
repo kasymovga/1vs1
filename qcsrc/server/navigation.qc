@@ -502,7 +502,6 @@ void(entity e, float f, float rangebias) navigation_routerating {
 	} else {
 		if (time > e.nearestwaypointtimeout) {
 			e.nearestwaypoint = navigation_findnearestwaypoint(e, TRUE);
-			// TODO: Cleaner solution, probably handling this timeout from ctf.qc
 			e.nearestwaypointtimeout = time + random() * 2 + 2;
 		}
 		nwp = e.nearestwaypoint;

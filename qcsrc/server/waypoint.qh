@@ -31,4 +31,4 @@ vector(vector position) waypoint_fixorigin;
 void(void) waypoint_generate_waypoints;
 entity waypoint_list; // linked with .aiment
 float waypoint_count;
-void(entity e) waypoint_relink_near;
+void(entity e, vector org) waypoint_relink_near;
