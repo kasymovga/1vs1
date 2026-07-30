@@ -573,9 +573,9 @@ void(void) navigation_poptouchedgoals {
 	m2 = org + self.maxs;
 	// Loose goal touching check when running
 	entity goal = self.goalcurrent;
-	float extend = 0;
-	if (goal.classname == "waypoint") {
+	if (goal.classname == "waypoint" && goal.size == '0 0 0') {
 		vector p;
+		float extend = 0;
 		p_x = bound(m1_x, goal.origin_x, m2_x);
 		p_y = bound(m1_y, goal.origin_y, m2_y);
 		p_z = bound(m1_z, goal.origin_z, m2_z);
