@@ -159,7 +159,8 @@ void(void) waypoint_think {
 	for (e = world; (e = find(e, classname, "waypoint")); ) {
 		if (math_boxes_overlap(self.absmin, self.absmax, e.absmin, e.absmax)) {
 			waypoint_addlink(self, e);
-			waypoint_addlink(e, self);
+			if not(e.wpflags & WAYPOINTFLAG_NORELINK)
+				waypoint_addlink(e, self);
 		} else {
 			if (!checkpvs(self.origin, e)) {
 				continue;
@@ -194,6 +195,7 @@ void(void) waypoint_think {
 			if (self.size == '0 0 0' && trace_walk(self, sv, PL_MIN, PL_MAX, ev, TRACE_MOVE_NOMONSTERS))
 				waypoint_addlink(self, e);
 
+			if not(e.wpflags & WAYPOINTFLAG_NORELINK)
 			if (e.size == '0 0 0' && trace_walk(e, ev, PL_MIN, PL_MAX, sv, TRACE_MOVE_NOMONSTERS))
 				waypoint_addlink(e, self);
 		}
