@@ -47,7 +47,7 @@ void(vector loweranim, vector upperanim, vector fallbackanim, float lowerloop, f
 		anim_update(self.weaponentity);
 		anim_update(self);
 	} else
-		anim_set(self, '13 1 1', lowerloop, TRUE, FALSE);
+		anim_set(self, loweranim, lowerloop, TRUE, FALSE);
 }
 
 void(string monstermodel, string wepmodel) monster_common_composite_precache {
