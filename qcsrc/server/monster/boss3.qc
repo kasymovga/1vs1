@@ -87,7 +87,7 @@ void() monster_boss3_spawn {
 	self.damageforcescale = 0.1;
 	self.netname = "Giant Arachna";
 	self.frags = 10;
-	self.anim_die1 = '1 1 1';
+	self.anim_die1 = '4 1 1';
 	self.view_ofs = '0 0 48';
 	entity e = marker_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
 	marker_UpdateMaxHealth(e, self.health);
