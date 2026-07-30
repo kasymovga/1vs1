@@ -104,7 +104,7 @@ void(void) monster_boss3_init {
 }
 
 void(void) spawnfunc_monster_boss3_spawn {
-	setsize(self, '-32 -32 -72', '32 32 96');
+	setsize(self, '-48 -48 -72', '48 48 96');
 	monster_init(monster_boss3_init);
 	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
 	self.noise3 = "player/pyria-skadi/player/pain50.ogg";

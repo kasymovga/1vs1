@@ -168,7 +168,7 @@ void(void) monster_boss4_init {
 }
 
 void(void) spawnfunc_monster_boss4_spawn {
-	setsize(self, '-48 -48 -72', '64 64 135');
+	setsize(self, '-48 -48 -72', '48 48 135');
 	monster_init(monster_boss4_init);
 	self.noise1 = "player/carni-lycan/coms/incoming.ogg";
 	self.noise2 = "player/carni-lycan/player/death2.ogg";
