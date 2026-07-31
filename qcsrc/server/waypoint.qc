@@ -3,6 +3,7 @@ float waypoint_schedulerelink_count;
 float waypoint_schedulerelink_save;
 float waypoint_presents_on_map;
 float g_waypoints_use_botclip;
+float g_waypoints_relink_doors;
 
 void(entity wp) waypoint_clearlinks;
 void(void) waypoint_save_links;
@@ -246,6 +247,7 @@ void(entity wp) waypoint_schedulerelink {
 }
 
 void(entity e, vector org) waypoint_relink_near {
+	if not(g_waypoints_relink_doors) return;
 	vector m1 = org + e.mins;
 	vector m2 = org + e.maxs;
 	vector o = (m1 + m2) * 0.5;
@@ -945,6 +947,7 @@ float(string s, float argc) waypoint_cmd_game {
 float waypoint_init_done;
 void(void) waypoint_init {
 	CVAR_CACHE(g_waypointeditor);
+	CVAR_CACHE(g_waypoints_relink_doors);
 	CVAR_CACHE(g_waypoints_use_botclip);
 	entity w = world;
 	while ((w = find(w, classname, "waypoint"))) {

@@ -36,6 +36,7 @@ set single_g_waypoints_auto_generate 1
 set single_g_score_bestweapon 0
 set single_g_showweaponspawns 0
 set single_g_player_forcecolor -2
+set single_g_waypoints_relink_doors 1
 alias quicksave "cmd quicksave"
 alias quickloadslot0 "load slot12.sav"
 alias quickloadslot1 "load slot14.sav"
