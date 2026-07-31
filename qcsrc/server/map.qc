@@ -23,12 +23,6 @@ float() map_list_get_position {
 
 float(string map) map_has_right_size {
 	float fh;
-	if (bot_count || cvar("bot_number") || player_count < cvar("minplayers"))
-	if (cvar("g_maplist_check_waypoints")) {
-		if not(file_exists(strcat("maps/", map, ".waypoints")))
-		if not(file_exists(strcat("maps/", map, ".waypoints.generated")))
-			return FALSE;
-	}
 	// open map size restriction file
 	fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
 	if (fh >= 0) {
