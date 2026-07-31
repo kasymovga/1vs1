@@ -228,7 +228,7 @@ void(void) navigation_markroutes_clear {
 	entity w;
 	if (navigation_markroutes_astar) {
 		for (w = waypoint_list; w; w = w.aiment) {
-			w.height = 10000000;
+			w.height = WAYPOINT_COST_MAX;
 			w.enemy = NULL;
 			w.weaponentity = NULL;
 			w.exteriorweaponentity = NULL;
@@ -237,7 +237,7 @@ void(void) navigation_markroutes_clear {
 		}
 	} else {
 		for (w = waypoint_list; w; w = w.aiment) {
-			w.height = 10000000;
+			w.height = WAYPOINT_COST_MAX;
 			w.enemy = NULL;
 			w.weaponentity = NULL;
 			w.exteriorweaponentity = NULL;
@@ -312,7 +312,7 @@ void(entity target_waypoint) navigation_markroutes {
 		navigation_markroutes_start_delayed(navigation_markroutes_start_from);
 		navigation_markroutes_started = FALSE;
 	}
-	if (target_waypoint && target_waypoint.height < 10000000 &&
+	if (target_waypoint && target_waypoint.height < WAYPOINT_COST_MAX &&
 			!target_waypoint.weaponentity && !target_waypoint.exteriorweaponentity)
 		return; // route is already exists
 	while (navigation_markroutes_edge_current && target_waypoint != navigation_markroutes_edge_current) {
@@ -507,7 +507,7 @@ void(entity e, float f, float rangebias) navigation_routerating {
 		nwp = e.nearestwaypoint;
 		if (nwp) navigation_markroutes(nwp);
 	}
-	if (nwp && nwp.height < 10000000)
+	if (nwp && nwp.height < WAYPOINT_COST_MAX)
 		f = f * rangebias / (rangebias + nwp.height);
 	else
 		f = 0;

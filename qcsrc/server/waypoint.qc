@@ -214,7 +214,7 @@ void(void) waypoint_think {
 void(entity wp) waypoint_clearlinks {
 	// clear links to other waypoints
 	float f;
-	f = 10000000;
+	f = WAYPOINT_COST_MAX;
 	wp.wp00 = wp.wp01 = wp.wp02 = wp.wp03 = wp.wp04 = wp.wp05 = wp.wp06 = wp.wp07 = world;
 	wp.wp08 = wp.wp09 = wp.wp10 = wp.wp11 = wp.wp12 = wp.wp13 = wp.wp14 = wp.wp15 = world;
 	wp.wp16 = wp.wp17 = wp.wp18 = wp.wp19 = wp.wp20 = wp.wp21 = wp.wp22 = wp.wp23 = world;
@@ -850,7 +850,7 @@ float(string s, float argc) waypoint_cmd_client {
 			i = 0;
 			m = 0;
 			for (e = waypoint_list; e; e = e.aiment) {
-				if (e.height >= 10000000) {
+				if (e.height >= WAYPOINT_COST_MAX) {
 					sprint(self, strcat("unreachable: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
 					e.effects |= EFFECT_NODEPTHTEST | EFFECT_BLUE;
@@ -864,7 +864,7 @@ float(string s, float argc) waypoint_cmd_client {
 			navigation_markroutes_inverted(e2);
 			i = 0;
 			for (e = waypoint_list; e; e = e.aiment) {
-				if (e.height >= 10000000) {
+				if (e.height >= WAYPOINT_COST_MAX) {
 					sprint(self, strcat("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
 					if not(e.effects & EFFECT_NODEPTHTEST) // not already reported before
