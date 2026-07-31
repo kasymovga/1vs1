@@ -281,10 +281,10 @@ void(entity fixed_source_waypoint) navigation_markroutes_start_delayed {
 			if (vlen(diff) < maxdist) {
 				if (trace_walk(self, self.origin, self.mins, self.maxs, v, bot_navigation_movemode)) {
 					w.height = vlen(v - self.origin) + w.dmg;
+					navigation_markroutes_edge_add(w);
+					if (!navigation_markroutes_edge_current || navigation_markroutes_edge_current.height > w.height)
+						navigation_markroutes_edge_current = w;
 				}
-				navigation_markroutes_edge_add(w);
-				if (!navigation_markroutes_edge_current || navigation_markroutes_edge_current.height > w.height)
-					navigation_markroutes_edge_current = w;
 			}
 		}
 	}
