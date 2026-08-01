@@ -178,7 +178,7 @@ void(void) waypoint_think {
 			ev_z = bound(em1_z, ev_z, em2_z);
 			dv = ev - sv;
 			dv_z = 0;
-			if (vlen(dv) >= 1050) { // max search distance in XY
+			if (vlen(dv) >= WAYPOINT_LINK_DISTANCE_MAX) { // max search distance in XY
 				continue;
 			}
 			if (self.size == '0 0 0') {
@@ -252,7 +252,7 @@ void(entity e, vector org) waypoint_relink_near {
 	vector m2 = org + e.maxs;
 	vector o = (m1 + m2) * 0.5;
 	vector p1, p2;
-	float r = vlen(e.size) * 0.5 + 1050;
+	float r = vlen(e.size) * 0.5 + WAYPOINT_LINK_DISTANCE_MAX;
 	entity w;
 	for (w = findradius(o, r); w; w = w.chain) {
 		if (w.classname != "waypoint") continue;
@@ -266,7 +266,7 @@ void(entity e, vector org) waypoint_relink_near {
 		p2_x = bound(m1_x, p1_x, m2_x);
 		p2_y = bound(m1_y, p1_y, m2_y);
 		p2_z = bound(m1_z, p1_z, m2_z);
-		if (vlen(p1 - p2) >= 1050) continue;
+		if (vlen(p1 - p2) >= WAYPOINT_LINK_DISTANCE_MAX) continue;
 		waypoint_schedulerelink(w);
 	}
 }

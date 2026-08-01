@@ -140,7 +140,7 @@ entity(entity ent, float walkfromwp) navigation_findnearestwaypoint {
 	vector _maxs = ent.maxs;
 	org_z = min(org_z, pm1_z + 1);
 	best = world;
-	bestdist = 1050;
+	bestdist = WAYPOINT_LINK_DISTANCE_MAX;
 	// box check failed, try walk
 	for (w = waypoint_list; w; w = w.aiment) {
 		// if object can walk from spawnfunc_waypoint
@@ -264,7 +264,6 @@ void(entity fixed_source_waypoint) navigation_markroutes_start_delayed {
 	} else {
 		entity w;
 		vector v, m1, m2, diff;
-		float maxdist = 750;
 		for (w = waypoint_list; w; w = w.aiment) {
 			if (w.size != '0 0 0') {
 				m1 = w.origin + w.mins;
@@ -278,7 +277,7 @@ void(entity fixed_source_waypoint) navigation_markroutes_start_delayed {
 
 			diff = v - self.origin;
 			diff_z = max(0, diff_z);
-			if (vlen(diff) < maxdist) {
+			if (vlen(diff) < WAYPOINT_LINK_DISTANCE_MAX) {
 				if (trace_walk(self, self.origin, self.mins, self.maxs, v, bot_navigation_movemode)) {
 					w.height = vlen(v - self.origin) + w.dmg;
 					navigation_markroutes_edge_add(w);
