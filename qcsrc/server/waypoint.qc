@@ -254,6 +254,8 @@ void(entity e, vector org) waypoint_relink_near {
 	vector p1, p2;
 	float r = vlen(e.size) * 0.5 + WAYPOINT_LINK_DISTANCE_MAX;
 	entity w;
+	vector oldorigin;
+	float skip = FALSE;
 	for (w = findradius(o, r); w; w = w.chain) {
 		if (w.classname != "waypoint") continue;
 		if (w.size == '0 0 0')
@@ -267,6 +269,20 @@ void(entity e, vector org) waypoint_relink_near {
 		p2_y = bound(m1_y, p1_y, m2_y);
 		p2_z = bound(m1_z, p1_z, m2_z);
 		if (vlen(p1 - p2) >= WAYPOINT_LINK_DISTANCE_MAX) continue;
+		if (w.size == '0 0 0') {
+			skip = FALSE;
+			oldorigin = e.origin;
+			if (e.origin != org) {
+				setorigin(e, org);
+			}
+			if not(checkpvs(p1, e)) {
+				skip = TRUE;
+			}
+			if (e.origin != oldorigin) {
+				setorigin(e, oldorigin);
+			}
+			if (skip) continue;
+		}
 		waypoint_schedulerelink(w);
 	}
 }
