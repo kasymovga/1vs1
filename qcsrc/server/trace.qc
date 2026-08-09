@@ -142,7 +142,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 					if (plugin_chain_trace_walk_skip_entity(trace_ent)) {
 						vector nextmove;
 						move = trace_endpos;
-						while (trace_ent.classname == "door_rotating" || trace_ent.classname == "door") {
+						while (plugin_chain_trace_walk_skip_entity(trace_ent)) {
 							nextmove = move + (dir * stepdist);
 							trace_line( move, nextmove, movemode, e);
 							move = nextmove;
