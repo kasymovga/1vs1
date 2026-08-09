@@ -482,10 +482,10 @@ void(entity e, float f, float rangebias) navigation_routerating {
 		v_x = bound(v1_x, self.origin_x, v2_x);
 		v_y = bound(v1_y, self.origin_y, v2_y);
 		v_z = bound(v1_z, self.origin_z, v2_z);
-		f = vlen(v - o);
+		float d = vlen(v - o);
 		if (f < 2000 + self.maxs_x)
 		if (trace_walk(self, self.origin, self.mins, self.maxs, v, bot_navigation_movemode)) {
-			f = f * rangebias / (rangebias + f);
+			f = f * rangebias / (rangebias + d);
 			if (navigation_bestrating < f) {
 				navigation_bestrating = f;
 				navigation_bestgoal = e;
