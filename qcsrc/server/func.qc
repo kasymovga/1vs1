@@ -357,7 +357,7 @@ void(void) func_magicwall_reset {
 
 void(void) func_magicwall_use_toggle {
 	func_magicwall_start_transition(((self.solid == SOLID_BSP) ? SOLID_NOT : SOLID_BSP), NULL);
-	waypoint_relink_near(self, self.origin);
+	waypoint_relink_door(self, self.origin);
 }
 
 void(void) func_magicwall_think_transition_start {
@@ -1108,8 +1108,8 @@ void(void) func_door_hit_top {
 
 	self.state = FUNC_STATE_TOP;
 	if ((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) {
-		waypoint_relink_near(self, self.pos1);
-		waypoint_relink_near(self, self.pos2);
+		waypoint_relink_door(self, self.pos1);
+		waypoint_relink_door(self, self.pos2);
 		return; // don't come down automatically
 	}
 	if (self.classname == "door")
@@ -1126,8 +1126,8 @@ void(void) func_door_hit_bottom {
 
 	self.state = FUNC_STATE_BOTTOM;
 	if ((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) {
-		waypoint_relink_near(self, self.pos1);
-		waypoint_relink_near(self, self.pos2);
+		waypoint_relink_door(self, self.pos1);
+		waypoint_relink_door(self, self.pos2);
 	}
 }
 
@@ -1531,10 +1531,12 @@ void(void) func_door_rm_hack {
 
 var float(entity e) func_door_trace_walk_skip_entity_next;
 float(entity e) func_door_trace_walk_skip_entity {
-	if ((trace_ent.classname == "door_rotating" || trace_ent.classname == "door") && !(trace_ent.spawnflags & FUNC_DOOR_TOGGLE)
-			&& (trace_ent.targetname == "" || trace_ent.nottargeted))
+	if ((trace_ent.classname == "door_rotating" || trace_ent.classname == "door")) {
+		if (!(trace_ent.spawnflags & FUNC_DOOR_TOGGLE) && // toggle door is not skippable
+				!trace_ent.items && // key door not skippable
+				(trace_ent.targetname == "" || trace_ent.nottargeted)) // targeted door not skippable
 		return TRUE;
-
+	}
 	return func_door_trace_walk_skip_entity_next(e);
 }
 

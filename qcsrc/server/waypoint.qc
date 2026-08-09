@@ -160,8 +160,6 @@ void(void) waypoint_think {
 	for (e = world; (e = find(e, classname, "waypoint")); ) {
 		if (math_boxes_overlap(self.absmin, self.absmax, e.absmin, e.absmax)) {
 			waypoint_addlink(self, e);
-			if not(e.wpflags & WAYPOINTFLAG_NORELINK)
-				waypoint_addlink(e, self);
 		} else {
 			if (!checkpvs(self.origin, e)) {
 				continue;
@@ -195,10 +193,6 @@ void(void) waypoint_think {
 			}
 			if (self.size == '0 0 0' && trace_walk(self, sv, PL_MIN, PL_MAX, ev, TRACE_MOVE_NOMONSTERS))
 				waypoint_addlink(self, e);
-
-			if not(e.wpflags & WAYPOINTFLAG_NORELINK)
-			if (e.size == '0 0 0' && trace_walk(e, ev, PL_MIN, PL_MAX, sv, TRACE_MOVE_NOMONSTERS))
-				waypoint_addlink(e, self);
 		}
 	}
 	waypoint_schedulerelink_count--;
@@ -247,17 +241,15 @@ void(entity wp) waypoint_schedulerelink {
 }
 
 void(entity e, vector org) waypoint_relink_near {
-	if not(g_waypoints_relink_doors) return;
 	vector m1 = org + e.mins;
 	vector m2 = org + e.maxs;
 	vector o = (m1 + m2) * 0.5;
-	vector p1, p2;
+	vector p1, p2, d;
 	float r = vlen(e.size) * 0.5 + WAYPOINT_LINK_DISTANCE_MAX;
 	entity w;
 	vector oldorigin;
 	float skip = FALSE;
-	for (w = findradius(o, r); w; w = w.chain) {
-		if (w.classname != "waypoint") continue;
+	for (w = waypoint_list; w; w = w.aiment) {
 		if (w.size == '0 0 0')
 			p1 = w.origin;
 		else {
@@ -265,10 +257,16 @@ void(entity e, vector org) waypoint_relink_near {
 			p1_y = bound(w.absmin_y, o_y, w.absmax_y);
 			p1_z = bound(w.absmin_z, o_z, w.absmax_z);
 		}
-		p2_x = bound(m1_x, p1_x, m2_x);
-		p2_y = bound(m1_y, p1_y, m2_y);
-		p2_z = bound(m1_z, p1_z, m2_z);
-		if (vlen(p1 - p2) >= WAYPOINT_LINK_DISTANCE_MAX) continue;
+		if (m1 == m2) {
+			p2 = org;
+		} else {
+			p2_x = bound(m1_x, p1_x, m2_x);
+			p2_y = bound(m1_y, p1_y, m2_y);
+			p2_z = bound(m1_z, p1_z, m2_z);
+		}
+		d = p2 - p1;
+		d_z = 0;
+		if (vlen(d) >= WAYPOINT_LINK_DISTANCE_MAX) continue;
 		if (w.size == '0 0 0') {
 			skip = FALSE;
 			oldorigin = e.origin;
@@ -285,6 +283,11 @@ void(entity e, vector org) waypoint_relink_near {
 		}
 		waypoint_schedulerelink(w);
 	}
+}
+
+void(entity e, vector org) waypoint_relink_door {
+	if not(g_waypoints_relink_doors) return;
+	waypoint_relink_near(e, org);
 }
 
 void(void) waypoint_target_init {
@@ -314,38 +317,7 @@ void(void) spawnfunc_waypoint {
 // remove a spawnfunc_waypoint, and schedule all neighbors to relink
 void(entity e) waypoint_remove {
 	// tell all linked waypoints that they need to relink
-	waypoint_schedulerelink(e.wp00);
-	waypoint_schedulerelink(e.wp01);
-	waypoint_schedulerelink(e.wp02);
-	waypoint_schedulerelink(e.wp03);
-	waypoint_schedulerelink(e.wp04);
-	waypoint_schedulerelink(e.wp05);
-	waypoint_schedulerelink(e.wp06);
-	waypoint_schedulerelink(e.wp07);
-	waypoint_schedulerelink(e.wp08);
-	waypoint_schedulerelink(e.wp09);
-	waypoint_schedulerelink(e.wp10);
-	waypoint_schedulerelink(e.wp11);
-	waypoint_schedulerelink(e.wp12);
-	waypoint_schedulerelink(e.wp13);
-	waypoint_schedulerelink(e.wp14);
-	waypoint_schedulerelink(e.wp15);
-	waypoint_schedulerelink(e.wp16);
-	waypoint_schedulerelink(e.wp17);
-	waypoint_schedulerelink(e.wp18);
-	waypoint_schedulerelink(e.wp19);
-	waypoint_schedulerelink(e.wp20);
-	waypoint_schedulerelink(e.wp21);
-	waypoint_schedulerelink(e.wp22);
-	waypoint_schedulerelink(e.wp23);
-	waypoint_schedulerelink(e.wp24);
-	waypoint_schedulerelink(e.wp25);
-	waypoint_schedulerelink(e.wp26);
-	waypoint_schedulerelink(e.wp27);
-	waypoint_schedulerelink(e.wp28);
-	waypoint_schedulerelink(e.wp29);
-	waypoint_schedulerelink(e.wp30);
-	waypoint_schedulerelink(e.wp31);
+	waypoint_relink_near(e, e.origin);
 	// and now remove the spawnfunc_waypoint
 	waypoint_list = entity_list_remove(waypoint_list, e, aiment);
 	remove(e);
@@ -784,7 +756,7 @@ entity(vector position) waypoint_spawnpersonal {
 	w.nearestwaypoint = world;
 	w.nearestwaypointtimeout = 0;
 	w.owner = self;
-	waypoint_schedulerelink(w);
+	waypoint_relink_near(w, w.origin);
 	return w;
 }
 
@@ -844,23 +816,40 @@ float(string s, float argc) waypoint_cmd_client {
 		s = argv(1);
 		switch (s) {
 		case "spawn":
-			waypoint_schedulerelink(waypoint_spawn(self.origin, self.origin, 0));
-			sprint(self, strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
+			e = waypoint_spawn(self.origin, self.origin, 0);
+			waypoint_relink_near(e, e.origin);
+			sprint(self, strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
 			break;
 		case "remove":
-			e = navigation_findnearestwaypoint(self, FALSE);
-			if (e)
-			if not(e.wpflags & WAYPOINTFLAG_GENERATED) {
-				sprint(self, strcat("Waypoint removed at ",vtos(e.origin),"\n"));
-				waypoint_remove(e);
+			if (self.classname == "player") {
+				e = navigation_findnearestwaypoint(self, FALSE);
+				if (e)
+				if not(e.wpflags & WAYPOINTFLAG_GENERATED) {
+					sprint(self, strcat("Waypoint removed at ", vtos(e.origin), "\n"));
+					waypoint_remove(e);
+				}
+			} else { //observer?
+				e = findradius(self.origin + self.view_ofs, 16);
+				if (e) {
+					sprint(self, strcat("Waypoint removed at ", vtos(e.origin), "\n"));
+					waypoint_remove(e);
+				}
 			}
 			break;
 		case "unreachable":
+			if (self.classname != "player") {
+				sprint(self, "Must be a player\n");
+				break;
+			}
 			for (e = waypoint_list; e; e = e.aiment) {
 				e.colormod_x = 1;
 				e.effects &= ~(EFFECT_NODEPTHTEST | EFFECT_RED | EFFECT_BLUE);
 			}
 			e2 = navigation_findnearestwaypoint(self, FALSE);
+			if not(e2) {
+				sprint(self, "Nearest waypoint not found, nothing is reachable\n");
+				break;
+			}
 			navigation_markroutes_start(e2);
 			navigation_markroutes(NULL);
 			i = 0;

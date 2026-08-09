@@ -49,6 +49,7 @@ void(void) func_breakable_look_destroyed {
 		}
 	}
 	self.solid = SOLID_NOT;
+	waypoint_relink_door(self, self.origin);
 }
 
 void(void) func_breakable_look_restore {
@@ -56,6 +57,7 @@ void(void) func_breakable_look_restore {
 	setmodel(self, self.mdl);
 	setsize(self, _mins, _maxs);
 	self.solid = self.oldsolid;
+	waypoint_relink_door(self, self.origin);
 }
 
 void func_breakable_meodp_death(entity attacker, entity inflictor) {
