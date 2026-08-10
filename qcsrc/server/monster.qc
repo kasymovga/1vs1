@@ -708,6 +708,8 @@ float monster_check_target(void() walk, void() guard) {
 
 float monster_common_init_done;
 void monster_common_init() {
+	if (monster_common_init_done) return;
+	monster_common_init_done = TRUE;
 	precache_sound("misc/teleport.wav");
 	CVAR_CACHE(g_monster_pushfactor);
 	float g_monster_difficulty;
@@ -722,10 +724,7 @@ void monster_common_init() {
 }
 
 void monster_init(void() init_func) {
-	if not(monster_common_init_done) {
-		monster_common_init();
-		monster_common_init_done = TRUE;
-	}
+	monster_common_init();
 	entity_move_out_of_solid(self);
 	if (find(NULL, classname, self.classname) != self)
 		return;
