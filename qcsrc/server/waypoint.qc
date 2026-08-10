@@ -153,7 +153,6 @@ void(entity from, entity to) waypoint_addlink {
 void(void) waypoint_think {
 	entity e;
 	vector sv, sm1, sm2, ev, em1, em2, dv;
-	stepheightvec = sv_stepheight * '0 0 1';
 	bot_navigation_movemode = TRACE_MOVE_NOMONSTERS;
 	sm1 = self.origin + self.mins;
 	sm2 = self.origin + self.maxs;

@@ -88,6 +88,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 		// Bad start
 		//print("tracewalk: ", vtos(start), " is a bad start\n");
 	}
+	vector stepheightvec = sv_stepheight * '0 0 1';
 	// Movement loop
 	yaw = vectoyaw(move);
 	for (;;) {
