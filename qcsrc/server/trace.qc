@@ -140,10 +140,10 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 					}
 					// check for doors
 					trace_line( org, move, movemode, e);
-					if (plugin_chain_trace_walk_skip_entity(trace_ent)) {
+					if (plugin_chain_trace_walk_skip_entity(trace_ent, e)) {
 						vector nextmove;
 						move = trace_endpos;
-						while (plugin_chain_trace_walk_skip_entity(trace_ent)) {
+						while (plugin_chain_trace_walk_skip_entity(trace_ent, e)) {
 							nextmove = move + (dir * stepdist);
 							trace_line( move, nextmove, movemode, e);
 							move = nextmove;

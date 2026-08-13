@@ -1529,15 +1529,15 @@ void(void) func_door_rm_hack {
 	}
 }
 
-var float(entity e) func_door_trace_walk_skip_entity_next;
-float(entity e) func_door_trace_walk_skip_entity {
+var float(entity e, entity who) func_door_trace_walk_skip_entity_next;
+float(entity e, entity who) func_door_trace_walk_skip_entity {
 	if ((trace_ent.classname == "door_rotating" || trace_ent.classname == "door")) {
 		if (!(trace_ent.spawnflags & FUNC_DOOR_TOGGLE) && // toggle door is not skippable
-				!trace_ent.items && // key door not skippable
+				(!trace_ent.items || (trace_ent.items & who.items)) && // key door skippable only for key owner
 				(trace_ent.targetname == "" || trace_ent.nottargeted)) // targeted door not skippable
 		return TRUE;
 	}
-	return func_door_trace_walk_skip_entity_next(e);
+	return func_door_trace_walk_skip_entity_next(e, who);
 }
 
 float func_door_init_done;
