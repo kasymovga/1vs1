@@ -1,6 +1,7 @@
 float waypoint_generated_count;
 float waypoint_schedulerelink_count;
 float waypoint_schedulerelink_save;
+float waypoint_schedulerelink_verbose;
 float waypoint_presents_on_map;
 float g_waypoints_use_botclip;
 float g_waypoints_relink_doors;
@@ -196,8 +197,11 @@ void(void) waypoint_think {
 	}
 	waypoint_schedulerelink_count--;
 	if not(waypoint_schedulerelink_count) {
-		if (waypoint_schedulerelink_save) {
+		if (waypoint_schedulerelink_verbose) {
 			print("Relinking waypoints finished\n");
+			waypoint_schedulerelink_verbose = FALSE;
+		}
+		if (waypoint_schedulerelink_save) {
 			waypoint_save_links();
 			waypoint_schedulerelink_save = FALSE;
 		}
@@ -342,6 +346,7 @@ void(void) waypoint_removeall {
 void(void) waypoint_schedulerelinkall {
 	print("Relinking all waypoints\n");
 	entity head;
+	waypoint_schedulerelink_verbose = TRUE;
 	for (head = waypoint_list; head; head = head.aiment)
 		waypoint_schedulerelink(head);
 }
