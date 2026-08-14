@@ -10,7 +10,6 @@ float vote_finished;
 
 float(string cmd) vote_check_nasty;
 entity(string vote, string cmd, entity caller) vote_kick_victim_get;
-float(string s, entity e) vote_cmd;
 void(entity e) vote_help;
 string(entity e) vote_netname;
 string(string m, entity e) vote_validate_map;

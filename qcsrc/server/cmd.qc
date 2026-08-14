@@ -584,8 +584,6 @@ void(string s) cmd_client {
 	} else if (cmd == "say") {
 		if (tokens >= 2) {
 			chat_say(self, FALSE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
-			if (substring(argv(1), 0, 1) == "/")
-				vote_cmd(strcat("vote call ", substring(s, strstrofs(s, "/", 0) + 1, -1)), self);
 		}
 	} else if (cmd == "say_team") {
 		if (tokens >= 2)

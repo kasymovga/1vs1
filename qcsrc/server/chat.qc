@@ -107,9 +107,16 @@ float(entity source, string m) chat_message_forbidden {
 
 void(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol) chat_say {
 	string msgstr, colorstr = "", namestr, fullmsgstr, sourcemsgstr, privatemsgprefix = "";
-	float flood, privatemsgprefixlen = 0;
+	float flood, privatemsgprefixlen = 0, slashme = FALSE;
 	entity head;
 	if (source) {
+		if (substring(msgin, 0, 1) == "/") {
+			if (substring(msgin, 0, 4) == "/me ") {
+				slashme = TRUE;
+			} else {
+				vote_cmd(strcat("vote call ", substring(msgin, 1, -1)), source);
+			}
+		}
 		if (source.abuser > 0) {
 			if (source.abuser_last_say)
 			if (time - source.abuser_last_say < 60)
@@ -174,9 +181,15 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		else
 			privatemsgprefix = strcat("\{1}* ^3You tell ", privatesay.netname, ": ^7");
 	} else if (teamsay) {
-		msgstr = strcat("\{1}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
+		if (slashme)
+			msgstr = strcat("\{1}", colorstr, "^3* (^3", namestr, colorstr, ") ^7", substring(msgin, 4, -1));
+		else
+			msgstr = strcat("\{1}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
 	} else {
-		msgstr = strcat("\{1}", namestr, "^7: ", msgin);
+		if (slashme)
+			msgstr = strcat("\{1}^3 * ^7", namestr, "^7 ", substring(msgin, 4, -1));
+		else
+			msgstr = strcat("\{1}", namestr, "^7: ", msgin);
 	}
 	msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 	fullmsgstr = msgstr;

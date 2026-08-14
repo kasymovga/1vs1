@@ -3,4 +3,5 @@ void(void) vote_reset;
 void(void) vote_client_connect;
 void(void) vote_client_disconnect;
 void(void) vote_think;
+float(string s, entity e) vote_cmd;
 float vote_called;
