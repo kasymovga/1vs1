@@ -571,6 +571,7 @@ void(void) physics_init {
 	CVAR_CACHE(g_dodging_sound);
 	CVAR_CACHE(g_walljump_smokeparticle_num);
 	CVAR_CACHE(g_steponskydamage);
+	CVAR_CACHE(g_steponslope);
 	CVAR_CACHE(g_nodropdamage);
 	CVAR_CACHE(g_jump_nofalldamage);
 	CVAR_CACHE(g_punchangle_decrease_speed);
@@ -753,6 +754,7 @@ float(entity to, float sf) physics_send {
 				+ (g_walk_align_to_ground ? 8 : 0)
 				+ (g_nofriction_cpm_hacks ? 16 : 0)
 				+ (g_steponskydamage ? 32 : 0)
+				+ (g_steponslope ? 64 : 0)
 				;
 		net_write_byte(MSG_ENTITY, switches);
 		if (g_walljump) {
