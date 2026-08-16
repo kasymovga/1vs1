@@ -240,6 +240,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 						if (position == 1) {
 							announce(e, "announcer/male/amazing.wav", "^31st place!");
 							if (sv_cts_autodemos_discard) e.discardabledemo = FALSE;
+							sprint(e, strcat("Record run interval: started at ", ftos(e.respawntime), ", duration is ", ftos(time - e.respawntime), "\n"));
 						} else if (position == 2)
 							announce(e, "announcer/male/awesome.wav", "^52st place!");
 						else if (position == 2)

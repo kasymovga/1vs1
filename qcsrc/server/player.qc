@@ -1079,6 +1079,7 @@ void(entity spot) player_spawn {
 	self.triggerhurttime = 0;
 	self.iscreature = TRUE;
 	self.delay = FALSE;
+	self.respawntime = time;
 	player_physics_setup(self);
 	self.flags = FL_CLIENT;
 	self.takedamage = DAMAGE_AIM;
