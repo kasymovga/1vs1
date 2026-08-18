@@ -461,10 +461,12 @@ void(string s) cmd_client {
 	string cmd;
 	float tokens;
 	entity e;
-	if not(self.flags & FL_CLIENT)
-	if (client_preconnect_abort())
-		return;
+	if not(self.flags & FL_CLIENT) {
+		if (client_preconnect_abort())
+			return;
 
+		self.discardabledemo = TRUE; //prevent demos for clients which failed to connect
+	}
 	tokens = tokenize_console(s);
 	cmd = argv(0);
 	if (cmd != "sentcvar")

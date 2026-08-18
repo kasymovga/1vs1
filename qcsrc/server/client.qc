@@ -426,6 +426,7 @@ void(void) client_connect { //called by engine
 			return;
 
 		self.flags = FL_CLIENT;
+		self.discardabledemo = FALSE; //demo can be keeped now
 	}
 	self.spectatee_status = num_for_edict(self);
 	if (self.abuser > 0)
