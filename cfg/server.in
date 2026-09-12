@@ -12,6 +12,7 @@ set sv_abuserplayername "User of RetardNet"
 set sv_sound_frag ""
 set sv_spectator_speed_multiplier 1.5
 set sv_master_list_sync 1
+set sv_gameplayfix_disable_monster_noise4 0 "monster - disable noise4"
 set sv_gameplayfix_dontlinkdoors 0
 set sv_gameplayfix_doorpositionq3 0
 set sv_gameplayfix_item_ignore_nodrop 0 "Make items ignore NODROP brushes"
