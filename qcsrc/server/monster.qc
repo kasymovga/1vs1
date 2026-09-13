@@ -10,6 +10,7 @@
 
 float g_monster_pushfactor;
 float monster_difficulty;
+float sv_gameplayfix_disable_monster_noise4;
 
 void(entity m, string s, float force) monster_sound {
 	if (force)
@@ -619,6 +620,7 @@ void monster_spawn_use() {
 }
 
 void monster_prepare(void() hunt, void() walk, void() idle) {
+	CVAR_CACHE(sv_gameplayfix_disable_monster_noise4);
 	self.classname = "monster";
 	self.health = self.owner.health;
 	self.dmg_edge = self.owner.dmg_edge;
@@ -628,7 +630,10 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.noise1 = self.owner.noise1;
 	self.noise2 = self.owner.noise2;
 	self.noise3 = self.owner.noise3;
-	self.noise4 = self.owner.noise4;
+	if (sv_gameplayfix_disable_monster_noise4)
+		self.noise4 = "";
+	else
+		self.noise4 = self.owner.noise4;
 	self.watersound_finished = time - random() * 2; // prevent ambient sounds right after spawn
 	self.iscreature = TRUE;
 	self.bot_attack = TRUE;
