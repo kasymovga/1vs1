@@ -113,7 +113,9 @@ float(void) game_type_vote_think {
 	if (game_type_vote_count == 1) {
 		game_type_switch(game_type_vote_types[0]);
 		game_type_vote_finished = TRUE;
-		cvar_set("g_profile", game_type_vote_profiles[0]);
+		if (game_type_vote_profiles[0] != " ")
+			cvar_set("g_profile", game_type_vote_profiles[0]);
+
 		return TRUE;
 	}
 	for (i = 0; i < game_type_vote_count; i++) {
