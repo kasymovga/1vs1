@@ -269,6 +269,7 @@ vector(void) physics_view_origin {
 		physics_end_origin = physics.origin;
 	} else {
 		physics_end_origin = pmove_org;
+		physics_flags = physics_start_flags;
 		v = physics_end_origin + '0 0 1' * getstati(STAT_VIEWHEIGHT);
 		if (view_camera_correction_needed) {
 			if not(CVAR(chase_active))
