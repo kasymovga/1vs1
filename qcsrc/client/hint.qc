@@ -16,5 +16,6 @@ void(void) hint_net_read {
 	str_unzone_ifneeded(hint_cmd_prev);
 	hint_cmd_next = strzone(strcat("cmd hint ", ftos(hint_num + 1), "\n"));
 	hint_cmd_prev = strzone(strcat("cmd hint ", ftos(hint_num - 1), "\n"));
-	GUI_Show(GUI_HINT);
+	if not(main_isdemo)
+		GUI_Show(GUI_HINT);
 }
