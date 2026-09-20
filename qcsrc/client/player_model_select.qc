@@ -352,6 +352,6 @@ void(void) player_model_select_read {
 	player_model_select_torso.draw = player_model_select_model_draw;
 	player_model_select_current.colormap = 1023;
 	player_model_select_torso.colormap = 1023;
-	if not(player_model_select_list_len)
+	if (!player_model_select_list_len || main_isdemo)
 		player_model_select_remove();
 }
