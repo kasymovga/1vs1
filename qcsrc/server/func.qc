@@ -499,7 +499,7 @@ void(vector tdest, vector adest, float tspeed, void() func) func_calc_move {
 		}
 	} else {
 		delta = tdest - self.origin;
-		traveltime = vlen(delta) / tspeed;
+		traveltime = max(vlen(delta) / tspeed, sys_ticrate);
 		self.velocity = delta * (1 / traveltime); // QuakeC doesn't allow vector/float division
 		self.avelocity = (adest - self.angles) * (1 / traveltime);
 	}
@@ -942,7 +942,6 @@ void(void) func_button_return {
 void(void) func_button_fire {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;    // will be reset upon return
-
 	if (self.state == FUNC_STATE_UP)
 		return;
 
@@ -962,6 +961,8 @@ void(void) func_button_reset {
 	setorigin(self, self.pos1);
 	self.frame = 0; // use normal textures
 	self.state = FUNC_STATE_BOTTOM;
+	self.velocity = '0 0 0';
+	self.think = stdproc_nothing;
 	if (self.health)
 		self.takedamage = DAMAGE_YES; // can be shot again
 }
