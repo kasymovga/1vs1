@@ -79,6 +79,12 @@ void(entity pl) race_ghost_start {
 		setmodel(pl.race_ghost, "models/player/grunt.dpm");
 		pl.race_ghost.frame = 8;
 		pl.race_ghost.customizeentityforclient = race_ghost_customize;
+		string s = bufstr_get(pl.race_ghost.enemy.lip, 0);
+		vector o;
+		o_x = stof(substring(s, 0, 7));
+		o_y = stof(substring(s, 7, 7));
+		o_z = stof(substring(s, 14, 7));
+		setorigin(pl.race_ghost, o);
 		BITXOR_ASSIGN(pl.race_ghost.effects, EFFECT_TELEPORT_BIT);
 	}
 }
