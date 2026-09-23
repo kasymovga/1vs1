@@ -79,6 +79,7 @@ void(entity pl) race_ghost_start {
 		setmodel(pl.race_ghost, "models/player/grunt.dpm");
 		pl.race_ghost.frame = 8;
 		pl.race_ghost.customizeentityforclient = race_ghost_customize;
+		BITXOR_ASSIGN(pl.race_ghost.effects, EFFECT_TELEPORT_BIT);
 	}
 }
 
@@ -110,6 +111,8 @@ void(entity ghost, entity ghost_body, float pos) race_ghost_record_read {
 	o2_y = stof(substring(record_str, 7, 7));
 	o2_z = stof(substring(record_str, 14, 7));
 	float a2 = stof(substring(record_str, 21, 4));
+	while (a1 - a2 > 180) a1 -= 360;
+	while (a1 - a2 < -180) a1 += 360;
 	float a = (a1 * (1 - f) + a2 * f);
 	vector o = (o1 * (1 - f) + o2 * f);
 	ghost_body.angles_y = a;
