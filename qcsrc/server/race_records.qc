@@ -725,6 +725,18 @@ void(string n, string id) race_records_link_name_to_id {
 	race_records_link_name_to_id_cb_arg2 = NULL;
 }
 
+void(string k, string v) race_records_list_ids_cb {
+	if (substring(k, 0, 9) != "raceid2n/") return;
+	string id = substring(k, 9, -1);
+	if not(client_id_is_valid(id)) return;
+	string n = db_get(db_server, k);
+	print(id, " - ", n, "\n");
+}
+
+void(void) race_records_list_ids {
+	db_for_each_key_like(db_server, "raceid2n/", "", race_records_list_ids_cb);
+}
+
 float(string name, string client_id, float checktime, float _speed, float _date) race_records_put {
 	float t, i, j, sp, d;
 	string n, id;
@@ -840,6 +852,8 @@ float(string cmd, float argc) race_records_cmd {
 		print("  clear_records [mapname]\n");
 		print("  clear_record <position>\n");
 		print("  link_id_to_name <position1> [position2]\n");
+		print("  show_id <position1>\n");
+		print("  list_ids\n");
 		print("  validate [fixflag]\n");
 	} else if (cmd == "validate") {
 		if (argc > 2) {
@@ -947,6 +961,22 @@ float(string cmd, float argc) race_records_cmd {
 			race_records_delete(p2);
 		}
 		race_records_sender.SendFlags = 1;
+		return TRUE;
+	} else if (cmd == "show_id") {
+		if (argc != 2) {
+			print("usage: sv_cmd show_id <position>\n");
+			print("       position must be from 1 to 10\n");
+			return TRUE;
+		}
+		float p = floor(stof(argv(1))) - 1;
+		if (p < 0 || p > 9) {
+			print("position must be from 1 to 10\n");
+			return TRUE;
+		}
+		print(race_records_id[p], "\n");
+		return TRUE;
+	} else if (cmd == "list_ids") {
+		race_records_list_ids();
 		return TRUE;
 	}
 	return FALSE;
