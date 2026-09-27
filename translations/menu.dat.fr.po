@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.4.1\n"
-"Last-Translator: Gustavo Zamboni, Alexandre Willian\n"
+"Last-Translator: Gustavo Zamboni, Alexandre Willian, [ARG]Mark\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: fr_FR\n"
 
@@ -109,10 +109,10 @@ msgid "Downloads:"
 msgstr "Téléchargements :"
 
 msgid "Speed (kB/s):"
-msgstr "Vitesse (kB/s) :"
+msgstr "Vitesse (kO/s) :"
 
 msgid "Client UDP port:"
-msgstr "Port UDP Client :"
+msgstr "Port UDP client :"
 
 msgid "Map list:"
 msgstr "Liste des cartes :"
@@ -130,7 +130,7 @@ msgid "Clear"
 msgstr "Effacer"
 
 msgid "Bookmark"
-msgstr "Répertorier"
+msgstr "Épingler"
 
 msgid "Address:"
 msgstr "Adresse :"
@@ -178,13 +178,13 @@ msgid "Win limit:"
 msgstr "Nbre max de victoires :"
 
 msgid "Player slots:"
-msgstr "Nombre de joueurs max :"
+msgstr "Nombre max de joueurs :"
 
 msgid "Number of bots:"
 msgstr "Nombre de Bots :"
 
 msgid "Bot skill:"
-msgstr "Niveau du Bot :"
+msgstr "Niveau des Bots :"
 
 msgid "Bot names:"
 msgstr "Noms des Bots :"
@@ -277,7 +277,7 @@ msgid "Teams:"
 msgstr "Équipes :"
 
 msgid "Teamplay settings:"
-msgstr "Paramétrage des équipes :"
+msgstr "Paramètres des équipes :"
 
 msgid "Record demos while playing"
 msgstr "Enregistrer les démos pendant le jeu"
@@ -358,7 +358,7 @@ msgid "Many"
 msgstr "Beaucoup"
 
 msgid "Lots"
-msgstr "Encore Plus"
+msgstr "Énormément"
 
 msgid "Up"
 msgstr "Haut"
@@ -385,7 +385,7 @@ msgid "HUD & Waypoints"
 msgstr "HUD & Waypoints"
 
 msgid "HUD settings:"
-msgstr "Paramétrages de l'interface :"
+msgstr "Paramètres de l'interface :"
 
 msgid "Background:"
 msgstr "Fond :"
@@ -451,10 +451,10 @@ msgid "Change key..."
 msgstr "Changer la touche..."
 
 msgid "Edit..."
-msgstr "Éditer..."
+msgstr "Modifier..."
 
 msgid "Full screen"
-msgstr "Pleine écran"
+msgstr "Plein écran"
 
 msgid "Desktop resolution"
 msgstr "Résolution de l'écran"
@@ -508,7 +508,7 @@ msgid "Disable multithreaded OpenGL"
 msgstr "Désactiver multithreaded OpenGL"
 
 msgid "Wait for GPU to finish each frame"
-msgstr "Attendre le GPU pour finaliser chaque frame"
+msgstr "Attendre le GPU pour finaliser chaque image"
 
 msgid "Brightness:"
 msgstr "Luminosité :"
@@ -520,7 +520,7 @@ msgid "Gamma:"
 msgstr "Gamma :"
 
 msgid "Contrast boost:"
-msgstr "Renforcer Contraste :"
+msgstr "Renforcer contraste :"
 
 msgid "Saturation:"
 msgstr "Saturation :"
@@ -562,7 +562,7 @@ msgid "Antialiasing:"
 msgstr "Anticrénelage :"
 
 msgid "Ambient:"
-msgstr "Ambience:"
+msgstr "Ambience :"
 
 msgid "Texture quality:"
 msgstr "Qualité des textures :"
@@ -709,10 +709,10 @@ msgid "Time warning:"
 msgstr "Avertissement de temps :"
 
 msgid "1 minute"
-msgstr "1 Minute"
+msgstr "1 minute"
 
 msgid "5 minutes"
-msgstr "5 Minutes"
+msgstr "5 minutes"
 
 msgid "Hit indicator"
 msgstr "Indicateur de frappe"
@@ -835,13 +835,13 @@ msgid "Info"
 msgstr "Info"
 
 msgid "Server Information"
-msgstr "Information du Serveur"
+msgstr "Informations du serveur"
 
 msgid "Players:"
 msgstr "Joueurs :"
 
 msgid "Map:"
-msgstr "Map :"
+msgstr "Carte :"
 
 msgid "Bots:"
 msgstr "Bots :"
@@ -859,7 +859,7 @@ msgid "Language..."
 msgstr "Langue... / Language..."
 
 msgid "Language"
-msgstr "Langue / Langauge"
+msgstr "Langue / Language"
 
 msgid "Disable Nexuiz-compatible symbols"
 msgstr "Désactiver les symboles Nexuiz"
@@ -986,7 +986,7 @@ msgid "Deferred shadow"
 msgstr "Ombres reportées"
 
 msgid "Discord status"
-msgstr "Statud Discord"
+msgstr "Statut Discord"
 
 msgid "Server thread"
 msgstr "Thread pour serveur"
@@ -998,7 +998,7 @@ msgid "* Digits only"
 msgstr "* Chiffres seulement"
 
 msgid "PIN-code:"
-msgstr "code PIN :"
+msgstr "Code PIN :"
 
 msgid "Enable demo player"
 msgstr "Activer le lecteur de démonstration"
