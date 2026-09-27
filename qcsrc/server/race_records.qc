@@ -437,8 +437,78 @@ string(string s) race_records_html_escape {
 	return s;
 }
 
+void(float f, string s, string path) race_records_to_html_segment {
+	float f2 = fopen(path, FILE_READ);
+	if (f2 < 0) {
+		fputs(f, s);
+		f2 = fopen(path, FILE_WRITE);
+		if (f >= 0) {
+			fputs(f2, s);
+			fclose(f2);
+		} else {
+			print("Can't open ", path, " for writing\n");
+		}
+	} else {
+		string line;
+		while ((line = fgets(f2))) {
+			fputs(f, strcat(line, "\n"));
+		}
+		fclose(f2);
+	}
+}
+
+void(float f) race_records_to_html_top {
+	string s = "<html>\n"
+			"<head>\n"
+			"<title>CTS record table</title>\n"
+			"<style>\n"
+			"body {\n"
+			"	background-color: black;\n"
+			"	color: white;\n"
+			"}\n"
+			"</style>\n"
+			"</head>\n"
+			"<body>\n"
+			"<script>\n"
+			"function sortTable(column) {\n"
+			"	var x, y;\n"
+			"	var table = document.getElementById(\"recordTable\");\n"
+			"	var rows = table.rows;\n"
+			"	for (var i = rows.length - 2; i > 0; i--) {\n"
+			"		for (var j = i; j < rows.length - 1; j++) {\n"
+			"			x = rows[j].getElementsByTagName(\"TD\")[column];\n"
+			"			y = rows[j + 1].getElementsByTagName(\"TD\")[column];\n"
+			"			if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {\n"
+			"				rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);\n"
+			"			} else {\n"
+			"				break;\n"
+			"			}\n"
+			"		}\n"
+			"	}\n"
+			"}\n"
+			"</script>\n"
+			"<table  id='recordTable'>\n"
+			"<tr>\n"
+			"<th><a href='#' onclick=\"sortTable(0)\">Map</a>\n";
+	float i, j;
+	for (i = 0; i < 10; i++) {
+		j = i * 2 + 1;
+		s = strcat(s, "<th><a href='#' onclick=\"sortTable(", ftos(j), ")\">Time #", ftos(i + 1), "</a>");
+		s = strcat(s, "<th><a href='#' onclick=\"sortTable(", ftos(j + 1), ")\">Player #", ftos(i + 1), "</a>\n");
+	}
+	race_records_to_html_segment(f, s, "cts_records_template_top.html");
+}
+
+void(float f) race_records_to_html_bottom {
+	race_records_to_html_segment(f,
+			"</table>\n"
+			"</body>\n"
+			"</html>\n"
+			, "cts_records_template_bottom.html");
+}
+
 void(void) race_records_to_html {
-	if not(cvar_string("sv_cts_records_to_html")) return;
+	if not(cvar("sv_cts_records_to_html")) return;
 	if not(race_records_modified) {
 		if (file_exists("cts_records.html")) return; //nothing to do
 	}
@@ -447,50 +517,12 @@ void(void) race_records_to_html {
 		print("Saving records to html failed: cannot open cts_records.html\n");
 		return;
 	}
-	fputs(f, "<html>\n");
-	fputs(f, "<head>\n");
-	fputs(f, "<title>CTS record table</title>\n");
-	fputs(f, "<style>\n");
-	fputs(f, "body {\n");
-	fputs(f, "	background-color: black;\n");
-	fputs(f, "	color: white;\n");
-	fputs(f, "}\n");
-	fputs(f, "</style>\n");
-	fputs(f, "</head>\n");
-	fputs(f, "<body>\n");
-	fputs(f, "<script>\n");
-	fputs(f, "function sortTable(column) {\n");
-	fputs(f, "	var x, y;\n");
-	fputs(f, "	var table = document.getElementById(\"recordTable\");\n");
-	fputs(f, "	var rows = table.rows;\n");
-	fputs(f, "	for (var i = rows.length - 2; i > 0; i--) {\n");
-	fputs(f, "		for (var j = i; j < rows.length - 1; j++) {\n");
-	fputs(f, "			x = rows[j].getElementsByTagName(\"TD\")[column];\n");
-	fputs(f, "			y = rows[j + 1].getElementsByTagName(\"TD\")[column];\n");
-	fputs(f, "			if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {\n");
-	fputs(f, "				rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);\n");
-	fputs(f, "			} else {\n");
-	fputs(f, "				break;\n");
-	fputs(f, "			}\n");
-	fputs(f, "		}\n");
-	fputs(f, "	}\n");
-	fputs(f, "}\n");
-	fputs(f, "</script>\n");
-	fputs(f, "<table  id='recordTable'>\n");
-	fputs(f, "<tr>\n");
-	fputs(f, "<th><a href='#' onclick=\"sortTable(0)\">Map</a>\n");
-	string s;
-	float i, j;
-	for (i = 0; i < 10; i++) {
-		j = i * 2 + 1;
-		s = strcat("<th><a href='#' onclick=\"sortTable(", ftos(j), ")\">Time #", ftos(i + 1), "</a>");
-		s = strcat(s, "<th><a href='#' onclick=\"sortTable(", ftos(j + 1), ")\">Player #", ftos(i + 1), "</a>\n");
-		fputs(f, s);
-	}
+	print("Writing cts_records.html\n");
 	map_info_enumerate();
 	map_info_filter_game_type(MAP_INFO_TYPE_CTS, map_info_required_flags(), map_info_forbidden_flags(), 1);
-	string m, n, id, p;
-	float breaked, t;
+	race_records_to_html_top(f);
+	string m, n, id, p, s;
+	float breaked, t, i, j;
 	for (i = 0; i < map_info_count; ++i) {
 		m = map_info_glob_item(map_info_filter_list_lookup(i));
 		s = strcat(m, race_records_path);
@@ -518,9 +550,7 @@ void(void) race_records_to_html {
 			}
 		}
 	}
-	fputs(f, "</table>\n");
-	fputs(f, "</body>\n");
-	fputs(f, "</html>\n");
+	race_records_to_html_bottom(f);
 	fclose(f);
 }
 
@@ -529,6 +559,7 @@ void(void) race_records_load {
 	string n, id;
 	float t, sp, d;
 	id = db_get(db_server, strcat(s, "id"));
+	float modified = FALSE;
 	if (id != "") {
 		n = db_get(db_server, strcat("raceid2n/", id));
 		if (n == "") {
@@ -543,9 +574,10 @@ void(void) race_records_load {
 	d = stof(db_get(db_server, strcat(s, "date")));
 	if (t && (n != "" || id != "")) {
 		if not(race_records_put(n, id, t, sp, d)) {
-			if (id != "")
+			if (id != "") {
 				race_records_id_ref_counter_decrease(id);
-
+				modified = TRUE;
+			}
 			print("Warning: records table line 1 failed\n");
 		}
 	}
@@ -566,14 +598,15 @@ void(void) race_records_load {
 		d = stof(db_get(db_server, strcat(s, ftos(i), "/date")));
 		if (t && (n != "" || id != "")) {
 			if not(race_records_put(n, id, t, sp, d)) {
-				if (id != "")
+				if (id != "") {
 					race_records_id_ref_counter_decrease(id);
-
+					modified = TRUE;
+				}
 				print("Warning: records table line ", ftos(i + 1), " failed\n");
 			}
 		}
 	}
-	race_records_modified = TRUE;
+	race_records_modified = modified;
 }
 
 void(void) race_records_save {
@@ -644,7 +677,7 @@ void(float i) race_records_delete {
 	race_records_time[9] = 0;
 	race_records_speed[9] = 0;
 	race_records_date[9] = 0;
-	race_records_modified = FALSE;
+	race_records_modified = TRUE;
 }
 
 float(entity to, float sf) race_records_send {
@@ -712,19 +745,18 @@ float(string k, string suffix) race_records_check_key {
 string race_records_link_name_to_id_cb_arg1;
 string race_records_link_name_to_id_cb_arg2;
 void(string k, string v) race_records_link_name_to_id_cb {
+	if (v != race_records_link_name_to_id_cb_arg1) return;
 	if not(race_records_check_key(k, "netname")) return;
 	float slash = strstrofs(k, "/", 0);
 	if (slash < 0) return; //impossible but...
 	if (substring(k, 0, slash) == mapname) return;
-	if (v == race_records_link_name_to_id_cb_arg1) {
-		string k_id = strcat(substring(k, 0, strlen(k) - 7), "id");
-		if (db_get(db_server, k_id) == "") {
-			db_put(db_server, k, "");
-			db_put(db_server, k_id, race_records_link_name_to_id_cb_arg2);
-			race_records_id_ref_counter_increase(race_records_link_name_to_id_cb_arg2,
-					race_records_link_name_to_id_cb_arg1);
-			print("Link ", race_records_link_name_to_id_cb_arg1, " on ", k, " to id\n");
-		}
+	string k_id = strcat(substring(k, 0, strlen(k) - 7), "id");
+	if (db_get(db_server, k_id) == "") {
+		db_put(db_server, k, "");
+		db_put(db_server, k_id, race_records_link_name_to_id_cb_arg2);
+		race_records_id_ref_counter_increase(race_records_link_name_to_id_cb_arg2,
+				race_records_link_name_to_id_cb_arg1);
+		print("Link ", race_records_link_name_to_id_cb_arg1, " on ", k, " to id\n");
 	}
 }
 

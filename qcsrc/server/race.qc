@@ -1111,8 +1111,10 @@ var void(void) race_shutdown_next;
 void(void) race_shutdown {
 	print("Saving race records...\n");
 	race_records_save();
-	race_records_to_html();
-	if (g_cts) race_ghost_save();
+	if (g_cts) {
+		race_records_to_html();
+		race_ghost_save();
+	}
 	race_shutdown_next();
 }
 
