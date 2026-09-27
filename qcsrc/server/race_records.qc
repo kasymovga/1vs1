@@ -696,23 +696,34 @@ void(string m) race_records_clear {
 	}
 }
 
+float(string k, string suffix) race_records_check_key {
+	float slash = strstrofs(k, "/", 0);
+	if (slash <= 0) return FALSE;
+	if (substring(k, slash, 14) != "/cts100record/")
+	if (substring(k, slash, 15) != "/race100record/")
+		return FALSE;
+
+	if (substring(k, strlen(k) - strlen(suffix) - 1, -1) != strcat("/", suffix))
+		return FALSE;
+
+	return TRUE;
+}
+
 string race_records_link_name_to_id_cb_arg1;
 string race_records_link_name_to_id_cb_arg2;
 void(string k, string v) race_records_link_name_to_id_cb {
-	if (substring(k, strlen(k) - 8, 8) != "/netname") return;
+	if not(race_records_check_key(k, "netname")) return;
 	float slash = strstrofs(k, "/", 0);
 	if (slash < 0) return; //impossible but...
 	if (substring(k, 0, slash) == mapname) return;
-	if (strstrofs(k, race_records_path, 0) == slash) {
-		if (v == race_records_link_name_to_id_cb_arg1) {
-			string k_id = strcat(substring(k, 0, strlen(k) - 7), "id");
-			if (db_get(db_server, k_id) == "") {
-				db_put(db_server, k, "");
-				db_put(db_server, k_id, race_records_link_name_to_id_cb_arg2);
-				race_records_id_ref_counter_increase(race_records_link_name_to_id_cb_arg2,
-						race_records_link_name_to_id_cb_arg1);
-				print("Link ", race_records_link_name_to_id_cb_arg1, " on ", k, " to id\n");
-			}
+	if (v == race_records_link_name_to_id_cb_arg1) {
+		string k_id = strcat(substring(k, 0, strlen(k) - 7), "id");
+		if (db_get(db_server, k_id) == "") {
+			db_put(db_server, k, "");
+			db_put(db_server, k_id, race_records_link_name_to_id_cb_arg2);
+			race_records_id_ref_counter_increase(race_records_link_name_to_id_cb_arg2,
+					race_records_link_name_to_id_cb_arg1);
+			print("Link ", race_records_link_name_to_id_cb_arg1, " on ", k, " to id\n");
 		}
 	}
 }
@@ -734,6 +745,7 @@ void(string k, string v) race_records_list_ids_cb {
 }
 
 void(void) race_records_list_ids {
+	race_records_save();
 	db_for_each_key_like(db_server, "raceid2n/", "", race_records_list_ids_cb);
 }
 
@@ -805,15 +817,7 @@ float(string name, string client_id, float checktime, float _speed, float _date)
 
 float race_records_validate_counter;
 void(string k, string v) race_records_validate_cb2 {
-	float slash = strstrofs(k, "/", 0);
-	if (slash < 0) return;
-	if (substring(k, slash, 14) != "/cts100record/")
-	if (substring(k, slash, 15) != "/race100record/")
-		return;
-
-	if (substring(k, strlen(k) - 3, -1) != "/id")
-		return;
-
+	if not(race_records_check_key(k, "id")) return;
 	race_records_validate_counter++;
 }
 
@@ -847,6 +851,43 @@ void(float fix) race_records_validate {
 	db_for_each_key_like(db_server, "raceid2n_rc/", "", race_records_validate_cb1);
 }
 
+string race_records_merge_ids_cb_source;
+string race_records_merge_ids_cb_name;
+string race_records_merge_ids_cb_destination;
+void(string k, string v) race_records_merge_ids_cb {
+	if not(race_records_check_key(k, "id")) return;
+	if (v == race_records_merge_ids_cb_source) {
+		db_put(db_server, k, race_records_merge_ids_cb_destination);
+		race_records_id_ref_counter_decrease(v);
+		race_records_id_ref_counter_increase(race_records_merge_ids_cb_destination, race_records_merge_ids_cb_name);
+	}
+}
+
+void(string id1, string id2) race_records_merge_ids {
+	race_records_save();
+	race_records_merge_ids_cb_source = id1;
+	race_records_merge_ids_cb_destination = id2;
+	race_records_merge_ids_cb_name = db_get(db_server, strcat("raceid2n/", id2));
+	if (race_records_merge_ids_cb_name == "")
+		race_records_merge_ids_cb_name = db_get(db_server, strcat("raceid2n/", id1));
+
+	if (race_records_merge_ids_cb_name == "")
+		race_records_merge_ids_cb_name = "<UNKNOWN>";
+
+	db_for_each_key_like(db_server, "/id", id1, race_records_merge_ids_cb);
+	race_records_merge_ids_cb_source = NULL;
+	race_records_merge_ids_cb_destination = NULL;
+	race_records_merge_ids_cb_name = NULL;
+	float i;
+	for (i = 0; i < 10; i++) {
+		if (race_records_id[i] == id1) {
+			str_unzone_ifneeded(race_records_id[i]);
+			race_records_id[i] = str_zone_ifneeded(id2);
+			race_records_sender.SendFlags = 1;
+		}
+	}
+}
+
 float(string cmd, float argc) race_records_cmd {
 	if (cmd == "help") {
 		print("  clear_records [mapname]\n");
@@ -854,6 +895,7 @@ float(string cmd, float argc) race_records_cmd {
 		print("  link_id_to_name <position1> [position2]\n");
 		print("  show_id <position1>\n");
 		print("  list_ids\n");
+		print("  merge_ids <sourceid> <desinationid>\n");
 		print("  validate [fixflag]\n");
 	} else if (cmd == "validate") {
 		if (argc > 2) {
@@ -977,6 +1019,23 @@ float(string cmd, float argc) race_records_cmd {
 		return TRUE;
 	} else if (cmd == "list_ids") {
 		race_records_list_ids();
+		return TRUE;
+	} else if (cmd == "merge_ids") {
+		if (argc != 3) {
+			print("usage: sv_cmd merge_ids <sourceid> <destinationid>\n");
+			return TRUE;
+		}
+		string id1 = argv(1);
+		string id2 = argv(2);
+		if not(client_id_is_valid(id1)) {
+			print("'", id1, "' is not valid client id\n");
+			return TRUE;
+		}
+		if not(client_id_is_valid(id2)) {
+			print("'", id2, "' is not valid client id\n");
+			return TRUE;
+		}
+		race_records_merge_ids(id1, id2);
 		return TRUE;
 	}
 	return FALSE;
