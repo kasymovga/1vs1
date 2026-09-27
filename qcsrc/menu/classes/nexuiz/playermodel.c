@@ -200,7 +200,7 @@ void drawNexuizPlayerModelSelector(entity me)
 	float i, n;
 	vector o;
 	me.src = me.currentModelImage;
-	if (me.src != "")
+	if (me.src != "" && me.src != "/")
 		drawImage(me);
 
 	me.src = NULL;
