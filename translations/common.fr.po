@@ -49,7 +49,7 @@ msgid "Save/Load Game"
 msgstr "Sauvegarder/Charger une partie"
 
 msgid "custom"
-msgstr "Personalisé"
+msgstr "Personnalisé"
 
 msgid "Show radar:"
 msgstr "Afficher les radars :"
@@ -82,7 +82,7 @@ msgid "Call a vote"
 msgstr "Lancer un vote"
 
 msgid "Mute list..."
-msgstr "Liste muette..."
+msgstr "Liste des muets..."
 
 msgid "Stop demo"
 msgstr "Arrêter la démo"
@@ -127,7 +127,7 @@ msgid "^1Don't shoot your team mates!"
 msgstr "^1Ne tires pas sur tes équipiers !"
 
 msgid "^1You killed your own dumb self!"
-msgstr "^1Tu t'es buté tout seul xd!"
+msgstr "^1Tu t'es buté tout seul xd"
 
 msgid "^4You {2}^4fragged ^7{1}"
 msgstr "^4Tu as {2}^4détruit ^7{1}"
@@ -139,7 +139,7 @@ msgid "^1Watch your step!"
 msgstr "^1Regardes où tu marches !"
 
 msgid "^1First blood"
-msgstr "^1Première destruction"
+msgstr "^1Premier frag"
 
 msgid "^1First victim"
 msgstr "^1Première victime"
@@ -169,13 +169,13 @@ msgstr "^1Caméra libre\n^1Appuis sur ^3{+attack}^1 pour suivre un joueur"
 "\n^1Mode de jeu : ^3{$2}"
 
 msgid "{1} was gunned by {2}"
-msgstr "{1} s'est fait buter par {2}"
+msgstr "{1} s'est fait abattre par {2}"
 
 msgid "{1} detonated"
 msgstr "{1} s'est kamikazé"
 
 msgid "{1} just noticed {2}'s blue ball"
-msgstr "{1} vient de voir les boules bleues de {2}"
+msgstr "{1} a remarqué les boules bleues de {2}"
 
 msgid "{1} has {2} frags in a row"
 msgstr "{1} vient d'enchaîner {2} frags"
@@ -187,19 +187,19 @@ msgid "{1} was thrown into a world of hurt by {2}"
 msgstr "{1} a été exilé dans le Royaume des Ombres par {2}"
 
 msgid "{1} was lasered to death by {2}"
-msgstr "{1} s'est fait ionisé jusqu'à la mort par {2}"
+msgstr "{1} s'est fait ionisé par {2}"
 
 msgid "{1}'s {3} kill spree was ended by {2}"
 msgstr "{2} a stoppé les {3} frags successifs de {1}"
 
 msgid "{1} felt the electrifying air of {2}'s combo"
-msgstr "{1} a subi le coup de foudre du combo de {2}"
+msgstr "{1} a subi le courroux du combo de {2}"
 
 msgid "{1} almost dodged {2}'s grenade"
 msgstr "{1} a failli esquiver la grenade de {2}"
 
 msgid "{1} was sniped by {2}"
-msgstr "{1} s'est fait terminer à distance par {2}"
+msgstr "{1} s'est fait quickscope par {2}"
 
 msgid "{1} drew first blood"
 msgstr "{1} obtient le premier frag"
@@ -220,7 +220,7 @@ msgid "{1} took a close look at {2}'s Crylink"
 msgstr "{1} a voulu inspecter le CryLink de {2}"
 
 msgid "{1} ended it all after a {2} kill spree"
-msgstr "{1} regrette ses {2} frags successifs"
+msgstr "{1} a décidé d'en finir avec {2} frags successifs"
 
 msgid "{1} has been vaporized by {2}"
 msgstr "{1} s'est fait cuire à point par {2}"
@@ -238,16 +238,16 @@ msgid "{1} was cut down by {2}"
 msgstr "{1} a été scier en deux par {2}"
 
 msgid "{1} died of {2}'s great playing on the @!{2}%'n Tuba"
-msgstr "{1} s'est fait envoûter par la mélodie du Tuba de {2}"
+msgstr "{1} s'est fait envoûter par la mélodie du @!{2}%'n Tuba de {2}"
 
 msgid "{1} was pummeled by {2}"
 msgstr "{2} vient de terminer {2} avec ses mains"
 
 msgid "{1} got hit in the head by {2}"
-msgstr "{1} s'est fait MLG par {2}"
+msgstr "{1} s'est fait MLG HEADHSOT par {2}"
 
 msgid "{1} couldn't resist the urge to self-destruct"
-msgstr "{1} s'est jeté dans les bras de la Mort"
+msgstr "{1} a embrassé la Mort"
 
 msgid "{1} was {3}^1fragged by {2}"
 msgstr "{1} s'est fait {3}^1fraggé par {2}"
@@ -262,13 +262,13 @@ msgid "{1} was zapped by {2}"
 msgstr "{1} a été électrisé à mort par {2}"
 
 msgid "You have the flag!"
-msgstr "Tu as le drapeau"
+msgstr "Tu as le drapeau !"
 
 msgid "{1} played with tiny rockets"
-msgstr "{1} played with tiny rockets"
+msgstr "{1} a joué avec des roquettes"
 
 msgid "{1} played with plasma"
-msgstr "{1} played with plasma"
+msgstr "{1} a joué avec du plasma"
 
 msgid "^4You revive ^7{1}"
 msgstr "^4Tu as ressuscité ^7{1}"
@@ -304,7 +304,7 @@ msgid "{1}^7 lost the {2}"
 msgstr "{1}^7 a perdu le {$2}"
 
 msgid "You dropped the ^2{1} with {2} {3}"
-msgstr "You dropped the ^2{1} with {2} {3}"
+msgstr "Tu as perdu le ^2{1} avec {2} {3}"
 
 msgid "You do not have the ^2{1}"
 msgstr "Pas de ^2{$1} dans ton inventaire"
@@ -319,7 +319,7 @@ msgid "{1}^7 captured the {2} in {3} seconds"
 msgstr "{1}^7 a capturé le {$2} en {3} secondes"
 
 msgid "^3{1} ^7got the {2}{3}"
-msgstr "^3{1} ^7got the {2}{3}"
+msgstr "^3{1} ^7a obtenu le {2}{3}"
 
 msgid "Jail is empty"
 msgstr "La prison est vide"
@@ -331,7 +331,7 @@ msgid "You dropped the ^2{1}"
 msgstr "Tu viens de jeter le ^2{$1}"
 
 msgid " took the downward turn"
-msgstr " took the downward turn"
+msgstr " a rejoint Michael Jackson sous terre"
 
 msgid "Capturing..."
 msgstr "Capture en cours..."
@@ -340,7 +340,7 @@ msgid "^4You revived by ^7{1}"
 msgstr "^4Tu as été ressuscité par ^7{1}"
 
 msgid "{1} could not remember where he put plasma"
-msgstr "{1} could not remember where he put plasma"
+msgstr "{1} a oublié où il a foutu son plasma"
 
 msgid "{1}^7 picked up the {2}"
 msgstr "{1}^7 vient d'obtenir {$2}"
@@ -349,7 +349,7 @@ msgid "You got the ^2{1}"
 msgstr "Tu as ramassé ^2{$1}"
 
 msgid "{1} died with a {2} kill spree"
-msgstr "{1} est mort avec {2} frags à la suite"
+msgstr "{1} est mort avec {2} frags successifs"
 
 msgid "{1}^7 captured the {2} in {3}, breaking {4}^7's previous record of {5} seconds"
 msgstr "{1}^7 a capturé le {$2} en {3} secondes, pulvérisant l'ancien record de {4}^7 de {5} secondes"
@@ -454,10 +454,10 @@ msgid "{1}^7 captured the keys for the {2}"
 msgstr "{1}^7 a récupéré les clés pour {$2}"
 
 msgid "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!"
-msgstr "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!"
+msgstr "Toutes les clés sont possédées par votre équipe !\n\nRejoins tes coéquipiers ^1MAINTENANT^7 !"
 
 msgid "All keys are in the {1}^7's hands!\n\nInterfere ^1NOW^7!"
-msgstr "All keys are in the {1}^7's hands!\n\nInterfere ^1NOW^7!"
+msgstr "Toutes les clés sont possédées par {1}^7 !\n\nNeutralisez-les ^1MAINTENANT^7 !"
 
 msgid "Round starts in {1}"
 msgstr "La partie commence dans {$1}"
@@ -466,13 +466,13 @@ msgid "^2* ^3{1}^2 calls a vote for {2}"
 msgstr "^2* ^3{1}^2 lance un vote pour {$2}"
 
 msgid "^2* ^3{1}^2's vote for ^1{2}^2 was accepted"
-msgstr "^2* Le vote de ^3{1}^2 pour ^1{2}^2 a été gagné"
+msgstr "^2* Le vote de ^3{1}^2 pour ^1{2}^2 a été accepté"
 
 msgid "^2* vote results: ^1{1}^2:^1{2}^2, ^1{3}^2 didn't care, ^1{4}^2 didn't have to vote"
 msgstr "^2* Résultats du vote : ^1{1}^2:^1{2}^2, ^1{3}^2 s'en foutaient, ^1{4}^2 n'ont pas le droit de vote"
 
 msgid "^2* vote results: ^1{1}^2:^1{2}^2 (^1{3}^2 needed), ^1{4}^2 didn't care, ^1{5}^2 didn't vote"
-msgstr "^2* Résultats du vote : ^1{1}^2:^1{2}^2 (^1{3}^2 needed), ^1{4}^2 didn't care, ^1{5}^2 didn't vote"
+msgstr "^2* Résultats du vote : ^1{1}^2:^1{2}^2 (^1{3}^2 nécessaires), ^1{4}^2 s'en foutaient, ^1{5}^2 n'ont pas le droit de vote"
 
 msgid "^2* ^3{1}^2's vote for {2}^2 timed out"
 msgstr "^2* Résultats du vote : le vote de ^3{1}^2 pour {2}^2 a expiré"
@@ -502,7 +502,7 @@ msgid "Jailbreak! The ^4BLUES^7 are escaping!\nControl point captured by {1}"
 msgstr "Fugue de la prison ! Les ^4BLEUS^7 s'échappent !\nZone capturée par {$1}"
 
 msgid "Point is not ready"
-msgstr "La zone ne peut pas etre capturée"
+msgstr "La zone ne peut pas être capturée"
 
 msgid "\n^2Starting in {1}"
 msgstr "\n^2On commence dans {$1}"
@@ -538,7 +538,7 @@ msgid "^1Red Flag"
 msgstr "^1Drapeau Rouge"
 
 msgid "The current level has been LOST."
-msgstr "Tu as PERDU la partie."
+msgstr "Vous avez PERDU ce niveau."
 
 msgid "You found a secret area!"
 msgstr "Tu viens de trouver un secret !"
@@ -547,10 +547,10 @@ msgid "Only {1} more to go..."
 msgstr "Plus que {$1} à récupérer..."
 
 msgid "^2Game finished!\n{1}^2 wins!"
-msgstr "^2Partie terminée !\n{$1}^2 gagne !"
+msgstr "^2Partie terminée !\n{$1}^2 a gagné !"
 
 msgid "Walk into the slipgate to exit."
-msgstr "Passes la porte pour sortir d'ici"
+msgstr "Passes la porte pour sortir d'ici."
 
 msgid "{1} was slimed"
 msgstr "{1} s'est fait gélifié"
@@ -574,7 +574,7 @@ msgid "^3Shield surrounds you"
 msgstr "^3Un bouclier te protège"
 
 msgid "The current level has been WON."
-msgstr "Tu as GAGNÉ la partie."
+msgstr "Vous avez GAGNÉ la partie."
 
 msgid "join 'best' team (auto-select)"
 msgstr "Choisir l'équipe automatiquement"
@@ -670,7 +670,7 @@ msgid "^3Shield has worn off"
 msgstr "^3Tu as perdu ton bouclier"
 
 msgid "{1} hit the ground with a crunch"
-msgstr "{1} a touché le sol en faisant un bruit bizarre"
+msgstr "{1} a touché le sol un peu trop vite"
 
 msgid "^3You are on speed"
 msgstr "^3Tu es sous l'effet de la meth"
@@ -751,7 +751,7 @@ msgid "Always"
 msgstr "Toujours"
 
 msgid "Show names:"
-msgstr "Affichage des noms:"
+msgstr "Affichage des noms :"
 
 msgid "Long"
 msgstr "Longue"
@@ -910,7 +910,7 @@ msgid "Mute"
 msgstr "Bloquer"
 
 msgid "Use RM HUD:"
-msgstr "Use RM HUD:"
+msgstr "Utiliser l'interface RM :"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -1006,7 +1006,7 @@ msgid "^1You accepted the vote."
 msgstr "^1Tu as répondu OUI au vote."
 
 msgid "^1You rejected the vote."
-msgstr "^1Tu as répondu NON au vote"
+msgstr "^1Tu as répondu NON au vote."
 
 msgid "{1}{2}^7 second left to find some ammo"
 msgstr "Il te reste {1}{2}^7 secondes pour trouver des munitions"
@@ -1027,7 +1027,7 @@ msgid "Score count: {1}/{2}"
 msgstr "Tableau des scores : {1}/{2}"
 
 msgid "^3Invisibility has worn off"
-msgstr "^3L'invisibilité a disparu"
+msgstr "^3L'invisibilité s'est arrêtée"
 
 msgid "^3You are invisible"
 msgstr "^3Tu es invisible"
@@ -1051,7 +1051,7 @@ msgid "You don't have any fuel for the ^2Jetpack"
 msgstr "Vous n'avez plus de carburant pour le ^2Jetpack"
 
 msgid "^7You steal special model from {1}"
-msgstr "^7Vous volez le modèle spécial de {1}"
+msgstr "^7Tu viens de voler l'apparence de {1}"
 
 msgid "^1No cheats allowed in campaign mode!"
 msgstr "^1Tricherie interdite en mode campagne !"
@@ -1087,7 +1087,7 @@ msgid "^3Starting in {1}"
 msgstr "^3Début dans {1}"
 
 msgid "{1} burnt to death"
-msgstr "{1} brûlé vif"
+msgstr "{1} a brûlé vif"
 
 msgid "{1}^2 is ready"
 msgstr "{1}^2 est prêt"
@@ -1096,7 +1096,7 @@ msgid "^3Round over"
 msgstr "^3Fin de la manche"
 
 msgid "{1} forgot about some firemine"
-msgstr "{1} j'ai oublié une mine incendiaire"
+msgstr "{1} s'est souvenu de la présence d'une mine incendiaire"
 
 msgid "Quicksaving..."
 msgstr "Sauvegarde rapide..."
@@ -1114,10 +1114,10 @@ msgid "^3Begin!"
 msgstr "^3Commencez !"
 
 msgid "{1}^7 steal special model from {2}"
-msgstr "{1}^7 vole un modèle spécial à {2}"
+msgstr "{1}^7 vole l'apparence de {2}"
 
 msgid "{1} used C++ and shot the leg out"
-msgstr "{1} a utilisé C++ et a tiré sur la jambe"
+msgstr "{1} a essayé C++ et s'est tiré une balle dans le pied"
 
 msgid "{1}^7 got special model"
 msgstr "{1}^7 obtient le modèle spécial"
@@ -1141,7 +1141,7 @@ msgid "^2Wave cleared!\n^3New wave starts in {1} seconds"
 msgstr "^2Vague éliminée !\n^3Une nouvelle vague commence dans {1} secondes."
 
 msgid "^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"
-msgstr "^3Jouez maintenant ^1PROLONGATIONS^3 !\n\n^3Continuez à fragmenter jusqu'à ce qu'on ait un ^1gagnant^3 !"
+msgstr "^3Jouez maintenant ^1PROLONGATIONS^3 !\n\n^3Continuez à fragger jusqu'à ce qu'il y ait un ^1gagnant^3 !"
 
 msgid "{1} captured {2} control point"
 msgstr "{1} a capturé le point de contrôle de {2}"
