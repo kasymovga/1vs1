@@ -191,7 +191,7 @@ float() single_monster_team_switchable {
 
 var void() single_player_think_next;
 void() single_player_think {
-	self.items &= ~(IT_KEY1 | IT_KEY2);
+	self.items &= ~IT_KEYS;
 	self.items |= self.keys;
 	single_player_think_next();
 }
