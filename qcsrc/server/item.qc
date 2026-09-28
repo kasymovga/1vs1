@@ -490,11 +490,6 @@ void(void) item_touch  {
 	if (!item_give_to(self, other))
 		return;
 
-	// single use keys - vanish if sv_gameplayfix_keys_vanish is true (used in some Quake maps)
-	if (sv_gameplayfix_keys_vanish)
-		if (substring(self.classname, 0, 9) == "item_key_")
-			remove(self);
-
 	item_touch_picked = TRUE;
 	activator = other;
 	trigger_use_targets();
