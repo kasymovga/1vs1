@@ -95,7 +95,6 @@ string sv_sound_mushroom;
 float sv_gameplayfix_item_ignore_nodrop;
 float sv_gameplayfix_item_ignore_noimpact;
 float sv_item_tracecull;
-float sv_gameplayfix_keys_vanish;
 
 void(string itemmodel, string defitemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue) item_start;
 
@@ -460,7 +459,6 @@ float(entity item, entity player) item_give_to {
 
 float item_touch_picked;
 void(void) item_touch  {
-	CVAR_CACHE(sv_gameplayfix_keys_vanish);
 	entity e, head;
 	item_touch_picked = FALSE;
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)

@@ -1,3 +1,5 @@
+float sv_gameplayfix_keys_vanish;
+
 // non-solid brush entities:
 void(void) spawnfunc_func_illusionary { model_init(SOLID_NOT); } // Q1 name (WARNING: MISPREDICTED)
 void(void) spawnfunc_func_clientillusionary { model_client_init(SOLID_NOT); } // brush entity
@@ -1232,45 +1234,43 @@ void(void) func_door_trigger_touch {
 	if (other.classname != "player")
 		return;
 
-	if (self.owner.items)
-	if not(other.keys & self.owner.items) {
-		if (self.owner.state == FUNC_STATE_BOTTOM)
-		if (clienttype(other) == CLIENTTYPE_REAL) {
-			string s;
-			if  (self.owner.items & IT_KEY1)
-				s = "Silver Key";
-			else if (self.owner.items & IT_KEY2)
-				s = "Gold Key";
-			else if (self.owner.items & IT_KEY3)
-				s = "Blood Key";
-			else
-				s = "Unknown Key";
+	if (self.owner.items) {
+		if not(other.keys & self.owner.items) {
+			if (self.owner.state == FUNC_STATE_BOTTOM)
+			if (clienttype(other) == CLIENTTYPE_REAL) {
+				string s;
+				if  (self.owner.items & IT_KEY1)
+					s = "Silver Key";
+				else if (self.owner.items & IT_KEY2)
+					s = "Gold Key";
+				else if (self.owner.items & IT_KEY3)
+					s = "Blood Key";
+				else
+					s = "Unknown Key";
 
-			if (time >= self.attack_finished_single) {
-				self.attack_finished_single = time + 1;
-				sound_play2(other, "misc/talk.wav");
+				if (time >= self.attack_finished_single) {
+					self.attack_finished_single = time + 1;
+					sound_play2(other, "misc/talk.wav");
+				}
+				print_to_spec(other, PRINT_CENTER, "This door required {1}", s, "", "");
 			}
-			print_to_spec(other, PRINT_CENTER, "This door required {1}", s, "", "");
-		}
-		return;
-	} else if (sv_gameplayfix_keys_vanish && (self.owner.items & IT_KEYS))
-		if ((self.owner.state == 1) || (self.owner.state == 3)) {
-			float _remove_key;
-			if (self.owner.items & IT_KEY1) {
-				// Silver Key
-				_remove_key = IT_KEY1;
-			} else if (self.owner.items & IT_KEY2) {
-				// Gold Key
-				_remove_key = IT_KEY2;
-			} else if (self.owner.items & IT_KEY3) {
-				// Blood Key
-				_remove_key = IT_KEY3;
-			} else {
-				// Unknown Key
-				_remove_key = 0;
+			return;
+		} else if (sv_gameplayfix_keys_vanish && (self.owner.items & IT_KEYS)) {
+			if (self.owner.state != FUNC_STATE_BOTTOM && (other.keys & self.owner.items & IT_KEYS)) {
+				other.keys &= ~(self.owner.items & IT_KEYS);
+				if (self.owner.items & IT_KEY1)
+					print_to(other, PRINT_CENTER, "{1}^7 not allowed in this passage, confiscated", "^5Silver Key", "", "");
+
+				if (self.owner.items & IT_KEY2)
+					print_to(other, PRINT_CENTER, "{1}^7 not allowed in this passage, confiscated", "^3Gold Key", "", "");
+
+				if (self.owner.items & IT_KEY3)
+					print_to(other, PRINT_CENTER, "{1}^7 not allowed in this passage, confiscated", "^1Blood Key", "", "");
+
+				sound(other, CHAN_AUTO, "kh/destroy.wav", VOL_BASE, ATTN_NORM);
 			}
-			other.keys = other.keys - _remove_key;
 		}
+	}
 	entity oldself = self;
 	activator = other;
 	self = self.owner;
@@ -1561,6 +1561,8 @@ float(entity e, entity who) func_door_trace_walk_skip_entity {
 float func_door_init_done;
 void(void) func_door_init {
 	if (func_door_init_done) return;
+	CVAR_CACHE(sv_gameplayfix_keys_vanish);
+	precache_sound("kh/destroy.wav");
 	func_door_init_done = TRUE;
 	func_door_trace_walk_skip_entity_next = plugin_chain_trace_walk_skip_entity;
 	plugin_chain_trace_walk_skip_entity = func_door_trace_walk_skip_entity;
