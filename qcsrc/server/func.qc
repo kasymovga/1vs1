@@ -1256,16 +1256,16 @@ void(void) func_door_trigger_touch {
 			}
 			return;
 		} else if (sv_gameplayfix_keys_vanish && (self.owner.items & IT_KEYS)) {
-			if (self.owner.state != FUNC_STATE_BOTTOM && (other.keys & self.owner.items & IT_KEYS)) {
+			if (self.owner.state == FUNC_STATE_BOTTOM && (other.keys & self.owner.items & IT_KEYS)) {
 				other.keys &= ~(self.owner.items & IT_KEYS);
 				if (self.owner.items & IT_KEY1)
-					print_to(other, PRINT_CENTER, "{1}^7 not allowed in this passage, confiscated", "^5Silver Key", "", "");
+					print_to(other, PRINT_CENTER, "{1}^7 is used", "^5Silver Key", "", "");
 
 				if (self.owner.items & IT_KEY2)
-					print_to(other, PRINT_CENTER, "{1}^7 not allowed in this passage, confiscated", "^3Gold Key", "", "");
+					print_to(other, PRINT_CENTER, "{1}^7 is used", "^3Gold Key", "", "");
 
 				if (self.owner.items & IT_KEY3)
-					print_to(other, PRINT_CENTER, "{1}^7 not allowed in this passage, confiscated", "^1Blood Key", "", "");
+					print_to(other, PRINT_CENTER, "{1}^7 is used", "^1Blood Key", "", "");
 
 				sound(other, CHAN_AUTO, "kh/destroy.wav", VOL_BASE, ATTN_NORM);
 			}
