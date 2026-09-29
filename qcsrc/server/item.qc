@@ -435,10 +435,23 @@ float(entity item, entity player) item_give_to {
 		}
 	}
 	if (item.spawnshieldtime)
-	if ((it = item.items & (IT_KEY1 | IT_KEY2 | IT_KEY3))) {
+	if ((it = (item.items & IT_KEYS))) {
 		if ((player.keys & it) == it)
 			goto skip;
 
+		if (sv_gameplayfix_keys_vanish && item.classname != "key_share") { // share keys with other players
+			entity e;
+			string cn = item.classname;
+			string t = item.target;
+			item.classname = "key_share"; // prevent recursion
+			PLAYER_FOR_EACH(e) {
+				if (e != player && (!team_teams || e.team == player.team)) {
+					item_give_to(item, e);
+				}
+			}
+			item.classname = cn;
+			item.target = t;
+		}
 		if (clienttype(player) == CLIENTTYPE_REAL)
 			print_to(player, PRINT_INFO, "You got the ^2{1}", item.netname, "", "");
 
@@ -1023,10 +1036,19 @@ void(void) spawnfunc_item_speed {
 }
 
 void(float key, string name, vector _colormod) item_key_spawn {
+	CVAR_CACHE(sv_gameplayfix_keys_vanish);
 	setorigin(self, self.origin + '0 0 1' * 48);
 	string tn = self.targetname;
 	self.targetname = "";
-	item_start("", "models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), name, key, 0, item_generic_pickupevalfunc, 100000);
+	float rt, rtj;
+	if (sv_gameplayfix_keys_vanish) {
+		rt = -1;
+		rtj = 0;
+	} else {
+		rt = cvar("g_pickup_respawntime_key");
+		rtj = cvar("g_pickup_respawntimejitter_key");
+	}
+	item_start("", "models/keyhunt/key.md3", "kh/collect.wav", rt, rtj, name, key, 0, item_generic_pickupevalfunc, 100000);
 	self.targetname = tn;
 	self.colormod = _colormod;
 	self.effects = EFFECT_FULLBRIGHT | EFFECT_STARDUST;

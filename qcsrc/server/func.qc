@@ -1,5 +1,3 @@
-float sv_gameplayfix_keys_vanish;
-
 // non-solid brush entities:
 void(void) spawnfunc_func_illusionary { model_init(SOLID_NOT); } // Q1 name (WARNING: MISPREDICTED)
 void(void) spawnfunc_func_clientillusionary { model_client_init(SOLID_NOT); } // brush entity
@@ -1257,17 +1255,21 @@ void(void) func_door_trigger_touch {
 			return;
 		} else if (sv_gameplayfix_keys_vanish && (self.owner.items & IT_KEYS)) {
 			if (self.owner.state == FUNC_STATE_BOTTOM && (other.keys & self.owner.items & IT_KEYS)) {
-				other.keys &= ~(self.owner.items & IT_KEYS);
-				if (self.owner.items & IT_KEY1)
-					print_to(other, PRINT_CENTER, "{1}^7 is used", "^5Silver Key", "", "");
+				entity pl;
+				PLAYER_FOR_EACH(pl) if ((pl.keys & self.owner.items) && (!team_teams || pl.team == other.team)) {
+					pl.keys &= ~(self.owner.items & IT_KEYS);
+					if (clienttype(pl) == CLIENTTYPE_REAL) {
+						if (self.owner.items & IT_KEY1)
+							print_to(pl, PRINT_CENTER, "{1}^7 is used", "^5Silver Key", "", "");
 
-				if (self.owner.items & IT_KEY2)
-					print_to(other, PRINT_CENTER, "{1}^7 is used", "^3Gold Key", "", "");
+						if (self.owner.items & IT_KEY2)
+							print_to(pl, PRINT_CENTER, "{1}^7 is used", "^3Gold Key", "", "");
 
-				if (self.owner.items & IT_KEY3)
-					print_to(other, PRINT_CENTER, "{1}^7 is used", "^1Blood Key", "", "");
-
-				sound(other, CHAN_AUTO, "kh/destroy.wav", VOL_BASE, ATTN_NORM);
+						if (self.owner.items & IT_KEY3)
+							print_to(pl, PRINT_CENTER, "{1}^7 is used", "^1Blood Key", "", "");
+					}
+					sound(pl, CHAN_AUTO, "kh/destroy.wav", VOL_BASE, ATTN_NORM);
+				}
 			}
 		}
 	}
@@ -1561,7 +1563,6 @@ float(entity e, entity who) func_door_trace_walk_skip_entity {
 float func_door_init_done;
 void(void) func_door_init {
 	if (func_door_init_done) return;
-	CVAR_CACHE(sv_gameplayfix_keys_vanish);
 	precache_sound("kh/destroy.wav");
 	func_door_init_done = TRUE;
 	func_door_trace_walk_skip_entity_next = plugin_chain_trace_walk_skip_entity;
