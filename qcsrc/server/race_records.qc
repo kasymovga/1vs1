@@ -626,7 +626,7 @@ void(void) race_records_save {
 		db_put(db_server, strcat(mapname, race_records_path, "netname"), n);
 	}
 	db_put(db_server, strcat(mapname, race_records_path, "speed"), ((sp > 0) ? ftos(sp) : ""));
-	db_put(db_server, strcat(mapname, race_records_path, "date"), ftos(d));
+	db_put(db_server, strcat(mapname, race_records_path, "date"), ((d > 0) ? ftos(d) : ""));
 	float i;
 	for (i = 1; i < 10; i++) {
 		t = race_records_time[i];
