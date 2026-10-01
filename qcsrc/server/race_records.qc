@@ -1005,10 +1005,12 @@ float(string cmd, float argc) race_records_cmd {
 		if (id1 != "" && p1 < p2) {
 			race_records_link_name_to_id(name2, id1);
 			race_records_delete(p2);
+			db_put(db_server, strcat("raceid2n/", id1), name1); // restore correct name after race_records_link_name_to_id()
 		}
 		if (id2 != "" && p2 < p1) {
 			race_records_link_name_to_id(name1, id2);
 			race_records_delete(p1);
+			db_put(db_server, strcat("raceid2n/", id2), name2); // restore correct name after race_records_link_name_to_id()
 		}
 		if (id1 != "" && p2 < p1) {
 			//swaping names and ids
