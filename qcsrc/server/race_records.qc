@@ -1,5 +1,3 @@
-float race_records_modified;
-
 string(string s) race_records_html_escape {
 	string cache_path = strcat("race_records_html_escape_cache/", uri_escape(s));
 	string cache = db_get(db_temp, cache_path);
@@ -711,6 +709,7 @@ void(string m) race_records_clear {
 			race_records_date[i] = 0;
 		}
 		race_records_sender.SendFlags = 1;
+		race_records_modified = TRUE;
 	} else {
 		db_put(db_server, strcat(m, race_records_path, "time"), "");
 		db_put(db_server, strcat(m, race_records_path, "netname"), "");

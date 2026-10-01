@@ -5,6 +5,7 @@ string race_records_name[10];
 float race_records_date[10];
 string race_records_id[10];
 entity race_records_sender;
+float race_records_modified;
 
 void(void) race_records_load;
 void(void) race_records_save;
