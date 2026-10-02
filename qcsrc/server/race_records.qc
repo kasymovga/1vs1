@@ -524,7 +524,7 @@ void(void) race_records_to_html {
 	for (i = 0; i < map_info_count; ++i) {
 		m = map_info_glob_item(map_info_filter_list_lookup(i));
 		s = strcat(m, race_records_path);
-		fputs(f, strcat("<tr><td>", uri_escape(m), "\n"));
+		fputs(f, strcat("<tr><td>", race_records_html_escape(m), "\n"));
 		breaked = FALSE;
 		for (j = 0; j < 10; j++) {
 			n = "";
