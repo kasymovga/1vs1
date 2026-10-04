@@ -1035,8 +1035,32 @@ void(void) spawnfunc_item_speed {
 	powerup_speed_init();
 }
 
-void(float key, string name, vector _colormod) item_key_spawn {
+var void(entity spot) item_key_player_spawn_next;
+void(entity spot) item_key_player_spawn {
+	item_key_player_spawn_next(spot);
+	if (sv_gameplayfix_keys_vanish) {
+		entity pl;
+		PLAYER_FOR_EACH(pl) {
+			if (self != pl && (!team_teams || self.team == pl.team)) {
+				self.keys = pl.keys;
+				break;
+			}
+		}
+	} else
+		self.keys = 0;
+}
+
+float item_key_init_done;
+void(void) item_key_init {
+	if (item_key_init_done) return;
+	item_key_init_done = TRUE;
 	CVAR_CACHE(sv_gameplayfix_keys_vanish);
+	item_key_player_spawn_next = plugin_chain_player_spawn;
+	plugin_chain_player_spawn = item_key_player_spawn;
+}
+
+void(float key, string name, vector _colormod) item_key_spawn {
+	item_key_init();
 	setorigin(self, self.origin + '0 0 1' * 48);
 	string tn = self.targetname;
 	self.targetname = "";

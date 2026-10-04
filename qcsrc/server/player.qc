@@ -1085,7 +1085,6 @@ void(entity spot) player_spawn {
 	self.takedamage = DAMAGE_AIM;
 	self.effects &= EFFECT_TELEPORT_BIT;
 	self.air_finished = time + 12;
-	self.keys = 0;
 	self.touch = push_touch;
 	self.pushfactor = g_player_pushfactor;
 	if not(self.body)
