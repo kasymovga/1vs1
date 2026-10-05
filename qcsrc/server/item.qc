@@ -1089,12 +1089,12 @@ void(entity spot) item_key_player_spawn {
 		entity pl;
 		PLAYER_FOR_EACH(pl) {
 			if (self != pl && (!team_teams || self.team == pl.team)) {
-				self.items = pl.items;
+				self.items |= (pl.items & IT_KEYS);
 				break;
 			}
 		}
 	} else
-		self.items = 0;
+		self.items &= ~IT_KEYS; //items probably already cleared, but just in case
 }
 
 float item_key_init_done;
