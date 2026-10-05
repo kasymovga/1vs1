@@ -1624,7 +1624,7 @@ void(vector powerups_pos, float powerups_scale) sbar_powerups_draw {
 		if (akimbo_time)
 			sbar_powerup_timer_draw(akimbo_time - time, "gfx/hud/sb_akimbo", '1 1 1');
 	}
-	if (sbar_stat_items & IT_KEYS) {
+	if (sbar_keys_is_powerups && (sbar_stat_items & IT_KEYS)) {
 		if (sbar_stat_items & IT_KEY1) {
 			sbar_powerup_timer_draw(0, "gfx/hud/sb_kh_blue", '1 1 1');
 		}
