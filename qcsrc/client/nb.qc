@@ -9,12 +9,12 @@
 #define NBPB_IRGB '0.7 0.1 0'
 
 void(vector pos, vector gameinfo_size, float gameinfo_scale) nb_hud {
-	if not((rm_hud_game_info_enabled = (sbar_stat_items & IT_KEYS)))
+	float nb_pb = getstatf(STAT_NB_METERSTART);
+	rm_hud_game_info_enabled = (nb_pb != 0);
+	if not(rm_hud_game_info_enabled)
 		return;
 
-	float nb_pb;
 	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '88 38 0', gameinfo_size, CVAR(sbar_gameinfo_background))
-	nb_pb = getstatf(STAT_NB_METERSTART);
 	//Manage the progress bar if any
 	if (nb_pb > 0) {
 		vector s;

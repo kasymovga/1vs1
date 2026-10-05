@@ -38,7 +38,6 @@ float g_nexball_ball_explosive_damage;
 float g_nexball_ball_explosive_force;
 float g_nexball_ball_scale;
 float nexball_teams;
-.float metertime;
 .float metertime_stat;
 // Nexball
 .entity ballcarried;
@@ -198,7 +197,6 @@ void(void) nexball_ball_restart {
 
 void(void) nexball_PlayerPreThink {
 	entity oldself;
-	self.items &= ~IT_KEY1;
 	if (self.ballcarried) {
 		if (self.ballcarried.teamtime && (self.ballcarried.teamtime < time)) {
 			print_all(PRINT_INFO, "The {1} held the ball for too long.", team_colored_name(self.team), "", "");
@@ -207,9 +205,12 @@ void(void) nexball_PlayerPreThink {
 			nexball_drop_ball(self, self.owner.origin, '0 0 0');
 			nexball_ball_reset();
 			self = oldself;
+			self.metertime_stat = 0;;
 		} else
-			self.items |= IT_KEY1;
-	}
+			self.metertime_stat = (self.metertime_stat ? self.metertime_stat : -1);
+	} else
+		self.metertime_stat = 0;
+
 	nexball_PlayerPreThink_NextLink();
 }
 
@@ -244,9 +245,7 @@ void(entity plyr, entity ball) nexball_give_ball {
 	if ((ownr = ball.owner)) {
 		ownr.effects &= ~g_nexball_basketball_effects_default;
 		ownr.ballcarried = world;
-		if (ownr.metertime)
-			ownr.metertime_stat = ownr.metertime = 0;
-
+		ownr.metertime_stat = ball.metertime_stat = 0;
 		marker_Kill(ownr.waypointsprite_attachedforcarrier);
 	} else {
 		marker_Kill(ball.waypointsprite_attachedforcarrier);
@@ -304,9 +303,7 @@ void(entity ball, vector org, vector vel) nexball_drop_ball {
 	ball.touch = nexball_basketball_touch;
 	ball.think = nexball_ball_reset;
 	ball.nextthink = min(time + g_nexball_delay_idle, ball.teamtime);
-	if (ball.owner.metertime)
-		ball.owner.metertime_stat = ball.owner.metertime = 0;
-
+	ball.owner.metertime_stat = ball.metertime_stat = 0;
 	marker_Kill(ball.owner.waypointsprite_attachedforcarrier);
 	marker_AttachCarrier("nb-ball", ball);
 	marker_UpdateRule(ball.waypointsprite_attachedforcarrier, 0);
@@ -814,8 +811,7 @@ void(float t) nexball_carrier_attack {
 	weapon_setup_shot (self, 4, "nexball/shoot1.wav",0);
 	trace_box(weapon_shotorg, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, weapon_shotorg, TRACE_MOVE_WORLDONLY, world);
 	if(trace_startsolid) {
-		if(self.metertime)
-			self.metertime = 0; // Shot failed, hide the power meter
+		ball.metertime_stat = 0; // Shot failed, hide the power meter
 		return;
 	}
 	//Calculate multiplier
@@ -834,24 +830,25 @@ void(float t) nexball_carrier_attack {
 	//TODO: use the speed_up cvar too ??
 }
 
-float nexball_carrier_think() {
-	if (self.BUTTON_ATCK || self.BUTTON_ATCK2)
-	{
-		if (g_nexball_basketball_meter)
-		{
-			if (!self.metertime)
-				self.metertime = time;
+float() nexball_carrier_think {
+	entity ball = self.ballcarried;
+	if (self.BUTTON_ATCK || self.BUTTON_ATCK2) {
+		if (g_nexball_basketball_meter) {
+			if (!ball.metertime_stat)
+				ball.metertime_stat = time;
 		} else
 			nexball_carrier_attack(-1);
 	}
-	if (self.metertime) {
-		self.metertime_stat = (time - self.metertime) / g_nexball_meter_period;
+	if (ball.metertime_stat) {
+		self.metertime_stat = (time - ball.metertime_stat) / g_nexball_meter_period;
 		self.metertime_stat = (self.metertime_stat - floor(self.metertime_stat)) * 2;
 		if (!self.BUTTON_ATCK ||
-				(g_nexball_primary_shootatmaxmeter && self.metertime + (g_nexball_meter_period / 2) < time))
+				(g_nexball_primary_shootatmaxmeter && ball.metertime_stat + (g_nexball_meter_period / 2) < time))
 
-			nexball_carrier_attack(time - self.metertime);
-	}
+			nexball_carrier_attack(time - ball.metertime_stat);
+	} else
+		self.metertime_stat = -1;
+
 	// nexball_drop_ball or stealing will set metertime back to 0
 	return TRUE;
 }
