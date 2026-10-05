@@ -94,6 +94,7 @@ string sv_model_mushroom;
 string sv_sound_mushroom;
 float sv_gameplayfix_item_ignore_nodrop;
 float sv_gameplayfix_item_ignore_noimpact;
+float sv_gameplayfix_keys_vanish;
 float sv_item_tracecull;
 
 void(string itemmodel, string defitemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue) item_start;
@@ -1033,6 +1034,52 @@ void(void) spawnfunc_item_speed {
 	self.modelflags |= MF_ROTATE;
 	self.customizeentityforclient = item_glow_customize;
 	powerup_speed_init();
+}
+
+float(entity player, entity door) item_key_apply {
+	float has_keys = (door.items & IT_KEYS);
+	if not(has_keys) return TRUE;
+	has_keys = (has_keys == (has_keys & player.keys));
+	if not(has_keys) {
+		if (door.state == FUNC_STATE_BOTTOM)
+		if (clienttype(player) == CLIENTTYPE_REAL) {
+			string s;
+			if  (door.items & IT_KEY1)
+				s = "Silver Key";
+			else if (door.items & IT_KEY2)
+				s = "Gold Key";
+			else if (door.items & IT_KEY3)
+				s = "Blood Key";
+			else
+				s = "Unknown Key";
+
+			if (time >= self.attack_finished_single) {
+				self.attack_finished_single = time + 1;
+				sound_play2(player, "misc/talk.wav");
+			}
+			print_to_spec(player, PRINT_CENTER, "This door required {1}", s, "", "");
+		}
+		return FALSE;
+	} else if (sv_gameplayfix_keys_vanish) {
+		if (door.state == FUNC_STATE_BOTTOM && has_keys) {
+			entity pl;
+			PLAYER_FOR_EACH(pl) if ((pl.keys & door.items) && (!team_teams || pl.team == player.team)) {
+				pl.keys &= ~(door.items & IT_KEYS);
+				if (clienttype(pl) == CLIENTTYPE_REAL) {
+					if (door.items & IT_KEY1)
+						print_to(pl, PRINT_CENTER, "{1}^7 is used", "^5Silver Key", "", "");
+
+					if (door.items & IT_KEY2)
+						print_to(pl, PRINT_CENTER, "{1}^7 is used", "^3Gold Key", "", "");
+
+					if (door.items & IT_KEY3)
+						print_to(pl, PRINT_CENTER, "{1}^7 is used", "^1Blood Key", "", "");
+				}
+				sound(pl, CHAN_AUTO, "kh/destroy.wav", VOL_BASE, ATTN_NORM);
+			}
+		}
+	}
+	return TRUE;
 }
 
 var void(entity spot) item_key_player_spawn_next;

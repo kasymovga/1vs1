@@ -1233,44 +1233,8 @@ void(void) func_door_trigger_touch {
 		return;
 
 	if (self.owner.items) {
-		if not(other.keys & self.owner.items) {
-			if (self.owner.state == FUNC_STATE_BOTTOM)
-			if (clienttype(other) == CLIENTTYPE_REAL) {
-				string s;
-				if  (self.owner.items & IT_KEY1)
-					s = "Silver Key";
-				else if (self.owner.items & IT_KEY2)
-					s = "Gold Key";
-				else if (self.owner.items & IT_KEY3)
-					s = "Blood Key";
-				else
-					s = "Unknown Key";
-
-				if (time >= self.attack_finished_single) {
-					self.attack_finished_single = time + 1;
-					sound_play2(other, "misc/talk.wav");
-				}
-				print_to_spec(other, PRINT_CENTER, "This door required {1}", s, "", "");
-			}
+		if not(item_key_apply(other, self.owner)) {
 			return;
-		} else if (sv_gameplayfix_keys_vanish && (self.owner.items & IT_KEYS)) {
-			if (self.owner.state == FUNC_STATE_BOTTOM && (other.keys & self.owner.items & IT_KEYS)) {
-				entity pl;
-				PLAYER_FOR_EACH(pl) if ((pl.keys & self.owner.items) && (!team_teams || pl.team == other.team)) {
-					pl.keys &= ~(self.owner.items & IT_KEYS);
-					if (clienttype(pl) == CLIENTTYPE_REAL) {
-						if (self.owner.items & IT_KEY1)
-							print_to(pl, PRINT_CENTER, "{1}^7 is used", "^5Silver Key", "", "");
-
-						if (self.owner.items & IT_KEY2)
-							print_to(pl, PRINT_CENTER, "{1}^7 is used", "^3Gold Key", "", "");
-
-						if (self.owner.items & IT_KEY3)
-							print_to(pl, PRINT_CENTER, "{1}^7 is used", "^1Blood Key", "", "");
-					}
-					sound(pl, CHAN_AUTO, "kh/destroy.wav", VOL_BASE, ATTN_NORM);
-				}
-			}
 		}
 	}
 	entity oldself = self;
