@@ -141,10 +141,7 @@ entity(vector point, .string field, string value, vector axismod) target_locatio
 	num_nearest = 0;
 	localhead = find(world, field, value);
 	while (localhead) {
-		if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.message2 == "###item###")
-			dist = localhead.oldorigin;
-		else
-			dist = localhead.origin;
+		dist = localhead.origin;
 		dist = dist - point;
 		dist = dist_x * axismod_x * '1 0 0' + dist_y * axismod_y * '0 1 0' + dist_z * axismod_z * '0 0 1';
 		len = vlen(dist);

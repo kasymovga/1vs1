@@ -124,6 +124,7 @@ void(void) net_csqc_entity_init {
 	net_csqc_entity_parsers[NET_CSQC_HOOK] = hook_read;
 	net_csqc_entity_parsers[NET_CSQC_PHYSICS_HOOK] = hook_physics_read;
 	net_csqc_entity_parsers[NET_CSQC_PHYSICS_JETPACK] = jetpack_read;
+	net_csqc_entity_parsers[NET_CSQC_CTF_STATE] = ctf_state_read;
 	net_csqc_entity_parsers[NET_CSQC_LMS_SPHERE] = lms_sphere_read;
 	net_csqc_entity_parsers[NET_CSQC_ICE] = ice_read;
 	net_csqc_entity_parsers[NET_CSQC_3RDVIEW] = thirdview_read;

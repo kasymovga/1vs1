@@ -19,13 +19,6 @@ const float IT_KEY1 = 131072;
 const float IT_KEY2 = 262144;
 const float IT_KEY3 = 65536;
 const float IT_KEYS = (IT_KEY1 | IT_KEY2 | IT_KEY3);
-// for players:
-float IT_RED_FLAG_TAKEN = 32768;
-float IT_RED_FLAG_LOST = 65536;
-float IT_RED_FLAG_CARRING = 98304;
-float IT_BLUE_FLAG_TAKEN = 131072;
-float IT_BLUE_FLAG_LOST = 262144;
-float IT_BLUE_FLAG_CARRING = 393216;
 // end
 const float IT_AKIMBO = 64;
 const float IT_INVISIBILITY = 524288;

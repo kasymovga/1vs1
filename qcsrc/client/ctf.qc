@@ -1,6 +1,9 @@
 float ctf_redflag_prevframe, ctf_blueflag_prevframe; // status during previous frame
 float ctf_redflag_prevstatus, ctf_blueflag_prevstatus; // last remembered status
 float ctf_redflag_statuschange_time, ctf_blueflag_statuschange_time; // time when the status changed
+float ctf_state_red;
+float ctf_state_blue;
+float ctf_state_shielded;
 
 void(void) ctf_hud_reset {
 	ctf_redflag_prevstatus = ctf_blueflag_prevstatus = ctf_redflag_prevframe = ctf_blueflag_prevframe = ctf_redflag_statuschange_time = ctf_blueflag_statuschange_time = 0;
@@ -9,21 +12,18 @@ void(void) ctf_hud_reset {
 void(vector pos, vector gameinfo_size, float gameinfo_scale) ctf_hud {
 	vector redflag_pos, blueflag_pos, sz;
 	float f; // every function should have that
-	float redflag, blueflag; // current status
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
-	redflag = (sbar_stat_items/IT_RED_FLAG_TAKEN) & 3;
-	blueflag = (sbar_stat_items/IT_BLUE_FLAG_TAKEN) & 3;
 	SBAR_POSITION_AND_SCALE(pos, gameinfo_scale, '124 50 0', gameinfo_size, CVAR(sbar_gameinfo_background))
 	// when status CHANGES, set old status into prevstatus and current status into status
-	if (redflag != ctf_redflag_prevframe) {
+	if (ctf_state_red != ctf_redflag_prevframe) {
 		ctf_redflag_statuschange_time = time;
 		ctf_redflag_prevstatus = ctf_redflag_prevframe;
-		ctf_redflag_prevframe = redflag;
+		ctf_redflag_prevframe = ctf_state_red;
 	}
-	if (blueflag != ctf_blueflag_prevframe) {
+	if (ctf_state_blue != ctf_blueflag_prevframe) {
 		ctf_blueflag_statuschange_time = time;
 		ctf_blueflag_prevstatus = ctf_blueflag_prevframe;
-		ctf_blueflag_prevframe = blueflag;
+		ctf_blueflag_prevframe = ctf_state_blue;
 	}
 	redflag_statuschange_elapsedtime = time - ctf_redflag_statuschange_time;
 	blueflag_statuschange_elapsedtime = time - ctf_blueflag_statuschange_time;
@@ -38,26 +38,26 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) ctf_hud {
 	string red_icon, red_icon_prevstatus;
 	float red_alpha, red_alpha_prevstatus;
 	red_alpha = red_alpha_prevstatus = 1;
-	switch(redflag) {
-	case 1: red_icon = "gfx/hud/sb_flag_red_taken"; break;
-	case 2: red_icon = "gfx/hud/sb_flag_red_lost"; break;
-	case 3: red_icon = "gfx/hud/sb_flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+	switch (ctf_state_red) {
+	case CTF_FLAG_CARRY: red_icon = "gfx/hud/sb_flag_red_taken"; break;
+	case CTF_FLAG_DROPPED: red_icon = "gfx/hud/sb_flag_red_lost"; break;
+	case CTF_FLAG_CARRIED_BY_YOU: red_icon = "gfx/hud/sb_flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 	default:
-		if ((sbar_stat_items & IT_CTF_SHIELDED) && (team_my == COLOR_TEAM2))
+		if (ctf_state_shielded && (team_my == COLOR_TEAM2))
 			red_icon = "gfx/hud/sb_flag_red_shielded";
 		else
 			red_icon = NULL;
 
 		break;
 	}
-	switch(ctf_redflag_prevstatus) {
-	case 1: red_icon_prevstatus = "gfx/hud/sb_flag_red_taken"; break;
-	case 2: red_icon_prevstatus = "gfx/hud/sb_flag_red_lost"; break;
-	case 3: red_icon_prevstatus = "gfx/hud/sb_flag_red_carrying"; red_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+	switch (ctf_redflag_prevstatus) {
+	case CTF_FLAG_CARRY: red_icon_prevstatus = "gfx/hud/sb_flag_red_taken"; break;
+	case CTF_FLAG_DROPPED: red_icon_prevstatus = "gfx/hud/sb_flag_red_lost"; break;
+	case CTF_FLAG_CARRIED_BY_YOU: red_icon_prevstatus = "gfx/hud/sb_flag_red_carrying"; red_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 	default:
-		if (redflag == 3)
+		if (ctf_state_red == CTF_FLAG_CARRIED_BY_YOU)
 			red_icon_prevstatus = "gfx/hud/sb_flag_red_carrying"; // make it more visible
-		else if ((sbar_stat_items & IT_CTF_SHIELDED) && (team_my == COLOR_TEAM2))
+		else if (ctf_state_shielded && (team_my == COLOR_TEAM2))
 			red_icon_prevstatus = "gfx/hud/sb_flag_red_shielded";
 		else
 			red_icon_prevstatus = NULL;
@@ -67,26 +67,26 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) ctf_hud {
 	string blue_icon, blue_icon_prevstatus;
 	float blue_alpha, blue_alpha_prevstatus;
 	blue_alpha = blue_alpha_prevstatus = 1;
-	switch(blueflag) {
-	case 1: blue_icon = "gfx/hud/sb_flag_blue_taken"; break;
-	case 2: blue_icon = "gfx/hud/sb_flag_blue_lost"; break;
-	case 3: blue_icon = "gfx/hud/sb_flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+	switch (ctf_state_blue) {
+	case CTF_FLAG_CARRY: blue_icon = "gfx/hud/sb_flag_blue_taken"; break;
+	case CTF_FLAG_DROPPED: blue_icon = "gfx/hud/sb_flag_blue_lost"; break;
+	case CTF_FLAG_CARRIED_BY_YOU: blue_icon = "gfx/hud/sb_flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 	default:
-		if ((sbar_stat_items & IT_CTF_SHIELDED) && (team_my == COLOR_TEAM1))
+		if (ctf_state_shielded && (team_my == COLOR_TEAM1))
 			blue_icon = "gfx/hud/sb_flag_blue_shielded";
 		else
 			blue_icon = NULL;
 
 		break;
 	}
-	switch(ctf_blueflag_prevstatus) {
-	case 1: blue_icon_prevstatus = "gfx/hud/sb_flag_blue_taken"; break;
-	case 2: blue_icon_prevstatus = "gfx/hud/sb_flag_blue_lost"; break;
-	case 3: blue_icon_prevstatus = "gfx/hud/sb_flag_blue_carrying"; blue_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+	switch (ctf_blueflag_prevstatus) {
+	case CTF_FLAG_CARRY: blue_icon_prevstatus = "gfx/hud/sb_flag_blue_taken"; break;
+	case CTF_FLAG_DROPPED: blue_icon_prevstatus = "gfx/hud/sb_flag_blue_lost"; break;
+	case CTF_FLAG_CARRIED_BY_YOU: blue_icon_prevstatus = "gfx/hud/sb_flag_blue_carrying"; blue_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 	default:
-		if (blueflag == 3)
+		if (ctf_state_blue == CTF_FLAG_CARRIED_BY_YOU)
 			blue_icon_prevstatus = "gfx/hud/sb_flag_blue_carrying"; // make it more visible
-		else if ((sbar_stat_items & IT_CTF_SHIELDED) && (team_my == COLOR_TEAM1))
+		else if (ctf_state_shielded && (team_my == COLOR_TEAM1))
 			blue_icon_prevstatus = "gfx/hud/sb_flag_blue_shielded";
 		else
 			blue_icon_prevstatus = NULL;
@@ -120,3 +120,8 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) ctf_hud {
 	}
 }
 
+void(float new) ctf_state_read {
+	ctf_state_shielded = net_read_byte();
+	ctf_state_red = net_read_byte();
+	ctf_state_blue = net_read_byte();
+}

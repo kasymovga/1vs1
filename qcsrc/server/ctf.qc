@@ -67,6 +67,8 @@ float captureshield_min_negscore; // punish at -20 points
 float captureshield_max_ratio; // punish at most 30% of each team
 float captureshield_force; // push force of the shield
 
+entity ctf_state;
+
 void() ctf_flag_think;
 void() ctf_flag_touch;
 
@@ -143,6 +145,7 @@ void(entity p, float dir) ctf_captureshield_update {
 				print_to_spec(p, PRINT_CENTER, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.", "", "", "");
 			}
 			p.ctf_captureshielded = should;
+			ctf_state.SendFlags = 1;
 		}
 	}
 }
@@ -193,8 +196,6 @@ void() ctf_captureshield_spawn {
 
 float   flagcaptimerecord;
 .float  flagpickuptime;
-//.float  iscommander;
-//.float  ctf_state;
 
 void() ctf_flag_place {
 	if (self.classname != "ctf_flag_team") {
@@ -291,6 +292,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 		return;
 
 	print_all(PRINT_INFO, "{1}^7 lost the {2}", p.netname,  e.netname, "");
+	ctf_state.SendFlags = 1;
 	if (penalty_receiver)
 		score_player_team_add_score(penalty_receiver, -CTF_SCORE_VALUE(penalty_suicidedrop));
 	else
@@ -458,6 +460,7 @@ void() ctf_flag_touch {
 		} else
 			print_all(PRINT_INFO, "{1}^7 captured the {2}", other.netname, other.flagcarried.netname, "");
 
+		ctf_state.SendFlags = 1;
 		score_player_team_add(other, CTF_SCORE_CAPS, CTF_SCORE_TEAM_CAPS, 1);
 		if (game_type == GAME_TYPE_CATF || game_type == GAME_TYPE_CTFT)
 			RM_ELSE({
@@ -501,10 +504,10 @@ void() ctf_flag_touch {
 	if (!other.ctf_captureshielded) {
 		if (other.next_take_time > time)
 			return;
-			
+
 		if (g_ctf_flag_pickup_effects) // pickup effect
 			pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
-			
+
 		// pick up
 		self.flagpickuptime = time; // used for timing runs
 		self.solid = SOLID_NOT;
@@ -514,6 +517,7 @@ void() ctf_flag_touch {
 		self.cnt = CTF_FLAG_CARRY;
 		self.angles = '0 0 0';
 		print_all(PRINT_INFO, "{1}^7 got the {2}", other.netname, self.netname, "");
+		ctf_state.SendFlags = 1;
 		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(self.team, CTF_SCORE_VALUE(score_pickup_base)));
 		self.dropperid = other.playerid;
 		score_player_add(other, CTF_SCORE_PICKUPS, 1);
@@ -541,6 +545,7 @@ void() ctf_flag_touch {
 		if (other.team == self.team || (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2)) {
 			// return flag
 			print_all(PRINT_INFO, "{1}^7 returned the {2}", other.netname,  self.netname, "");
+			ctf_state.SendFlags = 1;
 			// punish the player who last had it
 			PLAYER_FOR_EACH(player)
 				if (player.playerid == self.dropperid) {
@@ -580,6 +585,7 @@ void() ctf_flag_touch {
 			other.flagcarried = self;
 			self.cnt = CTF_FLAG_CARRY;
 			print_all(PRINT_INFO, "{1}^7 picked up the {2}", other.netname, self.netname, "");
+			ctf_state.SendFlags = 1;
 			float f;
 			f = bound(0, (self.pain_finished - time) / g_ctf_flag_returntime, 1);
 			//print("factor is ", ftos(f), "\n");
@@ -641,8 +647,11 @@ void(string basesprite) ctf_flag_spawn {
 	// link flag into ctf_worldflaglist
 	self.enemy = ctf_worldflaglist;
 	ctf_worldflaglist = self;
+	entity base = spawn();
+	base.netname = self.netname;
+	base.message2 = "###item###";
+	setorigin(base, self.origin);
 	self.classname = "ctf_flag_team";
-	self.message2 = "###item###";
 	if (self.spawnflags & 1)
 		self.noalign = 1;
 
@@ -724,10 +733,8 @@ void() spawnfunc_ctf_flag_team1 {
 	}
 	if (g_ctf_reverse) {
 		self.team = COLOR_TEAM2; // color 13 team (blue)
-		self.items = IT_KEY1; // silver key (bluish enough)
 	} else {
 		self.team = COLOR_TEAM1; // color 4 team (red)
-		self.items = IT_KEY2; // gold key (redish enough)
 	}
 	self.netname = "^1RED^7 flag";
 	self.skin = cvar("g_ctf_flag_red_skin");
@@ -780,10 +787,8 @@ void() spawnfunc_ctf_flag_team2 {
 	}
 	if (g_ctf_reverse) {
 		self.team = COLOR_TEAM1; // color 4 team (red)
-		self.items = IT_KEY2; // gold key (redish enough)
 	} else {
 		self.team = COLOR_TEAM2; // color 13 team (blue)
-		self.items = IT_KEY1; // silver key (bluish enough)
 	}
 	self.netname = "^4BLUE^7 flag";
 	self.skin = cvar("g_ctf_flag_blue_skin");
@@ -802,11 +807,56 @@ void() spawnfunc_ctf_flag_team2 {
 	if (!self.noise4)
 		self.noise4 = "ctf/blue_dropped.wav";
 
-	self.effects = self.effects | EFFECT_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 	if (cvar("g_ctf_dynamiclights"))
 		self.effects |= EFFECT_BLUE;
 
 	ctf_flag_spawn("bluebase");
+}
+
+float(entity to, float f) ctf_state_send {
+	entity f;
+	net_write_byte(MSG_ENTITY, NET_CSQC_CTF_STATE);
+	net_write_byte(MSG_ENTITY, to.ctf_captureshielded);
+	float state_blue = 0, state_red = 0;
+	for (f = ctf_worldflaglist; f; f = f.enemy) {
+		if (f.team == COLOR_TEAM1) {
+			if (f.cnt == CTF_FLAG_CARRY && f.owner == to) {
+				state_red = CTF_FLAG_CARRIED_BY_YOU;
+			} else if (f.cnt == CTF_FLAG_DROPPED) {
+				if (state_red != CTF_FLAG_CARRIED_BY_YOU)
+				if (state_red != CTF_FLAG_CARRY)
+					state_red = CTF_FLAG_DROPPED;
+			} else if (f.cnt == CTF_FLAG_CARRY) {
+				if (state_red != CTF_FLAG_CARRIED_BY_YOU)
+					state_red = CTF_FLAG_CARRY;
+			} else if (f.cnt == CTF_FLAG_BASE) {
+				if (state_red != CTF_FLAG_CARRIED_BY_YOU)
+				if (state_red != CTF_FLAG_CARRY)
+				if (state_red != CTF_FLAG_DROPPED)
+					state_red = CTF_FLAG_BASE;
+			}
+		} else if (f.team == COLOR_TEAM2) {
+			if (f.cnt == CTF_FLAG_CARRY && f.owner == to) {
+				state_blue = CTF_FLAG_CARRIED_BY_YOU;
+			} else if (f.cnt == CTF_FLAG_DROPPED) {
+				if (state_blue != CTF_FLAG_CARRIED_BY_YOU)
+				if (state_blue != CTF_FLAG_CARRY)
+					state_blue = CTF_FLAG_DROPPED;
+			} else if (f.cnt == CTF_FLAG_CARRY) {
+				if (state_blue != CTF_FLAG_CARRIED_BY_YOU)
+					state_blue = CTF_FLAG_CARRY;
+			} else if (f.cnt == CTF_FLAG_BASE) {
+				if (state_blue != CTF_FLAG_CARRIED_BY_YOU)
+				if (state_blue != CTF_FLAG_CARRY)
+				if (state_blue != CTF_FLAG_DROPPED)
+					state_blue = CTF_FLAG_BASE;
+			}
+		}
+	}
+	net_write_byte(MSG_ENTITY, state_red);
+	net_write_byte(MSG_ENTITY, state_blue);
+	return TRUE;
 }
 
 var void(float killed) ctf_player_clear_next;
@@ -849,55 +899,6 @@ float(entity plr) ctf_player_is_carrier { return plr.flagcarried != world; }
 void(entity plr) ctf_player_drop_carried { ctf_flag_drop(plr.flagcarried, world, world); }
 float(entity e) ctf_portal_forbidden_for { return e.classname == "ctf_flag_team"; }
 
-void(entity flag, float shift) ctf_setstatus2 {
-	if (flag.cnt == CTF_FLAG_CARRY) {
-		if (flag.owner == self)
-			self.items |= shift * 3;
-		else
-			self.items |= shift * 1;
-	} else if (flag.cnt == CTF_FLAG_DROPPED)
-		self.items |= shift * 2;
-}
-
-var void() ctf_player_think_next;
-void() ctf_player_think {
-	self.items &= ~IT_RED_FLAG_TAKEN;
-	self.items &= ~IT_RED_FLAG_LOST;
-	self.items &= ~IT_BLUE_FLAG_TAKEN;
-	self.items &= ~IT_BLUE_FLAG_LOST;
-	self.items &= ~IT_CTF_SHIELDED;
-	entity flag;
-	float redflags, blueflags;
-	if (self.ctf_captureshielded)
-		self.items |= IT_CTF_SHIELDED;
-
-	redflags = 0;
-	blueflags = 0;
-	for (flag = ctf_worldflaglist; flag; flag = flag.enemy) if (flag.cnt != CTF_FLAG_BASE) {
-		if (flag.items & IT_KEY2) // blue
-			++redflags;
-		else if (flag.items & IT_KEY1) // red
-			++blueflags;
-	}
-	// blinking magic: if there is more than one flag, show one of these in a clever way
-	if (redflags)
-		redflags = math_mod(floor(time * redflags * 0.75), redflags);
-
-	if (blueflags)
-		blueflags = math_mod(floor(time * blueflags * 0.75), blueflags);
-
-	for (flag = ctf_worldflaglist; flag; flag = flag.enemy) if (flag.cnt != CTF_FLAG_BASE) {
-		if (flag.items & IT_KEY2) { // blue
-			if (--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times)
-				ctf_setstatus2(flag, IT_RED_FLAG_TAKEN);
-		} else if (flag.items & IT_KEY1) { // red
-			if (--blueflags == -1) // happens exactly once
-				ctf_setstatus2(flag, IT_BLUE_FLAG_TAKEN);
-		}
-	}
-	ctf_player_think_next();
-}
-
 void() ctf_init {
 	CVAR_CACHE(g_ctf_reverse);
 	g_ctf = 1;
@@ -907,8 +908,6 @@ void() ctf_init {
 	captureshield_force = cvar("g_ctf_shield_force");
 	ctf_player_clear_next = plugin_chain_player_clear;
 	plugin_chain_player_clear = ctf_player_clear;
-	ctf_player_think_next = plugin_chain_player_think;
-	plugin_chain_player_think = ctf_player_think;
 	plugin_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	plugin_world_record_for_map = ctf_world_record_for_map;
 	ctf_damage_mods_set_next = plugin_chain_damage_mods_set;
@@ -997,4 +996,6 @@ void() ctf_init {
 	}
 	ctf_score_give_frag_mod_next = plugin_chain_score_give_frag_mod;
 	plugin_chain_score_give_frag_mod = ctf_score_give_frag_mod;
+	ctf_state = spawn();
+	net_link_entity(ctf_state, FALSE, 0, ctf_state_send);
 }
