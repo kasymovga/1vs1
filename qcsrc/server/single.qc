@@ -189,13 +189,6 @@ float() single_monster_team_switchable {
 	return FALSE;
 }
 
-var void() single_player_think_next;
-void() single_player_think {
-	self.items &= ~IT_KEYS;
-	self.items |= self.keys;
-	single_player_think_next();
-}
-
 var void(entity) single_player_spawn_next;
 void(entity e) single_player_spawn {
 	self.default_equip = TRUE;
@@ -258,8 +251,6 @@ void(void) single_init {
 	plugin_client_parms_change = single_client_parms_change;
 	plugin_client_parms_decode = single_client_parms_decode;
 	plugin_monster_team_switchable = single_monster_team_switchable;
-	single_player_think_next = plugin_chain_player_think;
-	plugin_chain_player_think = single_player_think;
 	single_player_spawn_next = plugin_chain_player_spawn;
 	plugin_chain_player_spawn = single_player_spawn;
 	single_shutdown_next = plugin_chain_shutdown;

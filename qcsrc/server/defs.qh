@@ -237,8 +237,6 @@ typedef .float floatfield;
 
 .float abuser;
 
-.float keys;
-
 .float lastdamage;
 
 .entity entcs;

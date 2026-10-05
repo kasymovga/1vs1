@@ -437,7 +437,7 @@ float(entity item, entity player) item_give_to {
 	}
 	if (item.spawnshieldtime)
 	if ((it = (item.items & IT_KEYS))) {
-		if ((player.keys & it) == it)
+		if ((player.items & it) == it)
 			goto skip;
 
 		if (sv_gameplayfix_keys_vanish && item.classname != "key_share") { // share keys with other players
@@ -457,7 +457,7 @@ float(entity item, entity player) item_give_to {
 			print_to(player, PRINT_INFO, "You got the ^2{1}", item.netname, "", "");
 
 		pickedup = TRUE;
-		player.keys |= it;
+		player.items |= it;
 	}
 :skip
 	if (!pickedup)
@@ -1039,7 +1039,7 @@ void(void) spawnfunc_item_speed {
 float(entity player, entity door) item_key_apply {
 	float has_keys = (door.items & IT_KEYS);
 	if not(has_keys) return TRUE;
-	has_keys = (has_keys == (has_keys & player.keys));
+	has_keys = (has_keys == (has_keys & player.items));
 	if not(has_keys) {
 		if (door.state == FUNC_STATE_BOTTOM)
 		if (clienttype(player) == CLIENTTYPE_REAL) {
@@ -1063,8 +1063,8 @@ float(entity player, entity door) item_key_apply {
 	} else if (sv_gameplayfix_keys_vanish) {
 		if (door.state == FUNC_STATE_BOTTOM && has_keys) {
 			entity pl;
-			PLAYER_FOR_EACH(pl) if ((pl.keys & door.items) && (!team_teams || pl.team == player.team)) {
-				pl.keys &= ~(door.items & IT_KEYS);
+			PLAYER_FOR_EACH(pl) if ((pl.items & door.items) && (!team_teams || pl.team == player.team)) {
+				pl.items &= ~(door.items & IT_KEYS);
 				if (clienttype(pl) == CLIENTTYPE_REAL) {
 					if (door.items & IT_KEY1)
 						print_to(pl, PRINT_CENTER, "{1}^7 is used", "^5Silver Key", "", "");
@@ -1089,12 +1089,12 @@ void(entity spot) item_key_player_spawn {
 		entity pl;
 		PLAYER_FOR_EACH(pl) {
 			if (self != pl && (!team_teams || self.team == pl.team)) {
-				self.keys = pl.keys;
+				self.items = pl.items;
 				break;
 			}
 		}
 	} else
-		self.keys = 0;
+		self.items = 0;
 }
 
 float item_key_init_done;
