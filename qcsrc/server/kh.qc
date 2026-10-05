@@ -253,7 +253,6 @@ void(entity key, entity initial_owner, float angle, float i) kh_Key_Spawn { // r
 	key.touch = kh_Key_Touch;
 	key.think = kh_key_think;
 	key.nextthink = time;
-	key.items = IT_KEY1 | IT_KEY2;
 	key.cnt = angle;
 	key.angles = '0 360 0' * random();
 	key.event_damage = kh_key_damage;
