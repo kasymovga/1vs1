@@ -9,6 +9,7 @@ float sbar_border_thickness;
 vector sbar_team_rgb;
 float sbar_scoreboard_fade;
 float sbar_starttime;
+float sbar_keys_is_powerups;
 
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
@@ -1591,34 +1592,49 @@ void sbar_powerup_timer_draw(float dt, string image, vector color) {
 }
 
 void(vector powerups_pos, float powerups_scale) sbar_powerups_draw {
-	if not(sbar_stat_items & IT_POWERUPS) return;
+	if not(sbar_stat_items & (IT_POWERUPS|IT_KEYS))
+		return;
+
 	float strength_time, invincibility_time, speed_time, invisibility_time, jetpack_time, akimbo_time;
 	sbar_powerup_pos = sbar_position(powerups_pos, '64 200 0', FALSE) + '40 160 0' * powerups_scale;
 	sbar_powerup_scale = powerups_scale;
 	//draw_borderlines(1, sbar_powerup_pos, fill_size, '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
-	strength_time = getstatf(STAT_STRENGTH_FINISHED);
-	invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
-	speed_time = getstatf(STAT_SPEED_FINISHED);
-	invisibility_time = getstatf(STAT_INVISIBILITY_FINISHED);
-	akimbo_time = getstatf(STAT_AKIMBO_FINISHED);
-	jetpack_time = getstati(STAT_FUEL);
-	if (strength_time)
-		sbar_powerup_timer_draw(strength_time - time, "gfx/hud/sb_str", '1 1 1');
+	if (sbar_stat_items & IT_POWERUPS) {
+		strength_time = getstatf(STAT_STRENGTH_FINISHED);
+		invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
+		speed_time = getstatf(STAT_SPEED_FINISHED);
+		invisibility_time = getstatf(STAT_INVISIBILITY_FINISHED);
+		akimbo_time = getstatf(STAT_AKIMBO_FINISHED);
+		jetpack_time = getstati(STAT_FUEL);
+		if (strength_time)
+			sbar_powerup_timer_draw(strength_time - time, "gfx/hud/sb_str", '1 1 1');
 
-	if (invincibility_time)
-		sbar_powerup_timer_draw(invincibility_time - time, "gfx/hud/sb_invinc", '1 1 1');
+		if (invincibility_time)
+			sbar_powerup_timer_draw(invincibility_time - time, "gfx/hud/sb_invinc", '1 1 1');
 
-	if (invisibility_time)
-		sbar_powerup_timer_draw(invisibility_time - time, "gfx/hud/sb_invisibility", '1 1 1');
+		if (invisibility_time)
+			sbar_powerup_timer_draw(invisibility_time - time, "gfx/hud/sb_invisibility", '1 1 1');
 
-	if (speed_time)
-		sbar_powerup_timer_draw(speed_time - time, "gfx/hud/sb_speed", '1 1 1');
+		if (speed_time)
+			sbar_powerup_timer_draw(speed_time - time, "gfx/hud/sb_speed", '1 1 1');
 
-	if (jetpack_time)
-		sbar_powerup_timer_draw(jetpack_time, "gfx/hud/sb_fuel", '1 1 1');
+		if (jetpack_time)
+			sbar_powerup_timer_draw(jetpack_time, "gfx/hud/sb_fuel", '1 1 1');
 
-	if (akimbo_time)
-		sbar_powerup_timer_draw(akimbo_time - time, "gfx/hud/sb_akimbo", '1 1 1');
+		if (akimbo_time)
+			sbar_powerup_timer_draw(akimbo_time - time, "gfx/hud/sb_akimbo", '1 1 1');
+	}
+	if (sbar_stat_items & IT_KEYS) {
+		if (sbar_stat_items & IT_KEY1) {
+			sbar_powerup_timer_draw(0, "gfx/hud/sb_kh_blue", '1 1 1');
+		}
+		if (sbar_stat_items & IT_KEY2) {
+			sbar_powerup_timer_draw(0, "gfx/hud/sb_kh_yellow", '1 1 1');
+		}
+		if (sbar_stat_items & IT_KEY3) {
+			sbar_powerup_timer_draw(0, "gfx/hud/sb_kh_red", '1 1 1');
+		}
+	}
 }
 
 void(void) sbar_pressedkeys_draw {
@@ -1804,6 +1820,7 @@ void(vector dummy1, vector dummy2, float dummy3) sbar_score_nothing_draw {}
 var void(vector position, vector sz, float scale) sbar_game_hud;
 void(vector position, vector sz, float scale) sbar_game_hud_nothing {};
 void(void) sbar_game_init {
+	sbar_keys_is_powerups = TRUE;
 	sbar_score_draw = sbar_score_draw_default;
 	rm_hud_game_info_enabled = TRUE;
 	if (game_type == GAME_TYPE_KEYHUNT || game_type == GAME_TYPE_KEYHUNT_CA || game_type == GAME_TYPE_KEYHUNT_FT) {
@@ -1813,6 +1830,7 @@ void(void) sbar_game_init {
 	} else if (game_type == GAME_TYPE_NEXBALL) {
 		sbar_game_hud = nb_hud;
 	} else if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP || game_type == GAME_TYPE_SURVIVE) {
+		sbar_keys_is_powerups = FALSE;
 		sbar_game_hud = single_hud;
 		sbar_score_draw = sbar_score_nothing_draw;
 	} else if (game_type == GAME_TYPE_FREEZETAG || game_type == GAME_TYPE_CLANARENA || game_type == GAME_TYPE_JAILBREAK) {

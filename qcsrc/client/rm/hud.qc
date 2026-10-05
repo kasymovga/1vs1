@@ -670,6 +670,18 @@ void(vector sectorpos) rm_hud_powerups_draw {
 			}
 		}
 	}
+	if (sbar_stat_items & IT_KEYS) {
+		pos = sectorpos;
+		if (sbar_stat_items & IT_KEY1) {
+			drawpic(pos + (strength_time ? '0 -32 0' : '0 0 0'), "gfx/hud/sb_kh_blue", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+		}
+		if (sbar_stat_items & IT_KEY2) {
+			drawpic(pos + ((strength_time2 || invincibility_time2) ? '40 -32 0' : '40 0 0'), "gfx/hud/sb_kh_yellow", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+		}
+		if (sbar_stat_items & IT_KEY3) {
+			drawpic(pos + (invincibility_time ? '80 -32 0' : '80 0 0'), "gfx/hud/sb_kh_red", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+		}
+	}
 }
 
 float rm_hud_vhealth = 0;
@@ -795,6 +807,10 @@ void(void) rm_hud_draw {
 	}
 	float pw_alpha = 0;
 	rm_hud_powerups_enabled = ((sbar_stat_items & IT_POWERUPS) ? 1 : 0);
+	if not(rm_hud_powerups_enabled)
+	if (sbar_keys_is_powerups) {
+		rm_hud_powerups_enabled = ((sbar_stat_items & IT_KEYS) ? 1 : 0);
+	}
 	if (rm_hud_powerups_enabled != rm_hud_powerups_state) {
 		if (rm_hud_powerups_enabled)
 			rm_hud_powerups_appeartime = time;
