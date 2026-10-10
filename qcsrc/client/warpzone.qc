@@ -121,6 +121,7 @@ void(float isnew) warpzone_read {
 	}
 }
 
+vector warpzone_view_angle_prev;
 void(float isnew) warpzone_teleported_read {
 	vector v, v2;
 	v_x = net_read_coord();
@@ -135,7 +136,14 @@ void(float isnew) warpzone_teleported_read {
 
 	physics_was_teleported = TRUE;
 	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
-		teleport_fix_angles(v2);
+		entity w;
+		for (w = warpzone_chain_begin; w; w = w.warpzone_chain) {
+			if (w.sv_entnum == entnum) {
+				//use angles from previous frame because angles in current frame is messed up in demos
+				teleport_fix_angles(warpzone_transform_vangles(w, warpzone_view_angle_prev));
+				break;
+			}
+		}
 	} else if (!warpzone_predicted || time - warpzone_predicted_time > 0.5 || warpzone_predicted.sv_entnum != entnum) {
 		entity w;
 		for (w = warpzone_chain_begin; w; w = w.warpzone_chain) {
@@ -146,8 +154,8 @@ void(float isnew) warpzone_teleported_read {
 	warpzone_predicted = NULL;
 }
 
-float warpzone_fixangles;
 void(void) warpzone_view_fix_real {
+	warpzone_view_angle_prev = view_angles;
 	if (warpzone_passed) {
 		view_angles = warpzone_transform_vangles(warpzone_passed, view_angles);
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
@@ -166,8 +174,12 @@ void(void) warpzone_view_fix_real {
 			view_origin += (clipdist - f) * w.warpzone_forward;
 	}
 	if (view_angles_z != 0) {
-		view_angles_z = approach_angle(view_angles_z, 0, frametime * 360);
-		R_SetView(VF_CL_VIEWANGLES, view_angles);
+		if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
+			view_angles_z = 0;
+		} else {
+			view_angles_z = approach_angle(view_angles_z, 0, frametime * 360);
+			R_SetView(VF_CL_VIEWANGLES, view_angles);
+		}
 	}
 }
 
