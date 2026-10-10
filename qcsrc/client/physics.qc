@@ -12,7 +12,10 @@ float physics_ground_curtime;
 float physics_ground_oldtime;
 float physics_ground_teleport_bit;
 vector physics_ground_origin;
+vector physics_ground_rotation;
+vector physics_ground_angles;
 vector physics_ground_oldorigin;
+vector physics_ground_oldangles;
 float physics_ground_lastent;
 float physics_skimming_start;
 float physics_cpmdoublejump_time_start;
@@ -205,15 +208,21 @@ vector(void) physics_view_origin {
 		}
 		self.origin = physics_start_origin;
 		if (physics_ground_lastent)
-		if (physics_ground_origin != physics_ground_oldorigin) {
+		if (physics_ground_origin != physics_ground_oldorigin || physics_ground_angles != physics_ground_oldangles) {
 			float f;
-			f = max(0, (physics_ground_curtime - physics_ground_oldtime) / (physics_ground_time - physics_ground_oldtime));
-			physics_ground_curtime += frametime;
+			f = max(0, (time - physics_ground_oldtime) / (physics_ground_time - physics_ground_oldtime));
 			vector ground_curorigin = (1 - f) * physics_ground_oldorigin + f * physics_ground_origin;
-			self.origin = physics_start_origin - (physics_ground_origin - ground_curorigin);
+			self.origin = physics_start_origin - (physics_ground_origin - ground_curorigin) + physics_ground_rotation * (1 - f);
 			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 8', TRACE_MOVE_NOMONSTERS, self);
-			if not(trace_startsolid)
-				self.origin = trace_endpos;
+			if (trace_startsolid) {
+				tracebox(self.origin - '0 0 8', self.mins, self.maxs, self.origin, TRACE_MOVE_NOMONSTERS, self);
+				if not(trace_startsolid)
+				if (trace_fraction < 1)
+					self.origin = trace_endpos;
+			} else {
+				if (trace_fraction < 1)
+					self.origin = trace_endpos;
+			}
 		}
 		pmove_org = self.origin;
 		self.lastwj = physics_lastwj;
@@ -554,20 +563,30 @@ void(float isnew) physics_read {
 			physics_start_nofriction_time = 0;
 
 		if (f & 32768) {
+			physics_ground_oldangles = physics_ground_angles;
 			physics_ground_oldorigin = physics_ground_origin;
-			physics_ground_curtime = physics_ground_oldtime = physics_ground_time;
+			physics_ground_oldtime = physics_ground_time;
 			float ground_ent = net_read_coord();
-			physics_ground_origin_x = net_read_coord();
-			physics_ground_origin_y = net_read_coord();
-			physics_ground_origin_z = net_read_coord();
+			physics_ground_origin = net_read_vector();
 			float tb = net_read_byte();
+			physics_ground_angles = net_read_vector();
 			physics_ground_time = time;
 			if (physics_ground_lastent != ground_ent || physics_ground_teleport_bit != tb) {
+				physics_ground_oldangles = physics_ground_angles;
 				physics_ground_oldorigin = physics_ground_origin;
 				physics_ground_oldtime = physics_ground_time;
 				physics_ground_lastent = ground_ent;
 				physics_ground_teleport_bit = tb;
 			}
+			vector r1, r2, v;
+			makevectors(physics_ground_angles);
+			v = (self.origin + '0 0 1' * self.mins_z) - physics_ground_origin;
+			r1_x = v_forward * v;
+			r1_y = v_right * v;
+			r1_z = v_up * v;
+			makevectors(physics_ground_oldangles);
+			r2 = v_forward * r1_x + v_right * r1_y + v_up * r1_z;
+			physics_ground_rotation = r2 - v;
 		} else {
 			physics_ground_lastent = 0;
 		}

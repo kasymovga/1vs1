@@ -855,11 +855,11 @@ float(entity to, float sf) physics_send {
 			net_write_coord(MSG_ENTITY, self.physics_nofriction_time);
 
 		if (sf & 32768) {
-			net_write_coord(MSG_ENTITY, num_for_edict(self.groundentity));
-			net_write_coord(MSG_ENTITY, self.groundentity.origin_x);
-			net_write_coord(MSG_ENTITY, self.groundentity.origin_y);
-			net_write_coord(MSG_ENTITY, self.groundentity.origin_z);
-			net_write_byte(MSG_ENTITY, (self.groundentity.effects & EFFECT_TELEPORT_BIT) == 0);
+			entity g = self.groundentity;
+			net_write_coord(MSG_ENTITY, num_for_edict(g));
+			net_write_vector(MSG_ENTITY, g.origin);
+			net_write_byte(MSG_ENTITY, (g.effects & EFFECT_TELEPORT_BIT) == 0);
+			net_write_vector(MSG_ENTITY, g.angles);
 		}
 		if (sf2 & 1) {
 			net_write_coord(MSG_ENTITY, self.skimming_time);
