@@ -215,7 +215,7 @@ vector(void) physics_view_origin {
 			self.origin = physics_start_origin - (physics_ground_origin - ground_curorigin) + physics_ground_rotation * (1 - f);
 			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 8', TRACE_MOVE_NOMONSTERS, self);
 			if (trace_startsolid) {
-				tracebox(self.origin - '0 0 8', self.mins, self.maxs, self.origin, TRACE_MOVE_NOMONSTERS, self);
+				tracebox(self.origin + '0 0 8', self.mins, self.maxs, self.origin, TRACE_MOVE_NOMONSTERS, self);
 				if not(trace_startsolid)
 				if (trace_fraction < 1)
 					self.origin = trace_endpos;
