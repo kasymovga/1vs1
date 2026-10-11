@@ -54,6 +54,7 @@ set _defrag_g_balance_zapper_primary_range 700
 set _defrag_g_balance_zapper_secondary 0
 set _defrag_g_balance_hook_secondary 0
 set _defrag_g_balance_powerup_invincible_takedamage 0
+set _defrag_g_balance_powerup_invincible_takehurtdamage 0.5
 set _defrag_g_start_ammo_shells 0
 set _defrag_g_start_ammo_nails 300
 set _defrag_g_start_weapon_uzi 1

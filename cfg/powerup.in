@@ -15,6 +15,7 @@ set g_powerup_shield 1 "if set to 0 the shield (invincibility) powerup will not 
 set g_powerup_addition 1 "addition for power time"
 set g_balance_powerup_akimbo_time 30
 set g_balance_powerup_invincible_takedamage 0.2
+set g_balance_powerup_invincible_takehurtdamage 1
 set g_balance_powerup_invincible_time 30
 set g_balance_powerup_invsibility_time 30
 set g_balance_powerup_strength_damage 3

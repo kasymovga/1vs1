@@ -6,6 +6,7 @@ float g_powerup_speed_droppable;
 float g_powerup_speed_factor;
 float g_powerup_invisibility_full_distance;
 float g_balance_powerup_invincible_takedamage;
+float g_balance_powerup_invincible_takehurtdamage;
 float g_balance_powerup_strength_damage;
 float g_balance_powerup_strength_force;
 float g_balance_powerup_strength_selfdamage;
@@ -78,6 +79,7 @@ void() powerup_init {
 	CVAR_CACHE(g_powerup_speed_factor);
 	CVAR_CACHE(g_powerup_invisibility_full_distance);
 	CVAR_CACHE(g_balance_powerup_invincible_takedamage);
+	CVAR_CACHE(g_balance_powerup_invincible_takehurtdamage);
 	CVAR_CACHE(g_balance_powerup_strength_damage);
 	CVAR_CACHE(g_balance_powerup_strength_force);
 	CVAR_CACHE(g_balance_powerup_strength_selfdamage);
@@ -88,11 +90,14 @@ void() powerup_init {
 
 var void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mods_set_next;
 void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mods_set {
-	if (targ.items & IT_INVINCIBLE)
-	if (deathtype != DEATH_HURTTRIGGER) {
-		plugin_chain_damage_mod = plugin_chain_damage_mod * g_balance_powerup_invincible_takedamage;
-		if (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
-			plugin_chain_damage_mod = 0;
+	if (targ.items & IT_INVINCIBLE) {
+		if (deathtype == DEATH_HURTTRIGGER) {
+			plugin_chain_damage_mod = plugin_chain_damage_mod * g_balance_powerup_invincible_takehurtdamage;
+		} else {
+			plugin_chain_damage_mod = plugin_chain_damage_mod * g_balance_powerup_invincible_takedamage;
+			if (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
+				plugin_chain_damage_mod = 0;
+		}
 	}
 	powerup_invincible_damage_mods_set_next(targ, attacker, deathtype);
 }
