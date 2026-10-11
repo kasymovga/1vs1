@@ -468,6 +468,15 @@ float(entity item, entity player) item_give_to {
 		if (player.switchweapon != weapon_best(player))
 			weapon_switch_force(player, weapon_best(player));
 
+	if (item.target != "") {
+		entity oldself = self;
+		entity oldactivator = activator;
+		self = item;
+		activator = player;
+		trigger_use_targets();
+		self = oldself;
+		activator = oldactivator;
+	}
 	return 1;
 }
 
@@ -503,8 +512,6 @@ void(void) item_touch  {
 		return;
 
 	item_touch_picked = TRUE;
-	activator = other;
-	trigger_use_targets();
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
 	if (substring(self.classname, 0, 7) == "dropped")
 		remove (self);
