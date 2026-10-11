@@ -74,6 +74,7 @@ float g_balance_powerup_invincible_time;
 float g_balance_powerup_speed_time;
 float g_pickup_weapon_ammo_limit;
 float g_pickup_dropped_lifetime;
+float g_pickup_ammo_negative_is_infinite;
 string sv_model_powerupstrength;
 string sv_model_powerupinvincible;
 string sv_model_powerupinvisibility;
@@ -356,14 +357,16 @@ float(entity item, entity player) item_give_to {
 			#define PICK_AMMO(x, maxx) \
 			if (item.x) \
 			if (player.x < max(maxx, item.x)) { \
-				float amount = plugin_chain_item_give_factor(player, 1) * item.x;\
+				float amount = plugin_chain_item_give_factor(player, 1) * item.x; \
+				if (amount < 0 && !g_pickup_ammo_negative_is_infinite) amount = 0; \
 				if ((item.flags & FL_WEAPON) && g_pickup_weapon_ammo_limit && ((player.weapons & self.weapons) || (player.weapons_extra & self.weapons_extra))) { \
 					if (player.x < amount) { \
 						player.x = max(0, amount); \
 						pickedup = TRUE; \
 					} \
 				} else { \
-					player.x = min(player.x + max(0, amount), max(maxx, item.x)); \
+					player.x = min(player.x + amount, max(maxx, item.x)); \
+					if (player.x < 0 && g_pickup_ammo_negative_is_infinite) player.x = 999999; \
 					pickedup = TRUE; \
 				} \
 			}
@@ -1320,6 +1323,7 @@ void(void) item_init {
 	CVAR_CACHE(g_balance_powerup_speed_time);
 	CVAR_CACHE(g_pickup_weapon_ammo_limit);
 	CVAR_CACHE(g_pickup_dropped_lifetime);
+	CVAR_CACHE(g_pickup_ammo_negative_is_infinite);
 	CVAR_CACHE(sv_gameplayfix_item_ignore_nodrop);
 	CVAR_CACHE(sv_gameplayfix_item_ignore_noimpact);
 	CVAR_CACHE(sv_item_tracecull);
