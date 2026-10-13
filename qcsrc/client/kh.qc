@@ -44,14 +44,14 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) kh_hud {
 
 	for (i = 0; i < 4; ++i) {
 		key = floor(kh_keys / pow(32, i)) & 31;
-		keyteam = key - 1;
+		keyteam = key;
 		switch(keyteam) {
-		case 30: // my key
+		case 31: // my key
 			keyteam = team_my;
 			a = 1;
 			aa = 1;
 			break;
-		case -1: // no key
+		case 0: // no key
 			a = 0;
 			aa = 0;
 			break;
