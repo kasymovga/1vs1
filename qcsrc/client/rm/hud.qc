@@ -936,6 +936,12 @@ void(void) rm_hud_draw {
 			}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
 			game_info_pos = hud_sector_pos;
 			game_info_size = hud_sector;
+			game_info_pos_x += rm_skin_sector_padding_left;
+			game_info_size_x -= rm_skin_sector_padding_left;
+			game_info_size_x -= rm_skin_sector_padding_right;
+			game_info_pos_y += rm_skin_sector_padding_top;
+			game_info_size_y -= rm_skin_sector_padding_top;
+			game_info_size_y -= rm_skin_sector_padding_bottom;
 		} else {
 			hud_sector_pos_x = next_sector;
 			hud_sector_x = -bw_right - bw_left;
@@ -1358,12 +1364,18 @@ void(float p) rm_hud_score_draw {
 	} else { // teamgames
 		float max_fragcount;
 		max_fragcount = -999;
+		float shift;
 		for (tm = team_list.sort_next; tm; tm = tm.sort_next) {
 			if (tm.team == TEAM_COLOR_SPECTATOR || !tm.team_size) // no players? don't display
 				continue;
 
 			score = tm.(teamscores[ts_primary]);
 			leader = 0;
+			if (score > 9)
+				shift = 1;
+			else
+				shift = 0;
+
 			if (score > max_fragcount)
 				max_fragcount = score;
 
@@ -1371,12 +1383,19 @@ void(float p) rm_hud_score_draw {
 				if (max_fragcount == score)
 					leader = 1;
 
-				sbar_draw_num(score_pos + ((score > 9) ? '24 0 0' : '0 0 0'), score, 4, 0, 24, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(score_pos + shift * '24 0 0', score, 4, 0, 24, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
 
-				sbar_draw_num(secondary_score_pos, score, 4, 0, 16, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				if (score > 99)
+					shift = 2;
+				else if (score > 9)
+					shift = 1;
+				else
+					shift = 0;
+
+				sbar_draw_num(secondary_score_pos + shift * '16 0 0', score, 4, 0, 16, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				secondary_score_pos = secondary_score_pos + '18 0 0';
 			}
 		}
