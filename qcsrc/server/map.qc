@@ -1,20 +1,18 @@
 string map_name_stored;
+float map_list_array;
 
 float map_count, map_current;
 
-// NOTE: this now expects the map list to be already tokenize()d and the count in map_count
 float() map_list_get_position {
 	float pos, idx;
-	string map;
-	map = mapname;
 	idx = cvar("_g_maplist_index");
 	if (idx >= 0)
 		if (idx < map_count)
-			if (map == argv(idx))
+			if (mapname == bufstr_get(map_list_array, idx))
 				return idx;
 
 	for (pos = 0; pos < map_count; ++pos)
-		if (map == argv(pos))
+		if (mapname == bufstr_get(map_list_array, pos))
 			return pos;
 
 	// resume normal maplist rotation if current map is not in g_maplist
@@ -67,7 +65,7 @@ float(string m) map_is_recent {
 
 float(float position, float pass) map_check {
 	string map_next;
-	map_next = argv(position);
+	map_next = bufstr_get(map_list_array, position);
 	if (pass <= 1) {
 		if (map_is_recent(map_next))
 			return 0;
@@ -92,7 +90,7 @@ void(string nextmapname) map_next_set {
 void(float position) map_goto_set_index {
 	registercvar("_g_maplist_index", "");
 	cvar_set("_g_maplist_index", ftos(position));
-	map_next_set(argv(position));
+	map_next_set(bufstr_get(map_list_array, position));
 }
 
 void() map_change {
@@ -128,105 +126,176 @@ float() map_list_method_random { // random map selection
 	return -1;
 }
 
+void() map_list_save {
+	registercvar("_g_maplist", "");
+	float i, list_num = 0;
+	float n = buf_getsize(map_list_array);
+	string m, ml = "";
+	float ml_len = 0, m_len;
+	for (i = 0; i < n; i++) {
+		m = bufstr_get(map_list_array, i);
+		m_len = strlen(m) + 1;
+		if (m_len + ml_len > 16380) {
+			if not(list_num)
+				cvar_set("_g_maplist", ml);
+			else
+				registercvar("_g_maplist", ftos(list_num));
+				cvar_set(strcat("_g_maplist", ftos(list_num)), ml);
+
+			ml = "";
+			list_num++;
+		}
+		ml = strcat(ml, " ", m);
+		ml_len += m_len;
+	}
+	if not(list_num) {
+		cvar_set("_g_maplist", ml);
+	} else {
+		registercvar("_g_maplist", ftos(list_num));
+		cvar_set(strcat("_g_maplist", ftos(list_num)), ml);
+	}
+	list_num++;
+	registercvar("_g_maplist", ftos(list_num));
+	cvar_set(strcat("_g_maplist", ftos(list_num)), "");
+}
+
 float(float exponent) map_list_method_shuffle { // more clever shuffling
 	// the exponent sets a bias on the map selection:
 	// the higher the exponent, the less likely "shortly repeated" same maps are
 	float i, j, imax, insertpos;
 	imax = 42;
 	for (i = 0; i <= imax; ++i) {
-		string newlist;
+		float newlist = buf_create();
 		// now reinsert this at another position
 		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
 		insertpos = insertpos * (map_count - 1);       // ]0, map_count - 1]
 		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., map_count}
 		// insert the current map there
-		newlist = "";
 		for (j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
-			newlist = strcat(newlist, " ", argv(j));
+			bufstr_add(newlist, bufstr_get(map_list_array, j), TRUE);
 
-		newlist = strcat(newlist, " ", argv(0));       // now insert the just selected map
+		bufstr_add(newlist, bufstr_get(map_list_array, 0), TRUE);
 		for (j = insertpos; j < map_count; ++j)         // i == map_count: no loop, has just been inserted as last
-			newlist = strcat(newlist, " ", argv(j));
+			bufstr_add(newlist, bufstr_get(map_list_array, j), TRUE);
 
-		newlist = substring(newlist, 1, strlen(newlist) - 1);
-		cvar_set("_g_maplist", newlist);
-		map_count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
+		buf_del(map_list_array);
+		map_list_array = newlist;
 		// NOTE: the selected map has just been inserted at (insertpos-1)th position
 		map_current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
-		if (map_check(map_current, 1))
+		if (map_check(map_current, 1)) {
+			map_list_save();
 			return map_current;
+		}
 	}
 	return -1;
 }
 
 void(void) map_list_filter {
 	string sf = "";
-	float n = tokenizebyseparator(cvar_string("_g_maplist"), " ");
+	float n = buf_getsize(map_list_array);
 	float i;
+	float nml = buf_create();
 	for (i = 0; i < n; i++) {
 		if (map_check(i, 2))
-			sf = strcat(sf, " ", argv(i));
+			bufstr_add(nml, bufstr_get(map_list_array, i), TRUE);
 	}
-	cvar_set("_g_maplist", sf);
+	buf_del(map_list_array);
+	map_list_array = nml;
+	map_count = buf_getsize(map_list_array);
 }
 
-string(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
+float(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
 	string out;
 	float i;
 	// to make absolutely sure:
 	map_info_enumerate();
 	map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), pRequiredFlags, pForbiddenFlags, 0);
 	out = "";
+	float aml = buf_create();
 	for (i = 0; i < map_info_count; ++i)
-		out = strcat(out, " ", map_info_glob_item(map_info_filter_list_lookup(i)));
+		bufstr_add(aml, map_info_glob_item(map_info_filter_list_lookup(i)), TRUE);
 
-	return substring(out, 1, strlen(out) - 1);
+	return aml;
+}
+
+void() map_list_load {
+	float list_num = 0;
+	string list = cvar_string("_g_maplist");
+	float i, n;
+	if (buf_getsize(map_list_array)) {
+		buf_del(map_list_array);
+		map_list_array = buf_create();
+	}
+	while (list != "") {
+		n = tokenizebyseparator(list, " ");
+		for (i = 0; i < n; i++) {
+			bufstr_add(map_list_array, argv(i), TRUE);
+		}
+		list_num++;
+		list = cvar_string(strcat("_g_maplist", ftos(list_num)));
+	}
+	map_count = buf_getsize(map_list_array);
 }
 
 void(void) map_list_reset {
 	print("Building map list...\n");
-	registercvar("_g_maplist", "");
 	string exclude = strcat(" ", cvar_string("g_maplist_exclude"), " ");
 	string list = "";
-	string h, t = map_list_allowed_maps(map_info_required_flags(), map_info_forbidden_flags());
-	while (t != "") {
-		h = str_car(t);
-		t = str_cdr(t);
+	string h;
+	buf_del(map_list_array);
+	map_list_array = buf_create();
+	float t = map_list_allowed_maps(map_info_required_flags(), map_info_forbidden_flags());
+	float i, n = buf_getsize(t);
+	for (i = 0; i < n; i++) {
+		h = bufstr_get(t, i);
 		if (strstrofs(exclude, strcat(" ", h, " "), 0) >= 0) {
 			print("Map ", h, " excluded from map list\n");
 			continue;
 		}
-		list = strcat(list, h, " ");
+		bufstr_add(map_list_array, h, TRUE);
 	}
-	cvar_set("_g_maplist", list);
-	print("Map list size: ", ftos(strlen(list)), "\n");
+	map_count = buf_getsize(map_list_array);
+	buf_del(t);
 	map_list_filter();
+	print("Total available maps: ", ftos(map_count), "\n");
 	if (cvar("g_maplist_shuffle"))
 		map_list_shuffle();
+
+	map_current = 0;
+	registercvar("_g_maplist_index", "0");
+	cvar_set("_g_maplist_index", "0");
+	map_list_save();
 }
 
+float map_list_init_done;
 void(void) map_list_init {
+	if (map_list_init_done) return;
+	map_list_init_done = TRUE;
+	registercvar("_g_maplist", "");
+	registercvar("_g_maplist1", "");
+	map_list_array = buf_create();
+	map_list_load();
 	string s = cvar_string("g_maplist");
 	string se = cvar_string("g_maplist_exclude");
 	string gt = game_type_name(game_type_current());
 	registercvar("_g_maplist_gametype", "");
 	registercvar("_g_maplist_source", "");
 	registercvar("_g_maplist_source_exclude", "");
-	registercvar("_g_maplist", "");
 	if (s != cvar_string("_g_maplist_source") || se != cvar_string("_g_maplist_source_exclude") || gt != cvar_string("_g_maplist_gametype")) {
 		print("Map list refiltering required...\n");
 		cvar_set("_g_maplist_gametype", gt);
 		cvar_set("_g_maplist", s);
+		cvar_set("_g_maplist1", "");
+		map_list_load();
 		map_list_filter();
+		map_list_save();
 		cvar_set("_g_maplist_source", s);
 		cvar_set("_g_maplist_source_exclude", se);
 		if (cvar("g_maplist_shuffle"))
 			map_list_shuffle();
 	}
-	map_count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 	if (map_count == 0) {
 		map_list_reset();
-		map_count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 	}
 	if (map_count == 0)
 		error("empty maplist, cannot select a new map");
@@ -254,7 +323,7 @@ string() map_list_next_get {
 
 	if (nextMap >= 0) {
 		map_goto_set_index(nextMap);
-		return map_name_stored;
+		return bufstr_get(map_list_array, nextMap);
 	}
 	return "";
 }
@@ -346,7 +415,18 @@ string(string m) map_goto {
 }
 
 void() map_list_shuffle {
-	cvar_set("_g_maplist", str_shuffle_words(cvar_string("_g_maplist")));
+	float i, j, n = buf_getsize(map_list_array);
+	string s1, s2;
+	for (i = 0; i < n; i++) {
+		j = floor(random() * n);
+		if (i != j) {
+			//swapping
+			s1 = bufstr_get(map_list_array, i);
+			s2 = bufstr_get(map_list_array, j);
+			bufstr_set(map_list_array, i, s2);
+			bufstr_set(map_list_array, j, s1);
+		}
+	}
 }
 
 entity map_intermission;
