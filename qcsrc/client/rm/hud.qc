@@ -934,14 +934,9 @@ void(void) rm_hud_draw {
 			RM_HUD_LINE_SECTOR({
 				sector_mod = '0 0 0';
 			}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
-			game_info_pos = hud_sector_pos;
-			game_info_size = hud_sector;
-			game_info_pos_x += rm_skin_sector_padding_left;
-			game_info_size_x -= rm_skin_sector_padding_left;
-			game_info_size_x -= rm_skin_sector_padding_right;
-			game_info_pos_y += rm_skin_sector_padding_top;
-			game_info_size_y -= rm_skin_sector_padding_top;
-			game_info_size_y -= rm_skin_sector_padding_bottom;
+			rm_hud_get_sector_full_clip_area(hud_sector_pos, hud_sector);
+			game_info_pos = rm_hud_sector_clip_pos;
+			game_info_size = rm_hud_sector_clip_size;
 		} else {
 			hud_sector_pos_x = next_sector;
 			hud_sector_x = -bw_right - bw_left;
@@ -1051,8 +1046,9 @@ void(void) rm_hud_draw {
 			RM_HUD_LINE_SECTOR({
 				sector_mod = '0 0 0';
 			}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
-			game_info_pos = hud_sector_pos;
-			game_info_size = hud_sector;
+			rm_hud_get_sector_full_clip_area(hud_sector_pos, hud_sector);
+			game_info_pos = rm_hud_sector_clip_pos;
+			game_info_size = rm_hud_sector_clip_size;
 		} else {
 			hud_sector_x = -bw_left - bw_right;
 			hud_sector_pos_x = next_sector;
