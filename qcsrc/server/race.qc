@@ -229,7 +229,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 					if (p.race_checkpoint == cp)
 						race_checkpoint_next_send(p, 0);
 			}
-			if (cp == race_timed_checkpoint) {
+			if (cp == race_timed_checkpoint) { // Finish line
 				if (race_position_used(e)) {
 					sprint(e, "\{1}^3Save/restore position was used, time not counted\n");
 				} else {
@@ -252,6 +252,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 						race_records_sender.SendFlags = 1;
 					}
 				}
+				e.respawntime = time;
 			}
 		} else {
 			// dummies
