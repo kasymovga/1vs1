@@ -770,6 +770,7 @@ void(void) world_restore {
 	db_init();
 	// Mapinfo
 	map_info_on_restore();
+	map_list_on_restore(); // map list not supposed presents in single player but just in case
 	world_dynamic_init();
 	if not(dlc_ready_all())
 		dlc_reload();

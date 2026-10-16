@@ -303,6 +303,13 @@ void(void) map_list_init {
 	map_current = bound(0, map_list_get_position(), map_count - 1);
 }
 
+void(void) map_list_on_restore {
+	if (map_list_init_done) {
+		map_list_init_done = FALSE;
+		map_list_init();
+	}
+}
+
 string() map_list_next_get {
 	float nextMap;
 	map_list_init();
