@@ -670,6 +670,7 @@ void(vector sectorpos) rm_hud_powerups_draw {
 			}
 		}
 	}
+	if (sbar_keys_is_powerups)
 	if (sbar_stat_items & IT_KEYS) {
 		pos = sectorpos;
 		if (sbar_stat_items & IT_KEY1) {
