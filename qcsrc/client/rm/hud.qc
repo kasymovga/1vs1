@@ -1411,7 +1411,7 @@ void(float p) rm_hud_score_draw {
 				}
 				scale2 = scale;
 				if (score > 999) {
-					if (team_count_no_spectator < 4) scale *= 0.75;
+					if (team_count_no_spectator < 4 && team_my != TEAM_COLOR_SPECTATOR) scale *= 0.75;
 					if (team_count_no_spectator == 2)
 						shift = 2 * scale + 1 / scale;
 					else
