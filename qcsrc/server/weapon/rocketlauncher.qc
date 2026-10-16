@@ -40,14 +40,6 @@ void(void) weapon_rocketlauncher_explode {
 				if (physics_is_flying(other))
 					announce(self.owner, "announcer/male/airshot.wav", "^5Air^1Shot");
 
-	if (self.owner.weapon == WEAPON_ROCKET_LAUNCHER) {
-		if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
-		if (self.owner.ammo_rockets < g_balance_rocketlauncher_ammo) {
-			self.owner.cnt = WEAPON_ROCKET_LAUNCHER;
-			WEAPON_ATTACK_FINISHED(self.owner) = time;
-			self.owner.switchweapon = weapon_best(self.owner);
-		}
-	}
 	self.realowner = self.owner;
 	projectile_explode();
 }
