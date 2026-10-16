@@ -162,40 +162,6 @@ void(void) world_dynamic_init {
 	slowmo_factor = cvar("g_slowmo");
 }
 
-void(void) world_getrecords {
-	float i;
-	string s = "", s1;
-	float f = -1;
-	for (i = 0; i < CMD_RECORDS_REPLY_STRINGS_COUNT; i++) {
-		str_unzone_ifneeded(cmd_records_reply[i]);
-	}
-	cmd_records_reply_extra = 0;
-	if (cvar("sv_dumprecords")) {
-		f = fopen(strcat("records-", game_type_name(game_type), ".txt"), FILE_WRITE);
-	}
-	for (i = 0; i < map_info_count; ++i)
-		if (map_info_get_by_id(i)) {
-			s1 = plugin_world_record_for_map(map_info_map_bspname);
-			if (strlen(s) + strlen(s1) > 4095) {
-				if (cmd_records_reply_extra >= CMD_RECORDS_REPLY_STRINGS_COUNT - 1)
-					break;
-
-				cmd_records_reply[cmd_records_reply_extra] = strzone(s);
-				cmd_records_reply_extra++;
-				s = "";
-			}
-			s = strcat(s, s1);
-			if (f >= 0) {
-				fputs(f, s1);
-			}
-		}
-	cmd_records_reply[cmd_records_reply_extra] = strzone(s);
-	if (f >= 0)
-		fclose(f);
-
-	map_info_clear_temps();
-}
-
 void(void) world_end_of_time {
 	print_all(PRINT_INFO, "The server has been running for too long. Restart required", "", "", "");
 	localcmd("\nrestart\n");
@@ -390,39 +356,7 @@ void(void) world_init {
 	addstat(STAT_PLAYER_STATE, STAT_INT, deadflag);
 	addstat(STAT_SPECSTATUS, STAT_INT, spectatee_status);
 	addstat(STAT_WEAPONS_EXTRA, STAT_INT, weapons_extra);
-	cmd_lsmaps_reply = "^7Maps available: ";
-	map_list = "";
-	for (i = 0, j = 0; i < map_info_count; ++i) {
-		if (map_info_get_by_id(i))
-			if not(map_info_map_flags & (MAP_INFO_FLAG_HIDDEN | MAP_INFO_FLAG_FORBIDDEN)) {
-				if (math_mod(i, 2))
-					col = "^2";
-				else
-					col = "^3";
-
-				++j;
-				cmd_lsmaps_reply = strcat(cmd_lsmaps_reply, col, map_info_map_bspname, " ");
-				map_list = strcat(map_list, map_info_map_bspname, " ");
-			}
-	}
-	cmd_lsmaps_reply = strzone(strcat(cmd_lsmaps_reply, "\n"));
-	map_list = strzone(map_list);
-	cmd_maplist_reply = "^7Maps in list: ";
-	n = tokenize_console(cvar_string("_g_maplist"));
-	for (i = 0, j = 0; i < n; ++i) {
-		if (map_info_check_map(argv(i))) {
-			if (math_mod(j, 2))
-				col = "^2";
-			else
-				col = "^3";
-
-			cmd_maplist_reply = strcat(cmd_maplist_reply, col, argv(i), " ");
-			++j;
-		}
-	}
-	cmd_maplist_reply = strzone(strcat(cmd_maplist_reply, "\n"));
-	map_info_clear_temps();
-	world_getrecords();
+	cmd_init();
 	client_init_spawn();
 	random_seed_spawn();
 	localcmd("\n_sv_hook_gamestart ", game_type_name(game_type), ";");
