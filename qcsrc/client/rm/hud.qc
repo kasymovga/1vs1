@@ -1360,38 +1360,80 @@ void(float p) rm_hud_score_draw {
 		float max_fragcount;
 		max_fragcount = -999;
 		float shift;
+		float scale, scale2;
 		for (tm = team_list.sort_next; tm; tm = tm.sort_next) {
 			if (tm.team == TEAM_COLOR_SPECTATOR || !tm.team_size) // no players? don't display
 				continue;
 
 			score = tm.(teamscores[ts_primary]);
 			leader = 0;
-			if (score > 9)
-				shift = 1;
-			else
-				shift = 0;
-
 			if (score > max_fragcount)
 				max_fragcount = score;
 
 			if (tm.team == team_my) {
+				if (score > 999) {
+					shift = 2.75;
+					scale = 0.5;
+				} else if (score > 99) {
+					shift = 2.25;
+					scale = 0.666;
+				} else if (score > 9) {
+					shift = 1;
+					scale = 1;
+				} else {
+					shift = 0;
+					scale = 1;
+				}
 				if (max_fragcount == score)
 					leader = 1;
 
-				sbar_draw_num(score_pos + shift * '24 0 0', score, 4, 0, 24, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(score_pos + shift * '24 0 0', score, 4, 0, 24 * scale, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
 
-				if (score > 99)
-					shift = 2;
-				else if (score > 9)
-					shift = 1;
-				else
-					shift = 0;
-
-				sbar_draw_num(secondary_score_pos + shift * '16 0 0', score, 4, 0, 16, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				secondary_score_pos = secondary_score_pos + '18 0 0';
+				if (team_my == TEAM_COLOR_SPECTATOR) {
+					if (team_count_no_spectator == 2) {
+						scale = 0.75;
+					} else if (team_count_no_spectator == 3) {
+						scale = 0.5;
+					} else {
+						scale = 0.4;
+					}
+				} else {
+					if (team_count_no_spectator == 2) {
+						scale = 1;
+					} else if (team_count_no_spectator == 3) {
+						scale = 0.7;
+					} else {
+						scale = 0.5;
+					}
+				}
+				scale2 = scale;
+				if (score > 999) {
+					if (team_count_no_spectator < 4) scale *= 0.75;
+					if (team_count_no_spectator == 2)
+						shift = 2 * scale + 1 / scale;
+					else
+						shift = 3 * scale + 1 / scale;
+				} else if (score > 99) {
+					if (team_count_no_spectator == 2)
+						shift = scale + 1 / scale;
+					else
+						shift = 2 * scale + 1 / scale;
+				} else if (score > 9) {
+					if (team_count_no_spectator == 2)
+						shift = 1 / scale;
+					else
+						shift = scale + 1 / scale;
+				} else {
+					if (team_count_no_spectator == 2)
+						shift = 1 / scale - scale;
+					else
+						shift = 1 / scale;
+				}
+				sbar_draw_num(secondary_score_pos + (shift) * '16 0 0', score, 4, 0, 16 * scale, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				secondary_score_pos = secondary_score_pos + '0 14 0' * scale2;
 			}
 		}
 	}
