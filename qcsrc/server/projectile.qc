@@ -282,6 +282,35 @@ void(void) projectile_explode {
 	stdproc_remove();
 }
 
+void(void) projectile_touch_origin_adjust {
+	if not(other) return;
+	vector om1 = other.origin + other.mins;
+	vector om2 = other.origin + other.maxs;
+	vector sm1 = self.origin + self.mins;
+	vector sm2 = self.origin + self.maxs;
+	// Check if projectile outside hitted entity
+	if (om2_x <= sm2_x) return;
+	if (om2_y <= sm2_y) return;
+	if (om2_z <= sm2_z) return;
+	if (om1_x >= sm1_x) return;
+	if (om1_y >= sm1_y) return;
+	if (om1_z >= sm1_z) return;
+	float d = vlen(self.size) + vlen(other.size);
+	vector trace_endpos_save = trace_endpos;
+	entity trace_ent_save = trace_ent;
+	vector trace_plane_normal_save = trace_plane_normal;
+	float trace_fraction_save = trace_fraction;
+	// projectile inside entity, step back and try find outside impact point
+	trace_box(self.origin - d * normalize(self.velocity), self.mins, self.maxs, self.origin, TRACE_MOVE_NORMAL, self);
+	if (trace_ent == other) {
+		setorigin(self, trace_endpos);
+	}
+	trace_endpos = trace_endpos_save;
+	trace_ent = trace_ent_save;
+	trace_plane_normal = trace_plane_normal_save;
+	trace_fraction = trace_fraction_save;
+}
+
 void(void) projectile_touch_explode {
 	PROJECTILE_TOUCH;
 	projectile_explode();

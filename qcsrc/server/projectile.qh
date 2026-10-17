@@ -1,5 +1,5 @@
 #define PROJECTILE_SKIPNONSOLID if (plugin_chain_projectile_touch_handle()) { return; }
-#define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(PROJECTILE_OWNER_CHECK()) return; if (self.lastpushtime >= time) if (self.velocity * trace_plane_normal > 0) { setorigin(self, self.origin); return; } if(projectile_no_impact_check()) { stdproc_remove(); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) projectile_update_next_frame(self); } while(0)
+#define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(PROJECTILE_OWNER_CHECK()) return; if (self.lastpushtime >= time) if (self.velocity * trace_plane_normal > 0) { setorigin(self, self.origin); return; } if(projectile_no_impact_check()) { stdproc_remove(); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) projectile_update_next_frame(self); projectile_touch_origin_adjust(); } while(0)
 #define PROJECTILE_OWNER_CHECK() ((other && (other == self.owner)) || (self.clipgroup && other.clipgroup == self.clipgroup))
 
 .float csqcprojectile_clientanimate;
@@ -15,6 +15,7 @@ void(float type) projectile_init;
 void(void) projectile_info_send;
 void(void) projectile_think2use;
 void(void) projectile_explode;
+void(void) projectile_touch_origin_adjust;
 void(void) projectile_touch_explode;
 void(entity e, vector _origin, float impacttype, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float _gravity, float _movetype) projectile_setup;
 void(float csqcid, vector sizes) projectile_register_auto;
