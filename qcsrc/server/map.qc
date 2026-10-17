@@ -205,7 +205,6 @@ void(void) map_list_filter {
 }
 
 float(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
-	string out;
 	float i;
 	// to make absolutely sure:
 	map_info_enumerate();
@@ -214,7 +213,6 @@ float(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
 	} , {
 		map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), pRequiredFlags, pForbiddenFlags, 0);
 	})
-	out = "";
 	float aml = buf_create();
 	for (i = 0; i < map_info_count; ++i)
 		bufstr_add(aml, map_info_glob_item(map_info_filter_list_lookup(i)), TRUE);
