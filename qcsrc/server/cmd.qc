@@ -1,14 +1,24 @@
 #define CMD_RECORDS_REPLY_STRINGS_COUNT 32
-string cmd_lsmaps2_reply;
-string cmd_records_reply[CMD_RECORDS_REPLY_STRINGS_COUNT]; //array for BIG replies
+//cached replies
+string cmd_records_reply[CMD_RECORDS_REPLY_STRINGS_COUNT];
 float cmd_records_reply_extra;
-string cmd_lsmaps_reply, cmd_maplist_reply; // cached replies
+string cmd_lsmaps_reply[CMD_LSMAPS_REPLY_STRINGS_COUNT];
+string cmd_maplist_reply[CMD_LSMAPS_REPLY_STRINGS_COUNT];
+string cmd_lsmaps2_reply[CMD_LSMAPS_REPLY_STRINGS_COUNT];
+float cmd_lsmaps_reply_extra, cmd_maplist_reply_extra;
 
 void(void) cmd_init {
-	cmd_lsmaps_reply = "^7Maps available: ";
-	cmd_lsmaps2_reply = "";
 	string col;
-	float i, j, n;
+	float i, j, n, l = 0, l2;
+	for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
+		str_unzone_ifneeded(cmd_lsmaps_reply[i]);
+		str_unzone_ifneeded(cmd_lsmaps2_reply[i]);
+		str_unzone_ifneeded(cmd_maplist_reply[i]);
+		cmd_lsmaps_reply[i] = "";
+		cmd_lsmaps2_reply[i] = "";
+		cmd_maplist_reply[i] = "";
+	}
+	cmd_lsmaps_reply[0] = "^7Maps available: ";
 	for (i = 0, j = 0; i < map_info_count; ++i) {
 		if (map_info_get_by_id(i))
 			if not(map_info_map_flags & (MAP_INFO_FLAG_HIDDEN | MAP_INFO_FLAG_FORBIDDEN)) {
@@ -18,30 +28,55 @@ void(void) cmd_init {
 					col = "^3";
 
 				++j;
-				cmd_lsmaps_reply = strcat(cmd_lsmaps_reply, col, map_info_map_bspname, " ");
-				cmd_lsmaps2_reply = strcat(cmd_lsmaps2_reply, map_info_map_bspname, " ");
+				l2 = strlen(map_info_map_bspname) + 3;
+				if (l + l2 >= 16384) {
+					if (cmd_lsmaps_reply_extra + 1 == CMD_LSMAPS_REPLY_STRINGS_COUNT)
+						break;
+
+					cmd_lsmaps_reply[cmd_lsmaps_reply_extra] = str_zone_ifneeded(cmd_lsmaps_reply[cmd_lsmaps_reply_extra]);
+					cmd_lsmaps2_reply[cmd_lsmaps_reply_extra] = str_zone_ifneeded(cmd_lsmaps2_reply[cmd_lsmaps_reply_extra]);
+					l = 0;
+					cmd_lsmaps_reply_extra++;
+				}
+				cmd_lsmaps_reply[cmd_lsmaps_reply_extra] = strcat(cmd_lsmaps_reply[cmd_lsmaps_reply_extra], col, map_info_map_bspname, " ");
+				cmd_lsmaps2_reply[cmd_lsmaps_reply_extra] = strcat(cmd_lsmaps2_reply[cmd_lsmaps_reply_extra], map_info_map_bspname, " ");
+				l += l2;
 			}
 	}
-	cmd_lsmaps_reply = strzone(strcat(cmd_lsmaps_reply, "\n"));
-	cmd_lsmaps2_reply = strzone(cmd_lsmaps2_reply);
-	cmd_maplist_reply = "^7Maps in list: ";
+	cmd_lsmaps_reply[cmd_lsmaps_reply_extra] = str_zone_ifneeded(cmd_lsmaps_reply[cmd_lsmaps_reply_extra]);
+	cmd_lsmaps2_reply[cmd_lsmaps_reply_extra] = str_zone_ifneeded(cmd_lsmaps2_reply[cmd_lsmaps_reply_extra]);
+	cmd_maplist_reply[0] = "^7Maps in list: ";
+	j = 0;
+	l = 0;
 	n = tokenize_console(cvar_string("_g_maplist"));
 	for (i = 0, j = 0; i < n; ++i) {
-		if (map_info_check_map(argv(i))) {
-			if (math_mod(j, 2))
-				col = "^2";
-			else
-				col = "^3";
+		if (math_mod(j, 2))
+			col = "^2";
+		else
+			col = "^3";
 
-			cmd_maplist_reply = strcat(cmd_maplist_reply, col, argv(i), " ");
+		l2 = strlen(map_info_map_bspname) + 3;
+		if (l + l2 >= 16384) {
+			if (cmd_maplist_reply_extra + 1 == CMD_LSMAPS_REPLY_STRINGS_COUNT)
+				break;
+
+			cmd_maplist_reply[cmd_maplist_reply_extra] = str_zone_ifneeded(cmd_maplist_reply[cmd_maplist_reply_extra]);
+			l = 0;
+			cmd_lsmaps_reply_extra++;
+		}
+		cmd_maplist_reply[cmd_maplist_reply_extra] = strcat(cmd_maplist_reply[cmd_maplist_reply_extra], col, argv(i), " ");
+		if (i == n - 1) {
 			++j;
+			n = tokenize_console(cvar_string(strcat("_g_maplist", ftos(j))));
+			i = 0;
 		}
 	}
-	cmd_maplist_reply = strzone(strcat(cmd_maplist_reply, "\n"));
+	cmd_maplist_reply[cmd_maplist_reply_extra] = str_zone_ifneeded(cmd_maplist_reply[cmd_maplist_reply_extra]);
 	string s = "", s1;
 	float f = -1;
 	for (i = 0; i < CMD_RECORDS_REPLY_STRINGS_COUNT; i++) {
 		str_unzone_ifneeded(cmd_records_reply[i]);
+		cmd_records_reply[i] = "";
 	}
 	cmd_records_reply_extra = 0;
 	if (cvar("sv_dumprecords")) {
@@ -54,7 +89,7 @@ void(void) cmd_init {
 				if (cmd_records_reply_extra >= CMD_RECORDS_REPLY_STRINGS_COUNT - 1)
 					break;
 
-				cmd_records_reply[cmd_records_reply_extra] = strzone(s);
+				cmd_records_reply[cmd_records_reply_extra] = str_zone_ifneeded(s);
 				cmd_records_reply_extra++;
 				s = "";
 			}
@@ -63,7 +98,7 @@ void(void) cmd_init {
 				fputs(f, s1);
 			}
 		}
-	cmd_records_reply[cmd_records_reply_extra] = strzone(s);
+	cmd_records_reply[cmd_records_reply_extra] = str_zone_ifneeded(s);
 	if (f >= 0)
 		fclose(f);
 
@@ -625,9 +660,19 @@ void(string s) cmd_client {
 			}
 		}
 	} else if (cmd == "maplist") {
-		sprint(self, cmd_maplist_reply);
+		float i;
+		for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
+			if (cmd_lsmaps_reply[i] == "") break;
+			sprint(self, cmd_maplist_reply[i]);
+		}
+		sprint(self, "\n");
 	} else if (cmd == "lsmaps") {
-		sprint(self, cmd_lsmaps_reply);
+		float i;
+		for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
+			if (cmd_lsmaps_reply[i] == "") break;
+			sprint(self, cmd_lsmaps_reply[i]);
+		}
+		sprint(self, "\n");
 	} else if (cmd == "lsmaps2") {
 		if not(!map_finished && (self.flags & FL_CLIENT)) // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
 			return;
@@ -635,7 +680,9 @@ void(string s) cmd_client {
 		msg_entity = self;
 		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 		net_write_byte(MSG_ONE, NET_TE_CSQC_MAPLIST);
-		net_write_string(MSG_ONE, cmd_lsmaps2_reply);
+		float i;
+		for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++)
+			net_write_string(MSG_ONE, cmd_lsmaps2_reply[i]);
 	} else if (cmd == "records") {
 		if (cmd_records_reply[0] == "")
 			sprint(self, "No records are available on this server.\n");

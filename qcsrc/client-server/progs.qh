@@ -1,5 +1,6 @@
 #include "anglestransform.qh"
 #include "client.qh"
+#include "cmd.qh"
 #include "color.qh"
 #include "content.qh"
 #include "ctf.qh"
