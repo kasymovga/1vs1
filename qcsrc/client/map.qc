@@ -1,5 +1,6 @@
 void(void) map_list_read {
 	float i, n;
+	gui_available_maps_count_total = 0;
 	for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
 		str_unzone_ifneeded(gui_available_maps[i]);
 		gui_available_maps_count[i] = 0;
