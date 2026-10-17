@@ -210,9 +210,9 @@ float(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
 	// to make absolutely sure:
 	map_info_enumerate();
 	RM_ELSE({
-		map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), pRequiredFlags, pForbiddenFlags, 0);
-	} , {
 		map_info_filter_game_type(rm_game_type_vote_map_info_mask(), pRequiredFlags, pForbiddenFlags, 0);
+	} , {
+		map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), pRequiredFlags, pForbiddenFlags, 0);
 	})
 	out = "";
 	float aml = buf_create();
