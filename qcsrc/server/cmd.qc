@@ -29,7 +29,7 @@ void(void) cmd_init {
 
 				++j;
 				l2 = strlen(map_info_map_bspname) + 3;
-				if (l + l2 >= 16384) {
+				if (l + l2 >= 16380) {
 					if (cmd_lsmaps_reply_extra + 1 == CMD_LSMAPS_REPLY_STRINGS_COUNT)
 						break;
 
@@ -662,17 +662,17 @@ void(string s) cmd_client {
 	} else if (cmd == "maplist") {
 		float i;
 		for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
-			if (cmd_lsmaps_reply[i] == "") break;
+			if (cmd_maplist_reply[i] == "") break;
 			sprint(self, cmd_maplist_reply[i]);
+			sprint(self, "\n");
 		}
-		sprint(self, "\n");
 	} else if (cmd == "lsmaps") {
 		float i;
 		for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
 			if (cmd_lsmaps_reply[i] == "") break;
 			sprint(self, cmd_lsmaps_reply[i]);
+			sprint(self, "\n");
 		}
-		sprint(self, "\n");
 	} else if (cmd == "lsmaps2") {
 		if not(!map_finished && (self.flags & FL_CLIENT)) // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
 			return;
