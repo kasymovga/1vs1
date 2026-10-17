@@ -120,7 +120,7 @@ void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float
 	} else if (me.voteType == 3) {
 		me.nItems = gui_available_maps_count_total;
 		float listnum = 0;
-		if (i > gui_available_maps_count[listnum]) {
+		if (i >= gui_available_maps_count[listnum]) {
 			i -= gui_available_maps_count[listnum];
 			listnum++;
 			if (listnum == CMD_LSMAPS_REPLY_STRINGS_COUNT) return;
