@@ -131,6 +131,7 @@ void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float
 			j = drawListBoxItemNexuizVoteArgsList_cdr_last_pos - 1;
 			s = drawListBoxItemNexuizVoteArgsList_cdr_last;
 		}
+		drawListBoxItemNexuizVoteArgsList_list_last = listnum;
 		for (j; j < i; j++) {
 			s = str_cdr(s);
 		}
