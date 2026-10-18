@@ -9,7 +9,7 @@ float cmd_lsmaps_reply_extra, cmd_maplist_reply_extra;
 
 void(void) cmd_init {
 	string col;
-	float i, j, n, l = 0, l2;
+	float i, j, n, l, l2;
 	for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
 		str_unzone_ifneeded(cmd_lsmaps_reply[i]);
 		str_unzone_ifneeded(cmd_lsmaps2_reply[i]);
@@ -19,6 +19,7 @@ void(void) cmd_init {
 		cmd_maplist_reply[i] = "";
 	}
 	cmd_lsmaps_reply[0] = "^7Maps available: ";
+	l = strlen(cmd_lsmaps_reply[0]);
 	for (i = 0, j = 0; i < map_info_count; ++i) {
 		if (map_info_get_by_id(i))
 			if not(map_info_map_flags & (MAP_INFO_FLAG_HIDDEN | MAP_INFO_FLAG_FORBIDDEN)) {
