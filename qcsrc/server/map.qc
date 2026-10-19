@@ -279,7 +279,7 @@ void(void) map_list_init {
 	map_list_load();
 	string s = cvar_string("g_maplist");
 	string se = cvar_string("g_maplist_exclude");
-	string gt = game_type_name(game_type_current());
+	string gt = ftos(map_info_filter_mask);
 	registercvar("_g_maplist_gametype", "");
 	registercvar("_g_maplist_source", "");
 	registercvar("_g_maplist_source_exclude", "");

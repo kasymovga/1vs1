@@ -5,6 +5,8 @@ float MAP_INFO_FLAG_HIDDEN           = 1; // not in lsmaps/menu/vcall/etc., can 
 float MAP_INFO_FLAG_FORBIDDEN        = 2; // don't even allow the map by a cvar setting that allows hidden maps
 float MAP_INFO_FLAG_FRUSTRATING      = 4; // this map is near impossible to play, enable at your own risk
 
+float map_info_filter_mask;
+
 float map_info_count;
 // info about a map that MapInfo loads
 string map_info_map_bspname;

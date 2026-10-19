@@ -204,6 +204,7 @@ float(float pGametype, float pFlagsRequired, float pFlagsForbidden, float pAbort
 		map_info_filtered = buf_create();
 	}
 	map_info_count = 0;
+	map_info_filter_mask = pGametype;
 	for (i = 0, j = -1; i < map_info_globcount; ++i) {
 		if (map_info_get_by_name(map_info_glob_item(i), 1, 0) == 2) // if we generated one... BAIL OUT and let the caller continue in the next frame.
 			if (pAbortOnGenerate) {
@@ -698,7 +699,7 @@ float(string s) map_info_check_map_keep_temps { // returns 0 if the map can't be
 	if (!map_info_get_by_name(s, 1, 0))
 		return 0;
 
-	if ((map_info_map_supported_game_types & map_info_type_from_game_type(game_type_current())) == 0)
+	if ((map_info_map_supported_game_types & map_info_filter_mask) == 0)
 		return 0;
 
 	return 1;
