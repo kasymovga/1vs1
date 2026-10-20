@@ -699,9 +699,13 @@ float(string s) map_info_check_map_keep_temps { // returns 0 if the map can't be
 	if (!map_info_get_by_name(s, 1, 0))
 		return 0;
 
-	if ((map_info_map_supported_game_types & map_info_filter_mask) == 0)
-		return 0;
-
+	if (map_info_filter_mask) {
+		if ((map_info_map_supported_game_types & map_info_filter_mask) == 0)
+			return 0;
+	} else {
+		if ((map_info_map_supported_game_types & map_info_type_from_game_type(game_type_current())) == 0)
+			return 0;
+	}
 	return 1;
 }
 
