@@ -1,4 +1,4 @@
-float MAP_INFO_TYPE_ALL              = 131071; // this has to include all above bits
+float MAP_INFO_TYPE_ALL              = 2097151; // all types
 float MAP_INFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
 
 float MAP_INFO_FLAG_HIDDEN           = 1; // not in lsmaps/menu/vcall/etc., can just be changed to manually
