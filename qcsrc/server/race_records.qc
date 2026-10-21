@@ -902,9 +902,10 @@ void(string id1, string id2) race_records_merge_ids {
 	if (race_records_merge_ids_cb_name == "")
 		race_records_merge_ids_cb_name = db_get(db_server, strcat("raceid2n/", id1));
 
-	if (race_records_merge_ids_cb_name == "")
-		race_records_merge_ids_cb_name = "<UNKNOWN>";
-
+	if (race_records_merge_ids_cb_name == "") {
+		print("Both ids has no name\n");
+		return;
+	}
 	db_for_each_key_like(db_server, "/id", id1, race_records_merge_ids_cb);
 	race_records_merge_ids_cb_source = NULL;
 	race_records_merge_ids_cb_destination = NULL;
