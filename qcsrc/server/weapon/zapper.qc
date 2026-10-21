@@ -35,6 +35,7 @@ float g_balance_zapper_secondary_recoil;
 float g_balance_zapper_secondary_refire;
 var .float zapper_buttonatck1 = BUTTON_ATCK;
 var .float zapper_buttonatck2 = BUTTON_ATCK2;
+.float zapper_knockback;
 
 .entity zapper_shield;
 .entity zapper_accumulator;
@@ -233,7 +234,6 @@ void(void) weapon_zapper_beam_think {
 	float fract;
 	entity targ;
 	vector end = weapon_shotorg + weapon_shotdir * self.zapper_range;
-	trace_line(weapon_shotorg, end, FALSE, o);
 	warpzone_trace_line(weapon_shotorg, end, FALSE, o);
 	antilag_end();
 	targ = trace_ent;
@@ -244,6 +244,10 @@ void(void) weapon_zapper_beam_think {
 		float _damage = g_balance_zapper_primary_damage;
 		float force  = g_balance_zapper_primary_force;
 		weapon_score_fires(o, WEAPON_ZAPPER, 1);
+		if (o.zapper_knockback) {
+			setorigin(self, end); // for damage radius
+			damage_radius(self, o, 0, 0, self.zapper_range, NULL, g_balance_rocketlauncher_force * 0.5, EFFECT_IMPACT_LASER, WEAPON_ZAPPER, NULL);
+		}
 		if (targ.takedamage) {
 			float d = vlen(end - weapon_shotorg) * fract;
 			float mindist = g_balance_zapper_primary_damagefalloff_mindist;
@@ -744,6 +748,26 @@ float(float req) weapon_zapper {
 	return TRUE;
 }
 
+var float(entity item, entity player) weapon_zapper_item_give_to_handle_next;
+var float(entity item, entity player) weapon_zapper_item_give_to_handle {
+	if (item.classname == "weapon_zapper")
+		player.zapper_knockback = item.speed;
+
+	return weapon_zapper_item_give_to_handle_next(item, player);
+}
+
+float weapon_zapper_knockback_init_done;
+void weapon_zapper_knockback_init(void) {
+	if (weapon_zapper_knockback_init_done) return;
+	print("Activating zapper knockback mode\n");
+	weapon_zapper_knockback_init_done = TRUE;
+	weapon_zapper_item_give_to_handle_next = plugin_chain_item_give_to_handle;
+	plugin_chain_item_give_to_handle = weapon_zapper_item_give_to_handle;
+}
+
 void spawnfunc_weapon_zapper(void) {
+	if (self.speed) { //knockback
+		weapon_zapper_knockback_init();
+	}
 	weapon_defaultspawnfunc(WEAPON_ZAPPER);
 }

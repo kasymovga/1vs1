@@ -280,11 +280,11 @@ float(entity item, entity player) item_give_to {
 	if (time < map_starttime)
 		return FALSE;
 
-	if (plugin_chain_ItemGiveToHandle(item, player)) {
-		pickedup = plugin_chain_ItemGiveToHandle_PickedUp;
-		plugin_chain_ItemGiveToHandle_PickedUp = FALSE;
-		_switchweapon = plugin_chain_ItemGiveToHandle_SwitchWeapon;
-		plugin_chain_ItemGiveToHandle_SwitchWeapon = FALSE;
+	if (plugin_chain_item_give_to_handle(item, player)) {
+		pickedup = plugin_chain_item_give_to_picked;
+		plugin_chain_item_give_to_picked = FALSE;
+		_switchweapon = plugin_chain_item_give_to_switch;
+		plugin_chain_item_give_to_switch = FALSE;
 	} else {
 		if (g_weapon_stay)
 		if not(item.flags & FL_NO_WEAPON_STAY)

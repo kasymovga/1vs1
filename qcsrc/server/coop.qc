@@ -233,8 +233,8 @@ void(void) coop_init {
 	plugin_chain_observer_spawn = coop_observer_spawn;
 	plugin_monster_quant = coop_monster_quant;
 	plugin_monster_killed = coop_monster_killed;
-	coop_item_give_to_handle_next = plugin_chain_ItemGiveToHandle;
-	plugin_chain_ItemGiveToHandle = coop_item_give_to_handle;
+	coop_item_give_to_handle_next = plugin_chain_item_give_to_handle;
+	plugin_chain_item_give_to_handle = coop_item_give_to_handle;
 	if (g_coop_item_share) {
 		coop_item_give_factor_next = plugin_chain_item_give_factor;
 		plugin_chain_item_give_factor = coop_item_give_factor;

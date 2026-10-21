@@ -67,9 +67,9 @@ var void(entity attacker) plugin_monster_killed {}
 var float() plugin_monster_quant { return 1; }
 var float(entity plr, entity viewer, float palpha) plugin_chain_player_alpha_mod = { return palpha; }
 var float(float secondary, float attacktime) plugin_chain_WeaponPrepareAttack = { return TRUE; }
-var float(entity item, entity player) plugin_chain_ItemGiveToHandle = { return FALSE; }
-float plugin_chain_ItemGiveToHandle_PickedUp;
-float plugin_chain_ItemGiveToHandle_SwitchWeapon;
+var float(entity item, entity player) plugin_chain_item_give_to_handle = { return FALSE; }
+float plugin_chain_item_give_to_picked;
+float plugin_chain_item_give_to_switch;
 var float(float wpn) plugin_chain_WeaponSpawnHandle = { return FALSE; }
 var void() plugin_chain_client_connect_real = {}
 var void() plugin_chain_client_connect = {}

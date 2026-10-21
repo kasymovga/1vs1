@@ -339,31 +339,32 @@ void() minstagib_player_think {
 	self.minstagib_nextthink = time + 1;
 }
 
-var float(entity item, entity player) minstagib_ItemGiveToHandle_next; //Not used actually
-float minstagib_ItemGiveToHandle(entity item, entity player) {
+var float(entity item, entity player) minstagib_item_give_to_handle_next;
+float minstagib_item_give_to_handle(entity item, entity player) {
+	minstagib_item_give_to_handle_next(item, player);
 	float it;
 	if not(item.spawnshieldtime)
 		return TRUE;
 
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max) {
-		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_item_give_to_picked = TRUE;
 		player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
 		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 	}
 	if ((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK)) {
-		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_item_give_to_picked = TRUE;
 		player.items |= it;
 		if (clienttype(player) == CLIENTTYPE_REAL)
 			print_to(player, PRINT_INFO, "You got the ^2{1}", item.netname, "", "");
 	}
-	plugin_chain_ItemGiveToHandle_SwitchWeapon = TRUE;
+	plugin_chain_item_give_to_switch = TRUE;
 	if (item.health) {
 		player.health = min(max(100, player.health + g_minstagib_health_drop), g_minstagib_health_max);
-		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_item_give_to_picked = TRUE;
 	}
 	if (item.ammo_cells) {
-		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_item_give_to_picked = TRUE;
 		// play some cool sounds ;)
 		if (clienttype(player) == CLIENTTYPE_REAL) {
 			if (player.health <= 5)
@@ -381,7 +382,7 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	}
 	// extralife powerup
 	if (item.max_health) {
-		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_item_give_to_picked = TRUE;
 		// sound not available
 		// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
 		player.armorvalue = min(player.armorvalue + 100, g_minstagib_armor_max);
@@ -390,11 +391,11 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	}
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max) {
-		plugin_chain_ItemGiveToHandle_PickedUp = TRUE;
+		plugin_chain_item_give_to_picked = TRUE;
 		player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
 		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 	}
-	return plugin_chain_ItemGiveToHandle_PickedUp;
+	return plugin_chain_item_give_to_picked;
 }
 
 var void() minstagib_player_health_armor_mods_set_next;
@@ -565,8 +566,8 @@ void(void) minstagib_init {
 	precache_sound ("announcer/robotic/narrowly.wav");
 	minstagib_player_think_next = plugin_chain_player_think;
 	plugin_chain_player_think = minstagib_player_think;
-	minstagib_ItemGiveToHandle_next = plugin_chain_ItemGiveToHandle;
-	plugin_chain_ItemGiveToHandle = minstagib_ItemGiveToHandle;
+	minstagib_item_give_to_handle_next = plugin_chain_item_give_to_handle;
+	plugin_chain_item_give_to_handle = minstagib_item_give_to_handle;
 	minstagib_player_health_armor_mods_set_next = plugin_chain_player_health_armor_mods_set;
 	plugin_chain_player_health_armor_mods_set = minstagib_player_health_armor_mods_set;
 	plugin_chain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
