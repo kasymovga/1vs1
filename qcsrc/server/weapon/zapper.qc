@@ -42,9 +42,6 @@ var .float zapper_buttonatck2 = BUTTON_ATCK2;
 .entity zapper_spinner;
 .entity zapper_beam;
 
-.float zapper_range;
-.float zapper_expire;
-.float zapper_lastdmg;
 .float zapper_arc_hit;
 .float zapper_heat;
 .float zapper_coolofftime;
@@ -171,8 +168,8 @@ float(entity to, float sf) weapon_zapper_beam_send {
 
 float(float secondary) weapon_zapper_beam_expired {
 	entity o = self.owner;
-	if (self.zapper_expire)
-	if (time > self.zapper_expire)
+	if (self.fade_time)
+	if (time > self.fade_time)
 		return TRUE;
 
 	if (!secondary && o.zapper_shield)
@@ -215,7 +212,7 @@ void(void) weapon_zapper_beam_think {
 	}
 	self.nextthink = time;
 	entity o = self.owner;
-	float dt = time - self.zapper_lastdmg;
+	float dt = time - self.lastdamage;
 	float rate = weapon_rate_factor_for(o);
 	float wantedTicrate = g_balance_zapper_primary_refire * rate;
 	if (frametime) {
@@ -233,7 +230,7 @@ void(void) weapon_zapper_beam_think {
 	weapon_setup_shot(self.enemy, 0, "", 0);
 	float fract;
 	entity targ;
-	vector end = weapon_shotorg + weapon_shotdir * self.zapper_range;
+	vector end = weapon_shotorg + weapon_shotdir * g_balance_zapper_primary_range;
 	warpzone_trace_line(weapon_shotorg, end, FALSE, o);
 	antilag_end();
 	targ = trace_ent;
@@ -246,7 +243,7 @@ void(void) weapon_zapper_beam_think {
 		weapon_score_fires(o, WEAPON_ZAPPER, 1);
 		if (o.zapper_knockback) {
 			setorigin(self, end); // for damage radius
-			damage_radius(self, o, 0, 0, self.zapper_range, NULL, g_balance_rocketlauncher_force * 0.5, EFFECT_IMPACT_LASER, WEAPON_ZAPPER, NULL);
+			damage_radius(self, o, 0, 0, g_balance_zapper_primary_range, NULL, g_balance_rocketlauncher_force * 0.5, EFFECT_IMPACT_LASER, WEAPON_ZAPPER, NULL);
 		}
 		if (targ.takedamage) {
 			float d = vlen(end - weapon_shotorg) * fract;
@@ -262,9 +259,9 @@ void(void) weapon_zapper_beam_think {
 		if not(self.enemy.items & IT_UNLIMITED_AMMO)
 			self.enemy.ammo_cells = self.enemy.ammo_cells - g_balance_zapper_primary_ammo;
 
-		self.zapper_lastdmg = self.zapper_lastdmg + wantedTicrate;
+		self.lastdamage = self.lastdamage + wantedTicrate;
 	}
-	WEAPON_ATTACK_FINISHED(self.enemy) = self.zapper_lastdmg + wantedTicrate;
+	WEAPON_ATTACK_FINISHED(self.enemy) = self.lastdamage + wantedTicrate;
 	if (org != self.pos1) {
 		self.SendFlags |= 2;
 		self.pos1 = org;
@@ -294,9 +291,8 @@ void(void) weapon_zapper_attack1 {
 	e.nextthink = time;
 	e.owner = akimbo_owner(self);
 	e.enemy = self;
-	e.zapper_range = g_balance_zapper_primary_range;
 	float shottime = g_balance_zapper_primary_refire * weapon_rate_factor();
-	e.zapper_lastdmg = time - shottime;
+	e.lastdamage = time - shottime;
 	net_link_entity(e, FALSE, 0, weapon_zapper_beam_send);
 	e.SendFlags = 255;
 	self.zapper_beam = e;
@@ -554,7 +550,7 @@ void(void) weapon_zapper_accumulate {
 	self = self.owner;
 	float accumulate_end = 1;
 	if (player_can_fire(self, TRUE) && self.weapon == WEAPON_ZAPPER) {
-		if (self.zapper_accumulator.zapper_expire < time &&
+		if (self.zapper_accumulator.fade_time < time &&
 			   (!self.zapper_buttonatck2
 			   || self.zapper_buttonatck1
 			   || time > self.zapper_accumulator.zapper_accumulate)) {
@@ -604,7 +600,7 @@ float(float req) weapon_zapper {
 						//W_SwitchWeapon_OutOfAmmo(self);
 					} else {
 						if (self.zapper_shield) {
-							self.zapper_shield.zapper_expire = time + g_balance_zapper_secondary_shield_lifetime;
+							self.zapper_shield.fade_time = time + g_balance_zapper_secondary_shield_lifetime;
 						} else if (time > self.zapper_shieldready) {
 							weapon_zapper_attack3();
 						}
@@ -628,7 +624,7 @@ float(float req) weapon_zapper {
 						//W_SwitchWeapon_OutOfAmmo(self);
 					} else {
 						if (self.zapper_shield) {
-							self.zapper_shield.zapper_expire = time + g_balance_zapper_secondary_shield_lifetime;
+							self.zapper_shield.fade_time = time + g_balance_zapper_secondary_shield_lifetime;
 						} else {
 							weapon_zapper_attack3();
 						}
@@ -643,7 +639,7 @@ float(float req) weapon_zapper {
 					self.zapper_accumulator.owner = self;
 					self.zapper_accumulator.think = weapon_zapper_accumulate;
 					self.zapper_accumulator.nextthink = time;
-					self.zapper_accumulator.zapper_expire = time + g_balance_zapper_secondary_animtime;
+					self.zapper_accumulator.fade_time = time + g_balance_zapper_secondary_animtime;
 					sound(self, CHAN_WEAPON2, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
 					weapon_thinkf(WEAPON_FRAME_FIRE1, g_balance_zapper_secondary_animtime, weapon_ready);
 				}
