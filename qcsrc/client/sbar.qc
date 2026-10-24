@@ -1462,7 +1462,7 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_def
 
 void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_race {
 	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && !team_teams) { // race/cts record display on HUD
-		SBAR_POSITION_AND_SCALE(score_pos, score_scale, '196 34 0', score_size, CVAR(sbar_score_background))
+		SBAR_POSITION_AND_SCALE(score_pos, score_scale, '180 34 0', score_size, CVAR(sbar_score_background))
 		float score, distribution;
 		vector distribution_color;
 		entity pl, me;
@@ -1481,7 +1481,8 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_rac
 		racemin = floor(score/(60 * TIME_FACTOR));
 		racesec = floor((score - racemin*(60 * TIME_FACTOR))/TIME_FACTOR);
 		racemsec = score - racemin*60*TIME_FACTOR - racesec*TIME_FACTOR;
-		vector pos = sbar_position(score_pos, '160 34 0' * score_scale, TRUE);
+		//vector pos = sbar_position(score_pos, '160 34 0' * score_scale, TRUE);
+		vector pos = score_pos;
 		vector font_size;
 		if (pl && ((!(scores_flags[ps_primary] & SCORE_FLAG_ZERO_IS_WORST)) || score)) {
 			// distribution display
@@ -1505,6 +1506,10 @@ void(vector score_pos, vector score_size, float score_scale) sbar_score_draw_rac
 			sbar_draw_num(pos + '132 0 0' * score_scale, distmsec, -SBAR_TIME_DECIMALS, 0, font_size_x, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			drawpic(pos + '121.5 0 0' * score_scale, "gfx/hud/num_dot", font_size, distribution_color, sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 			sbar_draw_num(pos + '71 0 0' * score_scale, distsec, 4, minusplus, font_size_x, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		} else {
+			pos_y -= 10 * score_scale;
+			pos_x -= 12 * score_scale;
+			score_scale *= 1.15;
 		}
 		font_size = '20 20 0' * score_scale;
 		sbar_draw_num(pos + '120 14 0' * score_scale, racemsec, -SBAR_TIME_DECIMALS, 0, font_size_x, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);

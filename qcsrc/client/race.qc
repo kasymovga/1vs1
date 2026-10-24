@@ -500,12 +500,20 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) race_hud {
 	drawfont = sbar_font;
 	string colorcode;
 	string timecode;
-	float i;
+	float i, j;
 	float delta;
 	vector shift = '16 0 0' * gameinfo_scale;
 	vector fontsz = '8 8 0' * gameinfo_scale;
-	pos_text_x += 8;
-	for (i = 0; i < race_checkpoints_count; i++) {
+	pos_text_x += 8 * gameinfo_scale;
+	if (rm_skin_loaded) {
+		i = max(race_checkpoints_count - 4, 0);
+		shift *= 1.5;
+		fontsz *= 1.5;
+		pos_text_y += 16 * gameinfo_scale;
+	} else {
+		i = 0;
+	}
+	for (; i < race_checkpoints_count; i++) {
 		delta = race_checkpoints_deltas[i];
 		if (delta < 0) {
 			colorcode = "^2";
@@ -545,6 +553,7 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) race_hud {
 				strcat(ftos(i + 1), "."), fontsz, '0.4 0.4 0.4', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawcolorcodedstring(pos_text + shift,
 				strcat(colorcode, TIME_ENCODED_TOSTRING(race_checkpoints_times_old[i]), timecode), fontsz, sbar_alpha_fg, DRAWFLAG_NORMAL);
+
 		pos_text_y += fontsz_y;
 	}
 }
