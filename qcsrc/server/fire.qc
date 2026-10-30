@@ -102,7 +102,7 @@ void(entity e) fire_apply_damage {
 	d = e.fire_damagepersec * t;
 	hi = e.fire_owner.hitsound;
 	ty = e.fire_owner.typehitsound;
-	damage(e, e, e.fire_owner, d, e.fire_deathtype, e.origin, '0 0 0');
+	if (d) damage(e, e, e.fire_owner, d, e.fire_deathtype, e.origin, '0 0 0');
 	if (e.fire_hitsound && e.fire_owner) {
 		e.fire_owner.hitsound = hi;
 		e.fire_owner.typehitsound = ty;
