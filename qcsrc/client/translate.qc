@@ -101,36 +101,31 @@ void(void) translate_init {
 	translate_load(translate_db, s, TRUE);
 }
 
+float translate_db_missed_cb_out;
+void(string k, string v) translate_db_missed_cb {
+	if (db_get(translate_db, k) != "") return;
+	k = strreplace("\n", "\\n", k);
+	k = strreplace("\"", "\\\"", k);
+	fputs(translate_db_missed_cb_out, "msgid \"");
+	fputs(translate_db_missed_cb_out, k);
+	fputs(translate_db_missed_cb_out, "\"\n");
+	fputs(translate_db_missed_cb_out, "msgstr \"");
+	fputs(translate_db_missed_cb_out, k);
+	fputs(translate_db_missed_cb_out, "\"\n\n");
+}
 
 void(void) translate_shutdown {
 	if (translate_db_missed >= 0) {
-		float i, j, n;
+		float i, j, n, c = buf_getsize(translate_db_missed);
 		string s;
 		translate_load(translate_db_missed, "missed_translations.po", FALSE);
-		float out = fopen("missed_translations.po", FILE_WRITE);
-		if (out >= 0) {
-			for (i = 0; i < DB_BUCKETS; i++) {
-				s = bufstr_get(translate_db_missed, i);
-				n = tokenizebyseparator(s, "\\");
-				for(j = 2; j < n; j += 2) {
-					s = argv(j - 1);
-					if (s == "modified") continue;
-					if (db_get(translate_db, s) != "") continue;
-					s = strreplace("\n", "\\n", s);
-					s = strreplace("\"", "\\\"", s);
-					fputs(out, "msgid \"");
-					fputs(out, s);
-					fputs(out, "\"\n");
-					fputs(out, "msgstr \"");
-					fputs(out, s);
-					fputs(out, "\"\n\n");
-				}
-			}
-			fclose(out);
+		translate_db_missed_cb_out = fopen("missed_translations.po", FILE_WRITE);
+		if (translate_db_missed_cb_out >= 0) {
+			db_for_each_key_like(translate_db_missed, "", "", translate_db_missed_cb);
+			fclose(translate_db_missed_cb_out);
 		}
 		db_close(translate_db_missed);
 	}
 	if (translate_db >= 0)
 		db_close(translate_db);
-
 }

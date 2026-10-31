@@ -4,6 +4,7 @@
 #include "color.qh"
 #include "content.qh"
 #include "ctf.qh"
+#include "db.qh"
 #include "dead.qh"
 #include "death.qh"
 #include "dpcontents.qh"

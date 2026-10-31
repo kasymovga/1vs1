@@ -1,15 +1,46 @@
 void(float db, string pFilename) db_save {
-	float fh, i, n;
+	float fh, i, n = buf_getsize(db);
 	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0) {
+	if (fh < 0) {
 		print(strcat("^1Can't write DB to ", pFilename));
 		return;
 	}
 	fputs(fh, strcat(ftos(DB_BUCKETS), "\n"));
-	for(i = 0; i < DB_BUCKETS; ++i)
-		fputs(fh, strcat(bufstr_get(db, i), "\n"));
-
+	for(i = 1; i < n; i++) {
+		fputs(fh, bufstr_get(db, i));
+		fputs(fh, "\n");
+	}
 	fclose(fh);
+}
+
+float(string pFilename) db_load {
+	float db, fh, i, j, n;
+	string l;
+	db = buf_create();
+	if (db < 0)
+		return -1;
+
+	fh = fopen(pFilename, FILE_READ);
+	if (fh < 0)
+		return db;
+
+	if (stof(fgets(fh)) == DB_BUCKETS) {
+		i = 1;
+		for (; (l = fgets(fh)); i++) {
+			if (l != "")
+				bufstr_set(db, i, l);
+		}
+	} else {
+		// different count of buckets?
+		// need to reorganize the database then (SLOW)
+		while((l = fgets(fh))) {
+			n = tokenizebyseparator(l, "\\");
+			for(j = 2; j < n; j += 2)
+				db_put(db, argv(j-1), uri_unescape(argv(j)));
+		}
+	}
+	fclose(fh);
+	return db;
 }
 
 void(void) db_init {
@@ -17,50 +48,15 @@ void(void) db_init {
 	db_temp = db_create();
 }
 
-void(float db, string s_key, string s_value, void(string k, string v) cb) db_for_each_key_like {
-	float i, n = buf_getsize(db);
-	s_value = uri_escape(s_value);
-	string l, k, v;
-	float k_e, v_e;
-	for (i = 0; i < n; i++) {
-		l = bufstr_get(db, i);
-		if ((s_key == "" || strstrofs(l, s_key, 1) >= 0)
-				&& (s_value == "" || strstrofs(l, s_value, 3) >= 0)) { //first character is always '\'
-			k_e = 0;
-			v_e = 0;
-			while (l != "") {
-				k_e = strstrofs(l, "\\", 1);
-				if (k_e <= 2) { //empty or not found
-					break;
-				}
-				v_e = strstrofs(l, "\\", k_e + 1);
-				if (v_e == k_e + 1) { //empty
-					break;
-				}
-				k = substring(l, 1, k_e - 1);
-				if (v_e >= 0)
-					v = substring(l, k_e + 1, v_e - k_e - 1);
-				else
-					v = substring(l, k_e + 1, -1);
-
-				if (v == "") break;
-				if ((s_key == "" || strstrofs(k, s_key, 0) >= 0)
-						&& (s_value == "" || strstrofs(v, s_value, 0) >= 0))
-					cb(k, uri_unescape(v));
-				if (v_e >= 0)
-					l = substring(l, v_e, -1);
-				else
-					break;
-			}
-		}
-	}
+float(float db) db_is_modified {
+	return (bufstr_get(db, 0) == "modified");
 }
 
 void(void) db_shutdown {
-	if (stof(infoget(bufstr_get(db_server, DB_BUCKETS), "modified")))
+	if (db_is_modified(db_server))
 		db_save(db_server, "server.db");
 
-	if(cvar("developer"))
+	if (cvar("developer"))
 		db_save(db_temp, "server-temp.db");
 
 	db_close(db_server);

@@ -1,0 +1,1 @@
+void(float db, string s_key, string s_value, void(string k, string v) cb) db_for_each_key_like;
