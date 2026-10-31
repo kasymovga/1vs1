@@ -231,7 +231,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 		for (float i = 0; i < c; i++) {
 			proj = projectile(t == WEAPON_EXTRA_TYPE_PROJECTILE, e, TRUE, self);
 			projectile_setup(proj, weapon_shotorg, it, hittype, d,
-					0 /* TODO: edgedamage */, r, f, ((t == WEAPON_EXTRA_TYPE_PROJECTILE ) ? g : 0), (bounces ? MOVETYPE_BOUNCE : MOVETYPE_FLY));
+					0 /* TODO: edgedamage */, r, f, ((t == WEAPON_EXTRA_TYPE_PROJECTILE ) ? g : 0), (bounces ? VM_MOVETYPE_BOUNCE : VM_MOVETYPE_FLY));
 			proj.use = projectile_explode;
 			if (t == WEAPON_EXTRA_TYPE_PROJECTILE_GUIDED) {
 				proj.weapon = self.weapon;

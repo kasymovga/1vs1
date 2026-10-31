@@ -29,7 +29,7 @@ void() monster_ewheel_hunt {
 			float i;
 			for (i = -1; i < 2; i += 2) {
 				entity proj = monster_projectile(TRUE, PROJECTILE_LASER, TRUE, self);
-				projectile_setup(proj, _shotorg + v_right * i * 16, EFFECT_IMPACT_LASER, WEAPON_LASER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+				projectile_setup(proj, _shotorg + v_right * i * 16, EFFECT_IMPACT_LASER, WEAPON_LASER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, VM_MOVETYPE_FLY);
 				proj.nextthink = time + 5;
 				proj.think = projectile_think2use;
 				proj.use = projectile_explode;
@@ -74,7 +74,7 @@ void() monster_ewheel_spawn {
 	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Magic Wheel";
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.entremove = monster_ewheel_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.weaponentity.colormod = self.colormod;

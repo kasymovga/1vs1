@@ -20,7 +20,7 @@ void(string monstermodel, string wepmodel) monster_common_composite_setup {
 	setmodel(self.weaponentity, strcat("models/monsters/", monstermodel, "/upper.md3"));
 	self.weaponentity.weaponentity = spawn();
 	setmodel(self.weaponentity.weaponentity, strcat("models/monsters/", monstermodel, "/head.md3"));
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	if (wepmodel != "") {
 		self.exteriorweaponentity = spawn();
 		self.exteriorweaponentity.scale = 0.8;

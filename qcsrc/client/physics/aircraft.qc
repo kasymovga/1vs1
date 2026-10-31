@@ -45,7 +45,7 @@ void(float isnew) physics_aircraft_read {
 		self.entremove = physics_aircraft_remove;
 		physics_aircraft_entity = self;
 		physics_aircraft_entity.solid = VM_SOLID_BBOX;
-		physics_aircraft_entity.movetype = MOVETYPE_QCWALK;
+		physics_aircraft_entity.movetype = VM_MOVETYPE_QCWALK;
 		physics_aircraft_entity.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	}
 	if (f & 1) {

@@ -12,7 +12,7 @@ float sv_breakable_debris;
 #define DEBRIS_CLIPGROUP 2000
 
 void(void) debris_setup {
-	if not(self.debrismovetype) self.debrismovetype = MOVETYPE_BOUNCE;
+	if not(self.debrismovetype) self.debrismovetype = VM_MOVETYPE_BOUNCE;
 	if not(self.debrissolid) self.debrissolid = VM_SOLID_NOT;
 	if (self.debrisvelocity == '0 0 0') self.debrisvelocity = '0 0 140';
 	if (self.debrisvelocityjitter == '0 0 0') self.debrisvelocityjitter = '70 70 70';

@@ -121,7 +121,7 @@ void(void) player_corpse_think {
 }
 
 void(void) player_respawn {
-	player_body_detach(1, MOVETYPE_TOSS);
+	player_body_detach(1, VM_MOVETYPE_TOSS);
 	client_put();
 }
 
@@ -1052,7 +1052,7 @@ float(void) player_real_customize {
 
 void(entity pl) player_physics_setup {
 	physics_clear(pl);
-	pl.movetype = MOVETYPE_QCWALK;
+	pl.movetype = VM_MOVETYPE_QCWALK;
 	pl.solid = VM_SOLID_SLIDEBOX;
 	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | (g_playerclip_collisions ? DPCONTENTS_PLAYERCLIP : 0);
 	if (player_independent)

@@ -265,7 +265,7 @@ void(vector start, vector start_visual, vector dir, float spread, float pSpeed, 
 		proj.nextthink = time + lifetime - g_antilag_bullets_time; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 		proj.touch = bullet_touch;
 	}
-	projectile_setup(proj, start, impacttype, dtype, _damage, headshotbonus, g_ballistics_materialconstant / bulletconstant, force, gravityfactor, (gravityfactor ? MOVETYPE_TOSS : MOVETYPE_FLY));
+	projectile_setup(proj, start, impacttype, dtype, _damage, headshotbonus, g_ballistics_materialconstant / bulletconstant, force, gravityfactor, (gravityfactor ? VM_MOVETYPE_TOSS : VM_MOVETYPE_FLY));
 	proj.velocity = (dir + randomvec() * spread) * pSpeed;
 	weapon_setup_projectile_velocity(proj);
 	proj.oldvelocity = proj.velocity;

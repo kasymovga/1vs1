@@ -249,7 +249,7 @@ void(float ignore) rm_buffs_model_read {
 			// this is a buff pickup model
 			self.buff_offset = '0 0 0';
 			self.solid = VM_SOLID_TRIGGER;
-			self.movetype = MOVETYPE_TOSS;
+			self.movetype = VM_MOVETYPE_TOSS;
 			self.scale = 1.5;
 			setsize(self, '-15 -15 -40', '15 15 40');
 			self.gravity = 100;

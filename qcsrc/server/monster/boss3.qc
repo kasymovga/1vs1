@@ -24,7 +24,7 @@ void() monster_boss3_hunt {
 		float i;
 		for (i = 0; i < 6; i++) {
 			entity proj = monster_projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
-			projectile_setup(proj, _shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+			projectile_setup(proj, _shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, VM_MOVETYPE_FLY);
 			proj.touch = projectile_touch_explode;
 			proj.velocity = normalize(normalize(_shotdir) + randomvec() * 0.1) * 1600;
 			proj.pushltime = time + 10;
@@ -74,7 +74,7 @@ void() monster_boss3_remove {
 void() monster_boss3_spawn {
 	monster_prepare(monster_boss3_hunt, monster_boss3_walk, monster_boss3_idle);
 	setmodel(self, "models/arachna/arachna.md3");
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.species = SPECIES_ALIEN;
 	self.exteriorweaponentity = spawn();
 	self.entremove = monster_boss3_remove;

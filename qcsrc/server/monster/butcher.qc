@@ -75,7 +75,7 @@ void() monster_butcher_walk {
 void() monster_butcher_spawn {
 	monster_prepare(monster_butcher_hunt, monster_butcher_walk, monster_butcher_idle);
 	setmodel(self, "models/oq/demon.mdl");
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.takedamage = DAMAGE_AIM;
 	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 1;

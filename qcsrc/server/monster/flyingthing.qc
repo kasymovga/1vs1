@@ -14,7 +14,7 @@ void() monster_flyingthing_hunt {
 	if (monster_hunt_prepare(monster_flyingthing_walk, monster_flyingthing_idle))
 		return;
 
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	vector v;
 	float dofire;
 	dofire = FALSE;
@@ -30,7 +30,7 @@ void() monster_flyingthing_hunt {
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		entity gren = monster_projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
-		projectile_setup(gren,_shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+		projectile_setup(gren,_shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, VM_MOVETYPE_FLY);
 		gren.nextthink = time + 5;
 		gren.think = projectile_think2use;
 		gren.use = projectile_explode;
@@ -50,7 +50,7 @@ void() monster_flyingthing_walk {
 	if (monster_walk_prepare(3000, 500, 0, 1, 1, monster_flyingthing_idle, 100))
 		return;
 
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	vector v = monster_move_fly(300, 5);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
@@ -63,7 +63,7 @@ void(void) monster_flyingthing_die {
 	entity gren;
 	for (i = 0; i < 4; i++) {
 		gren = monster_projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, NULL);
-		projectile_setup(gren,o, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_TOSS);
+		projectile_setup(gren,o, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, VM_MOVETYPE_TOSS);
 		gren.nextthink = time + 5;
 		gren.think = projectile_think2use;
 		gren.use = projectile_explode;
@@ -73,7 +73,7 @@ void(void) monster_flyingthing_die {
 }
 
 void() monster_flyingthing_spawn {
-	self.movetype = MOVETYPE_FLY;
+	self.movetype = VM_MOVETYPE_FLY;
 	self.species = SPECIES_ROBOT_SOLID;
 	self.netname = "Flying Thing";
 	monster_set_fly();

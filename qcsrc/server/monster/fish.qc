@@ -55,7 +55,7 @@ void() monster_fish_walk {
 }
 
 void() monster_fish_spawn {
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.species = SPECIES_ALIEN;
 	self.netname = "Acid Fish";
 	monster_prepare(monster_fish_hunt, monster_fish_walk, monster_fish_idle);

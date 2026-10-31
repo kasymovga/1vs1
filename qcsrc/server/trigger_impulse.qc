@@ -6,7 +6,7 @@ float trigger_impulse_frametime;
 float (entity e) trigger_impulse_affected {
 	if not(e.iscreature)
 	if not(e.flags & FLAG_PROJECTILE)
-	if (e.movetype != MOVETYPE_TOSS)
+	if (e.movetype != VM_MOVETYPE_TOSS)
 		return FALSE;
 
 	if (e.deadflag && e.iscreature)

@@ -133,7 +133,7 @@ void(void) weapon_electro_attack {
 	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_PLASMA, WEAPON_ELECTRO, g_balance_electro_primary_damage,
-			g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, g_balance_electro_primary_force, 0, MOVETYPE_FLY);
+			g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, g_balance_electro_primary_force, 0, VM_MOVETYPE_FLY);
 	proj.classname = "plasma_prim";
 	proj.use = weapon_electro_explode;
 	proj.think = projectile_think2use;
@@ -153,7 +153,7 @@ void(void) weapon_electro_attack2 {
 	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE, self); // no culling, it has sound
 	projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_PLASMA_BALL, WEAPON_ELECTRO | HITTYPE_SECONDARY, g_balance_electro_secondary_damage,
-			g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, g_balance_electro_secondary_force, 1, MOVETYPE_BOUNCE);
+			g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, g_balance_electro_secondary_force, 1, VM_MOVETYPE_BOUNCE);
 	proj.classname = "plasma";
 	proj.use = weapon_electro_explode;
 	proj.think = projectile_think2use;

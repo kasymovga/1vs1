@@ -1,6 +1,6 @@
 float(void) physics_spiderbot {
 	physics_velocity = self.velocity;
-	physics_movetype = MOVETYPE_QCWALK;
+	physics_movetype = VM_MOVETYPE_QCWALK;
 	physics_flags = self.flags;
 	physics_update_status();
 	self.velocity = physics_velocity;

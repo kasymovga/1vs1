@@ -110,7 +110,7 @@ void(void) monster_spider_spawn {
 	self.weaponentity.scale = 4;
 	setorigin(self.weaponentity, '0 0 16');
 	self.species = SPECIES_ROBOT_SOLID;
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.entremove = monster_spider_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.solid = VM_SOLID_BBOX;

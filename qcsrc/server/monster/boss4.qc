@@ -70,7 +70,7 @@ void() monster_boss4_hunt {
 		_shotorg = _shotorg + v_forward * self.maxs_x;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 		entity proj = monster_projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
-		projectile_setup(proj, _shotorg, EFFECT_IMPACT_FIREBALL, WEAPON_FIREBALL, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+		projectile_setup(proj, _shotorg, EFFECT_IMPACT_FIREBALL, WEAPON_FIREBALL, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, VM_MOVETYPE_FLY);
 		proj.touch = projectile_touch_explode;
 		proj.think = monster_boss4_mine_think;
 		proj.nextthink = time;

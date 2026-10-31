@@ -146,7 +146,7 @@ float() nadget_weapon_throw_handle {
 float(.float hg_type_field, .float hg_ammo_field) nadget_bot_aim_nadget {
 	float mt = GRENVAR(self.hg_type_field, "movetype");
 	float _gravity = 0;
-	if (mt == MOVETYPE_BOUNCE || mt == MOVETYPE_TOSS) {
+	if (mt == VM_MOVETYPE_BOUNCE || mt == VM_MOVETYPE_TOSS) {
 		_gravity = GRENVAR(self.hg_type_field, "gravity");
 	}
 	if (self.hg_ammo_field > 0) {

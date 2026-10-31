@@ -65,7 +65,7 @@ void(void) napalm_think {
 entity(entity powner, vector porg, float lifetime, float lifetime_randfactor, float deathtype,
 		float burnradius, float burndamage, float burnedgedamage, float burntime) napalm_spawn {
 	entity proj = projectile(TRUE, PROJECTILE_HG_NAPALMSHARD, TRUE, powner);
-	proj.movetype = MOVETYPE_BOUNCE;
+	proj.movetype = VM_MOVETYPE_BOUNCE;
 	proj.gravity = 1;
 	proj.classname = "napalm";
 	proj.projectiledeathtype = deathtype;

@@ -93,7 +93,7 @@ vector() turret_stdproc_aim_generic {
 		prep = pre_pos + (self.enemy.velocity * (impact_time + mintime));
 		if (self.aim_flags & TFL_AIM_ZPREDICT)
 		if not(self.enemy.flags & FLAG_ONGROUND)
-		if (self.enemy.movetype == MOVETYPE_WALK || self.enemy.movetype == MOVETYPE_TOSS || self.enemy.movetype == MOVETYPE_BOUNCE) {
+		if (self.enemy.movetype == VM_MOVETYPE_WALK || self.enemy.movetype == VM_MOVETYPE_TOSS || self.enemy.movetype == VM_MOVETYPE_BOUNCE) {
 			float vz;
 			prep_z = pre_pos_z;
 			vz = self.enemy.velocity_z;
@@ -149,7 +149,7 @@ void(vector v_from, vector v_to, vector v_colormod,
 	setorigin(gib,v_from);
 	entity_fade_setup(gib,time + f_lifetime,2);
 	gib.solid = VM_SOLID_CORPSE;
-	gib.movetype = MOVETYPE_BOUNCE;
+	gib.movetype = VM_MOVETYPE_BOUNCE;
 	gib.event_damage = turret_gib_damage;
 	gib.takedamage = DAMAGE_YES;
 	gib.health = -1;
@@ -183,7 +183,7 @@ void() turret_gib_boom {
 		setorigin(gib,self.origin);
 		entity_fade_setup(gib,time + 5,2);
 		gib.solid = VM_SOLID_CORPSE;
-		gib.movetype = MOVETYPE_BOUNCE;
+		gib.movetype = VM_MOVETYPE_BOUNCE;
 		gib.gravity = 0.5;
 		gib.damageforcescale = 2;
 		gib.event_damage = turret_gib_damage;
@@ -212,7 +212,7 @@ void(vector v_from, vector v_to, vector v_colormod,
 	setmodel(gib,e_mimic.model);
 	setorigin(gib,v_from);
 	gib.solid = VM_SOLID_BBOX;
-	gib.movetype = MOVETYPE_BOUNCE;
+	gib.movetype = VM_MOVETYPE_BOUNCE;
 	gib.gravity = 0.75;
 	gib.damageforcescale = 2;
 	gib.takedamage = DAMAGE_YES;
@@ -248,7 +248,7 @@ void() turret_stdproc_die {
 	net_write_coord (MSG_BROADCAST, org2_z);
 	// Unsolidify and hide real parts
 	self.solid = VM_SOLID_NOT;
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	self.alpha = -1;
 	self.tur_head.alpha = self.alpha;
 	self.customizeentityforclient = stdproc_false;
@@ -308,7 +308,7 @@ void() turret_stdproc_respawn {
 	self.tur_head.team = self.team;
 	turret_stdproc_setcolormod();
 	self.flags = (self.flags & ~FLAG_ONGROUND);
-	self.movetype = MOVETYPE_TOSS;
+	self.movetype = VM_MOVETYPE_TOSS;
 	self.deadflag = DEAD_NO;
 	self.effects = 0;
 	self.tur_head.effects = self.effects;
@@ -1314,7 +1314,7 @@ float(string cvar_base_name, string base, string head) turret_stdproc_init {
 	self.tur_head.scale = self.scale;
 	self.solid = VM_SOLID_BBOX;
 	self.takedamage = DAMAGE_AIM;
-	self.movetype = MOVETYPE_TOSS;
+	self.movetype = VM_MOVETYPE_TOSS;
 	// Attach stdprocs. override when and what needed
 	if (self.turrcaps_flags & TFL_TURRCAPS_SUPPORT) {
 		self.turret_score_target = turret_stdproc_targetscore_support;

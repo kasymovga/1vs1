@@ -49,7 +49,7 @@ entity(entity pl) soulmates_last_attached {
 	for (;;) {
 		PLAYER_FOR_EACH(e) {
 			if (e != last_attached)
-			if (e.movetype == MOVETYPE_FOLLOW)
+			if (e.movetype == VM_MOVETYPE_FOLLOW)
 			if (e.soulmates_gem)
 			if (e.soulmates_gem.aiment)
 			if (e.soulmates_gem.aiment.aiment == pl) {
@@ -67,7 +67,7 @@ entity(entity pl) soulmates_first_attached {
 	entity e;
 	PLAYER_FOR_EACH(e) {
 		if (e != pl)
-		if (e.movetype == MOVETYPE_FOLLOW)
+		if (e.movetype == VM_MOVETYPE_FOLLOW)
 		if (e.soulmates_gem)
 		if (e.soulmates_gem.aiment)
 		if (e.soulmates_gem.aiment.aiment == pl)
@@ -122,8 +122,8 @@ void(entity gem) soulmates_gem_drop {
 	setattachment(gem, NULL, "");
 	setorigin(gem, gem.owner.origin + '0 0 35');
 	if (self.aiment) {
-		if (gem.owner.aiment == gem.aiment && gem.owner.movetype == MOVETYPE_FOLLOW) {
-			gem.owner.movetype = MOVETYPE_WALK;
+		if (gem.owner.aiment == gem.aiment && gem.owner.movetype == VM_MOVETYPE_FOLLOW) {
+			gem.owner.movetype = VM_MOVETYPE_WALK;
 			gem.owner.aiment = NULL;
 		}
 		remove(gem.aiment);
@@ -131,7 +131,7 @@ void(entity gem) soulmates_gem_drop {
 	}
 	gem.flags &= ~FLAG_ONGROUND;
 	gem.solid = VM_SOLID_TRIGGER;
-	gem.movetype = MOVETYPE_TOSS;
+	gem.movetype = VM_MOVETYPE_TOSS;
 	gem.owner.soulmates_gem = NULL;
 	gem.owner = NULL;
 	gem.spawnshieldtime = time + 1;
@@ -174,7 +174,7 @@ void(entity gem) soulmates_gem_place {
 	self = gem;
 	entity_droptofloor();
 	self = e;
-	e.movetype = MOVETYPE_NONE;
+	e.movetype = VM_MOVETYPE_NONE;
 }
 
 entity(float t) soulmates_gem_create {
@@ -234,12 +234,12 @@ void(void) soulmates_controller_think {
 	self.nextthink = time;
 	entity pl, pl2, e;
 	PLAYER_FOR_EACH(pl) {
-		if (pl.soulmates_gem && pl.movetype != MOVETYPE_FOLLOW && player_entity(pl) == pl) {
+		if (pl.soulmates_gem && pl.movetype != VM_MOVETYPE_FOLLOW && player_entity(pl) == pl) {
 			PLAYER_FOR_EACH(pl2) {
-				if (pl2 != pl && PLAYER_REALLY_ALIVE(pl2) && pl2.movetype != MOVETYPE_FOLLOW && pl.team == pl2.team && player_entity(pl2) == pl2) {
+				if (pl2 != pl && PLAYER_REALLY_ALIVE(pl2) && pl2.movetype != VM_MOVETYPE_FOLLOW && pl.team == pl2.team && player_entity(pl2) == pl2) {
 					if (math_boxes_overlap(pl.absmin - '10 10 10', pl.absmax + '10 10 10', pl2.absmin, pl2.absmax)) {
 						pl2 = soulmates_last_attached(pl2);
-						pl.movetype = MOVETYPE_FOLLOW;
+						pl.movetype = VM_MOVETYPE_FOLLOW;
 						pl.velocity = '0 0 0';
 						pl.flags |= FLAG_ONGROUND;
 						pl.soulmates_gem.aiment = spawn();
@@ -293,7 +293,7 @@ void(float killed) soulmates_player_clear {
 
 	entity attached = soulmates_first_attached(self);
 	if (attached) {
-		attached.movetype = MOVETYPE_WALK;
+		attached.movetype = VM_MOVETYPE_WALK;
 		attached.soulmates_gem.aiment = NULL;
 	}
 	soulmates_player_clear_next(killed);

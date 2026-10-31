@@ -126,7 +126,7 @@ float vehicle_car_physics_hook() {
 
 void(void) vehicle_car_think {
 	if not(self.owner) {
-		physics_movetype = MOVETYPE_QCWALK;
+		physics_movetype = VM_MOVETYPE_QCWALK;
 		physics_flags = self.flags;
 		physics_velocity = self.velocity;
 		physics_gravity_factor = (self.gravity ? self.gravity : 1);

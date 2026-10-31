@@ -126,7 +126,7 @@ void(entity key) kh_Key_Attach { // runs when a player picks up a key and severa
 	key.angles_y -= key.owner.angles_y;
 	key.flags = 0;
 	key.solid = VM_SOLID_NOT;
-	key.movetype = MOVETYPE_NONE;
+	key.movetype = VM_MOVETYPE_NONE;
 	key.team = key.owner.team;
 	key.nextthink = time;
 	key.damageforcescale = 0;
@@ -139,7 +139,7 @@ void(entity key) kh_Key_Detach { // runs every time a key is dropped or lost. Ru
 	key.angles_y += key.owner.angles_y;
 	key.flags = FLAG_ITEM;
 	key.solid = VM_SOLID_TRIGGER;
-	key.movetype = MOVETYPE_TOSS;
+	key.movetype = VM_MOVETYPE_TOSS;
 	key.pain_finished = time + g_kh_delay_return;
 	key.damageforcescale = g_kh_damageforcescale;
 	key.takedamage = DAMAGE_YES;

@@ -15,7 +15,7 @@ float(void) func_moving_brush_init {
 	// to mean no restrictions, so use a yaw of 360 instead.
 	self.solid = VM_SOLID_BSP;
 	model_setup();
-	self.movetype = MOVETYPE_PUSH;
+	self.movetype = VM_MOVETYPE_PUSH;
 	if (self.modelindex == 0) {
 		entity_abort("func_moving_brush_init: no brushes found!");
 		return 0;
@@ -216,7 +216,7 @@ void(void) spawnfunc_func_rain {
 	if (!self.dest)
 		self.dest = '0 0 -700';
 	self.angles = '0 0 0';
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	self.solid = VM_SOLID_NOT;
 	model_setup();
 	if (!self.cnt)
@@ -254,7 +254,7 @@ void(void) spawnfunc_func_snow {
 		self.dest = '0 0 -300';
 
 	self.angles = '0 0 0';
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	self.solid = VM_SOLID_NOT;
 	model_setup();
 	if (!self.cnt)
@@ -523,7 +523,7 @@ void(void) func_plat_spawn_inside_trigger {
 	vector tmin, tmax;
 	trigger = spawn();
 	trigger.touch = func_plat_center_touch;
-	trigger.movetype = MOVETYPE_NONE;
+	trigger.movetype = VM_MOVETYPE_NONE;
 	trigger.solid = VM_SOLID_TRIGGER;
 	trigger.enemy = self;
 	trigger.existsonlyfor = self.existsonlyfor;
@@ -1334,7 +1334,7 @@ entity(vector fmins, vector fmaxs) func_spawn_field {
 	vector t1, t2, v;
 	trigger = spawn();
 	trigger.classname = "doortriggerfield";
-	trigger.movetype = MOVETYPE_NONE;
+	trigger.movetype = VM_MOVETYPE_NONE;
 	trigger.solid = VM_SOLID_TRIGGER;
 	trigger.owner = self;
 	trigger.touch = func_door_trigger_touch;

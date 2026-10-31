@@ -22,8 +22,8 @@ float HOOK_ABILITY;
 .float hook_attack_time;
 
 void(entity ent, entity e) hook_follow {
-	ent.movetype = MOVETYPE_FOLLOW; // make the hole follow
-	ent.solid = VM_SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid
+	ent.movetype = VM_MOVETYPE_FOLLOW; // make the hole follow
+	ent.solid = VM_SOLID_NOT; // VM_MOVETYPE_FOLLOW is always non-solid
 	ent.aiment = e; // make the hole follow bmodel
 	if (ent.aiment.takedamage)
 		ent.hook_attack_time = time + g_balance_grapplehook_damage_interval;
@@ -83,7 +83,7 @@ void hook_stop() {
 	self.hook.nextthink = time;
 	self.touch = stdproc_nothing;
 	self.velocity = '0 0 0';
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	self.hook_length = -1;
 	self.hook.SendFlags |= 16;
 }
@@ -237,7 +237,7 @@ void(void) hook_touch {
 	}
 	hook_stop();
 	if (other)
-		if (other.movetype != MOVETYPE_NONE) {
+		if (other.movetype != VM_MOVETYPE_NONE) {
 			hook_follow(self, other);
 		}
 
@@ -286,7 +286,7 @@ void(void) hook_fire {
 	net_link_entity(missile.hook, FALSE, 0, hook_send);
 	self.hook = missile;
 	missile.classname = "grapplinghook";
-	missile.movetype = (g_balance_grapplehook_gravity ? MOVETYPE_TOSS : MOVETYPE_FLY);
+	missile.movetype = (g_balance_grapplehook_gravity ? VM_MOVETYPE_TOSS : VM_MOVETYPE_FLY);
 	missile.solid = VM_SOLID_CORPSE;
 	missile.dphitcontentsmask = (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE);
 	setmodel (missile, "models/hook.md3"); // precision set below

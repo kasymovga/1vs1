@@ -32,7 +32,7 @@ float(entity to, float sf) projectile_send {
 	if (self.csqcprojectile_clientanimate) {
 		sf &= ~4;
 		sf |= 128; // client animated, not interpolated
-		if (self.movetype == MOVETYPE_BOUNCEMISSILE || self.movetype == MOVETYPE_BOUNCE)
+		if (self.movetype == VM_MOVETYPE_BOUNCEMISSILE || self.movetype == VM_MOVETYPE_BOUNCE)
 			sf |= 8;
 	} else if(!self.csqcprojectile_sendangles) {
 		sf &= ~4;
@@ -82,14 +82,14 @@ void(void) projectile_check {
 		if (!e.csqcprojectile_clientanimate || (e.flags & FLAG_ONGROUND)) {
 			if (e.origin != e.csqcprojectile_oldorigin)
 				projectile_update(e);
-		} else if (e.movetype == MOVETYPE_FOLLOW) {
+		} else if (e.movetype == VM_MOVETYPE_FOLLOW) {
 			if (e.angles != e.csqcprojectile_oldangles) {
 				projectile_update_angles(e);
 				e.csqcprojectile_oldangles = e.angles;
 			}
 			if (!e.aiment || wasfreed(e.aiment)) {
 				e.aiment = world;
-				e.movetype = MOVETYPE_TOSS;
+				e.movetype = VM_MOVETYPE_TOSS;
 				setorigin(e, e.csqcprojectile_oldorigin);
 				projectile_update(e);
 			}
@@ -180,12 +180,12 @@ void(entity e, vector _origin, float impacttype, float deathtype, float _dmg, fl
 	e.movetype = _movetype;
 	if (_gravity) {
 		e.gravity = _gravity;
-		if (e.movetype == MOVETYPE_FLY)
-			e.movetype = MOVETYPE_TOSS;
-		else if (e.movetype == MOVETYPE_BOUNCEMISSILE)
-			e.movetype = MOVETYPE_BOUNCE;
+		if (e.movetype == VM_MOVETYPE_FLY)
+			e.movetype = VM_MOVETYPE_TOSS;
+		else if (e.movetype == VM_MOVETYPE_BOUNCEMISSILE)
+			e.movetype = VM_MOVETYPE_BOUNCE;
 	} else {
-		if (e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_BOUNCE)
+		if (e.movetype == VM_MOVETYPE_TOSS || e.movetype == VM_MOVETYPE_BOUNCE)
 			e.gravity = 1;
 	}
 	if (e.owner && e.owner.solid != VM_SOLID_BSP) {
@@ -317,13 +317,13 @@ void(void) projectile_touch_explode {
 }
 
 void(entity e, entity to, vector a) projectile_stick {
-	if (to.solid == VM_SOLID_TRIGGER || e.movetype == MOVETYPE_FOLLOW || e.movetype == MOVETYPE_NONE)
+	if (to.solid == VM_SOLID_TRIGGER || e.movetype == VM_MOVETYPE_FOLLOW || e.movetype == VM_MOVETYPE_NONE)
 		return;
 
 	e.angles = a;
 	if (to) {
 		e.aiment = to;
-		e.movetype = MOVETYPE_FOLLOW;
+		e.movetype = VM_MOVETYPE_FOLLOW;
 		e.v_angle = e.angles;
 		e.v_angle_y -= to.angles_y;
 		e.punchangle = -to.angles;
@@ -332,7 +332,7 @@ void(entity e, entity to, vector a) projectile_stick {
 		e.flags &= ~FLAG_ONGROUND;
 		e.solid = VM_SOLID_CORPSE;
 	} else
-		e.movetype = MOVETYPE_NONE;
+		e.movetype = VM_MOVETYPE_NONE;
 
 	e.velocity = '0 0 0';
 	e.csqcprojectile_clientanimate = FALSE;
@@ -342,7 +342,7 @@ void(entity e, entity to, vector a) projectile_stick {
 
 void(entity proj, float delta) projectile_premove {
 	float g = 0;
-	if (proj.movetype == MOVETYPE_TOSS || proj.movetype == MOVETYPE_BOUNCE) {
+	if (proj.movetype == VM_MOVETYPE_TOSS || proj.movetype == VM_MOVETYPE_BOUNCE) {
 		g = (proj.gravity ? proj.gravity : 1) * sv_gravity;
 		proj.velocity_z -= 0.5 * g * delta;
 	}

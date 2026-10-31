@@ -300,15 +300,15 @@ void nadget_Sentry_Levitate(void) {
     self.velocity = self.velocity * (1 - frametime * g_nadgets_sentry_friction);
 
     if(g_nadgets_sentry_levitation && g_nadgets_sentry_pushfactor) {
-        // this hack is used to benefit from the "step" elevation of MOVETYPE_WALK while dragging a levitating sentry.
+        // this hack is used to benefit from the "step" elevation of VM_MOVETYPE_WALK while dragging a levitating sentry.
         // very low .gravaity is assigned to the sentry at spawn, which makes it seem like the sentry is still floating while being dragged.
 
         if(self.pushltime - (time + g_maxpushtime) > frametime) {
             // hook not attached
-            self.movetype = MOVETYPE_FLY;
+            self.movetype = VM_MOVETYPE_FLY;
         } else {
             // hook attached
-            self.movetype = MOVETYPE_WALK;
+            self.movetype = VM_MOVETYPE_WALK;
         }
     }
 }
@@ -539,7 +539,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     e.team = self.team;
     e.realowner = self; // can't use owner here because we want to be blocked by it
     e.solid = VM_SOLID_BBOX;
-    e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_FLY : (g_nadgets_sentry_pushfactor ? MOVETYPE_WALK : MOVETYPE_TOSS));
+    e.movetype = (g_nadgets_sentry_levitation ? VM_MOVETYPE_FLY : (g_nadgets_sentry_pushfactor ? VM_MOVETYPE_WALK : VM_MOVETYPE_TOSS));
     e.angles = '0 360 0' * random();
     e.reset = stdproc_remove;
     e.think = nadget_Sentry_Think;

@@ -1641,7 +1641,7 @@ void(void) rm_buffs_pickup_setup {
     self.flags = FLAG_ITEM;
     self.solid = VM_SOLID_TRIGGER;
     self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
-    self.movetype = MOVETYPE_TOSS;
+    self.movetype = VM_MOVETYPE_TOSS;
     self.think = Buffs_BuffPickup_Think;
     self.touch = Buffs_BuffPickup_Touch;
     self.reset = Buffs_BuffPickup_Reset;

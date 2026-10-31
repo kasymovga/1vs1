@@ -72,7 +72,7 @@ void(void) monster_ugandaknuckles_walk {
 void(void) monster_ugandaknuckles_spawn {
 	monster_prepare(monster_ugandaknuckles_hunt, monster_ugandaknuckles_walk, monster_ugandaknuckles_idle);
 	setmodel(self, "models/knuckles.md3");
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.takedamage = DAMAGE_AIM;
 	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 1;

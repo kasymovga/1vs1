@@ -150,7 +150,7 @@ void(void) jb_torture_grenades_think {
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), self.origin, v * 1000, 1);
 	entity proj = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self.enemy);
 	projectile_setup(proj, self.origin, EFFECT_IMPACT_ROCKET, DEATH_HURTTRIGGER, 400,
-			50, 400, 800, 0, MOVETYPE_BOUNCE);
+			50, 400, 800, 0, VM_MOVETYPE_BOUNCE);
     proj.velocity = v * (vlen(vd) + random() * 500);
 	proj.touch = jb_torture_grenade_touch;
 	proj.use = projectile_explode;
@@ -169,7 +169,7 @@ void(void) jb_torture_plasma_think {
 		//pointparticles(particleeffectnum("electro_muzzleflash"), self.origin, v * 1000, 1);
 		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self.enemy);
 		projectile_setup(proj, self.origin, EFFECT_IMPACT_PLASMA_COMBO, DEATH_HURTTRIGGER, 200,
-				25, 400, 800, 0, MOVETYPE_BOUNCE);
+				25, 400, 800, 0, VM_MOVETYPE_BOUNCE);
 		proj.velocity = v * (vlen(vd) + random() * 500);
 		proj.touch = jb_torture_plasma_touch;
 		proj.think = stdproc_remove;
@@ -181,7 +181,7 @@ void(void) jb_torture_plasma_think {
 		pointparticles(particleeffectnum("electro_muzzleflash"), self.origin, v * 1000, 1);
 		entity proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self.enemy);
 		projectile_setup(proj, self.origin, EFFECT_IMPACT_PLASMA_COMBO, DEATH_HURTTRIGGER, 200,
-				25, 400, 800, 0, MOVETYPE_FLY);
+				25, 400, 800, 0, VM_MOVETYPE_FLY);
 		proj.velocity = v * (vlen(vd) + random() * 500);
 		proj.touch = projectile_touch_explode;
 		proj.think = stdproc_remove;

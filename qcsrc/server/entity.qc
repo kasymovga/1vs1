@@ -163,8 +163,8 @@ void(entity platform) entity_drop_entities {
 		}
 	}
 	while((e = findentity(e, aiment, platform))) {
-		if(e.movetype == MOVETYPE_FOLLOW) {
-			e.movetype = MOVETYPE_TOSS;
+		if(e.movetype == VM_MOVETYPE_FOLLOW) {
+			e.movetype = VM_MOVETYPE_TOSS;
 			e.aiment = world;
 			e.flags &= ~FLAG_ONGROUND;
 			projectile_update_next_frame(e);

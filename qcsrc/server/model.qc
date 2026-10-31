@@ -216,7 +216,7 @@ void(void) model_movable_init {
 void(void) model_init_common_delayed {
 	model_dropbyspawnflags();
 	model_movable_init();
-	if (self.movetype == MOVETYPE_NONE)
+	if (self.movetype == VM_MOVETYPE_NONE)
 		self.culltracemode = CULLTRACEMODE_NONE;
 }
 

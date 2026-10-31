@@ -601,8 +601,8 @@ void(void) physics_player_jump {
 	if (physics_cantjump)
 		return;
 
-	if (physics_movetype != MOVETYPE_WALK)
-	if (physics_movetype != MOVETYPE_QCWALK)
+	if (physics_movetype != VM_MOVETYPE_WALK)
+	if (physics_movetype != VM_MOVETYPE_QCWALK)
 		return;
 
 	if (g_walljump)
@@ -809,7 +809,7 @@ void(void) physics_player_frame {
 		if (physics_player_plug(maxspd_mod))
 			goto end;
 	}
-	if (physics_movetype == MOVETYPE_NONE || physics_movetype == MOVETYPE_FOLLOW) goto finish;
+	if (physics_movetype == VM_MOVETYPE_NONE || physics_movetype == VM_MOVETYPE_FOLLOW) goto finish;
 	if (physics_flags & FLAG_WATERJUMP) {
 		physics_velocity_x = self.movedir_x;
 		physics_velocity_y = self.movedir_y;
@@ -1016,7 +1016,7 @@ void(void) physics_player_frame {
 			physics_move();
 			sv_gravity = gs;
 		}
-	} else if (physics_movetype == MOVETYPE_QCWALK)
+	} else if (physics_movetype == VM_MOVETYPE_QCWALK)
 		physics_move();
 
 	physics_gravity_factor = gravity_factor_save;

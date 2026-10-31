@@ -82,7 +82,7 @@ void(void) weapon_hagar_attack {
 	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
 	projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_HAGAR, WEAPON_HAGAR, g_balance_hagar_primary_damage,
-			g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, g_balance_hagar_primary_force, 0, MOVETYPE_FLY);
+			g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, g_balance_hagar_primary_force, 0, VM_MOVETYPE_FLY);
 	missile.touch = projectile_touch_explode;
 	missile.use = projectile_explode;
 	missile.think = projectile_think2use;
@@ -105,7 +105,7 @@ void(void) weapon_hagar_attack2 {
 	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, (g_balance_hagar_secondary_mode ? PROJECTILE_HAGAR_STICK : PROJECTILE_HAGAR), TRUE, self);
 	projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_HAGAR, WEAPON_HAGAR | HITTYPE_SECONDARY, g_balance_hagar_secondary_damage,
-			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force, g_balance_hagar_secondary_gravity, (g_balance_hagar_secondary_mode ? MOVETYPE_FLY : MOVETYPE_BOUNCEMISSILE));
+			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force, g_balance_hagar_secondary_gravity, (g_balance_hagar_secondary_mode ? VM_MOVETYPE_FLY : VM_MOVETYPE_BOUNCEMISSILE));
 	missile.touch = (g_balance_hagar_secondary_mode ? weapon_hagar_touch_stick : weapon_hagar_touch2);
 	missile.cnt = 0;
 	missile.use = projectile_explode;

@@ -174,7 +174,7 @@ void(void) rune_touch {
 	self.nextthink = time;
 	self.touch = stdproc_nothing;
 	self.solid = VM_SOLID_NOT;
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	setorigin(self, self.origin);
 	print_all(PRINT_INFO, "^7{1}^7 has picked up {2}^7", other.netname, rune_name(self.runes & (RUNE_LAST*2-1)), "");
 	sound (other, CHAN_TRIGGER, "misc/mediumhealth.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
@@ -190,7 +190,7 @@ void(void) rune_respawn {
 		self.solid = VM_SOLID_TRIGGER;
 		self.touch = rune_touch;
 		self.think = rune_respawn;
-		self.movetype = MOVETYPE_TOSS;
+		self.movetype = VM_MOVETYPE_TOSS;
 		self.nextthink = time + g_runes_respawntime + random() * g_runes_shuffletime;
 	} else {
 		// try again later
@@ -207,7 +207,7 @@ void(entity pl, entity e) rune_drop {
 	e.owner = world;
 	// don't instantly touch player again
 	e.wait = time + 1; // "notouch" time
-	e.movetype = MOVETYPE_TOSS;
+	e.movetype = VM_MOVETYPE_TOSS;
 	e.solid = VM_SOLID_TRIGGER;
 	// reposition itself if not picked up soon
 	e.think = rune_respawn;
@@ -308,7 +308,7 @@ void(void) rune_spawn_all {
 		e.touch = rune_touch;
 		e.think = rune_respawn;
 		e.nextthink = time;
-		e.movetype = MOVETYPE_TOSS;
+		e.movetype = VM_MOVETYPE_TOSS;
 		e.solid = VM_SOLID_TRIGGER;
 		e.flags = FLAG_ITEM;
 		e.reset = rune_reset;

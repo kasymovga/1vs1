@@ -176,7 +176,7 @@ void nadget_Shield_PlayerFrame(void) {
     }
 
     if(!self.movetype) {
-        // with MOVETYPE_NONE the player model rotation will not correspond to the view direction, so fix it here
+        // with VM_MOVETYPE_NONE the player model rotation will not correspond to the view direction, so fix it here
         self.angles_y = self.v_angle_y;
     }
 
@@ -252,7 +252,7 @@ NADGET_HOOKFUNCTION(shield, Attack) {
 
 	if(g_nadgets_shield_immobile) {
 		self.hg_shield_oldmovetype = self.movetype;
-		self.movetype = MOVETYPE_NONE;
+		self.movetype = VM_MOVETYPE_NONE;
 	}
     self.hg_shieldmax = d * rm_buffs_nadget_power(self);
     self.hg_shield = self.hg_shieldmax;
@@ -277,7 +277,7 @@ NADGET_HOOKFUNCTION(shield, Attack) {
         e.glow_color = 230;
         e.glow_trail = 1;
         e.avelocity = '14 0 22';
-        e.movetype = MOVETYPE_FOLLOW;
+        e.movetype = VM_MOVETYPE_FOLLOW;
         e.aiment = e.owner;
         setorigin(e, self.origin);
         setmodel(e, "models/ctf/shield.md3");

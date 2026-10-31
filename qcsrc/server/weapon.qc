@@ -1147,7 +1147,7 @@ void(entity missile) weapon_setup_projectile_velocity {
 
 	missile.velocity = weapon_calculate_projectile_velocity(missile.owner.velocity, missile.velocity);
 	if not(missile.gravity)
-	if (missile.movetype == MOVETYPE_TOSS || missile.movetype == MOVETYPE_BOUNCE)
+	if (missile.movetype == VM_MOVETYPE_TOSS || missile.movetype == VM_MOVETYPE_BOUNCE)
 		missile.gravity = 1;
 }
 

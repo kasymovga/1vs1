@@ -90,7 +90,7 @@ void() monster_walker_hunt {
 
 			self.bulletcounter = self.bulletcounter + 0.5;
 			entity missile = monster_projectile(FALSE, PROJECTILE_ROCKET, FALSE, self);
-			projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+			projectile_setup(missile, weapon_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, VM_MOVETYPE_FLY);
 			missile.takedamage = DAMAGE_YES;
 			missile.damageforcescale = 1;
 			missile.health = 10;
@@ -154,7 +154,7 @@ void() monster_walker_spawn {
 	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 0.1;
 	self.netname = "Walker Nagibator";
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.entremove = monster_walker_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.weaponentity.colormod = self.colormod;

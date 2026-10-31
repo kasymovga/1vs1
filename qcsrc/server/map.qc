@@ -479,7 +479,7 @@ void() map_finish {
 	map_intermission_running = 1;
 	CLIENT_FOR_EACH(e) {
 		e.solid = VM_SOLID_NOT;
-		e.movetype = MOVETYPE_NONE;
+		e.movetype = VM_MOVETYPE_NONE;
 		e.takedamage = DAMAGE_NO;
 		if (e.weaponentity) {
 			e.weaponentity.effects = EFFECT_NODRAW;

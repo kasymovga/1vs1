@@ -103,7 +103,7 @@ void(void) weapon_grenadelauncher_attack {
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, (g_balance_grenadelauncher_primary_bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
 	projectile_setup(gren, weapon_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
-			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force, 1, (g_balance_grenadelauncher_primary_bounce ? MOVETYPE_BOUNCE : MOVETYPE_TOSS));
+			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force, 1, (g_balance_grenadelauncher_primary_bounce ? VM_MOVETYPE_BOUNCE : VM_MOVETYPE_TOSS));
 	gren.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;
@@ -126,7 +126,7 @@ void(void) weapon_grenadelauncher_attack2 {
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
 	projectile_setup(gren, weapon_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER | HITTYPE_SECONDARY, g_balance_grenadelauncher_secondary_damage,
-			g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, g_balance_grenadelauncher_secondary_force, 1, MOVETYPE_BOUNCE);
+			g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, g_balance_grenadelauncher_secondary_force, 1, VM_MOVETYPE_BOUNCE);
 	gren.nextthink = time + g_balance_grenadelauncher_secondary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;

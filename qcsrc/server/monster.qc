@@ -208,7 +208,7 @@ void monster_drop_item(float item_code, string _model, string _sound, string _na
 	self.classname = "item"; //force drop even if g_pickup_nodrop 1
 	self.noalign = 1; //prevent drop to floor
 	item_start("", _model, _sound, 15, 0, _name, item_code, 0, item_generic_pickupevalfunc, 100);
-	self.movetype = MOVETYPE_TOSS;
+	self.movetype = VM_MOVETYPE_TOSS;
 	self.classname = "droppeditem"; //force item removing on pickup
 	self = e;
 }
@@ -261,7 +261,7 @@ void(void) monster_die_think {
 
 void monster_die_animated() {
 	monster_common_composite_anim(self.anim_die1, self.anim_die1, self.anim_die1, FALSE, FALSE);
-	self.movetype = MOVETYPE_TOSS;
+	self.movetype = VM_MOVETYPE_TOSS;
 	self.solid = VM_SOLID_CORPSE;
 	self.cnt = time + 5;
 	self.nextthink = time;
@@ -392,7 +392,7 @@ vector monster_move_swim(float _speed, float blend_factor) {
 }
 
 void monster_move_fly_idle(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter, float beakspeed) {
-	self.movetype = MOVETYPE_FLY;
+	self.movetype = VM_MOVETYPE_FLY;
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;

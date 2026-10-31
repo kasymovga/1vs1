@@ -22,7 +22,7 @@ void(void) func_portable_drop {
 	self.func_portable_caried.cnt = -1;
 	setorigin(e, pos);
 	e.solid = VM_SOLID_BSP;
-	e.movetype = MOVETYPE_TOSS;
+	e.movetype = VM_MOVETYPE_TOSS;
 	e.effects &= ~EFFECT_NODRAW;
 	e.flags = 0;
 }
@@ -38,7 +38,7 @@ void(entity e) func_portable_pick {
 	e2.enemy = e;
 	e.velocity = '0 0 0';
 	e.effects |= EFFECT_NODRAW;
-	e.movetype = MOVETYPE_NONE;
+	e.movetype = VM_MOVETYPE_NONE;
 	e.groundentity = NULL;
 	e.flags = 0;
 	e.solid = VM_SOLID_NOT;
@@ -99,7 +99,7 @@ void(float killed) func_portable_player_clear {
 
 void(void) spawnfunc_func_portable {
 	self.solid = VM_SOLID_BSP;
-	self.movetype = MOVETYPE_TOSS;
+	self.movetype = VM_MOVETYPE_TOSS;
 	self.pushfactor = (self.pushfactor ? self.pushfactor : 1);
 	model_init(VM_SOLID_BSP);
 	if (!func_portable_init_done) {

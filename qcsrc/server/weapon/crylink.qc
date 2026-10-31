@@ -113,7 +113,7 @@ void(void) weapon_crylink_attack {
 		proj.enemy = prevproj;
 		prevproj.aiment = proj;
 		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK_BIG, WEAPON_CRYLINK, g_balance_crylink_primary_damage,
-				g_balance_crylink_primary_edgedamage, g_balance_crylink_primary_radius, g_balance_crylink_primary_force, 0, (g_balance_crylink_primary_bouncedamagefactor ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
+				g_balance_crylink_primary_edgedamage, g_balance_crylink_primary_radius, g_balance_crylink_primary_force, 0, (g_balance_crylink_primary_bouncedamagefactor ? VM_MOVETYPE_BOUNCEMISSILE : VM_MOVETYPE_FLY));
 		proj.lip = g_balance_crylink_primary_bouncedamagefactor;
 		s = '0 0 0';
 		if (counter == 0)
@@ -164,7 +164,7 @@ void(void) weapon_crylink_attack2 {
 		proj.enemy = prevproj;
 		prevproj.aiment = proj;
 		projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_CRYLINK, WEAPON_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
-				g_balance_crylink_secondary_edgedamage, g_balance_crylink_secondary_radius, g_balance_crylink_secondary_force, 0, (g_balance_crylink_secondary_bouncedamagefactor ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
+				g_balance_crylink_secondary_edgedamage, g_balance_crylink_secondary_radius, g_balance_crylink_secondary_force, 0, (g_balance_crylink_secondary_bouncedamagefactor ? VM_MOVETYPE_BOUNCEMISSILE : VM_MOVETYPE_FLY));
 		proj.lip = g_balance_crylink_secondary_bouncedamagefactor;
 		if (g_sideview)
 			proj.velocity = (weapon_shotdir + (((counter + 0.5) / g_balance_crylink_secondary_shots) * 2 - 1) * v_up * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;

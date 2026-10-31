@@ -16,7 +16,7 @@ void() monster_bat_hunt {
 		return;
 
 	anim_update(self);
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	vector v;
 	float dofire;
 	dofire = FALSE;
@@ -33,7 +33,7 @@ void() monster_bat_hunt {
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/crylink_fire.wav", VOL_BASE, ATTN_NORM);
 		entity gren = monster_projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
-		projectile_setup(gren,_shotorg, EFFECT_IMPACT_CRYLINK_BIG, WEAPON_CRYLINK, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, MOVETYPE_FLY);
+		projectile_setup(gren,_shotorg, EFFECT_IMPACT_CRYLINK_BIG, WEAPON_CRYLINK, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0, VM_MOVETYPE_FLY);
 		gren.nextthink = time + 5;
 		gren.think = projectile_think2use;
 		gren.use = projectile_explode;
@@ -53,7 +53,7 @@ void() monster_bat_walk {
 	if (monster_walk_prepare(3000, 500, 0, 1, 1, monster_bat_idle, 100))
 		return;
 
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	anim_update(self);
 	vector v = monster_move_fly(300, 5);
 	v = vectoangles(v);
@@ -62,7 +62,7 @@ void() monster_bat_walk {
 }
 
 void() monster_bat_spawn {
-	self.movetype = MOVETYPE_FLY;
+	self.movetype = VM_MOVETYPE_FLY;
 	self.species = SPECIES_ALIEN;
 	self.netname = "Hell Bat";
 	monster_set_fly();

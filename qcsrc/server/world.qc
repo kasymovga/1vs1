@@ -824,7 +824,7 @@ void(void) world_creature_frame {
 	oldself = self;
 	self = findfloat(world, iscreature, TRUE);
 	while (self) {
-		if (self.movetype != MOVETYPE_NOCLIP) {
+		if (self.movetype != VM_MOVETYPE_NOCLIP) {
 			if (self.waterlevel) {
 				if (!(self.flags & FLAG_INWATER)) {
 					self.flags |= FLAG_INWATER;
@@ -900,7 +900,7 @@ void(void) world_frame_start { //called by engine
 	projectile_check();
 	entity e;
 	entity oldself = self;
-	for (e = world; (e = findfloat(e, movetype, MOVETYPE_QCWALK)); ) {
+	for (e = world; (e = findfloat(e, movetype, VM_MOVETYPE_QCWALK)); ) {
 		if (e.think)
 		if (e.nextthink)
 		if (e.nextthink <= time) {

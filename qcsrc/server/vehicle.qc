@@ -269,7 +269,7 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	if (other.classname != "player")
 		return FALSE;
 
-	if (other.movetype == MOVETYPE_FOLLOW || other.movetype == MOVETYPE_NONE)
+	if (other.movetype == VM_MOVETYPE_FOLLOW || other.movetype == VM_MOVETYPE_NONE)
 		return FALSE;
 
 	if not(player_can_fire(other, FALSE))
@@ -342,7 +342,7 @@ void(void(void) think_func, void(void) touch_func) vehicle_stdproc_spawn {
 	self.angles = self.enemy.angles;
 	self.takedamage = DAMAGE_AIM;
 	self.solid = VM_SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_PHYSICS;
+	self.movetype = VM_MOVETYPE_PHYSICS;
 	self.deadflag = DEAD_NO;
 	self.health = self.health_max;
 	self.vehicle_shield = self.shield_max;
@@ -371,7 +371,7 @@ void(void(void) think_func) vehicle_stdproc_die {
 		self.think = think_func;
 		self.nextthink = time;
 	}
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	self.dphitcontentsmask = 0;
 }
 

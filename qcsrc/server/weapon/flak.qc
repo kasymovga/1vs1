@@ -67,7 +67,7 @@ void(void) weapoon_flak_pellet_touch {
 entity(vector start, vector dir, float spread_side, float spread_ver, float pSpeed, float speed_up, float _damage, float force, float dtype, float gravityfactor, float bounces) weapon_flak_pellet {
 	entity proj;
 	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
-	projectile_setup(proj, start, 0, dtype, _damage, 0, 0, force, gravityfactor, (bounces ? MOVETYPE_BOUNCEMISSILE : MOVETYPE_FLY));
+	projectile_setup(proj, start, 0, dtype, _damage, 0, 0, force, gravityfactor, (bounces ? VM_MOVETYPE_BOUNCEMISSILE : VM_MOVETYPE_FLY));
 	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + random_2() * spread_side * v_right + random_2() * spread_ver * v_up) * pSpeed + '0 0 1' * speed_up;
@@ -160,7 +160,7 @@ void(void) weapon_flak_bomb {
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, PROJECTILE_RM_FLAK_BOMB, TRUE, self);
 	projectile_setup(gren, weapon_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_SUPERSHOTGUN | HITTYPE_SECONDARY, 0,
-			0, 0, 0, 1, MOVETYPE_TOSS);
+			0, 0, 0, 1, VM_MOVETYPE_TOSS);
 	gren.nextthink = time + g_balance_flak_secondary_bomb_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_flak_bomb_explode;

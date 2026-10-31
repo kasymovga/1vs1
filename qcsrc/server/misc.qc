@@ -38,7 +38,7 @@ void(entity e, entity to, string tag) misc_attach_sameorigin {
 }
 
 void(entity e, entity to) misc_follow_sameorigin {
-    e.movetype = MOVETYPE_FOLLOW; // make the hole follow
+    e.movetype = VM_MOVETYPE_FOLLOW; // make the hole follow
     e.aiment = to; // make the hole follow bmodel
     e.punchangle = to.angles; // the original angles of bmodel
     e.view_ofs = e.origin - to.origin; // relative origin
@@ -62,7 +62,7 @@ void(void) misc_follow_init {
 		}
 	} else {
 		if(self.spawnflags & 2) {
-			dst.movetype = MOVETYPE_FOLLOW;
+			dst.movetype = VM_MOVETYPE_FOLLOW;
 			dst.aiment = src;
 			// dst.punchangle = '0 0 0'; // keep unchanged
 			dst.view_ofs = dst.origin;
@@ -91,7 +91,7 @@ void misc_spikeshooter_spike_touch(void) {
 void misc_spikeshooter_use(void) {
 	entity spike = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, world);
 	projectile_setup(spike, self.origin, EFFECT_IMPACT_BULLET, WEAPON_UZI, 20,
-			20, 0, 20, 0, MOVETYPE_FLY);
+			20, 0, 20, 0, VM_MOVETYPE_FLY);
 	spike.velocity = self.movedir * 800;
 	spike.think = stdproc_remove;
 	spike.nextthink = time + 10;
@@ -371,7 +371,7 @@ void(void) spawnfunc_misc_barrel_explosive {
 	self.solid = VM_SOLID_BBOX;
 	self.pushfactor = 0.5;
 	self.friction = 0.5;
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.dmg = 100;
 	self.health = 50;
 	self.cnt = particleeffectnum("rocket_explode");

@@ -105,7 +105,7 @@ void(string mdlname, vector org, vector vconst, vector vrand, float specnum, flo
 	gib_latest = gib;
 	gib_count++;
 	gib.classname = "gib";
-	gib.move_movetype = MOVETYPE_BOUNCE;
+	gib.move_movetype = VM_MOVETYPE_BOUNCE;
 	gib.gravity = 1;
 	gib.solid = VM_SOLID_TRIGGER;
 	gib.cnt = specnum;

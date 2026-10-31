@@ -119,7 +119,7 @@ float(entity wz, entity e) warpzone_teleport {
 		o1 += w2.warpzone_forward * (0.125 - min(d, 0));
 	}
 	// put him out of solid
-	if (e.movetype != MOVETYPE_NOCLIP && e.classname != "observer") {
+	if (e.movetype != VM_MOVETYPE_NOCLIP && e.classname != "observer") {
 		if (warpzone_move_out_of_solid(wz, e, o1 - ofs, ofs)) {
 			o1 = warpzone_move_out_of_solid_origin + ofs;
 		} else
@@ -138,7 +138,7 @@ float(entity wz, entity e) warpzone_teleport {
 	if not(e.flags & FLAG_PROJECTILE) {
 		entity h;
 		for (h = world; (h = findentity(h, aiment, e)); ) {
-			if (h.movetype == MOVETYPE_FOLLOW) {
+			if (h.movetype == VM_MOVETYPE_FOLLOW) {
 				warpzone_refsys_add(h, wz);
 			}
 		}
@@ -292,7 +292,7 @@ void(void) warpzone_touch {
 	if (!warpzone_box_touches_brush(other.absmin, other.absmax, self, other))
 		return;
 
-	if (other.movetype == MOVETYPE_FOLLOW || other.tag_entity)
+	if (other.movetype == VM_MOVETYPE_FOLLOW || other.tag_entity)
 		return;
 
 	if (warpzone_plane_dist(self, other.origin + warpzone_entity_origin_offset(other)) >= 0) {// wrong side of the trigger_warpzone (don't teleport yet)
@@ -318,7 +318,7 @@ void(void) warpzone_touch {
 		return;
 	}
 	// FIXME needs a better check to know what is safe to teleport and what not
-	if (other.movetype == MOVETYPE_NONE)
+	if (other.movetype == VM_MOVETYPE_NONE)
 		return;
 
 	if (other.classname == "observer") {
@@ -848,7 +848,7 @@ void(void) warpzone_spawn {
 	else
 		setsize(self, self.mins, self.maxs);
 
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	self.solid = VM_SOLID_TRIGGER;
 	self.model = "";
 	if (m != "") {

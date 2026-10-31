@@ -570,7 +570,7 @@ void(void) item_reset {
 		marker_Kill(self.waypointsprite_attached);
 
 	item_show(self, (self.team ? (self.state ? -1 : 1) : !self.state));
-	if (self.movetype == MOVETYPE_NONE)
+	if (self.movetype == VM_MOVETYPE_NONE)
 		setorigin (self, self.origin);
 	else
 		setorigin (self, self.spawnorigin);
@@ -694,7 +694,7 @@ void(void) item_drop_to_floor {
 	trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 4096', TRACE_MOVE_NOMONSTERS, self);
 	setorigin(self, trace_endpos);
 	if (trace_fraction < 1 && !trace_ent) { //static surface
-		self.movetype = MOVETYPE_NONE;
+		self.movetype = VM_MOVETYPE_NONE;
 	} else {
 		self.spawnorigin = self.origin;
 	}
@@ -713,7 +713,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 
 		self.reset = stdproc_remove;
 		// it's a dropped weapon
-		self.movetype = MOVETYPE_TOSS;
+		self.movetype = VM_MOVETYPE_TOSS;
 		if (g_pickup_dropped_lifetime > 0)
 			entity_fade_setup(self, time + g_pickup_dropped_lifetime, 1);
 
@@ -739,9 +739,9 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 		if (self.spawnflags & 1)
 			self.noalign = 1;
 		if (self.noalign)
-			self.movetype = MOVETYPE_NONE;
+			self.movetype = VM_MOVETYPE_NONE;
 		else
-			self.movetype = MOVETYPE_TOSS;
+			self.movetype = VM_MOVETYPE_TOSS;
 
 		// do item filtering according to game mode and other things
 		if (!self.noalign) {

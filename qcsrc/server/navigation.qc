@@ -470,7 +470,7 @@ void(entity e, float f, float rangebias) navigation_routerating {
 	if (checkpvs(o, e)) {
 		vector v1;
 		vector v2;
-		if (e.movetype == MOVETYPE_WALK || e.movetype == MOVETYPE_QCWALK) {
+		if (e.movetype == VM_MOVETYPE_WALK || e.movetype == VM_MOVETYPE_QCWALK) {
 			trace_box(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', TRACE_MOVE_NORMAL, e);
 			v1 = trace_endpos + e.mins;
 			v2 = trace_endpos + e.maxs;

@@ -291,7 +291,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.health = 1;
 	self.takedamage = DAMAGE_NO;
 	self.solid = VM_SOLID_TRIGGER;
-	self.movetype = MOVETYPE_QCWALK;
+	self.movetype = VM_MOVETYPE_QCWALK;
 	self.flags = (FLAG_CLIENT | FLAG_NOTARGET);
 	self.armorvalue = 0;
 	self.effects = 0;

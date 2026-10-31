@@ -163,7 +163,7 @@ void nadget_GenericProjectile_Touch(void) {
         return;
 
     if(trace_ent && trace_ent.solid > VM_SOLID_TRIGGER)
-	if (self.movetype != MOVETYPE_FOLLOW && self.movetype != MOVETYPE_NONE)
+	if (self.movetype != VM_MOVETYPE_FOLLOW && self.movetype != VM_MOVETYPE_NONE)
         projectile_update_next_frame(self);
 
     if(projectile_no_impact_check()) {
@@ -316,8 +316,8 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
         e.angles_y = va_y - 90;
     }
 
-	if (self.movetype != MOVETYPE_NONE)
-	if (self.movetype != MOVETYPE_FOLLOW) { //not already sticked
+	if (self.movetype != VM_MOVETYPE_NONE)
+	if (self.movetype != VM_MOVETYPE_FOLLOW) { //not already sticked
 		sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
 		float lt_override = GRENVAR(e.hg_type, (e.hg_adept ? "_adept_stick_lifetime_override" : "stick_lifetime_override"));
 		if(lt_override > 0)
@@ -557,7 +557,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
 		gren.hg_detonatedelay = GV("detonate_delay");
 		gren.hg_detonateready = time + GV("detonate_threshold");
 	}
-	if (gren.movetype == MOVETYPE_TOSS || gren.movetype == MOVETYPE_BOUNCE)
+	if (gren.movetype == VM_MOVETYPE_TOSS || gren.movetype == VM_MOVETYPE_BOUNCE)
 		gren.gravity = GV("gravity");
 
     setorigin(gren, weapon_shotorg);

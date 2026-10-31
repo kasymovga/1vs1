@@ -46,7 +46,7 @@ void(void) weapon_hook_explode2 {
 	self.nextthink = time;
 	self.teleport_time = time;
 	self.cnt = 1;
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 }
 
 void(void) weapon_hook_touch2 {
@@ -62,7 +62,7 @@ void(void) weapon_hook_attack2 {
 	weapon_setup_shot (self, 4, "weapons/hookbomb_fire.wav", 0);
 	gren = projectile(TRUE, PROJECTILE_HOOKBOMB, TRUE, self);
 	projectile_setup(gren, weapon_shotorg, 0, WEAPON_HOOK | HITTYPE_SECONDARY, g_balance_hook_secondary_damage,
-			g_balance_hook_secondary_edgedamage, g_balance_hook_secondary_radius, g_balance_hook_secondary_force, g_balance_hook_secondary_gravity, MOVETYPE_TOSS);
+			g_balance_hook_secondary_edgedamage, g_balance_hook_secondary_radius, g_balance_hook_secondary_force, g_balance_hook_secondary_gravity, VM_MOVETYPE_TOSS);
 	gren.nextthink = time + g_balance_hook_secondary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_hook_explode2;

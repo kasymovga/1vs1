@@ -271,23 +271,23 @@ void(void) physics_player_pre { //called by engine
 			allowed_to_move = 1;
 
 		//cheats
-		if (self.movetype == MOVETYPE_NOCLIP) {
+		if (self.movetype == VM_MOVETYPE_NOCLIP) {
 			self.flags &= ~FLAG_FLY;
 			cheat_assign(self, flags, FLAG_SWIM, "NOCLIP");
-			self.movetype = MOVETYPE_QCWALK;
-		} else if (self.movetype == MOVETYPE_FLY) {
+			self.movetype = VM_MOVETYPE_QCWALK;
+		} else if (self.movetype == VM_MOVETYPE_FLY) {
 			self.flags &= ~FLAG_SWIM;
 			cheat_assign(self, flags, FLAG_FLY, "FLY");
-			self.movetype = MOVETYPE_QCWALK;
-		} else if (self.movetype == MOVETYPE_FOLLOW) {
+			self.movetype = VM_MOVETYPE_QCWALK;
+		} else if (self.movetype == VM_MOVETYPE_FOLLOW) {
 		} else if (allowed_to_move) {
-			self.movetype = MOVETYPE_QCWALK;
+			self.movetype = VM_MOVETYPE_QCWALK;
 		} else {
 			physics_velocity = '0 0 0';
-			self.movetype = MOVETYPE_NONE;
+			self.movetype = VM_MOVETYPE_NONE;
 		}
 	} else if (self.classname == "observer") {
-		self.movetype = MOVETYPE_QCWALK;
+		self.movetype = VM_MOVETYPE_QCWALK;
 		self.flags |= FLAG_SWIM;
 		self.flags &= ~FLAG_ONGROUND;
 	}
@@ -658,7 +658,7 @@ float(entity to, float sf) physics_send {
 	if (self.ladder_entity.classname == "func_water") sf |= 64;
 	if (self.crouch) sf |= 256;
 	if (self.last_maxspeedmod != 1) sf |= 512;
-	if (self.movetype != MOVETYPE_QCWALK) sf |= 1024;
+	if (self.movetype != VM_MOVETYPE_QCWALK) sf |= 1024;
 	if (self.gravity && self.gravity != 1) sf |= 2048;
 	if (self.teleport_time - time >= 0) sf |= 4096;
 	if (self.lastwj > 0) sf |= 8192;
@@ -674,7 +674,7 @@ float(entity to, float sf) physics_send {
 	}
 	if (self.groundentity)
 	if (self.flags & FLAG_ONGROUND_OR_SLICK)
-	if (self.groundentity.movetype != MOVETYPE_NONE)
+	if (self.groundentity.movetype != VM_MOVETYPE_NONE)
 	if (self.groundentity.solid == VM_SOLID_BSP) {
 		sf |= 32768;
 	}

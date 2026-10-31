@@ -145,7 +145,7 @@ void(vector push) physics_move_push_entity_trace {
 	end = self.move_origin + push;
 	if (self.move_nomonsters)
 		type = max(0, self.move_nomonsters);
-	else if (self.move_movetype == MOVETYPE_FLYMISSILE)
+	else if (self.move_movetype == VM_MOVETYPE_FLYMISSILE)
 		type = TRACE_MOVE_MISSILE;
 	else if (self.solid == VM_SOLID_TRIGGER || self.solid == VM_SOLID_NOT)
 		type = TRACE_MOVE_NOMONSTERS;
@@ -182,7 +182,7 @@ void(float dt) physics_move_toss { // SV_Physics_Toss
 	}
 	self.move_suspendedinair = FALSE;
 	//physics_move_check_velocity();
-	if (self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) {
+	if (self.move_movetype == VM_MOVETYPE_BOUNCE || self.move_movetype == VM_MOVETYPE_TOSS) {
 		self.move_didgravity = TRUE;
 		if (self.gravity)
 			self.move_velocity_z = self.move_velocity_z - dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
@@ -209,10 +209,10 @@ void(float dt) physics_move_toss { // SV_Physics_Toss
 			break;
 
 		movetime *= 1 - min(1, trace_fraction);
-		if (self.move_movetype == MOVETYPE_BOUNCEMISSILE) {
+		if (self.move_movetype == VM_MOVETYPE_BOUNCEMISSILE) {
 			self.move_velocity = physics_move_clip_velocity(self.move_velocity, trace_plane_normal, 2.0);
 			self.move_flags &= ~FLAG_ONGROUND;
-		} else if (self.move_movetype == MOVETYPE_BOUNCE) {
+		} else if (self.move_movetype == VM_MOVETYPE_BOUNCE) {
 			float d, bouncefac, bouncestop;
 			bouncefac = self.move_bounce_factor;
 			if not(bouncefac) bouncefac = 0.5;
@@ -246,7 +246,7 @@ void(float dt) physics_move_toss { // SV_Physics_Toss
 				self.move_flags &= ~FLAG_ONGROUND;
 		}
 		// DP revision 8905 (just, WHY...)
-		if (self.move_movetype == MOVETYPE_BOUNCEMISSILE)
+		if (self.move_movetype == VM_MOVETYPE_BOUNCEMISSILE)
 			break;
 
 		// DP revision 8918 (WHY...)
@@ -259,31 +259,31 @@ void(float dt) physics_move_toss { // SV_Physics_Toss
 void(float movedt) physics_move_frame {
 	self.move_didgravity = FALSE;
 	switch (self.move_movetype) {
-	case MOVETYPE_TOSS:
-	case MOVETYPE_BOUNCE:
-	case MOVETYPE_BOUNCEMISSILE:
-	case MOVETYPE_FLYMISSILE:
-	case MOVETYPE_FLY:
+	case VM_MOVETYPE_TOSS:
+	case VM_MOVETYPE_BOUNCE:
+	case VM_MOVETYPE_BOUNCEMISSILE:
+	case VM_MOVETYPE_FLYMISSILE:
+	case VM_MOVETYPE_FLY:
 		physics_move_toss(movedt);
 		break;
-	case MOVETYPE_PUSH:
+	case VM_MOVETYPE_PUSH:
 		error("SV_Physics_Pusher not implemented");
 		break;
-	case MOVETYPE_NONE:
+	case VM_MOVETYPE_NONE:
 		break;
-	case MOVETYPE_FOLLOW:
+	case VM_MOVETYPE_FOLLOW:
 		error("SV_Physics_Follow not implemented");
 		break;
-	case MOVETYPE_NOCLIP:
+	case VM_MOVETYPE_NOCLIP:
 		//physics_move_check_water();
 		self.move_origin = self.move_origin + server_ticrate * self.move_velocity;
 		self.move_angles = self.move_angles + server_ticrate * self.move_avelocity;
 		//physics_move_link_edict(FALSE);
 		break;
-	case MOVETYPE_STEP:
+	case VM_MOVETYPE_STEP:
 		error("SV_Physics_Step not implemented");
 		break;
-	case MOVETYPE_WALK:
+	case VM_MOVETYPE_WALK:
 		error("SV_Physics_Walk not implemented");
 		break;
 	}
@@ -293,7 +293,7 @@ void() physics_move_no_match_server { // optimized
 	float movedt;
 	movedt = time - self.move_time;
 	self.move_time = time;
-	//self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FLAG_ONGROUND));
+	//self.move_didgravity = ((self.move_movetype == VM_MOVETYPE_BOUNCE || self.move_movetype == VM_MOVETYPE_TOSS) && !(self.move_flags & FLAG_ONGROUND));
 	// we use the field as set by the last run of this
 	physics_move_frame(movedt);
 	if (wasfreed(self))
@@ -316,7 +316,7 @@ void() physics_move_match_server { // SV_Physics_Entity
 	n = max(0, floor(dt / server_ticrate));
 	dt -= n * server_ticrate;
 	self.move_time += n * server_ticrate;
-	//self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FLAG_ONGROUND));
+	//self.move_didgravity = ((self.move_movetype == VM_MOVETYPE_BOUNCE || self.move_movetype == VM_MOVETYPE_TOSS) && !(self.move_flags & FLAG_ONGROUND));
 	// we use the field as set by the last run of this
 	for (i = 0; i < n; ++i) {
 		physics_move_frame(movedt);
@@ -324,7 +324,7 @@ void() physics_move_match_server { // SV_Physics_Entity
 			return;
 	}
 	self.avelocity = self.move_avelocity;
-	if (dt > 0 && self.move_movetype != MOVETYPE_NONE && !(self.move_flags & FLAG_ONGROUND)) {
+	if (dt > 0 && self.move_movetype != VM_MOVETYPE_NONE && !(self.move_flags & FLAG_ONGROUND)) {
 		// now continue the move from move_time to time
 		self.velocity = self.move_velocity;
 		if (self.move_didgravity) {
@@ -334,7 +334,7 @@ void() physics_move_match_server { // SV_Physics_Entity
 				self.velocity_z = self.velocity_z - dt * getstatf(STAT_MOVEVARS_GRAVITY);
 		}
 		self.angles = self.move_angles + dt * self.avelocity;
-		if (self.movetype != MOVETYPE_NOCLIP) {
+		if (self.movetype != VM_MOVETYPE_NOCLIP) {
 			physics_move_push_entity_trace(dt * self.velocity);
 			if (!trace_startsolid)
 				setorigin(self, trace_endpos);

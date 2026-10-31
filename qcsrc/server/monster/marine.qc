@@ -119,7 +119,7 @@ void() monster_marine_spawn {
 	setmodel(self.body, "models/oq/soldier.mdl");
 	setattachment(self.body, self, "");
 	setorigin(self.body, '0 0 8');
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.entremove = monster_marine_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.solid = VM_SOLID_BBOX;

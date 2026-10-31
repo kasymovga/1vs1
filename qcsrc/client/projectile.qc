@@ -7,7 +7,7 @@
 
 void(void) projectile_touch_stop {
 	self.move_velocity = self.move_avelocity = '0 0 0';
-	self.move_movetype = MOVETYPE_NONE;
+	self.move_movetype = VM_MOVETYPE_NONE;
 }
 
 .float count; // set if clientside projectile
@@ -215,10 +215,10 @@ void(float ignore) projectile_read {
 			self.move_origin = self.origin;
 			self.move_velocity = self.velocity;
 			if (f & 8) {
-				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_movetype = VM_MOVETYPE_BOUNCE;
 				self.move_touch = NULL;
 			} else {
-				self.move_movetype = MOVETYPE_TOSS;
+				self.move_movetype = VM_MOVETYPE_TOSS;
 				self.move_touch = projectile_touch_stop;
 			}
 		} else if (f & 32) { //teleported
@@ -420,15 +420,15 @@ void(float ignore) projectile_read {
 	}
 	if (self.count & 128) {
 		if (self.gravity) {
-			if (self.move_movetype == MOVETYPE_FLY)
-				self.move_movetype = MOVETYPE_TOSS;
-			else if (self.move_movetype == MOVETYPE_BOUNCEMISSILE)
-				self.move_movetype = MOVETYPE_BOUNCE;
+			if (self.move_movetype == VM_MOVETYPE_FLY)
+				self.move_movetype = VM_MOVETYPE_TOSS;
+			else if (self.move_movetype == VM_MOVETYPE_BOUNCEMISSILE)
+				self.move_movetype = VM_MOVETYPE_BOUNCE;
 		} else {
-			if (self.move_movetype == MOVETYPE_TOSS)
-				self.move_movetype = MOVETYPE_FLY;
-			else if (self.move_movetype == MOVETYPE_BOUNCE)
-				self.move_movetype = MOVETYPE_BOUNCEMISSILE;
+			if (self.move_movetype == VM_MOVETYPE_TOSS)
+				self.move_movetype = VM_MOVETYPE_FLY;
+			else if (self.move_movetype == VM_MOVETYPE_BOUNCE)
+				self.move_movetype = VM_MOVETYPE_BOUNCEMISSILE;
 		}
 	} else
 		interpolate_note();

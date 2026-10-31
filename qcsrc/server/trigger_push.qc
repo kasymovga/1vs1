@@ -67,12 +67,12 @@ void(void) trigger_push_touch {
 	if (other.flags & FLAG_PROJECTILE) {
 		other.angles = vectoangles (other.velocity);
 		switch(other.movetype) {
-			case MOVETYPE_FLY:
-				other.movetype = MOVETYPE_TOSS;
+			case VM_MOVETYPE_FLY:
+				other.movetype = VM_MOVETYPE_TOSS;
 				other.gravity = 1;
 				break;
-			case MOVETYPE_BOUNCEMISSILE:
-				other.movetype = MOVETYPE_BOUNCE;
+			case VM_MOVETYPE_BOUNCEMISSILE:
+				other.movetype = VM_MOVETYPE_BOUNCE;
 				other.gravity = 1;
 				break;
 		}
@@ -146,7 +146,7 @@ void(void) trigger_push_findtarget {
 			waypoint_spawnforteleporter(self, self.dest, flighttime);
 		}
 	}
-	if (g_trigger_push_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE && self.modelindex) {
+	if (g_trigger_push_prediction && self.enemy && self.enemy.movetype == VM_MOVETYPE_NONE && self.modelindex) {
 		net_link_entity(self, TRUE, 0, trigger_push_prediction_send);
 	}
 }

@@ -67,7 +67,7 @@ float(vector org, vector m1, vector m2, entity targ, float shotspeed, float shot
 			targ.solid = savesolid;
 			// make it disappear
 			tracetossfaketarget.solid = VM_SOLID_NOT;
-			tracetossfaketarget.movetype = MOVETYPE_NONE;
+			tracetossfaketarget.movetype = VM_MOVETYPE_NONE;
 			tracetossfaketarget.model = "";
 			tracetossfaketarget.modelindex = 0;
 			// relink to remove it from physics considerations
@@ -80,7 +80,7 @@ float(vector org, vector m1, vector m2, entity targ, float shotspeed, float shot
 	targ.solid = savesolid;
 	// make it disappear
 	tracetossfaketarget.solid = VM_SOLID_NOT;
-	tracetossfaketarget.movetype = MOVETYPE_NONE;
+	tracetossfaketarget.movetype = VM_MOVETYPE_NONE;
 	tracetossfaketarget.model = "";
 	tracetossfaketarget.modelindex = 0;
 	// relink to remove it from physics considerations

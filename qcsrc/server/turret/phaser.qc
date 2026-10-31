@@ -126,7 +126,7 @@ void(void) turret_phaser_attack {
 	beam.owner = self;
 	beam.shot_dmg = self.shot_dmg / (self.shot_speed / beam.ticrate);
 	beam.scale = (1 / self.scale) * (self.target_range / 256);
-	beam.movetype = MOVETYPE_NONE;
+	beam.movetype = VM_MOVETYPE_NONE;
 	beam.enemy = self.enemy;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = beam.shot_dmg;

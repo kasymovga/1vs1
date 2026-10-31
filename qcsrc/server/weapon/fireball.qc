@@ -134,7 +134,7 @@ void(void) weapon_fireball_attack2 {
 	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_FIREBALL, WEAPON_FIREBALL | HITTYPE_SECONDARY, g_balance_fireball_secondary_damage,
-			g_balance_fireball_secondary_edgedamage, g_balance_fireball_secondary_radius, g_balance_fireball_secondary_force, 0, MOVETYPE_FLY);
+			g_balance_fireball_secondary_edgedamage, g_balance_fireball_secondary_radius, g_balance_fireball_secondary_force, 0, VM_MOVETYPE_FLY);
 	proj.pushltime = time + g_balance_fireball_secondary_lifetime;
 	proj.use = weapon_fireball_explode;
 	proj.think = weapon_fireball_think;
@@ -246,7 +246,7 @@ void(void) weapon_fireball_attack1 {
 	weapon_shotorg = trace_endpos;
 	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
-	projectile_setup(proj, weapon_shotorg, 0, WEAPON_FIREBALL, g_balance_fireball_primary_damage, 0, 0, 0, 1, MOVETYPE_BOUNCE);
+	projectile_setup(proj, weapon_shotorg, 0, WEAPON_FIREBALL, g_balance_fireball_primary_damage, 0, 0, 0, 1, VM_MOVETYPE_BOUNCE);
 	proj.solid = VM_SOLID_CORPSE;
 	proj.touch = weapon_fireball_mine_touch;
 	proj.think = weapon_fireball_mine_think;

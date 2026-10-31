@@ -187,7 +187,7 @@ void(void) spawnfunc_func_breakable {
 
 	self.oldsolid = self.solid;
 	self.max_health = self.health;
-	// yes, I know, MOVETYPE_NONE is not available here, not that one would want it here anyway
+	// yes, I know, VM_MOVETYPE_NONE is not available here, not that one would want it here anyway
 	if (self.mdl != "")
 		self.cnt = particleeffectnum(self.mdl);
 

@@ -178,7 +178,7 @@ void(void) turret_hk_missile_think {
 	if (self.cnt < time) {
 		self.cnt = time + 0.25;
 		self.nextthink = 0;
-		self.movetype         = MOVETYPE_BOUNCE;
+		self.movetype         = VM_MOVETYPE_BOUNCE;
 		sound(self, CHAN_PROJECTILE, "", 0.4 * VOL_BASE, ATTN_NORM);
 		return;
 	}
@@ -196,7 +196,7 @@ void(void) turret_hk_attack {
 	//entity flash2;
 	sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 	missile                  = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, fly sound
-	projectile_setup(missile, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
+	projectile_setup(missile, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, VM_MOVETYPE_FLY);
 	missile.solid            = VM_SOLID_BBOX;
 	setorigin(missile, self.tur_shotorg);
 	missile.scale            = 1;

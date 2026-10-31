@@ -56,7 +56,7 @@ void(void) trigger_solid_brush_init {
 		entity_movedir_setup();
 
 	model_setup();
-	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
+	self.movetype = VM_MOVETYPE_NONE; // why was this PUSH? -div0
 	if (!g_trigger_collisions_exact || self.solid < 0)
 		self.modelindex = 0;
 

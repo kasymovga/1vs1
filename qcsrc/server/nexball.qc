@@ -276,7 +276,7 @@ void(entity plyr, entity ball) nexball_give_ball {
 	plyr.effects |= g_nexball_basketball_effects_default;
 	ball.effects &= ~g_nexball_basketball_effects_default;
 	ball.velocity = '0 0 0';
-	ball.movetype = MOVETYPE_NONE;
+	ball.movetype = VM_MOVETYPE_NONE;
 	ball.touch = stdproc_nothing;
 	ball.effects |= EFFECT_NOSHADOW;
 	ball.scale = (ball.scale ? (ball.scale * 0.75) : 0.75); // scale down.
@@ -295,7 +295,7 @@ void(entity ball, vector org, vector vel) nexball_drop_ball {
 	ball.owner.effects &= ~g_nexball_basketball_effects_default;
 	setattachment(ball, world, "");
 	setorigin (ball, org);
-	ball.movetype = MOVETYPE_BOUNCE;
+	ball.movetype = VM_MOVETYPE_BOUNCE;
 	ball.flags &= ~FLAG_ONGROUND;
 	ball.scale = ball.dmg;
 	ball.velocity = vel;
@@ -318,9 +318,9 @@ void(void) nexball_ball_init {
 	if (map_finished) return;
 	self.flags &= ~FLAG_ONGROUND;
 	if (self.classname == "nexball_hockey")
-		self.movetype = MOVETYPE_BOUNCEMISSILE;
+		self.movetype = VM_MOVETYPE_BOUNCEMISSILE;
 	else
-		self.movetype = MOVETYPE_BOUNCE;
+		self.movetype = VM_MOVETYPE_BOUNCE;
 	if (self.classname == "nexball_basketball")
 		self.touch = nexball_basketball_touch;
 	else if (self.classname == "nexball_football")
@@ -350,7 +350,7 @@ void(void) nexball_ball_reset {
 			print_all(PRINT_INFO, "The {1} held the ball for too long.", team_colored_name(self.team), "", "");
 
 		self.touch = stdproc_nothing;
-		self.movetype = MOVETYPE_NOCLIP;
+		self.movetype = VM_MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
 		self.cnt = 2;
 		self.nextthink = time;
@@ -361,7 +361,7 @@ void(void) nexball_ball_reset {
 	} else { // step 4
 		self.velocity = '0 0 0';
 		setorigin(self, self.spawnorigin); // make sure it's positioned correctly anyway
-		self.movetype = MOVETYPE_NONE;
+		self.movetype = VM_MOVETYPE_NONE;
 		self.think = nexball_ball_init;
 		self.nextthink = max(time, map_starttime) + g_nexball_delay_start;
 	}
@@ -663,7 +663,7 @@ void(void) nexball_spawn_ball {
 		self.glow_color = cvar("g_nexball_trail_color");
 		self.glow_trail = TRUE;
 	}
-	self.movetype = MOVETYPE_FLY;
+	self.movetype = VM_MOVETYPE_FLY;
 	if (!cvar("g_nexball_sound_bounce"))
 		self.noise = "";
 	else if (!self.noise)

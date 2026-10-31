@@ -234,7 +234,7 @@ void(void) teleport_findtarget {
 	n = 0;
 	for (e = world; (e = find(e, targetname, self.target)); ) {
 		++n;
-		if (e.movetype == MOVETYPE_NONE)
+		if (e.movetype == VM_MOVETYPE_NONE)
 			waypoint_spawnforteleporter(self, e.origin, 0);
 	}
 	if (n == 0) {
@@ -255,7 +255,7 @@ void(void) teleport_findtarget {
 	}
 	// now enable touch
 	self.touch = teleport_touch;
-	if (g_teleport_prediction && self.enemy && self.enemy.movetype == MOVETYPE_NONE && self.modelindex) {
+	if (g_teleport_prediction && self.enemy && self.enemy.movetype == VM_MOVETYPE_NONE && self.modelindex) {
 		net_link_entity(self, TRUE, 0, teleport_prediction_send);
 	}
 }

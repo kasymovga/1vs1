@@ -38,7 +38,7 @@ void() monster_boss1_hunt {
 		float i;
 		for (i = 0; i < 4; i++) {
 			entity gren = monster_projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
-			projectile_setup(gren,_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0.01, MOVETYPE_TOSS);
+			projectile_setup(gren,_shotorg, EFFECT_IMPACT_GRENADE, WEAPON_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0.01, VM_MOVETYPE_TOSS);
 			gren.nextthink = time + 5;
 			gren.think = projectile_think2use;
 			gren.use = projectile_explode;

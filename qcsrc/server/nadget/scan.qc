@@ -73,7 +73,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 }
 
 void(void) nadget_scan_think {
-	if (self.movetype == MOVETYPE_FOLLOW || self.movetype == MOVETYPE_NONE) {
+	if (self.movetype == VM_MOVETYPE_FOLLOW || self.movetype == VM_MOVETYPE_NONE) {
 		pointparticles(particleeffectnum("crylink_impact"), self.origin, '0 0 0', 1);
 		if (time >= self.cnt) {
 			entity e;

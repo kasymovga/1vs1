@@ -90,7 +90,7 @@ void(void) casing_read {
 		casing.move_velocity = casing.velocity + 2 * prandomvec();
 		casing.move_angles = casing.angles;
 		casing.move_avelocity = '0 250 0' + 100 * prandomvec();
-		casing.move_movetype = MOVETYPE_BOUNCE;
+		casing.move_movetype = VM_MOVETYPE_BOUNCE;
 		casing.move_touch = casing_touch;
 		casing.move_time = time;
 		casing.solid = VM_SOLID_TRIGGER;

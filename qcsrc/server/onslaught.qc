@@ -48,7 +48,7 @@ void(vector v_from, vector v_to, string smodel, float f_lifetime, float b_burn) 
 	setmodel(gib, smodel);
 	setorigin(gib, v_from);
 	gib.solid = VM_SOLID_NOT;
-	gib.movetype = MOVETYPE_BOUNCE;
+	gib.movetype = VM_MOVETYPE_BOUNCE;
 	gib.takedamage = DAMAGE_YES;
 	gib.event_damage = onslaught_gib_damage;
 	gib.health = -1;
@@ -620,7 +620,7 @@ void(void) spawnfunc_onslaught_generator {
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
 	self.solid = VM_SOLID_BBOX;
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	self.lasthealth = self.max_health = self.health = g_ons_gen_health;
 	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, '-52 -52 -14', '52 52 75');
@@ -637,7 +637,7 @@ void(void) spawnfunc_onslaught_generator {
 	self.enemy = e = spawn();
 	e.classname = "onslaught_generator_shield";
 	e.solid = VM_SOLID_NOT;
-	e.movetype = MOVETYPE_NONE;
+	e.movetype = VM_MOVETYPE_NONE;
 	e.effects = EFFECT_ADDITIVE;
 	setmodel(e, "models/onslaught/generator_shield.md3");
 	setorigin(e, self.origin);
@@ -875,7 +875,7 @@ void onslaught_controlpoint_touch() {
 	e.max_health = g_ons_cp_health;
 	e.health = g_ons_cp_buildhealth;
 	e.solid = VM_SOLID_BBOX;
-	e.movetype = MOVETYPE_NONE;
+	e.movetype = VM_MOVETYPE_NONE;
 	e.scale = 1.2;
 	setmodel(e, "models/onslaught/controlpoint_icon.md3");
 	setsize(e, '-32 -32 -32', '32 32 32');
@@ -933,7 +933,7 @@ void(void) spawnfunc_onslaught_controlpoint {
 		return;
 	}
 	self.solid = VM_SOLID_TRIGGER;
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	setorigin(self, self.origin);
 	self.touch = onslaught_controlpoint_touch;
@@ -947,7 +947,7 @@ void(void) spawnfunc_onslaught_controlpoint {
 	e.classname = "onslaught_controlpoint_shield";
 	e.scale = 0.7;
 	e.solid = VM_SOLID_NOT;
-	e.movetype = MOVETYPE_NONE;
+	e.movetype = VM_MOVETYPE_NONE;
 	e.effects = EFFECT_ADDITIVE;
 	setmodel(e, "models/onslaught/controlpoint_shield.md3");
 	setorigin(e, self.origin);

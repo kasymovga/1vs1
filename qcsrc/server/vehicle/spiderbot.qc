@@ -73,7 +73,7 @@ void(void) vehicle_spiderbot_rocket_do {
 	missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
 	projectile_setup(missile, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire")), EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER,
 			g_vehicle_spiderbot_rocket_damage, g_vehicle_spiderbot_rocket_edgedamage, g_vehicle_spiderbot_rocket_radius,
-			g_vehicle_spiderbot_rocket_force, 0, MOVETYPE_FLY);
+			g_vehicle_spiderbot_rocket_force, 0, VM_MOVETYPE_FLY);
 	te_explosion (missile.origin);
 	missile.realowner = self.owner;
 	missile.nextthink = time;// 0.2;
@@ -232,7 +232,7 @@ void(void) vehicle_spiderbot_think {
 	if (self.owner)
 		self.owner.vehicle_heat = self.vehicle_heat;
 	else {
-		physics_movetype = MOVETYPE_QCWALK;
+		physics_movetype = VM_MOVETYPE_QCWALK;
 		physics_flags = self.flags;
 		physics_velocity = self.velocity;
 		physics_gravity_factor = (self.gravity ? self.gravity : 1);

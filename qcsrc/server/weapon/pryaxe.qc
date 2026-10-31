@@ -56,7 +56,7 @@ void(void) weapon_pryaxe_flyback {
 	projectile_update(self);
 	self.nextthink = time;
 	self.think = weapon_pryaxe_flyback_think;
-	self.movetype = MOVETYPE_NOCLIP;
+	self.movetype = VM_MOVETYPE_NOCLIP;
 	self.solid = VM_SOLID_NOT;
 	//remove(self);
 }
@@ -78,7 +78,7 @@ void(float issecondary) weapon_pryaxe_throw {
 	weapon_setup_shot(self, 0, "", 1);
 	entity proj = projectile(TRUE, PROJECTILE_RM_PRYAXE, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_RM_PRYAXE, WEAPON_MELEE, (issecondary ? g_balance_pryaxe_secondary_throw_damage : g_balance_pryaxe_primary_throw_damage),
-			0, 0, (issecondary ? g_balance_pryaxe_secondary_throw_force : g_balance_pryaxe_primary_throw_force), 0, MOVETYPE_FLY);
+			0, 0, (issecondary ? g_balance_pryaxe_secondary_throw_force : g_balance_pryaxe_primary_throw_force), 0, VM_MOVETYPE_FLY);
 	proj.nextthink = time + 10;
 	proj.use = weapon_pryaxe_flyback;
 	proj.think = projectile_think2use;

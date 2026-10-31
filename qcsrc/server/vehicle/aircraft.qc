@@ -52,7 +52,7 @@ void() vehicle_aircraft_attack_laser {
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
 	entity proj = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, EFFECT_IMPACT_LASER, WEAPON_HLAC, g_vehicle_aircraft_laser_damage,
-			g_vehicle_aircraft_laser_edgedamage, g_vehicle_aircraft_laser_radius, g_vehicle_aircraft_laser_force, 0, MOVETYPE_FLY);
+			g_vehicle_aircraft_laser_edgedamage, g_vehicle_aircraft_laser_radius, g_vehicle_aircraft_laser_force, 0, VM_MOVETYPE_FLY);
 	proj.realowner = self.owner;
 	proj.velocity = (v_forward + randomvec() * self.vehicle_heat * g_vehicle_aircraft_laser_spread) * g_vehicle_aircraft_laser_speed;
 	weapon_setup_projectile_velocity(proj);
@@ -95,9 +95,9 @@ void(void) vehicle_aircraft_pull {
 	if not(self.aiment) {
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 100', TRACE_MOVE_NORMAL, self);
 		if (trace_ent)
-		if (trace_ent.movetype != MOVETYPE_NOCLIP)
-		if (trace_ent.movetype != MOVETYPE_NONE)
-		if (trace_ent.movetype != MOVETYPE_FOLLOW)
+		if (trace_ent.movetype != VM_MOVETYPE_NOCLIP)
+		if (trace_ent.movetype != VM_MOVETYPE_NONE)
+		if (trace_ent.movetype != VM_MOVETYPE_FOLLOW)
 		if (trace_ent.solid == VM_SOLID_SLIDEBOX || trace_ent.solid == VM_SOLID_BBOX) {
 			float _volume = (trace_ent.maxs_x - trace_ent.mins_x) * (trace_ent.maxs_y - trace_ent.mins_y) *  (trace_ent.maxs_z - trace_ent.mins_z);
 			if (_volume < 3000 || _volume > 3000000) {
@@ -177,7 +177,7 @@ void(void) vehicle_aircraft_think {
 	if (self.owner) {
 		self.owner.vehicle_heat = self.vehicle_heat;
 	} else {
-		physics_movetype = MOVETYPE_QCWALK;
+		physics_movetype = VM_MOVETYPE_QCWALK;
 		physics_flags = self.flags;
 		physics_velocity = self.velocity;
 		physics_gravity_factor = (self.gravity ? self.gravity : 1);

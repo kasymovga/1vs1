@@ -144,7 +144,7 @@ void(float out) weapon_porto_attack {
 	weapon_shotdir = v_forward;
 	weapon_shotorg = self.origin + self.view_ofs + ((weapon_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 	gren = projectile(TRUE, (out ? PROJECTILE_PORTO_BLUE : PROJECTILE_PORTO_RED), TRUE, self);
-	gren.movetype = MOVETYPE_BOUNCEMISSILE;
+	gren.movetype = VM_MOVETYPE_BOUNCEMISSILE;
 	gren.playerid = self.playerid;
 	gren.classname = "porto";
 	gren.bot_dodge = TRUE;

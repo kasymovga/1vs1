@@ -185,7 +185,7 @@ void() ctf_captureshield_spawn {
 	e.customizeentityforclient = ctf_captureshield_customize;
 	e.classname = "ctf_captureshield";
 	e.effects = EFFECT_ADDITIVE;
-	e.movetype = MOVETYPE_NOCLIP;
+	e.movetype = VM_MOVETYPE_NOCLIP;
 	e.solid = VM_SOLID_TRIGGER;
 	e.avelocity = '7 0 11';
 	setorigin(e, self.origin);
@@ -212,7 +212,7 @@ void() ctf_flag_place {
 	self.mdl = self.model;
 	self.flags = FLAG_ITEM;
 	self.solid = VM_SOLID_TRIGGER;
-	self.movetype = MOVETYPE_NONE;
+	self.movetype = VM_MOVETYPE_NONE;
 	self.velocity = '0 0 0';
 	self.origin_z = self.origin_z + 6;
 	self.think = ctf_flag_think;
@@ -226,7 +226,7 @@ void() ctf_flag_place {
 		self.dropped_origin = self.origin;
 	} else {
 		entity_droptofloor();
-		self.movetype = MOVETYPE_TOSS;
+		self.movetype = VM_MOVETYPE_TOSS;
 	}
 	entity_initialize(self, ctf_captureshield_spawn, INITPRIO_SETLOCATION);
 }
@@ -239,9 +239,9 @@ void(entity e) ctf_flag_regen {
 	setattachment(e, world, "");
 	e.damageforcescale = 0;
 	e.takedamage = DAMAGE_NO;
-	e.movetype = MOVETYPE_NONE;
+	e.movetype = VM_MOVETYPE_NONE;
 	if (!e.noalign)
-		e.movetype = MOVETYPE_TOSS;
+		e.movetype = VM_MOVETYPE_TOSS;
 
 	e.velocity = '0 0 0';
 	e.solid = VM_SOLID_TRIGGER;
@@ -318,7 +318,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	e.owner = world;
 	e.flags = FLAG_ITEM; // clear FLAG_ONGROUND and any other junk
 	e.solid = VM_SOLID_TRIGGER;
-	e.movetype = MOVETYPE_TOSS;
+	e.movetype = VM_MOVETYPE_TOSS;
 	// setsize(e, '-16 -16 0', '16 16 74');
 	setorigin(e, p.origin - '0 0 24' + '0 0 37');
 	e.cnt = CTF_FLAG_DROPPED;
@@ -528,7 +528,7 @@ void() ctf_flag_touch {
 			if (player.team == self.team)
 				print_to_spec(player, PRINT_CENTER, "The enemy got your flag! Retrieve it!", "", "", "");
 
-		self.movetype = MOVETYPE_NONE;
+		self.movetype = VM_MOVETYPE_NONE;
 		setorigin(self, CTF_FLAG_CARRY_POS);
 		setattachment(self, other.body, "");
 		marker_AttachCarrier("flagcarrier", other);
@@ -603,7 +603,7 @@ void() ctf_flag_touch {
 				if (player.team == self.team)
 					print_to_spec(player, PRINT_CENTER, "The enemy got your flag! Retrieve it!", "", "", "");
 
-			self.movetype = MOVETYPE_NONE;	// flag must have MOVETYPE_NONE here, otherwise it will drop through the floor...
+			self.movetype = VM_MOVETYPE_NONE;	// flag must have VM_MOVETYPE_NONE here, otherwise it will drop through the floor...
 			setorigin(self, CTF_FLAG_CARRY_POS);
 			setattachment(self, other.body, "");
 			self.damageforcescale = 0;

@@ -57,7 +57,7 @@ void(void) monster_turret_remove {
 		self.weaponentity.scale *= self.scale;
 	}
 	setorigin(self.weaponentity, self.origin + '0 0 50');
-	self.weaponentity.movetype = MOVETYPE_TOSS;
+	self.weaponentity.movetype = VM_MOVETYPE_TOSS;
 	self.weaponentity.angles_y += self.angles_y;
 	self.weaponentity.takedamage = DAMAGE_YES;
 	if not(cvar("g_monster_turret_drop")) {
@@ -75,7 +75,7 @@ void() monster_turret_spawn {
 	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 0.1;
 	self.netname = "Walking Turret";
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = VM_MOVETYPE_WALK;
 	self.entremove = monster_turret_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.frags = 3;
@@ -92,7 +92,7 @@ void() monster_turret_spawn {
 	self.health = oldself.health * 0.25;
 	self = oldself;
 	setattachment(self.weaponentity, self, "tag_head");
-	self.weaponentity.movetype = MOVETYPE_NONE;
+	self.weaponentity.movetype = VM_MOVETYPE_NONE;
 	self.weaponentity.takedamage = FALSE;
 	setorigin(self.weaponentity, self.weaponentity.mins_z * '0 0 -1' + '0 0 10');
 }

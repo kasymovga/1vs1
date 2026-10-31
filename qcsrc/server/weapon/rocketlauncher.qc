@@ -150,7 +150,7 @@ void(void) weapon_rocketlauncher_attack {
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE, self); // because of fly sound
 	projectile_setup(missile, weapon_shotorg - v_forward * 3, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
-			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force, 0, MOVETYPE_FLY);
+			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force, 0, VM_MOVETYPE_FLY);
 	warpzone_refsys_copy(missile, missile.owner);
 	missile.classname = "rocket"; //for remote exploding
 	missile.realowner = self; //we neeed it without akimbo_owner for guiding

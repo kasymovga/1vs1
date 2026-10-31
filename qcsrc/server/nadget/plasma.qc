@@ -97,7 +97,7 @@ void nadget_Plasma_Shard(float kickangle) {
     proj.solid = VM_SOLID_CORPSE;
     proj.projectiledeathtype = (NADGET_PLASMA | HITTYPE_SECONDARY);
     setorigin(proj, self.origin);
-    proj.movetype = MOVETYPE_BOUNCE;
+    proj.movetype = VM_MOVETYPE_BOUNCE;
     if(cvar("g_nadgets_plasma_spread_circle")) {
 		float side = cvar("g_nadgets_plasma_spread_xy");
 		kick = side * v_forward * cos(kickangle) + side * v_right * sin(kickangle) + cvar("g_nadgets_plasma_spread_z_min") * v_up;
