@@ -11,9 +11,9 @@ float checkrules_equality;
 float g_campaign_skill;
 
 float(string s) campaign_bailout {
-	cvar = builtin_cvar;
-	cvar_string = builtin_cvar_string;
-	cvar_set = builtin_cvar_set;
+	cvar = vm_cvar;
+	cvar_string = vm_cvar_string;
+	cvar_set = vm_cvar_set;
 	cvar_set("g_campaign", "0");
 	g_campaign = 0;
 	print("campaign initialization failed: ", s, "\n");
@@ -66,12 +66,12 @@ string(float d) campaign_difficulty_string {
 }
 
 void(void) campaign_preinit {
-	if (builtin_cvar("_restore_game")) { //Hack for load game
+	if (vm_cvar("_restore_game")) { //Hack for load game
 		campaign_cvar_list = strzone("; ");
-		builtin_cvar_set("sv_public", "0");
-		builtin_cvar_set("pausable", "1");
-		builtin_cvar_set("_restore_game", "0");
-		builtin_cvar_set("g_campaign", "1");
+		vm_cvar_set("sv_public", "0");
+		vm_cvar_set("pausable", "1");
+		vm_cvar_set("_restore_game", "0");
+		vm_cvar_set("g_campaign", "1");
 		cvar = campaign_cvar;
 		cvar_string = campaign_cvar_string;
 		cvar_set = campaign_cvar_set;
@@ -106,7 +106,7 @@ void(void) campaign_preinit {
 	cvar_set("g_campaign", "1");
 	cvar_set("skill", ftos(baseskill));
 	cvar_set("bot_number", ftos(campaign_bots[campaign_level]));
-	string pm = builtin_cvar_string("_cl_playermodel");
+	string pm = vm_cvar_string("_cl_playermodel");
 	if (pm != "") {
 		cvar_set("campaign_single_g_player_forcemodel", pm);
 		cvar_set("campaign_surv_g_player_forcemodel", pm);
@@ -131,8 +131,8 @@ void(void) campaign_postinit {
 
 	cvar_set("fraglimit", ftos(campaign_fraglimit[campaign_level]));
 	cvar_set("timelimit", "0");
-	builtin_cvar_set("fraglimit", ftos(campaign_fraglimit[campaign_level]));
-	builtin_cvar_set("timelimit", "0");
+	vm_cvar_set("fraglimit", ftos(campaign_fraglimit[campaign_level]));
+	vm_cvar_set("timelimit", "0");
 }
 
 void(string cvarname, float value) campaign_save_cvar {
@@ -141,7 +141,7 @@ void(string cvarname, float value) campaign_save_cvar {
 	string contents;
 	string l;
 	registercvar(cvarname, ftos(value));
-	builtin_cvar_set(cvarname, ftos(value));
+	vm_cvar_set(cvarname, ftos(value));
 	// note: cvarname must be remembered
 	fh = fopen("campaign.cfg", FILE_READ);
 	contents = "";
@@ -203,7 +203,7 @@ void(void) campaign_preintermission {
 			// advance level (for menu to show it right)
 			campaign_save_cvar(campaign_index_var, campaign_level + 1);
 			localcmd("menu_cmd campaign_won\n");
-		} else if (campaign_level == builtin_cvar(campaign_index_var)) {
+		} else if (campaign_level == vm_cvar(campaign_index_var)) {
 			// advance level
 			campaign_save_cvar(campaign_index_var, campaign_level + 1);
 		}
@@ -220,7 +220,7 @@ void(void) campaign_postintermission {
 		campaign_file_unload();
 		return;
 	}
-	builtin_cvar_set("g_campaign_skill", ftos(g_campaign_skill));
+	vm_cvar_set("g_campaign_skill", ftos(g_campaign_skill));
 	if (campaign_map_transition)
 		campaign_setup_cvars_only(campaign_level);
 	else
@@ -236,8 +236,8 @@ void(void) campaign_restart {
 	if (campaign_postintermission_done) return;
 	registercvar("_campaign_name", "");
 	registercvar("_campaign_index", "");
-	builtin_cvar_set("g_campaign", "1");
-	builtin_cvar_set("_campaign_name", campaign_name);
-	builtin_cvar_set("_campaign_index", ftos(campaign_level));
-	builtin_cvar_set("g_campaign_skill", ftos(g_campaign_skill));
+	vm_cvar_set("g_campaign", "1");
+	vm_cvar_set("_campaign_name", campaign_name);
+	vm_cvar_set("_campaign_index", ftos(campaign_level));
+	vm_cvar_set("g_campaign_skill", ftos(g_campaign_skill));
 }

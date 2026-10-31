@@ -170,7 +170,7 @@ void Buffs_Random_Spawn(void) {
         //snap_to_entity(self, 1024, Buffs_Random_Spawn_EntFilter);
 
         setsize(self, '-1 -1 0' + '0 0 1' * self.mins_z, '1 1 0' + '0 0 1' * self.maxs_z);
-		builtin_droptofloor();
+		vm_droptofloor();
         setsize(self, omins + BUFFS_MARGIN_MINS, omaxs + BUFFS_MARGIN_MAXS);
         entity_move_out_of_solid_with_type(self, TRACE_MOVE_WORLDONLY);
 
@@ -1654,7 +1654,7 @@ void(void) rm_buffs_pickup_setup {
     setsize(self, '-15 -15 -40', '15 15 40');
     
     entity_move_out_of_solid_with_type(self, TRACE_MOVE_WORLDONLY);
-	builtin_droptofloor();
+	vm_droptofloor();
     net_link_entity(self, FALSE, 0, Buffs_Model_Send);
 
     ++g_buffs_count;

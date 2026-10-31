@@ -6,4 +6,4 @@ float CVAR_TYPEFLAG_PRIVATE = 4;
 float CVAR_TYPEFLAG_ENGINE = 8;
 float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
 float CVAR_TYPEFLAG_READONLY = 32;
-#define cvar_type builtin_cvar_type
+#define cvar_type vm_cvar_type

@@ -170,7 +170,7 @@ void(void) gib_read {
 	switch (type) {
 	case 0x01:
 		if (!issilent)
-			builtin_pointsound(org, "misc/gib.wav", VOL_BASE, ATTN_NORM);
+			vm_pointsound(org, "misc/gib.wav", VOL_BASE, ATTN_NORM);
 
 		if (prandom() < amount)
 			gib_toss("models/gibs/eye.md3", org, vel, prandomvec() * 150, specnum, 0, issilent);

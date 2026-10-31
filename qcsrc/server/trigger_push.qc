@@ -140,7 +140,7 @@ void(void) trigger_push_findtarget {
 			setorigin(e, org);
 			setsize(e, PL_MIN, PL_MAX);
 			e.velocity = self.movedir;
-			builtin_tracetoss(e, e);
+			vm_tracetoss(e, e);
 			self.dest = trace_endpos;
 			remove(e);
 			waypoint_spawnforteleporter(self, self.dest, flighttime);

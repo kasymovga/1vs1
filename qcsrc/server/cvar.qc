@@ -19,7 +19,7 @@ void(void) cvar_changes_init {
 	n = buf_getsize(h);
 	for (i = 0; i < n; ++i) {
 		k = bufstr_get(h, i);
-		v = builtin_cvar_string(k);
+		v = vm_cvar_string(k);
 		d = cvar_defstring(k);
 		if (v == d)
 			continue;
@@ -334,9 +334,9 @@ void(string profile) cvar_init {
 }
 
 void(void) cvar_preinit {
-	cvar = builtin_cvar;
-	cvar_string = builtin_cvar_string;
-	cvar_set = builtin_cvar_set;
+	cvar = vm_cvar;
+	cvar_string = vm_cvar_string;
+	cvar_set = vm_cvar_set;
 }
 
 float(string s) cvar_value_issafe {
@@ -364,23 +364,23 @@ void(string pKey, string pValue) cvar_settemp {
 	if (g_campaign)
 		cvar_set(pKey, pValue);
 
-	if(builtin_cvar_string(pKey) == pValue)
+	if(vm_cvar_string(pKey) == pValue)
 		return;
 
-	builtin_cvar_set("settemp_list", strcat("1 ", pKey, " ", builtin_cvar_string("settemp_var"), " ", builtin_cvar_string("settemp_list")));
-	registercvar(builtin_cvar_string("settemp_var"), "");
+	vm_cvar_set("settemp_list", strcat("1 ", pKey, " ", vm_cvar_string("settemp_var"), " ", vm_cvar_string("settemp_list")));
+	registercvar(vm_cvar_string("settemp_var"), "");
 	registercvar(pKey, "");
-	builtin_cvar_set(builtin_cvar_string("settemp_var"), builtin_cvar_string(pKey));
-	builtin_cvar_set("settemp_var", strcat(builtin_cvar_string("settemp_var"), "x"));
-	builtin_cvar_set(pKey, pValue);
+	vm_cvar_set(vm_cvar_string("settemp_var"), vm_cvar_string(pKey));
+	vm_cvar_set("settemp_var", strcat(vm_cvar_string("settemp_var"), "x"));
+	vm_cvar_set(pKey, pValue);
 }
 
 void(void) cvar_settemp_restore {
 	// undo what cvar_settemp did
 	float n, i;
-	n = tokenize_console(builtin_cvar_string("settemp_list"));
+	n = tokenize_console(vm_cvar_string("settemp_list"));
 	for (i = 0; i < n - 3; i += 3)
-		builtin_cvar_set(argv(i + 1), builtin_cvar_string(argv(i + 2)));
+		vm_cvar_set(argv(i + 1), vm_cvar_string(argv(i + 2)));
 
-	builtin_cvar_set("settemp_list", "0");
+	vm_cvar_set("settemp_list", "0");
 }

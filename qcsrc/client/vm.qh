@@ -1,8 +1,99 @@
+#define CSQC
+// DO NOT modify the contents of this section, or you will risk incompatibility with the game engine.
+// SYSTEM SECTION BEGIN
+entity self;
+entity other;
+entity world;
+float time;
+float frametime;
+float  player_localentnum; //the entnum
+float  player_localnum; //the playernum
+float maxclients; //a constant filled in by the engine. gah, portability eh?
+float clientcommandframe; //player movement
+float servercommandframe; //clientframe echoed off the server
+string mapname;
+//
+// global variables set by built in functions
+//
+vector v_forward, v_up, v_right; // set by makevectors()
+// set by traceline / tracebox
+float trace_allsolid;
+float trace_startsolid;
+float trace_fraction;
+vector trace_endpos;
+vector trace_plane_normal;
+float trace_plane_dist;
+entity trace_ent;
+float trace_inopen;
+float trace_inwater;
+void() CSQC_Init;
+void() CSQC_Shutdown;
+float(float f, float t, float n) CSQC_InputEvent;
+void(float w, float h) CSQC_UpdateView;
+float(string s) CSQC_ConsoleCommand;
+//these fields are read and set by the default player physics
+vector pmove_org;
+vector pmove_vel;
+vector pmove_mins;
+vector pmove_maxs;
+//retrieved from the current movement commands (read by player physics)
+float input_timelength;
+vector input_angles;
+vector input_movevalues; //forwards, right, up.
+float input_buttons; //attack, use, jump (default physics only uses jump)
+float movevar_gravity;
+float movevar_stopspeed;
+float movevar_maxspeed;
+float movevar_spectatormaxspeed; //used by NOCLIP movetypes.
+float movevar_accelerate;
+float movevar_airaccelerate;
+float movevar_wateraccelerate;
+float movevar_friction;
+float movevar_waterfriction;
+float movevar_entgravity; //the local player's gravity field. Is a multiple (1 is the normal value)
+void end_sys_globals; // flag for structure dumping
+.float modelindex; // *** model index in the precached list
+.vector absmin, absmax; // *** origin + mins / maxs
+.float entnum; // *** the ent number as on the server
+.float drawmask;
+.void() predraw;
+.float movetype;
+.float solid;
+.vector origin; // ***
+.vector oldorigin; // ***
+.vector velocity;
+.vector angles;
+.vector avelocity;
+.string classname; // spawn function
+.string model;
+.float frame;
+.float skin;
+.float effects;
+.vector mins, maxs; // bounding box extents reletive to origin
+.vector size; // maxs - mins
+.void() touch;
+.void() use;
+.void() think;
+.void() blocked; // for doors or plats, called when can't push other
+.float nextthink;
+.entity chain;
+.string netname;
+.entity  enemy;
+.float flags;
+.float colormap;
+.entity owner; // who launched a missile
+void end_sys_fields; // flag for structure dumping
+noref float pmove_onground;
+noref float intermission;
+float dmg_take, dmg_save;
+vector dmg_origin;
+// SYSTEM SECTION END
+
 void(vector ang) makevectors = #1;
 void(entity e, vector o) setorigin = #2;
 void(entity e, string m) setmodel = #3;
 void(entity e, vector min, vector max) setsize = #4;
-void() builtin_break = #6;
+void() vm_break = #6;
 float() random = #7;
 void(entity e, float chan, string samp, float vol, float atten) sound = #8;
 vector (vector v) normalize = #9;
@@ -33,7 +124,7 @@ float(float v) floor = #37;
 float(float v) ceil = #38;
 float(vector v) pointcontents = #41;
 float(float f) fabs = #43;
-float(string s) builtin_cvar = #45;
+float(string s) vm_cvar = #45;
 void(string s, ...) localcmd = #46;
 entity(entity e) nextent = #47;
 vector(vector v) vectoangles = #51;
@@ -41,7 +132,7 @@ vector(vector v, vector w) vectoangles2 = #51;
 float(float val) sin = #60;
 float(float val) cos = #61;
 float(float val) sqrt = #62;
-void(string var, string val) builtin_cvar_set = #72;
+void(string var, string val) vm_cvar_set = #72;
 //string(float f) chr = #78;
 float(string s) stof = #81;
 void(vector v1, vector min, vector max, vector v2, float nomonsters, entity forent) tracebox = #90;
@@ -146,46 +237,46 @@ float(entity ent) wasfreed = #353;
 string(string key) serverkey = #354;
 float(string s, float num) charindex = #356;
 float() onground = #355;
-float() builtin_ReadByte = #360;
-float() builtin_ReadChar = #361;
-float() builtin_ReadShort = #362;
-float() builtin_ReadLong = #363;
-float() builtin_ReadCoord = #364;
-float() builtin_ReadAngle = #365;
-string() builtin_ReadString = #366; //warning: this returns a temporary!
-void(entity in, entity out) builtin_copyentity = #400;
+float() vm_ReadByte = #360;
+float() vm_ReadChar = #361;
+float() vm_ReadShort = #362;
+float() vm_ReadLong = #363;
+float() vm_ReadCoord = #364;
+float() vm_ReadAngle = #365;
+string() vm_ReadString = #366; //warning: this returns a temporary!
+void(entity in, entity out) vm_copyentity = #400;
 entity(.string fld, string match) findchain = #402;
 entity(.entity fld, entity match) findchainentity = #403;
 entity(.float fld, float match) findchainfloat = #403;
 void(vector org, string modelname, float startframe, float endframe, float framerate) effect = #404;
-//void(vector org, vector velocity, float howmany) builtin_te_blood = #405;
-//void(vector mincorner, vector maxcorner, float explosionspeed, float howmany) builtin_te_bloodshower = #406;
-//void(vector org, vector color) builtin_te_explosionrgb = #407;
-//void(vector mincorner, vector maxcorner, vector vel, float howmany, float color, float gravityflag, float randomveljitter) builtin_te_particlecube = #408;
-void(vector mincorner, vector maxcorner, vector vel, float howmany, float color) builtin_te_particlerain = #409;
-void(vector mincorner, vector maxcorner, vector vel, float howmany, float color) builtin_te_particlesnow = #410;
-//void(vector org, vector vel, float howmany) builtin_te_spark = #411;
-//void(vector org) builtin_te_gunshotquad = #412;
-//void(vector org) builtin_te_spikequad = #413;
-//void(vector org) builtin_te_superspikequad = #414;
-//void(vector org) builtin_te_explosionquad = #415;
-//void(vector org) builtin_te_smallflash = #416;
-//void(vector org, float radius, float lifetime, vector color) builtin_te_customflash = #417;
-//void(vector org) builtin_te_gunshot = #418;
-//void(vector org) builtin_te_spike = #419;
-//void(vector org) builtin_te_superspike = #420;
-//void(vector org) builtin_te_explosion = #421;
-//void(vector org) builtin_te_tarexplosion = #422;
-//void(vector org) builtin_te_wizspike = #423;
-//void(vector org) builtin_te_knightspike = #424;
-//void(vector org) builtin_te_lavasplash = #425;
-//void(vector org) builtin_te_teleport = #426;
-//void(vector org, float color, float colorlength) builtin_te_explosion2 = #427;
-void(entity own, vector start, vector end) builtin_te_lightning1 = #428;
-//void(entity own, vector start, vector end) builtin_te_lightning2 = #429;
-//void(entity own, vector start, vector end) builtin_te_lightning3 = #430;
-//void(entity own, vector start, vector end) builtin_te_beam = #431;
-//void(vector org) builtin_te_plasmaburn = #433;
+//void(vector org, vector velocity, float howmany) vm_te_blood = #405;
+//void(vector mincorner, vector maxcorner, float explosionspeed, float howmany) vm_te_bloodshower = #406;
+//void(vector org, vector color) vm_te_explosionrgb = #407;
+//void(vector mincorner, vector maxcorner, vector vel, float howmany, float color, float gravityflag, float randomveljitter) vm_te_particlecube = #408;
+void(vector mincorner, vector maxcorner, vector vel, float howmany, float color) vm_te_particlerain = #409;
+void(vector mincorner, vector maxcorner, vector vel, float howmany, float color) vm_te_particlesnow = #410;
+//void(vector org, vector vel, float howmany) vm_te_spark = #411;
+//void(vector org) vm_te_gunshotquad = #412;
+//void(vector org) vm_te_spikequad = #413;
+//void(vector org) vm_te_superspikequad = #414;
+//void(vector org) vm_te_explosionquad = #415;
+//void(vector org) vm_te_smallflash = #416;
+//void(vector org, float radius, float lifetime, vector color) vm_te_customflash = #417;
+//void(vector org) vm_te_gunshot = #418;
+//void(vector org) vm_te_spike = #419;
+//void(vector org) vm_te_superspike = #420;
+//void(vector org) vm_te_explosion = #421;
+//void(vector org) vm_te_tarexplosion = #422;
+//void(vector org) vm_te_wizspike = #423;
+//void(vector org) vm_te_knightspike = #424;
+//void(vector org) vm_te_lavasplash = #425;
+//void(vector org) vm_te_teleport = #426;
+//void(vector org, float color, float colorlength) vm_te_explosion2 = #427;
+void(entity own, vector start, vector end) vm_te_lightning1 = #428;
+//void(entity own, vector start, vector end) vm_te_lightning2 = #429;
+//void(entity own, vector start, vector end) vm_te_lightning3 = #430;
+//void(entity own, vector start, vector end) vm_te_beam = #431;
+//void(vector org) vm_te_plasmaburn = #433;
 float(entity e, float s) getsurfacenumpoints = #434;
 vector (entity e, float s, float n) getsurfacepoint = #435;
 vector (entity e, float s) getsurfacenormal = #436;
@@ -199,7 +290,7 @@ float(string pattern, float caseinsensitive, float quiet) search_begin = #444;
 void(float handle) search_end = #445;
 float(float handle) search_getsize = #446;
 string(float handle, float num) search_getfilename = #447;
-string(string s) builtin_cvar_string = #448;
+string(string s) vm_cvar_string = #448;
 entity(entity start, .float fld, float match) findflags = #449;
 entity(.float fld, float match) findchainflags = #450;
 float(entity ent, string tagname) gettagindex = #451;
@@ -220,12 +311,12 @@ string(string s) strdecolorize = #477;
 string(float uselocaltime, string format, ...) strftime = #478;
 string(string s) strtolower = #480; // returns the passed in string in pure lowercase form
 string(string s) strtoupper = #481; // returns the passed in string in pure uppercase form
-void(vector origin, string sample, float volume, float attenuation) builtin_pointsound = #483;
+void(vector origin, string sample, float volume, float attenuation) vm_pointsound = #483;
 string(string search, string replace, string subject) strreplace = #484;
 float(string s, string separator1, ...) tokenizebyseparator = #479;
 float(float caseinsensitive, string s, ...) crc16 = #494;
-float(string varname) builtin_cvar_type = #495;
-string(void) builtin_ReadPicture = #501;
+float(string varname) vm_cvar_type = #495;
+string(void) vm_ReadPicture = #501;
 string(string filename) whichpack = #503;
 float(float entitynum, float fldnum) getentity = #504;
 vector(float entitynum, float fldnum) getentityvec = #504;

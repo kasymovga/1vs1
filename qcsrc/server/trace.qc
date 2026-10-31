@@ -5,7 +5,7 @@ void(entity ent, entity ignore, float toss_frametime, float toss_count) trace_to
 	g0 = ent.gravity;
 	ent.velocity = ent.velocity * toss_frametime * 20;
 	ent.gravity *= (toss_frametime * toss_frametime * 400);
-	builtin_tracetoss(ent, ignore);
+	vm_tracetoss(ent, ignore);
 	ent.velocity= v0;
 	ent.gravity = g0;
 	return;

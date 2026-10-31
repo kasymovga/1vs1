@@ -40,7 +40,7 @@ void(float bIsNewEntity) net_csqc_entity_update { //called by engine
 				self.entremove();
 
 			entity e = spawn();
-			builtin_copyentity(e, self); //force clean entity fields
+			vm_copyentity(e, self); //force clean entity fields
 			remove(e);
 			bIsNewEntity = 1;
 		}

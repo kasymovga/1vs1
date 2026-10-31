@@ -389,7 +389,7 @@ void() score_winning_condition_helper {
 	s = game_type_name(game_type);
 	s = strcat(s, ":", cvar_string("rexuizversion"));
 	s = strcat(s, "::", score_player_string(world, 2)); // make this 1 once we can
-	fullstatus = builtin_cvar("g_full_getstatus_responses");
+	fullstatus = vm_cvar("g_full_getstatus_responses");
 	if (score_team_entities_count) {
 		float t;
 		s = strcat(s, ":", score_team_string(0, 1));

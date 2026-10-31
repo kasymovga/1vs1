@@ -80,7 +80,7 @@ void(void) entity_initialize_run {
 
 // deferred dropping
 void(void) entity_droptofloor_handler {
-	builtin_droptofloor();
+	vm_droptofloor();
 	self.dropped_origin = self.origin;
 }
 

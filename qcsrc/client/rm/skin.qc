@@ -548,7 +548,7 @@ float(string skin_name) rm_skin_load {
 	dlc_load("rm_skins", FALSE);
 	dlc_recheck_all();
 	if not(dlc_ready("rm_skins")) return FALSE;
-	if (skin_name == "_builtin_") {
+	if (skin_name == "_vm_") {
 		rm_skin_load_fallback();
 		return TRUE;
 	}

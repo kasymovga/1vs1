@@ -1,5 +1,4 @@
-#include "sys.qh"
-#include "builtin.qh"
+#include "vm.qh"
 #include "../client-server/progs.qh"
 #include "../common/progs.qh"
 #include "constants.qh"

@@ -759,7 +759,7 @@ void(void) jb_controlpoint {
 	marker_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
 	self.cnt = self.team;
 	jb_controlpoint_model_setup();
-	builtin_droptofloor();
+	vm_droptofloor();
 	self.touch = jb_controlpoint_touch;
 	self.reset = jb_controlpoint_reset;
 	self.think = jb_controlpoint_think;

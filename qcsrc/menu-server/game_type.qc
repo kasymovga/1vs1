@@ -37,10 +37,10 @@ float(string t) game_type_from_name {
 }
 
 float(void) game_type_current {
-	float f = game_type_from_name(builtin_cvar_string("_gametype"));
+	float f = game_type_from_name(vm_cvar_string("_gametype"));
 	return (f ? f : GAME_TYPE_DEATHMATCH);
 }
 
 void(float t) game_type_switch {
-	builtin_cvar_set("_gametype", game_type_name(t));
+	vm_cvar_set("_gametype", game_type_name(t));
 }

@@ -20,7 +20,7 @@ float(entity pl, .float field, float flag, string descr) cheat_assign {
 }
 
 void(void) cheat_init {
-	if (builtin_cvar("sv_cheats")) {
+	if (vm_cvar("sv_cheats")) {
 		precache_sound("player/marine/coms/taunt1.ogg");
 		precache_sound("player/marine/coms/taunt3.ogg");
 	}

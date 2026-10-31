@@ -84,7 +84,7 @@ void(void) world_precache {
 
 
 void(void) world_static_init {
-	world_dedicated = builtin_cvar("_sv_init");;
+	world_dedicated = vm_cvar("_sv_init");;
 	minstagib_init();
 	weapon_extra_init();
 	item_init();
@@ -268,8 +268,8 @@ void(void) world_init {
 	cvar_set("date_day_of_week", strftime(TRUE, "%w"));
 	cvar_set("date_month", strftime(TRUE, "%m"));
 	cvar_set("date_year", strftime(TRUE, "%Y"));
-	builtin_cvar_set("deathmatch", "1");
-	builtin_cvar_set("coop", "0");
+	vm_cvar_set("deathmatch", "1");
+	vm_cvar_set("coop", "0");
 	world_already_spawned = TRUE;
 	net_compress_vector_init();
 	entity head;
@@ -590,17 +590,17 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 	fraglimit = cvar("fraglimit");
 	score_leadlimit = cvar("leadlimit");
 	if (g_campaign) {
-		float timelimit_real = builtin_cvar("timelimit");
+		float timelimit_real = vm_cvar("timelimit");
 		if (timelimit_real != timelimit) {
-			builtin_cvar_set("timelimit", ftos(timelimit));
+			vm_cvar_set("timelimit", ftos(timelimit));
 		}
-		float fraglimit_real = builtin_cvar("fraglimit");
+		float fraglimit_real = vm_cvar("fraglimit");
 		if (fraglimit_real != fraglimit) {
-			builtin_cvar_set("fraglimit", ftos(fraglimit));
+			vm_cvar_set("fraglimit", ftos(fraglimit));
 		}
-		float leadlimit_real = builtin_cvar("leadlimit");
+		float leadlimit_real = vm_cvar("leadlimit");
 		if (leadlimit_real != score_leadlimit) {
-			builtin_cvar_set("leadlimit", ftos(score_leadlimit));
+			vm_cvar_set("leadlimit", ftos(score_leadlimit));
 		}
 	}
 	if (warmup_active || time <= map_starttime) { // NOTE: this is <= to prevent problems in the very tic where the game starts

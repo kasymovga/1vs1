@@ -27,7 +27,7 @@ float entity_per_player_force;
 #define ENTITY_NOT_PER_PLAYER() do { entity_not_per_player = TRUE; } while (0)
 #define ENTITY_PER_PLAYER_FORCE() do { entity_per_player_force = TRUE; } while (0)
 float entity_per_player_entities;
-#define entity_abort builtin_objerror
+#define entity_abort vm_objerror
 void(entity e, vector v) entity_angles_normalize;
 entity(entity list, entity item, .entity linkfield) entity_list_remove;
 //entity(entity list, entity item, .entity linkfield) entity_list_add;

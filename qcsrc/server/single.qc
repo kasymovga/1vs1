@@ -10,9 +10,9 @@ entity single_secrets_controller;
 var void() single_shutdown_next;
 void() single_shutdown {
 	registercvar("_single_transit_weapons", "0");
-	builtin_cvar_set("_single_transit_weapons", ftos(_single_transit_weapons | weapon_spawned_list | player_start_weapons)); //builting function for avoid campaign wrapper
+	vm_cvar_set("_single_transit_weapons", ftos(_single_transit_weapons | weapon_spawned_list | player_start_weapons)); //builting function for avoid campaign wrapper
 	registercvar("_single_transit_weapons_extra", "0");
-	builtin_cvar_set("_single_transit_weapons_extra", ftos(_single_transit_weapons_extra | weapon_spawned_extra_list | player_start_weapons_extra)); //builting function for avoid campaign wrapper
+	vm_cvar_set("_single_transit_weapons_extra", ftos(_single_transit_weapons_extra | weapon_spawned_extra_list | player_start_weapons_extra)); //builting function for avoid campaign wrapper
 	single_shutdown_next();
 }
 
@@ -47,7 +47,7 @@ void(void) single_endlevel {
 		campaign_map_transition = TRUE;
 	}
 	registercvar("_autosave_skip", "0");
-	builtin_cvar_set("_autosave_skip", "0");
+	vm_cvar_set("_autosave_skip", "0");
 }
 
 float(float ignore, float ignore2) single_winning_condition {
@@ -67,7 +67,7 @@ float(entity ignore, entity ignore2, float ignore3) single_player_death_handle {
 	campaign_won = FALSE;
 	campaign_map_transition = TRUE;
 	registercvar("_autosave_skip", "0");
-	builtin_cvar_set("_autosave_skip", "1");
+	vm_cvar_set("_autosave_skip", "1");
 	return FALSE;
 }
 
@@ -87,8 +87,8 @@ void single_init_delayed(void) {
 			map_target.use = single_endlevel;
 		}
 	}
-	_single_transit_weapons = builtin_cvar("_single_transit_weapons"); //builtin to avoid campaign intercepting
-	_single_transit_weapons_extra = builtin_cvar("_single_transit_weapons_extra"); //builtin to avoid campaign intercepting
+	_single_transit_weapons = vm_cvar("_single_transit_weapons"); //builtin to avoid campaign intercepting
+	_single_transit_weapons_extra = vm_cvar("_single_transit_weapons_extra"); //builtin to avoid campaign intercepting
 	WEAPON_INFO_FOR_EACH(e) {
 		if (_single_transit_weapons & e.weapons)
 			weapon_precache(e.weapon);
@@ -151,7 +151,7 @@ float(void) single_forbid_spectators {
 }
 
 void(void) single_autosave {
-	float slot_auto_secondary = builtin_cvar("_slot_auto_secondary"); //last time saved on secondary slot
+	float slot_auto_secondary = vm_cvar("_slot_auto_secondary"); //last time saved on secondary slot
 	string slotnum = (slot_auto_secondary ? "11" : "13");
 	print_to(self, PRINT_CENTER, "Autosaving...", "", "", "");
 	localcmd(strcat("\nseta _slot_description", slotnum, " \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
@@ -168,10 +168,10 @@ float(void) single_player_equip_handle {
 	registercvar("_autosave_skip", "0");
 	if (game_type == GAME_TYPE_SINGLE)
 	if (self.netaddress == "local")
-	if not(builtin_cvar("_autosave_skip")) {
+	if not(vm_cvar("_autosave_skip")) {
 		defer(0.5, single_autosave);
 	}
-	builtin_cvar_set("_autosave_skip", "0");
+	vm_cvar_set("_autosave_skip", "0");
 	return TRUE;
 }
 
@@ -204,7 +204,7 @@ void(entity attacker) single_monster_killed {
 var float(string cmd, float tokens) single_cmd_client_handle_next;
 float(string cmd, float tokens) single_cmd_client_handle {
 	if (cmd == "quicksave") {
-		float slot_quick_secondary = builtin_cvar("_slot_quick_secondary"); //last time saved on secondary slot
+		float slot_quick_secondary = vm_cvar("_slot_quick_secondary"); //last time saved on secondary slot
 		string slotnum = (slot_quick_secondary ? "12" : "14");
 		print_to(self, PRINT_CENTER, "Quicksaving...", "", "", "");
 		localcmd(strcat("\nseta _slot_description", slotnum, " \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
@@ -232,13 +232,13 @@ float(float f) single_slowmo_update_mod {
 
 void(void) single_init {
 	hint_add("You can save/load game at any moment.");
-	single_skill_save = builtin_cvar("skill");
-	builtin_cvar_set("skill", "2");
-	builtin_cvar_set("deathmatch", "0");
+	single_skill_save = vm_cvar("skill");
+	vm_cvar_set("skill", "2");
+	vm_cvar_set("deathmatch", "0");
 	if (game_type == GAME_TYPE_COOP)
-		builtin_cvar_set("coop", "1");
+		vm_cvar_set("coop", "1");
 	else
-		builtin_cvar_set("coop", "0");
+		vm_cvar_set("coop", "0");
 
 	plugin_map_restart = single_map_restart;
 	plugin_forbid_specatators = single_forbid_spectators;
