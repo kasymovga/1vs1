@@ -161,7 +161,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		}
 		self.takedamage = FALSE;
 		self.event_damage = NULL;
-		self.solid = SOLID_NOT; // restore later
+		self.solid = VM_SOLID_NOT; // restore later
 	}
 }
 
@@ -613,9 +613,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		// view from the floor
 		physics_set_view_offsets(self, '0 0 -8', '0 0 -8');
 		// shootable corpse
-		self.solid = SOLID_CORPSE;
+		self.solid = VM_SOLID_CORPSE;
 		// don't stick to the floor
-		self.flags &= ~FL_ONGROUND;
+		self.flags &= ~FLAG_ONGROUND;
 		// dying animation
 		self.deadflag = DEAD_DYING;
 		// when to allow respawn
@@ -1053,7 +1053,7 @@ float(void) player_real_customize {
 void(entity pl) player_physics_setup {
 	physics_clear(pl);
 	pl.movetype = MOVETYPE_QCWALK;
-	pl.solid = SOLID_SLIDEBOX;
+	pl.solid = VM_SOLID_SLIDEBOX;
 	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | (g_playerclip_collisions ? DPCONTENTS_PLAYERCLIP : 0);
 	if (player_independent)
 		PLAYER_MAKE_INDEPENDENT(pl);
@@ -1081,7 +1081,7 @@ void(entity spot) player_spawn {
 	self.delay = FALSE;
 	self.respawntime = time;
 	player_physics_setup(self);
-	self.flags = FL_CLIENT;
+	self.flags = FLAG_CLIENT;
 	self.takedamage = DAMAGE_AIM;
 	self.effects &= EFFECT_TELEPORT_BIT;
 	self.air_finished = time + 12;

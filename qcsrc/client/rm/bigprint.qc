@@ -106,13 +106,13 @@ void(void) rm_bigprint_draw {
 						float j;
 						bp_pos_x = 0.5 * (vid_conwidth - 0.6025 * strlennocol(rm_bigprint_string) * 24);
 						for(j = 0; j < strlen(rm_bigprint_string); ++j) {
-							mychar = substring(rm_bigprint_string, j, 1);
+							mychar = str_sub(rm_bigprint_string, j, 1);
 							if(mychar == "^") {
-								if(substring(rm_bigprint_string, j+1, 1) == "x") {
-									mycolor = substring(rm_bigprint_string, j, 5);
+								if(str_sub(rm_bigprint_string, j+1, 1) == "x") {
+									mycolor = str_sub(rm_bigprint_string, j, 5);
 									j += 5;
 								} else {
-									mycolor = substring(rm_bigprint_string, j, 2);
+									mycolor = str_sub(rm_bigprint_string, j, 2);
 									++j;
 								}
 								continue;

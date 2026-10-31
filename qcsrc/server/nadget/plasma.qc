@@ -94,7 +94,7 @@ void nadget_Plasma_Shard(float kickangle) {
     proj.bot_dodge = TRUE;
     proj.bot_dodgerating = cvar("g_nadgets_plasma_projectile_damage") + 300; // just avoid plasma
     proj.hg_detonatetime = time + cvar("g_nadgets_plasma_projectile_lifetime") + random() * cvar("g_nadgets_plasma_projectile_lifetime_randomfactor");
-    proj.solid = SOLID_CORPSE;
+    proj.solid = VM_SOLID_CORPSE;
     proj.projectiledeathtype = (NADGET_PLASMA | HITTYPE_SECONDARY);
     setorigin(proj, self.origin);
     proj.movetype = MOVETYPE_BOUNCE;

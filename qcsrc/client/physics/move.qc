@@ -59,7 +59,7 @@ void() physics_move_link_edict_touch_area_grid { // SV_LinkEdict_TouchAreaGrid
 
 void(float touch_triggers) physics_move_link_edict { // SV_LinkEdict
 	vector mi, ma;
-	if (self.solid == SOLID_BSP) {
+	if (self.solid == VM_SOLID_BSP) {
 		// TODO set the absolute bbox
 		mi = self.mins;
 		ma = self.maxs;
@@ -69,7 +69,7 @@ void(float touch_triggers) physics_move_link_edict { // SV_LinkEdict
 	}
 	mi = mi + self.origin;
 	ma = ma + self.origin;
-	if (self.move_flags & FL_ITEM) {
+	if (self.move_flags & FLAG_ITEM) {
 		mi_x -= 15;
 		mi_y -= 15;
 		mi_z -= 1;
@@ -147,7 +147,7 @@ void(vector push) physics_move_push_entity_trace {
 		type = max(0, self.move_nomonsters);
 	else if (self.move_movetype == MOVETYPE_FLYMISSILE)
 		type = TRACE_MOVE_MISSILE;
-	else if (self.solid == SOLID_TRIGGER || self.solid == SOLID_NOT)
+	else if (self.solid == VM_SOLID_TRIGGER || self.solid == VM_SOLID_NOT)
 		type = TRACE_MOVE_NOMONSTERS;
 	else
 		type = TRACE_MOVE_NORMAL;
@@ -162,7 +162,7 @@ float(vector push, float failonstartsolid) physics_move_push_entity { // SV_Push
 
 	self.move_origin = trace_endpos;
 	if (trace_fraction < 1)
-		if (self.solid >= SOLID_TRIGGER && (!(self.move_flags & FL_ONGROUND) || (self.move_groundentity != trace_ent)))
+		if (self.solid >= VM_SOLID_TRIGGER && (!(self.move_flags & FLAG_ONGROUND) || (self.move_groundentity != trace_ent)))
 			physics_move_impact(trace_ent);
 
 	return trace_fraction;
@@ -170,9 +170,9 @@ float(vector push, float failonstartsolid) physics_move_push_entity { // SV_Push
 
 #define MAX_CLIP_PLANES 5
 void(float dt) physics_move_toss { // SV_Physics_Toss
-	if (self.move_flags & FL_ONGROUND) {
+	if (self.move_flags & FLAG_ONGROUND) {
 		if (self.move_velocity_z >= 1/32)
-			self.move_flags &= ~FL_ONGROUND;
+			self.move_flags &= ~FLAG_ONGROUND;
 		else if not(self.move_groundentity)
 			return;
 		else if (self.move_suspendedinair && wasfreed(self.move_groundentity)) {
@@ -211,7 +211,7 @@ void(float dt) physics_move_toss { // SV_Physics_Toss
 		movetime *= 1 - min(1, trace_fraction);
 		if (self.move_movetype == MOVETYPE_BOUNCEMISSILE) {
 			self.move_velocity = physics_move_clip_velocity(self.move_velocity, trace_plane_normal, 2.0);
-			self.move_flags &= ~FL_ONGROUND;
+			self.move_flags &= ~FLAG_ONGROUND;
 		} else if (self.move_movetype == MOVETYPE_BOUNCE) {
 			float d, bouncefac, bouncestop;
 			bouncefac = self.move_bounce_factor;
@@ -226,31 +226,31 @@ void(float dt) physics_move_toss { // SV_Physics_Toss
 			self.move_velocity = physics_move_clip_velocity(self.move_velocity, trace_plane_normal, 1 + bouncefac);
 			d = trace_plane_normal * self.move_velocity;
 			if (trace_plane_normal_z > 0.7 && d < bouncestop && d > -bouncestop) {
-				self.move_flags |= FL_ONGROUND;
+				self.move_flags |= FLAG_ONGROUND;
 				self.move_groundentity = trace_ent;
 				self.move_velocity = '0 0 0';
 				self.move_avelocity = '0 0 0';
 			} else
-				self.move_flags &= ~FL_ONGROUND;
+				self.move_flags &= ~FLAG_ONGROUND;
 		} else {
 			self.move_velocity = physics_move_clip_velocity(self.move_velocity, trace_plane_normal, 1.0);
 			if (trace_plane_normal_z > 0.7) {
-				self.move_flags |= FL_ONGROUND;
+				self.move_flags |= FLAG_ONGROUND;
 				self.move_groundentity = trace_ent;
-				if (trace_ent.solid == SOLID_BSP)
+				if (trace_ent.solid == VM_SOLID_BSP)
 					self.move_suspendedinair = TRUE;
 
 				self.move_velocity = '0 0 0';
 				self.move_avelocity = '0 0 0';
 			} else
-				self.move_flags &= ~FL_ONGROUND;
+				self.move_flags &= ~FLAG_ONGROUND;
 		}
 		// DP revision 8905 (just, WHY...)
 		if (self.move_movetype == MOVETYPE_BOUNCEMISSILE)
 			break;
 
 		// DP revision 8918 (WHY...)
-		if (self.move_flags & FL_ONGROUND)
+		if (self.move_flags & FLAG_ONGROUND)
 			break;
 	}
 	//physics_move_check_water_transition();
@@ -293,7 +293,7 @@ void() physics_move_no_match_server { // optimized
 	float movedt;
 	movedt = time - self.move_time;
 	self.move_time = time;
-	//self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FL_ONGROUND));
+	//self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FLAG_ONGROUND));
 	// we use the field as set by the last run of this
 	physics_move_frame(movedt);
 	if (wasfreed(self))
@@ -316,7 +316,7 @@ void() physics_move_match_server { // SV_Physics_Entity
 	n = max(0, floor(dt / server_ticrate));
 	dt -= n * server_ticrate;
 	self.move_time += n * server_ticrate;
-	//self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FL_ONGROUND));
+	//self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FLAG_ONGROUND));
 	// we use the field as set by the last run of this
 	for (i = 0; i < n; ++i) {
 		physics_move_frame(movedt);
@@ -324,7 +324,7 @@ void() physics_move_match_server { // SV_Physics_Entity
 			return;
 	}
 	self.avelocity = self.move_avelocity;
-	if (dt > 0 && self.move_movetype != MOVETYPE_NONE && !(self.move_flags & FL_ONGROUND)) {
+	if (dt > 0 && self.move_movetype != MOVETYPE_NONE && !(self.move_flags & FLAG_ONGROUND)) {
 		// now continue the move from move_time to time
 		self.velocity = self.move_velocity;
 		if (self.move_didgravity) {

@@ -20,7 +20,7 @@ void(void) func_weight_button_wait {
 	float r = vlen((self.absmax - self.absmin) / 2);
 	entity e;
 	float stillpressed = FALSE;
-	if ((self.pusher.flags & FL_ONGROUND_OR_SLICK) && self.pusher.groundentity == self) {
+	if ((self.pusher.flags & FLAG_ONGROUND_OR_SLICK) && self.pusher.groundentity == self) {
 		stillpressed = TRUE;
 	}
 	if (!stillpressed && self.pusher.movetype == MOVETYPE_QCWALK && self.pusher.velocity_z <= 0) {
@@ -35,7 +35,7 @@ void(void) func_weight_button_wait {
 	if not(stillpressed) {
 		for (e = findradius(ENTITY_CENTER(self), r); e; e = e.chain) {
 			if (e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_QCWALK || e.movetype == MOVETYPE_WALK)
-			if ((e.flags & FL_ONGROUND_OR_SLICK) && e.groundentity == self) {
+			if ((e.flags & FLAG_ONGROUND_OR_SLICK) && e.groundentity == self) {
 				self.pusher = e;
 				stillpressed = TRUE;
 				break;
@@ -63,7 +63,7 @@ void(void) func_weight_button_touch {
 	if (self.state) return;
 	if (other.velocity_z > 0) return;
 	//if (other.groundentity != self) return;
-	//if not(other.flags & FL_ONGROUND_OR_SLICK) return;
+	//if not(other.flags & FLAG_ONGROUND_OR_SLICK) return;
 	if not(other.movetype == MOVETYPE_TOSS || other.movetype == MOVETYPE_QCWALK || other.movetype == MOVETYPE_WALK) return;
 	self.pusher = other;
 	func_calc_move(self.pos2, self.angles, self.speed, func_weight_button_pressed);

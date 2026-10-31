@@ -6,7 +6,7 @@ float g_coop_item_share_distance;
 entity coop_teleporter_latest_active;
 
 void(void) coop_teleporter_think {
-	if (self.solid == SOLID_TRIGGER) {
+	if (self.solid == VM_SOLID_TRIGGER) {
 		self.alpha = approach(self.alpha, 1, 1);
 		if (self.alpha > 0.99)
 			return;
@@ -40,15 +40,15 @@ void(float killed) coop_player_clear {
 }
 
 void(void) coop_teleporter_use {
-	if (self.solid == SOLID_TRIGGER) {
+	if (self.solid == VM_SOLID_TRIGGER) {
 		if (self == coop_teleporter_latest_active)
 			coop_teleporter_latest_active = NULL;
 
-		self.solid = SOLID_NOT;
+		self.solid = VM_SOLID_NOT;
 		self.effects &= ~EFFECT_STARDUST;
 	} else {
 		coop_teleporter_latest_active = self;
-		self.solid = SOLID_TRIGGER;
+		self.solid = VM_SOLID_TRIGGER;
 		self.effects |= EFFECT_STARDUST;
 		if (self.alpha < 0)
 			self.alpha = 0.01;
@@ -64,7 +64,7 @@ void(void) coop_teleporter_touch {
 }
 
 void(void) coop_teleporter_reset {
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.alpha = -1;
 	self.use();
 }
@@ -196,11 +196,11 @@ float(entity to, float f) coop_item_give_factor {
 var float(entity item, entity plr) coop_item_give_to_handle_next;
 float(entity item, entity plr) coop_item_give_to_handle {
 	coop_item_give = NULL;
-	if ((item.flags & FL_POWERUP) //no powerups
-			|| (item.flags & FL_WEAPON) //no weapons
+	if ((item.flags & FLAG_POWERUP) //no powerups
+			|| (item.flags & FLAG_WEAPON) //no weapons
 			|| (item.items & (IT_KEY1 | IT_KEY2 | IT_KEY3)) //no keys
 			|| coop_item_give_recursion //no recursion
-			|| substring(item.classname, 0, 7) == "dropped") //no dropped item
+			|| str_sub(item.classname, 0, 7) == "dropped") //no dropped item
 		goto finish;
 
 	coop_item_give = item;

@@ -29,33 +29,33 @@ void() chess_draw2d {
 	if (team_my == COLOR_TEAM2) {
 		for (i = 0; i < 8; i++) {
 			drawstring('260 164 0' + i * '0 20 0', ftos(i + 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
-			drawstring('248 148 0' - i * '20 0 0', substring("abcdefgh", i, 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
+			drawstring('248 148 0' - i * '20 0 0', str_sub("abcdefgh", i, 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
 		}
 	} else {
 		for (i = 0; i < 8; i++) {
 			drawstring('92 304 0' - i * '0 20 0', ftos(i + 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
-			drawstring('108 320 0' + i * '20 0 0', substring("abcdefgh", i, 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
+			drawstring('108 320 0' + i * '20 0 0', str_sub("abcdefgh", i, 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
 		}
 	}
 	for (e = chess_pieces; e; e = e.enemy) {
 		switch (e.skin) {
 		case 'p':
-			piece = substring(pieces, 5, 1);
+			piece = str_sub(pieces, 5, 1);
 			break;
 		case 'n':
-			piece = substring(pieces, 4, 1);
+			piece = str_sub(pieces, 4, 1);
 			break;
 		case 'b':
-			piece = substring(pieces, 3, 1);
+			piece = str_sub(pieces, 3, 1);
 			break;
 		case 'r':
-			piece = substring(pieces, 2, 1);
+			piece = str_sub(pieces, 2, 1);
 			break;
 		case 'q':
-			piece = substring(pieces, 1, 1);
+			piece = str_sub(pieces, 1, 1);
 			break;
 		case 'k':
-			piece = substring(pieces, 0, 1);
+			piece = str_sub(pieces, 0, 1);
 			break;
 		}
 		if (team_my == COLOR_TEAM2) {

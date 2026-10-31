@@ -45,7 +45,7 @@ var .float flak_buttonatck2;
 
 void(void) weapoon_flak_pellet_touch {
 	PROJECTILE_TOUCH;
-	if (other.solid == SOLID_BSP)
+	if (other.solid == VM_SOLID_BSP)
 		effect_impact(self.origin, self.dmg, 0, 0, normalize(self.velocity), EFFECT_IMPACT_PELLET, self);
 
 	if (other && other.takedamage) {
@@ -136,7 +136,7 @@ void(void) weapon_flak_bomb_explode {
 void(void) weapon_flak_bomb_touch {
 	PROJECTILE_TOUCH;
 	if (other) {
-		if (other.solid == SOLID_BSP)
+		if (other.solid == VM_SOLID_BSP)
 			self.movedir = normalize(self.velocity + trace_plane_normal * (trace_plane_normal * self.velocity) * 2);
 		else
 			self.movedir = normalize(self.velocity);

@@ -38,7 +38,7 @@ float(entity to, float sf) rm_game_type_vote_send {
 
 		float o;
 		for (o = strstrofs(pakfile, "/", 0)+1; o > 0; o = strstrofs(pakfile, "/", 0)+1)
-			pakfile = substring(pakfile, o, 999);
+			pakfile = str_sub(pakfile, o, 999);
 
 		net_write_string(MSG_ENTITY, pakfile);
 		for (i = 0; i < 10; i++) {
@@ -84,13 +84,13 @@ float(string nextmap) rm_game_type_vote_start {
 	rm_game_type_vote_timeout = time + cvar("sv_rm_gametypevote_timeout");
 	rm_game_type_vote_ent = spawn();
 	net_link_entity(rm_game_type_vote_ent, FALSE, 0, rm_game_type_vote_send);
-	rm_game_type_vote_map = strzone(nextmap);
+	rm_game_type_vote_map = str_zone_ifneeded(nextmap);
 	map_info_get_by_name(rm_game_type_vote_map, 0, 0);
 	string picture = map_info_map_image;
 	if (picture == "")
 		picture = "gfx/m_nomap";
 
-	rm_game_type_vote_map_pic = strzone(picture);
+	rm_game_type_vote_map_pic = str_zone_ifneeded(picture);
 	float t, a = 0, i;
 	for (i = 0; i < 10; i++) {
 		t = rm_game_type_vote_types[i] & 63;

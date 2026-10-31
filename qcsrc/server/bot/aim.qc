@@ -27,7 +27,7 @@ float(vector org, vector m1, vector m2, entity targ, float shotspeed, float shot
 	if (shotspeed < 1)
 		return FALSE; // could cause division by zero if calculated
 
-	if (targ.solid < SOLID_BBOX) // SOLID_NOT and SOLID_TRIGGER
+	if (targ.solid < VM_SOLID_BBOX) // VM_SOLID_NOT and VM_SOLID_TRIGGER
 		return FALSE; // could never hit it
 
 	if (!tracetossent)
@@ -36,7 +36,7 @@ float(vector org, vector m1, vector m2, entity targ, float shotspeed, float shot
 	tracetossent.owner = ignore;
 	setsize(tracetossent, m1, m2);
 	savesolid = targ.solid;
-	targ.solid = SOLID_NOT;
+	targ.solid = VM_SOLID_NOT;
 	shottime = ((vlen(targ.origin - org) / shotspeed) + shotdelay);
 	v = targ.velocity * shottime + targ.origin;
 	trace_box(targ.origin, targ.mins, targ.maxs, v, FALSE, targ);
@@ -66,7 +66,7 @@ float(vector org, vector m1, vector m2, entity targ, float shotspeed, float shot
 		if (trace_ent == tracetossfaketarget) { // done
 			targ.solid = savesolid;
 			// make it disappear
-			tracetossfaketarget.solid = SOLID_NOT;
+			tracetossfaketarget.solid = VM_SOLID_NOT;
 			tracetossfaketarget.movetype = MOVETYPE_NONE;
 			tracetossfaketarget.model = "";
 			tracetossfaketarget.modelindex = 0;
@@ -79,7 +79,7 @@ float(vector org, vector m1, vector m2, entity targ, float shotspeed, float shot
 	}
 	targ.solid = savesolid;
 	// make it disappear
-	tracetossfaketarget.solid = SOLID_NOT;
+	tracetossfaketarget.solid = VM_SOLID_NOT;
 	tracetossfaketarget.movetype = MOVETYPE_NONE;
 	tracetossfaketarget.model = "";
 	tracetossfaketarget.modelindex = 0;
@@ -136,7 +136,7 @@ float(entity e) bot_aim_shouldattack {
 	if (player_alpha(e, self) < 0.2)
 		return FALSE;
 
-	if(e.flags & FL_NOTARGET)
+	if(e.flags & FLAG_NOTARGET)
 		return FALSE;
 
 	return TRUE;

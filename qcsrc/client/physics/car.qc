@@ -44,7 +44,7 @@ void(float isnew) physics_car_read {
 
 		self.entremove = physics_car_remove;
 		physics_car_entity = self;
-		physics_car_entity.solid = SOLID_BBOX;
+		physics_car_entity.solid = VM_SOLID_BBOX;
 		physics_car_entity.movetype = MOVETYPE_QCWALK;
 		physics_car_entity.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	}

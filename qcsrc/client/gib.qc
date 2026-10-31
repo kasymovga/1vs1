@@ -107,7 +107,7 @@ void(string mdlname, vector org, vector vconst, vector vrand, float specnum, flo
 	gib.classname = "gib";
 	gib.move_movetype = MOVETYPE_BOUNCE;
 	gib.gravity = 1;
-	gib.solid = SOLID_TRIGGER;
+	gib.solid = VM_SOLID_TRIGGER;
 	gib.cnt = specnum;
 	gib.silent = issilent;
 	gib_model_set(gib, mdlname, specnum);

@@ -1,10 +1,10 @@
 // non-solid brush entities:
-void(void) spawnfunc_func_illusionary { model_init(SOLID_NOT); } // Q1 name (WARNING: MISPREDICTED)
-void(void) spawnfunc_func_clientillusionary { model_client_init(SOLID_NOT); } // brush entity
+void(void) spawnfunc_func_illusionary { model_init(VM_SOLID_NOT); } // Q1 name (WARNING: MISPREDICTED)
+void(void) spawnfunc_func_clientillusionary { model_client_init(VM_SOLID_NOT); } // brush entity
 
 // solid brush entities
-void(void) spawnfunc_func_wall { model_init(SOLID_BSP); } // Q1 name
-void(void) spawnfunc_func_clientwall { model_client_init(SOLID_BSP); } // brush entity
+void(void) spawnfunc_func_wall { model_init(VM_SOLID_BSP); } // Q1 name
+void(void) spawnfunc_func_clientwall { model_client_init(VM_SOLID_BSP); } // brush entity
 
 void(void) spawnfunc_func_stardust {
 	self.effects = EFFECT_STARDUST;
@@ -13,7 +13,7 @@ void(void) spawnfunc_func_stardust {
 float(void) func_moving_brush_init {
 	// trigger angles are used for one-way touches.  An angle of 0 is assumed
 	// to mean no restrictions, so use a yaw of 360 instead.
-	self.solid = SOLID_BSP;
+	self.solid = VM_SOLID_BSP;
 	model_setup();
 	self.movetype = MOVETYPE_PUSH;
 	if (self.modelindex == 0) {
@@ -217,7 +217,7 @@ void(void) spawnfunc_func_rain {
 		self.dest = '0 0 -700';
 	self.angles = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	model_setup();
 	if (!self.cnt)
 		self.cnt = 12;
@@ -255,7 +255,7 @@ void(void) spawnfunc_func_snow {
 
 	self.angles = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	model_setup();
 	if (!self.cnt)
 		self.cnt = 12;
@@ -311,7 +311,7 @@ void(void) spawnfunc_func_nowalljump {
 .float alpha_nonsolid;
 .float oldsolid;
 
-#define MAGICWALL_ALPHAFIELD(e) (((e).solid == SOLID_BSP)? alpha_solid : alpha_nonsolid)
+#define MAGICWALL_ALPHAFIELD(e) (((e).solid == VM_SOLID_BSP)? alpha_solid : alpha_nonsolid)
 #define SPAWNFLAG_MW_START_HIDDEN 4
 #define SPAWNFLAG_MW_TOGGLE 8
 
@@ -356,7 +356,7 @@ void(void) func_magicwall_reset {
 }
 
 void(void) func_magicwall_use_toggle {
-	func_magicwall_start_transition(((self.solid == SOLID_BSP) ? SOLID_NOT : SOLID_BSP), NULL);
+	func_magicwall_start_transition(((self.solid == VM_SOLID_BSP) ? VM_SOLID_NOT : VM_SOLID_BSP), NULL);
 	waypoint_relink_door(self, self.origin);
 }
 
@@ -376,7 +376,7 @@ void(void) func_magicwall_use {
 
 		return;
 	}
-	func_magicwall_start_transition(((self.oldsolid == SOLID_BSP) ? SOLID_NOT : SOLID_BSP),
+	func_magicwall_start_transition(((self.oldsolid == VM_SOLID_BSP) ? VM_SOLID_NOT : VM_SOLID_BSP),
 		((self.wait >= 0) ? func_magicwall_think_transition_schedule_back : NULL));
 }
 
@@ -390,7 +390,7 @@ void(void) func_magicwall_touch {
 }
 
 void(void) spawnfunc_func_magicwall {
-    model_init(SOLID_BSP);
+    model_init(VM_SOLID_BSP);
     if (self.alpha_solid <= 0)
         self.alpha_solid = 1;
 
@@ -406,7 +406,7 @@ void(void) spawnfunc_func_magicwall {
     if (!self.speed)
         self.speed = 1;
 
-    self.oldsolid = ((self.spawnflags & SPAWNFLAG_MW_START_HIDDEN) ? SOLID_NOT : SOLID_BSP);
+    self.oldsolid = ((self.spawnflags & SPAWNFLAG_MW_START_HIDDEN) ? VM_SOLID_NOT : VM_SOLID_BSP);
     self.customizeentityforclient = func_magicwall_customize;
     self.think = func_magicwall_think;
     self.reset = func_magicwall_reset;
@@ -524,7 +524,7 @@ void(void) func_plat_spawn_inside_trigger {
 	trigger = spawn();
 	trigger.touch = func_plat_center_touch;
 	trigger.movetype = MOVETYPE_NONE;
-	trigger.solid = SOLID_TRIGGER;
+	trigger.solid = VM_SOLID_TRIGGER;
 	trigger.enemy = self;
 	trigger.existsonlyfor = self.existsonlyfor;
 	tmin = self.absmin + '25 25 0';
@@ -1064,7 +1064,7 @@ void(void) spawnfunc_func_button {
 		precache_sound(self.noise);
 
 	func_pos_setup();
-	self.flags |= FL_NOTARGET;
+	self.flags |= FLAG_NOTARGET;
 	func_button_reset();
 }
 
@@ -1335,7 +1335,7 @@ entity(vector fmins, vector fmaxs) func_spawn_field {
 	trigger = spawn();
 	trigger.classname = "doortriggerfield";
 	trigger.movetype = MOVETYPE_NONE;
-	trigger.solid = SOLID_TRIGGER;
+	trigger.solid = VM_SOLID_TRIGGER;
 	trigger.owner = self;
 	trigger.touch = func_door_trigger_touch;
 	trigger.existsonlyfor = self.existsonlyfor;

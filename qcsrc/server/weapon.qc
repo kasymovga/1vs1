@@ -314,7 +314,7 @@ float(float wpn) weapon_ammo_item_code {
 }
 
 void(void) weapon_thrown_think {
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.owner = NULL;
 	entity_fade_setup(self, time + g_weapon_thrown_lifetime, 1);
 }
@@ -713,13 +713,13 @@ void(float wpn) weapon_defaultspawnfunc {
 			}
 		}
 	} else {
-		self.flags |= FL_NO_WEAPON_STAY;
+		self.flags |= FLAG_NO_WEAPON_STAY;
 	}
 	// weapon stay isn't supported for teamed weapons
 	if (self.team)
-		self.flags |= FL_NO_WEAPON_STAY;
+		self.flags |= FLAG_NO_WEAPON_STAY;
 
-	item_start(e.model, e.lodmodel1, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	item_start(e.model, e.lodmodel1, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, FLAG_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if not(item_start_failed)
 	if (self.classname != "droppedweapon") {
 		weapon_precache(e.weapon);
@@ -1006,13 +1006,13 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	if (!g_norecoil) {
 		if (g_recoil_extra && !g_topview && !g_sideview) {
 			vector a = vectoangles(s_forward + randomvec() * g_recoil_extra_spread *
-					((ent.flags & FL_ONGROUND) ? (ent.crouch ? g_recoil_extra_spread_crouch_factor : 1) : g_recoil_extra_spread_fly_factor) * ent.punchangle_x);
+					((ent.flags & FLAG_ONGROUND) ? (ent.crouch ? g_recoil_extra_spread_crouch_factor : 1) : g_recoil_extra_spread_fly_factor) * ent.punchangle_x);
 			a_x = -a_x;
 			makevectors(a + ent.punchangle_x * '1 0 0');
 			s_forward = v_forward;
 			float f = max(0, 1 - fabs(sin(ent.punchangle_x * MATH_DEG2RAD)));
 			ent.punchangle_x -= recoil * f * g_recoil_extra *
-					((ent.flags & FL_ONGROUND) ? (ent.crouch ? g_recoil_extra_crouch_factor : 1) : g_recoil_extra_fly_factor);
+					((ent.flags & FLAG_ONGROUND) ? (ent.crouch ? g_recoil_extra_crouch_factor : 1) : g_recoil_extra_fly_factor);
 		} else
 			ent.punchangle_x = min(ent.punchangle_x, recoil * -1);
 	}
@@ -1211,8 +1211,8 @@ void(void) weapon_priority_update {
 			if (wi.impulse == imp)
 				weapon_priority_by_impulse = strcat(weapon_priority_by_impulse, " ", ftos(wi.weapon));
 
-	weapon_priority_by_order = strzone(substring(weapon_priority_by_order, 1, strlen(weapon_priority_by_order) - 1));
-	weapon_priority_by_impulse = strzone(substring(weapon_priority_by_impulse, 1, strlen(weapon_priority_by_impulse) - 1));
+	weapon_priority_by_order = str_zone_ifneeded(str_sub(weapon_priority_by_order, 1, strlen(weapon_priority_by_order) - 1));
+	weapon_priority_by_impulse = str_zone_ifneeded(str_sub(weapon_priority_by_impulse, 1, strlen(weapon_priority_by_impulse) - 1));
 }
 
 float(float wr) weapon_dummy_func {
@@ -1237,9 +1237,9 @@ void(float id,
 	else
 		dlc_add_dlc_or_pk3_by_file(s);
 
-	e.model = strzone(strcat("models/weapons/g_", s, ".md3"));
-	e.mdl = strzone(s);
-	e.lodmodel1 = strzone(strcat("models/weapons/g_", modelname, ".md3"));
+	e.model = str_zone_ifneeded(strcat("models/weapons/g_", s, ".md3"));
+	e.mdl = str_zone_ifneeded(s);
+	e.lodmodel1 = str_zone_ifneeded(strcat("models/weapons/g_", modelname, ".md3"));
 	float animfile;
 	string animfilename = strcat("models/weapons/h_", e.mdl, ".dpm.animinfo");
 	animfile = fopen(animfilename, FILE_READ);
@@ -1258,7 +1258,7 @@ void(float id,
 		if (anim_parseerror)
 			print("Parse error in ", animfilename, ", some animations are broken\n");
 	}
-	e.model2 = strzone(strcat("wpn-", e.mdl));
+	e.model2 = str_zone_ifneeded(strcat("wpn-", e.mdl));
 	e.spawnflags = 0;
 	if (normalweapon > 0)
 		e.spawnflags |= WEAPON_FLAG_NORMAL;

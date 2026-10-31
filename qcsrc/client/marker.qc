@@ -360,16 +360,16 @@ void(void) marker_init {
 	n = search_getsize(dh);
 	for (i = 0; i < n; ++i) {
 		s = search_getfilename(dh, i);
-		if (substring(s, 0, 15) != "models/sprites/")
+		if (str_sub(s, 0, 15) != "models/sprites/")
 			continue;
 
-		if (substring(s, strlen(s) - 4, 4) != ".tga")
+		if (str_sub(s, strlen(s) - 4, 4) != ".tga")
 			continue;
 
-		s = substring(s, 15, strlen(s) - 19);
+		s = str_sub(s, 15, strlen(s) - 19);
 		o = strstrofs(s, "_frame", 0);
-		sname = strcat("/spriteframes/", substring(s, 0, o));
-		sframes = substring(s, o + 6, strlen(s) - o - 6);
+		sname = strcat("/spriteframes/", str_sub(s, 0, o));
+		sframes = str_sub(s, o + 6, strlen(s) - o - 6);
 		f = stof(sframes) + 1;
 		db_put(db_temp, sname, ftos(max(f, stof(db_get(db_temp, sname)))));
 	}

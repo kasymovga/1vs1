@@ -7,7 +7,7 @@ float(void) physics_car {
 	self.flags = physics_flags;
 	self.angles_x = -self.angles_x;
 	makevectors(self.angles);
-    if(self.flags & FL_ONGROUND) {
+    if(self.flags & FLAG_ONGROUND) {
 		float _speed = vlen(self.velocity);
 		if (physics_v_angle_y != self.angles_y) {
 			float turn_angle_speed = g_vehicle_car_turnspeed * frametime * (_speed / g_vehicle_car_speed);

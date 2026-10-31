@@ -303,7 +303,7 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	self.owner = other;
 	self.owner.angles         = self.angles;
 	self.owner.takedamage     = DAMAGE_NO;
-	self.owner.solid          = SOLID_NOT;
+	self.owner.solid          = VM_SOLID_NOT;
 	self.owner.PlayerPhysplug = phys_plug;
 	self.owner.vehicle        = self;
 	self.team                 = self.owner.team;
@@ -341,7 +341,7 @@ void(void(void) think_func, void(void) touch_func) vehicle_stdproc_spawn {
 	setorigin(self, self.enemy.origin);
 	self.angles = self.enemy.angles;
 	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_SLIDEBOX;
+	self.solid = VM_SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_PHYSICS;
 	self.deadflag = DEAD_NO;
 	self.health = self.health_max;
@@ -365,7 +365,7 @@ void(void(void) think_func) vehicle_stdproc_die {
 	self.event_damage = NULL;
 	self.health = 0;
 	self.iscreature = FALSE;
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.touch = NULL;
 	if (think_func) {
 		self.think = think_func;

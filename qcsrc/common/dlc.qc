@@ -94,7 +94,7 @@ float(string dlc_name, float force_local) dlc_load {
 		if (s == dlc_name)
 			goto skip_add_to_list;
 	}
-	s = strzone(strcat(dlc_list, " ", dlc_name));
+	s = str_zone_ifneeded(strcat(dlc_list, " ", dlc_name));
 	str_unzone_ifneeded(dlc_list);
 	dlc_list = s;
 :skip_add_to_list
@@ -113,7 +113,7 @@ float(string dlc_name, float force_local) dlc_load {
 		localcmd("\ncurl --pak ", dlc_pk3_name(dlc_name), "\n");
 		s = strcat(dlc_load_queue, " ", dlc_name);
 		str_unzone_ifneeded(dlc_load_queue);
-		dlc_load_queue = strzone(s);
+		dlc_load_queue = str_zone_ifneeded(s);
 	}
 	return FALSE;
 }

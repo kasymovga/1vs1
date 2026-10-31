@@ -18,11 +18,11 @@ void(float db, string s_key, string s_value, void(string k, string v) cb) db_for
 				if (v_e == k_e + 1) { //empty
 					break;
 				}
-				k = substring(l, 1, k_e - 1);
+				k = str_sub(l, 1, k_e - 1);
 				if (v_e >= 0)
-					v = substring(l, k_e + 1, v_e - k_e - 1);
+					v = str_sub(l, k_e + 1, v_e - k_e - 1);
 				else
-					v = substring(l, k_e + 1, -1);
+					v = str_sub(l, k_e + 1, -1);
 
 				if (v == "") break;
 				if ((s_key == "" || strstrofs(k, s_key, 0) >= 0)
@@ -30,7 +30,7 @@ void(float db, string s_key, string s_value, void(string k, string v) cb) db_for
 					cb(k, uri_unescape(v));
 
 				if (v_e >= 0)
-					l = substring(l, v_e, -1);
+					l = str_sub(l, v_e, -1);
 				else
 					break;
 			}

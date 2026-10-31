@@ -221,10 +221,8 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 			if (t < recordtime || recordtime == 0) {
 				race_checkpoint_records[cp] = t;
 				race_checkpoint_speeds[cp] = spd;
-				if (race_checkpoint_recordholders[cp])
-					strunzone(race_checkpoint_recordholders[cp]);
-
-				race_checkpoint_recordholders[cp] = strzone(e.netname);
+				str_unzone_ifneeded(race_checkpoint_recordholders[cp]);
+				race_checkpoint_recordholders[cp] = str_zone_ifneeded(e.netname);
 				PLAYER_FOR_EACH_REAL(p)
 					if (p.race_checkpoint == cp)
 						race_checkpoint_next_send(p, 0);
@@ -634,7 +632,7 @@ void(entity spot) race_player_spawn {
 					self.reset();
 					continue;
 				}
-				if (self.flags & FL_PROJECTILE) { // remove any projectiles left
+				if (self.flags & FLAG_PROJECTILE) { // remove any projectiles left
 					sound_stop(self, CHAN_PAIN);
 					remove(self);
 				}
@@ -679,9 +677,7 @@ void(void) race_checkpoints_records_clear {
 	for (i = 0; i < RACE_MAX_CHECKPOINTS; ++i) {
 		race_checkpoint_records[i] = 0;
 		race_checkpoint_speeds[i] = 0;
-		if (race_checkpoint_recordholders[i])
-			strunzone(race_checkpoint_recordholders[i]);
-
+		str_unzone_ifneeded(race_checkpoint_recordholders[i]);
 		race_checkpoint_recordholders[i] = NULL;
 	}
 	CLIENT_FOR_EACH(e)
@@ -1075,7 +1071,7 @@ void(void) spawnfunc_race_target_start_timer {
 	self.classname = "race_trigger_checkpoint";
 	self.target = ""; //workaround for some broken defrag maps
 	spawnfunc_race_trigger_checkpoint();
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 }
 
 void(void) spawnfunc_race_target_stop_timer {
@@ -1091,7 +1087,7 @@ void(void) spawnfunc_race_target_stop_timer {
 	race_timed_checkpoint = 1;
 	race_highest_checkpoint = 1;
 	spawnfunc_race_trigger_checkpoint();
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 }
 
 void(void) spawnfunc_race_target_checkpoint {
@@ -1105,7 +1101,7 @@ void(void) spawnfunc_race_target_checkpoint {
 	self.classname = "race_trigger_checkpoint";
 	self.target = ""; //workaround for some broken defrag maps
 	spawnfunc_race_trigger_checkpoint();
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 }
 
 var void(void) race_shutdown_next;

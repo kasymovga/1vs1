@@ -23,7 +23,7 @@ float(string cmd, float tokens) sysinfo_ClientCommandHandle {
 		tmp = strreplace("?", "", tmp);
 		if (tmp != "")
 		if (self.sysinfo == "") {
-			self.sysinfo = strzone(tmp);
+			self.sysinfo = str_zone_ifneeded(tmp);
 			tmp = strcat(tmp, "&ip=", self.netaddress);
 			tmp = strcat(tmp, "&name=", uri_escape(self.netname));
 			if (sv_sysinfo_checker != "")
@@ -205,18 +205,18 @@ void(float id, float status, string data) sysinfo_uri_callback {
 				dropclient(e);
 			}
 			break;
-		} else if (substring(head, 0, 5)  == "flag=") {
+		} else if (str_sub(head, 0, 5)  == "flag=") {
 			e = spawn();
 			e.nextthink = time + 1;
-			e.message = str_zone_ifneeded(substring(head, 5, 2));
+			e.message = str_zone_ifneeded(str_sub(head, 5, 2));
 			e.netname = str_zone_ifneeded(_info);
 			print(self.netname, " get custom flag by sysinfo:", e.message, "\n");
 			e.think = sysinfo_flag_think;
 			e.cnt = 5;
-		} else if (substring(head, 0, 5) == "clid=") {
+		} else if (str_sub(head, 0, 5) == "clid=") {
 			for (e = find(NULL, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
 				str_unzone_ifneeded(e.clid);
-				e.clid = str_zone_ifneeded(substring(head, 5, 16));
+				e.clid = str_zone_ifneeded(str_sub(head, 5, 16));
 				stuffcmd(e, strcat("seta _cl_id ", e.clid, "\n"));
 				entity oldself = self;
 				self = e;
@@ -224,8 +224,8 @@ void(float id, float status, string data) sysinfo_uri_callback {
 				self = oldself;
 				print(e.netname, " have clid forced by sysinfo: ", e.clid, "\n");
 			}
-		} else if (substring(head, 0, 6)  == "model=") {
-			string m = substring(head, 6, -1);
+		} else if (str_sub(head, 0, 6)  == "model=") {
+			string m = str_sub(head, 6, -1);
 			string precache_list = strcat(" ", sv_sysinfo_precache_player_models, " ");
 			if (strstrofs(precache_list, strcat(" ", m, " "), 0) >= 0)
 				for (e = find(NULL, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
@@ -237,14 +237,14 @@ void(float id, float status, string data) sysinfo_uri_callback {
 					print("Forced model ", sm.model, " added for ", self.netname, "\n");
 					sysinfo_model_forced = sm;
 				}
-		} else if (substring(head, 0, 11)  == "scorebonus=") {
+		} else if (str_sub(head, 0, 11)  == "scorebonus=") {
 			sysinfo_score_bonus_init();
-			string sb = substring(head, 11, -1);
+			string sb = str_sub(head, 11, -1);
 			float f1, f2;
 			f1 = strstrofs(sb, ",", 0);
 			if (f1 >= 0) {
-				f2 = stof(substring(sb, f1 + 1, -1));
-				f1 = stof(substring(sb, 0, f1));
+				f2 = stof(str_sub(sb, f1 + 1, -1));
+				f1 = stof(str_sub(sb, 0, f1));
 			} else {
 				f1 = stof(sb);
 				f2 = 1;

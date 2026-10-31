@@ -172,7 +172,7 @@ void(void) spectator_player_think {
 void() spectator_think {
 	entity oldenemy = self.enemy;
 	if (self.BUTTON_JUMP && self.team <= 0) {
-		self.flags |= FL_SPAWNING;
+		self.flags |= FLAG_SPAWNING;
 	} else if (self.BUTTON_ATCK && !self.delay) {
 		if (spectator_spectate_next() != 1) {
 			spectator_observer_spawn(FALSE);
@@ -186,8 +186,8 @@ void() spectator_think {
 	}
 	if not(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.BUTTON_JUMP) {
 		if (self.team <= 0)
-		if (self.flags & FL_SPAWNING) {
-			self.flags &= ~FL_SPAWNING;
+		if (self.flags & FLAG_SPAWNING) {
+			self.flags &= ~FLAG_SPAWNING;
 			spectator_to_player();
 			return;
 		}
@@ -207,14 +207,14 @@ void() spectator_observer_think {
 		}
 	}
 	if (self.BUTTON_JUMP && self.team <= 0) {
-		self.flags |= FL_SPAWNING;
+		self.flags |= FLAG_SPAWNING;
 	} else if (self.BUTTON_ATCK) {
 		if (spectator_spectate_next() == 1) {
 			self.classname = "spectator";
 		}
 	} else {
-		if (self.flags & FL_SPAWNING) {
-			self.flags &= ~FL_SPAWNING;
+		if (self.flags & FLAG_SPAWNING) {
+			self.flags &= ~FLAG_SPAWNING;
 			spectator_to_player();
 			return;
 		}
@@ -290,9 +290,9 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.iscreature = FALSE;
 	self.health = 1;
 	self.takedamage = DAMAGE_NO;
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.movetype = MOVETYPE_QCWALK;
-	self.flags = (FL_CLIENT | FL_NOTARGET);
+	self.flags = (FLAG_CLIENT | FLAG_NOTARGET);
 	self.armorvalue = 0;
 	self.effects = 0;
 	self.pauserotarmor_finished = 0;

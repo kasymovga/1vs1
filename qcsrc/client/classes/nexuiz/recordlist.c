@@ -46,11 +46,11 @@ void drawListBoxItemNexuizRecordList(entity me, float i, vector absSize, float i
 	string record_map = str_car(s);
 	s = str_cdr(s);
 	float trim = 0;
-	while (substring(s, trim, 1) == " ")
+	while (str_sub(s, trim, 1) == " ")
 		trim++;
 
 	vector c;
-	s = substring(s, trim, -1);
+	s = str_sub(s, trim, -1);
 	string record_time = str_car(s);
 	string record_name = str_cdr(s);
 	if (record_map == map_shortname) {

@@ -3,14 +3,15 @@ vector gui_draw_mousepointer_offset;
 vector gui_draw_mousepointer_size;
 
 string(string pic) gui_image_path {
-	if(substring(pic, 0, 1) == "/")
-		return substring(pic, 1, strlen(pic)-1);
+	if(str_sub(pic, 0, 1) == "/")
+		return str_sub(pic, 1, strlen(pic)-1);
 	else
 		return strcat(skin_current, "/", pic);
 }
 
 void(string pic, vector theSize, vector theOffset) gui_set_mouse_pointer {
-	gui_draw_mousepointer = strzone(gui_image_path(pic));
+	str_unzone_ifneeded(gui_draw_mousepointer);
+	gui_draw_mousepointer = str_zone_ifneeded(gui_image_path(pic));
 	gui_draw_mousepointer_size = theSize;
 	gui_draw_mousepointer_offset = eX * (theOffset_x * theSize_x) + eY * (theOffset_y * theSize_y);
 }
@@ -251,7 +252,7 @@ string(string theText, float maxWidth, float ICanHasKallerz) gui_draw_text_short
 	if(gui_text_width(theText, ICanHasKallerz) <= maxWidth)
 		return theText;
 	else
-		return strcat(substring(theText, 0, gui_draw_text_length_up_to_width(theText, maxWidth - gui_text_width("...", ICanHasKallerz), ICanHasKallerz)), "...");
+		return strcat(str_sub(theText, 0, gui_draw_text_length_up_to_width(theText, maxWidth - gui_text_width("...", ICanHasKallerz), ICanHasKallerz)), "...");
 }
 
 float(string s) gui_text_width_with_colors {
@@ -295,7 +296,7 @@ void(string img, float a, float algn, float force1) gui_draw_background {
 	s = ftos(algn);
 	v_z = 0;
 	for (i = 0; i < strlen(s); ++i) {
-		f = stof(substring(s, i, 1));
+		f = stof(str_sub(s, i, 1));
 		switch(f) {
 		case 1: case 4: case 7: v_x = tl_x; break;
 		default:

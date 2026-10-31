@@ -36,8 +36,8 @@ void(void) single_endlevel {
 			single_monsters_total++;
 			continue;
 		}
-		if (substring(e.classname, 0, 8) == "monster_") //Untriggered spawn
-		if (substring(e.classname, strlen(e.classname) - 6, 6) == "_spawn")
+		if (str_sub(e.classname, 0, 8) == "monster_") //Untriggered spawn
+		if (str_sub(e.classname, strlen(e.classname) - 6, 6) == "_spawn")
 		if (e.dmg == max(e.cnt, 1)) {
 			single_monsters_total += e.dmg;
 		}
@@ -78,10 +78,10 @@ void single_init_delayed(void) {
 	cvar_set("skill", ftos(single_skill_save));
 	for (e = nextent(world); e; e = nextent(e)) {
 		if (e.target != "")
-		if (substring(e.target, 0, 9) == "endlevel:") {
-			s = substring(e.target, 9, -1);
+		if (str_sub(e.target, 0, 9) == "endlevel:") {
+			s = str_sub(e.target, 9, -1);
 			map_target = spawn();
-			map_target.netname = strzone(s);
+			map_target.netname = str_zone_ifneeded(s);
 			print("endlevel with nextmap: ", s, "\n");
 			map_target.targetname = e.target;
 			map_target.use = single_endlevel;

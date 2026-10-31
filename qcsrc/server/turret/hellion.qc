@@ -71,7 +71,7 @@ void(void) turret_hellion_attack {
 	//self.tur_shotorg_y = self.tur_shotorg_y * -1;
 	missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
 	projectile_setup(missile, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
-	missile.solid = SOLID_BBOX;
+	missile.solid = VM_SOLID_BBOX;
 	missile.classname          = "hellion_missile";
 	missile.takedamage         = DAMAGE_YES;
 	missile.event_damage       = turret_hellion_missile_damage;

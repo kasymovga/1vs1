@@ -17,7 +17,7 @@ void(entity pass, entity me) cmd_dumptree_open {
 
 void(entity pass, entity me) cmd_dumptree_close {
 	if (me.firstChild) {
-		cmd_dumptree_space = substring(cmd_dumptree_space, 0, strlen(cmd_dumptree_space) - 2);
+		cmd_dumptree_space = str_sub(cmd_dumptree_space, 0, strlen(cmd_dumptree_space) - 2);
 		print(cmd_dumptree_space, "}\n");
 	}
 }
@@ -90,14 +90,14 @@ void(string theCommand) cmd { //called by engine
 						cvar_set(strcat("_override_parm", ftos(lineno - 2)), line);
 					}
 				}
-				if (substring(line, 0, 17) == "\"campaign_level\" " && strlen(line) >= 19) {
-					cvar_set("_campaign_index", substring(line, 18, strlen(line) - 19));
+				if (str_sub(line, 0, 17) == "\"campaign_level\" " && strlen(line) >= 19) {
+					cvar_set("_campaign_index", str_sub(line, 18, strlen(line) - 19));
 				}
-				if (substring(line, 0, 19) == "\"g_campaign_skill\" " && strlen(line) >= 21) {
-					cvar_set("g_campaign_skill", substring(line, 20, strlen(line) - 21));
+				if (str_sub(line, 0, 19) == "\"g_campaign_skill\" " && strlen(line) >= 21) {
+					cvar_set("g_campaign_skill", str_sub(line, 20, strlen(line) - 21));
 				}
-				if (substring(line, 0, 16) == "\"campaign_name\" " && strlen(line) >= 18) {
-					cvar_set("_campaign_name", substring(line, 17, strlen(line) - 18));
+				if (str_sub(line, 0, 16) == "\"campaign_name\" " && strlen(line) >= 18) {
+					cvar_set("_campaign_name", str_sub(line, 17, strlen(line) - 18));
 				}
 				if (line == "}") break;
 			}

@@ -22,10 +22,10 @@ void(float argc, string response) udp_chat_extresponse {
 		return;
 	}
 
-	string msg = substring(response, argv_start_index(2), -1);
+	string msg = str_sub(response, argv_start_index(2), -1);
 	float colon = strstrofs(msg, ":", 0);
 	if (colon >= 0)
-		bprint("\{3}", "^5\x12 ^3", substring(msg, 0, colon), "^2:^5", substring(msg, colon + 1, -1), "\n");
+		bprint("\{3}", "^5\x12 ^3", str_sub(msg, 0, colon), "^2:^5", str_sub(msg, colon + 1, -1), "\n");
 	else
 		bprint("\{3}", "^5\x12 ", msg, "\n");
 

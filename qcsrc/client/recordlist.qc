@@ -19,7 +19,7 @@ string(entity e, float n) recordlist_line {
 		p1 = p2 + 1;
 		p2 = strstrofs(e.message, "\n", p1);
 	}
-	return substring(e.message, p1, p2 - p1);
+	return str_sub(e.message, p1, p2 - p1);
 }
 
 float(entity e) recordlist_lines_count {

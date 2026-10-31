@@ -45,7 +45,7 @@ float(void) physics_jump_velocity_mod {
 }
 
 float(entity a) physics_is_flying {
-	if (a.flags & FL_ONGROUND_OR_SLICK)
+	if (a.flags & FLAG_ONGROUND_OR_SLICK)
 		return 0;
 
 	if (a.waterlevel)
@@ -63,7 +63,7 @@ void(void) physics_check_ground_hook {
 			self.nextstep = time + 0.5;
 			sound(self, CHAN_PLAYER, "misc/outwater.wav", VOL_BASE, ATTN_NORM);
 		} else {
-			if (self.flags & FL_ONGROUND_OR_SLICK)
+			if (self.flags & FLAG_ONGROUND_OR_SLICK)
 			if (time >= self.ladder_time)
 			if (self.lastground < time - 0.3) {
 				self.nextstep = time + 0.2;
@@ -82,7 +82,7 @@ void(void) physics_check_ground_hook {
 	if (physics_is_player)
 	if not(physics_cantjump)
 	if (physics_button_jump)
-	if (sv_pogostick || (physics_flags & FL_JUMPRELEASED))
+	if (sv_pogostick || (physics_flags & FLAG_JUMPRELEASED))
 	if (g_jump_nofalldamage)
 		self.oldvelocity_z = 0;
 
@@ -121,7 +121,7 @@ float(void) physics_max_speed_mod {
 .float last_physics_ladder;
 void(void) physics_frame_end_hook {
 	self.last_physics_ladder = physics_ladder;
-	if ((physics_is_player && self.solid != SOLID_NOT) || self.classname == "observer")
+	if ((physics_is_player && self.solid != VM_SOLID_NOT) || self.classname == "observer")
 	if (self.mins != self.maxs) {
 		physics_triggers(physics_frame_begin_origin, self.origin, vlen(self.maxs - self.mins) / 2, 0);
 	}
@@ -197,8 +197,8 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 	for (; e; e = e.physics_chain) {
 		if (e == oldself) continue;
 		if (e.clipgroup && oldself.clipgroup == e.clipgroup) continue;
-		if (e.solid != SOLID_TRIGGER && e.solid != SOLID_CORPSE) continue; //projectiles use SOLID_CORPSE
-		if (e.owner == oldself && (e.flags & FL_PROJECTILE)) continue; //don't touch own projectiles
+		if (e.solid != VM_SOLID_TRIGGER && e.solid != VM_SOLID_CORPSE) continue; //projectiles use VM_SOLID_CORPSE
+		if (e.owner == oldself && (e.flags & FLAG_PROJECTILE)) continue; //don't touch own projectiles
 		if (e.existsonlyfor && e.existsonlyfor != oldself) continue;
 		if not(math_boxes_overlap(e.origin + e.mins, e.origin + e.maxs, v2_absmins, v2_absmaxs)) continue;
 		if (e.touch) {
@@ -272,12 +272,12 @@ void(void) physics_player_pre { //called by engine
 
 		//cheats
 		if (self.movetype == MOVETYPE_NOCLIP) {
-			self.flags &= ~FL_FLY;
-			cheat_assign(self, flags, FL_SWIM, "NOCLIP");
+			self.flags &= ~FLAG_FLY;
+			cheat_assign(self, flags, FLAG_SWIM, "NOCLIP");
 			self.movetype = MOVETYPE_QCWALK;
 		} else if (self.movetype == MOVETYPE_FLY) {
-			self.flags &= ~FL_SWIM;
-			cheat_assign(self, flags, FL_FLY, "FLY");
+			self.flags &= ~FLAG_SWIM;
+			cheat_assign(self, flags, FLAG_FLY, "FLY");
 			self.movetype = MOVETYPE_QCWALK;
 		} else if (self.movetype == MOVETYPE_FOLLOW) {
 		} else if (allowed_to_move) {
@@ -288,8 +288,8 @@ void(void) physics_player_pre { //called by engine
 		}
 	} else if (self.classname == "observer") {
 		self.movetype = MOVETYPE_QCWALK;
-		self.flags |= FL_SWIM;
-		self.flags &= ~FL_ONGROUND;
+		self.flags |= FLAG_SWIM;
+		self.flags &= ~FLAG_ONGROUND;
 	}
 	if (clienttype(self) == CLIENTTYPE_BOT) {
 		bot_think();
@@ -364,14 +364,14 @@ void(void) physics_player_pre { //called by engine
 		sv_pogostick = sv_pogostick_save;
 
 	self.frametime_accumulator = physics_frametime_accumulator;
-	if (physics_flags & FL_ONGROUND_OR_SLICK)
+	if (physics_flags & FLAG_ONGROUND_OR_SLICK)
 		self.lastground = time;
 
 	self.teleport_time = time + physics_teleport_time;
 	self.physics_nofriction_time = physics_nofriction;
 	self.crouch = physics_crouch;
-	if (physics_flags & FL_CLIMB)
-	if not(physics_lastflags & FL_CLIMB)
+	if (physics_flags & FLAG_CLIMB)
+	if not(physics_lastflags & FLAG_CLIMB)
 		player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
 
 	self.flags = physics_flags;
@@ -404,8 +404,8 @@ void(void) physics_client_disconnect_real {
 
 float(string s) physics_cvar {
 	string sv_s = s;
-	if (substring(s, 0, 3) == "sv_") {
-		s = substring(s, 3, -1);
+	if (str_sub(s, 0, 3) == "sv_") {
+		s = str_sub(s, 3, -1);
 	}
 	string g_s = strcat("g_", s);
 	string g_s_v = cvar_string(g_s);
@@ -442,7 +442,7 @@ float(entity plr, entity viewer, float _alpha) physics_sideview_player_alpha_mod
 
 var float(float f) physics_weapon_switch_mod_next;
 float(float f) physics_weapon_switch_mod {
-	if (akimbo_owner(self).flags & FL_CLIMB)
+	if (akimbo_owner(self).flags & FLAG_CLIMB)
 		return 0;
 
 	return physics_weapon_switch_mod_next(f);
@@ -645,7 +645,7 @@ float(entity to, float sf) physics_send {
 	if (SPECTATOR_IS_SPECTATOR(self)) {
 		//for strafe helper
 		entity spectatee = SPECTATOR_SPECTATEE(self);
-		if (spectatee.flags & FL_ONGROUND) sf |= 16;
+		if (spectatee.flags & FLAG_ONGROUND) sf |= 16;
 		v = spectatee.velocity;
 	} else {
 		if (self.classname == "player")
@@ -673,9 +673,9 @@ float(entity to, float sf) physics_send {
 			sf2 |= 4;
 	}
 	if (self.groundentity)
-	if (self.flags & FL_ONGROUND_OR_SLICK)
+	if (self.flags & FLAG_ONGROUND_OR_SLICK)
 	if (self.groundentity.movetype != MOVETYPE_NONE)
-	if (self.groundentity.solid == SOLID_BSP) {
+	if (self.groundentity.solid == VM_SOLID_BSP) {
 		sf |= 32768;
 	}
 	if (self.skimming_time > 0) sf2 |= 1;

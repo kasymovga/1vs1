@@ -90,7 +90,7 @@ void(void) spawnfunc_chess_piece {
 }
 
 void(void) spawnfunc_chess_board {
-	self.solid = SOLID_BSP;
+	self.solid = VM_SOLID_BSP;
 	model_setup();
 	chess_board_width = self.maxs_x - self.mins_x;
 	chess_board_height = self.maxs_y - self.mins_y;
@@ -130,7 +130,7 @@ float(float t) chess_position_is_check {
 }
 
 string(float x, float y) chess_cell_name {
-	string s = substring("abcdefgh", x, 1);
+	string s = str_sub("abcdefgh", x, 1);
 	return strcat(s, ftos(y + 1));
 }
 
@@ -539,7 +539,7 @@ entity(float t, float cellx, float celly, float wb) chess_piece_spawn {
 	if (wb)
 		e.angles = '0 180 0';
 
-	e.solid = SOLID_BSP;
+	e.solid = VM_SOLID_BSP;
 	chess_piece_move(e, cellx, celly, FALSE);
 	e.team = (wb ? COLOR_TEAM2 : COLOR_TEAM1);
 	e.colormod = team_colormod(e.team);
@@ -576,29 +576,29 @@ void(void) chess_board_init {
 		string squares = "01234567";
 		//rook king side
 		rookk = 2 + floor(random() * 6);
-		squares = strcat(substring(squares, 0, rookk), substring(squares, rookk + 1, 8 - rookk - 1));
+		squares = strcat(str_sub(squares, 0, rookk), str_sub(squares, rookk + 1, 8 - rookk - 1));
 		//rook queen side
 		rookq = floor(random() * (rookk - 1));
-		squares = strcat(substring(squares, 0, rookq), substring(squares, rookq + 1, 8 - rookq - 1));
+		squares = strcat(str_sub(squares, 0, rookq), str_sub(squares, rookq + 1, 8 - rookq - 1));
 		//king
 		king = rookq + floor(random() * (rookk - rookq - 1)) + 1;
-		squares = strcat(substring(squares, 0, king - 1), substring(squares, king, 8 - king - 2)); //king value is his string index + 1
+		squares = strcat(str_sub(squares, 0, king - 1), str_sub(squares, king, 8 - king - 2)); //king value is his string index + 1
 		//queen
 		i = floor(random() * 5);
-		queen = stof(substring(squares, i, 1));
-		squares = strcat(substring(squares, 0, i), substring(squares, i + 1, 5 - i - 1));
+		queen = stof(str_sub(squares, i, 1));
+		squares = strcat(str_sub(squares, 0, i), str_sub(squares, i + 1, 5 - i - 1));
 		//knight queen side
 		i = floor(random() * 4);
-		knightq = stof(substring(squares, i, 1));
-		squares = strcat(substring(squares, 0, i), substring(squares, i + 1, 4 - i - 1));
+		knightq = stof(str_sub(squares, i, 1));
+		squares = strcat(str_sub(squares, 0, i), str_sub(squares, i + 1, 4 - i - 1));
 		//knight king side
 		i = floor(random() * 3);
-		knightk = stof(substring(squares, i, 1));
-		squares = strcat(substring(squares, 0, i), substring(squares, i + 1, 3 - i - 1));
+		knightk = stof(str_sub(squares, i, 1));
+		squares = strcat(str_sub(squares, 0, i), str_sub(squares, i + 1, 3 - i - 1));
 		//bishop qeen side
 		i = floor(random() * 2);
-		bishopq = stof(substring(squares, i, 1));
-		squares = strcat(substring(squares, 0, i), substring(squares, i + 1, 2 - i - 1));
+		bishopq = stof(str_sub(squares, i, 1));
+		squares = strcat(str_sub(squares, 0, i), str_sub(squares, i + 1, 2 - i - 1));
 		//bishop king side
 		bishopk = stof(squares);
 		if (math_mod(bishopq, 2) == math_mod(bishopk, 2)) {
@@ -815,7 +815,7 @@ void(entity e, float x, float y) chess_history_add {
 	//note, written backward
 	string s = strcat(chess_cell_name(e.pos1_x, e.pos1_y), chess_cell_name(x, y), " ", chess_history);
 	str_unzone_ifneeded(chess_history);
-	chess_history = strzone(s);
+	chess_history = str_zone_ifneeded(s);
 }
 
 void(void) chess_history_check {
@@ -827,8 +827,8 @@ void(void) chess_history_check {
 		string s;
 		float i, j = n / 3;
 		for (i = 20; i <= j; i += 10) {
-			s = substring(chess_history, 0, i);
-			if (s == substring(chess_history, i, i) && s == substring(chess_history, i * 2, i)) {
+			s = str_sub(chess_history, 0, i);
+			if (s == str_sub(chess_history, i, i) && s == str_sub(chess_history, i * 2, i)) {
 				print_all(PRINT_CHAT_SILENT, "* Draw by threefold repetition rule", "", "", "");
 				chess_win = -1;
 			}
@@ -848,7 +848,7 @@ void(entity piece, float x, float y) chess_checkers_move_perform {
 
 	s = strcat(s, chess_cell_name(x, y));
 	str_unzone_ifneeded(chess_checkers_move_chain);
-	chess_checkers_move_chain = strzone(s);
+	chess_checkers_move_chain = str_zone_ifneeded(s);
 	entity e = NULL;
 	for (cx = piece.pos1_x + dx, cy = piece.pos1_y + dy; cx != x && cy != y; cx += dx, cy += dy) {
 		if ((e = chess_piece_find(cx, cy))) {
@@ -1175,16 +1175,16 @@ void(entity chess_bot) chess_checkers_ai_move {
 		}
 		str_unzone_ifneeded(chess_checkers_ai_move_move);
 		chess_checkers_ai_move_move = random_selection_chosen_string;
-		x = strstrofs(letters, substring(chess_checkers_ai_move_move, 0, 1), 0);
-		y = stof(substring(chess_checkers_ai_move_move, 1, 1)) - 1;
+		x = strstrofs(letters, str_sub(chess_checkers_ai_move_move, 0, 1), 0);
+		y = stof(str_sub(chess_checkers_ai_move_move, 1, 1)) - 1;
 		chess_checkers_ai_move_piece = chess_piece_find(x, y);
-		chess_checkers_ai_move_move = str_zone_ifneeded(substring(chess_checkers_ai_move_move, 2, -1));
+		chess_checkers_ai_move_move = str_zone_ifneeded(str_sub(chess_checkers_ai_move_move, 2, -1));
 	} else
 		if (chess_last_move_time + 0.25 > time) return;
 
-	x = strstrofs(letters, substring(chess_checkers_ai_move_move, 0, 1), 0);
-	y = stof(substring(chess_checkers_ai_move_move, 1, 1)) - 1;
-	s = substring(chess_checkers_ai_move_move, 2, -1);
+	x = strstrofs(letters, str_sub(chess_checkers_ai_move_move, 0, 1), 0);
+	y = stof(str_sub(chess_checkers_ai_move_move, 1, 1)) - 1;
+	s = str_sub(chess_checkers_ai_move_move, 2, -1);
 	str_unzone_ifneeded(chess_checkers_ai_move_move);
 	chess_checkers_ai_move_move = str_zone_ifneeded(s);
 	entity oldself = self;

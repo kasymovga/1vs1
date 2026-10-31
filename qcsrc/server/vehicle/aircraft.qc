@@ -98,7 +98,7 @@ void(void) vehicle_aircraft_pull {
 		if (trace_ent.movetype != MOVETYPE_NOCLIP)
 		if (trace_ent.movetype != MOVETYPE_NONE)
 		if (trace_ent.movetype != MOVETYPE_FOLLOW)
-		if (trace_ent.solid == SOLID_SLIDEBOX || trace_ent.solid == SOLID_BBOX) {
+		if (trace_ent.solid == VM_SOLID_SLIDEBOX || trace_ent.solid == VM_SOLID_BBOX) {
 			float _volume = (trace_ent.maxs_x - trace_ent.mins_x) * (trace_ent.maxs_y - trace_ent.mins_y) *  (trace_ent.maxs_z - trace_ent.mins_z);
 			if (_volume < 3000 || _volume > 3000000) {
 				return;
@@ -111,7 +111,7 @@ void(void) vehicle_aircraft_pull {
 		vector center = (self.aiment.mins + self.aiment.maxs) * 0.5 + self.aiment.origin;
 		vector delta = center - self.origin;
 		float ldelta = vlen(delta);
-		if (zdistance > 100 || zdistance < 0 || ldelta > 200 || (self.solid != SOLID_BBOX && self.solid != SOLID_SLIDEBOX)) {
+		if (zdistance > 100 || zdistance < 0 || ldelta > 200 || (self.solid != VM_SOLID_BBOX && self.solid != VM_SOLID_SLIDEBOX)) {
 			vehicle_aircraft_pull_stop();
 			return;
 		} else if (zdistance > 50) {

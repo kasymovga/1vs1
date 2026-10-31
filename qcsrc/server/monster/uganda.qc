@@ -74,7 +74,7 @@ void(void) monster_ugandaknuckles_spawn {
 	setmodel(self, "models/knuckles.md3");
 	self.movetype = MOVETYPE_WALK;
 	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Uganda Knuckles";
 }

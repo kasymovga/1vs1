@@ -7,13 +7,13 @@ string(float pFlags, float pValue) score_string {
 	else if(pFlags & SCORE_FLAG_RANK) {
 		valstr = ftos(pValue);
 		l = strlen(valstr);
-		if((l >= 2) && (substring(valstr, l - 2, 1) == "1"))
+		if((l >= 2) && (str_sub(valstr, l - 2, 1) == "1"))
 			valstr = strcat(valstr, "th");
-		else if(substring(valstr, l - 1, 1) == "1")
+		else if(str_sub(valstr, l - 1, 1) == "1")
 			valstr = strcat(valstr, "st");
-		else if(substring(valstr, l - 1, 1) == "2")
+		else if(str_sub(valstr, l - 1, 1) == "2")
 			valstr = strcat(valstr, "nd");
-		else if(substring(valstr, l - 1, 1) == "3")
+		else if(str_sub(valstr, l - 1, 1) == "3")
 			valstr = strcat(valstr, "rd");
 		else
 			valstr = strcat(valstr, "th");

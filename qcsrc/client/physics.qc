@@ -100,8 +100,8 @@ void(void) physics_vehicle_read_common {
 
 void(entity e) physics_vehicle_common_post {
 	if (extension_DP_RM_SETRENDERENTITY) {
-		setentityvec(physics_player_ent, E_ORIGIN, e.origin);
-		setentityvec(physics_player_ent, E_ANGLES, e.angles);
+		setentityvec(physics_player_ent, VM_ENTITY_ORIGIN, e.origin);
+		setentityvec(physics_player_ent, VM_ENTITY_ANGLES, e.angles);
 	}
 	physics_flags = self.flags;
 	setorigin(physics, e.origin + '0 0 1' * vehicle_adjust_view_start_offs - physics.view_ofs);
@@ -260,7 +260,7 @@ vector(void) physics_view_origin {
 		frametime = frametime_save;
 		v = physics.origin + physics.view_ofs;
 		if (CVAR(cl_stairsmoothspeed)) {
-			if (!(physics_flags & FL_ONGROUND) || physics_start_teleport_time > 0 || physics_was_teleported || physics_ground_lastent) {
+			if (!(physics_flags & FLAG_ONGROUND) || physics_start_teleport_time > 0 || physics_was_teleported || physics_ground_lastent) {
 				physics_stair_smoothz = v_z;
 				physics_was_teleported = FALSE;
 			} else {
@@ -303,13 +303,13 @@ void(void) physics_camera_setup {
 			if not(physics_player_ent) {
 				if (extension_DP_RM_SETRENDERENTITY) {
 					if not(main_isdemo) {
-						setentityvec(player_localentnum, E_ORIGIN, physics.origin);
+						setentityvec(player_localentnum, VM_ENTITY_ORIGIN, physics.origin);
 						vector v;
 						v_x = 0;
 						v_z = 0;
 						v_y = view_angles_y;
 						if (physics_deadflag == DEAD_NO)
-							setentityvec(player_localentnum, E_ANGLES, v);
+							setentityvec(player_localentnum, VM_ENTITY_ANGLES, v);
 					}
 				} else {
 					if (CVAR(chase_active))
@@ -492,7 +492,7 @@ void(float isnew) physics_read {
 		physics_velocity_frame_end = self.pmove_velocity;
 		physics_frametime = server_ticrate;
 		physics_is_player = f & 8;
-		self.solid = (physics_is_player ? SOLID_SLIDEBOX : SOLID_NOT);
+		self.solid = (physics_is_player ? VM_SOLID_SLIDEBOX : VM_SOLID_NOT);
 		physics_ladder = f & 32;
 		physics_ladder_iswater = f & 64;
 		physics_start_crouch = f & 256;
@@ -518,7 +518,7 @@ void(float isnew) physics_read {
 		else
 			physics_movetype = MOVETYPE_QCWALK;
 
-		if (physics_flags & FL_SWIM) //noclip
+		if (physics_flags & FLAG_SWIM) //noclip
 			self.dphitcontentsmask = 0;
 		else
 			self.dphitcontentsmask = physics_player_content;
@@ -600,6 +600,6 @@ void(float isnew) physics_read {
 		} else {
 			physics_cpmdoublejump_time_start = 0;
 		}
-		if (view_spectatee_status) physics_flags = ((f & 16) ? FL_ONGROUND : 0);
+		if (view_spectatee_status) physics_flags = ((f & 16) ? FLAG_ONGROUND : 0);
 	}
 }

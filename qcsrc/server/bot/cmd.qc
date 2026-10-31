@@ -72,9 +72,9 @@ float(entity bot, float idx) bot_havecommand {
 .string bot_placenames[BOT_CMD_MAX_PLACES];
 entity(string placename) bot_getplace {
 	entity e;
-	if (substring(placename, 0, 1) == "@") {
+	if (str_sub(placename, 0, 1) == "@") {
 		float i, p;
-		placename = substring(placename, 1, -1);
+		placename = str_sub(placename, 1, -1);
 		string s, s2;
 		for (i = 0; i < self.bot_places_count; ++i)
 			if (self.(bot_placenames[i]) == placename)
@@ -84,9 +84,9 @@ entity(string placename) bot_getplace {
 		s = s2 = cvar_string(placename);
 		p = strstrofs(s2, " ", 0);
 		if (p >= 0) {
-			s = substring(s2, 0, p);
+			s = str_sub(s2, 0, p);
 			//print("places: ", placename, " -> ", cvar_string(placename), "\n");
-			cvar_set(placename, strcat(substring(s2, p+1, -1), " ", s));
+			cvar_set(placename, strcat(str_sub(s2, p+1, -1), " ", s));
 			//print("places: ", placename, " := ", cvar_string(placename), "\n");
 		}
 		e = find(world, targetname, s);
@@ -94,7 +94,7 @@ entity(string placename) bot_getplace {
 			print("invalid place ", s, "\n");
 
 		if (i < BOT_CMD_MAX_PLACES) {
-			self.(bot_placenames[i]) = strzone(placename);
+			self.(bot_placenames[i]) = str_zone_ifneeded(placename);
 			self.(bot_places[i]) = e;
 			self.bot_places_count += 1;
 		}
@@ -222,7 +222,7 @@ void bot_cmd_commands_init() {
 // Returns first bot with matching name
 entity(string name) bot_cmd_find_bot_by_name {
 	entity bot;
-	bot = findchainflags(flags, FL_CLIENT);
+	bot = findchainflags(flags, FLAG_CLIENT);
 	while (bot) {
 		if (clienttype(bot) == CLIENTTYPE_BOT)
 		if (bot.netname==name)
@@ -240,7 +240,7 @@ entity(float number) bot_cmd_find_bot_by_number {
 	if (!number)
 		return world;
 
-	bot = findchainflags(flags, FL_CLIENT);
+	bot = findchainflags(flags, FLAG_CLIENT);
 	while (bot) {
 		if (clienttype(bot) == CLIENTTYPE_BOT) {
 			if (++c==number)
@@ -259,8 +259,8 @@ float(string cmdstring) bot_decodecommand {
 	if (sp < 0) {
 		parm = "";
 	} else {
-		parm = substring(cmdstring, sp + 1, -1);
-		cmdstring = substring(cmdstring, 0, sp);
+		parm = str_sub(cmdstring, sp + 1, -1);
+		cmdstring = str_sub(cmdstring, 0, sp);
 	}
 	if (!bot_cmd_initialized)
 		bot_cmd_commands_init();
@@ -283,8 +283,9 @@ float(string cmdstring) bot_decodecommand {
 			break;
 		case BOT_CMD_PARAMETER_STRING:
 			if (bot_cmd.bot_cmd_parm_string)
-				strunzone(bot_cmd.bot_cmd_parm_string);
-			bot_cmd.bot_cmd_parm_string = strzone(parm);
+				str_unzone_ifneeded(bot_cmd.bot_cmd_parm_string);
+
+			bot_cmd.bot_cmd_parm_string = str_zone_ifneeded(parm);
 			break;
 		case BOT_CMD_PARAMETER_VECTOR:
 			bot_cmd.bot_cmd_parm_vector = stov(parm);
@@ -534,12 +535,12 @@ float(void) bot_cmd_select_weapon {
 
 float(string expr) bot_cmd_eval {
 	// Search for numbers
-	if (strstrofs("0123456789", substring(expr, 0, 1), 0) >= 0) {
+	if (strstrofs("0123456789", str_sub(expr, 0, 1), 0) >= 0) {
 		return stof(expr);
 	}
 	// Search for cvars
-	if (substring(expr, 0, 5)=="cvar.") {
-		return cvar(substring(expr, 5, strlen(expr)));
+	if (str_sub(expr, 0, 5)=="cvar.") {
+		return cvar(str_sub(expr, 5, strlen(expr)));
 	}
 	// Search for fields
 	switch(expr) {
@@ -568,8 +569,8 @@ float(void) bot_cmd_if {
 	expr = bot_cmd.bot_cmd_parm_string;
 	cmpofs = strstrofs(expr,"=",0);
 	if (cmpofs>0) {
-		val_a = substring(expr,0,cmpofs);
-		val_b = substring(expr,cmpofs+1,strlen(expr));
+		val_a = str_sub(expr,0,cmpofs);
+		val_b = str_sub(expr,cmpofs+1,strlen(expr));
 		if (bot_cmd_eval(val_a)==bot_cmd_eval(val_b))
 			self.bot_cmd_condition_status |= BOT_CMD_CONDITION_TRUE;
 		else
@@ -579,8 +580,8 @@ float(void) bot_cmd_if {
 	}
 	cmpofs = strstrofs(expr,">",0);
 	if (cmpofs>0) {
-		val_a = substring(expr,0,cmpofs);
-		val_b = substring(expr,cmpofs+1,strlen(expr));
+		val_a = str_sub(expr,0,cmpofs);
+		val_b = str_sub(expr,cmpofs+1,strlen(expr));
 		if (bot_cmd_eval(val_a)>bot_cmd_eval(val_b))
 			self.bot_cmd_condition_status |= BOT_CMD_CONDITION_TRUE;
 		else
@@ -590,8 +591,8 @@ float(void) bot_cmd_if {
 	}
 	cmpofs = strstrofs(expr,"<",0);
 	if (cmpofs>0) {
-		val_a = substring(expr,0,cmpofs);
-		val_b = substring(expr,cmpofs+1,strlen(expr));
+		val_a = str_sub(expr,0,cmpofs);
+		val_b = str_sub(expr,cmpofs+1,strlen(expr));
 		if (bot_cmd_eval(val_a)<bot_cmd_eval(val_b))
 			self.bot_cmd_condition_status |= BOT_CMD_CONDITION_TRUE;
 		else
@@ -943,7 +944,7 @@ void(void) bot_cmd_resetqueues {
 		// also, cancel all barriers
 		cl.bot_barrier = 0;
 		for (i = 0; i < cl.bot_places_count; ++i) {
-			strunzone(cl.(bot_placenames[i]));
+			str_unzone_ifneeded(cl.(bot_placenames[i]));
 			cl.(bot_placenames[i]) = NULL;
 		}
 		cl.bot_places_count = 0;

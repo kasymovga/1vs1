@@ -118,7 +118,7 @@ void(void) spawnfunc_misc_terminal {
 	self.mins_x = self.mins_y;
 	self.maxs_x = self.maxs_y;
 	setsize(self, self.mins * self.scale, self.maxs * self.scale);
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	entity_move_out_of_solid(self);
 	entity_droptofloor_handler();
 	entity e = spawn();
@@ -131,7 +131,7 @@ void(void) spawnfunc_misc_terminal {
 	setsize(e, e.mins * e.scale, e.maxs * e.scale);
 	setorigin(e, self.origin + v_up * self.maxs_z);
 	o = e.origin;
-	e.solid = SOLID_BBOX;
+	e.solid = VM_SOLID_BBOX;
 	//e.skin = 1;
 	//e.glow_size = 150;
 	//e.glow_color = 0x7C;
@@ -150,7 +150,7 @@ void(void) spawnfunc_misc_terminal {
 	e.maxs_y = e.maxs_x;
 	e.scale = 1.1;
 	setsize(e, e.mins * e.scale, e.maxs * e.scale);
-	e.solid = SOLID_BBOX;
+	e.solid = VM_SOLID_BBOX;
 	self.enemy = misc_terminal_chain;
 	misc_terminal_chain = self;
 }

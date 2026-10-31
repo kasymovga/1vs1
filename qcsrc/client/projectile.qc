@@ -68,7 +68,7 @@ void(void) projectile_draw {
 	if (self.count & 128) {
 		self.move_angles = self.angles;
 		physics_move_match_server();
-		if not(self.move_flags & FL_ONGROUND)
+		if not(self.move_flags & FLAG_ONGROUND)
 		if (self.velocity != '0 0 0') {
 			self.angles = vectoangles(self.velocity);
 		}
@@ -86,7 +86,7 @@ void(void) projectile_draw {
 		drawn = (self.iflags & IFLAG_VALID);
 	}
 	t = time;
-	if ((!(f & FL_ONGROUND) || self.cnt == PROJECTILE_HG_RAZE) && !self.use_server_angles) {
+	if ((!(f & FLAG_ONGROUND) || self.cnt == PROJECTILE_HG_RAZE) && !self.use_server_angles) {
 		rot = '0 0 0';
 		switch (self.cnt) {
 		/*
@@ -181,15 +181,15 @@ void(float ignore) projectile_read {
     if (!self.use_server_angles)
         self.iflags |= IFLAG_AUTOANGLES;
 
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	//self.effects = EFFECT_NOMODELFLAGS;
 	// this should make collisions with bmodels more exact, but it leads to
 	// projectiles no longer being able to lie on a bmodel
 	self.move_nomonsters = TRACE_MOVE_WORLDONLY;
 	if (f & 64)
-		self.move_flags |= FL_ONGROUND;
+		self.move_flags |= FLAG_ONGROUND;
 	else
-		self.move_flags &= ~FL_ONGROUND;
+		self.move_flags &= ~FLAG_ONGROUND;
 
 	if (!self.move_time) {
 		// for some unknown reason, we don't need to care for

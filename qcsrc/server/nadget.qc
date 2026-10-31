@@ -1016,7 +1016,7 @@ void spawnfunc_target_bonusnadgets(void) {
 }
 
 void nadget_Pick(float tokens) {
-	if not(self.flags & FL_CLIENT)
+	if not(self.flags & FLAG_CLIENT)
 		return;
 
 	if (self.hg_type1_picked & 1024) {

@@ -81,7 +81,7 @@ void() monster_flyingthing_spawn {
 	setmodel(self, "models/turrets/walker_mghead.md3");
 	self.colormod = '2 3 1';
 	//self.effects = EFFECT_FULLBRIGHT;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;
 	self.view_ofs = '0 0 -16';

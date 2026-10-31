@@ -109,14 +109,14 @@ void(entity attacker, entity inflictor) rm_buffs_meodp_death_use;
 void(entity targ, entity attacker, entity inflictor) rm_buffs_meodp_trigger_death;
 
 float Buffs_Random_Spawn_EntFilter(entity e) {
-    return ((e.flags & FL_ITEM) && e.classname != "item_buff_randomspawn") || e.classname == "info_player_deathmatch";
+    return ((e.flags & FLAG_ITEM) && e.classname != "item_buff_randomspawn") || e.classname == "info_player_deathmatch";
 }
 
 void Buffs_Random_Spawn_Init(void) {
 	entity e;
     for(e = NULL; (e = rm_findfilter(e, Buffs_Random_Spawn_EntFilter));) {
         e.buff_oldsolid = e.solid;
-        e.solid = SOLID_BBOX;
+        e.solid = VM_SOLID_BBOX;
     }
 }
 
@@ -147,7 +147,7 @@ void Buffs_Random_Spawn(void) {
 
     if(Buffs_Random_Spawn_EntFilter(self)) {
         self.buff_oldsolid = self.solid;
-        self.solid = SOLID_BBOX;
+        self.solid = VM_SOLID_BBOX;
     }
 
     float a = max(1, g_buffs_random_spawns_distant), mx = -1;
@@ -662,7 +662,7 @@ float(entity plr, float bfs, float tm) rm_buffs_give {
 float Buffs_Model_Send(entity to, float sf) {
     entity o = self.owner;
 
-    if(self.flags & FL_ITEM)
+    if(self.flags & FLAG_ITEM)
         o = NULL;
     else if(o)
         sf &= ~(2 | 16);
@@ -1275,7 +1275,7 @@ void(entity targ, entity attacker, entity inflictor) rm_buffs_meodp_trigger_deat
 
 	entity oldself = self;
 	self = targ;
-	targ.meodp_point.solid = SOLID_NOT;
+	targ.meodp_point.solid = VM_SOLID_NOT;
 	targ.meodp_point.enemy = attacker;
 	//FIXME
 	//te_meodp(targ.meodp_point.origin);
@@ -1325,7 +1325,7 @@ float(entity ent, entity pass) rm_buffs_meodp_filter_nearby_related {
 }
 
 void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) rm_buffs_meodp_point_damage {
-    if(self.solid == SOLID_NOT || damage_radius_running)
+    if(self.solid == VM_SOLID_NOT || damage_radius_running)
         return; // hitscan only
     
     if(!damage)
@@ -1350,7 +1350,7 @@ void(entity e, meodp_death_f death) rm_buffs_meodp_point_attach {
 	p.customizeentityforclient = rm_buffs_meodp_point_customize;
     p.think = rm_buffs_meodp_point_think;
     p.nextthink = time;
-    p.solid = SOLID_NOT;
+    p.solid = VM_SOLID_NOT;
     p.colormod = '-10 -10 -10';
     p.glow_size = 256;
     p.glow_trail = 1;
@@ -1387,7 +1387,7 @@ entity(entity plr) rm_buffs_meodp_hitscan_begin {
     entity p, pts = findchain_tofield(classname, "meodp_point", meodp_chain);
     
     for(p = pts; p; p = p.meodp_chain) {
-        p.solid = SOLID_CORPSE;
+        p.solid = VM_SOLID_CORPSE;
         p.takedamage = DAMAGE_AIM;
     }
         
@@ -1396,7 +1396,7 @@ entity(entity plr) rm_buffs_meodp_hitscan_begin {
 
 void(entity pts) rm_buffs_meodp_hitscan_end {
     entity p; for(p = pts; p; p = p.meodp_chain) {
-        p.solid = SOLID_NOT;
+        p.solid = VM_SOLID_NOT;
         p.takedamage = DAMAGE_NO;
     }
 }
@@ -1638,8 +1638,8 @@ void(void) rm_buffs_pickup_setup {
         self.buffs = Buffs_Randomize_Yield();
     
     self.classname = "item_buff";
-    self.flags = FL_ITEM;
-    self.solid = SOLID_TRIGGER;
+    self.flags = FLAG_ITEM;
+    self.solid = VM_SOLID_TRIGGER;
     self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
     self.movetype = MOVETYPE_TOSS;
     self.think = Buffs_BuffPickup_Think;

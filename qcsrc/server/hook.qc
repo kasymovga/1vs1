@@ -23,7 +23,7 @@ float HOOK_ABILITY;
 
 void(entity ent, entity e) hook_follow {
 	ent.movetype = MOVETYPE_FOLLOW; // make the hole follow
-	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid
+	ent.solid = VM_SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid
 	ent.aiment = e; // make the hole follow bmodel
 	if (ent.aiment.takedamage)
 		ent.hook_attack_time = time + g_balance_grapplehook_damage_interval;
@@ -31,7 +31,7 @@ void(entity ent, entity e) hook_follow {
 	ent.punchangle = e.angles; // the original angles of bmodel
 	ent.view_ofs = ent.origin - e.origin; // relative origin
 	ent.v_angle = ent.angles - e.angles; // relative angles
-	ent.aiment_classname = strzone(e.classname);
+	ent.aiment_classname = str_zone_ifneeded(e.classname);
 	ent.aiment_deadflag = e.deadflag;
 	if (time < map_starttime)
 		hook_remove(self);
@@ -66,6 +66,7 @@ void(entity _hook) hook_remove {
 	if (o.hook != _hook)
 		o = NULL;
 
+	str_unzone_ifneeded(_hook.aiment_classname);
 	remove(_hook.hook);
 	remove(_hook);
 	if (o)
@@ -135,7 +136,7 @@ void(entity _hook, vector v, vector v0, vector dir) hook_pull_aiment {
 	if (_hook.aiment.pushfactor) {
 		vector dv = ((v - v0) * dir) * dir;
 		float pullfactor = 0.5;
-		if (_hook.aiment.flags & FL_ONGROUND)
+		if (_hook.aiment.flags & FLAG_ONGROUND)
 			pullfactor = 0.5 * g_balance_grapplehook_onground_pullfactor;
 
 		_hook.aiment.velocity = _hook.aiment.velocity - dv * (_hook.aiment.pushfactor / _hook.owner.pushfactor) * pullfactor;
@@ -286,7 +287,7 @@ void(void) hook_fire {
 	self.hook = missile;
 	missile.classname = "grapplinghook";
 	missile.movetype = (g_balance_grapplehook_gravity ? MOVETYPE_TOSS : MOVETYPE_FLY);
-	missile.solid = SOLID_CORPSE;
+	missile.solid = VM_SOLID_CORPSE;
 	missile.dphitcontentsmask = (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE);
 	setmodel (missile, "models/hook.md3"); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');

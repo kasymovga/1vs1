@@ -25,7 +25,7 @@ string mmss(float tenths) {
 	minutes = floor(tenths / 600);
 	tenths -= minutes * 600;
 	s = ftos(1000 + tenths);
-	return strcat(ftos(minutes), ":", substring(s, 1, 2));
+	return strcat(ftos(minutes), ":", str_sub(s, 1, 2));
 }
 
 var void() Radio_client_connect_real_NextLink;
@@ -256,7 +256,7 @@ void Radio_Queue_Advance(void) {
 		return;
 	}
 
-	cvar_set("_radio_queue", substring(q, sp+1, strlen(q)));
+	cvar_set("_radio_queue", str_sub(q, sp+1, strlen(q)));
 }
 
 void Radio_Queue_Skip(void) {
@@ -309,7 +309,7 @@ void Radio_URI_Get_Callback(float id, float status, string data) {
 	string d = "";
 
 	if(n > 3) {
-		d = substring(data, argv_start_index(3), strlen(data));
+		d = str_sub(data, argv_start_index(3), strlen(data));
 		d = strcat(d, " ^8(autoqueue)");
 	}
 

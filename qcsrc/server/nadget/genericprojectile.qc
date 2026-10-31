@@ -121,7 +121,7 @@ float nadget_GenericProjectile_TryStick(entity targ, vector normal) {
 	else
 		doStick = GRENVAR(self.hg_type, "stick");
 
-    if(!doStick || (targ.takedamage == DAMAGE_AIM && doStick < 2) || targ.solid == SOLID_CORPSE)
+    if(!doStick || (targ.takedamage == DAMAGE_AIM && doStick < 2) || targ.solid == VM_SOLID_CORPSE)
         return FALSE;
 
     self.velocity = '0 0 0';
@@ -162,7 +162,7 @@ void nadget_GenericProjectile_Touch(void) {
     if(PROJECTILE_OWNER_CHECK())
         return;
 
-    if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
+    if(trace_ent && trace_ent.solid > VM_SOLID_TRIGGER)
 	if (self.movetype != MOVETYPE_FOLLOW && self.movetype != MOVETYPE_NONE)
         projectile_update_next_frame(self);
 
@@ -246,7 +246,7 @@ void nadget_GenericProjectile_Touch(void) {
 		}
 :troll
         if(self.hg_type == NADGET_RAZE) {
-            if(trace_ent && trace_ent.solid == SOLID_BSP)
+            if(trace_ent && trace_ent.solid == VM_SOLID_BSP)
                 self.movedir = trace_plane_normal;
 
 			float bounce;
@@ -298,7 +298,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
     if(targ.classname == "misc_terminal")
         return;
 
-    if(targ.flags & FL_PROJECTILE)
+    if(targ.flags & FLAG_PROJECTILE)
         return;
 
     entity e = self;
@@ -336,7 +336,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
 
     setsize(e, hitmins, hitmaxs);
 
-    if(!targ || targ.solid == SOLID_BSP) {
+    if(!targ || targ.solid == VM_SOLID_BSP) {
         trace_box(e.origin, e.mins, e.maxs, e.origin - normal * 64, TRACE_MOVE_NOMONSTERS, e);
         if(!trace_startsolid)
             setorigin(e, trace_endpos);

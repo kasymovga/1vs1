@@ -17,7 +17,7 @@ void(float ignore) score_info_read {
 	string s;
 	score_init();
 	for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
-		s = strzone(net_read_string());
+		s = str_zone_ifneeded(net_read_string());
 		if (s == "country")
 			SP_COUNTRY_FIELD = i;
 		else if (s == "kills")
@@ -61,11 +61,13 @@ void(float ignore) score_info_read {
 					voip_group = o.scores[SP_VOIP_FIELD];
 				}
 		}
+		str_unzone_ifneeded(scores_label[i]);
 		scores_label[i] = s;
 		scores_flags[i] = net_read_byte();
 	}
 	for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i) {
-		teamscores_label[i] = strzone(net_read_string());
+		str_unzone_ifneeded(teamscores_label[i]);
+		teamscores_label[i] = str_zone_ifneeded(net_read_string());
 		teamscores_flags[i] = net_read_byte();
 	}
 	if (SP_STATUS_FIELD >= 0 && SP_TEAM_FIELD >= 0) {

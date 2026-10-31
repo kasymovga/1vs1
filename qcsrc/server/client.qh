@@ -15,7 +15,7 @@ void(entity spot) client_put_to_spot;
 void(string _name) client_mute_ifneeded;
 float() client_join_allowed;
 #define CLIENT_FOR_EACH_SLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= client_max_count); )
-#define CLIENT_FOR_EACH(v) CLIENT_FOR_EACH_SLOT(v) if(v.flags & FL_CLIENT)
+#define CLIENT_FOR_EACH(v) CLIENT_FOR_EACH_SLOT(v) if(v.flags & FLAG_CLIENT)
 #define CLIENT_FOR_EACH_REAL(v) CLIENT_FOR_EACH(v) if(clienttype(v) == CLIENTTYPE_REAL)
 #define CLIENT_FOR_EACH_BOT(v) CLIENT_FOR_EACH(v) if(clienttype(v) == CLIENTTYPE_BOT)
 float client_entity_from_argv_firsttoken;

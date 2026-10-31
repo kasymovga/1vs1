@@ -1,6 +1,6 @@
 void(void) udp_punch_hole_ping_think {
 	if (self.cnt <= 0) {
-		strunzone(self.message);
+		str_unzone_ifneeded(self.message);
 		remove(self);
 		return;
 	}
@@ -20,7 +20,7 @@ void(float argc, string response) udp_punch_hole_extresponse_handler {
 		if (s2 != "") {
 			e = spawn();
 			e.cnt = 3;
-			e.message = strzone(s2);
+			e.message = str_zone_ifneeded(s2);
 			e.think = udp_punch_hole_ping_think;
 			e.nextthink = time;
 		}

@@ -49,8 +49,7 @@ void rewrapCampaign(float w, float l0, float emptyheight)
 	for(i = 0; i < campaign_entries; ++i)
 	{
 		l = l0;
-		if(campaign_longdesc_wrapped[i])
-			strunzone(campaign_longdesc_wrapped[i]);
+		str_unzone_ifneeded(campaign_longdesc_wrapped[i]);
 		n = tokenizebyseparator(campaign_longdesc[i], "\n");
 		r = "";
 		for(j = 0; j < n; ++j)
@@ -73,11 +72,11 @@ void rewrapCampaign(float w, float l0, float emptyheight)
 		}
 		goto nottoolong;
 :toolong
-		while(substring(r, strlen(r) - 1, 1) == "\n")
-			r = substring(r, 0, strlen(r) - 1);
+		while(str_sub(r, strlen(r) - 1, 1) == "\n")
+			r = str_sub(r, 0, strlen(r) - 1);
 		r = strcat(r, "...\n");
 :nottoolong
-		campaign_longdesc_wrapped[i] = strzone(substring(r, 0, strlen(r) - 1));
+		campaign_longdesc_wrapped[i] = str_zone_ifneeded(str_sub(r, 0, strlen(r) - 1));
 	}
 }
 
@@ -101,11 +100,10 @@ void destroyNexuizCampaignList(entity me)
 void loadCvarsNexuizCampaignList(entity me)
 {
 	// read campaign cvars
-	if(me.cvarName)
-		strunzone(me.cvarName);
+	str_unzone_ifneeded(me.cvarName);
 	campaign_file_unload();
 	campaign_file_load(cvar_string("g_campaign_name"));
-	me.cvarName = strzone(strcat("g_campaign", campaign_name, "_index"));
+	me.cvarName = str_zone_ifneeded(strcat("g_campaign", campaign_name, "_index"));
 	registercvar(me.cvarName, "", 0); // saved by server QC anyway
 	me.campaignIndex = bound(0, cvar(me.cvarName), campaign_entries);
 	cvar_set(me.cvarName, ftos(me.campaignIndex));

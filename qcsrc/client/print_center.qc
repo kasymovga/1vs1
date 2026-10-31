@@ -22,20 +22,20 @@ void(string strMessage) print_center {
 
 	// strip trailing newlines
 	j = strlen(strMessage) - 1;
-	while (substring(strMessage, j, 1) == "\n" && j >= 0)
+	while (str_sub(strMessage, j, 1) == "\n" && j >= 0)
 		j = j - 1;
 
-	strMessage = substring(strMessage, 0, j + 1);
+	strMessage = str_sub(strMessage, 0, j + 1);
 
 	if (strMessage == "")
 		return;
 
 	// strip leading newlines and remember them, they are a hint that the message should be lower on the screen
 	j = 0;
-	while (substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
+	while (str_sub(strMessage, j, 1) == "\n" && j < strlen(strMessage))
 		j = j + 1;
 
-	strMessage = substring(strMessage, j, strlen(strMessage) - j);
+	strMessage = str_sub(strMessage, j, strlen(strMessage) - j);
 	print_center_offset_hint = j;
 	if (strMessage == "")
 		return;

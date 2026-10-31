@@ -421,11 +421,11 @@ void(entity cl) client_send_stuff {
 
 float client_playerid_last;
 void(void) client_connect { //called by engine
-	if not(self.flags & FL_CLIENT) {
+	if not(self.flags & FLAG_CLIENT) {
 		if (client_preconnect_abort())
 			return;
 
-		self.flags = FL_CLIENT;
+		self.flags = FLAG_CLIENT;
 		self.discardabledemo = FALSE; //demo can be keeped now
 	}
 	self.spectatee_status = num_for_edict(self);
@@ -480,7 +480,7 @@ void(void) client_connect { //called by engine
 }
 
 void(void) client_disconnect { //called by engine
-	if not(self.flags & FL_CLIENT) {
+	if not(self.flags & FLAG_CLIENT) {
 		print("Warning: client_disconnect without client_connect\n");
 		return;
 	}
@@ -504,7 +504,7 @@ void(void) client_disconnect { //called by engine
 	}
 	self.classname = "disconnecting";
 	player_clear(FALSE);
-	self.flags &= ~FL_CLIENT;
+	self.flags &= ~FLAG_CLIENT;
 	self.just_connected = FALSE;
 	self.team = -1;
 	if (self.killindicator)
@@ -514,7 +514,7 @@ void(void) client_disconnect { //called by engine
 	bot_relinkplayerlist();
 	score_detach(self);
 	if (self.clientstatus)
-		strunzone(self.clientstatus);
+		str_unzone_ifneeded(self.clientstatus);
 
 	player_sound_clear();
 	self.playerid = 0;
@@ -703,7 +703,7 @@ void(entity e, string args, float set) client_ability_hookuseswap_init {
 
 void() client_initialize {
 	if not(client_abuserplayername)
-		client_abuserplayername = strzone(cvar_string("sv_abuserplayername"));
+		client_abuserplayername = str_zone_ifneeded(cvar_string("sv_abuserplayername"));
 
 	CVAR_CACHE(g_balance_kill_delay);
 	CVAR_CACHE(g_changeteam_banned);
@@ -836,7 +836,7 @@ float(string s) client_id_is_valid {
 
 	float i;
 	for (i = 0; i < n; i++) {
-		if (strstrofs("0123456789ABCDEF", substring(s, i, 1), 0) < 0)
+		if (strstrofs("0123456789ABCDEF", str_sub(s, i, 1), 0) < 0)
 			return FALSE;
 	}
 	return TRUE;
@@ -859,8 +859,8 @@ void() client_cvars_parse {
 		str_unzone_ifneeded(self.cvar_cl_weaponpriority);
 		self.cvar_cl_weaponpriority = str_zone_ifneeded(weapon_fix_order_force_complete(val));
 		self.switchweapon = weapon_best(self);
-	} else if (substring(s, 0, 17) == "cl_weaponpriority") {
-		float ind = stof(substring(s, 17, 1));
+	} else if (str_sub(s, 0, 17) == "cl_weaponpriority") {
+		float ind = stof(str_sub(s, 17, 1));
 		str_unzone_ifneeded(self.cvar_cl_weaponpriorities[ind]);
 		(self.cvar_cl_weaponpriorities[ind]) = str_zone_ifneeded(weapon_fix_order_allow_incomplete(val));
 	} else if (s == "cl_autotaunt")
@@ -926,7 +926,7 @@ void() client_cvars_parse {
 		player_dmg_inflictor_setup();
 	} else if (s == "_cl_id" && self.clid == "") {
 		if (client_id_is_valid(val)) {
-			self.clid = strzone(val);
+			self.clid = str_zone_ifneeded(val);
 			stat_player_add(self);
 		} else {
 			if (val != "")
@@ -936,7 +936,7 @@ void() client_cvars_parse {
 			for (f = 0; f < 4; f++) {
 				self.clid = strcat(self.clid, DIGIT_DEC_TO_HEX(floor(random() * 16)));
 			}
-			self.clid = strzone(self.clid);
+			self.clid = str_zone_ifneeded(self.clid);
 			stuffcmd(self, strcat("seta _cl_id ", self.clid, "\n"));
 			stat_player_add(self);
 		}
@@ -1003,8 +1003,8 @@ entity(float tokens, float idx) client_entity_from_argv {
 	s = NULL;
 	client_entity_from_argv_firsttoken = -1;
 	if (tokens > idx) {
-		if (substring(argv(idx), 0, 1) == "#") {
-			s = substring(argv(idx), 1, -1);
+		if (str_sub(argv(idx), 0, 1) == "#") {
+			s = str_sub(argv(idx), 1, -1);
 			++idx;
 			if (s == "")
 				if (tokens > idx) {
@@ -1014,7 +1014,7 @@ entity(float tokens, float idx) client_entity_from_argv {
 			client_entity_from_argv_firsttoken = idx;
 			if (s == ftos(stof(s))) {
 				e = edict_num(stof(s));
-				if (e.flags & FL_CLIENT)
+				if (e.flags & FLAG_CLIENT)
 					return e;
 			}
 		} else {

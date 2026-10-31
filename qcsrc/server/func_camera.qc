@@ -61,9 +61,9 @@ void(void) spawnfunc_func_camera {
 		setsize(self, self.mins, self.maxs);
 
 	if(!self.solid)
-		self.solid = SOLID_BSP;
+		self.solid = VM_SOLID_BSP;
 	else if(self.solid < 0)
-		self.solid = SOLID_NOT;
+		self.solid = VM_SOLID_NOT;
 
 	self.SendEntity = func_camera_send;
 	self.SendFlags = 0xFFFFFF;

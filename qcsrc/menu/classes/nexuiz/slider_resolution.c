@@ -18,7 +18,7 @@ entity makeNexuizResolutionSlider()
 }
 void addResolutionNexuizResolutionSlider(entity me, float w, float h)
 {
-	me.addValue(me, strzone(strcat(ftos(w), "x", ftos(h))), strzone(strcat(ftos(w), " ", ftos(h))));
+	me.addValue(me, str_zone_ifneeded(strcat(ftos(w), "x", ftos(h))), str_zone_ifneeded(strcat(ftos(w), " ", ftos(h))));
 	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
 }
 void configureNexuizResolutionSliderNexuizResolutionSlider(entity me)

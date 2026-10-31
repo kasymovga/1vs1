@@ -15,7 +15,7 @@ float(void) trigger_exact_hit_recurse {
 
 	se = trace_ent;
 	s = se.solid;
-	se.solid = SOLID_NOT;
+	se.solid = VM_SOLID_NOT;
 	f = trigger_exact_hit_recurse();
 	se.solid = s;
 	return f;
@@ -27,7 +27,7 @@ float(void) trigger_exact_hit {
 		return 1;
 
 	s = self.solid;
-	self.solid = SOLID_BSP;
+	self.solid = VM_SOLID_BSP;
 	trigger_exact_hit_mins = other.mins + other.origin + (g_trigger_collisions_exact_extend ? '-1 -1 -1' : '0 0 0');
 	trigger_exact_hit_maxs = other.maxs + other.origin + (g_trigger_collisions_exact_extend ? '1 1 1' : '0 0 0');
 	if (g_trigger_collisions_exact > 1) {
@@ -61,7 +61,7 @@ void(void) trigger_solid_brush_init {
 		self.modelindex = 0;
 
 	self.model = "";
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 }
 
 void() trigger_dont_use_targets { }
@@ -279,7 +279,7 @@ void(void) trigger_multiple_wait {
 	if (self.max_health) {
 		self.health = self.max_health;
 		self.takedamage = DAMAGE_YES;
-		self.solid = SOLID_BBOX;
+		self.solid = VM_SOLID_BBOX;
 	}
 }
 
@@ -361,7 +361,7 @@ void(void) trigger_multiple_reset {
 	if (self.max_health) {
 		self.health = self.max_health;
 		self.takedamage = DAMAGE_YES;
-		self.solid = SOLID_BBOX;
+		self.solid = VM_SOLID_BBOX;
 	}
 	self.think = stdproc_nothing;
 	self.use = trigger_multiple_use;
@@ -413,7 +413,7 @@ void(void) spawnfunc_trigger_multiple {
 		self.max_health = self.health;
 		self.event_damage = trigger_multiple_eventdamage;
 		self.takedamage = DAMAGE_YES;
-		self.solid = SOLID_BBOX;
+		self.solid = VM_SOLID_BBOX;
 		setorigin (self, self.origin);	// make sure it links into the world
 	} else {
 		if (!(self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH)) {
@@ -511,7 +511,7 @@ float g_trigger_hurt_interval;
 void(void) trigger_hurt_touch {
 	// only do the TRIGGER_EXACT_TOUCH checks when really needed (saves some cpu)
 	if (other.takedamage)
-	if not(other.flags & FL_PROJECTILE)
+	if not(other.flags & FLAG_PROJECTILE)
 	if (other.triggerhurttime < time) {
 		TRIGGER_EXACT_TOUCH;
 		other.triggerhurttime = time + g_trigger_hurt_interval;
@@ -816,27 +816,27 @@ string(entity ear, entity source, float teamsay, entity privatesay, string msgin
 	else
 		msg = strdecolorize(msgin);
 
-	if (substring(ear.message, 0, 1) == "*") {
-		if (substring(ear.message, -1, 1) == "*") {
+	if (str_sub(ear.message, 0, 1) == "*") {
+		if (str_sub(ear.message, -1, 1) == "*") {
 			// two wildcards
 			// as we need multi-replacement here...
-			s = substring(ear.message, 1, -2);
+			s = str_sub(ear.message, 1, -2);
 			l -= 2;
 			if (strstrofs(msg, s, 0) >= 0)
 				matchstart = -2; // we use strreplace on s
 		} else {
 			// match at start
-			s = substring(ear.message, 1, -1);
+			s = str_sub(ear.message, 1, -1);
 			l -= 1;
-			if (substring(msg, -l, l) == s)
+			if (str_sub(msg, -l, l) == s)
 				matchstart = strlen(msg) - l;
 		}
 	} else {
-		if (substring(ear.message, -1, 1) == "*") {
+		if (str_sub(ear.message, -1, 1) == "*") {
 			// match at end
-			s = substring(ear.message, 0, -2);
+			s = str_sub(ear.message, 0, -2);
 			l -= 1;
-			if (substring(msg, 0, l) == s)
+			if (str_sub(msg, 0, l) == s)
 				matchstart = 0;
 		} else {
 			// full match
@@ -862,9 +862,9 @@ string(entity ear, entity source, float teamsay, entity privatesay, string msgin
 			return strreplace(s, ear.netname, msg);
 		else
 			return strcat(
-				substring(msg, 0, matchstart),
+				str_sub(msg, 0, matchstart),
 				ear.netname,
-				substring(msg, matchstart + l, -1)
+				str_sub(msg, matchstart + l, -1)
 			);
 	}
 	else
@@ -959,14 +959,14 @@ void(void) spawnfunc_trigger_cycle {
 
 void(void) trigger_killcredit_use {
 	self.enemy = activator;
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.think = self.reset;
 	self.nextthink = time + self.wait;
 }
 
 void(void) trigger_killcredit_reset {
 	self.enemy = world;
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.think = stdproc_nothing;
 }
 

@@ -66,7 +66,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	player.angles = to_angles;
 	player.velocity = to_velocity;
 	if (player.classname == "player")
-		player.flags &= ~FL_ONGROUND;
+		player.flags &= ~FLAG_ONGROUND;
 
 	projectile_update_after_teleport(player);
 }
@@ -135,7 +135,7 @@ float(entity wz, entity e) warpzone_teleport {
 	}
 	// do the teleport
 	warpzone_refsys_add(e, wz);
-	if not(e.flags & FL_PROJECTILE) {
+	if not(e.flags & FLAG_PROJECTILE) {
 		entity h;
 		for (h = world; (h = findentity(h, aiment, e)); ) {
 			if (h.movetype == MOVETYPE_FOLLOW) {
@@ -849,7 +849,7 @@ void(void) warpzone_spawn {
 		setsize(self, self.mins, self.maxs);
 
 	self.movetype = MOVETYPE_NONE;
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.model = "";
 	if (m != "") {
 		precache_model(m);

@@ -35,11 +35,11 @@ void loadCvarsNexuizSaveLoadDialog(entity me) {
 		if (slotNotEmptyNexuizSaveLoadDialog(i + 1)) {
 			descriptionsNexuizSaveLoadDialog[i] = cvar_string_zone_ifneeded(strcat("_slot_description", ftos(i + 1)));
 		} else if (i < 10)
-			descriptionsNexuizSaveLoadDialog[i] = strzone(strcat(_("Empty slot"), ftos(i + 1)));
+			descriptionsNexuizSaveLoadDialog[i] = str_zone_ifneeded(strcat(_("Empty slot"), ftos(i + 1)));
 		else if (i == 10 || i == 12)
-			descriptionsNexuizSaveLoadDialog[i] = strzone(_("Autosave"));
+			descriptionsNexuizSaveLoadDialog[i] = str_zone_ifneeded(_("Autosave"));
 		else
-			descriptionsNexuizSaveLoadDialog[i] = strzone(_("Quicksave"));
+			descriptionsNexuizSaveLoadDialog[i] = str_zone_ifneeded(_("Quicksave"));
 	}
 	i = 0;
 	for (e = me.saveSlot; e; e = e.saveSlot) {

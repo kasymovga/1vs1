@@ -106,7 +106,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 			teleport_death(player, teleporter, telefragger, telefragmin, telefragmax, _damage);
 
 		// player no longer is on ground
-		player.flags &= ~FL_ONGROUND;
+		player.flags &= ~FLAG_ONGROUND;
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		player.oldvelocity = player.velocity;
 		// reset tracking of who pushed you into a hazard (for kill credit)
@@ -116,7 +116,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 		} else {
 			player.pushltime = 0;
 		}
-	} else if (player.flags & FL_PROJECTILE) {
+	} else if (player.flags & FLAG_PROJECTILE) {
 		player.lastpushtime = time;
 	}
 }
@@ -133,7 +133,7 @@ void(void) teleport_touch {
 	if (other.health < 1)
 		return;
 
-	if not(other.iscreature || (g_teleport_projectiles && (other.flags & FL_PROJECTILE)))
+	if not(other.iscreature || (g_teleport_projectiles && (other.flags & FLAG_PROJECTILE)))
 		return;
 
 	if (other.classname != "player") {
@@ -243,7 +243,7 @@ void(void) teleport_findtarget {
 		print("classname = ", self.classname, "\n");
 		print("target = ", self.target, "\n");
 		print("targetname = ", self.targetname, "\n");
-		self.solid = SOLID_NOT;
+		self.solid = VM_SOLID_NOT;
 		return;
 	} else if (n == 1) {
 		// exactly one dest - bots love that

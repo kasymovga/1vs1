@@ -4,7 +4,7 @@ void(void) turret_flac_attack {
 	sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
 	proj = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
 	projectile_setup(proj, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.shot_dmg, self.shot_dmg * 0.5, self.shot_radius, self.shot_force, 0, MOVETYPE_FLY);
-	proj.solid = SOLID_BBOX;
+	proj.solid = VM_SOLID_BBOX;
 	proj.classname          = "flac_projectile";
 	proj.takedamage         = DAMAGE_NO;
 	proj.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;

@@ -81,7 +81,7 @@ float vehicle_bigwheel_physics_hook() {
 		return 1;
 	}
 	self = mybigwheel;
-	if(mybigwheel.flags & FL_ONGROUND)
+	if(mybigwheel.flags & FLAG_ONGROUND)
 		mybigwheel.wasFlying = 0;
 	else
 		mybigwheel.wasFlying = 1;
@@ -111,7 +111,7 @@ float vehicle_bigwheel_physics_hook() {
 	g_vehicle_car_turnspeed = s4;
 	g_vehicle_car_movement_inertia = s5;
 	mybigwheel.movement = physics_movement;
-	if (physics_movement_x && (physics_flags & FL_ONGROUND)) {
+	if (physics_movement_x && (physics_flags & FLAG_ONGROUND)) {
 		makevectors(mybigwheel.angles);
 		if (mybigwheel.attack_finished_single < time) {
 			mybigwheel.attack_finished_single = time + 3;
@@ -137,7 +137,7 @@ void(void) vehicle_bigwheel_think {
 		physics_gravity_factor = (self.gravity ? self.gravity : 1);
 		physics_update_status();
 		self.flags = physics_flags;
-		if (physics_flags & FL_ONGROUND) {
+		if (physics_flags & FLAG_ONGROUND) {
 			self.velocity = physics_velocity;
 			move_beak_simple(g_vehicle_bigwheel_speed_stop * frametime);
 			self.angles_x *= -1;

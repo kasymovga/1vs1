@@ -29,9 +29,9 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 		_damage = rm_buffs_medic_damage(targ, attacker, inflictor, _damage, deathtype, hitloc, force);
 		if (_damage < 0) return;
 	})
-	if (targ.flags & FL_GODMODE) {
+	if (targ.flags & FLAG_GODMODE) {
 		if (g_campaign) {
-			cheat_assign(targ, flags, FL_GODMODE, "GOD");
+			cheat_assign(targ, flags, FLAG_GODMODE, "GOD");
 		} else {
 			if (deathtype != DEATH_HURTTRIGGER)
 			if (deathtype != DEATH_TEAMCHANGE)
@@ -63,7 +63,7 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 		targ.armorvalue = 0;
 		targ.spawnshieldtime = 0;
 		targ.health = 0.9; // this is < 1
-		targ.flags -= targ.flags & FL_GODMODE;
+		targ.flags -= targ.flags & FLAG_GODMODE;
 		_damage = 100000;
 	} else if (deathtype == DEATH_MIRRORDAMAGE || deathtype == DEATH_ROT) {
 		// no processing
@@ -158,8 +158,8 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	if (self.damageforcescale)
 	if (vlen(force)) {
 		self.velocity = self.velocity + self.damageforcescale * force;
-		if (self.flags & FL_PROJECTILE) {
-			self.flags &= ~FL_ONGROUND;
+		if (self.flags & FLAG_PROJECTILE) {
+			self.flags &= ~FLAG_ONGROUND;
 			projectile_update(self);
 		}
 	}
@@ -228,7 +228,7 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 		else
 			effect_impact(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, impacttype, attacker);
 	}
-	float record_damage = attacker.flags & FL_CLIENT;
+	float record_damage = attacker.flags & FLAG_CLIENT;
 	targ = warpzone_find_radius(blastorigin, rad, FALSE);
 	float restoremaxs;
 	vector restoremaxsvalue = '0 0 0';

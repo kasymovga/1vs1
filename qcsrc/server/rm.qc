@@ -158,7 +158,7 @@ float(entity targ, entity inflictor, entity healer, float heal, float aheal, flo
 	if (targ.damageforcescale)
 	if (vlen(force)) {
 		targ.velocity = targ.velocity + targ.damageforcescale * force;
-		//targ.flags &= ~FL_ONGROUND;
+		//targ.flags &= ~FLAG_ONGROUND;
 	}
 	return heal + aheal;
 }

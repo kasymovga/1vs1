@@ -8,8 +8,8 @@ string(string s, float depth) str_shuffle_words_recursive {
 		spacepos = strstrofs(s, " ", splitpos);
 	}
 	if (spacepos < 0) return s;
-	string s1 = str_shuffle_words_recursive(substring(s, 0, spacepos), depth - 1);
-	string s2 = str_shuffle_words_recursive(substring(s, spacepos + 1, -1), depth - 1);
+	string s1 = str_shuffle_words_recursive(str_sub(s, 0, spacepos), depth - 1);
+	string s2 = str_shuffle_words_recursive(str_sub(s, spacepos + 1, -1), depth - 1);
 	if (random() < 0.5)
 		return strcat(s1, " ", s2);
 

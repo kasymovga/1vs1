@@ -37,7 +37,7 @@ void(void) walkietalkie_init {
 	walkietalkie_count = min(tokenize_console(s), 10);
 	float i;
 	for (i = 0; i < walkietalkie_count; i++) {
-		sv_walkietalkie[i] = strzone(argv(i));
+		sv_walkietalkie[i] = str_zone_ifneeded(argv(i));
 		precache_sound(walkietalkie_sound_path(i));
 	}
 	CVAR_CACHE(sv_walkietalkie_public);

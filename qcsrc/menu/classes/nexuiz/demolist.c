@@ -47,7 +47,7 @@ string demoNameNexuizDemoList(entity me, float i )
 {
     string s;
     s = search_getfilename(me.listDemo, i);
-    s = substring(s, 6, strlen(s) - 6 - 4);  // demos/, .dem
+    s = str_sub(s, 6, strlen(s) - 6 - 4);  // demos/, .dem
     return s;
 }
 
@@ -109,14 +109,8 @@ void showNotifyNexuizDemoList(entity me)
 
 void DemoList_Filter_Change(entity box, entity me)
 {	
-    if(me.filterString)
-    	strunzone(me.filterString);
-    
-    if(box.text != "")
-    	me.filterString = strzone(box.text);
-    else
-    	me.filterString = NULL;
-		
+    str_unzone_ifneeded(me.filterString);
+    me.filterString = str_zone_ifneeded(box.text);
     me.getDemos(me);
 }
 

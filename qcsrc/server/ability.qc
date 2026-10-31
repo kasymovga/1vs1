@@ -29,8 +29,8 @@ void(entity e, string al, float ac) ability_class_init {
 		eq = strstrofs(an, "=", 0);
 		if (eq > 0) {
 			args = an;
-			an = substring(an, 0, eq);
-			args = substring(args, eq + 1, -1);
+			an = str_sub(an, 0, eq);
+			args = str_sub(args, eq + 1, -1);
 		} else {
 			args = "";
 		}
@@ -55,7 +55,7 @@ void(entity e, string al, float ac) ability_class_init {
 			if (e) e.armorvalue = stof(args);
 		} else if (an == "health") {
 			if (e) e.health = stof(args);
-		} else if (substring(an, 0, 4) == "ammo_") {
+		} else if (str_sub(an, 0, 4) == "ammo_") {
 			if (e) {
 				if (an == "ammo_nails")
 					e.ammo_nails = stof(args);
@@ -216,8 +216,8 @@ void(void) ability_init_delayed {
 		an = cvar_string(strcat("g_ability_class", ftos(i), "_name"));
 		av = cvar_string(strcat("g_ability_class", ftos(i), "_value"));
 		if (an == "" || av == "") break;
-		ability_class_names[i] = strzone(an);
-		ability_class_values[i] = strzone(av);
+		ability_class_names[i] = str_zone_ifneeded(an);
+		ability_class_values[i] = str_zone_ifneeded(av);
 		ability_class_init(NULL, av, i);
 	}
 	ability_classes_count = i;
@@ -269,7 +269,7 @@ float(string n, void(entity e, string args, float set) init_func) ability_regist
 	}
 	if (f) return f;
 	f = 1 << ability_count;
-	ability_names[ability_count] = strzone(n);
+	ability_names[ability_count] = str_zone_ifneeded(n);
 	ability_initiators[ability_count] = init_func;
 	ability_count++;
 	return f;

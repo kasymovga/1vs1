@@ -31,13 +31,13 @@ void(string pFilename, string acl, string s, float recurse) map_info_parse_set_t
 					if (s == "")                    // empty lines
 						continue;
 
-					if (substring(s, 0, 1) == "#")  // UNIX style
+					if (str_sub(s, 0, 1) == "#")  // UNIX style
 						continue;
 
-					if (substring(s, 0, 2) == "//") // C++ style
+					if (str_sub(s, 0, 2) == "//") // C++ style
 						continue;
 
-					if (substring(s, 0, 1) == "_")  // q3map style
+					if (str_sub(s, 0, 1) == "_")  // q3map style
 						continue;
 
 					map_info_parse_set_temp(pFilename, acl, s, recurse - 1);
@@ -50,12 +50,12 @@ void(string pFilename, string acl, string s, float recurse) map_info_parse_set_t
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
 	else if not (cvar_value_issafe(s))
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
-	else if (substring(t, 0, 10) == "g_mapinfo_")
+	else if (str_sub(t, 0, 10) == "g_mapinfo_")
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
 	else if (map_info_matchacl(acl, t) <= 0)
 		print("Map ", pFilename, " contains a denied setting, ignored\n");
 	else {
-		if (cvar("g_mapinfo_settemp_force") && substring(t, 0, 2) == "g_" && substring(t, 0, 9) != "g_profile")
+		if (cvar("g_mapinfo_settemp_force") && str_sub(t, 0, 2) == "g_" && str_sub(t, 0, 9) != "g_profile")
 			t = strcat("force_", t);
 
 		cvar_settemp(t, s);

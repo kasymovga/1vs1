@@ -24,7 +24,7 @@ string(string order, float from, float to, float subtract, float complete) weapo
 				neworder = strcat(neworder, ftos(w), " ");
 		}
 	}
-	return substring(neworder, 0, strlen(neworder) - 1);
+	return str_sub(neworder, 0, strlen(neworder) - 1);
 }
 
 string(string order, float complete) weapon_fix_order {

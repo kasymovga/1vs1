@@ -132,8 +132,8 @@ float mouseDragNexuizColorpicker(entity me, vector coords)
 		i = me.controlledTextbox.cursorPos;
 		if(i >= 2)
 		{
-			if(substring(me.controlledTextbox.text, i-2, 1) == "^")
-				if(strstrofs("0123456789", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
+			if(str_sub(me.controlledTextbox.text, i-2, 1) == "^")
+				if(strstrofs("0123456789", str_sub(me.controlledTextbox.text, i-1, 1), 0) >= 0)
 				{
 					me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
 					me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
@@ -143,10 +143,10 @@ float mouseDragNexuizColorpicker(entity me, vector coords)
 
 		if(i >= 5)
 		{
-			if(substring(me.controlledTextbox.text, i-5, 2) == "^x")
-				if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-3, 1), 0) >= 0)
-					if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-2, 1), 0) >= 0)
-						if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
+			if(str_sub(me.controlledTextbox.text, i-5, 2) == "^x")
+				if(strstrofs("0123456789abcdefABCDEF", str_sub(me.controlledTextbox.text, i-3, 1), 0) >= 0)
+					if(strstrofs("0123456789abcdefABCDEF", str_sub(me.controlledTextbox.text, i-2, 1), 0) >= 0)
+						if(strstrofs("0123456789abcdefABCDEF", str_sub(me.controlledTextbox.text, i-1, 1), 0) >= 0)
 						{
 							me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
 							me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);

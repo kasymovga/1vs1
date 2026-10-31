@@ -8,12 +8,12 @@ void(entity w) warpzone_predict {
 
 		return;
 	}
-	w.solid = SOLID_BSP;
+	w.solid = VM_SOLID_BSP;
 	float ss = self.solid;
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	trace_box(self.origin, self.mins, self.maxs, self.origin, TRACE_MOVE_NORMAL, NULL);
 	self.solid = ss;
-	w.solid = SOLID_NOT;
+	w.solid = VM_SOLID_NOT;
 	if not(trace_ent == w) return;
 	vector v = '0 0 0';
 	if ((view_observer_status || physics_is_player) && self.classname == "physics_player") {

@@ -28,7 +28,7 @@ void(string monstermodel, string wepmodel) monster_common_composite_setup {
 		setmodel(self.exteriorweaponentity, strcat("models/weapons/v_", wepmodel, ".md3"));
 	}
 	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.dlc_reset = monster_common_composite_dlc_reset;
 	self.dlc_reset();
 	if (self.colormod == '0 0 0')

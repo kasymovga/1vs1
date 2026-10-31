@@ -92,7 +92,7 @@ vector() turret_stdproc_aim_generic {
 		}
 		prep = pre_pos + (self.enemy.velocity * (impact_time + mintime));
 		if (self.aim_flags & TFL_AIM_ZPREDICT)
-		if not(self.enemy.flags & FL_ONGROUND)
+		if not(self.enemy.flags & FLAG_ONGROUND)
 		if (self.enemy.movetype == MOVETYPE_WALK || self.enemy.movetype == MOVETYPE_TOSS || self.enemy.movetype == MOVETYPE_BOUNCE) {
 			float vz;
 			prep_z = pre_pos_z;
@@ -109,7 +109,7 @@ vector() turret_stdproc_aim_generic {
 	// Smooth out predict-Z?
 	/*
 	if (self.aim_flags & TFL_AIM_ZEASE)
-	if (self.enemy.flags & FL_CLIENT) {
+	if (self.enemy.flags & FLAG_CLIENT) {
 		vector v;
 		v = turret_real_origin(self.enemy);
 		pre_pos_z = (pre_pos_z + v_z) * 0.5;
@@ -148,13 +148,13 @@ void(vector v_from, vector v_to, vector v_colormod,
 	setmodel(gib,smodel);
 	setorigin(gib,v_from);
 	entity_fade_setup(gib,time + f_lifetime,2);
-	gib.solid = SOLID_CORPSE;
+	gib.solid = VM_SOLID_CORPSE;
 	gib.movetype = MOVETYPE_BOUNCE;
 	gib.event_damage = turret_gib_damage;
 	gib.takedamage = DAMAGE_YES;
 	gib.health = -1;
 	gib.effects = EFFECT_LOWPRECISION;
-	gib.flags = FL_NOTARGET;
+	gib.flags = FLAG_NOTARGET;
 	gib.colormod = v_colormod;
 	gib.velocity = v_to;
 	gib.scale = self.scale;
@@ -182,7 +182,7 @@ void() turret_gib_boom {
 		setmodel(gib,s);
 		setorigin(gib,self.origin);
 		entity_fade_setup(gib,time + 5,2);
-		gib.solid = SOLID_CORPSE;
+		gib.solid = VM_SOLID_CORPSE;
 		gib.movetype = MOVETYPE_BOUNCE;
 		gib.gravity = 0.5;
 		gib.damageforcescale = 2;
@@ -190,7 +190,7 @@ void() turret_gib_boom {
 		gib.takedamage = DAMAGE_YES;
 		gib.health = -1;
 		gib.effects = EFFECT_LOWPRECISION;
-		gib.flags = FL_NOTARGET;
+		gib.flags = FLAG_NOTARGET;
 		gib.velocity = self.velocity + (randomvec() * 700);
 		gib.avelocity = randomvec() * 64;
 		gib.scale = self.scale;
@@ -211,7 +211,7 @@ void(vector v_from, vector v_to, vector v_colormod,
 	gib.classname = "turret_gib";
 	setmodel(gib,e_mimic.model);
 	setorigin(gib,v_from);
-	gib.solid = SOLID_BBOX;
+	gib.solid = VM_SOLID_BBOX;
 	gib.movetype = MOVETYPE_BOUNCE;
 	gib.gravity = 0.75;
 	gib.damageforcescale = 2;
@@ -219,7 +219,7 @@ void(vector v_from, vector v_to, vector v_colormod,
 	gib.event_damage = turret_gib_damage;
 	gib.health = -1;
 	gib.effects = EFFECT_LOWPRECISION;
-	gib.flags = FL_NOTARGET;
+	gib.flags = FLAG_NOTARGET;
 	gib.colormod = v_colormod;
 	gib.velocity = v_to;
 	gib.avelocity = randomvec() * 32;
@@ -247,7 +247,7 @@ void() turret_stdproc_die {
 	net_write_coord (MSG_BROADCAST, org2_y);
 	net_write_coord (MSG_BROADCAST, org2_z);
 	// Unsolidify and hide real parts
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.movetype = MOVETYPE_NONE;
 	self.alpha = -1;
 	self.tur_head.alpha = self.alpha;
@@ -307,12 +307,12 @@ void() turret_stdproc_respawn {
 	// this function doubles as "teamchange" function.
 	self.tur_head.team = self.team;
 	turret_stdproc_setcolormod();
-	self.flags = (self.flags & ~FL_ONGROUND);
+	self.flags = (self.flags & ~FLAG_ONGROUND);
 	self.movetype = MOVETYPE_TOSS;
 	self.deadflag = DEAD_NO;
 	self.effects = 0;
 	self.tur_head.effects = self.effects;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.alpha = 1;
 	self.tur_head.alpha = self.alpha;
 	self.customizeentityforclient = stdproc_true;
@@ -355,7 +355,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (team_teams)
 	if (self.team == attacker.team) {
 		// This does not happen anymore. Re-enable if you fix that.
-		//if (attacker.flags & FL_CLIENT)
+		//if (attacker.flags & FLAG_CLIENT)
 		if (clienttype(attacker) == CLIENTTYPE_REAL)
 			sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
 
@@ -684,7 +684,7 @@ float(entity e_turret,entity e_target,float validate_flags) turret_validate_targ
 		return -4;
 
 	// If only this was used more..
-	if (e_target.flags & FL_NOTARGET)
+	if (e_target.flags & FLAG_NOTARGET)
 		return -5;
 
 	// Cant touch this
@@ -692,7 +692,7 @@ float(entity e_turret,entity e_target,float validate_flags) turret_validate_targ
 		return -6;
 
 	// player
-	if (e_target.flags & FL_CLIENT) {
+	if (e_target.flags & FLAG_CLIENT) {
 		if not(validate_flags & TFL_TARGETSELECT_PLAYERS)
 			return -7;
 
@@ -706,12 +706,12 @@ float(entity e_turret,entity e_target,float validate_flags) turret_validate_targ
 				return -9;
 
 	// Missile
-	if (e_target.flags & FL_PROJECTILE)
+	if (e_target.flags & FLAG_PROJECTILE)
 		if not(validate_flags & TFL_TARGETSELECT_MISSILES)
 			return -10;
 
 	if (validate_flags & TFL_TARGETSELECT_MISSILESONLY)
-		if not(e_target.flags & FL_PROJECTILE)
+		if not(e_target.flags & FLAG_PROJECTILE)
 			return -10.5;
 
 	// Team check
@@ -858,7 +858,7 @@ void() turret_think {
 		setorigin(self, gettaginfo(self.tag_entity, self.tag_index) + self.origin);
 		setattachment(self, world, "");
 		self.angles = vectoangles(v_forward);
-		tag_entity_restore.solid = SOLID_NOT;
+		tag_entity_restore.solid = VM_SOLID_NOT;
 	}
 	// Inactive turrets needs to run the think loop,
 	// So they can handle animation and wake up if need be.
@@ -1098,7 +1098,7 @@ float(string cvar_base_name, string base, string head) turret_stdproc_init {
 		tb.maxs_z = -1;
 		setsize(tb, tb.mins * self.scale, tb.maxs * self.scale);
 		setorigin(tb, self.origin);
-		tb.solid = SOLID_BBOX;
+		tb.solid = VM_SOLID_BBOX;
 		//makestatic(tb);
 	}
 	self.cvar_basename = cvar_base_name;
@@ -1312,7 +1312,7 @@ float(string cvar_base_name, string base, string head) turret_stdproc_init {
 	self.tur_health = self.health;
 	self.tur_head.health = self.health;
 	self.tur_head.scale = self.scale;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.takedamage = DAMAGE_AIM;
 	self.movetype = MOVETYPE_TOSS;
 	// Attach stdprocs. override when and what needed
@@ -1348,7 +1348,7 @@ void() turret_readcvars {
 	CVAR_CACHE(g_turrets_targetscan_playersonly);
 	e = nextent(world);
 	while (e) {
-		if (e.tur_head && substring(e.classname, 0, 6) == "turret") {
+		if (e.tur_head && str_sub(e.classname, 0, 6) == "turret") {
 			turret_load_unit_settings(e,e.cvar_basename,1);
 			if (e.turret_postthink) {
 				entity oldself = self;
@@ -1406,10 +1406,10 @@ float(entity e_turret,entity e_target) turret_stdproc_targetscore_generic {
 	*/
 	//a_score = 1 - (tvt_thadf / max(e_turret.aim_maxrot,e_turret.aim_maxpitch));
 	a_score = 1 - tvt_thadf / e_turret.aim_maxrot;
-	if ((e_turret.target_select_missilebias > 0) && (e_target.flags & FL_PROJECTILE))
+	if ((e_turret.target_select_missilebias > 0) && (e_target.flags & FLAG_PROJECTILE))
 		m_score = 1;
 
-	if ((e_turret.target_select_playerbias > 0) && (e_target.flags & FL_CLIENT))
+	if ((e_turret.target_select_playerbias > 0) && (e_target.flags & FLAG_CLIENT))
 		p_score = 1;
 
 	d_score = max(d_score,0);

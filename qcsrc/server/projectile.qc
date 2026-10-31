@@ -37,7 +37,7 @@ float(entity to, float sf) projectile_send {
 	} else if(!self.csqcprojectile_sendangles) {
 		sf &= ~4;
 	}
-	if (self.flags & FL_ONGROUND) {
+	if (self.flags & FLAG_ONGROUND) {
 		sf |= 64;
 	}
 	if (self.team <= 0) {
@@ -78,8 +78,8 @@ float(entity to, float sf) projectile_send {
 .vector csqcprojectile_oldangles;
 void(void) projectile_check {
 	entity e;
-	for (e = world; (e = findflags(e, flags, FL_PROJECTILE)); ) {
-		if (!e.csqcprojectile_clientanimate || (e.flags & FL_ONGROUND)) {
+	for (e = world; (e = findflags(e, flags, FLAG_PROJECTILE)); ) {
+		if (!e.csqcprojectile_clientanimate || (e.flags & FLAG_ONGROUND)) {
 			if (e.origin != e.csqcprojectile_oldorigin)
 				projectile_update(e);
 		} else if (e.movetype == MOVETYPE_FOLLOW) {
@@ -160,7 +160,7 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 	net_link_entity(e, docull, 0, projectile_send);
 	e.csqcprojectile_clientanimate = clientanimate;
 	e.csqcprojectile_type = type;
-	e.flags = FL_PROJECTILE;
+	e.flags = FLAG_PROJECTILE;
 	e.classname = "projectile";
 	if (entity_per_player_entities && _owner) {
 		if (clienttype(_owner) == CLIENTTYPE_NOTACLIENT)
@@ -169,7 +169,7 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 			e.existsonlyfor = _owner;
 	}
 	e.reset = stdproc_remove;
-	e.solid = SOLID_SLIDEBOX;
+	e.solid = VM_SOLID_SLIDEBOX;
 	e.dphitcontentsmask = (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE);
 	return e;
 }
@@ -188,7 +188,7 @@ void(entity e, vector _origin, float impacttype, float deathtype, float _dmg, fl
 		if (e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_BOUNCE)
 			e.gravity = 1;
 	}
-	if (e.owner && e.owner.solid != SOLID_BSP) {
+	if (e.owner && e.owner.solid != VM_SOLID_BSP) {
 		if (e.mins != e.maxs || e.mins != '0 0 0') {
 			vector v = (e.mins + e.maxs) * 0.5;
 			trace_box((e.owner.absmax + e.owner.absmin) * 0.5 - v, e.mins, e.maxs, _origin - v, TRACE_MOVE_NOMONSTERS, NULL);
@@ -317,7 +317,7 @@ void(void) projectile_touch_explode {
 }
 
 void(entity e, entity to, vector a) projectile_stick {
-	if (to.solid == SOLID_TRIGGER || e.movetype == MOVETYPE_FOLLOW || e.movetype == MOVETYPE_NONE)
+	if (to.solid == VM_SOLID_TRIGGER || e.movetype == MOVETYPE_FOLLOW || e.movetype == MOVETYPE_NONE)
 		return;
 
 	e.angles = a;
@@ -329,8 +329,8 @@ void(entity e, entity to, vector a) projectile_stick {
 		e.punchangle = -to.angles;
 		e.punchangle_y *= -1;
 		e.view_ofs = e.origin - to.origin;
-		e.flags &= ~FL_ONGROUND;
-		e.solid = SOLID_CORPSE;
+		e.flags &= ~FLAG_ONGROUND;
+		e.solid = VM_SOLID_CORPSE;
 	} else
 		e.movetype = MOVETYPE_NONE;
 

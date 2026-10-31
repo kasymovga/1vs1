@@ -93,7 +93,7 @@ void(void) minstagib_weapon_attack {
 
 	warpzone_draw_effect_triangle(weapon_shotorg, weapon_shotorg_visual,  warpzone_untransform_origin(warpzone_trace_transform, trace_endpos), minstagib_weapon_draw_beam_particles);
 	// flash and burn the wall
-	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
+	if (trace_ent.solid == VM_SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
 		if (g_balance_minstanex_explode) {
 			entity e = spawn();
 			setorigin(e, trace_endpos);
@@ -271,7 +271,7 @@ void(float itemid) minstagib_items {
 		self.max_health = 1;
 		item_start(sv_model_armorlarge, "models/items/g_a25.md3",
 			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-			"Extralife", IT_NAILS, FL_POWERUP, item_generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+			"Extralife", IT_NAILS, FLAG_POWERUP, item_generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 		return;
 	}
 	remove(self);
@@ -447,7 +447,7 @@ float(string s) minstagib_ItemForbidden {
 	if (s != "minstagib")
 	if (s != "item_speed")
 	if (s != "item_invisibility")
-	if (substring(s, 0, 8) != "item_key")
+	if (str_sub(s, 0, 8) != "item_key")
 		return TRUE;
 
 	return minstagib_ItemForbidden_next(s);

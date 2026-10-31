@@ -117,9 +117,9 @@ float(string s) net_ip_parse_v4 {
 	if (dot2 < 0) return FALSE;
 	dot3 = strstrofs(s, ".", dot2 + 1);
 	if (dot3 < 0) return FALSE;
-	net_ip_pref1 = substring(s, 0, dot1);
-	net_ip_pref2 = substring(s, 0, dot2);
-	net_ip_pref3 = substring(s, 0, dot3);
+	net_ip_pref1 = str_sub(s, 0, dot1);
+	net_ip_pref2 = str_sub(s, 0, dot2);
+	net_ip_pref3 = str_sub(s, 0, dot3);
 	net_ip_pref4 = s;
 	return TRUE;
 }
@@ -136,26 +136,26 @@ float(string s) net_ip_parse_v6 {
 	if (double_colon_pos < 0 && colon_count < 7) {
 		return FALSE;
 	} else {
-		s1 = substring(s, 0, double_colon_pos);
-		s2 = substring(s, double_colon_pos + 1, -1);
+		s1 = str_sub(s, 0, double_colon_pos);
+		s2 = str_sub(s, double_colon_pos + 1, -1);
 		for (float i = colon_count - 1; i < 7; i++) {
 			s1 = strcat(s1, ":0");
 		}
 		s1 = strcat(s1, s2);
 	}
-	if (substring(s1, 0, 1) == ":") s1 = strcat("0", s1);
-	if (substring(s1, -1, 1) == ":") s1 = strcat(s1, "0");
+	if (str_sub(s1, 0, 1) == ":") s1 = strcat("0", s1);
+	if (str_sub(s1, -1, 1) == ":") s1 = strcat(s1, "0");
 	net_ip_pref4 = s1;
 	colon_pos = -1;
 	colon_count = 0;
 	while ((colon_pos = strstrofs(s1, ":", colon_pos + 1)) >= 0) {
 		colon_count++;
 		if (colon_count == 2) { //32
-			net_ip_pref1 = substring(s1, 0, colon_pos);
+			net_ip_pref1 = str_sub(s1, 0, colon_pos);
 		} else if (colon_count == 3) { //48
-			net_ip_pref2 = substring(s1, 0, colon_pos);
+			net_ip_pref2 = str_sub(s1, 0, colon_pos);
 		} else if (colon_count == 4) { //64
-			net_ip_pref3 = substring(s1, 0, colon_pos);
+			net_ip_pref3 = str_sub(s1, 0, colon_pos);
 			break;
 		}
 	}

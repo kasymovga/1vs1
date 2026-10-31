@@ -2,7 +2,7 @@ string(string theText, float maxWidth, str_length_up_to_width_width_function_t t
 	if(tw(theText) <= maxWidth)
 		return theText;
 	else
-		return strcat(substring(theText, 0, str_length_up_to_width(theText, maxWidth - tw("..."), tw)), "...");
+		return strcat(str_sub(theText, 0, str_length_up_to_width(theText, maxWidth - tw("..."), tw)), "...");
 }
 
 float(string s) str_width_colors {

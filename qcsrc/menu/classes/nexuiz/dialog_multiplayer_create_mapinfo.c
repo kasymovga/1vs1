@@ -33,20 +33,18 @@ void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
 	me.currentMapIndex = i;
 	me.startButton.onClickEntity = mlb;
 	map_info_get_by_id(i);
-	if (me.currentMapBSPName) {
-		strunzone(me.currentMapBSPName);
-		strunzone(me.currentMapTitle);
-		strunzone(me.currentMapAuthor);
-		strunzone(me.currentMapDescription);
-		strunzone(me.currentMapPreviewImage);
-		strunzone(me.currentMapFeaturesText);
-	}
-	me.currentMapBSPName = strzone(map_info_map_bspname);
-	me.currentMapTitle = strzone(map_info_map_title);
-	me.currentMapAuthor = strzone(map_info_map_author);
-	me.currentMapDescription = strzone(map_info_map_description);
-	me.currentMapFeaturesText = strzone((map_info_map_supported_features & MAP_INFO_FEATURE_WEAPONS) ? _("Full item placement") : _("MinstaGib only"));
-	me.currentMapPreviewImage = strzone(strcat("/", map_info_map_image));
+	str_unzone_ifneeded(me.currentMapBSPName);
+	str_unzone_ifneeded(me.currentMapTitle);
+	str_unzone_ifneeded(me.currentMapAuthor);
+	str_unzone_ifneeded(me.currentMapDescription);
+	str_unzone_ifneeded(me.currentMapPreviewImage);
+	str_unzone_ifneeded(me.currentMapFeaturesText);
+	me.currentMapBSPName = str_zone_ifneeded(map_info_map_bspname);
+	me.currentMapTitle = str_zone_ifneeded(map_info_map_title);
+	me.currentMapAuthor = str_zone_ifneeded(map_info_map_author);
+	me.currentMapDescription = str_zone_ifneeded(map_info_map_description);
+	me.currentMapFeaturesText = str_zone_ifneeded((map_info_map_supported_features & MAP_INFO_FEATURE_WEAPONS) ? _("Full item placement") : _("MinstaGib only"));
+	me.currentMapPreviewImage = str_zone_ifneeded(strcat("/", map_info_map_image));
 
 	me.frame.setText(me.frame, me.currentMapBSPName);
 	me.titleLabel.setText(me.titleLabel, me.currentMapTitle);

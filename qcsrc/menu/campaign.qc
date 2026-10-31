@@ -14,11 +14,11 @@ void(void) campaign_init {
 			continue;
 
 		arg1 = argv(1);
-		if (substring(arg1, 0, 10) != "g_campaign") {
+		if (str_sub(arg1, 0, 10) != "g_campaign") {
 			print("Unknown variable in campaign.cfg: ", arg1, "\n");
 			continue;
 		}
-		if (substring(arg1, -6, 6) != "_index" && substring(arg1, -4, 4) != "_won") continue;
+		if (str_sub(arg1, -6, 6) != "_index" && str_sub(arg1, -4, 4) != "_won") continue;
 		registercvar(arg1, "", 0);
 		cvar_set(arg1, argv(2));
 	}

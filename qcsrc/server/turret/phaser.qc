@@ -39,7 +39,7 @@ void(vector start,vector end,vector smin,vector smax,
 		if (trace_ent == world || trace_fraction == 1)
 			break;
 
-		if (trace_ent.solid == SOLID_BSP)
+		if (trace_ent.solid == VM_SOLID_BSP)
 			break;
 
 		// make the entity non-solid so we can hit the next one
@@ -48,7 +48,7 @@ void(vector start,vector end,vector smin,vector smax,
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		// stop if this is a wall
 		// make the entity non-solid
-		trace_ent.solid = SOLID_NOT;
+		trace_ent.solid = VM_SOLID_NOT;
 	}
 	endpoint = trace_endpos;
 	// find all the entities the railgun hit and restore their solid state
@@ -64,7 +64,7 @@ void(vector start,vector end,vector smin,vector smax,
 		// get the details we need to call the damage function
 		hitloc = ent.railgunhitloc;
 		ent.railgunhitloc = '0 0 0';
-		ent.railgunhitsolidbackup = SOLID_NOT;
+		ent.railgunhitsolidbackup = VM_SOLID_NOT;
 		ent.railgunhit = FALSE;
 		// apply the damage
 		if (ent.takedamage) {
@@ -118,7 +118,7 @@ void(void) turret_phaser_attack {
 	beam.ticrate = 0.1; //cvar("sys_ticrate");
 	setmodel(beam,"models/turrets/phaser_beam.md3");
 	beam.effects = EFFECT_LOWPRECISION;
-	beam.solid = SOLID_NOT;
+	beam.solid = VM_SOLID_NOT;
 	beam.think = turret_phaser_beam_think;
 	beam.cnt = time + self.shot_speed;
 	beam.shot_spread = time + 2;

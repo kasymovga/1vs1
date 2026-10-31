@@ -55,7 +55,7 @@ void() monster_ewheel_walk {
 		self.frame = 1;
 		BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
 	}
-	if (self.flags & FL_ONGROUND) {
+	if (self.flags & FLAG_ONGROUND) {
 		monster_move_walk_rotate(400, 1, 0, 720);
 	}
 }
@@ -71,7 +71,7 @@ void() monster_ewheel_spawn {
 	setmodel(self.weaponentity, "models/turrets/ewheel-gun1.md3");
     setattachment(self.weaponentity, self, "tag_head");
 	self.species = SPECIES_ROBOT_SOLID;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Magic Wheel";
 	self.movetype = MOVETYPE_WALK;

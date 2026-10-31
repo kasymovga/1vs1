@@ -353,7 +353,7 @@ float() map_do_next_override {
 		}
 	}
 	if (cvar_string("quit_and_redirect") != "") {
-		redirection_target = strzone(cvar_string("quit_and_redirect"));
+		redirection_target = str_zone_ifneeded(cvar_string("quit_and_redirect"));
 		map_already_changed = TRUE;
 		return TRUE;
 	}
@@ -478,7 +478,7 @@ void() map_finish {
 	sound_play2all("misc/menu2.wav");
 	map_intermission_running = 1;
 	CLIENT_FOR_EACH(e) {
-		e.solid = SOLID_NOT;
+		e.solid = VM_SOLID_NOT;
 		e.movetype = MOVETYPE_NONE;
 		e.takedamage = DAMAGE_NO;
 		if (e.weaponentity) {

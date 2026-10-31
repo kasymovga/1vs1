@@ -75,7 +75,7 @@ void(float binary, .float field, float(float a, float b) func, string sound_incr
 
 void(void) target_items_use {
 	float h0, a0, f0;
-	if (substring(activator.classname, 7, 0) == "dropped") {
+	if (str_sub(activator.classname, 7, 0) == "dropped") {
 		TRIGGER_EXACT_TOUCH;
 		remove(activator);
 		return;
@@ -89,7 +89,7 @@ void(void) target_items_use {
 	TRIGGER_EXACT_TOUCH;
 	entity e;
 	for (e = world; (e = findentity(e, enemy, activator)); )
-		if (substring(e.classname, 0, 7) == "dropped")
+		if (str_sub(e.classname, 0, 7) == "dropped")
 			remove(e);
 
 	float _switchweapon;

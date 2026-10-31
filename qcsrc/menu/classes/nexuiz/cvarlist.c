@@ -57,17 +57,13 @@ void setSelectedNexuizCvarList(entity me, float i)
 	if(me.nItems == 0)
 		return;
 	
-	if(me.cvarName)
-		strunzone(me.cvarName);
-	if(me.cvarDescription)
-		strunzone(me.cvarDescription);
-	if(me.cvarType)
-		strunzone(me.cvarType);
-	if(me.cvarDefault)
-		strunzone(me.cvarDefault);
-	me.cvarName = strzone(bufstr_get(me.handle, me.selectedItem));
-	me.cvarDescription = strzone(cvar_description(me.cvarName));
-	me.cvarDefault = strzone(cvar_defstring(me.cvarName));
+	str_unzone_ifneeded(me.cvarName);
+	str_unzone_ifneeded(me.cvarDescription);
+	str_unzone_ifneeded(me.cvarType);
+	str_unzone_ifneeded(me.cvarDefault);
+	me.cvarName = str_zone_ifneeded(bufstr_get(me.handle, me.selectedItem));
+	me.cvarDescription = str_zone_ifneeded(cvar_description(me.cvarName));
+	me.cvarDefault = str_zone_ifneeded(cvar_defstring(me.cvarName));
 
 	float t;
 	t = cvar_type(me.cvarName);
@@ -82,8 +78,7 @@ void setSelectedNexuizCvarList(entity me, float i)
 		me.cvarType = strcat(me.cvarType, _(", engine setting"));
 	if(t & CVAR_TYPEFLAG_READONLY)
 		me.cvarType = strcat(me.cvarType, _(", read only"));
-	me.cvarType = strzone(substring(me.cvarType, 2, strlen(me.cvarType) - 2));
-
+	me.cvarType = str_zone_ifneeded(str_sub(me.cvarType, 2, strlen(me.cvarType) - 2));
 	me.cvarNameBox.setText(me.cvarNameBox, me.cvarName);
 	me.cvarDescriptionBox.setText(me.cvarDescriptionBox, me.cvarDescription);
 	me.cvarTypeBox.setText(me.cvarTypeBox, me.cvarType);

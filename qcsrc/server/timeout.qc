@@ -172,7 +172,7 @@ float(string cmd, float tokens) timeout_cmd_game_handle {
 
 var float(string cmd, float tokens) timeout_ClientCommandHandle_NextLink;
 float(string cmd, float tokens) timeout_ClientCommandHandle {
-	if (self.flags & FL_CLIENT) {
+	if (self.flags & FLAG_CLIENT) {
 		if (cmd == "timeout" || (cmd == "timeoutin" && timeout_status == 0)) {
 			if (self.classname == "player") {
 				if (vote_called)

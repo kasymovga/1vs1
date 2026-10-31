@@ -11,8 +11,8 @@ float(float gt, float tp, string pattern) game_type_filter {
 	else
 		subpattern3 = NULL;
 
-	if(substring(pattern, 0, 1) == "-") {
-		pattern = substring(pattern, 1, strlen(pattern) - 1);
+	if(str_sub(pattern, 0, 1) == "-") {
+		pattern = str_sub(pattern, 1, strlen(pattern) - 1);
 		if(strstrofs(strcat(",", pattern, ","), subpattern, 0) >= 0)
 			return 0;
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) >= 0)
@@ -20,8 +20,8 @@ float(float gt, float tp, string pattern) game_type_filter {
 		if(subpattern3 && strstrofs(strcat(",", pattern, ","), subpattern3, 0) >= 0)
 			return 0;
 	} else {
-		if(substring(pattern, 0, 1) == "+")
-			pattern = substring(pattern, 1, strlen(pattern) - 1);
+		if(str_sub(pattern, 0, 1) == "+")
+			pattern = str_sub(pattern, 1, strlen(pattern) - 1);
 		if(strstrofs(strcat(",", pattern, ","), subpattern, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
 		if((!subpattern3) || strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)

@@ -23,12 +23,12 @@ void(void) turret_plasma_attack {
 	proj.classname = "plasmabomb";
 	proj.think = turret_projectile_think_explode;
 	proj.nextthink = time + 9;
-	proj.solid = SOLID_BBOX;
+	proj.solid = VM_SOLID_BBOX;
 	proj.velocity = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
 	proj.touch = turret_projectile_touch_explode;
-	proj.flags = FL_PROJECTILE;
+	proj.flags = FLAG_PROJECTILE;
 	proj.enemy = self.enemy;
-	proj.flags |= FL_NOTARGET;
+	proj.flags |= FLAG_NOTARGET;
 	if (self.tur_head.frame == 0)
 		self.tur_head.frame = 1;
 }
@@ -41,12 +41,12 @@ void(void) turret_plasma_dual_attack {
 	proj.classname = "plasmabomb";
 	proj.think = turret_projectile_think_explode;
 	proj.nextthink = time + 9;
-	proj.solid = SOLID_BBOX;
+	proj.solid = VM_SOLID_BBOX;
 	proj.velocity = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
 	proj.touch = turret_projectile_touch_explode;
-	proj.flags = FL_PROJECTILE;
+	proj.flags = FLAG_PROJECTILE;
 	proj.enemy = self.enemy;
-	proj.flags |= FL_NOTARGET;
+	proj.flags |= FLAG_NOTARGET;
 	self.tur_head.frame += 1;
 }
 

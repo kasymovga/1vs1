@@ -7,8 +7,8 @@ void(void) game_status_draw {
 	n = strstrofs(tail, "\n", 0);
 	_size = sbar_fontsize * (2 + min(1, self.alpha)) * 0.5;
 	while (n >= 0) {
-		head = substring(tail, 0, n);
-		tail = substring(tail, n + 1, -1);
+		head = str_sub(tail, 0, n);
+		tail = str_sub(tail, n + 1, -1);
 		draw_string_colorcoded_center(pos, head, _size, self.alpha, DRAWFLAG_NORMAL);
 		n = strstrofs(tail, "\n", 0);
 		pos_y += _size_y;

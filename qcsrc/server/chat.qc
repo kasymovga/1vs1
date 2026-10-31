@@ -40,8 +40,8 @@ string(entity pl, string msg) chat_formatmessage {
 		if (p < 0)
 			break;
 
-		replacement = substring(msg, p, 2);
-		escape = substring(msg, p + 1, 1);
+		replacement = str_sub(msg, p, 2);
+		escape = str_sub(msg, p + 1, 1);
 		if (escape == "%")
 			replacement = "%";
 		else if (escape == "\\")
@@ -84,7 +84,7 @@ string(entity pl, string msg) chat_formatmessage {
 			else
 				replacement = "(nobody)";
 		}
-		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
+		msg = strcat(str_sub(msg, 0, p), replacement, str_sub(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);
 	}
 	return msg;
@@ -110,11 +110,11 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	float flood, privatemsgprefixlen = 0, slashme = FALSE;
 	entity head;
 	if (source) {
-		if (substring(msgin, 0, 1) == "/") {
-			if (substring(msgin, 0, 4) == "/me ") {
+		if (str_sub(msgin, 0, 1) == "/") {
+			if (str_sub(msgin, 0, 4) == "/me ") {
 				slashme = TRUE;
 			} else {
-				vote_cmd(strcat("vote call ", substring(msgin, 1, -1)), source);
+				vote_cmd(strcat("vote call ", str_sub(msgin, 1, -1)), source);
 			}
 		}
 		if (source.abuser > 0) {
@@ -141,8 +141,8 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		}
 	}
 	if (!teamsay && !privatesay)
-		if(substring(msgin, 0, 1) == " ")
-			msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
+		if(str_sub(msgin, 0, 1) == " ")
+			msgin = str_sub(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
 
 	msgin = chat_formatmessage(source, msgin);
 	if(msgin == "")
@@ -182,12 +182,12 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 			privatemsgprefix = strcat("\{1}* ^3You tell ", privatesay.netname, ": ^7");
 	} else if (teamsay) {
 		if (slashme)
-			msgstr = strcat("\{1}", colorstr, "^3* (^3", namestr, colorstr, ") ^7", substring(msgin, 4, -1));
+			msgstr = strcat("\{1}", colorstr, "^3* (^3", namestr, colorstr, ") ^7", str_sub(msgin, 4, -1));
 		else
 			msgstr = strcat("\{1}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
 	} else {
 		if (slashme)
-			msgstr = strcat("\{1}^3 * ^7", namestr, "^7 ", substring(msgin, 4, -1));
+			msgstr = strcat("\{1}^3 * ^7", namestr, "^7 ", str_sub(msgin, 4, -1));
 		else
 			msgstr = strcat("\{1}", namestr, "^7: ", msgin);
 	}
@@ -229,7 +229,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 			msgstr = strcat(msgstr, " ", str_wrapped_line(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
 			++lines;
 		}
-		msgstr = substring(msgstr, 1, strlen(msgstr) - 1);
+		msgstr = str_sub(msgstr, 1, strlen(msgstr) - 1);
 		if (str_wrapped_line_remaining != "") {
 			msgstr = strcat(msgstr, "\n");
 			flood = 2;
@@ -265,7 +265,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if (privatesay)
-		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
+		sourcemsgstr = strcat(privatemsgprefix, str_sub(sourcemsgstr, privatemsgprefixlen, -1));
 
 	if (source.muted && source) {
 		// always fake the message

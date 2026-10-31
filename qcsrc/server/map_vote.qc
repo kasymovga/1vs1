@@ -61,9 +61,9 @@ string(string m) map_vote_suggest {
 		map_vote_suggestion_ptr += 1;
 	}
 	if (map_vote_suggestions[i] != "")
-		strunzone(map_vote_suggestions[i]);
+		str_unzone_ifneeded(map_vote_suggestions[i]);
 
-	map_vote_suggestions[i] = strzone(m);
+	map_vote_suggestions[i] = str_zone_ifneeded(m);
 	return strcat("Suggestion of ", m, " accepted.");
 }
 
@@ -78,13 +78,13 @@ void(string nextMap, float isSuggestion) map_vote_add_votable {
 	if (strlen(nextMap) > map_vote_maxlen)
 		map_vote_maxlen = strlen(nextMap);
 
-	map_vote_maps[map_vote_count] = strzone(nextMap);
+	map_vote_maps[map_vote_count] = str_zone_ifneeded(nextMap);
 	map_info_get_by_name(nextMap, 0, 0);
 	string picture = map_info_map_image;
 	if (picture == "")
 		picture = "gfx/m_nomap";
 
-	map_vote_pictures[map_vote_count] = strzone(picture);
+	map_vote_pictures[map_vote_count] = str_zone_ifneeded(picture);
 	map_vote_maps_suggested[map_vote_count] = isSuggestion;
 	map_vote_count += 1;
 }
@@ -201,7 +201,7 @@ float(entity to, float sf) map_vote_send {
 						pakfile = whichpack(strcat(picfile, ".png"));
 
 					for (o = strstrofs(pakfile, "/", 0)+1; o > 0; o = strstrofs(pakfile, "/", 0)+1)
-						pakfile = substring(pakfile, o, 999);
+						pakfile = str_sub(pakfile, o, 999);
 
 					net_write_string(MSG_ENTITY, pakfile);
 				}
@@ -320,7 +320,7 @@ float() map_vote_check_rules2 {
 							result = strcat(result, ":", map_vote_maps[i]);
 							result = strcat(result, ":", ftos(map_vote_votes[i]));
 							if (i < map_vote_count_real) {
-								strunzone(map_vote_maps[i]);
+								str_unzone_ifneeded(map_vote_maps[i]);
 								map_vote_maps[i] = "";
 							}
 						}

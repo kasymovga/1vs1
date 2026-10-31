@@ -44,34 +44,34 @@ float(string s) dlc_load_settemps_from {
 		dlc_rexext_forcemodel = str_zone_ifneeded(cvar_string("g_player_allowed_models"));
 	}
 	while ((line = dlc_trimspaces(fgets(f)))) {
-		c = substring(line, 0, 1);
+		c = str_sub(line, 0, 1);
 		if (c == "#" || c == "/") continue;
 		separator = dlc_findspace(line);
 		if (separator < 0)
 			continue;
 
-		name = substring(line, 0, separator);
+		name = str_sub(line, 0, separator);
 		if (name == "require" || name == "require_ge" || name == "require_le") {
-			line = dlc_trimspaces(substring(line, separator + 1, -1));
+			line = dlc_trimspaces(str_sub(line, separator + 1, -1));
 			separator = dlc_findspace(line);
 			if (separator < 0)
 				continue;
 
 			string req = name;
-			name = substring(line, 0, separator);
-			value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(substring(line, separator + 1, -1))));
+			name = str_sub(line, 0, separator);
+			value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(str_sub(line, separator + 1, -1))));
 			if (req == "require") {
 				if (name == "g_profile") {
 					if not(cvar_profile_presents(value)) {
 						r = 0;
 						break;
 					}
-				} else if (substring(name, 0, 5) == "date_") {
+				} else if (str_sub(name, 0, 5) == "date_") {
 					string s1 = cvar_string(name);
 					string s2 = value;
 					//Remove leading 0 for date
-					if (substring(s1, 0, 1) == "0") s1 = substring(s1, 1, -1);
-					if (substring(s2, 0, 1) == "0") s2 = substring(s2, 1, -1);
+					if (str_sub(s1, 0, 1) == "0") s1 = str_sub(s1, 1, -1);
+					if (str_sub(s2, 0, 1) == "0") s2 = str_sub(s2, 1, -1);
 					if (s1 != s2) {
 						r = 0;
 						break;
@@ -93,7 +93,7 @@ float(string s) dlc_load_settemps_from {
 			}
 			continue;
 		}
-		value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(substring(line, separator + 1, -1))));
+		value = dlc_trimquotes(dlc_trimspaces(dlc_trimcommentary(str_sub(line, separator + 1, -1))));
 		if (name == "player_model_precache") { //forced player model precache
 			player_body_precache(value);
 			continue;
@@ -282,7 +282,7 @@ void(string dlc_name) dlc_require {
 	} else
 		dlc.SendFlags |= 2;
 
-	s = strzone(strcat(dlc_list_send, " ", dlc_name));
+	s = str_zone_ifneeded(strcat(dlc_list_send, " ", dlc_name));
 	str_unzone_ifneeded(dlc_list_send);
 	dlc_list_send = s;
 	dlc_require_server_only(dlc_name);
@@ -339,11 +339,11 @@ string(string file) dlc_by_file {
 	if (pk3 == "")
 		return "";
 
-	if (substring(pk3, 0, 8) == "dlcache/")
-		pk3 = substring(pk3, 8, -1);
+	if (str_sub(pk3, 0, 8) == "dlcache/")
+		pk3 = str_sub(pk3, 8, -1);
 
-	if (substring(pk3, 0, 11) == "zzz-rexdlc_" && substring(pk3, 0, 15) != "zzz-rexdlc_base") {
-		s = substring(pk3, 11, strlen(pk3) - 15);
+	if (str_sub(pk3, 0, 11) == "zzz-rexdlc_" && str_sub(pk3, 0, 15) != "zzz-rexdlc_base") {
+		s = str_sub(pk3, 11, strlen(pk3) - 15);
 		if (s != "") {
 			if (file_exists(dlc_serverpackage_name(s))) {
 				return s;
@@ -359,11 +359,11 @@ void(string file) dlc_add_dlc_or_pk3_by_file {
 	if (pk3 == "")
 		return;
 
-	if (substring(pk3, 0, 8) == "dlcache/")
-		pk3 = substring(pk3, 8, -1);
+	if (str_sub(pk3, 0, 8) == "dlcache/")
+		pk3 = str_sub(pk3, 8, -1);
 
-	if (substring(pk3, 0, 11) == "zzz-rexdlc_" && substring(pk3, 0, 15) != "zzz-rexdlc_base") {
-		s = substring(pk3, 11, strlen(pk3) - 15);
+	if (str_sub(pk3, 0, 11) == "zzz-rexdlc_" && str_sub(pk3, 0, 15) != "zzz-rexdlc_base") {
+		s = str_sub(pk3, 11, strlen(pk3) - 15);
 		if (s != "") {
 			if (file_exists(dlc_serverpackage_name(s))) {
 				dlc_require(s);
@@ -380,8 +380,8 @@ void(string file) dlc_add_dlc_or_pk3_by_file {
 			continue;
 
 		pk3_check = whichpack(head);
-		if (substring(pk3_check, 0, 8) == "dlcache/")
-			pk3_check = substring(pk3_check, 8, -1);
+		if (str_sub(pk3_check, 0, 8) == "dlcache/")
+			pk3_check = str_sub(pk3_check, 8, -1);
 
 		if (pk3 == pk3_check)
 			return;
@@ -401,15 +401,15 @@ void(void) dlc_extra_pk3_list_build {
 			continue;
 
 		pk3 = whichpack(head);
-		if (substring(pk3, 0, 8) == "dlcache/")
-			pk3 = substring(pk3, 8, -1);
+		if (str_sub(pk3, 0, 8) == "dlcache/")
+			pk3 = str_sub(pk3, 8, -1);
 
 		if (pk3 != "")
-		if (substring(pk3, 0, 11) != "zzz-rexdlc_") {
+		if (str_sub(pk3, 0, 11) != "zzz-rexdlc_") {
 			dlc_extra_pk3_list = strcat(dlc_extra_pk3_list, " ", pk3, ":", head);
 		}
 	}
-	dlc_extra_pk3_list = strzone(dlc_extra_pk3_list);
+	dlc_extra_pk3_list = str_zone_ifneeded(dlc_extra_pk3_list);
 	if (strstrofs(dlc_extra_pk3_list, ";", 0) >= 0 ||
 			strstrofs(dlc_extra_pk3_list, "\"", 0) >= 0 ||
 			strstrofs(dlc_extra_pk3_list, "\\", 0) >= 0)
@@ -449,12 +449,12 @@ void(void) dlc_init {
 		dlc_require(s);
 
 	string map_pk3 = whichpack(strcat("maps/", mapname, ".bsp"));
-	if (substring(map_pk3, 0, 8) == "dlcache/")
-		map_pk3 = substring(map_pk3, 8, -1);
+	if (str_sub(map_pk3, 0, 8) == "dlcache/")
+		map_pk3 = str_sub(map_pk3, 8, -1);
 
 	if (map_pk3 != "")
-	if (substring(map_pk3, 0, 11) == "zzz-rexdlc_" && substring(map_pk3, 0, 15) != "zzz-rexdlc_base") {
-		s = substring(map_pk3, 11, strlen(map_pk3) - 15);
+	if (str_sub(map_pk3, 0, 11) == "zzz-rexdlc_" && str_sub(map_pk3, 0, 15) != "zzz-rexdlc_base") {
+		s = str_sub(map_pk3, 11, strlen(map_pk3) - 15);
 		if (s != "") {
 			if (file_exists(dlc_serverpackage_name(s))) {
 				print("Map from DLC: ", s, "\n");
@@ -551,7 +551,7 @@ void(string s) dlc_precache_sound {
 	}
 	string dlc_sounds_new = strcat(dlc_sounds, " ", s);
 	str_unzone_ifneeded(dlc_sounds);
-	dlc_sounds = strzone(dlc_sounds_new);
+	dlc_sounds = str_zone_ifneeded(dlc_sounds_new);
 	dlc.SendFlags |= 8;
 	precache_sound(s);
 }

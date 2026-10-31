@@ -125,7 +125,7 @@ void(entity key) kh_Key_Attach { // runs when a player picks up a key and severa
 	setorigin(key, '0 0 1' * KH_KEY_ZSHIFT);  // fixing x, y in think
 	key.angles_y -= key.owner.angles_y;
 	key.flags = 0;
-	key.solid = SOLID_NOT;
+	key.solid = VM_SOLID_NOT;
 	key.movetype = MOVETYPE_NONE;
 	key.team = key.owner.team;
 	key.nextthink = time;
@@ -137,8 +137,8 @@ void(entity key) kh_Key_Detach { // runs every time a key is dropped or lost. Ru
 	setorigin(key, key.owner.origin + key.origin_z * '0 0 1');
 	setattachment(key, NULL, "");
 	key.angles_y += key.owner.angles_y;
-	key.flags = FL_ITEM;
-	key.solid = SOLID_TRIGGER;
+	key.flags = FLAG_ITEM;
+	key.solid = VM_SOLID_TRIGGER;
 	key.movetype = MOVETYPE_TOSS;
 	key.pain_finished = time + g_kh_delay_return;
 	key.damageforcescale = g_kh_damageforcescale;
@@ -289,7 +289,7 @@ void(entity key) kh_Key_Hide { // runs after when all the keys have been collect
 	entity o;
 	o = key.owner;
 	kh_Key_AssignTo(key, NULL);
-	key.solid = SOLID_NOT;
+	key.solid = VM_SOLID_NOT;
 	key.effects |= EFFECT_NODRAW;
 	kh_update_state();
 }

@@ -108,7 +108,7 @@ void() monster_walker_hunt {
 		if not(self.count)
 			self.cnt = 0;
 	}
-	float onground = (self.flags & FL_ONGROUND);
+	float onground = (self.flags & FLAG_ONGROUND);
 	anim_set(self, (onground ? '5 20 25' : '95 5 25'), TRUE, FALSE, FALSE);
 	anim_update(self);
 	vector v = monster_move_walk((onground ? 400 : 100), (onground ? 25 : 5), 0);
@@ -124,7 +124,7 @@ void() monster_walker_walk {
 	if (monster_walk_prepare(2500, 500, 0, 1, 3, monster_walker_idle, 100))
 		return;
 
-	float onground = (self.flags & FL_ONGROUND);
+	float onground = (self.flags & FLAG_ONGROUND);
 	anim_set(self, (onground ? '5 20 25' : '95 5 25'), TRUE, FALSE, FALSE);
 	anim_update(self);
 	monster_move_walk_rotate((onground ? 400 : 100), (onground ? 25 : 5), 0, 180);
@@ -151,7 +151,7 @@ void() monster_walker_spawn {
 	setmodel(self.weaponentity, "models/turrets/walker_head_minigun.md3");
 	setattachment(self.weaponentity, self, "tag_head");
 	self.species = SPECIES_ROBOT_SOLID;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 0.1;
 	self.netname = "Walker Nagibator";
 	self.movetype = MOVETYPE_WALK;

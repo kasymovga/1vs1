@@ -10,9 +10,7 @@ void(void) cvar_changes_init {
 	float h;
 	string k, v, d;
 	float n, i;
-	if (cvar_changes)
-		strunzone(cvar_changes);
-
+	str_unzone_ifneeded(cvar_changes);
 	cvar_changes = NULL;
 	h = buf_create();
 	buf_cvarlist(h, "", "_"); // exclude all _ cvars as they are temporary
@@ -24,7 +22,7 @@ void(void) cvar_changes_init {
 		if (v == d)
 			continue;
 
-#define BADPREFIX(p) if (substring(k, 0, strlen(p)) == p) continue
+#define BADPREFIX(p) if (str_sub(k, 0, strlen(p)) == p) continue
 #define BADCVAR(p) if (k == p) continue
 		// internal
 		BADCVAR("gamecfg");
@@ -128,11 +126,11 @@ void(void) cvar_changes_init {
 	else
 		cvar_changes = strcat("// this server runs at modified settings:\n", cvar_changes);
 
-	cvar_changes = strzone(cvar_changes);
+	cvar_changes = str_zone_ifneeded(cvar_changes);
 }
 
 float(string cvarname) cvar_ext {
-	if (substring(cvarname, 0, 2) != "g_")
+	if (str_sub(cvarname, 0, 2) != "g_")
 		return cvar_orig(cvarname);
 
 	string s;
@@ -170,7 +168,7 @@ float(string cvarname) cvar_ext {
 }
 
 string(string cvarname) cvar_string_ext {
-	if (substring(cvarname, 0, 2) != "g_")
+	if (str_sub(cvarname, 0, 2) != "g_")
 		return cvar_string_orig(cvarname);
 
 	string s, val;
@@ -222,7 +220,7 @@ void(string profile) cvar_profile_add {
 		if (s == profile)
 			return;
 	}
-	cvar_profile_prefix[cvar_profile_prefix_len] = strzone(profile);
+	cvar_profile_prefix[cvar_profile_prefix_len] = str_zone_ifneeded(profile);
 	cvar_profile_prefix_len++;
 	string inherit = cvar_string_orig(strcat(profile, "_inherit"));
 	while (inherit != "") {
@@ -244,7 +242,7 @@ void(string _game) cvar_game_add {
 		if (s == _game)
 			return;
 	}
-	cvar_game_prefix[cvar_game_prefix_len] = strzone(_game);
+	cvar_game_prefix[cvar_game_prefix_len] = str_zone_ifneeded(_game);
 	cvar_game_prefix_len++;
 	string inherit = cvar_string_orig(strcat(_game, "_inherit"));
 	while (inherit != "") {
@@ -284,7 +282,7 @@ void(void) cvar_profile_dlc_load {
 }
 
 string(string cvarname) cvar_name {
-	if (substring(cvarname, 0, 2) != "g_")
+	if (str_sub(cvarname, 0, 2) != "g_")
 		return cvarname;
 
 	string s;

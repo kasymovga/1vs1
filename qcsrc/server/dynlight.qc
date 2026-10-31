@@ -64,7 +64,7 @@ void(void) spawnfunc_dynlight {
 		self.enemy = spawn();
 		setattachment(self.enemy, self, "");
 	}
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.light_lev = 0;
 	self.reset = dynlight_reset;
 	dynlight_reset();

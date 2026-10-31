@@ -179,7 +179,7 @@ void(void) spawnfunc_conquest_cp {
 		team_teams_set_allowed(self.team);
 	}
 	self.cnt = self.team;
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.reset = conquest_cp_reset;
 	self.touch = conquest_cp_touch;
 	marker_SpawnFixed(NULL, self.origin + '0 0 64', self, sprite);

@@ -37,7 +37,7 @@ void(entity targ, entity attacker, float _damage, vector ignore) damage_indicato
 	if (targ == attacker)
 		return;
 
-	if (!g_damageindicator_projectiles && (targ.flags & FL_PROJECTILE))
+	if (!g_damageindicator_projectiles && (targ.flags & FLAG_PROJECTILE))
 		return;
 
 	entity e;

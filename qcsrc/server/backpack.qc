@@ -30,7 +30,7 @@ float() backpack_player_death_weapon_throw_handle {
 	entity wi = weapon_info(oldself.weapon);
 	self.weapons = wi.weapons;
 	self.weapons_extra = wi.weapons_extra;
-	item_start(sv_model_backpack, "models/items/g_jetpack.md3", "misc/itempickup.wav", 0, 0, s, IT_AMMO, FL_WEAPON | FL_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
+	item_start(sv_model_backpack, "models/items/g_jetpack.md3", "misc/itempickup.wav", 0, 0, s, IT_AMMO, FLAG_WEAPON | FLAG_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
 	self = oldself;
 	return TRUE;
 }

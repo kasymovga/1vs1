@@ -51,8 +51,8 @@ void(void) weapon_hagar_sticked_think {
 		for (; e; e = e.chain) {
 			if (e != self)
 			if (e.takedamage)
-			if not(e.flags & FL_PROJECTILE)
-			if (e.solid != SOLID_CORPSE) {
+			if not(e.flags & FLAG_PROJECTILE)
+			if (e.solid != VM_SOLID_CORPSE) {
 				projectile_explode();
 				return;
 			}

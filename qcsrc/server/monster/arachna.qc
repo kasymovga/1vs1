@@ -108,7 +108,7 @@ void() monster_arachna_spawn {
 	self.exteriorweaponentity.scale = 0.6;
 	setmodel(self.exteriorweaponentity, "models/weapons/v_electro.md3");
 	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Arachna";
 	self.view_ofs = '0 0 16';

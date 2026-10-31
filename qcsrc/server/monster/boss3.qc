@@ -83,7 +83,7 @@ void() monster_boss3_spawn {
 	setattachment(self.exteriorweaponentity, self, "tag_weapon");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_electro.md3");
 	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 0.1;
 	self.netname = "Giant Arachna";
 	self.frags = 10;

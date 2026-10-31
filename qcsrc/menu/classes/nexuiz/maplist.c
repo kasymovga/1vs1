@@ -71,7 +71,7 @@ void loadCvarsNexuizMapList(entity me)
 
 float g_maplistCacheQueryNexuizMapList(entity me, float i)
 {
-	return stof(substring(me.g_maplistCache, i, 1));
+	return stof(str_sub(me.g_maplistCache, i, 1));
 }
 void g_maplistCacheToggleNexuizMapList(entity me, float i)
 {
@@ -80,17 +80,17 @@ void g_maplistCacheToggleNexuizMapList(entity me, float i)
 	s = me.g_maplistCache;
 	if not(s)
 		return;
-	b = substring(s, i, 1);
+	b = str_sub(s, i, 1);
 	if(b == "0")
 		b = "1";
 	else if(b == "1")
 		b = "0";
 	else
 		return; // nothing happens
-	a = substring(s, 0, i);
-	c = substring(s, i+1, strlen(s) - (i+1));
-	strunzone(s);
-	me.g_maplistCache = strzone(strcat(a, b, c));
+	a = str_sub(s, 0, i);
+	c = str_sub(s, i+1, strlen(s) - (i+1));
+	str_unzone_ifneeded(s);
+	me.g_maplistCache = str_zone_ifneeded(strcat(a, b, c));
 	// TODO also update the actual cvar
 	if not((bspname = map_info_bsp_name_by_id(i)))
 		return;
@@ -103,7 +103,7 @@ void g_maplistCacheToggleNexuizMapList(entity me, float i)
 		for(i = 0; i < n; ++i)
 			if(argv(i) != bspname)
 				s = strcat(s, " ", argv(i));
-		cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
+		cvar_set("g_maplist", str_sub(s, 1, strlen(s) - 1));
 	}
 }
 
@@ -193,8 +193,7 @@ void refilterNexuizMapList(entity me)
 	gt = game_type_current();
 	map_info_filter_game_type(map_info_type_from_game_type(gt), map_info_required_flags(), map_info_forbidden_flags(), 0);
 	me.nItems = map_info_count;
-	if(me.g_maplistCache)
-		strunzone(me.g_maplistCache);
+	str_unzone_ifneeded(me.g_maplistCache);
 	s = "0";
 	for(i = 1; i < map_info_count; i *= 2)
 		s = strcat(s, s);
@@ -204,12 +203,12 @@ void refilterNexuizMapList(entity me)
 		j = map_info_find_name(argv(i));
 		if(j >= 0)
 			s = strcat(
-				substring(s, 0, j),
+				str_sub(s, 0, j),
 				"1",
-				substring(s, j+1, map_info_count - (j+1))
+				str_sub(s, j+1, map_info_count - (j+1))
 			);
 	}
-	me.g_maplistCache = strzone(s);
+	me.g_maplistCache = str_zone_ifneeded(s);
 	if(gt != me.lastGametype)
 	{
 		me.lastGametype = gt;
@@ -230,7 +229,7 @@ void MapList_All(entity btn, entity me)
 	s = "";
 	for(i = 0; i < map_info_count; ++i)
 		s = strcat(s, " ", map_info_bsp_name_by_id(i));
-	cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
+	cvar_set("g_maplist", str_sub(s, 1, strlen(s) - 1));
 	me.refilter(me);
 }
 
@@ -310,10 +309,9 @@ float keyDownNexuizMapList(entity me, float scan, float ascii, float shift)
 	{
 		if(time < me.typeToSearchTime)
 		{
-			save = substring(me.typeToSearchString, 0, strlen(me.typeToSearchString) - 1);
-			if(me.typeToSearchString)
-				strunzone(me.typeToSearchString);
-			me.typeToSearchString = strzone(save);
+			save = str_sub(me.typeToSearchString, 0, strlen(me.typeToSearchString) - 1);
+			str_unzone_ifneeded(me.typeToSearchString);
+			me.typeToSearchString = str_zone_ifneeded(save);
 			me.typeToSearchTime = time + 0.5;
 			if(strlen(me.typeToSearchString))
 			{
@@ -330,9 +328,9 @@ float keyDownNexuizMapList(entity me, float scan, float ascii, float shift)
 			save = ch;
 		else
 			save = strcat(me.typeToSearchString, ch);
-		if(me.typeToSearchString)
-			strunzone(me.typeToSearchString);
-		me.typeToSearchString = strzone(save);
+
+		str_unzone_ifneeded(me.typeToSearchString);
+		me.typeToSearchString = str_zone_ifneeded(save);
 		me.typeToSearchTime = time + 0.5;
 		map_info_find_name(me.typeToSearchString);
 		if(map_info_find_name_first_result >= 0)

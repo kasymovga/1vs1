@@ -76,8 +76,8 @@ void(float ignore) model_read {
 
 		str_unzone_ifneeded(self.bgmscript);
 		self.bgmscript = net_read_string();
-		if (substring(self.bgmscript, 0, 1) == "<") {
-			self.bgmscript = str_zone_ifneeded(substring(self.bgmscript, 1, -1));
+		if (str_sub(self.bgmscript, 0, 1) == "<") {
+			self.bgmscript = str_zone_ifneeded(str_sub(self.bgmscript, 1, -1));
 			self.bgmscriptangular = 1;
 		} else {
 			self.bgmscript = str_zone_ifneeded(self.bgmscript);

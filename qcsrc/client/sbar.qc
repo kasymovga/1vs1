@@ -55,7 +55,7 @@ void(string s) sbar_load {
 		while ((l = fgets(f))) {
 			h = str_car(l);
 			if (h != "") {
-				if (substring(h, 0, 5) == "sbar_") {
+				if (str_sub(h, 0, 5) == "sbar_") {
 					t = str_cdr(l);
 					cvar_set(h, t);
 				}
@@ -288,7 +288,7 @@ void(vector pos, float num, float showplus, float lettersize, vector rgb, float 
 	string str = ftos(num), tmp;
 	float i;
 	for (i = 0; i < digits; ++i) {
-		tmp = substring(str, i, 1);
+		tmp = str_sub(str, i, 1);
 		if (stroke == 1)
 			drawpic(pos, strcat("gfx/hud/num_", tmp, "_stroke"), vsize, rgb, alpha, dflags);
 
@@ -323,13 +323,13 @@ void(vector pos, float num, float digits, float showminusplus, float lettersize,
 	if (digits < 0) {
 		tmp = ftos(num);
 		digits = -digits;
-		str = strcat(substring("0000000000", 0, digits - strlen(tmp)), tmp);
+		str = strcat(str_sub("0000000000", 0, digits - strlen(tmp)), tmp);
 	} else
 		str = ftos(num);
 
 	l = strlen(str);
 	if (l > digits) {
-		str = substring(str, l-digits, 999);
+		str = str_sub(str, l-digits, 999);
 		l = strlen(str);
 	} else if (l < digits)
 		pos_x += (digits-l) * lettersize;
@@ -354,7 +354,7 @@ void(vector pos, float num, float digits, float showminusplus, float lettersize,
 	}
 
 	for (i = 0; i < l; ++i) {
-		tmp = substring(str, i, 1);
+		tmp = str_sub(str, i, 1);
 		if (stroke == 1)
 			drawpic(pos, strcat("gfx/hud/num_", tmp, "_stroke"), vsize, rgb, alpha, dflags);
 
@@ -608,19 +608,19 @@ void(float argc) sbar_field_set {
 		float nocomplain;
 		str = argv(i+1);
 		nocomplain = FALSE;
-		if (substring(str, 0, 1) == "?") {
+		if (str_sub(str, 0, 1) == "?") {
 			nocomplain = TRUE;
-			str = substring(str, 1, strlen(str) - 1);
+			str = str_sub(str, 1, strlen(str) - 1);
 		}
 		slash = strstrofs(str, "/", 0);
 		if (slash >= 0) {
-			pattern = substring(str, 0, slash);
-			str = substring(str, slash + 1, strlen(str) - (slash + 1));
+			pattern = str_sub(str, 0, slash);
+			str = str_sub(str, slash + 1, strlen(str) - (slash + 1));
 			if not(game_type_filter(game_type, team_teams, pattern))
 				continue;
 		}
-		strunzone(sbar_title[sbar_num_fields]);
-		sbar_title[sbar_num_fields] = strzone(str);
+		str_unzone_ifneeded(sbar_title[sbar_num_fields]);
+		sbar_title[sbar_num_fields] = str_zone_ifneeded(str);
 		sbar_size[sbar_num_fields] = stringwidth(str, FALSE);
 		str = strtolower(str);
 		if (str == "ping") {
@@ -684,48 +684,48 @@ void(float argc) sbar_field_set {
 	missing = (!have_primary) + (!have_secondary) + (!have_separator) + (!have_name);
 	if (sbar_num_fields+missing < SBAR_FIELDS_MAX) {
 		if (!have_name) {
-			strunzone(sbar_title[sbar_num_fields]);
+			str_unzone_ifneeded(sbar_title[sbar_num_fields]);
 			for (i = sbar_num_fields; i > 0; --i) {
 				sbar_title[i] = sbar_title[i-1];
 				sbar_size[i] = sbar_size[i-1];
 				sbar_field[i] = sbar_field[i-1];
 			}
-			sbar_title[0] = strzone("name");
+			sbar_title[0] = str_zone_ifneeded("name");
 			sbar_field[0] = SP_NAME;
 			++sbar_num_fields;
 			print("fixed missing field 'name'\n");
 			if (!have_separator) {
-				strunzone(sbar_title[sbar_num_fields]);
+				str_unzone_ifneeded(sbar_title[sbar_num_fields]);
 				for (i = sbar_num_fields; i > 1; --i) {
 					sbar_title[i] = sbar_title[i-1];
 					sbar_size[i] = sbar_size[i-1];
 					sbar_field[i] = sbar_field[i-1];
 				}
-				sbar_title[1] = strzone("|");
+				sbar_title[1] = str_zone_ifneeded("|");
 				sbar_field[1] = SP_SEPARATOR;
 				sbar_size[1] = stringwidth("|", FALSE);
 				++sbar_num_fields;
 				print("fixed missing field '|'\n");
 			}
 		} else if (!have_separator) {
-			strunzone(sbar_title[sbar_num_fields]);
-			sbar_title[sbar_num_fields] = strzone("|");
+			str_unzone_ifneeded(sbar_title[sbar_num_fields]);
+			sbar_title[sbar_num_fields] = str_zone_ifneeded("|");
 			sbar_size[sbar_num_fields] = stringwidth("|", FALSE);
 			sbar_field[sbar_num_fields] = SP_SEPARATOR;
 			++sbar_num_fields;
 			print("fixed missing field '|'\n");
 		}
 		if (!have_secondary) {
-			strunzone(sbar_title[sbar_num_fields]);
-			sbar_title[sbar_num_fields] = strzone(scores_label[ps_secondary]);
+			str_unzone_ifneeded(sbar_title[sbar_num_fields]);
+			sbar_title[sbar_num_fields] = str_zone_ifneeded(scores_label[ps_secondary]);
 			sbar_size[sbar_num_fields] = stringwidth(sbar_title[sbar_num_fields], FALSE);
 			sbar_field[sbar_num_fields] = ps_secondary;
 			++sbar_num_fields;
 			print("fixed missing field '", scores_label[ps_secondary], "'\n");
 		}
 		if (!have_primary) {
-			strunzone(sbar_title[sbar_num_fields]);
-			sbar_title[sbar_num_fields] = strzone(scores_label[ps_primary]);
+			str_unzone_ifneeded(sbar_title[sbar_num_fields]);
+			sbar_title[sbar_num_fields] = str_zone_ifneeded(scores_label[ps_primary]);
 			sbar_size[sbar_num_fields] = stringwidth(sbar_title[sbar_num_fields], FALSE);
 			sbar_field[sbar_num_fields] = ps_primary;
 			++sbar_num_fields;
@@ -866,7 +866,7 @@ string(entity pl, float field) sbar_field_get {
 
 		tmp = strstrofs(str, ".", 0);
 		if (tmp > 0)
-			str = substring(str, 0, tmp+2);
+			str = str_sub(str, 0, tmp+2);
 
 		return str;
 	case SP_BESTWEP:
@@ -1383,8 +1383,8 @@ void sbar_scoreboard_draw() {
 				str = tail;
 				tail = "";
 			} else {
-				str = substring(tail, 0, n);
-				tail = substring(tail, n + 1, -1);
+				str = str_sub(tail, 0, n);
+				tail = str_sub(tail, n + 1, -1);
 			}
 			drawcolorcodedstring(pos + '0.5 0 0' * (sbar_width - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
 			pos_y += sbar_fontsize_y;

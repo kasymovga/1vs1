@@ -60,7 +60,7 @@ void() monster_fish_spawn {
 	self.netname = "Acid Fish";
 	monster_prepare(monster_fish_hunt, monster_fish_walk, monster_fish_idle);
 	setmodel(self, "models/oq/fish.mdl");
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.scale = 1.6;
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;

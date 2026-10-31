@@ -237,7 +237,7 @@ void(void) nexball_drop_owner {
 	nexball_drop_ball(self, ownr.origin, ownr.velocity);
 	makevectors(ownr.v_angle_y * '0 1 0');
 	ownr.velocity += ('0 0 0.75' - v_forward) * 1000;
-	ownr.flags &= ~FL_ONGROUND;
+	ownr.flags &= ~FLAG_ONGROUND;
 }
 
 void(entity plyr, entity ball) nexball_give_ball {
@@ -260,7 +260,7 @@ void(entity plyr, entity ball) nexball_give_ball {
 	setorigin(ball, BALL_ATTACHORG);
 	plyr.pov_ball = spawn();
 	plyr.pov_ball.owner = plyr;
-	plyr.pov_ball.solid = SOLID_NOT;
+	plyr.pov_ball.solid = VM_SOLID_NOT;
 	plyr.pov_ball.classname = "pov_ball";
 	plyr.pov_ball.customizeentityforclient = weapon_model_customize;
 	plyr.pov_ball.viewmodelforclient = plyr;
@@ -296,7 +296,7 @@ void(entity ball, vector org, vector vel) nexball_drop_ball {
 	setattachment(ball, world, "");
 	setorigin (ball, org);
 	ball.movetype = MOVETYPE_BOUNCE;
-	ball.flags &= ~FL_ONGROUND;
+	ball.flags &= ~FLAG_ONGROUND;
 	ball.scale = ball.dmg;
 	ball.velocity = vel;
 	ball.ctf_droptime = time;
@@ -316,7 +316,7 @@ void(entity ball, vector org, vector vel) nexball_drop_ball {
 
 void(void) nexball_ball_init {
 	if (map_finished) return;
-	self.flags &= ~FL_ONGROUND;
+	self.flags &= ~FLAG_ONGROUND;
 	if (self.classname == "nexball_hockey")
 		self.movetype = MOVETYPE_BOUNCEMISSILE;
 	else
@@ -331,7 +331,7 @@ void(void) nexball_ball_init {
 	{
 		self.touch = nexball_hockey_touch;
 	}
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	setmodel(self, self.mdl);
 	setsize(self, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale);
 	self.cnt = 0;
@@ -368,7 +368,7 @@ void(void) nexball_ball_reset {
 }
 
 void(void) nexball_volleyball_touch {
-	if (other.solid == SOLID_BSP) {
+	if (other.solid == VM_SOLID_BSP) {
 		if (time > self.lastground + 0.1) {
 			sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
 			self.lastground = time;
@@ -402,7 +402,7 @@ void(void) nexball_volleyball_touch {
 }
 
 void(void) nexball_football_touch {
-	if (other.solid == SOLID_BSP) {
+	if (other.solid == VM_SOLID_BSP) {
 		if (time > self.lastground + 0.1)
 		{
 			sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
@@ -444,7 +444,7 @@ void(void) nexball_football_touch {
 }
 
 void(void) nexball_hockey_touch {
-	if (other.solid == SOLID_BSP) {
+	if (other.solid == VM_SOLID_BSP) {
 		self.velocity_z = 0;
 		self.velocity_x = self.velocity_x * g_nexball_hockey_bouncefactor;
 		self.velocity_y = self.velocity_y * g_nexball_hockey_bouncefactor;
@@ -485,7 +485,7 @@ void(void) nexball_basketball_touch {
 		if (other.health <= 0)
 			return;
 		nexball_give_ball(other, self);
-	} else if (other.solid == SOLID_BSP) {
+	} else if (other.solid == VM_SOLID_BSP) {
 		sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
 		if (vlen(self.velocity) && !self.cnt)
 			self.nextthink = min(time + g_nexball_delay_idle, self.teamtime);
@@ -515,7 +515,7 @@ void(void) nexball_goal_touch {
 	if(nexball_teams == 2)
 		otherteam = nexball_other_team(ball.team);
 
-	if((isclient = ball.pusher.flags & FL_CLIENT))
+	if((isclient = ball.pusher.flags & FLAG_CLIENT))
 		pname = ball.pusher.netname;
 	else
 		pname = "Someone (?)";
@@ -582,7 +582,7 @@ void(void) nexball_goal_touch {
 			remove(temp);
 		}
 		ball.cnt = 4;
-		ball.solid = SOLID_NOT;
+		ball.solid = VM_SOLID_NOT;
 		setmodel(ball, "");
 		ball.velocity = '0 0 0';
 	}
@@ -700,7 +700,7 @@ void(void) spawnfunc_nexball_basketball {
 	if (!self.effects)
 		self.effects = g_nexball_basketball_effects_default;
 
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.bouncefactor = cvar("g_nexball_basketball_bouncefactor");
 	self.bouncestop = cvar("g_nexball_basketball_bouncestop");
 	nexball_spawn_ball();
@@ -716,7 +716,7 @@ void(void) spawnfunc_nexball_volleyball {
 	if (!self.effects)
 		self.effects = g_nexball_basketball_effects_default;
 
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.bouncefactor = cvar("g_nexball_volleyball_bouncefactor");
 	self.bouncestop = cvar("g_nexball_volleyball_bouncestop");
 	nexball_spawn_ball();
@@ -724,7 +724,7 @@ void(void) spawnfunc_nexball_volleyball {
 
 void(void) spawnfunc_nexball_football {
 	self.classname = "nexball_football";
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.bouncefactor = cvar("g_nexball_football_bouncefactor");
 	self.bouncestop = cvar("g_nexball_football_bouncestop");
 	nexball_spawn_ball();
@@ -745,7 +745,7 @@ void(void) hockey_physic_controller_think {
 .entity hockey_physic_controller;
 void(void) spawnfunc_nexball_hockey {
 	self.classname = "nexball_hockey";
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.hockey_physic_controller = spawn();
 	self.hockey_physic_controller.ballcarried = self;
 	self.hockey_physic_controller.think = hockey_physic_controller_think;

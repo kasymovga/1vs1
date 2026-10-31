@@ -93,7 +93,7 @@ void(void) soulmates_gem_touch {
 
 	other.soulmates_gem = self;
 	sound_play2all("kh/capture.wav");
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.velocity = '0 0 0';
 	self.owner = other;
 	setattachment(self, other.body, "");
@@ -129,8 +129,8 @@ void(entity gem) soulmates_gem_drop {
 		remove(gem.aiment);
 		gem.aiment = NULL;
 	}
-	gem.flags &= ~FL_ONGROUND;
-	gem.solid = SOLID_TRIGGER;
+	gem.flags &= ~FLAG_ONGROUND;
+	gem.solid = VM_SOLID_TRIGGER;
 	gem.movetype = MOVETYPE_TOSS;
 	gem.owner.soulmates_gem = NULL;
 	gem.owner = NULL;
@@ -186,8 +186,8 @@ entity(float t) soulmates_gem_create {
 	e.touch = soulmates_gem_touch;
 	e.think = soulmates_gem_think;
 	e.nextthink = time + random();
-	e.solid = SOLID_TRIGGER;
-	e.flags = FL_ITEM;
+	e.solid = VM_SOLID_TRIGGER;
+	e.flags = FLAG_ITEM;
 	//e.reset2 = sm_SoulGem_Reset;
 	setmodel(e, "models/runematch/rune.mdl");
 	setsize(e, '0 0 -35', '0 0 0');
@@ -241,7 +241,7 @@ void(void) soulmates_controller_think {
 						pl2 = soulmates_last_attached(pl2);
 						pl.movetype = MOVETYPE_FOLLOW;
 						pl.velocity = '0 0 0';
-						pl.flags |= FL_ONGROUND;
+						pl.flags |= FLAG_ONGROUND;
 						pl.soulmates_gem.aiment = spawn();
 						pl.aiment = pl.soulmates_gem.aiment;
 						pl.soulmates_gem.aiment.aiment = pl2;

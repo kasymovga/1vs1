@@ -272,7 +272,7 @@ void(void) nadget_sentry_on_remove {
 
 void nadget_Sentry_Explode(void) {
 	effect_blast(self.origin + self.view_ofs);
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.think = stdproc_remove;
 	self.nextthink = time;
 }
@@ -502,7 +502,7 @@ void nadget_Sentry_Trigger(void) {
 					);
 				}
 			}
-			if (targ.solid == SOLID_BSP && !noimpact) {
+			if (targ.solid == VM_SOLID_BSP && !noimpact) {
 				effect_impact(endpos, c_dmg, 0, 0, force, WEAPON_ZAPPER | HITTYPE_SECONDARY, self);
 			}
             e.hg_sentry_energy = bound(0, e.hg_sentry_energy - c_cost, 1);
@@ -538,7 +538,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     e.classname = "hg_sentry";
     e.team = self.team;
     e.realowner = self; // can't use owner here because we want to be blocked by it
-    e.solid = SOLID_BBOX;
+    e.solid = VM_SOLID_BBOX;
     e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_FLY : (g_nadgets_sentry_pushfactor ? MOVETYPE_WALK : MOVETYPE_TOSS));
     e.angles = '0 360 0' * random();
     e.reset = stdproc_remove;

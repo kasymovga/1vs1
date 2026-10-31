@@ -40,9 +40,8 @@ void configureInputBoxInputBox(entity me, string theText, float theCursorPos, fl
 
 void setTextInputBox(entity me, string txt)
 {
-	if(me.text)
-		strunzone(me.text);
-	setTextLabel(me, strzone(txt));
+	str_unzone_ifneeded(me.text);
+	setTextLabel(me, str_zone_ifneeded(txt));
 }
 
 void InputBox_Clear_Click(entity btn, entity me)
@@ -77,11 +76,11 @@ void enterTextInputBox(entity me, string ch)
 {
 	float i;
 	for(i = 0; i < strlen(ch); ++i)
-		if(strstrofs(me.forbiddenCharacters, substring(ch, i, 1), 0) > -1)
+		if(strstrofs(me.forbiddenCharacters, str_sub(ch, i, 1), 0) > -1)
 			return;
 	if(strlen(ch) + strlen(me.text) > me.maxLength)
 		return;
-	me.setText(me, strcat(substring(me.text, 0, me.cursorPos), ch, substring(me.text, me.cursorPos, strlen(me.text) - me.cursorPos)));
+	me.setText(me, strcat(str_sub(me.text, 0, me.cursorPos), ch, str_sub(me.text, me.cursorPos, strlen(me.text) - me.cursorPos)));
 	me.cursorPos = me.cursorPos + strlen(ch);
 }
 
@@ -112,14 +111,14 @@ float keyDownInputBox(entity me, float key, float ascii, float shift)
 			if(me.cursorPos > 0)
 			{
 				me.cursorPos -= 1;
-				me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
+				me.setText(me, strcat(str_sub(me.text, 0, me.cursorPos), str_sub(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
 			}
 			return 1;
 		case K_DEL:
 			if(shift & GUI_KEY_STATE_CTRL)
 				me.setText(me, "");
 			else
-				me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
+				me.setText(me, strcat(str_sub(me.text, 0, me.cursorPos), str_sub(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
 			return 1;
 	}
 	return 0;
@@ -146,7 +145,7 @@ void drawInputBox(entity me)
 	}
 
 	me.cursorPos = bound(0, me.cursorPos, strlen(me.text));
-	cursorPosInWidths = gui_text_width(substring(me.text, 0, me.cursorPos), 0) * me.realFontSize_x;
+	cursorPosInWidths = gui_text_width(str_sub(me.text, 0, me.cursorPos), 0) * me.realFontSize_x;
 	totalSizeInWidths = gui_text_width(strcat(me.text, CURSOR), 0) * me.realFontSize_x;
 
 	if(me.dragScrollTimer < time)
@@ -178,11 +177,11 @@ void drawInputBox(entity me)
 		n = strlen(me.text);
 		for(i = 0; i < n; ++i)
 		{
-			ch = substring(me.text, i, 1);
+			ch = str_sub(me.text, i, 1);
 			if(ch == "^")
 			{
 				float w;
-				ch2 = substring(me.text, i+1, 1);
+				ch2 = str_sub(me.text, i+1, 1);
 				w = gui_text_width(strcat(ch, ch2), 0) * me.realFontSize_x;
 				if(ch2 == "^")
 				{
@@ -212,57 +211,57 @@ void drawInputBox(entity me)
 					theColor = '1 1 1';
 					theTempColor = '0 0 0';
 					
-					component = DIGIT_HEX_TO_DEC(substring(me.text, i+2, 1));
+					component = DIGIT_HEX_TO_DEC(str_sub(me.text, i+2, 1));
 					if (component >= 0) // ^xr found
 					{
 						theTempColor_x = component/15;
 						
-						component = DIGIT_HEX_TO_DEC(substring(me.text, i+3, 1));
+						component = DIGIT_HEX_TO_DEC(str_sub(me.text, i+3, 1));
 						if (component >= 0) // ^xrg found
 						{
 							theTempColor_y = component/15;
 							
-							component = DIGIT_HEX_TO_DEC(substring(me.text, i+4, 1));
+							component = DIGIT_HEX_TO_DEC(str_sub(me.text, i+4, 1));
 							if (component >= 0) // ^xrgb found
 							{
 								theTempColor_z = component/15;
 								theColor = theTempColor;
-								w = gui_text_width(substring(me.text, i, 5), 0) * me.realFontSize_x;
+								w = gui_text_width(str_sub(me.text, i, 5), 0) * me.realFontSize_x;
 								
 								gui_draw_fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
-								gui_draw_text(p, substring(me.text, i, 5), me.realFontSize, theColor, 1, 0);    // theVariableAlpha instead of 1 using alpha tags ^ax
+								gui_draw_text(p, str_sub(me.text, i, 5), me.realFontSize, theColor, 1, 0);    // theVariableAlpha instead of 1 using alpha tags ^ax
 								i += 3;
 							}
 							else
 							{
 								// blue missing
-								w = gui_text_width(substring(me.text, i, 4), 0) * me.realFontSize_x;
+								w = gui_text_width(str_sub(me.text, i, 4), 0) * me.realFontSize_x;
 								gui_draw_fill(p, eX * w + eY * me.realFontSize_y, eZ, 0.5);
-								gui_draw_text(p, substring(me.text, i, 4), me.realFontSize, '1 1 1', theAlpha, 0);
+								gui_draw_text(p, str_sub(me.text, i, 4), me.realFontSize, '1 1 1', theAlpha, 0);
 								i += 2;
 							}
 						}
 						else
 						{
 							// green missing
-							w = gui_text_width(substring(me.text, i, 3), 0) * me.realFontSize_x;
+							w = gui_text_width(str_sub(me.text, i, 3), 0) * me.realFontSize_x;
 							gui_draw_fill(p, eX * w + eY * me.realFontSize_y, eY, 0.5);
-							gui_draw_text(p, substring(me.text, i, 3), me.realFontSize, '1 1 1', theAlpha, 0);
+							gui_draw_text(p, str_sub(me.text, i, 3), me.realFontSize, '1 1 1', theAlpha, 0);
 							i += 1;
 						}
 					}
 					else
 					{
 						// red missing
-						//w = gui_text_width(substring(me.text, i, 2), 0) * me.realFontSize_x;
+						//w = gui_text_width(str_sub(me.text, i, 2), 0) * me.realFontSize_x;
 						gui_draw_fill(p, eX * w + eY * me.realFontSize_y, eX, 0.5);
-						gui_draw_text(p, substring(me.text, i, 2), me.realFontSize, '1 1 1', theAlpha, 0);
+						gui_draw_text(p, str_sub(me.text, i, 2), me.realFontSize, '1 1 1', theAlpha, 0);
 					}
 				}
 				/*else if(ch2 == "a") // ^a found
 				{
 					gui_draw_fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
-					gui_draw_text(p, substring(me.text, i, 2), me.realFontSize, theColor, 0.8, 0);
+					gui_draw_text(p, str_sub(me.text, i, 2), me.realFontSize, theColor, 0.8, 0);
 					
 					component = str2chr(me.text, i+2);
 					if (component >= '0' && component <= '9')
@@ -284,7 +283,7 @@ void drawInputBox(entity me)
 						else
 							theVariableAlpha = component*0.0625;
 						
-						gui_draw_fill(p, eX * gui_text_width(substring(me.text, i, 3), 0) * me.realFontSize_x + eY * me.realFontSize_y, '0.8 0.8 0.8', 0.5);
+						gui_draw_fill(p, eX * gui_text_width(str_sub(me.text, i, 3), 0) * me.realFontSize_x + eY * me.realFontSize_y, '0.8 0.8 0.8', 0.5);
 						gui_draw_text(p, strcat(ch, ch2), me.realFontSize, theColor, 0.8, 0);
 					}
 				}*/

@@ -3,7 +3,7 @@ void(float ratingscale, vector org, float sradius) freeze_role_goalrating_frozen
 	float distance;
 
 	// don't chase players if we're under water
-	if(self.waterlevel>WATER_LEVEL_WETFEET)
+	if(self.waterlevel>VM_WATERLEVEL_WETFEET)
 		return;
 
 	PLAYER_FOR_EACH(head)
@@ -16,11 +16,11 @@ void(float ratingscale, vector org, float sradius) freeze_role_goalrating_frozen
 			if (distance < 50 || distance > sradius)
 				continue;
 
-			if(head.flags & FL_INWATER || head.flags & FL_PARTIALGROUND)
+			if(head.flags & FLAG_INWATER || head.flags & FLAG_PARTIALGROUND)
 				continue;
 
 			// not falling
-			if(head.flags & FL_ONGROUND == 0)
+			if(head.flags & FLAG_ONGROUND == 0)
 				continue;
 
 			navigation_routerating(head, ratingscale, 5000);

@@ -31,9 +31,9 @@ void(void) bot_think {
 	if (self.bot_nextthink > time)
 		return;
 
-	self.flags &= ~FL_GODMODE;
+	self.flags &= ~FLAG_GODMODE;
 	if (bot_god)
-		self.flags |= FL_GODMODE;
+		self.flags |= FLAG_GODMODE;
 
 	self.bot_nextthink = self.bot_nextthink + bot_ai_thinkinterval * pow(0.5, bot_aiskill);
 	if (self.fixangle) {
@@ -127,12 +127,12 @@ void(void) bot_setnameandstuff {
 		name = bot_name;
 
 	// pick the model and skin
-	if (substring(bot_model, -4, 1) != ".")
+	if (str_sub(bot_model, -4, 1) != ".")
 		bot_model = strcat(bot_model, ".dpm");
 
-	self.playermodel = self.playermodel_freeme = strzone(strcat("models/player/", bot_model));
-	self.playerskin = self.playerskin_freeme = strzone(bot_skin);
-	self.netname = self.netname_freeme = strzone(strcat(prefix, name, suffix));
+	self.playermodel = self.playermodel_freeme = str_zone_ifneeded(strcat("models/player/", bot_model));
+	self.playerskin = self.playerskin_freeme = str_zone_ifneeded(bot_skin);
+	self.netname = self.netname_freeme = str_zone_ifneeded(strcat(prefix, name, suffix));
 }
 
 float(string s) bot_custom_weapon_id {
@@ -224,7 +224,7 @@ void(void) bot_relinkplayerlist {
 	entity prevbot;
 	player_count = 0;
 	bot_count = 0;
-	e = findchainflags(flags, FL_CLIENT);
+	e = findchainflags(flags, FLAG_CLIENT);
 	bot_list = world;
 	prevbot = world;
 	while (e)
@@ -252,15 +252,9 @@ void(void) bot_clientdisconnect {
 	if (clienttype(self) != CLIENTTYPE_BOT)
 		return;
 
-	if (self.netname_freeme)
-		strunzone(self.netname_freeme);
-
-	if (self.playermodel_freeme)
-		strunzone(self.playermodel_freeme);
-
-	if (self.playerskin_freeme)
-		strunzone(self.playerskin_freeme);
-
+	str_unzone_ifneeded(self.netname_freeme);
+	str_unzone_ifneeded(self.playermodel_freeme);
+	str_unzone_ifneeded(self.playerskin_freeme);
 	self.netname_freeme = NULL;
 	self.playermodel_freeme = NULL;
 	self.playerskin_freeme = NULL;

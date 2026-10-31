@@ -26,7 +26,7 @@ string(float n) game_type_vote_get_description {
 		s = strcat(s, " with ", strtoupper(p));
 
 	s = strcat(s, " (", ftos(game_type_vote_votes[n]), ")");
-	game_type_vote_descriptions[n] = strzone(s);
+	game_type_vote_descriptions[n] = str_zone_ifneeded(s);
 	return game_type_vote_descriptions[n];
 }
 
@@ -64,16 +64,16 @@ float(void) game_type_vote_think {
 		while (tail != "") {
 			head = str_car(tail);
 			tail = str_cdr(tail);
-			if (substring(head, 0, 1) == "*") {
-				head = substring(head, 1, -1);
+			if (str_sub(head, 0, 1) == "*") {
+				head = str_sub(head, 1, -1);
 				default_type = TRUE;
 			} else
 				default_type = FALSE;
 
 			colon = strstrofs(head, ":", 0);
 			if (colon >= 0) {
-				type = substring(head, 0, colon);
-				profile = substring(head, colon + 1, -1);
+				type = str_sub(head, 0, colon);
+				profile = str_sub(head, colon + 1, -1);
 			} else {
 				type = head;
 				profile = " ";
@@ -204,12 +204,12 @@ void(void) game_type_vote_init {
 	game_type_vote_mapinfo_mask = 0;
 	while (tail != "") {
 		head = str_car(tail);
-		if (substring(head, 0, 1) == "*")
-			head = substring(head, 1, -1);
+		if (str_sub(head, 0, 1) == "*")
+			head = str_sub(head, 1, -1);
 
 		colon = strstrofs(head, ":", 0);
 		if (colon >= 0)
-			head = substring(head, 0, colon);
+			head = str_sub(head, 0, colon);
 
 		tail = str_cdr(tail);
 		if (head != "") {

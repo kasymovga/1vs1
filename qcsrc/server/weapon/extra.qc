@@ -206,7 +206,7 @@ void(float num, float secondary, float t) weapon_extra_attack {
 			weapon_extra_draw_beam_particles_effect = e;
 			warpzone_draw_effect_triangle(weapon_shotorg, weapon_shotorg_visual,  warpzone_untransform_origin(warpzone_trace_transform, trace_endpos), weapon_extra_draw_beam_particles);
 			// flash and burn the wall
-			if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
+			if (trace_ent.solid == VM_SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
 				effect_impact(trace_endpos, 10000, 0, 0, 800 * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), it, self);
 			}
 		}

@@ -93,7 +93,7 @@ void(entity source) antilag_begin {
 
 	float past = time - antilag_lag;
 	antilag_context_index = antilag_find(source, past);
-	// change shooter to SOLID_BBOX so the shot can hit corpses
+	// change shooter to VM_SOLID_BBOX so the shot can hit corpses
 	antilag_source = source;
 	if (source) {
 		antilag_oldhitmask = source.dphitcontentsmask;

@@ -97,10 +97,10 @@ void getSkinsNexuizSkinList(entity me)
 	for(i = 0; i < n; ++i)
 	{
 		s = search_getfilename(glob, i);
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, substring(s, 9, strlen(s) - 24)); // the * part
+		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, str_sub(s, 9, strlen(s) - 24)); // the * part
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, "<TITLE>");
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, "<AUTHOR>");
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview"));
+		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", str_sub(s, 9, strlen(s) - 24), "/skinpreview"));
 		fh = fopen(s, FILE_READ);
 		if(fh < 0)
 		{
@@ -110,10 +110,10 @@ void getSkinsNexuizSkinList(entity me)
 		while((s = fgets(fh)))
 		{
 			// these two are handled by skinlist.qc
-			if(substring(s, 0, 6) == "title ")
-				bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, substring(s, 6, strlen(s) - 6));
-			else if(substring(s, 0, 7) == "author ")
-				bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, substring(s, 7, strlen(s) - 7));
+			if(str_sub(s, 0, 6) == "title ")
+				bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, str_sub(s, 6, strlen(s) - 6));
+			else if(str_sub(s, 0, 7) == "author ")
+				bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, str_sub(s, 7, strlen(s) - 7));
 		}
 		fclose(fh);
 	}

@@ -40,7 +40,7 @@ string(void) rank_type {
 	else
 		rank_prefix = "ffa";
 
-	return strzone(strcat(rank_prefix, cvar_string("g_rank_type")));
+	return str_zone_ifneeded(strcat(rank_prefix, cvar_string("g_rank_type")));
 }
 
 void(void) rank_init {

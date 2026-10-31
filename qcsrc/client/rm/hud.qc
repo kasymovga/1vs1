@@ -460,7 +460,7 @@ void(vector pos, float hgtype, float hgammo, float regen, float regenrate, float
 			hgtxt = ftos(rtime);
 			float dotpos = strstrofs(hgtxt, ".", 0);
 			if (dotpos >= 0)
-				hgtxt = substring(hgtxt, 0, dotpos + 2);
+				hgtxt = str_sub(hgtxt, 0, dotpos + 2);
 			else
 				hgtxt = strcat(hgtxt, ".0");
 		} else {

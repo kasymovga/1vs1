@@ -1,7 +1,7 @@
 // non-solid model entities:
-void(void) spawnfunc_misc_gamemodel         { model_init      (SOLID_NOT);} // model entity
-void(void) spawnfunc_misc_clientmodel       { model_client_init(SOLID_NOT);} // model entity
-void(void) spawnfunc_misc_models            { model_init      (SOLID_NOT);} // DEPRECATED old compat entity with confusing name, do not use
+void(void) spawnfunc_misc_gamemodel         { model_init      (VM_SOLID_NOT);} // model entity
+void(void) spawnfunc_misc_clientmodel       { model_client_init(VM_SOLID_NOT);} // model entity
+void(void) spawnfunc_misc_models            { model_init      (VM_SOLID_NOT);} // DEPRECATED old compat entity with confusing name, do not use
 
 void(entity e, entity to, string tag) misc_attach_sameorigin {
     vector org, t_forward, t_left, t_up, e_forward, e_up;
@@ -18,7 +18,7 @@ void(entity e, entity to, string tag) misc_attach_sameorigin {
     e.origin_y = org * t_left;
     e.origin_z = org * t_up;
     // current forward and up directions
-    if not(substring(e.model, 0, 1) == "*") // bmodels have their own rules
+    if not(str_sub(e.model, 0, 1) == "*") // bmodels have their own rules
         e.angles_x = -e.angles_x;
 
     makevectors(e.angles);
@@ -30,7 +30,7 @@ void(entity e, entity to, string tag) misc_attach_sameorigin {
     e_up_y = v_up * t_left;
     e_up_z = v_up * t_up;
     e.angles = vectoangles(e_forward, e_up);
-    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
+    if (str_sub(e.model, 0, 1) == "*") // bmodels have their own rules
         e.angles_x = -e.angles_x;
 
     setattachment(e, to, tag);
@@ -80,7 +80,7 @@ void(void) spawnfunc_misc_follow {
 
 void misc_spikeshooter_spike_touch(void) {
 	PROJECTILE_TOUCH;
-	if(other.solid == SOLID_BSP)
+	if(other.solid == VM_SOLID_BSP)
 		effect_impact(self.origin, self.dmg, 0, 0, normalize(self.velocity), EFFECT_IMPACT_BULLET, self);
 	if (other && other.takedamage) {
 		damage(other, self, world, 20, WEAPON_UZI, self.origin, 20 * normalize(self.velocity));
@@ -360,7 +360,7 @@ void(void) spawnfunc_misc_laser {
 void(void) spawnfunc_misc_tree {
 	precache_model("models/mtree01.md3");
 	setmodel(self, "models/mtree01.md3");
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	setsize(self, '-16 -16 0', '16 16 128');
 	entity_droptofloor();
 }
@@ -368,7 +368,7 @@ void(void) spawnfunc_misc_tree {
 void(void) spawnfunc_misc_barrel_explosive {
 	precache_model("models/grenademodel.md3");
 	setmodel(self, "models/grenademodel.md3");
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.pushfactor = 0.5;
 	self.friction = 0.5;
 	self.movetype = MOVETYPE_WALK;

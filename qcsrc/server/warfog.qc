@@ -36,5 +36,5 @@ void(void) warfog_init {
 	warfog_player_alpha_mod_next = plugin_chain_player_alpha_mod;
 	plugin_chain_player_alpha_mod = warfog_player_alpha_mod;
 	string fog_str = strcat(ftos(g_warfog_r), " ", ftos(g_warfog_g), " ", ftos(g_warfog_b), " ", ftos(g_warfog_alpha));
-	client_fog = strzone(strcat("0.5 ", fog_str, " ", ftos(g_warfog)));
+	client_fog = str_zone_ifneeded(strcat("0.5 ", fog_str, " ", ftos(g_warfog)));
 }

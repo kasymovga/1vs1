@@ -40,7 +40,7 @@ void(entity me) loadCvarsNexuizProfileList {
 	float n = 0;
 	while ((s2 = str_car(s)) != "") {
 		s = str_cdr(s);
-		g_profile[n] = strzone(s2);
+		g_profile[n] = str_zone_ifneeded(s2);
 		n++;
 		if (n == PROFILELIST_MAX) break;
 	}

@@ -13,7 +13,7 @@ float sv_breakable_debris;
 
 void(void) debris_setup {
 	if not(self.debrismovetype) self.debrismovetype = MOVETYPE_BOUNCE;
-	if not(self.debrissolid) self.debrissolid = SOLID_NOT;
+	if not(self.debrissolid) self.debrissolid = VM_SOLID_NOT;
 	if (self.debrisvelocity == '0 0 0') self.debrisvelocity = '0 0 140';
 	if (self.debrisvelocityjitter == '0 0 0') self.debrisvelocityjitter = '70 70 70';
 	if (self.debrisavelocityjitter == '0 0 0') self.debrisavelocityjitter = '600 600 600';

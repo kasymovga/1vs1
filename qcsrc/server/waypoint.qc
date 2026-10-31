@@ -894,7 +894,7 @@ float(string s, float argc) waypoint_cmd_client {
 				setsize(e, PL_MIN, PL_MAX);
 				trace_box(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', TRACE_MOVE_NOMONSTERS, world);
 				setorigin(e, trace_endpos);
-				e.flags |= FL_ONGROUND;
+				e.flags |= FLAG_ONGROUND;
 				if (navigation_findnearestwaypoint(e, FALSE)) {
 					e.effects &= ~EFFECT_NODEPTHTEST;
 					e.model = "";
@@ -907,7 +907,7 @@ float(string s, float argc) waypoint_cmd_client {
 					++i;
 				}
 				setorigin(e, org);
-				e.flags &= ~FL_ONGROUND;
+				e.flags &= ~FLAG_ONGROUND;
 				setsize(e, '0 0 0', '0 0 0');
 			}
 			if (i)

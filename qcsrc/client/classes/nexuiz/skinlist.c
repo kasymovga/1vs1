@@ -36,8 +36,8 @@ void(void) updateNexuizSkinList {
 	float i;
 	for (i = 0; i < selfNexuizSkinList.nItems; i++) {
 		s = search_getfilename(searchNexuizSkinList, i);
-		s = substring(s, 14, - 1);
-		s = substring(s, 0, strstrofs(s, "/", 0));
+		s = str_sub(s, 14, - 1);
+		s = str_sub(s, 0, strstrofs(s, "/", 0));
 		if (s == cvar_string("cl_rm_skin")) {
 			selfNexuizSkinList.selectedItem = i;
 		}
@@ -59,8 +59,8 @@ void clickListBoxItemNexuizSkinList(entity me, float i, vector where, float doub
 		string s;
 		if (i >= 0 && searchNexuizSkinList >= 0) {
 			s = search_getfilename(searchNexuizSkinList, i);
-			s = substring(s, 14, - 1);
-			s = substring(s, 0, strstrofs(s, "/", 0));
+			s = str_sub(s, 14, - 1);
+			s = str_sub(s, 0, strstrofs(s, "/", 0));
 			rm_skin_load(s);
 		} else
 			return;
@@ -93,8 +93,8 @@ void(entity me, float i, vector absSize, float isSelected) drawListBoxItemNexuiz
 
 	if (searchNexuizSkinList >= 0 && searchNexuizSkinList >= 0) {
 		s = search_getfilename(searchNexuizSkinList, i);
-		s = substring(s, 14, - 1);
-		s = substring(s, 0, strstrofs(s, "/", 0));
+		s = str_sub(s, 14, - 1);
+		s = str_sub(s, 0, strstrofs(s, "/", 0));
 	} else
 		s = "";
 

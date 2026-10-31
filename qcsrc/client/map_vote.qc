@@ -304,9 +304,9 @@ void(void) map_vote_init {
 	for (i = 0, power = 1; i < map_vote_count; ++i, power *= 2) {
 		map_vote_votes[i] = 0;
 		if (map_vote_maps_mask & power) {
-			map = strzone(net_read_string());
-			map_pic = strzone(net_read_string());
-			pk3 = strzone(net_read_string());
+			map = str_zone_ifneeded(net_read_string());
+			map_pic = str_zone_ifneeded(net_read_string());
+			pk3 = str_zone_ifneeded(net_read_string());
 			map_vote_maps[i] = map;
 			map_vote_paks[i] = pk3;
 			map_vote_pics[i] = map_pic;
@@ -314,9 +314,9 @@ void(void) map_vote_init {
 			//print(strcat("RECV: ", map, " in ", pk3, "\n"));
 			map_vote_checkpic(map_pic, pk3, i);
 		} else {
-			map_vote_maps[i] = strzone("if-you-see-this-the-code-is-broken");
-			map_vote_paks[i] = strzone("if-you-see-this-the-code-is-broken");
-			map_vote_pics[i] = strzone("if-you-see-this-the-code-is-broken");
+			map_vote_maps[i] = str_zone_ifneeded("if-you-see-this-the-code-is-broken");
+			map_vote_paks[i] = str_zone_ifneeded("if-you-see-this-the-code-is-broken");
+			map_vote_pics[i] = str_zone_ifneeded("if-you-see-this-the-code-is-broken");
 			map_vote_previews[i] = FALSE;
 		}
 	}
@@ -371,5 +371,5 @@ void(void) map_vote_picture_read {
 	float type;
 	type = net_read_byte();
 	map_vote_previews[type] = TRUE;
-	map_vote_pics[type] = strzone(net_read_picture());
+	map_vote_pics[type] = str_zone_ifneeded(net_read_picture());
 }

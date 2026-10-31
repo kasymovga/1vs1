@@ -479,10 +479,8 @@ void() score_winning_condition_helper {
 				score_winning_condition_helper_secondscore = -999999999;
 		}
 	}
-	if (worldstatus)
-		strunzone(worldstatus);
-
-	worldstatus = strzone(s);
+	str_unzone_ifneeded(worldstatus);
+	worldstatus = str_zone_ifneeded(s);
 	CLIENT_FOR_EACH(p) {
 		if (fullstatus) {
 			s = score_player_string(p, 1);
@@ -499,10 +497,8 @@ void() score_winning_condition_helper {
 			else
 				s = "-666";
 		}
-		if (p.clientstatus)
-			strunzone(p.clientstatus);
-
-		p.clientstatus = strzone(s);
+		str_unzone_ifneeded(p.clientstatus);
+		p.clientstatus = str_zone_ifneeded(s);
 	}
 }
 
@@ -546,7 +542,7 @@ string score_player_string(entity pl, float shortString) {
 					l = score_label[i];
 					out = strcat(out, score_log_label(l, f), ",");
 				}
-		out = substring(out, 0, strlen(out) - 1);
+		out = str_sub(out, 0, strlen(out) - 1);
 	} else if ((sk = pl.scorekeeper)) {
 		for (i = 0; i < SCORE_FILEDS_MAX; ++i)
 			if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) == SCORE_FLAG_SORT_PRIO_PRIMARY)
@@ -563,7 +559,7 @@ string score_player_string(entity pl, float shortString) {
 				if ((score_flags[i] & SCORE_FLAG_SORT_PRIO_MASK) != SCORE_FLAG_SORT_PRIO_SECONDARY)
 					out = strcat(out, ftos(sk.(scores[i])), ",");
 
-		out = substring(out, 0, strlen(out) - 1);
+		out = str_sub(out, 0, strlen(out) - 1);
 	}
 	return out;
 }
@@ -597,7 +593,7 @@ string(float tm, float shortString) score_team_string {
 					l = score_team_label[i];
 					out = strcat(out, score_log_label(l, f), ",");
 				}
-		out = substring(out, 0, strlen(out) - 1);
+		out = str_sub(out, 0, strlen(out) - 1);
 	} else if ((sk = score_teem_keepers[tm - 1])) {
 		for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i)
 			if (score_team_flags[i] & SCORE_FLAG_SORT_PRIO_MASK == SCORE_FLAG_SORT_PRIO_PRIMARY)
@@ -613,7 +609,7 @@ string(float tm, float shortString) score_team_string {
 				if (score_team_flags[i] & SCORE_FLAG_SORT_PRIO_MASK != SCORE_FLAG_SORT_PRIO_PRIMARY)
 				if (score_team_flags[i] & SCORE_FLAG_SORT_PRIO_MASK != SCORE_FLAG_SORT_PRIO_SECONDARY)
 					out = strcat(out, ftos(sk.(scores[i])), ",");
-		out = substring(out, 0, strlen(out) - 1);
+		out = str_sub(out, 0, strlen(out) - 1);
 	}
 	return out;
 }
@@ -736,7 +732,7 @@ void(entity to, float t, float w) score_nice_print_team {
 		if (score_label[i] != "") {
 			fl = score_flags[i];
 			s2 = score_label[i];
-			s = strcat(s, " ", score_nice_print_item_color(fl), strpad(-w, substring(s2, 0, w)));
+			s = strcat(s, " ", score_nice_print_item_color(fl), strpad(-w, str_sub(s2, 0, w)));
 		}
 	cmd_print_to(to, s);
 }
@@ -752,7 +748,7 @@ void(entity to, entity p, float w) score_nice_print_player {
 	for (;;) {
 		i = strlennocol(s) - NAMEWIDTH;
 		if (i > 0)
-			s = substring(s, 0, strlen(s) - i);
+			s = str_sub(s, 0, strlen(s) - i);
 		else {
 			s = strcat(s, strpad(i, ""));
 			break;

@@ -67,15 +67,15 @@ float(string acl, string str) map_info_matchacl {
 	while (acl != "") {
 		t = str_car(acl); acl = str_cdr(acl);
 		d = 1;
-		if (substring(t, 0, 1) == "-") {
+		if (str_sub(t, 0, 1) == "-") {
 			d = -1;
-			t = substring(t, 1, strlen(t) - 1);
-		} else if (substring(t, 0, 1) == "+")
-			t = substring(t, 1, strlen(t) - 1);
+			t = str_sub(t, 1, strlen(t) - 1);
+		} else if (str_sub(t, 0, 1) == "+")
+			t = str_sub(t, 1, strlen(t) - 1);
 
-		if (substring(t, -1, 1) == "*") {
-			t = substring(t, 0, strlen(t) - 1);
-			s = substring(s, 0, strlen(t));
+		if (str_sub(t, -1, 1) == "*") {
+			t = str_sub(t, 0, strlen(t) - 1);
+			s = str_sub(s, 0, strlen(t));
 		} else
 			s = str;
 
@@ -162,7 +162,7 @@ float map_info_globhandle;
 string(float i) map_info_glob_item {
 	string s;
 	s = search_getfilename(map_info_globhandle, i);
-	return substring(s, 5, strlen(s) - 9); // without maps/ and .bsp
+	return str_sub(s, 5, strlen(s) - 9); // without maps/ and .bsp
 }
 
 void(void) map_info_enumerate {
@@ -241,15 +241,15 @@ string(string s) map_info_unquote {
 	j = -1;
 	for (i = 0; i < l; ++i) {
 		string ch;
-		ch = substring(s, i, 1);
+		ch = str_sub(s, i, 1);
 		if (ch != " ")
 		if (ch != "\"") {
 			for (j = strlen(s) - i - 1; j > 0; --j) {
-				ch = substring(s, i+j, 1);
+				ch = str_sub(s, i+j, 1);
 				if (ch != " ") if (ch != "\"")
-					return substring(s, i, j+1);
+					return str_sub(s, i, j+1);
 			}
-			return substring(s, i, 1);
+			return str_sub(s, i, 1);
 		}
 	}
 	return "";
@@ -307,7 +307,7 @@ float(string pFilename) map_info_generate { // 0: failure, 1: ok ent, 2: ok bsp
 			break;
 
 		if (inWorldspawn == 1)
-			if (substring(s, 0, 1) == "}")
+			if (str_sub(s, 0, 1) == "}")
 				inWorldspawn = 0;
 
 		k = map_info_unquote(str_car(s));
@@ -326,8 +326,8 @@ float(string pFilename) map_info_generate { // 0: failure, 1: ok ent, 2: ok bsp
 			else if (k == "message") {
 				i = strstrofs(v, " by ", 0);
 				if (map_info_map_author == "<AUTHOR>" && i >= 0) {
-					map_info_map_title = substring(v, 0, i);
-					map_info_map_author = substring(v, i + 4, strlen(v) - (i + 4));
+					map_info_map_title = str_sub(v, 0, i);
+					map_info_map_author = str_sub(v, i + 4, strlen(v) - (i + 4));
 				} else
 					map_info_map_title = v;
 			}
@@ -352,7 +352,7 @@ float(string pFilename) map_info_generate { // 0: failure, 1: ok ent, 2: ok bsp
 					map_info_map_supported_game_types |= MAP_INFO_TYPE_CTF;
 				else if (v == "onslaught_generator")
 					map_info_map_supported_game_types |= MAP_INFO_TYPE_ONSLAUGHT;
-				else if (substring(v, 0, 8) == "nexball_" || substring(v, 0, 4) == "ball")
+				else if (str_sub(v, 0, 8) == "nexball_" || str_sub(v, 0, 4) == "ball")
 					map_info_map_supported_game_types |= MAP_INFO_TYPE_NEXBALL;
 				else if (v == "info_player_team1")
 					++spawnpoints;
@@ -366,7 +366,7 @@ float(string pFilename) map_info_generate { // 0: failure, 1: ok ent, 2: ok bsp
 					map_info_map_supported_game_types |= MAP_INFO_TYPE_RACE;
 				else if (v == "target_startTimer") {
 					map_info_map_supported_game_types |= MAP_INFO_TYPE_CTS;
-				} else if (substring(v, 0, 7) == "weapon_")
+				} else if (str_sub(v, 0, 7) == "weapon_")
 					map_info_map_supported_features |= MAP_INFO_FEATURE_WEAPONS;
 				else if (v == "shootingrange_target")
 					map_info_map_supported_game_types |= MAP_INFO_TYPE_SHOOTINGRANGE;
@@ -466,10 +466,10 @@ float(string pFilename, float pAllowGenerate, float pGametypeToSet) map_info_get
 		fputs(fh, strcat("author ", map_info_map_author, "\n"));
 		if (map_info_map_worldspawn_music != "") {
 			if (
-					substring(map_info_map_worldspawn_music, strlen(map_info_map_worldspawn_music) - 4, 4) == ".wav"
+					str_sub(map_info_map_worldspawn_music, strlen(map_info_map_worldspawn_music) - 4, 4) == ".wav"
 					||
-					substring(map_info_map_worldspawn_music, strlen(map_info_map_worldspawn_music) - 4, 4) == ".ogg")
-				fputs(fh, strcat("cdtrack ", substring(map_info_map_worldspawn_music, 0, strlen(map_info_map_worldspawn_music) - 4), "\n"));
+					str_sub(map_info_map_worldspawn_music, strlen(map_info_map_worldspawn_music) - 4, 4) == ".ogg")
+				fputs(fh, strcat("cdtrack ", str_sub(map_info_map_worldspawn_music, 0, strlen(map_info_map_worldspawn_music) - 4), "\n"));
 			else
 				fputs(fh, strcat("cdtrack ", map_info_map_worldspawn_music, "\n"));
 		} else {
@@ -520,13 +520,13 @@ float(string pFilename, float pAllowGenerate, float pGametypeToSet) map_info_get
 		if (s == "")                    // empty lines
 			continue;
 
-		if (substring(s, 0, 1) == "#")  // UNIX style
+		if (str_sub(s, 0, 1) == "#")  // UNIX style
 			continue;
 
-		if (substring(s, 0, 2) == "//") // C++ style
+		if (str_sub(s, 0, 2) == "//") // C++ style
 			continue;
 
-		if (substring(s, 0, 1) == "_")  // q3map style
+		if (str_sub(s, 0, 1) == "_")  // q3map style
 			continue;
 
 		t = str_car(s); s = str_cdr(s);
@@ -678,14 +678,14 @@ float(string s) map_info_find_name {
 		map_info_find_name_first_result = -1;
 		return -1; // no map_info_find_name_match, behind last item
 	}
-	if (strcasecmp(substring(map_info_find_name_match, 0, strlen(s)), s) == 0) {
+	if (strcasecmp(str_sub(map_info_find_name_match, 0, strlen(s)), s) == 0) {
 		map_info_find_name_match = NULL;
 		map_info_find_name_first_result = -1;
 		return -1; // wrong prefix
 	}
 	if (l == map_info_count - 1)
 		return l; // last one, nothing can follow => unique
-	if (strcasecmp(substring(map_info_glob_item(map_info_filter_list_lookup(l + 1)), 0, strlen(s)), s) == 0) {
+	if (strcasecmp(str_sub(map_info_glob_item(map_info_filter_list_lookup(l + 1)), 0, strlen(s)), s) == 0) {
 		map_info_find_name_match = NULL;
 		return -1; // ambigous map_info_find_name_match
 	}

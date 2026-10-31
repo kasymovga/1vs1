@@ -19,7 +19,7 @@ void(void) trigger_push_touch {
 	// FIXME: add a .float for whether an entity should be tossed by jumppads
 	if not(other.iscreature)
 	if (other.classname != "droppedweapon")
-	if (!(other.flags & FL_PROJECTILE) || g_trigger_push_skip_projectiles)
+	if (!(other.flags & FLAG_PROJECTILE) || g_trigger_push_skip_projectiles)
 		return;
 
 	if (other.deadflag && other.deadflag != DEAD_FREEZE && other.iscreature)
@@ -35,7 +35,7 @@ void(void) trigger_push_touch {
 		self.movedir = trigger_push_calculate_velocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), tgt.origin + (tgt.mins + tgt.maxs) * 0.5, self.height);
 	}
 	if (self.movedir == '0 0 0') return;
-	other.flags &= ~FL_ONGROUND;
+	other.flags &= ~FLAG_ONGROUND;
 	if (g_trigger_push_speed_nodecrease) {
 		other.velocity += self.movedir * frametime;
 	} else
@@ -64,7 +64,7 @@ void(void) trigger_push_touch {
 		self = oldself;
 		trigger_push_recursive = 0;
 	}
-	if (other.flags & FL_PROJECTILE) {
+	if (other.flags & FLAG_PROJECTILE) {
 		other.angles = vectoangles (other.velocity);
 		switch(other.movetype) {
 			case MOVETYPE_FLY:
@@ -135,7 +135,7 @@ void(void) trigger_push_findtarget {
 		self.movedir = trigger_push_calculate_velocity(org, tgt.origin + (tgt.mins + tgt.maxs) * 0.5, self.height);
 		flighttime = trigger_push_calculate_velocity_flighttime;
 		// calculate the destination and spawn a teleporter spawnfunc_waypoint
-		if (self.solid == SOLID_TRIGGER) {
+		if (self.solid == VM_SOLID_TRIGGER) {
 			e = spawn();
 			setorigin(e, org);
 			setsize(e, PL_MIN, PL_MAX);

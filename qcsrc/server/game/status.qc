@@ -30,7 +30,7 @@ void(string status, float _delay, string arg1, string arg2, string arg3) game_st
 			status = print_text_prepare(status, arg1, arg2, arg3);
 			rm_bigprint_all(" ", " ", _delay);
 			if (split >= 0) {
-				rm_bigprint_all(substring(status, 0, split), substring(status, split + 1, -1), _delay);
+				rm_bigprint_all(str_sub(status, 0, split), str_sub(status, split + 1, -1), _delay);
 			} else
 				rm_bigprint_all(status, "", _delay);
 

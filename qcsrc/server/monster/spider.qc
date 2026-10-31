@@ -29,7 +29,7 @@ void(void) monster_spider_hunt {
 		}
 	}
 	float dofire;
-	if (self.flags & FL_ONGROUND) {
+	if (self.flags & FLAG_ONGROUND) {
 		dofire = FALSE;
 		if (self.attack_finished_single < time)
 		if (f < 400) {
@@ -51,7 +51,7 @@ void(void) monster_spider_hunt {
 				sound(self, CHAN_WEAPON, "weapons/chainsaw_active_1.wav", VOL_BASE, ATTN_NORM);
 				self.lip = 1;
 			}
-		} else if (self.flags & FL_ONGROUND) {
+		} else if (self.flags & FLAG_ONGROUND) {
 			monster_move_walk_rotate(500, 5, 0, 720);
 		}
 	}
@@ -82,7 +82,7 @@ void(void) monster_spider_walk {
 		return;
 
 	self.frame = 0; //walk forward
-	if (self.flags & FL_ONGROUND) { // no air control
+	if (self.flags & FLAG_ONGROUND) { // no air control
 		monster_move_walk_rotate(400, 5, 0, 720);
 	}
 }
@@ -113,7 +113,7 @@ void(void) monster_spider_spawn {
 	self.movetype = MOVETYPE_WALK;
 	self.entremove = monster_spider_remove;
 	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 2;
 	if (self.weapon)
 		self.netname = "Chainsaw Spider";

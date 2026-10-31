@@ -226,7 +226,7 @@ void(string command) cmd_game {
 		client = world;
 		if (entno <= client_max_count)
 			client = edict_num(entno);
-		if (client.flags & FL_CLIENT) {
+		if (client.flags & FLAG_CLIENT) {
 			if (clienttype(client) == CLIENTTYPE_REAL) {
 				print_to(client, PRINT_CENTER, "^3SERVER ADMIN:\n\n^7{1}", argv(2), "", "");
 				print_to(client, PRINT_CHAT, "^3SERVER ADMIN^7: {1}", argv(2), "", "");
@@ -288,7 +288,7 @@ void(string command) cmd_game {
 		if (entno <= client_max_count)
 			client = edict_num(entno);
 
-		if (client.flags & FL_CLIENT) {
+		if (client.flags & FLAG_CLIENT) {
 			float lt;
 			lt = team_lock;
 			team_lock = 0;
@@ -513,14 +513,14 @@ void(string command) cmd_game {
 	if (cmd == "stuffcmd") {
 		e = edict_num(stof(argv(1)));
 		if (clienttype(e) == CLIENTTYPE_REAL)
-			stuffcmd(e, strcat(substring(command, argv_start_index(2), -1), "\n"));
+			stuffcmd(e, strcat(str_sub(command, argv_start_index(2), -1), "\n"));
 
 		return;
 	}
 	if (cmd == "bprint") {
 		CLIENT_FOR_EACH_REAL(e) {
 			if (e.netaddress != "local")
-				sprint(e, strcat(substring(command, argv_start_index(1), -1), "\n"));
+				sprint(e, strcat(str_sub(command, argv_start_index(1), -1), "\n"));
 		}
 		return;
 	}
@@ -568,7 +568,7 @@ void(string s) cmd_client {
 	string cmd;
 	float tokens;
 	entity e;
-	if not(self.flags & FL_CLIENT) {
+	if not(self.flags & FLAG_CLIENT) {
 		if (client_preconnect_abort())
 			return;
 
@@ -604,22 +604,22 @@ void(string s) cmd_client {
 		sprint(self, strcat("^1autoswitch turned ", autoswitchmsg, "\n"));
 	} else if (cmd == "sentcvar") { // new system
 		if (tokens == 2) { // undefined cvar: use the default value on the server then
-			s = strcat(substring(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
+			s = strcat(str_sub(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
 			tokens = tokenize_console(s);
 		}
 		client_cvars_parse();
 	} else if (cmd == "spectate") {
-		if not(self.flags & FL_CLIENT)
+		if not(self.flags & FLAG_CLIENT)
 			return;
 
 		client_team_change_kill(-2);
 	} else if (cmd == "join") {
-		if not(self.flags & FL_CLIENT)
+		if not(self.flags & FLAG_CLIENT)
 			return;
 		if (self.classname != "player" && !team_lock)
 			spectator_to_player();
 	} else if ( cmd == "selectteam" ) {
-		if not(self.flags & FL_CLIENT)
+		if not(self.flags & FLAG_CLIENT)
 			return;
 		if not(team_teams) {
 			sprint( self, "selecteam can only be used in teamgames\n");
@@ -675,7 +675,7 @@ void(string s) cmd_client {
 			sprint(self, "\n");
 		}
 	} else if (cmd == "lsmaps2") {
-		if not(!map_finished && (self.flags & FL_CLIENT)) // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
+		if not(!map_finished && (self.flags & FLAG_CLIENT)) // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
 			return;
 
 		msg_entity = self;
@@ -699,23 +699,23 @@ void(string s) cmd_client {
 		}
 	} else if (cmd == "voice") {
 		if (tokens >= 3)
-			player_sound_voice_message(argv(1), substring(s, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
+			player_sound_voice_message(argv(1), str_sub(s, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
 		else
 			player_sound_voice_message(argv(1), "");
 	} else if (cmd == "say") {
 		if (tokens >= 2) {
-			chat_say(self, FALSE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			chat_say(self, FALSE, world, str_sub(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 		}
 	} else if (cmd == "say_team") {
 		if (tokens >= 2)
-			chat_say(self, TRUE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			chat_say(self, TRUE, world, str_sub(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 	} else if (cmd == "tell") {
 		e = client_entity_from_argv(tokens, 1);
 		if (e && tokens > client_entity_from_argv_firsttoken) {
-			chat_say(self, FALSE, e, substring(s, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken)), TRUE);
+			chat_say(self, FALSE, e, str_sub(s, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken)), TRUE);
 		} else {
 			if (tokens > client_entity_from_argv_firsttoken)
-				trigger_magicear_processmessage_forallears(self, -1, world, substring(s, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken)));
+				trigger_magicear_processmessage_forallears(self, -1, world, str_sub(s, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken)));
 			sprint(self, "ERROR: usage: tell # playerid text...\n");
 		}
 	} else if (cmd == "teamstatus") {
@@ -728,14 +728,14 @@ void(string s) cmd_client {
 		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
 	} else if (cmd == "recordlistchunk" && tokens == 3) {
 		float n1 = floor(stof(argv(1))), n2 = floor(stof(argv(2)));
-		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16 && !map_finished && (self.flags & FL_CLIENT)) { // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
+		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16 && !map_finished && (self.flags & FLAG_CLIENT)) { // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
 			msg_entity = self;
 			net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 			net_write_byte(MSG_ONE, NET_TE_CSQC_RECORDLISTCHUNK);
 			net_write_byte(MSG_ONE, n1);
 			net_write_byte(MSG_ONE, n2);
 			if (n1 < CMD_RECORDS_REPLY_STRINGS_COUNT) {
-				string s2 = substring(cmd_records_reply[n1], 1024 * n2, 1024);
+				string s2 = str_sub(cmd_records_reply[n1], 1024 * n2, 1024);
 				net_write_string(MSG_ONE, s2);
 			} else {
 				net_write_string(MSG_ONE, "");
@@ -774,7 +774,7 @@ void(string s) cmd_client {
 			return;
 		}
 		if (cmd == "name") {
-			string name = substring(s, argv_start_index(1), -1);
+			string name = str_sub(s, argv_start_index(1), -1);
 			if (self.abuser > 0)
 				return;
 
@@ -785,8 +785,8 @@ void(string s) cmd_client {
 			}
 			client_mute_ifneeded(name);
 			if (strlen(strdecolorize(name)) > 48) {
-				name = substring(name, 0, 47);
-				s = strcat("name ", substring(name, 0, 47), "~");
+				name = str_sub(name, 0, 47);
+				s = strcat("name ", str_sub(name, 0, 47), "~");
 			}
 		}
 		clientcommand(self,s);

@@ -81,8 +81,8 @@ void drawLabel(entity me) {
 				while (t != "") {
 					nl = strstrofs(t, "\n", 0);
 					if (nl >= 0) {
-						tl = substring(t, 0, nl);
-						t = substring(t, nl + 1, -1);
+						tl = str_sub(t, 0, nl);
+						t = str_sub(t, nl + 1, -1);
 					} else {
 						tl = t;
 						t = "";

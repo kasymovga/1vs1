@@ -21,7 +21,7 @@ void(void) func_portable_drop {
 	self.func_portable_caried = spawn();
 	self.func_portable_caried.cnt = -1;
 	setorigin(e, pos);
-	e.solid = SOLID_BSP;
+	e.solid = VM_SOLID_BSP;
 	e.movetype = MOVETYPE_TOSS;
 	e.effects &= ~EFFECT_NODRAW;
 	e.flags = 0;
@@ -41,8 +41,8 @@ void(entity e) func_portable_pick {
 	e.movetype = MOVETYPE_NONE;
 	e.groundentity = NULL;
 	e.flags = 0;
-	e.solid = SOLID_NOT;
-	if (substring(e.model, 0, 1) != "*") {
+	e.solid = VM_SOLID_NOT;
+	if (str_sub(e.model, 0, 1) != "*") {
 		setmodel(e2, e.model);
 		if ((tag_found = gettagindex(_body, "tag_weapon"))) {
 			setattachment(e2, _body, "tag_weapon");
@@ -98,10 +98,10 @@ void(float killed) func_portable_player_clear {
 }
 
 void(void) spawnfunc_func_portable {
-	self.solid = SOLID_BSP;
+	self.solid = VM_SOLID_BSP;
 	self.movetype = MOVETYPE_TOSS;
 	self.pushfactor = (self.pushfactor ? self.pushfactor : 1);
-	model_init(SOLID_BSP);
+	model_init(VM_SOLID_BSP);
 	if (!func_portable_init_done) {
 		func_portable_init_done = 1;
 		func_portable_player_think_next = plugin_chain_player_think;

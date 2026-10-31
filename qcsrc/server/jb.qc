@@ -275,7 +275,7 @@ void(void) jb_think {
 	entity oldself = self, oldother = other;
 	if (jb_open_red) {
 		for (e = NULL; (e = find(e, targetname, "jail_red")); ) {
-			if (substring(e.classname, 0, 4) == "door") {
+			if (str_sub(e.classname, 0, 4) == "door") {
 				if (e.state == FUNC_STATE_BOTTOM) {
 					print_all(PRINT_INFO, "^1Red jail^7 closed", "", "", "");
 					jb_open_red = FALSE;
@@ -286,7 +286,7 @@ void(void) jb_think {
 	}
 	if (jb_open_blue) {
 		for (e = NULL; (e = find(e, targetname, "jail_blue")); ) {
-			if (substring(e.classname, 0, 4) == "door") {
+			if (str_sub(e.classname, 0, 4) == "door") {
 				if (e.state == FUNC_STATE_BOTTOM) {
 					print_all(PRINT_INFO, "^4Blue jail^7 closed", "", "", "");
 					jb_open_blue = FALSE;
@@ -763,7 +763,7 @@ void(void) jb_controlpoint {
 	self.touch = jb_controlpoint_touch;
 	self.reset = jb_controlpoint_reset;
 	self.think = jb_controlpoint_think;
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 }
 
 void(void) spawnfunc_func_jailbreak_jail_red {

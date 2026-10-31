@@ -16,7 +16,7 @@ void(float ratingscale, vector org, float sradius) jb_role_goalrating_enemyplaye
 		return;
 
 	// don't chase players if we're under water
-	if (self.waterlevel>WATER_LEVEL_WETFEET)
+	if (self.waterlevel>VM_WATERLEVEL_WETFEET)
 		return;
 
 	PLAYER_FOR_EACH (head) {
@@ -28,12 +28,12 @@ void(float ratingscale, vector org, float sradius) jb_role_goalrating_enemyplaye
 			if (distance < 100 || distance > sradius)
 				continue;
 
-			if ((e.flags & FL_INWATER) || (e.flags & FL_PARTIALGROUND))
+			if ((e.flags & FLAG_INWATER) || (e.flags & FLAG_PARTIALGROUND))
 				continue;
 
 			o = ENTITY_CENTER(e);
 			// not falling
-			if not(e.flags & FL_ONGROUND) {
+			if not(e.flags & FLAG_ONGROUND) {
 				trace_line(o, o + '0 0 -1500', TRUE, world);
 				t = pointcontents(trace_endpos + '0 0 1');
 				if (t != CONTENT_SOLID)

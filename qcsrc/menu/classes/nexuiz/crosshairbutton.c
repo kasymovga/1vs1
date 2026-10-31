@@ -35,7 +35,7 @@ void configureNexuizCrosshairButtonNexuizCrosshairButton(entity me, float theGro
 
 	me.configureRadioButton(me, NULL, me.fontSize, me.image, theGroup, 0);
 	me.srcMulti = 1;
-	me.src3 = strzone(strcat("/gfx/crosshair", ftos(me.cvarValueFloat)));
+	me.src3 = str_zone_ifneeded(strcat("/gfx/crosshair", ftos(me.cvarValueFloat)));
 }
 void setCheckedNexuizCrosshairButton(entity me, float val)
 {

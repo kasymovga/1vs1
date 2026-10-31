@@ -132,7 +132,7 @@ void(void) menu_draw {
 	float w;
 	for (i = 0; i < self.cnt; i++) {
 		subcmd = strstrofs(self.menu_items[i], "|", 0);
-		menu_string = strcat(substring(self.menu_items[i], 0, subcmd));
+		menu_string = strcat(str_sub(self.menu_items[i], 0, subcmd));
 		if ((w = stringwidth(strdecolorize(menu_string), FALSE)) > maxwidth)
 			maxwidth = w;
 	}
@@ -159,11 +159,11 @@ void(void) menu_draw {
 		subcmd = strstrofs(menu_string, "|", 0);
 		pos_x = center - stringwidth(strdecolorize(menu_string), FALSE) * 0.5 * 24 * size_scale;
 		if ((paren = strstrofs(menu_string, "(", 0)) >= 0 && (paren < subcmd || subcmd < 0)) {
-			paren_part = substring(menu_string, paren, subcmd - paren);
+			paren_part = str_sub(menu_string, paren, subcmd - paren);
 			drawcolorcodedstring(pos_y * '0 1 0' + ((maxwidth * 24 * 1.1 + CVAR(vid_conwidth)) * 0.5 - stringwidth(strdecolorize(paren_part), FALSE) * 24 * size_scale) * '1 0 0', strcat(item_color, paren_part), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
-			menu_string = strcat(item_color, substring(menu_string, 0, paren));
+			menu_string = strcat(item_color, str_sub(menu_string, 0, paren));
 		} else {
-			menu_string = strcat(item_color, substring(menu_string, 0, subcmd));
+			menu_string = strcat(item_color, str_sub(menu_string, 0, subcmd));
 		}
 		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
 		draw_borderlines(sbar_border_thickness, pos_y * '0 1 0' + '10 0 0', 24 * '0 1 0' + CVAR(vid_conwidth) * '1 0 0' - '24 0 0', border_color, 1, DRAWFLAG_NORMAL);
@@ -173,7 +173,7 @@ void(void) menu_draw {
 		} else if (i == 9) {
 			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, "0/a"), '12 12 0', 1, DRAWFLAG_NORMAL);
 		} else {
-			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, substring("bcdefg", i - 10, 1)), '12 12 0', 1, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, str_sub("bcdefg", i - 10, 1)), '12 12 0', 1, DRAWFLAG_NORMAL);
 		}
 		pos_y += MENU_ITEM_HEIGHT;
 	}
@@ -214,7 +214,7 @@ float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 	if (choice >= 0) {
 		float subcmd = strstrofs(menu.menu_items[choice], "|", 0);
 		if (subcmd >= 0) {
-			localcmd(strcat("\n", substring(menu.menu_items[choice], subcmd + 1, -1)));
+			localcmd(strcat("\n", str_sub(menu.menu_items[choice], subcmd + 1, -1)));
 		}
 		localcmd(strcat("\ncmd menu_select ", menu.menu_id, " ", ftos(choice), "\n"));
 		menu_choiced = choice;

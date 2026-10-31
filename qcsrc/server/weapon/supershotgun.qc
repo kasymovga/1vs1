@@ -28,7 +28,7 @@ float g_balance_supershotgun_secondary_spread;
 
 void(void) weapoon_supershotgun_touch {
 	PROJECTILE_TOUCH;
-	if (other.solid == SOLID_BSP)
+	if (other.solid == VM_SOLID_BSP)
 		effect_impact(self.origin, self.dmg, 0, 0, normalize(self.velocity), EFFECT_IMPACT_PELLET, self);
 
 	if (other && other.takedamage) {

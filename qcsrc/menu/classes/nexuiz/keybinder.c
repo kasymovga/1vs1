@@ -53,8 +53,8 @@ void Nexuiz_KeyBinds_Read()
 	{
 		if(tokenize_console(s) != 2)
 			continue;
-		Nexuiz_KeyBinds_Functions[Nexuiz_KeyBinds_Count] = strzone(argv(0));
-		Nexuiz_KeyBinds_Descriptions[Nexuiz_KeyBinds_Count] = strzone(argv(1));
+		Nexuiz_KeyBinds_Functions[Nexuiz_KeyBinds_Count] = str_zone_ifneeded(argv(0));
+		Nexuiz_KeyBinds_Descriptions[Nexuiz_KeyBinds_Count] = str_zone_ifneeded(argv(1));
 		++Nexuiz_KeyBinds_Count;
 		if(Nexuiz_KeyBinds_Count >= MAX_KEYBINDS)
 			break;
@@ -91,7 +91,7 @@ void resizeNotifyNexuizKeyBinder(entity me, vector relOrigin, vector relSize, ve
 	me.columnKeysOrigin = me.columnFunctionOrigin + me.columnFunctionSize + me.realFontSize_x;
 
 	if(me.userbindEditButton)
-		me.userbindEditButton.disabled = (substring(Nexuiz_KeyBinds_Descriptions[me.selectedItem], 0, 1) != "$");
+		me.userbindEditButton.disabled = (str_sub(Nexuiz_KeyBinds_Descriptions[me.selectedItem], 0, 1) != "$");
 }
 void KeyBinder_Bind_Change(entity btn, entity me)
 {
@@ -148,9 +148,9 @@ void editUserbindNexuizKeyBinder(entity me, string theName, string theCommandPre
 		return;
 	
 	descr = Nexuiz_KeyBinds_Descriptions[me.selectedItem];
-	if(substring(descr, 0, 1) != "$")
+	if(str_sub(descr, 0, 1) != "$")
 		return;
-	descr = substring(descr, 1, strlen(descr) - 1);
+	descr = str_sub(descr, 1, strlen(descr) - 1);
 
 	// Hooray! It IS a user bind!
 	cvar_set(strcat(descr, "_description"), theName);
@@ -169,9 +169,9 @@ void KeyBinder_Bind_Edit(entity btn, entity me)
 		return;
 	
 	descr = Nexuiz_KeyBinds_Descriptions[me.selectedItem];
-	if(substring(descr, 0, 1) != "$")
+	if(str_sub(descr, 0, 1) != "$")
 		return;
-	descr = substring(descr, 1, strlen(descr) - 1);
+	descr = str_sub(descr, 1, strlen(descr) - 1);
 
 	// Hooray! It IS a user bind!
 	me.userbindEditDialog.loadUserBind(me.userbindEditDialog, cvar_string(strcat(descr, "_description")), cvar_string(strcat(descr, "_press")), cvar_string(strcat(descr, "_release")));
@@ -224,7 +224,7 @@ void setSelectedNexuizKeyBinder(entity me, float i)
 	if(Nexuiz_KeyBinds_Functions[i] != "")
 		me.previouslySelected = i;
 	if(me.userbindEditButton)
-		me.userbindEditButton.disabled = (substring(Nexuiz_KeyBinds_Descriptions[i], 0, 1) != "$");
+		me.userbindEditButton.disabled = (str_sub(Nexuiz_KeyBinds_Descriptions[i], 0, 1) != "$");
 	setSelectedListBox(me, i);
 }
 float keyDownNexuizKeyBinder(entity me, float key, float ascii, float shift)
@@ -280,9 +280,9 @@ void drawListBoxItemNexuizKeyBinder(entity me, float i, vector absSize, float is
 		extraMargin = me.realFontSize_x * 0.5;
 	}
 
-	if(substring(descr, 0, 1) == "$")
+	if(str_sub(descr, 0, 1) == "$")
 	{
-		s = substring(descr, 1, strlen(descr) - 1);
+		s = str_sub(descr, 1, strlen(descr) - 1);
 		descr = cvar_string(strcat(s, "_description"));
 		if(descr == "")
 			descr = s;

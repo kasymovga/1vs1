@@ -219,7 +219,7 @@ void(void) spawnfunc_target_teleporter {
 	ENTITY_NOT_PER_PLAYER();
 	if (self.target != "") {
 		teleport_setup();
-		self.solid = SOLID_NOT;
+		self.solid = VM_SOLID_NOT;
 		self.modelindex = 0;
 		self.use = target_teleporter_use;
 	}
@@ -288,7 +288,7 @@ void(void) target_give_use {
 			if (self.existsonlyfor && e.existsonlyfor != self.existsonlyfor) continue;
 			if (e.existsonlyfor != activator) continue;
 		}
-		if not(e.flags & (FL_ITEM | FL_WEAPON)) {
+		if not(e.flags & (FLAG_ITEM | FLAG_WEAPON)) {
 			print("Target ", self.target, " is not item\n");
 			continue;
 		}

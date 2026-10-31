@@ -58,10 +58,10 @@ void target_spawn_useon(entity e)
 				continue;
 			}
 		}
-		if(substring(value, 0, 1) == "$")
+		if(str_sub(value, 0, 1) == "$")
 		{
-			value = substring(value, 1, strlen(value) - 1);
-			if(substring(value, 0, 1) == "$")
+			value = str_sub(value, 1, strlen(value) - 1);
+			if(str_sub(value, 0, 1) == "$")
 			{
 				// deferred replacement
 				// do nothing
@@ -74,24 +74,24 @@ void target_spawn_useon(entity e)
 				valueoffset = "";
 				if(valuefieldpos != -1)
 				{
-					valueoffset = substring(value, valuefieldpos + 1, strlen(value) - valuefieldpos - 1);
-					value = substring(value, 0, valuefieldpos);
+					valueoffset = str_sub(value, valuefieldpos + 1, strlen(value) - valuefieldpos - 1);
+					value = str_sub(value, 0, valuefieldpos);
 				}
 
 				valuefieldpos = strstrofs(valueoffset, "+", 0);
 				valueoffsetrandom = "";
 				if(valuefieldpos != -1)
 				{
-					valueoffsetrandom = substring(valueoffset, valuefieldpos + 1, strlen(valueoffset) - valuefieldpos - 1);
-					valueoffset = substring(valueoffset, 0, valuefieldpos);
+					valueoffsetrandom = str_sub(valueoffset, valuefieldpos + 1, strlen(valueoffset) - valuefieldpos - 1);
+					valueoffset = str_sub(valueoffset, 0, valuefieldpos);
 				}
 
 				valuefieldpos = strstrofs(value, ".", 0);
 				valuefield = "";
 				if(valuefieldpos != -1)
 				{
-					valuefield = substring(value, valuefieldpos + 1, strlen(value) - valuefieldpos - 1);
-					value = substring(value, 0, valuefieldpos);
+					valuefield = str_sub(value, valuefieldpos + 1, strlen(value) - valuefieldpos - 1);
+					value = str_sub(value, 0, valuefieldpos);
 				}
 
 				if(value == "self")
@@ -213,7 +213,7 @@ void target_spawn_useon(entity e)
 		}
 		if(key == "$")
 		{
-			if(substring(value, 0, 1) == "_")
+			if(str_sub(value, 0, 1) == "_")
 				value = strcat("target_spawn_helper", value);
 			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
 
@@ -316,7 +316,7 @@ void spawnfunc_target_spawn()
 {
 	target_spawn_initialize_field_db();
 	self.use = target_spawn_use;
-	self.message = strzone(strreplace("'", "\"", self.message));
+	self.message = str_zone_ifneeded(strreplace("'", "\"", self.message));
 	self.target_spawn_id = ++target_spawn_count;
 	entity_initialize(self, target_spawn_spawnfirst, INITPRIO_LAST);
 }

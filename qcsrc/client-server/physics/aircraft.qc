@@ -9,7 +9,7 @@ float(void) physics_aircraft {
 	if(physics_button_jump) {
 		self.velocity_z = self.velocity_z + g_vehicle_aircraft_accel_up * frametime;
 	}
-	if (self.flags & FL_ONGROUND) {
+	if (self.flags & FLAG_ONGROUND) {
 		move_beak_simple(g_vehicle_aircraft_speed_stop * frametime);
 	}
 	float turn_angle_speed;

@@ -51,11 +51,11 @@ void loadServerInfoNexuizServerInfoDialog(entity me, float i)
 	string s, typestr, versionstr, numh, maxp;
 
 	SLIST_FIELD_NAME = gethostcacheindexforkey("name");
-	me.currentServerName = strzone(gethostcachestring(SLIST_FIELD_NAME, i));
+	me.currentServerName = str_zone_ifneeded(gethostcachestring(SLIST_FIELD_NAME, i));
 	me.nameLabel.setText(me.nameLabel, me.currentServerName);
 
 	SLIST_FIELD_CNAME = gethostcacheindexforkey("cname");
-	me.currentServerCName = strzone(gethostcachestring(SLIST_FIELD_CNAME, i));
+	me.currentServerCName = str_zone_ifneeded(gethostcachestring(SLIST_FIELD_CNAME, i));
 	me.cnameLabel.setText(me.cnameLabel, me.currentServerCName);
 
 	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey("qcstatus");
@@ -71,40 +71,40 @@ void loadServerInfoNexuizServerInfoDialog(entity me, float i)
 		typestr = _("N/A");
 		versionstr = _("N/A");
 	}
-	me.currentServerType = strzone(typestr);
+	me.currentServerType = str_zone_ifneeded(typestr);
 	me.typeLabel.setText(me.typeLabel, me.currentServerType);
 
 
 	SLIST_FIELD_MAP = gethostcacheindexforkey("map");
-	me.currentServerMap = strzone(gethostcachestring(SLIST_FIELD_MAP, i));
+	me.currentServerMap = str_zone_ifneeded(gethostcachestring(SLIST_FIELD_MAP, i));
 	me.mapLabel.setText(me.mapLabel, me.currentServerMap);
 
 	SLIST_FIELD_PLAYERS = gethostcacheindexforkey("players");
-	me.currentServerPlayers = strzone(gethostcachestring(SLIST_FIELD_PLAYERS, i));
+	me.currentServerPlayers = str_zone_ifneeded(gethostcachestring(SLIST_FIELD_PLAYERS, i));
 	me.rawPlayerList.setPlayerList(me.rawPlayerList, me.currentServerPlayers);
 
 	SLIST_FIELD_NUMHUMANS = gethostcacheindexforkey("numhumans");
 	numh = ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i));
 	SLIST_FIELD_MAXPLAYERS = gethostcacheindexforkey("maxplayers");
 	maxp = ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i));
-	me.currentServerNumPlayers = strzone(strcat(numh,"/",maxp));
+	me.currentServerNumPlayers = str_zone_ifneeded(strcat(numh,"/",maxp));
 	me.numPlayersLabel.setText(me.numPlayersLabel, me.currentServerNumPlayers);
 
 	SLIST_FIELD_NUMBOTS = gethostcacheindexforkey("numbots");
 	s = ftos(gethostcachenumber(SLIST_FIELD_NUMBOTS, i));
-	me.currentServerNumBots = strzone(s);
+	me.currentServerNumBots = str_zone_ifneeded(s);
 	me.numBotsLabel.setText(me.numBotsLabel, me.currentServerNumBots);
 
 	SLIST_FIELD_MOD = gethostcacheindexforkey("mod");
-	me.currentServerMod = strzone(gethostcachestring(SLIST_FIELD_MOD, i));
+	me.currentServerMod = str_zone_ifneeded(gethostcachestring(SLIST_FIELD_MOD, i));
 	me.modLabel.setText(me.modLabel, me.currentServerMod);
 
-	me.currentServerVersion = strzone(versionstr);
+	me.currentServerVersion = str_zone_ifneeded(versionstr);
 	me.versionLabel.setText(me.versionLabel, me.currentServerVersion);
 
 	SLIST_FIELD_PING = gethostcacheindexforkey("ping");
 	s = ftos(gethostcachenumber(SLIST_FIELD_PING, i));
-	me.currentServerPing = strzone(s);
+	me.currentServerPing = str_zone_ifneeded(s);
 	me.pingLabel.setText(me.pingLabel, me.currentServerPing);
 }
 

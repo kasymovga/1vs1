@@ -78,7 +78,7 @@ float() warpzone_box_touches_brush_recurse {
 
 	se = trace_ent;
 	s = se.solid;
-	se.solid = SOLID_NOT;
+	se.solid = VM_SOLID_NOT;
 	f = warpzone_box_touches_brush_recurse();
 	se.solid = s;
 	return f;
@@ -90,7 +90,7 @@ float(vector mi, vector ma, entity e, entity ig) warpzone_box_touches_brush {
 		return 1;
 
 	s = e.solid;
-	e.solid = SOLID_BSP;
+	e.solid = VM_SOLID_BSP;
 	warpzone_box_touches_brush_mins = mi;
 	warpzone_box_touches_brush_maxs = ma;
 	warpzone_box_touches_brush_ent = e;
@@ -113,13 +113,13 @@ entity(vector mi, vector ma) warpzone_find {
 void() warpzone_make_all_solid {
 	entity e;
 	for (e = warpzone_chain_begin; e; e  = e.warpzone_chain)
-		e.solid = SOLID_BSP;
+		e.solid = VM_SOLID_BSP;
 }
 
 void() warpzone_make_all_other {
 	entity e;
 	for (e = warpzone_chain_begin; e; e  = e.warpzone_chain)
-		e.solid = SOLID_TRIGGER;
+		e.solid = VM_SOLID_TRIGGER;
 }
 
 void() warpzone_trace_init_transform {

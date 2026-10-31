@@ -39,7 +39,7 @@ void(void) vote_note_clear {
 	if (vote_note_message1 == "")
 		return;
 
-	strunzone(vote_note_bar);
+	str_unzone_ifneeded(vote_note_bar);
 	vote_note_message1 = "";
 }
 
@@ -69,7 +69,7 @@ void(void) vote_note_update {
 		vote_note_bar = strcat(vote_note_bar, "N");
 
 	//s = strcat(s, "^0[", vote_note_bar, "^0]");
-	vote_note_bar = strzone(vote_note_bar);
+	vote_note_bar = str_zone_ifneeded(vote_note_bar);
 	vote_note.SendFlags = 1;
 }
 
@@ -115,7 +115,7 @@ entity(string vote, string cmd, entity caller) vote_kick_victim_get {
 	e = client_entity_from_argv(tokens, 1);
 	if (e) {
 		if (client_entity_from_argv_firsttoken < tokens)
-			vote_kick_victim_reason = substring(vote, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken));
+			vote_kick_victim_reason = str_sub(vote, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken));
 		else
 			vote_kick_victim_reason = "";
 
@@ -123,9 +123,9 @@ entity(string vote, string cmd, entity caller) vote_kick_victim_get {
 		if (cmd != "vdo" || vote_kick_victim_reason == "")
 			reason = "~"; // by convention, ~ prefixes a "unverified" kickban which will not be networked
 
-		if (substring(vote_kick_victim_reason, 0, 1) == "~") {
+		if (str_sub(vote_kick_victim_reason, 0, 1) == "~") {
 			reason = "~";
-			vote_kick_victim_reason = substring(vote_kick_victim_reason, 1, strlen(vote_kick_victim_reason) - 1);
+			vote_kick_victim_reason = str_sub(vote_kick_victim_reason, 1, strlen(vote_kick_victim_reason) - 1);
 		}
 		if (caller)
 			reason = strcat(reason, "player ", strdecolorize(caller.netname));
@@ -167,11 +167,11 @@ float(string vote, string cmd, entity e) vote_remap {
 			return FALSE;
 
 	if (argv(0) == "chmap") {
-		vote = strcat("gotomap ", substring(vote, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+		vote = strcat("gotomap ", str_sub(vote, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 		vote_argc = tokenize_console(vote);
 	}
 	if (argv(0) == "gotomap") {
-		if (!(vote = vote_validate_map(substring(vote, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), e)))
+		if (!(vote = vote_validate_map(str_sub(vote, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), e)))
 			return FALSE;
 
 		vote = strcat("gotomap ", vote);
@@ -185,7 +185,7 @@ float(string vote, string cmd, entity e) vote_remap {
 		vote_remap_display = strcat("^1", vote, " (^7", victim.netname, "^1): ", vote_kick_victim_reason);
 	} else {
 		vote_remap_vote = vote;
-		vote_remap_display = strzone(strcat("^1", vote));
+		vote_remap_display = str_zone_ifneeded(strcat("^1", vote));
 	}
 	return TRUE;
 }
@@ -197,7 +197,7 @@ float(string s, entity e) vote_cmd {
 		cmd_print_to(e, "  vote COMMANDS ARGUMENTS. See 'vhelp' for more info.");
 		return TRUE;
 	} else if (argv(0) == "vote") {
-		if (e && !(e.flags & FL_CLIENT)) {
+		if (e && !(e.flags & FLAG_CLIENT)) {
 			cmd_print_to(e, "^1You can't use vote in unconnected state!");
 			return TRUE;
 		}
@@ -239,8 +239,8 @@ float(string s, entity e) vote_cmd {
 					} else if (vote_check_nasty(vote)) {
 						cmd_print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 					} else if (vote_remap(vote, "vcall", e)) {
-						vote_called_vote = strzone(vote_remap_vote);
-						vote_called_vote_display = strzone(vote_remap_display);
+						vote_called_vote = str_zone_ifneeded(vote_remap_vote);
+						vote_called_vote_display = str_zone_ifneeded(vote_remap_display);
 						vote_called = TRUE;
 						vote_note = note_new(vote_note_message);
 						vote_called_master = FALSE;
@@ -281,8 +281,8 @@ float(string s, entity e) vote_cmd {
 				} else {
 					vote_called = TRUE;
 					vote_called_master = TRUE;
-					vote_called_vote = strzone("XXX");
-					vote_called_vote_display = strzone("^3master");
+					vote_called_vote = str_zone_ifneeded("XXX");
+					vote_called_vote_display = str_zone_ifneeded("^3master");
 					vote_note = note_new(vote_note_message);
 					vote_finished = time + cvar("sv_vote_timeout");
 					if (sv_announcer_extra_vote_now != "")
@@ -457,7 +457,7 @@ void(void) vote_think {
 string(string all, float argc) vote_parse {
 	if (argc < 3)
 		return "";
-	return substring(all, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
+	return str_sub(all, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
 }
 
 float(string votecommand, string list) vote_command_in_list {
@@ -498,8 +498,8 @@ void(void) vote_reset {
 		player.vote_vote = 0;
 	}
 	if (vote_called) {
-		strunzone(vote_called_vote);
-		strunzone(vote_called_vote_display);
+		str_unzone_ifneeded(vote_called_vote);
+		str_unzone_ifneeded(vote_called_vote_display);
 	}
 	vote_called = FALSE;
 	vote_called_master = FALSE;

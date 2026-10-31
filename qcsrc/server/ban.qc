@@ -95,7 +95,7 @@ void(float id, float status, string data) ban_online_list_uri_callback {
 		print("error: status is ", ftos(status), "\n");
 		return;
 	}
-	if (substring(data, 0, 1) == "<") {
+	if (str_sub(data, 0, 1) == "<") {
 		print("error: received HTML instead of a ban list: ");
 		return;
 	}
@@ -124,8 +124,8 @@ void(float id, float status, string data) ban_online_list_uri_callback {
 
 		l = strlen(ip);
 		for (j = 0; j < l; ++j)
-			if (strstrofs("0123456789.", substring(ip, j, 1), 0) == -1) {
-				print("Invalid character ", substring(ip, j, 1), " in IP address ", ip, ". Skipping this ban.\n");
+			if (strstrofs("0123456789.", str_sub(ip, j, 1), 0) == -1) {
+				print("Invalid character ", str_sub(ip, j, 1), " in IP address ", ip, ". Skipping this ban.\n");
 				goto skip;
 			}
 		if (cvar("g_ban_sync_trusted_servers_verify"))
@@ -218,7 +218,7 @@ float(float i) ban_delete {
 
 	if (ban_expire[i] > 0) {
 		ban_online_list_send_unban(ban_ip[i]);
-		strunzone(ban_ip[i]);
+		str_unzone_ifneeded(ban_ip[i]);
 	}
 	ban_expire[i] = 0;
 	ban_ip[i] = "";
@@ -237,7 +237,7 @@ void(void) ban_load {
 	if (stof(argv(0)) == 1) {
 		ban_count = (n - 1) / 2;
 		for (i = 0; i < ban_count; ++i) {
-			ban_ip[i] = strzone(argv(2*i+1));
+			ban_ip[i] = str_zone_ifneeded(argv(2*i+1));
 			ban_expire[i] = time + stof(argv(2*i+2));
 		}
 	}
@@ -350,7 +350,7 @@ float(string ip, float bantime, string reason, float dosync) ban_insert {
 			// and abort
 			if(dosync)
 				if(reason != "")
-					if(substring(reason, 0, 1) != "~") // like IRC: unauthenticated banner
+					if(str_sub(reason, 0, 1) != "~") // like IRC: unauthenticated banner
 						ban_online_list_send(ip, bantime, reason);
 
 			return FALSE;
@@ -381,14 +381,14 @@ float(string ip, float bantime, string reason, float dosync) ban_insert {
 	// okay, insert our new victim as i
 	ban_delete(i);
 	ban_expire[i] = time + bantime;
-	ban_ip[i] = strzone(ip);
+	ban_ip[i] = str_zone_ifneeded(ip);
 	ban_count = max(ban_count, i + 1);
 	ban_save();
 	reason = ban_enforce(i, reason);
 	// and abort
 	if(dosync)
 		if(reason != "")
-			if(substring(reason, 0, 1) != "~") // like IRC: unauthenticated banner
+			if(str_sub(reason, 0, 1) != "~") // like IRC: unauthenticated banner
 				ban_online_list_send(ip, bantime, reason);
 
 	return TRUE;
@@ -444,7 +444,7 @@ float(string command) ban_cmd {
 	if (argv(0) == "kickban") {
 		#define INITARG(c) reasonarg = c
 		#define GETARG(v,d) if ((argc > reasonarg) && ((v = stof(argv(reasonarg))) != 0)) ++reasonarg; else v = d
-		#define RESTARG(v) if (argc > reasonarg) v = substring(command, argv_start_index(reasonarg), strlen(command) - argv_start_index(reasonarg)); else v = ""
+		#define RESTARG(v) if (argc > reasonarg) v = str_sub(command, argv_start_index(reasonarg), strlen(command) - argv_start_index(reasonarg)); else v = ""
 		if (argc >= 3) {
 			entno = stof(argv(2));
 			if (entno > client_max_count || entno < 1)

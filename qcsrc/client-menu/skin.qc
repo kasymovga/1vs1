@@ -29,18 +29,18 @@ void(void) skin_init {
 		skin_current = "gfx/menu/default";
 		fh = fopen(strcat(skin_current, "/skinvalues.txt"), FILE_READ);
 	}
-	skin_current = strzone(skin_current);
+	skin_current = str_zone_ifneeded(skin_current);
 	while ((s = fgets(fh))) {
 		// these two are handled by skinlist.qc
-		if(substring(s, 0, 6) == "title ")
+		if(str_sub(s, 0, 6) == "title ")
 			continue;
 
-		if(substring(s, 0, 7) == "author ")
+		if(str_sub(s, 0, 7) == "author ")
 			continue;
 
 		n = tokenize_console(s);
 		if(n >= 2)
-			skin_setting_apply(argv(0), substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			skin_setting_apply(argv(0), str_sub(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 	}
 	fclose(fh);
 }

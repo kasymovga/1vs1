@@ -437,7 +437,7 @@ void(void) weapon_model_exterior_think {
 void(void) weapon_model_spawn {
 	self.weaponentity = spawn();
 	self.weaponentity.classname = "weaponentity";
-	self.weaponentity.solid = SOLID_NOT;
+	self.weaponentity.solid = VM_SOLID_NOT;
 	self.weaponentity.owner = self;
 	self.weaponentity.state = WEAPON_STATE_READY;
 	self.weaponentity.realowner = akimbo_owner(self);
@@ -451,7 +451,7 @@ void(void) weapon_model_spawn {
 	self.weaponentity.nextthink = time;
 	self.exteriorweaponentity = spawn();
 	self.exteriorweaponentity.classname = "exteriorweaponentity";
-	self.exteriorweaponentity.solid = SOLID_NOT;
+	self.exteriorweaponentity.solid = VM_SOLID_NOT;
 	self.exteriorweaponentity.exteriorweaponentity = self.exteriorweaponentity;
 	self.exteriorweaponentity.owner = self;
 	self.exteriorweaponentity.realowner = akimbo_owner(self);

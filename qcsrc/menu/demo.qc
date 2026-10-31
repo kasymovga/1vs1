@@ -28,9 +28,9 @@ void(string s) demo_play {
 	}
 	localcmd("playdemo ", s, "\n");
 	str_unzone_ifneeded(demo_hud_name);
-	if (substring(s, 0, 6) == "demos/") s = substring(s, 6, -1);
+	if (str_sub(s, 0, 6) == "demos/") s = str_sub(s, 6, -1);
 	float n = strlen(s);
-	if (n > 4 && substring(s, n - 4, 4) == ".dem") s = substring(s, 0, n - 4);
+	if (n > 4 && str_sub(s, n - 4, 4) == ".dem") s = str_sub(s, 0, n - 4);
 	demo_hud_name = str_zone_ifneeded(s);
 	cvar_set("slowmo", "1");
 	if (cvar("menu_demo_hud")) {

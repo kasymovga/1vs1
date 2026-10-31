@@ -57,7 +57,7 @@ void(void) weapon_pryaxe_flyback {
 	self.nextthink = time;
 	self.think = weapon_pryaxe_flyback_think;
 	self.movetype = MOVETYPE_NOCLIP;
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	//remove(self);
 }
 
@@ -68,7 +68,7 @@ void(void) weapon_pryaxe_touch {
 		weapon_score_hits(self.realowner, other, self.projectiledeathtype, 1, self.dmg);
 	}
 	if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-	if (!other || other.solid == SOLID_BSP) {
+	if (!other || other.solid == VM_SOLID_BSP) {
 		effect_impact(ENTITY_CENTER(self), self.dmg, self.dmg, 0, normalize(self.velocity) * self.dmg_force, EFFECT_IMPACT_RM_PRYAXE, self.realowner);
 	}
 	weapon_pryaxe_flyback();
@@ -102,7 +102,7 @@ void(float issecondary) weapon_pryaxe_melee {
 			damage(trace_ent, self, self, d,
 					WEAPON_MELEE, trace_endpos, warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir) * f);
 		}
-		if (!trace_ent || trace_ent.solid == SOLID_BSP) {
+		if (!trace_ent || trace_ent.solid == VM_SOLID_BSP) {
 			effect_impact(trace_endpos, d, d, 0, weapon_shotdir * f, EFFECT_IMPACT_RM_PRYAXE, self);
 		}
 	}

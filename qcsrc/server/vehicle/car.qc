@@ -48,7 +48,7 @@ float vehicle_car_physics_hook() {
 		return 1;
 	}
 	self = mycar;
-	if(mycar.flags & FL_ONGROUND)
+	if(mycar.flags & FLAG_ONGROUND)
 		mycar.wasFlying = 0;
 	else
 		mycar.wasFlying = 1;
@@ -70,7 +70,7 @@ float vehicle_car_physics_hook() {
 	float rotate_factor_f = rotate_factor;
 	float rotate_factor_b = rotate_factor;
 	if (normalize(v1) * normalize(v2) < 0.75 && rotate_factor > 300) {
-		if (mycar.flags & FL_ONGROUND) {
+		if (mycar.flags & FLAG_ONGROUND) {
 			if (rotate_factor > 700) {
 				vehicle_car_dorifto_effect_sound(mycar);
 				vehicle_car_dorifto_effect_smoke_f(mycar);
@@ -92,14 +92,14 @@ float vehicle_car_physics_hook() {
 		while (a < -180) a += 360;
 		if (rotate_factor < 50) {
 			a = -a;
-			if (mycar.flags & FL_ONGROUND)
+			if (mycar.flags & FLAG_ONGROUND)
 			if (physics_movement_x > 0) {
 				rotate_factor_b = max(200, rotate_factor * 2);
 				vehicle_car_dorifto_effect_smoke_b(mycar);
 				vehicle_car_dorifto_effect_sound(mycar);
 			}
 		} else {
-			if (mycar.flags & FL_ONGROUND)
+			if (mycar.flags & FLAG_ONGROUND)
 			if (physics_movement_x < 0) {
 				rotate_factor_f = 0;
 				vehicle_car_dorifto_effect_smoke_f(mycar);
@@ -132,7 +132,7 @@ void(void) vehicle_car_think {
 		physics_gravity_factor = (self.gravity ? self.gravity : 1);
 		physics_update_status();
 		self.flags = physics_flags;
-		if (physics_flags & FL_ONGROUND) {
+		if (physics_flags & FLAG_ONGROUND) {
 			self.velocity = physics_velocity;
 			move_beak_simple(g_vehicle_car_speed_stop * frametime);
 			self.angles_x *= -1;

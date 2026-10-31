@@ -165,9 +165,9 @@ void(string s, float type) draw_search_and_precache {
 
 	for(i = 0; i < search_getsize(glob); ++i) {
 		pic = search_getfilename(glob, i);
-		pic = substring(pic, 0, strstrofs(pic, ".tga", 0));
-		pic = substring(pic, 0, strstrofs(pic, ".jpg", 0));
-		pic = substring(pic, 0, strstrofs(pic, ".png", 0));
+		pic = str_sub(pic, 0, strstrofs(pic, ".tga", 0));
+		pic = str_sub(pic, 0, strstrofs(pic, ".jpg", 0));
+		pic = str_sub(pic, 0, strstrofs(pic, ".png", 0));
 		//print("Precaching ", pic, "\n");
 		if (type == 1) //just image
 			precache_pic(pic);

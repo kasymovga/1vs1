@@ -106,7 +106,7 @@ void(entity e) bgm_script_init_entity {
 		l = strlen(m);
 		e.bgmscriptline0 = -1;
 		for (i = 0; i < bgm_script_bufsize; ++i) {
-			if (substring(bufstr_get(bgm_script_buf, i), 0, l) == m)
+			if (str_sub(bufstr_get(bgm_script_buf, i), 0, l) == m)
 				break;
 		}
 		e.bgmscriptline = e.bgmscriptline0 = i;

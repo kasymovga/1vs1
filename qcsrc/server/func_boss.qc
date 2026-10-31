@@ -65,7 +65,7 @@ void(entity shooter) func_boss_shooter_think {
 		return;
 	}
 	if (shooter.enemy &&
-			(shooter.enemy.health < 1 || shooter.enemy.solid == SOLID_NOT || !shooter.enemy.takedamage || shooter.enemy.deadflag != DEAD_NO)) {
+			(shooter.enemy.health < 1 || shooter.enemy.solid == VM_SOLID_NOT || !shooter.enemy.takedamage || shooter.enemy.deadflag != DEAD_NO)) {
 		shooter.enemy = NULL;
 	}
 	entity ple;
@@ -73,7 +73,7 @@ void(entity shooter) func_boss_shooter_think {
 		PLAYER_FOR_EACH(pl)
 		if (pl.health >= 1)
 		if (pl.takedamage)
-		if not(pl.flags & FL_NOTARGET)
+		if not(pl.flags & FLAG_NOTARGET)
 		if (pl.deadflag == DEAD_NO) {
 			ple = player_entity(pl);
 			trace_line(shooter.origin, ENTITY_CENTER(ple), TRACE_MOVE_NORMAL, shooter);
@@ -174,7 +174,7 @@ void(void) func_boss_controller_think {
 				self = oldself;
 				boss.state |= FUNC_BOSS_STATE_DEAD;
 				boss.effects |= EFFECT_NODRAW;
-				boss.solid = SOLID_NOT;
+				boss.solid = VM_SOLID_NOT;
 				for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
 					if (e.classname == "func_boss_part" && (e.spawnflags & 1)) {
 						e.effects &= ~EFFECT_NODRAW;
@@ -213,7 +213,7 @@ void(entity boss, entity attacker) func_boss_check_parts {
 	for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
 		if (e.classname == "func_boss_shooter" && e.cnt == boss.cnt) {
 			e.effects |= EFFECT_NODRAW;
-			e.solid = SOLID_NOT;
+			e.solid = VM_SOLID_NOT;
 			continue;
 		}
 	}
@@ -291,7 +291,7 @@ void(void) func_boss_reset {
 }
 
 void(void) spawnfunc_func_boss {
-	model_init(SOLID_BSP);
+	model_init(VM_SOLID_BSP);
 	monster_common_init(); // for monster_difficulty
 	if (self.targetname == "") {
 		entity_abort("missed targetname property");
@@ -335,7 +335,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	self.lastdamage = time;
 	if (self.health <= 0) {
 		self.effects |= EFFECT_NODRAW;
-		self.solid = SOLID_NOT;
+		self.solid = VM_SOLID_NOT;
 		self.takedamage = FALSE;
 		self.event_damage = NULL;
 		func_boss_volume_explode(self);
@@ -356,10 +356,10 @@ void(void) func_boss_part_init_delayed {
 void(void) func_boss_part_reset {
 	self.angles = '0 0 0';
 	if (self.spawnflags & 1) {
-		self.solid = SOLID_NOT;
+		self.solid = VM_SOLID_NOT;
 		self.effects |= EFFECT_NODRAW;
 	} else {
-		self.solid = SOLID_BSP;
+		self.solid = VM_SOLID_BSP;
 		self.effects &= ~EFFECT_NODRAW;
 	}
 	self.health = self.max_health;
@@ -369,7 +369,7 @@ void(void) func_boss_part_reset {
 }
 
 void(void) spawnfunc_func_boss_part {
-	model_init(SOLID_BSP);
+	model_init(VM_SOLID_BSP);
 	self.event_damage = func_boss_part_damage;
 	if (self.target == "") {
 		entity_abort("missed target property");
@@ -391,7 +391,7 @@ void(void) spawnfunc_func_boss_part {
 }
 
 void(void) func_boss_shooter_reset {
-	self.solid = SOLID_BSP;
+	self.solid = VM_SOLID_BSP;
 	self.angles = '0 0 0';
 	self.effects &= ~EFFECT_NODRAW;
 	self.enemy = NULL;
@@ -399,7 +399,7 @@ void(void) func_boss_shooter_reset {
 }
 
 void(void) spawnfunc_func_boss_shooter {
-	model_init(SOLID_BSP);
+	model_init(VM_SOLID_BSP);
 	if (self.target == "") {
 		entity_abort("missed target property");
 		return;

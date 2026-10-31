@@ -47,13 +47,13 @@ void(vector v_from, vector v_to, string smodel, float f_lifetime, float b_burn) 
 	gib = spawn();
 	setmodel(gib, smodel);
 	setorigin(gib, v_from);
-	gib.solid = SOLID_NOT;
+	gib.solid = VM_SOLID_NOT;
 	gib.movetype = MOVETYPE_BOUNCE;
 	gib.takedamage = DAMAGE_YES;
 	gib.event_damage = onslaught_gib_damage;
 	gib.health = -1;
 	gib.effects = EFFECT_LOWPRECISION;
-	gib.flags = FL_NOTARGET;
+	gib.flags = FLAG_NOTARGET;
 	gib.velocity = v_to;
 	gib.giblifetime	= time + f_lifetime;
 	if (b_burn) {
@@ -589,7 +589,7 @@ void onslaught_generator_reset()
 	self.iscaptured = TRUE;
 	self.islinked = TRUE;
 	self.isshielded = TRUE;
-	self.enemy.solid = SOLID_NOT;
+	self.enemy.solid = VM_SOLID_NOT;
 	self.think = onslaught_updatelinks;
 	self.nextthink = time + 0.2;
 	setmodel(self, "models/onslaught/generator.md3");
@@ -619,7 +619,7 @@ void(void) spawnfunc_onslaught_generator {
 	team_teams_set_allowed(self.team);
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	self.lasthealth = self.max_health = self.health = g_ons_gen_health;
 	setmodel(self, "models/onslaught/generator.md3");
@@ -636,7 +636,7 @@ void(void) spawnfunc_onslaught_generator {
 	// spawn shield model which indicates whether this can be damaged
 	self.enemy = e = spawn();
 	e.classname = "onslaught_generator_shield";
-	e.solid = SOLID_NOT;
+	e.solid = VM_SOLID_NOT;
 	e.movetype = MOVETYPE_NONE;
 	e.effects = EFFECT_ADDITIVE;
 	setmodel(e, "models/onslaught/generator_shield.md3");
@@ -874,7 +874,7 @@ void onslaught_controlpoint_touch() {
 	e.owner = self;
 	e.max_health = g_ons_cp_health;
 	e.health = g_ons_cp_buildhealth;
-	e.solid = SOLID_BBOX;
+	e.solid = VM_SOLID_BBOX;
 	e.movetype = MOVETYPE_NONE;
 	e.scale = 1.2;
 	setmodel(e, "models/onslaught/controlpoint_icon.md3");
@@ -905,7 +905,7 @@ void(void) onslaught_controlpoint_reset {
 	self.iscaptured = FALSE;
 	self.islinked = FALSE;
 	self.isshielded = TRUE;
-	self.enemy.solid = SOLID_NOT;
+	self.enemy.solid = VM_SOLID_NOT;
 	self.enemy.colormap = self.colormap;
 	self.think = self.enemy.think = NULL;
 	self.nextthink = 0;
@@ -932,7 +932,7 @@ void(void) spawnfunc_onslaught_controlpoint {
 		remove(self);
 		return;
 	}
-	self.solid = SOLID_TRIGGER;
+	self.solid = VM_SOLID_TRIGGER;
 	self.movetype = MOVETYPE_NONE;
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	setorigin(self, self.origin);
@@ -946,7 +946,7 @@ void(void) spawnfunc_onslaught_controlpoint {
 	self.enemy = e = spawn();
 	e.classname = "onslaught_controlpoint_shield";
 	e.scale = 0.7;
-	e.solid = SOLID_NOT;
+	e.solid = VM_SOLID_NOT;
 	e.movetype = MOVETYPE_NONE;
 	e.effects = EFFECT_ADDITIVE;
 	setmodel(e, "models/onslaught/controlpoint_shield.md3");

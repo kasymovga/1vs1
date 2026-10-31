@@ -80,7 +80,7 @@ void(void) vehicle_spiderbot_rocket_do {
 	missile.touch = projectile_touch_explode;
 	missile.velocity = normalize(v_forward + (v_up * g_vehicle_spiderbot_rocket_up) + randomvec() * g_vehicle_spiderbot_rocket_spread) * g_vehicle_spiderbot_rocket_speed;
 	missile.think = vehicle_spiderbot_rocket_think;
-	missile.solid = SOLID_BBOX;
+	missile.solid = VM_SOLID_BBOX;
 	missile.fade_time = time + 10;
 }
 
@@ -165,7 +165,7 @@ float(void) vehicle_spiderbot_physics_hook {
 		return 1;
 	}
 	self = spider;
-	if(spider.flags & FL_ONGROUND) {
+	if(spider.flags & FLAG_ONGROUND) {
 		if(player.BUTTON_JUMP) {
 			player.BUTTON_JUMP = 0;
 			spider.frame = 4; //jump
@@ -238,7 +238,7 @@ void(void) vehicle_spiderbot_think {
 		physics_gravity_factor = (self.gravity ? self.gravity : 1);
 		physics_update_status();
 		self.flags = physics_flags;
-		if(self.flags & FL_ONGROUND) {
+		if(self.flags & FLAG_ONGROUND) {
 			self.velocity = physics_velocity;
 			move_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);
 			self.angles_x *= -1;

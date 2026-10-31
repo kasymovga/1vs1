@@ -17,7 +17,7 @@ void(void) radio_stopper_think {
 
 void(void) radio_think {
 	if (self.cnt < 0 || time - self.cnt > 300) {
-		strunzone(self.netname);
+		str_unzone_ifneeded(self.netname);
 		remove(self);
 		return;
 	}
@@ -27,7 +27,7 @@ void(void) radio_think {
 	}
 	float start = (self.flags ? 0 : (server_time - self.radio_starttime));
 	localcmd("cd reset; cd remap ", self.netname, "; cd loop 1 ", ftos(start), ";");
-	strunzone(self.netname);
+	str_unzone_ifneeded(self.netname);
 	if (self.flags) {
 		// loop
 		remove(self);
@@ -74,7 +74,7 @@ void(void) radio_read {
 
 	e = spawn();
 	e.classname = "radio";
-	e.netname = strzone(fname);
+	e.netname = str_zone_ifneeded(fname);
 	e.think = radio_think;
 	e.nextthink = time;
 	e.cnt = time;

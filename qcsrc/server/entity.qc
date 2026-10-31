@@ -9,7 +9,7 @@ vector(entity box, vector org) entity_nearest_point_on_box {
 }
 
 void(entity ent) entity_fade_vanish_or_remove { // Makes client invisible or removes non-client
-	if (ent.flags & FL_CLIENT) {
+	if (ent.flags & FLAG_CLIENT) {
 		// vanish
 		ent.model = "";
 		ent.effects = 0;
@@ -143,7 +143,7 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
 	e.dphitcontentsmask = m;
 	if (i < attempts) {
 		setorigin(e, trace_endpos);
-		e.flags &= ~FL_ONGROUND;
+		e.flags &= ~FLAG_ONGROUND;
 		e.angles = vectoangles(start - end);
 		e.angles_x = 0;
 		e.angles_z = 0;
@@ -156,9 +156,9 @@ void(entity platform) entity_drop_entities {
 	const vector nudge = '1 1 1';
 	entity e = NULL;
 	while ((e = findentity(e, groundentity, platform))) {
-		if (e.flags & FL_ONGROUND)
+		if (e.flags & FLAG_ONGROUND)
 		if (math_boxes_overlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
-			e.flags &= ~FL_ONGROUND;
+			e.flags &= ~FLAG_ONGROUND;
 			projectile_update_next_frame(e);
 		}
 	}
@@ -166,7 +166,7 @@ void(entity platform) entity_drop_entities {
 		if(e.movetype == MOVETYPE_FOLLOW) {
 			e.movetype = MOVETYPE_TOSS;
 			e.aiment = world;
-			e.flags &= ~FL_ONGROUND;
+			e.flags &= ~FLAG_ONGROUND;
 			projectile_update_next_frame(e);
 		}
 	}
@@ -217,7 +217,7 @@ float(string repl) entity_spawn_replace {
 	if ((e = find(world, classname, repl))) {
 		self.classname = e.classname;
 	} else
-		self.classname = strzone(repl);
+		self.classname = str_zone_ifneeded(repl);
 
 	return TRUE;
 }
@@ -295,11 +295,11 @@ void(void) entity_spawn_pre {
 		inv = 0;
 
 		s = self.cvarfilter;
-		if(substring(s, 0, 1) == "+") {
-			s = substring(s, 1, -1);
-		} else if(substring(s, 0, 1) == "-") {
+		if(str_sub(s, 0, 1) == "+") {
+			s = str_sub(s, 1, -1);
+		} else if(str_sub(s, 0, 1) == "-") {
 			inv = 1;
-			s = substring(s, 1, -1);
+			s = str_sub(s, 1, -1);
 		}
 
 		n = tokenize(s);
@@ -315,49 +315,49 @@ void(void) entity_spawn_pre {
 			// var===x
 			// var!==x
 			if((o = strstrofs(s, ">=", 0)) >= 0) {
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
+				k = str_sub(s, 0, o);
+				v = str_sub(s, o+2, -1);
 				if(cvar(k) < stof(v))
 					goto cvar_fail;
 			} else if((o = strstrofs(s, "<=", 0)) >= 0) {
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
+				k = str_sub(s, 0, o);
+				v = str_sub(s, o+2, -1);
 				if(cvar(k) > stof(v))
 					goto cvar_fail;
 			} else if((o = strstrofs(s, ">", 0)) >= 0) {
-				k = substring(s, 0, o);
-				v = substring(s, o+1, -1);
+				k = str_sub(s, 0, o);
+				v = str_sub(s, o+1, -1);
 				if(cvar(k) <= stof(v))
 					goto cvar_fail;
 			} else if((o = strstrofs(s, "<", 0)) >= 0) {
-				k = substring(s, 0, o);
-				v = substring(s, o+1, -1);
+				k = str_sub(s, 0, o);
+				v = str_sub(s, o+1, -1);
 				if(cvar(k) >= stof(v))
 					goto cvar_fail;
 			} else if((o = strstrofs(s, "===", 0)) >= 0) {
-				k = substring(s, 0, o);
-				v = substring(s, o+3, -1);
+				k = str_sub(s, 0, o);
+				v = str_sub(s, o+3, -1);
 				if (k == "g_profile") {
 					if not(cvar_profile_presents(v)) goto cvar_fail;
 				} else if (cvar_string(k) != v)
 					goto cvar_fail;
 			} else if((o = strstrofs(s, "!==", 0)) >= 0) {
-				k = substring(s, 0, o);
-				v = substring(s, o+3, -1);
+				k = str_sub(s, 0, o);
+				v = str_sub(s, o+3, -1);
 				if(cvar_string(k) == v)
 					goto cvar_fail;
 			} else if((o = strstrofs(s, "==", 0)) >= 0) {
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
+				k = str_sub(s, 0, o);
+				v = str_sub(s, o+2, -1);
 				if(cvar(k) != stof(v))
 					goto cvar_fail;
 			} else if((o = strstrofs(s, "!=", 0)) >= 0) {
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
+				k = str_sub(s, 0, o);
+				v = str_sub(s, o+2, -1);
 				if(cvar(k) == stof(v))
 					goto cvar_fail;
-			} else if(substring(s, 0, 1) == "!") {
-				k = substring(s, 1, -1);
+			} else if(str_sub(s, 0, 1) == "!") {
+				k = str_sub(s, 1, -1);
 				if(cvar(k))
 					goto cvar_fail;
 			} else {
@@ -421,7 +421,7 @@ void(void) entity_spawn_post {
 	}
 	if not(entity_per_player_entities) return;
 	if (entity_not_per_player) return;
-	if (self.solid != SOLID_NOT || entity_per_player_force) {
+	if (self.solid != VM_SOLID_NOT || entity_per_player_force) {
 		entity oldself = self;
 		entity slot;
 		entity initializer = NULL;

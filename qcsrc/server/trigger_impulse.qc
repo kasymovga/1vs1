@@ -5,7 +5,7 @@
 float trigger_impulse_frametime;
 float (entity e) trigger_impulse_affected {
 	if not(e.iscreature)
-	if not(e.flags & FL_PROJECTILE)
+	if not(e.flags & FLAG_PROJECTILE)
 	if (e.movetype != MOVETYPE_TOSS)
 		return FALSE;
 
@@ -29,7 +29,7 @@ void(void) trigger_impulse_touch1 {
 
 	TRIGGER_EXACT_TOUCH;
 	other.velocity = other.velocity + normalize(self.enemy.origin - self.origin) * self.strength * trigger_impulse_frametime;
-	other.flags &= ~FL_ONGROUND;
+	other.flags &= ~FLAG_ONGROUND;
 }
 
 // Directionless (accelerator/decelerator) mode

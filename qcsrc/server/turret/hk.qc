@@ -19,7 +19,7 @@ float(entity e_target) turret_hk_is_valid_target {
 		return 0;
 
 	// If only this was used more..
-	if (e_target.flags & FL_NOTARGET)
+	if (e_target.flags & FLAG_NOTARGET)
 		return 0;
 
 	// Cant touch this
@@ -27,7 +27,7 @@ float(entity e_target) turret_hk_is_valid_target {
 		return 0;
 
 	// player
-	if (e_target.flags & FL_CLIENT) {
+	if (e_target.flags & FLAG_CLIENT) {
 		if (self.owner.target_select_playerbias < 0)
 			return 0;
 
@@ -35,7 +35,7 @@ float(entity e_target) turret_hk_is_valid_target {
 			return 0;
 	}
 	// Missile
-	if ((e_target.flags & FL_PROJECTILE) && (self.owner.target_select_missilebias < 0))
+	if ((e_target.flags & FLAG_PROJECTILE) && (self.owner.target_select_missilebias < 0))
 		return 0;
 
 	// Team check
@@ -197,7 +197,7 @@ void(void) turret_hk_attack {
 	sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 	missile                  = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, fly sound
 	projectile_setup(missile, self.tur_shotorg, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0, MOVETYPE_FLY);
-	missile.solid            = SOLID_BBOX;
+	missile.solid            = VM_SOLID_BBOX;
 	setorigin(missile, self.tur_shotorg);
 	missile.scale            = 1;
 	missile.classname        = "hk_missile";

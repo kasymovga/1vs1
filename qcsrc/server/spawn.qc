@@ -54,7 +54,7 @@ void() spawn_relocate {
 		e.classname = "info_player_foo";
 		setorigin(e, self.origin + v_forward * 24);
 		setsize(e, '-8 -8 -8', '8 8 8');
-		e.solid = SOLID_TRIGGER;
+		e.solid = VM_SOLID_TRIGGER;
 	}
 }
 

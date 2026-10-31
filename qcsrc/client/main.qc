@@ -101,7 +101,7 @@ void(void) CSQC_Init {
 	sbar_game_init();
 	// sbar_fields uses strunzone on the titles!
 	for(i = 0; i < SBAR_FIELDS_MAX; ++i)
-		sbar_title[i] = strzone("(null)");
+		sbar_title[i] = str_zone_ifneeded("(null)");
 
 	main_calledhooks = 0;
 	team_list = spawn();
@@ -115,13 +115,13 @@ void(void) CSQC_Init {
 	effect_impact_precache();
 	warpzone_init();
 	map_shortname = mapname;
-	if (!strcasecmp(substring(map_shortname, 0, 5), "maps/"))
-		map_shortname = substring(map_shortname, 5, strlen(map_shortname) - 5);
+	if (!strcasecmp(str_sub(map_shortname, 0, 5), "maps/"))
+		map_shortname = str_sub(map_shortname, 5, strlen(map_shortname) - 5);
 
-	if (!strcasecmp(substring(map_shortname, strlen(map_shortname) - 4, 4), ".bsp"))
-		map_shortname = substring(map_shortname, 0, strlen(map_shortname) - 4);
+	if (!strcasecmp(str_sub(map_shortname, strlen(map_shortname) - 4, 4), ".bsp"))
+		map_shortname = str_sub(map_shortname, 0, strlen(map_shortname) - 4);
 
-	map_shortname = strzone(map_shortname);
+	map_shortname = str_zone_ifneeded(map_shortname);
 	radar_minimapname = strcat("gfx/", map_shortname, "_radar");
 	if (precache_pic(radar_minimapname) == "") {
 		// but maybe we have a non-clever minimap
@@ -129,7 +129,7 @@ void(void) CSQC_Init {
 		if (precache_pic(radar_minimapname) == "")
 			radar_minimapname = ""; // FAIL
 	}
-	radar_minimapname = strzone(radar_minimapname);
+	radar_minimapname = str_zone_ifneeded(radar_minimapname);
 	net_csqc_entity_init();
 	draw_init();
 	ui_con_width_height_set();
@@ -188,7 +188,7 @@ void(string strMessage) CSQC_Parse_StuffCmd {
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void(string strMessage) CSQC_Parse_Print {
 	if (mute_list != "")
-	if (substring(strMessage, 0, 1) == "\{1}")
+	if (str_sub(strMessage, 0, 1) == "\{1}")
 	if (mute_check(strMessage))
 		return;
 

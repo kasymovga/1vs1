@@ -11,7 +11,7 @@ float(entity attacker, entity targ, float f) clanarena_score_give_frag_mod {
 
 var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) clanarena_player_damage_handle_NextLink;
 float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) clanarena_player_damage_handle {
-	if (attacker.flags & FL_CLIENT)
+	if (attacker.flags & FLAG_CLIENT)
 	if (deathtype != WEAPON_PORTO)
 	if (attacker.team != self.team) {
 		score_player_add(attacker, SP_SCORE, _damage / 10);

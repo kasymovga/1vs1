@@ -186,7 +186,7 @@ void() ctf_captureshield_spawn {
 	e.classname = "ctf_captureshield";
 	e.effects = EFFECT_ADDITIVE;
 	e.movetype = MOVETYPE_NOCLIP;
-	e.solid = SOLID_TRIGGER;
+	e.solid = VM_SOLID_TRIGGER;
 	e.avelocity = '7 0 11';
 	setorigin(e, self.origin);
 	setmodel(e, "models/ctf/shield.md3");
@@ -210,8 +210,8 @@ void() ctf_flag_place {
 
 	setattachment(self, world, "");
 	self.mdl = self.model;
-	self.flags = FL_ITEM;
-	self.solid = SOLID_TRIGGER;
+	self.flags = FLAG_ITEM;
+	self.solid = VM_SOLID_TRIGGER;
 	self.movetype = MOVETYPE_NONE;
 	self.velocity = '0 0 0';
 	self.origin_z = self.origin_z + 6;
@@ -244,13 +244,13 @@ void(entity e) ctf_flag_regen {
 		e.movetype = MOVETYPE_TOSS;
 
 	e.velocity = '0 0 0';
-	e.solid = SOLID_TRIGGER;
+	e.solid = VM_SOLID_TRIGGER;
 	// TODO: play a sound here
 	setorigin(e, e.dropped_origin);
 	e.angles = e.mangle;
 	e.cnt = CTF_FLAG_BASE;
 	e.owner = world;
-	e.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
+	e.flags = FLAG_ITEM; // clear FLAG_ONGROUND and any other junk
 }
 
 void(entity e) ctf_flag_return {
@@ -316,8 +316,8 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 		p.flagcarried = world;
 
 	e.owner = world;
-	e.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
-	e.solid = SOLID_TRIGGER;
+	e.flags = FLAG_ITEM; // clear FLAG_ONGROUND and any other junk
+	e.solid = VM_SOLID_TRIGGER;
 	e.movetype = MOVETYPE_TOSS;
 	// setsize(e, '-16 -16 0', '16 16 74');
 	setorigin(e, p.origin - '0 0 24' + '0 0 37');
@@ -485,7 +485,7 @@ void() ctf_flag_touch {
 		RM_ELSE({
 			string t = ftos(time - other.flagcarried.flagpickuptime);
 			float dot = strstrofs(t, ".", 0);
-			if (dot > 0) t = substring(t, 0, dot + 2);
+			if (dot > 0) t = str_sub(t, 0, dot + 2);
 			rm_bigprint_all(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores!"), strcat("^7Captured by ^3", other.netname, " ^7in ", t, "s"), 2);
 		}, {
 			if (game_type == GAME_TYPE_CTF)
@@ -510,7 +510,7 @@ void() ctf_flag_touch {
 
 		// pick up
 		self.flagpickuptime = time; // used for timing runs
-		self.solid = SOLID_NOT;
+		self.solid = VM_SOLID_NOT;
 		setorigin(self, self.origin); // relink
 		self.owner = other;
 		other.flagcarried = self;
@@ -541,7 +541,7 @@ void() ctf_flag_touch {
 		return;
 	}
 	if (self.cnt == CTF_FLAG_DROPPED) {
-		self.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
+		self.flags = FLAG_ITEM; // clear FLAG_ONGROUND and any other junk
 		if (other.team == self.team || (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2)) {
 			// return flag
 			print_all(PRINT_INFO, "{1}^7 returned the {2}", other.netname,  self.netname, "");
@@ -579,7 +579,7 @@ void() ctf_flag_touch {
 				pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
 			
 			// pick up
-			self.solid = SOLID_NOT;
+			self.solid = VM_SOLID_NOT;
 			setorigin(self, self.origin); // relink
 			self.owner = other;
 			other.flagcarried = self;

@@ -21,10 +21,10 @@ void(void) casing_delete {
 }
 
 void(void) casing_draw {
-	if (self.move_flags & FL_ONGROUND) {
+	if (self.move_flags & FLAG_ONGROUND) {
 		self.move_angles_x = 0;
 		self.move_angles_z = 0;
-		self.flags &= ~FL_ONGROUND;
+		self.flags &= ~FLAG_ONGROUND;
 	}
 	physics_move_no_match_server();
 	self.renderflags = 0;
@@ -41,7 +41,7 @@ void(void) casing_touch {
 		return;
 	}
 	if (!self.silent)
-	if (!trace_ent || trace_ent.solid == SOLID_BSP) {
+	if (!trace_ent || trace_ent.solid == VM_SOLID_BSP) {
 		if (vlen(self.velocity) > 50) {
 			if (time >= self.nextthink) {
 				string s;
@@ -93,7 +93,7 @@ void(void) casing_read {
 		casing.move_movetype = MOVETYPE_BOUNCE;
 		casing.move_touch = casing_touch;
 		casing.move_time = time;
-		casing.solid = SOLID_TRIGGER;
+		casing.solid = VM_SOLID_TRIGGER;
 		switch (casing.state) {
 		case 1:
 			setmodel(casing, "models/casing_shell.mdl");

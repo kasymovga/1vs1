@@ -141,28 +141,28 @@ void (entity e, float mode) item_show {
 	if (mode > 0) {
 		// make the item look normal, and be touchable
 		e.model = e.mdl;
-		e.solid = SOLID_TRIGGER;
+		e.solid = VM_SOLID_TRIGGER;
 		//e.colormod = '0 0 0';
 		e.alpha = 0;
 		e.spawnshieldtime = 1;
 	} else if (mode < 0) {
 		// hide the item completely
 		e.model = NULL;
-		e.solid = SOLID_NOT;
+		e.solid = VM_SOLID_NOT;
 		//e.colormod = '0 0 0';
 		e.alpha = -1;
 		e.spawnshieldtime = 1;
 	} else if (g_ghost_items) {
 		// make the item translucent green and not touchable
 		e.model = e.mdl;
-		e.solid = SOLID_NOT;
+		e.solid = VM_SOLID_NOT;
 		//e.colormod = '0.2 1 0.2';
 		e.alpha = g_ghost_items;
 		e.spawnshieldtime = 1;
 	} else {
 		// hide the item completely
 		e.model = NULL;
-		e.solid = SOLID_NOT;
+		e.solid = VM_SOLID_NOT;
 		//e.colormod = '0 0 0';
 		e.alpha = 0;
 		e.spawnshieldtime = 1;
@@ -229,7 +229,7 @@ void(void) item_respawn_countdown {
 }
 
 void(entity e, float t) item_schedule_respawn_in {
-	if ((e.flags & FL_POWERUP) && t >= ITEM_RESPAWN_TICKS) {
+	if ((e.flags & FLAG_POWERUP) && t >= ITEM_RESPAWN_TICKS) {
 		e.think = item_respawn_countdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.count = 0;
@@ -287,8 +287,8 @@ float(entity item, entity player) item_give_to {
 		plugin_chain_item_give_to_switch = FALSE;
 	} else {
 		if (g_weapon_stay)
-		if not(item.flags & FL_NO_WEAPON_STAY)
-		if (item.flags & FL_WEAPON) {
+		if not(item.flags & FLAG_NO_WEAPON_STAY)
+		if (item.flags & FLAG_WEAPON) {
 			WEAPON_INFO_FOR_EACH(e)
 				if ((e.weapons & item.weapons & player.weapons) || (e.weapons_extra & item.weapons_extra & player.weapons_extra))
 					if (akimbo_weapon_give(player, e.weapon, item.netname)) {
@@ -296,7 +296,7 @@ float(entity item, entity player) item_give_to {
 					}
 			if not(pickedup) {
 				if ((player.weapons & item.weapons) || (player.weapons_extra & item.weapons_extra)) {
-					if (g_weapon_stay == 2 && g_use_ammunition && substring(item.classname, 0, 7) != "dropped")
+					if (g_weapon_stay == 2 && g_use_ammunition && str_sub(item.classname, 0, 7) != "dropped")
 					if (player.ammo_shells < item.ammo_shells
 							|| player.ammo_nails < item.ammo_nails
 							|| player.ammo_rockets < item.ammo_rockets
@@ -308,7 +308,7 @@ float(entity item, entity player) item_give_to {
 						pickedup = TRUE;
 						goto skip;
 					}
-					if (g_weapon_stay != 1 || substring(item.classname, 0, 7) != "dropped") {
+					if (g_weapon_stay != 1 || str_sub(item.classname, 0, 7) != "dropped") {
 						goto skip;
 					}
 				}
@@ -329,7 +329,7 @@ float(entity item, entity player) item_give_to {
 		float weapons_full = FALSE;
 		float akimbo_picked = FALSE;
 		if (g_pickup_weapons_max) {
-			if (item.flags & FL_WEAPON) {
+			if (item.flags & FLAG_WEAPON) {
 				float weapons_count = 0;
 				WEAPON_INFO_FOR_EACH(e) {
 					if ((player.weapons & e.weapons) || (player.weapons_extra & e.weapons_extra)) {
@@ -359,7 +359,7 @@ float(entity item, entity player) item_give_to {
 			if (player.x < max(maxx, item.x)) { \
 				float amount = plugin_chain_item_give_factor(player, 1) * item.x; \
 				if (amount < 0 && !g_pickup_ammo_negative_is_infinite) amount = 0; \
-				if ((item.flags & FL_WEAPON) && g_pickup_weapon_ammo_limit && ((player.weapons & self.weapons) || (player.weapons_extra & self.weapons_extra))) { \
+				if ((item.flags & FLAG_WEAPON) && g_pickup_weapon_ammo_limit && ((player.weapons & self.weapons) || (player.weapons_extra & self.weapons_extra))) { \
 					if (player.x < amount) { \
 						player.x = max(0, amount); \
 						pickedup = TRUE; \
@@ -381,7 +381,7 @@ float(entity item, entity player) item_give_to {
 				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 			}
 		}
-		if ((item.flags & FL_WEAPON) && !weapons_full)
+		if ((item.flags & FLAG_WEAPON) && !weapons_full)
 			WEAPON_INFO_FOR_EACH(e) {
 				if not(item.weapons & e.weapons)
 				if not(item.weapons_extra & e.weapons_extra)
@@ -495,7 +495,7 @@ void(void) item_touch  {
 			remove(self);
 			return;
 		} else {
-			self.solid = SOLID_NOT;
+			self.solid = VM_SOLID_NOT;
 			self.touch = NULL;
 		}
 	}
@@ -505,7 +505,7 @@ void(void) item_touch  {
 	if (other.deadflag)
 		return;
 
-	if (self.solid != SOLID_TRIGGER)
+	if (self.solid != VM_SOLID_TRIGGER)
 		return;
 
 	if (self.owner == other)
@@ -516,18 +516,18 @@ void(void) item_touch  {
 
 	item_touch_picked = TRUE;
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
-	if (substring(self.classname, 0, 7) == "dropped")
+	if (str_sub(self.classname, 0, 7) == "dropped")
 		remove (self);
 	else if not(self.spawnshieldtime)
 		return;
-	else if ((self.flags & FL_WEAPON) && !(self.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
+	else if ((self.flags & FLAG_WEAPON) && !(self.flags & FLAG_NO_WEAPON_STAY) && g_weapon_stay)
 		return;
 	else {
 		if (self.team) {
 			random_selection_init();
 			for (head = world; (head = findfloat(head, team, self.team)); ) {
 				if (head.existsonlyfor == self.existsonlyfor)
-				if (head.flags & FL_ITEM) {
+				if (head.flags & FLAG_ITEM) {
 					item_show(head, -1);
 					random_selection_add(head, 0, NULL, head.cnt, 0);
 				}
@@ -543,11 +543,11 @@ void(void) item_touch  {
 entity item_team_linker;
 void(void) item_find_team {
 	entity e, e2;
-	for (e = NULL; (e = findflags(e, flags, FL_ITEM)); ) {
+	for (e = NULL; (e = findflags(e, flags, FLAG_ITEM)); ) {
 		if (e.effects & EFFECT_NODRAW)
 		if (e.team) {
 			random_selection_init();
-			for (e2 = e; e2; e2 = findflags(e2, flags, FL_ITEM)) {
+			for (e2 = e; e2; e2 = findflags(e2, flags, FLAG_ITEM)) {
 				if (e2.team != e.team) continue;
 				if (e2.existsonlyfor != e.existsonlyfor) continue;
 				random_selection_add(e2, 0, NULL, e2.cnt, 0);
@@ -557,7 +557,7 @@ void(void) item_find_team {
 			}
 			random_selection_chosen_ent.state = 0;
 			item_show(random_selection_chosen_ent, 1);
-			if ((random_selection_chosen_ent.flags & FL_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
+			if ((random_selection_chosen_ent.flags & FLAG_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
 				item_schedule_initial_respawn(random_selection_chosen_ent);
 		}
 	}
@@ -577,7 +577,7 @@ void(void) item_reset {
 
 	self.think = stdproc_nothing;
 	self.nextthink = 0;
-	if ((self.flags & FL_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
+	if ((self.flags & FLAG_POWERUP) && !entity_per_player_entities) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);
 }
 
@@ -707,7 +707,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 		itemmodel = defitemmodel;
 
 	// is it a dropped weapon?
-	if (substring(self.classname, 0, 7) == "dropped") {
+	if (str_sub(self.classname, 0, 7) == "dropped") {
 		if (g_pickup_nodrop)
 			goto item_start_fail;
 
@@ -748,7 +748,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 			// first nudge it off the floor a little bit to avoid math errors
 			setorigin(self, self.origin + '0 0 1');
 			// set item size before we spawn a spawnfunc_waypoint
-			if ((itemflags & FL_POWERUP) || self.health || self.armorvalue)
+			if ((itemflags & FLAG_POWERUP) || self.health || self.armorvalue)
 				setsize (self, '-16 -16 0', '16 16 48');
 			else
 				setsize (self, '-16 -16 0', '16 16 32');
@@ -786,7 +786,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 	}
 	self.netname = itemname;
 	self.items = itemid;
-	self.flags = (FL_ITEM | itemflags);
+	self.flags = (FLAG_ITEM | itemflags);
 	if (self.targetname != "" && !self.noalign)
 		self.mdl = ""; //invisible
 	else
@@ -801,16 +801,16 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 
 	setmodel(self, self.mdl); // precision set below
 	self.effects |= EFFECT_LOWPRECISION;
-	if ((itemflags & FL_POWERUP) || self.health || self.armorvalue)
+	if ((itemflags & FLAG_POWERUP) || self.health || self.armorvalue)
 		setsize (self, '-16 -16 0', '16 16 48');
 	else
 		setsize (self, '-16 -16 0', '16 16 32');
 
-	if (itemflags & FL_WEAPON)
+	if (itemflags & FLAG_WEAPON)
 		self.modelflags |= MF_ROTATE;
 
-	if (substring(self.classname, 0, 7) != "dropped") // if dropped, colormap is already set up nicely
-	if (itemflags & FL_WEAPON) {
+	if (str_sub(self.classname, 0, 7) != "dropped") // if dropped, colormap is already set up nicely
+	if (itemflags & FLAG_WEAPON) {
 		// neutral team color for pickup weapons
 		self.colormap = 1024; // color shirt=0 pants=0 grey
 	}
@@ -825,7 +825,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 			item_team_linker = spawn();
 			entity_initialize(item_team_linker, item_find_team, INITPRIO_FINDTARGET);
 		}
-	} else if ((self.flags & FL_POWERUP) && self.respawntime > 0 && substring(self.classname, 0, 7) != "dropped" && !entity_per_player_entities) // do not spawn powerups initially!
+	} else if ((self.flags & FLAG_POWERUP) && self.respawntime > 0 && str_sub(self.classname, 0, 7) != "dropped" && !entity_per_player_entities) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);
 
 	return;
@@ -985,7 +985,7 @@ void(void) spawnfunc_item_strength {
 		return;
 	}
 	self.strength_finished = (self.count ? self.count : g_balance_powerup_strength_time);
-	item_start(sv_model_powerupstrength, "models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	item_start(sv_model_powerupstrength, "models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, FLAG_POWERUP, item_generic_pickupevalfunc, 100000);
 	powerup_strength_init();
 }
 
@@ -995,7 +995,7 @@ void(void) spawnfunc_item_akimbo {
 		return;
 	}
 	self.akimbo_finished = (self.count ? self.count : g_balance_powerup_akimbo_time);
-	item_start(sv_model_powerupstrength, "models/items/g_akimbo.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Akimbo Powerup", IT_AKIMBO, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	item_start(sv_model_powerupstrength, "models/items/g_akimbo.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Akimbo Powerup", IT_AKIMBO, FLAG_POWERUP, item_generic_pickupevalfunc, 100000);
 	self.modelflags |= MF_ROTATE;
 	powerup_akimbo_init();
 }
@@ -1006,7 +1006,7 @@ void(void) spawnfunc_item_invincible {
 		return;
 	}
 	self.invincible_finished = (self.count ? self.count : g_balance_powerup_invincible_time);
-	item_start(sv_model_powerupinvincible, "models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	item_start(sv_model_powerupinvincible, "models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, FLAG_POWERUP, item_generic_pickupevalfunc, 100000);
 	powerup_invincible_init();
 }
 
@@ -1028,7 +1028,7 @@ void(void) spawnfunc_item_invisibility {
 		return;
 	}
 	self.invisibility_finished = (self.count ? self.count : g_balance_powerup_invisibility_time);
-	item_start(sv_model_powerupinvisibility, "models/items/g_invisibility.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Invisibility", IT_INVISIBILITY, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	item_start(sv_model_powerupinvisibility, "models/items/g_invisibility.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Invisibility", IT_INVISIBILITY, FLAG_POWERUP, item_generic_pickupevalfunc, 100000);
 	self.modelflags |= MF_ROTATE;
 	self.customizeentityforclient = item_glow_customize;
 	powerup_invisibility_init();
@@ -1040,7 +1040,7 @@ void(void) spawnfunc_item_speed {
 		return;
 	}
 	self.speed_finished = (self.count ? self.count : g_balance_powerup_speed_time);
-	item_start(sv_model_powerupspeed, "models/items/g_speed.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Speed", IT_SPEED, FL_POWERUP, item_generic_pickupevalfunc, 100000);
+	item_start(sv_model_powerupspeed, "models/items/g_speed.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Speed", IT_SPEED, FLAG_POWERUP, item_generic_pickupevalfunc, 100000);
 	self.modelflags |= MF_ROTATE;
 	self.customizeentityforclient = item_glow_customize;
 	powerup_speed_init();
@@ -1154,7 +1154,7 @@ void(void) spawnfunc_item_jetpack {
 		return;
 	}
 	self.ammo_fuel = (self.count ? self.count : g_pickup_fuel_jetpack);
-	item_start("", "models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	item_start("", "models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, FLAG_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 	jetpack_enable();
 }
 
@@ -1237,9 +1237,9 @@ float(entity pl) item_drop_required {
 	if (weapons_count < g_pickup_weapons_max) return FALSE;
 	for (e = findradius(ENTITY_CENTER(pl), vlen(pl.maxs - pl.mins) / 2); e; e = e.chain) {
 		if (e != pl)
-		if (e.solid == SOLID_TRIGGER)
+		if (e.solid == VM_SOLID_TRIGGER)
 		if (math_boxes_overlap(e.absmin, e.absmax, pl.absmin, pl.absmax))
-		if (e.flags & FL_WEAPON)
+		if (e.flags & FLAG_WEAPON)
 		if ((e.weapons && !(e.weapons & pl.weapons)) || (e.weapons_extra && !(e.weapons_extra & pl.weapons_extra))) {
 			return TRUE;
 		}

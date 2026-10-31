@@ -14,8 +14,8 @@ void(void) push_touch {
 	if not(other.takedamage)
 		return;
 
-	if (self.solid == SOLID_TRIGGER)
-	if (other.solid == SOLID_TRIGGER)
+	if (self.solid == VM_SOLID_TRIGGER)
+	if (other.solid == VM_SOLID_TRIGGER)
 		return;
 
 	float _damage, damage_speed;

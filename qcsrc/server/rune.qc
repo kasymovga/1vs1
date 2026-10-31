@@ -173,7 +173,7 @@ void(void) rune_touch {
 	self.think = rune_carried_think;
 	self.nextthink = time;
 	self.touch = stdproc_nothing;
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.movetype = MOVETYPE_NONE;
 	setorigin(self, self.origin);
 	print_all(PRINT_INFO, "^7{1}^7 has picked up {2}^7", other.netname, rune_name(self.runes & (RUNE_LAST*2-1)), "");
@@ -187,7 +187,7 @@ void(void) rune_touch {
 void(void) rune_respawn {
 	rune_unmark_spot(self);
 	if(rune_spawn_somewhere(self)) {
-		self.solid = SOLID_TRIGGER;
+		self.solid = VM_SOLID_TRIGGER;
 		self.touch = rune_touch;
 		self.think = rune_respawn;
 		self.movetype = MOVETYPE_TOSS;
@@ -208,7 +208,7 @@ void(entity pl, entity e) rune_drop {
 	// don't instantly touch player again
 	e.wait = time + 1; // "notouch" time
 	e.movetype = MOVETYPE_TOSS;
-	e.solid = SOLID_TRIGGER;
+	e.solid = VM_SOLID_TRIGGER;
 	// reposition itself if not picked up soon
 	e.think = rune_respawn;
 	e.nextthink = time + g_runes_respawntime + g_runes_shuffletime * random();
@@ -309,8 +309,8 @@ void(void) rune_spawn_all {
 		e.think = rune_respawn;
 		e.nextthink = time;
 		e.movetype = MOVETYPE_TOSS;
-		e.solid = SOLID_TRIGGER;
-		e.flags = FL_ITEM;
+		e.solid = VM_SOLID_TRIGGER;
+		e.flags = FLAG_ITEM;
 		e.reset = rune_reset;
 		e.modelflags |= MF_ROTATE;
 		if (rn == RUNE_SPEED && sv_model_rune_speed != "")

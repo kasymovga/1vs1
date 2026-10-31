@@ -23,8 +23,8 @@ void(void) dlc_extra_pk3_list_wait_think {
 		if (head == "") continue;
 		colon = strstrofs(head, ":", 0);
 		if (colon < 0) continue;
-		pk3 = substring(head, 0, colon);
-		pk3_file = substring(head, colon + 1, -1);
+		pk3 = str_sub(head, 0, colon);
+		pk3_file = str_sub(head, colon + 1, -1);
 		if not(file_exists(pk3_file)) {
 			if (self.cnt <= 0)
 				break;
@@ -129,7 +129,8 @@ void(float new) dlc_read {
 				}
 			}
 		}
-		dlc_extra_pk3_list = strzone(net_read_string());
+		str_unzone_ifneeded(dlc_extra_pk3_list);
+		dlc_extra_pk3_list = str_zone_ifneeded(net_read_string());
 	}
 	if (f & 4)
 		localConnection = TRUE;
@@ -151,8 +152,8 @@ void(float new) dlc_read {
 		if (head == "") continue;
 		colon = strstrofs(head, ":", 0);
 		if (colon < 0) continue;
-		pk3 = substring(head, 0, colon);
-		pk3_file = substring(head, colon + 1, -1);
+		pk3 = str_sub(head, 0, colon);
+		pk3_file = str_sub(head, colon + 1, -1);
 		if (pk3 == "" || pk3_file == "") continue;
 		if (file_exists(pk3_file)) continue;
 		print(pk3, " is missing, trying to fix\n");

@@ -77,7 +77,7 @@ void() monster_butcher_spawn {
 	setmodel(self, "models/oq/demon.mdl");
 	self.movetype = MOVETYPE_WALK;
 	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Crazy Butcher";
 	self.scale = 2;

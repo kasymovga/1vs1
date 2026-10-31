@@ -113,7 +113,7 @@ void(string _model) player_model_select_get_idle_q3animations {
 	while ((s = fgets(f))) {
 		c = tokenize_console(s);
 		s = argv(0);
-		if (strstrofs("0123456789", substring(s, 0, 1), 0) >= 0 && c > 3) {
+		if (strstrofs("0123456789", str_sub(s, 0, 1), 0) >= 0 && c > 3) {
 			animline++;
 			if (animline == 7) { //GESTURE
 				gestureframe = stof(s);
@@ -152,8 +152,8 @@ void(void) player_model_select_draw {
 
 		s = str_car(s);
 		float colon = strstrofs(s, ":", 0);
-		string _model = substring(s, 0, colon);
-		float _skin = stof(substring(s, colon + 1, -1));
+		string _model = str_sub(s, 0, colon);
+		float _skin = stof(str_sub(s, colon + 1, -1));
 		precache_model(_model);
 		setmodel(player_model_select_current, _model);
 		float fov_factor = (view_fov / 90);
@@ -163,12 +163,12 @@ void(void) player_model_select_draw {
 		} else
 			player_model_select_current.scale = 0.8 * fov_factor;
 
-		string s = strcat(substring(_model, 0, strlen(_model) - 4), "_torso", substring(_model, -4, 4));
+		string s = strcat(str_sub(_model, 0, strlen(_model) - 4), "_torso", str_sub(_model, -4, 4));
 		if (file_exists(s)) {
 			precache_model(s);
 			setmodel(player_model_select_torso, s);
 			setattachment(player_model_select_torso, player_model_select_current, "tag_torso");
-			string s = strcat(substring(_model, 0, strlen(_model) - 4), "_head", substring(_model, -4, 4));
+			string s = strcat(str_sub(_model, 0, strlen(_model) - 4), "_head", str_sub(_model, -4, 4));
 			if (file_exists(s)) {
 				precache_model(s);
 				setmodel(player_model_select_head, s);
@@ -271,19 +271,19 @@ void(string s, string curmodel, float curskin) player_model_select_search_by_pat
 	string _model, check;
 	for (i = 0; i < search_getsize(glob); ++i) {
 		_model = search_getfilename(glob, i);
-		check = substring(_model, max(0, strlen(_model) - 9), 5);
+		check = str_sub(_model, max(0, strlen(_model) - 9), 5);
 		if (check == "_lod1" || check == "_lod2" || check == "_head")
 			continue;
 
-		check = substring(_model, max(0, strlen(_model) - 10), 6);
+		check = str_sub(_model, max(0, strlen(_model) - 10), 6);
 		if (check == "_torso")
 			continue;
 
-		check = substring(_model, max(0, strlen(_model) - 15), 11);
+		check = str_sub(_model, max(0, strlen(_model) - 15), 11);
 		if (check == "_decompiled")
 			continue;
 
-		check = substring(_model, max(0, strlen(_model) - 13), 9);
+		check = str_sub(_model, max(0, strlen(_model) - 13), 9);
 		if (check == "_compiled")
 			continue;
 

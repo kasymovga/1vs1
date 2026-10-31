@@ -83,7 +83,7 @@ entity(entity powner, vector porg, float lifetime, float lifetime_randfactor, fl
 	proj.think = napalm_think;
 	proj.reset = stdproc_remove;
 	proj.nextthink = time;
-	proj.solid = SOLID_CORPSE;
+	proj.solid = VM_SOLID_CORPSE;
 	setorigin(proj, porg);
 	rm_buffs_meodp_point_attach(proj, rm_buffs_meodp_death_remove_multiple);
 	return proj;

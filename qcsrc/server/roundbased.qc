@@ -129,7 +129,7 @@ void(void) roundbased_world_frame_start {
 							rm_bigprint_all(" ", "", 1);
 							float nl = strstrofs(roundbased_winner_message, "\n", 0);
 							if (nl > 0)
-								rm_bigprint_all(substring(roundbased_winner_message, 0, nl), substring(roundbased_winner_message, nl + 1, -1), roundbased_restart_time - time);
+								rm_bigprint_all(str_sub(roundbased_winner_message, 0, nl), str_sub(roundbased_winner_message, nl + 1, -1), roundbased_restart_time - time);
 							else
 								rm_bigprint_all(roundbased_winner_message, "", roundbased_restart_time - time);
 						}

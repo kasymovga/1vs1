@@ -473,7 +473,7 @@ void(void) weapon_zapper_shield_blocker_think {
 
 void(void) weapon_zabber_shield_blocker_trigger_touch {
 	makevectors(self.owner.angles);
-	if (other.flags & FL_PROJECTILE) {
+	if (other.flags & FLAG_PROJECTILE) {
 		if (other.classname != "bullet")
 			weapon_zappber_shield_blocker_push(other);
 	} else if (other.classname == "player") {
@@ -518,7 +518,7 @@ void(void) weapon_zapper_attack3 {
 	b.think = weapon_zapper_shield_blocker_think;
 	b.zapper_shield = e;
 	b.nextthink = time;
-	b.solid = SOLID_BSP;
+	b.solid = VM_SOLID_BSP;
 	b.armorvalue = 1; //for stopping bullets
 	b.alpha = -1;
 	setmodel(b, "models/vhshield.md3");
@@ -526,7 +526,7 @@ void(void) weapon_zapper_attack3 {
 	e.zapper_shield = b;
 	entity t = spawn();
 	t.touch = weapon_zabber_shield_blocker_trigger_touch;
-	t.solid = SOLID_TRIGGER;
+	t.solid = VM_SOLID_TRIGGER;
 	t.owner = b;
 	setsize(t, '-70 -70 -70', '70 70 70');
 	b.enemy = t;

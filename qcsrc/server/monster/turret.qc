@@ -6,7 +6,7 @@ void() monster_turret_hunt {
 	if (monster_check_target(monster_turret_walk, monster_turret_idle))
 		return;
 
-	if (self.flags & FL_ONGROUND) {
+	if (self.flags & FLAG_ONGROUND) {
 		vector v = self.enemy.origin - self.origin;
 		float d = vlen(v);
 		if (d < 400) {
@@ -38,7 +38,7 @@ void() monster_turret_walk {
 		return;
 
 	self.frame = 0;
-	if (self.flags & FL_ONGROUND) {
+	if (self.flags & FLAG_ONGROUND) {
 		monster_move_walk_rotate(600 * self.scale, 5, 0, 90);
 	}
 }
@@ -72,7 +72,7 @@ void() monster_turret_spawn {
 	self.colormap = 1024;
 	self.colormod = '0.75 1 0.75';
 	self.species = SPECIES_ROBOT_SOLID;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 0.1;
 	self.netname = "Walking Turret";
 	self.movetype = MOVETYPE_WALK;

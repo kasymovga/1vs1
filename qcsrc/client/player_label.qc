@@ -12,8 +12,8 @@
 
 float(void) player_label_draw_pre {
 	float plr_entnum = self.shownames_entnum + 1;
-	if (getentity(plr_entnum, E_ACTIVE)) {
-		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
+	if (getentity(plr_entnum, VM_ENTITY_ACTIVE)) {
+		self.iorigin = getentityvec(plr_entnum, VM_ENTITY_ORIGIN);
 		if (self.teambubble)
 			self.teambubble.cnt = 1;
 	} else {

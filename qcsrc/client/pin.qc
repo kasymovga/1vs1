@@ -11,7 +11,7 @@ float pin_input_event(float bInputType, float nPrimary, float nSecondary) {
 			str_unzone_ifneeded(pin_code);
 			pin_code = "";
 		} else if (pin_selected == -1) {
-			string pin_code_new = substring(pin_code, 0, strlen(pin_code) - 1);
+			string pin_code_new = str_sub(pin_code, 0, strlen(pin_code) - 1);
 			str_unzone_ifneeded(pin_code);
 			pin_code = str_zone_ifneeded(pin_code_new);
 		} else {

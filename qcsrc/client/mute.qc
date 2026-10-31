@@ -27,7 +27,7 @@ void(float n) mute_add {
 		s = strcat(mute_list, ftos(n), " ");
 
 	str_unzone_ifneeded(mute_list);
-	mute_list = strzone(s);
+	mute_list = str_zone_ifneeded(s);
 }
 
 void(float n) mute_remove {
@@ -37,9 +37,9 @@ void(float n) mute_remove {
 	if (n < 0)
 		return;
 
-	s = strcat(substring(mute_list, 0, n), " ", substring(mute_list, n + strlen(s1), -1));
+	s = strcat(str_sub(mute_list, 0, n), " ", str_sub(mute_list, n + strlen(s1), -1));
 	str_unzone_ifneeded(mute_list);
-	mute_list = strzone(s);
+	mute_list = str_zone_ifneeded(s);
 }
 
 float(string strMessage) mute_check {
@@ -64,34 +64,34 @@ float(string strMessage) mute_check {
 		base_name = player_name(n - 1);
 		check_name = strcat(base_name, "^0#", s1);
 		prefix = strcat("\{1}", check_name, "^7: ");
-		if (prefix == substring(strMessage, 0, strlen(prefix))) {
+		if (prefix == str_sub(strMessage, 0, strlen(prefix))) {
 			print("message from #", s1, " was skipped\n");
 			return TRUE;
 		}
 		prefix = strcat("\{1}", colorstr, "(^3", check_name, colorstr, ") ^7");
-		if (prefix == substring(strMessage, 0, strlen(prefix))) {
+		if (prefix == str_sub(strMessage, 0, strlen(prefix))) {
 			print("group message from #", s1, " was skipped\n");
 			return TRUE;
 		}
 		prefix = strcat("\{1}* ^3", check_name, "^3 tells you: ^7");
-		if (prefix == substring(strMessage, 0, strlen(prefix))) {
+		if (prefix == str_sub(strMessage, 0, strlen(prefix))) {
 			print("private message from #", s1, " was skipped\n");
 			return TRUE;
 		}
 		if (team_teams) {
 			check_name = strcat(colorstr, strdecolorize(base_name), "^0#", ftos(n));
 			prefix = strcat("\{1}", check_name, "^7: ");
-			if (prefix == substring(strMessage, 0, strlen(prefix))) {
+			if (prefix == str_sub(strMessage, 0, strlen(prefix))) {
 				print("message from #", s1, " was skipped\n");
 				return TRUE;
 			}
 			prefix = strcat("\{1}", colorstr, "(^3", check_name, colorstr, ") ^7");
-			if (prefix == substring(strMessage, 0, strlen(prefix))) {
+			if (prefix == str_sub(strMessage, 0, strlen(prefix))) {
 				print("group message from #", s1, " was skipped\n");
 				return TRUE;
 			}
 			prefix = strcat("\{1}* ^3", check_name, "^3 tells you: ^7");
-			if (prefix == substring(strMessage, 0, strlen(prefix))) {
+			if (prefix == str_sub(strMessage, 0, strlen(prefix))) {
 				print("private message from #", s1, " was skipped\n");
 				return TRUE;
 			}

@@ -114,9 +114,9 @@ void ToggleFavorite(string srv)
 		{
 			s0 = s1 = s2 = "";
 			if(i > 0)
-				s0 = substring(s, 0, argv_end_index(i - 1));
+				s0 = str_sub(s, 0, argv_end_index(i - 1));
 			if(i < n-1)
-				s2 = substring(s, argv_start_index(i + 1), -1);
+				s2 = str_sub(s, argv_start_index(i + 1), -1);
 			if(s0 != "" && s2 != "")
 				s1 = " ";
 			print("s0 = >>", s0, "<<\ns1 = >>", s1, "<<\ns2 = >>", s2, "<<\n");
@@ -161,9 +161,8 @@ void setSelectedNexuizServerList(entity me, float i)
 	if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != me.nItems)
 		return; // sorry, it would be wrong
 
-	if(me.selectedServer)
-		strunzone(me.selectedServer);
-	me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+	str_unzone_ifneeded(me.selectedServer);
+	me.selectedServer = str_zone_ifneeded(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 
 	me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer);
 	me.ipAddressBox.cursorPos = strlen(me.selectedServer);
@@ -191,10 +190,10 @@ void refreshServerListNexuizServerList(entity me, float mode)
 		m = strstrofs(s, ":", 0);
 		if(m >= 0)
 		{
-			typestr = substring(s, 0, m);
-			s = substring(s, m + 1, strlen(s) - m - 1);
-			while(substring(s, 0, 1) == " ")
-				s = substring(s, 1, strlen(s) - 1);
+			typestr = str_sub(s, 0, m);
+			s = str_sub(s, m + 1, strlen(s) - m - 1);
+			while(str_sub(s, 0, 1) == " ")
+				s = str_sub(s, 1, strlen(s) - 1);
 		}
 		else
 			typestr = "";
@@ -286,9 +285,8 @@ void drawNexuizServerList(entity me)
 		{
 			if(me.selectedItem >= me.nItems)
 				me.selectedItem = me.nItems - 1;
-			if(me.selectedServer)
-				strunzone(me.selectedServer);
-			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+			str_unzone_ifneeded(me.selectedServer);
+			me.selectedServer = str_zone_ifneeded(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 		}
 
 	if(owned)
@@ -339,8 +337,8 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 	m = strstrofs(s, ":", 0);
 	if(m >= 0)
 	{
-		s = substring(s, 0, m);
-		while(substring(s, m+1, 1) == " ") // skip spaces
+		s = str_sub(s, 0, m);
+		while(str_sub(s, m+1, 1) == " ") // skip spaces
 			++m;
 	}
 	else
@@ -370,7 +368,7 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 
 	if(s != "")
 		s = strcat(s, ":");
-	s = strcat(s, substring(me.filterString, m+1, strlen(me.filterString) - m - 1));
+	s = strcat(s, str_sub(me.filterString, m+1, strlen(me.filterString) - m - 1));
 
 	me.controlledTextbox.setText(me.controlledTextbox, s);
 	me.controlledTextbox.keyDown(me.controlledTextbox, K_END, 0, 0);
@@ -379,10 +377,9 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 }
 void ServerList_Filter_Change(entity box, entity me)
 {
-	if(me.filterString)
-		strunzone(me.filterString);
+	str_unzone_ifneeded(me.filterString);
 	if(box.text != "")
-		me.filterString = strzone(box.text);
+		me.filterString = str_zone_ifneeded(box.text);
 	else
 		me.filterString = NULL;
 	me.refreshServerList(me, 0);
@@ -421,8 +418,7 @@ void setSortOrderNexuizServerList(entity me, float field, float direction)
 	me.sortButton4.forcePressed = 0;
 	me.sortButton5.forcePressed = (field == SLIST_FIELD_NUMHUMANS);
 	me.selectedItem = 0;
-	if(me.selectedServer)
-		strunzone(me.selectedServer);
+	str_unzone_ifneeded(me.selectedServer);
 	me.selectedServer = NULL;
 	me.refreshServerList(me, 0);
 }
@@ -553,7 +549,7 @@ void drawListBoxItemNexuizServerList(entity me, float i, vector absSize, float i
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	p = strstrofs(s, ":", 0);
 	if(p >= 0)
-		s = substring(s, 0, p);
+		s = str_sub(s, 0, p);
 	else
 		s = "";
 	s = gui_draw_text_shorten_to_width(s, me.columnMapSize / me.realFontSize_x, 0);

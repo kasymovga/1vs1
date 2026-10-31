@@ -52,12 +52,12 @@ void(void) dlc_load_fonts {
 
 void(void) dlc_curl_event_listener_think {
 	if (dlc_expected == "") return;
-	if (substring(curl_file_name, 0, 8) == "dlcache/") {
-		curl_file_name = substring(curl_file_name, 8, -1);
+	if (str_sub(curl_file_name, 0, 8) == "dlcache/") {
+		curl_file_name = str_sub(curl_file_name, 8, -1);
 	}
-	if (substring(curl_file_name, 0, 11) == "zzz-rexdlc_")
-	if (substring(curl_file_name, -4, 4) == ".pk3") {
-		string n = substring(curl_file_name, 11, -5);
+	if (str_sub(curl_file_name, 0, 11) == "zzz-rexdlc_")
+	if (str_sub(curl_file_name, -4, 4) == ".pk3") {
+		string n = str_sub(curl_file_name, 11, -5);
 		string s = strreplace(strcat(" ", n, " "), " ", dlc_expected);
 		str_unzone_ifneeded(dlc_expected);
 		dlc_expected = str_zone_ifneeded(s);
@@ -119,8 +119,8 @@ void(void) dlc_load_exts {
 			if (separator < 0)
 				continue;
 
-			k = substring(line, 0, separator);
-			v = dlc_trimspaces(substring(line, separator + 1, -1));
+			k = str_sub(line, 0, separator);
+			v = dlc_trimspaces(str_sub(line, separator + 1, -1));
 			if (k == "profile") {
 				profile = v;
 			}

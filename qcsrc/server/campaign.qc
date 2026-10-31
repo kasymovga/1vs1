@@ -32,7 +32,7 @@ string(string theCvar) campaign_cvar_string {
 	if (q < 0)
 		return cvar_defstring(theCvar);
 
-	return substring(campaign_cvar_list, p, q - p);
+	return str_sub(campaign_cvar_list, p, q - p);
 }
 
 float(string theCvar) campaign_cvar {
@@ -45,8 +45,8 @@ void(string theCvar, string theValue) campaign_cvar_set {
 
 	string s;
 	s = campaign_cvar_list;
-	campaign_cvar_list = strzone(strcat("; ", theCvar, " ", theValue, s));
-	strunzone(s);
+	campaign_cvar_list = str_zone_ifneeded(strcat("; ", theCvar, " ", theValue, s));
+	str_unzone_ifneeded(s);
 }
 
 float(void) campaign_invalid {
@@ -67,7 +67,7 @@ string(float d) campaign_difficulty_string {
 
 void(void) campaign_preinit {
 	if (vm_cvar("_restore_game")) { //Hack for load game
-		campaign_cvar_list = strzone("; ");
+		campaign_cvar_list = str_zone_ifneeded("; ");
 		vm_cvar_set("sv_public", "0");
 		vm_cvar_set("pausable", "1");
 		vm_cvar_set("_restore_game", "0");
@@ -87,7 +87,7 @@ void(void) campaign_preinit {
 	string title;
 	campaign_file_load(cvar_string("_campaign_name"));
 	campaign_level = cvar("_campaign_index");
-	campaign_index_var = strzone(strcat("g_campaign", campaign_name, "_index"));
+	campaign_index_var = str_zone_ifneeded(strcat("g_campaign", campaign_name, "_index"));
 	if (campaign_entries < 1) {
 		campaign_bailout("unknown map");
 		return;
@@ -99,7 +99,7 @@ void(void) campaign_preinit {
 	baseskill = bound(minskill, campaign_botskill[campaign_level] * baseskill * 0.5, maxskill);
 	cvar_set("sv_public", "0");
 	cvar_set("pausable", "1");
-	campaign_cvar_list = strzone(strcat("; ", campaign_mutators[campaign_level], "; "));
+	campaign_cvar_list = str_zone_ifneeded(strcat("; ", campaign_mutators[campaign_level], "; "));
 	cvar = campaign_cvar;
 	cvar_string = campaign_cvar_string;
 	cvar_set = campaign_cvar_set;
@@ -116,9 +116,9 @@ void(void) campaign_preinit {
 		return;
 
 	title = campaign_shortdesc[campaign_level];
-	title = strzone(strcat("Level ", ftos(campaign_level + 1), ": ", title));
-	campaign_message = strzone(strcat("^3Difficulty: ", campaign_difficulty_string(g_campaign_skill), "^7\n\n", campaign_longdesc[campaign_level]));
-	strunzone(title);
+	title = str_zone_ifneeded(strcat("Level ", ftos(campaign_level + 1), ": ", title));
+	campaign_message = str_zone_ifneeded(strcat("^3Difficulty: ", campaign_difficulty_string(g_campaign_skill), "^7\n\n", campaign_longdesc[campaign_level]));
+	str_unzone_ifneeded(title);
 }
 
 void(void) campaign_postinit {
@@ -227,8 +227,8 @@ void(void) campaign_postintermission {
 		campaign_setup(campaign_level + campaign_won);
 
 	campaign_file_unload();
-	strunzone(campaign_message);
-	strunzone(campaign_index_var);
+	str_unzone_ifneeded(campaign_message);
+	str_unzone_ifneeded(campaign_index_var);
 }
 
 void(void) campaign_restart {

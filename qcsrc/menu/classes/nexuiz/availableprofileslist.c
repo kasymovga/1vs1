@@ -22,7 +22,7 @@ void(entity me) destroyNexuizAvailableProfilesList {
 
 string(entity me) toStringNexuizAvailableProfilesList {
 	string s = bufstr_get(me.handle, me.selectedItem);
-	s = substring(s, 0, strlen(s) - 8);
+	s = str_sub(s, 0, strlen(s) - 8);
 	return s;
 }
 
@@ -35,7 +35,7 @@ void(entity me) loadCvarsNexuizAvailableProfilesList {
 	for (i = 0; i < me.nItems; i++) {
 		string s = bufstr_get(me.handle, i);
 		if (s == "") break;
-		s = strcat(" ", substring(s, 0, strlen(s) - 8), " ");
+		s = strcat(" ", str_sub(s, 0, strlen(s) - 8), " ");
 		if (strstrofs(profile, s, 0) >= 0) {
 			if (me.selectedItem >= i) me.selectedItem--;
 			bufstr_free(me.handle, i);
@@ -72,7 +72,7 @@ void(entity me, float i, vector absSize, float isSelected) drawListBoxItemNexuiz
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	string s = bufstr_get(me.handle, i);
-	s = substring(s, 0, strlen(s) - 8);
+	s = str_sub(s, 0, strlen(s) - 8);
 	gui_draw_text(me.realUpperMargin * eY, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 #endif

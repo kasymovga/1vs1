@@ -19,7 +19,7 @@ void IP2C_SetCountry_Internal(entity player, string cn) {
 
     if(player.scorekeeper) {
         cn = strtolower(cn);  // flag icons have lowcase names
-        score_player_set(player, IP2C_SCORE, str2chr(substring(cn, 0, 1), 0) | (str2chr(substring(cn, 1, 1), 0) * 256));
+        score_player_set(player, IP2C_SCORE, str2chr(str_sub(cn, 0, 1), 0) | (str2chr(str_sub(cn, 1, 1), 0) * 256));
     } else {
         IP2C_Log(strcat(player.netname, "^7 has no scorekeeper"));
     }
@@ -141,7 +141,7 @@ er_func_t IP2C_ER_Request_Callback;
 string ip2c_url_resolved;
 string ip2c_url_last;
 
-#define IP2C_SETSTR(s,v) if(s) strunzone(s); s = strzone(v)
+#define IP2C_SETSTR(s,v) str_unzone_ifneeded(s); s = str_zone_ifneeded(v)
 
 string IP2C_GetQueryURL(void) {
     var url = cvar_string("sv_ip2country_server");
@@ -157,18 +157,18 @@ string IP2C_GetQueryURL(void) {
     if(a_end < 0)
         a_end = strlen(url);
 
-    var host_addr = substring(url, a_start, a_end - a_start);
+    var host_addr = str_sub(url, a_start, a_end - a_start);
 
     // TODO: handle ipv6 addresses?
     var port_start = strstrofs(host_addr, ":", 0);
     var port_str = "-1";
 
     if(port_start >= 0) {
-        port_str = substring(host_addr, port_start + 1, strlen(host_addr));
-        host_addr = substring(host_addr, 0, port_start);
+        port_str = str_sub(host_addr, port_start + 1, strlen(host_addr));
+        host_addr = str_sub(host_addr, 0, port_start);
     }
 
-    var u_head = substring(url, 0, a_start);
+    var u_head = str_sub(url, 0, a_start);
 
     // FIXME: currently, we can't manually set the Host header for HTTP, so give up here for now...
     if(u_head == "http://" || u_head == "https://") {
@@ -176,11 +176,11 @@ string IP2C_GetQueryURL(void) {
         return ip2c_url_resolved;
     }
 
-    var u_tail = substring(url, a_end, strlen(url));
+    var u_tail = str_sub(url, a_end, strlen(url));
     var host_ip = netaddress_resolve(host_addr, stof(port_str));
 
-    if(substring(host_ip, strlen(host_ip) - 3, 3) == ":-1")
-        host_ip = substring(host_ip, 0, strlen(host_ip) - 3);
+    if(str_sub(host_ip, strlen(host_ip) - 3, 3) == ":-1")
+        host_ip = str_sub(host_ip, 0, strlen(host_ip) - 3);
 
     url = u_head + host_ip + u_tail;
 
@@ -193,9 +193,7 @@ string IP2C_GetQueryURL(void) {
 #endif
 
 void IP2C_FreeCallbackEntity(entity e) {
-    if(e.ip2c_callbackip)
-        strunzone(e.ip2c_callbackip);
-
+	str_unzone_ifneeded(e.ip2c_callbackip);
     remove(e);
 }
 
@@ -254,7 +252,7 @@ void IP2C_AddCallback(string ip, ip2c_callback_t callback, float timeout, entity
 
     entity cb = spawn();
     cb.classname = "ip2c_callbackprovider";
-    cb.ip2c_callbackip = strzone(ip);
+    cb.ip2c_callbackip = str_zone_ifneeded(ip);
     cb.ip2c_callbackentity = callbackentity;
     cb.ip2c_callbackfunction = callback;
     cb.think = IP2C_RequestTimeout;
@@ -294,8 +292,8 @@ void IP2C_Lookup(string ip, ip2c_callback_t callback, float timeout, entity call
 
     IP2C_Log(strcat("IP ", ip, " is not cached, requesting from the server"));
 
-    if(substring(url, 0, strlen(IP2C_UDP_PROTOCOL_PREFIX)) == IP2C_UDP_PROTOCOL_PREFIX) {
-        extresponse_query(substring(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url)), strcat("extResponse ip2cq ", ip));
+    if(str_sub(url, 0, strlen(IP2C_UDP_PROTOCOL_PREFIX)) == IP2C_UDP_PROTOCOL_PREFIX) {
+        extresponse_query(str_sub(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url)), strcat("extResponse ip2cq ", ip));
     } else {
         uri_get(strcat(url, ip), IP2C_URI_GET);
     }
@@ -306,8 +304,8 @@ void IP2C_ER_Response_Callback(float argc, string response) {
     float ok = FALSE;
 
     string url = IP2C_GetQueryURL();
-    if(substring(url, 0, strlen(IP2C_UDP_PROTOCOL_PREFIX)) == IP2C_UDP_PROTOCOL_PREFIX) {
-        string trusted = substring(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url));
+    if(str_sub(url, 0, strlen(IP2C_UDP_PROTOCOL_PREFIX)) == IP2C_UDP_PROTOCOL_PREFIX) {
+        string trusted = str_sub(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url));
         if(source == trusted)
             ok = TRUE;
     }
@@ -340,7 +338,7 @@ void(string ip, string cn, entity ent) ip2c_request_callback_lookup {
 
 	IP2C_Log(strcat("Sending query response to ", ent.netname, ": ", ip, " ", cn));
 	extresponse_query(ent.netname, strcat("extResponse ip2cr ", ip, " ", cn));
-	strunzone(ent.netname);
+	str_unzone_ifneeded(ent.netname);
 	remove(ent);
 }
 
@@ -356,7 +354,7 @@ void IP2C_ER_Request_Callback(float argc, string query) {
     }
     entity e = spawn();
     e.classname = "ip2cr_sourceinfo";
-    e.netname = strzone(source);
+    e.netname = str_zone_ifneeded(source);
     IP2C_Lookup(ip, ip2c_request_callback_lookup, 0, e);
 }
 
@@ -369,7 +367,7 @@ void IP2C_URI_Get_Callback(float id, float status, string data) {
     float n = tokenizebyseparator(data, " ");
     string cn, ip;
 
-    cn = substring(argv(0), 0, 2);
+    cn = str_sub(argv(0), 0, 2);
     ip = argv(1);
 
     if(cn == "--") {

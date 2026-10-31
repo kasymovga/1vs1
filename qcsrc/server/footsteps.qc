@@ -3,8 +3,8 @@ void() footsteps_world_frame_start {
 	entity oldself = self;
 	PLAYER_FOR_EACH(self)
 		if (!map_finished)
-		if (self.flags & FL_ONGROUND)
-		if (self.solid != SOLID_NOT)
+		if (self.flags & FLAG_ONGROUND)
+		if (self.solid != VM_SOLID_NOT)
 		if (vlen(self.velocity) > sv_maxspeed * 0.6)
 		if (!self.deadflag)
 		if (time < self.lastground + 0.2) {

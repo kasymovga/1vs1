@@ -339,7 +339,7 @@ void(entity e, string _model) player_body_animation_q3_load {
 	while ((s = fgets(animinfo))) {
 		c = strstrofs(s, "//", 0);
 		if (c >= 0)
-			s = substring(s, 0, c);
+			s = str_sub(s, 0, c);
 
 		c = tokenize_console(s);
 		if (c <= 0) {
@@ -349,7 +349,7 @@ void(entity e, string _model) player_body_animation_q3_load {
 		if (c < 4)
 			continue;
 
-		if (strstrofs("0123456789", substring(arg0, 0, 1), 0) < 0) {
+		if (strstrofs("0123456789", str_sub(arg0, 0, 1), 0) < 0) {
 			if (arg0 == "headoffset") {
 				//actually this offset mean something else
 				//setorigin(e.body.exteriorweaponentity, stof(argv(1)) * '1 0 0' + stof(argv(2)) * '0 1 0' + stof(argv(2)) * '0 0 1');
@@ -485,7 +485,7 @@ void(entity e, string _model) player_body_animation_load {
 	animfile = fopen(animfilename, FILE_READ);
 	if (animfile >= 0) {
 		while ((s = fgets(animfile)) != "") {
-			if (substring(s, 0, 1) == "/") continue;
+			if (str_sub(s, 0, 1) == "/") continue;
 			player_body_animation_parse_line(e, s);
 		}
 		fclose(animfile);
@@ -579,7 +579,7 @@ void(void) player_body_animation {
 		anim_update(b.weaponentity);
 	}
 	if (!b.animstate_override) {
-		if (!(self.flags & FL_ONGROUND)) {
+		if (!(self.flags & FLAG_ONGROUND)) {
 			if (self.crouch)
 				player_body_animation_set(self, anim_duckjump, FALSE, TRUE, FALSE, 2);
 			else
@@ -625,14 +625,14 @@ void(string modelname) player_body_setup_lod {
 			player_body_animation_set(self, anim_idle, TRUE, FALSE, TRUE, 2);
 			return;
 		}
-	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
+	s = strcat(str_sub(modelname, 0, strlen(modelname)-4), "_lod1", str_sub(modelname, -4, 4));
 	if (file_exists(s)) {
 		setmodel(self.body, s); // players have high precision
 		self.body.modelindex_lod1 = self.body.modelindex;
 	} else
 		self.body.modelindex_lod1 = -1;
 
-	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
+	s = strcat(str_sub(modelname, 0, strlen(modelname)-4), "_lod2", str_sub(modelname, -4, 4));
 	if (file_exists(s)) {
 		setmodel(self.body, s); // players have high precision
 		self.body.modelindex_lod2 = self.body.modelindex;
@@ -647,7 +647,7 @@ void(string modelname) player_body_setup_lod {
 	if (self.body.modelindex_lod2 < 0)
 		self.body.modelindex_lod2 = self.body.modelindex;
 
-	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_torso", substring(modelname, -4, 4));
+	s = strcat(str_sub(modelname, 0, strlen(modelname)-4), "_torso", str_sub(modelname, -4, 4));
 	if (file_exists(s)) {
 		if not(self.body.weaponentity) {
 			self.body.weaponentity = spawn();
@@ -656,7 +656,7 @@ void(string modelname) player_body_setup_lod {
 		}
 		setmodel(self.body.weaponentity, s);
 		setattachment(self.body.weaponentity, self.body, "tag_torso");
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_head", substring(modelname, -4, 4));
+		s = strcat(str_sub(modelname, 0, strlen(modelname)-4), "_head", str_sub(modelname, -4, 4));
 		if (file_exists(s)) {
 			if not(self.body.exteriorweaponentity) {
 				self.body.exteriorweaponentity = spawn();
@@ -721,8 +721,8 @@ string(string _playermodel) player_body_model_allowed {
 			strstrofs(s, strcat(" ", _playermodel, ":"), 0) >= 0)
 		return _playermodel;
 
-	if (substring(_playermodel, 0, 14) == "models/player/") {
-		string playermodelshort = substring(_playermodel, 14, -1); //without models/player/ prefix
+	if (str_sub(_playermodel, 0, 14) == "models/player/") {
+		string playermodelshort = str_sub(_playermodel, 14, -1); //without models/player/ prefix
 		if (strstrofs(s, strcat(" ", playermodelshort, " "), 0) >= 0 ||
 				strstrofs(s, strcat(" ", playermodelshort, ":"), 0) >= 0)
 			return _playermodel;
@@ -732,9 +732,9 @@ string(string _playermodel) player_body_model_allowed {
 				strstrofs(s, strcat(" ", playermodellong, ":"), 0) >= 0)
 			return _playermodel;
 	}
-	string modelwithoutextension = substring(_playermodel, 0, strlen(_playermodel) - 4);
-	if (substring(modelwithoutextension, 0, 14) == "models/player/")
-		modelwithoutextension = substring(modelwithoutextension, 14, -1);
+	string modelwithoutextension = str_sub(_playermodel, 0, strlen(_playermodel) - 4);
+	if (str_sub(modelwithoutextension, 0, 14) == "models/player/")
+		modelwithoutextension = str_sub(modelwithoutextension, 14, -1);
 
 	if (modelwithoutextension == "nexus")
 		modelwithoutextension = "rexus"; //workaroud for disabled nexus.zym
@@ -750,21 +750,21 @@ string(string _playermodel) player_body_model_allowed {
 	nextspace = strstrofs(s, " ", similarpos + 1);
 	nextcolon = strstrofs(s, ":", similarpos + 1);
 	if (nextcolon < 0)
-		return substring(s, similarpos + 1, nextspace - similarpos - 1);
+		return str_sub(s, similarpos + 1, nextspace - similarpos - 1);
 
-	return substring(s, similarpos + 1, min(nextspace, nextcolon) - similarpos - 1);
+	return str_sub(s, similarpos + 1, min(nextspace, nextcolon) - similarpos - 1);
 :randommodel
 	allowed_models = str_shuffle_words(allowed_models);
 	first_allowed_model = str_car(allowed_models);
 	if (strstrofs(first_allowed_model, ":", 0) > 0)
-		first_allowed_model = substring(first_allowed_model, 0, strstrofs(first_allowed_model, ":", 0));
+		first_allowed_model = str_sub(first_allowed_model, 0, strstrofs(first_allowed_model, ":", 0));
 
 	return first_allowed_model;
 }
 
 float(string _playermodel, float _skin) player_body_allowed_skin {
 	string allowed_models = player_body_model_list_allowed();
-	string playermodelshort = substring(_playermodel, 14, -1); //without models/player/ prefix
+	string playermodelshort = str_sub(_playermodel, 14, -1); //without models/player/ prefix
 	string s = strcat(" ", allowed_models, " ");
 	if (str_car(allowed_models) == "")
 		return _skin;
@@ -778,7 +778,7 @@ float(string _playermodel, float _skin) player_body_allowed_skin {
 	float allowed_skin_pos = strstrofs(s, strcat(" ", _playermodel, ":"), 0);
 	if (allowed_skin_pos >= 0) {
 		allowed_skin_pos = allowed_skin_pos + strlen(_playermodel) + 1;
-		return stof(str_car(substring(allowed_models, allowed_skin_pos, -1)));
+		return stof(str_car(str_sub(allowed_models, allowed_skin_pos, -1)));
 	}
 	return _skin;
 }
@@ -825,7 +825,7 @@ void() player_body_model_setup {
 		}
 		if (self.playermodel != "") {
 			str_unzone_ifneeded(self.playermodel_save);
-			self.playermodel_save = strzone(self.playermodel);
+			self.playermodel_save = str_zone_ifneeded(self.playermodel);
 			self.playermodel = "";
 		}
 	} else if (self.playermodel != "")
@@ -983,16 +983,16 @@ void(string list) player_body_precache {
 	for (; (s = str_car(list)) != ""; list = str_cdr(list)) {
 		colon = strstrofs(s, ":", 0);
 		if (colon > 0) {
-			_skin = substring(s, colon + 1, -1);
-			s = substring(s, 0, colon);
+			_skin = str_sub(s, colon + 1, -1);
+			s = str_sub(s, 0, colon);
 		}
 		if (strstrofs(s, "/", 0) < 0)
 			s = strcat("models/player/", s);
 
 		l = strlen(s);
 		if (l < 19) continue;
-		prefix = substring(s, 0, l - 4);
-		suffix = substring(s, l - 4, 4);
+		prefix = str_sub(s, 0, l - 4);
+		suffix = str_sub(s, l - 4, 4);
 		print("Precaching player model: ", s, "\n");
 		precache_model(s);
 		dlc_add_dlc_or_pk3_by_file(s);
@@ -1068,7 +1068,7 @@ string(string s) player_body_find_models {
 			continue;
 		}
 		if (strstrofs(m, "models/player/", 0) == 0) {
-			m = substring(m, 14, -1);
+			m = str_sub(m, 14, -1);
 			if (strstrofs(disabled_models, strcat(" ", m, " "), 0) >= 0)
 				continue;
 		}

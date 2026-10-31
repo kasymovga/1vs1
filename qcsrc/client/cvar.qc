@@ -107,8 +107,8 @@ void(string cv, string val) cvar_clientsettemp {
 
 	e = spawn();
 	e.classname = "saved_cvar_value";
-	e.netname = strzone(cv);
-	e.message = strzone(cvar_string(cv));
+	e.netname = str_zone_ifneeded(cv);
+	e.message = str_zone_ifneeded(cvar_string(cv));
 :saved
 	cvar_set(cv, val);
 }

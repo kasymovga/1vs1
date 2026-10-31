@@ -31,8 +31,8 @@ entity makeNexuizServerCreateTab(float single)
 void(entity input, entity ignore) nexuizServerCreateTabPINCodeOnChange {
 	float i, n = strlen(input.text);
 	for (i = 0; i < n; i++) {
-		if (strstrofs("0123456789", substring(input.text, i, 1), 0) < 0) {
-			setTextInputBox(input, strcat(substring(input.text, 0, i), substring(input.text, i + 1, -1)));
+		if (strstrofs("0123456789", str_sub(input.text, i, 1), 0) < 0) {
+			setTextInputBox(input, strcat(str_sub(input.text, 0, i), str_sub(input.text, i + 1, -1)));
 			n = strlen(input.text);
 			i--;
 		}

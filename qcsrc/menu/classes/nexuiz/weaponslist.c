@@ -32,7 +32,7 @@ string(string order, float i, float j) swapInPriorityNexuizWeaponsList {
 			else
 				s = strcat(s, argv(w), " ");
 		}
-		return substring(s, 0, strlen(s) - 1);
+		return str_sub(s, 0, strlen(s) - 1);
 	}
 	return order;
 }
@@ -107,7 +107,7 @@ string toStringNexuizWeaponsList(entity me)
 		e = weapon_info(stof(argv(i)));
 		s = strcat(s, e.message, ", ");
 	}
-	return substring(s, 0, strlen(s) - 2);
+	return str_sub(s, 0, strlen(s) - 2);
 }
 void drawListBoxItemNexuizWeaponsList(entity me, float i, vector absSize, float isSelected)
 {

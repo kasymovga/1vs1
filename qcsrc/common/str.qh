@@ -7,3 +7,7 @@ typedef float(string s) str_length_up_to_width_width_function_t;
 float(string theText, float maxWidth, str_length_up_to_width_width_function_t tw) str_length_up_to_width;
 string str_wrapped_line_remaining;
 string(float w, str_length_up_to_width_width_function_t tw) str_wrapped_line;
+#define strcat vm_strcat
+#define strlen vm_strlen
+#define strstrofs vm_strstrofs
+#define str_sub vm_substring

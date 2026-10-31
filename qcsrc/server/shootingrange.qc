@@ -29,7 +29,7 @@ void(void) shootingrange_target_show {
 
 void(void) shootingrange_target_hide {
 	self.alpha = -1;
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.nextthink = 0;
 }
 
@@ -146,8 +146,8 @@ void(void) spawnfunc_shootingrange_target {
 	self.iscreature = TRUE; //for accuracy tracking
 	self.classname = "shootingrange_target";
 	self.takedamage = DAMAGE_YES;
-	if (self.solid == SOLID_NOT)
-		self.solid = SOLID_BSP;
+	if (self.solid == VM_SOLID_NOT)
+		self.solid = VM_SOLID_BSP;
 
 	self.cnt = self.solid;
 
@@ -161,7 +161,7 @@ void(void) spawnfunc_shootingrange_target {
 
 void(void) spawnfunc_shootingrange_area {
 	model_setup();
-	self.solid = SOLID_NOT; //untouchable
+	self.solid = VM_SOLID_NOT; //untouchable
 	self.model = ""; //invisible
 }
 

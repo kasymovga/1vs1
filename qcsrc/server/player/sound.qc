@@ -48,7 +48,7 @@ void(string f) player_sound_precache {
 #define PLAYER_SOUND(m) player_sound_voice_samples_all = strcat(player_sound_voice_samples_all, " ", #m);
 		PLAYER_SOUND_VOICE_ALL
 #undef PLAYER_SOUND
-		player_sound_voice_samples_all = strzone(substring(player_sound_voice_samples_all, 1, strlen(player_sound_voice_samples_all) - 1));
+		player_sound_voice_samples_all = str_zone_ifneeded(str_sub(player_sound_voice_samples_all, 1, strlen(player_sound_voice_samples_all) - 1));
 	}
 }
 
@@ -90,9 +90,9 @@ float(string f, float first) player_sound_load {
 				continue;
 
 		if (self.field)
-			strunzone(self.field);
+			str_unzone_ifneeded(self.field);
 
-		self.field = strzone(strcat(argv(1), " ", argv(2)));
+		self.field = str_zone_ifneeded(strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
 	return TRUE;

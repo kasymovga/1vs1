@@ -51,10 +51,10 @@ void(void) monster_world_frame_start {
 				}
 			}
 			if (m.nextstep < time) {
-				if (m.waterlevel && m.waterlevel < WATER_LEVEL_SUBMERGED) {
+				if (m.waterlevel && m.waterlevel < VM_WATERLEVEL_SUBMERGED) {
 					m.nextstep = time + 5 + random();
 					sound(m, CHAN_TRIGGER, "misc/outwater.wav", VOL_BASEVOICE * 0.25, ATTN_NORM);
-				} else if ((m.flags & FL_ONGROUND) && m.noise != "") {
+				} else if ((m.flags & FLAG_ONGROUND) && m.noise != "") {
 					string s = m.noise;
 					float spd = stof(str_car(s));
 					s = str_cdr(s);
@@ -145,7 +145,7 @@ entity(float distance, float heardistance, float fov_factor, float attack_delay,
 	if ((e = player_entity(pl)))
 	if (e.health >= 1)
 	if (e.takedamage)
-	if not(e.flags & FL_NOTARGET)
+	if not(e.flags & FLAG_NOTARGET)
 	if (e.deadflag == DEAD_NO) {
 		if (team_teams) {
 			if not(self.team)
@@ -215,7 +215,7 @@ void monster_drop_item(float item_code, string _model, string _sound, string _na
 
 void monster_die() {
 	violence_gib_splash(self, 1, 1, self.enemy);
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.alpha = -1;
 	self.nextthink = time;
 	self.event_damage = NULL;
@@ -262,7 +262,7 @@ void(void) monster_die_think {
 void monster_die_animated() {
 	monster_common_composite_anim(self.anim_die1, self.anim_die1, self.anim_die1, FALSE, FALSE);
 	self.movetype = MOVETYPE_TOSS;
-	self.solid = SOLID_CORPSE;
+	self.solid = VM_SOLID_CORPSE;
 	self.cnt = time + 5;
 	self.nextthink = time;
 	self.think = monster_die_think;
@@ -297,7 +297,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 	} else if (deathtype == DEATH_FALL)
 		return;
 
-	float isenemy = (!attacker || attacker.team != self.team || (!team_teams && substring(attacker.classname, 0, 7) != "monster"));
+	float isenemy = (!attacker || attacker.team != self.team || (!team_teams && str_sub(attacker.classname, 0, 7) != "monster"));
 	if (!isenemy) {
 		if (g_friendlyfire)
 			_damage = _damage * g_friendlyfire;
@@ -377,14 +377,14 @@ vector(void) monster_get_direction {
 
 vector monster_move_swim(float _speed, float blend_factor) {
 	vector v = '0 0 0';
-	if (self.waterlevel < WATER_LEVEL_SWIMMING) {
+	if (self.waterlevel < VM_WATERLEVEL_SWIMMING) {
 		_speed *= 0.25;
 		self.gravity = 1;
 	} else
 		self.gravity = 0.01;
 
 	v = normalize(ENTITY_CENTER(self.enemy) - ENTITY_CENTER(self));
-	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
+	if (self.waterlevel == VM_WATERLEVEL_SUBMERGED) {
 		v_z = v_z + 0.1 * vlen(v);
 	}
 	move_simple(normalize(v), _speed, blend_factor * frametime);
@@ -410,14 +410,14 @@ void monster_move_fly_idle(float distance, float heardistance, float fov_factor,
 vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 	float vel_z_save;
 	vector v;
-	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
+	if (self.waterlevel == VM_WATERLEVEL_SUBMERGED) {
 		_speed *= 0.5;
 		//if(self.air_finished < time + 6)
 		if not(self.flags & MONSTER_IGNOREDROWN)
 			self.velocity_z += (_speed - self.velocity_z) * frametime;
 	}
 	if (self.velocity_z > 200)
-	if not(self.flags & FL_ONGROUND)
+	if not(self.flags & FLAG_ONGROUND)
 		return normalize(self.velocity);
 
 	if (rushdistance)
@@ -442,7 +442,7 @@ vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 	if (self.spectatortime < time) {
 		v = monster_get_direction();
 		v_z = 0;
-		if (self.flags & FL_ONGROUND) {
+		if (self.flags & FLAG_ONGROUND) {
 			float t = (self.maxs_x * 2) / _speed;
 			self.spectatortime = time + t;
 			vector o = self.origin + v * _speed * t * 1.5;
@@ -508,7 +508,7 @@ vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 		v = self.movedir;
 
 	vel_z_save = self.velocity_z;
-	if not(self.flags & FL_ONGROUND)
+	if not(self.flags & FLAG_ONGROUND)
 		_speed = _speed * 0.5;
 
 	move_simple(v, _speed, blend_factor * frametime);
@@ -740,9 +740,9 @@ void monster_init(void() init_func) {
 string monster_classname() {
 	float spawn_suffix = strstrofs(self.classname, "_spawn", 0);
 	if (spawn_suffix >= 0) {
-		return substring(self.classname, 8, spawn_suffix - 8);
+		return str_sub(self.classname, 8, spawn_suffix - 8);
 	}
-	return substring(self.classname, 8, -1);
+	return str_sub(self.classname, 8, -1);
 }
 
 void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
@@ -816,13 +816,13 @@ void(void) monster_monsters_init_delayed {
 		tail = str_cdr(tail);
 		n = strstrofs(head, ":", 0);
 		if (n > 0) {
-			monster_name = substring(head, 0, n);
-			monster_count = stof(substring(head, n + 1, -1));
+			monster_name = str_sub(head, 0, n);
+			monster_count = stof(str_sub(head, n + 1, -1));
 		} else {
 			monster_name = head;
 			monster_count = 1;
 		}
-		_monster_classname = strzone(strcat("monster_", monster_name, "_spawn"));
+		_monster_classname = str_zone_ifneeded(strcat("monster_", monster_name, "_spawn"));
 		monster_func = strcat("spawnfunc_monster_", monster_name, "_spawn");
 		if (isfunction(monster_func)) {
 			for (i = 0; i < monster_count; i++) {
@@ -863,7 +863,7 @@ void monster_group_counter_remove() {
 	while ((e = find(e, target2, self.targetname))) {
 		e.target2 = "";
 	}
-	strunzone(self.targetname);
+	str_unzone_ifneeded(self.targetname);
 	remove(self);
 }
 
@@ -883,7 +883,7 @@ void monster_group_use() {
 
 	entity e = NULL;
 	entity group = spawn();
-	group.targetname = strzone(strcat("_monster_group", ftos(self.cnt)));
+	group.targetname = str_zone_ifneeded(strcat("_monster_group", ftos(self.cnt)));
 	while ((e = find(e, targetname, self.target))) {
 		e.target2 = group.targetname;
 	}
@@ -939,7 +939,7 @@ void(float distance, float heardistance, float fov_factor, float attack_delay, f
 	if (monster_look_for_player(distance, heardistance, fov_factor, attack_delay, attack_delay_jitter)) {
 		return;
 	}
-	if (self.waterlevel == WATER_LEVEL_SUBMERGED) {
+	if (self.waterlevel == VM_WATERLEVEL_SUBMERGED) {
 		if not(self.flags & MONSTER_IGNOREDROWN)
 			self.velocity_z += (beakspeed - self.velocity_z) * frametime;
 	}

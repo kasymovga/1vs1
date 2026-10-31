@@ -1041,13 +1041,13 @@ float(string filename, float mode) fopen = #110; // opens a file inside quake/ga
 void(float fhandle) fclose = #111; // closes a file
 string(float fhandle) fgets = #112; // reads a line of text from the file and returns as a tempstring
 void(float fhandle, string s, ...) fputs = #113; // writes a line of text to the end of the file
-float(string s) strlen = #114; // returns how many characters are in a string
-string(string s1, string s2, ...) strcat = #115; // concatenates two or more strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
+float(string s) vm_strlen = #114; // returns how many characters are in a string
+string(string s1, string s2, ...) vm_strcat = #115; // concatenates two or more strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
 string strcat1(string s) = #115; // copies a string to a tempstring (so one can strunzone it) //FRIK_FILE
-string(string s, float start, float length) substring = #116; // returns a section of a string as a tempstring
+string(string s, float start, float length) vm_substring = #116; // returns a section of a string as a tempstring
 vector(string s) stov = #117; // returns vector value from a string
-string(string s, ...) strzone = #118; // makes a copy of a string into the string zone and returns it, this is often used to keep around a tempstring for longer periods of time (tempstrings are replaced often)
-void(string s) strunzone = #119; // removes a copy of a string from the string zone (you can not use that string again or it may crash!!!)
+string(string s, ...) vm_strzone = #118; // makes a copy of a string into the string zone and returns it, this is often used to keep around a tempstring for longer periods of time (tempstrings are replaced often)
+void(string s) vm_strunzone = #119; // removes a copy of a string from the string zone (you can not use that string again or it may crash!!!)
 //cvars:
 //pr_zone_min_strings : default 64 (64k), min 64 (64k), max 8192 (8mb)
 //description:
@@ -1070,7 +1070,7 @@ float(float number, float quantity) bitshift = #218;
 //darkplaces implementation: KrimZon
 //description:
 //various string manipulation functions
-float(string str, string sub, float startpos) strstrofs = #221;
+float(string str, string sub, float startpos) vm_strstrofs = #221;
 float(string str, float ofs) str2chr = #222;
 string(float c, ...) chr2str = #223;
 string(float ccase, float calpha, float cnum, string s, ...) strconv = #224;
@@ -1417,7 +1417,7 @@ void(entity e, string s) clientcommand = #440;
 float(string s) tokenize = #441;
 string(float n) argv = #442;
 //description:
-//provides QC the ability to completely control server interpretation of client commands ("say" and "color" for example, clientcommand is necessary for this and substring (FRIK_FILE) is useful) as well as adding new commands (tokenize, argv, and stof (FRIK_FILE) are useful for this)), whenever a clc_stringcmd is received the QC function is called, and it is up to the QC to decide what (if anything) to do with it
+//provides QC the ability to completely control server interpretation of client commands ("say" and "color" for example, clientcommand is necessary for this and str_sub (FRIK_FILE) is useful) as well as adding new commands (tokenize, argv, and stof (FRIK_FILE) are useful for this)), whenever a clc_stringcmd is received the QC function is called, and it is up to the QC to decide what (if anything) to do with it
 //
 //DP_QC_STRINGBUFFERS
 //idea: ??

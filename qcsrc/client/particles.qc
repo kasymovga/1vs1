@@ -14,7 +14,7 @@ float(void) particles_point_in_brush_recursive {
 
 	se = trace_ent;
 	s = se.solid;
-	se.solid = SOLID_NOT;
+	se.solid = VM_SOLID_NOT;
 	f = particles_point_in_brush_recursive();
 	se.solid = s;
 	return f;
@@ -26,7 +26,7 @@ float(entity brush, vector point) particles_point_in_brush {
 		return 1;
 
 	s = brush.solid;
-	brush.solid = SOLID_BSP;
+	brush.solid = VM_SOLID_BSP;
 	particles_point_in_brush_vec = point;
 	particles_point_in_brush_brush = brush;
 	f = particles_point_in_brush_recursive();
@@ -179,7 +179,7 @@ void(float ignore) particles_point_read {
 
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	self.draw = particles_point_draw;
 	self.entremove = particles_point_remove;
 }
@@ -244,7 +244,7 @@ void(float ignore) particles_rain_or_snow_read {
 	self.cnt = 0;
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	if (self.impulse)
 		self.draw = particles_rain_draw;
 	else

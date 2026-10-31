@@ -351,16 +351,16 @@ string(string s) race_records_html_escape {
 	if (c >= 0) {
 		sc = "";
 		for (; s != "";) {
-			sc = strcat(sc, substring(s, 0, c));
-			s = substring(s, c + 1, -1);
-			chr = substring(s, 0, 1);
+			sc = strcat(sc, str_sub(s, 0, c));
+			s = str_sub(s, c + 1, -1);
+			chr = str_sub(s, 0, 1);
 			if (chr == "" || chr == "^") { //nothing or secondary ^
 				//print("no color code\n");
 				sc = strcat(sc, "^");
-				s = substring(s, 1, -1); //skip character (if presented)
+				s = str_sub(s, 1, -1); //skip character (if presented)
 			} else if (strstrofs("0123456789", chr, 0) >= 0) { //simple color code
 				//print("simple color code\n");
-				s = substring(s, 1, -1); //skip character
+				s = str_sub(s, 1, -1); //skip character
 				rgb = "";
 				if (spanopened) sc = strcat(sc, "</span>");
 				spanopened = FALSE;
@@ -392,34 +392,34 @@ string(string s) race_records_html_escape {
 			} else if (chr == "x") { //complex color code
 				//print("complex color code\n");
 				rgb = "";
-				chr = substring(s, 1, 1);
+				chr = str_sub(s, 1, 1);
 				if (chr != "" && strstrofs("0123456789abcdefABCDEF", chr, 0) >= 0) {
 					rgb = chr;
-					chr = substring(s, 2, 1);
+					chr = str_sub(s, 2, 1);
 					if (chr != "" && strstrofs("0123456789abcdefABCDEF", chr, 0) >= 0) {
 						rgb = strcat(rgb, chr);
-						chr = substring(s, 3, 1);
+						chr = str_sub(s, 3, 1);
 						if (chr != "" && strstrofs("0123456789abcdefABCDEF", chr, 0) >= 0) {
 							rgb = strcat(rgb, chr);
 							if (spanopened) sc = strcat(sc, "</span>");
 							sc = strcat(sc, "<span style=\"color: #", rgb, "\">");
 							spanopened = TRUE;
-							s = substring(s, 4, -1); //skip character
+							s = str_sub(s, 4, -1); //skip character
 						} else {
 							sc = strcat(sc, "^x");
-							s = substring(s, 1, -1); //skip character
+							s = str_sub(s, 1, -1); //skip character
 						}
 					} else {
 						sc = strcat(sc, "^x");
-						s = substring(s, 1, -1); //skip character
+						s = str_sub(s, 1, -1); //skip character
 					}
 				} else {
 					sc = strcat(sc, "^x");
-					s = substring(s, 1, -1); //skip character
+					s = str_sub(s, 1, -1); //skip character
 				}
 			} else {
 				sc = strcat(sc, "^", chr);
-				s = substring(s, 1, -1); //skip character
+				s = str_sub(s, 1, -1); //skip character
 			}
 			c = strstrofs(s, "^", 0);
 			if (c < 0) {
@@ -731,11 +731,11 @@ void(string m) race_records_clear {
 float(string k, string suffix) race_records_check_key {
 	float slash = strstrofs(k, "/", 0);
 	if (slash <= 0) return FALSE;
-	if (substring(k, slash, 14) != "/cts100record/")
-	if (substring(k, slash, 15) != "/race100record/")
+	if (str_sub(k, slash, 14) != "/cts100record/")
+	if (str_sub(k, slash, 15) != "/race100record/")
 		return FALSE;
 
-	if (substring(k, strlen(k) - strlen(suffix) - 1, -1) != strcat("/", suffix))
+	if (str_sub(k, strlen(k) - strlen(suffix) - 1, -1) != strcat("/", suffix))
 		return FALSE;
 
 	return TRUE;
@@ -748,8 +748,8 @@ void(string k, string v) race_records_link_name_to_id_cb {
 	if not(race_records_check_key(k, "netname")) return;
 	float slash = strstrofs(k, "/", 0);
 	if (slash < 0) return; //impossible but...
-	if (substring(k, 0, slash) == mapname) return;
-	string k_id = strcat(substring(k, 0, strlen(k) - 7), "id");
+	if (str_sub(k, 0, slash) == mapname) return;
+	string k_id = strcat(str_sub(k, 0, strlen(k) - 7), "id");
 	if (db_get(db_server, k_id) == "") {
 		db_put(db_server, k, "");
 		db_put(db_server, k_id, race_records_link_name_to_id_cb_arg2);
@@ -768,8 +768,8 @@ void(string n, string id) race_records_link_name_to_id {
 }
 
 void(string k, string v) race_records_list_ids_cb {
-	if (substring(k, 0, 9) != "raceid2n/") return;
-	string id = substring(k, 9, -1);
+	if (str_sub(k, 0, 9) != "raceid2n/") return;
+	string id = str_sub(k, 9, -1);
 	if not(client_id_is_valid(id)) return;
 	string n = db_get(db_server, k);
 	print(id, " - ", n, "\n");
@@ -854,8 +854,8 @@ void(string k, string v) race_records_validate_cb2 {
 
 float race_records_validate_fix;
 void(string k, string v) race_records_validate_cb1 {
-	if (substring(k, 0, 12) != "raceid2n_rc/") return;
-	string id = substring(k, 12, -1);
+	if (str_sub(k, 0, 12) != "raceid2n_rc/") return;
+	string id = str_sub(k, 12, -1);
 	race_records_validate_counter = 0;
 	db_for_each_key_like(db_server, "/id", id, race_records_validate_cb2);
 	string msg = strcat("Validating reference counter for id: ", id, " - ");

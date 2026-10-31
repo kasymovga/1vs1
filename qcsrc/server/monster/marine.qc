@@ -122,7 +122,7 @@ void() monster_marine_spawn {
 	self.movetype = MOVETYPE_WALK;
 	self.entremove = monster_marine_remove;
 	self.takedamage = DAMAGE_AIM;
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Marine";
 	self.ammo_nails = 20;

@@ -158,12 +158,12 @@ float(string filename, float mode) fopen = #48;
 void(float fhandle) fclose = #49;
 string(float fhandle) fgets = #50;
 void(float fhandle, string s) fputs = #51;
-float(string s) strlen = #52;
-string(string s1, ...) strcat = #53;
-string(string s, float start, float length) substring = #54;
+float(string s) vm_strlen = #52;
+string(string s1, ...) vm_strcat = #53;
+string(string s, float start, float length) vm_substring = #54;
 vector(string s) stov = #55;
-string(string s) strzone = #56;
-void(string s) strunzone = #57;
+string(string s) vm_strzone = #56;
+void(string s) vm_strunzone = #57;
 float(string s) tokenize = #58;
 float(string s, string separator1, ...) tokenizebyseparator = #479;
 string(float n) argv = #59;
@@ -247,7 +247,7 @@ string(void) getextresponse = #624;
 //darkplaces implementation: KrimZon
 //description:
 //various string manipulation functions
-float(string str, string sub, float startpos) strstrofs = #221;
+float(string str, string sub, float startpos) vm_strstrofs = #221;
 float(string str, float ofs) str2chr = #222;
 string(float c, ...) chr2str = #223;
 string(float ccase, float calpha, float cnum, string s, ...) strconv = #224;

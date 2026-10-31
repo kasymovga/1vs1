@@ -1,7 +1,7 @@
 string(string s) dlc_trimquotes {
-	if (substring(s, 0, 1) == "\"")
-	if (substring(s, strlen(s) - 1, 1) == "\"")
-		s = substring(s, 1, strlen(s) - 2);
+	if (str_sub(s, 0, 1) == "\"")
+	if (str_sub(s, strlen(s) - 1, 1) == "\"")
+		s = str_sub(s, 1, strlen(s) - 2);
 
 	return s;
 }
@@ -25,10 +25,10 @@ string(string s) dlc_trimcommentary {
 		}
 	}
 	if (doubleslash > 0)
-		s = substring(s, 0, doubleslash);
+		s = str_sub(s, 0, doubleslash);
 
 	if (hash > 0 && (doubleslash < 0 || hash < doubleslash))
-		s = substring(s, 0, hash);
+		s = str_sub(s, 0, hash);
 
 	return s;
 }
@@ -36,9 +36,9 @@ string(string s) dlc_trimcommentary {
 string(string s) dlc_trimspaces {
 	string c;
 	for (;;) {
-		c = substring(s, 0, 1);
+		c = str_sub(s, 0, 1);
 		if (c == " " || c == "\t") {
-			s = substring (s, 1, -1);
+			s = str_sub (s, 1, -1);
 			continue;
 		}
 		break;
@@ -47,9 +47,9 @@ string(string s) dlc_trimspaces {
 	for (;;) {
 		n = strlen(s) - 1;
 		if (n < 0) break;
-		c = substring(s, n, 1);
+		c = str_sub(s, n, 1);
 		if (c == " " || c == "\t") {
-			s = substring (s, 0, n);
+			s = str_sub (s, 0, n);
 			continue;
 		}
 		break;

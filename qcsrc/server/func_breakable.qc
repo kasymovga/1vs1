@@ -48,7 +48,7 @@ void(void) func_breakable_look_destroyed {
 			self.origin_z = floor_z;
 		}
 	}
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	waypoint_relink_door(self, self.origin);
 }
 
@@ -183,7 +183,7 @@ void(void) spawnfunc_func_breakable {
 		self.health = 100;
 
 	if not(self.solid)
-		self.solid = SOLID_BSP;
+		self.solid = VM_SOLID_BSP;
 
 	self.oldsolid = self.solid;
 	self.max_health = self.health;

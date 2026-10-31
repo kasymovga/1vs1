@@ -48,8 +48,8 @@ void(void) note_draw {
 				note_line_draw(tail);
 				break;
 			}
-			head = substring(tail, 0, n);
-			tail = substring(tail, n + 1, -1);
+			head = str_sub(tail, 0, n);
+			tail = str_sub(tail, n + 1, -1);
 			note_line_draw(head);
 		}
 	}

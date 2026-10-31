@@ -69,7 +69,7 @@ void() monster_bat_spawn {
 	monster_prepare(monster_bat_hunt, monster_bat_walk, monster_bat_idle);
 	setmodel(self, "models/bat.md3");
 	self.colormod = '3 2 1';
-	self.solid = SOLID_BBOX;
+	self.solid = VM_SOLID_BBOX;
 	self.scale = 2;
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;

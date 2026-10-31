@@ -206,7 +206,7 @@ void(void) portal_touch {
 void(entity portal) portal_make_broken_portal {
 	portal.skin = 2;
 	portal.modelindex_lod0 = portal_model_index;
-	portal.solid = SOLID_NOT;
+	portal.solid = VM_SOLID_NOT;
 	portal.touch = stdproc_nothing;
 	portal.think = stdproc_nothing;
 	portal.effects = 0;
@@ -221,7 +221,7 @@ void(entity portal) portal_make_broken_portal {
 void(entity portal) portal_make_waiting_portal {
 	portal.skin = 2;
 	portal.modelindex_lod0 = portal_model_index;
-	portal.solid = SOLID_NOT;
+	portal.solid = VM_SOLID_NOT;
 	portal.touch = stdproc_nothing;
 	portal.think = stdproc_nothing;
 	portal.effects = EFFECT_ADDITIVE;
@@ -244,7 +244,7 @@ void(void) portal_think;
 void(entity portal) portal_make_in_portal {
 	portal.skin = 0;
 	portal.modelindex_lod0 = portal_model_index;
-	portal.solid = SOLID_NOT; // this is done when connecting them!
+	portal.solid = VM_SOLID_NOT; // this is done when connecting them!
 	portal.touch = portal_touch;
 	portal.think = portal_think;
 	portal.effects = EFFECT_RED;
@@ -265,10 +265,10 @@ void(entity portal) portal_make_out_portal {
 		portal.skin = 1;
 	}
 	if (g_portal_bidirectional) {
-		portal.solid = SOLID_TRIGGER;
+		portal.solid = VM_SOLID_TRIGGER;
 		portal.touch = portal_touch;
 	} else {
-		portal.solid = SOLID_NOT;
+		portal.solid = VM_SOLID_NOT;
 		portal.touch = stdproc_nothing;
 	}
 	portal.think = stdproc_nothing;
@@ -306,7 +306,7 @@ void(entity teleporter, entity destination) portal_connect {
 	teleporter.portal_wants_to_vanish = 0;
 	destination.portal_wants_to_vanish = 0;
 	teleporter.teleport_time = time;
-	teleporter.solid = SOLID_TRIGGER;
+	teleporter.solid = VM_SOLID_TRIGGER;
 }
 
 void(entity portal, float killed) portal_remove {

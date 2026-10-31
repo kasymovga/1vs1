@@ -76,15 +76,15 @@ void drawListBoxItemNexuizCreditsList(entity me, float i, vector absSize, float 
 
 	s = bufstr_get(me.bufferIndex, i);
 
-	if(substring(s, 0, 2) == "**")
+	if(str_sub(s, 0, 2) == "**")
 	{
-		s = substring(s, 2, strlen(s) - 2);
+		s = str_sub(s, 2, strlen(s) - 2);
 		theColor = SKINCOLOR_CREDITS_TITLE;
 		theAlpha = SKINALPHA_CREDITS_TITLE;
 	}
-	else if(substring(s, 0, 1) == "*")
+	else if(str_sub(s, 0, 1) == "*")
 	{
-		s = substring(s, 1, strlen(s) - 1);
+		s = str_sub(s, 1, strlen(s) - 1);
 		theColor = SKINCOLOR_CREDITS_FUNCTION;
 		theAlpha = SKINALPHA_CREDITS_FUNCTION;
 	}

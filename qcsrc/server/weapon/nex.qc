@@ -79,7 +79,7 @@ void(void) weapon_nex_attack {
 	}
 	self.nex_lasthit = damage_goodhits;
 	// flash and burn the wall
-	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+	if (trace_ent.solid == VM_SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		effect_impact(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * warpzone_transform_velocity(warpzone_trace_transform, weapon_shotdir), EFFECT_IMPACT_NEX, self);
 
 	//beam and muzzle flash done on client

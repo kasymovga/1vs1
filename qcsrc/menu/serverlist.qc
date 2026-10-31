@@ -31,7 +31,7 @@ void(float id, float status, string data) serverlist_callback {
 
 			while ((s = fgets(f))) {
 				d = strstrofs(s, "/", 0);
-				cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", ((d > 0) ? substring(s, 0, d) : s)));
+				cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", ((d > 0) ? str_sub(s, 0, d) : s)));
 			}
 			fclose(f);
 		}
@@ -48,7 +48,7 @@ void(float id, float status, string data) serverlist_callback {
 	for (i = 0; i < n; i++) {
 		s = argv(i);
 		d = strstrofs(s, "/", 0);
-		cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", ((d > 0) ? substring(s, 0, d) : s)));
+		cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", ((d > 0) ? str_sub(s, 0, d) : s)));
 	}
 }
 

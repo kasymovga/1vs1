@@ -1,13 +1,13 @@
 string(string s) str_zone_ifneeded {
 	if (s != "")
-		return strzone(s);
+		return vm_strzone(s);
 
 	return "";
 }
 
 void(string s) str_unzone_ifneeded {
 	if (s != "")
-		strunzone(s);
+		vm_strunzone(s);
 }
 
 string(string s) str_car {
@@ -17,9 +17,9 @@ string(string s) str_car {
 		return s;
 
 	if (o < 1)
-		return str_car(substring(s, 1, -1));
+		return str_car(str_sub(s, 1, -1));
 
-	return substring(s, 0, o);
+	return str_sub(s, 0, o);
 }
 
 string(string s) str_cdr {
@@ -29,9 +29,9 @@ string(string s) str_cdr {
 		return NULL;
 
 	if (o < 1)
-		return str_cdr(substring(s, 1, -1));
+		return str_cdr(str_sub(s, 1, -1));
 
-	return substring(s, o + 1, -1);
+	return str_sub(s, o + 1, -1);
 }
 
 string(float number, float decimals) str_float_decimals {
@@ -46,20 +46,20 @@ string(float number, float decimals) str_float_decimals {
 	result = ftos(number);
 	len = strlen(result);
 	if(len >= 7)
-		if(substring(result, len - 7, 1) == ".")
+		if(str_sub(result, len - 7, 1) == ".")
 		{
-			result = substring(result, 0, len - 7);
+			result = str_sub(result, 0, len - 7);
 			len -= 7;
 		}
 	if(decimals == 0)
 		return result; // don't insert a point for zero decimals
 
 	if(len <= decimals) {
-		result = strcat(substring("0000000000", 0, decimals - len + 1), result);
+		result = strcat(str_sub("0000000000", 0, decimals - len + 1), result);
 		len = decimals + 1;
 	}
-	tmp = substring(result, len - decimals, decimals);
-	result = strcat(substring(result, 0, len - decimals), ".", tmp);
+	tmp = str_sub(result, len - decimals, decimals);
+	result = strcat(str_sub(result, 0, len - decimals), ".", tmp);
 	return result;
 }
 
@@ -82,7 +82,7 @@ float(string theText, float maxWidth, str_length_up_to_width_width_function_t w)
 	right = strlen(theText); // this always fails
 	do {
 		middle = floor((left + right) / 2);
-		if(w(substring(theText, 0, middle)) <= maxWidth)
+		if(w(str_sub(theText, 0, middle)) <= maxWidth)
 			left = middle;
 		else
 			right = middle;
@@ -100,18 +100,18 @@ float(string theText, float maxWidth, str_length_up_to_width_width_function_t w)
 		// Even if the ^xrgb tag is not complete/correct, left is decreased
 		// (sometimes too much but with a correct result)
 		// it fixes also ^[0-9]
-		while(left >= 1 && substring(theText, left-1, 1) == "^")
+		while(left >= 1 && str_sub(theText, left-1, 1) == "^")
 			left-=1;
 
-		if (left >= 2 && substring(theText, left-2, 2) == "^x") // ^x/
+		if (left >= 2 && str_sub(theText, left-2, 2) == "^x") // ^x/
 			left-=2;
-		else if (left >= 3 && substring(theText, left-3, 2) == "^x")
+		else if (left >= 3 && str_sub(theText, left-3, 2) == "^x")
 			{
 				ch = str2chr(theText, left-1);
 				if( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xr/
 					left-=3;
 			}
-		else if (left >= 4 && substring(theText, left-4, 2) == "^x")
+		else if (left >= 4 && str_sub(theText, left-4, 2) == "^x")
 			{
 				ch = str2chr(theText, left-2);
 				if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') )
@@ -133,21 +133,21 @@ string(float w, str_length_up_to_width_width_function_t tw) str_wrapped_line {
 	cantake = str_length_up_to_width(s, w, tw);
 	if(cantake > 0 && cantake < strlen(s)) {
 		take = cantake - 1;
-		while(take > 0 && substring(s, take, 1) != " ")
+		while(take > 0 && str_sub(s, take, 1) != " ")
 			--take;
 
 		if(take == 0) {
-			str_wrapped_line_remaining = substring(s, cantake, strlen(s) - cantake);
+			str_wrapped_line_remaining = str_sub(s, cantake, strlen(s) - cantake);
 			if(str_wrapped_line_remaining == "")
 				str_wrapped_line_remaining = NULL;
 
-			return substring(s, 0, cantake);
+			return str_sub(s, 0, cantake);
 		} else {
-			str_wrapped_line_remaining = substring(s, take + 1, strlen(s) - take);
+			str_wrapped_line_remaining = str_sub(s, take + 1, strlen(s) - take);
 			if(str_wrapped_line_remaining == "")
 				str_wrapped_line_remaining = NULL;
 
-			return substring(s, 0, take);
+			return str_sub(s, 0, take);
 		}
 	} else {
 		str_wrapped_line_remaining = NULL;

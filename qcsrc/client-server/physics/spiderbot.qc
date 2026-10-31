@@ -7,7 +7,7 @@ float(void) physics_spiderbot {
 	self.flags = physics_flags;
 	self.angles_x = -self.angles_x;
 	makevectors(self.angles);
-	if (self.flags & FL_ONGROUND) {
+	if (self.flags & FLAG_ONGROUND) {
 		#ifdef SVQC
 		if (self.wasFlying && self.nextstep < time) {
 			sound(self, CHAN_PLAYER, sound_random("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
@@ -21,7 +21,7 @@ float(void) physics_spiderbot {
 		#endif
 		if (physics_button_jump) {
 			self.velocity = self.velocity * g_vehicle_spiderbot_jump_accel + v_up * g_vehicle_spiderbot_jump_up;
-			self.flags &= ~FL_ONGROUND;
+			self.flags &= ~FLAG_ONGROUND;
 		} else {
 			if (vlen(physics_movement) == 0) {
 				move_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);

@@ -24,7 +24,7 @@ void(void) rm_buffs_models_load {
 			s = "models/buffs/buff.md3";
 			print("No model found for the ", rm_buffs_TypeToName(b), " Buff! Falling back to default.\n");
 		}
-		rm_buffs_modelnames[i] = strzone(s);
+		rm_buffs_modelnames[i] = str_zone_ifneeded(s);
 		precache_model(rm_buffs_modelnames[i]);
 	}
 }
@@ -38,8 +38,8 @@ void(void) rm_buffs_model_draw {
 
 	interpolate_do();
 	if (self.sv_entnum && extension_DP_CSQC_QUERYRENDERENTITY) {
-		if (getentity(self.sv_entnum, E_ACTIVE)) {
-			org = getentityvec(self.sv_entnum, E_ORIGIN) + self.buff_offset;
+		if (getentity(self.sv_entnum, VM_ENTITY_ACTIVE)) {
+			org = getentityvec(self.sv_entnum, VM_ENTITY_ORIGIN) + self.buff_offset;
 		} else {
 			//FIXME
 			//if(fps_friendly)
@@ -248,7 +248,7 @@ void(float ignore) rm_buffs_model_read {
 		} else {
 			// this is a buff pickup model
 			self.buff_offset = '0 0 0';
-			self.solid = SOLID_TRIGGER;
+			self.solid = VM_SOLID_TRIGGER;
 			self.movetype = MOVETYPE_TOSS;
 			self.scale = 1.5;
 			setsize(self, '-15 -15 -40', '15 15 40');

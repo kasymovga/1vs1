@@ -53,11 +53,11 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 		trace_ent.railgunhittransform.warpzone_transform = warpzone_trace_transform.warpzone_transform;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		// stop if this is a wall
-		if (trace_ent.solid == SOLID_BSP)
+		if (trace_ent.solid == VM_SOLID_BSP)
 			break;
 
 		// make the entity non-solid
-		trace_ent.solid = SOLID_NOT;
+		trace_ent.solid = VM_SOLID_NOT;
 	}
 	endpoint = trace_endpos;
 	endent = trace_ent;
@@ -72,7 +72,7 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 		// get the details we need to call the damage function
 		hitloc = ent.railgunhitloc;
 		ent.railgunhitloc = '0 0 0';
-		ent.railgunhitsolidbackup = SOLID_NOT;
+		ent.railgunhitsolidbackup = VM_SOLID_NOT;
 		ent.railgunhit = FALSE;
 		//for stats so that team hit will count as a miss
 		bullet_from = warpzone_transform_origin(ent.railgunhittransform, start);
@@ -119,7 +119,7 @@ void(void) bullet_hit {
 				announce(self.owner, "announcer/male/awesome.wav", "^5Awesome");
 		}
 	}
-	if (other.solid == SOLID_BSP) {
+	if (other.solid == VM_SOLID_BSP) {
 		effect_curveparticles_end();
 		effect_impact(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.species, self);
 	}
@@ -131,8 +131,8 @@ void(void) bullet_leave_solid_think {
 	self.velocity = self.pos2;
 	self.think = stdproc_remove;
 	self.nextthink = max(time, self.cnt);
-	self.flags &= ~FL_ONGROUND;
-	if (self.enemy.solid == SOLID_BSP) {
+	self.flags &= ~FLAG_ONGROUND;
+	if (self.enemy.solid == VM_SOLID_BSP) {
 		float f;
 		f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
 		effect_impact(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.species, self);
@@ -192,7 +192,7 @@ float(entity e, vector vel, float constant) bullet_leave_solid {
 	self.nextthink = time + dt;
 	vel = vel * velfactor;
 	self.velocity = '0 0 0';
-	self.flags |= FL_ONGROUND; // prevent moving
+	self.flags |= FLAG_ONGROUND; // prevent moving
 	self.pos2 = vel;
 	return 1;
 }

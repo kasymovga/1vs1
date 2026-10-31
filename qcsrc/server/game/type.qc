@@ -46,13 +46,11 @@ void() game_type_init {
 		print("The current map contains a potentially harmful fog setting, ignored\n");
 		world.fog = NULL;
 	}
-	if (map_info_map_fog != "")
-		if (map_info_map_fog == "none")
-			world.fog = NULL;
-		else
-			world.fog = strzone(map_info_map_fog);
+	world.fog = "";
+	if (map_info_map_fog != "" && map_info_map_fog != "none")
+		world.fog = str_zone_ifneeded(map_info_map_fog);
 
-	client_stuff = strzone(map_info_map_clientstuff);
+	client_stuff = str_zone_ifneeded(map_info_map_clientstuff);
 	map_info_clear_temps();
 	// in case mapinfo switched the type
 	game_type_readcvars();

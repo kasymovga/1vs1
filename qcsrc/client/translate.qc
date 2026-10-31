@@ -20,8 +20,8 @@ string(string s) translate_skip_accents {
 	if (r >= 0) {
 		float i;
 		for (i = 0; i < 64; i++) {
-			if (strstrofs(s, substring(accent_chars, i, 1), 0) >= 0)
-				s = strreplace(substring(accent_chars, i, 1), substring(accent_chars_replacement, i, 1), s);
+			if (strstrofs(s, str_sub(accent_chars, i, 1), 0) >= 0)
+				s = strreplace(str_sub(accent_chars, i, 1), str_sub(accent_chars_replacement, i, 1), s);
 		}
 	}
 	return s;

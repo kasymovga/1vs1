@@ -16,7 +16,7 @@ string(string s, float n) race_ghost_pad_right {
 	float l = strlen(s);
 	float pad = n - l;
 	if (pad <= 0) return s;
-	return strcat(s, substring("          ", 0, pad));
+	return strcat(s, str_sub("          ", 0, pad));
 }
 
 string(vector o) race_ghost_vector_to_string {
@@ -81,9 +81,9 @@ void(entity pl) race_ghost_start {
 		pl.race_ghost.customizeentityforclient = race_ghost_customize;
 		string s = bufstr_get(pl.race_ghost.enemy.lip, 0);
 		vector o;
-		o_x = stof(substring(s, 0, 7));
-		o_y = stof(substring(s, 7, 7));
-		o_z = stof(substring(s, 14, 7));
+		o_x = stof(str_sub(s, 0, 7));
+		o_y = stof(str_sub(s, 7, 7));
+		o_z = stof(str_sub(s, 14, 7));
 		setorigin(pl.race_ghost, o);
 		BITXOR_ASSIGN(pl.race_ghost.effects, EFFECT_TELEPORT_BIT);
 	}
@@ -103,20 +103,20 @@ void(entity ghost, entity ghost_body, float pos) race_ghost_record_read {
 	float f = pos - pos_floor;
 	float ln = floor(pos_floor / 640);
 	float lp = math_mod(pos_floor, 640);
-	string record_str = substring(bufstr_get(ghost.lip, ln), lp * 25, 25);
+	string record_str = str_sub(bufstr_get(ghost.lip, ln), lp * 25, 25);
 	vector o1;
-	o1_x = stof(substring(record_str, 0, 7));
-	o1_y = stof(substring(record_str, 7, 7));
-	o1_z = stof(substring(record_str, 14, 7));
-	float a1 = stof(substring(record_str, 21, 4));
+	o1_x = stof(str_sub(record_str, 0, 7));
+	o1_y = stof(str_sub(record_str, 7, 7));
+	o1_z = stof(str_sub(record_str, 14, 7));
+	float a1 = stof(str_sub(record_str, 21, 4));
 	ln = floor(pos_ceil / 640);
 	lp = math_mod(pos_ceil, 640);
-	record_str = substring(bufstr_get(ghost.lip, ln), lp * 25, 25);
+	record_str = str_sub(bufstr_get(ghost.lip, ln), lp * 25, 25);
 	vector o2;
-	o2_x = stof(substring(record_str, 0, 7));
-	o2_y = stof(substring(record_str, 7, 7));
-	o2_z = stof(substring(record_str, 14, 7));
-	float a2 = stof(substring(record_str, 21, 4));
+	o2_x = stof(str_sub(record_str, 0, 7));
+	o2_y = stof(str_sub(record_str, 7, 7));
+	o2_z = stof(str_sub(record_str, 14, 7));
+	float a2 = stof(str_sub(record_str, 21, 4));
 	while (a1 - a2 > 180) a1 -= 360;
 	while (a1 - a2 < -180) a1 += 360;
 	float a = (a1 * (1 - f) + a2 * f);

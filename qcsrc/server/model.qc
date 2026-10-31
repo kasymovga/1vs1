@@ -180,7 +180,7 @@ float(entity to, float sf) model_client_send {
 
 void(void) model_think {
 	entity e = self.enemy;
-	if (e.flags & FL_ONGROUND) {
+	if (e.flags & FLAG_ONGROUND) {
 		float z_save = e.velocity_z;
 		e.velocity = e.velocity - e.velocity * frametime * e.friction;
 		e.velocity_z = z_save;
@@ -223,7 +223,7 @@ void(void) model_init_common_delayed {
 void(float sol) model_init_common {
 	self.use = model_setcolormaptoactivator;
 	entity_initialize(self, model_init_common_delayed, INITPRIO_DROPTOFLOOR);
-	if (!self.solid) self.solid = (sol); else if (self.solid < 0) self.solid = SOLID_NOT;
+	if (!self.solid) self.solid = (sol); else if (self.solid < 0) self.solid = VM_SOLID_NOT;
 }
 
 void model_init(float sol) {

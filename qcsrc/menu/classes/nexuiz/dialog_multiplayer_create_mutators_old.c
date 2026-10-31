@@ -30,7 +30,7 @@ string toStringNexuizOldMutatorsDialog(entity me) {
 	if (cvar("g_weapon_stay")) s = strcat(s, ", Weapons stay");
 	if (cvar("g_jetpack")) s = strcat(s, ", Jet pack");
 	if (s == "") return "None";
-	else return substring(s, 2, strlen(s) - 2);
+	else return str_sub(s, 2, strlen(s) - 2);
 }
 
 void fillNexuizOldMutatorsDialog(entity me) {

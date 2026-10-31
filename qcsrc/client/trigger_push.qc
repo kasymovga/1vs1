@@ -46,12 +46,12 @@ void(entity e) trigger_push_predict {
 		return;
 	}
 	if (!physics_is_player || (physics_deadflag && physics_deadflag != DEAD_FREEZE)) return;
-	e.solid = SOLID_BSP;
+	e.solid = VM_SOLID_BSP;
 	ss = self.solid;
-	self.solid = SOLID_NOT;
+	self.solid = VM_SOLID_NOT;
 	trace_box(self.origin, self.mins, self.maxs, self.origin, TRACE_MOVE_NORMAL, NULL);
 	self.solid = ss;
-	e.solid = SOLID_NOT;
+	e.solid = VM_SOLID_NOT;
 	if not(trace_ent == e) return;
 	//Must be synced with similar code in server physics code
 	if (e.state) {

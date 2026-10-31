@@ -34,12 +34,12 @@ void(void) dom_controlpoint_captured {
 	self.model = head.mdl;
 	self.modelindex = head.dmg;
 	self.skin = head.skin;
-	if (substring(self.message, 2, 18) == " has captured the ")
-		print_all(PRINT_INFO, "^3{1}^3 has captured the {2}", head.netname, substring(self.message, 20, -1), "");
-	else if (substring(self.message, 0, 18) == " has captured the ")
-		print_all(PRINT_INFO, "^3{1}^3 has captured the {2}", head.netname, substring(self.message, 18, -1), "");
-	else if (substring(self.message, 0, 16) == " has captured a ")
-		print_all(PRINT_INFO, "^3{1}^3 has captured a {2}", head.netname, substring(self.message, 16, -1), "");
+	if (str_sub(self.message, 2, 18) == " has captured the ")
+		print_all(PRINT_INFO, "^3{1}^3 has captured the {2}", head.netname, str_sub(self.message, 20, -1), "");
+	else if (str_sub(self.message, 0, 18) == " has captured the ")
+		print_all(PRINT_INFO, "^3{1}^3 has captured the {2}", head.netname, str_sub(self.message, 18, -1), "");
+	else if (str_sub(self.message, 0, 16) == " has captured a ")
+		print_all(PRINT_INFO, "^3{1}^3 has captured a {2}", head.netname, str_sub(self.message, 16, -1), "");
 	else
 		print_all(PRINT_INFO, strcat("^3{1}^3", self.message), head.netname, "", "");
 
@@ -290,8 +290,8 @@ void(void) dom_controlpoint_setup {
 	self.think = dom_controlpoint_think;
 	self.nextthink = time;
 	self.touch = dom_controlpoint_touch;
-	self.solid = SOLID_TRIGGER;
-	self.flags = FL_ITEM;
+	self.solid = VM_SOLID_TRIGGER;
+	self.flags = FLAG_ITEM;
 	setsize(self, '-32 -32 -32', '32 32 32');
 	setorigin(self, self.origin + '0 0 20');
 	entity_droptofloor();

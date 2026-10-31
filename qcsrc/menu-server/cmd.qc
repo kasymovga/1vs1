@@ -34,7 +34,7 @@ float(string command) cmd_generic {
 				if (argv(i) != s)
 					s2 = strcat(s2, " ", argv(i));
 
-			s2 = substring(s2, 1, strlen(s2) - 1);
+			s2 = str_sub(s2, 1, strlen(s2) - 1);
 			cvar_set("g_maplist", s2);
 			return TRUE;
 		} else if (argv(1) == "shuffle" && argc == 2) {
@@ -54,7 +54,7 @@ float(string command) cmd_generic {
 				if (map_info_check_map(argv(i)))
 					s2 = strcat(s2, " ", argv(i));
 
-			s2 = substring(s2, 1, strlen(s2) - 1);
+			s2 = str_sub(s2, 1, strlen(s2) - 1);
 			cvar_set("g_maplist", s2);
 			return TRUE;
 		}

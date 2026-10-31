@@ -27,7 +27,7 @@ void(void) havocbot_ai {
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
 		if (self.deadflag != DEAD_NO)
 		if (self.goalcurrent==world)
-		if (self.waterlevel==WATER_LEVEL_SWIMMING || self.aistatus & AI_STATUS_OUT_WATER) {
+		if (self.waterlevel==VM_WATERLEVEL_SWIMMING || self.aistatus & AI_STATUS_OUT_WATER) {
 			// Look for the closest waypoint out of water
 			entity newgoal, head;
 			float bestdistance, distance;
@@ -112,7 +112,7 @@ void(void) havocbot_ai {
 		//v = now * ((1-skillblend) + (distanceblend) * (skillblend)) + next * (1-distanceblend) * (skillblend);
 		v = now + blend * (next - now);
 		//v = now * (distanceblend) + next * (1-distanceblend);
-		if (self.waterlevel < WATER_LEVEL_SWIMMING)
+		if (self.waterlevel < VM_WATERLEVEL_SWIMMING)
 			v_z = 0;
 
 		//te_lightning2(world, self.origin, self.goalcurrent.origin);
@@ -198,7 +198,7 @@ void(vector dir) havocbot_bunnyhop {
 		self.bot_timelastseengoal = 0;
 		return;
 	}
-	if (self.waterlevel > WATER_LEVEL_WETFEET) {
+	if (self.waterlevel > VM_WATERLEVEL_WETFEET) {
 		self.aistatus &= ~AI_STATUS_RUNNING;
 		return;
 	}
@@ -208,7 +208,7 @@ void(vector dir) havocbot_bunnyhop {
 	}
 	bunnyhopdistance = vlen(self.origin - self.goalcurrent.origin);
 	// Run only to visible goals
-	if (self.flags & FL_ONGROUND)
+	if (self.flags & FLAG_ONGROUND)
 	if (self.speed==sv_maxspeed)
 	if (checkpvs(self.origin + self.view_ofs, self.goalcurrent)) {
 			self.bot_lastseengoal = self.goalcurrent;
@@ -261,7 +261,7 @@ void(vector dir) havocbot_bunnyhop {
 		self.bot_timelastseengoal = 0;
 	}
 	// Release jump button
-	if (self.flags & FL_ONGROUND == 0) {
+	if (self.flags & FLAG_ONGROUND == 0) {
 		if (self.velocity_z < 0 || vlen(self.velocity)<sv_maxspeed)
 		if not(self.aistatus & AI_STATUS_JETPACK_FLYING)
 			self.BUTTON_JUMP = FALSE;
@@ -284,7 +284,7 @@ void(vector dir) havocbot_bunnyhop {
 }
 
 void(void) havocbot_use_jetpack {
-	if (self.flags & FL_JUMPRELEASED)
+	if (self.flags & FLAG_JUMPRELEASED)
 		self.BUTTON_JUMP = TRUE;
 	else
 		self.BUTTON_JUMP = FALSE;
@@ -360,7 +360,7 @@ void(void) havocbot_movetogoal {
 	}
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if (skill>6)
-	if not(self.flags & FL_ONGROUND) {
+	if not(self.flags & FLAG_ONGROUND) {
 		trace_box(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', TRACE_MOVE_NOMONSTERS, self);
 		if (trigger_tracebox_hits_hurt(self.origin, self.mins, self.maxs, trace_endpos ))
 		if (self.items & IT_JETPACK) {
@@ -419,9 +419,9 @@ void(void) havocbot_movetogoal {
 	if (self.waterlevel)
 	if (self.goalcurrent==world) {
 		dir = '0 0 0';
-		if (self.waterlevel>WATER_LEVEL_SWIMMING)
+		if (self.waterlevel>VM_WATERLEVEL_SWIMMING)
 			dir_z = 1;
-		else if (self.velocity_z >= 0 && !(self.waterlevel == WATER_LEVEL_WETFEET && self.watertype == CONTENT_WATER))
+		else if (self.velocity_z >= 0 && !(self.waterlevel == VM_WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER))
 			self.BUTTON_JUMP = TRUE;
 		else
 			self.BUTTON_JUMP = FALSE;
@@ -457,12 +457,12 @@ void(void) havocbot_movetogoal {
 	evadeobstacle = '0 0 0';
 	evadelava = '0 0 0';
 	if (self.waterlevel) {
-		if (self.waterlevel > WATER_LEVEL_SWIMMING) {
+		if (self.waterlevel > VM_WATERLEVEL_SWIMMING) {
 		//	flatdir_z = 1;
 			self.aistatus |= AI_STATUS_OUT_WATER;
 		} else {
 			if (self.velocity_z >= 0 && !(self.watertype == CONTENT_WATER && self.goalcurrent.origin_z < self.origin_z) &&
-					(!(self.waterlevel == WATER_LEVEL_WETFEET && self.watertype == CONTENT_WATER) || self.aistatus & AI_STATUS_OUT_WATER))
+					(!(self.waterlevel == VM_WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER) || self.aistatus & AI_STATUS_OUT_WATER))
 				self.BUTTON_JUMP = TRUE;
 			else
 				self.BUTTON_JUMP = FALSE;
@@ -517,7 +517,7 @@ void(void) havocbot_movetogoal {
 		// (only when the bot is on the ground or jumping intentionally)
 		self.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 		if (trace_fraction == 1)
-		if (self.flags & FL_ONGROUND || self.aistatus & AI_STATUS_RUNNING || self.BUTTON_JUMP == TRUE) {
+		if (self.flags & FLAG_ONGROUND || self.aistatus & AI_STATUS_RUNNING || self.BUTTON_JUMP == TRUE) {
 			// Look downwards
 			trace_line(dst_ahead , dst_down, TRUE, world);
 			if (trace_endpos_z < self.origin_z + self.mins_z) {
@@ -579,7 +579,7 @@ void(void) havocbot_movetogoal {
 	if (skill+bot_moveskill >= bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(dir);
 
-	if ((dir * v_up) >= sv_jumpvelocity*0.5 && (self.flags & FL_ONGROUND)) self.BUTTON_JUMP=1;
+	if ((dir * v_up) >= sv_jumpvelocity*0.5 && (self.flags & FLAG_ONGROUND)) self.BUTTON_JUMP=1;
 	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=TRUE;
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,skill+bot_dodgeskill,10);
 }

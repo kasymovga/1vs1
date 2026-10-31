@@ -101,7 +101,7 @@ void(void) pin_init {
 	CVAR_CACHE(sv_pin_timeout);
 	float i, n = strlen(sv_pin_code);
 	for (i = 0; i < n; i++)
-		if (strstrofs("0123456789", substring(sv_pin_code, i, 1), 0) < 0) {
+		if (strstrofs("0123456789", str_sub(sv_pin_code, i, 1), 0) < 0) {
 			print("Incorrect character in PIN code! Must be digits only\n");
 			return;
 		}

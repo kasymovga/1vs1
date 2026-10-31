@@ -136,7 +136,7 @@ void(void) player_info_spec_message {
 	s = strcat(s, "\n");
 	str_unzone_ifneeded(self.message);
 	if (spectators)
-		self.message = strzone(s);
+		self.message = str_zone_ifneeded(s);
 	else
 		self.message = "";
 }
