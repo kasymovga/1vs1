@@ -5,6 +5,8 @@ CLASS(NexuizServerListTab) EXTENDS(NexuizTab)
 	ATTRIB(NexuizServerListTab, intendedWidth, float, 0.9)
 	ATTRIB(NexuizServerListTab, rows, float, 22)
 	ATTRIB(NexuizServerListTab, columns, float, 6.5)
+	ATTRIB(NexuizServerListTab, serverList, entity, NULL)
+	METHOD(NexuizServerListTab, showNotify, void(entity))
 ENDCLASS(NexuizServerListTab)
 entity makeNexuizServerListTab();
 #endif
@@ -18,11 +20,18 @@ entity makeNexuizServerListTab()
 	me.configureDialog(me);
 	return me;
 }
+void showNotifyNexuizServerListTab(entity me)
+{
+	showNotifyNexuizTab(me);
+	if (me.serverList)
+		me.serverList.showNotify(me.serverList);
+}
 void fillNexuizServerListTab(entity me)
 {
 	entity e, slist, btn;
 
 	slist  = makeNexuizServerList();
+	me.serverList = slist;
 
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeNexuizTextLabel(0, _("Filter:")));
@@ -67,9 +76,12 @@ void fillNexuizServerListTab(entity me)
 			e.onClickEntity = slist;
 			slist.infoButton = e;
 	me.TR(me);
-		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Join!"), '0 0 0'));
+		me.TD(me, 1, me.columns - 1.5, e = makeNexuizButton(_("Join!"), '0 0 0'));
 			e.onClick = ServerList_Connect_Click;
 			e.onClickEntity = slist;
 			slist.connectButton = e;
+		me.TD(me, 1, 1.5, e = makeNexuizButton(_("Refresh"), '0 0 0'));
+			e.onClick = ServerList_Refresh_Click;
+			e.onClickEntity = slist;
 }
 #endif

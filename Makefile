@@ -1,6 +1,15 @@
-SV_SOURCES=$(shell find qcsrc/server qcsrc/client-server qcsrc/common qcsrc/menu-server -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)') Makefile
-CL_SOURCES=$(shell find qcsrc/client qcsrc/client-server qcsrc/common qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c)') Makefile
-MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common qcsrc/menu-server qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c|inc)') Makefile
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+FIND_CMD=find -E
+FIND_OPT=
+else
+FIND_CMD=find
+FIND_OPT=-regextype posix-egrep
+endif
+
+SV_SOURCES=$(shell $(FIND_CMD) qcsrc/server qcsrc/client-server qcsrc/common qcsrc/menu-server -type f $(FIND_OPT) -regex '.*\.(qc|qh|src)') Makefile
+CL_SOURCES=$(shell $(FIND_CMD) qcsrc/client qcsrc/client-server qcsrc/common qcsrc/client-menu -type f $(FIND_OPT) -regex '.*\.(qc|qh|src|c)') Makefile
+MENU_SOURCES=$(shell $(FIND_CMD) qcsrc/menu qcsrc/common qcsrc/menu-server qcsrc/client-menu -type f $(FIND_OPT) -regex '.*\.(qc|qh|src|c|inc)') Makefile
 CFG_SOURSES=$(shell ls cfg/*.in)
 SET_CURL_PACKAGE=yes
 QCC=gmqcc

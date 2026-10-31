@@ -31,9 +31,11 @@ CLASS(NexuizServerList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizServerList, ipAddressBox, entity, NULL)
 	ATTRIB(NexuizServerList, favoriteButton, entity, NULL)
 	ATTRIB(NexuizServerList, nextRefreshTime, float, 0)
+	ATTRIB(NexuizServerList, lastRefreshRealTime, float, 0)
 	METHOD(NexuizServerList, refreshServerList, void(entity, float)) // refresh mode: 0 = just reparametrize, 1 = send new requests, 2 = clear
 	ATTRIB(NexuizServerList, needsRefresh, float, 1)
 	METHOD(NexuizServerList, focusEnter, void(entity))
+	METHOD(NexuizServerList, showNotify, void(entity))
 	METHOD(NexuizServerList, positionSortButton, void(entity, entity, float, float, string, void(entity, entity)))
 	ATTRIB(NexuizServerList, sortButton1, entity, NULL)
 	ATTRIB(NexuizServerList, sortButton2, entity, NULL)
@@ -49,6 +51,7 @@ CLASS(NexuizServerList) EXTENDS(NexuizListBox)
 ENDCLASS(NexuizServerList)
 entity makeNexuizServerList();
 void ServerList_Connect_Click(entity btn, entity me);
+void ServerList_Refresh_Click(entity btn, entity me);
 void ServerList_ShowEmpty_Click(entity box, entity me);
 void ServerList_ShowFull_Click(entity box, entity me);
 void ServerList_Filter_Change(entity box, entity me);
@@ -220,6 +223,7 @@ void refreshServerListNexuizServerList(entity me, float mode)
 		sethostcachesort(me.currentSortField, o);
 		resorthostcache();
 		if(mode >= 1) {
+			me.lastRefreshRealTime = gettime();
 			refreshhostcache();
 			if (cvar("sv_udppunchhole")) {
 				s = cvar_string("sv_udppunchhole_server");
@@ -230,14 +234,29 @@ void refreshServerListNexuizServerList(entity me, float mode)
 		}
 	}
 }
+void showNotifyNexuizServerList(entity me)
+{
+	float t = gettime();
+	// When entering the servers view:
+	// If at least 3 seconds passed since last refresh (to prevent spam on rapid tab switches),
+	// refresh immediately. When returning from gameplay, t - lastRefreshRealTime is always > 3s,
+	// so the server list begins updating immediately with zero delay.
+	if(t - me.lastRefreshRealTime > 3)
+	{
+		me.refreshServerList(me, 1);
+	}
+}
 void focusEnterNexuizServerList(entity me)
 {
-	if(time < me.nextRefreshTime)
+	float t = gettime();
+	if(t - me.lastRefreshRealTime < 5)
 	{
-		//print("sorry, no refresh yet\n");
 		return;
 	}
-	me.nextRefreshTime = time + 10;
+	me.refreshServerList(me, 1);
+}
+void ServerList_Refresh_Click(entity btn, entity me)
+{
 	me.refreshServerList(me, 1);
 }
 void drawNexuizServerList(entity me)
@@ -582,6 +601,11 @@ float keyDownNexuizServerList(entity me, float scan, float ascii, float shift)
 			ToggleFavorite(me.selectedServer);
 			me.ipAddressBoxFocused = -1;
 		}
+	}
+	else if(scan == K_F5)
+	{
+		ServerList_Refresh_Click(NULL, me);
+		return 1;
 	}
 	else if(keyDownListBox(me, scan, ascii, shift))
 		return 1;
