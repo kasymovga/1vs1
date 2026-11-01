@@ -5,7 +5,6 @@
 #include "db.qh"
 #include "digit.qh"
 #include "dlc.qh"
-#include "extensions.qh"
 #include "file.qh"
 #include "game_type.qh"
 #include "rgb.qh"
