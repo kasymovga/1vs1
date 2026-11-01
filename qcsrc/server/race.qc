@@ -974,7 +974,9 @@ float() race_WarmupAllowed {
 string(entity cl) race_client_fix_cvars {
 	string s = "cl_cmd settemp cl_movecliptokeyboard 2";
 	if (g_cts && !map_finished) {
-		race_ghost_best_announce(cl);
+		if (clienttype(cl) == VM_CLIENTTYPE_REAL)
+			race_ghost_best_announce(cl);
+
 		s = strcat(s, ";sendcvar cl_cts_ghost");
 	}
 	return s;
