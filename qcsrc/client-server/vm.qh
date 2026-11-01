@@ -1,0 +1,390 @@
+enum {
+	//definitions that id Software left out:
+	//these are passed as the 'nomonsters' parameter to traceline/tracebox (yes really this was supported in all quake engines, nomonsters is misnamed)
+	VM_MOVE_NORMAL = 0, // same as FALSE
+	VM_MOVE_NOMONSTER = 1, // same as TRUE
+	VM_MOVE_MISSILE = 2, // save as movement with .movetype == MOVETYPE_FLYMISSILE
+
+	//DP_QC_TRACE_MOVETYPE_HITMODEL
+	//idea: LordHavoc
+	//darkplaces implementation: LordHavoc
+	//constant definitions:
+	VM_MOVE_HITMODEL = 4,
+	//description:
+	//allows traces to hit alias models (not sprites!) instead of entity boxes, use as the nomonsters parameter to trace functions, note that you can hit invisible model entities (alpha < 0 or EF_NODRAW or model "", it only checks modelindex)
+
+	//DP_QC_TRACE_MOVETYPE_WORLDONLY
+	//idea: LordHavoc
+	//darkplaces implementation: LordHavoc
+	//constant definitions:
+	//float MOVE_WORLDONLY = 3;
+	//description:
+	//allows traces to hit only world (ignoring all entities, unlike MOVE_NOMONSTERS which hits all bmodels), use as the nomonsters parameter to trace functions
+	VM_MOVE_WORLDONLY = 3,
+};
+
+enum {
+	VM_WATERLEVEL_NONE = 0,
+	VM_WATERLEVEL_WETFEET = 1,
+	VM_WATERLEVEL_SWIMMING = 2,
+	VM_WATERLEVEL_SUBMERGED = 3,
+};
+
+enum {
+	VM_FL_FLY = 1, //engine (but we use as fly cheat) 1
+	VM_FL_SWIM = 2, //engine (but we use as noclip cheat) 2
+	VM_FL_CONVEYOR = 4, //unused 4
+	VM_FL_CLIENT = 8, //8
+	VM_FL_INWATER = 16, //16
+	VM_FL_MONSTER = 32, //unused 32
+	VM_FL_GODMODE = 64, //engine 64
+	VM_FL_NOTARGET = 128, //engine 128
+	VM_FL_ITEM = 256, //engine 256
+	VM_FL_ONGROUND = 512, //engine 512
+	VM_FL_PARTIALGROUND = 1024, //engine
+	VM_FL_WATERJUMP = 2048, //engine
+	VM_FL_JUMPRELEASED = 4096, //engine
+};
+
+enum {
+	VM_SOLID_NOT = 0,
+	VM_SOLID_TRIGGER = 1,
+	VM_SOLID_BBOX = 2,
+	VM_SOLID_SLIDEBOX = 3,
+	VM_SOLID_BSP = 4,
+	//DP_SOLIDCORPSE
+	//idea: LordHavoc
+	//darkplaces implementation: LordHavoc
+	//solid definitions:
+	//description:
+	//the entity will not collide with SOLID_CORPSE and SOLID_SLIDEBOX entities (and likewise they will not collide with it), this is useful if you want dead bodies that are shootable but do not obstruct movement by players and monsters, note that if you traceline with a SOLID_SLIDEBOX entity as the ignoreent, it will ignore SOLID_CORPSE entities, this is desirable for visibility and movement traces, but not for bullets, for the traceline to hit SOLID_CORPSE you must temporarily force the player (or whatever) to SOLID_BBOX and then restore to SOLID_SLIDEBOX after the traceline.
+	VM_SOLID_CORPSE = 5,
+};
+
+enum {
+	VM_MOVETYPE_NONE = 0,
+	VM_MOVETYPE_ANGLENOCLIP = 1,
+	VM_MOVETYPE_ANGLECLIP = 2,
+	VM_MOVETYPE_WALK = 3,
+	VM_MOVETYPE_STEP = 4,
+	VM_MOVETYPE_FLY = 5,
+	VM_MOVETYPE_TOSS = 6,
+	VM_MOVETYPE_PUSH = 7,
+	VM_MOVETYPE_NOCLIP = 8,
+	VM_MOVETYPE_FLYMISSILE = 9,
+	VM_MOVETYPE_BOUNCE = 10,
+	VM_MOVETYPE_BOUNCEMISSILE = 11, // Like bounce but doesn't lose speed on bouncing
+	VM_MOVETYPE_FOLLOW = 12, // 'Attaches' the entity to its aim_ent
+	VM_MOVETYPE_PHYSICS = 32,
+	VM_MOVETYPE_QCWALK = 128,
+};
+
+void(vector ang) makevectors = #1;
+void(entity e, vector o) setorigin = #2;
+void(entity e, string m) setmodel = #3;
+void(entity e, vector min, vector max) setsize = #4;
+float(void) random = #7;
+//void() vm_break = #6;
+void(entity e, float chan, string samp, float vol, float atten) vm_sound = #8;
+vector(vector v) normalize = #9;
+void(string e) error = #10;
+void(string e) vm_objerror = #11;
+float(vector v) vlen = #12;
+float(vector v) vectoyaw = #13;
+entity(void) spawn = #14;
+void(entity e) remove = #15;
+
+//DP_TRACE_HITCONTENTSMASK_SURFACEINFO
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//globals:
+.float dphitcontentsmask; // if non-zero on the entity passed to traceline/tracebox/tracetoss this will override the normal collidable contents rules and instead hit these contents values (for example AI can use tracelines that hit DONOTENTER if it wants to, by simply changing this field on the entity passed to traceline), this affects normal movement as well as trace calls
+float trace_dpstartcontents; // DPCONTENTS_ value at start position of trace
+float trace_dphitcontents; // DPCONTENTS_ value of impacted surface (not contents at impact point, just contents of the surface that was hit)
+float trace_dphitq3surfaceflags; // Q3SURFACEFLAG_ value of impacted surface
+string trace_dphittexturename; // texture name of impacted surface
+//constants:
+enum {
+	VM_DPCONTENTS_SOLID = 1,
+	VM_DPCONTENTS_WATER = 2,
+	VM_DPCONTENTS_SLIME = 4,
+	VM_DPCONTENTS_LAVA = 8,
+	VM_DPCONTENTS_SKY = 16,
+	VM_DPCONTENTS_BODY = 32,
+	VM_DPCONTENTS_CORPSE = 64,
+	VM_DPCONTENTS_NODROP = 128,
+	VM_DPCONTENTS_PLAYERCLIP = 256,
+	VM_DPCONTENTS_MONSTERCLIP = 512,
+	VM_DPCONTENTS_DONOTENTER = 1024,
+	VM_DPCONTENTS_LIQUIDSMASK = 14,
+	VM_DPCONTENTS_BOTCLIP = 2048,
+	VM_DPCONTENTS_OPAQUE = 4096,
+};
+//description:
+//adds additional information after a traceline/tracebox/tracetoss call.
+//also (very important) sets trace_* globals before calling .touch functions,
+//this allows them to inspect the nature of the collision (for example
+//determining if a projectile hit sky), clears trace_* variables for the other
+//object in a touch event (that is to say, a projectile moving will see the
+//trace results in its .touch function, but the player it hit will see very
+//little information in the trace_ variables as it was not moving at the time)
+
+float trace_networkentity;
+void(vector v1, vector v2, float nomonsters, entity forent) vm_traceline = #16;
+entity(entity start, .string fld, string match) find = #18;
+string(string s) precache_sound = #19;
+string(string s) precache_model = #20;
+entity(vector org, float rad) findradius = #22;
+//void(string s) dprint = #25;
+string(float f) ftos = #26;
+string(vector v) vtos = #27;
+//void(void) coredump = #28;
+//void(void) traceon = #29;
+//void(void) traceoff = #30;
+void(entity e) eprint = #31;
+float(float v) rint = #36;
+float(float v) floor = #37;
+float(float v) ceil = #38;
+float(vector v) pointcontents = #41;
+float(float f) fabs = #43;
+float(string s) vm_cvar = #45;
+void(string s, ...) localcmd = #46;
+entity(entity e) nextent = #47;
+
+//DP_QC_SINCOSSQRTPOW
+//idea: id Software, LordHavoc
+//darkplaces implementation: id Software, LordHavoc
+//builtin definitions:
+float(float val) sin = #60;
+float(float val) cos = #61;
+float(float val) sqrt = #62;
+float(float a, float b) pow = #97;
+//description:
+//useful math functions, sine of val, cosine of val, square root of val, and raise a to power b, respectively.
+
+void(string var, string val) vm_cvar_set = #72;
+float(string s) stof = #81;
+
+//DP_QC_TRACEBOX
+//idea: id Software
+//darkplaces implementation: id Software
+//builtin definitions:
+void(vector v1, vector min, vector max, vector v2, float nomonsters, entity forent) vm_tracebox = #90;
+//description:
+//similar to traceline but much more useful, traces a box of the size specified (technical note: in quake1 and halflife bsp maps the mins and maxs will be rounded up to one of the hull sizes, quake3 bsp does not have this problem, this is the case with normal moving entities as well).
+
+//DP_QC_RANDOMVEC
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+vector() randomvec = #91;
+//description:
+//returns a vector of length < 1, much quicker version of this QC: do {v_x = random()*2-1;v_y = random()*2-1;v_z = random()*2-1;} while(vlen(v) > 1)
+
+//DP_REGISTERCVAR
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(string name, string value, ...) registercvar = #93;
+//description:
+//adds a new console cvar to the server console (in singleplayer this is the player's console), the cvar exists until the mod is unloaded or the game quits.
+//NOTE: DP_CON_SET is much better.
+
+//DP_QC_MINMAXBOUND
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(float a, float b) min = #94;
+float(float a, float b, float c) min3 = #94;
+float(float a, float b, float c, float d) min4 = #94;
+float(float a, float b, float c, float d, float e) min5 = #94;
+float(float a, float b, float c, float d, float e, float f) min6 = #94;
+float(float a, float b, float c, float d, float e, float f, float g) min7 = #94;
+float(float a, float b, float c, float d, float e, float f, float g, float h) min8 = #94;
+float(float a, float b) max = #95;
+float(float a, float b, float c) max3 = #95;
+float(float a, float b, float c, float d) max4 = #95;
+float(float a, float b, float c, float d, float e) max5 = #95;
+float(float a, float b, float c, float d, float e, float f) max6 = #95;
+float(float a, float b, float c, float d, float e, float f, float g) max7 = #95;
+float(float a, float b, float c, float d, float e, float f, float g, float h) max8 = #95;
+float(float minimum, float val, float maximum) bound = #96;
+//description:
+//min returns the lowest of all the supplied numbers.
+//max returns the highest of all the supplied numbers.
+//bound clamps the value to the range and returns it.
+
+//DP_QC_FINDFLOAT
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(entity start, .entity fld, entity match) findentity = #98;
+entity(entity start, .float fld, float match) findfloat = #98;
+//description:
+//finds an entity or float field value, similar to find(), but for entity and float fields.
+
+//checkextension function
+//idea: expected by almost everyone
+//darkplaces implementation: LordHavoc
+float(string s) checkextension = #99;
+//description:
+//check if (cvar("pr_checkextension")) before calling this, this is the only
+//guaranteed extension to be present in the extension system, it allows you
+//to check if an extension is available, by name, to check for an extension
+//use code like this:
+//// (it is recommended this code be placed in worldspawn or a worldspawn called function somewhere)
+//if (cvar("pr_checkextension"))
+//if (checkextension("DP_SV_SETCOLOR"))
+//ext_setcolor = TRUE;
+//from then on you can check ext_setcolor to know if that extension is available
+
+//FRIK_FILE
+//idea: FrikaC
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(string filename, float mode) fopen = #110; // opens a file inside quake/gamedir/data/ (mode is FILE_READ, FILE_APPEND, or FILE_WRITE), returns fhandle >= 0 if successful, or fhandle < 0 if unable to open file for any reason
+void(float fhandle) fclose = #111; // closes a file
+string(float fhandle) fgets = #112; // reads a line of text from the file and returns as a tempstring
+void(float fhandle, string s, ...) fputs = #113; // writes a line of text to the end of the file
+
+float(string s) vm_strlen = #114; // returns how many characters are in a string
+string(string s1, ...) vm_strcat = #115; // concatenates two or more strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
+string(string s, float start, float length) vm_substring = #116; // returns a section of a string as a tempstring
+vector(string s) stov = #117; // returns vector value from a string
+string(string s, ...) vm_strzone = #118; // makes a copy of a string into the string zone and returns it, this is often used to keep around a tempstring for longer periods of time (tempstrings are replaced often)
+void(string s) vm_strunzone = #119; // removes a copy of a string from the string zone (you can not use that string again or it may crash!!!)
+//cvars:
+//pr_zone_min_strings : default 64 (64k), min 64 (64k), max 8192 (8mb)
+//description:
+//provides text file access functions and string manipulation functions, note that you may want to set pr_zone_min_strings in the worldspawn function if 64k is not enough string zone space.
+//
+//NOTE: strzone functionality is partially superseded by
+//DP_QC_UNLIMITEDTEMPSTRINGS when longterm storage is not needed
+
+//FTE_STRINGS
+//idea: many
+//darkplaces implementation: KrimZon
+//description:
+//various string manipulation functions
+float(string str, string sub, float startpos) vm_strstrofs = #221;
+float(string str, float ofs) str2chr = #222;
+string(float c, ...) chr2str = #223;
+string(float ccase, float calpha, float cnum, string s, ...) strconv = #224;
+string(float chars, string s, ...) strpad = #225;
+string(string info, string key, string value, ...) infoadd = #226;
+string(string info, string key) infoget = #227;
+float(string s1, string s2, float len) strncmp = #228;
+float(string s1, string s2) strcasecmp = #229;
+float(string s1, string s2, float len) strncasecmp = #230;
+
+//DP_SV_POINTPARTICLES
+//idea: Spike
+//darkplaces implementation: LordHavoc
+//function definitions:
+float(string effectname) particleeffectnum = #335;
+void(entity ent, float effectnum, vector start, vector end) trailparticles = #336;
+void(float effectnum, vector org, vector vel, float howmany) pointparticles = #337;
+//SVC definitions:
+//float svc_trailparticles = 60; // [short] entnum [short] effectnum [vector] start [vector] end
+//float svc_pointparticles = 61; // [short] effectnum [vector] start [vector] velocity [short] count
+//float svc_pointparticles1 = 62; // [short] effectnum [vector] start, same as svc_pointparticles except velocity is zero and count is 1
+//description:
+//provides the ability to spawn non-standard particle effects, typically these are defined in a particle effect information file such as effectinfo.txt in darkplaces.
+//this is a port of particle effect features from clientside QC (EXT_CSQC) to server QC, as these effects are potentially useful to all games even if they do not make use of EXT_CSQC.
+//warning: server must have same order of effects in effectinfo.txt as client does or the numbers would not match up, except for standard quake effects which are always the same numbers.
+
+//DP_SV_PRINT
+//idea: id Software (QuakeWorld Server)
+//darkplaces implementation: Black, LordHavoc
+void(string s, ...) print = #339; // same number as in EXT_CSQC
+//description:
+//this is identical to dprint except that it always prints regardless of the developer cvar.
+
+//DP_QC_EDICT_NUM
+//idea: 515
+//DarkPlaces implementation: LordHavoc
+//builtin definitions:
+float(entity ent) wasfreed = #353; // same as in EXT_CSQC extension
+entity(float entnum) edict_num = #459;
+//description:
+//edict_num returns the entity corresponding to a given number, this works even for freed entities, but you should call wasfreed(ent) to see if is currently active.
+//wasfreed returns whether an entity slot is currently free (entities that have never spawned are free, entities that have had remove called on them are also free).
+
+float(string s) tokenize = #441;
+string(float n) argv = #442;
+
+//DP_QC_FS_SEARCH
+//idea: Black
+//darkplaces implementation: Black
+//builtin definitions:
+float(string pattern, float caseinsensitive, float quiet) search_begin = #444;
+void(float handle) search_end = #445;
+float(float handle) search_getsize = #446;
+string(float handle, float num) search_getfilename = #447;
+//description:
+//search_begin performs a filename search with the specified pattern (for example "maps/*.bsp") and stores the results in a search slot (minimum of 128 supported by any engine with this extension), the other functions take this returned search slot number, be sure to search_free when done (they are also freed on progs reload).
+//search_end frees a search slot (also done at progs reload).
+//search_getsize returns how many filenames were found.
+//search_getfilename returns a filename from the search.
+
+//DP_QC_CVAR_STRING
+//idea: VorteX
+//DarkPlaces implementation: VorteX, LordHavoc
+//builtin definitions:
+string(string s) vm_cvar_string = #448;
+//description:
+//returns the value of a cvar, as a tempstring.
+
+//DP_QC_FINDFLAGS
+//idea: Sajt
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(entity start, .float fld, float match) findflags = #449;
+//description:
+//finds an entity with the specified flag set in the field, similar to find()
+//
+//DP_QC_FINDCHAINFLAGS
+//idea: Sajt
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(.float fld, float match) findchainflags = #450;
+//description:
+//similar to findflags() but returns a chain of entities like findradius.
+
+//DP_QC_ASINACOSATANATAN2TAN
+//idea: Urre
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(float s) asin = #471; // returns angle in radians for a given sin() value, the result is in the range -PI*0.5 to PI*0.5
+float(float c) acos = #472; // returns angle in radians for a given cos() value, the result is in the range 0 to PI
+float(float t) atan = #473; // returns angle in radians for a given tan() value, the result is in the range -PI*0.5 to PI*0.5
+float(float c, float s) atan2 = #474; // returns angle in radians for a given cos() and sin() value pair, the result is in the range -PI to PI (this is identical to vectoyaw except it returns radians rather than degrees)
+float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(a)) for the given angle in radians, the result is in the range -infinity to +infinity
+//description:
+//useful math functions for analyzing vectors, note that these all use angles in radians (just like the cos/sin functions) not degrees unlike makevectors/vectoyaw/vectoangles, so be sure to do the appropriate conversions (multiply by DEG2RAD or RAD2DEG as needed).
+//note: atan2 can take unnormalized vectors (just like vectoyaw), and the function was included only for completeness (more often you want vectoyaw or vectoangles), atan2(v_x,v_y) * RAD2DEG gives the same result as vectoyaw(v)
+
+//DP_QC_CRC16
+//idea: div0
+//darkplaces implementation: div0
+//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
+//When caseinsensitive is set, the CRC is calculated of the lower cased string.
+float(float caseinsensitive, string s, ...) crc16 = #494;
+
+//DP_QC_CVAR_TYPE
+//idea: div0
+//DarkPlaces implementation: div0
+//builtin definitions:
+float(string name) vm_cvar_type = #495;
+
+//DP_QC_TOKENIZE_CONSOLE
+//idea: div0
+//darkplaces implementation: div0
+//builtin definitions:
+float(string s) tokenize_console = #514;
+float(float i) argv_start_index = #515;
+float(float i) argv_end_index = #516;
+//description:
+//this function returns tokens separated just like the console does
+//also, functions are provided to get the index of the first and last character of each token in the original string
+//Passing negative values to them, or to argv, will be treated as indexes from the LAST token (like lists work in Perl). So argv(-1) will return the LAST token.

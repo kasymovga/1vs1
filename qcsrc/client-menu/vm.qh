@@ -1,0 +1,5 @@
+enum {
+	VM_CVAR_SAVE = 1,
+	VM_CVAR_NOTIFY = 2,
+	VM_CVAR_READONLY = 4,
+};
