@@ -957,24 +957,6 @@ void(entity ent, float colors) setcolor = #401;
 //SV_ChangeTeam is called by the engine whenever a "color" command is recieved, it may decide to do anything it pleases with the color passed by the client, including rejecting it (by doing nothing), or calling setcolor to apply it, preventing team changes is one use for this.
 //the color format is pants + shirt * 16 (0-255 potentially)
 //
-//DP_QC_FINDCHAIN
-//idea: LordHavoc
-//darkplaces implementation: LordHavoc
-//builtin definitions:
-entity(.string fld, string match) findchain = #402;
-entity(.string fld, string match, .entity fld) findchain_tofield = #402;
-//description:
-//similar to find() but returns a chain of entities like findradius.
-//
-//DP_QC_FINDCHAINFLOAT
-//idea: LordHavoc
-//darkplaces implementation: LordHavoc
-//builtin definitions:
-entity(.entity fld, entity match) findchainentity = #403;
-entity(.float fld, float match) findchainfloat = #403;
-//description:
-//similar to findentity()/findfloat() but returns a chain of entities like findradius.
-//
 //DP_TE_SPARK
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
@@ -1049,18 +1031,6 @@ void(vector dir) vectorvectors = #432;
 //description:
 //creates v_forward, v_right, and v_up vectors given a forward vector, similar to makevectors except it takes a forward direction vector instead of angles.
 //
-//DP_QC_GETSURFACE
-//idea: LordHavoc
-//darkplaces implementation: LordHavoc
-//builtin definitions:
-float(entity e, float s) getsurfacenumpoints = #434;
-vector(entity e, float s, float n) getsurfacepoint = #435;
-vector(entity e, float s) getsurfacenormal = #436;
-string(entity e, float s) getsurfacetexture = #437;
-float(entity e, vector p) getsurfacenearpoint = #438;
-vector(entity e, float s, vector p) getsurfaceclippedpoint = #439;
-//description:
-//functions to query surface information.
 //
 //DP_GFX_QUAKE3MODELTAGS
 //idea: id Software
@@ -1186,16 +1156,6 @@ void(entity e, string s) clientcommand = #440;
 //description:
 //provides QC the ability to completely control server interpretation of client commands ("say" and "color" for example, clientcommand is necessary for this and str_sub (FRIK_FILE) is useful) as well as adding new commands (tokenize, argv, and stof (FRIK_FILE) are useful for this)), whenever a clc_stringcmd is received the QC function is called, and it is up to the QC to decide what (if anything) to do with it
 //
-//
-//DP_QC_STRINGCOLORFUNCTIONS
-//idea: Dresk
-//darkplaces implementation: Dresk
-//builtin definitions:
-float(string s) strlennocol = #476; // returns how many characters are in a string, minus color codes
-string(string s) strdecolorize = #477; // returns a string minus the color codes of the string provided
-//description:
-//provides additional functionality to strings by supporting functions that isolate and identify strings with color codes
-//
 //DP_QC_TOKENIZEBYSEPARATOR
 //idea: Electro, SavageX, LordHavoc
 //darkplaces implementation: LordHavoc
@@ -1265,8 +1225,6 @@ void(float to, string s, float sz) vm_WritePicture = #501;
 //  for(i = 0; i < imagesize; ++i)
 //    WriteByte(to, [the i-th byte of the compressed JPEG image]);
 //
-//
-//
 //DP_QC_STRINGBUFFERS_CVARLIST
 //idea: div0
 //darkplaces implementation: div0
@@ -1285,8 +1243,8 @@ string(string name) cvar_description = #518;
 void(string s, ...) callfunction = #605;
 float(string s) isfunction = #607;
 string(void) getextresponse = #624;
-float(entity e, float s) getsurfacenumtriangles = #628;
-vector(entity e, float s, float n) getsurfacetriangle = #629;
+float(entity e, float s) vm_getsurfacenumtriangles = #628;
+vector(entity e, float s, float n) vm_getsurfacetriangle = #629;
 //DP_RM_QCSENDPACKET
 //idea: Akari
 //darkplaces implementation: Akari

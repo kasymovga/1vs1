@@ -494,19 +494,19 @@ void(void) warpzone_init_update_transform {
 	norm = point = '0 0 0';
 	area = 0;
 	for (i_s = 0; ; ++i_s) {
-		tex = getsurfacetexture(self, i_s);
+		tex = vm_getsurfacetexture(self, i_s);
 		if not(tex)
 			break; // this is beyond the last one
 
 		if (tex == "texture/common/trigger")
 			continue;
 
-		n_t = getsurfacenumtriangles(self, i_s);
+		n_t = vm_getsurfacenumtriangles(self, i_s);
 		for (i_t = 0; i_t < n_t; ++i_t) {
-			tri = getsurfacetriangle(self, i_s, i_t);
-			a = getsurfacepoint(self, i_s, tri_x);
-			b = getsurfacepoint(self, i_s, tri_y);
-			c = getsurfacepoint(self, i_s, tri_z);
+			tri = vm_getsurfacetriangle(self, i_s, i_t);
+			a = vm_getsurfacepoint(self, i_s, tri_x);
+			b = vm_getsurfacepoint(self, i_s, tri_y);
+			c = vm_getsurfacepoint(self, i_s, tri_z);
 			p = b - a;
 			q = c - a;
 			n = '1 0 0' * (q_y * p_z - q_z * p_y)
@@ -811,7 +811,7 @@ void(void) warpzone_dlc_load {
 	float i;
 	string tex;
 	for (i = 0; ; ++i) {
-		tex = getsurfacetexture(self, i);
+		tex = vm_getsurfacetexture(self, i);
 		if not(tex)
 			break;
 

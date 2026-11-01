@@ -310,6 +310,37 @@ entity(float entnum) edict_num = #459;
 //edict_num returns the entity corresponding to a given number, this works even for freed entities, but you should call wasfreed(ent) to see if is currently active.
 //wasfreed returns whether an entity slot is currently free (entities that have never spawned are free, entities that have had remove called on them are also free).
 
+//DP_QC_FINDCHAIN
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(.string fld, string match) findchain = #402;
+entity(.string fld, string match, .entity fld) findchain_tofield = #402;
+//description:
+//similar to find() but returns a chain of entities like findradius.
+
+//DP_QC_FINDCHAINFLOAT
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+entity(.entity fld, entity match) findchainentity = #403;
+entity(.float fld, float match) findchainfloat = #403;
+//description:
+//similar to findentity()/findfloat() but returns a chain of entities like findradius.
+
+//DP_QC_GETSURFACE
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+//float(entity e, float s) vm_getsurfacenumpoints = #434;
+vector(entity e, float s, float n) vm_getsurfacepoint = #435;
+//vector(entity e, float s) vm_getsurfacenormal = #436;
+string(entity e, float s) vm_getsurfacetexture = #437;
+//float(entity e, vector p) vm_getsurfacenearpoint = #438;
+//vector(entity e, float s, vector p) vm_getsurfaceclippedpoint = #439;
+//description:
+//functions to query surface information.
+
 float(string s) tokenize = #441;
 string(float n) argv = #442;
 
@@ -378,6 +409,15 @@ float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(
 //description:
 //useful math functions for analyzing vectors, note that these all use angles in radians (just like the cos/sin functions) not degrees unlike makevectors/vectoyaw/vectoangles, so be sure to do the appropriate conversions (multiply by DEG2RAD or RAD2DEG as needed).
 //note: atan2 can take unnormalized vectors (just like vectoyaw), and the function was included only for completeness (more often you want vectoyaw or vectoangles), atan2(v_x,v_y) * RAD2DEG gives the same result as vectoyaw(v)
+
+//DP_QC_STRINGCOLORFUNCTIONS
+//idea: Dresk
+//darkplaces implementation: Dresk
+//builtin definitions:
+float(string s) strlennocol = #476; // returns how many characters are in a string, minus color codes
+string(string s) strdecolorize = #477; // returns a string minus the color codes of the string provided
+//description:
+//provides additional functionality to strings by supporting functions that isolate and identify strings with color codes
 
 //DP_QC_STRFTIME
 //idea: LordHavoc
