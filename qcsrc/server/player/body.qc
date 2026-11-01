@@ -796,7 +796,7 @@ string(string _playermodel) player_body_model_check {
 	if not(file_exists(_playermodel)) {
 		return fallback;
 	}
-	return strcat1(_playermodel);
+	return strcat(_playermodel);
 }
 
 void() player_body_model_setup {

@@ -88,7 +88,7 @@ var void() pin_client_disconnect_real {
 
 var float() pin_spectator_to_player_handle_next;
 float() pin_spectator_to_player_handle {
-	if (clienttype(self) == CLIENTTYPE_REAL) {
+	if (clienttype(self) == VM_CLIENTTYPE_REAL) {
 		if (pin_checker_presents(self))
 			return TRUE;
 	}

@@ -240,7 +240,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 				self.team = (attacker ? attacker.team : 0);
 	}
 	if (deathtype == DEATH_HURTTRIGGER)
-		entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256);
+		entity_move_to_random_location(self, VM_DPCONTENTS_SOLID | VM_DPCONTENTS_CORPSE | VM_DPCONTENTS_PLAYERCLIP, VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA | VM_DPCONTENTS_SKY | VM_DPCONTENTS_BODY | VM_DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256);
 }
 
 void(void) key_reset {
@@ -260,7 +260,7 @@ void(entity key, entity initial_owner, float angle, float i) kh_Key_Spawn { // r
 	setmodel(key, "models/keyhunt/key.md3");
 	key.lip = 0;
 	key.effects &= ~EFFECT_NODRAW;
-	key.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	key.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP;
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
 	key.colormod = team_color(initial_owner.team) * KH_KEY_BRIGHTNESS;
 	key.reset = key_reset;
@@ -416,7 +416,7 @@ void(void) kh_key_think {  // runs all the time
 
 		if (self.waterlevel > 0)
 		if (self.watertype == CONTENT_LAVA || self.watertype == CONTENT_SLIME)
-			entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256);
+			entity_move_to_random_location(self, VM_DPCONTENTS_SOLID | VM_DPCONTENTS_CORPSE | VM_DPCONTENTS_PLAYERCLIP, VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA | VM_DPCONTENTS_SKY | VM_DPCONTENTS_BODY | VM_DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256);
 	} else if (kh_Key_AllOwnedByWhichTeam() != -1) {
 		if (self.nextstep < time) {
 			sound(self.owner, CHAN_AUTO, kh_sound_alarm, VOL_BASE, ATTN_NORM);  // play a simple alarm
@@ -515,7 +515,7 @@ void(float teem) kh_WinnerTeam { // runs when a team wins
 
 void(void) kh_Key_MoveToRandomLocation_Think {
 	vector v = self.origin;
-	if (entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 30, 1024, 256)) {
+	if (entity_move_to_random_location(self, VM_DPCONTENTS_SOLID | VM_DPCONTENTS_CORPSE | VM_DPCONTENTS_PLAYERCLIP, VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA | VM_DPCONTENTS_SKY | VM_DPCONTENTS_BODY | VM_DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 30, 1024, 256)) {
 		print_all(PRINT_INFO, "The {1}^7 respawned", self.netname, "", "");
 		self.pain_finished = time + g_kh_delay_return;
 		self.think = kh_key_think;

@@ -971,7 +971,7 @@ string nadget_SelectableTypes(float issecondary) {
 
 void nadget_WriteNadgetSelect(void) {
 	if (!g_nadgets && !(self.abilities & NADGET_ABILITY)) {
-		if (clienttype(self) == CLIENTTYPE_REAL)
+		if (clienttype(self) == VM_CLIENTTYPE_REAL)
 			print_to(self, PRINT_CENTER, "You don't have nadget ability", "", "", "");
 
 		return;
@@ -992,7 +992,7 @@ float nadget_ShowMenu(float always) {
     if((self.hg_type1_picked && self.BUTTON_CHAT) && always < 2)
         return FALSE;
 
-    if(nadget_SelectableTypes(FALSE) != "" && (always || !self.hg_type1_picked || (g_nadgets_double && !self.hg_type2_picked)) && clienttype(self) == CLIENTTYPE_REAL) {
+    if(nadget_SelectableTypes(FALSE) != "" && (always || !self.hg_type1_picked || (g_nadgets_double && !self.hg_type2_picked)) && clienttype(self) == VM_CLIENTTYPE_REAL) {
         nadget_WriteNadgetSelect();
         return TRUE;
     }
@@ -1020,7 +1020,7 @@ void nadget_Pick(float tokens) {
 		return;
 
 	if (self.hg_type1_picked & 1024) {
-		if (clienttype(self) == CLIENTTYPE_REAL)
+		if (clienttype(self) == VM_CLIENTTYPE_REAL)
 			print_to(self, PRINT_CENTER, "Your nadget type is forced", "", "", "");
 
 		return;

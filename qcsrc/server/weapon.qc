@@ -425,7 +425,7 @@ void(vector velo, float doreduce) weapon_throw {
 		return;
 
 	if (self.health >= 1) {
-		if (clienttype(self) == CLIENTTYPE_REAL) {
+		if (clienttype(self) == VM_CLIENTTYPE_REAL) {
 			if not(a_x)
 				print_to(self, PRINT_INFO, "You dropped the ^2{1}", weapon_name(w), "", "");
 			else
@@ -448,7 +448,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 	wi = weapon_info(wpn);
 	if not(wi.weapon) {
 		if (complain) {
-			if (clienttype(cl) == CLIENTTYPE_REAL)
+			if (clienttype(cl) == VM_CLIENTTYPE_REAL)
 				print_to(cl, PRINT_INFO, "Invalid weapon", "", "", "");
 		}
 		return FALSE;
@@ -465,7 +465,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 			}
 			if (!f) {
 				if (complain)
-				if (clienttype(cl) == CLIENTTYPE_REAL) {
+				if (clienttype(cl) == VM_CLIENTTYPE_REAL) {
 					sound_play2(cl, "weapons/unavailable.wav");
 					print_to(cl, PRINT_INFO, "You don't have any ammo for the ^2{1}", weapon_name(wpn), "", "");
 				}
@@ -475,7 +475,7 @@ float(entity cl, float wpn, float andammo, float complain) weapon_carried {
 		return TRUE;
 	}
 	if (complain)
-	if (clienttype(cl) == CLIENTTYPE_REAL) {
+	if (clienttype(cl) == VM_CLIENTTYPE_REAL) {
 		if ((weapon_spawned_list & wi.weapons) || (weapon_spawned_extra_list & wi.weapons_extra)) {
 			print_to(cl, PRINT_INFO, "You do not have the ^2{1}", weapon_name(wpn), "", "");
 			if (g_showweaponspawns)
@@ -1020,7 +1020,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 		weapon_shotdir = s_forward;
 	else {
 		float dphitcontentsmask_save = ent.dphitcontentsmask;
-		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+		ent.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_CORPSE;
 		warpzone_trace_line(o, o + s_forward * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NOMONSTERS, ent);
 		ent.dphitcontentsmask = dphitcontentsmask_save;
 		weapon_shotpoint = warpzone_untransform_origin(warpzone_trace_transform, trace_endpos);
@@ -1186,7 +1186,7 @@ void(entity e, float wep, string name) weapon_give {
 	self = e;
 	if (other.classname == "player") {
 		weapon_show_list(other);
-		if (clienttype(other) == CLIENTTYPE_REAL)
+		if (clienttype(other) == VM_CLIENTTYPE_REAL)
 			print_to(other, PRINT_INFO, "You got the ^2{1}", name, "", "");
 	}
 	self = oldself;

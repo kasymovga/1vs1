@@ -108,7 +108,7 @@ float(entity wz, entity e) warpzone_teleport {
 	a0 = e.angles;
 	o10 = o1 = warpzone_transform_origin(wz, o0);
 	v1 = warpzone_transform_velocity(wz, v0);
-	if not(clienttype(e) == CLIENTTYPE_NOTACLIENT)
+	if not(clienttype(e) == VM_CLIENTTYPE_NOTACLIENT)
 		a1 = warpzone_transform_vangles(wz, e.v_angle);
 	else
 		a1 = warpzone_transform_angles(wz, a0);

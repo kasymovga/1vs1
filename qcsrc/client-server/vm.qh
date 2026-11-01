@@ -342,7 +342,7 @@ string(string s) vm_cvar_string = #448;
 entity(entity start, .float fld, float match) findflags = #449;
 //description:
 //finds an entity with the specified flag set in the field, similar to find()
-//
+
 //DP_QC_FINDCHAINFLAGS
 //idea: Sajt
 //darkplaces implementation: LordHavoc
@@ -350,6 +350,21 @@ entity(entity start, .float fld, float match) findflags = #449;
 entity(.float fld, float match) findchainflags = #450;
 //description:
 //similar to findflags() but returns a chain of entities like findradius.
+
+//DP_QC_STRINGBUFFERS
+//idea: ??
+//darkplaces implementation: LordHavoc
+//functions to manage string buffer objects - that is, arbitrary length string arrays that are handled by the engine
+float() buf_create = #460;
+void(float bufhandle) buf_del = #461;
+float(float bufhandle) buf_getsize = #462;
+void(float bufhandle_from, float bufhandle_to) buf_copy = #463;
+void(float bufhandle, float sortpower, float backward) buf_sort = #464;
+string(float bufhandle, string glue) buf_implode = #465;
+string(float bufhandle, float string_index) bufstr_get = #466;
+void(float bufhandle, float string_index, string str) bufstr_set = #467;
+float(float bufhandle, string str, float order) bufstr_add = #468;
+void(float bufhandle, float string_index) bufstr_free = #469;
 
 //DP_QC_ASINACOSATANATAN2TAN
 //idea: Urre
@@ -364,6 +379,34 @@ float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(
 //useful math functions for analyzing vectors, note that these all use angles in radians (just like the cos/sin functions) not degrees unlike makevectors/vectoyaw/vectoangles, so be sure to do the appropriate conversions (multiply by DEG2RAD or RAD2DEG as needed).
 //note: atan2 can take unnormalized vectors (just like vectoyaw), and the function was included only for completeness (more often you want vectoyaw or vectoangles), atan2(v_x,v_y) * RAD2DEG gives the same result as vectoyaw(v)
 
+//DP_QC_STRFTIME
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+string(float uselocaltime, string format, ...) strftime = #478;
+//description:
+//provides the ability to get the local (in your timezone) or world (Universal Coordinated Time) time as a string using the formatting of your choice:
+//example: "%Y-%m-%d %H:%M:%S"   (result looks like: 2007-02-08 01:03:15)
+//note: "%F %T" gives the same result as "%Y-%m-%d %H:%M:%S" (ISO 8601 date format and 24-hour time)
+//for more format codes please do a web search for strftime 3 and you should find the man(3) pages for this standard C function.
+//practical uses:
+//changing day/night cycle (shops closing, monsters going on the prowl) in an RPG, for this you probably want to use s = strftime(TRUE, "%H");hour = stof(s);
+//printing current date/time for competitive multiplayer games, such as the beginning/end of each round in real world time.
+//activating eastereggs in singleplayer games on certain dates.
+//note: some codes such as %x and %X use your locale settings and thus may not make sense to international users, it is not advisable to use these as the server and clients may be in different countries.
+//note: if you display local time to a player, it would be a good idea to note whether it is local time using a string like "%F %T (local)", and otherwise use "%F %T (UTC)".
+//note: be aware that if the game is saved and reloaded a week later the date and time will be different, so if activating eastereggs in a singleplayer game or something you may want to only check when a level is loaded and then keep the same easteregg state throughout the level so that the easteregg does not deactivate when reloading from a savegame (also be aware that precaches should not depend on such date/time code because reloading a savegame often scrambles the precaches if so!).
+//note: this function can return a NULL string (you can check for it with if (!s)) if the localtime/gmtime functions returned NULL in the engine code, such as if those functions don't work on this platform (consoles perhaps?), so be aware that this may return nothing.
+
+//DP_QC_STRING_CASE_FUNCTIONS
+//idea: Dresk
+//darkplaces implementation: LordHavoc / Dresk
+//builtin definitions:
+string(string s) strtolower = #480; // returns the passed in string in pure lowercase form
+string(string s) strtoupper = #481; // returns the passed in string in pure uppercase form
+//description:
+//provides simple string uppercase and lowercase functions
+
 //DP_QC_CRC16
 //idea: div0
 //darkplaces implementation: div0
@@ -377,6 +420,43 @@ float(float caseinsensitive, string s, ...) crc16 = #494;
 //builtin definitions:
 float(string name) vm_cvar_type = #495;
 
+//DP_QC_WHICHPACK
+//idea: div0
+//darkplaces implementation: div0
+//builtin definitions:
+string(string filename) whichpack = #503;
+//description:
+//returns the name of the pak/pk3/whatever containing the given file, in the same path space as FRIK_FILE functions use (that is, possibly with a path name prefix)
+
+//DP_QC_URI_ESCAPE
+//idea: div0
+//darkplaces implementation: div0
+//URI::Escape's functionality
+string(string in) uri_escape = #510;
+string(string in) uri_unescape = #511;
+
+//DP_QC_NUM_FOR_EDICT
+//idea: Blub\0
+//darkplaces implementation: Blub\0
+//Function to get the number of an entity - a clean way.
+float(entity num) num_for_edict = #512;
+
+//DP_QC_URI_GET
+//idea: div0
+//darkplaces implementation: div0
+//loads text from an URL into a string
+//returns 1 on success of initiation, 0 if there are too many concurrent
+//connections already or if the URL is invalid
+//the following callback will receive the data and MUST exist!
+//  void(float id, float status, string data) URI_Get_Callback;
+//status is either
+//  negative for an internal error,
+//  0 for success, or
+//  the HTTP response code on server error (e.g. 404)
+//if 1 is returned by uri_get, the callback will be called in the future
+float(string url, float id) uri_get = #513;
+float(string url, float id, string posttype, string postdata) uri_post = #513;
+
 //DP_QC_TOKENIZE_CONSOLE
 //idea: div0
 //darkplaces implementation: div0
@@ -388,3 +468,25 @@ float(float i) argv_end_index = #516;
 //this function returns tokens separated just like the console does
 //also, functions are provided to get the index of the first and last character of each token in the original string
 //Passing negative values to them, or to argv, will be treated as indexes from the LAST token (like lists work in Perl). So argv(-1) will return the LAST token.
+
+//DP_QC_GETTIME
+//idea: tZork
+//darkplaces implementation: tZork, div0
+//constant definitions:
+enum {
+	VM_GETTIME_FRAMESTART = 0, // time of start of frame
+	VM_GETTIME_REALTIME = 1, // current time (may be OS specific)
+	VM_GETTIME_HIRES = 2, // like REALTIME, but may reset between QC invocations and thus can be higher precision
+	VM_GETTIME_UPTIME = 3, // time since start of the engine
+	//DP_QC_GETTIME_CDTRACK
+	//idea: div0
+	//darkplaces implementation: div0
+	//constant definitions:
+	VM_GETTIME_CDTRACK = 4,
+	//description:
+	//returns the playing time of the current cdtrack when passed to gettime()
+};
+//builtin definitions:
+float(float tmr) gettime = #519;
+//description:
+//some timers to query...

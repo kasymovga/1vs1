@@ -15,10 +15,10 @@ void(void) laser_draw {
 
 	interpolate_do();
 	if (self.count & 0x80) {
-		traceline(self.origin, self.velocity, 0, self);
+		trace_line(self.origin, self.velocity, 0, self);
 	} else {
 		makevectors(self.angles);
-		traceline(self.origin, self.origin + v_forward * 32768, 0, self);
+		trace_line(self.origin, self.origin + v_forward * 32768, 0, self);
 		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
 			trace_endpos = self.origin + v_forward * 1048576;
 	}

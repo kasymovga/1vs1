@@ -152,7 +152,7 @@ float(void) dom_controlpoint_capture_finished {
 	if (g_dom_point_capturetime <= 0)
 		return TRUE;
 
-	if (clienttype(other) == CLIENTTYPE_BOT)
+	if (clienttype(other) == VM_CLIENTTYPE_BOT)
 		bot_stay(other, 0.1);
 
 	if (self.state >= g_dom_point_capturetime) {

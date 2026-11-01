@@ -78,7 +78,7 @@ void(float melee_type, float extradmg, string snd) weapon_melee_attack {
 	melee.think = weapon_melee_attack_think;
 	melee.delay = melee.nextthink = time + g_balance_melee_delay;
 	melee.cnt = melee.count = max(1, 1 + ceil(g_balance_melee_time / g_balance_melee_ticrate));
-	melee.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	melee.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_CORPSE;
 	melee.dmg = extradmg;
 	melee.playerid = melee.owner.playerid;
 	if (melee_type == 2)

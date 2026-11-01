@@ -307,7 +307,7 @@ float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_ent
 	self.owner.PlayerPhysplug = phys_plug;
 	self.owner.vehicle        = self;
 	self.team                 = self.owner.team;
-	if (clienttype(other) == CLIENTTYPE_REAL) {
+	if (clienttype(other) == VM_CLIENTTYPE_REAL) {
 		ang_z = 0;
 		ang_x = -ang_x;
 		client_view_angles_set(other, ang);
@@ -350,7 +350,7 @@ void(void(void) think_func, void(void) touch_func) vehicle_stdproc_spawn {
 	self.event_damage = vehicle_stdproc_damage;
 	self.alpha = 1;
 	self.effects &= ~EFFECT_NODRAW;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	self.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP;
 	self.touch = touch_func;
 	if (think_func) {
 		self.think = think_func;

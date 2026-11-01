@@ -486,7 +486,7 @@ void() map_finish {
 			if (e.weaponentity.weaponentity)
 				e.weaponentity.weaponentity.effects = EFFECT_NODRAW;
 		}
-		if (clienttype(e) == CLIENTTYPE_REAL) {
+		if (clienttype(e) == VM_CLIENTTYPE_REAL) {
 			s = cvar_string("sv_intermission_cdtrack");
 			if (s != "")
 				stuffcmd(e, strcat("\ncd loop ", s, "\n"));

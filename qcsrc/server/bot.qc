@@ -231,7 +231,7 @@ void(void) bot_relinkplayerlist {
 	{
 		player_count = player_count + 1;
 		e.nextplayer = e.chain;
-		if (clienttype(e) == CLIENTTYPE_BOT)
+		if (clienttype(e) == VM_CLIENTTYPE_BOT)
 		{
 			e.nextbot = world;
 			if (prevbot)
@@ -249,7 +249,7 @@ void(void) bot_relinkplayerlist {
 }
 
 void(void) bot_clientdisconnect {
-	if (clienttype(self) != CLIENTTYPE_BOT)
+	if (clienttype(self) != VM_CLIENTTYPE_BOT)
 		return;
 
 	str_unzone_ifneeded(self.netname_freeme);
@@ -262,7 +262,7 @@ void(void) bot_clientdisconnect {
 }
 
 void(void) bot_clientconnect {
-	if (clienttype(self) != CLIENTTYPE_BOT)
+	if (clienttype(self) != VM_CLIENTTYPE_BOT)
 		return;
 
 	self.bot_preferredcolors = self.clientcolors;
@@ -281,7 +281,7 @@ void(void) bot_removefromlargestteam {
 	team_teams_allowed(world);
 	team_teams_count(world);
 	CLIENT_FOR_EACH_BOT(head) { break; }
-	if (clienttype(head) != CLIENTTYPE_BOT)
+	if (clienttype(head) != VM_CLIENTTYPE_BOT)
 		return;
 
 	best = head;
@@ -320,7 +320,7 @@ void(void) bot_removenewest {
 		return;
 	}
 	CLIENT_FOR_EACH_BOT(head) { break; }
-	if (clienttype(head) != CLIENTTYPE_BOT)
+	if (clienttype(head) != VM_CLIENTTYPE_BOT)
 		return;
 
 	best = head;
@@ -348,7 +348,7 @@ void(void) bot_skill_auto {
 	havebot = haveplayer = 0;
 	PLAYER_FOR_EACH(head) {
 		_kills = head.scorekeeper.scores[SP_KILLS];
-		if (clienttype(head) == CLIENTTYPE_REAL) {
+		if (clienttype(head) == VM_CLIENTTYPE_REAL) {
 			bestplayer = max(bestplayer, _kills);
 			haveplayer = 1;
 		} else {

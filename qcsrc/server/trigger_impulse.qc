@@ -12,9 +12,9 @@ float (entity e) trigger_impulse_affected {
 	if (e.deadflag && e.iscreature)
 		return FALSE;
 
-	if (clienttype(other) == CLIENTTYPE_REAL ||
+	if (clienttype(other) == VM_CLIENTTYPE_REAL ||
 			(other.owner && player_entity(other.owner) == other &&
-			clienttype(other.owner) == CLIENTTYPE_REAL)) { // real player or vehicle with real player
+			clienttype(other.owner) == VM_CLIENTTYPE_REAL)) { // real player or vehicle with real player
 		trigger_impulse_frametime = (physics_current_player ? physics_frametime : 0);
 	} else
 		trigger_impulse_frametime = frametime;

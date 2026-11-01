@@ -224,7 +224,7 @@ entity(string name) bot_cmd_find_bot_by_name {
 	entity bot;
 	bot = findchainflags(flags, FLAG_CLIENT);
 	while (bot) {
-		if (clienttype(bot) == CLIENTTYPE_BOT)
+		if (clienttype(bot) == VM_CLIENTTYPE_BOT)
 		if (bot.netname==name)
 			return bot;
 
@@ -242,7 +242,7 @@ entity(float number) bot_cmd_find_bot_by_number {
 
 	bot = findchainflags(flags, FLAG_CLIENT);
 	while (bot) {
-		if (clienttype(bot) == CLIENTTYPE_BOT) {
+		if (clienttype(bot) == VM_CLIENTTYPE_BOT) {
 			if (++c==number)
 				return bot;
 		}

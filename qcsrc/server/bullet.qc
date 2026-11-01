@@ -253,7 +253,7 @@ void(vector start, vector start_visual, vector dir, float spread, float pSpeed, 
 			proj.clipgroup = self.clipgroup;
 
 		if (entity_per_player_entities && self) {
-			if (clienttype(self) == CLIENTTYPE_NOTACLIENT)
+			if (clienttype(self) == VM_CLIENTTYPE_NOTACLIENT)
 				proj.existsonlyfor = self.existsonlyfor;
 			else
 				proj.existsonlyfor = self;

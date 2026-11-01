@@ -78,7 +78,7 @@ void(void) player_dmg_inflictor_setup {
 	if (g_player_damage_screen_effects || (self.client_flags & CLIENT_FLAG_SCREENDAMAGE)) {
 		if ((!self.dmg_inflictor || self.dmg_inflictor.classname != "dmg_inflictor"
 				|| self.dmg_inflictor.owner != self || wasfreed(self.dmg_inflictor))) { //spectator copy dmg_inflictor, so we need extra checks here
-			if (clienttype(self) == CLIENTTYPE_REAL) {
+			if (clienttype(self) == VM_CLIENTTYPE_REAL) {
 				self.dmg_inflictor = spawn();
 				self.dmg_inflictor.classname = "dmg_inflictor";
 				self.dmg_inflictor.owner = self;
@@ -207,7 +207,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 	string a_red = strcat("^1", a, "^1");
 	float attacker_is_player = (attacker.classname == "player" || (team_teams && attacker.classname == "spectator" && attacker.team > 0));
 	if (targ == attacker) {
-		if (clienttype(attacker) == CLIENTTYPE_BOT)
+		if (clienttype(attacker) == VM_CLIENTTYPE_BOT)
 			bot_say(attacker, FALSE, world, cvar_string("bot_messages_suicide"), "");
 
 		if (deathtype == DEATH_TEAMCHANGE) {
@@ -249,7 +249,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		if (targ.killcount > 2)
 			player_obituary_print_all("{1} ended it all after a {2} kill spree", s_red, ftos(targ.killcount), "");
 	} else if (attacker_is_player || attacker.netname != "") {
-		if (clienttype(attacker) == CLIENTTYPE_BOT) {
+		if (clienttype(attacker) == VM_CLIENTTYPE_BOT) {
 			if (bot_talk)
 			if (random() < bot_talk) {
 				if (team_teams && attacker.team == targ.team)
@@ -266,7 +266,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				self = oldself;
 			}
 		}
-		if (clienttype(targ) == CLIENTTYPE_BOT)
+		if (clienttype(targ) == VM_CLIENTTYPE_BOT)
 		if (bot_talk)
 		if (attacker_is_player)
 		if (random() <= bot_talk) {
@@ -375,7 +375,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			weapon_fragprefix = "";
 		}
 	} else {
-		if (clienttype(targ) == CLIENTTYPE_BOT)
+		if (clienttype(targ) == VM_CLIENTTYPE_BOT)
 		if (bot_talk)
 		if (random() <= bot_talk)
 			bot_say(targ, FALSE, world, cvar_string("bot_messages_suicide"), "");
@@ -599,7 +599,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		// print an obituary message
 		player_obituary(attacker, inflictor, self, deathtype);
 		if (sv_sound_frag != "")
-		if (clienttype(attacker) == CLIENTTYPE_REAL)
+		if (clienttype(attacker) == VM_CLIENTTYPE_REAL)
 		if (attacker != self)
 		if (team_is_different_teams(attacker, self))
 			sound_play2(attacker, sv_sound_frag);
@@ -878,7 +878,7 @@ void() player_think {
 		if (self.pusher)
 		if (self.pusher.team == self.team) {
 			msg_entity = self.pusher;
-			if (clienttype(msg_entity) == CLIENTTYPE_REAL) {
+			if (clienttype(msg_entity) == VM_CLIENTTYPE_REAL) {
 				if (msg_entity.cvar_cl_voice_directional == 1)
 					sound_to(MSG_ONE, self, CHAN_VOICE, sound_random_by_str(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_MIN);
 				else if (msg_entity.cvar_cl_voice_directional >= 0)
@@ -1054,7 +1054,7 @@ void(entity pl) player_physics_setup {
 	physics_clear(pl);
 	pl.movetype = VM_MOVETYPE_QCWALK;
 	pl.solid = VM_SOLID_SLIDEBOX;
-	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | (g_playerclip_collisions ? DPCONTENTS_PLAYERCLIP : 0);
+	pl.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | (g_playerclip_collisions ? VM_DPCONTENTS_PLAYERCLIP : 0);
 	if (player_independent)
 		PLAYER_MAKE_INDEPENDENT(pl);
 	else {
@@ -1143,7 +1143,7 @@ void(entity spot) player_spawn {
 	physics_set_view_offsets(self, PL_VIEW_OFS, PL_CROUCH_VIEW_OFS);
 	physics_set_sizes(self, PL_MIN, PL_MAX, PL_CROUCH_MIN, PL_CROUCH_MAX);
 	if (self.playermodel == "" && self.playermodel_save != "") {
-		self.playermodel = strcat1(self.playermodel_save); //temp string here, will be cleand by player_body_model_setup()
+		self.playermodel = strcat(self.playermodel_save); //temp string here, will be cleand by player_body_model_setup()
 	}
 	player_body_model_setup();
 	self.playermodel = ""; //just in case

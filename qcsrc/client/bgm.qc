@@ -148,7 +148,7 @@ float(entity e) bgm_script {
 		return -1;
 
 	e.just_toggled = FALSE;
-	t = gettime(GETTIME_CDTRACK);
+	t = gettime(VM_GETTIME_CDTRACK);
 	if (t < 0)
 		return -1;
 

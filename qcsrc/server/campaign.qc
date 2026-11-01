@@ -178,7 +178,7 @@ void(void) campaign_preintermission {
 	won = 0;
 	head = findchain(classname, "player");
 	while (head) {
-		if (clienttype(head) == CLIENTTYPE_REAL) {
+		if (clienttype(head) == VM_CLIENTTYPE_REAL) {
 			if (head.winning)
 				won = won + 1;
 			else

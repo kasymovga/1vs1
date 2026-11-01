@@ -1,3 +1,6 @@
-float CVAR_SAVE = 1;
-float CVAR_NOTIFY = 2;
-float CVAR_READONLY = 4;
+#define CVAR_SAVE VM_CVAR_SAVE
+#define CVAR_NOTIFY VM_CVAR_NOTIFY
+#define CVAR_READONLY VM_CVAR_READONLY
+#define cvar vm_cvar
+#define cvar_set vm_cvar_set
+#define cvar_string vm_cvar_string

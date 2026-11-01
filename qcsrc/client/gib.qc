@@ -75,7 +75,7 @@ void(void) gib_touch {
 		return;
 	}
 	if (!self.silent)
-		sound(self, CHAN_PAIN, strcat("misc/gib_splat0", ftos(floor(prandom() * 4 + 1)), ".wav"), VOL_BASE, ATTN_NORM);
+		vm_sound(self, CHAN_PAIN, strcat("misc/gib_splat0", ftos(floor(prandom() * 4 + 1)), ".wav"), VOL_BASE, ATTN_NORM);
 
 	pointparticles(particleeffectnum(strcat(gib_species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
 	self.nextthink = time;

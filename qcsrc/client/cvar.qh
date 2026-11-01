@@ -1,4 +1,1 @@
-#define cvar vm_cvar
-#define cvar_set vm_cvar_set
-#define cvar_string vm_cvar_string
 void(string s, vector v) cvar_set_vec;

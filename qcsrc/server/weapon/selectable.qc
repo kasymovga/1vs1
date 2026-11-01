@@ -42,7 +42,7 @@ float(string cmd, float tokens) weapon_selectable_cmd_client_handle {
 var float(void) weapon_selectable_spectator_to_player_handle_next;
 float(void) weapon_selectable_spectator_to_player_handle {
 	if not(self.w_secondary_picked)
-	if (clienttype(self) == CLIENTTYPE_REAL) {
+	if (clienttype(self) == VM_CLIENTTYPE_REAL) {
 		weapon_selectable_send();
 		return TRUE;
 	}

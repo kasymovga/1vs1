@@ -302,7 +302,7 @@ float(entity p, float wpn, string name) akimbo_weapon_give {
 
 	ag.weapons |= wi.weapons;
 	ag.weapons_extra |= wi.weapons_extra;
-	if (clienttype(p) == CLIENTTYPE_REAL)
+	if (clienttype(p) == VM_CLIENTTYPE_REAL)
 		print_to(p, PRINT_INFO, "You got ^4Akimbo ^2{1}", name, "", "");
 
 	return TRUE;
@@ -319,7 +319,7 @@ float(entity p, float wpn, string name) akimbo_weapon_drop {
 
 	ag.weapons &= ~wi.weapons;
 	ag.weapons_extra &= ~wi.weapons_extra;
-	if (clienttype(p) == CLIENTTYPE_REAL)
+	if (clienttype(p) == VM_CLIENTTYPE_REAL)
 		print_to(p, PRINT_INFO, "You drop ^4Akimbo ^2{1}", name, "", "");
 
 	return TRUE;

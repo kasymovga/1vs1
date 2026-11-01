@@ -46,7 +46,7 @@ void(float isnew) physics_spiderbot_read {
 		physics_spiderbot_entity = self;
 		physics_spiderbot_entity.solid = VM_SOLID_BBOX;
 		physics_spiderbot_entity.movetype = VM_MOVETYPE_QCWALK;
-		physics_spiderbot_entity.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
+		physics_spiderbot_entity.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_PLAYERCLIP;
 	}
 	if (f & 1) {
 		physics_vehicle_read_common();

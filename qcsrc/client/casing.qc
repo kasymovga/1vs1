@@ -55,7 +55,7 @@ void(void) casing_touch {
 					s = strcat("weapons/brass", ftos(f), ".wav");
 					break;
 				}
-				sound (self, CHAN_PROJECTILE, s, VOL_BASE, ATTN_NORM);
+				vm_sound(self, CHAN_PROJECTILE, s, VOL_BASE, ATTN_NORM);
 			}
 		}
 	}

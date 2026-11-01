@@ -25,7 +25,7 @@ void(entity attacker, float deathtype, float shots) weapon_score_fires {
 }
 
 void(entity cl) weapon_score_send {
-	if (clienttype(cl) != CLIENTTYPE_REAL) return;
+	if (clienttype(cl) != VM_CLIENTTYPE_REAL) return;
 	msg_entity = cl;
 	float w, fired;
 	entity src;

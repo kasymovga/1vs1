@@ -88,7 +88,7 @@ void(void) weapon_porto_touch {
 			if (trace_fraction >= 1)
 				return;
 
-			if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
+			if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & VM_DPCONTENTS_PLAYERCLIP))
 				return;
 
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -99,7 +99,7 @@ void(void) weapon_porto_touch {
 	if (self.owner.playerid != self.playerid) {
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		remove(self);
-	} else if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP)) {
+	} else if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & VM_DPCONTENTS_PLAYERCLIP)) {
 		sound_spam(self, CHAN_PROJECTILE, "porto/bounce.wav", VOL_BASE, ATTN_NORM);
 		// just reflect
 		self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * trace_plane_normal);
@@ -168,7 +168,7 @@ void(float out) weapon_porto_attack {
 	gren.playerid = self.playerid;
 	makevectors(vectoangles(gren.velocity));
 	gren.right_vector = v_right;
-	gren.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	gren.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP;
 }
 
 void(void) spawnfunc_weapon_porto {
@@ -212,7 +212,7 @@ float(float req) weapon_porto {
 	} else if (req == WEAPON_REQUEST_SETUP) {
 		if (g_balance_porto_old)
 		if not(self.porto_indicator)
-		if (clienttype(self) == CLIENTTYPE_REAL) {
+		if (clienttype(self) == VM_CLIENTTYPE_REAL) {
 			self.porto_indicator = spawn();
 			net_link_entity(self.porto_indicator, FALSE, 0, weapon_porto_send);
 			self.porto_indicator.viewmodelforclient = self;

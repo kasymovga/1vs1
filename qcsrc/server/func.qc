@@ -1268,7 +1268,7 @@ void(void) func_door_touch {
 	self.owner.attack_finished_single = time + 2;
 	if (!(self.owner.dmg) && (self.owner.message != "") && self.owner.state == FUNC_STATE_BOTTOM) {
 		print_to_spec(other, PRINT_CENTER, self.owner.message, "", "", "");
-		if (clienttype(other) == CLIENTTYPE_REAL) {
+		if (clienttype(other) == VM_CLIENTTYPE_REAL) {
 			sound_play2(other, "misc/talk.wav");
 		}
 	}
@@ -1820,7 +1820,7 @@ void(void) func_secret_touch {
 	self.attack_finished_single = time + 2;
 	if (self.message) {
 		print_to_spec(other, PRINT_CENTER, self.message, "", "", "");
-		if (clienttype(other) == CLIENTTYPE_REAL) {
+		if (clienttype(other) == VM_CLIENTTYPE_REAL) {
 			sound_play2(other, "misc/talk.wav");
 		}
 	}

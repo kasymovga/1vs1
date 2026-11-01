@@ -22,7 +22,7 @@ string(string m) handover_player_body_model_list_allowed_mod {
 
 void(void) handover_controller_think {
 	entity e;
-	if (clienttype(handover_player) == CLIENTTYPE_DISCONNECTED
+	if (clienttype(handover_player) == VM_CLIENTTYPE_DISCONNECTED
 			|| (handover_player.classname != "player" &&
 			!(handover_player.classname == "observer" && handover_player.team > 0)))
 		handover_player = NULL;

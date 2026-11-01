@@ -5,7 +5,7 @@ void(void) radio_stopper_think {
 		remove(self);
 		return;
 	}
-	float t = gettime(GETTIME_CDTRACK);
+	float t = gettime(VM_GETTIME_CDTRACK);
 	if (self.cnt > t) {
 		localcmd("cd reset;");
 		remove(self);

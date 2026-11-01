@@ -86,7 +86,7 @@ float antilag_oldhitmask;
 float antilag_lag;
 entity antilag_source;
 void(entity source) antilag_begin {
-	if (clienttype(source) != CLIENTTYPE_REAL)
+	if (clienttype(source) != VM_CLIENTTYPE_REAL)
 		antilag_lag = 0; // only antilag for clients
 	else
 		antilag_lag = ANTILAG_LATENCY(source);
@@ -97,7 +97,7 @@ void(entity source) antilag_begin {
 	antilag_source = source;
 	if (source) {
 		antilag_oldhitmask = source.dphitcontentsmask;
-		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+		source.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_CORPSE;
 	}
 	if (antilag_lag) {
 		// take players back into the past
@@ -148,7 +148,7 @@ void(entity e) antilag_add {
 }
 
 float(entity e) antilag_have {
-	if (clienttype(e) != CLIENTTYPE_NOTACLIENT)
+	if (clienttype(e) != VM_CLIENTTYPE_NOTACLIENT)
 	if (e.classname == "player")
 		return TRUE;
 

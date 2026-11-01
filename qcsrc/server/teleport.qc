@@ -52,7 +52,7 @@ void(entity player, entity teleporter, entity telefragger, vector telefragmin, v
 }
 
 void(entity teleporter, entity to, vector to_angles) teleport_teleportation_send {
-	if (clienttype(to) == CLIENTTYPE_REAL) {
+	if (clienttype(to) == VM_CLIENTTYPE_REAL) {
 		msg_entity = to;
 		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 		net_write_byte(MSG_ONE, NET_TE_CSQC_TELEPORTATION);

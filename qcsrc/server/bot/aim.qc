@@ -121,7 +121,7 @@ float(entity e) bot_aim_shouldattack {
 		if(e.team==0)
 			return FALSE;
 	} else if(bot_ignore_bots)
-		if(clienttype(e) == CLIENTTYPE_BOT)
+		if(clienttype(e) == VM_CLIENTTYPE_BOT)
 			return FALSE;
 
 	if (!e.takedamage)

@@ -69,7 +69,7 @@ float(entity e) rune_spawn_somewhere {
 		spot.owner = e;
 		return TRUE;
 	} else {
-		if(entity_move_to_random_location(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256)) {
+		if(entity_move_to_random_location(e, VM_DPCONTENTS_SOLID | VM_DPCONTENTS_CORPSE | VM_DPCONTENTS_PLAYERCLIP, VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA | VM_DPCONTENTS_SKY | VM_DPCONTENTS_BODY | VM_DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256)) {
 			// great
 			makevectors(self.angles),
 			self.velocity = v_forward * 250;

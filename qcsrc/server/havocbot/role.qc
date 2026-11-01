@@ -35,7 +35,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_item
 		} else {
 			// Ignore items under water
 			trace_line(head.origin + head.maxs, head.origin + head.maxs, TRACE_MOVE_NORMAL, head);
-			if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
+			if (trace_dpstartcontents & VM_DPCONTENTS_LIQUIDSMASK) {
 				head = head.chain;
 				continue;
 			}
@@ -48,7 +48,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_item
 
 				d = vlen(player.origin - head.origin); // distance between player and item
 				if (player.team == self.team ) {
-					if ( clienttype(player) != CLIENTTYPE_REAL || discard )
+					if ( clienttype(player) != VM_CLIENTTYPE_REAL || discard )
 						continue;
 
 					if ( d > friend_distance)
@@ -120,7 +120,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_enem
 		// TODO: Merge this logic with the bot_shouldattack function
 		if (self != head)
 		if (head.health > 0)
-		if ((noteam && (!bot_ignore_bots || clienttype(head) == CLIENTTYPE_REAL)) || head.team != self.team) {
+		if ((noteam && (!bot_ignore_bots || clienttype(head) == VM_CLIENTTYPE_REAL)) || head.team != self.team) {
 			e = player_entity(head);
 			eo = ENTITY_CENTER(e);
 			distance = vlen(eo - org);

@@ -665,7 +665,7 @@ void(void) jb_controlpoint_think {
 	for (e = self.killindicator; e; e = e.killindicator) {
 		progressbar_set(self.killindicator.sprite, self.state);
 		plugin_chain_capturing(e.enemy);
-		if (clienttype(e.enemy) == CLIENTTYPE_BOT) bot_stay(e.enemy, 0.1);
+		if (clienttype(e.enemy) == VM_CLIENTTYPE_BOT) bot_stay(e.enemy, 0.1);
 	}
 	if (self.state == 1) {
 		if (g_jb_controlpoint_claim && (self.team || !g_jb_controlpoint_claim_noneutral)) {

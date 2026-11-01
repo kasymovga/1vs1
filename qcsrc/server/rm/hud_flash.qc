@@ -3,7 +3,7 @@
 #define RM_HUD_FLASH_DEFAULT_ALPHA 0.4
 
 void(entity e, vector flashcolor, float staytime, float intensivity, float alph) rm_hud_flash {
-	if (clienttype(e) != CLIENTTYPE_REAL)
+	if (clienttype(e) != VM_CLIENTTYPE_REAL)
 		return;
 
 	msg_entity = e;
@@ -18,7 +18,7 @@ void(entity e, vector flashcolor, float staytime, float intensivity, float alph)
 }
 
 void(entity e, float staytime, float intensivity, float alph) rm_hud_flash_teamcolor {
-	if (clienttype(e) != CLIENTTYPE_REAL)
+	if (clienttype(e) != VM_CLIENTTYPE_REAL)
 		return;
 
 	msg_entity = e;

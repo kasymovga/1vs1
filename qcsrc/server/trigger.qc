@@ -177,7 +177,7 @@ void(float preventReuse) trigger_use_targets_ex {
 		t.target3 = self.target3;
 		t.target4 = self.target4;
 		if (entity_per_player_entities) {
-			if (clienttype(activator) != CLIENTTYPE_NOTACLIENT) {
+			if (clienttype(activator) != VM_CLIENTTYPE_NOTACLIENT) {
 				t.existsonlyfor = activator;
 			} else
 				t.existsonlyfor = self.existsonlyfor;

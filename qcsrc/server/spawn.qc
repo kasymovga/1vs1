@@ -78,7 +78,7 @@ float(entity spot, entity playerlist, float teamcheck) spawn_score {
 	if(spot.team != teamcheck)
 		return -1;
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(clienttype(self) == VM_CLIENTTYPE_REAL)
 	{
 		if(spot.restriction == 1)
 			return -1;

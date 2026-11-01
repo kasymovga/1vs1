@@ -113,7 +113,7 @@ void(void) physics_update_status {
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
 	}
 	#ifdef SVQC
-	if (trace_dpstartcontents & DPCONTENTS_NODROP)
+	if (trace_dpstartcontents & VM_DPCONTENTS_NODROP)
 		physics_in_nodrop();
 	#endif
 	if (physics_waterlevel < VM_WATERLEVEL_SWIMMING) {

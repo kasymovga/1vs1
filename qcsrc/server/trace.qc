@@ -74,11 +74,11 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 	ignorehazards = FALSE;
 	// Analyze starting point
 	trace_line(start, start, TRACE_MOVE_NORMAL, e);
-	if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+	if (trace_dpstartcontents & (VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA))
 		ignorehazards = TRUE;
 	else {
 		trace_line( start, start + '0 0 -65536', TRACE_MOVE_NORMAL, e);
-		if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)) {
+		if (trace_dpstartcontents & (VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA)) {
 			ignorehazards = TRUE;
 		}
 	}
@@ -107,13 +107,13 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 		dist = dist - stepdist;
 		trace_line(org, org, TRACE_MOVE_NORMAL, e);
 		if (!ignorehazards) {
-			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)) {
+			if (trace_dpstartcontents & (VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA)) {
 				// hazards blocking path
 				//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
 				goto finish;
 			}
 		}
-		if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
+		if (trace_dpstartcontents & VM_DPCONTENTS_LIQUIDSMASK) {
 			move = normalize(end - org);
 			trace_box(org, m1, m2, org + move * stepdist, movemode, e);
 			org = trace_endpos;

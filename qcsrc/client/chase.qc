@@ -4,9 +4,9 @@ float chase_active_save;
 vector(float back, float up) chase_adjust_view {
 	makevectors(view_fixangle ? view_fixed_angles : view_angles);
 	vector v = view_origin;
-	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * back, TRACE_MOVE_WORLDONLY, world);
+	trace_box(v, '-8 -8 -8', '8 8 8', v - v_forward * back, TRACE_MOVE_WORLDONLY, world);
 	v = trace_endpos;
-	tracebox(v, '-8 -8 -8', '8 8 8', v  + v_up * up, TRACE_MOVE_WORLDONLY, world);
+	trace_box(v, '-8 -8 -8', '8 8 8', v  + v_up * up, TRACE_MOVE_WORLDONLY, world);
 	return trace_endpos;
 }
 

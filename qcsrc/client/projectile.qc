@@ -146,16 +146,16 @@ void(entity e, float ch, string samp, float vol, float attn) projectile_loopsoun
 	if (self.silent)
 		return;
 
-	sound(e, ch, samp, vol, attn);
+	vm_sound(e, ch, samp, vol, attn);
 	e.snd_looping = 1;
 }
 
 void(void) projectile_remove {
 	if (self.snd_looping)
-		sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+		vm_sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 
 	if (self.count & 128) {
-		tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, TRACE_MOVE_NORMAL, self);
+		trace_box(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, TRACE_MOVE_NORMAL, self);
 		projectile_trail_draw(trace_endpos);
 	}
 }
@@ -387,7 +387,7 @@ void(float ignore) projectile_read {
 				case COLOR_TEAM3:           self.trail_effect = particleeffectnum("TE_TEI_G3YELLOW_HIT"); break;
 				case COLOR_TEAM4: default:  self.trail_effect = particleeffectnum("TE_TEI_G3PINK_HIT"); break;
 			}
-			//self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+			//self.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP;
 			break;
 		case PROJECTILE_HG_PLASMA_SHARD:
 			setmodel(self, "models/ebomb.mdl");

@@ -36,7 +36,7 @@ float(void) player_label_draw_pre {
 		return FALSE;
 
 	if (self.cnt) {
-		traceline(self.iorigin + self.maxs, view_origin, TRACE_MOVE_NOMONSTERS, NULL);
+		trace_line(self.iorigin + self.maxs, view_origin, TRACE_MOVE_NOMONSTERS, NULL);
 		if (trace_fraction < 1)
 			return FALSE;
 	}

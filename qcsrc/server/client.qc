@@ -44,7 +44,7 @@ void(void) client_put {
 	}
 	player_info_health_armor_update();
 	float oldteam = self.team;
-	if (clienttype(self) == CLIENTTYPE_BOT) {
+	if (clienttype(self) == VM_CLIENTTYPE_BOT) {
 		self.classname = "player";
 	}
 	if (map_finished)
@@ -57,7 +57,7 @@ void(void) client_put {
 		}
 		spot = player_spawn_spot();
 		if (!spot) {
-			if (clienttype(self) == CLIENTTYPE_REAL)
+			if (clienttype(self) == VM_CLIENTTYPE_REAL)
 				print_to(self, PRINT_CENTER, "Sorry, no spawnpoints available!\nHope your team can fix it...", "", "", "");
 
 			print(self.netname, " not have place to spawn\n");
@@ -469,7 +469,7 @@ void(void) client_connect { //called by engine
 	}
 	self.jointime = time;
 	self.allowedTimeouts = sv_timeout_number;
-	if (clienttype(self) == CLIENTTYPE_REAL) {
+	if (clienttype(self) == VM_CLIENTTYPE_REAL) {
 		if (!sv_foginterval && client_fog != "")
 			stuffcmd(self, strcat("\nfog ", client_fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
@@ -489,7 +489,7 @@ void(void) client_disconnect { //called by engine
 	print_all(PRINT_INFO, "^4{1}^4 disconnected", PLAYER_NAME_WITH_SLOT(self), "", "");
 	string s;
 	if ((s = cvar_string("g_ragequit_message")) != "")
-	if (clienttype(self) == CLIENTTYPE_REAL)
+	if (clienttype(self) == VM_CLIENTTYPE_REAL)
 	if (time > map_starttime)
 	if (team_teams != 1)
 	if (!map_finished)
@@ -523,7 +523,7 @@ void(void) client_disconnect { //called by engine
 	self.stacker = 0;
 	self.muted = 0;
 	ready_count();
-	if (clienttype(self) == CLIENTTYPE_REAL) {
+	if (clienttype(self) == VM_CLIENTTYPE_REAL) {
 		plugin_chain_client_disconnect_real();
 		vote_client_connect();
 	}
@@ -561,7 +561,7 @@ float() client_join_allowed {
 	if (currentlyPlaying < g_maxplayers)
 		return TRUE;
 
-	if (clienttype(self) == CLIENTTYPE_REAL)
+	if (clienttype(self) == VM_CLIENTTYPE_REAL)
 		print_to(self, PRINT_CENTER, "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity.", "", "", "");
 
 	return FALSE;
@@ -638,7 +638,7 @@ void(void) client_post_think { //called by engine
 		//stuffcmd(self, "seta _cl_name Player\n");
 	}
 	if (frametime)
-	if (clienttype(self) == CLIENTTYPE_REAL && (self.classname == "player" || self.team < 0)) {
+	if (clienttype(self) == VM_CLIENTTYPE_REAL && (self.classname == "player" || self.team < 0)) {
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		float timeleft, drop = FALSE, maxidle;
 		if (sv_maxidle_forcespec && self.classname == "player") {
@@ -772,7 +772,7 @@ void(void) client_cvars_request_wait {
 	if (self.owner.clid != "" || self.cnt <= 0) {
 		if (self.owner.clid == "" && self.cnt <= 0) {
 			if (self.cnt <= -1) {
-				if (clienttype(self.owner) == CLIENTTYPE_REAL) {
+				if (clienttype(self.owner) == VM_CLIENTTYPE_REAL) {
 					print("client #", num_for_edict(self.owner), " don't answer to requests, dropping\n");
 					dropclient(self.owner);
 				}
@@ -818,7 +818,7 @@ void(void) client_cvars_request {
 			}
 		}
 	}
-	if (clienttype(self) != CLIENTTYPE_REAL) return;
+	if (clienttype(self) != VM_CLIENTTYPE_REAL) return;
 	client_cvars_request_send(self);
 	e = spawn();
 	e.enemy = client_cvars_request_wait_chain;
@@ -843,8 +843,8 @@ float(string s) client_id_is_valid {
 }
 
 void() client_cvars_parse {
-	string s = strcat1(argv(1));
-	string val = strcat1(argv(2));
+	string s = strcat(argv(1));
+	string val = strcat(argv(2));
 	float f;
 	if (s == "cl_autoswitch")
 		if (stof(val))

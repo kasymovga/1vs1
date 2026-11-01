@@ -355,7 +355,7 @@ float minstagib_item_give_to_handle(entity item, entity player) {
 	if ((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK)) {
 		plugin_chain_item_give_to_picked = TRUE;
 		player.items |= it;
-		if (clienttype(player) == CLIENTTYPE_REAL)
+		if (clienttype(player) == VM_CLIENTTYPE_REAL)
 			print_to(player, PRINT_INFO, "You got the ^2{1}", item.netname, "", "");
 	}
 	plugin_chain_item_give_to_switch = TRUE;
@@ -366,7 +366,7 @@ float minstagib_item_give_to_handle(entity item, entity player) {
 	if (item.ammo_cells) {
 		plugin_chain_item_give_to_picked = TRUE;
 		// play some cool sounds ;)
-		if (clienttype(player) == CLIENTTYPE_REAL) {
+		if (clienttype(player) == VM_CLIENTTYPE_REAL) {
 			if (player.health <= 5)
 				sound_play2(player, "announcer/robotic/lastsecond.wav");
 			else if (player.health < 50)
@@ -386,7 +386,7 @@ float minstagib_item_give_to_handle(entity item, entity player) {
 		// sound not available
 		// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
 		player.armorvalue = min(player.armorvalue + 100, g_minstagib_armor_max);
-		if (clienttype(player) == CLIENTTYPE_REAL)
+		if (clienttype(player) == VM_CLIENTTYPE_REAL)
 			print_to(player, PRINT_INFO, "^3You picked up some extra lives", "", "", "");
 	}
 	if (item.ammo_fuel)

@@ -69,7 +69,7 @@ void(entity cl, float type, string s, string arg1, string arg2, string arg3) pri
 			if (SPECTATOR_IS_SPECTATING(spec, cl))
 				print_to(spec, type, s, arg1, arg2, arg3);
 
-	if (clienttype(cl) == CLIENTTYPE_REAL)
+	if (clienttype(cl) == VM_CLIENTTYPE_REAL)
 		print_to(cl, type, s, arg1, arg2, arg3);
 }
 

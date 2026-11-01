@@ -1,5 +1,5 @@
 void(entity e, string bigstring, string comment, float staytime) rm_bigprint {
-	if (clienttype(e) != CLIENTTYPE_REAL)
+	if (clienttype(e) != VM_CLIENTTYPE_REAL)
 		return;
 
 	msg_entity = e;

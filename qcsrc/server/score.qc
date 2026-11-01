@@ -107,7 +107,7 @@ float(float t, float scorefield, float score) score_team_add_to {
 }
 
 float(entity player, float scorefield, float score) score_team_add {
-	if (clienttype(player) == CLIENTTYPE_DISCONNECTED) return 0;
+	if (clienttype(player) == VM_CLIENTTYPE_DISCONNECTED) return 0;
 	return score_team_add_to(player.team, scorefield, score);
 }
 
@@ -327,7 +327,7 @@ entity(entity player) score_keeper_get {
 }
 
 float(entity player, float scorefield, float score) score_player_set {
-	if (clienttype(player) == CLIENTTYPE_DISCONNECTED) return 0;
+	if (clienttype(player) == VM_CLIENTTYPE_DISCONNECTED) return 0;
 	entity s;
 	if (scorefield < 0 || scorefield >= SCORE_FILEDS_MAX) {
 		backtrace("incorrect score field");
@@ -340,7 +340,7 @@ float(entity player, float scorefield, float score) score_player_set {
 }
 
 float(entity player, float scorefield, float score) score_player_add {
-	if (clienttype(player) == CLIENTTYPE_DISCONNECTED) return 0;
+	if (clienttype(player) == VM_CLIENTTYPE_DISCONNECTED) return 0;
 	entity s;
 	if (scorefield < 0 || scorefield >= SCORE_FILEDS_MAX) {
 		backtrace("incorrect score field");
@@ -484,7 +484,7 @@ void() score_winning_condition_helper {
 	CLIENT_FOR_EACH(p) {
 		if (fullstatus) {
 			s = score_player_string(p, 1);
-			if (clienttype(p) == CLIENTTYPE_REAL)
+			if (clienttype(p) == VM_CLIENTTYPE_REAL)
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
@@ -915,7 +915,7 @@ void(entity attacker, entity targ, float f) score_give_frag {
 		return;
 
 	score_player_add(targ, SP_DEATHS, 1);
-	if (clienttype(attacker) == CLIENTTYPE_DISCONNECTED) return;
+	if (clienttype(attacker) == VM_CLIENTTYPE_DISCONNECTED) return;
 	if (player_independent)
 		return;
 

@@ -475,8 +475,8 @@ vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 						else if (trace_fraction > 0.01) {
 							o = trace_endpos;
 							trace_box(o, self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
-							if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
-								if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+							if (trace_dpstartcontents & VM_DPCONTENTS_LIQUIDSMASK) {
+								if (trace_dpstartcontents & (VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA))
 									v = -v;
 								else if (!(self.flags & MONSTER_IGNOREDROWN) &&
 										pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
@@ -492,8 +492,8 @@ vector(float _speed, float blend_factor, float rushdistance) monster_move_walk {
 				else if (trace_fraction > 0.01) {
 					o = trace_endpos;
 					trace_box(o, self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
-					if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
-						if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+					if (trace_dpstartcontents & VM_DPCONTENTS_LIQUIDSMASK) {
+						if (trace_dpstartcontents & (VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA))
 							v = -v;
 						else if (!(self.flags & MONSTER_IGNOREDROWN) &&
 								pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
@@ -640,7 +640,7 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.team = self.owner.team;
 	self.weapon_think = hunt;
 	self.nextthink = time;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_MONSTERCLIP | DPCONTENTS_BOTCLIP | DPCONTENTS_BODY;
+	self.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_MONSTERCLIP | VM_DPCONTENTS_BOTCLIP | VM_DPCONTENTS_BODY;
 	string t = self.owner.target;
 	if (t == "")
 		t = self.target;
@@ -834,7 +834,7 @@ void(void) monster_monsters_init_delayed {
 				oldself = self;
 				self = monster;
 				callfunction(monster_func);
-				if not(entity_move_to_random_location(monster, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256)) {
+				if not(entity_move_to_random_location(monster, VM_DPCONTENTS_SOLID | VM_DPCONTENTS_CORPSE | VM_DPCONTENTS_PLAYERCLIP, VM_DPCONTENTS_SLIME | VM_DPCONTENTS_LAVA | VM_DPCONTENTS_SKY | VM_DPCONTENTS_BODY | VM_DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256)) {
 					print("Cant find place for ", monster_name, "\n");
 					stdproc_remove();
 				}

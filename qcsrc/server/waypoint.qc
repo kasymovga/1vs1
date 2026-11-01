@@ -42,11 +42,11 @@ entity(vector m1, vector m2, float f) waypoint_spawn {
 			return w;
 	}
 	w = spawn();
-	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+	w.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY;
 	if (g_waypoints_use_botclip)
-		w.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
+		w.dphitcontentsmask |= VM_DPCONTENTS_BOTCLIP;
 	else
-		w.dphitcontentsmask |= (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP);
+		w.dphitcontentsmask |= (VM_DPCONTENTS_PLAYERCLIP | VM_DPCONTENTS_MONSTERCLIP);
 
 	w.classname = "waypoint";
 	w.wpflags = f;
@@ -553,7 +553,7 @@ void(void) waypoint_path_generator_think {
 	vector v = trace_endpos;
 	trace_box(self.origin, PL_MIN, PL_MAX, self.origin - '0 0 1', TRACE_MOVE_NOMONSTERS, self);
 	if (trace_fraction < 1 && trace_plane_normal_z < 0.7) goto removegenerator;
-	if ((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP)
+	if ((trace_dpstartcontents | trace_dphitcontents) & VM_DPCONTENTS_NODROP)
 		goto removegenerator;
 
 	for (e = findradius(v, 50); e; e = e.chain) {
@@ -620,7 +620,7 @@ entity(float dir, vector from, vector lastwp, float depth) waypoint_path_generat
 		return NULL;
 	}
 	entity e = spawn();
-	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	e.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP;
 	setorigin(e, from);
 	e.pos1 = lastwp;
 	e.cnt = dir;

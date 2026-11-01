@@ -8,7 +8,7 @@ void(entity player, string msg, string txt) announce_force {
 				announce_force(e, msg, txt);
 			}
 		}
-	if (clienttype(player) != CLIENTTYPE_REAL)
+	if (clienttype(player) != VM_CLIENTTYPE_REAL)
 		return;
 
 	if (SPECTATOR_IS_SPECTATOR(player))

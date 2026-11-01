@@ -198,7 +198,7 @@ entity(float t) soulmates_gem_create {
 	e.enemy.enemy = e;
 	e.enemy.classname = "soulmates_gem_effect";
 	setmodel(e.enemy, "models/runematch/curse.mdl");
-	e.dphitcontentsmask = (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP);
+	e.dphitcontentsmask = (VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP);
 	setattachment(e.enemy, e, "");
 	e.colormod = soulmates_gem_colormod(t);
 	e.enemy.colormod = soulmates_gem_colormod2(t);

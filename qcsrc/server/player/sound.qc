@@ -167,14 +167,14 @@ void(string type, string msg) player_sound_voice_message {
 		if (self.pusher)
 			if (self.pusher.team == self.team) {
 				msg_entity = self.pusher;
-				if (clienttype(msg_entity) == CLIENTTYPE_REAL) {
+				if (clienttype(msg_entity) == VM_CLIENTTYPE_REAL) {
 					if (msg_entity.cvar_cl_voice_directional == 1)
 						sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
 					else if (msg_entity.cvar_cl_voice_directional >= 0)
 						sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
 				}
 				msg_entity = self;
-				if (clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if (clienttype(msg_entity) == VM_CLIENTTYPE_REAL)
 					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASE, ATTN_NONE);
 			}
 	} else {

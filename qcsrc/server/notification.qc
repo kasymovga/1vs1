@@ -1,7 +1,7 @@
 void(entity e1, float icontype, float iconmessage, entity e2) notification {
 	net_write_byte(MSG_BROADCAST, SVC_TEMPENTITY);
 	net_write_byte(MSG_BROADCAST, NET_TE_CSQC_NOTIFICATION);
-	if (clienttype(e1) == CLIENTTYPE_NOTACLIENT)
+	if (clienttype(e1) == VM_CLIENTTYPE_NOTACLIENT)
 		icontype |= 64;
 	else
 		icontype &= ~64;

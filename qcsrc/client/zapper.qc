@@ -114,7 +114,7 @@ void Zapper_Remove(void) {
 		remove(self.enemy);
 		self.enemy = world;
 	}
-    sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+	vm_sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 }
 
 void(float t) zapper_read {
@@ -125,10 +125,10 @@ void(float t) zapper_read {
 		attn = ATTN_NORM;
         if (t == NET_CSQC_ZAPPER_SHIELD) {
             self.draw = zapper_draw_shield;
-            sound(self, CHAN_PROJECTILE, "weapons/zapper_shield_loop.wav", 1, attn);
+			vm_sound(self, CHAN_PROJECTILE, "weapons/zapper_shield_loop.wav", 1, attn);
         } else {
             self.draw = zapper_draw;
-            sound(self, CHAN_PROJECTILE, "weapons/zapper_fly.wav", vol, attn);
+			vm_sound(self, CHAN_PROJECTILE, "weapons/zapper_fly.wav", vol, attn);
         }
 		if not(self.enemy)
 			self.enemy = spawn();

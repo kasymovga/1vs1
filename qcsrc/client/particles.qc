@@ -5,7 +5,7 @@ float(void) particles_point_in_brush_recursive {
 	float s;
 	entity se;
 	float f;
-	traceline(particles_point_in_brush_vec, particles_point_in_brush_vec, 0, world);
+	trace_line(particles_point_in_brush_vec, particles_point_in_brush_vec, 0, world);
 	if not(trace_ent)
 		return 0;
 
@@ -77,7 +77,7 @@ void(void) particles_point_draw {
 		p_z += random() * sz_z;
 		if (particles_point_in_brush(self, p)) {
 			if (self.movedir != '0 0 0') {
-				traceline(p, p + normalize(self.movedir) * 4096, 0, world);
+				trace_line(p, p + normalize(self.movedir) * 4096, 0, world);
 				p = trace_endpos;
 				pointparticles(self.cnt, p, trace_plane_normal * vlen(self.movedir) + self.velocity + randomvec() * self.waterlevel, self.count);
 			} else {
@@ -85,7 +85,7 @@ void(void) particles_point_draw {
 			}
 			if (self.noise != "") {
 				self.origin = p;
-				sound(self, CHAN_AUTO, self.noise, VOL_BASE * self.volume, self.atten);
+				vm_sound(self, CHAN_AUTO, self.noise, VOL_BASE * self.volume, self.atten);
 			}
 			self.just_toggled = 0;
 		} else if(self.absolute) {
@@ -207,7 +207,7 @@ void(float d) particles_snow_or_rain_set_bbox {
 
 	float skyz = view_origin_z + d * 0.5;
 	if (particles_snow_or_rain_maxs_z > skyz) {
-		tracebox('0 0 0', particles_snow_or_rain_mins, particles_snow_or_rain_maxs, '0 0 1' * (skyz - particles_snow_or_rain_maxs_z), TRACE_MOVE_WORLDONLY, world);
+		trace_box('0 0 0', particles_snow_or_rain_mins, particles_snow_or_rain_maxs, '0 0 1' * (skyz - particles_snow_or_rain_maxs_z), TRACE_MOVE_WORLDONLY, world);
 		particles_snow_or_rain_maxs = particles_snow_or_rain_maxs + trace_endpos;
 		particles_snow_or_rain_mins = particles_snow_or_rain_mins + trace_endpos;
 	}

@@ -172,7 +172,7 @@ void() ctf_captureshield_touch {
 	mymid = (self.absmin + self.absmax) * 0.5;
 	othermid = (other.absmin + other.absmax) * 0.5;
 	damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * captureshield_force);
-	if (clienttype(other) == CLIENTTYPE_REAL)
+	if (clienttype(other) == VM_CLIENTTYPE_REAL)
 		print_to(other, PRINT_CENTER, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", "", "", "");
 }
 
@@ -220,7 +220,7 @@ void() ctf_flag_place {
 	self.nextthink = time + 0.1;
 	self.cnt = CTF_FLAG_BASE;
 	self.mangle = self.angles;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	self.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP;
 	//self.effects = self.effects | EFFECT_DIMLIGHT;
 	if (self.noalign) {
 		self.dropped_origin = self.origin;

@@ -163,14 +163,14 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 	e.flags = FLAG_PROJECTILE;
 	e.classname = "projectile";
 	if (entity_per_player_entities && _owner) {
-		if (clienttype(_owner) == CLIENTTYPE_NOTACLIENT)
+		if (clienttype(_owner) == VM_CLIENTTYPE_NOTACLIENT)
 			e.existsonlyfor = _owner.existsonlyfor;
 		else
 			e.existsonlyfor = _owner;
 	}
 	e.reset = stdproc_remove;
 	e.solid = VM_SOLID_SLIDEBOX;
-	e.dphitcontentsmask = (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE);
+	e.dphitcontentsmask = (VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_CORPSE);
 	return e;
 }
 

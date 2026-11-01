@@ -652,7 +652,7 @@ void(void) havocbot_chooseenemy {
 
 		// Set flags to see through transparent objects
 		f = self.dphitcontentsmask;
-		self.dphitcontentsmask = DPCONTENTS_OPAQUE;
+		self.dphitcontentsmask = VM_DPCONTENTS_OPAQUE;
 		head = head2;
 		++i;
 	}

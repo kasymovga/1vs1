@@ -291,7 +291,7 @@ void(void) physics_player_pre { //called by engine
 		self.flags |= FLAG_SWIM;
 		self.flags &= ~FLAG_ONGROUND;
 	}
-	if (clienttype(self) == CLIENTTYPE_BOT) {
+	if (clienttype(self) == VM_CLIENTTYPE_BOT) {
 		bot_think();
 		if (g_sideview) {
 			if (self.movement != '0 0 0') {

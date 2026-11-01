@@ -212,7 +212,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 		if (tvalid) {
 			recordtime = race_checkpoint_records[cp];
 			recordspeed = race_checkpoint_speeds[cp];
-			recordholder = strcat1(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
+			recordholder = strcat(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
 			if (recordholder == e.netname)
 				recordholder = "";
 
@@ -626,7 +626,7 @@ void(entity spot) race_player_spawn {
 		self.race_completed = FALSE;
 		entity oldself = self;
 		for (self = world; (self = findentity(self, existsonlyfor, oldself)); ) {
-			if (clienttype(self) == CLIENTTYPE_NOTACLIENT) {
+			if (clienttype(self) == VM_CLIENTTYPE_NOTACLIENT) {
 				if (self.reset) {
 					//print("resetting ", self.classname, "/", self.targetname, "/", self.target, "\n");
 					self.reset();
@@ -639,7 +639,7 @@ void(entity spot) race_player_spawn {
 			}
 		}
 		for (self = world; (self = findentity(self, existsonlyfor, oldself)); )
-			if (clienttype(self) == CLIENTTYPE_NOTACLIENT) {
+			if (clienttype(self) == VM_CLIENTTYPE_NOTACLIENT) {
 				if (self.reset2) {
 					//print("extra resetting ", self.classname, "/", self.targetname, "\n");
 					self.reset2();

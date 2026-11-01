@@ -19,7 +19,7 @@ float(string cmd, float tokens) report_cmd_client_handle {
     if (cmd == "report" && tokens == 3) {
 		entity villain = edict_num(stof(argv(2)));
 		if (villain)
-		if (clienttype(villain) == CLIENTTYPE_REAL) {
+		if (clienttype(villain) == VM_CLIENTTYPE_REAL) {
 			string victimsysinfo = self.sysinfo;
 			string victimip = self.netaddress;
 			string victimnick = self.netname;

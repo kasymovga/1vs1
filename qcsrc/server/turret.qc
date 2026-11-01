@@ -356,7 +356,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (self.team == attacker.team) {
 		// This does not happen anymore. Re-enable if you fix that.
 		//if (attacker.flags & FLAG_CLIENT)
-		if (clienttype(attacker) == CLIENTTYPE_REAL)
+		if (clienttype(attacker) == VM_CLIENTTYPE_REAL)
 			sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
 
 		if (g_friendlyfire)

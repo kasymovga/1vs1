@@ -96,8 +96,8 @@ float(vector ofs) physics_move_test_entity_position { // SV_TestEntityPosition
 	float cont;
 	org = self.move_origin + ofs;
 	cont = self.dphitcontentsmask;
-	self.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, TRACE_MOVE_NOMONSTERS, self);
+	self.dphitcontentsmask = VM_DPCONTENTS_SOLID;
+	vm_tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, TRACE_MOVE_NOMONSTERS, self);
 	self.dphitcontentsmask = cont;
 	if (trace_startsolid)
 		return TRUE;
@@ -152,7 +152,7 @@ void(vector push) physics_move_push_entity_trace {
 	else
 		type = TRACE_MOVE_NORMAL;
 
-	tracebox(self.move_origin, self.mins, self.maxs, end, type, self);
+	vm_tracebox(self.move_origin, self.mins, self.maxs, end, type, self);
 }
 
 float(vector push, float failonstartsolid) physics_move_push_entity { // SV_PushEntity

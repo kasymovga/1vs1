@@ -134,13 +134,13 @@ void(entity for_whom) team_teams_allowed {
 	if (bot_vs_human && team_teams == 2 && for_whom) {
 		if (bot_vs_human > 0) {
 			// bots are all blue
-			if (clienttype(for_whom) == CLIENTTYPE_BOT)
+			if (clienttype(for_whom) == VM_CLIENTTYPE_BOT)
 				team1 = team3 = team4 = -1;
 			else
 				team2 = -1;
 		} else {
 			// bots are all red
-			if (clienttype(for_whom) == CLIENTTYPE_BOT)
+			if (clienttype(for_whom) == VM_CLIENTTYPE_BOT)
 				team2 = team3 = team4 = -1;
 			else
 				team1 = -1;
@@ -163,7 +163,7 @@ void(entity ignore) team_teams_count {
 			else
 				value = 1;
 
-			if (clienttype(head) == CLIENTTYPE_BOT)
+			if (clienttype(head) == VM_CLIENTTYPE_BOT)
 				bvalue = value = 1;
 			else
 				bvalue = 0;
@@ -207,7 +207,7 @@ float(entity pl) team_find_smallest {
 	smallestteam_count = 999999999;
 	smallestteam_score = 999999999;
 	if (bot_would_leave)
-	if (clienttype(pl) != CLIENTTYPE_BOT) {
+	if (clienttype(pl) != VM_CLIENTTYPE_BOT) {
 		team1 -= team1_bots * 255.0/256;
 		team2 -= team2_bots * 255.0/256;
 		team3 -= team3_bots * 255.0/256;
@@ -397,7 +397,7 @@ void(entity pl, float dteam, float nobalance) team_change {
 			largeteam = TRUE;
 		}
 		if (largeteam) {
-			if (clienttype(pl) == CLIENTTYPE_REAL) {
+			if (clienttype(pl) == VM_CLIENTTYPE_REAL) {
 				if (g_balance_teams_use_rank && rank_available)
 					print_to(pl, PRINT_CHAT, "^1Cannot change to a team with higher rank", "", "", "");
 				else
@@ -423,9 +423,9 @@ void(entity pl, float dteam, float nobalance) team_change {
 	entity e;
 	if not(nobalance) {
 		if (teamchange)
-		if (clienttype(pl) == CLIENTTYPE_REAL)
+		if (clienttype(pl) == VM_CLIENTTYPE_REAL)
 		PLAYER_FOR_EACH(e)
-			if (clienttype(e) == CLIENTTYPE_BOT)
+			if (clienttype(e) == VM_CLIENTTYPE_BOT)
 			if (e.team == dteam) {
 				e.team = -1;
 				self = e;
@@ -480,7 +480,7 @@ void(float source_team) team_shuffle_player_out {
 		random_selection_init();
 		CLIENT_FOR_EACH(head) {
 			if (head.team == steam)
-			if (clienttype(head) == CLIENTTYPE_BOT) {
+			if (clienttype(head) == VM_CLIENTTYPE_BOT) {
 				random_selection_add(head, 0, "", 1, 1);
 			}
 		}
@@ -488,7 +488,7 @@ void(float source_team) team_shuffle_player_out {
 		random_selection_init();
 		CLIENT_FOR_EACH(head) {
 			if (head.team == steam)
-			if not(clienttype(head) == CLIENTTYPE_BOT) {
+			if not(clienttype(head) == VM_CLIENTTYPE_BOT) {
 				random_selection_add(head, 0, "", 1, 1);
 			}
 		}
@@ -497,7 +497,7 @@ void(float source_team) team_shuffle_player_out {
 		CLIENT_FOR_EACH(head) {
 			player_score = head.scorekeeper.scores[SP_SCORE];
 			if (head.team == steam) {
-				if (clienttype(head) == CLIENTTYPE_BOT) {
+				if (clienttype(head) == VM_CLIENTTYPE_BOT) {
 					if (!selected_bot || player_score > selected_bot_score) {
 						selected_bot = head;
 						selected_bot_score = player_score;
@@ -514,7 +514,7 @@ void(float source_team) team_shuffle_player_out {
 		CLIENT_FOR_EACH(head) {
 			player_score = head.scorekeeper.scores[SP_SCORE];
 			if (head.team == steam) {
-				if (clienttype(head) == CLIENTTYPE_BOT) {
+				if (clienttype(head) == VM_CLIENTTYPE_BOT) {
 					if (!selected_bot || player_score < selected_bot_score) {
 						selected_bot = head;
 						selected_bot_score = player_score;

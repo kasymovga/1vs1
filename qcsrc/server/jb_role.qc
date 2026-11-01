@@ -22,7 +22,7 @@ void(float ratingscale, vector org, float sradius) jb_role_goalrating_enemyplaye
 	PLAYER_FOR_EACH (head) {
 		if (self != head)
 		if (head.health > 0 && !JB_PLAYER_JAILED(head))
-		if ((!bot_ignore_bots || clienttype(head) == CLIENTTYPE_REAL) && head.team != self.team) {
+		if ((!bot_ignore_bots || clienttype(head) == VM_CLIENTTYPE_REAL) && head.team != self.team) {
 			e = player_entity(head);
 			distance = vlen(e.origin - org);
 			if (distance < 100 || distance > sradius)

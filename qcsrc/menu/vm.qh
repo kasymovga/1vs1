@@ -96,14 +96,10 @@ float(vector v) vectoyaw = #10;
 vector(vector v) vectoangles = #11;
 float(void) random = #12;
 void(string command, ...) localcmd = #13;
-var float(string name) cvar = #14;
 float(string name) vm_cvar = #14;
-#define cvar vm_cvar
 string(string name) vm_cvar_string = #71;
-#define cvar_string vm_cvar_string
 const string(string name) cvar_defstring = #89;
 void(string name, string value) vm_cvar_set = #15;
-#define cvar_set vm_cvar_set
 //void(string text,...) dprint = #16;
 string(float f) ftos = #17;
 float(float f) fabs = #18;

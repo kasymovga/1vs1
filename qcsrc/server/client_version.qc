@@ -14,7 +14,7 @@ void(void) client_version_basics_end {
 }
 
 void(void) client_version_set_delayed {
-	if (clienttype(self.owner) != CLIENTTYPE_REAL) {
+	if (clienttype(self.owner) != VM_CLIENTTYPE_REAL) {
 		print("client_version_set_delayed: invalid client\n");
 		remove(self);
 		return;
@@ -74,7 +74,7 @@ float(string cmd, float tokens) client_version_cmd_client_handle {
 
 var void(void) client_version_client_connect_next;
 void(void) client_version_client_connect {
-	if (clienttype(self) == CLIENTTYPE_BOT)
+	if (clienttype(self) == VM_CLIENTTYPE_BOT)
 		score_player_set(self, CLIENT_SCORE_VERSION, CLIENT_VERSION_BOT);
 
 	client_version_client_connect_next();

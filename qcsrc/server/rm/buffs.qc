@@ -163,7 +163,7 @@ void Buffs_Random_Spawn(void) {
 	float failed = 1;
 	for(i = 0; i < a && fails < 10; ++i) {
 		failed = 0;
-        entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_WATER | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 128, 1024, 256);
+        entity_move_to_random_location(self, VM_DPCONTENTS_SOLID | VM_DPCONTENTS_CORPSE | VM_DPCONTENTS_PLAYERCLIP, VM_DPCONTENTS_SLIME | VM_DPCONTENTS_WATER | VM_DPCONTENTS_LAVA | VM_DPCONTENTS_SKY | VM_DPCONTENTS_BODY | VM_DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 128, 1024, 256);
 
 		//FIXME
         //snap_to_grid(self, 32);
@@ -1640,7 +1640,7 @@ void(void) rm_buffs_pickup_setup {
     self.classname = "item_buff";
     self.flags = FLAG_ITEM;
     self.solid = VM_SOLID_TRIGGER;
-    self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+    self.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY;
     self.movetype = VM_MOVETYPE_TOSS;
     self.think = Buffs_BuffPickup_Think;
     self.touch = Buffs_BuffPickup_Touch;

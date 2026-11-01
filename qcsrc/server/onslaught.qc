@@ -1090,7 +1090,7 @@ entity() onslaught_client_put_spawn_point {
 
 float(entity attacker, entity inflictor, float deathtype) onslaught_DeathHandle {
 	self.ons_spawn_area = '0 0 0';
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(clienttype(self) == VM_CLIENTTYPE_REAL)
 		map_location_request(self, "Select your spawn area", onslaught_LocationRequest_Callback);
 
 	return FALSE;

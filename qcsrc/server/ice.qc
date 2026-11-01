@@ -103,7 +103,7 @@ float(entity attacker, entity inflictor, float deathtype) ice_player_death_handl
 		return TRUE;
 
 	if (sv_sound_ice_frag != "")
-	if (clienttype(attacker) == CLIENTTYPE_REAL)
+	if (clienttype(attacker) == VM_CLIENTTYPE_REAL)
 	if (attacker != self)
 	if (team_is_different_teams(attacker, self))
 		sound_play2(attacker, sv_sound_ice_frag);
@@ -151,12 +151,12 @@ void(entity frozen, entity unfrozer) ice_unfroze {
 	sound(snd, CHAN_PROJECTILE, sv_sound_ice_revive, VOL_BASEVOICE, ATTN_NORM);
 	snd.nextthink = time + 2;
 	snd.think = stdproc_remove;
-	if (clienttype(unfrozer) == CLIENTTYPE_REAL)
+	if (clienttype(unfrozer) == VM_CLIENTTYPE_REAL)
 		print_to_spec(unfrozer, PRINT_CENTER, "^4You revive ^7{1}", frozen.netname, "", "");
 
 	if (unfrozer.classname == "player") {
 		print_all(PRINT_INFO, "^1{1}^1 was revived by {2}", frozen.netname, unfrozer.netname, "");
-		if (clienttype(frozen) == CLIENTTYPE_REAL)
+		if (clienttype(frozen) == VM_CLIENTTYPE_REAL)
 			print_to_spec(frozen, PRINT_CENTER, "^4You revived by ^7{1}", unfrozer.netname, "", "");
 	} else {
 		print_all(PRINT_INFO, "^1{1}^1 was autorevived", frozen.netname, "", "");
@@ -277,13 +277,13 @@ void(void) ice_think {
 		self.cnt += ICE_FRAME_TIME * unfroze_scale;
 		float p = self.cnt / g_ice_unfroze_time;
 		progressbar_set(self.weaponentity, p);
-		if (clienttype(self.owner) == CLIENTTYPE_BOT) {
+		if (clienttype(self.owner) == VM_CLIENTTYPE_BOT) {
 			self.owner.movement = '0 0 0';
 			bot_stay(self.owner, ICE_FRAME_TIME);
 		}
 		for (e = self.enemy; e; e = e.enemy) {
 			progressbar_set(e.weaponentity, p);
-			if (clienttype(e.owner) == CLIENTTYPE_BOT) {
+			if (clienttype(e.owner) == VM_CLIENTTYPE_BOT) {
 				e.owner.movement = '0 0 0';
 				bot_stay(e.owner, ICE_FRAME_TIME);
 			}

@@ -227,7 +227,7 @@ void(string command) cmd_game {
 		if (entno <= client_max_count)
 			client = edict_num(entno);
 		if (client.flags & FLAG_CLIENT) {
-			if (clienttype(client) == CLIENTTYPE_REAL) {
+			if (clienttype(client) == VM_CLIENTTYPE_REAL) {
 				print_to(client, PRINT_CENTER, "^3SERVER ADMIN:\n\n^7{1}", argv(2), "", "");
 				print_to(client, PRINT_CHAT, "^3SERVER ADMIN^7: {1}", argv(2), "", "");
 			}
@@ -362,10 +362,10 @@ void(string command) cmd_game {
 	}
 	if (cmd == "time") {
 		print("time = ", ftos(time), "\n");
-		print("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n");
-		print("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n");
-		print("hires = ", ftos(gettime(GETTIME_HIRES)), "\n");
-		print("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n");
+		print("frame start = ", ftos(gettime(VM_GETTIME_FRAMESTART)), "\n");
+		print("realtime = ", ftos(gettime(VM_GETTIME_REALTIME)), "\n");
+		print("hires = ", ftos(gettime(VM_GETTIME_HIRES)), "\n");
+		print("uptime = ", ftos(gettime(VM_GETTIME_UPTIME)), "\n");
 		print("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n");
 		print("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n");
 		return;
@@ -512,7 +512,7 @@ void(string command) cmd_game {
 	}
 	if (cmd == "stuffcmd") {
 		e = edict_num(stof(argv(1)));
-		if (clienttype(e) == CLIENTTYPE_REAL)
+		if (clienttype(e) == VM_CLIENTTYPE_REAL)
 			stuffcmd(e, strcat(str_sub(command, argv_start_index(2), -1), "\n"));
 
 		return;

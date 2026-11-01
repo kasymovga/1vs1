@@ -396,7 +396,7 @@ float(entity item, entity player) item_give_to {
 		if ((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK)) {
 			pickedup = TRUE;
 			player.items |= it;
-			if (clienttype(player) == CLIENTTYPE_REAL)
+			if (clienttype(player) == VM_CLIENTTYPE_REAL)
 				print_to(player, PRINT_INFO, "You got the ^2{1}", item.netname, "", "");
 		}
 		if (item.spawnshieldtime) {
@@ -456,7 +456,7 @@ float(entity item, entity player) item_give_to {
 			item.classname = cn;
 			item.target = t;
 		}
-		if (clienttype(player) == CLIENTTYPE_REAL)
+		if (clienttype(player) == VM_CLIENTTYPE_REAL)
 			print_to(player, PRINT_INFO, "You got the ^2{1}", item.netname, "", "");
 
 		pickedup = TRUE;
@@ -489,7 +489,7 @@ void(void) item_touch  {
 	item_touch_picked = FALSE;
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
 	if (trace_fraction < 1 &&
-			((((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) && !sv_gameplayfix_item_ignore_nodrop) ||
+			((((trace_dpstartcontents | trace_dphitcontents) & VM_DPCONTENTS_NODROP) && !sv_gameplayfix_item_ignore_nodrop) ||
 			((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) && !sv_gameplayfix_item_ignore_noimpact))) {
 		if (self.targetname == "") {
 			remove(self);
@@ -718,7 +718,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 			entity_fade_setup(self, time + g_pickup_dropped_lifetime, 1);
 
 		trace_line(self.origin, self.origin, TRACE_MOVE_NORMAL, self);
-		if ((trace_dpstartcontents & DPCONTENTS_NODROP) && !sv_gameplayfix_item_ignore_nodrop)
+		if ((trace_dpstartcontents & VM_DPCONTENTS_NODROP) && !sv_gameplayfix_item_ignore_nodrop)
 			goto item_start_fail;
 	} else {
 		// it's a level item
@@ -1052,7 +1052,7 @@ float(entity player, entity door) item_key_apply {
 	has_keys = (has_keys == (has_keys & player.items));
 	if not(has_keys) {
 		if (door.state == FUNC_STATE_BOTTOM)
-		if (clienttype(player) == CLIENTTYPE_REAL) {
+		if (clienttype(player) == VM_CLIENTTYPE_REAL) {
 			string s;
 			if  (door.items & IT_KEY1)
 				s = "Silver Key";
@@ -1075,7 +1075,7 @@ float(entity player, entity door) item_key_apply {
 			entity pl;
 			PLAYER_FOR_EACH(pl) if ((pl.items & door.items) && (!team_teams || pl.team == player.team)) {
 				pl.items &= ~(door.items & IT_KEYS);
-				if (clienttype(pl) == CLIENTTYPE_REAL) {
+				if (clienttype(pl) == VM_CLIENTTYPE_REAL) {
 					if (door.items & IT_KEY1)
 						print_to(pl, PRINT_CENTER, "{1}^7 is used", "^5Silver Key", "", "");
 
@@ -1165,7 +1165,7 @@ void spawnfunc_item_health (void) {if (self.spawnflags & 2) spawnfunc_item_healt
 void(void) item_mushroom_touch {
 	item_touch();
 	if (item_touch_picked)
-	if (clienttype(other) == CLIENTTYPE_REAL) {
+	if (clienttype(other) == VM_CLIENTTYPE_REAL) {
 		msg_entity = other;
 		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 		net_write_byte(MSG_ONE, NET_TE_CSQC_TRIP);

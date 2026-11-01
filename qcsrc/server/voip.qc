@@ -11,7 +11,7 @@ void(entity pl) voip_setup {
 	if (!vg)
 		return;
 
-	if (clienttype(pl) == CLIENTTYPE_BOT)
+	if (clienttype(pl) == VM_CLIENTTYPE_BOT)
 		pl.voipgroup = 0;
 
 	if (g_voice_chat_public < 2 && team_teams > 1) {
@@ -46,7 +46,7 @@ void(entity pl) voip_disable {
 }
 
 void(entity pl) voip_enable {
-	if (clienttype(pl) == CLIENTTYPE_REAL) {
+	if (clienttype(pl) == VM_CLIENTTYPE_REAL) {
 		pl.voipgroup = -768 - num_for_edict(pl);
 		if (pl.scorekeeper)
 			voip_setup(pl);

@@ -90,7 +90,7 @@ float keyDownInputBox(entity me, float key, float ascii, float shift)
 	me.dragScrollTimer = time;
 	if(ascii >= 32 && ascii != 127)
 	{
-		me.enterText(me, chr(ascii));
+		me.enterText(me, chr2str(ascii));
 		return 1;
 	}
 	switch(key)

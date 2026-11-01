@@ -168,7 +168,7 @@ void nadget_GenericProjectile_Touch(void) {
 
     if(projectile_no_impact_check()) {
         if(self.hg_type == NADGET_TRANSLOC || self.hg_type == NADGET_RAZE) {
-            if(trace_dphitcontents & DPCONTENTS_PLAYERCLIP) {
+            if(trace_dphitcontents & VM_DPCONTENTS_PLAYERCLIP) {
                 projectile_update_next_frame(self);
                 goto troll;
             }
@@ -257,7 +257,7 @@ void nadget_GenericProjectile_Touch(void) {
 
                 trace_box(o, self.mins, self.maxs, o + self.velocity * frametime, TRACE_MOVE_WORLDONLY, self);
 
-                if(trace_fraction < 1 && trace_dphitcontents & DPCONTENTS_SOLID) {
+                if(trace_fraction < 1 && trace_dphitcontents & VM_DPCONTENTS_SOLID) {
                     trace_plane_normal = norm;
                     float spd = vlen(self.velocity) * bounce;
                     vector dir = normalize(self.velocity);
@@ -413,7 +413,7 @@ void nadget_GenericProjectile_Think(void) {
 			self.owner.hg_detonables += 1;
 		}
 		if (self.hg_type == NADGET_REMOTE)
-		if (clienttype(self.owner) == CLIENTTYPE_BOT) {
+		if (clienttype(self.owner) == VM_CLIENTTYPE_BOT) {
 			nadget_GenericProjectile_Detonate(self);
 		}
 	}
@@ -510,13 +510,13 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     float hitmask;
 	switch(hgtype) {
 	case NADGET_RAZE:
-		hitmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP;
+		hitmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_CORPSE | VM_DPCONTENTS_PLAYERCLIP;
 		break;
 	case NADGET_TRANSLOC:
-		hitmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+		hitmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP;
 		break;
 	default:
-		hitmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+		hitmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_CORPSE;
 	}
 
     makevectors(self.((GV("noverticalvelocity")) ? angles : v_angle));

@@ -72,7 +72,7 @@ void(void) udp_chat_server_status {
 
 var void(entity source, string msg) udp_chat_PupblicPlayerChat_next;
 void(entity source, string msg) udp_chat_PupblicPlayerChat {
-	if (!source || clienttype(source) == CLIENTTYPE_REAL) {
+	if (!source || clienttype(source) == VM_CLIENTTYPE_REAL) {
 		string text;
 		if (source) {
 			string _netname = strreplace(":", "_", source.netname);

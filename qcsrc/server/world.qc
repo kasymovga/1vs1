@@ -404,7 +404,7 @@ void(float final) world_dump_stats {
 		fputs(file, strcat(s, "\n"));
 
 	CLIENT_FOR_EACH(other) {
-		if ((clienttype(other) == CLIENTTYPE_REAL) || (clienttype(other) == CLIENTTYPE_BOT && cvar("sv_logscore_bots"))) {
+		if ((clienttype(other) == VM_CLIENTTYPE_REAL) || (clienttype(other) == VM_CLIENTTYPE_BOT && cvar("sv_logscore_bots"))) {
 			s = strcat(":player:see-labels:", score_player_string(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
 			if (other.classname == "player")
@@ -926,7 +926,7 @@ void(float dorespawn) world_reset {
 	oldself = self;
 	plugin_world_reset();
 	for (self = world; (self = nextent(self)); )
-	if (clienttype(self) == CLIENTTYPE_NOTACLIENT) {
+	if (clienttype(self) == VM_CLIENTTYPE_NOTACLIENT) {
 		if (self.reset) {
 			self.reset();
 			continue;
@@ -935,7 +935,7 @@ void(float dorespawn) world_reset {
 			self.team = self.team_saved;
 	}
 	for (self = world; (self = nextent(self)); )
-	if (clienttype(self) == CLIENTTYPE_NOTACLIENT) {
+	if (clienttype(self) == VM_CLIENTTYPE_NOTACLIENT) {
 		if (self.reset2) {
 			self.reset2();
 			continue;

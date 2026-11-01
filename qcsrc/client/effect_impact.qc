@@ -16,7 +16,7 @@ void(void) effect_impact_read {
 	vector org2, backoff;
 	float r;
 	r = prandom();
-	traceline(org - normalize(force) * 16, org + normalize(force) * 16, TRACE_MOVE_NOMONSTERS, world);
+	trace_line(org - normalize(force) * 16, org + normalize(force) * 16, TRACE_MOVE_NOMONSTERS, world);
 	if (trace_fraction < 1 && impacttype != EFFECT_IMPACT_NEX)
 		backoff = trace_plane_normal;
 	else

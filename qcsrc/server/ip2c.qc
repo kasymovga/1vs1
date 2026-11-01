@@ -33,7 +33,7 @@ void IP2C_LookupForPlayer_Callback(string ip, string cn, entity player) {
 }
 
 void IP2C_SetCountry(entity player) {
-    if(clienttype(player) != CLIENTTYPE_REAL) {
+    if(clienttype(player) != VM_CLIENTTYPE_REAL) {
         IP2C_SetCountry_Internal(player, sv_ip2country_bot_flag);
     } else {
         IP2C_Lookup(player.netaddress, IP2C_LookupForPlayer_Callback, 0, player);

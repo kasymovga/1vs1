@@ -1081,7 +1081,7 @@ void(void) chess_physics_frame_begin_hook {
 
 var void(void) chess_player_think_next;
 void(void) chess_player_think {
-	if (clienttype(self) == CLIENTTYPE_BOT)
+	if (clienttype(self) == VM_CLIENTTYPE_BOT)
 		bot_stay(self, 1);
 
 	if (chess_interacted) {
@@ -1298,7 +1298,7 @@ float(float ignore1, float ignore2) chess_winning_condition {
 	if (time < map_starttime) return FALSE;
 	entity e, wh = NULL, wb = NULL, bh = NULL, bb = NULL;
 	PLAYER_FOR_EACH(e) {
-		if (clienttype(e) == CLIENTTYPE_BOT) {
+		if (clienttype(e) == VM_CLIENTTYPE_BOT) {
 			if (e.team == COLOR_TEAM1)
 				wb = e;
 			else if (e.team == COLOR_TEAM2)

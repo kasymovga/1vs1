@@ -103,7 +103,7 @@ void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mo
 }
 
 void(float finished, string samp) powerup_countdown {
-	if (clienttype(self) == CLIENTTYPE_REAL)
+	if (clienttype(self) == VM_CLIENTTYPE_REAL)
 		if (floor(finished - time - frametime) != floor(finished - time))
 			if (finished - time < 6)
 				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);

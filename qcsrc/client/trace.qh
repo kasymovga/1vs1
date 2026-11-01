@@ -1,2 +1,2 @@
-#define trace_line traceline
-#define trace_box tracebox
+#define trace_line vm_traceline
+#define trace_box vm_tracebox

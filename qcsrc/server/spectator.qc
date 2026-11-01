@@ -3,7 +3,7 @@ var entity(entity e) spectator_camera_adjust_func;
 
 #define spectator_note_customize Spectator_Note_Customize //compatibility with old save files
 float(void) spectator_note_customize {
-	if (other.classname == "player" && (other.clientcamera == other || clienttype(other.clientcamera) == CLIENTTYPE_NOTACLIENT))
+	if (other.classname == "player" && (other.clientcamera == other || clienttype(other.clientcamera) == VM_CLIENTTYPE_NOTACLIENT))
 		return FALSE;
 
 	return TRUE;
@@ -152,7 +152,7 @@ void(void) spectator_camera_setup {
 
 void(void) spectator_player_think {
 	if (self.clientcamera == self) return;
-	if (clienttype(self.clientcamera) == CLIENTTYPE_NOTACLIENT) return; //specing some non-player object
+	if (clienttype(self.clientcamera) == VM_CLIENTTYPE_NOTACLIENT) return; //specing some non-player object
 	entity oldenemy = self.enemy;
 	if (self.BUTTON_ATCK && !self.delay) {
 		if (spectator_spectate_next() != 1) {

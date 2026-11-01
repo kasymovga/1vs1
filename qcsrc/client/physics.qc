@@ -213,9 +213,9 @@ vector(void) physics_view_origin {
 			f = max(0, (time - physics_ground_oldtime) / (physics_ground_time - physics_ground_oldtime));
 			vector ground_curorigin = (1 - f) * physics_ground_oldorigin + f * physics_ground_origin;
 			self.origin = physics_start_origin - (physics_ground_origin - ground_curorigin) + physics_ground_rotation * (1 - f);
-			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 8', TRACE_MOVE_NOMONSTERS, self);
+			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 8', TRACE_MOVE_NOMONSTERS, self);
 			if (trace_startsolid) {
-				tracebox(self.origin + '0 0 8', self.mins, self.maxs, self.origin, TRACE_MOVE_NOMONSTERS, self);
+				trace_box(self.origin + '0 0 8', self.mins, self.maxs, self.origin, TRACE_MOVE_NOMONSTERS, self);
 				if not(trace_startsolid)
 				if (trace_fraction < 1)
 					self.origin = trace_endpos;
@@ -319,9 +319,9 @@ void(void) physics_camera_setup {
 			if (CVAR(chase_active) && !physics_plug_adjust_view && !view_observer_status) {
 				view_angles += '0 1 0' * CVAR(chase_angle);
 				makevectors(view_fixangle ? view_fixed_angles : view_angles);
-				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), TRACE_MOVE_NORMAL, world);
+				trace_box(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), TRACE_MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;
-				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), TRACE_MOVE_NORMAL, world);
+				trace_box(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), TRACE_MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;
 			}
 			R_SetView(VF_ORIGIN, view_camera_origin);
@@ -382,9 +382,9 @@ void(float isnew) physics_read {
 		g_dodging = switches & 64;
 		g_dodging_frozen = switches & 128;
 		if (switches & 256) //g_playerclip_collisions
-			physics_player_content = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
+			physics_player_content = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_PLAYERCLIP;
 		else
-			physics_player_content = DPCONTENTS_SOLID;
+			physics_player_content = VM_DPCONTENTS_SOLID;
 
 		if not(switches & 512) //mod_q3bsp_curves_collisions
 			cvar_clientsettemp("mod_q3bsp_curves_collisions" , "0");
