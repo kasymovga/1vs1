@@ -438,6 +438,17 @@ string(float uselocaltime, string format, ...) strftime = #478;
 //note: be aware that if the game is saved and reloaded a week later the date and time will be different, so if activating eastereggs in a singleplayer game or something you may want to only check when a level is loaded and then keep the same easteregg state throughout the level so that the easteregg does not deactivate when reloading from a savegame (also be aware that precaches should not depend on such date/time code because reloading a savegame often scrambles the precaches if so!).
 //note: this function can return a NULL string (you can check for it with if (!s)) if the localtime/gmtime functions returned NULL in the engine code, such as if those functions don't work on this platform (consoles perhaps?), so be aware that this may return nothing.
 
+//DP_QC_TOKENIZEBYSEPARATOR
+//idea: Electro, SavageX, LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+float(string s, string separator1, ...) tokenizebyseparator = #479;
+//description:
+//this function returns tokens separated by any of the supplied separator strings, example:
+//numnumbers = tokenizebyseparator("10.2.3.4", ".");
+//returns 4 and the tokens are "10" "2" "3" "4"
+//possibly useful for parsing IPv4 addresses (such as "1.2.3.4") and IPv6 addresses (such as "[1234:5678:9abc:def0:1234:5678:9abc:def0]:26000")
+
 //DP_QC_STRING_CASE_FUNCTIONS
 //idea: Dresk
 //darkplaces implementation: LordHavoc / Dresk

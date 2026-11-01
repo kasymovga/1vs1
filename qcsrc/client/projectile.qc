@@ -146,13 +146,13 @@ void(entity e, float ch, string samp, float vol, float attn) projectile_loopsoun
 	if (self.silent)
 		return;
 
-	vm_sound(e, ch, samp, vol, attn);
+	sound(e, ch, samp, vol, attn);
 	e.snd_looping = 1;
 }
 
 void(void) projectile_remove {
 	if (self.snd_looping)
-		vm_sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 
 	if (self.count & 128) {
 		trace_box(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, TRACE_MOVE_NORMAL, self);

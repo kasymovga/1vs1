@@ -47,7 +47,7 @@ void target_spawn_useon(entity e)
 		if(key == "$")
 		{
 			data_x = -1;
-			data_y = FIELD_STRING;
+			data_y = VM_FIELD_STRING;
 		}
 		else
 		{
@@ -178,13 +178,13 @@ void target_spawn_useon(entity e)
 				{
 					switch(data_y)
 					{
-						case FIELD_STRING:
+						case VM_FIELD_STRING:
 							value = strcat(value, valueoffset);
 							break;
-						case FIELD_FLOAT:
+						case VM_FIELD_FLOAT:
 							value = ftos(stof(value) + stof(valueoffset));
 							break;
-						case FIELD_VECTOR:
+						case VM_FIELD_VECTOR:
 							value = vtos(stov(value) + stov(valueoffset));
 							break;
 						default:
@@ -197,10 +197,10 @@ void target_spawn_useon(entity e)
 				{
 					switch(data_y)
 					{
-						case FIELD_FLOAT:
+						case VM_FIELD_FLOAT:
 							value = ftos(stof(value) + random() * stof(valueoffsetrandom));
 							break;
-						case FIELD_VECTOR:
+						case VM_FIELD_VECTOR:
 							data2 = stov(valueoffsetrandom);
 							value = vtos(stov(value) + random() * data2_x * '1 0 0' + random() * data2_y * '0 1 0' + random() * data2_z * '0 0 1');
 							break;
@@ -230,7 +230,7 @@ void target_spawn_useon(entity e)
 		}
 		else
 		{
-			if(data_y == FIELD_VECTOR)
+			if(data_y == VM_FIELD_VECTOR)
 				value = strreplace("'", "", value); // why?!?
 			putentityfieldstring(data_x, e, value);
 		}

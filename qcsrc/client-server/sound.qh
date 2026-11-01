@@ -1,3 +1,4 @@
+#define sound vm_sound
 const float CHAN_AUTO = 0;
 const float CHAN_WEAPON = 1; // Weapon fire
 const float CHAN_VOICE = 2; // Voice/Radio

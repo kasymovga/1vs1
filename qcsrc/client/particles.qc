@@ -85,7 +85,7 @@ void(void) particles_point_draw {
 			}
 			if (self.noise != "") {
 				self.origin = p;
-				vm_sound(self, CHAN_AUTO, self.noise, VOL_BASE * self.volume, self.atten);
+				sound(self, CHAN_AUTO, self.noise, VOL_BASE * self.volume, self.atten);
 			}
 			self.just_toggled = 0;
 		} else if(self.absolute) {

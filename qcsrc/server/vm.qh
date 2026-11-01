@@ -1156,17 +1156,6 @@ void(entity e, string s) clientcommand = #440;
 //description:
 //provides QC the ability to completely control server interpretation of client commands ("say" and "color" for example, clientcommand is necessary for this and str_sub (FRIK_FILE) is useful) as well as adding new commands (tokenize, argv, and stof (FRIK_FILE) are useful for this)), whenever a clc_stringcmd is received the QC function is called, and it is up to the QC to decide what (if anything) to do with it
 //
-//DP_QC_TOKENIZEBYSEPARATOR
-//idea: Electro, SavageX, LordHavoc
-//darkplaces implementation: LordHavoc
-//builtin definitions:
-float(string s, string separator1, ...) tokenizebyseparator = #479;
-//description:
-//this function returns tokens separated by any of the supplied separator strings, example:
-//numnumbers = tokenizebyseparator("10.2.3.4", ".");
-//returns 4 and the tokens are "10" "2" "3" "4"
-//possibly useful for parsing IPv4 addresses (such as "1.2.3.4") and IPv6 addresses (such as "[1234:5678:9abc:def0:1234:5678:9abc:def0]:26000")
-//
 //DP_QC_CVAR_DEFSTRING
 //idea: id Software (Doom3), LordHavoc
 //darkplaces implementation: LordHavoc
@@ -1196,11 +1185,13 @@ string(float fieldnum, entity ent) getentityfieldstring = #499;
 float(float fieldnum, entity ent, string s) putentityfieldstring = #500;
 //constants:
 //Returned by entityfieldtype
-float FIELD_STRING   = 1;
-float FIELD_FLOAT    = 2;
-float FIELD_VECTOR   = 3;
-float FIELD_ENTITY   = 4;
-float FIELD_FUNCTION = 6;
+enum {
+	VM_FIELD_STRING  = 1,
+	VM_FIELD_FLOAT = 2,
+	VM_FIELD_VECTOR  = 3,
+	VM_FIELD_ENTITY  = 4,
+	VM_FIELD_FUNCTION = 6,
+};
 //description:
 //Versatile functions intended for storing data from specific entities between level changes, but can be customized for some kind of partial savegame.
 //WARNING: .entity fields cannot be saved and restored between map loads as they will leave dangling pointers.

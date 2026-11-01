@@ -51,7 +51,7 @@ void(void) effect_blast_read {
 	pointparticles(particleeffectnum("TE_TEI_BIGEXPLOSION"), loc, '0 0 0', 1);
 	entity e = spawn();
 	setorigin(e, loc);
-	vm_sound(e, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	sound(e, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	remove(e);
 }
 
@@ -135,7 +135,7 @@ void(float isNew) effect_model_read {
 
 void(void) effect_hit_read {
 	if (CVAR(cl_hitsound))
-		vm_sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+		sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
 
 	if (CVAR(crosshair_hit_time) > 0)
 		view_crosshair_hittime = time + CVAR(crosshair_hit_time);
