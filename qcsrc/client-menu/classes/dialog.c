@@ -181,7 +181,7 @@ float keyDownDialog(entity me, float key, float ascii, float shift)
 {
 	if(me.closable)
 	{
-		if(key == K_ESCAPE)
+		if(key == VM_K_ESCAPE)
 		{
 			me.close(me);
 			return 1;

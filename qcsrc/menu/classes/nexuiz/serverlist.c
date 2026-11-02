@@ -374,8 +374,8 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 	s = strcat(s, str_sub(me.filterString, m+1, strlen(me.filterString) - m - 1));
 
 	me.controlledTextbox.setText(me.controlledTextbox, s);
-	me.controlledTextbox.keyDown(me.controlledTextbox, K_END, 0, 0);
-	me.controlledTextbox.keyUp(me.controlledTextbox, K_END, 0, 0);
+	me.controlledTextbox.keyDown(me.controlledTextbox, VM_K_END, 0, 0);
+	me.controlledTextbox.keyUp(me.controlledTextbox, VM_K_END, 0, 0);
 	//ServerList_Filter_Change(me.controlledTextbox, me);
 }
 void ServerList_Filter_Change(entity box, entity me)
@@ -567,17 +567,17 @@ float keyDownNexuizServerList(entity me, float scan, float ascii, float shift)
 	vector org, sz;
 	org = gui_box_to_global(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
 	sz = gui_box_to_global_size(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
-	if(scan == K_ENTER)
+	if(scan == VM_K_ENTER)
 	{
 		ServerList_Connect_Click(NULL, me);
 		return 1;
 	}
-	else if(scan == K_MOUSE2 || scan == K_SPACE)
+	else if(scan == VM_K_MOUSE2 || scan == VM_K_SPACE)
 	{
 		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 		DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 	}
-	else if(scan == K_INS || scan == K_MOUSE3)
+	else if(scan == VM_K_INS || scan == VM_K_MOUSE3)
 	{
 		i = me.selectedItem;
 		if(i < me.nItems)

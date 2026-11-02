@@ -26,11 +26,11 @@ float(void) weapon_wheel_remove {
 
 float(float bInputType, float nPrimary, float nSecondary) weapon_wheel_input_event {
 	if (bInputType == 0) {
-		if (nPrimary == K_ESCAPE) {
+		if (nPrimary == VM_K_ESCAPE) {
 			weapon_wheel_remove();
 			return TRUE;
 		}
-		if (nPrimary == K_MOUSE1) {
+		if (nPrimary == VM_K_MOUSE1) {
 			weapon_wheel_remove();
 			if (weapon_wheel_under_cursor >= 0) {
 				localcmd("impulse ", ftos(229 + weapon_wheel_under_cursor), "\n");

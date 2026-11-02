@@ -122,11 +122,11 @@ float weapon_select_input_event(float bInputType, float nPrimary, float nSeconda
 		return TRUE;
 
 	if (bInputType == 0) {
-		if (nPrimary == K_ESCAPE) {
+		if (nPrimary == VM_K_ESCAPE) {
 			weapon_select_active = FALSE;
 			return TRUE;
 		}
-		if (nPrimary == K_MOUSE1) {
+		if (nPrimary == VM_K_MOUSE1) {
 			vector o = ('1 0 0' * (CVAR(vid_conwidth) - weapon_select_width) + (CVAR(vid_conheight) - weapon_select_height) * '0 1 0') * 0.5;
 			vector s;
 			s_x = weapon_select_width;

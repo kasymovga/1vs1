@@ -169,7 +169,7 @@ void(float key, float ascii) menu_keyup {
 	if (!menu_active)
 		return;
 
-	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
+	if (key >= VM_K_MOUSE1 && key <= VM_K_MOUSE3) {
 		--menu_mouse_button_pressed;
 		if (menu_mouse_button_pressed < 0) {
 			menu_mouse_button_pressed = 0;
@@ -182,20 +182,20 @@ void(float key, float ascii) menu_keyup {
 	}
 	gui_draw_reset();
 	main.keyUp(main, key, ascii, menu_modkeys_state);
-	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
+	if (key >= VM_K_MOUSE1 && key <= VM_K_MOUSE3) {
 		menu_mouse_update();
 		if (!menu_mouse_button_pressed)
 			main.mouseRelease(main, menu_mouse_pos);
 	}
-	if (key == K_ALT) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_ALT);
-	if (key == K_CTRL) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_CTRL);
-	if (key == K_SHIFT) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_SHIFT);
+	if (key == VM_K_ALT) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_ALT);
+	if (key == VM_K_CTRL) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_CTRL);
+	if (key == VM_K_SHIFT) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_SHIFT);
 }
 
 void(float key, float ascii) menu_keydown {
 	if (!menu_initialized) {
 		if (dlc_failed || dlc_downloading) {
-			if (key == K_ESCAPE)
+			if (key == VM_K_ESCAPE)
 				localcmd("quit\n");
 		}
 		return;
@@ -203,7 +203,7 @@ void(float key, float ascii) menu_keydown {
 	if (!menu_active)
 		return;
 
-	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
+	if (key >= VM_K_MOUSE1 && key <= VM_K_MOUSE3) {
 		++menu_mouse_button_pressed;
 		if (menu_mouse_button_pressed > 3) {
 			menu_mouse_button_pressed = 3;
@@ -221,12 +221,12 @@ void(float key, float ascii) menu_keydown {
 		e.keyGrabbed(e, key, ascii);
 	} else {
 		gui_draw_reset();
-		if (key >= K_MOUSE1 && key <= K_MOUSE3) {
+		if (key >= VM_K_MOUSE1 && key <= VM_K_MOUSE3) {
 			menu_mouse_update();
 			if (menu_mouse_button_pressed == 1)
 				main.mousePress(main, menu_mouse_pos);
 
-			if (key == K_MOUSE1) {
+			if (key == VM_K_MOUSE1) {
 				if (time < menu_doubleclick_time && menu_doubleclick_position == menu_mouse_pos)
 					main.mouseDoubleClick(main, menu_mouse_pos);
 
@@ -235,13 +235,13 @@ void(float key, float ascii) menu_keydown {
 			}
 		}
 		if (!main.keyDown(main, key, ascii, menu_modkeys_state))
-			if (key == K_ESCAPE)
+			if (key == VM_K_ESCAPE)
 				if (menu_gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) // don't back out to console only
 					menu_hide(); // disable menu on unhandled ESC
 	}
-	if (key == K_ALT) menu_modkeys_state |= GUI_KEY_STATE_ALT;
-	if (key == K_CTRL) menu_modkeys_state |= GUI_KEY_STATE_CTRL;
-	if (key == K_SHIFT) menu_modkeys_state |= GUI_KEY_STATE_SHIFT;
+	if (key == VM_K_ALT) menu_modkeys_state |= GUI_KEY_STATE_ALT;
+	if (key == VM_K_CTRL) menu_modkeys_state |= GUI_KEY_STATE_CTRL;
+	if (key == VM_K_SHIFT) menu_modkeys_state |= GUI_KEY_STATE_SHIFT;
 }
 
 float() menu_init_pre {

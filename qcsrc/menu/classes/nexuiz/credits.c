@@ -102,13 +102,13 @@ float keyDownNexuizCreditsList(entity me, float scan, float ascii, float shift)
 	me.dragScrollTimer = time;
 	me.scrolling = 0;
 
-	if(scan == K_PGUP)
+	if(scan == VM_K_PGUP)
 		me.scrollPos = max(me.scrollPos - 0.5, 0);
-	else if(scan == K_PGDN)
+	else if(scan == VM_K_PGDN)
 		me.scrollPos = min(me.scrollPos + 0.5, me.nItems * me.itemHeight - 1);
-	else if(scan == K_UPARROW)
+	else if(scan == VM_K_UPARROW)
 		me.scrollPos = max(me.scrollPos - me.itemHeight, 0);
-	else if(scan == K_DOWNARROW)
+	else if(scan == VM_K_DOWNARROW)
 		me.scrollPos = min(me.scrollPos + me.itemHeight, me.nItems * me.itemHeight - 1);
 	else
 		return keyDownListBox(me, scan, ascii, shift);

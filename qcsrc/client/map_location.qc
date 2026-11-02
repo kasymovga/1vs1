@@ -12,7 +12,7 @@ float map_location_request_input_event(float input_type, float primary, float se
 	if (input_type != 0 || main_isdemo)
 		return FALSE;
 
-	if (primary == K_MOUSE1) {
+	if (primary == VM_K_MOUSE1) {
 		vector loc;
 		loc = radar_2dcoord_to_texcoord(mouse_position());
 		loc = radar_texcoord_to_3dcoord(loc);

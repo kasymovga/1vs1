@@ -38,7 +38,7 @@ float keyDownInputContainer(entity me, float scan, float ascii, float shift)
 	entity f, ff;
 	if(keyDownContainer(me, scan, ascii, shift))
 		return 1;
-	if(scan == K_ESCAPE)
+	if(scan == VM_K_ESCAPE)
 	{
 		f = me.focusedChild;
 		if(f)
@@ -48,7 +48,7 @@ float keyDownInputContainer(entity me, float scan, float ascii, float shift)
 		}
 		return 0;
 	}
-	if(scan == K_TAB)
+	if(scan == VM_K_TAB)
 	{
 		f = me.focusedChild;
 		if(shift & GUI_KEY_STATE_SHIFT)

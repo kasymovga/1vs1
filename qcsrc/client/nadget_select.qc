@@ -152,7 +152,7 @@ float(float bInputType, float nPrimary, float nSecondary) nadget_select_input_ev
 		return TRUE;
 
 	if (bInputType == 0) {
-		if (nPrimary == K_ESCAPE) {
+		if (nPrimary == VM_K_ESCAPE) {
 			if (nadget_select_confirmed2 >= 0)
 				nadget_select_confirmed2 = -1;
 			else if (nadget_select_confirmed1 >= 0)
@@ -162,7 +162,7 @@ float(float bInputType, float nPrimary, float nSecondary) nadget_select_input_ev
 			}
 			return TRUE;
 		}
-		if (nPrimary == K_MOUSE1) {
+		if (nPrimary == VM_K_MOUSE1) {
 			vector o;
 			o_x = (CVAR(vid_conwidth) - nadget_select_width) * 0.5;
 			o_y = (CVAR(vid_conheight) - nadget_select_height) * 0.5;

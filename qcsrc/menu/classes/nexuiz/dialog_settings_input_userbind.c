@@ -25,11 +25,11 @@ void NexuizUserbindEditDialog_Save(entity btn, entity me)
 void loadUserBindNexuizUserbindEditDialog(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
 	me.nameBox.setText(me.nameBox, theName);
-		me.nameBox.keyDown(me.nameBox, K_END, 0, 0);
+		me.nameBox.keyDown(me.nameBox, VM_K_END, 0, 0);
 	me.commandPressBox.setText(me.commandPressBox, theCommandPress);
-		me.nameBox.keyDown(me.commandPressBox, K_END, 0, 0);
+		me.nameBox.keyDown(me.commandPressBox, VM_K_END, 0, 0);
 	me.commandReleaseBox.setText(me.commandReleaseBox, theCommandRelease);
-		me.nameBox.keyDown(me.commandReleaseBox, K_END, 0, 0);
+		me.nameBox.keyDown(me.commandReleaseBox, VM_K_END, 0, 0);
 }
 
 void fillNexuizUserbindEditDialog(entity me)

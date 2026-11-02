@@ -300,7 +300,7 @@ float keyDownNexposee(entity me, float scan, float ascii, float shift)
 	if(me.animationState == 2)
 		if(keyDownContainer(me, scan, ascii, shift))
 			return 1;
-	if(scan == K_TAB)
+	if(scan == VM_K_TAB)
 	{
 		if(me.animationState == 0)
 		{
@@ -324,11 +324,11 @@ float keyDownNexposee(entity me, float scan, float ascii, float shift)
 	{
 		case 0:
 		case 3:
-			nexposeeKey = ((scan == K_SPACE) || (scan == K_ENTER));
+			nexposeeKey = ((scan == VM_K_SPACE) || (scan == VM_K_ENTER));
 			break;
 		case 1:
 		case 2:
-			nexposeeKey = (scan == K_ESCAPE);
+			nexposeeKey = (scan == VM_K_ESCAPE);
 			break;
 	}
 	if(nexposeeKey)

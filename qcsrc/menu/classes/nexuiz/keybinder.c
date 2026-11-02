@@ -110,7 +110,7 @@ void keyGrabbedNexuizKeyBinder(entity me, float key, float ascii)
 	string func;
 
 	me.keyGrabButton.forcePressed = 0;
-	if(key == K_ESCAPE)
+	if(key == VM_K_ESCAPE)
 		return;
 
 	func = Nexuiz_KeyBinds_Functions[me.selectedItem];
@@ -233,12 +233,12 @@ float keyDownNexuizKeyBinder(entity me, float key, float ascii, float shift)
 	r = 1;
 	switch(key)
 	{
-		case K_ENTER:
-		case K_SPACE:
+		case VM_K_ENTER:
+		case VM_K_SPACE:
 			KeyBinder_Bind_Change(me, me);
 			break;
-		case K_DEL:
-		case K_BACKSPACE:
+		case VM_K_DEL:
+		case VM_K_BACKSPACE:
 			KeyBinder_Bind_Clear(me, me);
 			break;
 		default:

@@ -50,7 +50,7 @@ void configureButtonButton(entity me, string txt, float sz, string gfx)
 }
 float keyDownButton(entity me, float key, float ascii, float shift)
 {
-	if(key == K_ENTER || key == K_SPACE)
+	if(key == VM_K_ENTER || key == VM_K_SPACE)
 	{
 		me.clickTime = 0.1; // delayed for effect
 		return 1;

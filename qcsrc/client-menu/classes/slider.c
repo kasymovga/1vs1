@@ -103,14 +103,14 @@ float(entity me, float key, float ascii, float shift) keyDownSlider {
 		return 0;
 
 	inRange = (almostInBoundSlider(me.valueMin, me.value, me.valueMax));
-	if (key == K_LEFTARROW) {
+	if (key == VM_K_LEFTARROW) {
 		if(inRange)
 			me.setValue(me, medianSlider(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
-	if (key == K_RIGHTARROW) {
+	if (key == VM_K_RIGHTARROW) {
 		if (inRange)
 			me.setValue(me, medianSlider(me.valueMin, me.value + me.valueKeyStep, me.valueMax));
 		else
@@ -118,25 +118,25 @@ float(entity me, float key, float ascii, float shift) keyDownSlider {
 
 		return 1;
 	}
-	if (key == K_PGUP) {
+	if (key == VM_K_PGUP) {
 		if(inRange)
 			me.setValue(me, medianSlider(me.valueMin, me.value - me.valuePageStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
-	if (key == K_PGDN) {
+	if (key == VM_K_PGDN) {
 		if(inRange)
 			me.setValue(me, medianSlider(me.valueMin, me.value + me.valuePageStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMin);
 		return 1;
 	}
-	if (key == K_HOME) {
+	if (key == VM_K_HOME) {
 		me.setValue(me, me.valueMin);
 		return 1;
 	}
-	if (key == K_END) {
+	if (key == VM_K_END) {
 		me.setValue(me, me.valueMax);
 		return 1;
 	}

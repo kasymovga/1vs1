@@ -57,30 +57,30 @@ void configureListBoxListBox(entity me, float theScrollbarWidth, float theItemHe
 float keyDownListBox(entity me, float key, float ascii, float shift)
 {
 	me.dragScrollTimer = time;
-	if(key == K_MWHEELUP)
+	if(key == VM_K_MWHEELUP)
 	{
 		me.scrollPos = max(me.scrollPos - 0.5, 0);
 		me.setSelected(me, min(me.selectedItem, floor((me.scrollPos + 1) / me.itemHeight - 1)));
 	}
-	else if(key == K_MWHEELDOWN)
+	else if(key == VM_K_MWHEELDOWN)
 	{
 		me.scrollPos = min(me.scrollPos + 0.5, me.nItems * me.itemHeight - 1);
 		me.setSelected(me, max(me.selectedItem, ceil(me.scrollPos / me.itemHeight)));
 	}
-	else if(key == K_PGUP)
+	else if(key == VM_K_PGUP)
 		me.setSelected(me, me.selectedItem - 1 / me.itemHeight);
-	else if(key == K_PGDN)
+	else if(key == VM_K_PGDN)
 		me.setSelected(me, me.selectedItem + 1 / me.itemHeight);
-	else if(key == K_UPARROW)
+	else if(key == VM_K_UPARROW)
 		me.setSelected(me, me.selectedItem - 1);
-	else if(key == K_DOWNARROW)
+	else if(key == VM_K_DOWNARROW)
 		me.setSelected(me, me.selectedItem + 1);
-	else if(key == K_HOME)
+	else if(key == VM_K_HOME)
 	{
 		me.scrollPos = 0;
 		me.setSelected(me, 0);
 	}
-	else if(key == K_END)
+	else if(key == VM_K_END)
 	{
 		me.scrollPos = max(0, me.nItems * me.itemHeight - 1);
 		me.setSelected(me, me.nItems - 1);

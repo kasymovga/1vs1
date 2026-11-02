@@ -78,9 +78,9 @@ float(float key, float down) demo_input_event {
 		demo_track(1);
 		return TRUE;
 	}
-	if (key == K_ESCAPE && !down) {
+	if (key == VM_K_ESCAPE && !down) {
 		demo_stop();
-	} else if (key == K_MOUSE1) {
+	} else if (key == VM_K_MOUSE1) {
 		demo_mouse_pressed = down;
 		menu_mouse_update();
 		if (down) {

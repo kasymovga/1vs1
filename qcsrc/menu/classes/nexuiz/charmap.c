@@ -95,27 +95,27 @@ float keyDownNexuizCharmap(entity me, float key, float ascii, float shift)
 {
 	switch(key)
 	{
-		case K_LEFTARROW:
+		case VM_K_LEFTARROW:
 			me.selectedCharacterCell = mod(me.selectedCharacterCell + 159, 160);
 			return 1;
-		case K_RIGHTARROW:
+		case VM_K_RIGHTARROW:
 			me.selectedCharacterCell = mod(me.selectedCharacterCell + 1, 160);
 			return 1;
-		case K_UPARROW:
+		case VM_K_UPARROW:
 			me.selectedCharacterCell = mod(me.selectedCharacterCell + 144, 160);
 			return 1;
-		case K_DOWNARROW:
+		case VM_K_DOWNARROW:
 			me.selectedCharacterCell = mod(me.selectedCharacterCell + 16, 160);
 			return 1;
-		case K_HOME:
+		case VM_K_HOME:
 			me.selectedCharacterCell = 0;
 			return 1;
-		case K_END:
+		case VM_K_END:
 			me.selectedCharacterCell = 159;
 			return 1;
-		case K_SPACE:
-		case K_ENTER:
-		case K_INS:
+		case VM_K_SPACE:
+		case VM_K_ENTER:
+		case VM_K_INS:
 			me.controlledTextbox.enterText(me.controlledTextbox, CharMap_CellToChar(me.selectedCharacterCell));
 			return 1;
 		default:

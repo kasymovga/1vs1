@@ -285,13 +285,13 @@ void MapList_LoadMap(entity btn, entity me)
 float keyDownNexuizMapList(entity me, float scan, float ascii, float shift)
 {
 	string ch, save;
-	if(scan == K_ENTER)
+	if(scan == VM_K_ENTER)
 	{
 		// pop up map info screen
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
 		DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 	}
-	else if(scan == K_SPACE)
+	else if(scan == VM_K_SPACE)
 	{
 		me.g_maplistCacheToggle(me, me.selectedItem);
 	}
@@ -305,7 +305,7 @@ float keyDownNexuizMapList(entity me, float scan, float ascii, float shift)
 		if(me.g_maplistCacheQuery(me, me.selectedItem))
 			me.g_maplistCacheToggle(me, me.selectedItem);
 	}
-	else if(scan == K_BACKSPACE)
+	else if(scan == VM_K_BACKSPACE)
 	{
 		if(time < me.typeToSearchTime)
 		{

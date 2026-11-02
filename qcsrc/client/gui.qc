@@ -25,7 +25,7 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 	r = FALSE;
 	gui_draw_reset();
 	GUI_mouse_pos = gui_global_to_box_size(mouse_position(), gui_draw_scale);
-	if (nPrimary == K_MOUSE1) {
+	if (nPrimary == VM_K_MOUSE1) {
 		if (bInputType == 0) { //Key down
 			if not(GUI_mouseButtonsPressed) {
 				mainWindow.mousePress(mainWindow, GUI_mouse_pos);
@@ -45,19 +45,19 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 		}
 	}
 	if (bInputType == 0) {
-		if(nPrimary == K_ALT) { GUI_shiftState |= GUI_KEY_STATE_ALT; r = TRUE; }
-		if(nPrimary == K_CTRL) { GUI_shiftState |= GUI_KEY_STATE_CTRL; r = TRUE; }
-		if(nPrimary == K_SHIFT) { GUI_shiftState |= GUI_KEY_STATE_SHIFT; r = TRUE; }
+		if(nPrimary == VM_K_ALT) { GUI_shiftState |= GUI_KEY_STATE_ALT; r = TRUE; }
+		if(nPrimary == VM_K_CTRL) { GUI_shiftState |= GUI_KEY_STATE_CTRL; r = TRUE; }
+		if(nPrimary == VM_K_SHIFT) { GUI_shiftState |= GUI_KEY_STATE_SHIFT; r = TRUE; }
 		if (mainWindow.keyDown(mainWindow, nPrimary, nSecondary, GUI_shiftState)) {
 			return TRUE;
-		} else if (nPrimary == K_ESCAPE) {
+		} else if (nPrimary == VM_K_ESCAPE) {
 			GUI_Hide();
 			return TRUE;
 		}
 	} else {
-		if(nPrimary == K_ALT) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_ALT); r = TRUE; }
-		if(nPrimary == K_CTRL) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_CTRL); r = TRUE; }
-		if(nPrimary == K_SHIFT) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_SHIFT); r = TRUE; }
+		if(nPrimary == VM_K_ALT) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_ALT); r = TRUE; }
+		if(nPrimary == VM_K_CTRL) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_CTRL); r = TRUE; }
+		if(nPrimary == VM_K_SHIFT) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_SHIFT); r = TRUE; }
 	}
 	if (GUI_mouse_pos != GUI_mouse_pos_old) {
 		if (GUI_mouseButtonsPressed) {

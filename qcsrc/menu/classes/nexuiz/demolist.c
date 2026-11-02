@@ -139,7 +139,7 @@ void clickListBoxItemNexuizDemoList(entity me, float i, vector where, float doub
 
 float keyDownNexuizDemoList(entity me, float scan, float ascii, float shift)
 {
-    if(scan == K_ENTER) {
+    if(scan == VM_K_ENTER) {
         me.startDemo(me);
         return 1;
     }

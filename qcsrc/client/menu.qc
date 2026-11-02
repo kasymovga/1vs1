@@ -187,7 +187,7 @@ float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 	if (bInputType != 0 || main_isdemo)
 		return FALSE;
 
-	if (nPrimary == K_ESCAPE)
+	if (nPrimary == VM_K_ESCAPE)
 	if (menu.flags & MENU_FLAG_ESCAPEABLE)
 		choice = menu.cnt;
 
@@ -204,7 +204,7 @@ float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 	if (nPrimary <= 'g') {
 		choice = nPrimary - 'a' + 9;
 	}
-	if (nPrimary == K_MOUSE1) {
+	if (nPrimary == VM_K_MOUSE1) {
 		menu_selected_update();
 		if (menu_selected < 0)
 			choice = menu.cnt;

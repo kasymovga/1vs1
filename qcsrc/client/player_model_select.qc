@@ -44,11 +44,11 @@ void(void) player_model_select_remove {
 
 float(float bInputType, float nPrimary, float nSecondary) player_model_select_input_event {
 	if (bInputType == 0) {
-		if (nPrimary == K_ESCAPE) {
+		if (nPrimary == VM_K_ESCAPE) {
 			player_model_select_remove();
 			return TRUE;
 		}
-		if (nPrimary == K_MOUSE1) {
+		if (nPrimary == VM_K_MOUSE1) {
 			float i = player_model_select_choosen_button();
 			if (i == 1)
 				player_model_select_list_pos--;

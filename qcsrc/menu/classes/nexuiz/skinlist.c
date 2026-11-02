@@ -184,7 +184,7 @@ void clickListBoxItemNexuizSkinList(entity me, float i, vector where, float doub
 
 float keyDownNexuizSkinList(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER) {
+	if(scan == VM_K_ENTER) {
 		me.setSkin(me);
 		return 1;
 	}

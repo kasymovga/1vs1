@@ -95,26 +95,26 @@ float keyDownInputBox(entity me, float key, float ascii, float shift)
 	}
 	switch(key)
 	{
-		case K_LEFTARROW:
+		case VM_K_LEFTARROW:
 			me.cursorPos -= 1;
 			return 1;
-		case K_RIGHTARROW:
+		case VM_K_RIGHTARROW:
 			me.cursorPos += 1;
 			return 1;
-		case K_HOME:
+		case VM_K_HOME:
 			me.cursorPos = 0;
 			return 1;
-		case K_END:
+		case VM_K_END:
 			me.cursorPos = strlen(me.text);
 			return 1;
-		case K_BACKSPACE:
+		case VM_K_BACKSPACE:
 			if(me.cursorPos > 0)
 			{
 				me.cursorPos -= 1;
 				me.setText(me, strcat(str_sub(me.text, 0, me.cursorPos), str_sub(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
 			}
 			return 1;
-		case K_DEL:
+		case VM_K_DEL:
 			if(shift & GUI_KEY_STATE_CTRL)
 				me.setText(me, "");
 			else

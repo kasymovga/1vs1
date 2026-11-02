@@ -61,7 +61,7 @@ float(float bInputType, float nPrimary, float nSecondary) rm_game_type_vote_inpu
 		localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
 		return TRUE;
 	}
-	if (nPrimary == K_MOUSE1) {
+	if (nPrimary == VM_K_MOUSE1) {
 		if (rm_game_type_vote_selection >= 0) {
 			imp = min(rm_game_type_vote_selection + 1, rm_game_type_vote_max);
 			localcmd(strcat("\nimpulse ", ftos(imp), "\n"));

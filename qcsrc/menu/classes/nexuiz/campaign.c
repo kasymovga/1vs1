@@ -226,7 +226,7 @@ void setSelectedNexuizCampaignList(entity me, float i)
 
 float keyDownNexuizCampaignList(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_SPACE)
+	if(scan == VM_K_ENTER || scan == VM_K_SPACE)
 		CampaignList_LoadMap(me, me);
 	else
 		return keyDownListBox(me, scan, ascii, shift);

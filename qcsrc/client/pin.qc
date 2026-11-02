@@ -6,7 +6,7 @@ float pin_input_event(float bInputType, float nPrimary, float nSecondary) {
 		return TRUE;
 
 	float pin_try = FALSE;
-	if (nPrimary == K_MOUSE1 && bInputType == 0) {
+	if (nPrimary == VM_K_MOUSE1 && bInputType == 0) {
 		if (pin_selected == -2) {
 			str_unzone_ifneeded(pin_code);
 			pin_code = "";

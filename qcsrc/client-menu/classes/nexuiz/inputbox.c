@@ -74,7 +74,7 @@ float keyDownNexuizInputBox(entity me, float key, float ascii, float shift)
 {
 	float r;
 	r = 0;
-	if(key == K_ENTER)
+	if(key == VM_K_ENTER)
 	{
 		if(me.cvarName)
 		{

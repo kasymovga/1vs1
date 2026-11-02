@@ -58,7 +58,7 @@ float(float bInputType, float nPrimary, float nSecondary) map_vote_input_event {
 		localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
 		return TRUE;
 	}
-	if (nPrimary == K_MOUSE1) {
+	if (nPrimary == VM_K_MOUSE1) {
 		map_vote_selection = map_vote_select();
 		if (map_vote_selection >= 0) {
 			imp = min(map_vote_selection + 1, map_vote_count);
