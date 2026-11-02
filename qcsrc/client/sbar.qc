@@ -1821,9 +1821,8 @@ float(float stat_regen, float stat_maxregen) sbar_nadget_regen {
 	return getstatf(stat_regen) / getstatf(stat_maxregen);
 }
 
-void(vector dummy1, vector dummy2, float dummy3) sbar_score_nothing_draw {}
+void(vector dummy1, vector dummy2, float dummy3) sbar_nothing_draw {}
 var void(vector position, vector sz, float scale) sbar_game_hud;
-void(vector position, vector sz, float scale) sbar_game_hud_nothing {};
 void(void) sbar_game_init {
 	sbar_keys_is_powerups = TRUE;
 	sbar_score_draw = sbar_score_draw_default;
@@ -1837,7 +1836,7 @@ void(void) sbar_game_init {
 	} else if (game_type == GAME_TYPE_SINGLE || game_type == GAME_TYPE_COOP || game_type == GAME_TYPE_SURVIVE) {
 		sbar_keys_is_powerups = FALSE;
 		sbar_game_hud = single_hud;
-		sbar_score_draw = sbar_score_nothing_draw;
+		sbar_score_draw = sbar_nothing_draw;
 	} else if (game_type == GAME_TYPE_FREEZETAG || game_type == GAME_TYPE_CLANARENA || game_type == GAME_TYPE_JAILBREAK) {
 		sbar_game_hud = ft_hud;
 	} else if (game_type == GAME_TYPE_RACE || game_type == GAME_TYPE_CTS) {
@@ -1849,7 +1848,7 @@ void(void) sbar_game_init {
 		sbar_game_hud = chess_hud;
 	} else {
 		rm_hud_game_info_enabled = FALSE;
-		sbar_game_hud = sbar_game_hud_nothing;
+		sbar_game_hud = sbar_nothing_draw;
 	}
 }
 

@@ -931,7 +931,7 @@ void(void) rm_hud_draw {
 		// teamhud
 		hud_sector_x = thwidth;
 		hud_sector_pos_x = next_sector;
-		if (rm_hud_game_info_enabled) {
+		if (rm_hud_game_info_enabled && sbar_score_draw != sbar_nothing_draw) {
 			RM_HUD_LINE_SECTOR({
 				sector_mod = '0 0 0';
 			}, RM_HUD_BG_SECTOR, RM_HUD_BG_BORDER, RM_HUD_A_SECTOR, RM_HUD_A_BORDER)
@@ -1292,7 +1292,9 @@ void(void) rm_hud_draw {
 		}
 	}
 	// draw scores and timer
-	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && team_teams <= 1) { // race/cts record display on HUD
+	if (sbar_score_draw == sbar_nothing_draw) {
+		sbar_game_hud(scoresector_pos - '0 8 0', scoresector_size + '0 16 0', 1);
+	} else if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && team_teams <= 1) { // race/cts record display on HUD
 		sbar_score_draw(scoresector_pos, scoresector_size, 1);
 	} else {
 		rm_hud_score_draw(scoresector_pos_x);
@@ -1302,11 +1304,8 @@ void(void) rm_hud_draw {
 	// draw strength/invincibility icon and timer
 	rm_hud_powerups_draw(powerup_pos);
 	sbar_runes_draw();
-	if (game_info_size == '0 0 0')
-		sbar_game_hud(SBAR_GAMEINFO_POSITION_DEFAULT, '0 0 0', 1);
-	else {
+	if (game_info_size != '0 0 0')
 		sbar_game_hud(game_info_pos, game_info_size, 1);
-	}
 }
 
 void(float p) rm_hud_score_draw {
