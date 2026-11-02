@@ -21,11 +21,17 @@ entity makeNexuizServerListTab()
 	return me;
 }
 
+float refreshNexuizServerListTab_next;
 void(entity me, entity ignore) refreshNexuizServerListTab {
+	if (refreshNexuizServerListTab_next > time) return;
+	refreshNexuizServerListTab_next = time + 5;
 	refreshhostcache();
 }
 
+float reloadNexuizServerListTab_next;
 void(entity me, entity ignore) reloadNexuizServerListTab {
+	if (reloadNexuizServerListTab_next > time) return;
+	reloadNexuizServerListTab_next = time + 1;
 	localcmd("net_slist\n");
 	serverlist_reload();
 }
