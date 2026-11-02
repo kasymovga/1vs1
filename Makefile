@@ -1,6 +1,6 @@
-SV_SOURCES=$(shell find qcsrc/server qcsrc/client-server qcsrc/common qcsrc/menu-server -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)') Makefile
-CL_SOURCES=$(shell find qcsrc/client qcsrc/client-server qcsrc/common qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c)') Makefile
-MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common qcsrc/menu-server qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c|inc)') Makefile
+SV_SOURCES=$(shell find qcsrc/server qcsrc/client-server qcsrc/common qcsrc/menu-server -type f -name '*.qc' -or -name '*.qh' -or -name '*.src') Makefile
+CL_SOURCES=$(shell find qcsrc/client qcsrc/client-server qcsrc/common qcsrc/client-menu -type f -name '*.qc' -or -name '*.qh' -or -name '*.src' -or -name '*.c') Makefile
+MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common qcsrc/menu-server qcsrc/client-menu -type f -name '*.qc' -or -name '*.qh' -or -name '*.src' -or -name '*.c') Makefile
 CFG_SOURSES=$(shell ls cfg/*.in)
 SET_CURL_PACKAGE=yes
 QCC=gmqcc
