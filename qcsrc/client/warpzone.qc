@@ -174,12 +174,8 @@ void(void) warpzone_view_fix_real {
 			view_origin += (clipdist - f) * w.warpzone_forward;
 	}
 	if (view_angles_z != 0) {
-		if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
-			view_angles_z = 0;
-		} else {
-			view_angles_z = approach_angle(view_angles_z, 0, frametime * 360);
-			R_SetView(VF_CL_VIEWANGLES, view_angles);
-		}
+		view_angles_z = approach_angle(view_angles_z, 0, frametime * 360);
+		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
 }
 
