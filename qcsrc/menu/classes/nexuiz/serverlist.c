@@ -261,8 +261,11 @@ void drawNexuizServerList(entity me)
 
 	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
 
-	me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
-
+	float n = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+	if (me.nItems != n) {
+		me.nItems = n;
+		refreshServerListNexuizServerList(me, 0);
+	}
 	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
 

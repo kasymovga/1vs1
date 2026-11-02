@@ -52,7 +52,11 @@ void(float id, float status, string data) serverlist_callback {
 	}
 }
 
+void(void) serverlist_reload {
+	uri_get(serverlist_uris[0], SERVERLIST_URI_HANDLER);
+}
+
 void(void) serverlist_init {
 	SERVERLIST_URI_HANDLER = uri_register_handler(serverlist_callback);
-	uri_get(serverlist_uris[0], SERVERLIST_URI_HANDLER);
+	serverlist_reload();
 }

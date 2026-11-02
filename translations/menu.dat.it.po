@@ -1001,3 +1001,9 @@ msgstr "Сodice PIN:"
 
 msgid "Enable demo player"
 msgstr "Abilita il lettore demo"
+
+msgid "Refresh"
+msgstr "Aggiorna"
+
+msgid "Reload"
+msgstr "Ricarica"

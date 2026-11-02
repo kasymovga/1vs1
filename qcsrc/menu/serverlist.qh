@@ -1,1 +1,2 @@
 void(void) serverlist_init;
+void(void) serverlist_reload;

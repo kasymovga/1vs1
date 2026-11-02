@@ -1002,3 +1002,9 @@ msgstr "PIN-code:"
 
 msgid "Enable demo player"
 msgstr "Demospeler inschakelen"
+
+msgid "Refresh"
+msgstr "Verversen"
+
+msgid "Reload"
+msgstr "Opnieuw laden"

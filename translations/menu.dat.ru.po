@@ -1000,3 +1000,9 @@ msgstr "PIN-код:"
 
 msgid "Enable demo player"
 msgstr "Включить демо-проигрыватель"
+
+msgid "Refresh"
+msgstr "Обновить"
+
+msgid "Reload"
+msgstr "Перезагрузить"

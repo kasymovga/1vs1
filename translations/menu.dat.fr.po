@@ -1002,3 +1002,9 @@ msgstr "Code PIN :"
 
 msgid "Enable demo player"
 msgstr "Activer le lecteur de démonstration"
+
+msgid "Refresh"
+msgstr "Actualiser"
+
+msgid "Reload"
+msgstr "Recharger"
