@@ -106,6 +106,7 @@ float(entity to, float sf) client_init_send {
 		net_write_coord(MSG_ENTITY, world_max_y);
 		net_write_coord(MSG_ENTITY, world_max_z);
 		net_write_string(MSG_ENTITY, sv_ip2country_subpath);
+		net_write_short(MSG_ENTITY, num_for_edict(to) - 1);
 	}
 	if (sf & 4) {
 		if (sv_foginterval && client_fog != "")

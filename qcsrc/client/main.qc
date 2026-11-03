@@ -221,6 +221,7 @@ void(float ignore) main_init_read {
 		marker_init(); //required world_min/world_max
 		str_unzone_ifneeded(sv_ip2country_subpath);
 		sv_ip2country_subpath = str_zone_ifneeded(net_read_string());
+		player_localnum = net_read_short();
 	}
 	if (sf & 4) {
 		str_unzone_ifneeded(fog_settings);
