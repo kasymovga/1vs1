@@ -30,8 +30,7 @@ void(void) CSQC_Init {
 	if (cvar("cl_maxfps_alwayssleep")) {
 		localcmd("\nseta cl_maxfps_alwayssleep 0\n");
 	}
-	if (cvar_string("sv_master2") == "")
-	if (cvar_string("sv_masterextra1") == "") {
+	if (cvar_string("sv_master2") == "") {
 		localcmd("\nseta sv_master2 107.161.23.68\n");
 	}
 	if (cvar("cl_effects_lightningarc_segmentlength") == 24)
