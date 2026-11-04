@@ -90,6 +90,3 @@ const float DRAWFLAG_MODULATE = 2;
 const float DRAWFLAG_2XMODULATE = 3;
 const float DRAWFLAG_SCREEN = 4;
 const float DRAWFLAG_MIPMAP = 0x100; // only for R_BeginPolygon
-
-float CAMERA_FREE = 1;
-float CAMERA_CHASE = 2;

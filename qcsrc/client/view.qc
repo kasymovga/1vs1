@@ -1,3 +1,7 @@
+enum {
+	VIEW_CAMERA_FREE = 1,
+	VIEW_CAMERA_CHASE = 2,
+};
 float view_drawtime;
 float view_project_is_broken;
 float view_old_view_width, view_old_view_height, view_old_zoom, view_old_fov, view_old_vid_pixelheight;
@@ -522,7 +526,7 @@ void(void) view_camera_setup {
 		view_camera_free_origin = view_origin;
 		view_camera_free_offset  = view_camera_free_offset;
 		cvar_set("camera_reset", "0");
-		view_camera_mode = CAMERA_CHASE;
+		view_camera_mode = VIEW_CAMERA_CHASE;
 	}
 	// Camera angles
 	if (view_camera_roll)
@@ -599,19 +603,19 @@ void(void) view_camera_setup {
 	//view_camera_free_offset += (view_camera_free_offset - view_camera_free_offset) * attenuation;
 	// Camera modes
 	if (cvar("camera_free")) {
-		if (view_camera_mode == CAMERA_CHASE) {
+		if (view_camera_mode == VIEW_CAMERA_CHASE) {
 			view_camera_free_offset = view_camera_free_origin + view_camera_free_offset;
 			view_camera_free_offset = view_camera_free_origin + view_camera_free_offset;
 		}
-		view_camera_mode = CAMERA_FREE;
+		view_camera_mode = VIEW_CAMERA_FREE;
 		view_camera_free_position = view_camera_free_offset;
 	} else {
-		if (view_camera_mode == CAMERA_FREE) {
+		if (view_camera_mode == VIEW_CAMERA_FREE) {
 			view_camera_free_origin = view_origin;
 			view_camera_free_offset = view_camera_free_offset - view_camera_free_origin;
 			view_camera_free_offset = view_camera_free_offset - view_camera_free_origin;
 		}
-		view_camera_mode = CAMERA_CHASE;
+		view_camera_mode = VIEW_CAMERA_CHASE;
 		if (cvar("camera_chase_smoothly"))
 			view_camera_free_origin += (view_origin - view_camera_free_origin) * attenuation;
 		else
