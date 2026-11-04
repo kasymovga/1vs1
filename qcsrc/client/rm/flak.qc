@@ -9,7 +9,7 @@ void(vector realorg, vector org, vector dir, float spread, float a, float animph
 	dir = v_forward;
 	trace_line(org, org + dir * 10000, TRACE_MOVE_NOMONSTERS, world);
 	vector dst = trace_endpos;
-	draw_cylindric_line(org, dst, 5, "particles/guideline", 0.05, animphase, '1 1 0.35', a, DRAWFLAG_ADDITIVE, view_origin);
+	draw_cylindric_line(org, dst, 5, "particles/guideline", 0.05, animphase, '1 1 0.35', a, VM_DRAWFLAG_ADDITIVE, view_origin);
 }
 
 void(void) rm_flak_charge_indicator_draw {

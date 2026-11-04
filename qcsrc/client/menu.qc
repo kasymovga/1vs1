@@ -116,14 +116,14 @@ void(void) menu_draw {
 	pos_y = MENU_ITEM_TOP_MARGIN;
 	pos_z = 0;
 	pos_x = center - stringwidth(self.menu_title, FALSE) * 0.5 * 24;
-    drawfill('0 1 0' * MENU_ITEM_TOP_MARGIN, '1 0 0' * CVAR(vid_conwidth) + '0 1 0' * (MENU_ITEM_TOP_MARGIN + MENU_ITEM_HEIGHT * (self.cnt + 1.5)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
-	drawstring(pos, self.menu_title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+    drawfill('0 1 0' * MENU_ITEM_TOP_MARGIN, '1 0 0' * CVAR(vid_conwidth) + '0 1 0' * (MENU_ITEM_TOP_MARGIN + MENU_ITEM_HEIGHT * (self.cnt + 1.5)), '0 0 0', 0.5, VM_DRAWFLAG_NORMAL);
+	drawstring(pos, self.menu_title, '24 24 0', '1 1 1', 1, VM_DRAWFLAG_NORMAL);
 	pos_y += MENU_ITEM_HEIGHT;
 	if (self.menu_timeout) {
 		i = ceil(max(0, self.menu_timeout - time));
 		menu_string = strcat(ftos(i), " seconds left");
 		pos_x = center - stringwidth(menu_string, FALSE) * 0.5 * 16;
-		drawstring(pos, menu_string, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
+		drawstring(pos, menu_string, '16 16 0', '0 1 0', 1, VM_DRAWFLAG_NORMAL);
 	}
 	pos_y += MENU_ITEM_HEIGHT;
 	menu_selected_update();
@@ -160,20 +160,20 @@ void(void) menu_draw {
 		pos_x = center - stringwidth(strdecolorize(menu_string), FALSE) * 0.5 * 24 * size_scale;
 		if ((paren = strstrofs(menu_string, "(", 0)) >= 0 && (paren < subcmd || subcmd < 0)) {
 			paren_part = str_sub(menu_string, paren, subcmd - paren);
-			drawcolorcodedstring(pos_y * '0 1 0' + ((maxwidth * 24 * 1.1 + CVAR(vid_conwidth)) * 0.5 - stringwidth(strdecolorize(paren_part), FALSE) * 24 * size_scale) * '1 0 0', strcat(item_color, paren_part), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos_y * '0 1 0' + ((maxwidth * 24 * 1.1 + CVAR(vid_conwidth)) * 0.5 - stringwidth(strdecolorize(paren_part), FALSE) * 24 * size_scale) * '1 0 0', strcat(item_color, paren_part), '24 24 0' * size_scale, 1, VM_DRAWFLAG_NORMAL);
 			menu_string = strcat(item_color, str_sub(menu_string, 0, paren));
 		} else {
 			menu_string = strcat(item_color, str_sub(menu_string, 0, subcmd));
 		}
-		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
-		draw_borderlines(sbar_border_thickness, pos_y * '0 1 0' + '10 0 0', 24 * '0 1 0' + CVAR(vid_conwidth) * '1 0 0' - '24 0 0', border_color, 1, DRAWFLAG_NORMAL);
-		draw_borderlines(sbar_border_thickness, pos_y * '0 1 0' + '-28 2 0' + lm, '0 12 0' + '12 0 0' + ((i == 9) ? '12 0 0' : '0 0 0'), border_color, 1, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, VM_DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos_y * '0 1 0' + '10 0 0', 24 * '0 1 0' + CVAR(vid_conwidth) * '1 0 0' - '24 0 0', border_color, 1, VM_DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos_y * '0 1 0' + '-28 2 0' + lm, '0 12 0' + '12 0 0' + ((i == 9) ? '12 0 0' : '0 0 0'), border_color, 1, VM_DRAWFLAG_NORMAL);
 		if (i < 9 || menu.cnt <= 10) {
-			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, ftos(i + 1)), '12 12 0', 1, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, ftos(i + 1)), '12 12 0', 1, VM_DRAWFLAG_NORMAL);
 		} else if (i == 9) {
-			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, "0/a"), '12 12 0', 1, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, "0/a"), '12 12 0', 1, VM_DRAWFLAG_NORMAL);
 		} else {
-			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, str_sub("bcdefg", i - 10, 1)), '12 12 0', 1, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos_y * '0 1 0' + '-26 2 0' + lm, strcat(item_color, str_sub("bcdefg", i - 10, 1)), '12 12 0', 1, VM_DRAWFLAG_NORMAL);
 		}
 		pos_y += MENU_ITEM_HEIGHT;
 	}

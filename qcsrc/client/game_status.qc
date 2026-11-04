@@ -9,12 +9,12 @@ void(void) game_status_draw {
 	while (n >= 0) {
 		head = str_sub(tail, 0, n);
 		tail = str_sub(tail, n + 1, -1);
-		draw_string_colorcoded_center(pos, head, _size, self.alpha, DRAWFLAG_NORMAL);
+		draw_string_colorcoded_center(pos, head, _size, self.alpha, VM_DRAWFLAG_NORMAL);
 		n = strstrofs(tail, "\n", 0);
 		pos_y += _size_y;
 		_size *= 0.8;
 	}
-	draw_string_colorcoded_center(pos, tail, _size, self.alpha, DRAWFLAG_NORMAL);
+	draw_string_colorcoded_center(pos, tail, _size, self.alpha, VM_DRAWFLAG_NORMAL);
 	self.alpha -= frametime;
 }
 

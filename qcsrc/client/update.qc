@@ -6,12 +6,12 @@ void(void) update_message_draw {
 	msg = "^1WARNING: ^3Your client is not recommended!";
 	pos_y = 10;
 	pos_x = 10;
-	drawcolorcodedstring(pos, msg, '18 36 0', _alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, msg, '18 36 0', _alpha, VM_DRAWFLAG_NORMAL);
 	pos_y += 32;
-	drawcolorcodedstring(pos, self.bgmscript, '18 36 0', _alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, self.bgmscript, '18 36 0', _alpha, VM_DRAWFLAG_NORMAL);
 	msg = "^3Please download and install Rexuiz from ^2http://rexuiz.com^7";
 	pos_y += 32;
-	drawcolorcodedstring(pos, msg, '18 36 0', _alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, msg, '18 36 0', _alpha, VM_DRAWFLAG_NORMAL);
 }
 
 void(string msg, float timeout) update_message {

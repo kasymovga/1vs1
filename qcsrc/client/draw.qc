@@ -109,9 +109,9 @@ void(vector cpos, vector l_size, float progress, float alpha, vector l_color, fl
 	pos_z = 0;
 	vector fill = l_size;
 	fill_x *= progress;
-	drawfill(pos, fill, l_color, alpha * 0.7, DRAWFLAG_NORMAL);
+	drawfill(pos, fill, l_color, alpha * 0.7, VM_DRAWFLAG_NORMAL);
 	if (fragments < 2) {
-		draw_borderlines(1, pos, l_size, l_color, alpha, DRAWFLAG_NORMAL);
+		draw_borderlines(1, pos, l_size, l_color, alpha, VM_DRAWFLAG_NORMAL);
 	} else {
 		vector fragsize;
 		fragsize_x = l_size_x / fragments;
@@ -119,7 +119,7 @@ void(vector cpos, vector l_size, float progress, float alpha, vector l_color, fl
 		fragsize_z = 0;
 		float frag;
 		for (frag = 0; frag < fragments; ++frag) {
-			draw_borderlines(1, pos + fragsize_x * frag * '1 0 0', fragsize, l_color, alpha, DRAWFLAG_NORMAL);
+			draw_borderlines(1, pos + fragsize_x * frag * '1 0 0', fragsize, l_color, alpha, VM_DRAWFLAG_NORMAL);
 		}
 	}
 }
@@ -172,9 +172,9 @@ void(string s, float type) draw_search_and_precache {
 		if (type == 1) //just image
 			precache_pic(pic);
 		else if (type == 2) //3d texture
-			draw_cylindric_line('1 1 1', '2 2 2', 1, pic, 1, 1, '1 1 1', 1, DRAWFLAG_ADDITIVE, view_camera_origin);
+			draw_cylindric_line('1 1 1', '2 2 2', 1, pic, 1, 1, '1 1 1', 1, VM_DRAWFLAG_ADDITIVE, view_camera_origin);
 		else if (type == 3) //sprite
-			draw_picture_rotate('1 1 0', 1, pic, '1 1 0', '0.5 0.5 0', '1 1 1', 1, DRAWFLAG_MIPMAP);
+			draw_picture_rotate('1 1 0', 1, pic, '1 1 0', '0.5 0.5 0', '1 1 1', 1, VM_DRAWFLAG_MIPMAP);
 	}
 	search_end(glob);
 }

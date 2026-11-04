@@ -4,7 +4,7 @@ void(vector o, vector fs, float sc, float _alpha, vector clr) rm_score_draw_numb
 	if (sc > 0) d = strcat("+", d);
 	float dw = stringwidth(d, FALSE) * fs_x;
 	o_x -= fs_x * 0.5;
-	drawstring(o, d, fs, clr, _alpha, DRAWFLAG_NORMAL);
+	drawstring(o, d, fs, clr, _alpha, VM_DRAWFLAG_NORMAL);
 	drawfont = sbar_font;
 }
 void(void) rm_score_draw {

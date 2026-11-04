@@ -30,7 +30,7 @@ void(void) rm_skin_unload {
 	rm_skin_line_alpha = 0;
 	rm_skin_flash_alphamod = 0;
 	rm_skin_flash_intmod = 0;
-	rm_skin_border_drawflag = DRAWFLAG_NORMAL;
+	rm_skin_border_drawflag = VM_DRAWFLAG_NORMAL;
 	rm_skin_sector_gap = '8 12 0';
 	rm_skin_sector_gap_screen = 8;
 	rm_skin_sector_gap_fract = '0 0 0';
@@ -122,9 +122,9 @@ vector(void) rm_skin_read_color {
 float(void) rm_skin_read_draw_flag {
 	switch (argv(1)) {
 	case "normal":
-		return DRAWFLAG_NORMAL;
+		return VM_DRAWFLAG_NORMAL;
 	case "additive":
-		return DRAWFLAG_ADDITIVE;
+		return VM_DRAWFLAG_ADDITIVE;
 	}
 	return -1;
 }
@@ -239,7 +239,7 @@ float(string cmd) rm_skin_eval {
 		rm_skin_border_drawflag = rm_skin_read_draw_flag();
 		if (rm_skin_border_drawflag == -1) {
 			print("rm_skin_eval: Invalid value for ", argv(0), ": ", argv(1), "\n");
-			rm_skin_border_drawflag = DRAWFLAG_NORMAL;
+			rm_skin_border_drawflag = VM_DRAWFLAG_NORMAL;
 			return 1;
 		}
 		return 0;
@@ -507,7 +507,7 @@ void(void) rm_skin_load_fallback {
 	rm_skin_line_alpha = 0.2;
 	rm_skin_flash_alphamod = 1;
 	rm_skin_flash_intmod = 1;
-	rm_skin_border_drawflag = DRAWFLAG_NORMAL;
+	rm_skin_border_drawflag = VM_DRAWFLAG_NORMAL;
 	rm_skin_flash_line_imod = 1;
 	rm_skin_flash_line_amod = 1;
 	rm_skin_flash_sector_imod = 2;
@@ -685,7 +685,7 @@ void(vector sectorpos, vector sectorsize, float basealpha, vector sectorcolor, f
 	float factor;
 	switch(rm_skin_sector_fill) {
 	case RM_SKIN_FILL_COLOR:
-		drawfill(fillpos, fillsize, sectorcolor, basealpha, DRAWFLAG_NORMAL);
+		drawfill(fillpos, fillsize, sectorcolor, basealpha, VM_DRAWFLAG_NORMAL);
 		break;
 	case RM_SKIN_FILL_TILE: case RM_SKIN_FILL_STRETCH:
 		size_left = rm_skin_size_sector_fill_left;
@@ -741,7 +741,7 @@ void(vector slicepos, vector slicesize, vector slicecolor, float slicealpha) rm_
 	slicesize_y -= rm_skin_line_padding_y;
 	switch(rm_skin_line_fill) {
 	case RM_SKIN_FILL_COLOR:
-		drawfill(slicepos, slicesize, slicecolor, slicealpha, DRAWFLAG_NORMAL);
+		drawfill(slicepos, slicesize, slicecolor, slicealpha, VM_DRAWFLAG_NORMAL);
 		return;
 	case RM_SKIN_FILL_TILE:
 		drawsize = slicesize;
@@ -751,13 +751,13 @@ void(vector slicepos, vector slicesize, vector slicecolor, float slicealpha) rm_
 			drawsize = drawsize * factor;
 		}
 		if (rm_skin_image_line_fill != "")
-			draw_pic_tiled(slicepos, rm_skin_image_line_fill, drawsize, slicesize, slicecolor, slicealpha, DRAWFLAG_NORMAL);
+			draw_pic_tiled(slicepos, rm_skin_image_line_fill, drawsize, slicesize, slicecolor, slicealpha, VM_DRAWFLAG_NORMAL);
 
 		return;
 	
 	case RM_SKIN_FILL_STRETCH:
 		if (rm_skin_image_line_fill != "")
-			draw_pic_tiled(slicepos, rm_skin_image_line_fill, slicesize, slicesize, slicecolor, slicealpha, DRAWFLAG_NORMAL);
+			draw_pic_tiled(slicepos, rm_skin_image_line_fill, slicesize, slicesize, slicecolor, slicealpha, VM_DRAWFLAG_NORMAL);
 
 		return;
 	}

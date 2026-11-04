@@ -115,7 +115,7 @@ string(float id, string map, float count, float maxwidth) rm_game_type_vote_form
 
 vector(vector o, float gtype, float count, float id) rm_game_type_vote_draw_item {
 	#define drawGameTypeLine(s,c,sc,a) \
-	drawstring(o, (s), sbar_fontsize * (sc), (c), a * alpha, DRAWFLAG_NORMAL); \
+	drawstring(o, (s), sbar_fontsize * (sc), (c), a * alpha, VM_DRAWFLAG_NORMAL); \
 	o_y += sbar_fontsize_y * sc *  (1 - pow(alpha - 1, 2))
 	string s;
 	s = rm_game_type_vote_description(id);
@@ -159,12 +159,12 @@ void(void) rm_game_type_vote_draw {
 	pos_y = ymin;
 	pos_z = 0;
 	pos_x = center - stringwidth("Decide the gametype", FALSE) * 24 * 0.5;
-	drawstring(pos, "Decide the gametype", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	drawstring(pos, "Decide the gametype", '24 24 0', '1 1 1', 1, VM_DRAWFLAG_NORMAL);
 	pos_y += 26;
 	i = ceil(max(0, rm_game_type_vote_timeout - time));
 	map = strcat(ftos(i), " seconds left");
 	pos_x = center - stringwidth(map, FALSE) * 16 * 0.5;
-	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
+	drawstring(pos, map, '16 16 0', '0 1 0', 1, VM_DRAWFLAG_NORMAL);
 	pos_y += 22;
 	pos_x = xmin;
 	//Map preview
@@ -181,16 +181,16 @@ void(void) rm_game_type_vote_draw {
 	o_x = CVAR(vid_conwidth) * 0.75 - img_fullsize_x * 0.5;
 	o_y = sbar_fontsize_y * 10;
 	vector o2 = o + 0.5 * (img_fullsize - img_size);
-	draw_borderlines(sbar_border_thickness, o2, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
+	draw_borderlines(sbar_border_thickness, o2, img_size, '0 0 0', 1, VM_DRAWFLAG_NORMAL);
 	if (rm_game_type_vote_map_pic_ready)
-		drawpic(o2, rm_game_type_vote_map_pic, img_size, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawpic(o2, rm_game_type_vote_map_pic, img_size, '1 1 1', a, VM_DRAWFLAG_NORMAL);
 
 	vector sz = sbar_fontsize * a;
 	img_size = img_fullsize;
 	if (sz_x > 0) {
 		o_y += img_size_y + 10;
 		o_x += img_size_x / 2 - (str_width_nocolors(rm_game_type_vote_map) * sz_x / 2);
-		drawstring(o, rm_game_type_vote_map, sz, '1 1 1' * a * a, a * a, DRAWFLAG_NORMAL);
+		drawstring(o, rm_game_type_vote_map, sz, '1 1 1' * a * a, a * a, VM_DRAWFLAG_NORMAL);
 	}
 	//Game types
 	o_x = max(CVAR(vid_conwidth) * 0.25 - (sbar_fontsize_x * rm_game_type_vote_longest) * 0.25, sbar_fontsize_x);

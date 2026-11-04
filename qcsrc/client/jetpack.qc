@@ -1,7 +1,7 @@
 entity jetpack_physics;
 
 float(void) jetpack_using {
-	float it = getstati(STAT_ITEMS);
+	float it = getstati(VM_STAT_ITEMS);
 	if not(it & IT_JETPACK)
 		return 0;
 

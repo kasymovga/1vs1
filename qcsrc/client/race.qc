@@ -287,12 +287,12 @@ void(float a1, float a2, float base_angle) race_sbar_draw_snap_zone {
 		v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_snap_zone_helper_position);
 		v2_x = max(0, race_angle_to_con_x(base_angle - a1 + a) - v1_x);
 		v2_y = CVAR(cl_cts_snap_zone_helper_height);
-		drawfill(v1, v2, CVAR(cl_cts_snap_zone_helper_color), 0.5, DRAWFLAG_NORMAL);
+		drawfill(v1, v2, CVAR(cl_cts_snap_zone_helper_color), 0.5, VM_DRAWFLAG_NORMAL);
 		v1_x = race_angle_to_con_x(base_angle + a1 + a);
 		v1_y = CVAR(vid_conheight) * 0.5 - CVAR(cl_cts_snap_zone_helper_position);
 		v2_x = max(0, race_angle_to_con_x(base_angle + a2 + a) - v1_x);
 		v2_y = CVAR(cl_cts_snap_zone_helper_height);
-		drawfill(v1, v2, CVAR(cl_cts_snap_zone_helper_color), 0.5, DRAWFLAG_NORMAL);
+		drawfill(v1, v2, CVAR(cl_cts_snap_zone_helper_color), 0.5, VM_DRAWFLAG_NORMAL);
 	}
 }
 
@@ -355,10 +355,10 @@ void(void) race_sbar_draw {
 				v2_x = max(0, race_angle_to_con_x(diffangle + 90) - v1_x);
 				v2_y = CVAR(cl_cts_strafe_helper_height);
 				v2_z = 0;
-				drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
+				drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, VM_DRAWFLAG_NORMAL);
 				v1_x = race_angle_to_con_x(diffangle - 90);
 				v2_x = max(0, race_angle_to_con_x(diffangle - strafeangle) - v1_x);
-				drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, DRAWFLAG_NORMAL);
+				drawfill(v1, v2, CVAR(cl_cts_strafe_helper_color), 0.25, VM_DRAWFLAG_NORMAL);
 			}
 			if (CVAR(cl_cts_strafe_helper_velocity_direction)) {
 				diffangle = race_angle_norm(view_angles_y - moveangle);
@@ -376,7 +376,7 @@ void(void) race_sbar_draw {
 				v1_y = CVAR(vid_conheight) * 0.5 + CVAR(cl_cts_strafe_helper_height);
 				v1_z = 0;
 				float f = CVAR(cl_cts_strafe_helper_height) * 0.5;
-				R_BeginPolygon("", DRAWFLAG_NORMAL);
+				R_BeginPolygon("", VM_DRAWFLAG_NORMAL);
 				if (backward) {
 					R_PolygonVertex(v1 + '-0.5 0 0' * f, '0 0 0', '1 1 1', 0.5);
 					R_PolygonVertex(v1 + '0.5 0 0' * f, '0 0 0', '1 1 1', 0.5);
@@ -443,16 +443,16 @@ void(void) race_sbar_draw {
 		}
 		if (s != "" && a > 0) {
 			if (s2 != "") {
-				drawcolorcodedstring(m - '0 28 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(m - '0 12 0' - '6 0 0' * stringwidth(s2, TRUE), s2, '12 12 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(m - '0 28 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, VM_DRAWFLAG_NORMAL);
+				drawcolorcodedstring(m - '0 12 0' - '6 0 0' * stringwidth(s2, TRUE), s2, '12 12 0', sbar_alpha_fg * a, VM_DRAWFLAG_NORMAL);
 			} else
-				drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, VM_DRAWFLAG_NORMAL);
 		}
 		if (race_penaltytime) {
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 			if (a > 0) {
 				s = strcat("^1PENALTY: ", str_float_decimals(race_penaltytime, 1), " (", race_penaltyreason, ")");
-				drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, VM_DRAWFLAG_NORMAL);
 			}
 		}
 		if (forcetime != "") {
@@ -463,18 +463,18 @@ void(void) race_sbar_draw {
 
 		if (race_laptime && race_checkpoint != 255) {
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + race_penaltyaccumulator - race_laptime));
-			drawstring(m - '16 0 0' * stringwidth(s, FALSE), s, '32 32 0', '1 1 1', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawstring(m - '16 0 0' * stringwidth(s, FALSE), s, '32 32 0', '1 1 1', sbar_alpha_fg * a, VM_DRAWFLAG_NORMAL);
 		}
 	} else {
 		if (race_mycheckpointtime) {
 			a = bound(0, 2 - (time - race_mycheckpointtime), 1);
 			s = race_checkpoint_string(race_mycheckpoint, race_mycheckpointdelta, -!race_mycheckpointenemy, race_mycheckpointlapsdelta, race_mycheckpointenemy);
-			drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, VM_DRAWFLAG_NORMAL);
 		}
 		if (race_othercheckpointtime && race_othercheckpointenemy != "") {
 			a = bound(0, 2 - (time - race_othercheckpointtime), 1);
 			s = race_checkpoint_string(race_othercheckpoint, -race_othercheckpointdelta, -!race_othercheckpointenemy, race_othercheckpointlapsdelta, race_othercheckpointenemy);
-			drawcolorcodedstring(m - '0 0 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(m - '0 0 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, VM_DRAWFLAG_NORMAL);
 		}
 		if (race_penaltytime && !race_penaltyaccumulator) {
 			t = race_penaltytime + race_penaltyeventtime;
@@ -485,7 +485,7 @@ void(void) race_sbar_draw {
 				else
 					s = strcat("^2PENALTY: 0.0 (", race_penaltyreason, ")");
 
-				drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, VM_DRAWFLAG_NORMAL);
 			}
 		}
 	}
@@ -529,9 +529,9 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) race_hud {
 			timecode = strcat("^7 (", colorcode, "-", str_float_decimals(TIME_DECODE(-delta), SBAR_TIME_DECIMALS), "^7)");
 
 		drawstring(pos_text,
-				strcat(ftos(race_checkpoints_shift + i + 1), "."), fontsz, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				strcat(ftos(race_checkpoints_shift + i + 1), "."), fontsz, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 		drawcolorcodedstring(pos_text + shift,
-				strcat(colorcode, TIME_ENCODED_TOSTRING(race_checkpoints_times[i]), timecode), fontsz, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				strcat(colorcode, TIME_ENCODED_TOSTRING(race_checkpoints_times[i]), timecode), fontsz, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 		pos_text_y += fontsz_y;
 	}
 	for (; i < race_checkpoints_count_old; i++) {
@@ -550,9 +550,9 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) race_hud {
 			timecode = strcat("^0 (", colorcode, "-", str_float_decimals(TIME_DECODE(-delta), SBAR_TIME_DECIMALS), "^0)");
 
 		drawstring(pos_text,
-				strcat(ftos(i + 1), "."), fontsz, '0.4 0.4 0.4', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				strcat(ftos(i + 1), "."), fontsz, '0.4 0.4 0.4', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 		drawcolorcodedstring(pos_text + shift,
-				strcat(colorcode, TIME_ENCODED_TOSTRING(race_checkpoints_times_old[i]), timecode), fontsz, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				strcat(colorcode, TIME_ENCODED_TOSTRING(race_checkpoints_times_old[i]), timecode), fontsz, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 
 		pos_text_y += fontsz_y;
 	}
@@ -583,35 +583,35 @@ string(float posy) race_records_table_string {
 		table_width = name_column_width + sbar_fontsize_x * 18;
 		pos_x = left = (CVAR(vid_conwidth) - table_width) / 2;
 		pos_y = posy + sbar_fontsize_y;
-		drawfill(pos, '1 0 0' * table_width + sbar_fontsize_y * (rows + 1) * '0 1 0', '0 0 0', 0.5, DRAWFLAG_NORMAL);
-		draw_borderlines(sbar_border_thickness, pos, '1 0 0' * table_width + sbar_fontsize_y * '0 1 0', '0 0 0', 1, DRAWFLAG_NORMAL);
+		drawfill(pos, '1 0 0' * table_width + sbar_fontsize_y * (rows + 1) * '0 1 0', '0 0 0', 0.5, VM_DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos, '1 0 0' * table_width + sbar_fontsize_y * '0 1 0', '0 0 0', 1, VM_DRAWFLAG_NORMAL);
 		pos_x += sbar_fontsize_x * 2;
-		draw_string_right(pos, "# ", sbar_fontsize, '1 1 0.5', 1, DRAWFLAG_NORMAL);
+		draw_string_right(pos, "# ", sbar_fontsize, '1 1 0.5', 1, VM_DRAWFLAG_NORMAL);
 		pos_x += sbar_fontsize_x;
-		drawstring(pos, "Name", sbar_fontsize, '1 1 0.5', 1, DRAWFLAG_NORMAL);
+		drawstring(pos, "Name", sbar_fontsize, '1 1 0.5', 1, VM_DRAWFLAG_NORMAL);
 		pos_x += name_column_width + sbar_fontsize_x;
-		drawstring(pos, "MSpd", sbar_fontsize, '1 1 0.5', 1, DRAWFLAG_NORMAL);
+		drawstring(pos, "MSpd", sbar_fontsize, '1 1 0.5', 1, VM_DRAWFLAG_NORMAL);
 		pos_x += sbar_fontsize_x * 5;
-		drawstring(pos, "Time", sbar_fontsize, '1 1 0.5', 1, DRAWFLAG_NORMAL);
+		drawstring(pos, "Time", sbar_fontsize, '1 1 0.5', 1, VM_DRAWFLAG_NORMAL);
 		pos_x += sbar_fontsize_x * 5;
-		drawstring(pos, "Gap", sbar_fontsize, '1 1 0.5', 1, DRAWFLAG_NORMAL);
+		drawstring(pos, "Gap", sbar_fontsize, '1 1 0.5', 1, VM_DRAWFLAG_NORMAL);
 		pos_y += sbar_fontsize_y;
 		pos_x = left;
-		draw_borderlines(sbar_border_thickness, pos, '1 0 0' * table_width + rows * sbar_fontsize_y * '0 1 0', '0 0 0', 1, DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos, '1 0 0' * table_width + rows * sbar_fontsize_y * '0 1 0', '0 0 0', 1, VM_DRAWFLAG_NORMAL);
 		for (i = 0; i < rows; i++) {
 			n = race_records_name[i];
 			tt = race_records_time[i];
 			sp = race_records_speed[i];
 			pos_x += sbar_fontsize_x * 2;
-			draw_string_right(pos, strcat(ftos(i + 1), " "), sbar_fontsize, '1 1 0.5', 1, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos, n, sbar_fontsize, 1, DRAWFLAG_NORMAL);
+			draw_string_right(pos, strcat(ftos(i + 1), " "), sbar_fontsize, '1 1 0.5', 1, VM_DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, n, sbar_fontsize, 1, VM_DRAWFLAG_NORMAL);
 			pos_x += name_column_width + sbar_fontsize_x * 5;
-			draw_string_right(pos, ftos(sp), sbar_fontsize, '0.5 1 0.5', 1, DRAWFLAG_NORMAL);
+			draw_string_right(pos, ftos(sp), sbar_fontsize, '0.5 1 0.5', 1, VM_DRAWFLAG_NORMAL);
 			pos_x = left + table_width - sbar_fontsize_x * 5;
-			draw_string_right(pos, TIME_ENCODED_TOSTRING(tt), sbar_fontsize, '1 1 0.5', 1, DRAWFLAG_NORMAL);
+			draw_string_right(pos, TIME_ENCODED_TOSTRING(tt), sbar_fontsize, '1 1 0.5', 1, VM_DRAWFLAG_NORMAL);
 			if (i) {
 				pos_x = left + table_width;
-				draw_string_right(pos, TIME_ENCODED_TOSTRING(tt - tt_prev), sbar_fontsize, '1 0.5 0.5', 1, DRAWFLAG_NORMAL);
+				draw_string_right(pos, TIME_ENCODED_TOSTRING(tt - tt_prev), sbar_fontsize, '1 0.5 0.5', 1, VM_DRAWFLAG_NORMAL);
 			}
 			tt_prev = tt;
 			pos_y += sbar_fontsize_y;
@@ -655,31 +655,31 @@ void(void) race_pad_draw {
 	b09 = b * 0.9;
 	c09 = c * 0.9;
 	d09 = d * 0.9;
-	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_BeginPolygon("", VM_DRAWFLAG_NORMAL);
 	R_PolygonVertex(v + a, '0 0 0', rgb, alpha);
 	R_PolygonVertex(v + a09, '0 1 0', rgb, alpha);
 	R_PolygonVertex(v + b09, '1 1 0', rgb, alpha);
 	R_PolygonVertex(v + b, '1 0 0', rgb, alpha);
 	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_BeginPolygon("", VM_DRAWFLAG_NORMAL);
 	R_PolygonVertex(v + b, '0 0 0', rgb, alpha);
 	R_PolygonVertex(v + b09, '0 1 0', rgb, alpha);
 	R_PolygonVertex(v + c09, '1 1 0', rgb, alpha);
 	R_PolygonVertex(v + c, '1 0 0', rgb, alpha);
 	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_BeginPolygon("", VM_DRAWFLAG_NORMAL);
 	R_PolygonVertex(v + c, '0 0 0', rgb, alpha);
 	R_PolygonVertex(v + c09, '0 1 0', rgb, alpha);
 	R_PolygonVertex(v + d09, '1 1 0', rgb, alpha);
 	R_PolygonVertex(v + d, '1 0 0', rgb, alpha);
 	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_BeginPolygon("", VM_DRAWFLAG_NORMAL);
 	R_PolygonVertex(v + d, '0 0 0', rgb, alpha);
 	R_PolygonVertex(v + d09, '0 1 0', rgb, alpha);
 	R_PolygonVertex(v + a09, '1 1 0', rgb, alpha);
 	R_PolygonVertex(v + a, '1 0 0', rgb, alpha);
 	R_EndPolygon();
-	//R_BeginPolygon("textures/trak5/graypanel1", DRAWFLAG_NORMAL);
+	//R_BeginPolygon("textures/trak5/graypanel1", VM_DRAWFLAG_NORMAL);
 	//R_PolygonVertex(v + a, '0 0 0', rgb, alpha);
 	//R_PolygonVertex(v + b, '0 1 0', rgb, alpha);
 	//R_PolygonVertex(v + c, '1 1 0', rgb, alpha);

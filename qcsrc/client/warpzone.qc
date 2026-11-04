@@ -61,7 +61,7 @@ void(entity w) warpzone_predict {
 	if (warpzone_predicted != w || time - warpzone_predicted_time > 0.5) {
 		warpzone_predicted = w;
 		view_angles = warpzone_transform_vangles(w, view_angles);
-		R_SetView(VF_CL_VIEWANGLES, view_angles);
+		R_SetView(VM_VF_CL_VIEWANGLES, view_angles);
 	}
 	warpzone_predicted_time = time;
 }
@@ -100,7 +100,7 @@ void(float isnew) warpzone_read {
 	warpzone_setup(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
 	// engine currently wants this
 	self.avelocity = anglestransform_turn_direction_fr(self.avelocity);
-	self.drawmask = MASK_NORMAL;
+	self.drawmask = VM_MASK_NORMAL;
 	// link me
 	//setmodel(self, self.model);
 	setorigin(self, self.origin);
@@ -158,7 +158,7 @@ void(void) warpzone_view_fix_real {
 	warpzone_view_angle_prev = view_angles;
 	if (warpzone_passed) {
 		view_angles = warpzone_transform_vangles(warpzone_passed, view_angles);
-		R_SetView(VF_CL_VIEWANGLES, view_angles);
+		R_SetView(VM_VF_CL_VIEWANGLES, view_angles);
 		warpzone_passed = NULL;
 	}
 	float halfdeg2rad = .5 * MATH_DEG2RAD;
@@ -175,7 +175,7 @@ void(void) warpzone_view_fix_real {
 	}
 	if (view_angles_z != 0) {
 		view_angles_z = approach_angle(view_angles_z, 0, frametime * 360);
-		R_SetView(VF_CL_VIEWANGLES, view_angles);
+		R_SetView(VM_VF_CL_VIEWANGLES, view_angles);
 	}
 }
 

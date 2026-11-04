@@ -185,9 +185,9 @@ void(float dt) physics_move_toss { // SV_Physics_Toss
 	if (self.move_movetype == VM_MOVETYPE_BOUNCE || self.move_movetype == VM_MOVETYPE_TOSS) {
 		self.move_didgravity = TRUE;
 		if (self.gravity)
-			self.move_velocity_z = self.move_velocity_z - dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+			self.move_velocity_z = self.move_velocity_z - dt * self.gravity * getstatf(VM_STAT_MOVEVARS_GRAVITY);
 		else
-			self.move_velocity_z = self.move_velocity_z - dt * getstatf(STAT_MOVEVARS_GRAVITY);
+			self.move_velocity_z = self.move_velocity_z - dt * getstatf(VM_STAT_MOVEVARS_GRAVITY);
 	}
 	self.move_angles = self.move_angles + self.move_avelocity * dt;
 	float movetime, bump;
@@ -219,9 +219,9 @@ void(float dt) physics_move_toss { // SV_Physics_Toss
 			bouncestop = self.move_bounce_stopspeed;
 			if not(bouncestop) bouncestop = 60 / 800;
 			if (self.gravity)
-				bouncestop *= self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+				bouncestop *= self.gravity * getstatf(VM_STAT_MOVEVARS_GRAVITY);
 			else
-				bouncestop *= getstatf(STAT_MOVEVARS_GRAVITY);
+				bouncestop *= getstatf(VM_STAT_MOVEVARS_GRAVITY);
 
 			self.move_velocity = physics_move_clip_velocity(self.move_velocity, trace_plane_normal, 1 + bouncefac);
 			d = trace_plane_normal * self.move_velocity;
@@ -329,9 +329,9 @@ void() physics_move_match_server { // SV_Physics_Entity
 		self.velocity = self.move_velocity;
 		if (self.move_didgravity) {
 			if (self.gravity)
-				self.velocity_z = self.velocity_z - dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+				self.velocity_z = self.velocity_z - dt * self.gravity * getstatf(VM_STAT_MOVEVARS_GRAVITY);
 			else
-				self.velocity_z = self.velocity_z - dt * getstatf(STAT_MOVEVARS_GRAVITY);
+				self.velocity_z = self.velocity_z - dt * getstatf(VM_STAT_MOVEVARS_GRAVITY);
 		}
 		self.angles = self.move_angles + dt * self.avelocity;
 		if (self.movetype != VM_MOVETYPE_NOCLIP) {

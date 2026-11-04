@@ -39,7 +39,7 @@ vector(void) physics_side_adjust_view {
 		view_angles = vectoangles(warpzone_plane_and_line_cross(view_origin, v_forward, o, normalize(v3 - o)) - view_origin);
 		view_angles_z = 0;
 		view_angles_x = -view_angles_x;
-		R_SetView(VF_CL_VIEWANGLES, view_angles);
+		R_SetView(VM_VF_CL_VIEWANGLES, view_angles);
 	}
 	view_fixangle = -1;
 	view_fixed_angles = '0 90 0';
@@ -67,7 +67,7 @@ vector(void) physics_top_adjust_view {
 		vector v3 = o + v_forward * 200 - v_up * v2_y * 200 + v_right * v2_x * 200;
 		view_angles = vectoangles(warpzone_plane_and_line_cross(view_origin, '0 0 1', v3, v_forward) - view_origin);
 		view_angles_x = 0;
-		R_SetView(VF_CL_VIEWANGLES, view_angles);
+		R_SetView(VM_VF_CL_VIEWANGLES, view_angles);
 	}
 	view_fixangle = -1;
 	view_fixed_angles = g_topview_angles;
@@ -273,17 +273,17 @@ vector(void) physics_view_origin {
 			}
 		}
 		if not(view_camera_free_active)
-			R_SetView(VF_ORIGIN, v);
+			R_SetView(VM_VF_ORIGIN, v);
 
 		physics_end_origin = physics.origin;
 	} else {
 		physics_end_origin = pmove_org;
 		physics_flags = physics_start_flags;
-		v = physics_end_origin + '0 0 1' * getstati(STAT_VIEWHEIGHT);
+		v = physics_end_origin + '0 0 1' * getstati(VM_STAT_VIEWHEIGHT);
 		if (view_camera_correction_needed) {
 			if not(CVAR(chase_active))
 			if not(view_camera_free_active)
-				R_SetView(VF_ORIGIN, v);
+				R_SetView(VM_VF_ORIGIN, v);
 
 			view_camera_correction_needed = FALSE;
 		}
@@ -324,7 +324,7 @@ void(void) physics_camera_setup {
 				trace_box(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), TRACE_MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;
 			}
-			R_SetView(VF_ORIGIN, view_camera_origin);
+			R_SetView(VM_VF_ORIGIN, view_camera_origin);
 		}
 	} else {
 		view_camera_origin = view_origin;

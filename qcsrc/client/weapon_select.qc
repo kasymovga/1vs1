@@ -50,7 +50,7 @@ void(void) weapon_select_draw {
 	}
 	float a = weapon_select_alpha;
 	drawfont = sbar_bigfont;
-	drawfill('0 0 0', '1 0 0' * CVAR(vid_conwidth) + CVAR(vid_conheight) * '0 1 0', '0 0 0', 0.5 * a, DRAWFLAG_NORMAL);
+	drawfill('0 0 0', '1 0 0' * CVAR(vid_conwidth) + CVAR(vid_conheight) * '0 1 0', '0 0 0', 0.5 * a, VM_DRAWFLAG_NORMAL);
 	vector o = ('1 0 0' * (CVAR(vid_conwidth) - weapon_select_width) + (CVAR(vid_conheight) - weapon_select_height) * '0 1 0') * 0.5;
 	vector s;
 	s_x = weapon_select_width;
@@ -63,15 +63,15 @@ void(void) weapon_select_draw {
 	sz_x = WEAPON_SELECT_SCALE;
 	sz_y = WEAPON_SELECT_SCALE;
 	sz_z = 0;
-	draw_string_center('0 1 0' * (o_y - sz_y * 1.25), "Weapon Selection", sz, '1 1 1', a, DRAWFLAG_NORMAL);
+	draw_string_center('0 1 0' * (o_y - sz_y * 1.25), "Weapon Selection", sz, '1 1 1', a, VM_DRAWFLAG_NORMAL);
 	o_x = (CVAR(vid_conwidth) * 0.5) - 0.5 * (weapon_select_width + WEAPON_SELECT_MARGIN);
-	drawfill(o, s, '0 0 0', 0.3, DRAWFLAG_NORMAL);
-	draw_borderlines(2, o, s, '0 0 0', a, DRAWFLAG_NORMAL);
+	drawfill(o, s, '0 0 0', 0.3, VM_DRAWFLAG_NORMAL);
+	draw_borderlines(2, o, s, '0 0 0', a, VM_DRAWFLAG_NORMAL);
 	string txt;
 	float txtw;
 	//txt = strcat("Key: ^2", strtoupper(input_command_key_first("+attack2")));
 	//txtw = stringwidth(txt, TRUE, sz);
-	//drawcolorcodedstring([o_x + (s_x - txtw) * 0.5, o_y + s_y + WEAPON_SELECT_MARGIN * 0.5], txt, sz, a, DRAWFLAG_NORMAL);
+	//drawcolorcodedstring([o_x + (s_x - txtw) * 0.5, o_y + s_y + WEAPON_SELECT_MARGIN * 0.5], txt, sz, a, VM_DRAWFLAG_NORMAL);
 	entity e;
 	float i = 0;
 	WEAPON_INFO_FOR_EACH(e) {
@@ -88,19 +88,19 @@ void(void) weapon_select_draw {
 			weapon_select_selalpha[sidx] = approach(weapon_select_selalpha[sidx], 1, frametime * 3);
 			p_x = o_x;
 			p_y = o_y + i * sz_y + WEAPON_SELECT_MARGIN * 0.5;
-			drawfill(p, s_x * '1 0 0' + sz_y * '0 1 0', clr, 0.2 * a, DRAWFLAG_NORMAL);
+			drawfill(p, s_x * '1 0 0' + sz_y * '0 1 0', clr, 0.2 * a, VM_DRAWFLAG_NORMAL);
 		} else
 			weapon_select_selalpha[sidx] = approach(weapon_select_selalpha[sidx], 0, frametime * 3);
 
 		p_x = o_x + WEAPON_SELECT_MARGIN * 0.5;
 		p_y = o_y + i * sz_y + WEAPON_SELECT_MARGIN * 0.5;
-		drawpic(p, e.icon, '2 1 0' * WEAPON_SELECT_SCALE, '1 1 1' * (0.5 + 0.5 * a2), a, DRAWFLAG_NORMAL);
+		drawpic(p, e.icon, '2 1 0' * WEAPON_SELECT_SCALE, '1 1 1' * (0.5 + 0.5 * a2), a, VM_DRAWFLAG_NORMAL);
 		p_x = WEAPON_SELECT_MARGIN * 0.5 + o_x + sz_x * 2;
-		drawstring(p, e.message, sz, clr, a, DRAWFLAG_NORMAL);
+		drawstring(p, e.message, sz, clr, a, VM_DRAWFLAG_NORMAL);
 		if (i < 10) {
 			txt = ((i == 9) ? "0" : ftos(i + 1));
 			txtw = stringwidth(txt, FALSE) * sz_x * 0.5;
-			drawstring('1 0 0' * (o_x + s_x - txtw) + p_y * '0 1 0', txt, sz * 0.5, '0.2 0.2 0.2', a, DRAWFLAG_NORMAL);
+			drawstring('1 0 0' * (o_x + s_x - txtw) + p_y * '0 1 0', txt, sz * 0.5, '0.2 0.2 0.2', a, VM_DRAWFLAG_NORMAL);
 		}
 		if (++i == WEAPON_SELECT_MAXOPTIONS)
 			break;

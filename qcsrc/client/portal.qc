@@ -33,7 +33,7 @@ void(float isnew) portal_read {
 		self.camera_transform = NULL;
 	}
 	// engine currently wants this
-	self.drawmask = MASK_NORMAL;
+	self.drawmask = VM_MASK_NORMAL;
 	setorigin(self, self.origin);
 	setsize(self, '0 0 0', '0 0 0');
 }

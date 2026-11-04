@@ -5,13 +5,13 @@ float weapon_wheel_available;
 float(entity e) weapon_wheel_ammo_check {
 	if ((e.items & IT_AMMO) && e.health) {
 		if (e.items & IT_SHELLS)
-			return e.health <= getstati(STAT_SHELLS);
+			return e.health <= getstati(VM_STAT_SHELLS);
 		else if (e.items & IT_NAILS)
-			return e.health <= getstati(STAT_NAILS);
+			return e.health <= getstati(VM_STAT_NAILS);
 		else if (e.items & IT_ROCKETS)
-			return e.health <= getstati(STAT_ROCKETS);
+			return e.health <= getstati(VM_STAT_ROCKETS);
 		else if (e.items & IT_CELLS)
-			return e.health <= getstati(STAT_CELLS);
+			return e.health <= getstati(VM_STAT_CELLS);
 	}
 	return TRUE;
 }
@@ -42,7 +42,7 @@ float(float bInputType, float nPrimary, float nSecondary) weapon_wheel_input_eve
 }
 
 void(void) weapon_wheel_draw {
-	if (getstati(STAT_HEALTH) < 1) {
+	if (getstati(VM_STAT_HEALTH) < 1) {
 		weapon_wheel_remove();
 		return;
 	}
@@ -61,7 +61,7 @@ void(void) weapon_wheel_draw {
 	for (idx = 0; idx < 10; ++idx)
 		sbar_weaponspace[idx] = 0;
 
-	drawfill('0 0 0', '1 0 0' * CVAR(vid_conwidth) + CVAR(vid_conheight) * '0 1 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
+	drawfill('0 0 0', '1 0 0' * CVAR(vid_conwidth) + CVAR(vid_conheight) * '0 1 0', '0.25 0.25 0.25', 0.75, VM_DRAWFLAG_NORMAL);
 	vector mpos = mouse_position();
 	WEAPON_INFO_FOR_EACH(e) {
 		if not(stat_weapons & e.weapons)
@@ -88,13 +88,13 @@ void(void) weapon_wheel_draw {
 		a = 0;
 		if (e.items & IT_AMMO) {
 			if (e.items & IT_SHELLS)
-				a = getstati(STAT_SHELLS);
+				a = getstati(VM_STAT_SHELLS);
 			else if (e.items & IT_NAILS)
-				a = getstati(STAT_NAILS);
+				a = getstati(VM_STAT_NAILS);
 			else if (e.items & IT_ROCKETS)
-				a = getstati(STAT_ROCKETS);
+				a = getstati(VM_STAT_ROCKETS);
 			else if (e.items & IT_CELLS)
-				a = getstati(STAT_CELLS);
+				a = getstati(VM_STAT_CELLS);
 
 			if (e.health && e.health > a)
 				noammo = TRUE;
@@ -105,20 +105,20 @@ void(void) weapon_wheel_draw {
 		}
 		undercursore = (weapon_wheel_under_cursor == e.weapon);
 		if (active || undercursore)
-			drawpic(pos, "gfx/hud/sb_ammobg", '80 40 0', '1 1 1', fade * (active * 0.25 + undercursore * 0.75), DRAWFLAG_NORMAL);
+			drawpic(pos, "gfx/hud/sb_ammobg", '80 40 0', '1 1 1', fade * (active * 0.25 + undercursore * 0.75), VM_DRAWFLAG_NORMAL);
 
-		drawpic(pos, e.icon, '80 40 0', noammo ? '0.25 0.25 0.25' : '1 1 1', fade * (noammo ? 0.5 : 1), DRAWFLAG_NORMAL);
+		drawpic(pos, e.icon, '80 40 0', noammo ? '0.25 0.25 0.25' : '1 1 1', fade * (noammo ? 0.5 : 1), VM_DRAWFLAG_NORMAL);
 		pos_x += 2;
 		if (a && !noammo)
-			drawstring(pos, ftos(a), '8 8 0', '1 1 1', fade, DRAWFLAG_NORMAL);
+			drawstring(pos, ftos(a), '8 8 0', '1 1 1', fade, VM_DRAWFLAG_NORMAL);
 		else if (e.items)
-			drawstring(pos, "X", '8 8 0', '1 0 0', fade, DRAWFLAG_NORMAL);
+			drawstring(pos, "X", '8 8 0', '1 0 0', fade, VM_DRAWFLAG_NORMAL);
 	}
 }
 
 float(float forward) weapon_wheel {
 	if not(CVAR(cl_weapon_wheel)) return FALSE;
-	if (getstati(STAT_HEALTH) < 1) {
+	if (getstati(VM_STAT_HEALTH) < 1) {
 		weapon_wheel_remove();
 		return FALSE;
 	}

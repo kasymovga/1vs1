@@ -119,7 +119,7 @@ void(float bg, float fg) radar_background_draw {
 	if (fg > 0 && radar_minimapname != "") {
 		fga = 1;
 		fgc = '1 1 1' * fg;
-		R_BeginPolygon(radar_minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP);
+		R_BeginPolygon(radar_minimapname, VM_DRAWFLAG_SCREEN | VM_DRAWFLAG_MIPMAP);
 		if (CVAR(v_flipped)) {
 			R_PolygonVertex(radar_texcoord_to_2dcoord(radar_pictexcoord3), radar_yinvert(radar_pictexcoord3), fgc, fga);
 			R_PolygonVertex(radar_texcoord_to_2dcoord(radar_pictexcoord2), radar_yinvert(radar_pictexcoord2), fgc, fga);
@@ -184,7 +184,7 @@ void(entity pingdata, float a) radar_ping_draw {
 	}
 	vector coord = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(pingdata.origin));
 	vector v = '2 2 0' * radar_size_scale * dt;
-	drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
+	drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, VM_DRAWFLAG_ADDITIVE);
 }
 
 void(entity e, float a) radar_circle_draw {
@@ -193,7 +193,7 @@ void(entity e, float a) radar_circle_draw {
 	vector v2 = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(e.origin + '-0.6  0.6 0' * e.cnt * e.scale));
 	vector v3 = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(e.origin +  '0.6  0.6 0' * e.cnt * e.scale));
 	vector v4 = radar_texcoord_to_2dcoord(radar_3dcoord_to_texcoord(e.origin +  '0.6 -0.6 0' * e.cnt * e.scale));
-	R_BeginPolygon("gfx/teamradar_ping", DRAWFLAG_ADDITIVE);
+	R_BeginPolygon("gfx/teamradar_ping", VM_DRAWFLAG_ADDITIVE);
 	R_PolygonVertex(v1, '0 0 0', e.colormod, a);
 	R_PolygonVertex(v2, '0 1 0', e.colormod, a);
 	R_PolygonVertex(v3, '1 1 0', e.colormod, a);
@@ -359,7 +359,7 @@ void(float big, string title) radar_view {
 		drawpic(frame_origin, "gfx/ons-frame", frame_size, '1 1 1', sbar_alpha_fg, 0);
 		drawpic(frame_origin, "gfx/ons-frame-team", frame_size, rgb, sbar_alpha_fg, 0);
 		if (title)
-			drawstring(frame_origin - '0 24 0', title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+			drawstring(frame_origin - '0 24 0', title, '24 24 0', '1 1 1', 1, VM_DRAWFLAG_NORMAL);
 
 		drawsetcliparea(
 				radar_origin2d_x - radar_size2d_x * 0.5,

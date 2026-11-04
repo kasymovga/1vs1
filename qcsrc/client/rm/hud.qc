@@ -207,14 +207,14 @@ void (vector pos, vector mySize) rm_hud_draw_ranking  {
 				continue;
 
 			if (pl == me)
-				drawfill(pos, eX * mySize_x + eY * fontsize_y, '1 1 1', highlight_alpha * sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawfill(pos, eX * mySize_x + eY * fontsize_y, '1 1 1', highlight_alpha * sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 
 			if (team_teams > 1)
 				score_color = team_rgb(pl.team) * 0.8;
 
 			s = str_shorten_to_width(player_name(pl.sv_entnum), name_size / fontsize_x, str_width_colors);
-			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE) * fontsize_x), s, fontsize, sbar_alpha_fg, DRAWFLAG_NORMAL);
-			drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE) * fontsize_x), s, fontsize, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
+			drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			pos_y += fontsize_y;
 			++i;
 		}
@@ -372,15 +372,15 @@ void(float prog, vector hud_sector_pos, vector hud_sector, vector c_sector, vect
 	else if (prog < 0.10)
 		a *= 1 - (0.10 - prog) / 0.10;
 
-	if (a) drawpic(hpos, rm_skin_image_progress_head, hsize, rm_skin_progress_head_color, a, DRAWFLAG_NORMAL);
+	if (a) drawpic(hpos, rm_skin_image_progress_head, hsize, rm_skin_progress_head_color, a, VM_DRAWFLAG_NORMAL);
 }
 
 float(float i) rm_hud_get_ammo_stat {
 	switch (i) {
-	case 0: return STAT_SHELLS;
-	case 1: return STAT_NAILS;
-	case 2: return STAT_ROCKETS;
-	case 3: return STAT_CELLS;
+	case 0: return VM_STAT_SHELLS;
+	case 1: return VM_STAT_NAILS;
+	case 2: return VM_STAT_ROCKETS;
+	case 3: return VM_STAT_CELLS;
 	}
 	return -1;
 }
@@ -444,14 +444,14 @@ void(vector pos, float hgtype, float hgammo, float regen, float regenrate, float
 	if (hgcd > 0) {
 		float cdh = hgsize_y * (hgcd / hgcdmax);
 		drawsetcliparea(pos_x, pos_y, hgsize_x, cdh);
-		drawpic(pos, hgicon, hgsize, hgcolor, sbar_alpha_fg * 0.3, DRAWFLAG_NORMAL);
+		drawpic(pos, hgicon, hgsize, hgcolor, sbar_alpha_fg * 0.3, VM_DRAWFLAG_NORMAL);
 		drawsetcliparea(pos_x, pos_y + cdh, hgsize_x, hgsize_y);
-		drawpic(pos, hgicon, hgsize, hgcolor, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, hgicon, hgsize, hgcolor, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 		drawresetcliparea();
 	} else {
-		drawpic(pos, hgicon, hgsize, hgcolor, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, hgicon, hgsize, hgcolor, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 	}
-	sbar_draw_num(pos + '26 5 0', hgammo, 3, 0, 24, '1 1 1' - '0 1 1' * (!hgammo), 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	sbar_draw_num(pos + '26 5 0', hgammo, 3, 0, 24, '1 1 1' - '0 1 1' * (!hgammo), 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 	if (CVAR(rm_shownadgetregen) && rm_active) {
 		string hgtxt;
 		float rtime;
@@ -479,7 +479,7 @@ void(vector pos, float hgtype, float hgammo, float regen, float regenrate, float
 		}
 		drawfont = sbar_bigfont;
 		float tsize = hgsize_x / stringwidth(hgtxt, FALSE);
-		drawstring(pos + '0.5 0 0' * (RM_HUD_SECWIDTH_NORMAL - hgsize_x) + '0 0.5 0' * (hgsize_y - tsize), hgtxt, '1 1 0' * tsize, '1 0 0' + '0 1 0' * (rtime >= 5) + '0 0 1' * (rtime >= 10), 1, DRAWFLAG_NORMAL);
+		drawstring(pos + '0.5 0 0' * (RM_HUD_SECWIDTH_NORMAL - hgsize_x) + '0 0.5 0' * (hgsize_y - tsize), hgtxt, '1 1 0' * tsize, '1 0 0' + '0 1 0' * (rtime >= 5) + '0 0 1' * (rtime >= 10), 1, VM_DRAWFLAG_NORMAL);
 		drawfont = sbar_font;
 	}
 }
@@ -488,7 +488,7 @@ void(string s) rm_hud_draw_name {
 	vector pos = '0 0 0';
 	drawfont = sbar_bigfont;
 	pos_y = CVAR(vid_conheight) - 50 - sbar_fontsize_y * 2;
-	drawcolorcodedstring(pos, s, sbar_fontsize * 2, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, s, sbar_fontsize * 2, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 	drawfont = sbar_font;
 }
 
@@ -511,24 +511,24 @@ void(void) rm_hud_draw_server_info {
 	vector sz_big  = sbar_fontsize_spec * a * 2;
 	vector sz_norm = sbar_fontsize * a * 2;
 	drawfont = sbar_bigfont;
-	draw_string_colorcoded_center(pos, main_hostname, sz_big, a, DRAWFLAG_NORMAL);
+	draw_string_colorcoded_center(pos, main_hostname, sz_big, a, VM_DRAWFLAG_NORMAL);
 	pos_y += sz_big_y + sz_norm_y * 0.5;
 	drawfont = sbar_font;
-	draw_string_center(pos, main_rexuiz_info, sz_norm, '1 0.6 0', a, DRAWFLAG_NORMAL);
+	draw_string_center(pos, main_rexuiz_info, sz_norm, '1 0.6 0', a, VM_DRAWFLAG_NORMAL);
 	pos_y += sz_norm_y * 2;
-	draw_string_colorcoded_center(pos, strcat("Playing ^5", game_type_name_long(game_type), " ^7on ^2", map_shortname), sz_norm, a, DRAWFLAG_NORMAL);
+	draw_string_colorcoded_center(pos, strcat("Playing ^5", game_type_name_long(game_type), " ^7on ^2", map_shortname), sz_norm, a, VM_DRAWFLAG_NORMAL);
 	if (main_motd == "")
 		return;
 
 	pos_y += sz_big_y * 1.5;
 	drawfont = sbar_bigfont;
-	draw_string_colorcoded_center(pos, "Message of The Day", sz_big, a, DRAWFLAG_NORMAL);
+	draw_string_colorcoded_center(pos, "Message of The Day", sz_big, a, VM_DRAWFLAG_NORMAL);
 	pos_y += sz_big_y + sz_norm_y * 0.5;
 	drawfont = sbar_font;
 	float n = tokenizebyseparator(main_motd, "\n");
 	float i;
 	for (i = 0; i < n; ++i) {
-		draw_string_colorcoded_center(pos, argv(i), sz_norm, a, DRAWFLAG_NORMAL);
+		draw_string_colorcoded_center(pos, argv(i), sz_norm, a, VM_DRAWFLAG_NORMAL);
 		pos_y += sz_norm_y;
 	}
 }
@@ -623,25 +623,25 @@ void(vector sectorpos) rm_hud_powerups_draw {
 	if (strength_time) {
 		if (strength_time > 0) {
 			if (strength_time < 5) {
-				draw_pic_expanding_two(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+				draw_pic_expanding_two(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE,
 					bound(0, (ceil(strength_time) - strength_time) / 0.5, 1));
 			} else {
-				drawpic(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+				drawpic(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE);
 			}
 			if (ceil(strength_time) < 10)
 				numpos_x -= countdown_fontsize;
 
-			sbar_draw_num(numpos, ceil(strength_time), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			sbar_draw_num(numpos, ceil(strength_time), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 		} else if(strength_time > -1) {
-			draw_pic_expanding(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+			draw_pic_expanding(pos, str_icon, picsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE,
 				bound(0, -strength_time / 0.5, 1));
 		}
 		if (strength_time2) {
-			drawpic(pos + '30 0 0', str_icon2, '12 12 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-			sbar_draw_num(pos + '30 2 0', ceil(strength_time2), 2, 0, 8, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos + '30 0 0', str_icon2, '12 12 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE);
+			sbar_draw_num(pos + '30 2 0', ceil(strength_time2), 2, 0, 8, '1 1 1', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			if (strength_time3) {
-				drawpic(pos + '36 16 0', str_icon3, '6 6 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-				sbar_draw_num(pos + '34 14 0', ceil(strength_time3), 2, 0, 6, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(pos + '36 16 0', str_icon3, '6 6 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE);
+				sbar_draw_num(pos + '34 14 0', ceil(strength_time3), 2, 0, 6, '1 1 1', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			}
 		}
 	}
@@ -651,22 +651,22 @@ void(vector sectorpos) rm_hud_powerups_draw {
 	if (invincibility_time) {
 		if (invincibility_time > 0) {
 			if (invincibility_time < 5) {
-				draw_pic_expanding_two(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+				draw_pic_expanding_two(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE,
 					bound(0, (ceil(invincibility_time) - invincibility_time) / 0.5, 1));
 			} else {
-				drawpic(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+				drawpic(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE);
 			}
-			sbar_draw_num(numpos, ceil(invincibility_time), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			sbar_draw_num(numpos, ceil(invincibility_time), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 		} else if(invincibility_time > -1) {
-			draw_pic_expanding(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+			draw_pic_expanding(pos, inv_icon, picsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE,
 				bound(0, -invincibility_time / 0.5, 1));
 		}
 		if (invincibility_time2) {
-			drawpic(pos + '-30 0 0', inv_icon2, '12 12 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-			sbar_draw_num(pos + '-30 2 0', ceil(invincibility_time2), 2, 0, 8, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos + '-30 0 0', inv_icon2, '12 12 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE);
+			sbar_draw_num(pos + '-30 2 0', ceil(invincibility_time2), 2, 0, 8, '1 1 1', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			if (invincibility_time3) {
-				drawpic(pos + '-30 16 0', inv_icon3, '6 6 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-				sbar_draw_num(pos + '-30 14 0', ceil(invincibility_time3), 2, 0, 6, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(pos + '-30 16 0', inv_icon3, '6 6 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE);
+				sbar_draw_num(pos + '-30 14 0', ceil(invincibility_time3), 2, 0, 6, '1 1 1', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			}
 		}
 	}
@@ -674,13 +674,13 @@ void(vector sectorpos) rm_hud_powerups_draw {
 	if (sbar_stat_items & IT_KEYS) {
 		pos = sectorpos;
 		if (sbar_stat_items & IT_KEY1) {
-			drawpic(pos + (strength_time ? '0 -32 0' : '0 0 0'), "gfx/hud/sb_kh_blue", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			drawpic(pos + (strength_time ? '0 -32 0' : '0 0 0'), "gfx/hud/sb_kh_blue", picsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE);
 		}
 		if (sbar_stat_items & IT_KEY2) {
-			drawpic(pos + ((strength_time2 || invincibility_time2) ? '40 -32 0' : '40 0 0'), "gfx/hud/sb_kh_yellow", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			drawpic(pos + ((strength_time2 || invincibility_time2) ? '40 -32 0' : '40 0 0'), "gfx/hud/sb_kh_yellow", picsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE);
 		}
 		if (sbar_stat_items & IT_KEY3) {
-			drawpic(pos + (invincibility_time ? '80 -32 0' : '80 0 0'), "gfx/hud/sb_kh_red", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			drawpic(pos + (invincibility_time ? '80 -32 0' : '80 0 0'), "gfx/hud/sb_kh_red", picsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_ADDITIVE);
 		}
 	}
 }
@@ -709,7 +709,7 @@ void(void) rm_hud_draw {
 	float sector_teamalpha = sector_basealpha;
 	float border_teamalpha = border_basealpha;
 	float sector_alphamod = 1;
-	float hud_sector_drawflag = DRAWFLAG_NORMAL;
+	float hud_sector_drawflag = VM_DRAWFLAG_NORMAL;
 	float ammosector_pos = 0, nadesector_pos = 0, nadesector2_pos = 0, next_sector;
 	vector scoresector_pos = SBAR_SCORE_POSITION_DEFAULT, scoresector_size = '0 0 0';
 	vector game_info_pos = '0 0 0', game_info_size = '0 0 0';
@@ -731,7 +731,7 @@ void(void) rm_hud_draw {
 		hgregen2 = sbar_nadget_regen(STAT_HGREGEN2, STAT_HGREGENMAX2);
 
 	if (CVAR(rm_hud_healthcolor)) {
-		base_teamcolor = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), sbar_armor_block_percentage);
+		base_teamcolor = rm_hud_healtharmor_maxdamage(getstati(VM_STAT_HEALTH), getstati(VM_STAT_ARMOR), sbar_armor_block_percentage);
 		base_teamcolor = view_healthcolor(base_teamcolor_x);
 	} else if (team_teams > 1) {
 		base_teamcolor = team_rgb(team_my);
@@ -764,8 +764,8 @@ void(void) rm_hud_draw {
 	sbar_bottomleft_y -= 10;
 	sbar_bottomright_y -= 10;
 	float armor, health;
-	armor = getstati(STAT_ARMOR);
-	health = getstati(STAT_HEALTH);
+	armor = getstati(VM_STAT_ARMOR);
+	health = getstati(VM_STAT_HEALTH);
 	float deathorobserver = (health < 1 || view_observer_status);
 	//float stat_items = getstati(STAT_ITEMS);
 	float stat_weapons = getstati(STAT_WEAPONS);
@@ -779,7 +779,7 @@ void(void) rm_hud_draw {
 	hudline_pos_y = sbar_bottom_y - 24;
 	hud_sector_y = 21;
 	hud_sector_pos_y = sbar_bottom_y - 27;
-	vector mxdmg = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), sbar_armor_block_percentage);
+	vector mxdmg = rm_hud_healtharmor_maxdamage(getstati(VM_STAT_HEALTH), getstati(VM_STAT_ARMOR), sbar_armor_block_percentage);
 	rm_hud_vhealth += (min(mxdmg_x + 1, sbar_health_nice * 2) - rm_hud_vhealth) * frametime * 10;
 	rm_hud_ammo_progress = -1;
 	float a; // i will be the ammo type (already declared), a will contain how much ammo there is of type i
@@ -1163,16 +1163,16 @@ void(void) rm_hud_draw {
 		float x = armor;
 		if (x > 0) {
 			if (x > 45) {
-				drawpic(armor_pos + '-7 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(armor_pos + '-7 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 				sbar_draw_num_colored(armor_pos + '24 0 0', x, 24, sbar_alpha_fg);
 			} else {
-				drawpic(armor_pos + '-7 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', (x+10)/55 * sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(armor_pos + '-7 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', (x+10)/55 * sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 				sbar_draw_num_colored(armor_pos + '26 0 0', x, 24, (x+10)/55 * sbar_alpha_fg);
 			}
 		}
 		// health
 		x = health;
-		drawpic(health_pos + '0 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(health_pos + '0 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 		sbar_draw_num_colored(health_pos + '26 0 0', x, 24, sbar_alpha_fg);
 	// weapon icons
 		sbar_weapons_draw(SBAR_WEAPONS_POSITION_DEFAULT, 1);
@@ -1196,34 +1196,34 @@ void(void) rm_hud_draw {
 					pos_y = 33;
 					pos = sbar_bottom - pos;
 					pos_x = ammosector_pos;
-					drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 					if (!a) {
 						if (sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO)
 							a = max(0, isclip);
 
-						draw_pic_expanding(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL, 1 - bound(0, (rm_hud_ammo_notify_time - time)*2, 1));
+						draw_pic_expanding(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL, 1 - bound(0, (rm_hud_ammo_notify_time - time)*2, 1));
 					}
 					if (a < 10 && !isclip)
-						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 					else
-						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 				}
 			} else {
 				if ((sbar_stat_items & itemcode) || ((!CVAR(cl_rm_hud_alt) || CVAR(vid_conwidth) < 950) && a_unused == 4 && i == rm_hud_ammo_last)) {
 					pos_y = sbar_bottom_y - 33;
 					pos_x = ammosector_pos;
 					rm_hud_ammo_last = i;
-					drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic(pos + '0 5 0', rm_hud_get_ammo_picture(i), '24 24 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 					if (a < 10 && !isclip)
-						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '26 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 					else
-						sbar_draw_num(pos + '26 5 0', (isclip ? max(0, isclip) : a), 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '26 5 0', (isclip ? max(0, isclip) : a), 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 				}
 				if ((isclip || !(sbar_stat_items & itemcode)) && !(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO) && (i != rm_hud_ammo_last || CVAR(cl_rm_hud_alt))) {
 					pos_y = sbar_bottom_y - 43;
 					pos_x = ammosector_pos - bw_left + ((RM_HUD_SECWIDTH_NORMAL + bw_right)/2) + a_offset - (42/2) * min(a_unused, ((CVAR(cl_rm_hud_alt) && CVAR(vid_conwidth) >= 950) ? 4 : 3));
-					drawpic(pos, rm_hud_get_ammo_picture(i), '10 10 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					sbar_draw_num(pos + '9 1 0', a, 3, 0, 10, '0.7 0.7 0.7', 0, sbar_alpha_fg * 0.7, DRAWFLAG_NORMAL);
+					drawpic(pos, rm_hud_get_ammo_picture(i), '10 10 0', '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
+					sbar_draw_num(pos + '9 1 0', a, 3, 0, 10, '0.7 0.7 0.7', 0, sbar_alpha_fg * 0.7, VM_DRAWFLAG_NORMAL);
 					a_offset += 42;
 				}
 			}
@@ -1260,31 +1260,31 @@ void(void) rm_hud_draw {
 			} else {
 				// HUD doesn't support the nade sector - fallback to the old display method
 				if (hgammo)
-					draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype), "s: ^3", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+					draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype), "s: ^3", ftos(hgammo)), sbar_fontsize, 0.6, VM_DRAWFLAG_NORMAL);
 				else
-					draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+					draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, VM_DRAWFLAG_NORMAL);
 
 				if (hgregen && hgregen != 1) {
 					vector hgrsize = '70 3 0';
 					hgapos_y += 10;
 					hgapos_x = (CVAR(vid_conwidth) - hgrsize_x) * 0.5;
 					hgrsize_x *= hgregen;
-					drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, DRAWFLAG_NORMAL);
+					drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, VM_DRAWFLAG_NORMAL);
 				}
 				if (hgtype2) {
 					hgapos_y += 5;
 					hgammo = getstati(STAT_HGAMMO2);
 					if (hgammo)
-						draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype2), "s: ^3", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+						draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype2), "s: ^3", ftos(hgammo)), sbar_fontsize, 0.6, VM_DRAWFLAG_NORMAL);
 					else
-						draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype2), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+						draw_string_colorcoded_center(hgapos, strcat(nadget_TypeToExpandedName(hgtype2), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, VM_DRAWFLAG_NORMAL);
 
 					if (hgregen2 && hgregen2 != 1) {
 						vector hgrsize = '70 3 0';
 						hgapos_y += 10;
 						hgapos_x = (CVAR(vid_conwidth) - hgrsize_x) * 0.5;
 						hgrsize_x *= hgregen2;
-						drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, DRAWFLAG_NORMAL);
+						drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, VM_DRAWFLAG_NORMAL);
 					}
 				}
 			}
@@ -1353,8 +1353,8 @@ void(float p) rm_hud_score_draw {
 
 		score_pos = score_pos + ((score > 9) ? '24 0 0' : '0 0 0');
 		secondary_score_pos = score_pos + '24 0 0' * 2.7 + '16 0 0' * (distribution > 9);
-		sbar_draw_num(score_pos, score, 4, 0, 24, '1 1 1' * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(score_pos, score, 4, 0, 24, '1 1 1' * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
+		sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float max_fragcount;
 		max_fragcount = -999;
@@ -1386,7 +1386,7 @@ void(float p) rm_hud_score_draw {
 				if (max_fragcount == score)
 					leader = 1;
 
-				sbar_draw_num(score_pos + shift * '24 0 0', score, 4, 0, 24 * scale, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(score_pos + shift * '24 0 0', score, 4, 0, 24 * scale, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
@@ -1431,7 +1431,7 @@ void(float p) rm_hud_score_draw {
 					else
 						shift = 1 / scale;
 				}
-				sbar_draw_num(secondary_score_pos + (shift) * '16 0 0', score, 4, 0, 16 * scale, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(secondary_score_pos + (shift) * '16 0 0', score, 4, 0, 16 * scale, team_rgb(tm.team) * ((!leader) ? 1 : 0.8) + ((!leader) ? '0.2 0.2 0.2' : '0 0 0'), leader, sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 				secondary_score_pos = secondary_score_pos + '0 14 0' * scale2;
 			}
 		}

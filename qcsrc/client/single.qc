@@ -32,13 +32,13 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) single_hud {
 			}
 		}
 		if (sbar_stat_items & IT_KEY1)
-			drawpic(pos + v1, "gfx/hud/sb_kh_blue", v2, '1.125 1.125 0.75', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos + v1, "gfx/hud/sb_kh_blue", v2, '1.125 1.125 0.75', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 
 		if (sbar_stat_items & IT_KEY2)
-			drawpic(pos + (v1 + v3), "gfx/hud/sb_kh_yellow", v2, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos + (v1 + v3), "gfx/hud/sb_kh_yellow", v2, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 
 		if (sbar_stat_items & IT_KEY3)
-			drawpic(pos + (v1 + v3 * 2), "gfx/hud/sb_kh_red", v2, '2 0.5 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos + (v1 + v3 * 2), "gfx/hud/sb_kh_red", v2, '2 0.5 0.5', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 	}
 	if (secrets_total) {
 		vector v1, v2;
@@ -66,8 +66,8 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) single_hud {
 			}
 		}
 		v1 -= v2_x * '0.4 0 0' * (strlen(s) - 3);
-		drawpic(pos + (v1 - v2_y * '0 0.5 0' * (icon_scale - 1)) * gameinfo_scale, "gfx/hud/single/secret", v2 * gameinfo_scale * icon_scale, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos + (v1 - v2_y * '0 0.5 0' * (icon_scale - 1)) * gameinfo_scale, "gfx/hud/single/secret", v2 * gameinfo_scale * icon_scale, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 		drawstring(pos + (v1 + v2_x * '1 0 0' * icon_scale) * gameinfo_scale, strcat(
-				ftos(getstati(STAT_SECRET)), "/", ftos(secrets_total)), v2 * gameinfo_scale, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				ftos(getstati(STAT_SECRET)), "/", ftos(secrets_total)), v2 * gameinfo_scale, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 	}
 }

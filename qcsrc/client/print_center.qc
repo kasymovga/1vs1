@@ -149,7 +149,7 @@ void(void) print_center_draw {
 				pos_x = (CVAR(vid_conwidth) - print_center_fontsize_x * print_center_width[i] * a) * 0.5;
 				ts = print_center_messages[i];
 				if (ts != "") {
-					drawcolorcodedstring(pos, ts, print_center_fontsize * a, a, DRAWFLAG_NORMAL);
+					drawcolorcodedstring(pos, ts, print_center_fontsize * a, a, VM_DRAWFLAG_NORMAL);
 					pos_y = pos_y + print_center_fontsize_y * a;
 				} else
 					// half height for empty lines looks better
@@ -167,7 +167,7 @@ void(void) print_center_draw {
 		pos_x = (CVAR(vid_conwidth) - print_center_fontsize_x * print_center_width[i]) * 0.5;
 		ts = print_center_messages[i];
 		if (ts != "") {
-			drawcolorcodedstring(pos, ts, print_center_fontsize, a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, ts, print_center_fontsize, a, VM_DRAWFLAG_NORMAL);
 			pos_y = pos_y + print_center_fontsize_y;
 		} else
 			// half height for empty lines looks better

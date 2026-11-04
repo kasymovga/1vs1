@@ -8,8 +8,8 @@ float view_camera_script_wait;
 void(void) view_camera_script {
 	if (!view_camera_script_current || !view_camera_script_current.enemy) {
 		if (view_camera_script_current) {
-			R_SetView(VF_ANGLES, view_camera_script_current.angles);
-			R_SetView(VF_ORIGIN, view_camera_script_current.origin);
+			R_SetView(VM_VF_ANGLES, view_camera_script_current.angles);
+			R_SetView(VM_VF_ORIGIN, view_camera_script_current.origin);
 		}
 		if (view_camera_script_wait >= 0) {
 			view_camera_script_wait -= frametime;
@@ -29,8 +29,8 @@ void(void) view_camera_script {
 	while (p1.angles_z - p2.angles_z > 180) p2.angles_z += 360;
 	vector a = p1.angles * (1 - view_camera_script_position) + p2.angles * view_camera_script_position;
 	vector o = p1.origin * (1 - view_camera_script_position) + p2.origin * view_camera_script_position;
-	R_SetView(VF_ANGLES, a);
-	R_SetView(VF_ORIGIN, o);
+	R_SetView(VM_VF_ANGLES, a);
+	R_SetView(VM_VF_ORIGIN, o);
 	float spd = (p1.cnt ? p1.cnt : view_camera_script_speed);
 	if (view_camera_script_position >= 1) {
 		view_camera_script_current = p2;

@@ -79,7 +79,7 @@ void(void) teleport_teleportation_read {
 		return;
 	}
 	view_angles = a;
-	R_SetView(VF_CL_VIEWANGLES, a);
+	R_SetView(VM_VF_CL_VIEWANGLES, a);
 	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
 		teleport_fix_angles(a);
 	}
@@ -132,7 +132,7 @@ void(entity e) teleport_predict {
 	teleport_predicted_last_time = time; //yes, it must be this way
 	teleport_predicted_last = e.sv_entnum;
 	view_angles = e.iorigin1;
-	R_SetView(VF_CL_VIEWANGLES, e.iorigin1);
+	R_SetView(VM_VF_CL_VIEWANGLES, e.iorigin1);
 	if (main_isdemo || (view_spectatee_status && !view_observer_status)) {
 		teleport_fix_angles(e.iorigin1);
 	}

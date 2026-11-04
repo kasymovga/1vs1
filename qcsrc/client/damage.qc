@@ -10,7 +10,7 @@ void(void) damage_indicator_draw {
 		return;
 
 	o_z = 0;
-	drawstring(o, NET_UNBOUND_FROM_BYTE(self.cnt), '12 12 0', '1 0.5 0', self.alpha * CVAR(cl_damageindicator_alpha), DRAWFLAG_NORMAL);
+	drawstring(o, NET_UNBOUND_FROM_BYTE(self.cnt), '12 12 0', '1 0.5 0', self.alpha * CVAR(cl_damageindicator_alpha), VM_DRAWFLAG_NORMAL);
 	drawfont = sbar_font;
 }
 

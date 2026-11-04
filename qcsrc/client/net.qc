@@ -30,7 +30,7 @@ void(float bIsNewEntity) net_csqc_entity_update { //called by engine
 		time = server_time;
 	} else {
 		server_prevtime = time;
-		server_deltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+		server_deltatime = getstatf(VM_STAT_MOVEVARS_TICRATE) * getstatf(VM_STAT_MOVEVARS_TIMESCALE);
 		time = server_prevtime + server_deltatime;
 	}
 	if (self.enttype)

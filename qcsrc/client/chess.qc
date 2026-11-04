@@ -23,18 +23,18 @@ void() chess_draw2d {
 		bw = !bw;
 		for (j = 0; j < 8; j++) {
 			bw = !bw;
-			drawfill('100 300 0' + '20 0 0' * i - '0 20 0' * j, '20 20 0', bw ? '1 1 1' : '0 0 0', 0.5, DRAWFLAG_NORMAL);
+			drawfill('100 300 0' + '20 0 0' * i - '0 20 0' * j, '20 20 0', bw ? '1 1 1' : '0 0 0', 0.5, VM_DRAWFLAG_NORMAL);
 		}
 	}
 	if (team_my == COLOR_TEAM2) {
 		for (i = 0; i < 8; i++) {
-			drawstring('260 164 0' + i * '0 20 0', ftos(i + 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
-			drawstring('248 148 0' - i * '20 0 0', str_sub("abcdefgh", i, 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
+			drawstring('260 164 0' + i * '0 20 0', ftos(i + 1), '10 10 0', '0.5 0.5 0.5', 1, VM_DRAWFLAG_NORMAL);
+			drawstring('248 148 0' - i * '20 0 0', str_sub("abcdefgh", i, 1), '10 10 0', '0.5 0.5 0.5', 1, VM_DRAWFLAG_NORMAL);
 		}
 	} else {
 		for (i = 0; i < 8; i++) {
-			drawstring('92 304 0' - i * '0 20 0', ftos(i + 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
-			drawstring('108 320 0' + i * '20 0 0', str_sub("abcdefgh", i, 1), '10 10 0', '0.5 0.5 0.5', 1, DRAWFLAG_NORMAL);
+			drawstring('92 304 0' - i * '0 20 0', ftos(i + 1), '10 10 0', '0.5 0.5 0.5', 1, VM_DRAWFLAG_NORMAL);
+			drawstring('108 320 0' + i * '20 0 0', str_sub("abcdefgh", i, 1), '10 10 0', '0.5 0.5 0.5', 1, VM_DRAWFLAG_NORMAL);
 		}
 	}
 	for (e = chess_pieces; e; e = e.enemy) {
@@ -65,7 +65,7 @@ void() chess_draw2d {
 			i = e.origin_x;
 			j = e.origin_y;
 		}
-		drawstring('101 302 0' + i * '20 0 0' - j * '0 20 0', piece, '20 20 0', ((e.team == 14) ? '0 0 1' : '1 0 0'), 1, DRAWFLAG_NORMAL);
+		drawstring('101 302 0' + i * '20 0 0' - j * '0 20 0', piece, '20 20 0', ((e.team == 14) ? '0 0 1' : '1 0 0'), 1, VM_DRAWFLAG_NORMAL);
 	}
 }
 
@@ -78,14 +78,14 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) chess_hud {
 	float tens = floor((chess_timer_white - floor(chess_timer_white)) * 10);
 	string s = strcat(ftos(mins), ":", ((secs < 10) ? "0" : ""), ftos(secs), ".", ftos(tens));
 	if (!chess_turn) s = strcat("* ", s);
-	draw_string_right(p, s, '20 20 0' * gameinfo_scale, '1 0.5 0.5', 1, DRAWFLAG_NORMAL);
+	draw_string_right(p, s, '20 20 0' * gameinfo_scale, '1 0.5 0.5', 1, VM_DRAWFLAG_NORMAL);
 	p += '0 20 0';
 	mins = floor(chess_timer_black / 60);
 	secs = floor(chess_timer_black - mins * 60);
 	tens = floor((chess_timer_black - floor(chess_timer_black)) * 10);
 	s = strcat(ftos(mins), ":", ((secs < 10) ? "0" : ""), ftos(secs), ".", ftos(tens));
 	if (chess_turn) s = strcat("* ", s);
-	draw_string_right(p, s, '20 20 0' * gameinfo_scale, '0.5 0.5 1', 1, DRAWFLAG_NORMAL);
+	draw_string_right(p, s, '20 20 0' * gameinfo_scale, '0.5 0.5 1', 1, VM_DRAWFLAG_NORMAL);
 }
 
 void(float isnew) chess_info_read {

@@ -103,20 +103,20 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) ctf_hud {
 	sz = '52 52 0' * gameinfo_scale;
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
 	if (red_icon_prevstatus && f < 1)
-		draw_pic_expanding(redflag_pos, red_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		draw_pic_expanding(redflag_pos, red_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * red_alpha_prevstatus, VM_DRAWFLAG_NORMAL, f);
 
 	rm_hud_game_info_enabled = FALSE;
 	if (red_icon) {
 		rm_hud_game_info_enabled = TRUE;
-		drawpic(redflag_pos, red_icon, sz, '1 1 1', sbar_alpha_fg * red_alpha * f, DRAWFLAG_NORMAL);
+		drawpic(redflag_pos, red_icon, sz, '1 1 1', sbar_alpha_fg * red_alpha * f, VM_DRAWFLAG_NORMAL);
 	}
 	f = bound(0, blueflag_statuschange_elapsedtime*2, 1);
 	if (blue_icon_prevstatus && f < 1)
-		draw_pic_expanding(blueflag_pos, blue_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		draw_pic_expanding(blueflag_pos, blue_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * blue_alpha_prevstatus, VM_DRAWFLAG_NORMAL, f);
 
 	if (blue_icon) {
 		rm_hud_game_info_enabled = TRUE;
-		drawpic(blueflag_pos, blue_icon, sz, '1 1 1', sbar_alpha_fg * blue_alpha * f, DRAWFLAG_NORMAL);
+		drawpic(blueflag_pos, blue_icon, sz, '1 1 1', sbar_alpha_fg * blue_alpha * f, VM_DRAWFLAG_NORMAL);
 	}
 }
 

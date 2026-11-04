@@ -90,7 +90,7 @@ void(void) player_label_draw {
 	drawfont = sbar_font;
 	float fade = 0.7;
 	namepos_x = namepos_x - 0.5 * width * textsz;
-	drawcolorcodedstring(namepos, s, textsz * '1 1 0', a, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(namepos, s, textsz * '1 1 0', a, VM_DRAWFLAG_NORMAL);
 	drawfont = oldfont;
 }
 

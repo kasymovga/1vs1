@@ -103,23 +103,23 @@ void(vector pos, float isize, float tsize, string map, string pic, float count, 
 	label = map_vote_item_format(id, map, count, tsize / sbar_fontsize_x);
 	text_size = stringwidth(strdecolorize(label), FALSE) * sbar_fontsize_x;
 	pos_x -= text_size*0.5;
-	drawcolorcodedstring(pos, label, sbar_fontsize, 1, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, label, sbar_fontsize, 1, VM_DRAWFLAG_NORMAL);
 	pos_x = pos_x + text_size*0.5 - img_size_x*0.5;
 	pos_y = pos_y - img_size_y;
 	pos += sbar_border_thickness * '1 1 0';
 	img_size -= (sbar_border_thickness * 2) * '1 1 0';
 	if (pic == "") {
-		drawfill(pos, img_size, '.5 .5 .5', .7, DRAWFLAG_NORMAL);
+		drawfill(pos, img_size, '.5 .5 .5', .7, VM_DRAWFLAG_NORMAL);
 	} else {
-		drawpic(pos, pic, img_size, '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(pos, pic, img_size, '1 1 1', 1, VM_DRAWFLAG_NORMAL);
 	}
-	drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', '1 1 1', 0.6, DRAWFLAG_NORMAL);
+	drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', '1 1 1', 0.6, VM_DRAWFLAG_NORMAL);
 	if (id == map_vote_ownvote || pic == "") {
-		draw_borderlines(sbar_border_thickness, pos, img_size, rgb, 1, DRAWFLAG_NORMAL);
-		drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', rgb, 0.6, DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos, img_size, rgb, 1, VM_DRAWFLAG_NORMAL);
+		drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', rgb, 0.6, VM_DRAWFLAG_NORMAL);
 	} else {
-		draw_borderlines(sbar_border_thickness, pos, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
-		drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', '1 1 1', 0.6, DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos, img_size, '0 0 0', 1, VM_DRAWFLAG_NORMAL);
+		drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', '1 1 1', 0.6, VM_DRAWFLAG_NORMAL);
 	}
 }
 
@@ -133,7 +133,7 @@ void(vector pos, float isize, float tsize, float count, float id) map_vote_absta
 	label = map_vote_item_format(id, "Don't care", count, tsize / sbar_fontsize_x);
 	text_size = stringwidth(label, FALSE) * sbar_fontsize_x;
 	pos_x -= text_size*0.5;
-	drawstring(pos, label, sbar_fontsize, rgb, 1, DRAWFLAG_NORMAL);
+	drawstring(pos, label, sbar_fontsize, rgb, 1, VM_DRAWFLAG_NORMAL);
 }
 
 vector(vector gridspec, float i, float m) map_vote_grid {
@@ -171,13 +171,13 @@ void(void) map_vote_draw {
 	RM_ELSE({s = strcat("Vote for a map (^2", map_vote_gametype, "^7)");}, //RM bigfont not support translations
 	{s = print_text_prepare("Vote for a map (^2{1}^7)", map_vote_gametype, "", "");})
 	pos_x = center - stringwidth(strdecolorize(s), TRUE) * 0.5 * 24;
-	drawcolorcodedstring(pos, s, '24 24 0', 1, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, s, '24 24 0', 1, VM_DRAWFLAG_NORMAL);
 	pos_y += 26;
 	i = ceil(max(0, map_vote_timeout - time));
 	RM_ELSE({map = strcat(ftos(i), " seconds left");}, //RM bigfont not support translations
 	{map = print_text_prepare("{1} seconds left", ftos(i), "", "");})
 	pos_x = center - stringwidth(map, FALSE) * 0.5 * 16;
-	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
+	drawstring(pos, map, '16 16 0', '0 1 0', 1, VM_DRAWFLAG_NORMAL);
 	pos_y += 22;
 	pos_x = xmin;
 	drawfont = sbar_font;

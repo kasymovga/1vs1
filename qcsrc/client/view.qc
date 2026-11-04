@@ -97,11 +97,11 @@ void view_tint_effect(void) {
 
 	if (view_tint_effect_shield) {
 		if (st) {
-			drawfill('0 0 0', fullscreen, '1 1 1', 0.1 * view_tint_effect_shield, DRAWFLAG_MODULATE);
+			drawfill('0 0 0', fullscreen, '1 1 1', 0.1 * view_tint_effect_shield, VM_DRAWFLAG_MODULATE);
 		} else {
 			vector clr = '1 1 0.5';
-			drawfill('0 0 0', fullscreen, clr * view_tint_effect_shield + '1 1 1' * (1 - view_tint_effect_shield), 1, DRAWFLAG_MODULATE);
-			drawfill('0 0 0', fullscreen, clr, 0.1 * view_tint_effect_shield, DRAWFLAG_ADDITIVE);
+			drawfill('0 0 0', fullscreen, clr * view_tint_effect_shield + '1 1 1' * (1 - view_tint_effect_shield), 1, VM_DRAWFLAG_MODULATE);
+			drawfill('0 0 0', fullscreen, clr, 0.1 * view_tint_effect_shield, VM_DRAWFLAG_ADDITIVE);
 		}
 	}
 }
@@ -167,7 +167,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		else
 			team_my = player_color(player_localnum);
 	}
-	server_ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+	server_ticrate = getstatf(VM_STAT_MOVEVARS_TICRATE) * getstatf(VM_STAT_MOVEVARS_TIMESCALE);
 	// Render the Scene
 	view_width = w;
 	view_height = h;
@@ -178,7 +178,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_fov = cvar("fov");
 	view_anybutton_zoom = input_button_zoom;
 	if (input_button_attack2_allowed) {
-		if (getstati(STAT_ACTIVEWEAPON) == WEAPON_NEX)
+		if (getstati(VM_STAT_ACTIVEWEAPON) == WEAPON_NEX)
 		if not(CVAR(cl_nex_secondary_zoom_disable))
 			view_anybutton_zoom += input_button_attack2;
 	}
@@ -202,7 +202,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	R_ClearScene();
 	// Assign Standard Viewflags
 	// Draw the World (and sky)
-	R_SetView(VF_DRAWWORLD, 1);
+	R_SetView(VM_VF_DRAWWORLD, 1);
 	view_angles = input_angles;
 	view_origin = physics_view_origin();
 	warpzone_view_fix();
@@ -216,9 +216,9 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_right = v_right;
 	view_up = v_up;
 	if (view_fixangle) {
-		R_SetView(VF_ANGLES, view_fixed_angles);
+		R_SetView(VM_VF_ANGLES, view_fixed_angles);
 		if (view_fixangle > 0)
-			R_SetView(VF_CL_VIEWANGLES, view_fixed_angles);
+			R_SetView(VM_VF_CL_VIEWANGLES, view_fixed_angles);
 
 		view_fixangle = 0;
 		view_camera_angles = view_fixed_angles;
@@ -243,11 +243,11 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 				view_damage_time = max(0, view_damage_time - view_drawframetime);
 			}
 		}
-		R_SetView(VF_ANGLES, view_angles + v);
+		R_SetView(VM_VF_ANGLES, view_angles + v);
 		view_camera_angles = view_angles;
 	}
 	// Set the console size vars
-	R_SetView(VF_FOV, view_fov_calculate());
+	R_SetView(VM_VF_FOV, view_fov_calculate());
 	// Camera for demo playback
 	if (view_camera_free_active) {
 		if (CVAR(camera_enable)
@@ -272,15 +272,15 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		view_camera_free_active = TRUE;
 		view_camera_mode = FALSE;
 	}
-	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
-	R_SetView(VF_DRAWENGINESBAR, 0);
+	R_SetView(VM_VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
+	R_SetView(VM_VF_DRAWENGINESBAR, 0);
 	e = self;
 	for (self = world; (self = nextent(self)); )
 		if (self.draw)
 			self.draw();
 
 	self = e;
-	R_AddEntities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
+	R_AddEntities(VM_MASK_NORMAL | VM_MASK_ENGINE | VM_MASK_ENGINEVIEWMODELS);
 	R_RenderScene();
 	// now switch to 2D drawing mode by calling a 2D drawing function
 	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
@@ -341,7 +341,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 			sz_x *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
 			sz_y *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
 			weapon_cross_origin_set();
-			drawpic(weapon_cross_origin - 0.5 * sz, SPIDER_CROSS, sz, '1 1 1', CVAR_OR(cl_vehicle_spiderbot_cross_alpha,0.6), DRAWFLAG_NORMAL);
+			drawpic(weapon_cross_origin - 0.5 * sz, SPIDER_CROSS, sz, '1 1 1', CVAR_OR(cl_vehicle_spiderbot_cross_alpha,0.6), VM_DRAWFLAG_NORMAL);
 			#undef SPIDER_CROSS
 		}
 	} else {
@@ -389,7 +389,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 				}
 				RM(
 					if (CVAR(rm_crosshealth)) {
-						vector x = rm_hud_healtharmor_maxdamage(getstati(STAT_HEALTH), getstati(STAT_ARMOR), sbar_armor_block_percentage);
+						vector x = rm_hud_healtharmor_maxdamage(getstati(VM_STAT_HEALTH), getstati(VM_STAT_ARMOR), sbar_armor_block_percentage);
 						wcross_color = view_healthcolor(x_x);
 					}
 					rm_crosshair_ring_draw(weapon_cross_origin, wcross_color, wcross_alpha);
@@ -398,7 +398,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 				wcross_size = drawgetimagesize(wcross_name);
 				wcross_size_x *= wcross_sizefloat;
 				wcross_size_y *= wcross_sizefloat;
-				drawpic(weapon_cross_origin - '0.5 0 0' * (wcross_size_x) - '0 0.5 0' * ( wcross_size_y), wcross_name, wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL);
+				drawpic(weapon_cross_origin - '0.5 0 0' * (wcross_size_x) - '0 0.5 0' * ( wcross_size_y), wcross_name, wcross_size, wcross_color, wcross_alpha, VM_DRAWFLAG_NORMAL);
 				if (CVAR(crosshair_dot)) {
 					vector dot_color = wcross_color;
 					if (CVAR(crosshair_dot_color_custom)) {
@@ -406,7 +406,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 						if (dot_color_string != "0")
 							dot_color = stov(dot_color_string);
 					}
-					drawpic(weapon_cross_origin - '0.5 0 0' * (wcross_size_x * CVAR(crosshair_dot_size)) - '0 0.5 0' * (wcross_size_y * CVAR(crosshair_dot_size)), view_crosshairdot_tex, wcross_size * CVAR(crosshair_dot_size), dot_color, wcross_alpha * CVAR(crosshair_dot_alpha), DRAWFLAG_NORMAL);
+					drawpic(weapon_cross_origin - '0.5 0 0' * (wcross_size_x * CVAR(crosshair_dot_size)) - '0 0.5 0' * (wcross_size_y * CVAR(crosshair_dot_size)), view_crosshairdot_tex, wcross_size * CVAR(crosshair_dot_size), dot_color, wcross_alpha * CVAR(crosshair_dot_alpha), VM_DRAWFLAG_NORMAL);
 				}
 			}
 		}
@@ -426,10 +426,10 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		w0 = cvar_string("vid_conwidth");
 		h0 = cvar_string("vid_conheight");
 		//R_SetView(VF_VIEWPORT, '0 0 0', '640 480 0');
-		//R_SetView(VF_FOV, '90 90 0');
-		R_SetView(VF_ORIGIN, '0 0 0');
-		R_SetView(VF_ANGLES, '0 0 0');
-		R_SetView(VF_PERSPECTIVE, 1);
+		//R_SetView(VM_VF_FOV, '90 90 0');
+		R_SetView(VM_VF_ORIGIN, '0 0 0');
+		R_SetView(VM_VF_ANGLES, '0 0 0');
+		R_SetView(VM_VF_PERSPECTIVE, 1);
 		makevectors('0 0 0');
 		vector v1, v2;
 		cvar_set("vid_conwidth", "800");
@@ -467,19 +467,19 @@ void(void) view_vehicle_hud {
 	p = p + '0 1 0' * CVAR(vid_conheight) - '0 72 0';
 	//pp = ('0 1 0' * hp) + ('1 0 0' * (1-hp));
 	if (shield >= 0)
-		drawfill(p, '256 0 0' * shield + '0 8 0' , '0.5 0.5 1', 0.75, DRAWFLAG_NORMAL);
+		drawfill(p, '256 0 0' * shield + '0 8 0' , '0.5 0.5 1', 0.75, VM_DRAWFLAG_NORMAL);
 
 	p_y += 8;
-	drawfill(p, '256 0 0' * hp + '0 8 0' , '0 1 0', 0.75, DRAWFLAG_NORMAL);
+	drawfill(p, '256 0 0' * hp + '0 8 0' , '0 1 0', 0.75, VM_DRAWFLAG_NORMAL);
 	p_x += 256 * hp;
-	drawfill(p, '256 0 0' * (1-hp) + '0 8 0' , '0 0 0', 0.75, DRAWFLAG_NORMAL);
+	drawfill(p, '256 0 0' * (1-hp) + '0 8 0' , '0 0 0', 0.75, VM_DRAWFLAG_NORMAL);
 	// Draw heat indicator
 	if (heat >= 0) {
 		p = '0.5 0 0' * (CVAR(vid_conwidth) - 256);
 		p = p + '0 1 0' * CVAR(vid_conheight) - '0 74  0';
-		drawfill(p, '256 0 0' * (1-heat) + '0 2 0' ,'0 0 1', 0.5, DRAWFLAG_NORMAL);
+		drawfill(p, '256 0 0' * (1-heat) + '0 2 0' ,'0 0 1', 0.5, VM_DRAWFLAG_NORMAL);
 		p_x += 256 * (1-heat);
-		drawfill(p, '256 0 0' * heat  + '0 2 0' , '1 0 0', 0.5, DRAWFLAG_NORMAL);
+		drawfill(p, '256 0 0' * heat  + '0 2 0' , '1 0 0', 0.5, VM_DRAWFLAG_NORMAL);
 	}
 	// Draw rocket icons for loaded/empty tubes.
 	if (rockets >= 0) {
@@ -490,16 +490,16 @@ void(void) view_vehicle_hud {
 			p = pp + '1 0 0' * (rkt_size * i);
 			if (rockets == 8) {
 				if (floor(reload * 8) == i) {
-					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 0 0' + '0 1 0' * ((reload*8)-i), 0.75 , DRAWFLAG_NORMAL);
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 0 0' + '0 1 0' * ((reload*8)-i), 0.75 , VM_DRAWFLAG_NORMAL);
 				} else if (i < reload * 8)
-					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 1 0', 0.75 , DRAWFLAG_NORMAL);
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 1 0', 0.75 , VM_DRAWFLAG_NORMAL);
 				else
-					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0.5 0.5 0.5', 0.75, DRAWFLAG_NORMAL);
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0.5 0.5 0.5', 0.75, VM_DRAWFLAG_NORMAL);
 			} else {
 				if (i < rockets)
-					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 0 0', 0.25, DRAWFLAG_NORMAL);
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 0 0', 0.25, VM_DRAWFLAG_NORMAL);
 				else
-					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 1 0' * reload, 0.75, DRAWFLAG_NORMAL);
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 1 0' * reload, 0.75, VM_DRAWFLAG_NORMAL);
 			}
 		}
 		#undef spider_rocket_icon
@@ -623,8 +623,8 @@ void(void) view_camera_setup {
 
 		view_camera_free_position = view_camera_free_origin + view_camera_free_offset;
 	}
-	R_SetView(VF_ANGLES, view_camera_free_angles);
-	R_SetView(VF_ORIGIN, view_camera_free_position);
+	R_SetView(VM_VF_ANGLES, view_camera_free_angles);
+	R_SetView(VM_VF_ORIGIN, view_camera_free_position);
 }
 
 vector(vector vec) view_project_3d_to_2d {

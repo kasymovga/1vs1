@@ -50,9 +50,9 @@ void(void) porto_draw {
 		if (idx == 2)
 			p = p - view_up * 16;
 		if (idx-1 >= portal1_idx) {
-			draw_cylindric_line(p, q, 4, "", 1, 0, '0 0 1', 0.5, DRAWFLAG_NORMAL, view_camera_origin);
+			draw_cylindric_line(p, q, 4, "", 1, 0, '0 0 1', 0.5, VM_DRAWFLAG_NORMAL, view_camera_origin);
 		} else {
-			draw_cylindric_line(p, q, 4, "", 1, 0, '1 0 0', 0.5, DRAWFLAG_NORMAL, view_camera_origin);
+			draw_cylindric_line(p, q, 4, "", 1, 0, '1 0 0', 0.5, VM_DRAWFLAG_NORMAL, view_camera_origin);
 		}
 		--idx;
 	}

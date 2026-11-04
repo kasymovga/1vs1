@@ -47,7 +47,7 @@ void(vector wcross_origin, vector wcross_color, float wcross_alpha) rm_crosshair
 					rm_crosshair_ring_fill,
 					0.5 * wcross_color + '0.5 0.5 0.5',
 					ringalpha,
-					DRAWFLAG_ADDITIVE);
+					VM_DRAWFLAG_ADDITIVE);
 		}
 		#if 0
 		float in_cycle = getstatf(STAT_INNERRING_CYCLE);
@@ -75,7 +75,7 @@ void(vector wcross_origin, vector wcross_color, float wcross_alpha) rm_crosshair
 				if(in_invert) 1 - rm_crosshair_ring_in_fill else rm_crosshair_ring_in_fill,
 				0.5 * wcross_color + '0.5 0.5 0.5',
 				ringalpha * rm_crosshair_ring_in_alpha,
-				DRAWFLAG_ADDITIVE
+				VM_DRAWFLAG_ADDITIVE
 			);
 		}
 		#endif

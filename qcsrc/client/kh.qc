@@ -63,32 +63,32 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) kh_hud {
 		if (a > 0) {
 			switch (keyteam) {
 			case COLOR_TEAM1:
-				drawpic (pa, "gfx/hud/sb_kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+				drawpic (pa, "gfx/hud/sb_kh_redarrow", kh_asize, '1 1 1', aa, VM_DRAWFLAG_NORMAL);  // show 30% alpha key
 				break;
 			case COLOR_TEAM2:
-				drawpic (pa, "gfx/hud/sb_kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+				drawpic (pa, "gfx/hud/sb_kh_bluearrow", kh_asize, '1 1 1', aa, VM_DRAWFLAG_NORMAL);  // show 30% alpha key
 				break;
 			case COLOR_TEAM3:
-				drawpic (pa, "gfx/hud/sb_kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+				drawpic (pa, "gfx/hud/sb_kh_yellowarrow", kh_asize, '1 1 1', aa, VM_DRAWFLAG_NORMAL);  // show 30% alpha key
 				break;
 			case COLOR_TEAM4:
-				drawpic (pa, "gfx/hud/sb_kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+				drawpic (pa, "gfx/hud/sb_kh_pinkarrow", kh_asize, '1 1 1', aa, VM_DRAWFLAG_NORMAL);  // show 30% alpha key
 				break;
 			default:
 				break;
 			}
 			switch (i) {
 			case 0:
-				drawpic (p, "gfx/hud/sb_kh_red", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+				drawpic (p, "gfx/hud/sb_kh_red", kh_size, '1 1 1', a, VM_DRAWFLAG_NORMAL);  // show 30% alpha key
 				break;
 			case 1:
-				drawpic (p, "gfx/hud/sb_kh_blue", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+				drawpic (p, "gfx/hud/sb_kh_blue", kh_size, '1 1 1', a, VM_DRAWFLAG_NORMAL);  // show 30% alpha key
 				break;
 			case 2:
-				drawpic (p, "gfx/hud/sb_kh_yellow", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+				drawpic (p, "gfx/hud/sb_kh_yellow", kh_size, '1 1 1', a, VM_DRAWFLAG_NORMAL);  // show 30% alpha key
 				break;
 			case 3:
-				drawpic (p, "gfx/hud/sb_kh_pink", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+				drawpic (p, "gfx/hud/sb_kh_pink", kh_size, '1 1 1', a, VM_DRAWFLAG_NORMAL);  // show 30% alpha key
 				break;
 			}
 		}

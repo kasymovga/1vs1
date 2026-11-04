@@ -34,7 +34,7 @@ void(float isnew) func_camera_read {
 	self.cnt = net_read_byte();
 	self.solid = net_read_byte();
 	// engine currently wants this
-	self.drawmask = MASK_NORMAL;
+	self.drawmask = VM_MASK_NORMAL;
 	self.camera_transform = func_camera_transform;
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);

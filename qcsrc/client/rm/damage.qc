@@ -13,10 +13,10 @@ void(vector o, vector fs, float h, float a, float _alpha, vector clr) rm_damage_
 	string d = rm_damage_indicator_ftos(h);
 	float dw = stringwidth(d, FALSE) * fs_x;
 	o_x -= fs_x * 0.5;
-	drawstring(o, d, fs, clr, _alpha, DRAWFLAG_NORMAL);
+	drawstring(o, d, fs, clr, _alpha, VM_DRAWFLAG_NORMAL);
 	if (a) {
 		string ad = strcat(" [", rm_damage_indicator_ftos(a), "]");
-		drawstring(o + '1 0 0' * dw, ad, fs, '.5 .5 .5' + clr * 0.2, _alpha, DRAWFLAG_NORMAL);
+		drawstring(o + '1 0 0' * dw, ad, fs, '.5 .5 .5' + clr * 0.2, _alpha, VM_DRAWFLAG_NORMAL);
 	}
 	drawfont = sbar_font;
 }

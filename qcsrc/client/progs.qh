@@ -1,7 +1,6 @@
 #include "vm.qh"
 #include "../common/progs.qh"
 #include "defs.qh"
-#include "constants.qh"
 #include "../client-server/progs.qh"
 #include "../client-menu/progs.qh"
 #include "trace.qh"

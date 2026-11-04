@@ -204,3 +204,107 @@ string keynumtostring(float keynum) = #520;
 string findkeysforcommand(string command) = #521;
 //DP_RM_REGEX2
 float(string regex, string input, float offset, float size, float flags) regex_match = #800;
+
+enum {
+	// Mask Constants (set .drawmask on entities; use R_AddEntities to add all entities based on mask)
+	VM_MASK_ENGINE = 1,
+	VM_MASK_ENGINEVIEWMODELS = 2,
+	VM_MASK_NORMAL = 4,
+};
+
+enum {
+	// Renderflag Constants (used for CSQC entities)
+	VM_RF_VIEWMODEL = 1,
+	VM_RF_EXTERNALMODEL = 2,
+	VM_RF_DEPTHHACK = 4,
+	VM_RF_ADDITIVE = 8,
+	VM_RF_USEAXIS = 16,
+};
+
+enum {
+	// Viewflag Constants (use with R_SetView)
+	VM_VF_MIN = 1, //(vector)
+	VM_VF_MIN_X = 2, //(float)
+	VM_VF_MIN_Y = 3, //(float)
+	VM_VF_SIZE = 4, //(vector) (viewport size)
+	VM_VF_SIZE_Y = 5, //(float)
+	VM_VF_SIZE_X = 6, //(float)
+	VM_VF_VIEWPORT = 7, //(vector, vector)
+	VM_VF_FOV = 8, //(vector)
+	VM_VF_FOVX = 9, //(float)
+	VM_VF_FOVY = 10, //(float)
+	VM_VF_ORIGIN = 11, //(vector)
+	VM_VF_ORIGIN_X = 12, //(float)
+	VM_VF_ORIGIN_Y = 13, //(float)
+	VM_VF_ORIGIN_Z = 14, //(float)
+	VM_VF_ANGLES = 15, //(vector)
+	VM_VF_ANGLES_X = 16, //(float)
+	VM_VF_ANGLES_Y = 17, //(float)
+	VM_VF_ANGLES_Z = 18, //(float)
+	VM_VF_DRAWWORLD = 19, //(float)
+	VM_VF_DRAWENGINESBAR = 20, //(float)
+	VM_VF_DRAWCROSSHAIR = 21, //(float)
+	VM_VF_PERSPECTIVE = 200, //(float)
+	VM_VF_CL_VIEWANGLES = 33, //(vector)
+	VM_VF_CL_VIEWANGLES_X = 34, //(float)
+	VM_VF_CL_VIEWANGLES_Y = 35, //(float)
+	VM_VF_CL_VIEWANGLES_Z = 36, //(float)
+};
+
+enum {
+	// Server Autosent Stat Constants
+	VM_STAT_HEALTH = 0,
+	VM_STAT_WEAPONMODEL = 2,
+	VM_STAT_AMMO = 3,
+	VM_STAT_ARMOR = 4,
+	VM_STAT_WEAPONFRAME = 5,
+	VM_STAT_SHELLS = 6,
+	VM_STAT_NAILS = 7,
+	VM_STAT_ROCKETS = 8,
+	VM_STAT_CELLS = 9,
+	VM_STAT_ACTIVEWEAPON = 10,
+	VM_STAT_TOTALSECRETS = 11,
+	VM_STAT_TOTALMONSTERS = 12,
+	VM_STAT_SECRETS = 13,
+	VM_STAT_MONSTERS = 14,
+	VM_STAT_ITEMS = 15,
+	VM_STAT_VIEWHEIGHT = 16,
+	VM_STAT_MOVEVARS_TICRATE = 240,
+	VM_STAT_MOVEVARS_TIMESCALE = 241,
+	VM_STAT_FRAGLIMIT = 235,
+	VM_STAT_TIMELIMIT = 236,
+	VM_STAT_MOVEVARS_GRAVITY = 242,
+	VM_STAT_MOVEVARS_MAXSPEED = 244,
+};
+
+enum {
+	// Button values used by input_buttons
+	VM_BUTTON_ATTACK = 1,
+	VM_BUTTON_JUMP = 2,
+	VM_BUTTON_3 = 4,
+	VM_BUTTON_4 = 8,
+	VM_BUTTON_5 = 16,
+	VM_BUTTON_6 = 32,
+	VM_BUTTON7 = 64,
+	VM_BUTTON8 = 128,
+	VM_BUTTON_USE = 256,
+	VM_BUTTON_CHAT = 512,
+	VM_BUTTON_PRYDONCURSOR = 1024,
+	VM_BUTTON_9 = 2048,
+	VM_BUTTON_10 = 4096,
+	VM_BUTTON_11 = 8192,
+	VM_BUTTON_12 = 16384,
+	VM_BUTTON_13 = 32768,
+	VM_BUTTON_14 = 65536,
+	VM_BUTTON_15 = 131072,
+	VM_BUTTON_16 = 262144,
+};
+
+enum {
+	VM_DRAWFLAG_NORMAL = 0,
+	VM_DRAWFLAG_ADDITIVE = 1,
+	VM_DRAWFLAG_MODULATE = 2,
+	VM_DRAWFLAG_2XMODULATE = 3,
+	VM_DRAWFLAG_SCREEN = 4,
+	VM_DRAWFLAG_MIPMAP = 0x100, // only for R_BeginPolygon
+};

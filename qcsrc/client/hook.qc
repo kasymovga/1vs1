@@ -4,7 +4,7 @@ float hook_pull_length_readed;
 
 string hook_draw_cb_tex;
 void(vector start, vector end, vector to) hook_draw_cb {
-	draw_cylindric_line(start, end, 8, hook_draw_cb_tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, warpzone_transform_origin(warpzone_trace_transform, view_camera_origin));
+	draw_cylindric_line(start, end, 8, hook_draw_cb_tex, 0.25, random(), '1 1 1', 1, VM_DRAWFLAG_NORMAL, warpzone_transform_origin(warpzone_trace_transform, view_camera_origin));
 }
 
 void(void) hook_draw {

@@ -205,30 +205,30 @@ void(void) player_model_select_draw {
 	player_model_select_current.angles_y = view_angles_y + (time * 90);
 	vector c = '1 0 0' * (CVAR(vid_conwidth) / 2);
 	drawfont = sbar_bigfont;
-	draw_string_center('0 100 0', _("Model select"), '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
-	draw_string_center('0 125 0', strcat(player_model_select_current.model, ":", ftos(player_model_select_current.skin)), '18 18 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	draw_string_center('0 100 0', _("Model select"), '24 24 0', '1 1 1', 1, VM_DRAWFLAG_NORMAL);
+	draw_string_center('0 125 0', strcat(player_model_select_current.model, ":", ftos(player_model_select_current.skin)), '18 18 0', '1 1 1', 1, VM_DRAWFLAG_NORMAL);
 	vector ca;
 	float button = player_model_select_choosen_button();
 	//Previous
 	if (button == 1) ca = '0.5 0.5 0.5'; else ca = '0 0 0';
-	drawfill(PLAYER_MODEL_SELECT_PREV_POS + c, PLAYER_MODEL_SELECT_PREV_SIZE, '0 0 0' + ca, 0.3, DRAWFLAG_NORMAL);
-    draw_borderlines(2, PLAYER_MODEL_SELECT_PREV_POS + c, PLAYER_MODEL_SELECT_PREV_SIZE, '0 0 0' + ca, 1, DRAWFLAG_NORMAL);
-	draw_string_center(PLAYER_MODEL_SELECT_PREV_POS + ('1 0 0' * PLAYER_MODEL_SELECT_PREV_SIZE_x * 0.5), "<", '60 60 0', '1 1 0' + ca, 1, DRAWFLAG_NORMAL);
+	drawfill(PLAYER_MODEL_SELECT_PREV_POS + c, PLAYER_MODEL_SELECT_PREV_SIZE, '0 0 0' + ca, 0.3, VM_DRAWFLAG_NORMAL);
+    draw_borderlines(2, PLAYER_MODEL_SELECT_PREV_POS + c, PLAYER_MODEL_SELECT_PREV_SIZE, '0 0 0' + ca, 1, VM_DRAWFLAG_NORMAL);
+	draw_string_center(PLAYER_MODEL_SELECT_PREV_POS + ('1 0 0' * PLAYER_MODEL_SELECT_PREV_SIZE_x * 0.5), "<", '60 60 0', '1 1 0' + ca, 1, VM_DRAWFLAG_NORMAL);
 	//Next
 	if (button == 2) ca = '0.5 0.5 0.5'; else ca = '0 0 0';
-	drawfill(PLAYER_MODEL_SELECT_NEXT_POS + c, PLAYER_MODEL_SELECT_NEXT_SIZE, '0 0 0' + ca, 0.3, DRAWFLAG_NORMAL);
-    draw_borderlines(2, PLAYER_MODEL_SELECT_NEXT_POS + c, PLAYER_MODEL_SELECT_NEXT_SIZE, '0 0 0' + ca, 1, DRAWFLAG_NORMAL);
-	draw_string_center(PLAYER_MODEL_SELECT_NEXT_POS + ('1 0 0' * PLAYER_MODEL_SELECT_NEXT_SIZE_x * 0.5), ">", '60 60 0', '1 1 0' + ca, 1, DRAWFLAG_NORMAL);
+	drawfill(PLAYER_MODEL_SELECT_NEXT_POS + c, PLAYER_MODEL_SELECT_NEXT_SIZE, '0 0 0' + ca, 0.3, VM_DRAWFLAG_NORMAL);
+    draw_borderlines(2, PLAYER_MODEL_SELECT_NEXT_POS + c, PLAYER_MODEL_SELECT_NEXT_SIZE, '0 0 0' + ca, 1, VM_DRAWFLAG_NORMAL);
+	draw_string_center(PLAYER_MODEL_SELECT_NEXT_POS + ('1 0 0' * PLAYER_MODEL_SELECT_NEXT_SIZE_x * 0.5), ">", '60 60 0', '1 1 0' + ca, 1, VM_DRAWFLAG_NORMAL);
 	//Ok
 	if (button == 3) ca = '0.5 0.5 0.5'; else ca = '0 0 0';
-	drawfill(PLAYER_MODEL_SELECT_OK_POS + c, PLAYER_MODEL_SELECT_OK_SIZE, '0 0 0' + ca, 0.3, DRAWFLAG_NORMAL);
-    draw_borderlines(2, PLAYER_MODEL_SELECT_OK_POS + c, PLAYER_MODEL_SELECT_OK_SIZE, '0 0 0' + ca, 1, DRAWFLAG_NORMAL);
-	draw_string_center(PLAYER_MODEL_SELECT_OK_POS + ('1 0 0' * PLAYER_MODEL_SELECT_OK_SIZE_x * 0.5), _("Ok"), '30 30 0', '0 1 0' + ca, 1, DRAWFLAG_NORMAL);
+	drawfill(PLAYER_MODEL_SELECT_OK_POS + c, PLAYER_MODEL_SELECT_OK_SIZE, '0 0 0' + ca, 0.3, VM_DRAWFLAG_NORMAL);
+    draw_borderlines(2, PLAYER_MODEL_SELECT_OK_POS + c, PLAYER_MODEL_SELECT_OK_SIZE, '0 0 0' + ca, 1, VM_DRAWFLAG_NORMAL);
+	draw_string_center(PLAYER_MODEL_SELECT_OK_POS + ('1 0 0' * PLAYER_MODEL_SELECT_OK_SIZE_x * 0.5), _("Ok"), '30 30 0', '0 1 0' + ca, 1, VM_DRAWFLAG_NORMAL);
 	//Cancel
 	if (button == 4) ca = '0.5 0.5 0.5'; else ca = '0 0 0';
-	drawfill(PLAYER_MODEL_SELECT_CANCEL_POS + c, PLAYER_MODEL_SELECT_CANCEL_SIZE, '0 0 0' + ca, 0.3, DRAWFLAG_NORMAL);
-    draw_borderlines(2, PLAYER_MODEL_SELECT_CANCEL_POS + c, PLAYER_MODEL_SELECT_CANCEL_SIZE, '0 0 0' + ca, 1, DRAWFLAG_NORMAL);
-	draw_string_center(PLAYER_MODEL_SELECT_CANCEL_POS + ('1 0 0' * PLAYER_MODEL_SELECT_CANCEL_SIZE_x * 0.5), _("Cancel"), '30 30 0', '1 0 0' + ca, 1, DRAWFLAG_NORMAL);
+	drawfill(PLAYER_MODEL_SELECT_CANCEL_POS + c, PLAYER_MODEL_SELECT_CANCEL_SIZE, '0 0 0' + ca, 0.3, VM_DRAWFLAG_NORMAL);
+    draw_borderlines(2, PLAYER_MODEL_SELECT_CANCEL_POS + c, PLAYER_MODEL_SELECT_CANCEL_SIZE, '0 0 0' + ca, 1, VM_DRAWFLAG_NORMAL);
+	draw_string_center(PLAYER_MODEL_SELECT_CANCEL_POS + ('1 0 0' * PLAYER_MODEL_SELECT_CANCEL_SIZE_x * 0.5), _("Cancel"), '30 30 0', '1 0 0' + ca, 1, VM_DRAWFLAG_NORMAL);
     drawfont = sbar_font;
 }
 
@@ -296,7 +296,7 @@ void(void) player_model_select_model_draw {
 	if (CVAR(chase_active) || !cvar("r_drawviewmodel"))
 		self.renderflags = 0;
 	else
-		self.renderflags = RF_VIEWMODEL | RF_DEPTHHACK;
+		self.renderflags = VM_RF_VIEWMODEL | VM_RF_DEPTHHACK;
 
 	R_AddEntity(self);
 }
@@ -347,7 +347,7 @@ void(void) player_model_select_read {
 	player_model_select_torso.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
 	player_model_select_head.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
 	player_model_select_current.draw = player_model_select_model_draw;
-	player_model_select_current.renderflags = RF_VIEWMODEL | RF_DEPTHHACK;
+	player_model_select_current.renderflags = VM_RF_VIEWMODEL | VM_RF_DEPTHHACK;
 	player_model_select_head.draw = player_model_select_model_draw;
 	player_model_select_torso.draw = player_model_select_model_draw;
 	player_model_select_current.colormap = 1023;

@@ -3,9 +3,9 @@
 #define NBPB_BT 2                   //thickness
 #define NBPB_BRGB '1 1 1'
 #define NBPB_BALPH 1                //alpha
-#define NBPB_BFLAG DRAWFLAG_NORMAL
+#define NBPB_BFLAG VM_DRAWFLAG_NORMAL
 #define NBPB_IALPH 0.4
-#define NBPB_IFLAG DRAWFLAG_NORMAL
+#define NBPB_IFLAG VM_DRAWFLAG_NORMAL
 #define NBPB_IRGB '0.7 0.1 0'
 
 void(vector pos, vector gameinfo_size, float gameinfo_scale) nb_hud {
@@ -29,6 +29,6 @@ void(vector pos, vector gameinfo_size, float gameinfo_scale) nb_hud {
 		drawline(NBPB_BT, pos + s, pos + '1 0 0' * s_x, NBPB_BRGB, NBPB_BALPH, NBPB_BFLAG);
 		drawline(NBPB_BT, pos + s, pos + '0 1 0' * s_y, NBPB_BRGB, NBPB_BALPH, NBPB_BFLAG);
 	}
-	drawpic(pos, "gfx/hud/sb_nexball_carrying", '80 34 0' * gameinfo_scale, '1 1 1', 1, DRAWFLAG_NORMAL);
+	drawpic(pos, "gfx/hud/sb_nexball_carrying", '80 34 0' * gameinfo_scale, '1 1 1', 1, VM_DRAWFLAG_NORMAL);
 }
 

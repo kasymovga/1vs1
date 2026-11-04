@@ -302,5 +302,5 @@ void(void) rm_buffs_draw {
 		return;
 
 	a = 1 - bound(0, time - rm_buffs_draw_updatetime, 1);
-	drawcolorcodedstring(rm_draw_buffs_pos, rm_buffs_draw_str, sbar_fontsize, 0.3 + 0.7 * a, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(rm_draw_buffs_pos, rm_buffs_draw_str, sbar_fontsize, 0.3 + 0.7 * a, VM_DRAWFLAG_NORMAL);
 }

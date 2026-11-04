@@ -41,16 +41,16 @@ void(void) progressbar_draw {
 			draw_progress_fragmented(center * '1 0 0' + '0 1 0' * pos_y, '120 5 0', p, 0.7 * sbar_alpha_fg, c, 1);
 			pos_y -= 20;
 			pos_x = center - stringwidth(e.netname, FALSE) * 6;
-			drawstring(pos, e.netname, sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(pos, e.netname, sbar_fontsize, '1 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			pos_y -= 50;
 		}, {
 			pos_x = left;
-			draw_borderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			draw_borderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			fillrect_x = 200 * (f / 100);
-			drawfill(pos, fillrect, '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawfill(pos, fillrect, '1 1 0', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			pos_y -= 20;
 			pos_x = center - stringwidth(e.netname, FALSE) * 6;
-			drawstring(pos, e.netname, '12 12 0', '0 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(pos, e.netname, '12 12 0', '0 1 1', sbar_alpha_fg, VM_DRAWFLAG_NORMAL);
 			pos_y -= 50;
 		})
 		if (e.origin_z > 0)
@@ -87,14 +87,14 @@ void(void) progressbar_fade_draw {
 		draw_progress_fragmented(center * '1 0 0' + '0 1 0' * pos_y, '120 5 0', p, 0.7 * sbar_alpha_fg, c, 1);
 		pos_y -= 20;
 		pos_x = center - stringwidth(self.netname, FALSE) * 6;
-		drawstring(pos, self.netname, sbar_fontsize, '1 1 1', sbar_alpha_fg * self.alpha, DRAWFLAG_NORMAL);
+		drawstring(pos, self.netname, sbar_fontsize, '1 1 1', sbar_alpha_fg * self.alpha, VM_DRAWFLAG_NORMAL);
 	}, {
-		draw_borderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg * self.alpha, DRAWFLAG_NORMAL);
+		draw_borderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg * self.alpha, VM_DRAWFLAG_NORMAL);
 		fillrect_x = 200 * (self.origin_x / 100);
-		drawfill(pos, fillrect, '1 1 0', sbar_alpha_fg * self.alpha, DRAWFLAG_NORMAL);
+		drawfill(pos, fillrect, '1 1 0', sbar_alpha_fg * self.alpha, VM_DRAWFLAG_NORMAL);
 		pos_y -= 20;
 		pos_x = center - stringwidth(self.netname, FALSE) * 6;
-		drawstring(pos, self.netname, '12 12 0', '0 1 1', sbar_alpha_fg * self.alpha, DRAWFLAG_NORMAL);
+		drawstring(pos, self.netname, '12 12 0', '0 1 1', sbar_alpha_fg * self.alpha, VM_DRAWFLAG_NORMAL);
 	});
 }
 

@@ -209,18 +209,18 @@ void(void) marker_draw {
 		oc_x = bound(10, oc_x, CVAR(vid_conwidth) - sw - 10);
 		oc_y = bound(10, oc_y, CVAR(vid_conheight) - fs_y - 10);
 		txty = oc_y;
-		drawstring(oc, self.model, fs, self.colormod, a, DRAWFLAG_NORMAL);
+		drawstring(oc, self.model, fs, self.colormod, a, VM_DRAWFLAG_NORMAL);
 		toptext = (self.team ? ((self.team == team_my) ? self.netname2 : self.netname) : "");
 		if (toptext != "" && toptext != self.model) {
 			fs += '1 1 0' * 2 * sin(time*3);
 			sw = stringwidth(toptext, FALSE) * fs_x;
 			oc_y = bound(10 + fs_y*1.5, oc_y - fs_y*1.5, CVAR(vid_conheight) - fs_y*3 - 10);
 			oc_x = bound(10, o_x - sw * 0.5, CVAR(vid_conwidth) - sw - 10);
-			drawstring(oc, toptext, fs, ((self.team == team_my) ? self.text_color2 : self.text_color1), a/* * self.topalpha*/, DRAWFLAG_NORMAL);
+			drawstring(oc, toptext, fs, ((self.team == team_my) ? self.text_color2 : self.text_color1), a/* * self.topalpha*/, VM_DRAWFLAG_NORMAL);
 		}
 		drawfont = sbar_font;
     } else
-		draw_picture_rotate(o, rot * 90 * MATH_DEG2RAD, spriteimage, MARKER_SIZE * t, MARKER_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
+		draw_picture_rotate(o, rot * 90 * MATH_DEG2RAD, spriteimage, MARKER_SIZE * t, MARKER_HOTSPOT * t, '1 1 1', a, VM_DRAWFLAG_MIPMAP);
 
 	if (self.build_finished) {
 		if (time < self.build_finished + 0.25) {
@@ -248,7 +248,7 @@ void(void) marker_draw {
 			o_x = bound(10 + w * 0.5, o_x, CVAR(vid_conwidth) - w * 0.5 - 10);
 			o_y = bound(10 + h * 0.5, txty + h*5, CVAR(vid_conheight) - h * 0.5);
 		}
-		marker_healthbar_draw(o, rot * 90 * MATH_DEG2RAD, self.health, MARKER_SIZE * t, MARKER_HOTSPOT * t, MARKER_HEALTHBAR_WIDTH * t, MARKER_HEALTHBAR_HEIGHT * t, MARKER_HEALTHBAR_MARGIN * t, MARKER_HEALTHBAR_BORDER * t, align, self.radar_color, a * MARKER_HEALTHBAR_BORDERALPHA, self.radar_color, a * MARKER_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
+		marker_healthbar_draw(o, rot * 90 * MATH_DEG2RAD, self.health, MARKER_SIZE * t, MARKER_HOTSPOT * t, MARKER_HEALTHBAR_WIDTH * t, MARKER_HEALTHBAR_HEIGHT * t, MARKER_HEALTHBAR_MARGIN * t, MARKER_HEALTHBAR_BORDER * t, align, self.radar_color, a * MARKER_HEALTHBAR_BORDERALPHA, self.radar_color, a * MARKER_HEALTHBAR_HEALTHALPHA, VM_DRAWFLAG_NORMAL);
 	}
 }
 

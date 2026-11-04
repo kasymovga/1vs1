@@ -75,9 +75,9 @@ void(void) rm_bigprint_draw {
 			drawfont = sbar_bigfont;
 
 			if (CVAR(rm_simpleeffects))
-				draw_string_colorcoded_center(bp_pos, rm_bigprint_oldstring, '24 24 0', bp_alpha, DRAWFLAG_NORMAL);
+				draw_string_colorcoded_center(bp_pos, rm_bigprint_oldstring, '24 24 0', bp_alpha, VM_DRAWFLAG_NORMAL);
 			else
-				draw_string_colorcoded_center(bp_pos, rm_bigprint_oldstring, '24 24 0' * (1.0 + (1.0 - bp_alpha)), bp_alpha, DRAWFLAG_NORMAL);
+				draw_string_colorcoded_center(bp_pos, rm_bigprint_oldstring, '24 24 0' * (1.0 + (1.0 - bp_alpha)), bp_alpha, VM_DRAWFLAG_NORMAL);
 
 			drawfont = sbar_font;
 			//comment for oldbigprint is not displayed
@@ -95,7 +95,7 @@ void(void) rm_bigprint_draw {
 			if (bp_alpha > 0) {
 				drawfont = sbar_bigfont;
 				if (CVAR(rm_simpleeffects))
-					draw_string_colorcoded_center(bp_pos, rm_bigprint_string, '24 24 0', bp_alpha, DRAWFLAG_NORMAL);
+					draw_string_colorcoded_center(bp_pos, rm_bigprint_string, '24 24 0', bp_alpha, VM_DRAWFLAG_NORMAL);
 				else {
 					vector sz;
 					#if 0 //FIXME
@@ -122,13 +122,13 @@ void(void) rm_bigprint_draw {
 							string resultstr = strcat(mycolor, mychar);
 							sz = '24 24 0' * (1.0 + (1.0 - bp_alpha));
 							bp_pos_x += stringwidth(resultstr, TRUE, sz);
-							drawcolorcodedstring(bp_pos + offset, resultstr, sz, bp_alpha, DRAWFLAG_NORMAL);
+							drawcolorcodedstring(bp_pos + offset, resultstr, sz, bp_alpha, VM_DRAWFLAG_NORMAL);
 						}
 					} else {
 					#endif
 						//sz = '24 24 0' * (1.0 + ipol_powIn(3, 1.0 - bp_alpha)); //FIXME
 						sz = '24 24 0' * (2 - bp_alpha);
-						draw_string_colorcoded_center(bp_pos - sz * 0.25 * (1 - bp_alpha), rm_bigprint_string, sz, bp_alpha, DRAWFLAG_NORMAL);
+						draw_string_colorcoded_center(bp_pos - sz * 0.25 * (1 - bp_alpha), rm_bigprint_string, sz, bp_alpha, VM_DRAWFLAG_NORMAL);
 					#if 0
 					}
 					#endif
@@ -149,9 +149,9 @@ void(void) rm_bigprint_draw {
 			bp_alpha = bound(0, 1 - 4 * (time - (i ? rm_bigprint_commentappeartime : rm_bigprint_commentfadetime)), 1);
 			if (bp_alpha) {
 				if(CVAR(rm_simpleeffects))
-					draw_string_colorcoded_center(bp_pos, rm_bigprint_comment, sbar_fontsize, bp_alpha, DRAWFLAG_NORMAL);
+					draw_string_colorcoded_center(bp_pos, rm_bigprint_comment, sbar_fontsize, bp_alpha, VM_DRAWFLAG_NORMAL);
 				else
-					draw_string_colorcoded_center(bp_pos, rm_bigprint_comment, sbar_fontsize * (1.0 + (1.0 - bp_alpha)), bp_alpha, DRAWFLAG_NORMAL);
+					draw_string_colorcoded_center(bp_pos, rm_bigprint_comment, sbar_fontsize * (1.0 + (1.0 - bp_alpha)), bp_alpha, VM_DRAWFLAG_NORMAL);
 			} else if(!i)
 				rm_bigprint_comment_draw = 0;
 		}

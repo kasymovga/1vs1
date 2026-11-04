@@ -20,7 +20,7 @@ void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
     float t = self.cnt + time;
     float _alpha = self.alpha;
     rgb *= _alpha;
-	draw_cylindric_line(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE, warpzone_find_nearest_origin((from + to) * 0.5, view_camera_origin, FALSE));
+	draw_cylindric_line(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, VM_DRAWFLAG_ADDITIVE, warpzone_find_nearest_origin((from + to) * 0.5, view_camera_origin, FALSE));
     zapper_particles_trace_callback_beamoffs += 0.03 * vlen(from - to) / zapper_beam_width;
 
 }
@@ -97,7 +97,7 @@ void(void) zapper_draw_shield {
 	}
     string tex = "particles/zapper";
     vector rgb = zapper_beam_rgb(self.team) * 0.5;
-	draw_cylindric_line(end, start,  12, tex, 0.03, 5 * time, rgb, self.alpha, DRAWFLAG_ADDITIVE, view_origin);
+	draw_cylindric_line(end, start,  12, tex, 0.03, 5 * time, rgb, self.alpha, VM_DRAWFLAG_ADDITIVE, view_origin);
     if (self.alpha < 1)
         return;
 
@@ -197,7 +197,7 @@ void zapper_lightning_arc_draw(void) {
 	default         : tex = "particles/hook_green";     break;
     }
     float i; for(i = 0; i < 5; ++i)
-		draw_cylindric_line(self.origin, self.velocity, 25 * self.alpha, tex, 0.02, random(), '1 1 1', self.alpha, DRAWFLAG_ADDITIVE, view_origin);
+		draw_cylindric_line(self.origin, self.velocity, 25 * self.alpha, tex, 0.02, random(), '1 1 1', self.alpha, VM_DRAWFLAG_ADDITIVE, view_origin);
 
     self.alpha = self.alpha - frametime * 3;
     if (self.alpha < 0)

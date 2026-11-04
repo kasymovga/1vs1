@@ -64,8 +64,8 @@ void(float i, vector numpad_center, vector mv, float a) pin_numpad_digit_draw {
 		selected = TRUE;
 		pin_selected = i;
 	}
-	draw_borderlines(2, v2 + v * 0.05, v * 0.9, (selected ? '0.5 0.5 0.5' : '0 0 0'), 1, DRAWFLAG_NORMAL);
-	draw_string_center('1 0 0' * (x - 1) * v_x + '0 1 0' * (v2_y + v_y * 0.2), letter, v * 0.5, (selected ? '1 1 0' : '1 1 1'), a, DRAWFLAG_NORMAL);
+	draw_borderlines(2, v2 + v * 0.05, v * 0.9, (selected ? '0.5 0.5 0.5' : '0 0 0'), 1, VM_DRAWFLAG_NORMAL);
+	draw_string_center('1 0 0' * (x - 1) * v_x + '0 1 0' * (v2_y + v_y * 0.2), letter, v * 0.5, (selected ? '1 1 0' : '1 1 1'), a, VM_DRAWFLAG_NORMAL);
 }
 
 void(void) pin_draw {
@@ -79,23 +79,23 @@ void(void) pin_draw {
 		input_event_callback = pin_input_event;
 
 	pin_selected = -3;
-	drawfill('0 0 0', '1 0 0' * CVAR(vid_conwidth) + CVAR(vid_conheight) * '0 1 0', '0 0 0', 0.5 * self.alpha, DRAWFLAG_NORMAL);
+	drawfill('0 0 0', '1 0 0' * CVAR(vid_conwidth) + CVAR(vid_conheight) * '0 1 0', '0 0 0', 0.5 * self.alpha, VM_DRAWFLAG_NORMAL);
 	vector numpad_center;
 	numpad_center_x = CVAR(vid_conwidth) / 2;
 	numpad_center_y = CVAR(vid_conheight) / 2;
 	numpad_center_z = 0;
 	mouse_enable("");
 	drawfont = sbar_bigfont;
-	draw_string_center('0 1 0' * numpad_center_y * 0.15, _("Enter PIN-code:"), numpad_center * 0.05, '1 1 1', self.alpha, DRAWFLAG_NORMAL);
+	draw_string_center('0 1 0' * numpad_center_y * 0.15, _("Enter PIN-code:"), numpad_center * 0.05, '1 1 1', self.alpha, VM_DRAWFLAG_NORMAL);
 	self.cnt -= frametime;
 	if (self.alpha >= 1)
 		draw_string_center('0 1 0' * numpad_center_y * 0.2,
 				print_text_prepare("{1} seconds left", ftos(max(1, ceil(self.cnt))), "", ""),
-				numpad_center * 0.025, '1 1 1', self.alpha, DRAWFLAG_NORMAL);
+				numpad_center * 0.025, '1 1 1', self.alpha, VM_DRAWFLAG_NORMAL);
 
-	draw_string_center('0 1 0' * numpad_center_y * 0.3, pin_code, numpad_center * 0.2, '1 1 1', self.alpha, DRAWFLAG_NORMAL);
+	draw_string_center('0 1 0' * numpad_center_y * 0.3, pin_code, numpad_center * 0.2, '1 1 1', self.alpha, VM_DRAWFLAG_NORMAL);
 	if (self.alpha < 0.9)
-		draw_string_center('0 1 0' * numpad_center_y * 0.5, _("Success!"), numpad_center * 0.05, '0.5 1 0.5', self.alpha, DRAWFLAG_NORMAL);
+		draw_string_center('0 1 0' * numpad_center_y * 0.5, _("Success!"), numpad_center * 0.05, '0.5 1 0.5', self.alpha, VM_DRAWFLAG_NORMAL);
 
 	float i;
 	vector mv = mouse_position();

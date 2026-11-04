@@ -35,9 +35,9 @@ void(void) mouse_draw {
 			if (skin_current != menu_skin)
 				skin_init();
 
-			drawpic(mouse_pos - SKINOFFSET_CURSOR_x * '32 0 0' - SKINOFFSET_CURSOR_y * '0 32 0', strcat("gfx/menu/", menu_skin, "/cursor"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+			drawpic(mouse_pos - SKINOFFSET_CURSOR_x * '32 0 0' - SKINOFFSET_CURSOR_y * '0 32 0', strcat("gfx/menu/", menu_skin, "/cursor"), '32 32 0', '1 1 1', 1, VM_DRAWFLAG_NORMAL);
 		} else {
-			drawpic(mouse_pos - '16 16 0', mouse_cursor, '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+			drawpic(mouse_pos - '16 16 0', mouse_cursor, '32 32 0', '1 1 1', 1, VM_DRAWFLAG_NORMAL);
 		}
 		mouse_enabled = FALSE;
 		mouse_disabling = TRUE;
