@@ -995,7 +995,6 @@ void(entity piece, float x, float y) chess_move_perform {
 	chess_history_check();
 }
 
-float chess_interacted;
 void(void) chess_physics_frame_begin_hook {
 	if (self.classname != "player") return;
 	if (time < map_starttime) return;
@@ -1024,7 +1023,6 @@ void(void) chess_physics_frame_begin_hook {
 	entity e = NULL;
 	if (trace_ent) {
 		if (trace_ent.classname == "chess_board" || trace_ent.classname == "chess_piece") {
-			chess_interacted = TRUE;
 			if (trace_ent.classname == "chess_piece") {
 				if (trace_ent.team == self.team && !(chess_type == CHESS_960 && chess_piece_picked && chess_move_is_legal(chess_piece_picked, trace_ent.pos1_x, trace_ent.pos1_y, TRUE)))
 					chess_piece_point(trace_ent);
@@ -1084,11 +1082,6 @@ void(void) chess_player_think {
 	if (clienttype(self) == VM_CLIENTTYPE_BOT)
 		bot_stay(self, 1);
 
-	if (chess_interacted) {
-		self.BUTTON_ATCK = FALSE;
-		self.BUTTON_ATCK2 = FALSE;
-		chess_interacted = FALSE;
-	}
 	chess_player_think_next();
 }
 
