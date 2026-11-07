@@ -105,7 +105,7 @@ void(void) model_setcolormaptoactivator {
 	if (self.SendEntity == model_client_send)
 		self.SendFlags |= 1;
 
-	BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
+	teleport_bit_set(self);
 }
 
 void(void) model_dropbyspawnflags {

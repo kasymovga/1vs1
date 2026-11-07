@@ -5,6 +5,14 @@ float g_teleport_time;
 float g_teleport_prediction;
 float g_telefrags;
 
+.float teleport_bit_time;
+void(entity e) teleport_bit_set {
+	if (e.teleport_bit_time < time) {
+		BITXOR_ASSIGN(e.effects, VM_EF_TELEPORT_BIT);
+		e.teleport_bit_time = time;
+	}
+}
+
 void(entity e, vector v, float t) teleport_origin_set {
 	setorigin(e, v);
 	// don't reset back to last position, even if new position is stuck in solid
@@ -12,7 +20,7 @@ void(entity e, vector v, float t) teleport_origin_set {
 	antilag_teleported(e);
 	plugin_chain_teleport_origin_set(e);
 	physics_mark_as_teleported(e, t);
-	BITXOR_ASSIGN(e.effects, EFFECT_TELEPORT_BIT);
+	teleport_bit_set(e);
 	projectile_update_after_teleport(e);
 	navigation_teleported(e);
 }

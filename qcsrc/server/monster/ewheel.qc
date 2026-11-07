@@ -4,7 +4,7 @@ void() monster_ewheel_idle {
 	monster_idle(2500, 500, 0, 1, 3, 50);
 	if (self.frame) {
 		self.frame = 0;
-		BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
+		teleport_bit_set(self);
 	}
 }
 
@@ -43,7 +43,7 @@ void() monster_ewheel_hunt {
 	monster_move_walk_rotate(500, 1, 0, 720);
 	if (self.frame != 2) {
 		self.frame = 2;
-		BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
+		teleport_bit_set(self);
 	}
 }
 
@@ -53,7 +53,7 @@ void() monster_ewheel_walk {
 
 	if (self.frame != 1) {
 		self.frame = 1;
-		BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
+		teleport_bit_set(self);
 	}
 	if (self.flags & FLAG_ONGROUND) {
 		monster_move_walk_rotate(400, 1, 0, 720);

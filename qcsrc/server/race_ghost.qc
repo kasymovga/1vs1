@@ -84,8 +84,7 @@ void(entity pl) race_ghost_start {
 		o_x = stof(str_sub(s, 0, 7));
 		o_y = stof(str_sub(s, 7, 7));
 		o_z = stof(str_sub(s, 14, 7));
-		setorigin(pl.race_ghost, o);
-		BITXOR_ASSIGN(pl.race_ghost.effects, EFFECT_TELEPORT_BIT);
+		teleport_origin_set(pl.race_ghost, o, 0);
 	}
 }
 

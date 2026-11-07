@@ -165,7 +165,7 @@ void(void) vehicle_bigwheel_think {
 		self.frame = 0;
 
 	if (oldframe != self.frame) {
-		BITXOR_ASSIGN(self.effects, EFFECT_TELEPORT_BIT);
+		teleport_bit_set(self);
 	}
 }
 
