@@ -238,7 +238,7 @@ void(entity unfrozer) nadget_ice_unfroze {
 var void() nadget_player_effects_next;
 void() nadget_player_effects {
 	if (time < self.hg_plasmalock) {
-		self.effects |= (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
+		self.effects |= (VM_EF_ADDITIVE | VM_EF_FULLBRIGHT);
 		if (self.hg_plasmalock_owner.classname != "player") {
 			self.hg_plasmalock_owner = NULL;
 			self.hg_plasmalock = 0;

@@ -275,7 +275,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 		sh.alpha = 0.5;
 		sh.scale  = (128 / vlen(self.maxs - self.mins))*2;
 		setmodel(sh, "models/vhshield.md3");
-		sh.effects = EFFECT_LOWPRECISION;
+		sh.effects = VM_EF_LOWPRECISION;
 		sh.angles = vectoangles(normalize(-force));
 		sh.nextthink = time + 0.2;
 		sh.think = stdproc_remove;

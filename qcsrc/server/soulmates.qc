@@ -203,7 +203,7 @@ entity(float t) soulmates_gem_create {
 	e.colormod = soulmates_gem_colormod(t);
 	e.enemy.colormod = soulmates_gem_colormod2(t);
 	e.alpha = e.enemy.alpha = 0.8;
-	e.effects = e.enemy.effects = (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION);
+	e.effects = e.enemy.effects = (VM_EF_ADDITIVE | VM_EF_FULLBRIGHT | VM_EF_LOWPRECISION);
 	if (t == COLOR_TEAM1)
 		soulmates_gems_count1++;
 	else if (t == COLOR_TEAM2)

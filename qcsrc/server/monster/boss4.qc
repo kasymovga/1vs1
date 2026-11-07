@@ -152,7 +152,7 @@ void() monster_boss4_spawn {
 	self.flags = MONSTER_IGNOREFIRE;
 	self.anim_die1 = MONSTER_BOSS4_ANIM_DIE;
 	self.view_ofs = '0 0 81';
-	self.weaponentity.weaponentity.effects = EFFECT_FLAME;
+	self.weaponentity.weaponentity.effects = VM_EF_FLAME;
 	entity e = marker_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
 	marker_UpdateMaxHealth(e, self.health);
 	marker_UpdateHealth(e, self.health);

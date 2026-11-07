@@ -858,7 +858,7 @@ float(entity to, float sf) physics_send {
 			entity g = self.groundentity;
 			net_write_coord(MSG_ENTITY, num_for_edict(g));
 			net_write_vector(MSG_ENTITY, g.origin);
-			net_write_byte(MSG_ENTITY, (g.effects & EFFECT_TELEPORT_BIT) == 0);
+			net_write_byte(MSG_ENTITY, (g.effects & VM_EF_TELEPORT_BIT) == 0);
 			net_write_vector(MSG_ENTITY, g.angles);
 		}
 		if (sf2 & 1) {

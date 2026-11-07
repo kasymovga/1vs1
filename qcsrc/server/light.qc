@@ -9,5 +9,5 @@ void(void) spawnfunc_light_torch_small_walltorch {
 
 void(void) spawnfunc_light_flame_large_yellow {
 	setmodel(self, "null");
-	self.effects |= EFFECT_FLAME;
+	self.effects |= VM_EF_FLAME;
 }

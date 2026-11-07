@@ -184,7 +184,7 @@ void() ctf_captureshield_spawn {
 	e.touch = ctf_captureshield_touch;
 	e.customizeentityforclient = ctf_captureshield_customize;
 	e.classname = "ctf_captureshield";
-	e.effects = EFFECT_ADDITIVE;
+	e.effects = VM_EF_ADDITIVE;
 	e.movetype = VM_MOVETYPE_NOCLIP;
 	e.solid = VM_SOLID_TRIGGER;
 	e.avelocity = '7 0 11';
@@ -674,9 +674,9 @@ void(string basesprite) ctf_flag_spawn {
 	if (!self.scale)
 		self.scale = 0.6;
 
-	self.effects = self.effects | EFFECT_LOWPRECISION;
+	self.effects = self.effects | VM_EF_LOWPRECISION;
 	if (cvar("g_ctf_fullbrightflags"))
-		self.effects |= EFFECT_FULLBRIGHT;
+		self.effects |= VM_EF_FULLBRIGHT;
 
 	// From Spidflisk
 	if (cvar("g_ctf_flag_glowtrails")) { // Provide Flag Glow Trail
@@ -751,7 +751,7 @@ void() spawnfunc_ctf_flag_team1 {
 		self.noise4 = "ctf/red_dropped.wav";
 
 	if (cvar("g_ctf_dynamiclights"))
-		self.effects |= EFFECT_RED;
+		self.effects |= VM_EF_RED;
 
 	ctf_flag_spawn("redbase");
 }
@@ -807,9 +807,9 @@ void() spawnfunc_ctf_flag_team2 {
 	if (!self.noise4)
 		self.noise4 = "ctf/blue_dropped.wav";
 
-	self.effects |= EFFECT_LOWPRECISION;
+	self.effects |= VM_EF_LOWPRECISION;
 	if (cvar("g_ctf_dynamiclights"))
-		self.effects |= EFFECT_BLUE;
+		self.effects |= VM_EF_BLUE;
 
 	ctf_flag_spawn("bluebase");
 }

@@ -339,7 +339,7 @@ void(void) rune_spawn_all {
 		setattachment(e.enemy, e, "");
 		setsize(e, '-12 -12 -35', '12 12 0');
 		e.enemy.colormod = e.colormod = rune_colormod(rn);
-		e.effects = e.enemy.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;//EFFECT_ADDITIVE;// | EFFECT_FULLBRIGHT;
+		e.effects = e.enemy.effects = VM_EF_ADDITIVE | VM_EF_FULLBRIGHT | VM_EF_LOWPRECISION;//EFFECT_ADDITIVE;// | EFFECT_FULLBRIGHT;
 		e.glow_size = 50;
 		//e.glow_color = 0;
 	}

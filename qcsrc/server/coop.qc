@@ -45,11 +45,11 @@ void(void) coop_teleporter_use {
 			coop_teleporter_latest_active = NULL;
 
 		self.solid = VM_SOLID_NOT;
-		self.effects &= ~EFFECT_STARDUST;
+		self.effects &= ~VM_EF_STARDUST;
 	} else {
 		coop_teleporter_latest_active = self;
 		self.solid = VM_SOLID_TRIGGER;
-		self.effects |= EFFECT_STARDUST;
+		self.effects |= VM_EF_STARDUST;
 		if (self.alpha < 0)
 			self.alpha = 0.01;
 	}

@@ -32,7 +32,7 @@ void(void) rm_buffs_models_load {
 void(void) rm_buffs_model_draw {
 	vector org;
 	float rendermodel = FALSE;
-	if (!(self.effects & EFFECT_NODRAW))
+	if (!(self.effects & VM_EF_NODRAW))
 	if (self.alpha > 0)
 		rendermodel = TRUE;
 
@@ -57,7 +57,7 @@ void(void) rm_buffs_model_draw {
 	//FIXME
 	//if(self.lightlev)
 	//    R_AddDynamicLightEx(org, self.lightlev, self.lightcolor, -1, NULL, self.lightflags);
-	if (self.effects & EFFECT_STARDUST)
+	if (self.effects & VM_EF_STARDUST)
 		pointparticles(particleeffectnum("EF_STARDUST"), org, '0 0 0', frametime);
 }
 
@@ -67,12 +67,12 @@ void(void) rm_buffs_model_multi_think {
 		return;
 	}
 	self.effects = self.owner.effects;
-	self.effects &= ~EFFECT_NODRAW;
+	self.effects &= ~VM_EF_NODRAW;
 	self.lightlev = self.owner.lightlev * 0.7;
 	self.alpha = self.owner.alpha;
 	if (self.buffs == RM_BUFFS_MEODP) {
 		self.lightcolor = '1 0 0';
-		self.effects &= ~EFFECT_ADDITIVE;
+		self.effects &= ~VM_EF_ADDITIVE;
 	}
 	vector ang = '0 0 0';
 	ang_y = math_mod(time * 120 + self.cnt, 360);
@@ -88,7 +88,7 @@ void(void) rm_buffs_model_think {
 	if(self.sv_entnum) {
 		// this is an overhead buff model
 
-		self.effects |= EFFECT_ADDITIVE;
+		self.effects |= VM_EF_ADDITIVE;
 		self.alpha = 1;
 		float me = player_localentnum/* - 1*/;
 
@@ -101,13 +101,13 @@ void(void) rm_buffs_model_think {
 		if (!self.buff_active) {
 			// this is an inactive buff pickup model
 			self.alpha = 0.3;
-			self.effects &= ~(EFFECT_FULLBRIGHT | EFFECT_ADDITIVE);
+			self.effects &= ~(VM_EF_FULLBRIGHT | VM_EF_ADDITIVE);
 			self.lightlev = 0;
 		} else {
 			// this is an active buff pickup model
 
 			self.alpha = 1;
-			self.effects |= (EFFECT_FULLBRIGHT | EFFECT_ADDITIVE);
+			self.effects |= (VM_EF_FULLBRIGHT | VM_EF_ADDITIVE);
 			
 			self.lightlev = 220 + 36 * sin(time);
 		}
@@ -115,7 +115,7 @@ void(void) rm_buffs_model_think {
 	}
 
 	if (self.buffs == RM_BUFFS_MEODP)
-		self.effects &= ~EFFECT_ADDITIVE;
+		self.effects &= ~VM_EF_ADDITIVE;
 			
 	self.nextthink = time;
 }
@@ -159,14 +159,14 @@ void(entity ment, float thebuffs) rm_buffs_model_set {
 				ment.(buffmdl[i]) = NULL;
 			}
 		}
-		ment.effects &= ~EFFECT_NODRAW;
+		ment.effects &= ~VM_EF_NODRAW;
 		vector omins = ment.mins;
 		vector omaxs = ment.maxs;
 		setmodel(ment, rm_buffs_modelnames[rm_buffs_TypeToIndex(thebuffs)]);
 		setsize(ment, omins, omaxs);
 	} else {
 		// multiple buffs - hide ment and use additional models
-		ment.effects |= EFFECT_NODRAW;
+		ment.effects |= VM_EF_NODRAW;
 		for(i = 0, b = 1; b <= RM_BUFFS_LAST; b *= 2) if(thebuffs & b) {
 			if(!ment.(buffmdl[i]) || wasfreed(ment.(buffmdl[i])))
 				ment.(buffmdl[i]) = spawn();
@@ -203,9 +203,9 @@ void(void) rm_buffs_model_ring_think {
 	self.angles_y = time * -110.1;
 	self.alpha = self.owner.alpha;
 	self.effects = self.owner.effects;
-	self.effects &= ~(EFFECT_STARDUST | EFFECT_NODRAW);
+	self.effects &= ~(VM_EF_STARDUST | VM_EF_NODRAW);
 	if (self.owner.team)
-		self.effects &= ~EFFECT_ADDITIVE;
+		self.effects &= ~VM_EF_ADDITIVE;
 
 	setorigin(self, self.owner.origin + '0 0 15');
 }
@@ -235,7 +235,7 @@ void(float ignore) rm_buffs_model_read {
 		self.entremove = rm_buffs_model_remove;
 		self.draw = rm_buffs_model_draw;
 		self.think = rm_buffs_model_think;
-		self.effects = (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_NOSHADOW);
+		self.effects = (VM_EF_ADDITIVE | VM_EF_FULLBRIGHT | VM_EF_NOSHADOW);
 		self.lightlev = 200;
 		self.nextthink = time;
 		//FIXME
@@ -253,7 +253,7 @@ void(float ignore) rm_buffs_model_read {
 			self.scale = 1.5;
 			setsize(self, '-15 -15 -40', '15 15 40');
 			self.gravity = 100;
-			self.effects |= EFFECT_STARDUST;
+			self.effects |= VM_EF_STARDUST;
 			//FIXME
 			//if(!CVAR(gl_flashblend))
 			//    self.lightflags |= PFLAGS_CORONA;

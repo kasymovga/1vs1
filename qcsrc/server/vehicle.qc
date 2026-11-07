@@ -146,7 +146,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		sh.colormod = '1 1 1';
 		sh.alpha = 0.5;
 		sh.scale  = (128 / vlen(self.maxs - self.mins))*2;
-		sh.effects = EFFECT_LOWPRECISION;
+		sh.effects = VM_EF_LOWPRECISION;
 		sh.angles = vectoangles(normalize(hitloc - self.origin)) - self.angles;
 		setmodel(sh,"models/vhshield.md3");
 		setattachment(sh,self,"");
@@ -199,7 +199,7 @@ var void() vehicle_player_effects_next;
 void vehicle_player_effects() {
 	if (self.vehicle)
 	if (self.vehicle.vehicle_flags & VHF_HIDEPLAYER)
-		self.effects |= EFFECT_NODRAW;
+		self.effects |= VM_EF_NODRAW;
 
 	vehicle_player_effects_next();
 }
@@ -231,7 +231,7 @@ float(float f) vehicle_weapon_frame_switch_mod {
 void(float d, float ed, float r, float f) vehicle_blowup {
 	damage_radius(self, self.dmg_inflictor, d, ed, r, world, f, EFFECT_IMPACT_ROCKET, WEAPON_ROCKET_LAUNCHER, world);
 	self.alpha = -1;
-	self.effects |= EFFECT_NODRAW;
+	self.effects |= VM_EF_NODRAW;
 	self.nextthink = time + 10;
 	self.think = self.vehicle_spawn;
 	self.velocity = '0 0 0';
@@ -349,7 +349,7 @@ void(void(void) think_func, void(void) touch_func) vehicle_stdproc_spawn {
 	self.iscreature = TRUE;
 	self.event_damage = vehicle_stdproc_damage;
 	self.alpha = 1;
-	self.effects &= ~EFFECT_NODRAW;
+	self.effects &= ~VM_EF_NODRAW;
 	self.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP;
 	self.touch = touch_func;
 	if (think_func) {

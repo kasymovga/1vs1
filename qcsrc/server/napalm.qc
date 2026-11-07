@@ -70,7 +70,7 @@ entity(entity powner, vector porg, float lifetime, float lifetime_randfactor, fl
 	proj.classname = "napalm";
 	proj.projectiledeathtype = deathtype;
 	proj.pushltime = time + lifetime + random_2() * lifetime_randfactor;
-	proj.effects = EFFECT_NODEPTHTEST;
+	proj.effects = VM_EF_NODEPTHTEST;
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = burndamage + 100;
 	proj.dmg_radius = burnradius;

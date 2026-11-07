@@ -227,12 +227,12 @@ void nadget_Sentry_SetOwner(entity sentry, entity newowner) {
 
     if(newowner) {
         sentry.skin = 0;
-        sentry.aiment.effects &= ~EFFECT_NODRAW;
+        sentry.aiment.effects &= ~VM_EF_NODRAW;
         sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * team_color((team_teams ? sentry.team : COLOR_TEAM3));
         sentry.bot_attack = TRUE;
     } else {
         sentry.skin = 1;
-        sentry.aiment.effects |= EFFECT_NODRAW;
+        sentry.aiment.effects |= VM_EF_NODRAW;
         sentry.bot_attack = FALSE;
     }
 
@@ -391,9 +391,9 @@ void nadget_Sentry_Think(void) {
     }
 
     if(self.health < g_nadgets_sentry_health) {
-        self.effects |= EFFECT_FLAME;
+        self.effects |= VM_EF_FLAME;
     } else {
-        self.effects &= ~EFFECT_FLAME;
+        self.effects &= ~VM_EF_FLAME;
     }
 
     self.hg_sentry_energy = approach(self.hg_sentry_energy, 1, frametime * g_nadgets_sentry_energy_regen);
@@ -571,7 +571,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     c.pflags = PFLAGS_FULLDYNAMIC;
     c.color = '0.3 0.3 0.3' + 0.7 * team_color(((self.team > 0) ? self.team : COLOR_TEAM3));
     c.owner = self;
-    c.effects |= EFFECT_DOUBLESIDED;
+    c.effects |= VM_EF_DOUBLESIDED;
     sound(c, CHAN_PROJECTILE, "weapons/electro_fly.wav", 0.5, 2);
 
     e.aiment = c;

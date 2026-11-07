@@ -50,9 +50,9 @@ void(void) ice_remove {
 
 float(void) ice_customize {
 	if (plugin_chain_PlayerVisibleThroughWallFor(self.owner, other))
-		self.effects |= EFFECT_NODEPTHTEST;
+		self.effects |= VM_EF_NODEPTHTEST;
 	else
-		self.effects &= ~EFFECT_NODEPTHTEST;
+		self.effects &= ~VM_EF_NODEPTHTEST;
 
 	return TRUE;
 }

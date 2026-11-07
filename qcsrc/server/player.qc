@@ -702,25 +702,25 @@ float(entity plr, entity viewer) player_alpha {
 
 void() player_effects {
 	entity b = self.body;
-	float teleport_bit = (self.effects & EFFECT_TELEPORT_BIT);
+	float teleport_bit = (self.effects & VM_EF_TELEPORT_BIT);
 	if (!b) return;
 	b.body.effects = teleport_bit; //for teleportation
 	fire_apply_effect(self);
 	plugin_chain_player_effects();
 	if (g_fullbrightplayers)
-		self.effects = (self.effects | EFFECT_FULLBRIGHT);
+		self.effects = (self.effects | VM_EF_FULLBRIGHT);
 
 	if not(g_spawnfrags)
 	if (time >= map_starttime)
 	if (time < self.spawnshieldtime)
-		self.effects = (self.effects | (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT));
+		self.effects = (self.effects | (VM_EF_ADDITIVE | VM_EF_FULLBRIGHT));
 
-	b.effects = (self.effects | (b.effects & EFFECT_RESTARTANIM_BIT));
+	b.effects = (self.effects | (b.effects & VM_EF_RESTARTANIM_BIT));
 	if (b.weaponentity) {
 		b.weaponentity.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
-		b.weaponentity.effects = (self.effects | (b.weaponentity.effects & EFFECT_RESTARTANIM_BIT));
+		b.weaponentity.effects = (self.effects | (b.weaponentity.effects & VM_EF_RESTARTANIM_BIT));
 		if (b.exteriorweaponentity)
-			b.exteriorweaponentity.effects = (self.effects | (b.exteriorweaponentity.effects & EFFECT_RESTARTANIM_BIT));
+			b.exteriorweaponentity.effects = (self.effects | (b.exteriorweaponentity.effects & VM_EF_RESTARTANIM_BIT));
 	} else
 		b.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
 
@@ -1083,14 +1083,14 @@ void(entity spot) player_spawn {
 	player_physics_setup(self);
 	self.flags = FLAG_CLIENT;
 	self.takedamage = DAMAGE_AIM;
-	self.effects &= EFFECT_TELEPORT_BIT;
+	self.effects &= VM_EF_TELEPORT_BIT;
 	self.air_finished = time + 12;
 	self.touch = push_touch;
 	self.pushfactor = g_player_pushfactor;
 	if not(self.body)
 		player_body_spawn(world);
 	else
-		self.body.effects &= ~EFFECT_NODRAW;
+		self.body.effects &= ~VM_EF_NODRAW;
 
 	player_dmg_inflictor_setup();
 	self.body.nextthink = 0;

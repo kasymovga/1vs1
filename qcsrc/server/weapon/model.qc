@@ -214,7 +214,7 @@ void(void) weapon_model_think {
 		self.weapon_morph3time = 0;
 		self.weapon_morph4time = 0;
 	}
-	self.effects = self.realowner.body.effects & (EFFECT_ADDITIVE | EFFECT_RED | EFFECT_BLUE);
+	self.effects = self.realowner.body.effects & (VM_EF_ADDITIVE | VM_EF_RED | VM_EF_BLUE);
 	self.colormap = self.owner.colormap;
 	self.alpha = player_alpha(self.owner, akimbo_owner(self.owner));
 	if (self.owner.cvar_cl_gunalpha)
@@ -415,7 +415,7 @@ void(void) weapon_model_exterior_think {
 		self.dlc_reset = weapon_model_exterior_dlc_reset;
 		self.dlc_reset();
 	}
-	self.effects = (self.realowner.body.effects & (EFFECT_ADDITIVE | EFFECT_RED | EFFECT_BLUE | EFFECT_LOWPRECISION | EFFECT_FULLBRIGHT));
+	self.effects = (self.realowner.body.effects & (VM_EF_ADDITIVE | VM_EF_RED | VM_EF_BLUE | VM_EF_LOWPRECISION | VM_EF_FULLBRIGHT));
 	self.colormap = o.colormap;
 	entity wi = o.weaponentity;
 	if (wi.wframe == WEAPON_FRAME_MELEE || (o.weapon == WEAPON_MELEE && wi.frame == WEAPON_FRAME_FIRE2)) {

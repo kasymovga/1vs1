@@ -272,7 +272,7 @@ NADGET_HOOKFUNCTION(shield, Attack) {
         e.think = nadget_Shield_Model_Think;
         e.nextthink = time;
         e.alpha = 0.1;
-        e.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT;
+        e.effects = VM_EF_ADDITIVE | VM_EF_FULLBRIGHT;
         e.glow_size = 256;
         e.glow_color = 230;
         e.glow_trail = 1;

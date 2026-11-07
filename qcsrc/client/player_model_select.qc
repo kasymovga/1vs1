@@ -343,9 +343,9 @@ void(void) player_model_select_read {
 		player_model_select_head = spawn();
 		player_model_select_torso = spawn();
 	}
-	player_model_select_current.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
-	player_model_select_torso.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
-	player_model_select_head.effects = EFFECT_FULLBRIGHT | EFFECT_NODEPTHTEST;
+	player_model_select_current.effects = VM_EF_FULLBRIGHT | VM_EF_NODEPTHTEST;
+	player_model_select_torso.effects = VM_EF_FULLBRIGHT | VM_EF_NODEPTHTEST;
+	player_model_select_head.effects = VM_EF_FULLBRIGHT | VM_EF_NODEPTHTEST;
 	player_model_select_current.draw = player_model_select_model_draw;
 	player_model_select_current.renderflags = VM_RF_VIEWMODEL | VM_RF_DEPTHHACK;
 	player_model_select_head.draw = player_model_select_model_draw;

@@ -884,9 +884,9 @@ float(void) player_body_torso_customize {
 		return FALSE;
 
 	if (plugin_chain_PlayerVisibleThroughWallFor(o, other))
-		self.effects |= EFFECT_NODEPTHTEST;
+		self.effects |= VM_EF_NODEPTHTEST;
 	else
-		self.effects &= ~EFFECT_NODEPTHTEST;
+		self.effects &= ~VM_EF_NODEPTHTEST;
 
 	return TRUE;
 }
@@ -904,9 +904,9 @@ float(void) player_body_customize {
 			self.tag_entity = self.body;
 	}
 	if (plugin_chain_PlayerVisibleThroughWallFor(o, other))
-		self.effects |= EFFECT_NODEPTHTEST;
+		self.effects |= VM_EF_NODEPTHTEST;
 	else
-		self.effects &= ~EFFECT_NODEPTHTEST;
+		self.effects &= ~VM_EF_NODEPTHTEST;
 
 	if (self.weaponentity) {
 		self.weaponentity.alpha = self.alpha;
@@ -948,9 +948,9 @@ float(void) player_body_base_customize {
 		self.exteriormodeltoclient = world;
 
 	if (plugin_chain_PlayerVisibleThroughWallFor(self.owner, other))
-		self.effects |= EFFECT_NODEPTHTEST;
+		self.effects |= VM_EF_NODEPTHTEST;
 	else
-		self.effects &= ~EFFECT_NODEPTHTEST;
+		self.effects &= ~VM_EF_NODEPTHTEST;
 
 	return TRUE;
 }

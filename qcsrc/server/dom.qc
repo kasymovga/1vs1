@@ -314,9 +314,9 @@ void(void) spawnfunc_dom_controlpoint {
 	if not(self.scale)
 		self.scale = 0.6;
 
-	self.effects = self.effects | EFFECT_LOWPRECISION;
+	self.effects = self.effects | VM_EF_LOWPRECISION;
 	if (g_dom_point_fullbright)
-		self.effects |= EFFECT_FULLBRIGHT;
+		self.effects |= VM_EF_FULLBRIGHT;
 }
 
 // code from here on is just to support maps that don't have control point and team entities

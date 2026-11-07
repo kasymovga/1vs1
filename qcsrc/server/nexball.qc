@@ -1,4 +1,4 @@
-//EFFECT_BRIGHTFIELD|EFFECT_BRIGHTLIGHT|EFFECT_DIMLIGHT|EFFECT_BLUE|EFFECT_RED|EFFECT_FLAME
+//EFFECT_BRIGHTFIELD|EFFECT_BRIGHTLIGHT|EFFECT_DIMLIGHT|VM_EF_BLUE|VM_EF_RED|VM_EF_FLAME
 float ST_NEXBALL_GOALS;
 float SP_NEXBALL_GOALS;
 float SP_NEXBALL_FAULTS;
@@ -278,7 +278,7 @@ void(entity plyr, entity ball) nexball_give_ball {
 	ball.velocity = '0 0 0';
 	ball.movetype = VM_MOVETYPE_NONE;
 	ball.touch = stdproc_nothing;
-	ball.effects |= EFFECT_NOSHADOW;
+	ball.effects |= VM_EF_NOSHADOW;
 	ball.scale = (ball.scale ? (ball.scale * 0.75) : 0.75); // scale down.
 	marker_AttachCarrier("nb-ball", plyr);
 	marker_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0);
@@ -291,7 +291,7 @@ void(entity plyr, entity ball) nexball_give_ball {
 
 void(entity ball, vector org, vector vel) nexball_drop_ball {
 	ball.effects |= g_nexball_basketball_effects_default;
-	ball.effects &= ~EFFECT_NOSHADOW;
+	ball.effects &= ~VM_EF_NOSHADOW;
 	ball.owner.effects &= ~g_nexball_basketball_effects_default;
 	setattachment(ball, world, "");
 	setorigin (ball, org);
@@ -658,7 +658,7 @@ void(void) nexball_spawn_ball {
 	self.mdl = self.model;
 	nexball_relocate();
 	self.spawnorigin = self.origin;
-	self.effects = self.effects | EFFECT_LOWPRECISION;
+	self.effects = self.effects | VM_EF_LOWPRECISION;
 	if (cvar(strcat("g_", self.classname, "_trail"))) {
 		self.glow_color = cvar("g_nexball_trail_color");
 		self.glow_trail = TRUE;

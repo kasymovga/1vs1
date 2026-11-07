@@ -13,7 +13,7 @@ float(void) player_info_customize {
 		return FALSE;
 
 	if (team_teams && o.team == other.team) {
-		self.effects |= EFFECT_FULLBRIGHT;
+		self.effects |= VM_EF_FULLBRIGHT;
 	} else {
 		if not(g_showenemynames) return FALSE;
 		if (o.body.body == self.enemy)
@@ -21,9 +21,9 @@ float(void) player_info_customize {
 			return FALSE;
 
 		if (plugin_chain_PlayerVisibleThroughWallFor(o,other)) {
-			self.effects |= EFFECT_FULLBRIGHT;
+			self.effects |= VM_EF_FULLBRIGHT;
 		} else
-			self.effects &= ~EFFECT_FULLBRIGHT;
+			self.effects &= ~VM_EF_FULLBRIGHT;
 	}
 	return TRUE;
 }
@@ -32,7 +32,7 @@ float(entity to, float sf) player_info_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_ENTCS);
 	sf = sf & 31;
 	entity o = self.owner;
-	if (self.effects & EFFECT_FULLBRIGHT)
+	if (self.effects & VM_EF_FULLBRIGHT)
 		sf |= 64;
 
 	if (team_teams)

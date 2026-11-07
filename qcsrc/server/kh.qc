@@ -259,7 +259,7 @@ void(entity key, entity initial_owner, float angle, float i) kh_Key_Spawn { // r
 	key.takedamage = DAMAGE_YES;
 	setmodel(key, "models/keyhunt/key.md3");
 	key.lip = 0;
-	key.effects &= ~EFFECT_NODRAW;
+	key.effects &= ~VM_EF_NODRAW;
 	key.dphitcontentsmask = VM_DPCONTENTS_SOLID | VM_DPCONTENTS_BODY | VM_DPCONTENTS_PLAYERCLIP;
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
 	key.colormod = team_color(initial_owner.team) * KH_KEY_BRIGHTNESS;
@@ -290,7 +290,7 @@ void(entity key) kh_Key_Hide { // runs after when all the keys have been collect
 	o = key.owner;
 	kh_Key_AssignTo(key, NULL);
 	key.solid = VM_SOLID_NOT;
-	key.effects |= EFFECT_NODRAW;
+	key.effects |= VM_EF_NODRAW;
 	kh_update_state();
 }
 
@@ -410,7 +410,7 @@ void(void) kh_key_think {  // runs all the time
 	}
 	// if in nodrop or time over, respawn key
 	if not(self.owner) {
-		if not(self.effects & EFFECT_NODRAW)
+		if not(self.effects & VM_EF_NODRAW)
 			if (time > self.pain_finished)
 				kh_LoserTeam(self.team, self);
 
@@ -666,7 +666,7 @@ float(entity e) kh_Key_waypointsprite_visible_for_player {
 	if (g_kh_showenemycarrier)
 		return FALSE;
 
-	if (self.owner.effects & EFFECT_NODRAW)
+	if (self.owner.effects & VM_EF_NODRAW)
 		return FALSE;
 
 	if (!self.owner.owner)
@@ -806,7 +806,7 @@ void(void) kh_init {
 	entity key;
 	for (i = 0; i < kh_teams; i++) {
 		key = spawn();
-		key.effects = EFFECT_NODRAW;
+		key.effects = VM_EF_NODRAW;
 		key.weaponentity = kh_worldkeylist; //use weaponentity field for global key chain
 		kh_worldkeylist = key;
 		key.team = team_from_index(i);

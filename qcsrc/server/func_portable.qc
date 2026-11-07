@@ -23,12 +23,12 @@ void(void) func_portable_drop {
 	setorigin(e, pos);
 	e.solid = VM_SOLID_BSP;
 	e.movetype = VM_MOVETYPE_TOSS;
-	e.effects &= ~EFFECT_NODRAW;
+	e.effects &= ~VM_EF_NODRAW;
 	e.flags = 0;
 }
 
 void(void) func_portable_decolorize {
-	self.effects &= ~(EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
+	self.effects &= ~(VM_EF_ADDITIVE | VM_EF_FULLBRIGHT);
 }
 
 void(entity e) func_portable_pick {
@@ -37,7 +37,7 @@ void(entity e) func_portable_pick {
 	entity e2 = spawn();
 	e2.enemy = e;
 	e.velocity = '0 0 0';
-	e.effects |= EFFECT_NODRAW;
+	e.effects |= VM_EF_NODRAW;
 	e.movetype = VM_MOVETYPE_NONE;
 	e.groundentity = NULL;
 	e.flags = 0;
@@ -78,7 +78,7 @@ void(void) func_portable_player_think {
 		makevectors(self.v_angle);
 		trace_line(o, o + self.maxs_x * 4 * v_forward, TRACE_MOVE_NORMAL, self);
 		if (trace_ent && trace_ent.classname == "func_portable") {
-			trace_ent.effects |= (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
+			trace_ent.effects |= (VM_EF_ADDITIVE | VM_EF_FULLBRIGHT);
 			trace_ent.nextthink = time + sys_ticrate * 2;
 			trace_ent.think = func_portable_decolorize;
 			if (self.BUTTON_ATCK) {

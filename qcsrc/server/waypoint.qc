@@ -15,7 +15,7 @@ void(entity w) waypoint_show {
 		w.culltracemode = CULLTRACEMODE_NONE;
 		m1 = w.mins;
 		m2 = w.maxs;
-		setmodel(w, "models/runematch/rune.mdl"); w.effects = EFFECT_LOWPRECISION;
+		setmodel(w, "models/runematch/rune.mdl"); w.effects = VM_EF_LOWPRECISION;
 		setsize(w, m1, m2);
 		if (w.wpflags & WAYPOINTFLAG_ITEM)
 			w.colormod = '1 0 0';
@@ -847,7 +847,7 @@ float(string s, float argc) waypoint_cmd_client {
 			}
 			for (e = waypoint_list; e; e = e.aiment) {
 				e.colormod_x = 1;
-				e.effects &= ~(EFFECT_NODEPTHTEST | EFFECT_RED | EFFECT_BLUE);
+				e.effects &= ~(VM_EF_NODEPTHTEST | VM_EF_RED | VM_EF_BLUE);
 			}
 			e2 = navigation_findnearestwaypoint(self, FALSE);
 			if not(e2) {
@@ -862,7 +862,7 @@ float(string s, float argc) waypoint_cmd_client {
 				if (e.height >= WAYPOINT_COST_MAX) {
 					sprint(self, strcat("unreachable: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
-					e.effects |= EFFECT_NODEPTHTEST | EFFECT_BLUE;
+					e.effects |= VM_EF_NODEPTHTEST | VM_EF_BLUE;
 					++i;
 					++m;
 				}
@@ -876,9 +876,9 @@ float(string s, float argc) waypoint_cmd_client {
 				if (e.height >= WAYPOINT_COST_MAX) {
 					sprint(self, strcat("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
-					if not(e.effects & EFFECT_NODEPTHTEST) // not already reported before
+					if not(e.effects & VM_EF_NODEPTHTEST) // not already reported before
 						++m;
-					e.effects |= EFFECT_NODEPTHTEST | EFFECT_RED;
+					e.effects |= VM_EF_NODEPTHTEST | VM_EF_RED;
 					++i;
 				}
 			}
@@ -896,11 +896,11 @@ float(string s, float argc) waypoint_cmd_client {
 				setorigin(e, trace_endpos);
 				e.flags |= FLAG_ONGROUND;
 				if (navigation_findnearestwaypoint(e, FALSE)) {
-					e.effects &= ~EFFECT_NODEPTHTEST;
+					e.effects &= ~VM_EF_NODEPTHTEST;
 					e.model = "";
 				} else {
 					sprint(self, strcat("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n"));
-					e.effects |= EFFECT_NODEPTHTEST;
+					e.effects |= VM_EF_NODEPTHTEST;
 					setmodel(e, self.body.model);
 					e.frame = self.body.frame;
 					e.skin = self.body.skin;

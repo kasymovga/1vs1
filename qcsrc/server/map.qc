@@ -482,9 +482,9 @@ void() map_finish {
 		e.movetype = VM_MOVETYPE_NONE;
 		e.takedamage = DAMAGE_NO;
 		if (e.weaponentity) {
-			e.weaponentity.effects = EFFECT_NODRAW;
+			e.weaponentity.effects = VM_EF_NODRAW;
 			if (e.weaponentity.weaponentity)
-				e.weaponentity.weaponentity.effects = EFFECT_NODRAW;
+				e.weaponentity.weaponentity.effects = VM_EF_NODRAW;
 		}
 		if (clienttype(e) == VM_CLIENTTYPE_REAL) {
 			s = cvar_string("sv_intermission_cdtrack");

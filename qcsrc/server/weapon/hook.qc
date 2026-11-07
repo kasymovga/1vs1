@@ -40,7 +40,7 @@ void(void) weapon_hook_explode_think {
 void(void) weapon_hook_explode2 {
 	self.event_damage = NULL;
 	self.touch = stdproc_nothing;
-	self.effects |= EFFECT_NODRAW;
+	self.effects |= VM_EF_NODRAW;
 	self.projectiledeathtype |= HITTYPE_NOTEAMDAMAGE;
 	self.think = weapon_hook_explode_think;
 	self.nextthink = time;

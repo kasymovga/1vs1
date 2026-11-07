@@ -123,9 +123,9 @@ void(entity e) fire_apply_damage {
 
 void(entity e) fire_apply_effect {
 	if (fire_is_burning(e))
-		e.effects |= EFFECT_FLAME;
+		e.effects |= VM_EF_FLAME;
 	else
-		e.effects &= ~EFFECT_FLAME;
+		e.effects &= ~VM_EF_FLAME;
 }
 
 void(void) fire_burner_think {
@@ -136,7 +136,7 @@ void(void) fire_burner_think {
 	}
 	if not(fire_is_burning(self.owner)) {
 		if (self.owner.fire_burner == self) {
-			self.owner.effects &= ~EFFECT_FLAME;
+			self.owner.effects &= ~VM_EF_FLAME;
 			self.owner.fire_burner = NULL;
 		}
 		remove(self);

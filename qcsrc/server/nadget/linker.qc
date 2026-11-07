@@ -123,7 +123,7 @@ NADGET_HOOKFUNCTION(linker, Attack) {
     e.nextthink = time;
     e.hg_spawntime = time;
     e.reset = stdproc_remove;
-    e.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION | EFFECT_DOUBLESIDED;
+    e.effects = VM_EF_ADDITIVE | VM_EF_FULLBRIGHT | VM_EF_LOWPRECISION | VM_EF_DOUBLESIDED;
     e.gravity = 100;
     e.cnt = time + g_nadgets_linker_duration/* * Buffs_NadgetPower(self) */;
     e.hg_deathtime = e.cnt;

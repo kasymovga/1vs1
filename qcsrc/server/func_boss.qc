@@ -173,11 +173,11 @@ void(void) func_boss_controller_think {
 				debris_throw('0 0 0');
 				self = oldself;
 				boss.state |= FUNC_BOSS_STATE_DEAD;
-				boss.effects |= EFFECT_NODRAW;
+				boss.effects |= VM_EF_NODRAW;
 				boss.solid = VM_SOLID_NOT;
 				for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
 					if (e.classname == "func_boss_part" && (e.spawnflags & 1)) {
-						e.effects &= ~EFFECT_NODRAW;
+						e.effects &= ~VM_EF_NODRAW;
 					}
 				}
 			}
@@ -212,7 +212,7 @@ void(entity boss, entity attacker) func_boss_check_parts {
 	}
 	for (e = find(NULL, target, boss.targetname); e; e = find(e, target, boss.targetname)) {
 		if (e.classname == "func_boss_shooter" && e.cnt == boss.cnt) {
-			e.effects |= EFFECT_NODRAW;
+			e.effects |= VM_EF_NODRAW;
 			e.solid = VM_SOLID_NOT;
 			continue;
 		}
@@ -279,7 +279,7 @@ void(void) func_boss_use {
 void(void) func_boss_reset {
 	self.origin = self.spawnorigin;
 	self.angles = '0 0 0';
-	self.effects &= ~EFFECT_NODRAW;
+	self.effects &= ~VM_EF_NODRAW;
 	setorigin(self, self.spawnorigin);
 	if (self.sprite) {
 		marker_Kill(self.sprite);
@@ -334,7 +334,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	marker_UpdateHealth(boss.sprite, boss.health);
 	self.lastdamage = time;
 	if (self.health <= 0) {
-		self.effects |= EFFECT_NODRAW;
+		self.effects |= VM_EF_NODRAW;
 		self.solid = VM_SOLID_NOT;
 		self.takedamage = FALSE;
 		self.event_damage = NULL;
@@ -357,10 +357,10 @@ void(void) func_boss_part_reset {
 	self.angles = '0 0 0';
 	if (self.spawnflags & 1) {
 		self.solid = VM_SOLID_NOT;
-		self.effects |= EFFECT_NODRAW;
+		self.effects |= VM_EF_NODRAW;
 	} else {
 		self.solid = VM_SOLID_BSP;
-		self.effects &= ~EFFECT_NODRAW;
+		self.effects &= ~VM_EF_NODRAW;
 	}
 	self.health = self.max_health;
 	self.colormod = '0 0 0';
@@ -393,7 +393,7 @@ void(void) spawnfunc_func_boss_part {
 void(void) func_boss_shooter_reset {
 	self.solid = VM_SOLID_BSP;
 	self.angles = '0 0 0';
-	self.effects &= ~EFFECT_NODRAW;
+	self.effects &= ~VM_EF_NODRAW;
 	self.enemy = NULL;
 	setorigin(self, self.spawnorigin);
 }

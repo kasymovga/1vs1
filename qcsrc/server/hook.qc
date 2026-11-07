@@ -301,7 +301,7 @@ void(void) hook_fire {
 	missile.touch = hook_touch;
 	missile.hook.think = hook_think;
 	missile.hook.nextthink = time + 0.1;
-	missile.effects = /*EFFECT_FULLBRIGHT | EFFECT_ADDITIVE |*/ EFFECT_LOWPRECISION;
+	missile.effects = /*VM_EF_FULLBRIGHT | VM_EF_ADDITIVE |*/ VM_EF_LOWPRECISION;
 	missile.health = g_balance_grapplehook_health;//120
 	missile.event_damage = hook_damage;
 	missile.takedamage = DAMAGE_AIM;

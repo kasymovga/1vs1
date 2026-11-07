@@ -81,7 +81,7 @@ void(void) nadget_scan_think {
 			setmodel(e, "models/ctf/shield.md3");
 			setorigin(e, self.origin);
 			e.alpha = 0.125;
-			e.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION | EFFECT_DOUBLESIDED | EFFECT_NODEPTHTEST;
+			e.effects = VM_EF_ADDITIVE | VM_EF_FULLBRIGHT | VM_EF_LOWPRECISION | VM_EF_DOUBLESIDED | VM_EF_NODEPTHTEST;
 			setmodel(e, "models/ctf/shield.md3");
 			e.cnt = 1000 / e.maxs_x;
 			e.customizeentityforclient = nadget_scan_wave_customize;

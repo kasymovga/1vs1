@@ -125,7 +125,7 @@ void(entity plr, float show) player_label_team_bubble_update {
 			plr.teambubble = spawn();
 			precache_model("models/misc/teambubble.spr");
 			setmodel(plr.teambubble, "models/misc/teambubble.spr");
-			plr.teambubble.effects = EFFECT_NODEPTHTEST;
+			plr.teambubble.effects = VM_EF_NODEPTHTEST;
 			plr.teambubble.owner = plr;
 			plr.teambubble.draw = player_label_team_bubble_draw;
 		}

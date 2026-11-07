@@ -17,13 +17,13 @@ entity(float t) weapon_flash_spawn {
 		flash.nextthink = time + 0.02;
 		flash.frame = 2;
 		flash.alpha = 1;
-		flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
+		flash.effects = VM_EF_ADDITIVE | VM_EF_FULLBRIGHT | VM_EF_LOWPRECISION;
 		break;
 	case WEAPON_FLASH_SHOTGUN:
 		setmodel(flash, "models/uziflash.md3"); // precision set below
 		flash.think = stdproc_remove;
 		flash.nextthink = time + 0.06;
-		flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
+		flash.effects = VM_EF_ADDITIVE | VM_EF_FULLBRIGHT | VM_EF_LOWPRECISION;
 		break;
 	case WEAPON_FLASH_ROCKET:
 		setmodel(flash, "models/flash.md3"); // precision set below
@@ -34,7 +34,7 @@ entity(float t) weapon_flash_spawn {
 		remove(flash);
 		return NULL;
 	}
-	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
+	flash.effects = VM_EF_ADDITIVE | VM_EF_FULLBRIGHT | VM_EF_LOWPRECISION;
 	return flash;
 }
 

@@ -224,7 +224,7 @@ void(entity portal) portal_make_waiting_portal {
 	portal.solid = VM_SOLID_NOT;
 	portal.touch = stdproc_nothing;
 	portal.think = stdproc_nothing;
-	portal.effects = EFFECT_ADDITIVE;
+	portal.effects = VM_EF_ADDITIVE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
 	if (portal_type) {
@@ -247,7 +247,7 @@ void(entity portal) portal_make_in_portal {
 	portal.solid = VM_SOLID_NOT; // this is done when connecting them!
 	portal.touch = portal_touch;
 	portal.think = portal_think;
-	portal.effects = EFFECT_RED;
+	portal.effects = VM_EF_RED;
 	portal.nextthink = time;
 	portal.takedamage = DAMAGE_NO;
 	if (portal_type) {
@@ -272,7 +272,7 @@ void(entity portal) portal_make_out_portal {
 		portal.touch = stdproc_nothing;
 	}
 	portal.think = stdproc_nothing;
-	portal.effects = EFFECT_STARDUST | EFFECT_BLUE;
+	portal.effects = VM_EF_STARDUST | VM_EF_BLUE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
 	if (portal_type) {
@@ -449,7 +449,7 @@ float(entity to, float sendflags) portal_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_PORTAL);
 	net_write_short(MSG_ENTITY, self.modelindex);
 	net_write_short(MSG_ENTITY, self.skin);
-	net_write_coord(MSG_ENTITY, self.effects & ~EFFECT_NODEPTHTEST);
+	net_write_coord(MSG_ENTITY, self.effects & ~VM_EF_NODEPTHTEST);
 	net_write_coord(MSG_ENTITY, self.origin_x);
 	net_write_coord(MSG_ENTITY, self.origin_y);
 	net_write_coord(MSG_ENTITY, self.origin_z);

@@ -18,7 +18,7 @@ void(void) weapon_porto_success {
 		entity_abort("Cannot succeed successfully: no owner\n");
 		return;
 	}
-	if (self.effects & EFFECT_RED)
+	if (self.effects & VM_EF_RED)
 		self.owner.porto_current_in = NULL;
 	else
 		self.owner.porto_current_out = NULL;
@@ -28,8 +28,8 @@ void(void) weapon_porto_success {
 	} else {
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.owner.porto_current_out = self;
-		BITXOR_ASSIGN(self.effects, EFFECT_RED);
-		projectile_update_with_type(self, ((self.effects & EFFECT_RED) ? PROJECTILE_PORTO_RED : PROJECTILE_PORTO_BLUE));
+		BITXOR_ASSIGN(self.effects, VM_EF_RED);
+		projectile_update_with_type(self, ((self.effects & VM_EF_RED) ? PROJECTILE_PORTO_RED : PROJECTILE_PORTO_BLUE));
 	}
 }
 
@@ -39,12 +39,12 @@ void(void) weapoon_porto_fail {
 		return;
 	}
 	if (g_balance_porto_old) {
-		if not(self.effects & EFFECT_RED)
+		if not(self.effects & VM_EF_RED)
 		if not(self.owner.portal_out)
 		if (self.owner.portal_in)
 			portal_clear_all(self.owner);
 	}
-	if (self.effects & EFFECT_RED)
+	if (self.effects & VM_EF_RED)
 		self.owner.porto_current_in = NULL;
 	else
 		self.owner.porto_current_out = NULL;
@@ -107,7 +107,7 @@ void(void) weapon_porto_touch {
 	} else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) {
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		weapoon_porto_fail();
-	} else if (self.effects & EFFECT_RED) {
+	} else if (self.effects & VM_EF_RED) {
 		if (portal_spawn_in_portal_at_trace(self.owner, self.right_vector)) {
 			self.portal_id = self.owner.portal_in.portal_id;
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
@@ -152,7 +152,7 @@ void(float out) weapon_porto_attack {
 	if (out) {
 		self.porto_current_out = gren;
 	} else {
-		gren.effects = EFFECT_RED;
+		gren.effects = VM_EF_RED;
 		self.porto_current_in = gren;
 	}
 	gren.scale = 4;

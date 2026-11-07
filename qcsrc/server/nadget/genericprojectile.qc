@@ -351,7 +351,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
     e.meodp_point_angleoffs = '90 180 0';
 #endif
 
-    e.effects |= EFFECT_NODEPTHTEST; // no culling please
+    e.effects |= VM_EF_NODEPTHTEST; // no culling please
     entity_move_out_of_solid(e);
 }
 

@@ -9,7 +9,7 @@ void(float isnew) ice_read {
 	float f = net_read_byte();
 	if (isnew) {
 		self.draw = ice_draw;
-		self.effects = 32768 | EFFECT_FULLBRIGHT; //EFFECT_DOUBLESIDED;
+		self.effects = 32768 | VM_EF_FULLBRIGHT; //EFFECT_DOUBLESIDED;
 	}
 	if (f & 1) {
 		self.modelindex = net_read_short();

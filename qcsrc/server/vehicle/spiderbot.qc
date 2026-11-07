@@ -120,7 +120,7 @@ void(entity gun) vehicle_spiderbot_minigun_fire {
 	flash.frame = 2;
 	flash.angles_z = flash.v_angle_z + random() * 180;
 	flash.alpha = 1;
-	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
+	flash.effects = VM_EF_ADDITIVE | VM_EF_FULLBRIGHT | VM_EF_LOWPRECISION;
 }
 
 void(void) vehicle_spiderbot_miniguns_do {

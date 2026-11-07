@@ -730,7 +730,7 @@ void(entity piece) chess_piece_pick {
 				else
 					e.colormod = '1 1 0';
 
-				e.effects = (EFFECT_ADDITIVE | EFFECT_NODEPTHTEST);
+				e.effects = (VM_EF_ADDITIVE | VM_EF_NODEPTHTEST);
 				e.scale = chess_cell_width / (self.maxs_x - self.mins_x) * 0.9;
 				chess_piece_move(e, i, j, FALSE);
 				e.enemy = chess_allowed_moves;
@@ -748,7 +748,7 @@ void(entity e) chess_piece_point {
 	}
 	chess_piece_pointed = e;
 	if (chess_piece_pointed) {
-		chess_piece_pointed.effects = (EFFECT_ADDITIVE | EFFECT_STARDUST);
+		chess_piece_pointed.effects = (VM_EF_ADDITIVE | VM_EF_STARDUST);
 		chess_piece_pointed.colormod = team_colormod(chess_piece_pointed.team) * 2;
 	}
 }

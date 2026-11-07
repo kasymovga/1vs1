@@ -153,7 +153,7 @@ void(vector v_from, vector v_to, vector v_colormod,
 	gib.event_damage = turret_gib_damage;
 	gib.takedamage = DAMAGE_YES;
 	gib.health = -1;
-	gib.effects = EFFECT_LOWPRECISION;
+	gib.effects = VM_EF_LOWPRECISION;
 	gib.flags = FLAG_NOTARGET;
 	gib.colormod = v_colormod;
 	gib.velocity = v_to;
@@ -162,7 +162,7 @@ void(vector v_from, vector v_to, vector v_colormod,
 	setsize(gib, gib.mins * gib.scale, gib.maxs * gib.scale);
 	//if (b_burn) {
 	//	burn = spawn();
-	//	burn.effects = EFFECT_LOWPRECISION | EFFECT_FLAME;
+	//	burn.effects = VM_EF_LOWPRECISION | VM_EF_FLAME;
 	//	setattachment(burn,gib,"");
 	//	setorigin(burn,(gib.mins + gib.maxs) * 0.5);
 	//	entity_fade_setup(burn,time + (f_lifetime * 0.5) ,2);
@@ -189,7 +189,7 @@ void() turret_gib_boom {
 		gib.event_damage = turret_gib_damage;
 		gib.takedamage = DAMAGE_YES;
 		gib.health = -1;
-		gib.effects = EFFECT_LOWPRECISION;
+		gib.effects = VM_EF_LOWPRECISION;
 		gib.flags = FLAG_NOTARGET;
 		gib.velocity = self.velocity + (randomvec() * 700);
 		gib.avelocity = randomvec() * 64;
@@ -218,7 +218,7 @@ void(vector v_from, vector v_to, vector v_colormod,
 	gib.takedamage = DAMAGE_YES;
 	gib.event_damage = turret_gib_damage;
 	gib.health = -1;
-	gib.effects = EFFECT_LOWPRECISION;
+	gib.effects = VM_EF_LOWPRECISION;
 	gib.flags = FLAG_NOTARGET;
 	gib.colormod = v_colormod;
 	gib.velocity = v_to;
@@ -227,7 +227,7 @@ void(vector v_from, vector v_to, vector v_colormod,
 	gib.nextthink = boomtime;
 	gib.scale = self.scale;
 	setsize(gib, gib.mins * gib.scale, gib.maxs * gib.scale);
-	//gib.effects = EFFECT_FLAME;
+	//gib.effects = VM_EF_FLAME;
 }
 
 /*
@@ -377,7 +377,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	// FIXME: Better damage feedback
 	// Start burning when we have 10% or less health left
 	//if (self.health < (self.tur_health * 0.1))
-	//    self.effects = EFFECT_FLAME;
+	//    self.effects = VM_EF_FLAME;
 	if (self.health <= 0) {
 		baseent.event_damage = NULL;
 		baseent.takedamage = DAMAGE_NO;

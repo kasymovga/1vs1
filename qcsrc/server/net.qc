@@ -14,7 +14,7 @@ void(entity e, float docull, float dt, float(entity, float) sendfunc) net_link_e
 	e.SendEntity = sendfunc;
 	e.SendFlags = 0xFFFFFF;
 	if (!docull)
-		e.effects |= EFFECT_NODEPTHTEST;
+		e.effects |= VM_EF_NODEPTHTEST;
 
 	if (dt) {
 		e.nextthink = time + dt;

@@ -137,7 +137,7 @@ string(float it) item_counter_field_name {
 .float max_armorvalue;
 
 void (entity e, float mode) item_show {
-	e.effects &= ~(EFFECT_ADDITIVE | EFFECT_STARDUST | EFFECT_FULLBRIGHT);
+	e.effects &= ~(VM_EF_ADDITIVE | VM_EF_STARDUST | VM_EF_FULLBRIGHT);
 	if (mode > 0) {
 		// make the item look normal, and be touchable
 		e.model = e.mdl;
@@ -168,10 +168,10 @@ void (entity e, float mode) item_show {
 		e.spawnshieldtime = 1;
 	}
 	if (e.strength_finished || e.invincible_finished)
-		e.effects |= EFFECT_ADDITIVE | EFFECT_FULLBRIGHT;
+		e.effects |= VM_EF_ADDITIVE | VM_EF_FULLBRIGHT;
 
 	if (g_fullbrightitems)
-		e.effects |= EFFECT_FULLBRIGHT;
+		e.effects |= VM_EF_FULLBRIGHT;
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
@@ -544,14 +544,14 @@ entity item_team_linker;
 void(void) item_find_team {
 	entity e, e2;
 	for (e = NULL; (e = findflags(e, flags, FLAG_ITEM)); ) {
-		if (e.effects & EFFECT_NODRAW)
+		if (e.effects & VM_EF_NODRAW)
 		if (e.team) {
 			random_selection_init();
 			for (e2 = e; e2; e2 = findflags(e2, flags, FLAG_ITEM)) {
 				if (e2.team != e.team) continue;
 				if (e2.existsonlyfor != e.existsonlyfor) continue;
 				random_selection_add(e2, 0, NULL, e2.cnt, 0);
-				e2.effects &= ~EFFECT_NODRAW;
+				e2.effects &= ~VM_EF_NODRAW;
 				item_show(e2, -1);
 				e2.state = 1;
 			}
@@ -800,7 +800,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 		self.customizeentityforclient = item_customize;
 
 	setmodel(self, self.mdl); // precision set below
-	self.effects |= EFFECT_LOWPRECISION;
+	self.effects |= VM_EF_LOWPRECISION;
 	if ((itemflags & FLAG_POWERUP) || self.health || self.armorvalue)
 		setsize (self, '-16 -16 0', '16 16 48');
 	else
@@ -820,7 +820,7 @@ void (string itemmodel, string defitemmodel, string pickupsound, float defaultre
 		if (!self.cnt)
 			self.cnt = 1; // item probability weight
 
-		self.effects |= EFFECT_NODRAW; // marker for item team search
+		self.effects |= VM_EF_NODRAW; // marker for item team search
 		if not(item_team_linker) {
 			item_team_linker = spawn();
 			entity_initialize(item_team_linker, item_find_team, INITPRIO_FINDTARGET);
@@ -1132,7 +1132,7 @@ void(float key, string name, vector _colormod) item_key_spawn {
 	item_start("", "models/keyhunt/key.md3", "kh/collect.wav", rt, rtj, name, key, 0, item_generic_pickupevalfunc, 100000);
 	self.targetname = tn;
 	self.colormod = _colormod;
-	self.effects = EFFECT_FULLBRIGHT | EFFECT_STARDUST;
+	self.effects = VM_EF_FULLBRIGHT | VM_EF_STARDUST;
 	setsize(self, self.mins - '0 0 1' * 48, self.maxs);
 }
 

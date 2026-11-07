@@ -163,7 +163,7 @@ float(entity wz, entity e) warpzone_teleport {
 		ts.nextthink = time + 1;
 		ts.owner = e;
 		ts.enemy = wz;
-		ts.effects = EFFECT_NODEPTHTEST;
+		ts.effects = VM_EF_NODEPTHTEST;
 		ts.classname = "warpzone_teleported";
 		ts.angles = wz.warpzone_transform;
 		ts.customizeentityforclient = warpzone_teleported_customize;
@@ -863,7 +863,7 @@ void(void) warpzone_spawn {
 
 	self.SendEntity = warpzone_send;
 	self.SendFlags = 0xFFFFFF;
-	self.effects |= EFFECT_NODEPTHTEST;
+	self.effects |= VM_EF_NODEPTHTEST;
 	self.warpzone_next = warpzone_first;
 	if not(warpzone_first) {
 		warpzone_enable();
