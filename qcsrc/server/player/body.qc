@@ -1148,7 +1148,7 @@ void(void) player_body_init {
 		g_player_allowed_models_blue = str_zone_ifneeded(g_player_allowed_models_blue);
 		g_player_allowed_models_yellow = str_zone_ifneeded(g_player_allowed_models_yellow);
 		g_player_allowed_models_pink = str_zone_ifneeded(g_player_allowed_models_pink);
-	} else if (player_body_all_models_allowed(g_player_allowed_models) && g_player_disabled_models != "") {
+	} else if (player_body_all_models_allowed(g_player_allowed_models)) {
 		g_player_allowed_models = player_body_find_models("models/player/*.zym");
 		g_player_allowed_models = strcat(g_player_allowed_models, player_body_find_models("models/player/*.dpm"));
 		g_player_allowed_models = strcat(g_player_allowed_models, player_body_find_models("models/player/*.md3"));
