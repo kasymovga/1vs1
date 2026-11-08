@@ -11,3 +11,10 @@ string(float w, str_length_up_to_width_width_function_t tw) str_wrapped_line;
 #define strlen vm_strlen
 #define strstrofs vm_strstrofs
 #define str_sub vm_substring
+#define strreplace vm_strreplace
+#define strtolower vm_strtolower
+#define strtoupper vm_strtoupper
+#define strlennocol vm_strlennocol
+#define strdecolorize vm_strdecolorize
+#define strcasecmp vm_strcasecmp
+#define strpad vm_strpad

@@ -1164,16 +1164,6 @@ string(string s) cvar_defstring = #482;
 //description:
 //returns the default value of a cvar, as a tempstring.
 //
-//DP_QC_STRREPLACE
-//idea: Sajt
-//darkplaces implementation: Sajt
-//builtin definitions:
-string(string search, string replace, string subject) strreplace = #484;
-string(string search, string replace, string subject) strireplace = #485;
-//description:
-//strreplace replaces all occurrences of 'search' with 'replace' in the string 'subject', and returns the result as a tempstring.
-//strireplace does the same but uses case-insensitive matching of the 'search' term
-//
 //DP_QC_ENTITYDATA
 //idea: KrimZon
 //darkplaces implementation: KrimZon

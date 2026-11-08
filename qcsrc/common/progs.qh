@@ -11,4 +11,5 @@
 #include "stdproc.qh"
 #include "str.qh"
 #include "uri.qh"
+#include "vm.qh"
 #include "weapon.qh"

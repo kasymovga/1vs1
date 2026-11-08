@@ -238,21 +238,7 @@ float(float fld, float hostnr) gethostcachenumber = #621;
 float(string key) gethostcacheindexforkey = #622;
 void(string key) addwantedhostcachekey = #623;
 string(void) getextresponse = #624;
-//FTE_STRINGS
-//idea: many
-//darkplaces implementation: KrimZon
-//description:
-//various string manipulation functions
-float(string str, string sub, float startpos) vm_strstrofs = #221;
-float(string str, float ofs) str2chr = #222;
-string(float c, ...) chr2str = #223;
-string(float ccase, float calpha, float cnum, string s, ...) strconv = #224;
-string(float chars, string s, ...) strpad = #225;
-string(string info, string key, string value, ...) infoadd = #226;
-string(string info, string key) infoget = #227;
-float(string s1, string s2, float len) strncmp = #228;
-float(string s1, string s2) strcasecmp = #229;
-float(string s1, string s2, float len) strncasecmp = #230;
+
 //DP_QC_STRINGBUFFERS
 //idea: ??
 //darkplaces implementation: LordHavoc
@@ -267,34 +253,14 @@ string(float bufhandle, float string_index) bufstr_get = #446;
 void(float bufhandle, float string_index, string str) bufstr_set = #447;
 float(float bufhandle, string str, float order) bufstr_add = #448;
 void(float bufhandle, float string_index) bufstr_free = #449;
-string(string s) strdecolorize = #477;
-string(string s) strtolower = #480;
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
 string(string name) cvar_description = #518;
-//DP_QC_CRC16
-//idea: div0
-//darkplaces implementation: div0
-//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
-//When caseinsensitive is set, the CRC is calculated of the lower cased string.
-float(float caseinsensitive, string s, ...) crc16 = #494;
-//DP_QC_CVAR_TYPE
-float(string name) vm_cvar_type = #495;
-//DP_QC_URI_ESCAPE
-//idea: div0
-//darkplaces implementation: div0
-//URI::Escape's functionality
-string(string in) uri_escape = #510;
-string(string in) uri_unescape = #511;
 string(string, float) netaddress_resolve = #625;
-string(string search, string replace, string subject) strreplace = #484;
-string(float uselocaltime, string format, ...) strftime = #478;
-float(string url, float id) uri_get = #513;
-float(string s) tokenize_console = #514;
-float(float i) argv_start_index = #515;
-float(float i) argv_end_index = #516;
 string(float, float) getgamedirinfo = #626;
-#define GETGAMEDIRINFO_NAME 0
-#define GETGAMEDIRINFO_DESCRIPTION 1
+enum {
+	VM_GETGAMEDIRINFO_NAME = 0,
+	VM_GETGAMEDIRINFO_DESCRIPTION = 1,
+};
 //DP_RM_QCSENDPACKET
 //idea: Akari
 //darkplaces implementation: Akari

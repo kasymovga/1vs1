@@ -1048,6 +1048,6 @@ entity(float tokens, float idx) client_entity_from_argv {
 
 void(entity pl, float tstart, float dt) client_write_recordmarker {
 	// also write a marker into demo files for demotc-race-record-extractor to find
-	stuffcmd(pl, strcat( strcat("//", strconv(2, 0, 0, game_type_name(game_type)), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
+	stuffcmd(pl, strcat( strcat("//", strtoupper(game_type_name(game_type)), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
 			" ", ftos(tstart), " ", ftos(dt), "\n"));
 }

@@ -1,0 +1,110 @@
+//FTE_STRINGS
+//idea: many
+//darkplaces implementation: KrimZon
+//description:
+//various string manipulation functions
+float(string str, string sub, float startpos) vm_strstrofs = #221;
+float(string str, float ofs) str2chr = #222;
+string(float c, ...) chr2str = #223;
+string(float ccase, float calpha, float cnum, string s, ...) vm_strconv = #224;
+string(float chars, string s, ...) vm_strpad = #225;
+string(string info, string key, string value, ...) infoadd = #226;
+string(string info, string key) infoget = #227;
+float(string s1, string s2, float len) vm_strncmp = #228;
+float(string s1, string s2) vm_strcasecmp = #229;
+float(string s1, string s2, float len) vm_strncasecmp = #230;
+
+//DP_QC_STRINGCOLORFUNCTIONS
+//idea: Dresk
+//darkplaces implementation: Dresk
+//builtin definitions:
+float(string s) vm_strlennocol = #476; // returns how many characters are in a string, minus color codes
+string(string s) vm_strdecolorize = #477; // returns a string minus the color codes of the string provided
+//description:
+//provides additional functionality to strings by supporting functions that isolate and identify strings with color codes
+
+//DP_QC_STRFTIME
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//builtin definitions:
+string(float uselocaltime, string format, ...) strftime = #478;
+//description:
+//provides the ability to get the local (in your timezone) or world (Universal Coordinated Time) time as a string using the formatting of your choice:
+//example: "%Y-%m-%d %H:%M:%S"   (result looks like: 2007-02-08 01:03:15)
+//note: "%F %T" gives the same result as "%Y-%m-%d %H:%M:%S" (ISO 8601 date format and 24-hour time)
+//for more format codes please do a web search for strftime 3 and you should find the man(3) pages for this standard C function.
+//practical uses:
+//changing day/night cycle (shops closing, monsters going on the prowl) in an RPG, for this you probably want to use s = strftime(TRUE, "%H");hour = stof(s);
+//printing current date/time for competitive multiplayer games, such as the beginning/end of each round in real world time.
+//activating eastereggs in singleplayer games on certain dates.
+//note: some codes such as %x and %X use your locale settings and thus may not make sense to international users, it is not advisable to use these as the server and clients may be in different countries.
+//note: if you display local time to a player, it would be a good idea to note whether it is local time using a string like "%F %T (local)", and otherwise use "%F %T (UTC)".
+//note: be aware that if the game is saved and reloaded a week later the date and time will be different, so if activating eastereggs in a singleplayer game or something you may want to only check when a level is loaded and then keep the same easteregg state throughout the level so that the easteregg does not deactivate when reloading from a savegame (also be aware that precaches should not depend on such date/time code because reloading a savegame often scrambles the precaches if so!).
+//note: this function can return a NULL string (you can check for it with if (!s)) if the localtime/gmtime functions returned NULL in the engine code, such as if those functions don't work on this platform (consoles perhaps?), so be aware that this may return nothing.
+
+//DP_QC_STRING_CASE_FUNCTIONS
+//idea: Dresk
+//darkplaces implementation: LordHavoc / Dresk
+//builtin definitions:
+string(string s) vm_strtolower = #480; // returns the passed in string in pure lowercase form
+string(string s) vm_strtoupper = #481; // returns the passed in string in pure uppercase form
+//description:
+//provides simple string uppercase and lowercase functions
+
+//DP_QC_STRREPLACE
+//idea: Sajt
+//darkplaces implementation: Sajt
+//builtin definitions:
+string(string search, string replace, string subject) vm_strreplace = #484;
+string(string search, string replace, string subject) vm_strireplace = #485;
+//description:
+//strreplace replaces all occurrences of 'search' with 'replace' in the string 'subject', and returns the result as a tempstring.
+//strireplace does the same but uses case-insensitive matching of the 'search' term
+
+//DP_QC_CRC16
+//idea: div0
+//darkplaces implementation: div0
+//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
+//When caseinsensitive is set, the CRC is calculated of the lower cased string.
+float(float caseinsensitive, string s, ...) crc16 = #494;
+
+//DP_QC_CVAR_TYPE
+//idea: div0
+//DarkPlaces implementation: div0
+//builtin definitions:
+float(string name) vm_cvar_type = #495;
+
+//DP_QC_URI_ESCAPE
+//idea: div0
+//darkplaces implementation: div0
+//URI::Escape's functionality
+string(string in) uri_escape = #510;
+string(string in) uri_unescape = #511;
+
+//DP_QC_URI_GET
+//idea: div0
+//darkplaces implementation: div0
+//loads text from an URL into a string
+//returns 1 on success of initiation, 0 if there are too many concurrent
+//connections already or if the URL is invalid
+//the following callback will receive the data and MUST exist!
+//  void(float id, float status, string data) URI_Get_Callback;
+//status is either
+//  negative for an internal error,
+//  0 for success, or
+//  the HTTP response code on server error (e.g. 404)
+//if 1 is returned by uri_get, the callback will be called in the future
+float(string url, float id) uri_get = #513;
+float(string url, float id, string posttype, string postdata) uri_post = #513;
+
+//DP_QC_TOKENIZE_CONSOLE
+//idea: div0
+//darkplaces implementation: div0
+//builtin definitions:
+float(string s) tokenize_console = #514;
+float(float i) argv_start_index = #515;
+float(float i) argv_end_index = #516;
+//description:
+//this function returns tokens separated just like the console does
+//also, functions are provided to get the index of the first and last character of each token in the original string
+//Passing negative values to them, or to argv, will be treated as indexes from the LAST token (like lists work in Perl). So argv(-1) will return the LAST token.
