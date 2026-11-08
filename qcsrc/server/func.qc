@@ -448,12 +448,15 @@ void(void) func_calc_move_done {
 	if (self.velocity != '0 0 0') {
 		// After moving, set origin to exact final destination
 		vector d = self.finaldest - self.origin;
-		vector o = ENTITY_CENTER(self);
-		entity e = findradius(o, vlen(self.absmax - self.absmin) * 0.5);
+		entity e = findradius(ENTITY_CENTER(self), vlen(self.maxs - self.mins) * 0.5);
 		for (; e; e = e.chain) {
 			if (e.groundentity == self) {
 				setorigin(e, e.origin + d);
-				entity_move_out_of_solid_with_type(e, TRACE_MOVE_NOMONSTERS);
+				trace_box(e.origin, e.mins, e.maxs, e.origin - '0 0 8', TRACE_MOVE_NOMONSTERS, e);
+				if (trace_startsolid)
+					entity_move_out_of_solid_with_type(e, TRACE_MOVE_NOMONSTERS);
+				else if (trace_ent == self)
+					setorigin(e, trace_endpos);
 			}
 		}
 		setorigin(self, self.finaldest);
@@ -477,6 +480,11 @@ void(vector tdest, vector adest, float tspeed, void() func) func_calc_move {
 	self.think1 = func;
 	self.finaldest = tdest;
 	self.v_angle = adest;
+	entity e = findradius(ENTITY_CENTER(self), vlen(self.maxs - self.mins) * 0.5);
+	for (; e; e = e.chain) {
+		if (e.groundentity == self) teleport_bit_set(e);
+	}
+	teleport_bit_set(self);
 	if (tspeed <= 0) {
 		func_calc_move_done();
 		return;
@@ -598,7 +606,6 @@ void(void) func_plat_trigger_use {
 
 	func_plat_go_down();
 }
-
 
 void(void) func_plat_crush {
 	if ((self.spawnflags & 4) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
