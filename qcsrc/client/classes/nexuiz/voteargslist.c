@@ -43,7 +43,7 @@ void setVoteTypeNexuizVoteArgsList(entity me, string vote) {
 		me.nItems = 255;
 	} else if (vote == "gotomap" || vote == "chmap" || vote == "nextmap") {
 		new_voteType = 3;
-		me.nItems = max(1, gui_available_maps_count_total);
+		me.nItems = max(1, buf_getsize(map_list));
 	}
 	me.selectedItem = -1;
 	if (new_voteType != me.voteType) {
@@ -73,18 +73,7 @@ void setSelectedNexuizVoteArgsList(entity me, float i)
 				s = strcat(s, " reason");
 		}
 	} else if (me.voteType == 3) {
-		float j, listnum = 0;
-		while (i > gui_available_maps_count[listnum]) {
-			i -= gui_available_maps_count[listnum];
-			listnum++;
-			if (listnum == CMD_LSMAPS_REPLY_STRINGS_COUNT) return;
-		}
-		s = gui_available_maps[listnum];
-		for (j = 0; j < i; j++) {
-			s = str_cdr(s);
-		}
-		s = str_car(s);
-		s = strcat(vote, " ", s);
+		s = strcat(vote, " ", bufstr_get(map_list, i));
 		me.voteList.textBox.setText(me.voteList.textBox, s);
 		me.voteList.textBox.cursorPos = strlen(s);
 	}
@@ -118,29 +107,7 @@ void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float
 			s = strcat("#", ftos(e.sv_entnum + 1), ": ", strdecolorize(player_name(e.sv_entnum)));
 
 	} else if (me.voteType == 3) {
-		me.nItems = gui_available_maps_count_total;
-		float listnum = 0;
-		if (i >= gui_available_maps_count[listnum]) {
-			i -= gui_available_maps_count[listnum];
-			listnum++;
-			if (listnum == CMD_LSMAPS_REPLY_STRINGS_COUNT) return;
-		}
-		s = gui_available_maps[listnum];
-		float j = 0;
-		if (i >= drawListBoxItemNexuizVoteArgsList_cdr_last_pos - 1 && drawListBoxItemNexuizVoteArgsList_list_last == listnum) {
-			j = drawListBoxItemNexuizVoteArgsList_cdr_last_pos - 1;
-			s = drawListBoxItemNexuizVoteArgsList_cdr_last;
-		}
-		drawListBoxItemNexuizVoteArgsList_list_last = listnum;
-		for (j; j < i; j++) {
-			s = str_cdr(s);
-		}
-		if (i != drawListBoxItemNexuizVoteArgsList_cdr_last_pos - 1) {
-			str_unzone_ifneeded(drawListBoxItemNexuizVoteArgsList_cdr_last);
-			drawListBoxItemNexuizVoteArgsList_cdr_last = str_zone_ifneeded(s);
-			drawListBoxItemNexuizVoteArgsList_cdr_last_pos = i + 1;
-		}
-		s = str_car(s);
+		s = bufstr_get(map_list, i);
 	}
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 }

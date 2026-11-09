@@ -28,7 +28,3 @@ enum {
 	GUI_RECORDLIST,
 	GUI_HUD,
 };
-
-string gui_available_maps[CMD_LSMAPS_REPLY_STRINGS_COUNT];
-float gui_available_maps_count[CMD_LSMAPS_REPLY_STRINGS_COUNT];
-float gui_available_maps_count_total;
