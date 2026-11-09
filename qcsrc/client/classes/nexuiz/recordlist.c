@@ -67,6 +67,6 @@ void drawListBoxItemNexuizRecordList(entity me, float i, vector absSize, float i
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, record_map, me.realFontSize, c, SKINALPHA_TEXT, 0);
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.4 0 0', record_time, me.realFontSize, c, SKINALPHA_TEXT, 0);
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.6 0 0', record_name, me.realFontSize, c, SKINALPHA_TEXT, 1);
-	me.nItems = max(1, recordlist_size);
+	me.nItems = max(1, recordlist_size());
 }
 #endif
