@@ -53,9 +53,8 @@ void(void) func_breakable_look_destroyed {
 }
 
 void(void) func_breakable_look_restore {
-	vector _mins = self.mins, _maxs = self.maxs;
 	setmodel(self, self.mdl);
-	setsize(self, _mins, _maxs);
+	model_setup_size(self);
 	self.solid = self.oldsolid;
 	waypoint_relink_door(self, self.origin);
 }

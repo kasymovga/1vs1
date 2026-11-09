@@ -66,6 +66,13 @@ void(void) model_lod_attach {
 		self.customizeentityforclient = model_lod_customize;
 }
 
+void(entity m) model_setup_size {
+	if (self.scale)
+		setsize(self, self.mins * self.scale, self.maxs * self.scale);
+	else
+		setsize(self, self.mins, self.maxs);
+}
+
 void(void) model_setup {
 	if (self.model != "") {
 		precache_model(self.model);
@@ -73,10 +80,7 @@ void(void) model_setup {
 		entity_initialize(self, model_lod_attach, INITPRIO_FINDTARGET);
 	}
 	setorigin(self, self.origin);
-	if (self.scale)
-		setsize(self, self.mins * self.scale, self.maxs * self.scale);
-	else
-		setsize(self, self.mins, self.maxs);
+	model_setup_size(self);
 }
 
 void(void) model_setup_no_lod {
