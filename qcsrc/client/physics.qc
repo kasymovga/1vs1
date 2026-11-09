@@ -580,7 +580,7 @@ void(float isnew) physics_read {
 			}
 			vector r1, r2, v;
 			makevectors(physics_ground_angles);
-			v = (self.origin + '0 0 1' * self.mins_z) - physics_ground_origin;
+			v = (self.origin + '0 0 0.5' * (self.maxs_z + self.mins_z)) - physics_ground_origin;
 			r1_x = v_forward * v;
 			r1_y = v_right * v;
 			r1_z = v_up * v;
