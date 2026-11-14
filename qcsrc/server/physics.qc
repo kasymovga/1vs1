@@ -647,6 +647,7 @@ float(entity to, float sf) physics_send {
 		entity spectatee = SPECTATOR_SPECTATEE(self);
 		if (spectatee.flags & FLAG_ONGROUND) sf |= 16;
 		v = spectatee.velocity;
+		self.last_maxspeedmod = spectatee.last_maxspeedmod;
 	} else {
 		if (self.classname == "player")
 			sf |= 8;
