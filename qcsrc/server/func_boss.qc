@@ -27,6 +27,24 @@ void(string t) func_boss_controller_switch_target {
 			break;
 	}
 	if (self.aiment) {
+		if (boss.cnt && boss.velocity != '0 0 0') {
+			float i;
+			entity e = self.aiment;
+			vector dir = normalize(boss.velocity);
+			vector d = e.origin - boss.origin;
+			float cost = (normalize(d) * dir) * vlen(d);
+			float cost2;
+			for (i = 0; i < 40; i++) { // search not first but some of closest corner path to more smooth transition
+				e = find(NULL, targetname, e.target);
+				if (e == self.aiment) break;
+				vector d = e.origin - boss.origin;
+				cost2 = (normalize(d) * dir) * vlen(d);
+				if (cost2 > cost) {
+					cost = cost2;
+					self.aiment = e;
+				}
+			}
+		}
 		entity_angles_normalize(boss, self.aiment.angles);
 		self.speed = (self.aiment.speed ? self.aiment.speed : boss.speed);
 	} else
