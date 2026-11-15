@@ -1075,13 +1075,16 @@ void(void) spawnfunc_func_button {
 	func_button_reset();
 }
 
-float FUNC_DOOR_START_OPEN = 1;
-float FUNC_DOOR_DONT_LINK = 4;
-float FUNC_DOOR_TOGGLE = 32;
-float FUNC_DOOR_KEY_GOLD_OR_CRUSH = 8;
-float FUNC_DOOR_KEY_SILVER = 16;
-float FUNC_DOOR_KEY_BLOOD = 64;
-float FUNC_DOOR_PLAYER_ONLY = 128;
+enum {
+	FUNC_DOOR_START_OPEN = 1,
+	FUNC_DOOR_DONT_LINK = 4,
+	FUNC_DOOR_TOGGLE = 32,
+	FUNC_DOOR_KEY_GOLD_OR_CRUSH = 8,
+	FUNC_DOOR_KEY_SILVER = 16,
+	FUNC_DOOR_KEY_BLOOD = 64,
+	FUNC_DOOR_PLAYER_ONLY = 128,
+	FUNC_DOOR_NO_RELINK_WAYPOINTS = 65536,
+};
 
 void(void) func_door_go_down;
 void(void) func_door_go_up;
@@ -1115,7 +1118,7 @@ void(void) func_door_hit_top {
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
 	self.state = FUNC_STATE_TOP;
-	if ((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) {
+	if (((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) && !(self.spawnflags & FUNC_DOOR_NO_RELINK_WAYPOINTS)) {
 		waypoint_relink_door(self, self.pos1);
 		waypoint_relink_door(self, self.pos2);
 		return; // don't come down automatically
@@ -1133,7 +1136,7 @@ void(void) func_door_hit_bottom {
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
 	self.state = FUNC_STATE_BOTTOM;
-	if ((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) {
+	if (((self.spawnflags & FUNC_DOOR_TOGGLE) || self.wait < 0) && !(self.spawnflags & FUNC_DOOR_NO_RELINK_WAYPOINTS)) {
 		waypoint_relink_door(self, self.pos1);
 		waypoint_relink_door(self, self.pos2);
 	}
@@ -1382,16 +1385,19 @@ float(entity e1, entity e2) func_doors_touching {
 }
 
 void(void) func_doors_link {
-	entity t, starte;
+	entity t, starte, e;
 	vector cmins, cmaxs;
 	if (self.enemy)
 		return; // already linked by another door
 
 	if ((self.spawnflags & FUNC_DOOR_DONT_LINK) || cvar("sv_gameplayfix_dontlinkdoors")) {
 		self.owner = self.enemy = self;
-		IFTARGETED
-			return;
+		IFTARGETED {
+			if ((e = find(NULL, target, self.targetname)) && e.classname == "trigger_multivibrator")
+				self.spawnflags |= FUNC_DOOR_NO_RELINK_WAYPOINTS;
 
+			return;
+		}
 		if (self.health || (!self.items && cvar("g_door_shootable"))) {
 			self.takedamage = DAMAGE_YES;
 			self.event_damage = func_door_damage;
@@ -1461,6 +1467,13 @@ void(void) func_doors_link {
 				cmaxs_z = t.absmax_z;
 		}
 	} while (1);
+	if (starte.targetname != "" && !starte.nottargeted) {
+		if ((e = find(NULL, target, starte.targetname)) && e.classname == "trigger_multivibrator") {
+			starte.spawnflags |= FUNC_DOOR_NO_RELINK_WAYPOINTS;
+			for (t = starte.enemy; t != starte; t = t.enemy)
+				t.spawnflags |= FUNC_DOOR_NO_RELINK_WAYPOINTS;
+		}
+	}
 	if (starte.targetname == "" || starte.nottargeted)
 	if (starte.health > 0 || (!starte.items && cvar("g_door_shootable"))) {
 		for (t = starte; ;) {
@@ -1523,7 +1536,7 @@ void(void) func_door_rm_hack {
 var float(entity e, entity who) func_door_trace_walk_skip_entity_next;
 float(entity e, entity who) func_door_trace_walk_skip_entity {
 	if ((trace_ent.classname == "door_rotating" || trace_ent.classname == "door")) {
-		if (!(trace_ent.spawnflags & FUNC_DOOR_TOGGLE) && // toggle door is not skippable
+		if ((!(trace_ent.spawnflags & FUNC_DOOR_TOGGLE) || (trace_ent.spawnflags & FUNC_DOOR_NO_RELINK_WAYPOINTS)) && // toggle door is not skippable
 				(!trace_ent.items || (trace_ent.items & who.items)) && // key door skippable only for key owner
 				(trace_ent.targetname == "" || trace_ent.nottargeted)) // targeted door not skippable
 		return TRUE;
