@@ -15,7 +15,7 @@ float(entity pl, .float field, float flag, string descr) cheat_assign {
 		announce(pl, "player/marine/coms/taunt1.ogg", "^1PUSSY");
 		pl.field |= flag;
 	}
-	sprint(pl, m);
+	vm_sprint(pl, m);
 	return (pl.field & flag);
 }
 

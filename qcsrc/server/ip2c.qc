@@ -45,7 +45,7 @@ var float(string cmd, float tokens) IP2C_ClientCommandHandle_NextLink;
 float IP2C_ClientCommandHandle(string cmd, float tokens) {
     if(cmd == "fakeflag" && self.classname) {
         if(strlen(argv(1)) != 2) {
-            sprint(self, "^1The flag code must be exactly 2 characters long.\n");
+            vm_sprint(self, "^1The flag code must be exactly 2 characters long.\n");
             return TRUE;
         }
 

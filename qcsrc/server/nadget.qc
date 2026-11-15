@@ -1037,7 +1037,7 @@ void nadget_Pick(float tokens) {
 	float success, t, i, argc;
 
 	if(g_nadgets_double && t1 == t2 && t1 != NADGET_RANDOM && t2 != NADGET_RANDOM) {
-		sprint(self, "^1Primary and secondary nadgets can't be of the same type\n");
+		vm_sprint(self, "^1Primary and secondary nadgets can't be of the same type\n");
 		return;
 	}
 
@@ -1082,7 +1082,7 @@ void nadget_Pick(float tokens) {
 		}
 
 		if(!success) {
-			sprint(self, "^1This nadget type is either invalid or not allowed on this server.\n");
+			vm_sprint(self, "^1This nadget type is either invalid or not allowed on this server.\n");
 			return;
 		}
 	}, g_nadgets_double)

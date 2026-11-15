@@ -36,7 +36,7 @@ float(string cmd, float tokens) report_cmd_client_handle {
 			s = strcat(s, "reason=", uri_escape(reason));
 			print("Report sending: ", s, "\n");
 			uri_get(strcat(sv_report_url, "?", s), report_uri_handler);
-			sprint(self, "\{1}^2Your report sended\n");
+			vm_sprint(self, "\{1}^2Your report sended\n");
 			return TRUE;
 		}
 	}

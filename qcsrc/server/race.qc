@@ -229,7 +229,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 			}
 			if (cp == race_timed_checkpoint) { // Finish line
 				if (race_position_used(e)) {
-					sprint(e, "\{1}^3Save/restore position was used, time not counted\n");
+					vm_sprint(e, "\{1}^3Save/restore position was used, time not counted\n");
 				} else {
 					float position = race_records_put(e.netname, e.clid, t, e.scorekeeper.race_maxspeed, -1);
 					if (position) {
@@ -238,7 +238,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 						if (position == 1) {
 							announce(e, "announcer/male/amazing.wav", "^31st place!");
 							if (sv_cts_autodemos_discard) e.discardabledemo = FALSE;
-							sprint(e, strcat("Record run interval: started at ", ftos(e.respawntime), ", time is ", TIME_ENCODED_TOSTRING(t), ", duration is ", ftos(time - e.respawntime), "\n"));
+							vm_sprint(e, strcat("Record run interval: started at ", ftos(e.respawntime), ", time is ", TIME_ENCODED_TOSTRING(t), ", duration is ", ftos(time - e.respawntime), "\n"));
 						} else if (position == 2)
 							announce(e, "announcer/male/awesome.wav", "^52st place!");
 						else if (position == 2)
@@ -1199,7 +1199,7 @@ void(entity src, entity dst) race_copy {
 
 void(entity pl) race_position_create {
 	if (pl.classname != "player") {
-		sprint(pl, "\{1}^1You need join game first!\n");
+		vm_sprint(pl, "\{1}^1You need join game first!\n");
 		return;
 	}
 	race_position_remove(pl);
@@ -1208,12 +1208,12 @@ void(entity pl) race_position_create {
 	e.classname = "race_position";
 	e.owner = pl;
 	e.cnt = 1;
-	sprint(pl, "\{1}^2Position was saved\n");
+	vm_sprint(pl, "\{1}^2Position was saved\n");
 }
 
 void(entity pl) race_position_restore {
 	if (pl.classname != "player") {
-		sprint(pl, "\{1}^1You need join game first!\n");
+		vm_sprint(pl, "\{1}^1You need join game first!\n");
 		return;
 	}
 	entity e = race_position_find(pl);
@@ -1225,10 +1225,10 @@ void(entity pl) race_position_restore {
 			race_time_clear(pl);
 
 		e.cnt = 1;
-		sprint(pl, "\{1}^2Position was restored\n");
+		vm_sprint(pl, "\{1}^2Position was restored\n");
 		return;
 	}
-	sprint(pl, "\{1}^1No saved position found!\n");
+	vm_sprint(pl, "\{1}^1No saved position found!\n");
 }
 
 var float(string cmd, float argc) race_cmd_client_handle_next;

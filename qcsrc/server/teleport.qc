@@ -181,7 +181,7 @@ void(void) teleport_touch {
 		e = random_selection_chosen_ent;
 	}
 	if (!e) {
-		sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
+		vm_sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
 		return;
 	}
 	makevectors(e.angles);

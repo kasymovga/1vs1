@@ -108,7 +108,7 @@ void(void) cmd_init {
 
 void(entity e, string s) cmd_print_to {
     if (e)
-        sprint(e, strcat("\{1}", s, "\n"));
+        vm_sprint(e, strcat("\{1}", s, "\n"));
     else
         print(s, "\n");
 }
@@ -258,7 +258,7 @@ void(string command) cmd_game {
 		CLIENT_FOR_EACH(plr) { //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 			if (plr.classname == "spectator" || plr.classname == "observer") {
 				plr.spectatortime = time;
-				sprint(plr, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+				vm_sprint(plr, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 			}
 		}
 		bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds!\n"));
@@ -520,7 +520,7 @@ void(string command) cmd_game {
 	if (cmd == "bprint") {
 		CLIENT_FOR_EACH_REAL(e) {
 			if (e.netaddress != "local")
-				sprint(e, strcat(str_sub(command, argv_start_index(1), -1), "\n"));
+				vm_sprint(e, strcat(str_sub(command, argv_start_index(1), -1), "\n"));
 		}
 		return;
 	}
@@ -557,7 +557,7 @@ float(void) cmd_floodcheck {
 
 void(void) cmd_records_print_think {
 	self.cnt = self.cnt + 1;
-	sprint(self.enemy, cmd_records_reply[self.cnt]);
+	vm_sprint(self.enemy, cmd_records_reply[self.cnt]);
 	if (self.cnt >= cmd_records_reply_extra) {
 		remove(self);
 	} else
@@ -601,7 +601,7 @@ void(string s) cmd_client {
 			self.client_flags &= ~CLIENT_FLAG_AUTOSWITCH;
 			autoswitchmsg = "off";
 		}
-		sprint(self, strcat("^1autoswitch turned ", autoswitchmsg, "\n"));
+		vm_sprint(self, strcat("^1autoswitch turned ", autoswitchmsg, "\n"));
 	} else if (cmd == "sentcvar") { // new system
 		if (tokens == 2) { // undefined cvar: use the default value on the server then
 			s = strcat(str_sub(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
@@ -622,10 +622,10 @@ void(string s) cmd_client {
 		if not(self.flags & FLAG_CLIENT)
 			return;
 		if not(team_teams) {
-			sprint( self, "selecteam can only be used in teamgames\n");
+			vm_sprint( self, "selecteam can only be used in teamgames\n");
 		} else if (g_campaign) {
 		} else if (team_lock) {
-			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
+			vm_sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if ( argv(1) == "red" ) {
 			client_team_change(COLOR_TEAM1);
 		} else if ( argv(1) == "blue" ) {
@@ -637,7 +637,7 @@ void(string s) cmd_client {
 		} else if ( argv(1) == "auto" ) {
 			client_team_change(-1);
 		} else {
-			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
+			vm_sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
 		}
 	} else if (cmd == "ready") {
 		if not(self.classname == "player" || self.team > 0)
@@ -657,22 +657,22 @@ void(string s) cmd_client {
 				if (!timeout_status)
 					ready_count();
 			} else {
-				sprint(self, "^1Game has already been restarted\n");
+				vm_sprint(self, "^1Game has already been restarted\n");
 			}
 		}
 	} else if (cmd == "maplist") {
 		float i;
 		for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
 			if (cmd_maplist_reply[i] == "") break;
-			sprint(self, cmd_maplist_reply[i]);
-			sprint(self, "\n");
+			vm_sprint(self, cmd_maplist_reply[i]);
+			vm_sprint(self, "\n");
 		}
 	} else if (cmd == "lsmaps") {
 		float i;
 		for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
 			if (cmd_lsmaps_reply[i] == "") break;
-			sprint(self, cmd_lsmaps_reply[i]);
-			sprint(self, "\n");
+			vm_sprint(self, cmd_lsmaps_reply[i]);
+			vm_sprint(self, "\n");
 		}
 	} else if (cmd == "lsmaps2") {
 		if not(!map_finished && (self.flags & FLAG_CLIENT)) // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded
@@ -686,10 +686,10 @@ void(string s) cmd_client {
 			net_write_string(MSG_ONE, cmd_lsmaps2_reply[i]);
 	} else if (cmd == "records") {
 		if (cmd_records_reply[0] == "")
-			sprint(self, "No records are available on this server.\n");
+			vm_sprint(self, "No records are available on this server.\n");
 		else {
-			sprint(self, "Records on this server:\n");
-			sprint(self, cmd_records_reply[0]);
+			vm_sprint(self, "Records on this server:\n");
+			vm_sprint(self, cmd_records_reply[0]);
 			if (cmd_records_reply_extra) {
 				e = spawn();
 				e.nextthink = time + sys_ticrate;
@@ -716,16 +716,16 @@ void(string s) cmd_client {
 		} else {
 			if (tokens > client_entity_from_argv_firsttoken)
 				trigger_magicear_processmessage_forallears(self, -1, world, str_sub(s, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken)));
-			sprint(self, "ERROR: usage: tell # playerid text...\n");
+			vm_sprint(self, "ERROR: usage: tell # playerid text...\n");
 		}
 	} else if (cmd == "teamstatus") {
 		score_nice_print(self);
 	} else if (cmd == "cvar_changes") {
-		sprint(self, cvar_changes);
+		vm_sprint(self, cvar_changes);
 	} else if (cmd == "menu_select") {
 		menu_select(argv(1), stof(argv(2)));
 	} else if (cmd == "mylocation") {
-		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
+		vm_sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
 	} else if (cmd == "recordlistchunk" && tokens == 3) {
 		float n1 = floor(stof(argv(1))), n2 = floor(stof(argv(2)));
 		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16 && !map_finished && (self.flags & FLAG_CLIENT)) { // csqc messages must be avoided at end of map, because client can get it between levels without csqc loaded

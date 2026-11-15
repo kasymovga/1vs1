@@ -269,37 +269,37 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 
 	if (source.muted && source) {
 		// always fake the message
-		sprint(source, sourcemsgstr);
+		vm_sprint(source, sourcemsgstr);
 		if (source.flood_field <= time)
 			print(source.netname, "#", ftos(etof(self)), " attempted to chat\n");
 	} else if(flood == 1) {
 		if (g_chat_flood_notify_flooder)
-			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
+			vm_sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
 		else {
-			sprint(source, sourcemsgstr);
+			vm_sprint(source, sourcemsgstr);
 		}
 		if (g_chat_flood_damage_flooder)
 		if not(source.deadflag)
 			damage(source, world, world, g_chat_flood_damage_flooder, DEATH_HURTTRIGGER, source.origin, '0 0 0');
 	} else if (privatesay) {
-		sprint(source, sourcemsgstr);
-		sprint(privatesay, msgstr);
+		vm_sprint(source, sourcemsgstr);
+		vm_sprint(privatesay, msgstr);
 	} else if (teamsay > 0) {
-		sprint(source, sourcemsgstr);
+		vm_sprint(source, sourcemsgstr);
 		PLAYER_FOR_EACH_REAL(head) if(head.team == source.team)
 			if (head != source) {
-				sprint(head, msgstr);
+				vm_sprint(head, msgstr);
 			}
 	} else if(teamsay < 0) {
-		sprint(source, sourcemsgstr);
+		vm_sprint(source, sourcemsgstr);
 		CLIENT_FOR_EACH_REAL(head) if (head.classname != "player" && head.team <= 0)
 			if (head != source)
-				sprint(head, msgstr);
+				vm_sprint(head, msgstr);
 	} else if (sourcemsgstr != msgstr) {
-		sprint(source, sourcemsgstr);
+		vm_sprint(source, sourcemsgstr);
 		CLIENT_FOR_EACH_REAL(head)
 			if (head != source)
-				sprint(head, msgstr);
+				vm_sprint(head, msgstr);
 	} else
 		bprint(msgstr);
 }

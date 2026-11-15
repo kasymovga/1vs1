@@ -116,7 +116,7 @@ void(string type, string msg) player_sound_voice_message {
 
 	sample = player_voice_message_sample_field(type);
 	if (player_voice_message_sample_not_found) {
-		sprint(self, strcat("Invalid voice. Use one of: ", player_sound_voice_samples_all, "\n"));
+		vm_sprint(self, strcat("Invalid voice. Use one of: ", player_sound_voice_samples_all, "\n"));
 		return;
 	}
 	ownteam = (type != "taunt" && type != "teamshot");

@@ -101,10 +101,10 @@ void() timeout_handler_think {
 
 void() timeout_evaluate_timeout {
 	if (warmup_active && !g_warmup_allow_timeout)
-		return sprint(self, "\{1}^1You can not call a timeout in warmup-stage!\n");
+		return vm_sprint(self, "\{1}^1You can not call a timeout in warmup-stage!\n");
 
 	if (time < map_starttime )
-		return sprint(self, "\{1}^1You can not call a timeout while the map is being restarted!\n");
+		return vm_sprint(self, "\{1}^1You can not call a timeout while the map is being restarted!\n");
 
 	if (timeout_status != 2) {
 		if (timeout_status == 1)
@@ -116,12 +116,12 @@ void() timeout_evaluate_timeout {
 			float lastPossibleTimeout;
 			lastPossibleTimeout = (timelimit * 60) - cvar("sv_timeout_leadtime") - 1;
 			if (lastPossibleTimeout < time - map_starttime)
-				return sprint(self, "\{1}^1It is too late to call a timeout now!\n");
+				return vm_sprint(self, "\{1}^1It is too late to call a timeout now!\n");
 		}
 	}
 	//player may not call a timeout if he has no calls left
 	if (self.allowedTimeouts < 1)
-		return sprint(self, "\{1}^1You already used all your timeout calls for this map!\n");
+		return vm_sprint(self, "\{1}^1You already used all your timeout calls for this map!\n");
 	//now all required checks are passed
 	self.allowedTimeouts -= 1;
 	print_all(PRINT_CHAT, "^2* ^7{1} ^7called a timeout ({2} timeouts left)!", self.netname, ftos(self.allowedTimeouts), ""); //write a bprint who started the timeout (and how many he has left)
@@ -141,7 +141,7 @@ void() timeout_evaluate_timeout {
 
 void(entity plr) timeout_evaluate_timein {
 	if (plr && plr != timeout_initiator)
-		return sprint(plr, "\{1}^1You may not abort the active timeout. Only the player who called it can do that!\n");
+		return vm_sprint(plr, "\{1}^1You may not abort the active timeout. Only the player who called it can do that!\n");
 
 	if (timeout_status == 1) {
 		timeout_remaining_time = timeout_status = 0;
@@ -176,11 +176,11 @@ float(string cmd, float tokens) timeout_ClientCommandHandle {
 		if (cmd == "timeout" || (cmd == "timeoutin" && timeout_status == 0)) {
 			if (self.classname == "player") {
 				if (vote_called)
-					sprint(self, "\{1}^1You can not call a timeout while a vote is active!\n");
+					vm_sprint(self, "\{1}^1You can not call a timeout while a vote is active!\n");
 				else
 					timeout_evaluate_timeout();
 			} else
-				sprint(self, "\{1}^1Only players can call a timeout!\n");
+				vm_sprint(self, "\{1}^1Only players can call a timeout!\n");
 
 			return TRUE;
 		}

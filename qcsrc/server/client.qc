@@ -299,7 +299,7 @@ void(float destteam) client_team_change_kill {
 			self.killindicator.nextthink = time + (self.lip) * 0.05;
 			self.killindicator.cnt = ceil(g_balance_kill_delay);
 			self.killindicator.count = bound(0, ceil(g_balance_kill_delay), 10);
-			sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
+			vm_sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
 			self.lip = 0;
 		}
 	}
@@ -385,7 +385,7 @@ float() client_preconnect_abort {
 				n++;
 
 		if (n + 1 > sv_maxconnects_per_address) {
-			sprint(self, strcat("^1Connections limit for ", self.netaddress, " exceeded\n"));
+			vm_sprint(self, strcat("^1Connections limit for ", self.netaddress, " exceeded\n"));
 			dropclient(self);
 			return TRUE;
 		}
@@ -466,7 +466,7 @@ void(void) client_connect { //called by engine
 	bot_relinkplayerlist();
 	self.spectatortime = time;
 	if (spectator_block) {
-		sprint(self, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+		vm_sprint(self, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 	}
 	self.jointime = time;
 	self.allowedTimeouts = sv_timeout_number;
@@ -575,7 +575,7 @@ float() client_join_allowed {
 void(void) client_check_spectator_block {
 	if (self.classname == "spectator" || self.classname == "observer") {
 		if (time > (self.spectatortime + g_maxplayers_spectator_blocktime)) {
-			sprint(self, "^7You were kicked from the server because you are spectator and spectators aren't allowed at the moment.\n");
+			vm_sprint(self, "^7You were kicked from the server because you are spectator and spectators aren't allowed at the moment.\n");
 			dropclient(self);
 		}
 	}

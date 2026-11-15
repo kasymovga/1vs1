@@ -60,7 +60,7 @@ void(float n) walkietalkie_menu_select {
 		return;
 
 	if (self.classname != "player") {
-		sprint(self, "\{1}^1Spectators cannot use walkie-talkie\n");
+		vm_sprint(self, "\{1}^1Spectators cannot use walkie-talkie\n");
 		return;
 	}
 	float _team_index = ((team_teams && !sv_walkietalkie_public) ? team_index(self.team) : 0);
@@ -87,7 +87,7 @@ void(void) walkietalkie_menu {
 		return;
 
 	if (self.classname != "player") {
-		sprint(self, "\{1}^1Spectators cannot use walkie-talkie\n");
+		vm_sprint(self, "\{1}^1Spectators cannot use walkie-talkie\n");
 		return;
 	}
 	entity e = menu_prepare(self, "walkietalkie", "Walkie Talkie", 0, walkietalkie_menu_select);

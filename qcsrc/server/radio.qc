@@ -96,7 +96,7 @@ void Radio_Announce(entity e) {
 			desc = strcat(desc, "^7 - ", ftos(left), " in queue");
 
 		if(e)
-			sprint(e, strcat("\{1}", desc, "\n"));
+			vm_sprint(e, strcat("\{1}", desc, "\n"));
 		else {
 			bprint("\{1}", desc, "\n");
 		}

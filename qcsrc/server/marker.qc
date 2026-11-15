@@ -383,7 +383,7 @@ void(float imp) marker_impulse {
 			marker_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 			marker_Ping(wp);
 		}
-		sprint(self, "personal waypoint spawned at location\n");
+		vm_sprint(self, "personal waypoint spawned at location\n");
 		break;
 	case 31:
 		wp = marker_DeployPersonal("waypoint", self.cursor_trace_endpos);
@@ -399,7 +399,7 @@ void(float imp) marker_impulse {
 				marker_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 				marker_Ping(wp);
 			}
-			sprint(self, "personal waypoint spawned at death location\n");
+			vm_sprint(self, "personal waypoint spawned at death location\n");
 		}
 		break;
 	case 33:
@@ -414,7 +414,7 @@ void(float imp) marker_impulse {
 			if (wp)
 				marker_Ping(wp);
 
-			sprint(self, "HELP ME attached\n");
+			vm_sprint(self, "HELP ME attached\n");
 		}
 		break;
 	case 34:
@@ -423,7 +423,7 @@ void(float imp) marker_impulse {
 			marker_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 			marker_Ping(wp);
 		}
-		sprint(self, "HERE spawned at location\n");
+		vm_sprint(self, "HERE spawned at location\n");
 		break;
 	case 35:
 		wp = marker_DeployFixed("here", FALSE, self.cursor_trace_endpos);
@@ -439,7 +439,7 @@ void(float imp) marker_impulse {
 				marker_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 				marker_Ping(wp);
 			}
-			sprint(self, "HERE spawned at death location\n");
+			vm_sprint(self, "HERE spawned at death location\n");
 		}
 		break;
 	case 37:
@@ -448,7 +448,7 @@ void(float imp) marker_impulse {
 			marker_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 			marker_Ping(wp);
 		}
-		sprint(self, "DANGER spawned at location\n");
+		vm_sprint(self, "DANGER spawned at location\n");
 		break;
 	case 38:
 		wp = marker_DeployFixed("danger", FALSE, self.cursor_trace_endpos);
@@ -464,16 +464,16 @@ void(float imp) marker_impulse {
 				marker_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 				marker_Ping(wp);
 			}
-			sprint(self, "DANGER spawned at death location\n");
+			vm_sprint(self, "DANGER spawned at death location\n");
 		}
 		break;
 	case 47:
 		marker_ClearPersonal();
-		sprint(self, "personal waypoint cleared\n");
+		vm_sprint(self, "personal waypoint cleared\n");
 		break;
 	case 48:
 		marker_ClearOwned();
-		sprint(self, "all waypoints cleared\n");
+		vm_sprint(self, "all waypoints cleared\n");
 		break;
 	}
 }

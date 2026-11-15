@@ -822,27 +822,27 @@ float(string s, float argc) waypoint_cmd_client {
 		case "spawn":
 			e = waypoint_spawn(self.origin, self.origin, 0);
 			waypoint_relink_near(e, e.origin);
-			sprint(self, strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
+			vm_sprint(self, strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
 			break;
 		case "remove":
 			if (self.classname == "player") {
 				e = navigation_findnearestwaypoint(self, FALSE);
 				if (e)
 				if not(e.wpflags & WAYPOINTFLAG_GENERATED) {
-					sprint(self, strcat("Waypoint removed at ", vtos(e.origin), "\n"));
+					vm_sprint(self, strcat("Waypoint removed at ", vtos(e.origin), "\n"));
 					waypoint_remove(e);
 				}
 			} else { //observer?
 				e = findradius(self.origin + self.view_ofs, 16);
 				if (e) {
-					sprint(self, strcat("Waypoint removed at ", vtos(e.origin), "\n"));
+					vm_sprint(self, strcat("Waypoint removed at ", vtos(e.origin), "\n"));
 					waypoint_remove(e);
 				}
 			}
 			break;
 		case "unreachable":
 			if (self.classname != "player") {
-				sprint(self, "Must be a player\n");
+				vm_sprint(self, "Must be a player\n");
 				break;
 			}
 			for (e = waypoint_list; e; e = e.aiment) {
@@ -851,7 +851,7 @@ float(string s, float argc) waypoint_cmd_client {
 			}
 			e2 = navigation_findnearestwaypoint(self, FALSE);
 			if not(e2) {
-				sprint(self, "Nearest waypoint not found, nothing is reachable\n");
+				vm_sprint(self, "Nearest waypoint not found, nothing is reachable\n");
 				break;
 			}
 			navigation_markroutes_start(e2);
@@ -860,7 +860,7 @@ float(string s, float argc) waypoint_cmd_client {
 			m = 0;
 			for (e = waypoint_list; e; e = e.aiment) {
 				if (e.height >= WAYPOINT_COST_MAX) {
-					sprint(self, strcat("unreachable: ", etos(e), " ", vtos(e.origin), "\n"));
+					vm_sprint(self, strcat("unreachable: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
 					e.effects |= VM_EF_NODEPTHTEST | VM_EF_BLUE;
 					++i;
@@ -868,13 +868,13 @@ float(string s, float argc) waypoint_cmd_client {
 				}
 			}
 			if (i)
-				sprint(self, strcat(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n"));
+				vm_sprint(self, strcat(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n"));
 
 			navigation_markroutes_inverted(e2);
 			i = 0;
 			for (e = waypoint_list; e; e = e.aiment) {
 				if (e.height >= WAYPOINT_COST_MAX) {
-					sprint(self, strcat("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n"));
+					vm_sprint(self, strcat("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.colormod_x = 0.1;
 					if not(e.effects & VM_EF_NODEPTHTEST) // not already reported before
 						++m;
@@ -883,10 +883,10 @@ float(string s, float argc) waypoint_cmd_client {
 				}
 			}
 			if (i)
-				sprint(self, strcat(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n"));
+				vm_sprint(self, strcat(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n"));
 
 			if (m)
-				sprint(self, strcat(ftos(m), " waypoints have been marked total\n"));
+				vm_sprint(self, strcat(ftos(m), " waypoints have been marked total\n"));
 
 			i = 0;
 			for (e = findchain(classname, "info_player_deathmatch"); e; e = e.chain) {
@@ -899,7 +899,7 @@ float(string s, float argc) waypoint_cmd_client {
 					e.effects &= ~VM_EF_NODEPTHTEST;
 					e.model = "";
 				} else {
-					sprint(self, strcat("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n"));
+					vm_sprint(self, strcat("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n"));
 					e.effects |= VM_EF_NODEPTHTEST;
 					setmodel(e, self.body.model);
 					e.frame = self.body.frame;
@@ -911,7 +911,7 @@ float(string s, float argc) waypoint_cmd_client {
 				setsize(e, '0 0 0', '0 0 0');
 			}
 			if (i)
-				sprint(self, strcat(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n"));
+				vm_sprint(self, strcat(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n"));
 
 			break;
 		}

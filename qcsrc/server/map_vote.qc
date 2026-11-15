@@ -148,7 +148,7 @@ float map_vote_client_command(string cmd) {
 		return TRUE;
 	}
 	if (cmd == "suggestmap") {
-		sprint(self, strcat(map_vote_suggest(argv(1)), "\n"));
+		vm_sprint(self, strcat(map_vote_suggest(argv(1)), "\n"));
 		return TRUE;
 	}
 	return FALSE;

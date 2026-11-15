@@ -396,7 +396,7 @@ float(string ip, float bantime, string reason, float dosync) ban_insert {
 
 void(entity client, float bantime, float masksize, string reason) ban_kick {
 	if (!net_ip_parse(client.netaddress)) {
-		sprint(client, strcat("Kickbanned: ", reason, "\n"));
+		vm_sprint(client, strcat("Kickbanned: ", reason, "\n"));
 		dropclient(client);
 		return;
 	}
@@ -419,7 +419,7 @@ void(entity client, float bantime, float masksize, string reason) ban_kick {
 	/*
 	 * not needed, as we enforce the ban in ban_insert anyway
 	// and kick him
-	sprint(client, strcat("Kickbanned: ", reason, "\n"));
+	vm_sprint(client, strcat("Kickbanned: ", reason, "\n"));
 	dropclient(client);
 	 */
 }

@@ -281,32 +281,32 @@ void(void) world_init {
 	}
 	db_init();
 	// 0 normal
-	lightstyle(0, "m");
+	vm_lightstyle(0, "m");
 	// 1 FLICKER (first variety)
-	lightstyle(1, "mmnmmommommnonmmonqnmmo");
+	vm_lightstyle(1, "mmnmmommommnonmmonqnmmo");
 	// 2 SLOW STRONG PULSE
-	lightstyle(2, "abcdefghijklmnopqrstuvwxyzyxwvutsrqponmlkjihgfedcba");
+	vm_lightstyle(2, "abcdefghijklmnopqrstuvwxyzyxwvutsrqponmlkjihgfedcba");
 	// 3 CANDLE (first variety)
-	lightstyle(3, "mmmmmaaaaammmmmaaaaaabcdefgabcdefg");
+	vm_lightstyle(3, "mmmmmaaaaammmmmaaaaaabcdefgabcdefg");
 	// 4 FAST STROBE
-	lightstyle(4, "mamamamamama");
+	vm_lightstyle(4, "mamamamamama");
 	// 5 GENTLE PULSE 1
-	lightstyle(5,"jklmnopqrstuvwxyzyxwvutsrqponmlkj");
+	vm_lightstyle(5,"jklmnopqrstuvwxyzyxwvutsrqponmlkj");
 	// 6 FLICKER (second variety)
-	lightstyle(6, "nmonqnmomnmomomno");
+	vm_lightstyle(6, "nmonqnmomnmomomno");
 	// 7 CANDLE (second variety)
-	lightstyle(7, "mmmaaaabcdefgmmmmaaaammmaamm");
+	vm_lightstyle(7, "mmmaaaabcdefgmmmmaaaammmaamm");
 	// 8 CANDLE (third variety)
-	lightstyle(8, "mmmaaammmaaammmabcdefaaaammmmabcdefmmmaaaa");
+	vm_lightstyle(8, "mmmaaammmaaammmabcdefaaaammmmabcdefmmmaaaa");
 	// 9 SLOW STROBE (fourth variety)
-	lightstyle(9, "aaaaaaaazzzzzzzz");
+	vm_lightstyle(9, "aaaaaaaazzzzzzzz");
 	// 10 FLUORESCENT FLICKER
-	lightstyle(10, "mmamammmmammamamaaamammma");
+	vm_lightstyle(10, "mmamammmmammamamaaamammma");
 	// 11 SLOW PULSE NOT FADE TO BLACK
-	lightstyle(11, "abcdefghijklmnopqrrqponmlkjihgfedcba");
+	vm_lightstyle(11, "abcdefghijklmnopqrrqponmlkjihgfedcba");
 	// styles 32-62 are assigned by the spawnfunc_light program for switchable lights
 	// 63 testing
-	lightstyle(63, "a");
+	vm_lightstyle(63, "a");
 	cvar_changes_init();
 	campaign_preinit();
 	precache_model("null"); // we need this one before game_type_init. or maybe not
