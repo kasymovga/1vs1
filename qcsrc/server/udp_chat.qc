@@ -77,7 +77,7 @@ void(entity source, string msg) udp_chat_PupblicPlayerChat {
 		if (source) {
 			string _netname = strreplace(":", "_", source.netname);
 			_netname = strreplace("@", "_", _netname);
-			text = strcat(strdecolorize(_netname), "#", ftos(num_for_edict(source)), "@", sv_udpchat_id, ": ", strdecolorize(msg));
+			text = strcat(strdecolorize(_netname), "#", ftos(etof(source)), "@", sv_udpchat_id, ": ", strdecolorize(msg));
 		} else
 			text = strcat("SERVER#0@", sv_udpchat_id, ": ", strdecolorize(msg));
 

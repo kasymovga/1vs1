@@ -900,7 +900,7 @@ void(entity ent, entity ignore) vm_tracetoss = #64;
 //idea: id Software
 //darkplaces implementation: id Software
 //builtin definitions:
-string(entity ent) etos = #65;
+string(entity ent) vm_etos = #65;
 //description:
 //prints "entity 1" or similar into a string. (this was a Q2 builtin)
 //

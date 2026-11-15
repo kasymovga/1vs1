@@ -23,10 +23,10 @@ void(entity pl) voip_setup {
 			pl.voipgroup = 1;
 	}
 	if (pl.muted) {
-		pl.voipgroup = -256 - num_for_edict(pl);
+		pl.voipgroup = -256 - etof(pl);
 	}
 	if (pl.abuser > 0) {
-		pl.voipgroup = -512 - num_for_edict(pl);
+		pl.voipgroup = -512 - etof(pl);
 	}
 	if (vg != pl.voipgroup)
 		print(player_name(pl), "^7 switched to VOIP channel #", ftos(pl.voipgroup), "\n");
@@ -47,7 +47,7 @@ void(entity pl) voip_disable {
 
 void(entity pl) voip_enable {
 	if (clienttype(pl) == VM_CLIENTTYPE_REAL) {
-		pl.voipgroup = -768 - num_for_edict(pl);
+		pl.voipgroup = -768 - etof(pl);
 		if (pl.scorekeeper)
 			voip_setup(pl);
 	} else

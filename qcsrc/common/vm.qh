@@ -4,8 +4,8 @@
 //description:
 //various string manipulation functions
 float(string str, string sub, float startpos) vm_strstrofs = #221;
-float(string str, float ofs) str2chr = #222;
-string(float c, ...) chr2str = #223;
+float(string str, float ofs) vm_str2chr = #222;
+string(float c, ...) vm_chr2str = #223;
 string(float ccase, float calpha, float cnum, string s, ...) vm_strconv = #224;
 string(float chars, string s, ...) vm_strpad = #225;
 string(string info, string key, string value, ...) infoadd = #226;

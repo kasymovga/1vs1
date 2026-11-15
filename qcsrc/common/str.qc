@@ -107,16 +107,16 @@ float(string theText, float maxWidth, str_length_up_to_width_width_function_t w)
 			left-=2;
 		else if (left >= 3 && str_sub(theText, left-3, 2) == "^x")
 			{
-				ch = str2chr(theText, left-1);
+				ch = stoc(theText, left-1);
 				if( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xr/
 					left-=3;
 			}
 		else if (left >= 4 && str_sub(theText, left-4, 2) == "^x")
 			{
-				ch = str2chr(theText, left-2);
+				ch = stoc(theText, left-2);
 				if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') )
 				{
-					ch = str2chr(theText, left-1);
+					ch = stoc(theText, left-1);
 					if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xrg/
 						left-=4;
 				}

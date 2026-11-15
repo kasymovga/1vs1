@@ -32,7 +32,7 @@ string(string text, string command) input_command_key {
 	}
 	keys = db_get(db_binds, command);
 	if (keys == "") {
-		float firstchr = str2chr(command, 0);
+		float firstchr = stoc(command, 0);
 		if (firstchr == ' ' || firstchr == '\t' || firstchr == '\r' || firstchr == '\n') {
 			backtrace("input_command_key: command started with whitespace");
 			return "";

@@ -289,7 +289,7 @@ float(entity to, float sf) vehicle_aircraft_physics_send {
 		net_write_coord(MSG_ENTITY, g_vehicle_aircraft_speed_stop);
 		net_write_coord(MSG_ENTITY, g_vehicle_aircraft_turnspeed);
 		net_write_coord(MSG_ENTITY, g_vehicle_aircraft_movement_inertia);
-		net_write_short(MSG_ENTITY, num_for_edict(self.vehicle));
+		net_write_short(MSG_ENTITY, etof(self.vehicle));
 	}
 	if (sf & 2) {
 		net_write_coord(MSG_ENTITY, self.vehicle.angles_x);

@@ -10,8 +10,8 @@ void(entity e1, float icontype, float iconmessage, entity e2) notification {
 	if (icontype & 64)
 		net_write_string(MSG_BROADCAST, e1.netname);
 	else
-		net_write_short(MSG_BROADCAST, num_for_edict(e1));
+		net_write_short(MSG_BROADCAST, etof(e1));
 
-	net_write_short(MSG_BROADCAST, num_for_edict(e2));
+	net_write_short(MSG_BROADCAST, etof(e2));
 	net_write_coord(MSG_BROADCAST, iconmessage);
 }

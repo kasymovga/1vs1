@@ -8,7 +8,7 @@ string(string s) race_records_html_escape {
 	float c;
 	string sc = "";
 	for (i = 0; i < n; i++) {
-		c = str2chr(s, i);
+		c = stoc(s, i);
 		if (c & 0xE000) {
 			c &= ~0xE000;
 		}
@@ -19,7 +19,7 @@ string(string s) race_records_html_escape {
 		else if (c == '>')
 			sc = strcat(sc, "&gt;");
 		else if ((c >= 32 && c <= 127) || c > 255)
-			sc = strcat(sc, chr2str(c));
+			sc = strcat(sc, ctos(c));
 		else if (c == 1)
 			sc = strcat(sc, "&#9588;");
 		else if (c == 2)

@@ -225,7 +225,7 @@ void(float preventReuse) trigger_use_targets_ex {
 					self = t;
 					other = otemp;
 					activator = act;
-					//print(act.classname, "#", ftos(num_for_edict(act)), ": ");
+					//print(act.classname, "#", ftos(etof(act)), ": ");
 					//print(stemp.classname, "/", stemp.targetname, " -> ", t.classname, "/", t.targetname, "\n");
 					self.use();
 					if (preventReuse) {

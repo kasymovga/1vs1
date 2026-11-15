@@ -225,7 +225,7 @@ void(string command) cmd_game {
 		entno = stof(argv(1));
 		client = world;
 		if (entno <= client_max_count)
-			client = edict_num(entno);
+			client = ftoe(entno);
 		if (client.flags & FLAG_CLIENT) {
 			if (clienttype(client) == VM_CLIENTTYPE_REAL) {
 				print_to(client, PRINT_CENTER, "^3SERVER ADMIN:\n\n^7{1}", argv(2), "", "");
@@ -286,7 +286,7 @@ void(string command) cmd_game {
 		entno = stof(argv(1));
 		client = world;
 		if (entno <= client_max_count)
-			client = edict_num(entno);
+			client = ftoe(entno);
 
 		if (client.flags & FLAG_CLIENT) {
 			float lt;
@@ -511,7 +511,7 @@ void(string command) cmd_game {
 		return;
 	}
 	if (cmd == "stuffcmd") {
-		e = edict_num(stof(argv(1)));
+		e = ftoe(stof(argv(1)));
 		if (clienttype(e) == VM_CLIENTTYPE_REAL)
 			stuffcmd(e, strcat(str_sub(command, argv_start_index(2), -1), "\n"));
 

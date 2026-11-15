@@ -785,7 +785,7 @@ string(entity pl, float field) sbar_field_get {
 		if (!char0 || !char1)
 			return "";
 
-		return strcat(chr2str(char0), chr2str(char1));
+		return strcat(ctos(char0), ctos(char1));
 	case SP_NADGET:
 		tmp = pl.(scores[SP_NADGET_FIELD]);
 		if (tmp)

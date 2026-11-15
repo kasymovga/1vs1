@@ -193,7 +193,7 @@ void(entity e, float f) score_send_delayed {
 float(entity to, float sendflags) score_send_entity {
 	float i, p, longflags, n;
 	net_write_byte(MSG_ENTITY, NET_CSQC_SCORES);
-	net_write_byte(MSG_ENTITY, num_for_edict(self.owner));
+	net_write_byte(MSG_ENTITY, etof(self.owner));
 	longflags = 0;
 	for (i = 0, p = 1; i < SCORE_FILEDS_MAX; ++i, p *= 2)
 		if (self.scores[i] > 127 || self.scores[i] <= -128)

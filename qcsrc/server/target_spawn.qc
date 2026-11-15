@@ -156,7 +156,7 @@ void target_spawn_useon(entity e)
 				if(valuefield == "")
 				{
 					if(value == "")
-						value = ftos(num_for_edict(valueent));
+						value = ftos(etof(valueent));
 				}
 				else
 				{

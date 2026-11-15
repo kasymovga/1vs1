@@ -90,7 +90,7 @@ float keyDownInputBox(entity me, float key, float ascii, float shift)
 	me.dragScrollTimer = time;
 	if(ascii >= 32 && ascii != 127)
 	{
-		me.enterText(me, chr2str(ascii));
+		me.enterText(me, ctos(ascii));
 		return 1;
 	}
 	switch(key)
@@ -263,7 +263,7 @@ void drawInputBox(entity me)
 					gui_draw_fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
 					gui_draw_text(p, str_sub(me.text, i, 2), me.realFontSize, theColor, 0.8, 0);
 					
-					component = str2chr(me.text, i+2);
+					component = stoc(me.text, i+2);
 					if (component >= '0' && component <= '9')
 						component = component - '0';
 					else if (component >= 'a' && component <= 'f')

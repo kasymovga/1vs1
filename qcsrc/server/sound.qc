@@ -5,7 +5,7 @@
 
 void(float dest, entity e, vector o, float chan, string samp, float vol, float atten) sound_to_at {
 	float entno, idx;
-	entno = num_for_edict(e);
+	entno = etof(e);
 	idx = precache_sound_index(samp);
 	float sflags;
 	sflags = 0;
@@ -59,7 +59,7 @@ void(entity e, vector o, float chan, string samp, float vol, float atten) sound_
 
 void(float dest, entity e, float chan) sound_stop_to {
 	float entno;
-	entno = num_for_edict(e);
+	entno = etof(e);
 	if (entno >= 8192) {
 		float idx, sflags;
 		idx = precache_sound_index("misc/null.wav");

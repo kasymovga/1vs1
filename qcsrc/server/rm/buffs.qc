@@ -672,9 +672,9 @@ float Buffs_Model_Send(entity to, float sf) {
 
     if(sf & 1) {
 		if (to == o)
-			net_write_byte(MSG_ENTITY, num_for_edict(o));
+			net_write_byte(MSG_ENTITY, etof(o));
 		else
-			net_write_byte(MSG_ENTITY, num_for_edict(o.body.body));
+			net_write_byte(MSG_ENTITY, etof(o.body.body));
     }
 
     if(sf & 2) {

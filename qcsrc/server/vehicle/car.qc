@@ -264,7 +264,7 @@ float(entity to, float sf) vehicle_car_physics_send {
 		net_write_coord(MSG_ENTITY, g_vehicle_car_turnspeed);
 		net_write_coord(MSG_ENTITY, g_vehicle_car_movement_inertia);
 		net_write_coord(MSG_ENTITY, g_vehicle_car_speed_drift);
-		net_write_short(MSG_ENTITY, num_for_edict(self.vehicle));
+		net_write_short(MSG_ENTITY, etof(self.vehicle));
 		net_write_byte(MSG_ENTITY, 1);
 	}
 	if (sf & 2) {

@@ -450,7 +450,7 @@ float(string command) ban_cmd {
 			if (entno > client_max_count || entno < 1)
 				return TRUE;
 
-			client = edict_num(entno);
+			client = ftoe(entno);
 			INITARG(3);
 			GETARG(bantime, cvar("g_ban_default_bantime"));
 			GETARG(masksize, cvar("g_ban_default_masksize"));

@@ -171,7 +171,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	else
 		namestr = source.netname;
 
-	namestr = strcat(namestr, "^0#", ftos(num_for_edict(source)));
+	namestr = strcat(namestr, "^0#", ftos(etof(source)));
 	if (privatesay) {
 		msgstr = strcat("\{1}* ^3", namestr, "^3 tells you: ^7");
 		privatemsgprefixlen = strlen(msgstr);
@@ -271,7 +271,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		// always fake the message
 		sprint(source, sourcemsgstr);
 		if (source.flood_field <= time)
-			print(source.netname, "#", ftos(num_for_edict(self)), " attempted to chat\n");
+			print(source.netname, "#", ftos(etof(self)), " attempted to chat\n");
 	} else if(flood == 1) {
 		if (g_chat_flood_notify_flooder)
 			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));

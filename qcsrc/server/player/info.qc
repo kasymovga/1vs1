@@ -46,8 +46,8 @@ float(entity to, float sf) player_info_send {
 
 	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1) {
-		net_write_byte(MSG_ENTITY, num_for_edict(o));
-		net_write_short(MSG_ENTITY, num_for_edict(self.enemy));
+		net_write_byte(MSG_ENTITY, etof(o));
+		net_write_short(MSG_ENTITY, etof(self.enemy));
 	}
 	if (sf & 64) {
 		if (sf & 2) {

@@ -1,0 +1,14 @@
+#define NULL nil
+enum {
+	FALSE = 0,
+	TRUE = 1,
+};
+#define vtos vm_vtos
+#define stov vm_stov
+#define ftos vm_ftos
+#define stof vm_stof
+#define ctos vm_chr2str
+#define stoc vm_str2chr
+#define etos vm_etos
+#define etof vm_num_for_edict
+#define ftoe vm_edict_num

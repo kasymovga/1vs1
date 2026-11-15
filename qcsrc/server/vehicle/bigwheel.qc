@@ -267,7 +267,7 @@ float(entity to, float sf) vehicle_bigwheel_physics_send {
 		net_write_coord(MSG_ENTITY, g_vehicle_bigwheel_turnspeed);
 		net_write_coord(MSG_ENTITY, g_vehicle_bigwheel_movement_inertia);
 		net_write_coord(MSG_ENTITY, g_vehicle_bigwheel_speed_drift);
-		net_write_short(MSG_ENTITY, num_for_edict(self.vehicle));
+		net_write_short(MSG_ENTITY, etof(self.vehicle));
 		net_write_byte(MSG_ENTITY, 0);
 	}
 	if (sf & 2) {

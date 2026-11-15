@@ -18,23 +18,23 @@ void(void) notification_read {
 	if (notification_type == NOTIFICATION_DEATH) {
 		if (w) {
 			if (DEATH_ISNADGET(w)) {
-				_icon = chr2str(0xE100 + w - NADGET_START + 32);
+				_icon = ctos(0xE100 + w - NADGET_START + 32);
 			} else {
-				_icon = chr2str(0xE100 + w);
+				_icon = ctos(0xE100 + w);
 			}
 		} else {
 			if (deathtype == DEATH_FIRE || deathtype == DEATH_LAVA)
-				_icon = chr2str(0xE100 + FONT_ICON_LAVA);
+				_icon = ctos(0xE100 + FONT_ICON_LAVA);
 			else if (deathtype == DEATH_SLIME)
-				_icon = chr2str(0xE100 + FONT_ICON_SLIME);
+				_icon = ctos(0xE100 + FONT_ICON_SLIME);
 			else if (deathtype == DEATH_FALL)
-				_icon = chr2str(0xE100 + FONT_ICON_FALL);
+				_icon = ctos(0xE100 + FONT_ICON_FALL);
 			else if (deathtype == DEATH_DROWN)
-				_icon = chr2str(0xE100 + FONT_ICON_WATER);
+				_icon = ctos(0xE100 + FONT_ICON_WATER);
 			else if (deathtype == DEATH_HURTTRIGGER)
-				_icon = chr2str(0xE100 + FONT_ICON_VOID);
+				_icon = ctos(0xE100 + FONT_ICON_VOID);
 			else
-				_icon = chr2str(0xE100 + FONT_ICON_KILL);
+				_icon = ctos(0xE100 + FONT_ICON_KILL);
 		}
 	} else {
 	}

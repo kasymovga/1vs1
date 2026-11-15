@@ -78,7 +78,7 @@ float(entity to, float sf) warpzone_teleported_send {
 	net_write_coord(MSG_ENTITY, self.angles_z);
 	net_write_coord(MSG_ENTITY, self.owner.v_angle_x);
 	net_write_coord(MSG_ENTITY, self.owner.v_angle_y);
-	net_write_coord(MSG_ENTITY, num_for_edict(self.enemy));
+	net_write_coord(MSG_ENTITY, etof(self.enemy));
 	return TRUE;
 }
 
@@ -371,7 +371,7 @@ float(entity to, float sendflags) warpzone_send {
 	net_write_coord(MSG_ENTITY, self.warpzone_targetangles_x);
 	net_write_coord(MSG_ENTITY, self.warpzone_targetangles_y);
 	net_write_coord(MSG_ENTITY, self.warpzone_targetangles_z);
-	net_write_coord(MSG_ENTITY, num_for_edict(self));
+	net_write_coord(MSG_ENTITY, etof(self));
 	return TRUE;
 }
 

@@ -138,7 +138,7 @@ entity(string vote, string cmd, entity caller) vote_kick_victim_get {
 		if not(cvar_value_issafe(reason))
 			reason = uri_escape(reason);
 
-		vote_kick_victim_newcommand = strcat(argv(0), " # ", ftos(num_for_edict(e)));
+		vote_kick_victim_newcommand = strcat(argv(0), " # ", ftos(etof(e)));
 		if (argv(0) == "kickban") {
 			vote_kick_victim_newcommand = strcat(vote_kick_victim_newcommand, " ", cvar_string("g_ban_default_bantime"), " ", cvar_string("g_ban_default_masksize"), " ", reason);
 		} else if (argv(0) == "kick") {
@@ -418,7 +418,7 @@ void(entity e) vote_help {
 
 string vote_netname(entity e) {
 	if (e) {
-		return strcat(e.netname, "^0#", ftos(num_for_edict(e)));
+		return strcat(e.netname, "^0#", ftos(etof(e)));
 	} else {
 		if (cvar_string("sv_adminnick") != "") {
 			return cvar_string("sv_adminnick");

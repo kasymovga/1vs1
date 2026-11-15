@@ -40,7 +40,7 @@ void(void) jb_note_message {
 }
 
 string(entity cp) jb_marker_name {
-	string id = chr2str(str2chr("A", 0) + cp.dmg);
+	string id = ctos(stoc("A", 0) + cp.dmg);
 	if (cp.netname)
 		return strcat(id, ": ", strdecolorize(cp.netname));
 

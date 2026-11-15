@@ -111,7 +111,7 @@ entity nadget_Sentry_FindTarget(entity emitter) {
 
 void nadget_Sentry_Beam_Think(void) {
     entity targ = self.enemy.enemy;
-    vector end = targ.origin + targ.view_ofs * (0.5 + 0.5 * sin(time * 5 + num_for_edict(self)));
+    vector end = targ.origin + targ.view_ofs * (0.5 + 0.5 * sin(time * 5 + etof(self)));
     vector start = self.owner.origin + self.owner.view_ofs;
     vector end_transformed;
 	end = warpzone_find_nearest_origin(start, end, TRUE);
@@ -222,7 +222,7 @@ void nadget_Sentry_SetOwner(entity sentry, entity newowner) {
     nadget_Waypoint_Remove(sentry.hg_waypoint);
 
     sentry.team = (team_teams ? newowner.team : 0);
-    sentry.colormap = num_for_edict(newowner);
+    sentry.colormap = etof(newowner);
     sentry.aiment.colormap = sentry.colormap;
 
     if(newowner) {
@@ -548,7 +548,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     e.hg_type = NADGET_SENTRY;
     e.view_ofs = '0 0 100';
     e.takedamage = DAMAGE_AIM;
-    e.colormap = num_for_edict(e.realowner);
+    e.colormap = etof(e.realowner);
     e.health = g_nadgets_sentry_health;
     e.event_damage = nadget_Sentry_Damage;
     e.cnt = time + g_nadgets_sentry_beam_initialdelay;

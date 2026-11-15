@@ -17,7 +17,7 @@ void(float id, float status, string data) report_uri_callback {
 var float(string cmd, float tokens) report_cmd_client_handle_next;
 float(string cmd, float tokens) report_cmd_client_handle {
     if (cmd == "report" && tokens == 3) {
-		entity villain = edict_num(stof(argv(2)));
+		entity villain = ftoe(stof(argv(2)));
 		if (villain)
 		if (clienttype(villain) == VM_CLIENTTYPE_REAL) {
 			string victimsysinfo = self.sysinfo;

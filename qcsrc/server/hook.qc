@@ -98,7 +98,7 @@ float(entity to, float sf) hook_send {
 
 	net_write_byte(MSG_ENTITY, sf);
 	if (sf & 1)
-		net_write_byte(MSG_ENTITY, num_for_edict(_hook.owner));
+		net_write_byte(MSG_ENTITY, etof(_hook.owner));
 
 	vector v;
 	if (sf & 2) {

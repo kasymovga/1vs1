@@ -106,7 +106,7 @@ float(entity to, float sf) client_init_send {
 		net_write_coord(MSG_ENTITY, world_max_y);
 		net_write_coord(MSG_ENTITY, world_max_z);
 		net_write_string(MSG_ENTITY, sv_ip2country_subpath);
-		net_write_short(MSG_ENTITY, num_for_edict(to) - 1);
+		net_write_short(MSG_ENTITY, etof(to) - 1);
 	}
 	if (sf & 4) {
 		if (sv_foginterval && client_fog != "")
@@ -198,7 +198,7 @@ void(void) client_parms_change { //called by engine
 
 void(void) client_parms_decode {
 	// load parms
-	if (num_for_edict(self) == 1) {
+	if (etof(self) == 1) {
 		#define PARMOVERRIDE(x) if (cvar_string("_override_parm" #x) != "") { parm##x = cvar("_override_parm" #x); cvar_set("_override_parm" #x, ""); }
 		PARMOVERRIDE(1)
 		PARMOVERRIDE(2)
@@ -223,7 +223,7 @@ void(void) client_parms_decode {
 		self.parm_idlesince = time;
 
 	if (parm2) {
-		print("Client #", ftos(num_for_edict(self)), " muted by parm2\n");
+		print("Client #", ftos(etof(self)), " muted by parm2\n");
 		self.muted = TRUE;
 	}
 	self.ability_class = parm3;
@@ -429,7 +429,7 @@ void(void) client_connect { //called by engine
 		self.flags = FLAG_CLIENT;
 		self.discardabledemo = FALSE; //demo can be keeped now
 	}
-	self.spectatee_status = num_for_edict(self);
+	self.spectatee_status = etof(self);
 	if (self.abuser > 0)
 		self.netname = client_abuserplayername;
 
@@ -658,10 +658,10 @@ void(void) client_post_think { //called by engine
 			if (timeleft <= 0) {
 				announce(self, "announcer/robotic/terminated.wav", "^1Terminated");
 				if (drop) {
-					print_all(PRINT_INFO, "^3{1}#^0{2}^3 was kicked for idling.", self.netname, ftos(num_for_edict(self)), "");
+					print_all(PRINT_INFO, "^3{1}#^0{2}^3 was kicked for idling.", self.netname, ftos(etof(self)), "");
 					dropclient(self);
 				} else {
-					print_all(PRINT_INFO, "^3{1}#^0{2}^3 was moved to spectators for idling.", self.netname, ftos(num_for_edict(self)), "");
+					print_all(PRINT_INFO, "^3{1}#^0{2}^3 was moved to spectators for idling.", self.netname, ftos(etof(self)), "");
 					player_to_spec(self);
 				}
 				return;
@@ -774,11 +774,11 @@ void(void) client_cvars_request_wait {
 		if (self.owner.clid == "" && self.cnt <= 0) {
 			if (self.cnt <= -1) {
 				if (clienttype(self.owner) == VM_CLIENTTYPE_REAL) {
-					print("client #", num_for_edict(self.owner), " don't answer to requests, dropping\n");
+					print("client #", etof(self.owner), " don't answer to requests, dropping\n");
 					dropclient(self.owner);
 				}
 			} else {
-				print("requesting reconnect for client #", ftos(num_for_edict(self.owner)), "\n");
+				print("requesting reconnect for client #", ftos(etof(self.owner)), "\n");
 				stuffcmd(self.owner, "disconnect;reconnect\n");
 				return;
 			}
@@ -797,7 +797,7 @@ void(void) client_cvars_request_wait {
 		remove(self);
 		return;
 	}
-	print("requesting cvars for client #", ftos(num_for_edict(self.owner)), "\n");
+	print("requesting cvars for client #", ftos(etof(self.owner)), "\n");
 	client_cvars_request_send(self.owner);
 }
 
@@ -931,7 +931,7 @@ void() client_cvars_parse {
 			stat_player_add(self);
 		} else {
 			if (val != "")
-				print("Warning, client #", ftos(num_for_edict(self)), " send invalid id ", val, "\n");
+				print("Warning, client #", ftos(etof(self)), " send invalid id ", val, "\n");
 
 			self.clid = strftime(TRUE, "%y%m%d%H%M%S");
 			for (f = 0; f < 4; f++) {
@@ -1014,7 +1014,7 @@ entity(float tokens, float idx) client_entity_from_argv {
 				}
 			client_entity_from_argv_firsttoken = idx;
 			if (s == ftos(stof(s))) {
-				e = edict_num(stof(s));
+				e = ftoe(stof(s));
 				if (e.flags & FLAG_CLIENT)
 					return e;
 			}

@@ -46,11 +46,11 @@ void(void) weapon_crylink_projectile_link_remove {
 
 void(float move_correction) weapon_crylink_projectile_link_explode {
 	entity e;
-	float self_num = num_for_edict(self);
+	float self_num = etof(self);
 	entity oldself = self;
 	entity oldother = other;
 	for (e = self.aiment; e != oldself;) {
-		if (num_for_edict(e) < self_num)
+		if (etof(e) < self_num)
 			trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * frametime * (move_correction - 1), TRACE_MOVE_NORMAL, e); //engine already moved it, move it back
 		else
 			trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * frametime * move_correction, TRACE_MOVE_NORMAL, e); //move it forward, because engine still not moved it. FIXME: gravity?

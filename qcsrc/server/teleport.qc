@@ -64,7 +64,7 @@ void(entity teleporter, entity to, vector to_angles) teleport_teleportation_send
 		msg_entity = to;
 		net_write_byte(MSG_ONE, SVC_TEMPENTITY);
 		net_write_byte(MSG_ONE, NET_TE_CSQC_TELEPORTATION);
-		net_write_coord(MSG_ONE, num_for_edict(teleporter));
+		net_write_coord(MSG_ONE, etof(teleporter));
 		net_write_coord(MSG_ONE, to_angles_x);
 		net_write_coord(MSG_ONE, to_angles_y);
 	}
@@ -209,7 +209,7 @@ void(void) teleport_touch {
 
 float(entity to, float sf) teleport_prediction_send {
 	net_write_byte(MSG_ENTITY, NET_CSQC_TELEPORT_PREDICTION);
-	net_write_coord(MSG_ENTITY, num_for_edict(self));
+	net_write_coord(MSG_ENTITY, etof(self));
 	net_write_coord(MSG_ENTITY, self.modelindex);
 	net_write_coord(MSG_ENTITY, self.origin_x);
 	net_write_coord(MSG_ENTITY, self.origin_y);
@@ -247,7 +247,7 @@ void(void) teleport_findtarget {
 	}
 	if (n == 0) {
 		// no dest!
-		print("Teleporter with nonexistant target: ", ftos(num_for_edict(self)), "\n");
+		print("Teleporter with nonexistant target: ", ftos(etof(self)), "\n");
 		print("classname = ", self.classname, "\n");
 		print("target = ", self.target, "\n");
 		print("targetname = ", self.targetname, "\n");

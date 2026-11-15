@@ -434,7 +434,7 @@ void(void) entity_spawn_post {
 		}
 		slot = nextent(NULL);
 		self.existsonlyfor = slot;
-		for (slot = nextent(slot); num_for_edict(slot) <= client_max_count; slot = nextent(slot)) {
+		for (slot = nextent(slot); etof(slot) <= client_max_count; slot = nextent(slot)) {
 			self = spawn();
 			copyentity(oldself, self);
 			self.existsonlyfor = slot;
