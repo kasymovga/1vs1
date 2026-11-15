@@ -760,12 +760,8 @@ void nadget_AdvanceRegen(entity plr, float delta, float limit) {
 
     if(plr.hg_ctx_regentime <= 0) {
         float rem = -plr.hg_ctx_regentime;
-        if(math_almost_equals(rem, 0))
-            rem = 0;
-
         plr.hg_ctx_ammo += 1;
         nadget_SetRegenTime(plr, nadget_RegenTime(plr));
-
         if(rem)
             nadget_AdvanceRegen(plr, rem, limit);
     }

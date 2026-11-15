@@ -23,6 +23,7 @@ vector(void) view_fov_calculate {
 	if (zoomfactor < 1 || zoomfactor > 16)
 		zoomfactor = 2.5;
 
+	float zoomfactorinv = 1 / zoomfactor;
 	zoomspeed = CVAR(cl_zoomspeed);
 	if (zoomspeed >= 0)
 		if (zoomspeed < 0.5 || zoomspeed > 16)
@@ -38,22 +39,22 @@ vector(void) view_fov_calculate {
 	} else {
 		if (zoomspeed < 0) { // instant zoom
 			if (zoomdir)
-				view_zoom_current = 1 / zoomfactor;
+				view_zoom_current = zoomfactorinv;
 			else
 				view_zoom_current = 1;
 		} else {
 			if (zoomdir)
 				view_zoom_current = 1 / bound(1, 1 / view_zoom_current + view_drawframetime * zoomspeed * (zoomfactor - 1), zoomfactor);
 			else
-				view_zoom_current = bound(1 / zoomfactor, view_zoom_current + view_drawframetime * zoomspeed * (1 - 1 / zoomfactor), 1);
+				view_zoom_current = bound(zoomfactorinv, view_zoom_current + view_drawframetime * zoomspeed * (1 - zoomfactorinv), 1);
 		}
 	}
-	if (math_almost_equals(view_zoom_current, 1))
+	if (view_zoom_current >= 1)
 		view_zoom_fraction_current = 0;
-	else if (math_almost_equals(view_zoom_current, 1/zoomfactor))
+	else if (view_zoom_current <= zoomfactorinv)
 		view_zoom_fraction_current = 1;
 	else
-		view_zoom_fraction_current = (view_zoom_current - 1) / (1/zoomfactor - 1);
+		view_zoom_fraction_current = (view_zoom_current - 1) / (zoomfactorinv - 1);
 
 	if (CVAR(cl_zoomsensitivity) < 1)
 		setsensitivityscale(pow(view_zoom_current, 1 - CVAR(cl_zoomsensitivity)));
