@@ -253,7 +253,7 @@ void(entity boss, entity attacker) func_boss_check_parts {
 		if (e.health > 0) return;
 	}
 	//boss defeated
-	if (boss.target2) {
+	if (boss.target2 != "") {
 		for (e = find(NULL, targetname, boss.target2); e; e = find(e, targetname, boss.target2)) {
 			if (e.use) {
 				oldself = self;
