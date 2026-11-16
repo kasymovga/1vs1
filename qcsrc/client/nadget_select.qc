@@ -31,11 +31,11 @@ void(vector o, vector s) nadget_select_update {
 
 void(void) nadget_select_draw {
 	if (nadget_select_active) {
-		nadget_select_alpha = approach(nadget_select_alpha, 1, frametime * 5);
+		nadget_select_alpha = approach(nadget_select_alpha, 1, view_drawframetime * 5);
 		input_event_callback = nadget_select_input_event;
 		mouse_enable("");
 	} else
-		nadget_select_alpha = approach(nadget_select_alpha, 0, frametime * 7);
+		nadget_select_alpha = approach(nadget_select_alpha, 0, view_drawframetime * 7);
 
 	if (!nadget_select_alpha) {
 		nadget_select = NULL;
@@ -95,12 +95,12 @@ void(void) nadget_select_draw {
 					'0.1 0.1 0.1');
 
 			if (isConfirmed || isSelected) {
-				nadget_select_selalpha[sidx] = approach(nadget_select_selalpha[sidx], 1, frametime * 3);
+				nadget_select_selalpha[sidx] = approach(nadget_select_selalpha[sidx], 1, view_drawframetime * 3);
 				p_x = o_x;
 				p_y = o_y + i * sz_y + NADGET_SELECT_MARGIN * 0.5;
 				drawfill(p, (s_x * '1 0 0' + sz_y * '0 1 0'), clr, 0.2 * a, VM_DRAWFLAG_NORMAL);
 			} else
-				nadget_select_selalpha[sidx] = approach(nadget_select_selalpha[sidx], 0, frametime * 3);
+				nadget_select_selalpha[sidx] = approach(nadget_select_selalpha[sidx], 0, view_drawframetime * 3);
 
 			p_x = o_x + NADGET_SELECT_MARGIN * 0.5;
 			p_y = o_y + i * sz_y + NADGET_SELECT_MARGIN * 0.5;

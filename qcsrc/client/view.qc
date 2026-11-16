@@ -2,7 +2,6 @@ enum {
 	VIEW_CAMERA_FREE = 1,
 	VIEW_CAMERA_CHASE = 2,
 };
-float view_drawtime;
 float view_project_is_broken;
 float view_old_view_width, view_old_view_height, view_old_zoom, view_old_fov, view_old_vid_pixelheight;
 float view_fovx, view_fovy; //must be global because of goto skip
@@ -168,14 +167,14 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		else
 			team_my = player_color(player_localnum);
 	}
-	server_ticrate = getstatf(VM_STAT_MOVEVARS_TICRATE) * getstatf(VM_STAT_MOVEVARS_TIMESCALE);
+	float ts = max(getstatf(VM_STAT_MOVEVARS_TIMESCALE), 0.001);
+	server_ticrate = getstatf(VM_STAT_MOVEVARS_TICRATE) * ts;
 	// Render the Scene
 	view_width = w;
 	view_height = h;
 	view_crosshair = TRUE;
 	fog_force();
-	view_drawframetime = max(0.000001, time - view_drawtime);
-	view_drawtime = time;
+	view_drawframetime = frametime / ts;
 	view_fov = cvar("fov");
 	view_anybutton_zoom = input_button_zoom;
 	if (input_button_attack2_allowed) {

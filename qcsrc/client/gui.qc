@@ -71,12 +71,8 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 }
 
 void GUI_Draw_Remove() {
-	float timescale = getstatf(VM_STAT_MOVEVARS_TIMESCALE);
 	if (GUI_alpha > 0) {
-		if (timescale < 1 || frametime <= 0)
-			GUI_alpha -= 0.05;
-		else
-			GUI_alpha -= frametime * 5;
+		GUI_alpha -= view_drawframetime * 5;
 	} else {
 		GUI_RemoveRecursive(mainWindow);
 		mainWindow = NULL;
@@ -98,10 +94,7 @@ void GUI_Draw_Remove() {
 void GUI_Draw() {
 	float timescale = getstatf(VM_STAT_MOVEVARS_TIMESCALE);
 	if (GUI_alpha < 1) {
-		if (timescale < 1 || frametime <= 0)
-			GUI_alpha += 0.05;
-		else
-			GUI_alpha += frametime * 5;
+		GUI_alpha += view_drawframetime * 5;
 	}
 	gui_conwidth = CVAR(vid_conwidth);
 	gui_conheight = CVAR(vid_conheight);

@@ -37,11 +37,11 @@ float(void) weapon_select_get {
 
 void(void) weapon_select_draw {
 	if (weapon_select_active) {
-		weapon_select_alpha = approach(weapon_select_alpha, 1, frametime * 5);
+		weapon_select_alpha = approach(weapon_select_alpha, 1, view_drawframetime * 5);
 		input_event_callback = weapon_select_input_event;
 		mouse_enable("");
 	} else
-		weapon_select_alpha = approach(weapon_select_alpha, 0, frametime * 7);
+		weapon_select_alpha = approach(weapon_select_alpha, 0, view_drawframetime * 7);
 
 	if (!weapon_select_alpha) {
 		remove(self);
@@ -85,12 +85,12 @@ void(void) weapon_select_draw {
 		float isSelected = i == weapon_select_selected;
 		vector clr = '0.75 0.75 0.75';
 		if (isSelected) {
-			weapon_select_selalpha[sidx] = approach(weapon_select_selalpha[sidx], 1, frametime * 3);
+			weapon_select_selalpha[sidx] = approach(weapon_select_selalpha[sidx], 1, view_drawframetime * 3);
 			p_x = o_x;
 			p_y = o_y + i * sz_y + WEAPON_SELECT_MARGIN * 0.5;
 			drawfill(p, s_x * '1 0 0' + sz_y * '0 1 0', clr, 0.2 * a, VM_DRAWFLAG_NORMAL);
 		} else
-			weapon_select_selalpha[sidx] = approach(weapon_select_selalpha[sidx], 0, frametime * 3);
+			weapon_select_selalpha[sidx] = approach(weapon_select_selalpha[sidx], 0, view_drawframetime * 3);
 
 		p_x = o_x + WEAPON_SELECT_MARGIN * 0.5;
 		p_y = o_y + i * sz_y + WEAPON_SELECT_MARGIN * 0.5;
