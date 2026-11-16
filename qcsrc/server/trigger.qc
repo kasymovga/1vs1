@@ -713,7 +713,7 @@ void(void) spawnfunc_trigger_multivibrator {
 	self.use = trigger_multivibrator_toggle;
 	self.think = trigger_multivibrator_send;
 	self.nextthink = time;
-	IFTARGETED
+	if (TARGET_IS_TARGETED(self))
 		trigger_multivibrator_reset();
 }
 
@@ -1297,7 +1297,7 @@ void(void) spawnfunc_trigger_gravity {
 		precache_sound(self.noise);
 
 	self.state = TRUE;
-	IFTARGETED {
+	if (TARGET_IS_TARGETED(self)) {
 		self.use = trigger_gravity_use;
 		if (self.spawnflags & 2)
 			self.state = FALSE;

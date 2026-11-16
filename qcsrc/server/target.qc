@@ -11,7 +11,7 @@ void(void) spawnfunc_target_speaker {
 	if (self.noise)
 		precache_sound (self.noise);
 
-	IFTARGETED {
+	if (TARGET_IS_TARGETED(self)) {
 		if (!self.atten)
 			self.atten = ATTN_NORM;
 		else if (self.atten < 0)
@@ -115,7 +115,7 @@ void(void) spawnfunc_target_voicescript {
 }
 
 void(void) target_delay_init {
-	IFTARGETED
+	if (TARGET_IS_TARGETED(self))
 		return;
 
 	self.use();

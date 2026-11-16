@@ -151,7 +151,7 @@ void(void) spawnfunc_func_pointparticles {
 		self.cnt = particleeffectnum(self.mdl);
 
 	net_link_entity(self, FALSE, 0, func_pointparticles_send);
-	IFTARGETED {
+	if (TARGET_IS_TARGETED(self)) {
 		self.use = fucn_pointparticles_use;
 		self.reset = func_pointparticles_reset;
 		self.reset();
@@ -1392,7 +1392,7 @@ void(void) func_doors_link {
 
 	if ((self.spawnflags & FUNC_DOOR_DONT_LINK) || cvar("sv_gameplayfix_dontlinkdoors")) {
 		self.owner = self.enemy = self;
-		IFTARGETED {
+		if (TARGET_IS_TARGETED(self)) {
 			if ((e = find(NULL, target, self.targetname)) && e.classname == "trigger_multivibrator")
 				self.spawnflags |= FUNC_DOOR_NO_RELINK_WAYPOINTS;
 
@@ -1421,7 +1421,7 @@ void(void) func_doors_link {
 			if (self.items)
 				starte.items = self.items;
 
-			IFTARGETED
+			if (TARGET_IS_TARGETED(self))
 				starte.targetname = self.targetname;
 
 			if (self.message != "")
@@ -1436,7 +1436,7 @@ void(void) func_doors_link {
 			if (self.health)
 				break;
 
-			IFTARGETED
+			if (TARGET_IS_TARGETED(self))
 				break;
 
 			self.owner.trigger_field = func_spawn_field(cmins, cmaxs);
@@ -1891,8 +1891,7 @@ void(void) spawnfunc_func_door_secret {
 	self.blocked = func_secret_blocked;
 	self.speed = 50;
 	self.use = func_door_secret_use;
-	IFTARGETED {
-	} else
+	if not(TARGET_IS_TARGETED(self))
 		self.spawnflags |= SECRET_YES_SHOOT;
 
 	if (self.spawnflags & SECRET_YES_SHOOT) {

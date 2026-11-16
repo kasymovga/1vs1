@@ -349,7 +349,7 @@ void(void) spawnfunc_misc_laser {
 	entity_initialize(self, misc_laser_init, INITPRIO_FINDTARGET);
 	self.mangle = self.angles;
 	net_link_entity(self, FALSE, 0, misc_laser_send);
-	IFTARGETED {
+	if (TARGET_IS_TARGETED(self)) {
 		self.reset = misc_laser_reset;
 		misc_laser_reset();
 		self.use = misc_laser_use;

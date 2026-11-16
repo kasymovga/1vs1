@@ -72,8 +72,7 @@ void(void) spawnfunc_info_location {
 }
 
 void(void) spawnfunc_info_teleport_destination {
-	IFTARGETED {
-	} else
+	if not(TARGET_IS_TARGETED(self))
 		entity_abort("^3Teleport destination without a targetname");
 }
 
