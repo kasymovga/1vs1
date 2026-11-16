@@ -101,7 +101,7 @@ void() map_vote_init {
 	else
 		nmax = min(MAP_VOTE_COUNT, cvar("g_maplist_votable"));
 
-	smax = min3(nmax, cvar("g_maplist_votable_suggestions"), map_vote_suggestion_ptr);
+	smax = min(nmax, cvar("g_maplist_votable_suggestions"), map_vote_suggestion_ptr);
 	if (map_vote_suggestion_ptr)
 		for (i = 0; i < 100 && map_vote_count < smax; ++i)
 			map_vote_add_votable(map_vote_suggestions[floor(random() * map_vote_suggestion_ptr)], TRUE);

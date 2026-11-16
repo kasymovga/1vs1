@@ -124,12 +124,12 @@ void(string m, float s, float f, vector o, vector v, vector ang, vector angv, fl
 	e.fade_time = t2;
 	e.skin = s;
 	if (s0 >= 0)
-		e.scale = s0 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
+		e.scale = s0 / max(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
 	else
 		e.scale = -s0;
 
 	if (s2 >= 0)
-		e.dmg = s2 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
+		e.dmg = s2 / max(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
 	else
 		e.dmg = -s2;
 

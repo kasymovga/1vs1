@@ -187,7 +187,7 @@ void(void) marker_draw {
 		spriteimage = strcat("models/sprites/", self.model, "_frame", ftos(math_mod(floor((max(0, time - self.spawntime)) * 2), t)));
 
 	float edgedistance_min, crosshairdistance;
-	edgedistance_min = min4(o_y, o_x,CVAR(vid_conwidth) - o_x, CVAR(vid_conheight) - o_y);
+	edgedistance_min = min(o_y, o_x,CVAR(vid_conwidth) - o_x, CVAR(vid_conheight) - o_y);
 	crosshairdistance = sqrt( pow(o_x - CVAR(vid_conwidth)/2, 2) + pow(o_y - CVAR(vid_conheight)/2, 2) );
 	t = CVAR_OR(g_waypointsprite_scale, 1) * (1 - CVAR(_menu_alpha)) * vidscale;
 	a = a * (1 - (1 - marker_distancefadealpha) * (bound(0, dist/marker_distancefadedistance, 1)));

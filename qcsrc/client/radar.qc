@@ -51,7 +51,7 @@ float(vector v) radar_vlen2d {
 }
 
 float(vector v) radar_vlen_maxnorm2d {
-	return max4(v_x, v_y, -v_x, -v_y);
+	return max(v_x, v_y, -v_x, -v_y);
 }
 
 float(vector v) radar_vlen_minnorm2d {
@@ -321,8 +321,8 @@ void(float big, string title) radar_view {
 		c2 = math_rotate('1 0 0' * world_min_x + '0 1 0' * world_max_y, radar_angle * MATH_DEG2RAD);
 		c3 = math_rotate('1 0 0' * world_max_x + '0 1 0' * world_min_y, radar_angle * MATH_DEG2RAD);
 		span = '0 0 0';
-		span_x = max4(c0_x, c1_x, c2_x, c3_x) - min4(c0_x, c1_x, c2_x, c3_x);
-		span_y = max4(c0_y, c1_y, c2_y, c3_y) - min4(c0_y, c1_y, c2_y, c3_y);
+		span_x = max(c0_x, c1_x, c2_x, c3_x) - min(c0_x, c1_x, c2_x, c3_x);
+		span_y = max(c0_y, c1_y, c2_y, c3_y) - min(c0_y, c1_y, c2_y, c3_y);
 		// max-min distance must fit the radar in x=x, y=y
 		bigsize = min(
 				radar_size2d_x * scale2d / (1.05 * span_x),
