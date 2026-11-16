@@ -151,6 +151,7 @@ void(void) race_InitSpectator {
 void(void) race_respawn_delayed {
 	if (self.enemy.classname == "player")
 	if (self.enemy.health >= 1)
+	if (self.enemy.respawntime == self.respawntime)
 	if (self.enemy.playerid == self.playerid) {
 		entity oldself = self;
 		self = oldself.enemy;
@@ -204,6 +205,7 @@ void(entity e, float cp, float t, float spd, float tvalid) race_time_send {
 			e2.nextthink = time + 1;
 			e2.enemy = e;
 			e2.playerid = e.playerid;
+			e2.respawntime = time; // player respawntime will be set to time too later
 		}
 	}
 	float recordtime, recordspeed;
