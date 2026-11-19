@@ -100,6 +100,7 @@ void(void) monster_spider_spawn {
     setmodel(self, "models/spiderbot/spiderbot.dpm");
 	self.scale = 0.25;
 	self.weaponentity = spawn();
+	self.view_ofs = '0 0 4';
 	if (self.owner.weapon) {
 		setmodel(self.weaponentity, "models/weapons/v_chainsaw.md3");
 		self.weapon = 1;
