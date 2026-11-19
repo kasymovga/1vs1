@@ -21,24 +21,27 @@ void(entity e) func_boss_volume_explode {
 
 void(string t) func_boss_controller_switch_target {
 	entity boss = self.enemy;
+	entity oldaiment = self.aiment;
 	self.aiment = NULL;
 	while ((self.aiment = find(self.aiment, targetname, t))) {
 		if (self.aiment.cnt == boss.cnt)
 			break;
 	}
-	if (self.aiment) {
-		if (boss.cnt && boss.velocity != '0 0 0') {
+	if (self.aiment && oldaiment) {
+		if (boss.cnt) {
 			float i;
 			entity e = self.aiment;
-			vector dir = normalize(boss.velocity);
+			vector dir = normalize(oldaiment.origin - boss.origin);
 			vector d = e.origin - boss.origin;
-			float cost = (normalize(d) * dir) * vlen(d);
+			float cost = (normalize(d) * dir) * (1 / vlen(d));
 			float cost2;
 			for (i = 0; i < 40; i++) { // search not first but some of closest corner path to more smooth transition
-				e = find(NULL, targetname, e.target);
+				if (e.target == "") break;
+				if not((e = find(NULL, targetname, e.target))) break;
 				if (e == self.aiment) break;
-				vector d = e.origin - boss.origin;
-				cost2 = (normalize(d) * dir) * vlen(d);
+				if (e.cnt != boss.cnt) continue;
+				d = e.origin - boss.origin;
+				cost2 = (normalize(d) * dir) * (1 / vlen(d));
 				if (cost2 > cost) {
 					cost = cost2;
 					self.aiment = e;
