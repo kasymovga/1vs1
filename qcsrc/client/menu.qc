@@ -1,11 +1,6 @@
 entity menu;
 float menu_selected;
 float menu_choiced;
-.string menu_items[MENU_ITEMS_MAXCOUNT];
-.entity menu_next;
-.string menu_id;
-.string menu_title;
-.float menu_timeout;
 
 #define MENU_ITEM_HEIGHT 30
 #define MENU_ITEM_TOP_MARGIN 20
@@ -13,14 +8,11 @@ float menu_choiced;
 void(void) menu_draw;
 
 void(void) menu_remove {
-	float i;
-	for (i = 0; i < self.cnt; i++) {
-		str_unzone_ifneeded(self.menu_items[i]);
-	}
-	str_unzone_ifneeded(self.menu_id);
-	str_unzone_ifneeded(self.menu_title);
+	str_unzone_ifneeded(self.netname);
+	str_unzone_ifneeded(self.message);
+	if (self.cnt) buf_del(self.armorvalue);
 	if (self == menu) {
-		menu = menu.menu_next;
+		menu = menu.enemy;
 		if (menu) {
 			menu.draw2d = menu_draw;
 			menu.draw2dflag = 3;
@@ -30,9 +22,9 @@ void(void) menu_remove {
 		return;
 	}
 	entity e;
-	for (e = menu; e.menu_next; e = e.menu_next)
-		if (e.menu_next == self) {
-			e.menu_next = e.menu_next.menu_next;
+	for (e = menu; e.enemy; e = e.enemy)
+		if (e.enemy == self) {
+			e.enemy = e.enemy.enemy;
 			return;
 		}
 }
@@ -43,7 +35,7 @@ void(float bIsNewEntity) menu_read {
 	float skip_duplicated;
 	skip_duplicated = FALSE;
 	float i;
-	for (e = menu; e; e = e.menu_next)
+	for (e = menu; e; e = e.enemy)
 		if (e == self)
 			skip_duplicated = TRUE;
 
@@ -55,34 +47,39 @@ void(float bIsNewEntity) menu_read {
 			menu.draw2dflag = 1;
 		} else {
 			e = menu;
-			while (e.menu_next)
-				e = e.menu_next;
+			while (e.enemy)
+				e = e.enemy;
 
-			e.menu_next = self;
+			e.enemy = self;
 		}
-		self.menu_next = world;
+		self.enemy = world;
 		self.entremove = menu_remove;
 	}
 	f = net_read_byte();
 	self.flags |= f;
 	if (f & 8) {
-		str_unzone_ifneeded(self.menu_id);
-		self.menu_id = str_zone_ifneeded(net_read_string());
+		str_unzone_ifneeded(self.netname);
+		self.netname = str_zone_ifneeded(net_read_string());
 	}
 	if (f & 4) {
-		self.menu_timeout = net_read_coord();
-		if (self.menu_timeout)
-			self.menu_timeout += time;
+		self.health = net_read_coord(); //timeout
+		if (self.health)
+			self.health += time;
 	}
 	if (f & 2) {
-		str_unzone_ifneeded(self.menu_title);
-		self.menu_title = str_zone_ifneeded(print_text_prepare(net_read_string(), "", "", ""));
+		str_unzone_ifneeded(self.message);
+		self.message = str_zone_ifneeded(print_text_prepare(net_read_string(), "", "", ""));
 	}
 	if (f & 1) {
+		if (self.cnt)
+			buf_del(self.armorvalue);
+
 		self.cnt = net_read_byte();
-		for (i = 0; i < self.cnt; i++) {
-			str_unzone_ifneeded(self.menu_items[i]);
-			(self.menu_items[i]) = str_zone_ifneeded(net_read_string());
+		if (self.cnt) {
+			self.armorvalue = buf_create();
+			for (i = 0; i < self.cnt; i++) {
+				bufstr_set(self.armorvalue, i, net_read_string());
+			}
 		}
 	}
 }
@@ -115,12 +112,12 @@ void(void) menu_draw {
 	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = MENU_ITEM_TOP_MARGIN;
 	pos_z = 0;
-	pos_x = center - stringwidth(self.menu_title, FALSE) * 0.5 * 24;
-    drawfill('0 1 0' * MENU_ITEM_TOP_MARGIN, '1 0 0' * CVAR(vid_conwidth) + '0 1 0' * (MENU_ITEM_TOP_MARGIN + MENU_ITEM_HEIGHT * (self.cnt + 1.5)), '0 0 0', 0.5, VM_DRAWFLAG_NORMAL);
-	drawstring(pos, self.menu_title, '24 24 0', '1 1 1', 1, VM_DRAWFLAG_NORMAL);
+	pos_x = center - stringwidth(self.message, FALSE) * 0.5 * 24;
+	drawfill('0 1 0' * MENU_ITEM_TOP_MARGIN, '1 0 0' * CVAR(vid_conwidth) + '0 1 0' * (MENU_ITEM_TOP_MARGIN + MENU_ITEM_HEIGHT * (self.cnt + 1.5)), '0 0 0', 0.5, VM_DRAWFLAG_NORMAL);
+	drawstring(pos, self.message, '24 24 0', '1 1 1', 1, VM_DRAWFLAG_NORMAL);
 	pos_y += MENU_ITEM_HEIGHT;
-	if (self.menu_timeout) {
-		i = ceil(max(0, self.menu_timeout - time));
+	if (self.health) {
+		i = ceil(max(0, self.health - time));
 		menu_string = strcat(ftos(i), " seconds left");
 		pos_x = center - stringwidth(menu_string, FALSE) * 0.5 * 16;
 		drawstring(pos, menu_string, '16 16 0', '0 1 0', 1, VM_DRAWFLAG_NORMAL);
@@ -131,8 +128,8 @@ void(void) menu_draw {
 	float maxwidth = 0;
 	float w;
 	for (i = 0; i < self.cnt; i++) {
-		subcmd = strstrofs(self.menu_items[i], "|", 0);
-		menu_string = strcat(str_sub(self.menu_items[i], 0, subcmd));
+		subcmd = strstrofs(bufstr_get(self.armorvalue, i), "|", 0);
+		menu_string = strcat(str_sub(bufstr_get(self.armorvalue, i), 0, subcmd));
 		if ((w = stringwidth(strdecolorize(menu_string), FALSE)) > maxwidth)
 			maxwidth = w;
 	}
@@ -155,7 +152,7 @@ void(void) menu_draw {
 			item_color = "^7";
 			border_color = '0 0 0';
 		}
-		menu_string = self.menu_items[i];
+		menu_string = bufstr_get(self.armorvalue, i);
 		subcmd = strstrofs(menu_string, "|", 0);
 		pos_x = center - stringwidth(strdecolorize(menu_string), FALSE) * 0.5 * 24 * size_scale;
 		if ((paren = strstrofs(menu_string, "(", 0)) >= 0 && (paren < subcmd || subcmd < 0)) {
@@ -212,11 +209,11 @@ float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 			choice = min(menu_selected, menu.cnt);
 	}
 	if (choice >= 0) {
-		float subcmd = strstrofs(menu.menu_items[choice], "|", 0);
+		float subcmd = strstrofs(bufstr_get(menu.armorvalue, choice), "|", 0);
 		if (subcmd >= 0) {
-			localcmd(strcat("\n", str_sub(menu.menu_items[choice], subcmd + 1, -1)));
+			localcmd(strcat("\n", str_sub(bufstr_get(menu.armorvalue, choice), subcmd + 1, -1)));
 		}
-		localcmd(strcat("\ncmd menu_select ", menu.menu_id, " ", ftos(choice), "\n"));
+		localcmd(strcat("\ncmd menu_select ", menu.netname, " ", ftos(choice), "\n"));
 		menu_choiced = choice;
 		return TRUE;
 	}
