@@ -1,0 +1,3 @@
+set chainsaw_profile "Chainsaw"
+set chainsaw_g_start_weapon_laser 0
+set chainsaw_g_start_weapon_chainsaw 1
