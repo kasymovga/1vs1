@@ -311,6 +311,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
 		sound_stop(self, CHAN_TRIGGER);
+		sound_stop(self, CHAN_VOICE);
 		monster_sound(self, self.noise2, FALSE);
 		plugin_monster_killed(attacker);
 		entity o = self.owner;
