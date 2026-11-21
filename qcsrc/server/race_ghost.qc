@@ -12,18 +12,11 @@ entity(void) race_ghost_spawn {
 	return e;
 }
 
-string(string s, float n) race_ghost_pad_right {
-	float l = strlen(s);
-	float pad = n - l;
-	if (pad <= 0) return s;
-	return strcat(s, str_sub("          ", 0, pad));
-}
-
 string(vector o) race_ghost_vector_to_string {
 	return strcat(
-			race_ghost_pad_right(ftos(floor(o_x + 0.5)), 7),
-			race_ghost_pad_right(ftos(floor(o_y + 0.5)), 7),
-			race_ghost_pad_right(ftos(floor(o_z + 0.5)), 7));
+			strpad(7, str_sub(ftos(floor(o_x + 0.5)), 0, 7)),
+			strpad(7, str_sub(ftos(floor(o_y + 0.5)), 0, 7)),
+			strpad(7, str_sub(ftos(floor(o_z + 0.5)), 0, 7)));
 }
 
 entity(entity ghost) race_ghost_refcounter_decrease { //always return NULL
@@ -92,7 +85,7 @@ void(entity pl) race_ghost_record_add {
 	float ln = floor(pl.race_ghost.state / 640);
 	pl.race_ghost.state++;
 	string record_str = race_ghost_vector_to_string(pl.origin);
-	record_str = strcat(record_str, race_ghost_pad_right(ftos(floor(pl.angles_y + 0.5)), 4));
+	record_str = strcat(record_str, strpad(4, str_sub(ftos(floor(pl.angles_y + 0.5)), 0, 4)));
 	bufstr_set(pl.race_ghost.lip, ln, strcat(bufstr_get(pl.race_ghost.lip, ln), record_str));
 }
 
