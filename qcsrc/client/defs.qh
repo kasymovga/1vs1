@@ -1,6 +1,5 @@
 // Additional OPTIONAL Fields and Globals
 .string message;
-.float renderflags;
 
 // Basic variables
 .float enttype; // entity type sent from server

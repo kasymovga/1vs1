@@ -95,6 +95,7 @@ vector(vector v, vector w) vectoangles2 = #51;
 vector (vector org) getlight = #92;
 string(string s) uncolorstring = #170;
 void() R_ClearScene = #300;
+.float renderflags;
 void(float mask) R_AddEntities = #301;
 void(entity e) R_AddEntity = #302;
 float(float property, ...) R_SetView = #303;
