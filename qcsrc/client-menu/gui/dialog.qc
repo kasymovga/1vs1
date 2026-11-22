@@ -12,8 +12,8 @@
 // control to your dialog THEN - with the right height
 //
 // a subclass may help with using this as a tab
-entity spawnDialog() {
-	entity me; me = spawnInputContainer();
+entity(void) gui_dialog_spawn {
+	entity me; me = gui_inputcontainer_spawn();
 	me.configureDialog = configureDialogDialog; // no runtime configuration, all parameters are given in the code!
 	me.fill = fillDialog; // to be overridden by user to fill the dialog with controls
 	me.keyDown = keyDownDialog;
@@ -73,8 +73,7 @@ entity spawnDialog() {
 // control to your dialog THEN - with the right height
 //
 // a subclass may help with using this as a tab
-void Dialog_Close(entity button, entity me)
-{
+void(entity button, entity me) gui_dialog_close {
 	me.close(me);
 }
 void fillDialog(entity me)
@@ -124,7 +123,7 @@ void configureDialogDialog(entity me)
 {
 	entity closebutton = NULL;
 	float absWidth, absHeight;
-	me.frame = spawnBorderImage();
+	me.frame = gui_borderimage_spawn();
 	me.frame.configureBorderImage(me.frame, me.title, me.titleFontSize, me.color, me.backgroundImage, me.titleHeight);
 	me.frame.zoomedOutTitleBarPosition = me.zoomedOutTitleBarPosition;
 	me.frame.zoomedOutTitleBar = me.zoomedOutTitleBar;
@@ -147,9 +146,9 @@ void configureDialogDialog(entity me)
 	me.fill(me);
 	if(me.closable)
 	{
-		closebutton = me.closeButton = spawnButton();
+		closebutton = me.closeButton = gui_button_spawn();
 		closebutton.configureButton(closebutton, "Close", 0, me.closeButtonImage);
-		closebutton.onClick = Dialog_Close; closebutton.onClickEntity = me;
+		closebutton.onClick = gui_dialog_close; closebutton.onClickEntity = me;
 		closebutton.srcMulti = 0;
 		me.addItem(me, closebutton, '0 0 0', '1 1 0', 1); // put it as LAST
 	}

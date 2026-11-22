@@ -161,7 +161,7 @@ void fillNexuizOldMutatorsDialog(entity me) {
 		gui_set_dependent(s, "g_use_ammunition", 0, -1);
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton("OK", '0 0 0'));
-				e.onClick = Dialog_Close;
+				e.onClick = gui_dialog_close;
 				e.onClickEntity = me;
 }
 void closeNexuizOldMutatorsDialog(entity me) {

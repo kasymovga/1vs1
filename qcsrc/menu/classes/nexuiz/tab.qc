@@ -1,5 +1,5 @@
 entity spawnNexuizTab() {
-	entity me; me = spawnTab();
+	entity me; me = gui_tab_spawn();
 	// still to be customized by user
 	/*
 	ATTRIB(NexuizTab, intendedWidth, float, 0)

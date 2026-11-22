@@ -1,5 +1,5 @@
 entity spawnNexuizSlider() {
-	entity me; me = spawnSlider();
+	entity me; me = gui_slider_spawn();
 	me.configureNexuizSlider = configureNexuizSliderNexuizSlider;
 	me.setValue = setValueNexuizSlider;
 	me.fontSize = SKINFONTSIZE_NORMAL;

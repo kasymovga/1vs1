@@ -1,5 +1,5 @@
-entity spawnBorderImage() {
-	entity me; me = spawnLabel();
+entity(void) gui_borderimage_spawn {
+	entity me; me = gui_label_spawn();
 	me.configureBorderImage = configureBorderImageBorderImage;
 	me.resizeNotify = resizeNotifyBorderImage;
 	me.draw = drawBorderImage;

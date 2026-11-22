@@ -19,7 +19,7 @@ void fillNexuizCreditsDialog(entity me)
 		me.TD(me, me.rows - 1, me.columns, me.creditsList = makeNexuizCreditsList());
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
-				e.onClick = Dialog_Close;
+				e.onClick = gui_dialog_close;
 				e.onClickEntity = me;
 }
 void focusEnterNexuizCreditsDialog(entity me)

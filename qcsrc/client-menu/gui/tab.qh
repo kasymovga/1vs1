@@ -1,4 +1,4 @@
-entity spawnTab();
+entity(void) gui_tab_spawn;
 .float isTabRoot;
 .float closable;
 .float rootDialog;
@@ -17,4 +17,3 @@ entity spawnTab();
 .float rowHeight; // pixels
 .float titleHeight; // pixels
 .string backgroundImage;
-

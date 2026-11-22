@@ -1,5 +1,5 @@
 entity spawnNexuizInputBox() {
-	entity me; me = spawnInputBox();
+	entity me; me = gui_inputbox_spawn();
 	me.configureNexuizInputBox = configureNexuizInputBoxNexuizInputBox;
 	me.focusLeave = focusLeaveNexuizInputBox;
 	me.setText = setTextNexuizInputBox;

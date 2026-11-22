@@ -1,4 +1,4 @@
-entity spawnImage();
+entity(void) gui_image_spawn;
 void(entity, string) configureImageImage;
 .void(entity, string) configureImage;
 void(entity) drawImage;
@@ -12,4 +12,3 @@ void(entity, vector, vector, vector, vector) resizeNotifyImage;
 .float forcedAspect;
 .vector imgOrigin;
 .vector imgSize;
-

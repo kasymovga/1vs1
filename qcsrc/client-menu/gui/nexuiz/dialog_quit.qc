@@ -18,6 +18,6 @@ void fillNexuizQuitDialog(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCommandButton(_("Yes"), '1 0 0', "quit", 0));
 		me.TD(me, 1, 1, e = makeNexuizButton(_("No"), '0 1 0'));
-			e.onClick = Dialog_Close;
+			e.onClick = gui_dialog_close;
 			e.onClickEntity = me;
 }

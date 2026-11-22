@@ -1,4 +1,4 @@
-entity spawnInputContainer();
+entity(void) gui_inputcontainer_spawn;
 float(entity, float, float, float) keyDownInputContainer;
 .float(entity, float, float, float) keyDown;
 float(entity, vector) mouseMoveInputContainer;

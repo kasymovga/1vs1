@@ -1,5 +1,5 @@
-void CheckBox_Click(entity me, entity thOther);
-entity spawnCheckBox();
+void(entity me, entity thOther) gui_checkbox_click;
+entity(void) gui_checkbox_spawn;
 void(entity, string, float, string) configureCheckBoxCheckBox;
 .void(entity, string, float, string) configureCheckBox;
 void(entity) drawCheckBox;
@@ -13,4 +13,3 @@ void(entity, float) setCheckedCheckBox;
 .void(entity, entity) onClick;
 .float srcMulti;
 .float disabled;
-

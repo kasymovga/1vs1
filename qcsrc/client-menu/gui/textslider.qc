@@ -1,15 +1,13 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then multiple times addValue, then configureTextSlider
-entity spawnTextSlider() {
-	entity me; me = spawnSlider();
+entity(void) gui_textslider_spawn {
+	entity me; me = gui_slider_spawn();
 	me.valueToText = valueToTextTextSlider;
 	me.valueToIdentifier = valueToIdentifierTextSlider;
 	me.setValueFromIdentifier = setValueFromIdentifierTextSlider;
 	me.getIdentifier = getIdentifierTextSlider;
 	me.addValue = addValueTextSlider;
 	me.configureTextSliderValues = configureTextSliderValuesTextSlider;
-
-
 	me.nValues = 0;
 	me.classname = "TextSlider";
 	return me;

@@ -1,5 +1,5 @@
 entity spawnNexuizNexposee() {
-	entity me; me = spawnNexposee();
+	entity me; me = gui_nexposee_spawn();
 	me.configureNexuizNexposee = configureNexuizNexposeeNexuizNexposee;
 	me.close = closeNexuizNexposee;
 	me.classname = "NexuizNexposee";

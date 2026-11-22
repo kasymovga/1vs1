@@ -1,4 +1,4 @@
-entity spawnListBox() {
+entity(void) gui_listbox_spawn {
 	entity me; me = gui_item_spawn();
 	me.resizeNotify = resizeNotifyListBox;
 	me.configureListBox = configureListBoxListBox;

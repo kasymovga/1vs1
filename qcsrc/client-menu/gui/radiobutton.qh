@@ -1,9 +1,8 @@
-void RadioButton_Click(entity me, entity theOther);
-entity spawnRadioButton();
+void(entity me, entity theOther) gui_radiobutton_click;
+entity(void) gui_radiobutton_spawn;
 void(entity, string, float, string, float, float) configureRadioButtonRadioButton;
 .void(entity, string, float, string, float, float) configureRadioButton;
 .float checked;
 .float group;
 .float allowDeselect;
 .void(entity, entity) onClick;
-

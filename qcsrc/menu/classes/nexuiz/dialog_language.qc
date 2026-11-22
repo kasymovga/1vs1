@@ -10,7 +10,7 @@ entity spawnNexuizLanguageDialog() {
 	return me;
 }
 void changeLanguage(entity me, entity e) {
-	RadioButton_Click(me, e);
+	gui_radiobutton_click(me, e);
 	if (cvar_string("_menu_current_language") != cvar_string("prvm_language")) {
 		cvar_set("_menu_current_language", cvar_string("prvm_language"));
 		cvar_set("_menu_show_language_dialog", "1");

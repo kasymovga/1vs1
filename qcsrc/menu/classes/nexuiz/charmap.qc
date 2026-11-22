@@ -1,5 +1,5 @@
 entity spawnNexuizCharmap() {
-	entity me; me = spawnImage();
+	entity me; me = gui_image_spawn();
 	me.configureNexuizCharmap = configureNexuizCharmapNexuizCharmap;
 	me.mousePress = mousePressNexuizCharmap;
 	me.mouseRelease = mouseReleaseNexuizCharmap;

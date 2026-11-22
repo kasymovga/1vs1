@@ -1,5 +1,5 @@
 entity spawnNexuizTextLabel() {
-	entity me; me = spawnLabel();
+	entity me; me = gui_label_spawn();
 	me.configureNexuizTextLabel = configureNexuizTextLabelNexuizTextLabel;
 	me.draw = drawNexuizTextLabel;
 	me.fontSize = SKINFONTSIZE_NORMAL;

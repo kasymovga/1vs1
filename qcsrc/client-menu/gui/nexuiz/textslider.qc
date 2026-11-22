@@ -1,5 +1,5 @@
 entity spawnNexuizTextSlider() {
-	entity me; me = spawnTextSlider();
+	entity me; me = gui_textslider_spawn();
 	me.configureNexuizTextSlider = configureNexuizTextSliderNexuizTextSlider;
 	me.setValue = setValueNexuizTextSlider;
 	me.configureNexuizTextSliderValues = configureNexuizTextSliderValuesNexuizTextSlider;

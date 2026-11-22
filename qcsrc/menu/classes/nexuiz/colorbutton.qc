@@ -1,5 +1,5 @@
 entity spawnNexuizColorButton() {
-	entity me; me = spawnRadioButton();
+	entity me; me = gui_radiobutton_spawn();
 	me.configureNexuizColorButton = configureNexuizColorButtonNexuizColorButton;
 	me.setChecked = setCheckedNexuizColorButton;
 	me.draw = drawNexuizColorButton;

@@ -1,5 +1,5 @@
-entity spawnInputBox() {
-	entity me; me = spawnLabel();
+entity(void) gui_inputbox_spawn {
+	entity me; me = gui_label_spawn();
 	me.configureInputBox = configureInputBoxInputBox;
 	me.draw = drawInputBox;
 	me.setText = setTextInputBox;

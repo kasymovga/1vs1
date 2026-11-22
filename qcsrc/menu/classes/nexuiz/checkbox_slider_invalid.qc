@@ -1,5 +1,5 @@
 entity spawnNexuizSliderCheckBox() {
-	entity me; me = spawnCheckBox();
+	entity me; me = gui_checkbox_spawn();
 	me.configureNexuizSliderCheckBox = configureNexuizSliderCheckBoxNexuizSliderCheckBox;
 	me.setChecked = setCheckedNexuizSliderCheckBox;
 	me.draw = drawNexuizSliderCheckBox;
@@ -31,7 +31,7 @@ void configureNexuizSliderCheckBoxNexuizSliderCheckBox(entity me, float theOffVa
 	me.offValue = theOffValue;
 	me.inverted = isInverted;
 	me.checked = (theControlledSlider.value == theOffValue);
-	if(theControlledSlider.value == medianSlider(theControlledSlider.valueMin, theControlledSlider.value, theControlledSlider.valueMax))
+	if(theControlledSlider.value == gui_slider_median(theControlledSlider.valueMin, theControlledSlider.value, theControlledSlider.valueMax))
 		me.savedValue = theControlledSlider.value;
 	else
 		me.savedValue = theControlledSlider.valueMin;
@@ -41,7 +41,7 @@ void configureNexuizSliderCheckBoxNexuizSliderCheckBox(entity me, float theOffVa
 void drawNexuizSliderCheckBox(entity me)
 {
 	me.checked = ((me.controlledSlider.value == me.offValue) != me.inverted);
-	if(me.controlledSlider.value == medianSlider(me.controlledSlider.valueMin, me.controlledSlider.value, me.controlledSlider.valueMax))
+	if(me.controlledSlider.value == gui_slider_median(me.controlledSlider.valueMin, me.controlledSlider.value, me.controlledSlider.valueMax))
 		me.savedValue = me.controlledSlider.value;
 	drawCheckBox(me);
 }
@@ -51,7 +51,7 @@ void setCheckedNexuizSliderCheckBox(entity me, float val)
 		return;
 	me.checked = val;
 	if(val == me.inverted)
-		me.controlledSlider.setValue(me.controlledSlider, medianSlider(me.controlledSlider.valueMin, me.savedValue, me.controlledSlider.valueMax));
+		me.controlledSlider.setValue(me.controlledSlider, gui_slider_median(me.controlledSlider.valueMin, me.savedValue, me.controlledSlider.valueMax));
 	else
 		me.controlledSlider.setValue(me.controlledSlider, me.offValue);
 }

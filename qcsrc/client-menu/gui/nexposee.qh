@@ -1,4 +1,4 @@
-entity spawnNexposee();
+entity(void) gui_nexposee_spawn;
 void(entity) drawNexposee;
 .void(entity) draw;
 float(entity, float, float, float) keyDownNexposee;

@@ -1,4 +1,4 @@
-entity spawnLabel() {
+entity(void) gui_label_spawn {
 	entity me; me = gui_item_spawn();
 	me.configureLabel = configureLabelLabel;
 	me.draw = drawLabel;

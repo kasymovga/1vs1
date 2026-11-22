@@ -12,7 +12,7 @@
 // control to your dialog THEN - with the right height
 //
 // a subclass may help with using this as a tab
-entity spawnDialog();
+entity(void) gui_dialog_spawn;
 void(entity) configureDialogDialog;
 .void(entity) configureDialog; // no runtime configuration, all parameters are given in the code!
 void(entity) fillDialog;
@@ -67,4 +67,4 @@ void(entity, float, float) gotoRCDialog;
 .entity frame;
 .float instanceOfDialog;
 
-void Dialog_Close(entity button, entity me);
+void(entity button, entity me) gui_dialog_close;

@@ -1,7 +1,7 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
-entity spawnSlider() {
-	entity me; me = spawnLabel();
+entity(void) gui_slider_spawn {
+	entity me; me = gui_label_spawn();
 	me.resizeNotify = resizeNotifySlider;
 	me.configureSliderVisuals = configureSliderVisualsSlider;
 	me.configureSliderValues = configureSliderValuesSlider;
@@ -40,10 +40,9 @@ entity spawnSlider() {
 	me.classname = "Slider";
 	return me;
 }
-float(float a, float b, float c) medianSlider;
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
-float(float a, float b, float c) medianSlider {
+float(float a, float b, float c) gui_slider_median {
 	if (a < c)
 		return bound(a, b, c);
 	return bound(c, b, a);
@@ -61,7 +60,7 @@ void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSi
 float(float a, float b, float c) almostInBoundSlider {
 	float eps;
 	eps = (max(a, -a) + max(c, -c)) * 0.001;
-	return b == medianSlider(a - eps, b, c + eps);
+	return b == gui_slider_median(a - eps, b, c + eps);
 }
 string(entity me, float val) valueToTextSlider {
 	if (almostInBoundSlider(me.valueMin, val, me.valueMax))
@@ -96,28 +95,28 @@ float(entity me, float key, float ascii, float shift) keyDownSlider {
 	inRange = (almostInBoundSlider(me.valueMin, me.value, me.valueMax));
 	if (key == VM_K_LEFTARROW) {
 		if(inRange)
-			me.setValue(me, medianSlider(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
+			me.setValue(me, gui_slider_median(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
 	if (key == VM_K_RIGHTARROW) {
 		if (inRange)
-			me.setValue(me, medianSlider(me.valueMin, me.value + me.valueKeyStep, me.valueMax));
+			me.setValue(me, gui_slider_median(me.valueMin, me.value + me.valueKeyStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMin);
 		return 1;
 	}
 	if (key == VM_K_PGUP) {
 		if(inRange)
-			me.setValue(me, medianSlider(me.valueMin, me.value - me.valuePageStep, me.valueMax));
+			me.setValue(me, gui_slider_median(me.valueMin, me.value - me.valuePageStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
 	if (key == VM_K_PGDN) {
 		if(inRange)
-			me.setValue(me, medianSlider(me.valueMin, me.value + me.valuePageStep, me.valueMax));
+			me.setValue(me, gui_slider_median(me.valueMin, me.value + me.valuePageStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMin);
 		return 1;
@@ -145,7 +144,7 @@ float(entity me, vector pos) mouseDragSlider {
 		if (pos_x >= 1 - me.textSpace + me.tolerance_x) hit = 0;
 		if (pos_y >= 1 + me.tolerance_y) hit = 0;
 		if (hit) {
-			v = medianSlider(0, (pos_x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
+			v = gui_slider_median(0, (pos_x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 			if (me.valueStep)
 				v = floor(0.5 + v / me.valueStep) * me.valueStep;
 			me.setValue(me, v);
@@ -170,7 +169,7 @@ float(entity me, vector pos) mousePressSlider {
 		//me.mouseDrag(me, pos);
 	} else {
 		float clickValue, pageValue, inRange;
-		clickValue = medianSlider(0, (pos_x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
+		clickValue = gui_slider_median(0, (pos_x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 		inRange = (almostInBoundSlider(me.valueMin, me.value, me.valueMax));
 		if (pos_x < controlCenter) {
 			pageValue = me.value - me.valuePageStep;
@@ -178,7 +177,7 @@ float(entity me, vector pos) mousePressSlider {
 				clickValue = floor(clickValue / me.valueStep) * me.valueStep;
 			pageValue = max(pageValue, clickValue);
 			if (inRange)
-				me.setValue(me, medianSlider(me.valueMin, pageValue, me.valueMax));
+				me.setValue(me, gui_slider_median(me.valueMin, pageValue, me.valueMax));
 			else
 				me.setValue(me, me.valueMax);
 		} else {
@@ -187,7 +186,7 @@ float(entity me, vector pos) mousePressSlider {
 				clickValue = ceil(clickValue / me.valueStep) * me.valueStep;
 			pageValue = min(pageValue, clickValue);
 			if (inRange)
-				me.setValue(me, medianSlider(me.valueMin, pageValue, me.valueMax));
+				me.setValue(me, gui_slider_median(me.valueMin, pageValue, me.valueMax));
 			else
 				me.setValue(me, me.valueMax);
 		}

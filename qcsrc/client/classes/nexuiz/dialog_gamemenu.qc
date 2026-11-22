@@ -129,7 +129,7 @@ void fillNexuizGameMenuDialog(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Return to game"), '0 0 0'));
-				e.onClick = Dialog_Close;
+				e.onClick = gui_dialog_close;
 				e.onClickEntity = me;
 	me.TR(me);
 	me.TR(me);

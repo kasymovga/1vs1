@@ -1,5 +1,5 @@
 entity spawnNexuizCheckBox() {
-	entity me; me = spawnCheckBox();
+	entity me; me = gui_checkbox_spawn();
 	me.configureNexuizCheckBox = configureNexuizCheckBoxNexuizCheckBox;
 	me.setChecked = setCheckedNexuizCheckBox;
 	me.fontSize = SKINFONTSIZE_NORMAL;

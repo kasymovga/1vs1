@@ -149,7 +149,7 @@ void fillNexuizServerInfoDialog(entity me)
 				me.pingLabel = e;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns - 6, e = makeNexuizButton(_("Close"), '0 0 0'));
-				e.onClick = Dialog_Close;
+				e.onClick = gui_dialog_close;
 				e.onClickEntity = me;
 		me.TD(me, 1, me.columns - 6, e = makeNexuizButton(_("Join!"), '0 0 0'));
 				e.onClick = Join_Click;

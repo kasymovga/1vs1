@@ -17,7 +17,7 @@ entity spawnNexuizUserbindEditDialog() {
 void NexuizUserbindEditDialog_Save(entity btn, entity me)
 {
 	me.keybindBox.editUserbind(me.keybindBox, me.nameBox.text, me.commandPressBox.text, me.commandReleaseBox.text);
-	Dialog_Close(btn, me);
+	gui_dialog_close(btn, me);
 }
 void loadUserBindNexuizUserbindEditDialog(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
@@ -45,6 +45,6 @@ void fillNexuizUserbindEditDialog(entity me)
 				e.onClick = NexuizUserbindEditDialog_Save;
 				e.onClickEntity = me;
 		me.TD(me, 1, me.columns / 2, e = makeNexuizButton(_("Cancel"), '0 0 0'));
-				e.onClick = Dialog_Close;
+				e.onClick = gui_dialog_close;
 				e.onClickEntity = me;
 }

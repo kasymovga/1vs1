@@ -1,5 +1,5 @@
 entity spawnNexuizImage() {
-	entity me; me = spawnImage();
+	entity me; me = gui_image_spawn();
 	me.configureNexuizImage = configureNexuizImageNexuizImage;
 	me.classname = "NexuizImage";
 	return me;

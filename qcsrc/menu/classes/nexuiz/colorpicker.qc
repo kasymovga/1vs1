@@ -1,5 +1,5 @@
 entity spawnNexuizColorpicker() {
-	entity me; me = spawnImage();
+	entity me; me = gui_image_spawn();
 	me.configureNexuizColorpicker = configureNexuizColorpickerNexuizColorpicker;
 	me.mousePress = mousePressNexuizColorpicker;
 	me.mouseRelease = mouseReleaseNexuizColorpicker;

@@ -1,5 +1,5 @@
 entity spawnNexuizCrosshairButton() {
-	entity me; me = spawnRadioButton();
+	entity me; me = gui_radiobutton_spawn();
 	me.configureNexuizCrosshairButton = configureNexuizCrosshairButtonNexuizCrosshairButton;
 	me.setChecked = setCheckedNexuizCrosshairButton;
 	me.draw = drawNexuizCrosshairButton;

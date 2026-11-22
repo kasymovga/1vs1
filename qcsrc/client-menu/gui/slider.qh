@@ -1,6 +1,6 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
-entity spawnSlider();
+entity(void) gui_slider_spawn;
 void(entity, vector, vector, vector, vector) resizeNotifySlider;
 .void(entity, vector, vector, vector, vector) resizeNotify;
 void(entity, float, float, float, string) configureSliderVisualsSlider;
@@ -48,5 +48,3 @@ void(entity) showNotifySlider;
 .vector colorC;
 .vector colorF;
 .float disabledAlpha;
-
-float(float a, float b, float c) medianSlider;

@@ -1,5 +1,5 @@
-entity spawnButton() {
-	entity me; me = spawnLabel();
+entity(void) gui_button_spawn {
+	entity me; me = gui_label_spawn();
 	me.configureButton = configureButtonButton;
 	me.draw = drawButton;
 	me.showNotify = showNotifyButton;

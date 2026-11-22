@@ -1,5 +1,5 @@
 entity spawnNexuizGametypeButton() {
-	entity me; me = spawnRadioButton();
+	entity me; me = gui_radiobutton_spawn();
 	me.configureNexuizGametypeButton = configureNexuizGametypeButtonNexuizGametypeButton;
 	me.setChecked = setCheckedNexuizGametypeButton;
 	me.fontSize = SKINFONTSIZE_NORMAL;
@@ -62,6 +62,6 @@ void saveCvarsNexuizGametypeButton(entity me)
 }
 void GameTypeButton_Click(entity me, entity other)
 {
-	RadioButton_Click(me, other);
+	gui_radiobutton_click(me, other);
 	me.parent.gameTypeChangeNotify(me.parent);
 }

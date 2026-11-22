@@ -122,6 +122,6 @@ void(entity me) fillNexuizWeaponsDialog {
 				e.configureNexuizTextSliderValues(e);
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
-				e.onClick = Dialog_Close;
+				e.onClick = gui_dialog_close;
 				e.onClickEntity = me;
 }

@@ -1,4 +1,4 @@
-entity spawnImage() {
+entity(void) gui_image_spawn {
 	entity me; me = gui_item_spawn();
 	me.configureImage = configureImageImage;
 	me.draw = drawImage;

@@ -1,4 +1,4 @@
-entity spawnInputBox();
+entity(void) gui_inputbox_spawn;
 void(entity, string, float, float, string) configureInputBoxInputBox;
 .void(entity, string, float, float, string) configureInputBox;
 void(entity) drawInputBox;

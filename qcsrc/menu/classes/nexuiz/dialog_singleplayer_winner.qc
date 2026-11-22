@@ -11,7 +11,7 @@ entity spawnNexuizWinnerDialog() {
 }
 void closeWinnderDialog(entity me, entity button)
 {
-	Dialog_Close(me, button);
+	gui_dialog_close(me, button);
 	menu_goto("credits");
 }
 void fillNexuizWinnerDialog(entity me)

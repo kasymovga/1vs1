@@ -1,5 +1,5 @@
 entity spawnNexuizRadioButton() {
-	entity me; me = spawnRadioButton();
+	entity me; me = gui_radiobutton_spawn();
 	me.configureNexuizRadioButton = configureNexuizRadioButtonNexuizRadioButton;
 	me.draw = drawNexuizRadioButton;
 	me.setChecked = setCheckedNexuizRadioButton;

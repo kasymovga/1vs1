@@ -219,7 +219,7 @@ void MapList_LoadMap(entity btn, entity me)
 	if(btn.parent.instanceOfNexuizMapInfoDialog)
 	{
 		i = btn.parent.currentMapIndex;
-		Dialog_Close(btn, btn.parent);
+		gui_dialog_close(btn, btn.parent);
 	}
 	if(i >= me.nItems || i < 0)
 		return;

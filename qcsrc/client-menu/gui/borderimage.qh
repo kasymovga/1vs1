@@ -1,4 +1,4 @@
-entity spawnBorderImage();
+entity(void) gui_borderimage_spawn;
 void(entity, string, float, vector, string, float) configureBorderImageBorderImage;
 .void(entity, string, float, vector, string, float) configureBorderImage;
 void(entity, vector, vector, vector, vector) resizeNotifyBorderImage;

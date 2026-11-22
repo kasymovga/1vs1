@@ -1,4 +1,4 @@
-entity spawnListBox();
+entity(void) gui_listbox_spawn;
 void(entity, vector, vector, vector, vector) resizeNotifyListBox;
 .void(entity, vector, vector, vector, vector) resizeNotify;
 void(entity, float, float) configureListBoxListBox;
@@ -45,4 +45,3 @@ void(entity, float, vector, float) clickListBoxItemListBox;
 .void(entity, float, vector, float) clickListBoxItem; // item number, relative clickpos, double click
 void(entity, float) setSelectedListBox;
 .void(entity, float) setSelected;
-

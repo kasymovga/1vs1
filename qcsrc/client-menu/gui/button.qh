@@ -1,4 +1,4 @@
-entity spawnButton();
+entity(void) gui_button_spawn;
 void(entity, string, float, string) configureButtonButton;
 .void(entity, string, float, string) configureButton;
 void(entity) drawButton;

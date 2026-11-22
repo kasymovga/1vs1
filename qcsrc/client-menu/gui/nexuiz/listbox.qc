@@ -1,5 +1,5 @@
 entity spawnNexuizListBox() {
-	entity me; me = spawnListBox();
+	entity me; me = gui_listbox_spawn();
 	me.configureNexuizListBox = configureNexuizListBoxNexuizListBox;
 	me.fontSize = SKINFONTSIZE_NORMAL;
 	me.scrollbarWidth = SKINWIDTH_SCROLLBAR;

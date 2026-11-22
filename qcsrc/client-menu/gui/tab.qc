@@ -1,5 +1,5 @@
-entity spawnTab() {
-	entity me; me = spawnDialog();
+entity(void) gui_tab_spawn {
+	entity me; me = gui_dialog_spawn();
 	me.isTabRoot = 0;
 	me.closable = 0;
 	me.rootDialog = 0;

@@ -1,5 +1,5 @@
 entity spawnNexuizButton() {
-	entity me; me = spawnButton();
+	entity me; me = gui_button_spawn();
 	me.configureNexuizButton = configureNexuizButtonNexuizButton;
 	me.fontSize = SKINFONTSIZE_NORMAL;
 	me.image = SKINGFX_BUTTON;

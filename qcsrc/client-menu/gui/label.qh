@@ -1,4 +1,4 @@
-entity spawnLabel();
+entity(void) gui_label_spawn;
 void(entity, string, float, float) configureLabelLabel;
 .void(entity, string, float, float) configureLabel;
 void(entity) drawLabel;

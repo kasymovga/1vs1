@@ -1,6 +1,6 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then multiple times addValue, then configureTextSlider
-entity spawnTextSlider();
+entity(void) gui_textslider_spawn;
 string(entity, float) valueToTextTextSlider;
 .string(entity, float) valueToText;
 string(entity, float) valueToIdentifierTextSlider;
@@ -16,4 +16,3 @@ void(entity, string) configureTextSliderValuesTextSlider;
 .string valueStrings[256];
 .string valueIdentifiers[256];
 .float nValues;
-
