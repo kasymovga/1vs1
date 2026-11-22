@@ -1,5 +1,5 @@
 entity spawnImage() {
-	entity me; me = spawnItem();
+	entity me; me = gui_item_spawn();
 	me.configureImage = configureImageImage;
 	me.draw = drawImage;
 	me.toString = toStringImage;

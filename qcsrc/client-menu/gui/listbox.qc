@@ -1,5 +1,5 @@
 entity spawnListBox() {
-	entity me; me = spawnItem();
+	entity me; me = gui_item_spawn();
 	me.resizeNotify = resizeNotifyListBox;
 	me.configureListBox = configureListBoxListBox;
 	me.draw = drawListBox;

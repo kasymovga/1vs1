@@ -1,5 +1,5 @@
-entity spawnModalController() {
-	entity me; me = spawnContainer();
+entity(void) gui_modalcontroller_spawn {
+	entity me; me = gui_container_spawn();
 	me.resizeNotify = resizeNotifyModalController;
 	me.draw = drawModalController;
 	me.addItem = addItemModalController;

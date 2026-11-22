@@ -1,4 +1,4 @@
-entity spawnModalController();
+entity(void) gui_modalcontroller_spawn;
 void(entity, vector, vector, vector, vector) resizeNotifyModalController;
 .void(entity, vector, vector, vector, vector) resizeNotify;
 void(entity) drawModalController;

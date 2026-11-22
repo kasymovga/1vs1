@@ -1,5 +1,5 @@
 entity spawnInputContainer() {
-	entity me; me = spawnContainer();
+	entity me; me = gui_container_spawn();
 	me.keyDown = keyDownInputContainer;
 	me.mouseMove = mouseMoveInputContainer;
 	me.mousePress = mousePressInputContainer;

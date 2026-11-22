@@ -1,4 +1,4 @@
-entity spawnContainer();
+entity(void) gui_container_spawn;
 void(entity) drawContainer;
 .void(entity) draw;
 float(entity, float, float, float) keyUpContainer;

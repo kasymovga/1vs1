@@ -1,5 +1,5 @@
 entity spawnMainWindow() {
-	entity me; me = spawnModalController();
+	entity me; me = gui_modalcontroller_spawn();
 	me.configureMainWindow = configureMainWindowMainWindow;
 	me.mutatorsDialog = NULL;
 	me.oldMutatorsDialog = NULL;

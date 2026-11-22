@@ -1,5 +1,5 @@
 entity spawnNexuizTabController() {
-	entity me; me = spawnModalController();
+	entity me; me = gui_modalcontroller_spawn();
 	me.configureNexuizTabController = configureNexuizTabControllerNexuizTabController;
 	me.makeTabButton = makeTabButtonNexuizTabController;
 	me.rows = 0;

@@ -28,6 +28,7 @@ void(string name) menu_goto;
 .void(void) think;
 .entity owner;
 .entity enemy;
+.string classname;
 
 entity keyGrabber;
 .void(entity me, float key, float ascii) keyGrabbed;

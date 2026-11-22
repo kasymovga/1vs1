@@ -1,4 +1,4 @@
-entity spawnItem();
+entity(void) gui_item_spawn;
 void(entity) drawItem;
 .void(entity) draw;
 float(entity, float, float, float) keyDownItem;
@@ -36,4 +36,3 @@ void(entity) destroyItem;
 .float preferredFocusPriority;
 .vector origin;
 .vector size;
-

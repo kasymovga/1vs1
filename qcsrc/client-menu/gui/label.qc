@@ -1,5 +1,5 @@
 entity spawnLabel() {
-	entity me; me = spawnItem();
+	entity me; me = gui_item_spawn();
 	me.configureLabel = configureLabelLabel;
 	me.draw = drawLabel;
 	me.resizeNotify = resizeNotifyLabel;

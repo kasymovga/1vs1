@@ -1,5 +1,5 @@
-entity spawnContainer() {
-	entity me; me = spawnItem();
+entity(void) gui_container_spawn {
+	entity me; me = gui_item_spawn();
 	me.draw = drawContainer;
 	me.keyUp = keyUpContainer;
 	me.keyDown = keyDownContainer;

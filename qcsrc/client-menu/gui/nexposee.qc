@@ -1,5 +1,5 @@
 entity spawnNexposee() {
-	entity me; me = spawnContainer();
+	entity me; me = gui_container_spawn();
 	me.draw = drawNexposee;
 	me.keyDown = keyDownNexposee;
 	me.keyUp = keyUpNexposee;
