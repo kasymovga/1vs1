@@ -1,0 +1,27 @@
+entity spawnNexuizInputBox();
+void(entity, float, string) configureNexuizInputBoxNexuizInputBox;
+.void(entity, float, string) configureNexuizInputBox;
+void(entity) focusLeaveNexuizInputBox;
+.void(entity) focusLeave;
+void(entity, string) setTextNexuizInputBox;
+.void(entity, string) setText;
+.float fontSize;
+.string image;
+.void(entity, entity) onChange;
+.entity onChangeEntity;
+.void(entity, entity) onEnter;
+.entity onEnterEntity;
+.float marginLeft;
+.float marginRight;
+.vector color;
+.vector colorF;
+.float alpha;
+.string cvarName;
+void(entity) loadCvarsNexuizInputBox;
+.void(entity) loadCvars;
+void(entity) saveCvarsNexuizInputBox;
+.void(entity) saveCvars;
+float(entity, float, float, float) keyDownNexuizInputBox;
+.float(entity, float, float, float) keyDown;
+
+entity makeNexuizInputBox(float, string);

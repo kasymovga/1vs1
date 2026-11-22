@@ -1,0 +1,136 @@
+entity spawnNexuizCharmap() {
+	entity me; me = spawnImage();
+	me.configureNexuizCharmap = configureNexuizCharmapNexuizCharmap;
+	me.mousePress = mousePressNexuizCharmap;
+	me.mouseRelease = mouseReleaseNexuizCharmap;
+	me.mouseMove = mouseMoveNexuizCharmap;
+	me.mouseDrag = mouseDragNexuizCharmap;
+	me.keyDown = keyDownNexuizCharmap;
+	me.focusLeave = focusLeaveNexuizCharmap;
+	me.draw = drawNexuizCharmap;
+	me.controlledTextbox = NULL;
+	me.image = SKINGFX_CHARMAP;
+	me.image2 = SKINGFX_CHARMAP_SELECTED;
+	me.focusable = 1;
+	me.previouslySelectedCharacterCell = -1;
+	me.selectedCharacterCell = 0;
+	me.mouseSelectedCharacterCell = -1;
+	me.classname = "NexuizCharmap";
+	return me;
+}
+entity makeNexuizCharmap(entity theTextbox);
+entity makeNexuizCharmap(entity theTextbox)
+{
+	entity me;
+	me = spawnNexuizCharmap();
+	me.configureNexuizCharmap(me, theTextbox);
+	return me;
+}
+string CharMap_CellToChar(float c)
+{
+	if(c == 13)
+		return chr(127);
+	else if(c < 32)
+		return chr(c);
+	else if (cvar("utf8_oldfont_for_oldchars"))
+		return chr(c + 96);
+	else
+		return chr((c + 96) | 0xE000);
+}
+void configureNexuizCharmapNexuizCharmap(entity me, entity theTextbox)
+{
+	me.controlledTextbox = theTextbox;
+	if not(file_exists_image(gui_image_path(me.image)))
+		me.image = "/gfx/menu/default/charmap";
+	if not(file_exists_image(gui_image_path(me.image2)))
+		me.image2 = "/gfx/menu/default/charmapbutton";
+	me.configureImage(me, me.image);
+}
+float mouseMoveNexuizCharmap(entity me, vector coords)
+{
+	float x, y, c;
+	x = floor(coords_x * 16);
+	y = floor(coords_y * 10);
+	if(x < 0 || y < 0 || x >= 16 || y >= 10)
+	{
+		me.mouseSelectedCharacterCell = -1;
+		return 0;
+	}
+	c = y * 16 + x;
+	if(c != me.mouseSelectedCharacterCell)
+		me.mouseSelectedCharacterCell = me.selectedCharacterCell = c;
+	return 1;
+}
+float mouseDragNexuizCharmap(entity me, vector coords)
+{
+	return me.mouseMove(me, coords);
+}
+float mousePressNexuizCharmap(entity me, vector coords)
+{
+	me.mouseMove(me, coords);
+	if(me.mouseSelectedCharacterCell >= 0)
+	{
+		me.pressed = 1;
+		me.previouslySelectedCharacterCell = me.selectedCharacterCell;
+	}
+	return 1;
+}
+float mouseReleaseNexuizCharmap(entity me, vector coords)
+{
+	if(!me.pressed)
+		return 0;
+	me.mouseMove(me, coords);
+	if(me.selectedCharacterCell == me.previouslySelectedCharacterCell)
+		me.controlledTextbox.enterText(me.controlledTextbox, CharMap_CellToChar(me.selectedCharacterCell));
+	me.pressed = 0;
+	return 1;
+}
+float keyDownNexuizCharmap(entity me, float key, float ascii, float shift)
+{
+	switch(key)
+	{
+		case VM_K_LEFTARROW:
+				me.selectedCharacterCell = mod(me.selectedCharacterCell + 159, 160);
+				return 1;
+		case VM_K_RIGHTARROW:
+				me.selectedCharacterCell = mod(me.selectedCharacterCell + 1, 160);
+				return 1;
+		case VM_K_UPARROW:
+				me.selectedCharacterCell = mod(me.selectedCharacterCell + 144, 160);
+				return 1;
+		case VM_K_DOWNARROW:
+				me.selectedCharacterCell = mod(me.selectedCharacterCell + 16, 160);
+				return 1;
+		case VM_K_HOME:
+				me.selectedCharacterCell = 0;
+				return 1;
+		case VM_K_END:
+				me.selectedCharacterCell = 159;
+				return 1;
+		case VM_K_SPACE:
+		case VM_K_ENTER:
+		case VM_K_INS:
+				me.controlledTextbox.enterText(me.controlledTextbox, CharMap_CellToChar(me.selectedCharacterCell));
+				return 1;
+		default:
+				return me.controlledTextbox.keyDown(me.controlledTextbox, key, ascii, shift);
+	}
+}
+void focusLeaveNexuizCharmap(entity me)
+{
+	me.controlledTextbox.saveCvars(me.controlledTextbox);
+}
+void drawNexuizCharmap(entity me)
+{
+	if(me.focused)
+	{
+		if(!me.pressed || (me.selectedCharacterCell == me.previouslySelectedCharacterCell))
+		{
+				vector c;
+				c = eX * (mod(me.selectedCharacterCell, 16) / 16.0);
+				c += eY * (floor(me.selectedCharacterCell / 16.0) / 10.0);
+				gui_draw_picture(c, me.image2, '0.0625 0.1 0', '1 1 1', 1);
+		}
+	}
+	drawImage(me);
+}

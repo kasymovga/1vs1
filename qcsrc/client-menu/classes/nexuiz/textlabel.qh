@@ -1,0 +1,11 @@
+entity spawnNexuizTextLabel();
+void(entity, float, string) configureNexuizTextLabelNexuizTextLabel;
+.void(entity, float, string) configureNexuizTextLabel;
+void(entity) drawNexuizTextLabel;
+.void(entity) draw;
+.float fontSize;
+.float alpha;
+.float disabledAlpha;
+.vector colorL;
+
+entity makeNexuizTextLabel(float theAlign, string theText);

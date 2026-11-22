@@ -1,0 +1,5 @@
+entity spawnMainWindow();
+void(entity) configureMainWindowMainWindow;
+.void(entity) configureMainWindow;
+
+/* Click. The c-word is here so you can grep for it :-) */

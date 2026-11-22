@@ -1,0 +1,14 @@
+entity spawnNexuizSaveLoadDialog();
+void(entity) fillNexuizSaveLoadDialog;
+.void(entity) fill; // to be overridden by user to fill the dialog with controls
+void(entity) configureDialogNexuizSaveLoadDialog;
+.void(entity) configureDialog;
+void(entity) loadCvarsNexuizSaveLoadDialog;
+.void(entity) loadCvars;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.string name;
+

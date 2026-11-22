@@ -1,0 +1,22 @@
+entity spawnNexuizGametypeButton();
+void(entity, float, string, string) configureNexuizGametypeButtonNexuizGametypeButton;
+.void(entity, float, string, string) configureNexuizGametypeButton;
+void(entity, float) setCheckedNexuizGametypeButton;
+.void(entity, float) setChecked;
+.float fontSize;
+.string image;
+.vector color;
+.vector colorC;
+.vector colorF;
+.vector colorD;
+.float srcMulti;
+.float useDownAsChecked;
+.string cvarName;
+void(entity) loadCvarsNexuizGametypeButton;
+.void(entity) loadCvars;
+void(entity) saveCvarsNexuizGametypeButton;
+.void(entity) saveCvars;
+.float alpha;
+.float disabledAlpha;
+
+entity makeNexuizGametypeButton(float, string, string);

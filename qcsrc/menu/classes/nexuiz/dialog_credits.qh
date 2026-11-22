@@ -1,0 +1,13 @@
+entity spawnNexuizCreditsDialog();
+void(entity) fillNexuizCreditsDialog;
+.void(entity) fill;
+void(entity) focusEnterNexuizCreditsDialog;
+.void(entity) focusEnter;
+.string title;
+.string name;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.entity creditsList;
+

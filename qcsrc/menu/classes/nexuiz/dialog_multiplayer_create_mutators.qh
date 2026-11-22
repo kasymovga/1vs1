@@ -1,0 +1,15 @@
+entity spawnNexuizMutatorsDialog();
+string(entity) toStringNexuizMutatorsDialog;
+.string(entity) toString;
+void(entity) fillNexuizMutatorsDialog;
+.void(entity) fill;
+void(entity) showNotifyNexuizMutatorsDialog;
+.void(entity) showNotify;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.entity currentProfile;
+.entity availableProfiles;
+

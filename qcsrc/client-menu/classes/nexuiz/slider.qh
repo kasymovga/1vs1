@@ -1,0 +1,24 @@
+entity spawnNexuizSlider();
+void(entity, float, float, float, string) configureNexuizSliderNexuizSlider;
+.void(entity, float, float, float, string) configureNexuizSlider;
+void(entity, float) setValueNexuizSlider;
+.void(entity, float) setValue;
+.float fontSize;
+.float valueSpace;
+.string image;
+.vector tolerance;
+.float align;
+.vector color;
+.vector colorC;
+.vector colorF;
+.vector colorD;
+.vector color2;
+.string cvarName;
+void(entity) loadCvarsNexuizSlider;
+.void(entity) loadCvars;
+void(entity) saveCvarsNexuizSlider;
+.void(entity) saveCvars;
+.float alpha;
+.float disabledAlpha;
+
+entity makeNexuizSlider(float, float, float, string);

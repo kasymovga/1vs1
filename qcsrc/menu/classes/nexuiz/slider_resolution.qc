@@ -1,0 +1,65 @@
+entity spawnNexuizResolutionSlider() {
+	entity me; me = spawnNexuizTextSlider();
+	me.configureNexuizResolutionSlider = configureNexuizResolutionSliderNexuizResolutionSlider;
+	me.addResolution = addResolutionNexuizResolutionSlider;
+	me.loadCvars = loadCvarsNexuizResolutionSlider;
+	me.saveCvars = saveCvarsNexuizResolutionSlider;
+	me.classname = "NexuizResolutionSlider";
+	return me;
+}
+entity makeNexuizResolutionSlider();
+entity makeNexuizResolutionSlider()
+{
+	entity me;
+	me = spawnNexuizResolutionSlider();
+	me.configureNexuizResolutionSlider(me);
+	return me;
+}
+void addResolutionNexuizResolutionSlider(entity me, float w, float h)
+{
+	me.addValue(me, str_zone_ifneeded(strcat(ftos(w), "x", ftos(h))), str_zone_ifneeded(strcat(ftos(w), " ", ftos(h))));
+	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
+}
+void configureNexuizResolutionSliderNexuizResolutionSlider(entity me)
+{
+	float i;
+	vector r0, r, c;
+	me.configureNexuizTextSlider(me, "vid_width");
+	c = '0 0 0';
+	r0 = '0 0 0';
+	for(i = 0;; ++i)
+	{
+		r = getresolution(i);
+		if(r_x == 0 && r_y == 0)
+				break;
+		if(r == r0)
+				continue;
+		r0 = r;
+		if(r_x < 640 || r_y < 400)
+				continue;
+		c_x = 800;
+		c_y = rint(c_x * r_y / r_x);
+		if(c_y >= 600)
+		{
+				me.addResolution(me, r_x, r_y);
+				continue;
+		}
+		c_y = 600;
+		c_x = rint(c_y * r_x / r_y);
+		me.addResolution(me, r_x, r_y);
+	}
+	me.configureNexuizTextSliderValues(me);
+}
+void loadCvarsNexuizResolutionSlider(entity me)
+{
+	me.setValueFromIdentifier(me, strcat(cvar_string("vid_width"), " ", cvar_string("vid_height")));
+}
+void saveCvarsNexuizResolutionSlider(entity me)
+{
+	if(me.value >= 0 || me.value < me.nValues)
+	{
+		tokenize_console(me.getIdentifier(me));
+		cvar_set("vid_width", argv(0));
+		cvar_set("vid_height", argv(1));
+	}
+}

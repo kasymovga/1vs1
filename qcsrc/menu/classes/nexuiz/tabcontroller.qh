@@ -1,0 +1,10 @@
+entity spawnNexuizTabController();
+void(entity, float) configureNexuizTabControllerNexuizTabController;
+.void(entity, float) configureNexuizTabController;
+entity(entity, string, entity) makeTabButtonNexuizTabController;
+.entity(entity, string, entity) makeTabButton;
+.float rows;
+.float fontSize;
+.string image;
+
+entity makeNexuizTabController(float theRows);

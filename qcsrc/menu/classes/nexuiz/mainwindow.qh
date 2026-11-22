@@ -1,0 +1,17 @@
+entity spawnMainWindow();
+void(entity) configureMainWindowMainWindow;
+.void(entity) configureMainWindow;
+.entity mutatorsDialog;
+.entity oldMutatorsDialog;
+.entity weaponsDialog;
+.entity mapInfoDialog;
+.entity userbindEditDialog;
+.entity winnerDialog;
+.entity hudDialog;
+.entity serverInfoDialog;
+.entity languageDialog;
+.entity saveLoadDialog;
+.entity mainNexposee;
+.float fadedAlpha;
+
+/* Click. The c-word is here so you can grep for it :-) */

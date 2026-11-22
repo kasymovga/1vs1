@@ -1,0 +1,9 @@
+entity spawnNexuizMultiplayerDialog();
+void(entity) fillNexuizMultiplayerDialog;
+.void(entity) fill;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+

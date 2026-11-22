@@ -1,0 +1,70 @@
+// Note: this class is called Dialog, but it can also handle a tab under the following conditions:
+// - isTabRoot is 0
+// - backgroundImage is the tab's background
+// - closable is 0
+// - rootDialog is 0
+// - title is ""
+// - marginTop is 
+// - intendedHeight ends up to be the tab's actual height, or at least close
+// - titleFontSize is 0
+// - marginTop cancels out as much of titleHeight as needed (that is, it should be actualMarginTop - titleHeight)
+// To ensure the latter, you best create all tabs FIRST and insert the tabbed
+// control to your dialog THEN - with the right height
+//
+// a subclass may help with using this as a tab
+entity spawnDialog();
+void(entity) configureDialogDialog;
+.void(entity) configureDialog; // no runtime configuration, all parameters are given in the code!
+void(entity) fillDialog;
+.void(entity) fill; // to be overridden by user to fill the dialog with controls
+float(entity, float, float, float) keyDownDialog;
+.float(entity, float, float, float) keyDown;
+void(entity) closeDialog;
+.void(entity) close;
+void(entity, float, float, float, float, entity, vector) addItemSimpleDialog;
+.void(entity, float, float, float, float, entity, vector) addItemSimple;
+void(entity, float, float, entity) TDDialog;
+.void(entity, float, float, entity) TD;
+void(entity, float, float, entity, vector) TDNoMarginDialog;
+.void(entity, float, float, entity, vector) TDNoMargin;
+void(entity, float) TDemptyDialog;
+.void(entity, float) TDempty;
+void(entity, float) setFirstColumnDialog;
+.void(entity, float) setFirstColumn;
+void(entity) TRDialog;
+.void(entity) TR;
+void(entity, float, float) gotoRCDialog;
+.void(entity, float, float) gotoRC;
+.float isTabRoot;
+.entity closeButton;
+.float intendedHeight;
+.vector itemOrigin;
+.vector itemSize;
+.vector itemSpacing;
+.float currentRow;
+.float currentColumn;
+.float firstColumn;
+// to be customized
+.float closable;
+.string title; // ;)
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.float marginTop; // pixels
+.float marginBottom; // pixels
+.float marginLeft; // pixels
+.float marginRight; // pixels
+.float columnSpacing; // pixels
+.float rowSpacing; // pixels
+.float rowHeight; // pixels
+.float titleHeight; // pixels
+.float titleFontSize; // pixels; if 0, title causes no margin
+.float zoomedOutTitleBarPosition;
+.float zoomedOutTitleBar;
+.string backgroundImage;
+.string closeButtonImage;
+.entity frame;
+.float instanceOfDialog;
+
+void Dialog_Close(entity button, entity me);

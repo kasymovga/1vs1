@@ -1,0 +1,9 @@
+entity spawnNexuizAudioSettingsTab();
+void(entity) fillNexuizAudioSettingsTab;
+.void(entity) fill;
+.string title;
+.float intendedWidth;
+.float rows;
+.float columns;
+
+entity makeNexuizAudioSettingsTab();

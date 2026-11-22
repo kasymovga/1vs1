@@ -1,0 +1,48 @@
+entity spawnListBox();
+void(entity, vector, vector, vector, vector) resizeNotifyListBox;
+.void(entity, vector, vector, vector, vector) resizeNotify;
+void(entity, float, float) configureListBoxListBox;
+.void(entity, float, float) configureListBox;
+void(entity) drawListBox;
+.void(entity) draw;
+float(entity, float, float, float) keyDownListBox;
+.float(entity, float, float, float) keyDown;
+float(entity, vector) mousePressListBox;
+.float(entity, vector) mousePress;
+float(entity, vector) mouseDragListBox;
+.float(entity, vector) mouseDrag;
+float(entity, vector) mouseReleaseListBox;
+.float(entity, vector) mouseRelease;
+float(entity, vector) mouseDoubleClickListBox;
+.float(entity, vector) mouseDoubleClick;
+.float focusable;
+.float selectedItem;
+.vector size;
+.vector origin;
+.float scrollPos; // measured in window heights, fixed when needed
+.float previousValue;
+.float pressed; // 0 = normal, 1 = scrollbar dragging, 2 = item dragging, 3 = released
+.float pressOffset;
+void(entity) updateControlTopBottomListBox;
+.void(entity) updateControlTopBottom;
+.float controlTop;
+.float controlBottom;
+.float controlWidth;
+.float dragScrollTimer;
+.vector dragScrollPos;
+.string src; // scrollbar
+.vector color;
+.vector color2;
+.vector colorC;
+.vector colorF;
+.vector tolerance; // drag tolerance
+.float scrollbarWidth; // pixels
+.float nItems;
+.float itemHeight;
+void(entity, float, vector, float) drawListBoxItemListBox;
+.void(entity, float, vector, float) drawListBoxItem; // item number, width/height, selected
+void(entity, float, vector, float) clickListBoxItemListBox;
+.void(entity, float, vector, float) clickListBoxItem; // item number, relative clickpos, double click
+void(entity, float) setSelectedListBox;
+.void(entity, float) setSelected;
+

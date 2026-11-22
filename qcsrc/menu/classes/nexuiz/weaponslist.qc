@@ -1,0 +1,132 @@
+entity spawnNexuizWeaponsList() {
+	entity me; me = spawnNexuizListBox();
+	me.configureNexuizWeaponsList = configureNexuizWeaponsListNexuizWeaponsList;
+	me.toString = toStringNexuizWeaponsList;
+	me.rowsPerItem = 1;
+	me.draw = drawNexuizWeaponsList;
+	me.drawListBoxItem = drawListBoxItemNexuizWeaponsList;
+	me.resizeNotify = resizeNotifyNexuizWeaponsList;
+	me.keyDown = keyDownNexuizWeaponsList;
+	me.realFontSize = '0 0 0';
+	me.realUpperMargin = 0;
+	me.mouseDrag = mouseDragNexuizWeaponsList;
+	me.classname = "NexuizWeaponsList";
+	return me;
+}
+entity makeNexuizWeaponsList();
+void WeaponsList_MoveUp_Click(entity btn, entity me);
+void WeaponsList_MoveDown_Click(entity box, entity me);
+string(string order, float i, float j) swapInPriorityNexuizWeaponsList {
+	string s;
+	float w, n;
+	n = tokenize_console(order);
+	if(i >= 0 && i < n && j >= 0 && j < n && i != j) {
+		s = "";
+		for(w = 0; w < n; ++w)
+		{
+				if(w == i)
+				s = strcat(s, argv(j), " ");
+				else if(w == j)
+				s = strcat(s, argv(i), " ");
+				else
+				s = strcat(s, argv(w), " ");
+		}
+		return str_sub(s, 0, strlen(s) - 1);
+	}
+	return order;
+}
+entity makeNexuizWeaponsList()
+{
+	entity me;
+	me = spawnNexuizWeaponsList();
+	me.configureNexuizWeaponsList(me);
+	return me;
+}
+void configureNexuizWeaponsListNexuizWeaponsList(entity me)
+{
+	me.configureNexuizListBox(me);
+}
+void drawNexuizWeaponsList(entity me)
+{
+	// read in cvar?
+	string s, t;
+	s = cvar_string("cl_weaponpriority");
+	t = weapon_fix_order(s, 1);
+	if(t != s)
+	{
+		print("Weapon priority list fixed\n");
+		cvar_set("cl_weaponpriority", t);
+	}
+	me.nItems = tokenize_console(t);
+	drawListBox(me);
+}
+void WeaponsList_MoveUp_Click(entity box, entity me)
+{
+	if(me.selectedItem > 0)
+	{
+		cvar_set("cl_weaponpriority", swapInPriorityNexuizWeaponsList(cvar_string("cl_weaponpriority"), me.selectedItem - 1, me.selectedItem));
+		me.selectedItem -= 1;
+	}
+}
+void WeaponsList_MoveDown_Click(entity box, entity me)
+{
+	if(me.selectedItem < me.nItems - 1)
+	{
+		cvar_set("cl_weaponpriority", swapInPriorityNexuizWeaponsList(cvar_string("cl_weaponpriority"), me.selectedItem, me.selectedItem + 1));
+		me.selectedItem += 1;
+	}
+}
+void resizeNotifyNexuizWeaponsList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+{
+	resizeNotifyNexuizListBox(me, relOrigin, relSize, absOrigin, absSize);
+	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
+	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+}
+float mouseDragNexuizWeaponsList(entity me, vector pos)
+{
+	float f, i;
+	i = me.selectedItem;
+	f = mouseDragListBox(me, pos);
+	if(me.selectedItem != i)
+		cvar_set("cl_weaponpriority", swapInPriorityNexuizWeaponsList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
+	return f;
+}
+string toStringNexuizWeaponsList(entity me)
+{
+	float n, i;
+	string s;
+	entity e;
+	n = tokenize_console(cvar_string("cl_weaponpriority"));
+	s = "";
+	for(i = 0; i < n; ++i)
+	{
+		e = weapon_info(stof(argv(i)));
+		s = strcat(s, e.message, ", ");
+	}
+	return str_sub(s, 0, strlen(s) - 2);
+}
+void drawListBoxItemNexuizWeaponsList(entity me, float i, vector absSize, float isSelected)
+{
+	entity e;
+	if(isSelected)
+		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	e = weapon_info(stof(argv(i)));
+	gui_draw_text(me.realUpperMargin * eY, e.message, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+}
+float keyDownNexuizWeaponsList(entity me, float scan, float ascii, float shift)
+{
+	if(ascii == 43) // +
+	{
+		WeaponsList_MoveUp_Click(NULL, me);
+		return 1;
+	}
+	else if(scan == 45) // -
+	{
+		WeaponsList_MoveDown_Click(NULL, me);
+		return 1;
+	}
+	else if(keyDownListBox(me, scan, ascii, shift))
+		return 1;
+	return 0;
+}

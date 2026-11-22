@@ -1,0 +1,9 @@
+entity spawnNexuizDecibelsSlider();
+void(entity) loadCvarsNexuizDecibelsSlider;
+.void(entity) loadCvars;
+void(entity) saveCvarsNexuizDecibelsSlider;
+.void(entity) saveCvars;
+string(entity, float) valueToTextNexuizDecibelsSlider;
+.string(entity, float) valueToText;
+
+entity makeNexuizDecibelsSlider(float, float, float, string);

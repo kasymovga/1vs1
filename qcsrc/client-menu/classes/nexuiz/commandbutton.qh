@@ -1,0 +1,13 @@
+#ifndef COMMANDBUTTON_CLOSE
+# define COMMANDBUTTON_CLOSE 1
+# define COMMANDBUTTON_APPLY 2
+//# define COMMANDBUTTON_REVERT 4
+#endif
+
+entity spawnNexuizCommandButton();
+void(entity, string, vector, string, float) configureNexuizCommandButtonNexuizCommandButton;
+.void(entity, string, vector, string, float) configureNexuizCommandButton;
+.string onClickCommand;
+.float flags;
+
+entity makeNexuizCommandButton(string theText, vector theColor, string theCommand, float closesMenu);

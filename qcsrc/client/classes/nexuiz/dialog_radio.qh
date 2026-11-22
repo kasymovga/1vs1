@@ -1,0 +1,10 @@
+entity spawnNexuizRadioDialog();
+void(entity) fillNexuizRadioDialog;
+.void(entity) fill; // to be overridden by user to fill the dialog with controls
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.string name;
+

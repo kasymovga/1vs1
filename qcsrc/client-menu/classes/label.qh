@@ -1,0 +1,29 @@
+entity spawnLabel();
+void(entity, string, float, float) configureLabelLabel;
+.void(entity, string, float, float) configureLabel;
+void(entity) drawLabel;
+.void(entity) draw;
+void(entity, vector, vector, vector, vector) resizeNotifyLabel;
+.void(entity, vector, vector, vector, vector) resizeNotify;
+void(entity, string) setTextLabel;
+.void(entity, string) setText;
+string(entity) toStringLabel;
+.string(entity) toString;
+.string text;
+.float fontSize;
+.float align;
+.float allowCut;
+.float allowColors;
+.float keepspaceLeft; // for use by subclasses (radiobuttons for example)
+.float keepspaceRight;
+.float marginLeft; // alternate way to specify keepspace* (in characters from the font)
+.float marginRight;
+.vector realFontSize;
+.vector realOrigin;
+.float alpha;
+.vector colorL;
+.float disabled;
+.float disabledAlpha;
+.entity textEntity;
+.float allowWrap;
+

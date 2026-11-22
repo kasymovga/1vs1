@@ -1,0 +1,14 @@
+entity spawnNexuizButton();
+void(entity, string, vector) configureNexuizButtonNexuizButton;
+.void(entity, string, vector) configureNexuizButton;
+.float fontSize;
+.string image;
+.string grayImage;
+.vector color;
+.vector colorC;
+.vector colorF;
+.vector colorD;
+.float alpha;
+.float disabledAlpha;
+
+entity makeNexuizButton(string theText, vector theColor);

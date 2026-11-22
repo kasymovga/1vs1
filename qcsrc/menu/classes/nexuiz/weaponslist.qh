@@ -1,0 +1,22 @@
+entity spawnNexuizWeaponsList();
+void(entity) configureNexuizWeaponsListNexuizWeaponsList;
+.void(entity) configureNexuizWeaponsList;
+string(entity) toStringNexuizWeaponsList;
+.string(entity) toString;
+.float rowsPerItem;
+void(entity) drawNexuizWeaponsList;
+.void(entity) draw;
+void(entity, float, vector, float) drawListBoxItemNexuizWeaponsList;
+.void(entity, float, vector, float) drawListBoxItem;
+void(entity, vector, vector, vector, vector) resizeNotifyNexuizWeaponsList;
+.void(entity, vector, vector, vector, vector) resizeNotify;
+float(entity, float, float, float) keyDownNexuizWeaponsList;
+.float(entity, float, float, float) keyDown;
+.vector realFontSize;
+.float realUpperMargin;
+float(entity, vector) mouseDragNexuizWeaponsList;
+.float(entity, vector) mouseDrag;
+
+entity makeNexuizWeaponsList();
+void WeaponsList_MoveUp_Click(entity btn, entity me);
+void WeaponsList_MoveDown_Click(entity box, entity me);

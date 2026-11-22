@@ -1,0 +1,20 @@
+entity spawnTab();
+.float isTabRoot;
+.float closable;
+.float rootDialog;
+.string title;
+.float titleFontSize; // pixels
+// still to be customized
+.float intendedWidth;
+.float rows;
+.float columns;
+.float marginTop; // pixels
+.float marginBottom; // pixels
+.float marginLeft; // pixels
+.float marginRight; // pixels
+.float columnSpacing; // pixels
+.float rowSpacing; // pixels
+.float rowHeight; // pixels
+.float titleHeight; // pixels
+.string backgroundImage;
+

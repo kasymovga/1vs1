@@ -1,0 +1,20 @@
+entity spawnNexuizColorButton();
+void(entity, float, float, float) configureNexuizColorButtonNexuizColorButton;
+.void(entity, float, float, float) configureNexuizColorButton;
+void(entity, float) setCheckedNexuizColorButton;
+.void(entity, float) setChecked;
+void(entity) drawNexuizColorButton;
+.void(entity) draw;
+.float fontSize;
+.string image;
+.string image2;
+.float useDownAsChecked;
+.float cvarPart;
+.string cvarName;
+.float cvarValueFloat;
+void(entity) loadCvarsNexuizColorButton;
+.void(entity) loadCvars;
+void(entity) saveCvarsNexuizColorButton;
+.void(entity) saveCvars;
+
+entity makeNexuizColorButton(float, float, float);

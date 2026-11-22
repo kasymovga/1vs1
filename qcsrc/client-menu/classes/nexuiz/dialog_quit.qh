@@ -1,0 +1,9 @@
+entity spawnNexuizQuitDialog();
+void(entity) fillNexuizQuitDialog;
+.void(entity) fill;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+

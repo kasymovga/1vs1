@@ -1,0 +1,13 @@
+entity spawnNexuizHUDDialog();
+string(entity) toStringNexuizHUDDialog;
+.string(entity) toString;
+void(entity) fillNexuizHUDDialog;
+.void(entity) fill;
+void(entity) showNotifyNexuizHUDDialog;
+.void(entity) showNotify;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+

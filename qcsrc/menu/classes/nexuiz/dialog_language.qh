@@ -1,0 +1,9 @@
+entity spawnNexuizLanguageDialog();
+void(entity) fillNexuizLanguageDialog;
+.void(entity) fill;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+

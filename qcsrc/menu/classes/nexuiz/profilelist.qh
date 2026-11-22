@@ -1,0 +1,15 @@
+entity spawnNexuizProfileList();
+string(entity) toStringNexuizProfileList;
+.string(entity) toString;
+.float rowsPerItem;
+void(entity, float, vector, float) drawListBoxItemNexuizProfileList;
+.void(entity, float, vector, float) drawListBoxItem;
+void(entity, vector, vector, vector, vector) resizeNotifyNexuizProfileList;
+.void(entity, vector, vector, vector, vector) resizeNotify;
+.vector realFontSize;
+.float realUpperMargin;
+void(entity) loadCvarsNexuizProfileList;
+.void(entity) loadCvars;
+
+entity makeNexuizProfileList();
+const float PROFILELIST_MAX = 4;

@@ -1,0 +1,11 @@
+entity spawnNexuizCampaignTab();
+void(entity) fillNexuizCampaignTab;
+.void(entity) fill;
+.string title;
+.entity campaignBox;
+.entity btnGame;
+.float rows;
+.float columns;
+.float intendedWidth;
+
+entity makeNexuizCampaignTab();

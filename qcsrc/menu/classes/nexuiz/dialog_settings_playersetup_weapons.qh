@@ -1,0 +1,14 @@
+entity spawnNexuizWeaponsDialog();
+string(entity) toStringNexuizWeaponsDialog;
+.string(entity) toString;
+void(entity) fillNexuizWeaponsDialog;
+.void(entity) fill;
+void(entity) showNotifyNexuizWeaponsDialog;
+.void(entity) showNotify;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.entity weaponsList;
+

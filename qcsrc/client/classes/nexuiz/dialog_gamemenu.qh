@@ -1,0 +1,13 @@
+entity spawnNexuizGameMenuDialog();
+void(entity) fillNexuizGameMenuDialog;
+.void(entity) fill; // to be overridden by user to fill the dialog with controls
+void(entity) configureDialogNexuizGameMenuDialog;
+.void(entity) configureDialog;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.string name;
+
+/* Click. The c-word is here so you can grep for it :-) */

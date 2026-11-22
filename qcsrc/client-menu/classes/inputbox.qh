@@ -1,0 +1,35 @@
+entity spawnInputBox();
+void(entity, string, float, float, string) configureInputBoxInputBox;
+.void(entity, string, float, float, string) configureInputBox;
+void(entity) drawInputBox;
+.void(entity) draw;
+void(entity, string) setTextInputBox;
+.void(entity, string) setText;
+void(entity, string) enterTextInputBox;
+.void(entity, string) enterText;
+float(entity, float, float, float) keyDownInputBox;
+.float(entity, float, float, float) keyDown;
+float(entity, vector) mouseReleaseInputBox;
+.float(entity, vector) mouseRelease;
+float(entity, vector) mousePressInputBox;
+.float(entity, vector) mousePress;
+float(entity, vector) mouseDragInputBox;
+.float(entity, vector) mouseDrag;
+void(entity) showNotifyInputBox;
+.void(entity) showNotify;
+.string src;
+.float cursorPos; // characters
+.float scrollPos; // widths
+.float focusable;
+.float disabled;
+.float lastChangeTime;
+.float dragScrollTimer;
+.vector dragScrollPos;
+.float pressed;
+.float editColorCodes;
+.string forbiddenCharacters;
+.vector color;
+.vector colorF;
+.float maxLength;
+
+void InputBox_Clear_Click(entity btn, entity me);

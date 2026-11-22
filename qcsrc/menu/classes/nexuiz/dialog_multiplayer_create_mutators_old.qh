@@ -1,0 +1,15 @@
+entity spawnNexuizOldMutatorsDialog();
+string(entity) toStringNexuizOldMutatorsDialog;
+.string(entity) toString;
+void(entity) fillNexuizOldMutatorsDialog;
+.void(entity) fill;
+//	METHOD(NexuizOldMutatorsDialog, showNotify, void(entity))
+void(entity) closeNexuizOldMutatorsDialog;
+.void(entity) close;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.entity refilterEntity;
+

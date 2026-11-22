@@ -1,0 +1,19 @@
+entity spawnNexuizCrosshairButton();
+void(entity, float, float) configureNexuizCrosshairButtonNexuizCrosshairButton;
+.void(entity, float, float) configureNexuizCrosshairButton;
+void(entity, float) setCheckedNexuizCrosshairButton;
+.void(entity, float) setChecked;
+void(entity) drawNexuizCrosshairButton;
+.void(entity) draw;
+.float fontSize;
+.string image;
+.float useDownAsChecked;
+.string src3;
+.string cvarName;
+.float cvarValueFloat;
+void(entity) loadCvarsNexuizCrosshairButton;
+.void(entity) loadCvars;
+void(entity) saveCvarsNexuizCrosshairButton;
+.void(entity) saveCvars;
+
+entity makeNexuizCrosshairButton(float, float);

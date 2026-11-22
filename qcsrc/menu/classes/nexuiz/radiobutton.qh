@@ -1,0 +1,24 @@
+entity spawnNexuizRadioButton();
+void(entity, float, string, string, string) configureNexuizRadioButtonNexuizRadioButton;
+.void(entity, float, string, string, string) configureNexuizRadioButton;
+void(entity) drawNexuizRadioButton;
+.void(entity) draw;
+void(entity, float) setCheckedNexuizRadioButton;
+.void(entity, float) setChecked;
+.float fontSize;
+.string image;
+.vector color;
+.vector colorC;
+.vector colorF;
+.vector colorD;
+.string cvarName;
+.string cvarValue;
+.string cvarOffValue;
+void(entity) loadCvarsNexuizRadioButton;
+.void(entity) loadCvars;
+void(entity) saveCvarsNexuizRadioButton;
+.void(entity) saveCvars;
+.float alpha;
+.float disabledAlpha;
+
+entity makeNexuizRadioButton(float, string, string, string);

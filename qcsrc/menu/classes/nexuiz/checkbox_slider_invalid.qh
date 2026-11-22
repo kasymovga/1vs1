@@ -1,0 +1,21 @@
+entity spawnNexuizSliderCheckBox();
+void(entity, float, float, entity, string) configureNexuizSliderCheckBoxNexuizSliderCheckBox;
+.void(entity, float, float, entity, string) configureNexuizSliderCheckBox;
+void(entity, float) setCheckedNexuizSliderCheckBox;
+.void(entity, float) setChecked;
+void(entity) drawNexuizSliderCheckBox;
+.void(entity) draw;
+.float fontSize;
+.string image;
+.vector color;
+.vector colorC;
+.vector colorF;
+.vector colorD;
+.float alpha;
+.float disabledAlpha;
+.entity controlledSlider;
+.float offValue;
+.float inverted;
+.float savedValue;
+
+entity makeNexuizSliderCheckBox(float, float, entity, string);

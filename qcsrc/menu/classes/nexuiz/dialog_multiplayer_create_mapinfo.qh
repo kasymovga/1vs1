@@ -1,0 +1,25 @@
+entity spawnNexuizMapInfoDialog();
+void(entity) fillNexuizMapInfoDialog;
+.void(entity) fill;
+void(entity, float, entity) loadMapInfoNexuizMapInfoDialog;
+.void(entity, float, entity) loadMapInfo;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.entity previewImage;
+.entity titleLabel;
+.entity authorLabel;
+.entity descriptionLabel;
+.entity featuresLabel;
+.entity typeLabelNext;
+.float currentMapIndex;
+.string currentMapBSPName;
+.string currentMapTitle;
+.string currentMapAuthor;
+.string currentMapDescription;
+.string currentMapPreviewImage;
+.string currentMapFeaturesText;
+.float instanceOfNexuizMapInfoDialog;
+

@@ -1,0 +1,15 @@
+entity spawnNexuizUserbindEditDialog();
+void(entity, string, string, string) loadUserBindNexuizUserbindEditDialog;
+.void(entity, string, string, string) loadUserBind;
+void(entity) fillNexuizUserbindEditDialog;
+.void(entity) fill;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.entity keybindBox;
+.entity nameBox;
+.entity commandPressBox;
+.entity commandReleaseBox;
+

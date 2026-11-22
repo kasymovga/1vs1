@@ -1,0 +1,7 @@
+entity spawnNexuizBigCommandButton();
+void(entity, string, vector, string, float) configureNexuizBigCommandButtonNexuizBigCommandButton;
+.void(entity, string, vector, string, float) configureNexuizBigCommandButton;
+.string image;
+.string grayImage;
+
+entity makeNexuizBigCommandButton(string theText, vector theColor, string theCommand, float closesMenu);

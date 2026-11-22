@@ -79,5 +79,27 @@
 #include "player_info.qh"
 #include "font.qh"
 #include "thirdview.qh"
-#include "classes.qh"
+#define draw drawGUI
+#define frame frameGUI
+#include "classes/nexuiz/rootdialog.qh"
+#include "classes/nexuiz/voteargslist.qh"
+#include "classes/nexuiz/votelist.qh"
+#include "classes/nexuiz/dialog_gamemenu.qh"
+#include "classes/nexuiz/dialog_gamesettings.qh"
+#include "classes/nexuiz/dialog_radio.qh"
+#include "classes/nexuiz/mainwindow.qh"
+#include "classes/nexuiz/dialog_vcall.qh"
+#include "classes/nexuiz/dialog_hint.qh"
+#include "classes/nexuiz/reportplayerlist.qh"
+#include "classes/nexuiz/reporttypelist.qh"
+#include "classes/nexuiz/dialog_report.qh"
+#include "classes/nexuiz/mutelist.qh"
+#include "classes/nexuiz/dialog_mutelist.qh"
+#include "classes/nexuiz/recordlist.qh"
+#include "classes/nexuiz/dialog_recordlist.qh"
+#include "classes/nexuiz/dialog_hud.qh"
+#include "classes/nexuiz/hudlist.qh"
+#include "classes/nexuiz/skinlist.qh"
+#undef draw
+#undef frame
 #include "notification.qh"

@@ -1,0 +1,16 @@
+entity spawnNexuizListBox();
+void(entity) configureNexuizListBoxNexuizListBox;
+.void(entity) configureNexuizListBox;
+.float fontSize;
+.float scrollbarWidth;
+.string src;
+.vector tolerance;
+.float rowsPerItem;
+void(entity, vector, vector, vector, vector) resizeNotifyNexuizListBox;
+.void(entity, vector, vector, vector, vector) resizeNotify;
+.vector color;
+.vector colorF;
+.vector color2;
+.vector colorC;
+
+entity makeNexuizListBox();

@@ -1,3 +1,42 @@
+#ifdef CSQC
+#define draw drawGUI
+#define frame frameGUI
+#endif
+#include "classes/object.qh"
+#include "classes/item.qh"
+#include "classes/container.qh"
+#include "classes/inputcontainer.qh"
+#include "classes/nexposee.qh"
+#include "classes/modalcontroller.qh"
+#include "classes/image.qh"
+#include "classes/label.qh"
+#include "classes/button.qh"
+#include "classes/checkbox.qh"
+#include "classes/radiobutton.qh"
+#include "classes/borderimage.qh"
+#include "classes/slider.qh"
+#include "classes/dialog.qh"
+#include "classes/tab.qh"
+#include "classes/textslider.qh"
+#include "classes/listbox.qh"
+#include "classes/inputbox.qh"
+#include "classes/nexuiz/dialog.qh"
+#include "classes/nexuiz/button.qh"
+#include "classes/nexuiz/commandbutton.qh"
+#include "classes/nexuiz/bigcommandbutton.qh"
+#include "classes/nexuiz/dialog_teamselect.qh"
+#include "classes/nexuiz/textlabel.qh"
+#include "classes/nexuiz/slider.qh"
+#include "classes/nexuiz/checkbox.qh"
+#include "classes/nexuiz/textslider.qh"
+#include "classes/nexuiz/listbox.qh"
+#include "classes/nexuiz/inputbox.qh"
+#include "classes/nexuiz/dialog_quit.qh"
+#include "classes/nexuiz/dialog_saveload.qh"
+#ifdef CSQC
+#undef draw
+#undef frame
+#endif
 #include "cvar.qh"
 #include "gui.qh"
 #include "skin.qh"

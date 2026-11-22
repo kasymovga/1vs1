@@ -1,0 +1,16 @@
+void CheckBox_Click(entity me, entity thOther);
+entity spawnCheckBox();
+void(entity, string, float, string) configureCheckBoxCheckBox;
+.void(entity, string, float, string) configureCheckBox;
+void(entity) drawCheckBox;
+.void(entity) draw;
+string(entity) toStringCheckBox;
+.string(entity) toString;
+void(entity, float) setCheckedCheckBox;
+.void(entity, float) setChecked;
+.float useDownAsChecked;
+.float checked;
+.void(entity, entity) onClick;
+.float srcMulti;
+.float disabled;
+

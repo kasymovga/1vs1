@@ -1,0 +1,5 @@
+entity spawnNexuizImage();
+void(entity, string, float) configureNexuizImageNexuizImage;
+.void(entity, string, float) configureNexuizImage;
+
+entity makeNexuizImage(string theImage, float theAspect);

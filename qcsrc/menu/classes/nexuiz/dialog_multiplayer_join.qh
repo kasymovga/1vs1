@@ -1,0 +1,13 @@
+entity spawnNexuizServerListTab();
+void(entity) fillNexuizServerListTab;
+.void(entity) fill;
+.string title;
+.float intendedWidth;
+.float rows;
+.float columns;
+void(entity) showNotifyNexuizServerListTab;
+.void(entity) showNotify;
+float(entity me, float scan, float ascii, float shift) keyDownNexuizServerListTab;
+.float(entity me, float scan, float ascii, float shift) keyDown;
+
+entity makeNexuizServerListTab();

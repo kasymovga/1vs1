@@ -1,0 +1,11 @@
+entity spawnNexuizAdvancedSettingsTab();
+void(entity) fillNexuizAdvancedSettingsTab;
+.void(entity) fill;
+.string title;
+.float intendedWidth;
+.float rows;
+.float columns;
+void(entity) showNotifyNexuizAdvancedSettingsTab;
+.void(entity) showNotify;
+
+entity makeNexuizAdvancedSettingsTab();

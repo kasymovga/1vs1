@@ -1,0 +1,23 @@
+entity spawnNexuizCheckBox();
+void(entity, float, float, string, string) configureNexuizCheckBoxNexuizCheckBox;
+.void(entity, float, float, string, string) configureNexuizCheckBox;
+void(entity, float) setCheckedNexuizCheckBox;
+.void(entity, float) setChecked;
+.float fontSize;
+.string image;
+.float yesValue;
+.float noValue;
+.vector color;
+.vector colorC;
+.vector colorF;
+.vector colorD;
+.string cvarName;
+void(entity) loadCvarsNexuizCheckBox;
+.void(entity) loadCvars;
+void(entity) saveCvarsNexuizCheckBox;
+.void(entity) saveCvars;
+.float alpha;
+.float disabledAlpha;
+
+entity makeNexuizCheckBox(float, string, string);
+entity makeNexuizCheckBoxEx(float, float, string, string);

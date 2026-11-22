@@ -1,0 +1,14 @@
+entity spawnNexuizRecordList();
+void(entity, float, vector, float) drawListBoxItemNexuizRecordList;
+.void(entity, float, vector, float) drawListBoxItem;
+void(entity, float) setSelectedNexuizRecordList;
+.void(entity, float) setSelected;
+void(entity, vector, vector, vector, vector) resizeNotifyNexuizRecordList;
+.void(entity, vector, vector, vector, vector) resizeNotify;
+void(entity, float, vector, float) clickListBoxItemNexuizRecordList;
+.void(entity, float, vector, float) clickListBoxItem;
+.float realUpperMargin;
+.float columnNameOrigin;
+.entity voteList;
+
+entity makeNexuizRecordList();

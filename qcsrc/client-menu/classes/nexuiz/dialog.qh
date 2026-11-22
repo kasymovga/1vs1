@@ -1,0 +1,29 @@
+entity spawnNexuizDialog();
+// still to be customized by user
+/*
+	ATTRIB(NexuizDialog, closable, float, 1)
+	ATTRIB(NexuizDialog, title, string, "Form1") // ;)
+	ATTRIB(NexuizDialog, color, vector, '1 0.5 1')
+	ATTRIB(NexuizDialog, intendedWidth, float, 0)
+	ATTRIB(NexuizDialog, rows, float, 3)
+	ATTRIB(NexuizDialog, columns, float, 2)
+	*/
+.float marginTop; // pixels
+.float marginBottom; // pixels
+.float marginLeft; // pixels
+.float marginRight; // pixels
+.float columnSpacing; // pixels
+.float rowSpacing; // pixels
+.float rowHeight; // pixels
+.float titleHeight; // pixels
+.float titleFontSize; // pixels
+.string backgroundImage;
+.float borderLines;
+.string closeButtonImage;
+.float zoomedOutTitleBarPosition;
+.float zoomedOutTitleBar;
+.float alpha;
+void(entity) configureDialogNexuizDialog;
+.void(entity) configureDialog;
+
+entity currentDialog;

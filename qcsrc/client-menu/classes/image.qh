@@ -1,0 +1,15 @@
+entity spawnImage();
+void(entity, string) configureImageImage;
+.void(entity, string) configureImage;
+void(entity) drawImage;
+.void(entity) draw;
+string(entity) toStringImage;
+.string(entity) toString;
+void(entity, vector, vector, vector, vector) resizeNotifyImage;
+.void(entity, vector, vector, vector, vector) resizeNotify;
+.string src;
+.vector color;
+.float forcedAspect;
+.vector imgOrigin;
+.vector imgSize;
+

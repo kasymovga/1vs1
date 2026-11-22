@@ -1,0 +1,21 @@
+entity spawnNexuizPlayerList();
+.float rowsPerItem;
+void(entity, vector, vector, vector, vector) resizeNotifyNexuizPlayerList;
+.void(entity, vector, vector, vector, vector) resizeNotify;
+void(entity, float, vector, float) drawListBoxItemNexuizPlayerList;
+.void(entity, float, vector, float) drawListBoxItem;
+.vector realFontSize;
+.float columnNameOrigin;
+.float columnNameSize;
+.float columnScoreOrigin;
+.float columnScoreSize;
+.float realUpperMargin;
+.vector origin;
+.vector itemAbsSize;
+void(entity, string) setPlayerListNexuizPlayerList;
+.void(entity, string) setPlayerList;
+string(entity, float, float) getPlayerListNexuizPlayerList;
+.string(entity, float, float) getPlayerList;
+.float playerList;
+
+entity makeNexuizPlayerList();

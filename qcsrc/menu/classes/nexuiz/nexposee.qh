@@ -1,0 +1,7 @@
+entity spawnNexuizNexposee();
+void(entity) configureNexuizNexposeeNexuizNexposee;
+.void(entity) configureNexuizNexposee;
+void(entity) closeNexuizNexposee;
+.void(entity) close;
+
+entity makeNexuizNexposee();

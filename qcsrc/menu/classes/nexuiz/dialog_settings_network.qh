@@ -1,0 +1,9 @@
+entity spawnNexuizNetworkSettingsTab();
+void(entity) fillNexuizNetworkSettingsTab;
+.void(entity) fill;
+.string title;
+.float intendedWidth;
+.float rows;
+.float columns;
+
+entity makeNexuizNetworkSettingsTab();
