@@ -116,7 +116,7 @@ void(string k, string v) translate_db_missed_cb {
 
 void(void) translate_shutdown {
 	if (translate_db_missed >= 0) {
-		float i, j, n, c = buf_getsize(translate_db_missed);
+		float i, j, n, c = str_array_size(translate_db_missed);
 		string s;
 		translate_load(translate_db_missed, "missed_translations.po", FALSE);
 		translate_db_missed_cb_out = fopen("missed_translations.po", FILE_WRITE);

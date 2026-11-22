@@ -31,21 +31,21 @@ void configureNexuizCreditsListNexuizCreditsList(entity me)
 	string l;
 	me.configureNexuizListBox(me);
 	// load the file
-	me.bufferIndex = buf_create();
+	me.bufferIndex = str_array_create();
 	fh = fopen("rexuiz-credits.txt", FILE_READ);
 	if(fh >= 0) {
 		i = 0;
 		while((l = fgets(fh))) {
-			bufstr_set(me.bufferIndex, i, l);
+			str_array_set(me.bufferIndex, i, l);
 			++i;
 		}
 		fclose(fh);
 	}
-	me.nItems = buf_getsize(me.bufferIndex);
+	me.nItems = str_array_size(me.bufferIndex);
 }
 void destroyNexuizCreditsList(entity me)
 {
-	buf_del(me.bufferIndex);
+	str_array_delete(me.bufferIndex);
 }
 void drawNexuizCreditsList(entity me)
 {
@@ -74,7 +74,7 @@ void drawListBoxItemNexuizCreditsList(entity me, float i, vector absSize, float 
 	float theAlpha;
 	vector theColor;
 
-	s = bufstr_get(me.bufferIndex, i);
+	s = str_array_get(me.bufferIndex, i);
 
 	if(str_sub(s, 0, 2) == "**")
 	{

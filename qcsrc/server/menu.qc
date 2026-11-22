@@ -26,7 +26,7 @@ float(entity to, float sf) menu_send {
 		net_write_byte(MSG_ENTITY, self.cnt);
 		float i;
 		for (i = 0; i < self.cnt; i++)
-			net_write_string(MSG_ENTITY, bufstr_get(self.state, i));
+			net_write_string(MSG_ENTITY, str_array_get(self.state, i));
 	}
 	return TRUE;
 }
@@ -41,7 +41,7 @@ entity(entity plr, string _menu_id, string _menu_title, float timeout, void(floa
 		}
 
 	e = spawn();
-	e.state = buf_create();
+	e.state = str_array_create();
 	e.classname = "menu";
 	e.message = _menu_id;
 	e.netname = str_zone_ifneeded(_menu_title);
@@ -71,7 +71,7 @@ void(entity menu, string name) menu_add_item {
 	if (menu.cnt >= MENU_ITEMS_MAXCOUNT)
 		return;
 
-	bufstr_set(menu.state, menu.cnt, name);
+	str_array_set(menu.state, menu.cnt, name);
 	menu.cnt++;
 }
 
@@ -79,7 +79,7 @@ void(entity menu, float item, string name) menu_set_item {
 	if (item < 0 || item >= menu.cnt)
 		return;
 
-	bufstr_set(menu.state, item, name);
+	str_array_set(menu.state, item, name);
 	menu.SendFlags |= 1;
 }
 
@@ -103,7 +103,7 @@ void(entity menu) menu_remove {
 				break;
 			}
 	str_unzone_ifneeded(menu.netname);
-	buf_del(menu.state);
+	str_array_delete(menu.state);
 	remove(menu);
 }
 

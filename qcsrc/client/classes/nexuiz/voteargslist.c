@@ -43,7 +43,7 @@ void setVoteTypeNexuizVoteArgsList(entity me, string vote) {
 		me.nItems = 255;
 	} else if (vote == "gotomap" || vote == "chmap" || vote == "nextmap") {
 		new_voteType = 3;
-		me.nItems = max(1, buf_getsize(map_list));
+		me.nItems = max(1, str_array_size(map_list));
 	}
 	me.selectedItem = -1;
 	if (new_voteType != me.voteType) {
@@ -73,7 +73,7 @@ void setSelectedNexuizVoteArgsList(entity me, float i)
 				s = strcat(s, " reason");
 		}
 	} else if (me.voteType == 3) {
-		s = strcat(vote, " ", bufstr_get(map_list, i));
+		s = strcat(vote, " ", str_array_get(map_list, i));
 		me.voteList.textBox.setText(me.voteList.textBox, s);
 		me.voteList.textBox.cursorPos = strlen(s);
 	}
@@ -107,7 +107,7 @@ void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float
 			s = strcat("#", ftos(e.sv_entnum + 1), ": ", strdecolorize(player_name(e.sv_entnum)));
 
 	} else if (me.voteType == 3) {
-		s = bufstr_get(map_list, i);
+		s = str_array_get(map_list, i);
 	}
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 }

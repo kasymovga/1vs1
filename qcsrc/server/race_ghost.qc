@@ -7,7 +7,7 @@ float sv_cts_ghost;
 
 entity(void) race_ghost_spawn {
 	entity e = spawn();
-	e.lip = buf_create();
+	e.lip = str_array_create();
 	e.cnt = 1;
 	return e;
 }
@@ -23,7 +23,7 @@ entity(entity ghost) race_ghost_refcounter_decrease { //always return NULL
 	if not(ghost) return NULL;
 	ghost.cnt--;
 	if (ghost.cnt <= 0) {
-		buf_del(ghost.lip);
+		str_array_delete(ghost.lip);
 		str_unzone_ifneeded(ghost.message);
 		remove(ghost);
 	}
@@ -72,7 +72,7 @@ void(entity pl) race_ghost_start {
 		setmodel(pl.race_ghost, "models/player/grunt.dpm");
 		pl.race_ghost.frame = 8;
 		pl.race_ghost.customizeentityforclient = race_ghost_customize;
-		string s = bufstr_get(pl.race_ghost.enemy.lip, 0);
+		string s = str_array_get(pl.race_ghost.enemy.lip, 0);
 		vector o;
 		o_x = stof(str_sub(s, 0, 7));
 		o_y = stof(str_sub(s, 7, 7));
@@ -86,7 +86,7 @@ void(entity pl) race_ghost_record_add {
 	pl.race_ghost.state++;
 	string record_str = race_ghost_vector_to_string(pl.origin);
 	record_str = strcat(record_str, strpad(4, str_sub(ftos(floor(pl.angles_y + 0.5)), 0, 4)));
-	bufstr_set(pl.race_ghost.lip, ln, strcat(bufstr_get(pl.race_ghost.lip, ln), record_str));
+	str_array_set(pl.race_ghost.lip, ln, strcat(str_array_get(pl.race_ghost.lip, ln), record_str));
 }
 
 void(entity ghost, entity ghost_body, float pos) race_ghost_record_read {
@@ -95,7 +95,7 @@ void(entity ghost, entity ghost_body, float pos) race_ghost_record_read {
 	float f = pos - pos_floor;
 	float ln = floor(pos_floor / 640);
 	float lp = math_mod(pos_floor, 640);
-	string record_str = str_sub(bufstr_get(ghost.lip, ln), lp * 25, 25);
+	string record_str = str_sub(str_array_get(ghost.lip, ln), lp * 25, 25);
 	vector o1;
 	o1_x = stof(str_sub(record_str, 0, 7));
 	o1_y = stof(str_sub(record_str, 7, 7));
@@ -103,7 +103,7 @@ void(entity ghost, entity ghost_body, float pos) race_ghost_record_read {
 	float a1 = stof(str_sub(record_str, 21, 4));
 	ln = floor(pos_ceil / 640);
 	lp = math_mod(pos_ceil, 640);
-	record_str = str_sub(bufstr_get(ghost.lip, ln), lp * 25, 25);
+	record_str = str_sub(str_array_get(ghost.lip, ln), lp * 25, 25);
 	vector o2;
 	o2_x = stof(str_sub(record_str, 0, 7));
 	o2_y = stof(str_sub(record_str, 7, 7));
@@ -236,7 +236,7 @@ void(void) race_ghost_init {
 			race_ghost_best.message = str_zone_ifneeded(fgets(f));
 			race_ghost_best.speed = stof(str_car(str_cdr(str_cdr(str_cdr(race_ghost_best.message))))); // 4th argument
 			while ((s = fgets(f))) {
-				bufstr_set(race_ghost_best.lip, race_ghost_best.state, s);
+				str_array_set(race_ghost_best.lip, race_ghost_best.state, s);
 				race_ghost_best.state++;
 			}
 			fclose(f);
@@ -254,7 +254,7 @@ void(void) race_ghost_save {
 			float i;
 			fputs(f, strcat(race_ghost_best.message, "\n"));
 			for (i = 0; i < race_ghost_best.state; i++)
-				fputs(f, strcat(bufstr_get(race_ghost_best.lip, i), "\n"));
+				fputs(f, strcat(str_array_get(race_ghost_best.lip, i), "\n"));
 
 			fclose(f);
 		}

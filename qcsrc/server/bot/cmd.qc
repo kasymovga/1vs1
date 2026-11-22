@@ -9,16 +9,16 @@ void(entity bot) bot_clearqueue {
 	if (!bot.bot_cmdqueuebuf_allocated)
 		error("clearqueue but no queue allocated");
 
-	buf_del(bot.bot_cmdqueuebuf);
+	str_array_delete(bot.bot_cmdqueuebuf);
 	bot.bot_cmdqueuebuf_allocated = FALSE;
 }
 
 void(entity bot, string cmdstring) bot_queuecommand {
 	if (!bot.bot_cmdqueuebuf_allocated) {
-		bot.bot_cmdqueuebuf = buf_create();
+		bot.bot_cmdqueuebuf = str_array_create();
 		bot.bot_cmdqueuebuf_allocated = TRUE;
 	}
-	bufstr_set(bot.bot_cmdqueuebuf, bot.bot_cmdqueuebuf_end, cmdstring);
+	str_array_set(bot.bot_cmdqueuebuf, bot.bot_cmdqueuebuf_end, cmdstring);
 	bot.bot_cmdqueuebuf_end += 1;
 }
 
@@ -32,7 +32,7 @@ void(entity bot, float idx) bot_dequeuecommand {
 	if (idx >= bot.bot_cmdqueuebuf_end)
 		error("dequeueing a command in the future");
 
-	bufstr_set(bot.bot_cmdqueuebuf, idx, "");
+	str_array_set(bot.bot_cmdqueuebuf, idx, "");
 	if (idx == bot.bot_cmdqueuebuf_start)
 		bot.bot_cmdqueuebuf_start += 1;
 
@@ -50,7 +50,7 @@ string(entity bot, float idx) bot_readcommand {
 	if (idx >= bot.bot_cmdqueuebuf_end)
 		error("reading a command in the future");
 
-	return bufstr_get(bot.bot_cmdqueuebuf, idx);
+	return str_array_get(bot.bot_cmdqueuebuf, idx);
 }
 
 float(entity bot, float idx) bot_havecommand {

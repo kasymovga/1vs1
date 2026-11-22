@@ -17,33 +17,32 @@ void AvailableProfilesList_MoveDown_Click(entity box, entity me);
 
 #ifdef IMPLEMENTATION
 void(entity me) destroyNexuizAvailableProfilesList {
-	buf_del(me.handle);
+	str_array_delete(me.handle);
 }
 
 string(entity me) toStringNexuizAvailableProfilesList {
-	string s = bufstr_get(me.handle, me.selectedItem);
+	string s = str_array_get(me.handle, me.selectedItem);
 	s = str_sub(s, 0, strlen(s) - 8);
 	return s;
 }
 
 void(entity me) loadCvarsNexuizAvailableProfilesList {
-	buf_cvarlist(me.handle, "*_profile", "g_");
-	me.nItems = buf_getsize(me.handle);
+	str_array_cvar_list(me.handle, "*_profile", "g_");
+	me.nItems = str_array_size(me.handle);
 	float i, j;
 	string s;
 	string profile = strcat(" ", strreplace("+", " ", cvar_string("g_profile")), " ");
 	for (i = 0; i < me.nItems; i++) {
-		string s = bufstr_get(me.handle, i);
+		string s = str_array_get(me.handle, i);
 		if (s == "") break;
 		s = strcat(" ", str_sub(s, 0, strlen(s) - 8), " ");
 		if (strstrofs(profile, s, 0) >= 0) {
 			if (me.selectedItem >= i) me.selectedItem--;
-			bufstr_free(me.handle, i);
 			for (j = i + 1; j < me.nItems; j++) {
-				bufstr_set(me.handle, j - 1, bufstr_get(me.handle, j));
+				str_array_set(me.handle, j - 1, str_array_get(me.handle, j));
 			}
 			me.nItems--;
-			bufstr_free(me.handle, me.nItems);
+			str_array_free(me.handle, me.nItems);
 			i--;
 		}
 	}
@@ -52,7 +51,7 @@ void(entity me) loadCvarsNexuizAvailableProfilesList {
 entity() makeNexuizAvailableProfilesList {
 	entity me;
 	me = spawnNexuizAvailableProfilesList();
-	me.handle = buf_create();
+	me.handle = str_array_create();
 	loadCvarsNexuizProfileList(me);
 	me.configureNexuizListBox(me);
 	return me;
@@ -71,7 +70,7 @@ void(entity me, float i, vector absSize, float isSelected) drawListBoxItemNexuiz
 	if(isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	string s = bufstr_get(me.handle, i);
+	string s = str_array_get(me.handle, i);
 	s = str_sub(s, 0, strlen(s) - 8);
 	gui_draw_text(me.realUpperMargin * eY, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }

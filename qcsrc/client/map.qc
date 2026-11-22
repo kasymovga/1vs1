@@ -5,9 +5,9 @@ void(void) map_list_read {
 	if (map_list_init_done) {
 		map_list_init_done = 1;
 	} else {
-		buf_del(map_list);
+		str_array_delete(map_list);
 	}
-	map_list = buf_create();
+	map_list = str_array_create();
 	float i, n;
 	string s, m;
 	for (i = 0; i < CMD_LSMAPS_REPLY_STRINGS_COUNT; i++) {
@@ -15,7 +15,7 @@ void(void) map_list_read {
 		while (s != "") {
 			m = str_car(s);
 			if (m != "")
-				bufstr_add(map_list, m, TRUE);
+				str_array_add(map_list, m, TRUE);
 
 			s = str_cdr(s);
 		}

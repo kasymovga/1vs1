@@ -12,11 +12,11 @@ void(void) cvar_changes_init {
 	float n, i;
 	str_unzone_ifneeded(cvar_changes);
 	cvar_changes = NULL;
-	h = buf_create();
+	h = str_array_create();
 	buf_cvarlist(h, "", "_"); // exclude all _ cvars as they are temporary
-	n = buf_getsize(h);
+	n = str_array_size(h);
 	for (i = 0; i < n; ++i) {
-		k = bufstr_get(h, i);
+		k = str_array_get(h, i);
 		v = vm_cvar_string(k);
 		d = cvar_defstring(k);
 		if (v == d)
@@ -120,7 +120,7 @@ void(void) cvar_changes_init {
 			break;
 		}
 	}
-	buf_del(h);
+	str_array_delete(h);
 	if (cvar_changes == "")
 		cvar_changes = "// this server runs at default settings\n";
 	else

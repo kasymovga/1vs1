@@ -358,16 +358,16 @@ entity(.float fld, float match) findchainflags = #450;
 //idea: ??
 //darkplaces implementation: LordHavoc
 //functions to manage string buffer objects - that is, arbitrary length string arrays that are handled by the engine
-float() buf_create = #460;
-void(float bufhandle) buf_del = #461;
-float(float bufhandle) buf_getsize = #462;
-void(float bufhandle_from, float bufhandle_to) buf_copy = #463;
-void(float bufhandle, float sortpower, float backward) buf_sort = #464;
-string(float bufhandle, string glue) buf_implode = #465;
-string(float bufhandle, float string_index) bufstr_get = #466;
-void(float bufhandle, float string_index, string str) bufstr_set = #467;
-float(float bufhandle, string str, float order) bufstr_add = #468;
-void(float bufhandle, float string_index) bufstr_free = #469;
+float() vm_buf_create = #460;
+void(float bufhandle) vm_buf_del = #461;
+float(float bufhandle) vm_buf_getsize = #462;
+void(float bufhandle_from, float bufhandle_to) vm_buf_copy = #463;
+void(float bufhandle, float sortpower, float backward) vm_buf_sort = #464;
+string(float bufhandle, string glue) vm_buf_implode = #465;
+string(float bufhandle, float string_index) vm_bufstr_get = #466;
+void(float bufhandle, float string_index, string str) vm_bufstr_set = #467;
+float(float bufhandle, string str, float order) vm_bufstr_add = #468;
+void(float bufhandle, float string_index) vm_bufstr_free = #469;
 
 //DP_QC_ASINACOSATANATAN2TAN
 //idea: Urre

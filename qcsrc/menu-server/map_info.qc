@@ -96,14 +96,14 @@ void(void) map_info_cache_destroy {
 		return;
 
 	db_close(map_info_cache_db_name_to_index);
-	buf_del(map_info_cache_buf_index_to_map_data);
+	str_array_delete(map_info_cache_buf_index_to_map_data);
 	map_info_cache_active = 0;
 }
 
 void(void) map_info_cache_create {
 	map_info_cache_destroy();
 	map_info_cache_db_name_to_index = db_create();
-	map_info_cache_buf_index_to_map_data = buf_create();
+	map_info_cache_buf_index_to_map_data = str_array_create();
 	map_info_cache_active = 1;
 }
 
@@ -115,21 +115,21 @@ void(void) map_info_cache_store {
 
 	s = db_get(map_info_cache_db_name_to_index, map_info_map_bspname);
 	if (s == "") {
-		i = buf_getsize(map_info_cache_buf_index_to_map_data);
+		i = str_array_size(map_info_cache_buf_index_to_map_data);
 		db_put(map_info_cache_db_name_to_index, map_info_map_bspname, ftos(i));
 	}
 	else
 		i = stof(s);
 
 	// now store all the stuff
-	bufstr_set(map_info_cache_buf_index_to_map_data,   i, map_info_map_bspname);
-	bufstr_set(map_info_cache_buf_index_to_map_data, ++i, map_info_map_title);
-	bufstr_set(map_info_cache_buf_index_to_map_data, ++i, map_info_map_description);
-	bufstr_set(map_info_cache_buf_index_to_map_data, ++i, map_info_map_author);
-	bufstr_set(map_info_cache_buf_index_to_map_data, ++i, ftos(map_info_map_supported_game_types));
-	bufstr_set(map_info_cache_buf_index_to_map_data, ++i, ftos(map_info_map_supported_features));
-	bufstr_set(map_info_cache_buf_index_to_map_data, ++i, ftos(map_info_map_flags));
-	bufstr_set(map_info_cache_buf_index_to_map_data, ++i, map_info_map_image);
+	str_array_set(map_info_cache_buf_index_to_map_data,   i, map_info_map_bspname);
+	str_array_set(map_info_cache_buf_index_to_map_data, ++i, map_info_map_title);
+	str_array_set(map_info_cache_buf_index_to_map_data, ++i, map_info_map_description);
+	str_array_set(map_info_cache_buf_index_to_map_data, ++i, map_info_map_author);
+	str_array_set(map_info_cache_buf_index_to_map_data, ++i, ftos(map_info_map_supported_game_types));
+	str_array_set(map_info_cache_buf_index_to_map_data, ++i, ftos(map_info_map_supported_features));
+	str_array_set(map_info_cache_buf_index_to_map_data, ++i, ftos(map_info_map_flags));
+	str_array_set(map_info_cache_buf_index_to_map_data, ++i, map_info_map_image);
 }
 
 float(string map) map_info_cache_retrieve {
@@ -144,14 +144,14 @@ float(string map) map_info_cache_retrieve {
 
 	i = stof(s);
 	// now retrieve all the stuff
-	map_info_map_bspname = bufstr_get(map_info_cache_buf_index_to_map_data, i);
-	map_info_map_title = bufstr_get(map_info_cache_buf_index_to_map_data, ++i);
-	map_info_map_description = bufstr_get(map_info_cache_buf_index_to_map_data, ++i);
-	map_info_map_author = bufstr_get(map_info_cache_buf_index_to_map_data, ++i);
-	map_info_map_supported_game_types = stof(bufstr_get(map_info_cache_buf_index_to_map_data, ++i));
-	map_info_map_supported_features = stof(bufstr_get(map_info_cache_buf_index_to_map_data, ++i));
-	map_info_map_flags = stof(bufstr_get(map_info_cache_buf_index_to_map_data, ++i));
-	map_info_map_image = bufstr_get(map_info_cache_buf_index_to_map_data, ++i);
+	map_info_map_bspname = str_array_get(map_info_cache_buf_index_to_map_data, i);
+	map_info_map_title = str_array_get(map_info_cache_buf_index_to_map_data, ++i);
+	map_info_map_description = str_array_get(map_info_cache_buf_index_to_map_data, ++i);
+	map_info_map_author = str_array_get(map_info_cache_buf_index_to_map_data, ++i);
+	map_info_map_supported_game_types = stof(str_array_get(map_info_cache_buf_index_to_map_data, ++i));
+	map_info_map_supported_features = stof(str_array_get(map_info_cache_buf_index_to_map_data, ++i));
+	map_info_map_flags = stof(str_array_get(map_info_cache_buf_index_to_map_data, ++i));
+	map_info_map_image = str_array_get(map_info_cache_buf_index_to_map_data, ++i);
 	return 1;
 }
 
@@ -180,20 +180,20 @@ void(void) map_info_enumerate {
 float map_info_filtered;
 float map_info_filtered_allocated;
 float(float i) map_info_filter_list_lookup {
-	return stof(bufstr_get(map_info_filtered, i));
+	return stof(str_array_get(map_info_filtered, i));
 }
 
 void(float i, float j, entity pass) map_info_filter_list_swap {
 	string h;
-	h = bufstr_get(map_info_filtered, i);
-	bufstr_set(map_info_filtered, i, bufstr_get(map_info_filtered, j));
-	bufstr_set(map_info_filtered, j, h);
+	h = str_array_get(map_info_filtered, i);
+	str_array_set(map_info_filtered, i, str_array_get(map_info_filtered, j));
+	str_array_set(map_info_filtered, j, h);
 }
 
 float(float i, float j, entity pass) map_info_filter_list_cmp {
 	string a, b;
-	a = map_info_glob_item(stof(bufstr_get(map_info_filtered, i)));
-	b = map_info_glob_item(stof(bufstr_get(map_info_filtered, j)));
+	a = map_info_glob_item(stof(str_array_get(map_info_filtered, i)));
+	b = map_info_glob_item(stof(str_array_get(map_info_filtered, j)));
 	return strcasecmp(a, b);
 }
 
@@ -201,7 +201,7 @@ float(float pGametype, float pFlagsRequired, float pFlagsForbidden, float pAbort
 	float i, j;
 	if not(map_info_filtered_allocated) {
 		map_info_filtered_allocated = 1;
-		map_info_filtered = buf_create();
+		map_info_filtered = str_array_create();
 	}
 	map_info_count = 0;
 	map_info_filter_mask = pGametype;
@@ -214,7 +214,7 @@ float(float pGametype, float pFlagsRequired, float pFlagsForbidden, float pAbort
 		if ((map_info_map_supported_game_types & pGametype) != 0)
 		if ((map_info_map_flags & pFlagsForbidden) == 0)
 		if ((map_info_map_flags & pFlagsRequired) == pFlagsRequired)
-			bufstr_set(map_info_filtered, ++j, ftos(i));
+			str_array_set(map_info_filtered, ++j, ftos(i));
 	}
 	map_info_count = j + 1;
 	map_info_clear_temps();
@@ -225,7 +225,7 @@ float(float pGametype, float pFlagsRequired, float pFlagsForbidden, float pAbort
 
 void() map_info_filter_free {
 	if (map_info_filtered_allocated) {
-		buf_del(map_info_filtered);
+		str_array_delete(map_info_filtered);
 		map_info_filtered_allocated = 0;
 	}
 }

@@ -39,31 +39,31 @@ void setPlayerListNexuizPlayerList(entity me, string plist)
 	float buf,i,n;
 	string s;
 
-	buf = buf_create();
+	buf = str_array_create();
 	me.nItems = tokenizebyseparator(plist, "\n");
 	for(i = 0; i < me.nItems; ++i)
 	{
-		bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME, argv(i)); // -666 100 "^4Nex ^2Player"
+		str_array_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME, argv(i)); // -666 100 "^4Nex ^2Player"
 	}
 
 	for(i = 0; i < me.nItems; ++i)
 	{
-		s = bufstr_get(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME);
+		s = str_array_get(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME);
 		n = tokenize_console(s);
 
 		if(n == 4)
 		{
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_TEAM,  argv(2)); // 0 for spec, else 1, 2, 3, 4
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(3)); // ^4Nex ^2Player
+			str_array_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
+			str_array_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
+			str_array_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_TEAM,  argv(2)); // 0 for spec, else 1, 2, 3, 4
+			str_array_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(3)); // ^4Nex ^2Player
 		}
 		else
 		{
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_TEAM,  "-1");
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(2)); // ^4Nex ^2Player
+			str_array_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
+			str_array_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
+			str_array_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_TEAM,  "-1");
+			str_array_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(2)); // ^4Nex ^2Player
 		}
 	}
 	me.playerList = buf;
@@ -71,7 +71,7 @@ void setPlayerListNexuizPlayerList(entity me, string plist)
 
 string getPlayerListNexuizPlayerList(entity me, float i, float key)
 {
-	return bufstr_get(me.playerList, i * PLAYERPARM_COUNT + key);
+	return str_array_get(me.playerList, i * PLAYERPARM_COUNT + key);
 }
 
 void resizeNotifyNexuizPlayerList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)

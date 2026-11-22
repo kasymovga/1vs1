@@ -129,10 +129,10 @@ void(float db, string pFilename) cmd_db_dump {
 	if (fh < 0)
 		error(strcat("Can't dump DB to ", pFilename));
 
-	n = buf_getsize(db);
+	n = str_array_size(db);
 	fputs(fh, "0\n");
 	for(i = 0; i < n; ++i) {
-		m = tokenizebyseparator(bufstr_get(db, i), "\\");
+		m = tokenizebyseparator(str_array_get(db, i), "\\");
 		for(j = 2; j < m; j += 2)
 			fputs(fh, strcat("\\", argv(j-1), "\\", argv(j), "\n"));
 	}

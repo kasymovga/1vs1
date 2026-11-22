@@ -243,17 +243,17 @@ string(void) getextresponse = #624;
 //idea: ??
 //darkplaces implementation: LordHavoc
 //functions to manage string buffer objects - that is, arbitrary length string arrays that are handled by the engine
-float() buf_create = #440;
-void(float bufhandle) buf_del = #441;
-float(float bufhandle) buf_getsize = #442;
-void(float bufhandle_from, float bufhandle_to) buf_copy = #443;
-void(float bufhandle, float sortpower, float backward) buf_sort = #444;
-string(float bufhandle, string glue) buf_implode = #445;
-string(float bufhandle, float string_index) bufstr_get = #446;
-void(float bufhandle, float string_index, string str) bufstr_set = #447;
-float(float bufhandle, string str, float order) bufstr_add = #448;
-void(float bufhandle, float string_index) bufstr_free = #449;
-void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
+float() vm_buf_create = #440;
+void(float bufhandle) vm_buf_del = #441;
+float(float bufhandle) vm_buf_getsize = #442;
+void(float bufhandle_from, float bufhandle_to) vm_buf_copy = #443;
+void(float bufhandle, float sortpower, float backward) vm_buf_sort = #444;
+string(float bufhandle, string glue) vm_buf_implode = #445;
+string(float bufhandle, float string_index) vm_bufstr_get = #446;
+void(float bufhandle, float string_index, string str) vm_bufstr_set = #447;
+float(float bufhandle, string str, float order) vm_bufstr_add = #448;
+void(float bufhandle, float string_index) vm_bufstr_free = #449;
+void(float bufhandle, string pattern, string antipattern) vm_buf_cvarlist = #517;
 string(string name) cvar_description = #518;
 string(string, float) netaddress_resolve = #625;
 string(float, float) getgamedirinfo = #626;

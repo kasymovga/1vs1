@@ -15,8 +15,8 @@ void(float n1, float n2) recordlist_request_chunk {
 
 float(void) recordlist_size {
 	if not(recordlist_init_done) return 1;
-	if (recordlist_chunk_expected < 0) return buf_getsize(recordlist);
-	return buf_getsize(recordlist) + 1; // for [Loading...]
+	if (recordlist_chunk_expected < 0) return str_array_size(recordlist);
+	return str_array_size(recordlist) + 1; // for [Loading...]
 }
 
 string(float i) recordlist_get {
@@ -27,8 +27,8 @@ string(float i) recordlist_get {
 	if (recordlist_chunk_expected >= 0) {
 		recordlist_request_chunk(recordlist_offset, recordlist_chunk_expected);
 	}
-	if (i < buf_getsize(recordlist))
-		return bufstr_get(recordlist, i);
+	if (i < str_array_size(recordlist))
+		return str_array_get(recordlist, i);
 
 	if (recordlist_chunk_expected >= 0)
 		return "[Loading...]";
@@ -42,7 +42,7 @@ void() recordlist_read {
 	string s = net_read_string();
 	if not(recordlist_init_done) {
 		recordlist_init_done = TRUE;
-		recordlist = buf_create();
+		recordlist = str_array_create();
 	}
 	if (n1 != recordlist_offset)
 		return;
@@ -71,7 +71,7 @@ void() recordlist_read {
 				recordlist_chunk_end = str_zone_ifneeded(str_sub(s, p1, -1));
 				break;
 			}
-			bufstr_add(recordlist, str_sub(s, p1, p2 - p1), TRUE);
+			str_array_add(recordlist, str_sub(s, p1, p2 - p1), TRUE);
 		}
 	}
 }

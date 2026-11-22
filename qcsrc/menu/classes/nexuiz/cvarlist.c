@@ -45,9 +45,9 @@ void configureNexuizCvarListNexuizCvarList(entity me)
 {
 	me.configureNexuizListBox(me);
 
-	me.handle = buf_create();
-	buf_cvarlist(me.handle, "", "_");
-	me.nItems = buf_getsize(me.handle);
+	me.handle = str_array_create();
+	str_array_cvar_list(me.handle, "", "_");
+	me.nItems = str_array_size(me.handle);
 }
 void setSelectedNexuizCvarList(entity me, float i)
 {
@@ -61,7 +61,7 @@ void setSelectedNexuizCvarList(entity me, float i)
 	str_unzone_ifneeded(me.cvarDescription);
 	str_unzone_ifneeded(me.cvarType);
 	str_unzone_ifneeded(me.cvarDefault);
-	me.cvarName = str_zone_ifneeded(bufstr_get(me.handle, me.selectedItem));
+	me.cvarName = str_zone_ifneeded(str_array_get(me.handle, me.selectedItem));
 	me.cvarDescription = str_zone_ifneeded(cvar_description(me.cvarName));
 	me.cvarDefault = str_zone_ifneeded(cvar_defstring(me.cvarName));
 
@@ -91,8 +91,8 @@ void setSelectedNexuizCvarList(entity me, float i)
 }
 void CvarList_Filter_Change(entity box, entity me)
 {
-	buf_cvarlist(me.handle, box.text, "_");
-	me.nItems = buf_getsize(me.handle);
+	str_array_cvar_list(me.handle, box.text, "_");
+	me.nItems = str_array_size(me.handle);
 
 	me.setSelected(me, 0);
 }
@@ -124,7 +124,7 @@ void drawListBoxItemNexuizCvarList(entity me, float i, vector absSize, float isS
 	if(isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	
-	k = bufstr_get(me.handle, i);
+	k = str_array_get(me.handle, i);
 
 	v = cvar_string(k);
 	d = cvar_defstring(k);

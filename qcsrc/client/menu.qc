@@ -10,7 +10,7 @@ void(void) menu_draw;
 void(void) menu_remove {
 	str_unzone_ifneeded(self.netname);
 	str_unzone_ifneeded(self.message);
-	if (self.cnt) buf_del(self.armorvalue);
+	if (self.cnt) str_array_delete(self.armorvalue);
 	if (self == menu) {
 		menu = menu.enemy;
 		if (menu) {
@@ -72,13 +72,13 @@ void(float bIsNewEntity) menu_read {
 	}
 	if (f & 1) {
 		if (self.cnt)
-			buf_del(self.armorvalue);
+			str_array_delete(self.armorvalue);
 
 		self.cnt = net_read_byte();
 		if (self.cnt) {
-			self.armorvalue = buf_create();
+			self.armorvalue = str_array_create();
 			for (i = 0; i < self.cnt; i++) {
-				bufstr_set(self.armorvalue, i, net_read_string());
+				str_array_set(self.armorvalue, i, net_read_string());
 			}
 		}
 	}
@@ -128,8 +128,8 @@ void(void) menu_draw {
 	float maxwidth = 0;
 	float w;
 	for (i = 0; i < self.cnt; i++) {
-		subcmd = strstrofs(bufstr_get(self.armorvalue, i), "|", 0);
-		menu_string = strcat(str_sub(bufstr_get(self.armorvalue, i), 0, subcmd));
+		subcmd = strstrofs(str_array_get(self.armorvalue, i), "|", 0);
+		menu_string = strcat(str_sub(str_array_get(self.armorvalue, i), 0, subcmd));
 		if ((w = stringwidth(strdecolorize(menu_string), FALSE)) > maxwidth)
 			maxwidth = w;
 	}
@@ -152,7 +152,7 @@ void(void) menu_draw {
 			item_color = "^7";
 			border_color = '0 0 0';
 		}
-		menu_string = bufstr_get(self.armorvalue, i);
+		menu_string = str_array_get(self.armorvalue, i);
 		subcmd = strstrofs(menu_string, "|", 0);
 		pos_x = center - stringwidth(strdecolorize(menu_string), FALSE) * 0.5 * 24 * size_scale;
 		if ((paren = strstrofs(menu_string, "(", 0)) >= 0 && (paren < subcmd || subcmd < 0)) {
@@ -209,9 +209,9 @@ float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 			choice = min(menu_selected, menu.cnt);
 	}
 	if (choice >= 0) {
-		float subcmd = strstrofs(bufstr_get(menu.armorvalue, choice), "|", 0);
+		float subcmd = strstrofs(str_array_get(menu.armorvalue, choice), "|", 0);
 		if (subcmd >= 0) {
-			localcmd(strcat("\n", str_sub(bufstr_get(menu.armorvalue, choice), subcmd + 1, -1)));
+			localcmd(strcat("\n", str_sub(str_array_get(menu.armorvalue, choice), subcmd + 1, -1)));
 		}
 		localcmd(strcat("\ncmd menu_select ", menu.netname, " ", ftos(choice), "\n"));
 		menu_choiced = choice;

@@ -86,9 +86,9 @@ void(void) bgm_script_init {
 	if (fh < 0)
 		return;
 
-	bgm_script_buf = buf_create();
+	bgm_script_buf = str_array_create();
 	while((s = fgets(fh))) {
-		bufstr_set(bgm_script_buf, bgm_script_bufsize, s);
+		str_array_set(bgm_script_buf, bgm_script_bufsize, s);
 		++bgm_script_bufsize;
 	}
 	fclose(fh);
@@ -106,7 +106,7 @@ void(entity e) bgm_script_init_entity {
 		l = strlen(m);
 		e.bgmscriptline0 = -1;
 		for (i = 0; i < bgm_script_bufsize; ++i) {
-			if (str_sub(bufstr_get(bgm_script_buf, i), 0, l) == m)
+			if (str_sub(str_array_get(bgm_script_buf, i), 0, l) == m)
 				break;
 		}
 		e.bgmscriptline = e.bgmscriptline0 = i;
@@ -164,7 +164,7 @@ float(entity e) bgm_script {
 	}
 	// find the CURRENT line
 	for (;;) {
-		tokenize_console(bufstr_get(bgm_script_buf, e.bgmscriptline));
+		tokenize_console(str_array_get(bgm_script_buf, e.bgmscriptline));
 		if (stof(argv(1)) >= t || argv(0) != e.bgmscript) {
 			e.bgmscripttime = t;
 			return bgm_GetCurrentAmplitude(e, t - e.bgmscriptstatetime);

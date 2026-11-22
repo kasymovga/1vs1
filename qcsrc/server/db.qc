@@ -1,5 +1,5 @@
 void(float db, string pFilename) db_save {
-	float fh, i, n = buf_getsize(db);
+	float fh, i, n = str_array_size(db);
 	fh = fopen(pFilename, FILE_WRITE);
 	if (fh < 0) {
 		print(strcat("^1Can't write DB to ", pFilename));
@@ -7,7 +7,7 @@ void(float db, string pFilename) db_save {
 	}
 	fputs(fh, strcat(ftos(DB_BUCKETS), "\n"));
 	for(i = 1; i < n; i++) {
-		fputs(fh, bufstr_get(db, i));
+		fputs(fh, str_array_get(db, i));
 		fputs(fh, "\n");
 	}
 	fclose(fh);
@@ -16,7 +16,7 @@ void(float db, string pFilename) db_save {
 float(string pFilename) db_load {
 	float db, fh, i, j, n;
 	string l;
-	db = buf_create();
+	db = str_array_create();
 	if (db < 0)
 		return -1;
 
@@ -28,7 +28,7 @@ float(string pFilename) db_load {
 		i = 1;
 		for (; (l = fgets(fh)); i++) {
 			if (l != "")
-				bufstr_set(db, i, l);
+				str_array_set(db, i, l);
 		}
 	} else {
 		// different count of buckets?
@@ -49,7 +49,7 @@ void(void) db_init {
 }
 
 float(float db) db_is_modified {
-	return (bufstr_get(db, 0) == "modified");
+	return (str_array_get(db, 0) == "modified");
 }
 
 void(void) db_shutdown {

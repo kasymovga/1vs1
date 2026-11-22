@@ -8,11 +8,11 @@ float() map_list_get_position {
 	idx = cvar("_g_maplist_index");
 	if (idx >= 0)
 		if (idx < map_count)
-			if (mapname == bufstr_get(map_list_array, idx))
+			if (mapname == str_array_get(map_list_array, idx))
 				return idx;
 
 	for (pos = 0; pos < map_count; ++pos)
-		if (mapname == bufstr_get(map_list_array, pos))
+		if (mapname == str_array_get(map_list_array, pos))
 			return pos;
 
 	// resume normal maplist rotation if current map is not in g_maplist
@@ -65,7 +65,7 @@ float(string m) map_is_recent {
 
 float(float position, float pass) map_check {
 	string map_next;
-	map_next = bufstr_get(map_list_array, position);
+	map_next = str_array_get(map_list_array, position);
 	if (pass <= 1) {
 		if (map_is_recent(map_next))
 			return 0;
@@ -90,7 +90,7 @@ void(string nextmapname) map_next_set {
 void(float position) map_goto_set_index {
 	registercvar("_g_maplist_index", "");
 	cvar_set("_g_maplist_index", ftos(position));
-	map_next_set(bufstr_get(map_list_array, position));
+	map_next_set(str_array_get(map_list_array, position));
 }
 
 void() map_change {
@@ -129,11 +129,11 @@ float() map_list_method_random { // random map selection
 void() map_list_save {
 	registercvar("_g_maplist", "");
 	float i, list_num = 0;
-	float n = buf_getsize(map_list_array);
+	float n = str_array_size(map_list_array);
 	string m, ml = "";
 	float ml_len = 0, m_len;
 	for (i = 0; i < n; i++) {
-		m = bufstr_get(map_list_array, i);
+		m = str_array_get(map_list_array, i);
 		m_len = strlen(m) + 1;
 		if (m_len + ml_len > 16380) {
 			if not(list_num)
@@ -165,20 +165,20 @@ float(float exponent) map_list_method_shuffle { // more clever shuffling
 	float i, j, imax, insertpos;
 	imax = 42;
 	for (i = 0; i <= imax; ++i) {
-		float newlist = buf_create();
+		float newlist = str_array_create();
 		// now reinsert this at another position
 		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
 		insertpos = insertpos * (map_count - 1);       // ]0, map_count - 1]
 		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., map_count}
 		// insert the current map there
 		for (j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
-			bufstr_add(newlist, bufstr_get(map_list_array, j), TRUE);
+			str_array_add(newlist, str_array_get(map_list_array, j), TRUE);
 
-		bufstr_add(newlist, bufstr_get(map_list_array, 0), TRUE);
+		str_array_add(newlist, str_array_get(map_list_array, 0), TRUE);
 		for (j = insertpos; j < map_count; ++j)         // i == map_count: no loop, has just been inserted as last
-			bufstr_add(newlist, bufstr_get(map_list_array, j), TRUE);
+			str_array_add(newlist, str_array_get(map_list_array, j), TRUE);
 
-		buf_del(map_list_array);
+		str_array_delete(map_list_array);
 		map_list_array = newlist;
 		// NOTE: the selected map has just been inserted at (insertpos-1)th position
 		map_current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
@@ -192,16 +192,16 @@ float(float exponent) map_list_method_shuffle { // more clever shuffling
 
 void(void) map_list_filter {
 	string sf = "";
-	float n = buf_getsize(map_list_array);
+	float n = str_array_size(map_list_array);
 	float i;
-	float nml = buf_create();
+	float nml = str_array_create();
 	for (i = 0; i < n; i++) {
 		if (map_check(i, 2))
-			bufstr_add(nml, bufstr_get(map_list_array, i), TRUE);
+			str_array_add(nml, str_array_get(map_list_array, i), TRUE);
 	}
-	buf_del(map_list_array);
+	str_array_delete(map_list_array);
 	map_list_array = nml;
-	map_count = buf_getsize(map_list_array);
+	map_count = str_array_size(map_list_array);
 }
 
 float(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
@@ -213,9 +213,9 @@ float(float pRequiredFlags, float pForbiddenFlags) map_list_allowed_maps {
 	} , {
 		map_info_filter_game_type(map_info_type_from_game_type(game_type_current()), pRequiredFlags, pForbiddenFlags, 0);
 	})
-	float aml = buf_create();
+	float aml = str_array_create();
 	for (i = 0; i < map_info_count; ++i)
-		bufstr_add(aml, map_info_glob_item(map_info_filter_list_lookup(i)), TRUE);
+		str_array_add(aml, map_info_glob_item(map_info_filter_list_lookup(i)), TRUE);
 
 	return aml;
 }
@@ -224,19 +224,19 @@ void() map_list_load {
 	float list_num = 0;
 	string list = cvar_string("_g_maplist");
 	float i, n;
-	if (buf_getsize(map_list_array)) {
-		buf_del(map_list_array);
-		map_list_array = buf_create();
+	if (str_array_size(map_list_array)) {
+		str_array_delete(map_list_array);
+		map_list_array = str_array_create();
 	}
 	while (list != "") {
 		n = tokenizebyseparator(list, " ");
 		for (i = 0; i < n; i++) {
-			bufstr_add(map_list_array, argv(i), TRUE);
+			str_array_add(map_list_array, argv(i), TRUE);
 		}
 		list_num++;
 		list = cvar_string(strcat("_g_maplist", ftos(list_num)));
 	}
-	map_count = buf_getsize(map_list_array);
+	map_count = str_array_size(map_list_array);
 }
 
 void(void) map_list_reset {
@@ -244,20 +244,20 @@ void(void) map_list_reset {
 	string exclude = strcat(" ", cvar_string("g_maplist_exclude"), " ");
 	string list = "";
 	string h;
-	buf_del(map_list_array);
-	map_list_array = buf_create();
+	str_array_delete(map_list_array);
+	map_list_array = str_array_create();
 	float t = map_list_allowed_maps(map_info_required_flags(), map_info_forbidden_flags());
-	float i, n = buf_getsize(t);
+	float i, n = str_array_size(t);
 	for (i = 0; i < n; i++) {
-		h = bufstr_get(t, i);
+		h = str_array_get(t, i);
 		if (strstrofs(exclude, strcat(" ", h, " "), 0) >= 0) {
 			print("Map ", h, " excluded from map list\n");
 			continue;
 		}
-		bufstr_add(map_list_array, h, TRUE);
+		str_array_add(map_list_array, h, TRUE);
 	}
-	map_count = buf_getsize(map_list_array);
-	buf_del(t);
+	map_count = str_array_size(map_list_array);
+	str_array_delete(t);
 	map_list_filter();
 	print("Total available maps: ", ftos(map_count), "\n");
 	if (cvar("g_maplist_shuffle"))
@@ -275,7 +275,7 @@ void(void) map_list_init {
 	map_list_init_done = TRUE;
 	registercvar("_g_maplist", "");
 	registercvar("_g_maplist1", "");
-	map_list_array = buf_create();
+	map_list_array = str_array_create();
 	map_list_load();
 	string s = cvar_string("g_maplist");
 	string se = cvar_string("g_maplist_exclude");
@@ -332,7 +332,7 @@ string() map_list_next_get {
 
 	if (nextMap >= 0) {
 		map_goto_set_index(nextMap);
-		return bufstr_get(map_list_array, nextMap);
+		return str_array_get(map_list_array, nextMap);
 	}
 	return "";
 }
@@ -424,16 +424,16 @@ string(string m) map_goto {
 }
 
 void() map_list_shuffle {
-	float i, j, n = buf_getsize(map_list_array);
+	float i, j, n = str_array_size(map_list_array);
 	string s1, s2;
 	for (i = 0; i < n; i++) {
 		j = floor(random() * n);
 		if (i != j) {
 			//swapping
-			s1 = bufstr_get(map_list_array, i);
-			s2 = bufstr_get(map_list_array, j);
-			bufstr_set(map_list_array, i, s2);
-			bufstr_set(map_list_array, j, s1);
+			s1 = str_array_get(map_list_array, i);
+			s2 = str_array_get(map_list_array, j);
+			str_array_set(map_list_array, i, s2);
+			str_array_set(map_list_array, j, s1);
 		}
 	}
 }

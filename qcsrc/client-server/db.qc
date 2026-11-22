@@ -1,10 +1,10 @@
 void(float db, string s_key, string s_value, void(string k, string v) cb) db_for_each_key_like {
-	float i, n = buf_getsize(db);
+	float i, n = str_array_size(db);
 	s_value = uri_escape(s_value);
 	string l, k, v;
 	float k_e, v_e;
 	for (i = 1; i < n; i++) {
-		l = bufstr_get(db, i);
+		l = str_array_get(db, i);
 		if ((s_key == "" || strstrofs(l, s_key, 1) >= 0)
 				&& (s_value == "" || strstrofs(l, s_value, 3) >= 0)) { //first character is always '\'
 			k_e = 0;

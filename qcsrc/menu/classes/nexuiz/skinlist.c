@@ -76,7 +76,7 @@ void saveCvarsNexuizSkinList(entity me)
 
 string skinParameterNexuizSkinList(entity me, float i, float key)
 {
-	return bufstr_get(me.skinlist, i * SKINPARM_COUNT + key);
+	return str_array_get(me.skinlist, i * SKINPARM_COUNT + key);
 }
 
 void getSkinsNexuizSkinList(entity me)
@@ -84,7 +84,7 @@ void getSkinsNexuizSkinList(entity me)
 	float glob, buf, i, n, fh;
 	string s;
 
-	buf = buf_create();
+	buf = str_array_create();
 	glob = search_begin("gfx/menu/*/skinvalues.txt", TRUE, TRUE);
 	if(glob < 0)
 	{
@@ -97,10 +97,10 @@ void getSkinsNexuizSkinList(entity me)
 	for(i = 0; i < n; ++i)
 	{
 		s = search_getfilename(glob, i);
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, str_sub(s, 9, strlen(s) - 24)); // the * part
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, "<TITLE>");
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, "<AUTHOR>");
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", str_sub(s, 9, strlen(s) - 24), "/skinpreview"));
+		str_array_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, str_sub(s, 9, strlen(s) - 24)); // the * part
+		str_array_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, "<TITLE>");
+		str_array_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, "<AUTHOR>");
+		str_array_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", str_sub(s, 9, strlen(s) - 24), "/skinpreview"));
 		fh = fopen(s, FILE_READ);
 		if(fh < 0)
 		{
@@ -111,9 +111,9 @@ void getSkinsNexuizSkinList(entity me)
 		{
 			// these two are handled by skinlist.qc
 			if(str_sub(s, 0, 6) == "title ")
-				bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, str_sub(s, 6, strlen(s) - 6));
+				str_array_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, str_sub(s, 6, strlen(s) - 6));
 			else if(str_sub(s, 0, 7) == "author ")
-				bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, str_sub(s, 7, strlen(s) - 7));
+				str_array_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, str_sub(s, 7, strlen(s) - 7));
 		}
 		fclose(fh);
 	}
@@ -126,7 +126,7 @@ void getSkinsNexuizSkinList(entity me)
 
 void destroyNexuizSkinList(entity me)
 {
-	buf_del(me.skinlist);
+	str_array_delete(me.skinlist);
 }
 
 void resizeNotifyNexuizSkinList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
