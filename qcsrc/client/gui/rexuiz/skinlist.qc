@@ -1,90 +1,103 @@
-entity spawnNexuizSkinList() {
-	entity me; me = gui_rexuiz_listbox_spawn();
-	me.drawListBoxItem = drawListBoxItemNexuizSkinList;
-	me.resizeNotify = resizeNotifyNexuizSkinList;
-	me.destroy = destroyNexuizSkinList;
-	me.clickListBoxItem = clickListBoxItemNexuizSkinList;
+void(entity me, float i, vector where, float doubleclick) gui_rexuiz_skinlist_click;
+void(entity me) gui_rexuiz_skinlist_destroy;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_skinlist_resize;
+void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_skinlist_item_draw;
+
+entity(void) gui_rexuiz_skinlist_spawn {
+	entity me = gui_rexuiz_listbox_spawn();
+	me.drawListBoxItem = gui_rexuiz_skinlist_item_draw;
+	me.resizeNotify = gui_rexuiz_skinlist_resize;
+	me.destroy = gui_rexuiz_skinlist_destroy;
+	me.clickListBoxItem = gui_rexuiz_skinlist_click;
 	me.textBox = NULL;
 	me.realUpperMargin = 0;
 	me.columnNameOrigin = 0;
 	me.classname = "NexuizSkinList";
 	return me;
 }
-entity makeNexuizSkinList();
-void(void) updateNexuizSkinList;
-entity selfNexuizSkinList;
-float searchNexuizSkinList;
-void(void) updateNexuizSkinList {
-	if not(selfNexuizSkinList) return;
-	if (searchNexuizSkinList >= 0)
-		search_end(searchNexuizSkinList);
+
+entity gui_rexuiz_skinlist_current;
+float gui_rexuiz_skinlist_search;
+
+void(void) gui_rexuiz_skinlist_update {
+	if not(gui_rexuiz_skinlist_current) return;
+	if (gui_rexuiz_skinlist_search >= 0)
+		search_end(gui_rexuiz_skinlist_search);
 	if (!rm_skin_loaded) {
-		searchNexuizSkinList = -1;
-		selfNexuizSkinList.nItems = 0;
+		gui_rexuiz_skinlist_search = -1;
+		gui_rexuiz_skinlist_current.nItems = 0;
 		return;
 	}
-	searchNexuizSkinList = search_begin("gfx/hud/skins/*/skininfo", TRUE, TRUE);
-	if (searchNexuizSkinList >= 0) {
-		selfNexuizSkinList.nItems = search_getsize(searchNexuizSkinList);
+	gui_rexuiz_skinlist_search = search_begin("gfx/hud/skins/*/skininfo", TRUE, TRUE);
+	if (gui_rexuiz_skinlist_search >= 0) {
+		gui_rexuiz_skinlist_current.nItems = search_getsize(gui_rexuiz_skinlist_search);
 	} else {
-		selfNexuizSkinList.nItems = 0;
+		gui_rexuiz_skinlist_current.nItems = 0;
 	}
 	string s;
 	float i;
-	for (i = 0; i < selfNexuizSkinList.nItems; i++) {
-		s = search_getfilename(searchNexuizSkinList, i);
+	for (i = 0; i < gui_rexuiz_skinlist_current.nItems; i++) {
+		s = search_getfilename(gui_rexuiz_skinlist_search, i);
 		s = str_sub(s, 14, - 1);
 		s = str_sub(s, 0, strstrofs(s, "/", 0));
 		if (s == cvar_string("cl_rm_skin")) {
-				selfNexuizSkinList.selectedItem = i;
+				gui_rexuiz_skinlist_current.selectedItem = i;
 		}
 	}
 }
-entity(void) makeNexuizSkinList {
+
+entity(void) gui_rexuiz_skinlist_make {
 	entity me;
-	selfNexuizSkinList = me = spawnNexuizSkinList();
-	searchNexuizSkinList = -1;
+	gui_rexuiz_skinlist_current = me = gui_rexuiz_skinlist_spawn();
+	gui_rexuiz_skinlist_search = -1;
 	me.configureNexuizListBox(me);
 	me.selectedItem = -1;
-	updateNexuizSkinList();
+	gui_rexuiz_skinlist_update();
 	return me;
 }
-void clickListBoxItemNexuizSkinList(entity me, float i, vector where, float doubleclick) {
+
+void(entity me, float i, vector where, float doubleclick) gui_rexuiz_skinlist_click {
 	if (doubleclick) {
 		string s;
-		if (i >= 0 && searchNexuizSkinList >= 0) {
-				s = search_getfilename(searchNexuizSkinList, i);
-				s = str_sub(s, 14, - 1);
-				s = str_sub(s, 0, strstrofs(s, "/", 0));
-				rm_skin_load(s);
+		if (i >= 0 && gui_rexuiz_skinlist_search >= 0) {
+			s = search_getfilename(gui_rexuiz_skinlist_search, i);
+			s = str_sub(s, 14, - 1);
+			s = str_sub(s, 0, strstrofs(s, "/", 0));
+			rm_skin_load(s);
 		} else
-				return;
-		GUI_Hide();
-		GUI_Hide();
-		GUI_Hide();
+			return;
+
+		GUI_Hide(); // hud dialog
+		GUI_Hide(); // game settings
+		GUI_Hide(); // game menu
 	}
 }
-void(entity me) destroyNexuizSkinList {
-	if (searchNexuizSkinList >= 0)
-		search_end(searchNexuizSkinList);
-	searchNexuizSkinList = -1;
-	selfNexuizSkinList = NULL;
+void(entity me) gui_rexuiz_skinlist_destroy {
+	if (gui_rexuiz_skinlist_search >= 0)
+		search_end(gui_rexuiz_skinlist_search);
+
+	gui_rexuiz_skinlist_search = -1;
+	gui_rexuiz_skinlist_current = NULL;
 }
-void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) resizeNotifyNexuizSkinList {
+
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_skinlist_resize {
 	resizeNotifyNexuizListBox(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 }
-void(entity me, float i, vector absSize, float isSelected) drawListBoxItemNexuizSkinList {
+
+void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_skinlist_item_draw {
 	string s;
-	if(isSelected)
+	if (isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	if (searchNexuizSkinList >= 0 && searchNexuizSkinList >= 0) {
-		s = search_getfilename(searchNexuizSkinList, i);
+
+	if (gui_rexuiz_skinlist_search >= 0 && gui_rexuiz_skinlist_search >= 0) {
+		s = search_getfilename(gui_rexuiz_skinlist_search, i);
 		s = str_sub(s, 14, - 1);
 		s = str_sub(s, 0, strstrofs(s, "/", 0));
 	} else
 		s = "";
+
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 }

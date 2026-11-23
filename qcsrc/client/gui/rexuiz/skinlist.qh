@@ -1,15 +1,11 @@
-entity spawnNexuizSkinList();
-void(entity, float, vector, float) drawListBoxItemNexuizSkinList;
+entity(void) gui_rexuiz_skinlist_spawn;
 .void(entity, float, vector, float) drawListBoxItem;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizSkinList;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-void(entity) destroyNexuizSkinList;
 .void(entity) destroy;
-void(entity, float, vector, float) clickListBoxItemNexuizSkinList;
 .void(entity, float, vector, float) clickListBoxItem;
 .entity textBox;
 .float realUpperMargin;
 .float columnNameOrigin;
 
-entity makeNexuizSkinList();
-void(void) updateNexuizSkinList;
+entity(void) gui_rexuiz_skinlist_make;
+void(void) gui_rexuiz_skinlist_update;

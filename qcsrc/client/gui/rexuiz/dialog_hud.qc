@@ -54,10 +54,10 @@ void(entity me) gui_rexuiz_dialog_hud_fill {
 	me.TR(me);
 		me.TD(me, 1, 2, e = gui_rexuiz_textlabel_make(0, _("Available HUDs:")));
 	me.TR(me);
-		me.TD(me, 6, 2, e = makeNexuizHudList());
+		me.TD(me, 6, 2, e = gui_rexuiz_hudlist_make());
 		hudListNexuizHudDialog = e;
 	me.gotoRC(me, 2, 3); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 6, 2, e = makeNexuizSkinList());
+		me.TD(me, 6, 2, e = gui_rexuiz_skinlist_make());
 		skinListNexuizHudDialog = e;
 	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2, e = gui_rexuiz_button_make(_("Apply"), '0 0 0'));

@@ -25,8 +25,8 @@ void(entity me) gui_rexuiz_dialog_vcall_fill {
 		me.TD(me, 1, 10, e = gui_rexuiz_textlabel_make(0, _("Available votes:")));
 		me.TD(me, 1, 10, e = gui_rexuiz_textlabel_make(0, _("Possible arguments:")));
 	me.TR(me);
-		me.TD(me, 13, 10, vlist = makeNexuizVoteList());
-		me.TD(me, 13, 10, vlist.voteArgsList = makeNexuizVoteArgsList());
+		me.TD(me, 13, 10, vlist = gui_rexuiz_votelist_make());
+		me.TD(me, 13, 10, vlist.voteArgsList = gui_rexuiz_voteargslist_make());
 		vlist.voteArgsList.nexuizFont = 1;
 		vlist.voteArgsList.voteList = vlist;
 	me.TR(me);

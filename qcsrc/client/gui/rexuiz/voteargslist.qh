@@ -1,11 +1,7 @@
-entity spawnNexuizVoteArgsList();
-void(entity, float, vector, float) drawListBoxItemNexuizVoteArgsList;
+entity(void) gui_rexuiz_voteargslist_spawn;
 .void(entity, float, vector, float) drawListBoxItem;
-void(entity, float) setSelectedNexuizVoteArgsList;
 .void(entity, float) setSelected;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizVoteArgsList;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-void(entity, string) setVoteTypeNexuizVoteArgsList;
 .void(entity, string) setVoteType;
 .float voteType;
 .entity textBox;
@@ -13,4 +9,4 @@ void(entity, string) setVoteTypeNexuizVoteArgsList;
 .float columnNameOrigin;
 .entity voteList;
 
-entity makeNexuizVoteArgsList();
+entity(void) gui_rexuiz_voteargslist_make;

@@ -23,7 +23,7 @@ void unmuteMuteListDialog(entity btn, entity me) {
 void(entity me) gui_rexuiz_dialog_mutelist_fill {
 	entity e, list;
 	me.TR(me);
-		me.TD(me, 14, 10, list = makeNexuizMuteList());
+		me.TD(me, 14, 10, list = gui_rexuiz_mutelist_make());
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);

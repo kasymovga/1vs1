@@ -95,8 +95,8 @@ void(void) rm_skin_unload {
 	print("Unloaded HUD skin\n");
 	RM_SKIN_FREE(rm_skin_name);
 	rm_skin_loaded = FALSE;
-	updateNexuizSkinList();
-	updateNexuizHudList();
+	gui_rexuiz_skinlist_update();
+	gui_rexuiz_hudlist_update();
 }
 
 float(void) rm_skin_read_team_color {
@@ -587,8 +587,8 @@ float(string skin_name) rm_skin_load {
 	rm_skin_name = str_zone_ifneeded(skin_name);
 	rm_skin_loaded = TRUE;
 	cvar_set("cl_rm_skin", skin_name);
-	updateNexuizSkinList();
-	updateNexuizHudList();
+	gui_rexuiz_skinlist_update();
+	gui_rexuiz_hudlist_update();
 	return TRUE;
 #undef RM_SKIN_IMAGE
 }

@@ -1,9 +1,7 @@
-entity spawnNexuizReportTypeList();
-void(entity, float, vector, float) drawListBoxItemNexuizReportTypeList;
+entity(void) gui_rexuiz_reporttypelist_spawn;
 .void(entity, float, vector, float) drawListBoxItem;
 .float realUpperMargin;
 .float columnNameOrigin;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizReportTypeList;
 .void(entity, vector, vector, vector, vector) resizeNotify;
 
-entity makeNexuizReportTypeList();
+entity(void) gui_rexuiz_reporttypelist_make;

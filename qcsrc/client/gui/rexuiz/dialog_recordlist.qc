@@ -32,7 +32,7 @@ void(entity btn, entity me) gui_rexuiz_dialog_recordlist_vote {
 void(entity me) gui_rexuiz_dialog_recordlist_fill {
 	entity e, record_list;
 	me.TR(me);
-		me.TD(me, me.rows - 1, 20, record_list = makeNexuizRecordList());
+		me.TD(me, me.rows - 1, 20, record_list = gui_rexuiz_recordlist_make());
 		record_list.nexuizFont = 1;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, 10, e = gui_rexuiz_button_make(_("Call a vote for this map"), '0 0 0'));

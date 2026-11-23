@@ -1,11 +1,9 @@
-entity spawnNexuizMuteList();
-void(entity, float, vector, float) drawListBoxItemNexuizMuteList;
+entity(void) gui_rexuiz_mutelist_spawn;
 .void(entity, float, vector, float) drawListBoxItem;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizMuteList;
 .void(entity, vector, vector, vector, vector) resizeNotify;
 .entity textBox;
 .float realUpperMargin;
 .float columnNameOrigin;
 .entity voteArgsList;
 
-entity makeNexuizMuteList();
+entity(void) gui_rexuiz_mutelist_make;

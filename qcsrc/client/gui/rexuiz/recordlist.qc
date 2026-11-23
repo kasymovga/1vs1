@@ -1,39 +1,48 @@
-entity spawnNexuizRecordList() {
+void(entity me, float i) gui_rexuiz_recordlist_select;
+void(entity me, float i, vector where, float doubleclick) gui_rexuiz_recordlist_click;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_recordlist_resize;
+void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_recordlist_item_draw;
+
+entity(void) gui_rexuiz_recordlist_spawn {
 	entity me; me = gui_rexuiz_listbox_spawn();
-	me.drawListBoxItem = drawListBoxItemNexuizRecordList;
-	me.setSelected = setSelectedNexuizRecordList;
-	me.resizeNotify = resizeNotifyNexuizRecordList;
-	me.clickListBoxItem = clickListBoxItemNexuizRecordList;
+	me.drawListBoxItem = gui_rexuiz_recordlist_item_draw;
+	me.setSelected = gui_rexuiz_recordlist_select;
+	me.resizeNotify = gui_rexuiz_recordlist_resize;
+	me.clickListBoxItem = gui_rexuiz_recordlist_click;
 	me.realUpperMargin = 0;
 	me.columnNameOrigin = 0;
 	me.voteList = NULL;
 	me.classname = "NexuizRecordList";
 	return me;
 }
-entity makeNexuizRecordList();
-entity makeNexuizRecordList(void) {
+
+entity(void) gui_rexuiz_recordlist_make {
 	entity me;
-	me = spawnNexuizRecordList();
+	me = gui_rexuiz_recordlist_spawn();
 	me.configureNexuizListBox(me);
 	me.nItems = 1;
 	return me;
 }
-void setSelectedNexuizRecordList(entity me, float i) {
+
+void(entity me, float i) gui_rexuiz_recordlist_select {
 	setSelectedListBox(me, i);
 	if (i >= me.nItems)
 		return;
 }
-void clickListBoxItemNexuizRecordList(entity me, float i, vector where, float doubleclick) {
+
+void(entity me, float i, vector where, float doubleclick) gui_rexuiz_recordlist_click {
 	if (doubleclick && i > -1)
 		me.onClickEntity.onClick(me.onClickEntity, me);
 }
-void resizeNotifyNexuizRecordList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) {
+
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_recordlist_resize {
 	resizeNotifyNexuizListBox(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 }
-void drawListBoxItemNexuizRecordList(entity me, float i, vector absSize, float isSelected) {
+
+void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_recordlist_item_draw {
 	if (isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	string s = recordlist_get(i);

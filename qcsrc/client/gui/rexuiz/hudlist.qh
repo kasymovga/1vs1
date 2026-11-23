@@ -1,15 +1,11 @@
-entity spawnNexuizHudList();
-void(entity, float, vector, float) drawListBoxItemNexuizHudList;
+entity(void) gui_rexuiz_hudlist_spawn;
 .void(entity, float, vector, float) drawListBoxItem;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizHudList;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-void(entity) destroyNexuizHudList;
 .void(entity) destroy;
-void(entity, float, vector, float) clickListBoxItemNexuizHudList;
 .void(entity, float, vector, float) clickListBoxItem;
 .entity textBox;
 .float realUpperMargin;
 .float columnNameOrigin;
 
-entity makeNexuizHudList();
-void(void) updateNexuizHudList;
+entity(void) gui_rexuiz_hudlist_make;
+void(void) gui_rexuiz_hudlist_update;
