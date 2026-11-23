@@ -1,5 +1,5 @@
 entity spawnNexuizReportDialog() {
-	entity me; me = spawnNexuizRootDialog();
+	entity me = gui_rexuiz_rootdialog_spawn();
 	me.fill = fillNexuizReportDialog; // to be overridden by user to fill the dialog with controls
 	me.title = _("Report a player");
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;

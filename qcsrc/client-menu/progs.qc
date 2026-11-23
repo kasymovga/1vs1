@@ -33,6 +33,7 @@
 #include "gui/rexuiz/inputbox.qc"
 #include "gui/rexuiz/dialog_quit.qc"
 #include "gui/rexuiz/dialog_saveload.qc"
+#include "gui/rexuiz/rootdialog.qc"
 #ifdef CSQC
 #undef draw
 #undef frame

@@ -1,5 +1,5 @@
 entity spawnNexuizMuteListDialog() {
-	entity me; me = spawnNexuizRootDialog();
+	entity me = gui_rexuiz_rootdialog_spawn();
 	me.fill = fillNexuizMuteListDialog; // to be overridden by user to fill the dialog with controls
 	me.title = _("Mute list");
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;

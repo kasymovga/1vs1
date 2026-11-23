@@ -1,5 +1,5 @@
 entity spawnNexuizVcallDialog() {
-	entity me; me = spawnNexuizRootDialog();
+	entity me = gui_rexuiz_rootdialog_spawn();
 	me.fill = fillNexuizVcallDialog; // to be overridden by user to fill the dialog with controls
 	me.title = _("Call a vote");
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;

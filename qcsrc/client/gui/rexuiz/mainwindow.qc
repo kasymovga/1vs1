@@ -4,20 +4,19 @@ entity spawnMainWindow() {
 	me.classname = "MainWindow";
 	return me;
 }
-/* Click. The c-word is here so you can grep for it :-) */
 void QuitDialogClose(entity me) {
 	GUI_Hide();
 }
 void configureMainWindowMainWindow(entity me)
 {
 	entity i;
-	gui_gameMenuDialog = i = spawnNexuizGameMenuDialog();
+	gui_gameMenuDialog = i = gui_rexuiz_dialog_gamemenu_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	gui_teamSelectDialog = i = gui_rexuiz_dialog_teamselect_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_gameSettingsDialog = i = spawnNexuizGameSettingsDialog();
+	gui_gameSettingsDialog = i = gui_rexuiz_dialog_gamesettings_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	gui_voteCallDialog = i = spawnNexuizVcallDialog();
@@ -50,4 +49,3 @@ void configureMainWindowMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.initializeDialog(me, me);
 }
-/* Click. The c-word is here so you can grep for it :-) */

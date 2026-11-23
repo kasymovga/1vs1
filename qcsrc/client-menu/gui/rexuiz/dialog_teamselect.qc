@@ -2,7 +2,7 @@ void(entity me) gui_rexuiz_dialog_teamselect_fill;
 void(entity me) gui_rexuiz_dialog_teamselect_show;
 
 entity(void) gui_rexuiz_dialog_teamselect_spawn {
-	entity me = spawnNexuizRootDialog();
+	entity me = gui_rexuiz_rootdialog_spawn();
 	me.fill = gui_rexuiz_dialog_teamselect_fill;
 	me.showNotify = gui_rexuiz_dialog_teamselect_show;
 	me.title = _("Team Selection");

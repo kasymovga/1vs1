@@ -1,0 +1,2 @@
+entity(void) gui_rexuiz_rootdialog_spawn;
+.void(entity) close;

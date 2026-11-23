@@ -1,6 +1,8 @@
-entity spawnNexuizGameSettingsDialog() {
-	entity me; me = spawnNexuizRootDialog();
-	me.fill = fillNexuizGameSettingsDialog; // to be overridden by user to fill the dialog with controls
+void(entity me) gui_rexuiz_dialog_gamesettings_fill;
+
+entity(void) gui_rexuiz_dialog_gamesettings_spawn {
+	entity me = gui_rexuiz_rootdialog_spawn();
+	me.fill = gui_rexuiz_dialog_gamesettings_fill;
 	me.configureDialog = configureDialogNexuizGameSettingsDialog;
 	me.title = "Game Settings";
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;
@@ -39,8 +41,8 @@ void(entity me) saveCvarsNexuizGameSettingsDialogGunAlpha {
 		cvar_set("cl_gunalpha", ftos(me.value));
 	}
 }
-void fillNexuizGameSettingsDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_gamesettings_fill {
 	entity e;
 	me.gotoRC(me, -1, 0.25); me.setFirstColumn(me, me.currentColumn);
 	if (game_type == GAME_TYPE_SINGLE) {

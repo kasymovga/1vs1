@@ -1,7 +1,7 @@
 void(entity me) gui_rexuiz_dialog_saveload_fill;
 
 entity(void) gui_rexuiz_dialog_saveload_spawn {
-	entity me; me = spawnNexuizRootDialog();
+	entity me = gui_rexuiz_rootdialog_spawn();
 	me.fill = gui_rexuiz_dialog_saveload_fill;
 	me.configureDialog = configureDialogNexuizSaveLoadDialog;
 	me.loadCvars = loadCvarsNexuizSaveLoadDialog;

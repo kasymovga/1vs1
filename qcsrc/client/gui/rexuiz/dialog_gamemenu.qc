@@ -1,6 +1,8 @@
-entity spawnNexuizGameMenuDialog() {
-	entity me; me = spawnNexuizRootDialog();
-	me.fill = fillNexuizGameMenuDialog; // to be overridden by user to fill the dialog with controls
+void(entity me) gui_rexuiz_dialog_gamemenu_fill;
+
+entity (void) gui_rexuiz_dialog_gamemenu_spawn {
+	entity me = gui_rexuiz_rootdialog_spawn();
+	me.fill = gui_rexuiz_dialog_gamemenu_fill;
 	me.configureDialog = configureDialogNexuizGameMenuDialog;
 	me.title = _("Game Menu");
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;
@@ -11,7 +13,6 @@ entity spawnNexuizGameMenuDialog() {
 	me.classname = "NexuizGameMenuDialog";
 	return me;
 }
-/* Click. The c-word is here so you can grep for it :-) */
 void ShowGameSettings(entity ignore, entity ignore2) {
 	GUI_Show(GUI_GAMESETTINGS);
 }
@@ -52,8 +53,7 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 void showMuteListGameMenuDialog(entity ignore, entity ignore2) {
 	GUI_Show(GUI_MUTELIST);
 }
-void fillNexuizGameMenuDialog(entity me)
-{
+void(entity me) gui_rexuiz_dialog_gamemenu_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_commandbutton_make(_("Main menu"), '0 0 0', "togglemenu;", GUI_REXUIZ_COMMANDBUTTON_CLOSE));
@@ -137,4 +137,3 @@ void fillNexuizGameMenuDialog(entity me)
 				e.onClick = ShowQuit;
 				e.onClickEntity = me;
 }
-/* Click. The c-word is here so you can grep for it :-) */

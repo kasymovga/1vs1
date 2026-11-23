@@ -1,6 +1,5 @@
-entity spawnNexuizGameSettingsDialog();
-void(entity) fillNexuizGameSettingsDialog;
-.void(entity) fill; // to be overridden by user to fill the dialog with controls
+entity(void) gui_rexuiz_dialog_gamesettings_spawn;
+.void(entity) fill;
 void(entity) configureDialogNexuizGameSettingsDialog;
 .void(entity) configureDialog;
 .string title;
@@ -9,4 +8,3 @@ void(entity) configureDialogNexuizGameSettingsDialog;
 .float rows;
 .float columns;
 .string name;
-

@@ -1,0 +1,10 @@
+entity(void) gui_rexuiz_dialog_gamemenu_spawn;
+.void(entity) fill;
+void(entity) configureDialogNexuizGameMenuDialog;
+.void(entity) configureDialog;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.string name;

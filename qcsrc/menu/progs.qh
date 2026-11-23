@@ -19,7 +19,6 @@
 #include "classes/nexuiz/slider_resolution.qh"
 #include "classes/nexuiz/radiobutton.qh"
 #include "classes/nexuiz/nexposee.qh"
-#include "classes/nexuiz/rootdialog.qh"
 #include "classes/nexuiz/colorbutton.qh"
 #include "classes/nexuiz/dialog_multiplayer_join.qh"
 #include "classes/nexuiz/dialog_multiplayer_join_serverinfo.qh"
