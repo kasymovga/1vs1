@@ -1,0 +1,26 @@
+entity(void) gui_rexuiz_charmap_spawn;
+void(entity, entity) configureNexuizCharmapNexuizCharmap;
+.void(entity, entity) configureNexuizCharmap;
+float(entity, vector) mousePressNexuizCharmap;
+.float(entity, vector) mousePress;
+float(entity, vector) mouseReleaseNexuizCharmap;
+.float(entity, vector) mouseRelease;
+float(entity, vector) mouseMoveNexuizCharmap;
+.float(entity, vector) mouseMove;
+float(entity, vector) mouseDragNexuizCharmap;
+.float(entity, vector) mouseDrag;
+float(entity, float, float, float) keyDownNexuizCharmap;
+.float(entity, float, float, float) keyDown;
+void(entity) focusLeaveNexuizCharmap;
+.void(entity) focusLeave;
+void(entity) drawNexuizCharmap;
+.void(entity) draw;
+.entity controlledTextbox;
+.string image;
+.string image2;
+.float focusable;
+.float previouslySelectedCharacterCell;
+.float selectedCharacterCell;
+.float mouseSelectedCharacterCell;
+
+entity(entity theTextbox) gui_rexuiz_charmap_make;

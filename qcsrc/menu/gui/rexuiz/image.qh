@@ -1,0 +1,4 @@
+entity(void) gui_rexuiz_image_spawn;
+.void(entity, string, float) configureNexuizImage;
+
+entity(string theImage, float theAspect) gui_rexuiz_image_make;

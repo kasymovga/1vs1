@@ -1,0 +1,8 @@
+entity(void) gui_rexuiz_tabcontroller_spawn;
+.void(entity, float) configureNexuizTabController;
+.entity(entity, string, entity) makeTabButton;
+.float rows;
+.float fontSize;
+.string image;
+
+entity(float theRows) gui_rexuiz_tabcontroller_make;

@@ -1,7 +1,0 @@
-entity spawnNexuizBigButton();
-void(entity, string, vector) configureNexuizBigButtonNexuizBigButton;
-.void(entity, string, vector) configureNexuizBigButton;
-.string image;
-.string grayImage;
-
-entity makeNexuizButton(string theText, vector theColor);
