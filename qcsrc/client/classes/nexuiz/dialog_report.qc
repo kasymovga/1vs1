@@ -25,8 +25,8 @@ void(entity btn, entity me) reportNexuizReportDialog {
 void(entity me) fillNexuizReportDialog {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, _("Naughty behaviour:")));
-		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, _("Player:")));
+		me.TD(me, 1, 10, e = gui_rexuiz_textlabel_make(0, _("Naughty behaviour:")));
+		me.TD(me, 1, 10, e = gui_rexuiz_textlabel_make(0, _("Player:")));
 	me.TR(me);
 		me.TD(me, 13, 10, e = makeNexuizReportTypeList());
 		typeNexuizReportDialog = e;
@@ -45,8 +45,8 @@ void(entity me) fillNexuizReportDialog {
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 10, e = makeNexuizButton(_("Report"), '0 0 0'));
+		me.TD(me, 1, 10, e = gui_rexuiz_button_make(_("Report"), '0 0 0'));
 				e.onClick = reportNexuizReportDialog;
 				e.onClickEntity = me;
-		me.TD(me, 1, 10, e = makeNexuizCommandButton(_("Cancel"), '0 0 0', "", 1));
+		me.TD(me, 1, 10, e = gui_rexuiz_commandbutton_make(_("Cancel"), '0 0 0', "", 1));
 }

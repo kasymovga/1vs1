@@ -28,20 +28,20 @@ void fillNexuizHintDialog(entity me)
 	entity e;
 	me.TR(me);
 		me.TDempty(me, 0.125);
-		me.TD(me, 3, 3.75, e = makeNexuizTextLabel(0, hint));
+		me.TD(me, 3, 3.75, e = gui_rexuiz_textlabel_make(0, hint));
 		e.allowWrap = 1;
 	hint_text_label = e;
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.125);
-		me.TD(me, 1, 3.75, e = makeNexuizCheckBox(0, "cl_hints_skip", _("Skip start hints")));
+		me.TD(me, 1, 3.75, e = gui_rexuiz_checkbox_make(0, "cl_hints_skip", _("Skip start hints")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeNexuizButton(_("<< Previous"), '0 0 0'));
+		me.TD(me, 1, 1.5, e = gui_rexuiz_button_make(_("<< Previous"), '0 0 0'));
 		e.onClick = prevNexuizHintDialog;
-		me.TD(me, 1, 1.5, e = makeNexuizButton(_("Next >>"), '0 0 0'));
+		me.TD(me, 1, 1.5, e = gui_rexuiz_button_make(_("Next >>"), '0 0 0'));
 		e.onClick = nextNexuizHintDialog;
-		me.TD(me, 1, 1, e = makeNexuizButton(_("Close"), '0 0 0'));
+		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
 		e.onClick = closeNexuizHintDialog;
 }

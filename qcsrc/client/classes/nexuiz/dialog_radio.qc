@@ -14,12 +14,12 @@ void fillNexuizRadioDialog(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizCommandButton(_("On"), '0 1 0', "cmd radiotoggle 1;", 0));
-		me.TD(me, 1, 1, e = makeNexuizCommandButton(_("Off"), '1 0 0', "cd reset;", 0));
+		me.TD(me, 1, 1, e = gui_rexuiz_commandbutton_make(_("On"), '0 1 0', "cmd radiotoggle 1;", 0));
+		me.TD(me, 1, 1, e = gui_rexuiz_commandbutton_make(_("Off"), '1 0 0', "cd reset;", 0));
 	me.TR(me);
 		me.TDempty(me, 0.5);
-		me.TD(me, 2, 1.5, e = makeNexuizCheckBox(0, "_radio", _("Play next track")));
+		me.TD(me, 2, 1.5, e = gui_rexuiz_checkbox_make(0, "_radio", _("Play next track")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, me.columns, e = makeNexuizCommandButton(_("Done"), '0 0 0', "", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns, e = gui_rexuiz_commandbutton_make(_("Done"), '0 0 0', "", GUI_REXUIZ_COMMANDBUTTON_CLOSE));
 }

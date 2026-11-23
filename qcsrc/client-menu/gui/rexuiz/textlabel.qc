@@ -1,4 +1,4 @@
-entity spawnNexuizTextLabel() {
+entity(void) gui_rexuiz_textlabel_spawn {
 	entity me; me = gui_label_spawn();
 	me.configureNexuizTextLabel = configureNexuizTextLabelNexuizTextLabel;
 	me.draw = drawNexuizTextLabel;
@@ -9,11 +9,9 @@ entity spawnNexuizTextLabel() {
 	me.classname = "NexuizTextLabel";
 	return me;
 }
-entity makeNexuizTextLabel(float theAlign, string theText);
-entity makeNexuizTextLabel(float theAlign, string theText)
-{
-	entity me;
-	me = spawnNexuizTextLabel();
+
+entity(float theAlign, string theText) gui_rexuiz_textlabel_make {
+	entity me = gui_rexuiz_textlabel_spawn();
 	me.configureNexuizTextLabel(me, theAlign, theText);
 	return me;
 }

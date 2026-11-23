@@ -1,5 +1,5 @@
 entity spawnNexuizSettingsDialog() {
-	entity me; me = spawnNexuizDialog();
+	entity me; me = gui_rexuiz_dialog_spawn();
 	me.fill = fillNexuizSettingsDialog;
 	me.title = _("Settings");
 	me.color = SKINCOLOR_DIALOG_SETTINGS;

@@ -1,5 +1,5 @@
 entity spawnNexuizReportPlayerList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.drawListBoxItem = drawListBoxItemNexuizReportPlayerList;
 	me.realUpperMargin = 0;
 	me.columnNameOrigin = 0;

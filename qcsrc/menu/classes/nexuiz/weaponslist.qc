@@ -1,5 +1,5 @@
 entity spawnNexuizWeaponsList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.configureNexuizWeaponsList = configureNexuizWeaponsListNexuizWeaponsList;
 	me.toString = toStringNexuizWeaponsList;
 	me.rowsPerItem = 1;

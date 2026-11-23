@@ -1,12 +1,12 @@
 entity spawnNexuizBigButton() {
-	entity me; me = spawnNexuizButton();
+	entity me; me = gui_rexuiz_button_spawn();
 	me.configureNexuizBigButton = configureNexuizBigButtonNexuizBigButton;
 	me.image = SKINGFX_BUTTON_BIG;
 	me.grayImage = SKINGFX_BUTTON_BIG_GRAY;
 	me.classname = "NexuizButton";
 	return me;
 }
-entity makeNexuizButton(string theText, vector theColor);
+entity gui_rexuiz_button_make(string theText, vector theColor);
 entity makeNexuizBigButton(string theText, vector theColor)
 {
 	entity me;

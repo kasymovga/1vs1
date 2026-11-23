@@ -1,5 +1,5 @@
 entity spawnNexuizMutatorsDialog() {
-	entity me; me = spawnNexuizDialog();
+	entity me; me = gui_rexuiz_dialog_spawn();
 	me.toString = toStringNexuizMutatorsDialog;
 	me.fill = fillNexuizMutatorsDialog;
 	me.showNotify = showNotifyNexuizMutatorsDialog;
@@ -70,11 +70,11 @@ void(entity btn, entity me) removeClickNexuizMutatorsDialog {
 void fillNexuizMutatorsDialog(entity me) {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 2, makeNexuizTextLabel(0, _("Gameplay mutators:")));
+		me.TD(me, 1, 2, gui_rexuiz_textlabel_make(0, _("Gameplay mutators:")));
 	me.TR(me);
-		me.TD(me, 1, 1.75, makeNexuizTextLabel(0, _("Available:")));
+		me.TD(me, 1, 1.75, gui_rexuiz_textlabel_make(0, _("Available:")));
 		me.TDempty(me, 0.5);
-		me.TD(me, 1, 1.75, makeNexuizTextLabel(0, _("Enabled:")));
+		me.TD(me, 1, 1.75, gui_rexuiz_textlabel_make(0, _("Enabled:")));
 	me.TR(me);
 		me.TD(me, 7, 1.75, me.availableProfiles = e = makeNexuizAvailableProfilesList());
 		me.TDempty(me, 0.5);
@@ -83,16 +83,16 @@ void fillNexuizMutatorsDialog(entity me) {
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 1.8);
-		me.TD(me, 1, 0.4, e = makeNexuizButton(_(">>"), '0 0 0'));
+		me.TD(me, 1, 0.4, e = gui_rexuiz_button_make(_(">>"), '0 0 0'));
 		e.onClick = addClickNexuizMutatorsDialog;
 		e.onClickEntity = me;
 	me.TR(me);
 		me.TDempty(me, 1.8);
-		me.TD(me, 1, 0.4, e = makeNexuizButton(_("<<"), '0 0 0'));
+		me.TD(me, 1, 0.4, e = gui_rexuiz_button_make(_("<<"), '0 0 0'));
 		e.onClick = removeClickNexuizMutatorsDialog;
 		e.onClickEntity = me;
 	me.gotoRC(me, me.rows - 1, 0);
-	me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
+	me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("OK"), '0 0 0'));
 		e.onClick = gui_dialog_close;
 		e.onClickEntity = me;
 }

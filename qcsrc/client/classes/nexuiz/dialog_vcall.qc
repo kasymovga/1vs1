@@ -20,8 +20,8 @@ void fillNexuizVcallDialog(entity me)
 {
 	entity e, vlist;
 	me.TR(me);
-		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, _("Available votes:")));
-		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, _("Possible arguments:")));
+		me.TD(me, 1, 10, e = gui_rexuiz_textlabel_make(0, _("Available votes:")));
+		me.TD(me, 1, 10, e = gui_rexuiz_textlabel_make(0, _("Possible arguments:")));
 	me.TR(me);
 						  me.TD(me, 13, 10, vlist = makeNexuizVoteList());
 						  me.TD(me, 13, 10, vlist.voteArgsList = makeNexuizVoteArgsList());
@@ -40,14 +40,14 @@ void fillNexuizVcallDialog(entity me)
 				me.TR(me);
 				me.TR(me);
 				me.TR(me); // ???
-						  me.TD(me, 1, 20, e = makeNexuizInputBox(1, "_menu_vote_string"));
+						  me.TD(me, 1, 20, e = gui_rexuiz_inputbox_make(1, "_menu_vote_string"));
 						  //e.saveImmediately = 1;
 						  vlist.textBox = e;
 						  vlist.voteArgsList.textBox = e;
 				me.TR(me);
-						  me.TD(me, 1, 10, e = makeNexuizButton(_("Call the vote"), '0 0 0'));
+						  me.TD(me, 1, 10, e = gui_rexuiz_button_make(_("Call the vote"), '0 0 0'));
 						      e.onClick = VoteCall_f;
 						      e.onClickEntity = me;
-						  me.TD(me, 1, 10, e = makeNexuizCommandButton(_("Cancel"), '0 0 0', "", 1));
+						  me.TD(me, 1, 10, e = gui_rexuiz_commandbutton_make(_("Cancel"), '0 0 0', "", 1));
 				me.voteList = vlist;
 }

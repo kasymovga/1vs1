@@ -1,4 +1,4 @@
-entity spawnNexuizDialog();
+entity(void) gui_rexuiz_dialog_spawn;
 // still to be customized by user
 /*
 	ATTRIB(NexuizDialog, closable, float, 1)

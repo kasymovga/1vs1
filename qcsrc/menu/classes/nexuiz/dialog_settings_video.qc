@@ -247,17 +247,17 @@ void fillNexuizVideoSettingsTab(entity me)
 	entity mc;
 	float n;
 	me.TR(me);
-		me.TD(me, 1, 1.2, e = makeNexuizTextLabel(0, _("Quality preset:")));
+		me.TD(me, 1, 1.2, e = gui_rexuiz_textlabel_make(0, _("Quality preset:")));
 		n = 5;
-		me.TD(me, 1, 5.3 / n, e = makeNexuizButton(_("Low"), '0 0 0'));
+		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("Low"), '0 0 0'));
 				e.onClick = lowNexuizVideoSettingsTab;
-		me.TD(me, 1, 5.3 / n, e = makeNexuizButton(_("Medium"), '0 0 0'));
+		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("Medium"), '0 0 0'));
 				e.onClick = mediumNexuizVideoSettingsTab;
-		me.TD(me, 1, 5.3 / n, e = makeNexuizButton(_("Normal"), '0 0 0'));
+		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("Normal"), '0 0 0'));
 				e.onClick = normalNexuizVideoSettingsTab;
-		me.TD(me, 1, 5.3 / n, e = makeNexuizButton(_("High"), '0 0 0'));
+		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("High"), '0 0 0'));
 				e.onClick = highNexuizVideoSettingsTab;
-		me.TD(me, 1, 5.3 / n, e = makeNexuizButton(_("Ultra"), '0 0 0'));
+		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("Ultra"), '0 0 0'));
 				e.onClick = ultraNexuizVideoSettingsTab;
 	me.TR(me);
 		mc = makeNexuizTabController(me.rows - 2);
@@ -267,5 +267,5 @@ void fillNexuizVideoSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, me.rows - 3, me.columns, mc);
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "vid_restart; menu_cmd ui_con_width_height_set;saveconfig\n", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, gui_rexuiz_commandbutton_make(_("Apply immediately"), '0 0 0', "vid_restart; menu_cmd ui_con_width_height_set;saveconfig\n", GUI_REXUIZ_COMMANDBUTTON_APPLY));
 }

@@ -1,4 +1,4 @@
-entity spawnNexuizButton() {
+entity(void) gui_rexuiz_button_spawn {
 	entity me; me = gui_button_spawn();
 	me.configureNexuizButton = configureNexuizButtonNexuizButton;
 	me.fontSize = SKINFONTSIZE_NORMAL;
@@ -13,11 +13,10 @@ entity spawnNexuizButton() {
 	me.classname = "NexuizButton";
 	return me;
 }
-entity makeNexuizButton(string theText, vector theColor);
-entity makeNexuizButton(string theText, vector theColor)
-{
+
+entity(string theText, vector theColor) gui_rexuiz_button_make {
 	entity me;
-	me = spawnNexuizButton();
+	me = gui_rexuiz_button_spawn();
 	me.configureNexuizButton(me, theText, theColor);
 	return me;
 }

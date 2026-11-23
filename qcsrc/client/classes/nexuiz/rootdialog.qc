@@ -1,5 +1,5 @@
 entity spawnNexuizRootDialog() {
-	entity me; me = spawnNexuizDialog();
+	entity me; me = gui_rexuiz_dialog_spawn();
 	// still to be customized by user
 	/*
 	ATTRIB(NexuizDialog, closable, float, 1)

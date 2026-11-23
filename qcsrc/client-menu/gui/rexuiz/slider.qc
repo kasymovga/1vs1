@@ -1,5 +1,5 @@
-entity spawnNexuizSlider() {
-	entity me; me = gui_slider_spawn();
+entity(void) gui_rexuiz_slider_spawn {
+	entity me = gui_slider_spawn();
 	me.configureNexuizSlider = configureNexuizSliderNexuizSlider;
 	me.setValue = setValueNexuizSlider;
 	me.fontSize = SKINFONTSIZE_NORMAL;
@@ -20,11 +20,9 @@ entity spawnNexuizSlider() {
 	me.classname = "NexuizSlider";
 	return me;
 }
-entity makeNexuizSlider(float, float, float, string);
-entity makeNexuizSlider(float theValueMin, float theValueMax, float theValueStep, string theCvar)
-{
-	entity me;
-	me = spawnNexuizSlider();
+
+entity(float theValueMin, float theValueMax, float theValueStep, string theCvar) gui_rexuiz_slider_make {
+	entity me = gui_rexuiz_slider_spawn();
 	me.configureNexuizSlider(me, theValueMin, theValueMax, theValueStep, theCvar);
 	return me;
 }

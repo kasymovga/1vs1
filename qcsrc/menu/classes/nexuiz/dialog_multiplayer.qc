@@ -1,5 +1,5 @@
 entity spawnNexuizMultiplayerDialog() {
-	entity me; me = spawnNexuizDialog();
+	entity me; me = gui_rexuiz_dialog_spawn();
 	me.fill = fillNexuizMultiplayerDialog;
 	me.title = _("Multiplayer");
 	me.color = SKINCOLOR_DIALOG_MULTIPLAYER;

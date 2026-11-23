@@ -1,5 +1,5 @@
 entity spawnNexuizCampaignList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.configureNexuizCampaignList = configureNexuizCampaignListNexuizCampaignList;
 	me.rowsPerItem = 10;
 	me.draw = drawNexuizCampaignList;

@@ -14,7 +14,7 @@ void configureMainWindowMainWindow(entity me)
 	gui_gameMenuDialog = i = spawnNexuizGameMenuDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_teamSelectDialog = i = spawnNexuizTeamSelectDialog();
+	gui_teamSelectDialog = i = gui_rexuiz_dialog_teamselect_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	gui_gameSettingsDialog = i = spawnNexuizGameSettingsDialog();
@@ -26,10 +26,10 @@ void configureMainWindowMainWindow(entity me)
 	gui_radioDialog = i = spawnNexuizRadioDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_saveLoad = i = spawnNexuizSaveLoadDialog();
+	gui_saveLoad = i = gui_rexuiz_dialog_saveload_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_quitDialog = i = spawnNexuizQuitDialog();
+	gui_quitDialog = i = gui_rexuiz_dialog_quit_spawn();
 	i.close = QuitDialogClose;
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);

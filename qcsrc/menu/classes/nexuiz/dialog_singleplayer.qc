@@ -1,5 +1,5 @@
 entity spawnNexuizSingleplayerDialog() {
-	entity me; me = spawnNexuizDialog();
+	entity me; me = gui_rexuiz_dialog_spawn();
 	me.fill = fillNexuizSingleplayerDialog;
 	me.title = _("Singleplayer");
 	me.color = SKINCOLOR_DIALOG_SINGLEPLAYER;

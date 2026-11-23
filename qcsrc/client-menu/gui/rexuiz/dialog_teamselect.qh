@@ -1,9 +1,7 @@
-entity spawnNexuizTeamSelectDialog();
-void(entity) fillNexuizTeamSelectDialog;
+entity(void) gui_rexuiz_dialog_teamselect_spawn;
 .void(entity) fill; // to be overridden by user to fill the dialog with controls
-void(entity) showNotifyNexuizTeamSelectDialog;
 .void(entity) showNotify;
-.string title; // ;)
+.string title;
 .vector color;
 .float intendedWidth;
 .float rows;
@@ -13,5 +11,3 @@ void(entity) showNotifyNexuizTeamSelectDialog;
 .entity team2;
 .entity team3;
 .entity team4;
-
-/* Click. The c-word is here so you can grep for it :-) */

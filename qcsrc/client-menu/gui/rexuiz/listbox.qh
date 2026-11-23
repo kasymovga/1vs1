@@ -1,4 +1,4 @@
-entity spawnNexuizListBox();
+entity(void) gui_rexuiz_listbox_spawn;
 void(entity) configureNexuizListBoxNexuizListBox;
 .void(entity) configureNexuizListBox;
 .float fontSize;
@@ -13,4 +13,4 @@ void(entity, vector, vector, vector, vector) resizeNotifyNexuizListBox;
 .vector color2;
 .vector colorC;
 
-entity makeNexuizListBox();
+entity(void) gui_rexuiz_listbox_make;

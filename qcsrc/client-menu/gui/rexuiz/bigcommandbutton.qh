@@ -1,0 +1,5 @@
+entity(void) gui_rexuiz_bigcommandbutton_spawn; // must be configured with configureNexuizCommandButton
+.string image;
+.string grayImage;
+
+entity(string theText, vector theColor, string theCommand, float theFlags) gui_rexuiz_bigcommandbutton_make;

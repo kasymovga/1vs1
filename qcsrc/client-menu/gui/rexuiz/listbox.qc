@@ -1,4 +1,4 @@
-entity spawnNexuizListBox() {
+entity(void) gui_rexuiz_listbox_spawn {
 	entity me; me = gui_listbox_spawn();
 	me.configureNexuizListBox = configureNexuizListBoxNexuizListBox;
 	me.fontSize = SKINFONTSIZE_NORMAL;
@@ -14,11 +14,10 @@ entity spawnNexuizListBox() {
 	me.classname = "NexuizListBox";
 	return me;
 }
-entity makeNexuizListBox();
-entity makeNexuizListBox()
-{
+
+entity(void) gui_rexuiz_listbox_make {
 	entity me;
-	me = spawnNexuizListBox();
+	me = gui_rexuiz_listbox_spawn();
 	me.configureNexuizListBox(me);
 	return me;
 }

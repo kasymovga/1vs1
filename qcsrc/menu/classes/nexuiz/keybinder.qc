@@ -1,5 +1,5 @@
 entity spawnNexuizKeyBinder() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.configureNexuizKeyBinder = configureNexuizKeyBinderNexuizKeyBinder;
 	me.rowsPerItem = 1;
 	me.drawListBoxItem = drawListBoxItemNexuizKeyBinder;

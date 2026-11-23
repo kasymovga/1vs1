@@ -1,5 +1,5 @@
 entity spawnNexuizHudList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.drawListBoxItem = drawListBoxItemNexuizHudList;
 	me.resizeNotify = resizeNotifyNexuizHudList;
 	me.destroy = destroyNexuizHudList;

@@ -1,4 +1,4 @@
-entity spawnNexuizSlider();
+entity(void) gui_rexuiz_slider_spawn;
 void(entity, float, float, float, string) configureNexuizSliderNexuizSlider;
 .void(entity, float, float, float, string) configureNexuizSlider;
 void(entity, float) setValueNexuizSlider;
@@ -21,4 +21,4 @@ void(entity) saveCvarsNexuizSlider;
 .float alpha;
 .float disabledAlpha;
 
-entity makeNexuizSlider(float, float, float, string);
+entity(float theValueMin, float theValueMax, float theValueStep, string theCvar) gui_rexuiz_slider_make;

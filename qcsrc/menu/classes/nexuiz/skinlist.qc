@@ -1,5 +1,5 @@
 entity spawnNexuizSkinList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.configureNexuizSkinList = configureNexuizSkinListNexuizSkinList;
 	me.rowsPerItem = 4;
 	me.resizeNotify = resizeNotifyNexuizSkinList;

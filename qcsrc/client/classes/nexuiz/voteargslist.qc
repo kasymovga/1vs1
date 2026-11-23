@@ -1,5 +1,5 @@
 entity spawnNexuizVoteArgsList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.drawListBoxItem = drawListBoxItemNexuizVoteArgsList;
 	me.setSelected = setSelectedNexuizVoteArgsList;
 	me.resizeNotify = resizeNotifyNexuizVoteArgsList;

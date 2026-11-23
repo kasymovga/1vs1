@@ -1,5 +1,5 @@
 entity spawnNexuizDecibelsSlider() {
-	entity me; me = spawnNexuizSlider();
+	entity me = gui_rexuiz_slider_spawn();
 	me.loadCvars = loadCvarsNexuizDecibelsSlider;
 	me.saveCvars = saveCvarsNexuizDecibelsSlider;
 	me.valueToText = valueToTextNexuizDecibelsSlider;

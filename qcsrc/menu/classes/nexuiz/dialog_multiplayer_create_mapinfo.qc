@@ -1,5 +1,5 @@
 entity spawnNexuizMapInfoDialog() {
-	entity me; me = spawnNexuizDialog();
+	entity me; me = gui_rexuiz_dialog_spawn();
 	me.fill = fillNexuizMapInfoDialog;
 	me.loadMapInfo = loadMapInfoNexuizMapInfoDialog;
 	me.title = _("Map Information");
@@ -66,28 +66,28 @@ void fillNexuizMapInfoDialog(entity me)
 		me.previewImage = e;
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 	w = me.columns - me.currentColumn;
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Title:")));
-		me.TD(me, 1, w-1, e = makeNexuizTextLabel(0, ""));
+		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Title:")));
+		me.TD(me, 1, w-1, e = gui_rexuiz_textlabel_make(0, ""));
 				e.colorL = SKINCOLOR_MAPLIST_TITLE;
 				e.allowCut = 1;
 				me.titleLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Author:")));
-		me.TD(me, 1, w-1, e = makeNexuizTextLabel(0, ""));
+		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Author:")));
+		me.TD(me, 1, w-1, e = gui_rexuiz_textlabel_make(0, ""));
 				e.colorL = SKINCOLOR_MAPLIST_AUTHOR;
 				e.allowCut = 1;
 				me.authorLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Features:")));
-		me.TD(me, 1, w-1, e = makeNexuizTextLabel(0, ""));
+		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Features:")));
+		me.TD(me, 1, w-1, e = gui_rexuiz_textlabel_make(0, ""));
 				e.allowCut = 1;
 				me.featuresLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Game types:")));
+		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Game types:")));
 		float i;
 		e = me;
 		for (i = GAME_TYPE_DEATHMATCH; i < GAME_TYPE_SINGLE; i++) {
-				me.TD(me, 1, 2, e.typeLabelNext = makeNexuizTextLabel(0, game_type_name_long(i)));
+				me.TD(me, 1, 2, e.typeLabelNext = gui_rexuiz_textlabel_make(0, game_type_name_long(i)));
 				e = e.typeLabelNext;
 				if not(mod(i, 2)) {
 				me.TR(me);
@@ -95,15 +95,15 @@ void fillNexuizMapInfoDialog(entity me)
 				}
 		}
 	me.gotoRC(me, me.rows - 2, 0);
-		me.TD(me, 1, me.columns, e = makeNexuizTextLabel(0.5, ""));
+		me.TD(me, 1, me.columns, e = gui_rexuiz_textlabel_make(0.5, ""));
 				e.allowCut = 1;
 				me.descriptionLabel = e;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, 0.5);
-		me.TD(me, 1, me.columns - 5.5, e = makeNexuizButton(_("Close"), '0 0 0'));
+		me.TD(me, 1, me.columns - 5.5, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
 				e.onClick = gui_dialog_close;
 				e.onClickEntity = me;
-		me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeNexuizButton(_("Play"), '0 0 0'));
+		me.TD(me, 1, me.columns - 5.5, me.startButton = e = gui_rexuiz_button_make(_("Play"), '0 0 0'));
 				me.startButton.onClick = MapList_LoadMap;
 				me.startButton.onClickEntity = NULL; // filled later
 		me.TDempty(me, 0.5);

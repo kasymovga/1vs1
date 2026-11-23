@@ -1,0 +1,13 @@
+enum {
+	GUI_REXUIZ_COMMANDBUTTON_CLOSE = 1,
+	GUI_REXUIZ_COMMANDBUTTON_APPLY = 2,
+	GUI_REXUIZ_COMMANDBUTTON_REVERT = 4,
+};
+
+entity(void) gui_rexuiz_commandbutton_spawn;
+void(entity, string, vector, string, float) configureNexuizCommandButtonNexuizCommandButton;
+.void(entity, string, vector, string, float) configureNexuizCommandButton;
+.string onClickCommand;
+.float flags;
+
+entity(string theText, vector theColor, string theCommand, float theFlags) gui_rexuiz_commandbutton_make;

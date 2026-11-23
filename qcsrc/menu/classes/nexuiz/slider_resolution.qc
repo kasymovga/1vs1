@@ -1,5 +1,5 @@
 entity spawnNexuizResolutionSlider() {
-	entity me; me = spawnNexuizTextSlider();
+	entity me = gui_rexuiz_textslider_spawn();
 	me.configureNexuizResolutionSlider = configureNexuizResolutionSliderNexuizResolutionSlider;
 	me.addResolution = addResolutionNexuizResolutionSlider;
 	me.loadCvars = loadCvarsNexuizResolutionSlider;

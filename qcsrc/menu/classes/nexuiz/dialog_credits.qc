@@ -1,5 +1,5 @@
 entity spawnNexuizCreditsDialog() {
-	entity me; me = spawnNexuizDialog();
+	entity me; me = gui_rexuiz_dialog_spawn();
 	me.fill = fillNexuizCreditsDialog;
 	me.focusEnter = focusEnterNexuizCreditsDialog;
 	me.title = _("Credits");
@@ -18,7 +18,7 @@ void fillNexuizCreditsDialog(entity me)
 	me.TR(me);
 		me.TD(me, me.rows - 1, me.columns, me.creditsList = makeNexuizCreditsList());
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
+		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("OK"), '0 0 0'));
 				e.onClick = gui_dialog_close;
 				e.onClickEntity = me;
 }

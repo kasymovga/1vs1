@@ -35,12 +35,12 @@ void fillNexuizMuteListDialog(entity me) {
 	me.TR(me);
 	me.TR(me); // ???
 	me.TR(me);
-		me.TD(me, 1, 5, e = makeNexuizButton(_("Mute"), '0 0 0'));
+		me.TD(me, 1, 5, e = gui_rexuiz_button_make(_("Mute"), '0 0 0'));
 		e.onClick = muteMuteListDialog;
 		e.onClickEntity = list;
-		me.TD(me, 1, 5, e = makeNexuizButton(_("Unmute"), '0 0 0'));
+		me.TD(me, 1, 5, e = gui_rexuiz_button_make(_("Unmute"), '0 0 0'));
 		e.onClick = unmuteMuteListDialog;
 		e.onClickEntity = list;
 	me.TR(me);
-		me.TD(me, 1, 10, e = makeNexuizCommandButton(_("Close"), '0 0 0', "", 1));
+		me.TD(me, 1, 10, e = gui_rexuiz_commandbutton_make(_("Close"), '0 0 0', "", 1));
 }

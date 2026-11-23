@@ -1,5 +1,5 @@
 entity spawnNexuizReportTypeList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.drawListBoxItem = drawListBoxItemNexuizReportTypeList;
 	me.realUpperMargin = 0;
 	me.columnNameOrigin = 0;

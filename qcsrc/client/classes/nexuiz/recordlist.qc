@@ -1,5 +1,5 @@
 entity spawnNexuizRecordList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.drawListBoxItem = drawListBoxItemNexuizRecordList;
 	me.setSelected = setSelectedNexuizRecordList;
 	me.resizeNotify = resizeNotifyNexuizRecordList;

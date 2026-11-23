@@ -1,5 +1,5 @@
 entity spawnNexuizMuteList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.drawListBoxItem = drawListBoxItemNexuizMuteList;
 	me.resizeNotify = resizeNotifyNexuizMuteList;
 	me.textBox = NULL;

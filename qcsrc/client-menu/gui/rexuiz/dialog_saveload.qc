@@ -1,6 +1,8 @@
-entity spawnNexuizSaveLoadDialog() {
+void(entity me) gui_rexuiz_dialog_saveload_fill;
+
+entity(void) gui_rexuiz_dialog_saveload_spawn {
 	entity me; me = spawnNexuizRootDialog();
-	me.fill = fillNexuizSaveLoadDialog; // to be overridden by user to fill the dialog with controls
+	me.fill = gui_rexuiz_dialog_saveload_fill;
 	me.configureDialog = configureDialogNexuizSaveLoadDialog;
 	me.loadCvars = loadCvarsNexuizSaveLoadDialog;
 	me.title = _("Load Game");
@@ -102,20 +104,19 @@ float mouseDoubleClickNexuizSaveLoadDialogSlot(entity btn, vector v) {
 }
 #endif
 
-void fillNexuizSaveLoadDialog(entity me)
-{
+void(entity me) gui_rexuiz_dialog_saveload_fill {
 	entity e;
 	float i, j;
 	e = me;
 	for (i = 0; i < 14; i += 2) {
 		me.TR(me);
 			if (i == 10) {
-				me.TD(me, 1, 3, makeNexuizTextLabel(0, _("Autosave:")));
-				me.TD(me, 1, 3, makeNexuizTextLabel(0, _("Quicksave:")));
+				me.TD(me, 1, 3, gui_rexuiz_textlabel_make(0, _("Autosave:")));
+				me.TD(me, 1, 3, gui_rexuiz_textlabel_make(0, _("Quicksave:")));
 				me.TR(me);
 			}
 			for (j = 0; j < 2; j++) {
-				me.TD(me, 1, 3, e.saveSlot = makeNexuizButton(descriptionsNexuizSaveLoadDialog[i + j], '0 0 0'));
+				me.TD(me, 1, 3, e.saveSlot = gui_rexuiz_button_make(descriptionsNexuizSaveLoadDialog[i + j], '0 0 0'));
 				e = e.saveSlot;
 				e.onClick = SlotSelect;
 				e.onClickEntity = me;
@@ -132,12 +133,12 @@ void fillNexuizSaveLoadDialog(entity me)
 		float button_width = 6;
 #endif
 #ifdef CSQC
-		me.TD(me, 1, button_width, e = makeNexuizButton(_("Save"), '0 0 0'));
+		me.TD(me, 1, button_width, e = gui_rexuiz_button_make(_("Save"), '0 0 0'));
 		buttonSave = e;
 		e.onClick = saveGameNexuizSaveLoadDialog;
 		e.onClickEntity = me;
 #endif
-		me.TD(me, 1, button_width, e = makeNexuizButton(_("Load"), '0 0 0'));
+		me.TD(me, 1, button_width, e = gui_rexuiz_button_make(_("Load"), '0 0 0'));
 		e.onClick = loadGameNexuizSaveLoadDialog;
 		e.onClickEntity = me;
 }

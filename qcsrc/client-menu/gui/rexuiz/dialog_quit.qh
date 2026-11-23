@@ -1,5 +1,4 @@
-entity spawnNexuizQuitDialog();
-void(entity) fillNexuizQuitDialog;
+entity(void) gui_rexuiz_dialog_quit_spawn;
 .void(entity) fill;
 .string title;
 .vector color;

@@ -21,7 +21,7 @@ void switchTo(entity btn, entity me) {
 	me.campaignBox.loadCvars(me.campaignBox);
 }
 entity addCampaign(entity me, entity e, string _title, string cfg) {
-	me.TD(me, 1, 1.1, e.btnGame = makeNexuizButton(_title, '0 0 0'));
+	me.TD(me, 1, 1.1, e.btnGame = gui_rexuiz_button_make(_title, '0 0 0'));
 	e = e.btnGame;
 	e.cvarName = cfg;
 	e.onClick = switchTo;
@@ -45,19 +45,19 @@ void fillNexuizCampaignTab(entity me) {
 	me.TR(me);
 		me.TD(me, me.rows - 6, me.columns, me.campaignBox = makeNexuizCampaignList());
 	me.gotoRC(me, me.rows - 4, 0);
-		me.TD(me, 1, 0.5, makeNexuizTextLabel(0, _("Difficulty:")));
+		me.TD(me, 1, 0.5, gui_rexuiz_textlabel_make(0, _("Difficulty:")));
 	me.TR(me);
 		me.TD(me, 1, 0.7, makeNexuizRadioButton(1, "menu_campaign_skill", "-1", _("Easiest")));
 		me.TD(me, 1, 0.7, makeNexuizRadioButton(1, "menu_campaign_skill", "0", _("Easy")));
 		me.TD(me, 1, 0.7, makeNexuizRadioButton(1, "menu_campaign_skill", "1", _("Medium")));
 		me.TD(me, 1, 0.7, makeNexuizRadioButton(1, "menu_campaign_skill", "2", _("Hard")));
 		me.TD(me, 1, 0.7, makeNexuizRadioButton(1, "menu_campaign_skill", "3", _("Insane")));
-		me.TD(me, 1, 1.5, e = makeNexuizButton(_("Load Game..."), '0 0 0'));
+		me.TD(me, 1, 1.5, e = gui_rexuiz_button_make(_("Load Game..."), '0 0 0'));
 				e.onClick = DialogOpenButton_Click;
 				e.onClickEntity = main.saveLoadDialog;
 	switchTo(me.btnGame, me);
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns , e = makeNexuizButton(_("Start Game!"), '0 0 0'));
+		me.TD(me, 1, me.columns , e = gui_rexuiz_button_make(_("Start Game!"), '0 0 0'));
 				e.onClick = CampaignList_LoadMap;
 				e.onClickEntity = me.campaignBox;
 }

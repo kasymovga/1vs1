@@ -1,5 +1,5 @@
 entity spawnNexuizCvarList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.configureNexuizCvarList = configureNexuizCvarListNexuizCvarList;
 	me.rowsPerItem = 1;
 	me.drawListBoxItem = drawListBoxItemNexuizCvarList;

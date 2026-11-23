@@ -1,5 +1,5 @@
 entity spawnNexuizUserbindEditDialog() {
-	entity me; me = spawnNexuizDialog();
+	entity me; me = gui_rexuiz_dialog_spawn();
 	me.loadUserBind = loadUserBindNexuizUserbindEditDialog;
 	me.fill = fillNexuizUserbindEditDialog;
 	me.title = _("User defined key bind");
@@ -32,19 +32,19 @@ void fillNexuizUserbindEditDialog(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Name:")));
-		me.TD(me, 1, me.columns - 1, me.nameBox = makeNexuizInputBox(0, NULL));
+		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Name:")));
+		me.TD(me, 1, me.columns - 1, me.nameBox = gui_rexuiz_inputbox_make(0, NULL));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Command when pressed:")));
-		me.TD(me, 1, me.columns - 1, me.commandPressBox = makeNexuizInputBox(0, NULL));
+		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Command when pressed:")));
+		me.TD(me, 1, me.columns - 1, me.commandPressBox = gui_rexuiz_inputbox_make(0, NULL));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Command when released:")));
-		me.TD(me, 1, me.columns - 1, me.commandReleaseBox = makeNexuizInputBox(0, NULL));
+		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Command when released:")));
+		me.TD(me, 1, me.columns - 1, me.commandReleaseBox = gui_rexuiz_inputbox_make(0, NULL));
 	me.TR(me);
-		me.TD(me, 1, me.columns / 2, e = makeNexuizButton(_("Save"), '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = gui_rexuiz_button_make(_("Save"), '0 0 0'));
 				e.onClick = NexuizUserbindEditDialog_Save;
 				e.onClickEntity = me;
-		me.TD(me, 1, me.columns / 2, e = makeNexuizButton(_("Cancel"), '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = gui_rexuiz_button_make(_("Cancel"), '0 0 0'));
 				e.onClick = gui_dialog_close;
 				e.onClickEntity = me;
 }

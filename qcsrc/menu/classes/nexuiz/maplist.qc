@@ -1,5 +1,5 @@
 entity spawnNexuizMapList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.configureNexuizMapList = configureNexuizMapListNexuizMapList;
 	me.rowsPerItem = 4;
 	me.draw = drawNexuizMapList;

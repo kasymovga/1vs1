@@ -1,4 +1,4 @@
-entity spawnNexuizTextLabel();
+entity(void) gui_rexuiz_textlabel_spawn;
 void(entity, float, string) configureNexuizTextLabelNexuizTextLabel;
 .void(entity, float, string) configureNexuizTextLabel;
 void(entity) drawNexuizTextLabel;
@@ -8,4 +8,4 @@ void(entity) drawNexuizTextLabel;
 .float disabledAlpha;
 .vector colorL;
 
-entity makeNexuizTextLabel(float theAlign, string theText);
+entity(float theAlign, string theText) gui_rexuiz_textlabel_make;

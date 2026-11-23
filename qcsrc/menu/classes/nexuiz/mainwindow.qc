@@ -20,7 +20,7 @@ entity spawnMainWindow() {
 void configureMainWindowMainWindow(entity me)
 {
 	entity n, i;
-	i = spawnNexuizTeamSelectDialog();
+	i = gui_rexuiz_dialog_teamselect_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.mutatorsDialog = i = spawnNexuizMutatorsDialog();
@@ -50,7 +50,7 @@ void configureMainWindowMainWindow(entity me)
 	me.languageDialog = i = spawnNexuizLanguageDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	me.saveLoadDialog = i = spawnNexuizSaveLoadDialog();
+	me.saveLoadDialog = i = gui_rexuiz_dialog_saveload_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.mainNexposee = n = spawnNexuizNexposee();
@@ -71,7 +71,7 @@ void configureMainWindowMainWindow(entity me)
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_CREDITS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / gui_conheight));
-		i = spawnNexuizQuitDialog();
+		i = gui_rexuiz_dialog_quit_spawn();
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_QUIT, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);

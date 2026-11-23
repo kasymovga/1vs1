@@ -1,5 +1,5 @@
 entity spawnNexuizLanguageDialog() {
-	entity me; me = spawnNexuizDialog();
+	entity me; me = gui_rexuiz_dialog_spawn();
 	me.fill = fillNexuizLanguageDialog;
 	me.title = _("Language");
 	me.color = SKINCOLOR_DIALOG_SETTINGS;
@@ -44,15 +44,15 @@ void fillNexuizLanguageDialog(entity me) {
 		e.onClick = changeLanguage;
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizCheckBox(1, "utf8_oldfont_for_oldchars", _("Disable Nexuiz-compatible symbols")));
+		me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(1, "utf8_oldfont_for_oldchars", _("Disable Nexuiz-compatible symbols")));
 	me.TR(me);
 		me.TDempty(me, 0.05);
-		me.TD(me, 0.5, 1.9, e = makeNexuizTextLabel(0, _("* Needed for some european characters, player names might be displayed incorrectly")));
+		me.TD(me, 0.5, 1.9, e = gui_rexuiz_textlabel_make(0, _("* Needed for some european characters, player names might be displayed incorrectly")));
 		e.allowWrap = 1;
 		e.colorL = SKINCOLOR_TEXT_WARNING;
 		e.fontSize = e.fontSize * 0.6;
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Close"), '0 0 0'));
+		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
 				e.onClick = DialogCloseButton_Click;
 				e.onClickEntity = me;
 }

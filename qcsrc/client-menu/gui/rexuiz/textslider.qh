@@ -1,4 +1,4 @@
-entity spawnNexuizTextSlider();
+entity(void) gui_rexuiz_textslider_spawn;
 void(entity, string) configureNexuizTextSliderNexuizTextSlider;
 .void(entity, string) configureNexuizTextSlider;
 void(entity, float) setValueNexuizTextSlider;
@@ -23,4 +23,4 @@ void(entity) saveCvarsNexuizTextSlider;
 .float alpha;
 .float disabledAlpha;
 
-entity makeNexuizTextSlider(string); // note: you still need to call addValue and configureNexuizTextSliderValues!
+entity(string theCvar) gui_rexuiz_textslider_make;

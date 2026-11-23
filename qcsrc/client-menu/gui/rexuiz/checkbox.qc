@@ -1,4 +1,4 @@
-entity spawnNexuizCheckBox() {
+entity(void) gui_rexuiz_checkbox_spawn {
 	entity me; me = gui_checkbox_spawn();
 	me.configureNexuizCheckBox = configureNexuizCheckBoxNexuizCheckBox;
 	me.setChecked = setCheckedNexuizCheckBox;
@@ -18,10 +18,8 @@ entity spawnNexuizCheckBox() {
 	me.classname = "NexuizCheckBox";
 	return me;
 }
-entity makeNexuizCheckBox(float, string, string);
-entity makeNexuizCheckBoxEx(float, float, string, string);
-entity makeNexuizCheckBox(float isInverted, string theCvar, string theText)
-{
+
+entity(float isInverted, string theCvar, string theText) gui_rexuiz_checkbox_make {
 	float y, n;
 	if(isInverted > 1)
 	{
@@ -43,12 +41,12 @@ entity makeNexuizCheckBox(float isInverted, string theCvar, string theText)
 		n = 0;
 		y = 1;
 	}
-	return makeNexuizCheckBoxEx(y, n, theCvar, theText);
+	return gui_rexuiz_checkbox_make2(y, n, theCvar, theText);
 }
-entity makeNexuizCheckBoxEx(float theYesValue, float theNoValue, string theCvar, string theText)
-{
+
+entity(float theYesValue, float theNoValue, string theCvar, string theText) gui_rexuiz_checkbox_make2 {
 	entity me;
-	me = spawnNexuizCheckBox();
+	me = gui_rexuiz_checkbox_spawn();
 	me.configureNexuizCheckBox(me, theYesValue, theNoValue, theCvar, theText);
 	return me;
 }

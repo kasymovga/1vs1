@@ -1,4 +1,4 @@
-entity spawnNexuizCheckBox();
+entity(void) gui_rexuiz_checkbox_spawn;
 void(entity, float, float, string, string) configureNexuizCheckBoxNexuizCheckBox;
 .void(entity, float, float, string, string) configureNexuizCheckBox;
 void(entity, float) setCheckedNexuizCheckBox;
@@ -19,5 +19,5 @@ void(entity) saveCvarsNexuizCheckBox;
 .float alpha;
 .float disabledAlpha;
 
-entity makeNexuizCheckBox(float, string, string);
-entity makeNexuizCheckBoxEx(float, float, string, string);
+entity(float isInverted, string theCvar, string theText) gui_rexuiz_checkbox_make;
+entity(float theYesValue, float theNoValue, string theCvar, string theText) gui_rexuiz_checkbox_make2;

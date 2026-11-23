@@ -1,4 +1,4 @@
-entity spawnNexuizInputBox() {
+entity(void) gui_rexuiz_inputbox_spawn {
 	entity me; me = gui_inputbox_spawn();
 	me.configureNexuizInputBox = configureNexuizInputBoxNexuizInputBox;
 	me.focusLeave = focusLeaveNexuizInputBox;
@@ -21,11 +21,10 @@ entity spawnNexuizInputBox() {
 	me.classname = "NexuizInputBox";
 	return me;
 }
-entity makeNexuizInputBox(float, string);
-entity makeNexuizInputBox(float doEditColorCodes, string theCvar)
-{
+
+entity(float doEditColorCodes, string theCvar) gui_rexuiz_inputbox_make {
 	entity me;
-	me = spawnNexuizInputBox();
+	me = gui_rexuiz_inputbox_spawn();
 	me.configureNexuizInputBox(me, doEditColorCodes, theCvar);
 	return me;
 }

@@ -1,5 +1,5 @@
-entity spawnNexuizTextSlider() {
-	entity me; me = gui_textslider_spawn();
+entity(void) gui_rexuiz_textslider_spawn {
+	entity me = gui_textslider_spawn();
 	me.configureNexuizTextSlider = configureNexuizTextSliderNexuizTextSlider;
 	me.setValue = setValueNexuizTextSlider;
 	me.configureNexuizTextSliderValues = configureNexuizTextSliderValuesNexuizTextSlider;
@@ -21,11 +21,10 @@ entity spawnNexuizTextSlider() {
 	me.classname = "NexuizTextSlider";
 	return me;
 }
-entity makeNexuizTextSlider(string); // note: you still need to call addValue and configureNexuizTextSliderValues!
-entity makeNexuizTextSlider(string theCvar)
-{
+
+entity(string theCvar) gui_rexuiz_textslider_make {
 	entity me;
-	me = spawnNexuizTextSlider();
+	me = gui_rexuiz_textslider_spawn();
 	me.configureNexuizTextSlider(me, theCvar);
 	return me;
 }

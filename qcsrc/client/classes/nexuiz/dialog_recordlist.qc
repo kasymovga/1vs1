@@ -29,9 +29,9 @@ void fillNexuizRecordListDialog(entity me) {
 		me.TD(me, me.rows - 1, 20, record_list = makeNexuizRecordList());
 		record_list.nexuizFont = 1;
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, 10, e = makeNexuizButton(_("Call a vote for this map"), '0 0 0'));
+		me.TD(me, 1, 10, e = gui_rexuiz_button_make(_("Call a vote for this map"), '0 0 0'));
 				e.onClick = gotomapNexuizRecordListDialog;
 				e.onClickEntity = record_list;
 		record_list.onClickEntity = e;
-		me.TD(me, 1, 10, e = makeNexuizCommandButton(_("Close"), '0 0 0', "", 1));
+		me.TD(me, 1, 10, e = gui_rexuiz_commandbutton_make(_("Close"), '0 0 0', "", 1));
 }

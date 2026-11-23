@@ -1,5 +1,5 @@
 entity spawnNexuizCreditsList() {
-	entity me; me = spawnNexuizListBox();
+	entity me; me = gui_rexuiz_listbox_spawn();
 	me.configureNexuizCreditsList = configureNexuizCreditsListNexuizCreditsList;
 	me.rowsPerItem = 1;
 	me.draw = drawNexuizCreditsList;
