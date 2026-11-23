@@ -1,9 +1,6 @@
-entity spawnNexuizSliderCheckBox();
-void(entity, float, float, entity, string) configureNexuizSliderCheckBoxNexuizSliderCheckBox;
+entity(void) gui_rexuiz_checkbox_slider_spawn;
 .void(entity, float, float, entity, string) configureNexuizSliderCheckBox;
-void(entity, float) setCheckedNexuizSliderCheckBox;
 .void(entity, float) setChecked;
-void(entity) drawNexuizSliderCheckBox;
 .void(entity) draw;
 .float fontSize;
 .string image;
@@ -18,4 +15,4 @@ void(entity) drawNexuizSliderCheckBox;
 .float inverted;
 .float savedValue;
 
-entity makeNexuizSliderCheckBox(float, float, entity, string);
+entity(float theOffValue, float isInverted, entity theControlledSlider, string theText) gui_rexuiz_checkbox_slider_make;

@@ -214,6 +214,7 @@ float(string file, string name) cin_open = #461;
 void(string name) cin_close = #462;
 void(string name, float type) cin_setstate = #463;
 float(string name) cin_getstate = #464;
+float(float f) vm_log = #532;
 void(float dest) setkeydest = #601;
 float(void) getkeydest = #602;
 void(float trg) setmousetarget = #603;

@@ -1,7 +1,5 @@
-entity spawnNexuizNexposee();
-void(entity) configureNexuizNexposeeNexuizNexposee;
+entity(void) gui_rexuiz_nexposee_spawn;
 .void(entity) configureNexuizNexposee;
-void(entity) closeNexuizNexposee;
 .void(entity) close;
 
-entity makeNexuizNexposee();
+entity(void) gui_rexuiz_nexposee_make;

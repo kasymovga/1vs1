@@ -1,7 +1,5 @@
-entity spawnNexuizGametypeButton();
-void(entity, float, string, string) configureNexuizGametypeButtonNexuizGametypeButton;
+entity(void) gui_rexuiz_gametypebutton_spawn;
 .void(entity, float, string, string) configureNexuizGametypeButton;
-void(entity, float) setCheckedNexuizGametypeButton;
 .void(entity, float) setChecked;
 .float fontSize;
 .string image;
@@ -12,11 +10,9 @@ void(entity, float) setCheckedNexuizGametypeButton;
 .float srcMulti;
 .float useDownAsChecked;
 .string cvarName;
-void(entity) loadCvarsNexuizGametypeButton;
 .void(entity) loadCvars;
-void(entity) saveCvarsNexuizGametypeButton;
 .void(entity) saveCvars;
 .float alpha;
 .float disabledAlpha;
 
-entity makeNexuizGametypeButton(float, string, string);
+entity(float theGroup, string theCvar, string theText) gui_rexuiz_gametypebutton_make;

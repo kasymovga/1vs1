@@ -32,7 +32,7 @@
 #include "gui/rexuiz/image.qc"
 #include "gui/rexuiz/crosshairbutton.qc"
 #include "gui/rexuiz/playermodel.qc"
-#include "gui/rexuiz/checkbox_slider_invalid.qc"
+#include "gui/rexuiz/checkbox_slider.qc"
 #include "gui/rexuiz/charmap.qc"
 #include "gui/rexuiz/keybinder.qc"
 #include "gui/rexuiz/dialog_settings_input.qc"

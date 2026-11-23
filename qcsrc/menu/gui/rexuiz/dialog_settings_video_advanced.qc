@@ -102,9 +102,9 @@ void fillNexuizVideoSettingsAdvancedTab(entity me)
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "r_sky", _("Sky")));
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textlabel_make(0, _("Texture compression")));
-		me.TD(me, 1, 0.5, e = makeNexuizRadioButton(2, "gl_texturecompression", "0", _("None")));
-		me.TD(me, 1, 0.5, e = makeNexuizRadioButton(2, "gl_texturecompression", "1", _("Fast")));
-		me.TD(me, 1, 0.5, e = makeNexuizRadioButton(2, "gl_texturecompression", "2", _("Good")));
+		me.TD(me, 1, 0.5, e = gui_rexuiz_radiobutton_make(2, "gl_texturecompression", "0", _("None")));
+		me.TD(me, 1, 0.5, e = gui_rexuiz_radiobutton_make(2, "gl_texturecompression", "1", _("Fast")));
+		me.TD(me, 1, 0.5, e = gui_rexuiz_radiobutton_make(2, "gl_texturecompression", "2", _("Good")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "r_shadow_deferred", _("Deferred shadow")));
 	me.TR(me);

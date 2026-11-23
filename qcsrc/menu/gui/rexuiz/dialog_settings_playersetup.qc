@@ -166,7 +166,7 @@ void fillNexuizPlayerSettingsTab(entity me)
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(2, 16, 0.5, "cl_zoomfactor"));
 	me.TR(me);
 		sl = gui_rexuiz_slider_make(1, 8, 0.5, "cl_zoomspeed");
-		me.TD(me, 1, 1.25, e = makeNexuizSliderCheckBox(-1, 1, sl, _("Zoom speed:")));
+		me.TD(me, 1, 1.25, e = gui_rexuiz_checkbox_slider_make(-1, 1, sl, _("Zoom speed:")));
 		me.TD(me, 1, 2, sl);
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = gui_rexuiz_button_make(_("Weapon settings..."), '0 0 0'));

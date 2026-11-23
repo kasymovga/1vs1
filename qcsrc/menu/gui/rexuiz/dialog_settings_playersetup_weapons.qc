@@ -26,14 +26,14 @@ void(entity me) fillNexuizWeaponsDialog {
 		me.TD(me, 1, 2, gui_rexuiz_textlabel_make(0, _("Weapon priority list:")));
 	me.TR(me);
 		h0 = me.currentRow;
-		me.TD(me, h, 1.25, e = me.weaponsList = makeNexuizWeaponsList());
+		me.TD(me, h, 1.25, e = me.weaponsList = gui_rexuiz_weaponlist_make());
 	me.gotoRC(me, h0 + h / 2 - 1, 1.25);
 		me.TD(me, 1, 0.5, e = gui_rexuiz_button_make(_("Up"), '0 0 0'));
-				e.onClick = WeaponsList_MoveUp_Click;
+				e.onClick = gui_rexuiz_weaponlist_moveup_click;
 				e.onClickEntity = me.weaponsList;
 	me.gotoRC(me, h0 + h / 2, 1.25);
 		me.TD(me, 1, 0.5, e = gui_rexuiz_button_make(_("Down"), '0 0 0'));
-				e.onClick = WeaponsList_MoveDown_Click;
+				e.onClick = gui_rexuiz_weaponlist_movedown_click;
 				e.onClickEntity = me.weaponsList;
 	me.gotoRC(me, h0 + h, 0);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "cl_weaponpriority_useforcycling", _("Use priority list for weapon cycling")));

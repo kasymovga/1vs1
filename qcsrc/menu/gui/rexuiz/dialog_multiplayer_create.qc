@@ -44,7 +44,7 @@ void fillNexuizServerCreateTab(entity me)
 	for (i = GAME_TYPE_DEATHMATCH; i < GAME_TYPE_SINGLE; i++) {
 		if (mod(i - 1, n) == 0)
 				me.TR(me);
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, game_type_name(i), game_type_name_long(i)));
+		me.TD(me, 1, me.columns / n, e = gui_rexuiz_gametypebutton_make(1, game_type_name(i), game_type_name_long(i)));
 				if not(selected)
 				selected = e;
 				else if(e.checked)
@@ -91,11 +91,11 @@ void fillNexuizServerCreateTab(entity me)
 	}
 	me.TR(me);
 		me.sliderTimelimit = gui_rexuiz_slider_make(1.0, 60.0, 0.5, "g_timelimit");
-		me.TD(me, 1, 1, e = makeNexuizSliderCheckBox(0, 1, me.sliderTimelimit, _("Time limit:")));
+		me.TD(me, 1, 1, e = gui_rexuiz_checkbox_slider_make(0, 1, me.sliderTimelimit, _("Time limit:")));
 		me.TD(me, 1, 2, me.sliderTimelimit);
 	me.TR(me);
 		me.sliderFraglimit = gui_rexuiz_slider_make(1.0, 2000.0, 5, "g_scorelimit");
-		me.TD(me, 1, 1, e = makeNexuizSliderCheckBox(0, 1, me.sliderFraglimit, _("Point limit:")));
+		me.TD(me, 1, 1, e = gui_rexuiz_checkbox_slider_make(0, 1, me.sliderFraglimit, _("Point limit:")));
 				me.checkboxFraglimit = e;
 		me.TD(me, 1, 2, me.sliderFraglimit);
 	if not(me.isSinglePlayer) {

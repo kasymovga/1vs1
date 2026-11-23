@@ -13,5 +13,3 @@ void(entity) configureMainWindowMainWindow;
 .entity saveLoadDialog;
 .entity mainNexposee;
 .float fadedAlpha;
-
-/* Click. The c-word is here so you can grep for it :-) */

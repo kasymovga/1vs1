@@ -16,7 +16,7 @@ entity spawnMainWindow() {
 	me.classname = "MainWindow";
 	return me;
 }
-/* Click. The c-word is here so you can grep for it :-) */
+
 void configureMainWindowMainWindow(entity me)
 {
 	entity n, i;
@@ -53,7 +53,7 @@ void configureMainWindowMainWindow(entity me)
 	me.saveLoadDialog = i = gui_rexuiz_dialog_saveload_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	me.mainNexposee = n = spawnNexuizNexposee();
+	me.mainNexposee = n = gui_rexuiz_nexposee_spawn();
 		i = spawnNexuizSingleplayerDialog();
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -84,4 +84,3 @@ void configureMainWindowMainWindow(entity me)
 		me.showChild(me, me.languageDialog, '0 0 0', '1 1 0', 0);
 	}
 }
-/* Click. The c-word is here so you can grep for it :-) */

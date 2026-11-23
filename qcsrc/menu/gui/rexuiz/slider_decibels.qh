@@ -1,9 +1,6 @@
-entity spawnNexuizDecibelsSlider();
-void(entity) loadCvarsNexuizDecibelsSlider;
+entity(void) gui_rexuiz_slider_decibels_spawn;
 .void(entity) loadCvars;
-void(entity) saveCvarsNexuizDecibelsSlider;
 .void(entity) saveCvars;
-string(entity, float) valueToTextNexuizDecibelsSlider;
 .string(entity, float) valueToText;
 
-entity makeNexuizDecibelsSlider(float, float, float, string);
+entity(float theValueMin, float theValueMax, float theValueStep, string theCvar) gui_rexuiz_slider_decibels_make;
