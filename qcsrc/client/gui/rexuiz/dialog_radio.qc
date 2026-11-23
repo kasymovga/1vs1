@@ -1,6 +1,8 @@
-entity spawnNexuizRadioDialog() {
+void(entity me) gui_rexuiz_dialog_radio_fill;
+
+entity(void) gui_rexuiz_dialog_radio_spawn {
 	entity me = gui_rexuiz_rootdialog_spawn();
-	me.fill = fillNexuizRadioDialog; // to be overridden by user to fill the dialog with controls
+	me.fill = gui_rexuiz_dialog_radio_fill;
 	me.title = _("Radio");
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;
 	me.intendedWidth = 0.3;
@@ -10,8 +12,8 @@ entity spawnNexuizRadioDialog() {
 	me.classname = "NexuizRadioDialog";
 	return me;
 }
-void fillNexuizRadioDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_radio_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_commandbutton_make(_("On"), '0 1 0', "cmd radiotoggle 1;", 0));

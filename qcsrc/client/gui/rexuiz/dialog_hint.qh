@@ -1,6 +1,5 @@
-entity spawnNexuizHintDialog();
-void(entity) fillNexuizHintDialog;
-.void(entity) fill; // to be overridden by user to fill the dialog with controls
+entity(void) gui_rexuiz_dialog_hint_spawn;
+.void(entity) fill;
 void(entity) configureDialogNexuizHintDialog;
 .void(entity) configureDialog;
 .string title;

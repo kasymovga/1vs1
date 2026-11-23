@@ -1,6 +1,5 @@
-entity spawnNexuizRadioDialog();
-void(entity) fillNexuizRadioDialog;
-.void(entity) fill; // to be overridden by user to fill the dialog with controls
+entity(void) gui_rexuiz_dialog_radio_spawn;
+.void(entity) fill;
 .string title;
 .vector color;
 .float intendedWidth;

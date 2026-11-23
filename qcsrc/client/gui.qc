@@ -131,7 +131,7 @@ void GUI_Show(float window) {
 		gui_conwidth = CVAR(vid_conwidth);
 		gui_conheight = CVAR(vid_conheight);
 		gui_draw_reset();
-		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
+		mainWindow = gui_rexuiz_mainwindow_spawn(); mainWindow.configureMainWindow(mainWindow);
 		vector wh;
 		wh_x = gui_conwidth;
 		wh_y = gui_conheight;

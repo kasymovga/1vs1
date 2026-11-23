@@ -1,6 +1,8 @@
-entity spawnNexuizHintDialog() {
+void(entity me) gui_rexuiz_dialog_hint_fill;
+
+entity(void) gui_rexuiz_dialog_hint_spawn {
 	entity me = gui_rexuiz_rootdialog_spawn();
-	me.fill = fillNexuizHintDialog; // to be overridden by user to fill the dialog with controls
+	me.fill = gui_rexuiz_dialog_hint_fill;
 	me.configureDialog = configureDialogNexuizHintDialog;
 	me.title = "Hint";
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;
@@ -23,8 +25,8 @@ void(entity ignore, entity ignore2) prevNexuizHintDialog {
 void(entity ignore, entity ignore2) closeNexuizHintDialog {
 	GUI_Hide();
 }
-void fillNexuizHintDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_hint_fill {
 	entity e;
 	me.TR(me);
 		me.TDempty(me, 0.125);
@@ -45,3 +47,4 @@ void fillNexuizHintDialog(entity me)
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
 		e.onClick = closeNexuizHintDialog;
 }
+

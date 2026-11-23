@@ -1,5 +1,2 @@
-entity spawnMainWindow();
-void(entity) configureMainWindowMainWindow;
+entity(void) gui_rexuiz_mainwindow_spawn;
 .void(entity) configureMainWindow;
-
-/* Click. The c-word is here so you can grep for it :-) */

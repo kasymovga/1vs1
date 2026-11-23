@@ -1,6 +1,8 @@
-entity spawnNexuizMuteListDialog() {
+void(entity me) gui_rexuiz_dialog_mutelist_fill;
+
+entity(void) gui_rexuiz_dialog_mutelist_spawn {
 	entity me = gui_rexuiz_rootdialog_spawn();
-	me.fill = fillNexuizMuteListDialog; // to be overridden by user to fill the dialog with controls
+	me.fill = gui_rexuiz_dialog_mutelist_fill;
 	me.title = _("Mute list");
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;
 	me.intendedWidth = 0.8;
@@ -17,7 +19,8 @@ void muteMuteListDialog(entity btn, entity me) {
 void unmuteMuteListDialog(entity btn, entity me) {
 	mute_remove(btn.onClickEntity.selectedItem + 1);
 }
-void fillNexuizMuteListDialog(entity me) {
+
+void(entity me) gui_rexuiz_dialog_mutelist_fill {
 	entity e, list;
 	me.TR(me);
 		me.TD(me, 14, 10, list = makeNexuizMuteList());

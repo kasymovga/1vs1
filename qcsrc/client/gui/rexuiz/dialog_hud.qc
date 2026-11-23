@@ -1,6 +1,8 @@
-entity spawnNexuizHudDialog() {
+void(entity me) gui_rexuiz_dialog_hud_fill;
+
+entity(void) gui_rexuiz_dialog_hud_spawn {
 	entity me = gui_rexuiz_rootdialog_spawn();
-	me.fill = fillNexuizHudDialog; // to be overridden by user to fill the dialog with controls
+	me.fill = gui_rexuiz_dialog_hud_fill;
 	me.title = _("HUD selection");
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;
 	me.intendedWidth = 0.6;
@@ -32,7 +34,7 @@ void(entity me) saveCvarsUseRMHUDNexuizHudDialog {
 		rm_skin_load(cvar_string("cl_rm_skin"));
 	}
 }
-void(entity me) fillNexuizHudDialog {
+void(entity me) gui_rexuiz_dialog_hud_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Show radar:")));
