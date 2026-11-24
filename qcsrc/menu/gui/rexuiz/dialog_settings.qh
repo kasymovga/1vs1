@@ -1,9 +1,7 @@
-entity spawnNexuizSettingsDialog();
-void(entity) fillNexuizSettingsDialog;
+entity(void) gui_rexuiz_dialog_settings_spawn;
 .void(entity) fill;
 .string title;
 .vector color;
 .float intendedWidth;
 .float rows;
 .float columns;
-

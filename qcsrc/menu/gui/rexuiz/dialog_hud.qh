@@ -1,9 +1,9 @@
-entity spawnNexuizWinnerDialog();
-void(entity) fillNexuizWinnerDialog;
+entity(void) gui_rexuiz_dialog_hud_spawn;
+.string(entity) toString;
 .void(entity) fill;
+.void(entity) showNotify;
 .string title;
 .vector color;
 .float intendedWidth;
 .float rows;
 .float columns;
-

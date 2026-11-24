@@ -1,0 +1,7 @@
+entity(void) gui_rexuiz_dialog_winner_spawn;
+.void(entity) fill;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;

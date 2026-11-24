@@ -1,9 +1,7 @@
-entity spawnNexuizMultiplayerDialog();
-void(entity) fillNexuizMultiplayerDialog;
+entity(void) gui_rexuiz_dialog_multiplayer_spawn;
 .void(entity) fill;
 .string title;
 .vector color;
 .float intendedWidth;
 .float rows;
 .float columns;
-

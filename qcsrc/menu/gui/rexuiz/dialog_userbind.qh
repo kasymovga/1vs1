@@ -1,7 +1,5 @@
-entity spawnNexuizUserbindEditDialog();
-void(entity, string, string, string) loadUserBindNexuizUserbindEditDialog;
+entity(void) gui_rexuiz_dialog_userbind_spawn;
 .void(entity, string, string, string) loadUserBind;
-void(entity) fillNexuizUserbindEditDialog;
 .void(entity) fill;
 .string title;
 .vector color;
@@ -12,4 +10,3 @@ void(entity) fillNexuizUserbindEditDialog;
 .entity nameBox;
 .entity commandPressBox;
 .entity commandReleaseBox;
-

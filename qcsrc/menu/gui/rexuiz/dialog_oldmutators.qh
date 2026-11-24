@@ -1,0 +1,10 @@
+entity(void) gui_rexuiz_dialog_oldmutators_spawn;
+.string(entity) toString;
+.void(entity) fill;
+.void(entity) close;
+.string title;
+.vector color;
+.float intendedWidth;
+.float rows;
+.float columns;
+.entity refilterEntity;

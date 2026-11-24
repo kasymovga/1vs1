@@ -1,6 +1,9 @@
-entity spawnNexuizWinnerDialog() {
-	entity me; me = gui_rexuiz_dialog_spawn();
-	me.fill = fillNexuizWinnerDialog;
+void(entity me, entity button) gui_rexuiz_dialog_winner_close;
+void(entity me) gui_rexuiz_dialog_winner_fill;
+
+entity(void) gui_rexuiz_dialog_winner_spawn {
+	entity me = gui_rexuiz_dialog_spawn();
+	me.fill = gui_rexuiz_dialog_winner_fill;
 	me.title = _("Congratulations!");
 	me.color = SKINCOLOR_DIALOG_SINGLEPLAYER;
 	me.intendedWidth = 0.4;
@@ -9,13 +12,13 @@ entity spawnNexuizWinnerDialog() {
 	me.classname = "NexuizWinnerDialog";
 	return me;
 }
-void closeWinnderDialog(entity me, entity button)
-{
+
+void(entity me, entity button) gui_rexuiz_dialog_winner_close {
 	gui_dialog_close(me, button);
 	menu_goto("credits");
 }
-void fillNexuizWinnerDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_winner_fill {
 	entity e;
 	me.TR(me);
 		me.TDempty(me, 0.5);
@@ -26,6 +29,6 @@ void fillNexuizWinnerDialog(entity me)
 		e.allowWrap = 1;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("OK"), '0 0 0'));
-				e.onClick = closeWinnderDialog;
-				e.onClickEntity = me;
+			e.onClick = gui_rexuiz_dialog_winner_close;
+			e.onClickEntity = me;
 }

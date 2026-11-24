@@ -1,6 +1,8 @@
-entity spawnNexuizMultiplayerDialog() {
+void(entity me) gui_rexuiz_dialog_multiplayer_fill;
+
+entity(void) gui_rexuiz_dialog_multiplayer_spawn {
 	entity me; me = gui_rexuiz_dialog_spawn();
-	me.fill = fillNexuizMultiplayerDialog;
+	me.fill = gui_rexuiz_dialog_multiplayer_fill;
 	me.title = _("Multiplayer");
 	me.color = SKINCOLOR_DIALOG_MULTIPLAYER;
 	me.intendedWidth = 0.96;
@@ -9,15 +11,15 @@ entity spawnNexuizMultiplayerDialog() {
 	me.classname = "NexuizMultiplayerDialog";
 	return me;
 }
-void fillNexuizMultiplayerDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_multiplayer_fill {
 	entity mc, e;
 	mc = gui_rexuiz_tabcontroller_make(me.rows - 2);
 	me.TR(me);
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Servers"), makeNexuizServerListTab()));
-				//setDependentStringNotEqual(e, "_cl_name", "Player");
+			//setDependentStringNotEqual(e, "_cl_name", "Player");
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Create"), makeNexuizServerCreateTab(FALSE)));
-				//setDependentStringNotEqual(e, "_cl_name", "Player");
+			//setDependentStringNotEqual(e, "_cl_name", "Player");
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Demos"), makeNexuizDemoBrowserTab()));
 	me.TR(me);
 	me.TR(me);

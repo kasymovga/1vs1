@@ -1,8 +1,12 @@
-entity spawnNexuizWeaponsDialog() {
-	entity me; me = gui_rexuiz_dialog_spawn();
-	me.toString = toStringNexuizWeaponsDialog;
-	me.fill = fillNexuizWeaponsDialog;
-	me.showNotify = showNotifyNexuizWeaponsDialog;
+void(entity me) gui_rexuiz_dialog_weapons_show;
+string(entity me) gui_rexuiz_dialog_weapons_to_string;
+void(entity me) gui_rexuiz_dialog_weapons_fill;
+
+entity(void) gui_rexuiz_dialog_weapons_spawn {
+	entity me = gui_rexuiz_dialog_spawn();
+	me.toString = gui_rexuiz_dialog_weapons_to_string;
+	me.fill = gui_rexuiz_dialog_weapons_fill;
+	me.showNotify = gui_rexuiz_dialog_weapons_show;
 	me.title = _("Weapon settings");
 	me.color = SKINCOLOR_DIALOG_WEAPONS;
 	me.intendedWidth = 0.7;
@@ -12,13 +16,16 @@ entity spawnNexuizWeaponsDialog() {
 	me.classname = "NexuizWeaponsDialog";
 	return me;
 }
-void(entity me) showNotifyNexuizWeaponsDialog {
+
+void(entity me) gui_rexuiz_dialog_weapons_show {
 	gui_load_all_cvars(me);
 }
-string(entity me) toStringNexuizWeaponsDialog {
+
+string(entity me) gui_rexuiz_dialog_weapons_to_string {
 	return me.weaponsList.toString(me.weaponsList);
 }
-void(entity me) fillNexuizWeaponsDialog {
+
+void(entity me) gui_rexuiz_dialog_weapons_fill {
 	entity e;
 	float h0, h;
 	h = 8;
@@ -29,12 +36,12 @@ void(entity me) fillNexuizWeaponsDialog {
 		me.TD(me, h, 1.25, e = me.weaponsList = gui_rexuiz_weaponlist_make());
 	me.gotoRC(me, h0 + h / 2 - 1, 1.25);
 		me.TD(me, 1, 0.5, e = gui_rexuiz_button_make(_("Up"), '0 0 0'));
-				e.onClick = gui_rexuiz_weaponlist_moveup_click;
-				e.onClickEntity = me.weaponsList;
+			e.onClick = gui_rexuiz_weaponlist_moveup_click;
+			e.onClickEntity = me.weaponsList;
 	me.gotoRC(me, h0 + h / 2, 1.25);
 		me.TD(me, 1, 0.5, e = gui_rexuiz_button_make(_("Down"), '0 0 0'));
-				e.onClick = gui_rexuiz_weaponlist_movedown_click;
-				e.onClickEntity = me.weaponsList;
+			e.onClick = gui_rexuiz_weaponlist_movedown_click;
+			e.onClickEntity = me.weaponsList;
 	me.gotoRC(me, h0 + h, 0);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "cl_weaponpriority_useforcycling", _("Use priority list for weapon cycling")));
 	me.TR(me);
@@ -43,17 +50,17 @@ void(entity me) fillNexuizWeaponsDialog {
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "r_drawviewmodel", _("Draw 1st person weapon model")));
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textlabel_make(0, _("Weapon alpha:")));
-				gui_set_dependent(e, "r_drawviewmodel", 1, 1);
-				me.TD(me, 1, 2.5, e = gui_rexuiz_slider_make(0.05, 1, 0.05, "cl_gunalpha"));
-				gui_set_dependent(e, "r_drawviewmodel", 1, 1);
+			gui_set_dependent(e, "r_drawviewmodel", 1, 1);
+			me.TD(me, 1, 2.5, e = gui_rexuiz_slider_make(0.05, 1, 0.05, "cl_gunalpha"));
+			gui_set_dependent(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.5, gui_rexuiz_textlabel_make(0, _("Align:")));
 		me.TD(me, 1, 2.5, e = gui_rexuiz_textslider_make("cl_gunalign"));
-				e.addValue(e, "Right", "1");
-				e.addValue(e, "Left", "2");
-				e.addValue(e, "Center or Right", "3");
-				e.addValue(e, "Center or Left", "4");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, "Right", "1");
+			e.addValue(e, "Left", "2");
+			e.addValue(e, "Center or Right", "3");
+			e.addValue(e, "Center or Left", "4");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 1.5);
 		me.TD(me, 1, 2.5, e = gui_rexuiz_checkbox_make(0, "cl_gunalign_force_center", _("Force center position")));
@@ -67,61 +74,61 @@ void(entity me) fillNexuizWeaponsDialog {
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Laser:")));
 		me.TD(me, 1, 1, e = gui_rexuiz_textslider_make("cl_lasermodel"));
-				e.addValue(e, _("Default"), "0");
-				e.addValue(e, _("Xon"), "1");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Xon"), "1");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Shotgun:")));
 		me.TD(me, 1, 1, e = gui_rexuiz_textslider_make("cl_sgmodel"));
-				e.addValue(e, _("Default"), "0");
-				e.addValue(e, _("Nex23"), "-1");
-				e.addValue(e, _("Nex11"), "-2");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Nex23"), "-1");
+			e.addValue(e, _("Nex11"), "-2");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Uzi:")));
 		me.TD(me, 1, 1, e = gui_rexuiz_textslider_make("cl_uzimodel"));
-				e.addValue(e, _("Default"), "0");
-				e.addValue(e, _("Nex23"), "-1");
-				e.addValue(e, _("Nex11"), "-2");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Nex23"), "-1");
+			e.addValue(e, _("Nex11"), "-2");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Nex/Minstanex:")));
 		me.TD(me, 1, 1, e = gui_rexuiz_textslider_make("cl_oldnexmodel"));
-				e.addValue(e, _("Default"), "0");
-				e.addValue(e, _("Classic"), "1");
-				e.addValue(e, _("Nex11"), "2");
-				e.addValue(e, _("Xon"), "-1");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Classic"), "1");
+			e.addValue(e, _("Nex11"), "2");
+			e.addValue(e, _("Xon"), "-1");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Electro:")));
 		me.TD(me, 1, 1, e = gui_rexuiz_textslider_make("cl_electromodel"));
-				e.addValue(e, _("Default"), "0");
-				e.addValue(e, _("Nex23"), "-1");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Nex23"), "-1");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Rocket launcher:")));
 		me.TD(me, 1, 1, e = gui_rexuiz_textslider_make("cl_rlmodel"));
-				e.addValue(e, _("Default"), "0");
-				e.addValue(e, _("Nex23"), "-1");
-				e.addValue(e, _("QuaRL"), "2");
-				e.addValue(e, _("Xon"), "1");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Nex23"), "-1");
+			e.addValue(e, _("QuaRL"), "2");
+			e.addValue(e, _("Xon"), "1");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Grenade launcher:")));
 		me.TD(me, 1, 1, e = gui_rexuiz_textslider_make("cl_glmodel"));
-				e.addValue(e, _("Default"), "0");
-				e.addValue(e, _("Nex23"), "-1");
-				e.addValue(e, _("Xon"), "1");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Nex23"), "-1");
+			e.addValue(e, _("Xon"), "1");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Hagar:")));
 		me.TD(me, 1, 1, e = gui_rexuiz_textslider_make("cl_hagarmodel"));
-				e.addValue(e, _("Default"), "0");
-				e.addValue(e, _("Nex23"), "-1");
-				e.addValue(e, _("Xon"), "1");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Nex23"), "-1");
+			e.addValue(e, _("Xon"), "1");
+			e.configureNexuizTextSliderValues(e);
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("OK"), '0 0 0'));
-				e.onClick = gui_dialog_close;
-				e.onClickEntity = me;
+			e.onClick = gui_dialog_close;
+			e.onClickEntity = me;
 }

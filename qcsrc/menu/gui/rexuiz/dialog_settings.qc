@@ -1,6 +1,8 @@
-entity spawnNexuizSettingsDialog() {
+void(entity me) gui_rexuiz_dialog_settings_fill;
+
+entity(void) gui_rexuiz_dialog_settings_spawn {
 	entity me; me = gui_rexuiz_dialog_spawn();
-	me.fill = fillNexuizSettingsDialog;
+	me.fill = gui_rexuiz_dialog_settings_fill;
 	me.title = _("Settings");
 	me.color = SKINCOLOR_DIALOG_SETTINGS;
 	me.intendedWidth = 0.96;
@@ -9,14 +11,14 @@ entity spawnNexuizSettingsDialog() {
 	me.classname = "NexuizSettingsDialog";
 	return me;
 }
-void fillNexuizSettingsDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_settings_fill {
 	entity e;
 	entity mc;
 	mc = gui_rexuiz_tabcontroller_make(me.rows - 2);
 	me.TR(me);
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Game"), makeNexuizPlayerSettingsTab()));
-				if(cvar_string("_cl_name") == "Player")
+			if(cvar_string("_cl_name") == "Player")
 				e.onClick(e, e.onClickEntity); // lol animation
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Input"), makeNexuizInputSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Video"), makeNexuizVideoSettingsTab()));

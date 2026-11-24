@@ -1,7 +1,5 @@
-entity spawnNexuizServerInfoDialog();
-void(entity) fillNexuizServerInfoDialog;
+entity(void) gui_rexuiz_dialog_serverinfo_spawn;
 .void(entity) fill;
-void(entity, float) loadServerInfoNexuizServerInfoDialog;
 .void(entity, float) loadServerInfo;
 .string title;
 .vector color;
@@ -28,15 +26,3 @@ void(entity, float) loadServerInfoNexuizServerInfoDialog;
 .entity modLabel;
 .entity versionLabel;
 .entity pingLabel;
-
-float SLIST_FIELD_NAME;
-float SLIST_FIELD_CNAME;
-float SLIST_FIELD_QCSTATUS;
-float SLIST_FIELD_MAP;
-float SLIST_FIELD_PLAYERS;
-float SLIST_FIELD_NUMHUMANS;
-float SLIST_FIELD_MAXPLAYERS;
-float SLIST_FIELD_NUMBOTS;
-float SLIST_FIELD_MOD;
-float SLIST_FIELD_PING;
-void Join_Click(entity btn, entity me);

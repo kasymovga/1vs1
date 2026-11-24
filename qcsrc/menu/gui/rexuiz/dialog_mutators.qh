@@ -1,13 +1,11 @@
-entity spawnNexuizHUDDialog();
-string(entity) toStringNexuizHUDDialog;
+entity(void) gui_rexuiz_dialog_mutators_spawn;
 .string(entity) toString;
-void(entity) fillNexuizHUDDialog;
 .void(entity) fill;
-void(entity) showNotifyNexuizHUDDialog;
 .void(entity) showNotify;
 .string title;
 .vector color;
 .float intendedWidth;
 .float rows;
 .float columns;
-
+.entity currentProfile;
+.entity availableProfiles;

@@ -1,6 +1,8 @@
-entity spawnNexuizSingleplayerDialog() {
+void(entity me) gui_rexuiz_dialog_singleplayer_fill;
+
+entity(void) gui_rexuiz_dialog_singleplayer_spawn {
 	entity me; me = gui_rexuiz_dialog_spawn();
-	me.fill = fillNexuizSingleplayerDialog;
+	me.fill = gui_rexuiz_dialog_singleplayer_fill;
 	me.title = _("Singleplayer");
 	me.color = SKINCOLOR_DIALOG_SINGLEPLAYER;
 	me.intendedWidth = 0.80;
@@ -9,8 +11,8 @@ entity spawnNexuizSingleplayerDialog() {
 	me.classname = "NexuizSingleplayerDialog";
 	return me;
 }
-void fillNexuizSingleplayerDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_singleplayer_fill {
 	entity mc, e;
 	mc = gui_rexuiz_tabcontroller_make(me.rows - 2);
 	me.TR(me);

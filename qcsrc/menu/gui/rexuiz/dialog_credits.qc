@@ -1,7 +1,10 @@
-entity spawnNexuizCreditsDialog() {
+void(entity me) gui_rexuiz_dialog_credits_fill;
+void(entity me) gui_rexuiz_dialog_credits_focus_enter;
+
+entity(void) gui_rexuiz_dialog_credits_spawn {
 	entity me; me = gui_rexuiz_dialog_spawn();
-	me.fill = fillNexuizCreditsDialog;
-	me.focusEnter = focusEnterNexuizCreditsDialog;
+	me.fill = gui_rexuiz_dialog_credits_fill;
+	me.focusEnter = gui_rexuiz_dialog_credits_focus_enter;
 	me.title = _("Credits");
 	me.name = "credits";
 	me.color = SKINCOLOR_DIALOG_CREDITS;
@@ -12,8 +15,8 @@ entity spawnNexuizCreditsDialog() {
 	me.classname = "NexuizCreditsDialog";
 	return me;
 }
-void fillNexuizCreditsDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_credits_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, me.rows - 1, me.columns, me.creditsList = gui_rexuiz_credits_make());
@@ -22,7 +25,7 @@ void fillNexuizCreditsDialog(entity me)
 			e.onClick = gui_dialog_close;
 			e.onClickEntity = me;
 }
-void focusEnterNexuizCreditsDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_credits_focus_enter {
 	me.creditsList.scrolling = time + 1;
 }

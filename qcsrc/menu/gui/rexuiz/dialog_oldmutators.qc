@@ -1,9 +1,12 @@
-entity spawnNexuizOldMutatorsDialog() {
+string(entity me) gui_rexuiz_dialog_oldmutators_to_string;
+void(entity me) gui_rexuiz_dialog_oldmutators_fill;
+void(entity me) gui_rexuiz_dialog_oldmutators_close;
+
+entity(void) gui_rexuiz_dialog_oldmutators_spawn {
 	entity me; me = gui_rexuiz_dialog_spawn();
-	me.toString = toStringNexuizOldMutatorsDialog;
-	me.fill = fillNexuizOldMutatorsDialog;
-//	METHOD(NexuizOldMutatorsDialog, showNotify, void(entity))
-	me.close = closeNexuizOldMutatorsDialog;
+	me.toString = gui_rexuiz_dialog_oldmutators_to_string;
+	me.fill = gui_rexuiz_dialog_oldmutators_fill;
+	me.close = gui_rexuiz_dialog_oldmutators_close;
 	me.title = "Mutators";
 	me.color = SKINCOLOR_DIALOG_MUTATORS;
 	me.intendedWidth = 0.9;
@@ -13,10 +16,8 @@ entity spawnNexuizOldMutatorsDialog() {
 	me.classname = "NexuizOldMutatorsDialog";
 	return me;
 }
-void showNotifyNexuizOldMutatorsDialog(entity me) {
-	gui_load_all_cvars(me);
-}
-string toStringNexuizOldMutatorsDialog(entity me) {
+
+string(entity me) gui_rexuiz_dialog_oldmutators_to_string {
 	string s;
 	s = "";
 	if (cvar("g_minstagib")) s = strcat(s, ", MinstaGib");
@@ -30,7 +31,8 @@ string toStringNexuizOldMutatorsDialog(entity me) {
 	if (s == "") return "None";
 	else return str_sub(s, 2, strlen(s) - 2);
 }
-void fillNexuizOldMutatorsDialog(entity me) {
+
+void(entity me) gui_rexuiz_dialog_oldmutators_fill {
 	entity e, s;
 	me.TR(me);
 		me.TD(me, 1, 2, gui_rexuiz_textlabel_make(0, _("Gameplay mutators:")));
@@ -41,8 +43,8 @@ void fillNexuizOldMutatorsDialog(entity me) {
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.4, e = gui_rexuiz_textlabel_make(0, _("Gravity:")));
 		me.TD(me, 1, 0.4, s = gui_rexuiz_slider_make(80, 1600, 8, "g_gravity"));
-				s.valueDigits = 0;
-				s.valueDisplayMultiplier = 0.125; // show gravity in percent
+			s.valueDigits = 0;
+			s.valueDisplayMultiplier = 0.125; // show gravity in percent
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "g_runes", _("Runes")));
@@ -56,20 +58,20 @@ void fillNexuizOldMutatorsDialog(entity me) {
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "g_pinata", _("Pinata")));
 		me.TR(me);
-				me.TDempty(me, 0.4);
-				me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "g_pinata_drop_all", _("Drop all weapons")));
-				gui_set_dependent(e, "g_pinata", 0, -1);
+			me.TDempty(me, 0.4);
+			me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "g_pinata_drop_all", _("Drop all weapons")));
+			gui_set_dependent(e, "g_pinata", 0, -1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "g_pickup_items", _("Pickup items")));
 		me.TR(me);
-				me.TDempty(me, 0.4);
-				me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "g_pickup_weapons", _("Pickup weapons")));
-				gui_set_dependent(e, "g_pickup_items", 0, -1);
-				me.TR(me);
-				me.TDempty(me, 0.6);
-				me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make2(2, 0, "g_weapon_stay", _("Weapons stay")));
-				gui_set_dependent(e, "g_pickup_items", 0, -1);
+			me.TDempty(me, 0.4);
+			me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "g_pickup_weapons", _("Pickup weapons")));
+			gui_set_dependent(e, "g_pickup_items", 0, -1);
+			me.TR(me);
+			me.TDempty(me, 0.6);
+			me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make2(2, 0, "g_weapon_stay", _("Weapons stay")));
+			gui_set_dependent(e, "g_pickup_items", 0, -1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "g_use_ammunition", _("Use ammunition")));
@@ -80,10 +82,10 @@ void fillNexuizOldMutatorsDialog(entity me) {
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.6, e = gui_rexuiz_textlabel_make(0, _("Akimbo:")));
 		me.TD(me, 1, 0.6, s = gui_rexuiz_textslider_make("g_akimbo_weapons"));
-				s.addValue(s, _("None"), "none");
-				s.addValue(s, _("Laser"), "laser");
-				s.addValue(s, _("All"), "all");
-				s.configureNexuizTextSliderValues(s);
+			s.addValue(s, _("None"), "none");
+			s.addValue(s, _("Laser"), "laser");
+			s.addValue(s, _("All"), "all");
+			s.configureNexuizTextSliderValues(s);
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 4, gui_rexuiz_textlabel_make(0, _("Start weapons:")));
 	me.TR(me);
@@ -161,11 +163,12 @@ void fillNexuizOldMutatorsDialog(entity me) {
 		gui_set_dependent(s, "g_use_ammunition", 0, -1);
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make("OK", '0 0 0'));
-				e.onClick = gui_dialog_close;
-				e.onClickEntity = me;
+			e.onClick = gui_dialog_close;
+			e.onClickEntity = me;
 }
-void closeNexuizOldMutatorsDialog(entity me) {
+void(entity me) gui_rexuiz_dialog_oldmutators_close {
 	if (me.refilterEntity)
 		me.refilterEntity.refilter(me.refilterEntity);
+
 	closeDialog(me);
 }

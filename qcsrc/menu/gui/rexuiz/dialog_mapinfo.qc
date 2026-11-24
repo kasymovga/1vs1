@@ -1,7 +1,10 @@
-entity spawnNexuizMapInfoDialog() {
+void(entity me, float i, entity mlb) gui_rexuiz_dialog_mapinfo_load;
+void(entity me) gui_rexuiz_dialog_mapinfo_fill;
+
+entity(void) gui_rexuiz_dialog_mapinfo_spawn {
 	entity me; me = gui_rexuiz_dialog_spawn();
-	me.fill = fillNexuizMapInfoDialog;
-	me.loadMapInfo = loadMapInfoNexuizMapInfoDialog;
+	me.fill = gui_rexuiz_dialog_mapinfo_fill;
+	me.loadMapInfo = gui_rexuiz_dialog_mapinfo_load;
 	me.title = _("Map Information");
 	me.color = SKINCOLOR_DIALOG_MAPINFO;
 	me.intendedWidth = 0.85;
@@ -24,8 +27,8 @@ entity spawnNexuizMapInfoDialog() {
 	me.classname = "NexuizMapInfoDialog";
 	return me;
 }
-void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
-{
+
+void(entity me, float i, entity mlb) gui_rexuiz_dialog_mapinfo_load {
 	me.currentMapIndex = i;
 	me.startButton.onClickEntity = mlb;
 	map_info_get_by_id(i);
@@ -56,8 +59,8 @@ void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
 	}
 	map_info_clear_temps();
 }
-void fillNexuizMapInfoDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_mapinfo_fill {
 	entity e;
 	float w;
 	me.TR(me);
@@ -68,43 +71,43 @@ void fillNexuizMapInfoDialog(entity me)
 	w = me.columns - me.currentColumn;
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Title:")));
 		me.TD(me, 1, w-1, e = gui_rexuiz_textlabel_make(0, ""));
-				e.colorL = SKINCOLOR_MAPLIST_TITLE;
-				e.allowCut = 1;
-				me.titleLabel = e;
+			e.colorL = SKINCOLOR_MAPLIST_TITLE;
+			e.allowCut = 1;
+			me.titleLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Author:")));
 		me.TD(me, 1, w-1, e = gui_rexuiz_textlabel_make(0, ""));
-				e.colorL = SKINCOLOR_MAPLIST_AUTHOR;
-				e.allowCut = 1;
-				me.authorLabel = e;
+			e.colorL = SKINCOLOR_MAPLIST_AUTHOR;
+			e.allowCut = 1;
+			me.authorLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Features:")));
 		me.TD(me, 1, w-1, e = gui_rexuiz_textlabel_make(0, ""));
-				e.allowCut = 1;
-				me.featuresLabel = e;
+			e.allowCut = 1;
+			me.featuresLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Game types:")));
 		float i;
 		e = me;
 		for (i = GAME_TYPE_DEATHMATCH; i < GAME_TYPE_SINGLE; i++) {
-				me.TD(me, 1, 2, e.typeLabelNext = gui_rexuiz_textlabel_make(0, game_type_name_long(i)));
-				e = e.typeLabelNext;
-				if not(mod(i, 2)) {
+			me.TD(me, 1, 2, e.typeLabelNext = gui_rexuiz_textlabel_make(0, game_type_name_long(i)));
+			e = e.typeLabelNext;
+			if not(mod(i, 2)) {
 				me.TR(me);
 				me.TDempty(me, 1);
-				}
+			}
 		}
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_textlabel_make(0.5, ""));
-				e.allowCut = 1;
-				me.descriptionLabel = e;
+			e.allowCut = 1;
+			me.descriptionLabel = e;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, me.columns - 5.5, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
-				e.onClick = gui_dialog_close;
-				e.onClickEntity = me;
+			e.onClick = gui_dialog_close;
+			e.onClickEntity = me;
 		me.TD(me, 1, me.columns - 5.5, me.startButton = e = gui_rexuiz_button_make(_("Play"), '0 0 0'));
-				me.startButton.onClick = MapList_LoadMap;
-				me.startButton.onClickEntity = NULL; // filled later
+			me.startButton.onClick = gui_rexuiz_maplist_start;
+			me.startButton.onClickEntity = NULL; // filled later
 		me.TDempty(me, 0.5);
 }

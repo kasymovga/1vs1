@@ -1,7 +1,5 @@
-entity spawnNexuizCreditsDialog();
-void(entity) fillNexuizCreditsDialog;
+entity(void) gui_rexuiz_dialog_credits_spawn;
 .void(entity) fill;
-void(entity) focusEnterNexuizCreditsDialog;
 .void(entity) focusEnter;
 .string title;
 .string name;
@@ -10,4 +8,3 @@ void(entity) focusEnterNexuizCreditsDialog;
 .float rows;
 .float columns;
 .entity creditsList;
-

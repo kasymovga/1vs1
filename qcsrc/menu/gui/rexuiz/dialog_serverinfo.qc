@@ -1,7 +1,10 @@
-entity spawnNexuizServerInfoDialog() {
-	entity me; me = gui_rexuiz_dialog_spawn();
-	me.fill = fillNexuizServerInfoDialog;
-	me.loadServerInfo = loadServerInfoNexuizServerInfoDialog;
+void(entity me, float i) gui_rexuiz_dialog_serverinfo_load;
+void(entity me) gui_rexuiz_dialog_serverinfo_fill;
+
+entity(void) gui_rexuiz_dialog_serverinfo_spawn {
+	entity me = gui_rexuiz_dialog_spawn();
+	me.fill = gui_rexuiz_dialog_serverinfo_fill;
+	me.loadServerInfo = gui_rexuiz_dialog_serverinfo_load;
 	me.title = _("Server Information");
 	me.color = SKINCOLOR_DIALOG_SERVERINFO;
 	me.intendedWidth = 0.68;
@@ -30,6 +33,7 @@ entity spawnNexuizServerInfoDialog() {
 	me.classname = "NexuizServerInfoDialog";
 	return me;
 }
+
 float SLIST_FIELD_NAME;
 float SLIST_FIELD_CNAME;
 float SLIST_FIELD_QCSTATUS;
@@ -40,9 +44,8 @@ float SLIST_FIELD_MAXPLAYERS;
 float SLIST_FIELD_NUMBOTS;
 float SLIST_FIELD_MOD;
 float SLIST_FIELD_PING;
-void Join_Click(entity btn, entity me);
-void loadServerInfoNexuizServerInfoDialog(entity me, float i)
-{
+
+void(entity me, float i) gui_rexuiz_dialog_serverinfo_load {
 	float m;
 	string s, typestr, versionstr, numh, maxp;
 	SLIST_FIELD_NAME = gethostcacheindexforkey("name");
@@ -54,13 +57,10 @@ void loadServerInfoNexuizServerInfoDialog(entity me, float i)
 	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey("qcstatus");
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	m = tokenizebyseparator(s, ":");
-	if(m > 1)
-	{
+	if (m > 1) {
 		typestr = argv (0);
 		versionstr = argv(1);
-	}
-	else
-	{
+	} else {
 		typestr = _("N/A");
 		versionstr = _("N/A");
 	}
@@ -92,70 +92,70 @@ void loadServerInfoNexuizServerInfoDialog(entity me, float i)
 	me.currentServerPing = str_zone_ifneeded(s);
 	me.pingLabel.setText(me.pingLabel, me.currentServerPing);
 }
-void fillNexuizServerInfoDialog(entity me)
-{
+
+void(entity btn, entity me) gui_rexuiz_dialog_serverinfo_join_click {
+	localcmd("connect ", me.currentServerCName, "\n");
+}
+
+void(entity me) gui_rexuiz_dialog_serverinfo_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_textlabel_make(0.5, ""));
-				e.colorL = SKINCOLOR_SERVERINFO_NAME;
-				e.allowCut = 1;
-				me.nameLabel = e;
+			e.colorL = SKINCOLOR_SERVERINFO_NAME;
+			e.allowCut = 1;
+			me.nameLabel = e;
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_textlabel_make(0.5, ""));
-				e.colorL = SKINCOLOR_SERVERINFO_IP;
-				e.allowCut = 1;
-				me.cnameLabel = e;
+			e.colorL = SKINCOLOR_SERVERINFO_IP;
+			e.allowCut = 1;
+			me.cnameLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 5.5, e = gui_rexuiz_textlabel_make(0, _("Players:")));
 	me.TR(me);
 		me.TD(me, me.rows - 4, 6, e = gui_rexuiz_playerlist_make());
-				e.nexuizFont = TRUE;
-				me.rawPlayerList = e;
+			e.nexuizFont = TRUE;
+			me.rawPlayerList = e;
 	me.gotoRC(me, 1, 6.25); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 1.75, e = gui_rexuiz_textlabel_make(0, _("Type:")));
 		me.TD(me, 1, 4.0, e = gui_rexuiz_textlabel_make(0, ""));
-				e.allowCut = 1;
-				me.typeLabel = e;
+			e.allowCut = 1;
+			me.typeLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1.75, e = gui_rexuiz_textlabel_make(0, _("Map:")));
 		me.TD(me, 1, 4.0, e = gui_rexuiz_textlabel_make(0, ""));
-				e.allowCut = 1;
-				me.mapLabel = e;
+			e.allowCut = 1;
+			me.mapLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1.75, e = gui_rexuiz_textlabel_make(0, _("Players:")));
 		me.TD(me, 1, 4.0, e = gui_rexuiz_textlabel_make(0, ""));
-				e.allowCut = 1;
-				me.numPlayersLabel = e;
+			e.allowCut = 1;
+			me.numPlayersLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1.75, e = gui_rexuiz_textlabel_make(0, _("Bots:")));
 		me.TD(me, 1, 4.0, e = gui_rexuiz_textlabel_make(0, ""));
-				e.allowCut = 1;
-				me.numBotsLabel = e;
+			e.allowCut = 1;
+			me.numBotsLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1.75, e = gui_rexuiz_textlabel_make(0, _("Mod:")));
 		me.TD(me, 1, 4.0, e = gui_rexuiz_textlabel_make(0, ""));
-				e.allowCut = 1;
-				me.modLabel = e;
+			e.allowCut = 1;
+			me.modLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1.75, e = gui_rexuiz_textlabel_make(0, _("Version:")));
 		me.TD(me, 1, 4.0, e = gui_rexuiz_textlabel_make(0, ""));
-				e.allowCut = 1;
-				me.versionLabel = e;
+			e.allowCut = 1;
+			me.versionLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1.75, e = gui_rexuiz_textlabel_make(0, _("Ping:")));
 		me.TD(me, 1, 4.0, e = gui_rexuiz_textlabel_make(0, ""));
-				e.allowCut = 1;
-				me.pingLabel = e;
+			e.allowCut = 1;
+			me.pingLabel = e;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns - 6, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
-				e.onClick = gui_dialog_close;
-				e.onClickEntity = me;
+			e.onClick = gui_dialog_close;
+			e.onClickEntity = me;
 		me.TD(me, 1, me.columns - 6, e = gui_rexuiz_button_make(_("Join!"), '0 0 0'));
-				e.onClick = Join_Click;
-				e.onClickEntity = me;
-}
-void Join_Click(entity btn, entity me)
-{
-	localcmd("connect ", me.currentServerCName, "\n");
+			e.onClick = gui_rexuiz_dialog_serverinfo_join_click;
+			e.onClickEntity = me;
 }

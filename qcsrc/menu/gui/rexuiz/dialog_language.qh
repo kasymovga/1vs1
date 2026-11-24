@@ -1,9 +1,7 @@
-entity spawnNexuizLanguageDialog();
-void(entity) fillNexuizLanguageDialog;
+entity(void) gui_rexuiz_dialog_language_spawn;
 .void(entity) fill;
 .string title;
 .vector color;
 .float intendedWidth;
 .float rows;
 .float columns;
-

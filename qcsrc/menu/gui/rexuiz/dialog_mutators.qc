@@ -1,8 +1,12 @@
-entity spawnNexuizMutatorsDialog() {
-	entity me; me = gui_rexuiz_dialog_spawn();
-	me.toString = toStringNexuizMutatorsDialog;
-	me.fill = fillNexuizMutatorsDialog;
-	me.showNotify = showNotifyNexuizMutatorsDialog;
+void(entity me) gui_rexuiz_dialog_mutators_show;
+string(entity me) gui_rexuiz_dialog_mutators_to_string;
+void(entity me) gui_rexuiz_dialog_mutators_fill;
+
+entity(void) gui_rexuiz_dialog_mutators_spawn {
+	entity me = gui_rexuiz_dialog_spawn();
+	me.toString = gui_rexuiz_dialog_mutators_to_string;
+	me.fill = gui_rexuiz_dialog_mutators_fill;
+	me.showNotify = gui_rexuiz_dialog_mutators_show;
 	me.title = _("Mutators");
 	me.color = SKINCOLOR_DIALOG_MUTATORS;
 	me.intendedWidth = 0.5;
@@ -13,10 +17,12 @@ entity spawnNexuizMutatorsDialog() {
 	me.classname = "NexuizMutatorsDialog";
 	return me;
 }
-void showNotifyNexuizMutatorsDialog(entity me) {
+
+void(entity me) gui_rexuiz_dialog_mutators_show {
 	gui_load_all_cvars(me);
 }
-string profileDescriptionNexuizMutatorsDialog(string profile_name) {
+
+string(string profile_name) gui_rexuiz_dialog_mutators_profile_description {
 	if (profile_name == "") return "Default";
 	if (strstrofs(profile_name, " ", 0) >= 0)
 		return profile_name;
@@ -26,10 +32,12 @@ string profileDescriptionNexuizMutatorsDialog(string profile_name) {
 	}
 	return profile_name;
 }
-string(entity me) toStringNexuizMutatorsDialog {
-	return profileDescriptionNexuizMutatorsDialog(cvar_string("g_profile"));
+
+string(entity me) gui_rexuiz_dialog_mutators_to_string {
+	return gui_rexuiz_dialog_mutators_profile_description(cvar_string("g_profile"));
 }
-void(entity btn, entity me) addClickNexuizMutatorsDialog {
+
+void(entity btn, entity me) gui_rexuiz_dialog_mutators_add_click {
 	if (me.currentProfile.nItems >= GUI_REXUIZ_PROFILELIST_MAX) {
 		print("Too much profiles\n");
 		return;
@@ -54,7 +62,8 @@ void(entity btn, entity me) addClickNexuizMutatorsDialog {
 	me.currentProfile.loadCvars(me.currentProfile);
 	me.availableProfiles.loadCvars(me.availableProfiles);
 }
-void(entity btn, entity me) removeClickNexuizMutatorsDialog {
+
+void(entity btn, entity me) gui_rexuiz_dialog_mutators_remove_click {
 	if (me.currentProfile.nItems <= 0) return;
 	string s = me.currentProfile.toString(me.currentProfile);
 	string profile = cvar_string("g_profile");
@@ -67,7 +76,8 @@ void(entity btn, entity me) removeClickNexuizMutatorsDialog {
 	me.currentProfile.loadCvars(me.currentProfile);
 	me.availableProfiles.loadCvars(me.availableProfiles);
 }
-void fillNexuizMutatorsDialog(entity me) {
+
+void(entity me) gui_rexuiz_dialog_mutators_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 2, gui_rexuiz_textlabel_make(0, _("Gameplay mutators:")));
@@ -84,12 +94,12 @@ void fillNexuizMutatorsDialog(entity me) {
 	me.TR(me);
 		me.TDempty(me, 1.8);
 		me.TD(me, 1, 0.4, e = gui_rexuiz_button_make(_(">>"), '0 0 0'));
-		e.onClick = addClickNexuizMutatorsDialog;
+		e.onClick = gui_rexuiz_dialog_mutators_add_click;
 		e.onClickEntity = me;
 	me.TR(me);
 		me.TDempty(me, 1.8);
 		me.TD(me, 1, 0.4, e = gui_rexuiz_button_make(_("<<"), '0 0 0'));
-		e.onClick = removeClickNexuizMutatorsDialog;
+		e.onClick = gui_rexuiz_dialog_mutators_remove_click;
 		e.onClickEntity = me;
 	me.gotoRC(me, me.rows - 1, 0);
 	me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("OK"), '0 0 0'));

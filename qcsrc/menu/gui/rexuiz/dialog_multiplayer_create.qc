@@ -57,7 +57,7 @@ void fillNexuizServerCreateTab(entity me)
 	}
 	me.TR(me);
 	me.TR(me);
-		me.mapListBox = makeNexuizMapList(me.isSinglePlayer);
+		me.mapListBox = gui_rexuiz_maplist_make(me.isSinglePlayer);
 		me.TD(me, 1, 3, e = gui_rexuiz_textlabel_make(0, _("Map list:")));
 				gui_make_callback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
@@ -65,10 +65,10 @@ void fillNexuizServerCreateTab(entity me)
 	me.gotoRC(me, me.rows - 3, 0);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("All"), '0 0 0'));
-				e.onClick = MapList_All;
+				e.onClick = gui_rexuiz_maplist_all;
 				e.onClickEntity = me.mapListBox;
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("None"), '0 0 0'));
-				e.onClick = MapList_None;
+				e.onClick = gui_rexuiz_maplist_none;
 				e.onClickEntity = me.mapListBox;
 	me.gotoRC(me, 4, 3.5); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
@@ -157,7 +157,7 @@ void fillNexuizServerCreateTab(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		//me.TD(me, 1, 2, e = makeNexuizModButton("Multiplayer_Create"));
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make((me.isSinglePlayer ? _("Start Game!") : _("Start Multiplayer!")), '0 0 0'));
-				e.onClick = MapList_LoadMap;
+				e.onClick = gui_rexuiz_maplist_start;
 				e.onClickEntity = me.mapListBox;
 				me.mapListBox.startButton = e;
 	me.gameTypeChangeNotify(me);

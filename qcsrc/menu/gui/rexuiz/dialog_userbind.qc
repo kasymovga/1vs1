@@ -1,7 +1,10 @@
-entity spawnNexuizUserbindEditDialog() {
-	entity me; me = gui_rexuiz_dialog_spawn();
-	me.loadUserBind = loadUserBindNexuizUserbindEditDialog;
-	me.fill = fillNexuizUserbindEditDialog;
+void(entity me, string theName, string theCommandPress, string theCommandRelease) gui_rexuiz_dialog_userbind_load;
+void(entity me) gui_rexuiz_dialog_userbind_fill;
+
+entity(void) gui_rexuiz_dialog_userbind_spawn {
+	entity me = gui_rexuiz_dialog_spawn();
+	me.loadUserBind = gui_rexuiz_dialog_userbind_load;
+	me.fill = gui_rexuiz_dialog_userbind_fill;
 	me.title = _("User defined key bind");
 	me.color = SKINCOLOR_DIALOG_USERBIND;
 	me.intendedWidth = 0.7;
@@ -14,22 +17,22 @@ entity spawnNexuizUserbindEditDialog() {
 	me.classname = "NexuizUserbindEditDialog";
 	return me;
 }
-void NexuizUserbindEditDialog_Save(entity btn, entity me)
-{
+
+void(entity btn, entity me) gui_rexuiz_dialog_userbind_save_click {
 	me.keybindBox.editUserbind(me.keybindBox, me.nameBox.text, me.commandPressBox.text, me.commandReleaseBox.text);
 	gui_dialog_close(btn, me);
 }
-void loadUserBindNexuizUserbindEditDialog(entity me, string theName, string theCommandPress, string theCommandRelease)
-{
+
+void(entity me, string theName, string theCommandPress, string theCommandRelease) gui_rexuiz_dialog_userbind_load {
 	me.nameBox.setText(me.nameBox, theName);
-		me.nameBox.keyDown(me.nameBox, VM_K_END, 0, 0);
+	me.nameBox.keyDown(me.nameBox, VM_K_END, 0, 0);
 	me.commandPressBox.setText(me.commandPressBox, theCommandPress);
-		me.nameBox.keyDown(me.commandPressBox, VM_K_END, 0, 0);
+	me.nameBox.keyDown(me.commandPressBox, VM_K_END, 0, 0);
 	me.commandReleaseBox.setText(me.commandReleaseBox, theCommandRelease);
-		me.nameBox.keyDown(me.commandReleaseBox, VM_K_END, 0, 0);
+	me.nameBox.keyDown(me.commandReleaseBox, VM_K_END, 0, 0);
 }
-void fillNexuizUserbindEditDialog(entity me)
-{
+
+void(entity me) gui_rexuiz_dialog_userbind_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Name:")));
@@ -42,9 +45,9 @@ void fillNexuizUserbindEditDialog(entity me)
 		me.TD(me, 1, me.columns - 1, me.commandReleaseBox = gui_rexuiz_inputbox_make(0, NULL));
 	me.TR(me);
 		me.TD(me, 1, me.columns / 2, e = gui_rexuiz_button_make(_("Save"), '0 0 0'));
-				e.onClick = NexuizUserbindEditDialog_Save;
-				e.onClickEntity = me;
+			e.onClick = gui_rexuiz_dialog_userbind_save_click;
+			e.onClickEntity = me;
 		me.TD(me, 1, me.columns / 2, e = gui_rexuiz_button_make(_("Cancel"), '0 0 0'));
-				e.onClick = gui_dialog_close;
-				e.onClickEntity = me;
+			e.onClick = gui_dialog_close;
+			e.onClickEntity = me;
 }
