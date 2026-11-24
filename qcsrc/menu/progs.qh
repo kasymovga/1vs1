@@ -53,7 +53,7 @@
 #include "gui/rexuiz/demolist.qh"
 #include "gui/rexuiz/colorpicker.qh"
 #include "gui/rexuiz/cvarlist.qh"
-#include "gui/rexuiz/availableprofileslist.qh"
+#include "gui/rexuiz/availableprofiles.qh"
 #include "gui/rexuiz/profilelist.qh"
 #include "curl.qh"
 #include "dlc.qh"

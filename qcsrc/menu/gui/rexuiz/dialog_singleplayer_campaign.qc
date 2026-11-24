@@ -43,7 +43,7 @@ void fillNexuizCampaignTab(entity me) {
 		e = addCampaign(me, e, _("Single Player (Demo)"), "spdemo");
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, me.rows - 6, me.columns, me.campaignBox = makeNexuizCampaignList());
+		me.TD(me, me.rows - 6, me.columns, me.campaignBox = gui_rexuiz_campaign_make());
 	me.gotoRC(me, me.rows - 4, 0);
 		me.TD(me, 1, 0.5, gui_rexuiz_textlabel_make(0, _("Difficulty:")));
 	me.TR(me);
@@ -58,6 +58,6 @@ void fillNexuizCampaignTab(entity me) {
 	switchTo(me.btnGame, me);
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns , e = gui_rexuiz_button_make(_("Start Game!"), '0 0 0'));
-				e.onClick = CampaignList_LoadMap;
+				e.onClick = gui_rexuiz_campaign_map_load;
 				e.onClickEntity = me.campaignBox;
 }

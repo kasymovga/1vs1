@@ -1,9 +1,6 @@
-entity spawnNexuizColorButton();
-void(entity, float, float, float) configureNexuizColorButtonNexuizColorButton;
+entity(void) gui_rexuiz_colorbutton_spawn;
 .void(entity, float, float, float) configureNexuizColorButton;
-void(entity, float) setCheckedNexuizColorButton;
 .void(entity, float) setChecked;
-void(entity) drawNexuizColorButton;
 .void(entity) draw;
 .float fontSize;
 .string image;
@@ -12,9 +9,7 @@ void(entity) drawNexuizColorButton;
 .float cvarPart;
 .string cvarName;
 .float cvarValueFloat;
-void(entity) loadCvarsNexuizColorButton;
 .void(entity) loadCvars;
-void(entity) saveCvarsNexuizColorButton;
 .void(entity) saveCvars;
 
-entity makeNexuizColorButton(float, float, float);
+entity(float theGroup, float theColor, float theValue) gui_rexuiz_colorbutton_make;

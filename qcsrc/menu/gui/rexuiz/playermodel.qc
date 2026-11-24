@@ -1,17 +1,24 @@
-entity spawnNexuizPlayerModelSelector() {
+void(entity me) gui_rexuiz_playermodel_configure;
+void(entity me) gui_rexuiz_playermodel_load;
+void(entity me, float d) gui_rexuiz_playermodel_go;
+void(entity me) gui_rexuiz_playermodel_save;
+void(entity me) gui_rexuiz_playermodel_draw;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_playermodel_resize;
+
+entity(void) gui_rexuiz_playermodel_spawn {
 	entity me = gui_rexuiz_image_spawn();
-	me.configureNexuizPlayerModelSelector = configureNexuizPlayerModelSelectorNexuizPlayerModelSelector;
-	me.loadCvars = loadCvarsNexuizPlayerModelSelector;
-	me.saveCvars = saveCvarsNexuizPlayerModelSelector;
-	me.draw = drawNexuizPlayerModelSelector;
-	me.resizeNotify = resizeNotifyNexuizPlayerModelSelector;
+	me.configureNexuizPlayerModelSelector = gui_rexuiz_playermodel_configure;
+	me.loadCvars = gui_rexuiz_playermodel_load;
+	me.saveCvars = gui_rexuiz_playermodel_save;
+	me.draw = gui_rexuiz_playermodel_draw;
+	me.resizeNotify = gui_rexuiz_playermodel_resize;
 	me.currentModel = NULL;
 	me.currentSkin = 0;
 	me.currentModelImage = NULL;
 	me.currentModelTitle = NULL;
 	me.currentModelTxtName = NULL;
 	me.currentModelDescription = NULL;
-	me.go = goNexuizPlayerModelSelector;
+	me.go = gui_rexuiz_playermodel_go;
 	me.origin = '0 0 0';
 	me.size = '0 0 0';
 	me.realFontSize = '0 0 0';
@@ -20,22 +27,19 @@ entity spawnNexuizPlayerModelSelector() {
 	me.classname = "NexuizPlayerModelSelector";
 	return me;
 }
-entity makeNexuizPlayerModelSelector();
-void PlayerModelSelector_Next_Click(entity btn, entity me);
-void PlayerModelSelector_Prev_Click(entity btn, entity me);
-entity makeNexuizPlayerModelSelector()
-{
-	entity me;
-	me = spawnNexuizPlayerModelSelector();
+
+entity(void) gui_rexuiz_playermodel_make {
+	entity me = gui_rexuiz_playermodel_spawn();
 	me.configureNexuizPlayerModelSelector(me);
 	return me;
 }
-void configureNexuizPlayerModelSelectorNexuizPlayerModelSelector(entity me)
-{
+
+void(entity me) gui_rexuiz_playermodel_configure {
 	me.configureNexuizImage(me, NULL, 263.0/360.0);
 	me.loadCvars(me);
 }
-string findImageNexuizPlayerModelSelector(string s) {
+
+string(string s) gui_rexuiz_playermodel_image_find {
 	if not(file_exists(strcat(s, ".jpg")))
 	if not(file_exists(strcat(s, ".png")))
 	if not(file_exists(strcat(s, ".tga"))) {
@@ -43,7 +47,8 @@ string findImageNexuizPlayerModelSelector(string s) {
 	}
 	return s;
 }
-void loadCvarsNexuizPlayerModelSelector(entity me) {
+
+void(entity me) gui_rexuiz_playermodel_load {
 	float glob, i, fh;
 	string fn;
 	string nm, t, l;
@@ -66,16 +71,18 @@ void loadCvarsNexuizPlayerModelSelector(entity me) {
 	glob = search_begin("models/player/*.txt", TRUE, TRUE);
 	if (glob < 0)
 		return;
+
 	for (i = 0; i < search_getsize(glob); ++i) {
 		fn = search_getfilename(glob, i);
 		fh = fopen(fn, FILE_READ);
 		if (fh < 0)
 				continue;
+
 		t = fgets(fh);
 		nm = fgets(fh);
 		if (stof(fgets(fh)) == me.currentSkin)
 		if (fgets(fh) == me.currentModel) {
-				me.currentModelImage = str_zone_ifneeded(strcat("/", findImageNexuizPlayerModelSelector(nm)));
+				me.currentModelImage = str_zone_ifneeded(strcat("/", gui_rexuiz_playermodel_image_find(nm)));
 				me.currentModelTxtName = str_zone_ifneeded(fn);
 				me.currentModelTitle = str_zone_ifneeded(t);
 				me.currentModelDescription = "";
@@ -93,21 +100,24 @@ void loadCvarsNexuizPlayerModelSelector(entity me) {
 	}
 	search_end(glob);
 }
-void goNexuizPlayerModelSelector(entity me, float d) {
+
+void(entity me, float d) gui_rexuiz_playermodel_go {
 	float glob, i, fh;
 	string l;
 	glob = search_begin("models/player/*.txt", TRUE, TRUE);
 	if (glob < 0)
 		return;
+
 	for (i = 0; i < search_getsize(glob); ++i)
 		if (search_getfilename(glob, i) == me.currentModelTxtName)
-				break;
+			break;
+
 	// now i is search_getsize(glob) if not found, and the right index if found.
 	if (i == search_getsize(glob)) {
 		if (d < 0)
-				i = search_getsize(glob) - 1;
+			i = search_getsize(glob) - 1;
 		else
-				i = 0;
+			i = 0;
 	} else {
 		i = mod(i + d + search_getsize(glob), search_getsize(glob));
 	}
@@ -122,25 +132,25 @@ void goNexuizPlayerModelSelector(entity me, float d) {
 		txtname = search_getfilename(glob, i);
 		fh = fopen(txtname, FILE_READ);
 		if (fh < 0) {
-				i = mod(i + d + search_getsize(glob), search_getsize(glob));
-				if (i == startedfrom) {
+			i = mod(i + d + search_getsize(glob), search_getsize(glob));
+			if (i == startedfrom) {
 				search_end(glob);
 				return; // nothing found
-				}
-				continue;
+			}
+			continue;
 		}
 		modeltitle = fgets(fh);
-		modelimage = strcat("/", findImageNexuizPlayerModelSelector(fgets(fh)));
+		modelimage = strcat("/", gui_rexuiz_playermodel_image_find(fgets(fh)));
 		currentskin = stof(fgets(fh));
 		_model = strtolower(fgets(fh));
 		if (!player_model_path_check(_model) || !file_exists(_model)) {
-				i = mod(i + d + search_getsize(glob), search_getsize(glob));
-				fclose(fh);
-				if (i == startedfrom) {
+			i = mod(i + d + search_getsize(glob), search_getsize(glob));
+			fclose(fh);
+			if (i == startedfrom) {
 				search_end(glob);
 				return; // nothing found
-				}
-				continue;
+			}
+			continue;
 		}
 		break;
 	}
@@ -149,7 +159,8 @@ void goNexuizPlayerModelSelector(entity me, float d) {
 	string modeldescription = "";
 	while ((l = fgets(fh))) {
 		if (modeldescription != "")
-				modeldescription = strcat(modeldescription, "\n");
+			modeldescription = strcat(modeldescription, "\n");
+
 		modeldescription = strcat(modeldescription, l);
 	}
 	fclose(fh);
@@ -165,40 +176,40 @@ void goNexuizPlayerModelSelector(entity me, float d) {
 	me.currentSkin = currentskin;
 	me.currentModelDescription = str_zone_ifneeded(modeldescription);
 }
-void PlayerModelSelector_Next_Click(entity btn, entity me)
-{
+
+void(entity btn, entity me) gui_rexuiz_playermodel_next_click {
 	me.go(me, +1);
 	me.saveCvars(me);
 }
-void PlayerModelSelector_Prev_Click(entity btn, entity me)
-{
+
+void(entity btn, entity me) gui_rexuiz_playermodel_prev_click {
 	me.go(me, -1);
 	me.saveCvars(me);
 }
-void saveCvarsNexuizPlayerModelSelector(entity me)
-{
+
+void(entity me) gui_rexuiz_playermodel_save {
 	// TODO rather set the _cl ones and apply later?
 	localcmd(strcat("playermodel ", me.currentModel, "\nplayerskin ", ftos(me.currentSkin), "\n"));
 }
-void drawNexuizPlayerModelSelector(entity me)
-{
+
+void(entity me) gui_rexuiz_playermodel_draw {
 	float i, n;
 	vector o;
 	me.src = me.currentModelImage;
 	if (me.src != "" && me.src != "/")
 		drawImage(me);
+
 	me.src = NULL;
 	// draw text on the image, handle \n in the description
 	gui_draw_text_center('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
 	o = '0.5 1 0' - eY * me.realFontSize_y * ((n = tokenizebyseparator(me.currentModelDescription, "\n")) + 0.5);
-	for(i = 0; i < n; ++i)
-	{
+	for (i = 0; i < n; ++i) {
 		gui_draw_text_center(o, argv(i), me.realFontSize, '1 1 1', 1, FALSE);
 		o += eY * me.realFontSize_y;
 	}
 }
-void resizeNotifyNexuizPlayerModelSelector(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
-{
+
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_playermodel_resize {
 	resizeNotifyImage(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;

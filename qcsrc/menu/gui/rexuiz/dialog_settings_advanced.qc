@@ -31,11 +31,11 @@ void(entity me) fillNexuizAdvancedSettingsTab {
 		e.colorL = SKINCOLOR_TEXT_WARNING;
 		e.fontSize = e.fontSize * 0.6;
 	me.gotoRC(me, 0, 3); me.setFirstColumn(me, me.currentColumn);
-	cvarlist = makeNexuizCvarList();
+	cvarlist = gui_rexuiz_cvarlist_make();
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Cvar filter:")));
 		me.TD(me, 1, 0.5, btn = gui_rexuiz_button_make(_("Clear"), '0 0 0'));
 		me.TD(me, 1, 1.5, e = gui_rexuiz_inputbox_make(0, NULL));
-				e.onChange = CvarList_Filter_Change;
+				e.onChange = gui_rexuiz_cvarlist_filter_change;
 				e.onChangeEntity = cvarlist;
 				btn.onClick = InputBox_Clear_Click;
 				btn.onClickEntity = e;
@@ -61,11 +61,11 @@ void(entity me) fillNexuizAdvancedSettingsTab {
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Value:")));
 		me.TD(me, 1, 1, e = gui_rexuiz_inputbox_make(0, NULL));
 				cvarlist.cvarValueBox = e;
-				e.onChange = CvarList_Value_Change;
+				e.onChange = gui_rexuiz_cvarlist_value_change;
 				e.onChangeEntity = cvarlist;
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(NULL, SKINCOLOR_CVARLIST_REVERTBUTTON));
 				cvarlist.cvarDefaultBox = e;
-				e.onClick = CvarList_Revert_Click;
+				e.onClick = gui_rexuiz_cvarlist_revert_click;
 				e.onClickEntity = cvarlist;
 				e.allowCut = 1;
 				e.marginLeft = e.marginRight = 0.5;

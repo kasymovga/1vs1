@@ -1,26 +1,15 @@
-entity spawnNexuizSkinList();
-void(entity) configureNexuizSkinListNexuizSkinList;
+entity(void) gui_rexuiz_skinlist_spawn;
 .void(entity) configureNexuizSkinList;
 .float rowsPerItem;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizSkinList;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-void(entity, float, vector, float) drawListBoxItemNexuizSkinList;
 .void(entity, float, vector, float) drawListBoxItem;
-void(entity) getSkinsNexuizSkinList;
 .void(entity) getSkins;
-void(entity) setSkinNexuizSkinList;
 .void(entity) setSkin;
-void(entity) loadCvarsNexuizSkinList;
 .void(entity) loadCvars;
-void(entity) saveCvarsNexuizSkinList;
 .void(entity) saveCvars;
-string(entity, float, float) skinParameterNexuizSkinList;
 .string(entity, float, float) skinParameter;
-void(entity, float, vector, float) clickListBoxItemNexuizSkinList;
 .void(entity, float, vector, float) clickListBoxItem;
-float(entity, float, float, float) keyDownNexuizSkinList;
 .float(entity, float, float, float) keyDown;
-void(entity) destroyNexuizSkinList;
 .void(entity) destroy;
 .float skinlist;
 .vector realFontSize;
@@ -34,5 +23,5 @@ void(entity) destroyNexuizSkinList;
 .vector itemAbsSize;
 .string name;
 
-entity makeNexuizSkinList();
-void SetSkin_Click(entity btn, entity me);
+entity(void) gui_rexuiz_skinlist_make;
+

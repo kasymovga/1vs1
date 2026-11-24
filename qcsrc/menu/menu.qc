@@ -129,7 +129,7 @@ void() menu_init_delayed {
 	gui_conwidth = gui_conheight = -1;
 	gui_draw_reset();
 	menu_update_width_height();
-	main = spawnMainWindow(); main.configureMainWindow(main);
+	main = gui_rexuiz_mainwindow_spawn(); main.configureMainWindow(main);
 	main.resizeNotify(main, '0 0 0', eX * gui_conwidth + eY * gui_conheight, '0 0 0', eX * gui_conwidth + eY * gui_conheight);
 	main.focused = 1;
 	menu_modkeys_state = 0;

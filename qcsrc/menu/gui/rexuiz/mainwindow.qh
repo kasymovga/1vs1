@@ -1,5 +1,4 @@
-entity spawnMainWindow();
-void(entity) configureMainWindowMainWindow;
+entity(void) gui_rexuiz_mainwindow_spawn;
 .void(entity) configureMainWindow;
 .entity mutatorsDialog;
 .entity oldMutatorsDialog;

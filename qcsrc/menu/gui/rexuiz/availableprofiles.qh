@@ -1,0 +1,12 @@
+entity(void) gui_rexuiz_availableprofiles_spawn;
+.string(entity) toString;
+.float rowsPerItem;
+.void(entity, float, vector, float) drawListBoxItem;
+.void(entity, vector, vector, vector, vector) resizeNotify;
+.vector realFontSize;
+.float realUpperMargin;
+.float handle;
+.void(entity) destroy;
+.void(entity) loadCvars;
+
+entity(void) gui_rexuiz_availableprofiles_make;

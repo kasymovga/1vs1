@@ -1,17 +1,29 @@
-entity spawnNexuizSkinList() {
+void(entity me) gui_rexuiz_skinlist_configure;
+void(entity me) gui_rexuiz_skinlist_load;
+void(entity me) gui_rexuiz_skinlist_save;
+string(entity me, float i, float key) gui_rexuiz_skinlist_parameter;
+void(entity me) gui_rexuiz_skinlist_get;
+void(entity me) gui_rexuiz_skinlist_destroy;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_skinlist_resize;
+void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_skinlist_item_draw;
+void(entity me) gui_rexuiz_skinlist_set;
+void(entity me, float i, vector where, float doubleclick) gui_rexuiz_skinlist_item_click;
+float(entity me, float scan, float ascii, float shift) gui_rexuiz_skinlist_keydown;
+
+entity(void) gui_rexuiz_skinlist_spawn {
 	entity me; me = gui_rexuiz_listbox_spawn();
-	me.configureNexuizSkinList = configureNexuizSkinListNexuizSkinList;
+	me.configureNexuizSkinList = gui_rexuiz_skinlist_configure;
 	me.rowsPerItem = 4;
-	me.resizeNotify = resizeNotifyNexuizSkinList;
-	me.drawListBoxItem = drawListBoxItemNexuizSkinList;
-	me.getSkins = getSkinsNexuizSkinList;
-	me.setSkin = setSkinNexuizSkinList;
-	me.loadCvars = loadCvarsNexuizSkinList;
-	me.saveCvars = saveCvarsNexuizSkinList;
-	me.skinParameter = skinParameterNexuizSkinList;
-	me.clickListBoxItem = clickListBoxItemNexuizSkinList;
-	me.keyDown = keyDownNexuizSkinList;
-	me.destroy = destroyNexuizSkinList;
+	me.resizeNotify = gui_rexuiz_skinlist_resize;
+	me.drawListBoxItem = gui_rexuiz_skinlist_item_draw;
+	me.getSkins = gui_rexuiz_skinlist_get;
+	me.setSkin = gui_rexuiz_skinlist_set;
+	me.loadCvars = gui_rexuiz_skinlist_load;
+	me.saveCvars = gui_rexuiz_skinlist_save;
+	me.skinParameter = gui_rexuiz_skinlist_parameter;
+	me.clickListBoxItem = gui_rexuiz_skinlist_item_click;
+	me.keyDown = gui_rexuiz_skinlist_keydown;
+	me.destroy = gui_rexuiz_skinlist_destroy;
 	me.skinlist = -1;
 	me.realFontSize = '0 0 0';
 	me.columnPreviewOrigin = 0;
@@ -26,76 +38,68 @@ entity spawnNexuizSkinList() {
 	me.classname = "NexuizSkinList";
 	return me;
 }
-entity makeNexuizSkinList();
-void SetSkin_Click(entity btn, entity me);
-entity makeNexuizSkinList()
-{
+
+entity(void) gui_rexuiz_skinlist_make {
 	entity me;
-	me = spawnNexuizSkinList();
+	me = gui_rexuiz_skinlist_spawn();
 	me.configureNexuizSkinList(me);
 	return me;
 }
-void configureNexuizSkinListNexuizSkinList(entity me)
-{
+
+void(entity me) gui_rexuiz_skinlist_configure {
 	me.configureNexuizListBox(me);
 	me.getSkins(me);
 	me.loadCvars(me);
 }
-void loadCvarsNexuizSkinList(entity me)
-{
+
+void(entity me) gui_rexuiz_skinlist_load {
 	string s;
 	float i, n;
 	s = cvar_string("menu_skin");
 	n = me.nItems;
-	for(i = 0; i < n; ++i)
-	{
-		if(me.skinParameter(me, i, 0) == s)
-		{
+	for (i = 0; i < n; ++i) {
+		if (me.skinParameter(me, i, 0) == s) {
 				me.selectedItem = i;
 				break;
 		}
 	}
 }
-void saveCvarsNexuizSkinList(entity me)
-{
+
+void(entity me) gui_rexuiz_skinlist_save {
 	cvar_set("menu_skin", me.skinParameter(me, me.selectedItem, 0));
 }
-string skinParameterNexuizSkinList(entity me, float i, float key)
-{
+
+string(entity me, float i, float key) gui_rexuiz_skinlist_parameter {
 	return str_array_get(me.skinlist, i * 4 + key);
 }
-void getSkinsNexuizSkinList(entity me)
-{
+
+void(entity me) gui_rexuiz_skinlist_get {
 	float glob, buf, i, n, fh;
 	string s;
 	buf = str_array_create();
 	glob = search_begin("gfx/menu/*/skinvalues.txt", TRUE, TRUE);
-	if(glob < 0)
-	{
+	if (glob < 0) {
 		me.skinlist = buf;
 		me.nItems = 0;
 		return;
 	}
 	n = search_getsize(glob);
-	for(i = 0; i < n; ++i)
-	{
+	for (i = 0; i < n; ++i) {
 		s = search_getfilename(glob, i);
 		str_array_set(buf, i * 4 + 0, str_sub(s, 9, strlen(s) - 24)); // the * part
 		str_array_set(buf, i * 4 + 1, "<TITLE>");
 		str_array_set(buf, i * 4 + 2, "<AUTHOR>");
 		str_array_set(buf, i * 4 + 3, strcat("/gfx/menu/", str_sub(s, 9, strlen(s) - 24), "/skinpreview"));
 		fh = fopen(s, FILE_READ);
-		if(fh < 0)
-		{
-				print("Warning: can't open skinvalues.txt file\n");
-				continue;
+		if (fh < 0) {
+			print("Warning: can't open skinvalues.txt file\n");
+			continue;
 		}
-		while((s = fgets(fh)))
-		{
-				// these two are handled by skinlist.qc
-				if(str_sub(s, 0, 6) == "title ")
+		while ((s = fgets(fh))) {
+			// these two are handled by skinlist.qc
+			if (str_sub(s, 0, 6) == "title ")
 				str_array_set(buf, i * 4 + 1, str_sub(s, 6, strlen(s) - 6));
-				else if(str_sub(s, 0, 7) == "author ")
+			else if(str_sub(s, 0, 7) == "author ")
 				str_array_set(buf, i * 4 + 2, str_sub(s, 7, strlen(s) - 7));
 		}
 		fclose(fh);
@@ -104,12 +108,12 @@ void getSkinsNexuizSkinList(entity me)
 	me.skinlist = buf;
 	me.nItems = n;
 }
-void destroyNexuizSkinList(entity me)
-{
+
+void(entity me) gui_rexuiz_skinlist_destroy {
 	str_array_delete(me.skinlist);
 }
-void resizeNotifyNexuizSkinList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
-{
+
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_skinlist_resize {
 	me.itemAbsSize = '0 0 0';
 	resizeNotifyNexuizListBox(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
@@ -121,11 +125,12 @@ void resizeNotifyNexuizSkinList(entity me, vector relOrigin, vector relSize, vec
 	me.columnNameOrigin = me.columnPreviewOrigin + me.columnPreviewSize + me.realFontSize_x;
 	me.columnNameSize = 1 - me.columnPreviewSize - 2 * me.realFontSize_x;
 }
-void drawListBoxItemNexuizSkinList(entity me, float i, vector absSize, float isSelected)
-{
+
+void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_skinlist_item_draw {
 	string s;
-	if(isSelected)
+	if (isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+
 	s = me.skinParameter(me, i, 3);
 	gui_draw_picture(me.columnPreviewOrigin * eX, s, me.columnPreviewSize * eX + eY, '1 1 1', 1);
 	s = me.skinParameter(me, i, 0);
@@ -136,27 +141,24 @@ void drawListBoxItemNexuizSkinList(entity me, float i, vector absSize, float isS
 	s = gui_draw_text_shorten_to_width(s, me.columnNameSize / me.realFontSize_x, 0);
 	gui_draw_text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - gui_text_width(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_SKINLIST_AUTHOR, SKINALPHA_TEXT, 0);
 }
-void setSkinNexuizSkinList(entity me)
-{
+
+void(entity me) gui_rexuiz_skinlist_set {
 	if (cvar_string("menu_skin") == me.skinParameter(me, me.selectedItem, 0))
 		return;
+
 	me.saveCvars(me);
 	localcmd("\nmenu_restart\nr_restart\ntogglemenu\ndefer 0.1 \"menu_cmd skinselect\"\n");
 }
-void SetSkin_Click(entity btn, entity me)
-{
-	me.setSkin(me);
-}
-void clickListBoxItemNexuizSkinList(entity me, float i, vector where, float doubleclick) {
+
+void(entity me, float i, vector where, float doubleclick) gui_rexuiz_skinlist_item_click {
 	if (doubleclick)
 		me.setSkin(me);
 }
-float keyDownNexuizSkinList(entity me, float scan, float ascii, float shift)
-{
-	if(scan == VM_K_ENTER) {
+
+float(entity me, float scan, float ascii, float shift) gui_rexuiz_skinlist_keydown {
+	if (scan == VM_K_ENTER) {
 		me.setSkin(me);
 		return 1;
-	}
-	else
+	} else
 		return keyDownListBox(me, scan, ascii, shift);
 }

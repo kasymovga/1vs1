@@ -1,6 +1,8 @@
-entity spawnMainWindow() {
-	entity me; me = gui_modalcontroller_spawn();
-	me.configureMainWindow = configureMainWindowMainWindow;
+void(entity me) gui_rexuiz_mainwindow_configure;
+
+entity(void) gui_rexuiz_mainwindow_spawn {
+	entity me = gui_modalcontroller_spawn();
+	me.configureMainWindow = gui_rexuiz_mainwindow_configure;
 	me.mutatorsDialog = NULL;
 	me.oldMutatorsDialog = NULL;
 	me.weaponsDialog = NULL;
@@ -17,8 +19,7 @@ entity spawnMainWindow() {
 	return me;
 }
 
-void configureMainWindowMainWindow(entity me)
-{
+void(entity me) gui_rexuiz_mainwindow_configure {
 	entity n, i;
 	i = gui_rexuiz_dialog_teamselect_spawn();
 	i.configureDialog(i);
@@ -54,28 +55,28 @@ void configureMainWindowMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.mainNexposee = n = gui_rexuiz_nexposee_spawn();
-		i = spawnNexuizSingleplayerDialog();
-		i.configureDialog(i);
-		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-		n.setNexposee(n, i, SKINPOSITION_DIALOG_SINGLEPLAYER, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
-		i = spawnNexuizMultiplayerDialog();
-		i.configureDialog(i);
-		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-		n.setNexposee(n, i, SKINPOSITION_DIALOG_MULTIPLAYER, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
-		i = spawnNexuizSettingsDialog();
-		i.configureDialog(i);
-		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-		n.setNexposee(n, i, SKINPOSITION_DIALOG_SETTINGS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
-		i = spawnNexuizCreditsDialog();
-		i.configureDialog(i);
-		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-		n.setNexposee(n, i, SKINPOSITION_DIALOG_CREDITS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
-		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / gui_conheight));
-		i = gui_rexuiz_dialog_quit_spawn();
-		i.configureDialog(i);
-		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-		n.setNexposee(n, i, SKINPOSITION_DIALOG_QUIT, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
-		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / gui_conheight));
+	i = spawnNexuizSingleplayerDialog();
+	i.configureDialog(i);
+	n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	n.setNexposee(n, i, SKINPOSITION_DIALOG_SINGLEPLAYER, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
+	i = spawnNexuizMultiplayerDialog();
+	i.configureDialog(i);
+	n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	n.setNexposee(n, i, SKINPOSITION_DIALOG_MULTIPLAYER, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
+	i = spawnNexuizSettingsDialog();
+	i.configureDialog(i);
+	n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	n.setNexposee(n, i, SKINPOSITION_DIALOG_SETTINGS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
+	i = spawnNexuizCreditsDialog();
+	i.configureDialog(i);
+	n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	n.setNexposee(n, i, SKINPOSITION_DIALOG_CREDITS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
+	n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / gui_conheight));
+	i = gui_rexuiz_dialog_quit_spawn();
+	i.configureDialog(i);
+	n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	n.setNexposee(n, i, SKINPOSITION_DIALOG_QUIT, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
+	n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / gui_conheight));
 	me.addItem(me, n, '0 0 0', '1 1 0', SKINALPHAS_MAINMENU_z);
 	me.moveItemAfter(me, n, NULL);
 	me.initializeDialog(me, n);

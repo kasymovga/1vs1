@@ -1,11 +1,7 @@
-entity spawnNexuizResolutionSlider();
-void(entity) configureNexuizResolutionSliderNexuizResolutionSlider;
+entity(void) gui_rexuiz_slider_resolution_spawn;
 .void(entity) configureNexuizResolutionSlider;
-void(entity, float, float) addResolutionNexuizResolutionSlider;
 .void(entity, float, float) addResolution;
-void(entity) loadCvarsNexuizResolutionSlider;
 .void(entity) loadCvars;
-void(entity) saveCvarsNexuizResolutionSlider;
 .void(entity) saveCvars;
 
-entity makeNexuizResolutionSlider();
+entity(void) gui_rexuiz_slider_resolution_make;

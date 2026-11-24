@@ -1,13 +1,8 @@
-entity spawnNexuizPlayerModelSelector();
-void(entity) configureNexuizPlayerModelSelectorNexuizPlayerModelSelector;
+entity(void) gui_rexuiz_playermodel_spawn;
 .void(entity) configureNexuizPlayerModelSelector;
-void(entity) loadCvarsNexuizPlayerModelSelector;
 .void(entity) loadCvars;
-void(entity) saveCvarsNexuizPlayerModelSelector;
 .void(entity) saveCvars;
-void(entity) drawNexuizPlayerModelSelector;
 .void(entity) draw;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizPlayerModelSelector;
 .void(entity, vector, vector, vector, vector) resizeNotify;
 .string currentModel;
 .float currentSkin;
@@ -15,7 +10,6 @@ void(entity, vector, vector, vector, vector) resizeNotifyNexuizPlayerModelSelect
 .string currentModelTitle;
 .string currentModelTxtName;
 .string currentModelDescription;
-void(entity, float) goNexuizPlayerModelSelector;
 .void(entity, float) go;
 .vector origin;
 .vector size;
@@ -23,6 +17,6 @@ void(entity, float) goNexuizPlayerModelSelector;
 .float fontSize;
 .float titleFontSize;
 
-entity makeNexuizPlayerModelSelector();
-void PlayerModelSelector_Next_Click(entity btn, entity me);
-void PlayerModelSelector_Prev_Click(entity btn, entity me);
+entity(void) gui_rexuiz_playermodel_make;
+void(entity btn, entity me) gui_rexuiz_playermodel_next_click;
+void(entity btn, entity me) gui_rexuiz_playermodel_prev_click;

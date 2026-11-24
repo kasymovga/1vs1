@@ -49,7 +49,7 @@ void fillNexuizVideoSettingsBasicTab(entity me)
 		gui_set_dependent(e, "vid_fullscreen", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Resolution:")));
-		me.TD(me, 1, 2, e = makeNexuizResolutionSlider());
+		me.TD(me, 1, 2, e = gui_rexuiz_slider_resolution_make());
 		gui_set_dependent_or(e, "vid_fullscreen", 0, 0, "vid_desktopfullscreen", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Resolution scale:")));

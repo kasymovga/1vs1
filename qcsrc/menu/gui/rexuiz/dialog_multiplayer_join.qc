@@ -47,7 +47,7 @@ float(entity me, float scan, float ascii, float shift) keyDownNexuizServerListTa
 void fillNexuizServerListTab(entity me)
 {
 	entity e, slist, btn;
-	slist = makeNexuizServerList();
+	slist = gui_rexuiz_serverlist_make();
 	me.TR(me);
 		me.TD(me, 1, 0.75, btn = gui_rexuiz_button_make(_("Refresh"), '0 0 0'));
 				btn.onClick = refreshNexuizServerListTab;
@@ -55,7 +55,7 @@ void fillNexuizServerListTab(entity me)
 				btn.onClick = reloadNexuizServerListTab;
 		me.TD(me, 1, 0.5, e = gui_rexuiz_textlabel_make(0, _("Filter:")));
 		me.TD(me, 1, me.columns - 4, e = gui_rexuiz_inputbox_make(0, NULL));
-				e.onChange = ServerList_Filter_Change;
+				e.onChange = gui_rexuiz_serverlist_filter_change;
 				e.onChangeEntity = slist;
 				slist.controlledTextbox = e;
 		me.TD(me, 1, 0.5, btn = gui_rexuiz_button_make(_("Clear"), '0 0 0'));
@@ -64,11 +64,11 @@ void fillNexuizServerListTab(entity me)
 		me.TD(me, 1, 0.5, e = gui_rexuiz_checkbox_make(0, "menu_slist_showempty", _("Empty")));
 				slist.filterShowEmpty = e.checked;
 				e.onClickEntity = slist;
-				e.onClick = ServerList_ShowEmpty_Click;
+				e.onClick = gui_rexuiz_serverlist_show_empty_click;
 		me.TD(me, 1, 0.5, e = gui_rexuiz_checkbox_make(0, "menu_slist_showfull", _("Full")));
 				slist.filterShowFull = e.checked;
 				e.onClickEntity = slist;
-				e.onClick = ServerList_ShowFull_Click;
+				e.onClick = gui_rexuiz_serverlist_show_full_click;
 		me.TD(me, 1, 0.5, e = gui_rexuiz_checkbox_make(0, "net_slist_pause", _("Pause")));
 	me.TR(me);
 		me.TD(me, 1, 1, slist.sortButton1 = gui_rexuiz_button_make(NULL, '0 0 0'));
@@ -81,20 +81,20 @@ void fillNexuizServerListTab(entity me)
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 0.6, e = gui_rexuiz_textlabel_make(0, _("Address:")));
 		me.TD(me, 1, 2.9, e = gui_rexuiz_inputbox_make(0, NULL));
-				e.onEnter = ServerList_Connect_Click;
+				e.onEnter = gui_rexuiz_serverlist_connect_click;
 				e.onEnterEntity = slist;
 				slist.ipAddressBox = e;
 		me.TD(me, 1, 1.5, e = gui_rexuiz_button_make("", '0 0 0'));
-				e.onClick = ServerList_Favorite_Click;
+				e.onClick = gui_rexuiz_serverlist_favorite_click;
 				e.onClickEntity = slist;
 				slist.favoriteButton = e;
 		me.TD(me, 1, 1.5, e = gui_rexuiz_button_make(_("Info"), '0 0 0'));
-				e.onClick = ServerList_Info_Click;
+				e.onClick = gui_rexuiz_serverlist_info_click;
 				e.onClickEntity = slist;
 				slist.infoButton = e;
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("Join!"), '0 0 0'));
-				e.onClick = ServerList_Connect_Click;
+				e.onClick = gui_rexuiz_serverlist_connect_click;
 				e.onClickEntity = slist;
 				slist.connectButton = e;
 }

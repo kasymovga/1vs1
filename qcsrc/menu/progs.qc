@@ -52,7 +52,7 @@
 #include "gui/rexuiz/demolist.qc"
 #include "gui/rexuiz/colorpicker.qc"
 #include "gui/rexuiz/cvarlist.qc"
-#include "gui/rexuiz/availableprofileslist.qc"
+#include "gui/rexuiz/availableprofiles.qc"
 #include "gui/rexuiz/profilelist.qc"
 #include "cmd.qc"
 #include "menu.qc"

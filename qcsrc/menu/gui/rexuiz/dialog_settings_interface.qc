@@ -10,7 +10,7 @@ entity spawnNexuizInterfaceSettingsTab() {
 }
 entity makeNexuizInterfaceSettingsTab();
 void (entity btn, entity me) applyNexuizInterfaceSettingsTab {
-	SetSkin_Click(btn, me);
+	me.setSkin(me);
 	if (cvar("cl_font_iceland") && !dlc_ready("font-iceland")) {
 		localcmd(";fs_rescan;saveconfig\n");
 	} else if (!cvar("cl_font_iceland") && dlc_ready("font-iceland")) {
@@ -34,7 +34,7 @@ void(entity me) fillNexuizInterfaceSettingsTab {
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_textlabel_make(0, _("Menu skins:")));
 	me.TR(me);
-		me.TD(me, me.rows - 2, 3, sk = makeNexuizSkinList());
+		me.TD(me, me.rows - 2, 3, sk = gui_rexuiz_skinlist_make());
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("Apply immediately"), '0 0 0'));
 				e.onClick = applyNexuizInterfaceSettingsTab;

@@ -1,17 +1,23 @@
-entity spawnNexuizCvarList() {
-	entity me; me = gui_rexuiz_listbox_spawn();
-	me.configureNexuizCvarList = configureNexuizCvarListNexuizCvarList;
+void(entity me) gui_rexuiz_cvarlist_configure;
+void(entity me, float i) gui_rexuiz_cvarlist_select;
+void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_cvarlist_item_draw;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_cvarlist_resize;
+float(entity me, float scan, float ascii, float shift) gui_rexuiz_cvarlist_key_down;
+
+entity(void) gui_rexuiz_cvarlist_spawn {
+	entity me = gui_rexuiz_listbox_spawn();
+	me.configureNexuizCvarList = gui_rexuiz_cvarlist_configure;
 	me.rowsPerItem = 1;
-	me.drawListBoxItem = drawListBoxItemNexuizCvarList;
-	me.resizeNotify = resizeNotifyNexuizCvarList;
-	me.keyDown = keyDownNexuizCvarList;
+	me.drawListBoxItem = gui_rexuiz_cvarlist_item_draw;
+	me.resizeNotify = gui_rexuiz_cvarlist_resize;
+	me.keyDown = gui_rexuiz_cvarlist_key_down;
 	me.realFontSize = '0 0 0';
 	me.realUpperMargin = 0;
 	me.columnNameOrigin = 0;
 	me.columnNameSize = 0;
 	me.columnValueOrigin = 0;
 	me.columnValueSize = 0;
-	me.setSelected = setSelectedNexuizCvarList;
+	me.setSelected = gui_rexuiz_cvarlist_select;
 	me.controlledTextbox = NULL;
 	me.cvarNameBox = NULL;
 	me.cvarDescriptionBox = NULL;
@@ -26,30 +32,26 @@ entity spawnNexuizCvarList() {
 	me.classname = "NexuizCvarList";
 	return me;
 }
-entity makeNexuizCvarList();
-void CvarList_Filter_Change(entity box, entity me);
-void CvarList_Value_Change(entity box, entity me);
-void CvarList_Revert_Click(entity btn, entity me);
-entity makeNexuizCvarList()
-{
-	entity me;
-	me = spawnNexuizCvarList();
+
+entity(void) gui_rexuiz_cvarlist_make {
+	entity me = gui_rexuiz_cvarlist_spawn();
 	me.configureNexuizCvarList(me);
 	return me;
 }
-void configureNexuizCvarListNexuizCvarList(entity me)
-{
+
+void(entity me) gui_rexuiz_cvarlist_configure {
 	me.configureNexuizListBox(me);
 	me.handle = str_array_create();
 	str_array_cvar_list(me.handle, "", "_");
 	me.nItems = str_array_size(me.handle);
 }
-void setSelectedNexuizCvarList(entity me, float i)
-{
+
+void(entity me, float i) gui_rexuiz_cvarlist_select {
 	string s;
 	setSelectedListBox(me, i);
-	if(me.nItems == 0)
+	if (me.nItems == 0)
 		return;
+
 	str_unzone_ifneeded(me.cvarName);
 	str_unzone_ifneeded(me.cvarDescription);
 	str_unzone_ifneeded(me.cvarType);
@@ -60,16 +62,20 @@ void setSelectedNexuizCvarList(entity me, float i)
 	float t;
 	t = cvar_type(me.cvarName);
 	me.cvarType = "";
-	if(t & CVAR_TYPEFLAG_SAVED)
+	if (t & CVAR_TYPEFLAG_SAVED)
 		me.cvarType = strcat(me.cvarType, _(", will be saved to config.cfg"));
 	else
 		me.cvarType = strcat(me.cvarType, _(", will not be saved"));
-	if(t & CVAR_TYPEFLAG_PRIVATE)
+
+	if (t & CVAR_TYPEFLAG_PRIVATE)
 		me.cvarType = strcat(me.cvarType, _(", private"));
-	if(t & CVAR_TYPEFLAG_ENGINE)
+
+	if (t & CVAR_TYPEFLAG_ENGINE)
 		me.cvarType = strcat(me.cvarType, _(", engine setting"));
-	if(t & CVAR_TYPEFLAG_READONLY)
+
+	if (t & CVAR_TYPEFLAG_READONLY)
 		me.cvarType = strcat(me.cvarType, _(", read only"));
+
 	me.cvarType = str_zone_ifneeded(str_sub(me.cvarType, 2, strlen(me.cvarType) - 2));
 	me.cvarNameBox.setText(me.cvarNameBox, me.cvarName);
 	me.cvarDescriptionBox.setText(me.cvarDescriptionBox, me.cvarDescription);
@@ -80,14 +86,14 @@ void setSelectedNexuizCvarList(entity me, float i)
 	me.cvarValueBox.setText(me.cvarValueBox, s);
 	me.cvarValueBox.cursorPos = strlen(s);
 }
-void CvarList_Filter_Change(entity box, entity me)
-{
+
+void(entity box, entity me) gui_rexuiz_cvarlist_filter_change {
 	str_array_cvar_list(me.handle, box.text, "_");
 	me.nItems = str_array_size(me.handle);
 	me.setSelected(me, 0);
 }
-void resizeNotifyNexuizCvarList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
-{
+
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_cvarlist_resize {
 	resizeNotifyNexuizListBox(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
@@ -98,47 +104,49 @@ void resizeNotifyNexuizCvarList(entity me, vector relOrigin, vector relSize, vec
 	me.columnValueOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize_x;
 	me.setSelected(me, me.selectedItem);
 }
-void drawListBoxItemNexuizCvarList(entity me, float i, vector absSize, float isSelected)
-{
+
+void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_cvarlist_item_draw {
 	string k, v, d;
 	float t;
 	vector theColor;
 	float theAlpha;
 	string s;
-	if(isSelected)
+	if (isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+
 	k = str_array_get(me.handle, i);
 	v = cvar_string(k);
 	d = cvar_defstring(k);
 	t = cvar_type(k);
-	if(t & CVAR_TYPEFLAG_SAVED)
+	if (t & CVAR_TYPEFLAG_SAVED)
 		theAlpha = SKINALPHA_CVARLIST_SAVED;
 	else
 		theAlpha = SKINALPHA_CVARLIST_TEMPORARY;
-	if(v == d)
+	if (v == d)
 		theColor = SKINCOLOR_CVARLIST_UNCHANGED;
 	else
 		theColor = SKINCOLOR_CVARLIST_CHANGED;
+
 	s = gui_draw_text_shorten_to_width(k, me.columnNameSize / me.realFontSize_x, 0);
 	gui_draw_text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	s = gui_draw_text_shorten_to_width(v, me.columnValueSize / me.realFontSize_x, 0);
 	gui_draw_text(me.realUpperMargin * eY + me.columnValueOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
-float keyDownNexuizCvarList(entity me, float scan, float ascii, float shift)
-{
-	if(keyDownListBox(me, scan, ascii, shift))
+
+float(entity me, float scan, float ascii, float shift) gui_rexuiz_cvarlist_key_down {
+	if (keyDownListBox(me, scan, ascii, shift))
 		return 1;
 	else if(!me.controlledTextbox)
 		return 0;
 	else
 		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
 }
-void CvarList_Value_Change(entity box, entity me)
-{
+
+void(entity box, entity me) gui_rexuiz_cvarlist_value_change {
 	cvar_set(me.cvarNameBox.text, box.text);
 }
-void CvarList_Revert_Click(entity btn, entity me)
-{
+
+void(entity btn, entity me) gui_rexuiz_cvarlist_revert_click {
 	me.cvarValueBox.setText(me.cvarValueBox, me.cvarDefault);
 	me.cvarValueBox.cursorPos = strlen(me.cvarDefault);
 }

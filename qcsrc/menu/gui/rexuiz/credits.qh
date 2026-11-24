@@ -1,20 +1,14 @@
-entity spawnNexuizCreditsList();
-void(entity) configureNexuizCreditsListNexuizCreditsList;
+entity(void) gui_rexuiz_credits_spawn;
 .void(entity) configureNexuizCreditsList;
 .float rowsPerItem;
-void(entity) drawNexuizCreditsList;
 .void(entity) draw;
-void(entity, float, vector, float) drawListBoxItemNexuizCreditsList;
 .void(entity, float, vector, float) drawListBoxItem;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizCreditsList;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-float(entity, float, float, float) keyDownNexuizCreditsList;
 .float(entity, float, float, float) keyDown;
-void(entity) destroyNexuizCreditsList;
 .void(entity) destroy;
 .vector realFontSize;
 .float realUpperMargin;
 .float bufferIndex;
 .float scrolling;
 
-entity makeNexuizCreditsList();
+entity(void) gui_rexuiz_credits_make;

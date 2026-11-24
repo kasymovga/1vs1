@@ -108,7 +108,7 @@ void fillNexuizServerInfoDialog(entity me)
 	me.TR(me);
 		me.TD(me, 1, 5.5, e = gui_rexuiz_textlabel_make(0, _("Players:")));
 	me.TR(me);
-		me.TD(me, me.rows - 4, 6, e = makeNexuizPlayerList());
+		me.TD(me, me.rows - 4, 6, e = gui_rexuiz_playerlist_make());
 				e.nexuizFont = TRUE;
 				me.rawPlayerList = e;
 	me.gotoRC(me, 1, 6.25); me.setFirstColumn(me, me.currentColumn);

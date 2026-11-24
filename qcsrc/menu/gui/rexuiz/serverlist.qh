@@ -1,16 +1,10 @@
-entity spawnNexuizServerList();
-void(entity) configureNexuizServerListNexuizServerList;
+entity(void) gui_rexuiz_serverlist_spawn;
 .void(entity) configureNexuizServerList;
 .float rowsPerItem;
-void(entity) drawNexuizServerList;
 .void(entity) draw;
-void(entity, float, vector, float) drawListBoxItemNexuizServerList;
 .void(entity, float, vector, float) drawListBoxItem;
-void(entity, float, vector, float) clickListBoxItemNexuizServerList;
 .void(entity, float, vector, float) clickListBoxItem;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizServerList;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-float(entity, float, float, float) keyDownNexuizServerList;
 .float(entity, float, float, float) keyDown;
 .vector realFontSize;
 .float realUpperMargin;
@@ -25,9 +19,7 @@ float(entity, float, float, float) keyDownNexuizServerList;
 .float columnPlayersOrigin;
 .float columnPlayersSize;
 .string selectedServer; // to restore selected server when needed
-void(entity, float) setSelectedNexuizServerList;
 .void(entity, float) setSelected;
-void(entity, float, float) setSortOrderNexuizServerList;
 .void(entity, float, float) setSortOrder;
 .float filterShowEmpty;
 .float filterShowFull;
@@ -36,12 +28,9 @@ void(entity, float, float) setSortOrderNexuizServerList;
 .entity ipAddressBox;
 .entity favoriteButton;
 .float nextRefreshTime;
-void(entity, float) refreshServerListNexuizServerList;
 .void(entity, float) refreshServerList; // refresh mode: 0 = just reparametrize, 1 = send new requests, 2 = clear
 .float needsRefresh;
-void(entity) focusEnterNexuizServerList;
 .void(entity) focusEnter;
-void(entity, entity, float, float, string, void(entity, entity)) positionSortButtonNexuizServerList;
 .void(entity, entity, float, float, string, void(entity, entity)) positionSortButton;
 .entity sortButton1;
 .entity sortButton2;
@@ -54,10 +43,10 @@ void(entity, entity, float, float, string, void(entity, entity)) positionSortBut
 .float currentSortField;
 .float ipAddressBoxFocused;
 
-entity makeNexuizServerList();
-void ServerList_Connect_Click(entity btn, entity me);
-void ServerList_ShowEmpty_Click(entity box, entity me);
-void ServerList_ShowFull_Click(entity box, entity me);
-void ServerList_Filter_Change(entity box, entity me);
-void ServerList_Favorite_Click(entity btn, entity me);
-void ServerList_Info_Click(entity btn, entity me);
+entity(void) gui_rexuiz_serverlist_make;
+void(entity btn, entity me) gui_rexuiz_serverlist_connect_click;
+void(entity box, entity me) gui_rexuiz_serverlist_show_empty_click;
+void(entity box, entity me) gui_rexuiz_serverlist_show_full_click;
+void(entity box, entity me) gui_rexuiz_serverlist_filter_change;
+void(entity btn, entity me) gui_rexuiz_serverlist_favorite_click;
+void(entity btn, entity me) gui_rexuiz_serverlist_info_click;

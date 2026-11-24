@@ -131,14 +131,14 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 	me.TR(me);
 	me.gotoRC(me, 8, 0.0);
-		pms = makeNexuizPlayerModelSelector();
+		pms = gui_rexuiz_playermodel_make();
 		me.TD(me, 1, 0.6, e = gui_rexuiz_textlabel_make(1, _("Model:")));
 		me.TD(me, 1, 0.3, e = gui_rexuiz_button_make("<<", '0 0 0'));
-				e.onClick = PlayerModelSelector_Prev_Click;
+				e.onClick = gui_rexuiz_playermodel_prev_click;
 				e.onClickEntity = pms;
 		me.TD(me, me.rows - me.currentRow - 1, 1.8, pms);
 		me.TD(me, 1, 0.3, e = gui_rexuiz_button_make(">>", '0 0 0'));
-				e.onClick = PlayerModelSelector_Next_Click;
+				e.onClick = gui_rexuiz_playermodel_next_click;
 				e.onClickEntity = pms;
 	me.TR(me);
 		r = me.currentRow;
@@ -148,12 +148,12 @@ void fillNexuizPlayerSettingsTab(entity me)
 		for(i = 0; i < n; ++i)
 		{
 				me.gotoRC(me, r + i * m, 0.1);
-				me.TDNoMargin(me, m, 0.2, e = makeNexuizColorButton(1, 0, i), '0 1 0');
+				me.TDNoMargin(me, m, 0.2, e = gui_rexuiz_colorbutton_make(1, 0, i), '0 1 0');
 		}
 		for(i = 0; i < n; ++i)
 		{
 				me.gotoRC(me, r + i * m, 0.4);
-				me.TDNoMargin(me, m, 0.2, e = makeNexuizColorButton(2, 1, i), '0 1 0');
+				me.TDNoMargin(me, m, 0.2, e = gui_rexuiz_colorbutton_make(2, 1, i), '0 1 0');
 		}
 	me.gotoRC(me, 0, 3.25); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1.25, e = gui_rexuiz_textlabel_make(0, _("Field of View:")));
@@ -190,13 +190,13 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = gui_rexuiz_textlabel_make(0, _("Crosshair:")));
 		for(i = 1; i <= 10; ++i) {
-				me.TDNoMargin(me, 1, 2 / 10, e = makeNexuizCrosshairButton(3, i), '1 1 0');
+				me.TDNoMargin(me, 1, 2 / 10, e = gui_rexuiz_crosshairbutton_make(3, i), '1 1 0');
 				gui_set_dependent(e, "crosshair_per_weapon", 0, 0);
 		}
 	me.TR(me);
 		me.TDempty(me, 1.25);
 		for(i = 11; i <= 20; ++i) {
-				me.TDNoMargin(me, 1, 2 / 10, e = makeNexuizCrosshairButton(3, i), '1 1 0');
+				me.TDNoMargin(me, 1, 2 / 10, e = gui_rexuiz_crosshairbutton_make(3, i), '1 1 0');
 				gui_set_dependent(e, "crosshair_per_weapon", 0, 0);
 		}
 	me.TR(me);

@@ -16,11 +16,11 @@ void fillNexuizCreditsDialog(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, me.rows - 1, me.columns, me.creditsList = makeNexuizCreditsList());
+		me.TD(me, me.rows - 1, me.columns, me.creditsList = gui_rexuiz_credits_make());
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("OK"), '0 0 0'));
-				e.onClick = gui_dialog_close;
-				e.onClickEntity = me;
+			e.onClick = gui_dialog_close;
+			e.onClickEntity = me;
 }
 void focusEnterNexuizCreditsDialog(entity me)
 {

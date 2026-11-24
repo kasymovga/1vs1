@@ -1,15 +1,11 @@
-entity spawnNexuizProfileList();
-string(entity) toStringNexuizProfileList;
+entity(void) gui_rexuiz_profilelist_spawn;
 .string(entity) toString;
 .float rowsPerItem;
-void(entity, float, vector, float) drawListBoxItemNexuizProfileList;
 .void(entity, float, vector, float) drawListBoxItem;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizProfileList;
 .void(entity, vector, vector, vector, vector) resizeNotify;
 .vector realFontSize;
 .float realUpperMargin;
-void(entity) loadCvarsNexuizProfileList;
 .void(entity) loadCvars;
 
-entity makeNexuizProfileList();
-const float PROFILELIST_MAX = 4;
+entity(void) gui_rexuiz_profilelist_make;
+const float GUI_REXUIZ_PROFILELIST_MAX = 4;

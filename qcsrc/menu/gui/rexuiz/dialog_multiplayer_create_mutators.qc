@@ -30,7 +30,7 @@ string(entity me) toStringNexuizMutatorsDialog {
 	return profileDescriptionNexuizMutatorsDialog(cvar_string("g_profile"));
 }
 void(entity btn, entity me) addClickNexuizMutatorsDialog {
-	if (me.currentProfile.nItems >= PROFILELIST_MAX) {
+	if (me.currentProfile.nItems >= GUI_REXUIZ_PROFILELIST_MAX) {
 		print("Too much profiles\n");
 		return;
 	}
@@ -76,9 +76,9 @@ void fillNexuizMutatorsDialog(entity me) {
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 1.75, gui_rexuiz_textlabel_make(0, _("Enabled:")));
 	me.TR(me);
-		me.TD(me, 7, 1.75, me.availableProfiles = e = makeNexuizAvailableProfilesList());
+		me.TD(me, 7, 1.75, me.availableProfiles = e = gui_rexuiz_availableprofiles_make());
 		me.TDempty(me, 0.5);
-		me.TD(me, 7, 1.75, me.currentProfile = e = makeNexuizProfileList());
+		me.TD(me, 7, 1.75, me.currentProfile = e = gui_rexuiz_profilelist_make());
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
