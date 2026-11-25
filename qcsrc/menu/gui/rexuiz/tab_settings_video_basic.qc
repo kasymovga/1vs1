@@ -1,6 +1,8 @@
-entity spawnNexuizVideoSettingsBasicTab() {
+void(entity me) gui_rexuiz_tab_settings_video_basic_fill;
+
+entity(void) gui_rexuiz_tab_settings_video_basic_spawn {
 	entity me; me = gui_rexuiz_tab_spawn();
-	me.fill = fillNexuizVideoSettingsBasicTab;
+	me.fill = gui_rexuiz_tab_settings_video_basic_fill;
 	me.title = _("Basic");
 	me.intendedWidth = 1;
 	me.rows = 20;
@@ -8,21 +10,15 @@ entity spawnNexuizVideoSettingsBasicTab() {
 	me.classname = "NexuizVideoSettingsBasicTab";
 	return me;
 }
-entity makeNexuizVideoSettingsBasicTab();
-entity makeNexuizVideoSettingsBasicTab()
-{
+
+entity(void) gui_rexuiz_tab_settings_video_basic_make {
 	entity me;
-	me = spawnNexuizVideoSettingsBasicTab();
+	me = gui_rexuiz_tab_settings_video_basic_spawn();
 	me.configureDialog(me);
 	return me;
 }
-void(entity e1, entity e2) fxxaChangedNexuizVideoSettingsBasicTab {
-	print("fxxa changed\n");
-	if (cvar("r_fxaa")) {
-		cvar_set("vid_samples", "1");
-	}
-}
-void(entity me) loadCvarsAASliderNexuizVideoSettingsBasicTab {
+
+void(entity me) gui_rexuiz_tab_settings_video_basic_aa_load {
 	if (cvar("r_fxaa"))
 		me.setValueFromIdentifier(me, "fxaa");
 	else if (cvar_string(me.cvarName) == "fxaa") //wtf?
@@ -30,18 +26,19 @@ void(entity me) loadCvarsAASliderNexuizVideoSettingsBasicTab {
 	else
 		me.setValueFromIdentifier(me, cvar_string(me.cvarName));
 }
-void(entity me) saveCvarsAASliderNexuizVideoSettingsBasicTab {
+
+void(entity me) gui_rexuiz_tab_settings_video_basic_aa_save {
 	if (me.value >= 0 && me.value < me.nValues) {
 		string s = me.getIdentifier(me);
 		if (s == "fxaa") {
-				cvar_set(me.cvarName, "1");
-				cvar_set("r_fxaa", "1");
+			cvar_set(me.cvarName, "1");
+			cvar_set("r_fxaa", "1");
 		} else
-				cvar_set(me.cvarName, me.getIdentifier(me));
+			cvar_set(me.cvarName, me.getIdentifier(me));
 	}
 }
-void fillNexuizVideoSettingsBasicTab(entity me)
-{
+
+void(entity me) gui_rexuiz_tab_settings_video_basic_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_checkbox_make(0, "vid_fullscreen", _("Full screen")));
@@ -57,12 +54,12 @@ void fillNexuizVideoSettingsBasicTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Max FPS:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("cl_maxfps"));
-				e.addValue(e, "125", "125");
-				e.addValue(e, "250", "250");
-				e.addValue(e, "500", "500");
-				e.addValue(e, "1000", "1000");
-				e.addValue(e, _("Unlimited"), "0");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, "125", "125");
+			e.addValue(e, "250", "250");
+			e.addValue(e, "500", "500");
+			e.addValue(e, "1000", "1000");
+			e.addValue(e, _("Unlimited"), "0");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Brightness:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(0.0, 0.5, 0.02, "v_brightness"));
@@ -105,80 +102,80 @@ void fillNexuizVideoSettingsBasicTab(entity me)
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Geometry detail:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("r_subdivisions_tolerance"));
-				e.addValue(e, _("Lowest"), "16");
-				e.addValue(e, _("Low"), "8");
-				e.addValue(e, _("Normal"), "4");
-				e.addValue(e, _("Good"), "3");
-				e.addValue(e, _("Best"), "2");
-				e.addValue(e, _("Insane"), "1");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Lowest"), "16");
+			e.addValue(e, _("Low"), "8");
+			e.addValue(e, _("Normal"), "4");
+			e.addValue(e, _("Good"), "3");
+			e.addValue(e, _("Best"), "2");
+			e.addValue(e, _("Insane"), "1");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textlabel_make(0, _("Texture quality:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("gl_picmip"));
-				e.addValue(e, _("Lowest"), "16");
-				e.addValue(e, _("Low"), "4");
-				e.addValue(e, _("Normal"), "2");
-				e.addValue(e, _("Good"), "1");
-				e.addValue(e, _("Best"), "0");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Lowest"), "16");
+			e.addValue(e, _("Low"), "4");
+			e.addValue(e, _("Normal"), "2");
+			e.addValue(e, _("Good"), "1");
+			e.addValue(e, _("Best"), "0");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textlabel_make(0, _("World texture quality:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("gl_picmip_world"));
-				e.addValue(e, _("Lowest"), "16");
-				e.addValue(e, _("Low"), "4");
-				e.addValue(e, _("Normal"), "2");
-				e.addValue(e, _("Good"), "1");
-				e.addValue(e, _("Best"), "0");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Lowest"), "16");
+			e.addValue(e, _("Low"), "4");
+			e.addValue(e, _("Normal"), "2");
+			e.addValue(e, _("Good"), "1");
+			e.addValue(e, _("Best"), "0");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Antialiasing:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("vid_samples"));
-				e.addValue(e, _("Disabled"), "1");
-				e.addValue(e, _("FXAA"), "fxaa");
-				e.addValue(e, "2x", "2");
-				e.addValue(e, "4x", "4");
-				e.configureNexuizTextSliderValues(e);
-				e.loadCvars = loadCvarsAASliderNexuizVideoSettingsBasicTab;
-				e.saveCvars = saveCvarsAASliderNexuizVideoSettingsBasicTab;
+			e.addValue(e, _("Disabled"), "1");
+			e.addValue(e, _("FXAA"), "fxaa");
+			e.addValue(e, "2x", "2");
+			e.addValue(e, "4x", "4");
+			e.configureNexuizTextSliderValues(e);
+			e.loadCvars = gui_rexuiz_tab_settings_video_basic_aa_load;
+			e.saveCvars = gui_rexuiz_tab_settings_video_basic_aa_save;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Anisotropy:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("gl_texture_anisotropy"));
-				e.addValue(e, _("Disabled"), "1");
-				e.addValue(e, "2x", "2");
-				e.addValue(e, "4x", "4");
-				e.addValue(e, "8x", "8");
-				e.addValue(e, "16x", "16");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Disabled"), "1");
+			e.addValue(e, "2x", "2");
+			e.addValue(e, "4x", "4");
+			e.addValue(e, "8x", "8");
+			e.addValue(e, "16x", "16");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Motion blur:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(0, 1, 0.1, "r_motionblur"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Damage blur:")));
-				gui_set_dependent(e, "r_motionblur", 0, 1);
+			gui_set_dependent(e, "r_motionblur", 0, 1);
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(0, 1, 0.1, "r_damageblur"));
-				gui_set_dependent(e, "r_motionblur", 0, 1);
+			gui_set_dependent(e, "r_motionblur", 0, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_checkbox_make(0, "r_water", _("Reflections:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("r_water_resolutionmultiplier"));
-				e.addValue(e, _("Blurred"), "0.25");
-				e.addValue(e, _("Good"), "0.5");
-				e.addValue(e, _("Sharp"), "1");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Blurred"), "0.25");
+			e.addValue(e, _("Good"), "0.5");
+			e.addValue(e, _("Sharp"), "1");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "r_shadow_realtime_dlight", _("Realtime dynamic lighting")));
 		me.TD(me, 1, 1, e = gui_rexuiz_checkbox_make(0, "r_shadow_realtime_dlight_shadows", _("Shadows")));
-				gui_set_dependent(e, "r_shadow_realtime_dlight", 1, 1);
+			gui_set_dependent(e, "r_shadow_realtime_dlight", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "r_shadow_realtime_world", _("Realtime world lighting")));
 		me.TD(me, 1, 1, e = gui_rexuiz_checkbox_make(0, "r_shadow_realtime_world_shadows", _("Shadows")));
-				gui_set_dependent(e, "r_shadow_realtime_world", 1, 1);
+			gui_set_dependent(e, "r_shadow_realtime_world", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Lighting intensity:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(0.01, 2, 0.05, "r_shadow_lightintensityscale"));
-				gui_set_dependent_or(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
+			gui_set_dependent_or(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "r_shadow_usenormalmap", _("Use normal maps")));
-				gui_set_dependent_or(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
+			gui_set_dependent_or(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 2, e = gui_rexuiz_checkbox_make(0, "r_extra_texture_effects", _("Extra texture effects")));
 }

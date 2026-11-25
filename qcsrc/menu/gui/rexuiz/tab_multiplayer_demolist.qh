@@ -1,0 +1,9 @@
+entity(void) gui_rexuiz_tab_multiplayer_demolist_spawn;
+.void(entity) fill;
+.string title;
+.float intendedWidth;
+.float rows;
+.float columns;
+.string name;
+
+entity(void) gui_rexuiz_tab_multiplayer_demolist_make;

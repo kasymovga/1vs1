@@ -1,7 +1,5 @@
-entity spawnNexuizServerCreateTab();
-void(entity) fillNexuizServerCreateTab;
+entity(void) rexuiz_gui_tab_multiplayer_create_spawn;
 .void(entity) fill;
-void(entity) gameTypeChangeNotifyNexuizServerCreateTab;
 .void(entity) gameTypeChangeNotify;
 .string title;
 .float intendedWidth;
@@ -14,4 +12,4 @@ void(entity) gameTypeChangeNotifyNexuizServerCreateTab;
 .entity sliderTeams;
 .entity checkboxFraglimit;
 
-entity makeNexuizServerCreateTab(float single);
+entity(float single) rexuiz_gui_tab_multiplayer_create_make;

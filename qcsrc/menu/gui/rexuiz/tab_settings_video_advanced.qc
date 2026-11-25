@@ -1,6 +1,8 @@
-entity spawnNexuizVideoSettingsAdvancedTab() {
-	entity me; me = gui_rexuiz_tab_spawn();
-	me.fill = fillNexuizVideoSettingsAdvancedTab;
+void(entity me) gui_rexuiz_tab_settings_video_advanced_fill;
+
+entity(void) gui_rexuiz_tab_settings_video_advanced_spawn {
+	entity me = gui_rexuiz_tab_spawn();
+	me.fill = gui_rexuiz_tab_settings_video_advanced_fill;
 	me.title = _("Advanced");
 	me.intendedWidth = 0.9;
 	me.rows = 20;
@@ -8,36 +10,37 @@ entity spawnNexuizVideoSettingsAdvancedTab() {
 	me.classname = "NexuizVideoSettingsAdvancedTab";
 	return me;
 }
-entity makeNexuizVideoSettingsAdvancedTab();
-entity makeNexuizVideoSettingsAdvancedTab()
-{
-	entity me;
-	me = spawnNexuizVideoSettingsAdvancedTab();
+
+entity(void) gui_rexuiz_tab_settings_video_advanced_make {
+	entity me = gui_rexuiz_tab_settings_video_advanced_spawn();
 	me.configureDialog(me);
 	return me;
 }
-void casingsCountUpdate(entity e, entity me) {
+
+void(entity e, entity me) gui_rexuiz_tab_settings_video_advanced_casings_count_update {
 	cvar_set("cl_casings", ftos(!!cvar("cl_casings_maxcount")));
 }
-void gibsUpdate(entity gibsMaxCount, entity me) {
+
+void(entity gibsMaxCount, entity me) gui_rexuiz_tab_settings_video_advanced_gibs_update {
 	if (cvar("cl_nogibs") == 1) {
 		if (cvar("cl_gibs_maxcount"))
-				cvar_set("cl_gibs_maxcount", "0");
+			cvar_set("cl_gibs_maxcount", "0");
 	} else if not(cvar("cl_gibs_maxcount"))
 		cvar_set("cl_gibs_maxcount", "30");
 	gibsMaxCount.loadCvars(gibsMaxCount);
 }
-void gibsCountUpdate(entity gibs, entity me) {
+
+void(entity gibs, entity me) gui_rexuiz_tab_settings_video_advanced_gibs_count_update {
 	if not(cvar("cl_gibs_maxcount")) {
 		if (cvar("cl_nogibs") < 1)
-				cvar_set("cl_nogibs", "1");
+			cvar_set("cl_nogibs", "1");
 	} else if (cvar("cl_nogibs") >= 1) {
 		cvar_set("cl_nogibs", "0.5");
 	}
 	gibs.loadCvars(gibs);
 }
-void fillNexuizVideoSettingsAdvancedTab(entity me)
-{
+
+void(entity me) gui_rexuiz_tab_settings_video_advanced_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textlabel_make(0, _("Particle quality:")));
@@ -48,41 +51,41 @@ void fillNexuizVideoSettingsAdvancedTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textlabel_make(0, _("Gibs:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("cl_nogibs"));
-				e.addValue(e, _("None"), "1");
-				e.addValue(e, _("Few"), "0.75");
-				e.addValue(e, _("Many"), "0.5");
-				e.addValue(e, _("Lots"), "0");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("None"), "1");
+			e.addValue(e, _("Few"), "0.75");
+			e.addValue(e, _("Many"), "0.5");
+			e.addValue(e, _("Lots"), "0");
+			e.configureNexuizTextSliderValues(e);
 		entity gibs = e;
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textlabel_make(0, _("Gibs count:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(0, 100, 10, "cl_gibs_maxcount"));
 		entity gibsMaxCount = e;
-		gui_make_callback(gibs, gibsMaxCount, gibsUpdate);
-		gui_make_callback(gibsMaxCount, gibs, gibsCountUpdate);
-		gibsUpdate(gibsMaxCount, gibs);
-		gibsCountUpdate(gibs, gibsMaxCount);
+		gui_make_callback(gibs, gibsMaxCount, gui_rexuiz_tab_settings_video_advanced_gibs_update);
+		gui_make_callback(gibsMaxCount, gibs, gui_rexuiz_tab_settings_video_advanced_gibs_count_update);
+		gui_rexuiz_tab_settings_video_advanced_gibs_update(gibsMaxCount, gibs);
+		gui_rexuiz_tab_settings_video_advanced_gibs_count_update(gibs, gibsMaxCount);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textlabel_make(0, _("Casing count:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(0, 100, 10, "cl_casings_maxcount"));
-		gui_make_callback(e, NULL, casingsCountUpdate);
-		casingsCountUpdate(NULL, e);
+		gui_make_callback(e, NULL, gui_rexuiz_tab_settings_video_advanced_casings_count_update);
+		gui_rexuiz_tab_settings_video_advanced_casings_count_update(NULL, e);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_checkbox_make(0, "cl_decals", _("Decals")));
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(64, 1024, 64, "cl_decals_max"));
-				gui_set_dependent(e, "cl_decals", 1, 1);
+			gui_set_dependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.3, e = gui_rexuiz_textlabel_make(0, _("Distance:")));
-				gui_set_dependent(e, "cl_decals", 1, 1);
+			gui_set_dependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(200, 500, 20, "r_drawdecals_drawdistance"));
-				gui_set_dependent(e, "cl_decals", 1, 1);
+			gui_set_dependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.3, e = gui_rexuiz_textlabel_make(0, _("Time:")));
-				gui_set_dependent(e, "cl_decals", 1, 1);
+			gui_set_dependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = gui_rexuiz_slider_make(1, 20, 1, "cl_decals_time"));
-				gui_set_dependent(e, "cl_decals", 1, 1);
+			gui_set_dependent(e, "cl_decals", 1, 1);
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 	me.TD(me, 1, 1, e = gui_rexuiz_checkbox_make(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
 	me.TD(me, 1, 1.8, e = gui_rexuiz_checkbox_make(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
@@ -91,7 +94,7 @@ void fillNexuizVideoSettingsAdvancedTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_checkbox_make(0, "r_glsl_offsetmapping", _("Offset mapping")));
 		me.TD(me, 1, 1.5, e = gui_rexuiz_checkbox_make(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
-				gui_set_dependent(e, "r_glsl_offsetmapping", 1, 1);
+			gui_set_dependent(e, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "r_bloom", _("Bloom")));
 	me.TR(me);
@@ -110,12 +113,12 @@ void fillNexuizVideoSettingsAdvancedTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "r_celoutlines", _("Cartoon-style outlines")));
-				gui_set_dependent(e, "r_shadow_deferred", 1, 1);
+			gui_set_dependent(e, "r_shadow_deferred", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "r_celshading", _("Cartoon-style shading")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "v_glslgamma", _("Use GLSL to handle color control")));
 	me.TR(me);
-		if(cvar_type("apple_multithreadedgl") & CVAR_TYPEFLAG_ENGINE)
+		if (cvar_type("apple_multithreadedgl") & CVAR_TYPEFLAG_ENGINE)
 				me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(1, "apple_multithreadedgl", _("Disable multithreaded OpenGL")));
 }

@@ -1,6 +1,8 @@
-entity spawnNexuizNetworkSettingsTab() {
-	entity me; me = gui_rexuiz_tab_spawn();
-	me.fill = fillNexuizNetworkSettingsTab;
+void(entity me) gui_rexuiz_tab_settings_network_fill;
+
+entity(void) gui_rexuiz_tab_settings_network_spawn {
+	entity me = gui_rexuiz_tab_spawn();
+	me.fill = gui_rexuiz_tab_settings_network_fill;
 	me.title = _("Network");
 	me.intendedWidth = 0.9;
 	me.rows = 22;
@@ -8,16 +10,14 @@ entity spawnNexuizNetworkSettingsTab() {
 	me.classname = "NexuizNetworkSettingsTab";
 	return me;
 }
-entity makeNexuizNetworkSettingsTab();
-entity makeNexuizNetworkSettingsTab()
-{
-	entity me;
-	me = spawnNexuizNetworkSettingsTab();
+
+entity(void) gui_rexuiz_tab_settings_network_make {
+	entity me = gui_rexuiz_tab_settings_network_spawn();
 	me.configureDialog(me);
 	return me;
 }
-void fillNexuizNetworkSettingsTab(entity me)
-{
+
+void(entity me) gui_rexuiz_tab_settings_network_fill {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "shownetgraph", _("Show netgraph")));
@@ -25,12 +25,12 @@ void fillNexuizNetworkSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = gui_rexuiz_textlabel_make(0, _("Network speed:")));
 		me.TD(me, 1, 1.75, e = gui_rexuiz_textslider_make("_cl_rate"));
-				e.addValue(e, _("Low"), "8000");
-				e.addValue(e, _("Medium"), "24000");
-				e.addValue(e, _("High"), "64000");
-				e.addValue(e, _("Unlimited"), "128000");
-				e.configureNexuizTextSliderValues(e);
-				me.TR(me);
+			e.addValue(e, _("Low"), "8000");
+			e.addValue(e, _("Medium"), "24000");
+			e.addValue(e, _("High"), "64000");
+			e.addValue(e, _("Unlimited"), "128000");
+			e.configureNexuizTextSliderValues(e);
+			me.TR(me);
 		me.TD(me, 1, 1.25, e = gui_rexuiz_textlabel_make(0, _("Input packets/s:")));
 		me.TD(me, 1, 1.75, e = gui_rexuiz_slider_make(20, 125, 1, "cl_netfps"));
 	me.TR(me);

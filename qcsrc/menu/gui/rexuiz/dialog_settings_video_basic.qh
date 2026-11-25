@@ -1,9 +1,0 @@
-entity spawnNexuizVideoSettingsBasicTab();
-void(entity) fillNexuizVideoSettingsBasicTab;
-.void(entity) fill;
-.string title;
-.float intendedWidth;
-.float rows;
-.float columns;
-
-entity makeNexuizVideoSettingsBasicTab();

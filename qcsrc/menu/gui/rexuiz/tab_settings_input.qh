@@ -1,0 +1,8 @@
+entity(void) gui_rexuiz_tab_settings_input_spawn;
+.void(entity) fill;
+.string title;
+.float intendedWidth;
+.float rows;
+.float columns;
+
+entity(void) gui_rexuiz_tab_settings_input_make;

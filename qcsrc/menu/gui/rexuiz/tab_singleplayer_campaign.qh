@@ -1,5 +1,4 @@
-entity spawnNexuizCampaignTab();
-void(entity) fillNexuizCampaignTab;
+entity(void) gui_rexuiz_tab_singleplayer_campaign_spawn;
 .void(entity) fill;
 .string title;
 .entity campaignBox;
@@ -8,4 +7,4 @@ void(entity) fillNexuizCampaignTab;
 .float columns;
 .float intendedWidth;
 
-entity makeNexuizCampaignTab();
+entity(void) gui_rexuiz_tab_singleplayer_campaign_make;

@@ -62,11 +62,11 @@ void(string theCommand) cmd { //called by engine
 	} else if (s == "skinselect") {
 		menu_goto("skinselector");
 	} else if (s == "video" && argc == 2) {
-		if (argv(1) == "low") lowNexuizVideoSettingsTab(NULL, NULL);
-		else if (argv(1) == "medium") mediumNexuizVideoSettingsTab(NULL, NULL);
-		else if (argv(1) == "normal") normalNexuizVideoSettingsTab(NULL, NULL);
-		else if (argv(1) == "high") highNexuizVideoSettingsTab(NULL, NULL);
-		else if (argv(1) == "ultra") ultraNexuizVideoSettingsTab(NULL, NULL);
+		if (argv(1) == "low") gui_rexuiz_tab_settings_video_preset_low(NULL, NULL);
+		else if (argv(1) == "medium") gui_rexuiz_tab_settings_video_preset_medium(NULL, NULL);
+		else if (argv(1) == "normal") gui_rexuiz_tab_settings_video_preset_normal(NULL, NULL);
+		else if (argv(1) == "high") gui_rexuiz_tab_settings_video_preset_high(NULL, NULL);
+		else if (argv(1) == "ultra") gui_rexuiz_tab_settings_video_preset_ultra(NULL, NULL);
 	} else if (s == "loadfallback" && argc == 2) {
 		if (isserver() || clientstate() == CS_CONNECTED) {
 			//print("Loading successful\n");

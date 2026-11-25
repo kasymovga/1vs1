@@ -1,6 +1,8 @@
-entity spawnNexuizAudioSettingsTab() {
-	entity me; me = gui_rexuiz_tab_spawn();
-	me.fill = fillNexuizAudioSettingsTab;
+void(entity me) gui_rexuiz_tab_settings_audio_fill;
+
+entity(void) gui_rexuiz_tab_settings_audio_spawn {
+	entity me = gui_rexuiz_tab_spawn();
+	me.fill = gui_rexuiz_tab_settings_audio_fill;
 	me.title = _("Audio");
 	me.intendedWidth = 0.9;
 	me.rows = 22;
@@ -8,16 +10,14 @@ entity spawnNexuizAudioSettingsTab() {
 	me.classname = "NexuizAudioSettingsTab";
 	return me;
 }
-entity makeNexuizAudioSettingsTab();
-entity makeNexuizAudioSettingsTab()
-{
-	entity me;
-	me = spawnNexuizAudioSettingsTab();
+
+entity(void) gui_rexuiz_tab_settings_audio_make {
+	entity me = gui_rexuiz_tab_settings_audio_spawn();
 	me.configureDialog(me);
 	return me;
 }
-void fillNexuizAudioSettingsTab(entity me)
-{
+
+void(entity me) gui_rexuiz_tab_settings_audio_fill {
 	entity e, s, sl;
 	me.TR(me);
 		s = gui_rexuiz_slider_decibels_make(-20, 0, 0.5, "mastervolume");
@@ -128,27 +128,27 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Frequency:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("snd_speed"));
-				e.addValue(e, _("8 kHz"), "8000");
-				e.addValue(e, _("11.025 kHz"), "11025");
-				e.addValue(e, _("16 kHz"), "16000");
-				e.addValue(e, _("22.05 kHz"), "22050");
-				e.addValue(e, _("24 kHz"), "24000");
-				e.addValue(e, _("32 kHz"), "32000");
-				e.addValue(e, _("44.1 kHz"), "44100");
-				e.addValue(e, _("48 kHz"), "48000");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("8 kHz"), "8000");
+			e.addValue(e, _("11.025 kHz"), "11025");
+			e.addValue(e, _("16 kHz"), "16000");
+			e.addValue(e, _("22.05 kHz"), "22050");
+			e.addValue(e, _("24 kHz"), "24000");
+			e.addValue(e, _("32 kHz"), "32000");
+			e.addValue(e, _("44.1 kHz"), "44100");
+			e.addValue(e, _("48 kHz"), "48000");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Channels:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("snd_channels"));
-				e.addValue(e, _("Mono"), "1");
-				e.addValue(e, _("Stereo"), "2");
-				e.addValue(e, "2.1", "3");
-				e.addValue(e, "3.1", "4");
-				e.addValue(e, "4.1", "5");
-				e.addValue(e, "5.1", "6");
-				e.addValue(e, "6.1", "7");
-				e.addValue(e, "7.1", "8");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Mono"), "1");
+			e.addValue(e, _("Stereo"), "2");
+			e.addValue(e, "2.1", "3");
+			e.addValue(e, "3.1", "4");
+			e.addValue(e, "4.1", "5");
+			e.addValue(e, "5.1", "6");
+			e.addValue(e, "6.1", "7");
+			e.addValue(e, "7.1", "8");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 2.8, e = gui_rexuiz_checkbox_make(0, "snd_swapstereo", _("Swap Stereo")));
@@ -168,20 +168,20 @@ void fillNexuizAudioSettingsTab(entity me)
 		me.TD(me, 1, 1.1, e = gui_rexuiz_textlabel_make(0, _("Taunt range:")));
 		gui_set_dependent(e, "cl_voice_directional", 0.5, -0.5);
 		me.TD(me, 1, 1.6, e = gui_rexuiz_textslider_make("cl_voice_directional_taunt_attenuation"));
-				e.addValue(e, _("Very short"), "3");
-				e.addValue(e, _("Short"), "2");
-				e.addValue(e, _("Normal"), "0.5");
-				e.addValue(e, _("Long"), "0.25");
-				e.addValue(e, _("Very long"), "0.015625");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Very short"), "3");
+			e.addValue(e, _("Short"), "2");
+			e.addValue(e, _("Normal"), "0.5");
+			e.addValue(e, _("Long"), "0.25");
+			e.addValue(e, _("Very long"), "0.015625");
+			e.configureNexuizTextSliderValues(e);
 		gui_set_dependent(e, "cl_voice_directional", 0.5, -0.5);
 	me.TR(me);
 		sl = gui_rexuiz_slider_make(0.15, 1, 0.05, "cl_autotaunt");
-				sl.valueDisplayMultiplier = 100;
-				sl.valueDigits = 0;
+			sl.valueDisplayMultiplier = 100;
+			sl.valueDigits = 0;
 		me.TD(me, 1, 1, e = gui_rexuiz_checkbox_slider_make(0, 1, sl, _("Automatic taunts")));
 		if(sl.value != e.savedValue)
-				e.savedValue = 0.65; // default
+			e.savedValue = 0.65; // default
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_textlabel_make(0.1, _("Frequency:")));
 		me.TD(me, 1, 2, sl);
@@ -189,11 +189,11 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textlabel_make(0, _("Time warning:")));
 		me.TD(me, 1, 1.5, e = gui_rexuiz_textslider_make("cl_sound_maptime_warning"));
-				e.addValue(e, _("None"), "0");
-				e.addValue(e, _("1 minute"), "1");
-				e.addValue(e, _("5 minutes"), "2");
-				e.addValue(e, _("Both"), "3");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("None"), "0");
+			e.addValue(e, _("1 minute"), "1");
+			e.addValue(e, _("5 minutes"), "2");
+			e.addValue(e, _("Both"), "3");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "cl_hitsound", _("Hit indicator")));
 	me.TR(me);

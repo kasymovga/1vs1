@@ -1,9 +1,0 @@
-entity spawnNexuizInputSettingsTab();
-void(entity) fillNexuizInputSettingsTab;
-.void(entity) fill;
-.string title;
-.float intendedWidth;
-.float rows;
-.float columns;
-
-entity makeNexuizInputSettingsTab();

@@ -1,0 +1,13 @@
+entity(void) gui_rexuiz_tab_settings_video_spawn;
+.void(entity) fill;
+.string title;
+.float intendedWidth;
+.float rows;
+.float columns;
+
+entity(void) gui_rexuiz_tab_settings_video_make;
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_low;
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_normal;
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_medium;
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_high;
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_ultra;

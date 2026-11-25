@@ -1,0 +1,9 @@
+entity(void) gui_rexuiz_tab_settings_advanced_spawn;
+.void(entity) fill;
+.string title;
+.float intendedWidth;
+.float rows;
+.float columns;
+.void(entity) showNotify;
+
+entity(void) gui_rexuiz_tab_settings_advanced_make;

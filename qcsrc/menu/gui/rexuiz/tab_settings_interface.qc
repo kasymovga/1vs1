@@ -1,6 +1,8 @@
-entity spawnNexuizInterfaceSettingsTab() {
+void(entity me) gui_rexuiz_tab_settings_interface_fill;
+
+entity(void) gui_rexuiz_tab_settings_interface_spawn {
 	entity me; me = gui_rexuiz_tab_spawn();
-	me.fill = fillNexuizInterfaceSettingsTab;
+	me.fill = gui_rexuiz_tab_settings_interface_fill;
 	me.title = _("Interface");
 	me.intendedWidth = 0.9;
 	me.rows = 22;
@@ -8,8 +10,8 @@ entity spawnNexuizInterfaceSettingsTab() {
 	me.classname = "NexuizInterfaceSettingsTab";
 	return me;
 }
-entity makeNexuizInterfaceSettingsTab();
-void (entity btn, entity me) applyNexuizInterfaceSettingsTab {
+
+void (entity btn, entity me) gui_rexuiz_tab_settings_interface_apply {
 	me.setSkin(me);
 	if (cvar("cl_font_iceland") && !dlc_ready("font-iceland")) {
 		localcmd(";fs_rescan;saveconfig\n");
@@ -22,13 +24,14 @@ void (entity btn, entity me) applyNexuizInterfaceSettingsTab {
 		localcmd(";fs_rescan;saveconfig\n");
 	}
 }
-entity() makeNexuizInterfaceSettingsTab {
-	entity me;
-	me = spawnNexuizInterfaceSettingsTab();
+
+entity(void) gui_rexuiz_tab_settings_interface_make {
+	entity me = gui_rexuiz_tab_settings_interface_spawn();
 	me.configureDialog(me);
 	return me;
 }
-void(entity me) fillNexuizInterfaceSettingsTab {
+
+void(entity me) gui_rexuiz_tab_settings_interface_fill {
 	entity e;
 	entity sk;
 	me.TR(me);
@@ -37,8 +40,8 @@ void(entity me) fillNexuizInterfaceSettingsTab {
 		me.TD(me, me.rows - 2, 3, sk = gui_rexuiz_skinlist_make());
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("Apply immediately"), '0 0 0'));
-				e.onClick = applyNexuizInterfaceSettingsTab;
-				e.onClickEntity = sk;
+			e.onClick = gui_rexuiz_tab_settings_interface_apply;
+			e.onClickEntity = sk;
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "showtime", _("Show current time")));
 	me.TR(me);
@@ -50,27 +53,27 @@ void(entity me) fillNexuizInterfaceSettingsTab {
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8/3, e = gui_rexuiz_radiobutton_make(1, "cl_showspeed_unit", "0", _("qu/s (hidden)")));
-				gui_set_dependent(e, "cl_showspeed", 1, 1);
+			gui_set_dependent(e, "cl_showspeed", 1, 1);
 		me.TD(me, 1, 2.8/3, e = gui_rexuiz_radiobutton_make(1, "cl_showspeed_unit", "1", _("qu/s")));
-				gui_set_dependent(e, "cl_showspeed", 1, 1);
+			gui_set_dependent(e, "cl_showspeed", 1, 1);
 		me.TD(me, 1, 2.8/3, e = gui_rexuiz_radiobutton_make(1, "cl_showspeed_unit", "2", _("m/s")));
-				gui_set_dependent(e, "cl_showspeed", 1, 1);
+			gui_set_dependent(e, "cl_showspeed", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8/3, e = gui_rexuiz_radiobutton_make(1, "cl_showspeed_unit", "3", _("km/h")));
-				gui_set_dependent(e, "cl_showspeed", 1, 1);
+			gui_set_dependent(e, "cl_showspeed", 1, 1);
 		me.TD(me, 1, 2.8/3, e = gui_rexuiz_radiobutton_make(1, "cl_showspeed_unit", "4", _("mph")));
-				gui_set_dependent(e, "cl_showspeed", 1, 1);
+			gui_set_dependent(e, "cl_showspeed", 1, 1);
 		me.TD(me, 1, 2.8/3, e = gui_rexuiz_radiobutton_make(1, "cl_showspeed_unit", "5", _("knots")));
-				gui_set_dependent(e, "cl_showspeed", 1, 1);
+			gui_set_dependent(e, "cl_showspeed", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "cl_showacceleration", _("Show accelerometer")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8/2, e = gui_rexuiz_textlabel_make(0, _("Accelerometer scale:")));
-				gui_set_dependent(e, "cl_showacceleration", 1, 1);
+			gui_set_dependent(e, "cl_showacceleration", 1, 1);
 		me.TD(me, 1, 2.8/2, e = gui_rexuiz_slider_make(1, 10, 0.5, "cl_showacceleration_scale"));
-				gui_set_dependent(e, "cl_showacceleration", 1, 1);
+			gui_set_dependent(e, "cl_showacceleration", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_checkbox_make(0, "cl_font_iceland", _("Use \"Iceland\" font for big messages")));
 	me.TR(me);
@@ -93,6 +96,6 @@ void(entity me) fillNexuizInterfaceSettingsTab {
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = gui_rexuiz_button_make(_("Language..."), '0 0 0'));
-				e.onClick = DialogOpenButton_Click;
-				e.onClickEntity = main.languageDialog;
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.languageDialog;
 }

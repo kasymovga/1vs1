@@ -1,6 +1,8 @@
-entity spawnNexuizVideoSettingsTab() {
+void(entity me) gui_rexuiz_tab_settings_video_fill;
+
+entity(void) gui_rexuiz_tab_settings_video_spawn {
 	entity me; me = gui_rexuiz_tab_spawn();
-	me.fill = fillNexuizVideoSettingsTab;
+	me.fill = gui_rexuiz_tab_settings_video_fill;
 	me.title = _("Video");
 	me.intendedWidth = 0.9;
 	me.rows = 22;
@@ -8,8 +10,8 @@ entity spawnNexuizVideoSettingsTab() {
 	me.classname = "NexuizVideoSettingsTab";
 	return me;
 }
-entity makeNexuizVideoSettingsTab();
-void(entity btn, entity me) lowNexuizVideoSettingsTab {
+
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_low {
 	cvar_set("cl_decals", "1");
 	cvar_set("cl_decals_time", "2");
 	cvar_set("cl_particles_quality", "0.1");
@@ -45,7 +47,6 @@ void(entity btn, entity me) lowNexuizVideoSettingsTab {
 	cvar_set("r_water_resolutionmultiplier", "0.5");
 	cvar_set("vid_samples", "1");
 	cvar_set("r_fxaa", "0");
-	//r_viewscale 1
 	cvar_set("r_glsl_postprocess", "0");
 	cvar_set("r_glsl_saturation", "1");
 	cvar_set("v_glslgamma", "0");
@@ -54,7 +55,8 @@ void(entity btn, entity me) lowNexuizVideoSettingsTab {
 	cvar_set("r_extra_texture_effects", "0");
 	gui_load_all_cvars(main);
 }
-void(entity btn, entity me) mediumNexuizVideoSettingsTab {
+
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_medium {
 	cvar_set("cl_decals", "1");
 	cvar_set("cl_decals_time", "2");
 	cvar_set("cl_particles_quality", "0.25");
@@ -90,7 +92,6 @@ void(entity btn, entity me) mediumNexuizVideoSettingsTab {
 	cvar_set("r_water_resolutionmultiplier", "0.5");
 	cvar_set("vid_samples", "1");
 	cvar_set("r_fxaa", "0");
-	//r_viewscale 1
 	cvar_set("r_glsl_postprocess", "0");
 	cvar_set("r_glsl_saturation", "1");
 	cvar_set("v_glslgamma", "0");
@@ -99,7 +100,8 @@ void(entity btn, entity me) mediumNexuizVideoSettingsTab {
 	cvar_set("r_extra_texture_effects", "1");
 	gui_load_all_cvars(main);
 }
-void(entity btn, entity me) normalNexuizVideoSettingsTab {
+
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_normal {
 	cvar_set("cl_decals", "1");
 	cvar_set("cl_decals_time", "2");
 	cvar_set("cl_particles_quality", "0.5");
@@ -135,7 +137,6 @@ void(entity btn, entity me) normalNexuizVideoSettingsTab {
 	cvar_set("r_water_resolutionmultiplier", "0.5");
 	cvar_set("vid_samples", "1");
 	cvar_set("r_fxaa", "0");
-	//r_viewscale 1
 	cvar_set("r_glsl_postprocess", "0");
 	cvar_set("r_glsl_saturation", "1");
 	cvar_set("v_glslgamma", "0");
@@ -144,7 +145,8 @@ void(entity btn, entity me) normalNexuizVideoSettingsTab {
 	cvar_set("r_extra_texture_effects", "1");
 	gui_load_all_cvars(main);
 }
-void(entity btn, entity me) highNexuizVideoSettingsTab {
+
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_high {
 	cvar_set("cl_decals", "1");
 	cvar_set("cl_decals_time", "4");
 	cvar_set("cl_particles_quality", "0.75");
@@ -180,7 +182,6 @@ void(entity btn, entity me) highNexuizVideoSettingsTab {
 	cvar_set("r_water_resolutionmultiplier", "0.5");
 	cvar_set("vid_samples", "1");
 	cvar_set("r_fxaa", "1");
-	//r_viewscale 1
 	cvar_set("r_glsl_postprocess", "0");
 	//r_glsl_saturation 1
 	cvar_set("v_glslgamma", "1");
@@ -189,7 +190,8 @@ void(entity btn, entity me) highNexuizVideoSettingsTab {
 	cvar_set("r_extra_texture_effects", "1");
 	gui_load_all_cvars(main);
 }
-void(entity btn, entity me) ultraNexuizVideoSettingsTab {
+
+void(entity btn, entity me) gui_rexuiz_tab_settings_video_preset_ultra {
 	cvar_set("cl_decals", "1");
 	cvar_set("cl_decals_time", "10");
 	cvar_set("cl_particles_quality", "1");
@@ -234,15 +236,14 @@ void(entity btn, entity me) ultraNexuizVideoSettingsTab {
 	cvar_set("r_extra_texture_effects", "1");
 	gui_load_all_cvars(main);
 }
-entity makeNexuizVideoSettingsTab()
-{
-	entity me;
-	me = spawnNexuizVideoSettingsTab();
+
+entity(void) gui_rexuiz_tab_settings_video_make {
+	entity me = gui_rexuiz_tab_settings_video_spawn();
 	me.configureDialog(me);
 	return me;
 }
-void fillNexuizVideoSettingsTab(entity me)
-{
+
+void(entity me) gui_rexuiz_tab_settings_video_fill {
 	entity e;
 	entity mc;
 	float n;
@@ -250,19 +251,19 @@ void fillNexuizVideoSettingsTab(entity me)
 		me.TD(me, 1, 1.2, e = gui_rexuiz_textlabel_make(0, _("Quality preset:")));
 		n = 5;
 		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("Low"), '0 0 0'));
-				e.onClick = lowNexuizVideoSettingsTab;
+			e.onClick = gui_rexuiz_tab_settings_video_preset_low;
 		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("Medium"), '0 0 0'));
-				e.onClick = mediumNexuizVideoSettingsTab;
+			e.onClick = gui_rexuiz_tab_settings_video_preset_medium;
 		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("Normal"), '0 0 0'));
-				e.onClick = normalNexuizVideoSettingsTab;
+			e.onClick = gui_rexuiz_tab_settings_video_preset_normal;
 		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("High"), '0 0 0'));
-				e.onClick = highNexuizVideoSettingsTab;
+			e.onClick = gui_rexuiz_tab_settings_video_preset_high;
 		me.TD(me, 1, 5.3 / n, e = gui_rexuiz_button_make(_("Ultra"), '0 0 0'));
-				e.onClick = ultraNexuizVideoSettingsTab;
+			e.onClick = gui_rexuiz_tab_settings_video_preset_ultra;
 	me.TR(me);
 		mc = gui_rexuiz_tabcontroller_make(me.rows - 2);
-		me.TD(me, 1, 3.25, e = mc.makeTabButton(mc, _("Basic"), makeNexuizVideoSettingsBasicTab()));
-		me.TD(me, 1, 3.25, mc.makeTabButton(mc, _("Advanced"), makeNexuizVideoSettingsAdvancedTab()));
+		me.TD(me, 1, 3.25, e = mc.makeTabButton(mc, _("Basic"), gui_rexuiz_tab_settings_video_basic_make()));
+		me.TD(me, 1, 3.25, mc.makeTabButton(mc, _("Advanced"), gui_rexuiz_tab_settings_video_advanced_make()));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, me.rows - 3, me.columns, mc);

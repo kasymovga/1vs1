@@ -1,7 +1,5 @@
-entity spawnNexuizPlayerSettingsTab();
-void(entity) fillNexuizPlayerSettingsTab;
+entity(void) gui_rexuiz_tab_settings_game_spawn;
 .void(entity) fill;
-void(entity) drawNexuizPlayerSettingsTab;
 .void(entity) draw;
 .string title;
 .float intendedWidth;
@@ -10,4 +8,4 @@ void(entity) drawNexuizPlayerSettingsTab;
 .entity playerNameLabel;
 .float playerNameLabelAlpha;
 
-entity makeNexuizPlayerSettingsTab();
+entity(void) gui_rexuiz_tab_settings_game_make;

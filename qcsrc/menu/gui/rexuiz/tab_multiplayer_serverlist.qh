@@ -1,0 +1,10 @@
+entity(void) gui_rexuiz_tab_multiplayer_serverlist_spawn;
+.void(entity) fill;
+.string title;
+.float intendedWidth;
+.float rows;
+.float columns;
+.void(entity) showNotify;
+.float(entity me, float scan, float ascii, float shift) keyDown;
+
+entity(void) gui_rexuiz_tab_multiplayer_serverlist_make;

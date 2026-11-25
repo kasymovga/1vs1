@@ -1,7 +1,10 @@
-entity spawnNexuizServerCreateTab() {
-	entity me; me = gui_rexuiz_tab_spawn();
-	me.fill = fillNexuizServerCreateTab;
-	me.gameTypeChangeNotify = gameTypeChangeNotifyNexuizServerCreateTab;
+void(entity me) rexuiz_gui_tab_multiplayer_create_fill;
+void(entity me) rexuiz_gui_tab_multiplayer_create_type_change;
+
+entity(void) rexuiz_gui_tab_multiplayer_create_spawn {
+	entity me = gui_rexuiz_tab_spawn();
+	me.fill = rexuiz_gui_tab_multiplayer_create_fill;
+	me.gameTypeChangeNotify = rexuiz_gui_tab_multiplayer_create_type_change;
 	me.title = _("Create");
 	me.intendedWidth = 0.9;
 	me.rows = 22;
@@ -15,15 +18,15 @@ entity spawnNexuizServerCreateTab() {
 	me.classname = "NexuizServerCreateTab";
 	return me;
 }
-entity makeNexuizServerCreateTab(float single);
-entity makeNexuizServerCreateTab(float single)
-{
+
+entity(float single) rexuiz_gui_tab_multiplayer_create_make {
 	entity me;
-	me = spawnNexuizServerCreateTab();
+	me = rexuiz_gui_tab_multiplayer_create_spawn();
 	me.isSinglePlayer = single;
 	me.configureDialog(me);
 	return me;
 }
+
 void(entity input, entity ignore) nexuizServerCreateTabPINCodeOnChange {
 	float i, n = strlen(input.text);
 	for (i = 0; i < n; i++) {
@@ -34,8 +37,8 @@ void(entity input, entity ignore) nexuizServerCreateTabPINCodeOnChange {
 		}
 	}
 }
-void fillNexuizServerCreateTab(entity me)
-{
+
+void(entity me) rexuiz_gui_tab_multiplayer_create_fill {
 	entity e, selected;
 	float n;
 	float i;
@@ -43,15 +46,15 @@ void fillNexuizServerCreateTab(entity me)
 	selected = NULL;
 	for (i = GAME_TYPE_DEATHMATCH; i < GAME_TYPE_SINGLE; i++) {
 		if (mod(i - 1, n) == 0)
-				me.TR(me);
+			me.TR(me);
+
 		me.TD(me, 1, me.columns / n, e = gui_rexuiz_gametypebutton_make(1, game_type_name(i), game_type_name_long(i)));
-				if not(selected)
+			if not(selected)
 				selected = e;
-				else if(e.checked)
+			else if(e.checked)
 				selected = e;
 	}
-	if(selected)
-	{
+	if (selected) {
 		//print("NO CHECK\n");
 		selected.setChecked(selected, 1);
 	}
@@ -59,35 +62,35 @@ void fillNexuizServerCreateTab(entity me)
 	me.TR(me);
 		me.mapListBox = gui_rexuiz_maplist_make(me.isSinglePlayer);
 		me.TD(me, 1, 3, e = gui_rexuiz_textlabel_make(0, _("Map list:")));
-				gui_make_callback(e, me.mapListBox, me.mapListBox.refilterCallback);
+			gui_make_callback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
 		me.TD(me, me.rows - 9, 3, me.mapListBox);
 	me.gotoRC(me, me.rows - 3, 0);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("All"), '0 0 0'));
-				e.onClick = gui_rexuiz_maplist_all;
-				e.onClickEntity = me.mapListBox;
+			e.onClick = gui_rexuiz_maplist_all;
+			e.onClickEntity = me.mapListBox;
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("None"), '0 0 0'));
-				e.onClick = gui_rexuiz_maplist_none;
-				e.onClickEntity = me.mapListBox;
+			e.onClick = gui_rexuiz_maplist_none;
+			e.onClickEntity = me.mapListBox;
 	me.gotoRC(me, 4, 3.5); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 3, e = gui_rexuiz_textlabel_make(0, _("Match settings:")));
 	if (!me.isSinglePlayer) {
 		me.TR(me);
-				me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Server mode:")));
-				me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("menu_public"));
-				e.addValue(e, _("Single player"), "-1");
-				e.addValue(e, _("Private"), "0");
-				e.addValue(e, _("Public"), "1");
-				e.configureNexuizTextSliderValues(e);
+			me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Server mode:")));
+			me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("menu_public"));
+			e.addValue(e, _("Single player"), "-1");
+			e.addValue(e, _("Private"), "0");
+			e.addValue(e, _("Public"), "1");
+			e.configureNexuizTextSliderValues(e);
 		me.TR(me);
-				me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("PIN-code:")));
-				me.TD(me, 1, 1, e = gui_rexuiz_inputbox_make(0, "sv_pin_code"));
-				e.onChange = nexuizServerCreateTabPINCodeOnChange;
-				me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("* Digits only")));
-				e.colorL = SKINCOLOR_TEXT_WARNING;
-				e.fontSize = e.fontSize * 0.6;
+			me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("PIN-code:")));
+			me.TD(me, 1, 1, e = gui_rexuiz_inputbox_make(0, "sv_pin_code"));
+			e.onChange = nexuizServerCreateTabPINCodeOnChange;
+			me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("* Digits only")));
+			e.colorL = SKINCOLOR_TEXT_WARNING;
+			e.fontSize = e.fontSize * 0.6;
 	}
 	me.TR(me);
 		me.sliderTimelimit = gui_rexuiz_slider_make(1.0, 60.0, 0.5, "g_timelimit");
@@ -96,17 +99,17 @@ void fillNexuizServerCreateTab(entity me)
 	me.TR(me);
 		me.sliderFraglimit = gui_rexuiz_slider_make(1.0, 2000.0, 5, "g_scorelimit");
 		me.TD(me, 1, 1, e = gui_rexuiz_checkbox_slider_make(0, 1, me.sliderFraglimit, _("Point limit:")));
-				me.checkboxFraglimit = e;
+			me.checkboxFraglimit = e;
 		me.TD(me, 1, 2, me.sliderFraglimit);
 	if not(me.isSinglePlayer) {
 		me.TR(me);
-				me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Player slots:")));
-				me.TD(me, 1, 2, gui_rexuiz_slider_make(1, 64, 1, "menu_maxplayers"));
+			me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Player slots:")));
+			me.TD(me, 1, 2, gui_rexuiz_slider_make(1, 64, 1, "menu_maxplayers"));
 		me.TR(me);
-				me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Minimal amount of human and bots:")));
+			me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Minimal amount of human and bots:")));
 		me.TR(me);
-				me.TDempty(me, 1);
-				me.TD(me, 1, 2, gui_rexuiz_slider_make(0, 32, 1, "menu_minplayers"));
+			me.TDempty(me, 1);
+			me.TD(me, 1, 2, gui_rexuiz_slider_make(0, 32, 1, "menu_minplayers"));
 	}
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, (me.isSinglePlayer ? _("Number of bots:") :_("Additional number of bots:"))));
@@ -116,54 +119,54 @@ void fillNexuizServerCreateTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_textlabel_make(0, _("Bot skill:")));
 		me.TD(me, 1, 2, e = gui_rexuiz_textslider_make("skill"));
-				e.addValue(e, _("Botlike"), "0");
-				e.addValue(e, _("Beginner"), "4");
-				e.addValue(e, _("You will win"), "8");
-				e.addValue(e, _("You can win"), "12");
-				e.addValue(e, _("You might win"), "16");
-				e.addValue(e, _("Advanced"), "20");
-				e.addValue(e, _("Expert"), "24");
-				e.addValue(e, _("Pro"), "28");
-				e.addValue(e, _("Assassin"), "32");
-				e.addValue(e, _("Unhuman"), "36");
-				e.addValue(e, _("Godlike"), "40");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Botlike"), "0");
+			e.addValue(e, _("Beginner"), "4");
+			e.addValue(e, _("You will win"), "8");
+			e.addValue(e, _("You can win"), "12");
+			e.addValue(e, _("You might win"), "16");
+			e.addValue(e, _("Advanced"), "20");
+			e.addValue(e, _("Expert"), "24");
+			e.addValue(e, _("Pro"), "28");
+			e.addValue(e, _("Assassin"), "32");
+			e.addValue(e, _("Unhuman"), "36");
+			e.addValue(e, _("Godlike"), "40");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.9, e = gui_rexuiz_textlabel_make(0, _("Teams:")));
 		me.TD(me, 1, 2, me.sliderTeams = e = gui_rexuiz_textslider_make("g_tdm_teams"));
-				e.addValue(e, _("Default"), "0");
-				e.addValue(e, _("2 teams"), "2");
-				e.addValue(e, _("3 teams"), "3");
-				e.addValue(e, _("4 teams"), "4");
-				e.configureNexuizTextSliderValues(e);
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("2 teams"), "2");
+			e.addValue(e, _("3 teams"), "3");
+			e.addValue(e, _("4 teams"), "4");
+			e.configureNexuizTextSliderValues(e);
 		gui_make_multi(e, "g_dom_teams g_kh_teams");
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("Mutators..."), '0 0 0'));
-				e.onClick = DialogOpenButton_Click;
-				e.onClickEntity = main.mutatorsDialog;
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.mutatorsDialog;
 		me.TD(me, 1, 2, e = gui_rexuiz_textlabel_make(0, NULL));
-				e.textEntity = main.mutatorsDialog;
-				e.allowCut = 1;
+			e.textEntity = main.mutatorsDialog;
+			e.allowCut = 1;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("Old mutators..."), '0 0 0'));
-				e.onClick = DialogOpenButton_Click;
-				e.onClickEntity = main.oldMutatorsDialog;
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.oldMutatorsDialog;
 		me.TD(me, 1, 2, e = gui_rexuiz_textlabel_make(0, NULL));
-				e.textEntity = main.oldMutatorsDialog;
-				e.allowCut = 1;
+			e.textEntity = main.oldMutatorsDialog;
+			e.allowCut = 1;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_checkbox_make(0, "rm", _("RocketMinsta")));
 	me.gotoRC(me, me.rows - 1, 0);
 		//me.TD(me, 1, 2, e = makeNexuizModButton("Multiplayer_Create"));
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make((me.isSinglePlayer ? _("Start Game!") : _("Start Multiplayer!")), '0 0 0'));
-				e.onClick = gui_rexuiz_maplist_start;
-				e.onClickEntity = me.mapListBox;
-				me.mapListBox.startButton = e;
+			e.onClick = gui_rexuiz_maplist_start;
+			e.onClickEntity = me.mapListBox;
+			me.mapListBox.startButton = e;
 	me.gameTypeChangeNotify(me);
 }
-void gameTypeChangeNotifyNexuizServerCreateTab(entity me)
-{
+
+void(entity me) rexuiz_gui_tab_multiplayer_create_type_change {
 	// tell the map list to update
 	float gt;
 	entity e, l, t;
