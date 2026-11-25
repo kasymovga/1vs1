@@ -1,5 +1,5 @@
 entity(void) gui_rexuiz_dialog_teamselect_spawn;
-.void(entity) fill; // to be overridden by user to fill the dialog with controls
+.void(entity) fill;
 .void(entity) showNotify;
 .string title;
 .vector color;

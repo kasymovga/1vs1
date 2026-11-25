@@ -3,7 +3,6 @@ void(entity me) gui_rexuiz_dialog_hint_fill;
 entity(void) gui_rexuiz_dialog_hint_spawn {
 	entity me = gui_rexuiz_rootdialog_spawn();
 	me.fill = gui_rexuiz_dialog_hint_fill;
-	me.configureDialog = configureDialogNexuizHintDialog;
 	me.title = "Hint";
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;
 	me.intendedWidth = 0.75;
@@ -12,9 +11,6 @@ entity(void) gui_rexuiz_dialog_hint_spawn {
 	me.name = "Hint";
 	me.classname = "NexuizHintDialog";
 	return me;
-}
-void(entity me) configureDialogNexuizHintDialog {
-	configureDialogNexuizDialog(me); //Parent method
 }
 void(entity ignore, entity ignore2) nextNexuizHintDialog {
 	localcmd(hint_cmd_next);

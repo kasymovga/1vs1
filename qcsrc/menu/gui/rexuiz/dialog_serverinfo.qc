@@ -153,7 +153,7 @@ void(entity me) gui_rexuiz_dialog_serverinfo_fill {
 			me.pingLabel = e;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns - 6, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
-			e.onClick = gui_dialog_close;
+			e.onClick = gui_dialog_button_close;
 			e.onClickEntity = me;
 		me.TD(me, 1, me.columns - 6, e = gui_rexuiz_button_make(_("Join!"), '0 0 0'));
 			e.onClick = gui_rexuiz_dialog_serverinfo_join_click;

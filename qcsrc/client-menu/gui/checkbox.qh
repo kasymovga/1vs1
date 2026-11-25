@@ -1,12 +1,8 @@
 void(entity me, entity thOther) gui_checkbox_click;
 entity(void) gui_checkbox_spawn;
-void(entity, string, float, string) configureCheckBoxCheckBox;
 .void(entity, string, float, string) configureCheckBox;
-void(entity) drawCheckBox;
 .void(entity) draw;
-string(entity) toStringCheckBox;
 .string(entity) toString;
-void(entity, float) setCheckedCheckBox;
 .void(entity, float) setChecked;
 .float useDownAsChecked;
 .float checked;

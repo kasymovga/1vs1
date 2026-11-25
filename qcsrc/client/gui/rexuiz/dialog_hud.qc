@@ -24,7 +24,7 @@ void(entity btn, entity me) applyNexuizHudDialog {
 	GUI_Hide();
 }
 void(entity me) saveCvarsUseRMHUDNexuizHudDialog {
-	saveCvarsNexuizTextSlider(me);
+	gui_rexuiz_textslider_save(me);
 	float i = cvar("cl_rm_hud");
 	if (i > 0)
 		rm_skin_load(cvar_string("cl_rm_skin"));

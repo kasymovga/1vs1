@@ -1,19 +1,11 @@
 entity(void) gui_button_spawn;
-void(entity, string, float, string) configureButtonButton;
 .void(entity, string, float, string) configureButton;
-void(entity) drawButton;
 .void(entity) draw;
-void(entity) showNotifyButton;
 .void(entity) showNotify;
-void(entity, vector, vector, vector, vector) resizeNotifyButton;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-float(entity, float, float, float) keyDownButton;
 .float(entity, float, float, float) keyDown;
-float(entity, vector) mousePressButton;
 .float(entity, vector) mousePress;
-float(entity, vector) mouseDragButton;
 .float(entity, vector) mouseDrag;
-float(entity, vector) mouseReleaseButton;
 .float(entity, vector) mouseRelease;
 .void(entity, entity) onClick;
 .entity onClickEntity;
@@ -37,4 +29,4 @@ float(entity, vector) mouseReleaseButton;
 .float alpha2;
 .vector origin;
 .vector size;
-
+void(entity me) gui_button_show;

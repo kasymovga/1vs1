@@ -1,9 +1,14 @@
+void(entity me, float val) gui_checkbox_set;
+string(entity me) gui_checkbox_to_string;
+void(entity me, string txt, float sz, string gfx) gui_checkbox_configure;
+void(entity me) drawCheckBox;
+
 entity(void) gui_checkbox_spawn {
-	entity me; me = gui_button_spawn();
-	me.configureCheckBox = configureCheckBoxCheckBox;
+	entity me = gui_button_spawn();
+	me.configureCheckBox = gui_checkbox_configure;
 	me.draw = drawCheckBox;
-	me.toString = toStringCheckBox;
-	me.setChecked = setCheckedCheckBox;
+	me.toString = gui_checkbox_to_string;
+	me.setChecked = gui_checkbox_set;
 	me.useDownAsChecked = 0;
 	me.checked = 0;
 	me.onClick = gui_checkbox_click;
@@ -12,33 +17,33 @@ entity(void) gui_checkbox_spawn {
 	me.classname = "CheckBox";
 	return me;
 }
-void setCheckedCheckBox(entity me, float val)
-{
+
+void(entity me, float val) gui_checkbox_set {
 	me.checked = val;
 }
+
 void(entity me, entity thOther) gui_checkbox_click {
 	me.setChecked(me, !me.checked);
 }
-string toStringCheckBox(entity me)
-{
+
+string(entity me) gui_checkbox_to_string {
 	return strcat(toStringLabel(me), ", ", me.checked ? "checked" : "unchecked");
 }
-void configureCheckBoxCheckBox(entity me, string txt, float sz, string gfx)
-{
+
+void(entity me, string txt, float sz, string gfx) gui_checkbox_configure {
 	me.configureButton(me, txt, sz, gfx);
 	me.align = 0;
 }
-void drawCheckBox(entity me)
-{
+
+void(entity me) drawCheckBox {
 	float s;
 	s = me.pressed;
-	if(me.useDownAsChecked)
-	{
+	if (me.useDownAsChecked) {
 		me.srcSuffix = NULL;
 		me.forcePressed = me.checked;
-	}
-	else
+	} else
 		me.srcSuffix = (me.checked ? "1" : "0");
-	drawButton(me);
+
+	gui_button_draw(me);
 	me.pressed = s;
 }

@@ -14,7 +14,7 @@ entity(void) gui_rexuiz_dialog_winner_spawn {
 }
 
 void(entity me, entity button) gui_rexuiz_dialog_winner_close {
-	gui_dialog_close(me, button);
+	gui_dialog_button_close(me, button);
 	menu_goto("credits");
 }
 

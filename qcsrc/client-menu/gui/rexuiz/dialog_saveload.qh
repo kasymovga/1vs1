@@ -1,8 +1,6 @@
 entity(void) gui_rexuiz_dialog_saveload_spawn;
-.void(entity) fill; // to be overridden by user to fill the dialog with controls
-void(entity) configureDialogNexuizSaveLoadDialog;
+.void(entity) fill;
 .void(entity) configureDialog;
-void(entity) loadCvarsNexuizSaveLoadDialog;
 .void(entity) loadCvars;
 .string title;
 .vector color;

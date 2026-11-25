@@ -115,7 +115,7 @@ void(entity me) gui_rexuiz_skinlist_destroy {
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_skinlist_resize {
 	me.itemAbsSize = '0 0 0';
-	resizeNotifyNexuizListBox(me, relOrigin, relSize, absOrigin, absSize);
+	gui_rexuiz_listbox_resize(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
 	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize_y);

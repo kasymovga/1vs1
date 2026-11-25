@@ -1,10 +1,12 @@
+void(entity me) gui_rexuiz_dialog_saveload_configure;
+void(entity me) gui_rexuiz_dialog_saveload_load;
 void(entity me) gui_rexuiz_dialog_saveload_fill;
 
 entity(void) gui_rexuiz_dialog_saveload_spawn {
 	entity me = gui_rexuiz_rootdialog_spawn();
 	me.fill = gui_rexuiz_dialog_saveload_fill;
-	me.configureDialog = configureDialogNexuizSaveLoadDialog;
-	me.loadCvars = loadCvarsNexuizSaveLoadDialog;
+	me.configureDialog = gui_rexuiz_dialog_saveload_configure;
+	me.loadCvars = gui_rexuiz_dialog_saveload_load;
 	me.title = _("Load Game");
 	me.color = SKINCOLOR_DIALOG_TEAMSELECT;
 	me.intendedWidth = 0.5;
@@ -15,41 +17,41 @@ entity(void) gui_rexuiz_dialog_saveload_spawn {
 	return me;
 }
 
-string descriptionsNexuizSaveLoadDialog[14];
+string gui_rexuiz_dialog_saveload_descriptions[14];
 
-float slotNotEmptyNexuizSaveLoadDialog(float n) {
+float(float n) gui_rexuiz_dialog_saveload_slot_empty {
 	return file_exists(strcat("slot", ftos(n), ".sav"));
 }
 
 .entity saveSlot;
 
-void loadCvarsNexuizSaveLoadDialog(entity me) {
+void(entity me) gui_rexuiz_dialog_saveload_load {
 	entity e;
 	float i;
 	for (i = 0; i < 14; i++) {
-		str_unzone_ifneeded(descriptionsNexuizSaveLoadDialog[i]);
-		if (slotNotEmptyNexuizSaveLoadDialog(i + 1)) {
-			descriptionsNexuizSaveLoadDialog[i] = cvar_string_zone_ifneeded(strcat("_slot_description", ftos(i + 1)));
+		str_unzone_ifneeded(gui_rexuiz_dialog_saveload_descriptions[i]);
+		if (gui_rexuiz_dialog_saveload_slot_empty(i + 1)) {
+			gui_rexuiz_dialog_saveload_descriptions[i] = cvar_string_zone_ifneeded(strcat("_slot_description", ftos(i + 1)));
 		} else if (i < 10)
-			descriptionsNexuizSaveLoadDialog[i] = str_zone_ifneeded(strcat(_("Empty slot"), ftos(i + 1)));
+			gui_rexuiz_dialog_saveload_descriptions[i] = str_zone_ifneeded(strcat(_("Empty slot"), ftos(i + 1)));
 		else if (i == 10 || i == 12)
-			descriptionsNexuizSaveLoadDialog[i] = str_zone_ifneeded(_("Autosave"));
+			gui_rexuiz_dialog_saveload_descriptions[i] = str_zone_ifneeded(_("Autosave"));
 		else
-			descriptionsNexuizSaveLoadDialog[i] = str_zone_ifneeded(_("Quicksave"));
+			gui_rexuiz_dialog_saveload_descriptions[i] = str_zone_ifneeded(_("Quicksave"));
 	}
 	i = 0;
 	for (e = me.saveSlot; e; e = e.saveSlot) {
-		e.setText(e, descriptionsNexuizSaveLoadDialog[i]);
+		e.setText(e, gui_rexuiz_dialog_saveload_descriptions[i]);
 		i++;
 	}
 }
 
-void configureDialogNexuizSaveLoadDialog(entity me) {
+void(entity me) gui_rexuiz_dialog_saveload_configure {
 	me.loadCvars(me);
-	configureDialogNexuizDialog(me); //Parent method
+	gui_rexuiz_dialog_configure(me); //Parent method
 }
 
-float GetSlotNumber(entity e) {
+float(entity e) gui_rexuiz_dialog_saveload_slot_number {
 	float i;
 	i = 0;
 	for (; e.saveSlot; e = e.saveSlot) {
@@ -60,9 +62,9 @@ float GetSlotNumber(entity e) {
 	return 0;
 }
 
-void loadGameNexuizSaveLoadDialog(entity btn, entity me) {
-	float slot = GetSlotNumber(me);
-	if (slotNotEmptyNexuizSaveLoadDialog(slot)) {
+void(entity btn, entity me) gui_rexuiz_dialog_saveload_game_load {
+	float slot = gui_rexuiz_dialog_saveload_slot_number(me);
+	if (gui_rexuiz_dialog_saveload_slot_empty(slot)) {
 		localcmd(strcat("\nset _restore_game 1; maxplayers 1; load slot", ftos(slot), "\n"));
 		localcmd(strcat("menu_cmd loadfallback slot", ftos(slot), ".sav\n"));
 		me.close(me);
@@ -70,8 +72,8 @@ void loadGameNexuizSaveLoadDialog(entity btn, entity me) {
 }
 
 #ifdef CSQC
-void saveGameNexuizSaveLoadDialog(entity btn, entity me) {
-	float slot = GetSlotNumber(me);
+void(entity btn, entity me) gui_rexuiz_dialog_saveload_game_save {
+	float slot = gui_rexuiz_dialog_saveload_slot_number(me);
 	localcmd(strcat("\nseta _slot_description", ftos(slot), " \""));
 	localcmd(strcat(map_shortname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 	localcmd(" \"\n");
@@ -81,25 +83,25 @@ void saveGameNexuizSaveLoadDialog(entity btn, entity me) {
 #endif
 
 #ifdef CSQC
-entity buttonSave;
+entity gui_rexuiz_dialog_saveload_button_save;
 #endif
-void SlotSelect(entity btn, entity me) {
+void gui_rexuiz_dialog_saveload_slot_select(entity btn, entity me) {
 	entity e;
 	for (e = me.saveSlot; e; e = e.saveSlot) {
 		e.forcePressed = 0;
 	}
 	btn.forcePressed = 1;
 #ifdef CSQC
-	if (GetSlotNumber(me) > 10)
-		buttonSave.disabled = TRUE;
+	if (gui_rexuiz_dialog_saveload_slot_number(me) > 10)
+		gui_rexuiz_dialog_saveload_button_save.disabled = TRUE;
 	else
-		buttonSave.disabled = FALSE;
+		gui_rexuiz_dialog_saveload_button_save.disabled = FALSE;
 #endif
 }
 
 #ifdef MENUQC
-float mouseDoubleClickNexuizSaveLoadDialogSlot(entity btn, vector v) {
-	loadGameNexuizSaveLoadDialog(btn, btn.onClickEntity);
+float(entity btn, vector v) gui_rexuiz_dialog_saveload_doubleclick {
+	gui_rexuiz_dialog_saveload_game_load(btn, btn.onClickEntity);
 	return TRUE;
 }
 #endif
@@ -116,12 +118,12 @@ void(entity me) gui_rexuiz_dialog_saveload_fill {
 				me.TR(me);
 			}
 			for (j = 0; j < 2; j++) {
-				me.TD(me, 1, 3, e.saveSlot = gui_rexuiz_button_make(descriptionsNexuizSaveLoadDialog[i + j], '0 0 0'));
-				e = e.saveSlot;
-				e.onClick = SlotSelect;
-				e.onClickEntity = me;
+				me.TD(me, 1, 3, e.saveSlot = gui_rexuiz_button_make(gui_rexuiz_dialog_saveload_descriptions[i + j], '0 0 0'));
+					e = e.saveSlot;
+					e.onClick = gui_rexuiz_dialog_saveload_slot_select;
+					e.onClickEntity = me;
 #ifdef MENUQC
-				e.mouseDoubleClick = mouseDoubleClickNexuizSaveLoadDialogSlot;
+					e.mouseDoubleClick = gui_rexuiz_dialog_saveload_doubleclick;
 #endif
 			}
 	}
@@ -134,11 +136,11 @@ void(entity me) gui_rexuiz_dialog_saveload_fill {
 #endif
 #ifdef CSQC
 		me.TD(me, 1, button_width, e = gui_rexuiz_button_make(_("Save"), '0 0 0'));
-		buttonSave = e;
-		e.onClick = saveGameNexuizSaveLoadDialog;
-		e.onClickEntity = me;
+			gui_rexuiz_dialog_saveload_button_save = e;
+			e.onClick = gui_rexuiz_dialog_saveload_game_save;
+			e.onClickEntity = me;
 #endif
 		me.TD(me, 1, button_width, e = gui_rexuiz_button_make(_("Load"), '0 0 0'));
-		e.onClick = loadGameNexuizSaveLoadDialog;
-		e.onClickEntity = me;
+			e.onClick = gui_rexuiz_dialog_saveload_game_load;
+			e.onClickEntity = me;
 }

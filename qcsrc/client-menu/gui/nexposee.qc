@@ -146,7 +146,7 @@ void drawNexposee(entity me)
 			{
 				me.animationFactor = 1;
 				me.animationState = 2;
-				setFocusContainer(me, me.selectedChild);
+				gui_container_focus_set(me, me.selectedChild);
 				#ifdef MENUQC
 				gui_load_all_cvars(me);
 				#endif
@@ -190,7 +190,7 @@ void drawNexposee(entity me)
 		}
 		me.setAlphaOf(me, e, e.Container_alpha * (1 - f) + a * f);
 	}
-	drawContainer(me);
+	gui_container_draw(me);
 	/*
 	for(e = me.firstChild; e; e = e.nextSibling)
 	{
@@ -217,7 +217,7 @@ float mousePressNexposee(entity me, vector pos)
 		if(me.mouseFocusedChild)
 		{
 			me.animationState = 1;
-			setFocusContainer(me, NULL);
+			gui_container_focus_set(me, NULL);
 		}
 		else
 			me.close(me);
@@ -225,10 +225,10 @@ float mousePressNexposee(entity me, vector pos)
 	}
 	else if(me.animationState == 2)
 	{
-		if not(mousePressContainer(me, pos))
+		if not(gui_container_mouse_press(me, pos))
 		{
 			me.animationState = 3;
-			setFocusContainer(me, NULL);
+			gui_container_focus_set(me, NULL);
 		}
 		return 1;
 	}
@@ -237,13 +237,13 @@ float mousePressNexposee(entity me, vector pos)
 float mouseReleaseNexposee(entity me, vector pos)
 {
 	if(me.animationState == 2)
-		return mouseReleaseContainer(me, pos);
+		return gui_container_mouse_release(me, pos);
 	return 0;
 }
 float mouseDragNexposee(entity me, vector pos)
 {
 	if(me.animationState == 2)
-		return mouseDragContainer(me, pos);
+		return gui_container_mouse_drag(me, pos);
 	return 0;
 }
 float mouseMoveNexposee(entity me, vector pos)
@@ -253,7 +253,7 @@ float mouseMoveNexposee(entity me, vector pos)
 	e = me.mouseFocusedChild;
 	me.mouseFocusedChild = me.itemFromPoint(me, pos);
 	if(me.animationState == 2)
-		return mouseMoveContainer(me, pos);
+		return gui_container_mouse_move(me, pos);
 	if(me.animationState == 0)
 	{
 		if(me.mouseFocusedChild)
@@ -266,14 +266,14 @@ float mouseMoveNexposee(entity me, vector pos)
 float keyUpNexposee(entity me, float scan, float ascii, float shift)
 {
 	if(me.animationState == 2)
-		return keyUpContainer(me, scan, ascii, shift);
+		return gui_container_key_up(me, scan, ascii, shift);
 	return 0;
 }
 float keyDownNexposee(entity me, float scan, float ascii, float shift)
 {
 	float nexposeeKey = 0;
 	if(me.animationState == 2)
-		if(keyDownContainer(me, scan, ascii, shift))
+		if(gui_container_key_down(me, scan, ascii, shift))
 			return 1;
 	if(scan == VM_K_TAB)
 	{
@@ -323,14 +323,14 @@ float keyDownNexposee(entity me, float scan, float ascii, float shift)
 			me.selectedChild = me.focusedChild;
 		if not(me.selectedChild)
 			me.animationState = 0;
-		setFocusContainer(me, NULL);
+		gui_container_focus_set(me, NULL);
 		return 1;
 	}
 	return 0;
 }
 void addItemNexposee(entity me, entity theOther, vector theOrigin, vector theSize, float theAlpha)
 {
-	addItemContainer(me, theOther, theOrigin, theSize, theAlpha);
+	gui_container_item_add(me, theOther, theOrigin, theSize, theAlpha);
 	theOther.Nexposee_initialSize = theOther.Container_size;
 	theOther.Nexposee_initialOrigin = theOther.Container_origin;
 	theOther.Nexposee_initialAlpha = theOther.Container_alpha;
@@ -338,7 +338,7 @@ void addItemNexposee(entity me, entity theOther, vector theOrigin, vector theSiz
 void focusEnterNexposee(entity me)
 {
 	if(me.animationState == 2) {
-		setFocusContainer(me, me.selectedChild);
+		gui_container_focus_set(me, me.selectedChild);
 		#ifdef MENUQC
 		gui_load_all_cvars(me);
 		#endif

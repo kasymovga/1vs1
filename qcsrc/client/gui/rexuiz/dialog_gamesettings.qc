@@ -24,7 +24,7 @@ void configureDialogNexuizGameSettingsDialog(entity me) {
 		me.columns += 5;
 		me.intendedWidth += 0.4;
 	})
-	configureDialogNexuizDialog(me); //Parent method
+	gui_rexuiz_dialog_configure(me); //Parent method
 }
 void(entity me, entity bnt) showHudDialogGameSettingsDialog {
 	GUI_Show(GUI_HUD);

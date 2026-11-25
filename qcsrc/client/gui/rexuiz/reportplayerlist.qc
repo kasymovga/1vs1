@@ -18,7 +18,7 @@ entity(void) gui_rexuiz_reportplayerlist_make {
 	return me;
 }
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_reportplayerlist_resize {
-	resizeNotifyNexuizListBox(me, relOrigin, relSize, absOrigin, absSize);
+	gui_rexuiz_listbox_resize(me, relOrigin, relSize, absOrigin, absSize); //parent method
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);

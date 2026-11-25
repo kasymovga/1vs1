@@ -1,7 +1,10 @@
+void(entity me) gui_rexuiz_textlabel_draw;
+void(entity me, float theAlign, string theText) gui_rexuiz_textlabel_configure;
+
 entity(void) gui_rexuiz_textlabel_spawn {
 	entity me; me = gui_label_spawn();
-	me.configureNexuizTextLabel = configureNexuizTextLabelNexuizTextLabel;
-	me.draw = drawNexuizTextLabel;
+	me.configureNexuizTextLabel = gui_rexuiz_textlabel_configure;
+	me.draw = gui_rexuiz_textlabel_draw;
 	me.fontSize = SKINFONTSIZE_NORMAL;
 	me.alpha = SKINALPHA_TEXT;
 	me.disabledAlpha = SKINALPHA_DISABLED;
@@ -15,11 +18,11 @@ entity(float theAlign, string theText) gui_rexuiz_textlabel_make {
 	me.configureNexuizTextLabel(me, theAlign, theText);
 	return me;
 }
-void configureNexuizTextLabelNexuizTextLabel(entity me, float theAlign, string theText)
-{
+
+void(entity me, float theAlign, string theText) gui_rexuiz_textlabel_configure {
 	me.configureLabel(me, theText, me.fontSize, theAlign);
 }
-void drawNexuizTextLabel(entity me)
-{
+
+void(entity me) gui_rexuiz_textlabel_draw {
 	drawLabel(me);
 }

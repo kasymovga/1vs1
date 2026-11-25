@@ -18,5 +18,5 @@ entity(void) gui_rexuiz_tab_spawn {
 
 void(entity me) gui_rexuiz_tab_show {
 	gui_load_all_cvars(me);
-	showNotifyContainer(me);
+	gui_container_show(me);
 }

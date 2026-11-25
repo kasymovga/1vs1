@@ -5,7 +5,6 @@ enum {
 };
 
 entity(void) gui_rexuiz_commandbutton_spawn;
-void(entity, string, vector, string, float) configureNexuizCommandButtonNexuizCommandButton;
 .void(entity, string, vector, string, float) configureNexuizCommandButton;
 .string onClickCommand;
 .float flags;

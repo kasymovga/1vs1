@@ -20,7 +20,7 @@ void(entity me) gui_rexuiz_dialog_quit_fill {
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_commandbutton_make(_("Yes"), '1 0 0', "quit", 0));
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("No"), '0 1 0'));
-			e.onClick = gui_dialog_close;
+			e.onClick = gui_dialog_button_close;
 			e.onClickEntity = me;
 }
 

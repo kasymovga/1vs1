@@ -104,7 +104,7 @@ void(entity me) gui_rexuiz_dialog_mapinfo_fill {
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, me.columns - 5.5, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
-			e.onClick = gui_dialog_close;
+			e.onClick = gui_dialog_button_close;
 			e.onClickEntity = me;
 		me.TD(me, 1, me.columns - 5.5, me.startButton = e = gui_rexuiz_button_make(_("Play"), '0 0 0'));
 			me.startButton.onClick = gui_rexuiz_maplist_start;

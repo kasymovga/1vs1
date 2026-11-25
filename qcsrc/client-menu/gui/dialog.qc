@@ -1,30 +1,27 @@
-// Note: this class is called Dialog, but it can also handle a tab under the following conditions:
-// - isTabRoot is 0
-// - backgroundImage is the tab's background
-// - closable is 0
-// - rootDialog is 0
-// - title is ""
-// - marginTop is 
-// - intendedHeight ends up to be the tab's actual height, or at least close
-// - titleFontSize is 0
-// - marginTop cancels out as much of titleHeight as needed (that is, it should be actualMarginTop - titleHeight)
-// To ensure the latter, you best create all tabs FIRST and insert the tabbed
-// control to your dialog THEN - with the right height
-//
-// a subclass may help with using this as a tab
+void(entity me) gui_dialog_fill;
+void(entity me, float row, float col, float rowspan, float colspan, entity e, vector v) gui_dialog_item_simple_add;
+void(entity me, float row, float col) gui_dialog_gotorc;
+void(entity me) gui_dialog_tr;
+void(entity me, float rowspan, float colspan, entity e) gui_dialog_td;
+void(entity me, float rowspan, float colspan, entity e, vector v) gui_dialog_tdnomargin;
+void(entity me, float col) gui_dialog_column_first_set;
+void(entity me, float colspan) gui_dialog_td_empty;
+void(entity me) gui_dialog_close;
+float(entity me, float key, float ascii, float shift) gui_dialog_key_down;
+
 entity(void) gui_dialog_spawn {
 	entity me; me = gui_inputcontainer_spawn();
-	me.configureDialog = configureDialogDialog; // no runtime configuration, all parameters are given in the code!
-	me.fill = fillDialog; // to be overridden by user to fill the dialog with controls
-	me.keyDown = keyDownDialog;
-	me.close = closeDialog;
-	me.addItemSimple = addItemSimpleDialog;
-	me.TD = TDDialog;
-	me.TDNoMargin = TDNoMarginDialog;
-	me.TDempty = TDemptyDialog;
-	me.setFirstColumn = setFirstColumnDialog;
-	me.TR = TRDialog;
-	me.gotoRC = gotoRCDialog;
+	me.configureDialog = gui_dialog_configure; // no runtime configuration, all parameters are given in the code!
+	me.fill = gui_dialog_fill; // to be overridden by user to fill the dialog with controls
+	me.keyDown = gui_dialog_key_down;
+	me.close = gui_dialog_close;
+	me.addItemSimple = gui_dialog_item_simple_add;
+	me.TD = gui_dialog_td;
+	me.TDNoMargin = gui_dialog_tdnomargin;
+	me.TDempty = gui_dialog_td_empty;
+	me.setFirstColumn = gui_dialog_column_first_set;
+	me.TR = gui_dialog_tr;
+	me.gotoRC = gui_dialog_gotorc;
 	me.isTabRoot = 1;
 	me.closeButton = NULL;
 	me.intendedHeight = 0;
@@ -59,28 +56,15 @@ entity(void) gui_dialog_spawn {
 	me.classname = "Dialog";
 	return me;
 }
-// Note: this class is called Dialog, but it can also handle a tab under the following conditions:
-// - isTabRoot is 0
-// - backgroundImage is the tab's background
-// - closable is 0
-// - rootDialog is 0
-// - title is ""
-// - marginTop is 
-// - intendedHeight ends up to be the tab's actual height, or at least close
-// - titleFontSize is 0
-// - marginTop cancels out as much of titleHeight as needed (that is, it should be actualMarginTop - titleHeight)
-// To ensure the latter, you best create all tabs FIRST and insert the tabbed
-// control to your dialog THEN - with the right height
-//
-// a subclass may help with using this as a tab
-void(entity button, entity me) gui_dialog_close {
+
+void(entity button, entity me) gui_dialog_button_close {
 	me.close(me);
 }
-void fillDialog(entity me)
-{
+
+void(entity me) gui_dialog_fill {
 }
-void addItemSimpleDialog(entity me, float row, float col, float rowspan, float colspan, entity e, vector v)
-{
+
+void(entity me, float row, float col, float rowspan, float colspan, entity e, vector v) gui_dialog_item_simple_add {
 	//print(vtos(me.itemSpacing), " ", vtos(me.itemSize), "\n");
 	vector o, s;
 	o = me.itemOrigin + eX * ( col * me.itemSpacing_x) + eY * ( row * me.itemSpacing_y);
@@ -91,36 +75,36 @@ void addItemSimpleDialog(entity me, float row, float col, float rowspan, float c
 	s_y += (me.itemSpacing_y - me.itemSize_y) * v_y;
 	me.addItem(me, e, o, s, 1);
 }
-void gotoRCDialog(entity me, float row, float col)
-{
+
+void(entity me, float row, float col) gui_dialog_gotorc {
 	me.currentRow = row;
 	me.currentColumn = col;
 }
-void TRDialog(entity me)
-{
+
+void(entity me) gui_dialog_tr {
 	me.currentRow += 1;
 	me.currentColumn = me.firstColumn;
 }
-void TDDialog(entity me, float rowspan, float colspan, entity e)
-{
+
+void(entity me, float rowspan, float colspan, entity e) gui_dialog_td {
 	me.addItemSimple(me, me.currentRow, me.currentColumn, rowspan, colspan, e, '0 0 0');
 	me.currentColumn += colspan;
 }
-void TDNoMarginDialog(entity me, float rowspan, float colspan, entity e, vector v)
-{
+
+void(entity me, float rowspan, float colspan, entity e, vector v) gui_dialog_tdnomargin {
 	me.addItemSimple(me, me.currentRow, me.currentColumn, rowspan, colspan, e, v);
 	me.currentColumn += colspan;
 }
-void setFirstColumnDialog(entity me, float col)
-{
+
+void(entity me, float col) gui_dialog_column_first_set {
 	me.firstColumn = col;
 }
-void TDemptyDialog(entity me, float colspan)
-{
+
+void(entity me, float colspan) gui_dialog_td_empty {
 	me.currentColumn += colspan;
 }
-void configureDialogDialog(entity me)
-{
+
+void(entity me) gui_dialog_configure {
 	entity closebutton = NULL;
 	float absWidth, absHeight;
 	me.frame = gui_borderimage_spawn();
@@ -131,46 +115,41 @@ void configureDialogDialog(entity me)
 	me.addItem(me, me.frame, '0 0 0', '1 1 0', 1);
 	if not(me.titleFontSize)
 		me.titleHeight = 0; // no title bar
+
 	absWidth = me.intendedWidth * gui_conwidth;
 	absHeight = me.titleHeight + me.marginTop + me.rows * me.rowHeight + (me.rows - 1) * me.rowSpacing + me.marginBottom;
 	me.itemOrigin = eX * (me.marginLeft / absWidth)
-						          + eY * ((me.titleHeight + me.marginTop) / absHeight);
+			+ eY * ((me.titleHeight + me.marginTop) / absHeight);
 	me.itemSize = eX * ((1 - (me.marginLeft + me.marginRight + me.columnSpacing * (me.columns - 1)) / absWidth) / me.columns)
-						          + eY * (me.rowHeight / absHeight);
+			+ eY * (me.rowHeight / absHeight);
 	me.itemSpacing = me.itemSize
-						          + eX * (me.columnSpacing / absWidth)
-						          + eY * (me.rowSpacing / absHeight);
+			+ eX * (me.columnSpacing / absWidth)
+			+ eY * (me.rowSpacing / absHeight);
 	me.intendedHeight = absHeight / gui_conheight;
 	me.currentRow = -1;
 	me.currentColumn = -1;
 	me.fill(me);
-	if(me.closable)
-	{
+	if (me.closable) {
 		closebutton = me.closeButton = gui_button_spawn();
 		closebutton.configureButton(closebutton, "Close", 0, me.closeButtonImage);
-		closebutton.onClick = gui_dialog_close; closebutton.onClickEntity = me;
+		closebutton.onClick = gui_dialog_button_close; closebutton.onClickEntity = me;
 		closebutton.srcMulti = 0;
 		me.addItem(me, closebutton, '0 0 0', '1 1 0', 1); // put it as LAST
 	}
 	me.frame.closeButton = closebutton;
 }
-void closeDialog(entity me)
-{
-	if(me.parent.instanceOfNexposee)
-	{
+
+void(entity me) gui_dialog_close {
+	if (me.parent.instanceOfNexposee) {
 		ExposeeCloseButton_Click(me, me.parent);
-	}
-	else if(me.parent.instanceOfModalController)
-	{
+	} else if(me.parent.instanceOfModalController) {
 		DialogCloseButton_Click(me, me);
 	}
 }
-float keyDownDialog(entity me, float key, float ascii, float shift)
-{
-	if(me.closable)
-	{
-		if(key == VM_K_ESCAPE)
-		{
+
+float(entity me, float key, float ascii, float shift) gui_dialog_key_down {
+	if (me.closable) {
+		if (key == VM_K_ESCAPE) {
 			me.close(me);
 			return 1;
 		}

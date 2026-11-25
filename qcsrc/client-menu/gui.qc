@@ -345,7 +345,7 @@ void(entity wnd) gui_activate_window {
 		// nexposee (sorry for violating abstraction here)
 		par.selectedChild = wnd;
 		par.animationState = 1;
-		setFocusContainer(par, NULL);
+		gui_container_focus_set(par, NULL);
 	} else if(par.instanceOfContainer) {
 		// other containers
 		if(par.focused)

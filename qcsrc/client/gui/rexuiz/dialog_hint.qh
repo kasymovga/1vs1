@@ -1,11 +1,8 @@
 entity(void) gui_rexuiz_dialog_hint_spawn;
 .void(entity) fill;
-void(entity) configureDialogNexuizHintDialog;
-.void(entity) configureDialog;
 .string title;
 .vector color;
 .float intendedWidth;
 .float rows;
 .float columns;
 .string name;
-

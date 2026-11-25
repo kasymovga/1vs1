@@ -105,7 +105,7 @@ void(entity me) gui_rexuiz_tab_settings_game_draw {
 	else
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
 
-	drawContainer(me);
+	gui_container_draw(me);
 }
 
 void(entity me) gui_rexuiz_tab_settings_game_fill {

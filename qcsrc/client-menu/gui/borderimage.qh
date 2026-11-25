@@ -1,9 +1,6 @@
 entity(void) gui_borderimage_spawn;
-void(entity, string, float, vector, string, float) configureBorderImageBorderImage;
 .void(entity, string, float, vector, string, float) configureBorderImage;
-void(entity, vector, vector, vector, vector) resizeNotifyBorderImage;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-void(entity) drawBorderImage;
 .void(entity) draw;
 .string src;
 .float borderHeight;
@@ -16,4 +13,3 @@ void(entity) drawBorderImage;
 .float zoomedOutTitleBarPosition;
 .float zoomedOutTitleBar;
 .float borderLines;
-

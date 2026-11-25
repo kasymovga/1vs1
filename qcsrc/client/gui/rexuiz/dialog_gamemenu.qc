@@ -48,7 +48,7 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 		if (main_campaign)
 				me.rows = me.rows - 1; //mute
 	}
-	configureDialogNexuizDialog(me); //Parent method
+	gui_rexuiz_dialog_configure(me); //Parent method
 }
 void showMuteListGameMenuDialog(entity ignore, entity ignore2) {
 	GUI_Show(GUI_MUTELIST);
@@ -129,7 +129,7 @@ void(entity me) gui_rexuiz_dialog_gamemenu_fill {
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("Return to game"), '0 0 0'));
-				e.onClick = gui_dialog_close;
+				e.onClick = gui_dialog_button_close;
 				e.onClickEntity = me;
 	me.TR(me);
 	me.TR(me);

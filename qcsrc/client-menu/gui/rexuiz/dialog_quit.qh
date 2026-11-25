@@ -5,4 +5,3 @@ entity(void) gui_rexuiz_dialog_quit_spawn;
 .float intendedWidth;
 .float rows;
 .float columns;
-

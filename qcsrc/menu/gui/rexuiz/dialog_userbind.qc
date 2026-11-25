@@ -20,7 +20,7 @@ entity(void) gui_rexuiz_dialog_userbind_spawn {
 
 void(entity btn, entity me) gui_rexuiz_dialog_userbind_save_click {
 	me.keybindBox.editUserbind(me.keybindBox, me.nameBox.text, me.commandPressBox.text, me.commandReleaseBox.text);
-	gui_dialog_close(btn, me);
+	gui_dialog_button_close(btn, me);
 }
 
 void(entity me, string theName, string theCommandPress, string theCommandRelease) gui_rexuiz_dialog_userbind_load {
@@ -48,6 +48,6 @@ void(entity me) gui_rexuiz_dialog_userbind_fill {
 			e.onClick = gui_rexuiz_dialog_userbind_save_click;
 			e.onClickEntity = me;
 		me.TD(me, 1, me.columns / 2, e = gui_rexuiz_button_make(_("Cancel"), '0 0 0'));
-			e.onClick = gui_dialog_close;
+			e.onClick = gui_dialog_button_close;
 			e.onClickEntity = me;
 }

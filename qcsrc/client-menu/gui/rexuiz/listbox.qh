@@ -1,16 +1,14 @@
 entity(void) gui_rexuiz_listbox_spawn;
-void(entity) configureNexuizListBoxNexuizListBox;
 .void(entity) configureNexuizListBox;
 .float fontSize;
 .float scrollbarWidth;
 .string src;
 .vector tolerance;
 .float rowsPerItem;
-void(entity, vector, vector, vector, vector) resizeNotifyNexuizListBox;
 .void(entity, vector, vector, vector, vector) resizeNotify;
 .vector color;
 .vector colorF;
 .vector color2;
 .vector colorC;
-
 entity(void) gui_rexuiz_listbox_make;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_listbox_resize;

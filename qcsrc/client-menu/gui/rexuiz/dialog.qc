@@ -1,5 +1,5 @@
 entity(void) gui_rexuiz_dialog_spawn {
-	entity me; me = gui_dialog_spawn();
+	entity me = gui_dialog_spawn();
 	// still to be customized by user
 	/*
 	ATTRIB(NexuizDialog, closable, float, 1)
@@ -24,13 +24,11 @@ entity(void) gui_rexuiz_dialog_spawn {
 	me.zoomedOutTitleBarPosition = SKINHEIGHT_ZOOMEDTITLE * 0.5 - 0.5;
 	me.zoomedOutTitleBar = SKINHEIGHT_ZOOMEDTITLE != 0;
 	me.alpha = SKINALPHA_TEXT;
-	me.configureDialog = configureDialogNexuizDialog;
+	me.configureDialog = gui_rexuiz_dialog_configure;
 	me.classname = "NexuizDialog";
 	return me;
 }
-entity currentDialog;
-void configureDialogNexuizDialog(entity me)
-{
-	currentDialog = me;
-	configureDialogDialog(me);
+
+void(entity me) gui_rexuiz_dialog_configure {
+	gui_dialog_configure(me);
 }

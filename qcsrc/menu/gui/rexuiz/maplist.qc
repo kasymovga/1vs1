@@ -117,7 +117,7 @@ void(entity me) gui_rexuiz_maplist_draw {
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_maplist_resize {
 	me.itemAbsSize = '0 0 0';
-	resizeNotifyNexuizListBox(me, relOrigin, relSize, absOrigin, absSize);
+	gui_rexuiz_listbox_resize(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
 	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize_y);
@@ -236,7 +236,7 @@ void(entity btn, entity me) gui_rexuiz_maplist_start {
 	i = me.selectedItem;
 	if (btn.parent.instanceOfNexuizMapInfoDialog) {
 		i = btn.parent.currentMapIndex;
-		gui_dialog_close(btn, btn.parent);
+		gui_dialog_button_close(btn, btn.parent);
 	}
 	if (i >= me.nItems || i < 0)
 		return;

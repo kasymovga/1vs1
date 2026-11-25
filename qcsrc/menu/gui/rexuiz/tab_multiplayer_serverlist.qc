@@ -49,7 +49,7 @@ float(entity me, float scan, float ascii, float shift) gui_rexuiz_tab_multiplaye
 
 		return TRUE;
 	}
-	return keyDownContainer(me, scan, ascii, shift);
+	return gui_container_key_down(me, scan, ascii, shift);
 }
 
 void(entity me) gui_rexuiz_tab_multiplayer_serverlist_fill {

@@ -16,7 +16,7 @@ entity(void) gui_inputcontainer_spawn {
 }
 void resizeNotifyInputContainer(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyContainer(me, relOrigin, relSize, absOrigin, absSize);
+	gui_container_resize(me, relOrigin, relSize, absOrigin, absSize);
 	/*
 	if(me.parent.instanceOfInputContainer)
 		me.isTabRoot = 0;
@@ -26,13 +26,13 @@ void resizeNotifyInputContainer(entity me, vector relOrigin, vector relSize, vec
 }
 void focusLeaveInputContainer(entity me)
 {
-	focusLeaveContainer(me);
+	gui_container_focus_leave(me);
 	me.mouseFocusedChild = NULL;
 }
 float keyDownInputContainer(entity me, float scan, float ascii, float shift)
 {
 	entity f, ff;
-	if(keyDownContainer(me, scan, ascii, shift))
+	if(gui_container_key_down(me, scan, ascii, shift))
 		return 1;
 	if(scan == VM_K_ESCAPE)
 	{
@@ -121,7 +121,7 @@ float _changeFocusXYInputContainer(entity me, vector pos)
 }
 float mouseDragInputContainer(entity me, vector pos)
 {
-	if(mouseDragContainer(me, pos))
+	if(gui_container_mouse_drag(me, pos))
 		return 1;
 	if(pos_x >= 0 && pos_y >= 0 && pos_x < 1 && pos_y < 1)
 		return 1;
@@ -130,7 +130,7 @@ float mouseDragInputContainer(entity me, vector pos)
 float mouseMoveInputContainer(entity me, vector pos)
 {
 	if(me._changeFocusXY(me, pos))
-		if(mouseMoveContainer(me, pos))
+		if(gui_container_mouse_move(me, pos))
 			return 1;
 	if(pos_x >= 0 && pos_y >= 0 && pos_x < 1 && pos_y < 1)
 		return 1;
@@ -140,7 +140,7 @@ float mousePressInputContainer(entity me, vector pos)
 {
 	me.mouseFocusedChild = NULL; // force focusing
 	if(me._changeFocusXY(me, pos))
-		if(mousePressContainer(me, pos))
+		if(gui_container_mouse_press(me, pos))
 			return 1;
 	if(pos_x >= 0 && pos_y >= 0 && pos_x < 1 && pos_y < 1)
 		return 1;
@@ -149,7 +149,7 @@ float mousePressInputContainer(entity me, vector pos)
 float mouseReleaseInputContainer(entity me, vector pos)
 {
 	float r;
-	r = mouseReleaseContainer(me, pos);
+	r = gui_container_mouse_release(me, pos);
 	if(me.focused) // am I still eligible for this? (UGLY HACK, but a mouse event could have changed focus away)
 		if(me._changeFocusXY(me, pos))
 			return 1;

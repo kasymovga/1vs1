@@ -36,7 +36,7 @@ void(entity me, float i, vector where, float doubleclick) gui_rexuiz_recordlist_
 }
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_recordlist_resize {
-	resizeNotifyNexuizListBox(me, relOrigin, relSize, absOrigin, absSize);
+	gui_rexuiz_listbox_resize(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);

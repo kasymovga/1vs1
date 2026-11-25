@@ -1,7 +1,5 @@
 entity(void) gui_rexuiz_textlabel_spawn;
-void(entity, float, string) configureNexuizTextLabelNexuizTextLabel;
 .void(entity, float, string) configureNexuizTextLabel;
-void(entity) drawNexuizTextLabel;
 .void(entity) draw;
 .float fontSize;
 .float alpha;

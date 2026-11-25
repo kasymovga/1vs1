@@ -1,7 +1,5 @@
 entity(void) gui_rexuiz_checkbox_spawn;
-void(entity, float, float, string, string) configureNexuizCheckBoxNexuizCheckBox;
 .void(entity, float, float, string, string) configureNexuizCheckBox;
-void(entity, float) setCheckedNexuizCheckBox;
 .void(entity, float) setChecked;
 .float fontSize;
 .string image;
@@ -12,9 +10,7 @@ void(entity, float) setCheckedNexuizCheckBox;
 .vector colorF;
 .vector colorD;
 .string cvarName;
-void(entity) loadCvarsNexuizCheckBox;
 .void(entity) loadCvars;
-void(entity) saveCvarsNexuizCheckBox;
 .void(entity) saveCvars;
 .float alpha;
 .float disabledAlpha;

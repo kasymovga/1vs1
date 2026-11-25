@@ -163,12 +163,13 @@ void(entity me) gui_rexuiz_dialog_oldmutators_fill {
 		gui_set_dependent(s, "g_use_ammunition", 0, -1);
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make("OK", '0 0 0'));
-			e.onClick = gui_dialog_close;
+			e.onClick = gui_dialog_button_close;
 			e.onClickEntity = me;
 }
+
 void(entity me) gui_rexuiz_dialog_oldmutators_close {
 	if (me.refilterEntity)
 		me.refilterEntity.refilter(me.refilterEntity);
 
-	closeDialog(me);
+	gui_dialog_close(me);
 }

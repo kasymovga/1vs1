@@ -1,7 +1,5 @@
 entity(void) gui_rexuiz_slider_spawn;
-void(entity, float, float, float, string) configureNexuizSliderNexuizSlider;
 .void(entity, float, float, float, string) configureNexuizSlider;
-void(entity, float) setValueNexuizSlider;
 .void(entity, float) setValue;
 .float fontSize;
 .float valueSpace;
@@ -14,9 +12,7 @@ void(entity, float) setValueNexuizSlider;
 .vector colorD;
 .vector color2;
 .string cvarName;
-void(entity) loadCvarsNexuizSlider;
 .void(entity) loadCvars;
-void(entity) saveCvarsNexuizSlider;
 .void(entity) saveCvars;
 .float alpha;
 .float disabledAlpha;

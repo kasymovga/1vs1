@@ -1,13 +1,4 @@
 entity(void) gui_rexuiz_dialog_spawn;
-// still to be customized by user
-/*
-	ATTRIB(NexuizDialog, closable, float, 1)
-	ATTRIB(NexuizDialog, title, string, "Form1") // ;)
-	ATTRIB(NexuizDialog, color, vector, '1 0.5 1')
-	ATTRIB(NexuizDialog, intendedWidth, float, 0)
-	ATTRIB(NexuizDialog, rows, float, 3)
-	ATTRIB(NexuizDialog, columns, float, 2)
-	*/
 .float marginTop; // pixels
 .float marginBottom; // pixels
 .float marginLeft; // pixels
@@ -23,7 +14,6 @@ entity(void) gui_rexuiz_dialog_spawn;
 .float zoomedOutTitleBarPosition;
 .float zoomedOutTitleBar;
 .float alpha;
-void(entity) configureDialogNexuizDialog;
 .void(entity) configureDialog;
 
-entity currentDialog;
+void(entity me) gui_rexuiz_dialog_configure;
