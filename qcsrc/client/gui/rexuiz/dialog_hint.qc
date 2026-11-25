@@ -12,13 +12,14 @@ entity(void) gui_rexuiz_dialog_hint_spawn {
 	me.classname = "NexuizHintDialog";
 	return me;
 }
-void(entity ignore, entity ignore2) nextNexuizHintDialog {
+
+void(entity ignore, entity ignore2) gui_rexuiz_dialog_hint_next {
 	localcmd(hint_cmd_next);
 }
-void(entity ignore, entity ignore2) prevNexuizHintDialog {
+void(entity ignore, entity ignore2) gui_rexuiz_dialog_hint_prev {
 	localcmd(hint_cmd_prev);
 }
-void(entity ignore, entity ignore2) closeNexuizHintDialog {
+void(entity ignore, entity ignore2) gui_rexuiz_dialog_hint_close {
 	GUI_Hide();
 }
 
@@ -27,7 +28,7 @@ void(entity me) gui_rexuiz_dialog_hint_fill {
 	me.TR(me);
 		me.TDempty(me, 0.125);
 		me.TD(me, 3, 3.75, e = gui_rexuiz_textlabel_make(0, hint));
-		e.allowWrap = 1;
+			e.allowWrap = 1;
 	hint_text_label = e;
 	me.TR(me);
 	me.TR(me);
@@ -37,10 +38,10 @@ void(entity me) gui_rexuiz_dialog_hint_fill {
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = gui_rexuiz_button_make(_("<< Previous"), '0 0 0'));
-		e.onClick = prevNexuizHintDialog;
+			e.onClick = gui_rexuiz_dialog_hint_prev;
 		me.TD(me, 1, 1.5, e = gui_rexuiz_button_make(_("Next >>"), '0 0 0'));
-		e.onClick = nextNexuizHintDialog;
+			e.onClick = gui_rexuiz_dialog_hint_next;
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
-		e.onClick = closeNexuizHintDialog;
+			e.onClick = gui_rexuiz_dialog_hint_close;
 }
 

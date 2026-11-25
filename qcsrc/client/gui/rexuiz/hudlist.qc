@@ -38,50 +38,50 @@ void(void) gui_rexuiz_hudlist_update {
 		gui_rexuiz_hudlist_search = -1;
 		gui_rexuiz_hudlist_current.nItems = 2;
 		if (CVAR(cl_rm_hud_alt))
-				gui_rexuiz_hudlist_current.selectedItem = 0;
+			gui_rexuiz_hudlist_current.selectedItem = 0;
 		else
-				gui_rexuiz_hudlist_current.selectedItem = 1;
+			gui_rexuiz_hudlist_current.selectedItem = 1;
 	} else {
 		gui_rexuiz_hudlist_search = search_begin("data/*.hud", TRUE, TRUE);
 		if (gui_rexuiz_hudlist_search >= 0)
-				gui_rexuiz_hudlist_current.nItems = search_getsize(gui_rexuiz_hudlist_search) + 1;
+			gui_rexuiz_hudlist_current.nItems = search_getsize(gui_rexuiz_hudlist_search) + 1;
 		else
-				gui_rexuiz_hudlist_current.nItems = 1;
+			gui_rexuiz_hudlist_current.nItems = 1;
 	}
 }
 
 entity(void) gui_rexuiz_hudlist_make {
 	entity me;
 	gui_rexuiz_hudlist_default("default1", "sbar_timer_position -18 20 1\n"
-				"sbar_timer_scale 1.5\n");
+			"sbar_timer_scale 1.5\n");
 	gui_rexuiz_hudlist_default("default2", "sbar_weapons_position 0 200 8\n");
 	gui_rexuiz_hudlist_default("default3", "sbar_weapons_position 0 200 8\n"
-				"sbar_timer_position -18 20 1\n"
-				"sbar_timer_scale 1.5\n");
+			"sbar_timer_position -18 20 1\n"
+			"sbar_timer_scale 1.5\n");
 	gui_rexuiz_hudlist_default("alternative1", "sbar_ammo_position 0 0 9\n"
-		"sbar_armor_position 140 5 9\n"
-		"sbar_gameinfo_position 0 0 2\n"
-		"sbar_health_position -140 5 9\n"
-		"sbar_nadget_position 0 9 8\n"
-		"sbar_nadget2_position 74 9 8\n"
-		"sbar_powerups_position 0 336 10\n"
-		"sbar_score_position 0 8 10\n"
-		"sbar_score_scale 0.75\n"
-		"sbar_timer_position -18 20 1\n"
-		"sbar_timer_scale 1.5\n"
-		"sbar_weapons_position 0 100 10\n");
+			"sbar_armor_position 140 5 9\n"
+			"sbar_gameinfo_position 0 0 2\n"
+			"sbar_health_position -140 5 9\n"
+			"sbar_nadget_position 0 9 8\n"
+			"sbar_nadget2_position 74 9 8\n"
+			"sbar_powerups_position 0 336 10\n"
+			"sbar_score_position 0 8 10\n"
+			"sbar_score_scale 0.75\n"
+			"sbar_timer_position -18 20 1\n"
+			"sbar_timer_scale 1.5\n"
+			"sbar_weapons_position 0 100 10\n");
 	gui_rexuiz_hudlist_default("alternative2", "sbar_ammo_position 0 0 9\n"
-		"sbar_armor_position 140 5 9\n"
-		"sbar_gameinfo_position 0 0 2\n"
-		"sbar_health_position -140 5 9\n"
-		"sbar_nadget_position 0 9 8\n"
-		"sbar_nadget2_position 74 9 8\n"
-		"sbar_powerups_position 0 336 10\n"
-		"sbar_score_position 0 8 10\n"
-		"sbar_score_scale 0.75\n"
-		"sbar_timer_position -18 20 1\n"
-		"sbar_timer_scale 1.5\n"
-		"sbar_weapons_position 0 200 0\n");
+			"sbar_armor_position 140 5 9\n"
+			"sbar_gameinfo_position 0 0 2\n"
+			"sbar_health_position -140 5 9\n"
+			"sbar_nadget_position 0 9 8\n"
+			"sbar_nadget2_position 74 9 8\n"
+			"sbar_powerups_position 0 336 10\n"
+			"sbar_score_position 0 8 10\n"
+			"sbar_score_scale 0.75\n"
+			"sbar_timer_position -18 20 1\n"
+			"sbar_timer_scale 1.5\n"
+			"sbar_weapons_position 0 200 0\n");
 	me = gui_rexuiz_hudlist_spawn();
 	me.configureNexuizListBox(me);
 	gui_rexuiz_hudlist_current = me;
@@ -117,6 +117,7 @@ void(entity me, float i, vector where, float doubleclick) gui_rexuiz_hudlist_cli
 void(entity me) gui_hudlist_destroy {
 	if (gui_rexuiz_hudlist_search >= 0)
 		search_end(gui_rexuiz_hudlist_search);
+
 	gui_rexuiz_hudlist_search = -1;
 	gui_rexuiz_hudlist_current = NULL;
 }

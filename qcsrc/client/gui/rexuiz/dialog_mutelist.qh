@@ -7,4 +7,3 @@ entity(void) gui_rexuiz_dialog_mutelist_spawn;
 .float columns;
 .string name;
 .entity voteList;
-

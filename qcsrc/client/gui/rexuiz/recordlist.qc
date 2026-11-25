@@ -45,12 +45,14 @@ void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSi
 void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_recordlist_item_draw {
 	if (isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+
 	string s = recordlist_get(i);
 	string record_map = str_car(s);
 	s = str_cdr(s);
 	float trim = 0;
 	while (str_sub(s, trim, 1) == " ")
 		trim++;
+
 	vector c;
 	s = str_sub(s, trim, -1);
 	string record_time = str_car(s);
@@ -58,13 +60,14 @@ void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_recordlist
 	if (record_map == map_shortname) {
 		c = SKINCOLOR_TEXT_HIGHLIGHTED;
 		if (game_type == GAME_TYPE_CTS) {
-				if (race_records_time[0]) {
+			if (race_records_time[0]) {
 				record_name = race_records_name[0];
 				record_time = TIME_ENCODED_TOSTRING(race_records_time[0]);
-				}
+			}
 		}
 	} else
 		c = SKINCOLOR_TEXT;
+
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, record_map, me.realFontSize, c, SKINALPHA_TEXT, 0);
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.4 0 0', record_time, me.realFontSize, c, SKINALPHA_TEXT, 0);
 	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.6 0 0', record_name, me.realFontSize, c, SKINALPHA_TEXT, 1);

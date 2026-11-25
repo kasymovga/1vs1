@@ -65,11 +65,12 @@ void(entity me, float i) gui_rexuiz_voteargslist_select {
 		entity e = player_slots[i];
 		if (e) {
 			if (me.voteType == 1)
-			s = strcat(vote, " # ", ftos(e.sv_entnum + 1));
+				s = strcat(vote, " # ", ftos(e.sv_entnum + 1));
 			else
-			s = strcat(vote, " ", ftos(e.sv_entnum + 1));
+				s = strcat(vote, " ", ftos(e.sv_entnum + 1));
+
 			if (vote == "kick" || vote == "kickban")
-			s = strcat(s, " reason");
+				s = strcat(s, " reason");
 		}
 	} else if (me.voteType == 3) {
 		s = strcat(vote, " ", str_array_get(map_list, i));

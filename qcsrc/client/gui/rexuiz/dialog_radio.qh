@@ -6,4 +6,3 @@ entity(void) gui_rexuiz_dialog_radio_spawn;
 .float rows;
 .float columns;
 .string name;
-

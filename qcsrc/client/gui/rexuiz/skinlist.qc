@@ -23,6 +23,7 @@ void(void) gui_rexuiz_skinlist_update {
 	if not(gui_rexuiz_skinlist_current) return;
 	if (gui_rexuiz_skinlist_search >= 0)
 		search_end(gui_rexuiz_skinlist_search);
+
 	if (!rm_skin_loaded) {
 		gui_rexuiz_skinlist_search = -1;
 		gui_rexuiz_skinlist_current.nItems = 0;
@@ -41,7 +42,7 @@ void(void) gui_rexuiz_skinlist_update {
 		s = str_sub(s, 14, - 1);
 		s = str_sub(s, 0, strstrofs(s, "/", 0));
 		if (s == cvar_string("cl_rm_skin")) {
-				gui_rexuiz_skinlist_current.selectedItem = i;
+			gui_rexuiz_skinlist_current.selectedItem = i;
 		}
 	}
 }

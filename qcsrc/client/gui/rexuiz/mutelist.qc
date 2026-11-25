@@ -33,6 +33,7 @@ void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_mutelist_d
 	string s;
 	if (isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+
 	float n = i + 1;
 	s = strdecolorize(player_name(i));
 	if (mute_listed(n)) {

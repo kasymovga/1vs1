@@ -34,9 +34,9 @@ void(entity me) gui_rexuiz_dialog_report_fill {
 		me.TD(me, 1, 10, e = gui_rexuiz_textlabel_make(0, _("Player:")));
 	me.TR(me);
 		me.TD(me, 13, 10, e = gui_rexuiz_reporttypelist_make());
-		gui_rexuiz_dialog_report_typelist = e;
+			gui_rexuiz_dialog_report_typelist = e;
 		me.TD(me, 13, 10, e = gui_rexuiz_reportplayerlist_make());
-		gui_rexuiz_dialog_report_playerlist = e;
+			gui_rexuiz_dialog_report_playerlist = e;
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);

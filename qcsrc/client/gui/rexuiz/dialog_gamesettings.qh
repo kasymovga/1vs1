@@ -1,6 +1,5 @@
 entity(void) gui_rexuiz_dialog_gamesettings_spawn;
 .void(entity) fill;
-void(entity) configureDialogNexuizGameSettingsDialog;
 .void(entity) configureDialog;
 .string title;
 .vector color;

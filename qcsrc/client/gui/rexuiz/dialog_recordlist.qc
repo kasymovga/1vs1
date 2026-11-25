@@ -33,11 +33,11 @@ void(entity me) gui_rexuiz_dialog_recordlist_fill {
 	entity e, record_list;
 	me.TR(me);
 		me.TD(me, me.rows - 1, 20, record_list = gui_rexuiz_recordlist_make());
-		record_list.nexuizFont = 1;
+			record_list.nexuizFont = 1;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, 10, e = gui_rexuiz_button_make(_("Call a vote for this map"), '0 0 0'));
 			e.onClick = gui_rexuiz_dialog_recordlist_vote;
 			e.onClickEntity = record_list;
-		record_list.onClickEntity = e;
+			record_list.onClickEntity = e;
 		me.TD(me, 1, 10, e = gui_rexuiz_commandbutton_make(_("Close"), '0 0 0', "", 1));
 }

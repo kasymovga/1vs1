@@ -13,10 +13,11 @@ entity(void) gui_rexuiz_dialog_mutelist_spawn {
 	me.classname = "NexuizMuteListDialog";
 	return me;
 }
-void muteMuteListDialog(entity btn, entity me) {
+
+void(entity btn, entity me) gui_rexuiz_dialog_mutelist_mute {
 	mute_add(btn.onClickEntity.selectedItem + 1);
 }
-void unmuteMuteListDialog(entity btn, entity me) {
+void(entity btn, entity me) gui_rexuiz_dialog_mutelist_unmute {
 	mute_remove(btn.onClickEntity.selectedItem + 1);
 }
 
@@ -39,11 +40,11 @@ void(entity me) gui_rexuiz_dialog_mutelist_fill {
 	me.TR(me); // ???
 	me.TR(me);
 		me.TD(me, 1, 5, e = gui_rexuiz_button_make(_("Mute"), '0 0 0'));
-		e.onClick = muteMuteListDialog;
-		e.onClickEntity = list;
+			e.onClick = gui_rexuiz_dialog_mutelist_mute;
+			e.onClickEntity = list;
 		me.TD(me, 1, 5, e = gui_rexuiz_button_make(_("Unmute"), '0 0 0'));
-		e.onClick = unmuteMuteListDialog;
-		e.onClickEntity = list;
+			e.onClick = gui_rexuiz_dialog_mutelist_unmute;
+			e.onClickEntity = list;
 	me.TR(me);
 		me.TD(me, 1, 10, e = gui_rexuiz_commandbutton_make(_("Close"), '0 0 0', "", 1));
 }
