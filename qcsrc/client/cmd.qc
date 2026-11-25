@@ -43,7 +43,7 @@ void(string msg) GameCommand { //called by engine
 		setmodel(cmd_spawnentity, argv(1));
 		cmd_spawnentity.frame = stof(argv(2));
 	} else if (cmd == "showradio") {
-		GUI_Show(GUI_RADIO);
+		gui_show(GUI_RADIO);
 	} else if (cmd == "report") {
 		float i;
 		if (argc > REPORT_REASONS_COUNT_MAX - 1)
@@ -58,9 +58,9 @@ void(string msg) GameCommand { //called by engine
 			str_unzone_ifneeded(report_reasons[i]);
 			report_reasons[i] = "";
 		}
-		GUI_Show(GUI_REPORT);
+		gui_show(GUI_REPORT);
 	} else if (cmd == "recordlist") {
-		GUI_Show(GUI_RECORDLIST);
+		gui_show(GUI_RECORDLIST);
 	} else if (cmd == "r_restart") {
 		marker_init();
 		draw_init();

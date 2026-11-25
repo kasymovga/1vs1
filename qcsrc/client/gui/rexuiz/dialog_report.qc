@@ -22,8 +22,8 @@ void(entity btn, entity me) gui_rexuiz_dialog_report_send {
 	if (type_s != "") {
 		float player = gui_rexuiz_dialog_report_playerlist.selectedItem;
 		localcmd("cmd report ", type_s, " ", ftos(player + 1), "\n");
-		GUI_Hide();
-		GUI_Hide();
+		gui_hide();
+		gui_hide();
 	}
 }
 

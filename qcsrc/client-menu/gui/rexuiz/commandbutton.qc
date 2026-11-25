@@ -26,7 +26,7 @@ void(entity me, entity theOther) gui_rexuiz_commandbutton_click {
 		menu_goto(NULL);
 #endif
 #ifdef CSQC
-		GUI_Hide();
+		gui_hide();
 #endif
 }
 

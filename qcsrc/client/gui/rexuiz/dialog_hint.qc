@@ -20,7 +20,7 @@ void(entity ignore, entity ignore2) gui_rexuiz_dialog_hint_prev {
 	localcmd(hint_cmd_prev);
 }
 void(entity ignore, entity ignore2) gui_rexuiz_dialog_hint_close {
-	GUI_Hide();
+	gui_hide();
 }
 
 void(entity me) gui_rexuiz_dialog_hint_fill {

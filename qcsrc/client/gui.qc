@@ -1,125 +1,125 @@
-entity mainWindow;
-float GUI_mouseButtonsPressed;
-vector GUI_mouse_pos;
-vector GUI_mouse_pos_old;
-float GUI_alpha;
-float GUI_shiftState;
-float GUI_currentWindow;
+entity gui_root;
+float gui_mouse_pressed;
+vector gui_mouse_pos;
+vector gui_mouse_pos_old;
+float gui_alpha;
+float gui_shift;
+float gui_current;
 float gui_con_chat_save;
 float gui_con_chat_was_changed;
 float gui_doubleclick_time;
 vector gui_doubleclick_position;
 
-void GUI_RemoveRecursive(entity me) {
+void(entity me) gui_recursive_remove {
 	entity e, e_next;
-	for(e = me.firstChild; e; e = e_next) {
+	for (e = me.firstChild; e; e = e_next) {
 		e_next = e.nextSibling;
-		GUI_RemoveRecursive(e);
+		gui_recursive_remove(e);
 	}
 	me.destroy(me);
 	remove(me);
 }
 
-float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
+float(float bInputType, float nPrimary, float nSecondary) gui_input_event {
 	float r;
 	r = FALSE;
 	gui_draw_reset();
-	GUI_mouse_pos = gui_global_to_box_size(mouse_position(), gui_draw_scale);
+	gui_mouse_pos = gui_global_to_box_size(mouse_position(), gui_draw_scale);
 	if (nPrimary == VM_K_MOUSE1) {
 		if (bInputType == 0) { //Key down
-			if not(GUI_mouseButtonsPressed) {
-				mainWindow.mousePress(mainWindow, GUI_mouse_pos);
-				GUI_mouseButtonsPressed = TRUE;
-				if (GUI_mouse_pos == gui_doubleclick_position && time < gui_doubleclick_time)
-					mainWindow.mouseDoubleClick(mainWindow, GUI_mouse_pos);
+			if not(gui_mouse_pressed) {
+				gui_root.mousePress(gui_root, gui_mouse_pos);
+				gui_mouse_pressed = TRUE;
+				if (gui_mouse_pos == gui_doubleclick_position && time < gui_doubleclick_time)
+					gui_root.mouseDoubleClick(gui_root, gui_mouse_pos);
 
 				gui_doubleclick_time = time + 0.4;
-				gui_doubleclick_position = GUI_mouse_pos;
+				gui_doubleclick_position = gui_mouse_pos;
 			}
 			r = TRUE;
 		} else { //Key up
-			if (GUI_mouseButtonsPressed) {
-				mainWindow.mouseRelease(mainWindow, GUI_mouse_pos);
-				GUI_mouseButtonsPressed = FALSE;
+			if (gui_mouse_pressed) {
+				gui_root.mouseRelease(gui_root, gui_mouse_pos);
+				gui_mouse_pressed = FALSE;
 			}
 		}
 	}
 	if (bInputType == 0) {
-		if(nPrimary == VM_K_ALT) { GUI_shiftState |= GUI_KEY_STATE_ALT; r = TRUE; }
-		if(nPrimary == VM_K_CTRL) { GUI_shiftState |= GUI_KEY_STATE_CTRL; r = TRUE; }
-		if(nPrimary == VM_K_SHIFT) { GUI_shiftState |= GUI_KEY_STATE_SHIFT; r = TRUE; }
-		if (mainWindow.keyDown(mainWindow, nPrimary, nSecondary, GUI_shiftState)) {
+		if (nPrimary == VM_K_ALT) { gui_shift |= GUI_KEY_STATE_ALT; r = TRUE; }
+		if (nPrimary == VM_K_CTRL) { gui_shift |= GUI_KEY_STATE_CTRL; r = TRUE; }
+		if (nPrimary == VM_K_SHIFT) { gui_shift |= GUI_KEY_STATE_SHIFT; r = TRUE; }
+		if (gui_root.keyDown(gui_root, nPrimary, nSecondary, gui_shift)) {
 			return TRUE;
 		} else if (nPrimary == VM_K_ESCAPE) {
-			GUI_Hide();
+			gui_hide();
 			return TRUE;
 		}
 	} else {
-		if(nPrimary == VM_K_ALT) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_ALT); r = TRUE; }
-		if(nPrimary == VM_K_CTRL) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_CTRL); r = TRUE; }
-		if(nPrimary == VM_K_SHIFT) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_SHIFT); r = TRUE; }
+		if (nPrimary == VM_K_ALT) { gui_shift &= ~(gui_shift & GUI_KEY_STATE_ALT); r = TRUE; }
+		if (nPrimary == VM_K_CTRL) { gui_shift &= ~(gui_shift & GUI_KEY_STATE_CTRL); r = TRUE; }
+		if (nPrimary == VM_K_SHIFT) { gui_shift &= ~(gui_shift & GUI_KEY_STATE_SHIFT); r = TRUE; }
 	}
-	if (GUI_mouse_pos != GUI_mouse_pos_old) {
-		if (GUI_mouseButtonsPressed) {
-			mainWindow.mouseDrag(mainWindow, GUI_mouse_pos);
+	if (gui_mouse_pos != gui_mouse_pos_old) {
+		if (gui_mouse_pressed) {
+			gui_root.mouseDrag(gui_root, gui_mouse_pos);
 		} else
-			mainWindow.mouseMove(mainWindow, GUI_mouse_pos);
+			gui_root.mouseMove(gui_root, gui_mouse_pos);
 
-		GUI_mouse_pos_old = GUI_mouse_pos;
+		gui_mouse_pos_old = gui_mouse_pos;
 	}
 	return r;
 }
 
-void GUI_Draw_Remove() {
-	if (GUI_alpha > 0) {
-		GUI_alpha -= view_drawframetime * 5;
+void() gui_draw_remove {
+	if (gui_alpha > 0) {
+		gui_alpha -= view_drawframetime * 5;
 	} else {
-		GUI_RemoveRecursive(mainWindow);
-		mainWindow = NULL;
-		if (input_event_callback == GUI_InputEvent)
+		gui_recursive_remove(gui_root);
+		gui_root = NULL;
+		if (input_event_callback == gui_input_event)
 			input_event_callback = NULL;
 
 		gui_chat_restore();
 		return;
 	}
-	mainWindow.focusEnter(mainWindow);
-	mainWindow.showNotify(mainWindow);
+	gui_root.focusEnter(gui_root);
+	gui_root.showNotify(gui_root);
 	gui_draw_reset();
-	gui_draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+	gui_draw_background(SKINGFX_BACKGROUND_INGAME, gui_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	gui_draw_reset();
-	gui_draw_alpha *= GUI_alpha;
-	mainWindow.drawGUI(mainWindow);
+	gui_draw_alpha *= gui_alpha;
+	gui_root.drawGUI(gui_root);
 }
 
-void GUI_Draw() {
+void() gui_draw {
 	float timescale = getstatf(VM_STAT_MOVEVARS_TIMESCALE);
-	if (GUI_alpha < 1) {
-		GUI_alpha += view_drawframetime * 5;
+	if (gui_alpha < 1) {
+		gui_alpha += view_drawframetime * 5;
 	}
 	gui_conwidth = CVAR(vid_conwidth);
 	gui_conheight = CVAR(vid_conheight);
-	mainWindow.focusEnter(mainWindow);
-	mainWindow.showNotify(mainWindow);
+	gui_root.focusEnter(gui_root);
+	gui_root.showNotify(gui_root);
 	gui_draw_reset();
-	gui_draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+	gui_draw_background(SKINGFX_BACKGROUND_INGAME, gui_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	gui_draw_reset();
-	gui_draw_alpha *= GUI_alpha;
-	mainWindow.drawGUI(mainWindow);
+	gui_draw_alpha *= gui_alpha;
+	gui_root.drawGUI(gui_root);
 	mouse_enable("");
-	input_event_callback = GUI_InputEvent;
-	GUI_InputEvent(1, 0, 0); //workaround for old engines
+	input_event_callback = gui_input_event;
+	gui_input_event(1, 0, 0); //workaround for old engines
 }
 
-void GUI_Draw_Set() {
+void() gui_draw_set {
 	view_draw2d_post_self = self;
-	view_draw2d_post = GUI_Draw;
+	view_draw2d_post = gui_draw;
 }
 
-void GUI_Show(float window) {
-	GUI_mouseButtonsPressed = FALSE;
-	GUI_shiftState = FALSE;
-	GUI_currentWindow = window;
-	if not(mainWindow) {
+void(float window) gui_show {
+	gui_mouse_pressed = FALSE;
+	gui_shift = FALSE;
+	gui_current = window;
+	if not(gui_root) {
 		if (cvar("_backup_con_chatvars_set")) //avoid conflicts with con_chat_maximize
 			gui_con_chat_save = cvar("_backup_con_chat");
 		else
@@ -131,37 +131,37 @@ void GUI_Show(float window) {
 		gui_conwidth = CVAR(vid_conwidth);
 		gui_conheight = CVAR(vid_conheight);
 		gui_draw_reset();
-		mainWindow = gui_rexuiz_mainwindow_spawn(); mainWindow.configureMainWindow(mainWindow);
+		gui_root = gui_rexuiz_mainwindow_spawn(); gui_root.configureMainWindow(gui_root);
 		vector wh;
 		wh_x = gui_conwidth;
 		wh_y = gui_conheight;
 		wh_z = 0;
-		mainWindow.resizeNotify(mainWindow, '0 0 0', wh, '0 0 0', wh);
+		gui_root.resizeNotify(gui_root, '0 0 0', wh, '0 0 0', wh);
 	}
-	mainWindow.draw2d = GUI_Draw_Set;
-	mainWindow.draw2dflag = 1;
+	gui_root.draw2d = gui_draw_set;
+	gui_root.draw2dflag = 1;
 	entity e = NULL;
 	switch (window) {
 	case GUI_TEAMSELECT:
-		e = gui_teamSelectDialog;
+		e = gui_teamselect;
 		break;
 	case GUI_GAMEMENU:
-		e = gui_gameMenuDialog;
+		e = gui_gamemenu;
 		break;
 	case GUI_GAMESETTINGS:
-		e = gui_gameSettingsDialog;
+		e = gui_gamesettings;
 		break;
 	case GUI_VCALL:
-		e = gui_voteCallDialog;
+		e = gui_votecall;
 		break;
 	case GUI_QUIT:
-		e = gui_quitDialog;
+		e = gui_quit;
 		break;
 	case GUI_RADIO:
-		e = gui_radioDialog;
+		e = gui_radio;
 		break;
 	case GUI_SAVELOAD:
-		e = gui_saveLoad;
+		e = gui_saveload;
 		break;
 	case GUI_HINT:
 		e = gui_hint;
@@ -170,33 +170,33 @@ void GUI_Show(float window) {
 		e = gui_report;
 		break;
 	case GUI_MUTELIST:
-		e = gui_muteList;
+		e = gui_mutelist;
 		break;
 	case GUI_RECORDLIST:
-		e = gui_recordList;
+		e = gui_recordlist;
 		break;
 	case GUI_HUD:
 		e = gui_hud;
 		break;
 	}
 	if not(e) {
-		GUI_Hide();
+		gui_hide();
 		return;
 	}
 	gui_activate_window(e);
 	gui_setpointerfocus(e);
-	mainWindow.focused = 1;
-	gui_container_focus_set(mainWindow, e);
+	gui_root.focused = 1;
+	gui_container_focus_set(gui_root, e);
 }
 
-void GUI_Hide() {
-	if (GUI_currentWindow == GUI_GAMEMENU || GUI_currentWindow == GUI_TEAMSELECT || GUI_currentWindow == GUI_SAVELOAD || (GUI_currentWindow == GUI_HINT && !hint_user)) {
-		mainWindow.draw2d = GUI_Draw_Remove;
-		mainWindow.draw2dflag = 1;
-	} else if (GUI_currentWindow == GUI_HUD) {
-		GUI_Show(GUI_GAMESETTINGS);
+void() gui_hide {
+	if (gui_current == GUI_GAMEMENU || gui_current == GUI_TEAMSELECT || gui_current == GUI_SAVELOAD || (gui_current == GUI_HINT && !hint_user)) {
+		gui_root.draw2d = gui_draw_remove;
+		gui_root.draw2dflag = 1;
+	} else if (gui_current == GUI_HUD) {
+		gui_show(GUI_GAMESETTINGS);
 	} else
-		GUI_Show(GUI_GAMEMENU);
+		gui_show(GUI_GAMEMENU);
 }
 
 void(void) gui_chat_restore {

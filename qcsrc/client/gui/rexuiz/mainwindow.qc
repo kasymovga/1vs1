@@ -8,30 +8,30 @@ entity(void) gui_rexuiz_mainwindow_spawn {
 }
 
 void(entity me) gui_rexuiz_mainwindow_dialog_quit_close {
-	GUI_Hide();
+	gui_hide();
 }
 
 void(entity me) gui_rexuiz_mainwindow_configure {
 	entity i;
-	gui_gameMenuDialog = i = gui_rexuiz_dialog_gamemenu_spawn();
+	gui_gamemenu = i = gui_rexuiz_dialog_gamemenu_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_teamSelectDialog = i = gui_rexuiz_dialog_teamselect_spawn();
+	gui_teamselect = i = gui_rexuiz_dialog_teamselect_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_gameSettingsDialog = i = gui_rexuiz_dialog_gamesettings_spawn();
+	gui_gamesettings = i = gui_rexuiz_dialog_gamesettings_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_voteCallDialog = i = gui_rexuiz_dialog_vcall_spawn();
+	gui_votecall = i = gui_rexuiz_dialog_vcall_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_radioDialog = i = gui_rexuiz_dialog_radio_spawn();
+	gui_radio = i = gui_rexuiz_dialog_radio_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_saveLoad = i = gui_rexuiz_dialog_saveload_spawn();
+	gui_saveload = i = gui_rexuiz_dialog_saveload_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_quitDialog = i = gui_rexuiz_dialog_quit_spawn();
+	gui_quit = i = gui_rexuiz_dialog_quit_spawn();
 	i.close = gui_rexuiz_mainwindow_dialog_quit_close;
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -41,10 +41,10 @@ void(entity me) gui_rexuiz_mainwindow_configure {
 	gui_report = i = gui_rexuiz_dialog_report_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_muteList = i = gui_rexuiz_dialog_mutelist_spawn();
+	gui_mutelist = i = gui_rexuiz_dialog_mutelist_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	gui_recordList = i = gui_rexuiz_dialog_recordlist_spawn();
+	gui_recordlist = i = gui_rexuiz_dialog_recordlist_spawn();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	gui_hud = i = gui_rexuiz_dialog_hud_spawn();

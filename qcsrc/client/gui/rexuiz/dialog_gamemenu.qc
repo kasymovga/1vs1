@@ -16,23 +16,23 @@ entity (void) gui_rexuiz_dialog_gamemenu_spawn {
 }
 
 void(entity ignore, entity ignore2) gui_rexuiz_dialog_gamemenu_gamesettings {
-	GUI_Show(GUI_GAMESETTINGS);
+	gui_show(GUI_GAMESETTINGS);
 }
 
 void(entity ignore, entity ignore2) gui_rexuiz_dialog_gamemenu_vcall {
-	GUI_Show(GUI_VCALL);
+	gui_show(GUI_VCALL);
 }
 
 void(entity ignore, entity ignore2) gui_rexuiz_dialog_gamemenu_quit {
-	GUI_Show(GUI_QUIT);
+	gui_show(GUI_QUIT);
 }
 
 void(entity ignore, entity ignore2) gui_rexuiz_dialog_gamemenu_switchteam {
-	GUI_Show(GUI_TEAMSELECT);
+	gui_show(GUI_TEAMSELECT);
 }
 
 void(entity ignore, entity ignore2) gui_rexuiz_dialog_gamemenu_saveload {
-	GUI_Show(GUI_SAVELOAD);
+	gui_show(GUI_SAVELOAD);
 }
 
 void(entity me) gui_rexuiz_dialog_gamemenu_configure {
@@ -62,7 +62,7 @@ void(entity me) gui_rexuiz_dialog_gamemenu_configure {
 }
 
 void(entity ignore, entity ignore2) gui_rexuiz_dialog_gamemenu_mutelist {
-	GUI_Show(GUI_MUTELIST);
+	gui_show(GUI_MUTELIST);
 }
 
 void(entity me) gui_rexuiz_dialog_gamemenu_fill {

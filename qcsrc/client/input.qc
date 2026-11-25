@@ -14,7 +14,7 @@ float CSQC_InputEvent(float input_type, float primary, float secondary) {
 	}
 	if (input_type == 0)
 	if (primary == VM_K_ESCAPE) {
-		GUI_Show(GUI_GAMEMENU);
+		gui_show(GUI_GAMEMENU);
 		return TRUE;
 	}
 	return skip;

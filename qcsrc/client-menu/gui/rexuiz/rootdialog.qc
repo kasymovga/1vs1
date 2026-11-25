@@ -9,7 +9,7 @@ entity(void) gui_rexuiz_rootdialog_spawn {
 
 void(entity me) gui_rexuiz_rootdialog_close {
 #ifdef CSQC
-	GUI_Hide();
+	gui_hide();
 #endif
 #ifdef MENUQC
 	menu_goto(NULL);

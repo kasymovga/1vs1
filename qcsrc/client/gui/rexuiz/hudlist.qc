@@ -108,9 +108,9 @@ void(entity me, float i, vector where, float doubleclick) gui_rexuiz_hudlist_cli
 			} else
 				return;
 		}
-		GUI_Hide(); //close hud dialog
-		GUI_Hide(); //close game settings dialog
-		GUI_Hide(); //close menu
+		gui_hide(); //close hud dialog
+		gui_hide(); //close game settings dialog
+		gui_hide(); //close menu
 	}
 }
 

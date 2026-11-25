@@ -1,7 +1,7 @@
 void(void) hint_net_read {
 	float u;
 	u = net_read_byte();
-	if (GUI_currentWindow != GUI_HINT)
+	if (gui_current != GUI_HINT)
 		hint_user = u;
 
 	hint_num = net_read_byte();
@@ -9,6 +9,7 @@ void(void) hint_net_read {
 	hint = str_zone_ifneeded(print_text_prepare(net_read_string(), "", "", ""));
 	if (hint_text_label)
 		hint_text_label.setText(hint_text_label, hint);
+
 	if (!hint_user && CVAR(cl_hints_skip))
 		return;
 
@@ -17,5 +18,5 @@ void(void) hint_net_read {
 	hint_cmd_next = str_zone_ifneeded(strcat("cmd hint ", ftos(hint_num + 1), "\n"));
 	hint_cmd_prev = str_zone_ifneeded(strcat("cmd hint ", ftos(hint_num - 1), "\n"));
 	if not(main_isdemo)
-		GUI_Show(GUI_HINT);
+		gui_show(GUI_HINT);
 }

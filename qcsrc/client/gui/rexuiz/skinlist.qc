@@ -68,9 +68,9 @@ void(entity me, float i, vector where, float doubleclick) gui_rexuiz_skinlist_cl
 		} else
 			return;
 
-		GUI_Hide(); // hud dialog
-		GUI_Hide(); // game settings
-		GUI_Hide(); // game menu
+		gui_hide(); // hud dialog
+		gui_hide(); // game settings
+		gui_hide(); // game menu
 	}
 }
 void(entity me) gui_rexuiz_skinlist_destroy {

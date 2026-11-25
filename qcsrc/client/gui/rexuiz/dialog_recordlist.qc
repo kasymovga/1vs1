@@ -24,8 +24,8 @@ void(entity btn, entity me) gui_rexuiz_dialog_recordlist_vote {
 			return;
 
 		localcmd(strcat("cmd vote call gotomap ", s, ";"));
-		GUI_Hide();
-		GUI_Hide();
+		gui_hide();
+		gui_hide();
 	}
 }
 

@@ -1,17 +1,17 @@
 void(void) gui_chat_restore;
-void GUI_Show(float window);
-void GUI_Hide();
-entity gui_gameMenuDialog;
-entity gui_teamSelectDialog;
-entity gui_gameSettingsDialog;
-entity gui_voteCallDialog;
-entity gui_quitDialog;
-entity gui_radioDialog;
-entity gui_saveLoad;
+void(float window) gui_show;
+void() gui_hide;
+entity gui_gamemenu;
+entity gui_teamselect;
+entity gui_gamesettings;
+entity gui_votecall;
+entity gui_quit;
+entity gui_radio;
+entity gui_saveload;
 entity gui_hint;
 entity gui_report;
-entity gui_muteList;
-entity gui_recordList;
+entity gui_mutelist;
+entity gui_recordlist;
 entity gui_hud;
 
 enum {

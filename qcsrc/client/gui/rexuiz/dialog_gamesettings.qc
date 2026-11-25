@@ -33,7 +33,7 @@ void(entity me) gui_rexuiz_dialog_gamesettings_configure {
 }
 
 void(entity me, entity bnt) gui_rexuiz_dialog_gamesettings_hud {
-	GUI_Show(GUI_HUD);
+	gui_show(GUI_HUD);
 }
 
 void(entity me) gui_rexuiz_dialog_gamesettings_gun_alpha_load {

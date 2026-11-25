@@ -23,9 +23,9 @@ void(entity btn, entity me) gui_rexuiz_dialog_hud_apply {
 	if (gui_rexuiz_dialog_hud_skinlist.selectedItem >= 0)
 		gui_rexuiz_dialog_hud_skinlist.clickListBoxItem(gui_rexuiz_dialog_hud_skinlist, gui_rexuiz_dialog_hud_skinlist.selectedItem, '0 0 0', 1); //emulate double click
 
-	GUI_Hide();
-	GUI_Hide();
-	GUI_Hide();
+	gui_hide();
+	gui_hide();
+	gui_hide();
 }
 
 void(entity me) gui_rexuiz_dialog_hud_rm_save {
