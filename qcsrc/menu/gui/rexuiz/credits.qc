@@ -59,7 +59,7 @@ void(entity me) gui_rexuiz_credits_draw {
 		i = max(i, ceil(me.scrollPos / me.itemHeight));
 		me.setSelected(me, i);
 	}
-	drawListBox(me);
+	gui_listbox_draw(me);
 }
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_credits_resize {
@@ -103,7 +103,7 @@ float(entity me, float scan, float ascii, float shift) gui_rexuiz_credits_key_do
 	else if (scan == VM_K_DOWNARROW)
 		me.scrollPos = min(me.scrollPos + me.itemHeight, me.nItems * me.itemHeight - 1);
 	else
-		return keyDownListBox(me, scan, ascii, shift);
+		return gui_listbox_key_down(me, scan, ascii, shift);
 
 	i = min(me.selectedItem, floor((me.scrollPos + 1) / me.itemHeight - 1));
 	i = max(i, ceil(me.scrollPos / me.itemHeight));

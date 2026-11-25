@@ -33,12 +33,12 @@ void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSi
 	if (me.isNexposeeTitleBar) {
 		vector scrs;
 		scrs = eX * gui_conwidth + eY * gui_conheight;
-		resizeNotifyLabel(me, relOrigin, relSize, gui_box_to_global(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), gui_box_to_global_size(me.parent.Nexposee_smallSize, scrs));
+		gui_label_resize(me, relOrigin, relSize, gui_box_to_global(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), gui_box_to_global_size(me.parent.Nexposee_smallSize, scrs));
 		me.realOrigin_y = me.realFontSize_y * me.zoomedOutTitleBarPosition;
 		me.realOrigin_Nexposeed = me.realOrigin;
 		me.realFontSize_Nexposeed = me.realFontSize;
 	}
-	resizeNotifyLabel(me, relOrigin, relSize, absOrigin, absSize);
+	gui_label_resize(me, relOrigin, relSize, absOrigin, absSize);
 	me.borderVec = me.borderHeight / absSize_y * (eY + eX * (absSize_y / absSize_x));
 	me.realOrigin_y = 0.5 * (me.borderVec_y - me.realFontSize_y);
 	if (me.closeButton) {
@@ -73,7 +73,7 @@ void(entity me) gui_borderimage_draw {
 			me.realOrigin = ro * me.parent.Nexposee_animationFactor + me.realOrigin_Nexposeed * (1 - me.parent.Nexposee_animationFactor);
 			me.realFontSize = rf * me.parent.Nexposee_animationFactor + me.realFontSize_Nexposeed * (1 - me.parent.Nexposee_animationFactor);
 		}
-		drawLabel(me);
+		gui_label_draw(me);
 		if (me.isNexposeeTitleBar) {
 			// me.Nexposee_animationState 0 (small) or 1 (full)
 			// default values are for 1

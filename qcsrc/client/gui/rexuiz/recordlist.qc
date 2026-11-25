@@ -25,7 +25,7 @@ entity(void) gui_rexuiz_recordlist_make {
 }
 
 void(entity me, float i) gui_rexuiz_recordlist_select {
-	setSelectedListBox(me, i);
+	gui_listbox_select(me, i);
 	if (i >= me.nItems)
 		return;
 }

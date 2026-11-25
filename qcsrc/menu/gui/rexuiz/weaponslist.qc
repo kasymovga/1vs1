@@ -63,7 +63,7 @@ void(entity me) gui_rexuiz_weaponlist_draw {
 		cvar_set("cl_weaponpriority", t);
 	}
 	me.nItems = tokenize_console(t);
-	drawListBox(me);
+	gui_listbox_draw(me);
 }
 
 void(entity box, entity me) gui_rexuiz_weaponlist_moveup_click {
@@ -90,7 +90,7 @@ void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSi
 float(entity me, vector pos) gui_rexuiz_weaponlist_mouse_drag {
 	float f, i;
 	i = me.selectedItem;
-	f = mouseDragListBox(me, pos);
+	f = gui_listbox_mouse_drag(me, pos);
 	if (me.selectedItem != i)
 		cvar_set("cl_weaponpriority", gui_rexuiz_weaponlist_swap_in_priority(cvar_string("cl_weaponpriority"), me.selectedItem, i));
 
@@ -127,7 +127,7 @@ float(entity me, float scan, float ascii, float shift) gui_rexuiz_weaponlist_key
 	} else if(scan == 45) { // -
 		gui_rexuiz_weaponlist_movedown_click(NULL, me);
 		return 1;
-	} else if(keyDownListBox(me, scan, ascii, shift))
+	} else if(gui_listbox_key_down(me, scan, ascii, shift))
 		return 1;
 
 	return 0;

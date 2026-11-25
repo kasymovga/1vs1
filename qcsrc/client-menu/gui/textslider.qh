@@ -1,17 +1,11 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then multiple times addValue, then configureTextSlider
 entity(void) gui_textslider_spawn;
-string(entity, float) valueToTextTextSlider;
 .string(entity, float) valueToText;
-string(entity, float) valueToIdentifierTextSlider;
 .string(entity, float) valueToIdentifier;
-void(entity, string) setValueFromIdentifierTextSlider;
 .void(entity, string) setValueFromIdentifier;
-string(entity) getIdentifierTextSlider;
 .string(entity) getIdentifier;
-void(entity, string, string) addValueTextSlider;
 .void(entity, string, string) addValue;
-void(entity, string) configureTextSliderValuesTextSlider;
 .void(entity, string) configureTextSliderValues;
 .string valueStrings[256];
 .string valueIdentifiers[256];

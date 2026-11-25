@@ -30,5 +30,5 @@ void(entity me) gui_rexuiz_listbox_configure {
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_listbox_resize {
 	me.itemHeight = me.rowsPerItem * me.fontSize / absSize_y;
-	resizeNotifyListBox(me, relOrigin, relSize, absOrigin, absSize);
+	gui_listbox_resize(me, relOrigin, relSize, absOrigin, absSize);
 }

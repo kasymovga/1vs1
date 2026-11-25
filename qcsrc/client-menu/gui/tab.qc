@@ -1,11 +1,10 @@
 entity(void) gui_tab_spawn {
-	entity me; me = gui_dialog_spawn();
+	entity me = gui_dialog_spawn();
 	me.isTabRoot = 0;
 	me.closable = 0;
 	me.rootDialog = 0;
 	me.title = NULL;
 	me.titleFontSize = 0; // pixels
-	// still to be customized
 	me.intendedWidth = 0;
 	me.rows = 3;
 	me.columns = 2;

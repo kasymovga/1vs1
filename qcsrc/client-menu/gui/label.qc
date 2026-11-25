@@ -1,10 +1,16 @@
+string(entity me) gui_label_to_string;
+void(entity me, string txt) gui_label_set;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_label_resize;
+void(entity me, string txt, float sz, float algn) gui_label_configure;
+void(entity me) gui_label_draw;
+
 entity(void) gui_label_spawn {
-	entity me; me = gui_item_spawn();
-	me.configureLabel = configureLabelLabel;
-	me.draw = drawLabel;
-	me.resizeNotify = resizeNotifyLabel;
-	me.setText = setTextLabel;
-	me.toString = toStringLabel;
+	entity me = gui_item_spawn();
+	me.configureLabel = gui_label_configure;
+	me.draw = gui_label_draw;
+	me.resizeNotify = gui_label_resize;
+	me.setText = gui_label_set;
+	me.toString = gui_label_to_string;
 	me.text = NULL;
 	me.fontSize = 8;
 	me.align = 0.5;
@@ -25,37 +31,41 @@ entity(void) gui_label_spawn {
 	me.classname = "Label";
 	return me;
 }
-string toStringLabel(entity me)
-{
+
+string(entity me) gui_label_to_string {
 	return me.text;
 }
-void setTextLabel(entity me, string txt)
-{
+
+void(entity me, string txt) gui_label_set {
 	me.text = txt;
 	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(me.realFontSize_x * gui_text_width(me.text, me.allowColors), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
 }
-void resizeNotifyLabel(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
-{
-	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_label_resize {
+	gui_item_resize(me, relOrigin, relSize, absOrigin, absSize);
 	// absSize_y is height of label
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;
 	if (gui_draw_scale_x / gui_draw_scale_y < 1.5)
 		me.realFontSize_x = 0.666 * me.realFontSize_x;
-	if(me.marginLeft)
+
+	if (me.marginLeft)
 		me.keepspaceLeft = me.marginLeft * me.realFontSize_x;
-	if(me.marginRight)
+
+	if (me.marginRight)
 		me.keepspaceRight = me.marginRight * me.realFontSize_x;
+
 	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(me.realFontSize_x * gui_text_width(me.text, me.allowColors), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
 	me.realOrigin_y = 0.5 * (1 - me.realFontSize_y);
 }
-void configureLabelLabel(entity me, string txt, float sz, float algn)
-{
+
+void(entity me, string txt, float sz, float algn) gui_label_configure {
 	me.fontSize = sz;
 	me.align = algn;
 	me.setText(me, txt);
 }
-void drawLabel(entity me) {
+
+void(entity me) gui_label_draw {
 	string t;
 	vector o;
 	if (me.disabled)
@@ -87,12 +97,13 @@ void drawLabel(entity me) {
 					} else {
 						str_wrapped_line_remaining = tl;
 						while (str_wrapped_line_remaining != "") {
-						 if (me.allowColors)
-						  tl = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_with_colors);
-						 else
-						  tl = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_without_colors);
-						 gui_draw_text(o, tl, me.realFontSize, me.colorL, me.alpha, me.allowColors);
-						 o_y += me.realFontSize_y;
+							if (me.allowColors)
+								tl = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_with_colors);
+							else
+								tl = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_without_colors);
+
+							gui_draw_text(o, tl, me.realFontSize, me.colorL, me.alpha, me.allowColors);
+							o_y += me.realFontSize_y;
 						}
 					}
 				}

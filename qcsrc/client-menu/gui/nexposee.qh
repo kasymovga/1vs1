@@ -1,40 +1,26 @@
 entity(void) gui_nexposee_spawn;
-void(entity) drawNexposee;
 .void(entity) draw;
-float(entity, float, float, float) keyDownNexposee;
 .float(entity, float, float, float) keyDown;
-float(entity, float, float, float) keyUpNexposee;
 .float(entity, float, float, float) keyUp;
-float(entity, vector) mousePressNexposee;
 .float(entity, vector) mousePress;
-float(entity, vector) mouseMoveNexposee;
 .float(entity, vector) mouseMove;
-float(entity, vector) mouseReleaseNexposee;
 .float(entity, vector) mouseRelease;
-float(entity, vector) mouseDragNexposee;
 .float(entity, vector) mouseDrag;
-void(entity, vector, vector, vector, vector) resizeNotifyNexposee;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-void(entity) focusEnterNexposee;
 .void(entity) focusEnter;
-void(entity) closeNexposee;
 .void(entity) close;
 .float animationState;
 .float animationFactor;
 .entity selectedChild;
 .entity mouseFocusedChild;
-void(entity, entity, vector, vector, float) addItemNexposee;
 .void(entity, entity, vector, vector, float) addItem;
-void(entity) calcNexposee;
 .void(entity) calc;
-void(entity, entity, vector, float, float) setNexposeeNexposee;
 .void(entity, entity, vector, float, float) setNexposee;
 .vector mousePosition;
-void(entity, entity, vector) pullNexposeeNexposee;
 .void(entity, entity, vector) pullNexposee;
 .float instanceOfNexposee;
 
-void ExposeeCloseButton_Click(entity button, entity theOther); // un-exposees the current state
+void(entity button, entity theOther) gui_nexposee_close_click; // un-exposees the current state
 // animation states:
 //   0 = thumbnails seen
 //   1 = zooming in

@@ -55,7 +55,7 @@ void(entity me, string vote) gui_rexuiz_voteargslist_type_set {
 }
 
 void(entity me, float i) gui_rexuiz_voteargslist_select {
-	setSelectedListBox(me, i);
+	gui_listbox_select(me, i);
 	if (i >= me.nItems)
 		return;
 

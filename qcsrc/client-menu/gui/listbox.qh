@@ -1,19 +1,11 @@
 entity(void) gui_listbox_spawn;
-void(entity, vector, vector, vector, vector) resizeNotifyListBox;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-void(entity, float, float) configureListBoxListBox;
 .void(entity, float, float) configureListBox;
-void(entity) drawListBox;
 .void(entity) draw;
-float(entity, float, float, float) keyDownListBox;
 .float(entity, float, float, float) keyDown;
-float(entity, vector) mousePressListBox;
 .float(entity, vector) mousePress;
-float(entity, vector) mouseDragListBox;
 .float(entity, vector) mouseDrag;
-float(entity, vector) mouseReleaseListBox;
 .float(entity, vector) mouseRelease;
-float(entity, vector) mouseDoubleClickListBox;
 .float(entity, vector) mouseDoubleClick;
 .float focusable;
 .float selectedItem;
@@ -23,7 +15,6 @@ float(entity, vector) mouseDoubleClickListBox;
 .float previousValue;
 .float pressed; // 0 = normal, 1 = scrollbar dragging, 2 = item dragging, 3 = released
 .float pressOffset;
-void(entity) updateControlTopBottomListBox;
 .void(entity) updateControlTopBottom;
 .float controlTop;
 .float controlBottom;
@@ -39,9 +30,11 @@ void(entity) updateControlTopBottomListBox;
 .float scrollbarWidth; // pixels
 .float nItems;
 .float itemHeight;
-void(entity, float, vector, float) drawListBoxItemListBox;
 .void(entity, float, vector, float) drawListBoxItem; // item number, width/height, selected
-void(entity, float, vector, float) clickListBoxItemListBox;
 .void(entity, float, vector, float) clickListBoxItem; // item number, relative clickpos, double click
-void(entity, float) setSelectedListBox;
 .void(entity, float) setSelected;
+void(entity me, float i) gui_listbox_select;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_listbox_resize;
+void(entity me, float i, vector absSize, float selected) gui_listbox_item_draw;
+float(entity me, float key, float ascii, float shift) gui_listbox_key_down;
+float(entity me, vector pos) gui_listbox_mouse_drag;

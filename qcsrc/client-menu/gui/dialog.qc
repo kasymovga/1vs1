@@ -141,9 +141,9 @@ void(entity me) gui_dialog_configure {
 
 void(entity me) gui_dialog_close {
 	if (me.parent.instanceOfNexposee) {
-		ExposeeCloseButton_Click(me, me.parent);
+		gui_nexposee_close_click(me, me.parent);
 	} else if(me.parent.instanceOfModalController) {
-		DialogCloseButton_Click(me, me);
+		gui_modalcontroller_open_click(me, me);
 	}
 }
 
@@ -154,5 +154,5 @@ float(entity me, float key, float ascii, float shift) gui_dialog_key_down {
 			return 1;
 		}
 	}
-	return keyDownInputContainer(me, key, ascii, shift);
+	return gui_inputcontainer_key_down(me, key, ascii, shift);
 }

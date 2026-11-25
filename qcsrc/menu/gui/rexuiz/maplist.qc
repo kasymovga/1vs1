@@ -112,7 +112,7 @@ void(entity me) gui_rexuiz_maplist_draw {
 	if (me.startButton)
 		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems));
 
-	drawListBox(me);
+	gui_listbox_draw(me);
 }
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_maplist_resize {
@@ -137,7 +137,7 @@ void(entity me, float i, vector where, float doubleclick) gui_rexuiz_maplist_ite
 				// DOUBLE CLICK!
 				// pop up map info screen
 				main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
-				DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+				gui_modalcontroller_origin_open_click(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 				return;
 			}
 	} else {
@@ -270,7 +270,7 @@ float(entity me, float scan, float ascii, float shift) gui_rexuiz_maplist_key_do
 	if (scan == VM_K_ENTER) {
 		// pop up map info screen
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
-		DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+		gui_modalcontroller_origin_open_click(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 	} else if (scan == VM_K_SPACE) {
 		me.g_maplistCacheToggle(me, me.selectedItem);
 	} else if (ascii == 43) { // +
@@ -305,7 +305,7 @@ float(entity me, float scan, float ascii, float shift) gui_rexuiz_maplist_key_do
 		if (map_info_find_name_first_result >= 0)
 			me.setSelected(me, map_info_find_name_first_result);
 	} else
-		return keyDownListBox(me, scan, ascii, shift);
+		return gui_listbox_key_down(me, scan, ascii, shift);
 
 	return 1;
 }

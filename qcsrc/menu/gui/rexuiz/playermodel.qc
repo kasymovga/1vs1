@@ -197,7 +197,7 @@ void(entity me) gui_rexuiz_playermodel_draw {
 	vector o;
 	me.src = me.currentModelImage;
 	if (me.src != "" && me.src != "/")
-		drawImage(me);
+		gui_image_draw(me);
 
 	me.src = NULL;
 	// draw text on the image, handle \n in the description
@@ -210,7 +210,7 @@ void(entity me) gui_rexuiz_playermodel_draw {
 }
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_playermodel_resize {
-	resizeNotifyImage(me, relOrigin, relSize, absOrigin, absSize);
+	gui_image_resize(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;
 }

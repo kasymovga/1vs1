@@ -1,19 +1,30 @@
-// Note:
-//   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
+void(entity me) gui_slider_draw;
+void(entity me) gui_slider_show;
+float(entity me, vector pos) gui_slider_mouse_release;
+float(entity me, vector pos) gui_slider_mouse_press;
+float(entity me, vector pos) gui_slider_mouse_drag;
+float(entity me, float key, float ascii, float shift) gui_slider_key_down;
+void(entity me, float theValueMin, float theValue, float theValueMax, float theValueStep, float theValueKeyStep, float theValuePageStep) gui_slider_configure;
+void(entity me, float sz, float theAlign, float theTextSpace, string gfx) gui_slider_visuals_configure;
+string(entity me, float val) gui_slider_value_text;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_slider_resize;
+string(entity me) gui_slider_to_string;
+void(entity me, float val) gui_slider_set;
+
 entity(void) gui_slider_spawn {
-	entity me; me = gui_label_spawn();
-	me.resizeNotify = resizeNotifySlider;
-	me.configureSliderVisuals = configureSliderVisualsSlider;
-	me.configureSliderValues = configureSliderValuesSlider;
-	me.draw = drawSlider;
-	me.keyDown = keyDownSlider;
-	me.mousePress = mousePressSlider;
-	me.mouseDrag = mouseDragSlider;
-	me.mouseRelease = mouseReleaseSlider;
-	me.valueToText = valueToTextSlider;
-	me.toString = toStringSlider;
-	me.setValue = setValueSlider;
-	me.showNotify = showNotifySlider;
+	entity me = gui_label_spawn();
+	me.resizeNotify = gui_slider_resize;
+	me.configureSliderVisuals = gui_slider_visuals_configure;
+	me.configureSliderValues = gui_slider_configure;
+	me.draw = gui_slider_draw;
+	me.keyDown = gui_slider_key_down;
+	me.mousePress = gui_slider_mouse_press;
+	me.mouseDrag = gui_slider_mouse_drag;
+	me.mouseRelease = gui_slider_mouse_release;
+	me.valueToText = gui_slider_value_text;
+	me.toString = gui_slider_to_string;
+	me.setValue = gui_slider_set;
+	me.showNotify = gui_slider_show;
 	me.src = NULL;
 	me.focusable = 1;
 	me.value = 0;
@@ -40,40 +51,48 @@ entity(void) gui_slider_spawn {
 	me.classname = "Slider";
 	return me;
 }
-// Note:
-//   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
+
 float(float a, float b, float c) gui_slider_median {
 	if (a < c)
 		return bound(a, b, c);
+
 	return bound(c, b, a);
 }
-void(entity me, float val) setValueSlider {
+
+void(entity me, float val) gui_slider_set {
 	me.value = val;
 }
-string(entity me) toStringSlider {
+
+string(entity me) gui_slider_to_string {
 	return strcat(ftos(me.value), " (", me.valueToText(me, me.value), ")");
 }
-void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) resizeNotifySlider {
-	resizeNotifyLabel(me, relOrigin, relSize, absOrigin, absSize);
+
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_slider_resize {
+	gui_label_resize(me, relOrigin, relSize, absOrigin, absSize);
 	me.controlWidth = absSize_y / absSize_x;
 }
+
 float(float a, float b, float c) almostInBoundSlider {
 	float eps;
 	eps = (max(a, -a) + max(c, -c)) * 0.001;
 	return b == gui_slider_median(a - eps, b, c + eps);
 }
-string(entity me, float val) valueToTextSlider {
+
+string(entity me, float val) gui_slider_value_text {
 	if (almostInBoundSlider(me.valueMin, val, me.valueMax))
 		return str_float_decimals(val * me.valueDisplayMultiplier, me.valueDigits);
+
 	return "";
 }
-void(entity me, float sz, float theAlign, float theTextSpace, string gfx) configureSliderVisualsSlider {
-	configureLabelLabel(me, NULL, sz, theAlign);
+
+void(entity me, float sz, float theAlign, float theTextSpace, string gfx) gui_slider_visuals_configure {
+	gui_label_configure(me, NULL, sz, theAlign);
 	me.textSpace = theTextSpace;
 	me.keepspaceLeft = (theTextSpace == 0) ? 0 : (1 - theTextSpace);
 	me.src = gfx;
 }
-void(entity me, float theValueMin, float theValue, float theValueMax, float theValueStep, float theValueKeyStep, float theValuePageStep) configureSliderValuesSlider {
+
+void(entity me, float theValueMin, float theValue, float theValueMax, float theValueStep, float theValueKeyStep, float theValuePageStep) gui_slider_configure {
 	me.value = theValue;
 	me.valueStep = theValueStep;
 	me.valueMin = theValueMin;
@@ -88,13 +107,15 @@ void(entity me, float theValueMin, float theValue, float theValueMax, float theV
 	else if (me.valueStep >= 0.01) // about a whole number of 100ths
 		me.valueDigits = 2;
 }
-float(entity me, float key, float ascii, float shift) keyDownSlider {
+
+float(entity me, float key, float ascii, float shift) gui_slider_key_down {
 	float inRange;
 	if (me.disabled)
 		return 0;
+
 	inRange = (almostInBoundSlider(me.valueMin, me.value, me.valueMax));
 	if (key == VM_K_LEFTARROW) {
-		if(inRange)
+		if (inRange)
 			me.setValue(me, gui_slider_median(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMax);
@@ -108,14 +129,14 @@ float(entity me, float key, float ascii, float shift) keyDownSlider {
 		return 1;
 	}
 	if (key == VM_K_PGUP) {
-		if(inRange)
+		if (inRange)
 			me.setValue(me, gui_slider_median(me.valueMin, me.value - me.valuePageStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
 	if (key == VM_K_PGDN) {
-		if(inRange)
+		if (inRange)
 			me.setValue(me, gui_slider_median(me.valueMin, me.value + me.valuePageStep, me.valueMax));
 		else
 			me.setValue(me, me.valueMin);
@@ -132,7 +153,8 @@ float(entity me, float key, float ascii, float shift) keyDownSlider {
 	// TODO more keys
 	return 0;
 }
-float(entity me, vector pos) mouseDragSlider {
+
+float(entity me, vector pos) gui_slider_mouse_drag {
 	float hit;
 	float v;
 	if (me.disabled)
@@ -147,16 +169,19 @@ float(entity me, vector pos) mouseDragSlider {
 			v = gui_slider_median(0, (pos_x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 			if (me.valueStep)
 				v = floor(0.5 + v / me.valueStep) * me.valueStep;
+
 			me.setValue(me, v);
 		} else
 			me.setValue(me, me.previousValue);
 	}
 	return 1;
 }
-float(entity me, vector pos) mousePressSlider {
+
+float(entity me, vector pos) gui_slider_mouse_press {
 	float controlCenter;
 	if (me.disabled)
 		return 0;
+
 	if (pos_x < 0) return 0;
 	if (pos_y < 0) return 0;
 	if (pos_x >= 1 - me.textSpace) return 0;
@@ -200,16 +225,20 @@ float(entity me, vector pos) mousePressSlider {
 	}
 	return 1;
 }
-float(entity me, vector pos) mouseReleaseSlider {
+
+float(entity me, vector pos) gui_slider_mouse_release {
 	me.pressed = 0;
-	if(me.disabled)
+	if (me.disabled)
 		return 0;
+
 	return 1;
 }
-void(entity me) showNotifySlider {
+
+void(entity me) gui_slider_show {
 	me.focusable = !me.disabled;
 }
-void(entity me) drawSlider {
+
+void(entity me) gui_slider_draw {
 	float controlLeft;
 	float save;
 	me.focusable = !me.disabled;
@@ -230,6 +259,6 @@ void(entity me) drawSlider {
 	}
 	me.setText(me, me.valueToText(me, me.value));
 	gui_draw_alpha = save;
-	drawLabel(me);
+	gui_label_draw(me);
 	me.text = NULL; // TEMPSTRING!
 }

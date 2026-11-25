@@ -163,7 +163,7 @@ void(entity btn, entity me) gui_rexuiz_keybinder_edit {
 	descr = str_sub(descr, 1, strlen(descr) - 1);
 	// Hooray! It IS a user bind!
 	me.userbindEditDialog.loadUserBind(me.userbindEditDialog, cvar_string(strcat(descr, "_description")), cvar_string(strcat(descr, "_press")), cvar_string(strcat(descr, "_release")));
-	DialogOpenButton_Click(btn, me.userbindEditDialog);
+	gui_modalcontroller_open_click(btn, me.userbindEditDialog);
 }
 
 void(entity btn, entity me) gui_rexuiz_keybinder_clear {
@@ -210,7 +210,7 @@ void(entity me, float i) gui_rexuiz_keybinder_select {
 	if (me.userbindEditButton)
 		me.userbindEditButton.disabled = (str_sub(gui_rexuiz_keybinder_descriptions[i], 0, 1) != "$");
 
-	setSelectedListBox(me, i);
+	gui_listbox_select(me, i);
 }
 
 float(entity me, float key, float ascii, float shift) gui_rexuiz_keybinder_key_down {
@@ -226,7 +226,7 @@ float(entity me, float key, float ascii, float shift) gui_rexuiz_keybinder_key_d
 		gui_rexuiz_keybinder_clear(me, me);
 		break;
 	default:
-		r = keyDownListBox(me, key, ascii, shift);
+		r = gui_listbox_key_down(me, key, ascii, shift);
 		break;
 	}
 	return r;

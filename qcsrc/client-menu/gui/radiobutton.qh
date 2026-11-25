@@ -1,6 +1,5 @@
 void(entity me, entity theOther) gui_radiobutton_click;
 entity(void) gui_radiobutton_spawn;
-void(entity, string, float, string, float, float) configureRadioButtonRadioButton;
 .void(entity, string, float, string, float, float) configureRadioButton;
 .float checked;
 .float group;

@@ -51,5 +51,5 @@ string(entity me, float v) gui_rexuiz_slider_decibels_value_to_text {
 	else if(v >= -0.1 && !me.valueMax)
 		return _("MAX");
 
-	return strcat(valueToTextSlider(me, v), _(" dB"));
+	return strcat(gui_slider_value_text(me, v), _(" dB"));
 }

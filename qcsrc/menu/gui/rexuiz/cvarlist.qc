@@ -48,7 +48,7 @@ void(entity me) gui_rexuiz_cvarlist_configure {
 
 void(entity me, float i) gui_rexuiz_cvarlist_select {
 	string s;
-	setSelectedListBox(me, i);
+	gui_listbox_select(me, i);
 	if (me.nItems == 0)
 		return;
 
@@ -134,7 +134,7 @@ void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_cvarlist_i
 }
 
 float(entity me, float scan, float ascii, float shift) gui_rexuiz_cvarlist_key_down {
-	if (keyDownListBox(me, scan, ascii, shift))
+	if (gui_listbox_key_down(me, scan, ascii, shift))
 		return 1;
 	else if(!me.controlledTextbox)
 		return 0;

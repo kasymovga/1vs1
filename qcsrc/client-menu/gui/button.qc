@@ -48,11 +48,11 @@ void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSi
 	else
 		me.keepspaceLeft = min(0.8, absSize_y / absSize_x);
 
-	resizeNotifyLabel(me, relOrigin, relSize, absOrigin, absSize);
+	gui_label_resize(me, relOrigin, relSize, absOrigin, absSize);
 }
 
 void(entity me, string txt, float sz, string gfx) gui_button_configure {
-	configureLabelLabel(me, txt, sz, me.srcMulti ? 0.5 : 0);
+	gui_label_configure(me, txt, sz, me.srcMulti ? 0.5 : 0);
 	me.src = gfx;
 }
 
@@ -139,7 +139,7 @@ void(entity me) gui_button_draw {
 		gui_draw_picture(bOrigin, me.src2, bSize, me.color2, me.alpha2);
 	}
 	gui_draw_alpha = save;
-	drawLabel(me);
+	gui_label_draw(me);
 	if (me.clickTime > 0 && me.clickTime <= frametime) {
 		// keyboard click timer expired? Fire the event then.
 		if not(me.disabled)

@@ -24,5 +24,5 @@ void(entity me, float theAlign, string theText) gui_rexuiz_textlabel_configure {
 }
 
 void(entity me) gui_rexuiz_textlabel_draw {
-	drawLabel(me);
+	gui_label_draw(me);
 }

@@ -131,5 +131,5 @@ float(entity me, float scan, float ascii, float shift) gui_rexuiz_demolist_key_d
 		me.startDemo(me);
 		return 1;
 	} else
-		return keyDownListBox(me, scan, ascii, shift);
+		return gui_listbox_key_down(me, scan, ascii, shift);
 }

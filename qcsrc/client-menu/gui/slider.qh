@@ -1,29 +1,17 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
 entity(void) gui_slider_spawn;
-void(entity, vector, vector, vector, vector) resizeNotifySlider;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-void(entity, float, float, float, string) configureSliderVisualsSlider;
 .void(entity, float, float, float, string) configureSliderVisuals;
-void(entity, float, float, float, float, float, float) configureSliderValuesSlider;
 .void(entity, float, float, float, float, float, float) configureSliderValues;
-void(entity) drawSlider;
 .void(entity) draw;
-float(entity, float, float, float) keyDownSlider;
 .float(entity, float, float, float) keyDown;
-float(entity, vector) mousePressSlider;
 .float(entity, vector) mousePress;
-float(entity, vector) mouseDragSlider;
 .float(entity, vector) mouseDrag;
-float(entity, vector) mouseReleaseSlider;
 .float(entity, vector) mouseRelease;
-string(entity, float) valueToTextSlider;
 .string(entity, float) valueToText;
-string(entity) toStringSlider;
 .string(entity) toString;
-void(entity, float) setValueSlider;
 .void(entity, float) setValue;
-void(entity) showNotifySlider;
 .void(entity) showNotify;
 .string src;
 .float focusable;

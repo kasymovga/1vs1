@@ -96,6 +96,6 @@ void(entity me) gui_rexuiz_tab_settings_interface_fill {
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = gui_rexuiz_button_make(_("Language..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
+			e.onClick = gui_modalcontroller_open_click;
 			e.onClickEntity = main.languageDialog;
 }

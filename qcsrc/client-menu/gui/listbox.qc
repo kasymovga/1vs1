@@ -1,13 +1,21 @@
+void(entity me, float theScrollbarWidth, float theItemHeight) gui_listbox_configure;
+float(entity me, vector pos) gui_listbox_mouse_press;
+float(entity me, vector pos) gui_listbox_mouse_release;
+float(entity me, vector pos) gui_listbox_mouse_doubleclick;
+void(entity me) gui_listbox_control_topbottom_update;
+void(entity me) gui_listbox_draw;
+void(entity me, float i, vector where, float doubleclick) gui_listbox_item_click;
+
 entity(void) gui_listbox_spawn {
 	entity me; me = gui_item_spawn();
-	me.resizeNotify = resizeNotifyListBox;
-	me.configureListBox = configureListBoxListBox;
-	me.draw = drawListBox;
-	me.keyDown = keyDownListBox;
-	me.mousePress = mousePressListBox;
-	me.mouseDrag = mouseDragListBox;
-	me.mouseRelease = mouseReleaseListBox;
-	me.mouseDoubleClick = mouseDoubleClickListBox;
+	me.resizeNotify = gui_listbox_resize;
+	me.configureListBox = gui_listbox_configure;
+	me.draw = gui_listbox_draw;
+	me.keyDown = gui_listbox_key_down;
+	me.mousePress = gui_listbox_mouse_press;
+	me.mouseDrag = gui_listbox_mouse_drag;
+	me.mouseRelease = gui_listbox_mouse_release;
+	me.mouseDoubleClick = gui_listbox_mouse_doubleclick;
 	me.focusable = 1;
 	me.selectedItem = 0;
 	me.size = '0 0 0';
@@ -16,7 +24,7 @@ entity(void) gui_listbox_spawn {
 	me.previousValue = 0;
 	me.pressed = 0; // 0 = normal, 1 = scrollbar dragging, 2 = item dragging, 3 = released
 	me.pressOffset = 0;
-	me.updateControlTopBottom = updateControlTopBottomListBox;
+	me.updateControlTopBottom = gui_listbox_control_topbottom_update;
 	me.controlTop = 0;
 	me.controlBottom = 0;
 	me.controlWidth = 0;
@@ -31,128 +39,110 @@ entity(void) gui_listbox_spawn {
 	me.scrollbarWidth = 0; // pixels
 	me.nItems = 42;
 	me.itemHeight = 0;
-	me.drawListBoxItem = drawListBoxItemListBox; // item number, width/height, selected
-	me.clickListBoxItem = clickListBoxItemListBox; // item number, relative clickpos, double click
-	me.setSelected = setSelectedListBox;
+	me.drawListBoxItem = gui_listbox_item_draw; // item number, width/height, selected
+	me.clickListBoxItem = gui_listbox_item_click; // item number, relative clickpos, double click
+	me.setSelected = gui_listbox_select;
 	me.classname = "ListBox";
 	return me;
 }
-void setSelectedListBox(entity me, float i)
-{
+
+void(entity me, float i) gui_listbox_select {
 	me.selectedItem = floor(0.5 + bound(0, i, me.nItems - 1));
 }
-void resizeNotifyListBox(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
-{
-	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_listbox_resize {
+	gui_item_resize(me, relOrigin, relSize, absOrigin, absSize);
 	me.controlWidth = me.scrollbarWidth / absSize_x;
 }
-void configureListBoxListBox(entity me, float theScrollbarWidth, float theItemHeight)
-{
+
+void(entity me, float theScrollbarWidth, float theItemHeight) gui_listbox_configure {
 	me.scrollbarWidth = theScrollbarWidth;
 	me.itemHeight = theItemHeight;
 }
-float keyDownListBox(entity me, float key, float ascii, float shift)
-{
+
+float(entity me, float key, float ascii, float shift) gui_listbox_key_down {
 	me.dragScrollTimer = time;
-	if(key == VM_K_MWHEELUP)
-	{
+	if (key == VM_K_MWHEELUP) {
 		me.scrollPos = max(me.scrollPos - 0.5, 0);
 		me.setSelected(me, min(me.selectedItem, floor((me.scrollPos + 1) / me.itemHeight - 1)));
-	}
-	else if(key == VM_K_MWHEELDOWN)
-	{
+	} else if (key == VM_K_MWHEELDOWN) {
 		me.scrollPos = min(me.scrollPos + 0.5, me.nItems * me.itemHeight - 1);
 		me.setSelected(me, max(me.selectedItem, ceil(me.scrollPos / me.itemHeight)));
-	}
-	else if(key == VM_K_PGUP)
+	} else if (key == VM_K_PGUP)
 		me.setSelected(me, me.selectedItem - 1 / me.itemHeight);
-	else if(key == VM_K_PGDN)
+	else if (key == VM_K_PGDN)
 		me.setSelected(me, me.selectedItem + 1 / me.itemHeight);
-	else if(key == VM_K_UPARROW)
+	else if (key == VM_K_UPARROW)
 		me.setSelected(me, me.selectedItem - 1);
-	else if(key == VM_K_DOWNARROW)
+	else if (key == VM_K_DOWNARROW)
 		me.setSelected(me, me.selectedItem + 1);
-	else if(key == VM_K_HOME)
-	{
+	else if (key == VM_K_HOME) {
 		me.scrollPos = 0;
 		me.setSelected(me, 0);
-	}
-	else if(key == VM_K_END)
-	{
+	} else if (key == VM_K_END) {
 		me.scrollPos = max(0, me.nItems * me.itemHeight - 1);
 		me.setSelected(me, me.nItems - 1);
 	}
 	else
 		return 0;
+
 	return 1;
 }
-float mouseDragListBox(entity me, vector pos)
-{
+
+float(entity me, vector pos) gui_listbox_mouse_drag {
 	float hit;
 	float i;
 	me.updateControlTopBottom(me);
 	me.dragScrollPos = pos;
-	if(me.pressed == 1)
-	{
+	if (me.pressed == 1) {
 		hit = 1;
-		if(pos_x < 1 - me.controlWidth - me.tolerance_y * me.controlWidth) hit = 0;
-		if(pos_y < 0 - me.tolerance_x) hit = 0;
-		if(pos_x >= 1 + me.tolerance_y * me.controlWidth) hit = 0;
-		if(pos_y >= 1 + me.tolerance_x) hit = 0;
-		if(hit)
-		{
+		if (pos_x < 1 - me.controlWidth - me.tolerance_y * me.controlWidth) hit = 0;
+		if (pos_y < 0 - me.tolerance_x) hit = 0;
+		if (pos_x >= 1 + me.tolerance_y * me.controlWidth) hit = 0;
+		if (pos_y >= 1 + me.tolerance_x) hit = 0;
+		if (hit) {
 			// calculate new pos to v
 			float delta;
 			delta = (pos_y - me.pressOffset) / (1 - (me.controlBottom - me.controlTop)) * (me.nItems * me.itemHeight - 1);
 			me.scrollPos = me.previousValue + delta;
-		}
-		else
+		} else
 			me.scrollPos = me.previousValue;
+
 		me.scrollPos = min(me.scrollPos, me.nItems * me.itemHeight - 1);
 		me.scrollPos = max(me.scrollPos, 0);
 		i = min(me.selectedItem, floor((me.scrollPos + 1) / me.itemHeight - 1));
 		i = max(i, ceil(me.scrollPos / me.itemHeight));
 		me.setSelected(me, i);
-	}
-	else if(me.pressed == 2)
-	{
+	} else if (me.pressed == 2) {
 		me.setSelected(me, floor((me.scrollPos + pos_y) / me.itemHeight));
 	}
 	return 1;
 }
-float mousePressListBox(entity me, vector pos)
-{
-	if(pos_x < 0) return 0;
-	if(pos_y < 0) return 0;
-	if(pos_x >= 1) return 0;
-	if(pos_y >= 1) return 0;
+
+float(entity me, vector pos) gui_listbox_mouse_press {
+	if (pos_x < 0) return 0;
+	if (pos_y < 0) return 0;
+	if (pos_x >= 1) return 0;
+	if (pos_y >= 1) return 0;
 	me.dragScrollPos = pos;
 	me.updateControlTopBottom(me);
 	me.dragScrollTimer = time;
-	if(pos_x >= 1 - me.controlWidth)
-	{
+	if (pos_x >= 1 - me.controlWidth) {
 		// if hit, set me.pressed, otherwise scroll by one page
-		if(pos_y < me.controlTop)
-		{
+		if (pos_y < me.controlTop) {
 			// page up
 			me.scrollPos = max(me.scrollPos - 1, 0);
 			me.setSelected(me, min(me.selectedItem, floor((me.scrollPos + 1) / me.itemHeight - 1)));
-		}
-		else if(pos_y > me.controlBottom)
-		{
+		} else if (pos_y > me.controlBottom) {
 			// page down
 			me.scrollPos = min(me.scrollPos + 1, me.nItems * me.itemHeight - 1);
 			me.setSelected(me, max(me.selectedItem, ceil(me.scrollPos / me.itemHeight)));
-		}
-		else
-		{
+		} else {
 			me.pressed = 1;
 			me.pressOffset = pos_y;
 			me.previousValue = me.scrollPos;
 		}
-	}
-	else
-	{
+	} else {
 		// continue doing that while dragging (even when dragging outside). When releasing, forward the click to the then selected item.
 		me.pressed = 2;
 		// an item has been clicked. Select it, ...
@@ -160,23 +150,19 @@ float mousePressListBox(entity me, vector pos)
 	}
 	return 1;
 }
-float mouseReleaseListBox(entity me, vector pos)
-{
+
+float(entity me, vector pos) gui_listbox_mouse_release {
 	vector absSize;
-	if(me.pressed == 1)
-	{
+	if (me.pressed == 1) {
 		// slider dragging mode
 		// in that case, nothing happens on releasing
-	}
-	else if(me.pressed == 2)
-	{
+	} else if (me.pressed == 2) {
 		me.pressed = 3; // do that here, so setSelected can know the mouse has been released
 		// item dragging mode
 		// select current one one last time...
 		me.setSelected(me, floor((me.scrollPos + pos_y) / me.itemHeight));
 		// and give it a nice click event
-		if(me.nItems > 0)
-		{
+		if (me.nItems > 0) {
 			absSize = gui_box_to_global_size(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
 			me.clickListBoxItem(me, me.selectedItem, gui_global_to_box(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight), 0);
 		}
@@ -184,37 +170,33 @@ float mouseReleaseListBox(entity me, vector pos)
 	me.pressed = 0;
 	return 1;
 }
-float mouseDoubleClickListBox(entity me, vector pos) {
+
+float(entity me, vector pos) gui_listbox_mouse_doubleclick {
 	if (me.pressed == 2) {
 		me.clickListBoxItem(me, me.selectedItem, gui_global_to_box(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight), 1);
 		return 1;
 	}
 	return 0;
 }
-void updateControlTopBottomListBox(entity me)
-{
+
+void(entity me) gui_listbox_control_topbottom_update {
 	float f;
 	// scrollPos is in 0..1 and indicates where the "page" currently shown starts.
-	if(me.nItems * me.itemHeight <= 1)
-	{
+	if (me.nItems * me.itemHeight <= 1) {
 		// we don't need no stinkin' scrollbar, we don't need no view control...
 		me.controlTop = 0;
 		me.controlBottom = 1;
 		me.scrollPos = 0;
-	}
-	else
-	{
-		if(frametime) // only do this in draw frames
-		{
-			if(me.dragScrollTimer < time)
-			{
+	} else {
+		if (frametime) { // only do this in draw frames
+			if (me.dragScrollTimer < time) {
 				float save;
 				save = me.scrollPos;
 				// if selected item is below listbox, increase scrollpos so it is in
 				me.scrollPos = max(me.scrollPos, me.selectedItem * me.itemHeight - 1 + me.itemHeight);
 				// if selected item is above listbox, decrease scrollpos so it is in
 				me.scrollPos = min(me.scrollPos, me.selectedItem * me.itemHeight);
-				if(me.scrollPos != save)
+				if (me.scrollPos != save)
 					me.dragScrollTimer = time + 0.2;
 			}
 		}
@@ -228,8 +210,7 @@ void updateControlTopBottomListBox(entity me)
 		float fmin;
 		fmin = 1 * me.controlWidth / me.size_y * me.size_x;
 		f = me.controlBottom - me.controlTop;
-		if(f < fmin) // FIXME good default?
-		{
+		if (f < fmin) { // FIXME good default?
 			// f * X + 1 * (1-X) = fmin
 			// (f - 1) * X + 1 = fmin
 			// (f - 1) * X = fmin - 1
@@ -240,25 +221,24 @@ void updateControlTopBottomListBox(entity me)
 		}
 	}
 }
-void drawListBox(entity me)
-{
+
+void(entity me) gui_listbox_draw {
 	float i;
 	vector absSize;
 	vector oldshift, oldscale;
-	if(me.pressed == 2)
+	if (me.pressed == 2)
 		me.mouseDrag(me, me.dragScrollPos); // simulate mouseDrag event
+
 	me.updateControlTopBottom(me);
-	if(me.controlWidth)
-	{
+	if (me.controlWidth) {
 		gui_draw_button_picture_vertical(eX * (1 - me.controlWidth), strcat(me.src, "_s"), eX * me.controlWidth + eY, me.color2, 1);
-		if(me.nItems * me.itemHeight > 1)
-		{
+		if (me.nItems * me.itemHeight > 1) {
 			vector o, s;
 			o = eX * (1 - me.controlWidth) + eY * me.controlTop;
 			s = eX * me.controlWidth + eY * (me.controlBottom - me.controlTop);
-			if(me.pressed == 1)
+			if (me.pressed == 1)
 				gui_draw_button_picture_vertical(o, strcat(me.src, "_c"), s, me.colorC, 1);
-			else if(me.focused)
+			else if (me.focused)
 				gui_draw_button_picture_vertical(o, strcat(me.src, "_f"), s, me.colorF, 1);
 			else
 				gui_draw_button_picture_vertical(o, strcat(me.src, "_n"), s, me.color, 1);
@@ -274,12 +254,13 @@ void drawListBox(entity me)
 	if (cvar("utf8_oldfont_for_oldchars"))
 	if (cvar("font3_is_unicode_compat"))
 		drawfont = FONT_USER + 0;
-	for(i = floor(me.scrollPos / me.itemHeight); i < me.nItems; ++i)
-	{
+
+	for (i = floor(me.scrollPos / me.itemHeight); i < me.nItems; ++i) {
 		float y;
 		y = i * me.itemHeight - me.scrollPos;
-		if(y >= 1)
+		if (y >= 1)
 			break;
+
 		gui_draw_shift = gui_box_to_global(eY * y, oldshift, oldscale);
 		gui_draw_scale = gui_box_to_global_size(eY * me.itemHeight + eX * (1 - me.controlWidth), oldscale);
 		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
@@ -287,11 +268,11 @@ void drawListBox(entity me)
 	drawfont = odf;
 	gui_draw_clip_clear();
 }
-void clickListBoxItemListBox(entity me, float i, vector where, float doubleclick)
-{
+
+void(entity me, float i, vector where, float doubleclick) gui_listbox_item_click {
 	// itemclick, itemclick, does whatever itemclick does
 }
-void drawListBoxItemListBox(entity me, float i, vector absSize, float selected)
-{
+
+void(entity me, float i, vector absSize, float selected) gui_listbox_item_draw {
 	gui_draw_text('0 0 0', strcat("Item ", ftos(i)), eX * (8 / absSize_x) + eY * (8 / absSize_y), (selected ? '0 1 0' : '1 1 1'), 1, 0);
 }

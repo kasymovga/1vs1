@@ -31,7 +31,7 @@ void(entity input, entity ignore) nexuizServerCreateTabPINCodeOnChange {
 	float i, n = strlen(input.text);
 	for (i = 0; i < n; i++) {
 		if (strstrofs("0123456789", str_sub(input.text, i, 1), 0) < 0) {
-				setTextInputBox(input, strcat(str_sub(input.text, 0, i), str_sub(input.text, i + 1, -1)));
+				gui_inputbox_set(input, strcat(str_sub(input.text, 0, i), str_sub(input.text, i + 1, -1)));
 				n = strlen(input.text);
 				i--;
 		}
@@ -143,14 +143,14 @@ void(entity me) rexuiz_gui_tab_multiplayer_create_fill {
 		gui_make_multi(e, "g_dom_teams g_kh_teams");
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("Mutators..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
+			e.onClick = gui_modalcontroller_open_click;
 			e.onClickEntity = main.mutatorsDialog;
 		me.TD(me, 1, 2, e = gui_rexuiz_textlabel_make(0, NULL));
 			e.textEntity = main.mutatorsDialog;
 			e.allowCut = 1;
 	me.TR(me);
 		me.TD(me, 1, 1, e = gui_rexuiz_button_make(_("Old mutators..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
+			e.onClick = gui_modalcontroller_open_click;
 			e.onClickEntity = main.oldMutatorsDialog;
 		me.TD(me, 1, 2, e = gui_rexuiz_textlabel_make(0, NULL));
 			e.textEntity = main.oldMutatorsDialog;

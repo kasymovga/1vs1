@@ -172,7 +172,7 @@ void(entity me) gui_rexuiz_tab_settings_game_fill {
 		me.TD(me, 1, 2, sl);
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = gui_rexuiz_button_make(_("Weapon settings..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
+			e.onClick = gui_modalcontroller_open_click;
 			e.onClickEntity = main.weaponsDialog;
 		me.TD(me, 1, 2, e0 = gui_rexuiz_textlabel_make(0, NULL));
 			e0.textEntity = main.weaponsDialog;
@@ -222,7 +222,7 @@ void(entity me) gui_rexuiz_tab_settings_game_fill {
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 2.2, e = gui_rexuiz_button_make(_("HUD & Waypoints..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
+			e.onClick = gui_modalcontroller_open_click;
 			e.onClickEntity = main.hudDialog;
 		me.TDempty(me, 0.5);
 	me.TR(me);

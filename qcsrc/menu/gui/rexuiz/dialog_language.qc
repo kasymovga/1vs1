@@ -57,6 +57,6 @@ void(entity me) gui_rexuiz_dialog_language_fill {
 		e.fontSize = e.fontSize * 0.6;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = gui_rexuiz_button_make(_("Close"), '0 0 0'));
-			e.onClick = DialogCloseButton_Click;
+			e.onClick = gui_modalcontroller_close_click;
 			e.onClickEntity = me;
 }

@@ -102,7 +102,7 @@ void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSi
 				e.resizeNotify(e, o, s, gui_box_to_global(o, absOrigin, absSize), gui_box_to_global_size(s, absSize));
 			}
 	} while (d);
-	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+	gui_item_resize(me, relOrigin, relSize, absOrigin, absSize);
 }
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_container_resize {

@@ -1,14 +1,24 @@
+void(entity me, string theText, float theCursorPos, float theFontSize, string gfx) gui_inputbox_configure;
+void(entity me, string txt) gui_inputbox_set;
+float(entity me, vector pos) gui_inputbox_mouse_drag;
+float(entity me, vector pos) gui_inputbox_mouse_press;
+float(entity me, vector pos) gui_inputbox_mouse_release;
+void(entity me, string ch) gui_inputbox_enter_text;
+float(entity me, float key, float ascii, float shift) gui_inputbox_key_down;
+void(entity me) gui_inputbox_draw;
+void(entity me) gui_inputbox_show;
+
 entity(void) gui_inputbox_spawn {
 	entity me; me = gui_label_spawn();
-	me.configureInputBox = configureInputBoxInputBox;
-	me.draw = drawInputBox;
-	me.setText = setTextInputBox;
-	me.enterText = enterTextInputBox;
-	me.keyDown = keyDownInputBox;
-	me.mouseRelease = mouseReleaseInputBox;
-	me.mousePress = mousePressInputBox;
-	me.mouseDrag = mouseDragInputBox;
-	me.showNotify = showNotifyInputBox;
+	me.configureInputBox = gui_inputbox_configure;
+	me.draw = gui_inputbox_draw;
+	me.setText = gui_inputbox_set;
+	me.enterText = gui_inputbox_enter_text;
+	me.keyDown = gui_inputbox_key_down;
+	me.mouseRelease = gui_inputbox_mouse_release;
+	me.mousePress = gui_inputbox_mouse_press;
+	me.mouseDrag = gui_inputbox_mouse_drag;
+	me.showNotify = gui_inputbox_show;
 	me.src = NULL;
 	me.cursorPos = 0; // characters
 	me.scrollPos = 0; // widths
@@ -26,24 +36,23 @@ entity(void) gui_inputbox_spawn {
 	me.classname = "InputBox";
 	return me;
 }
-void InputBox_Clear_Click(entity btn, entity me);
-void configureInputBoxInputBox(entity me, string theText, float theCursorPos, float theFontSize, string gfx)
-{
-	configureLabelLabel(me, theText, theFontSize, 0.0);
+
+void(entity me, string theText, float theCursorPos, float theFontSize, string gfx) gui_inputbox_configure {
+	gui_label_configure(me, theText, theFontSize, 0.0);
 	me.src = gfx;
 	me.cursorPos = theCursorPos;
 }
-void setTextInputBox(entity me, string txt)
-{
+
+void(entity me, string txt) gui_inputbox_set {
 	str_unzone_ifneeded(me.text);
-	setTextLabel(me, str_zone_ifneeded(txt));
+	gui_label_set(me, str_zone_ifneeded(txt));
 }
-void InputBox_Clear_Click(entity btn, entity me)
-{
+
+void(entity btn, entity me) InputBox_Clear_Click {
 	me.setText(me, "");
 }
-float mouseDragInputBox(entity me, vector pos)
-{
+
+float(entity me, vector pos) gui_inputbox_mouse_drag {
 	float p;
 	me.dragScrollPos = pos;
 	p = me.scrollPos + pos_x - me.keepspaceLeft;
@@ -51,78 +60,78 @@ float mouseDragInputBox(entity me, vector pos)
 	me.lastChangeTime = time;
 	return 1;
 }
-float mousePressInputBox(entity me, vector pos)
-{
+
+float(entity me, vector pos) gui_inputbox_mouse_press {
 	me.dragScrollTimer = time;
 	me.pressed = 1;
-	return mouseDragInputBox(me, pos);
+	return gui_inputbox_mouse_drag(me, pos);
 }
-float mouseReleaseInputBox(entity me, vector pos)
-{
+
+float(entity me, vector pos) gui_inputbox_mouse_release {
 	me.pressed = 0;
-	return mouseDragInputBox(me, pos);
+	return gui_inputbox_mouse_drag(me, pos);
 }
-void enterTextInputBox(entity me, string ch)
-{
+
+void(entity me, string ch) gui_inputbox_enter_text {
 	float i;
-	for(i = 0; i < strlen(ch); ++i)
-		if(strstrofs(me.forbiddenCharacters, str_sub(ch, i, 1), 0) > -1)
+	for (i = 0; i < strlen(ch); ++i)
+		if (strstrofs(me.forbiddenCharacters, str_sub(ch, i, 1), 0) > -1)
 			return;
-	if(strlen(ch) + strlen(me.text) > me.maxLength)
+
+	if (strlen(ch) + strlen(me.text) > me.maxLength)
 		return;
+
 	me.setText(me, strcat(str_sub(me.text, 0, me.cursorPos), ch, str_sub(me.text, me.cursorPos, strlen(me.text) - me.cursorPos)));
 	me.cursorPos = me.cursorPos + strlen(ch);
 }
-float keyDownInputBox(entity me, float key, float ascii, float shift)
-{
+
+float(entity me, float key, float ascii, float shift) gui_inputbox_key_down {
 	me.lastChangeTime = time;
 	me.dragScrollTimer = time;
-	if(ascii >= 32 && ascii != 127)
-	{
+	if (ascii >= 32 && ascii != 127) {
 		me.enterText(me, ctos(ascii));
 		return 1;
 	}
-	switch(key)
-	{
-		case VM_K_LEFTARROW:
+	switch(key) {
+	case VM_K_LEFTARROW:
+		me.cursorPos -= 1;
+		return 1;
+	case VM_K_RIGHTARROW:
+		me.cursorPos += 1;
+		return 1;
+	case VM_K_HOME:
+		me.cursorPos = 0;
+		return 1;
+	case VM_K_END:
+		me.cursorPos = strlen(me.text);
+		return 1;
+	case VM_K_BACKSPACE:
+		if(me.cursorPos > 0)
+		{
 			me.cursorPos -= 1;
-			return 1;
-		case VM_K_RIGHTARROW:
-			me.cursorPos += 1;
-			return 1;
-		case VM_K_HOME:
-			me.cursorPos = 0;
-			return 1;
-		case VM_K_END:
-			me.cursorPos = strlen(me.text);
-			return 1;
-		case VM_K_BACKSPACE:
-			if(me.cursorPos > 0)
-			{
-				me.cursorPos -= 1;
-				me.setText(me, strcat(str_sub(me.text, 0, me.cursorPos), str_sub(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
-			}
-			return 1;
-		case VM_K_DEL:
-			if(shift & GUI_KEY_STATE_CTRL)
-				me.setText(me, "");
-			else
-				me.setText(me, strcat(str_sub(me.text, 0, me.cursorPos), str_sub(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
-			return 1;
+			me.setText(me, strcat(str_sub(me.text, 0, me.cursorPos), str_sub(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
+		}
+		return 1;
+	case VM_K_DEL:
+		if(shift & GUI_KEY_STATE_CTRL)
+			me.setText(me, "");
+		else
+			me.setText(me, strcat(str_sub(me.text, 0, me.cursorPos), str_sub(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
+		return 1;
 	}
 	return 0;
 }
-void drawInputBox(entity me)
-{
+
+void(entity me) gui_inputbox_draw {
 	float cursorPosInWidths, totalSizeInWidths;
-	if(me.pressed)
+	if (me.pressed)
 		me.mouseDrag(me, me.dragScrollPos); // simulate mouseDrag event
+
 	me.focusable = !me.disabled;
-	if(me.disabled)
+	if (me.disabled)
 		gui_draw_alpha *= me.disabledAlpha;
-	if(me.src)
-	{
-		if(me.focused && !me.disabled)
+	if (me.src) {
+		if (me.focused && !me.disabled)
 			gui_draw_button_picture('0 0 0', strcat(me.src, "_f"), '1 1 0', me.colorF, 1);
 		else
 			gui_draw_button_picture('0 0 0', strcat(me.src, "_n"), '1 1 0', me.color, 1);
@@ -130,19 +139,17 @@ void drawInputBox(entity me)
 	me.cursorPos = bound(0, me.cursorPos, strlen(me.text));
 	cursorPosInWidths = gui_text_width(str_sub(me.text, 0, me.cursorPos), 0) * me.realFontSize_x;
 	totalSizeInWidths = gui_text_width(strcat(me.text, "_"), 0) * me.realFontSize_x;
-	if(me.dragScrollTimer < time)
-	{
+	if (me.dragScrollTimer < time) {
 		float save;
 		save = me.scrollPos;
 		me.scrollPos = bound(cursorPosInWidths - (0.875 - me.keepspaceLeft - me.keepspaceRight), me.scrollPos, cursorPosInWidths - 0.125);
-		if(me.scrollPos != save)
+		if (me.scrollPos != save)
 			me.dragScrollTimer = time + 0.2;
 	}
 	me.scrollPos = min(me.scrollPos, totalSizeInWidths - (1 - me.keepspaceRight - me.keepspaceLeft));
 	me.scrollPos = max(0, me.scrollPos);
 	gui_draw_set_clip_rect(eX * me.keepspaceLeft, eX * (1 - me.keepspaceLeft - me.keepspaceRight) + eY);
-	if(me.editColorCodes)
-	{
+	if (me.editColorCodes) {
 		string ch, ch2;
 		float i, n;
 		vector theColor;
@@ -154,79 +161,60 @@ void drawInputBox(entity me)
 		theColor = '1 1 1';
 		theAlpha = 1; //theVariableAlpha = 1; // changes when ^ax found
 		n = strlen(me.text);
-		for(i = 0; i < n; ++i)
-		{
+		for (i = 0; i < n; ++i) {
 			ch = str_sub(me.text, i, 1);
-			if(ch == "^")
-			{
+			if (ch == "^") {
 				float w;
 				ch2 = str_sub(me.text, i+1, 1);
 				w = gui_text_width(strcat(ch, ch2), 0) * me.realFontSize_x;
-				if(ch2 == "^")
-				{
+				if (ch2 == "^") {
 					gui_draw_fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
 					gui_draw_text(p + eX * 0.25 * w, "^", me.realFontSize, theColor, theAlpha, 0);
-				}
-				else if(ch2 == "0" || stof(ch2)) // digit?
-				{
-					switch(stof(ch2))
-					{
-						case 0: theColor = '0 0 0'; theAlpha = 1; break;
-						case 1: theColor = '1 0 0'; theAlpha = 1; break;
-						case 2: theColor = '0 1 0'; theAlpha = 1; break;
-						case 3: theColor = '1 1 0'; theAlpha = 1; break;
-						case 4: theColor = '0 0 1'; theAlpha = 1; break;
-						case 5: theColor = '0 1 1'; theAlpha = 1; break;
-						case 6: theColor = '1 0 1'; theAlpha = 1; break;
-						case 7: theColor = '1 1 1'; theAlpha = 1; break;
-						case 8: theColor = '1 1 1'; theAlpha = 0.5; break;
-						case 9: theColor = '0.5 0.5 0.5'; theAlpha = 1; break;
+				} else if(ch2 == "0" || stof(ch2)) { // digit?
+					switch(stof(ch2)) {
+					case 0: theColor = '0 0 0'; theAlpha = 1; break;
+					case 1: theColor = '1 0 0'; theAlpha = 1; break;
+					case 2: theColor = '0 1 0'; theAlpha = 1; break;
+					case 3: theColor = '1 1 0'; theAlpha = 1; break;
+					case 4: theColor = '0 0 1'; theAlpha = 1; break;
+					case 5: theColor = '0 1 1'; theAlpha = 1; break;
+					case 6: theColor = '1 0 1'; theAlpha = 1; break;
+					case 7: theColor = '1 1 1'; theAlpha = 1; break;
+					case 8: theColor = '1 1 1'; theAlpha = 0.5; break;
+					case 9: theColor = '0.5 0.5 0.5'; theAlpha = 1; break;
 					}
 					gui_draw_fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
 					gui_draw_text(p, strcat(ch, ch2), me.realFontSize, theColor, theAlpha, 0);
-				}
-				else if(ch2 == "x") // ^x found
-				{
+				} else if(ch2 == "x") { // ^x found
 					theColor = '1 1 1';
 					theTempColor = '0 0 0';
 					component = DIGIT_HEX_TO_DEC(str_sub(me.text, i+2, 1));
-					if (component >= 0) // ^xr found
-					{
+					if (component >= 0) { // ^xr found
 						theTempColor_x = component/15;
 						component = DIGIT_HEX_TO_DEC(str_sub(me.text, i+3, 1));
-						if (component >= 0) // ^xrg found
-						{
-						 theTempColor_y = component/15;
-						 component = DIGIT_HEX_TO_DEC(str_sub(me.text, i+4, 1));
-						 if (component >= 0) // ^xrgb found
-						 {
-						  theTempColor_z = component/15;
-						  theColor = theTempColor;
-						  w = gui_text_width(str_sub(me.text, i, 5), 0) * me.realFontSize_x;
-						  gui_draw_fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
-						  gui_draw_text(p, str_sub(me.text, i, 5), me.realFontSize, theColor, 1, 0); // theVariableAlpha instead of 1 using alpha tags ^ax
-						  i += 3;
-						 }
-						 else
-						 {
-						  // blue missing
-						  w = gui_text_width(str_sub(me.text, i, 4), 0) * me.realFontSize_x;
-						  gui_draw_fill(p, eX * w + eY * me.realFontSize_y, eZ, 0.5);
-						  gui_draw_text(p, str_sub(me.text, i, 4), me.realFontSize, '1 1 1', theAlpha, 0);
-						  i += 2;
-						 }
+						if (component >= 0) {
+							theTempColor_y = component/15;
+							component = DIGIT_HEX_TO_DEC(str_sub(me.text, i+4, 1));
+							if (component >= 0) { // ^xrgb found
+								theTempColor_z = component/15;
+								theColor = theTempColor;
+								w = gui_text_width(str_sub(me.text, i, 5), 0) * me.realFontSize_x;
+								gui_draw_fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
+								gui_draw_text(p, str_sub(me.text, i, 5), me.realFontSize, theColor, 1, 0); // theVariableAlpha instead of 1 using alpha tags ^ax
+								i += 3;
+							} else { // blue missing
+								w = gui_text_width(str_sub(me.text, i, 4), 0) * me.realFontSize_x;
+								gui_draw_fill(p, eX * w + eY * me.realFontSize_y, eZ, 0.5);
+								gui_draw_text(p, str_sub(me.text, i, 4), me.realFontSize, '1 1 1', theAlpha, 0);
+								i += 2;
+							}
+						} else { // green missing
+							w = gui_text_width(str_sub(me.text, i, 3), 0) * me.realFontSize_x;
+							gui_draw_fill(p, eX * w + eY * me.realFontSize_y, eY, 0.5);
+							gui_draw_text(p, str_sub(me.text, i, 3), me.realFontSize, '1 1 1', theAlpha, 0);
+							i += 1;
 						}
-						else
-						{
-						 // green missing
-						 w = gui_text_width(str_sub(me.text, i, 3), 0) * me.realFontSize_x;
-						 gui_draw_fill(p, eX * w + eY * me.realFontSize_y, eY, 0.5);
-						 gui_draw_text(p, str_sub(me.text, i, 3), me.realFontSize, '1 1 1', theAlpha, 0);
-						 i += 1;
-						}
-					}
-					else
-					{
+					} else {
 						// red missing
 						//w = gui_text_width(str_sub(me.text, i, 2), 0) * me.realFontSize_x;
 						gui_draw_fill(p, eX * w + eY * me.realFontSize_y, eX, 0.5);
@@ -262,8 +250,7 @@ void drawInputBox(entity me)
 						gui_draw_text(p, strcat(ch, ch2), me.realFontSize, theColor, 0.8, 0);
 					}
 				}*/
-				else
-				{
+				else {
 					gui_draw_fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
 					gui_draw_text(p, strcat(ch, ch2), me.realFontSize, theColor, theAlpha, 0);
 				}
@@ -274,15 +261,15 @@ void drawInputBox(entity me)
 			gui_draw_text(p, ch, me.realFontSize, theColor, theAlpha, 0); // TODO theVariableAlpha
 			p += eX * gui_text_width(ch, 0) * me.realFontSize_x;
 		}
-	}
-	else
+	} else
 		gui_draw_text(me.realOrigin - eX * me.scrollPos, me.text, me.realFontSize, '1 1 1', 1, 0);
-		// skipping drawLabel(me);
-	if(!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
+		// skipping gui_label_draw(me);
+	if (!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
 		gui_draw_text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), "_", me.realFontSize, '1 1 1', 1, 0);
+
 	gui_draw_clip_clear();
 }
-void showNotifyInputBox(entity me)
-{
+
+void(entity me) gui_inputbox_show {
 	me.focusable = !me.disabled;
 }

@@ -1,14 +1,12 @@
 entity(void) gui_image_spawn;
-void(entity, string) configureImageImage;
 .void(entity, string) configureImage;
-void(entity) drawImage;
 .void(entity) draw;
-string(entity) toStringImage;
 .string(entity) toString;
-void(entity, vector, vector, vector, vector) resizeNotifyImage;
 .void(entity, vector, vector, vector, vector) resizeNotify;
 .string src;
 .vector color;
 .float forcedAspect;
 .vector imgOrigin;
 .vector imgSize;
+void(entity me) gui_image_draw;
+void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_image_resize;

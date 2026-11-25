@@ -1,23 +1,13 @@
 entity(void) gui_modalcontroller_spawn;
-void(entity, vector, vector, vector, vector) resizeNotifyModalController;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-void(entity) drawModalController;
 .void(entity) draw;
-void(entity, entity, vector, vector, float) addItemModalController;
 .void(entity, entity, vector, vector, float) addItem;
-void(entity, entity, vector, vector, float) showChildModalController;
 .void(entity, entity, vector, vector, float) showChild;
-void(entity, entity, float) hideChildModalController;
 .void(entity, entity, float) hideChild;
-void(entity, float) hideAllModalController;
 .void(entity, float) hideAll;
-void(entity, entity, vector, vector, float) addItemModalController;
 .void(entity, entity, vector, vector, float) addItem;
-void(entity, entity, entity) addTabModalController;
 .void(entity, entity, entity) addTab;
-void(entity, entity) initializeDialogModalController;
 .void(entity, entity) initializeDialog;
-void(entity, entity, float, float) switchStateModalController;
 .void(entity, entity, float, float) switchState;
 .vector origin;
 .vector size;
@@ -28,7 +18,7 @@ void(entity, entity, float, float) switchStateModalController;
 .entity tabSelectingButton;
 .vector origin;
 .vector size;
-void TabButton_Click(entity button, entity tab); // assumes a button has set the above fields to its own absolute origin, its size, and the tab to activate
-void DialogOpenButton_Click(entity button, entity tab); // assumes a button has set the above fields to its own absolute origin, its size, and the tab to activate
-void DialogOpenButton_Click_withCoords(entity button, entity tab, vector theOrigin, vector theSize);
-void DialogCloseButton_Click(entity button, entity tab); // assumes a button has set the above fields to the tab to close
+void(entity button, entity tab) gui_modalcontroller_tab_click; // assumes a button has set the above fields to its own absolute origin, its size, and the tab to activate
+void(entity button, entity tab) gui_modalcontroller_open_click; // assumes a button has set the above fields to its own absolute origin, its size, and the tab to activate
+void(entity button, entity tab, vector theOrigin, vector theSize) gui_modalcontroller_origin_open_click;
+void(entity button, entity tab) gui_modalcontroller_close_click; // assumes a button has set the above fields to the tab to close

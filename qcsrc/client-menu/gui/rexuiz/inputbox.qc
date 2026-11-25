@@ -52,18 +52,18 @@ void(entity me) gui_rexuiz_inputbox_focus_leave {
 
 void(entity me, string new) gui_rexuiz_inputbox_set {
 	if (me.text != new) {
-		setTextInputBox(me, new);
+		gui_inputbox_set(me, new);
 		if (me.onChange)
 			me.onChange(me, me.onChangeEntity);
 	} else
-		setTextInputBox(me, new);
+		gui_inputbox_set(me, new);
 }
 
 void(entity me) gui_rexuiz_inputbox_load {
 	if not(me.cvarName)
 		return;
 
-	setTextInputBox(me, cvar_string(me.cvarName));
+	gui_inputbox_set(me, cvar_string(me.cvarName));
 }
 
 void(entity me) gui_rexuiz_inputbox_save {
@@ -84,7 +84,7 @@ float(entity me, float key, float ascii, float shift) gui_rexuiz_inputbox_key_do
 		if (me.onEnter)
 			me.onEnter(me, me.onEnterEntity);
 	}
-	if (keyDownInputBox(me, key, ascii, shift))
+	if (gui_inputbox_key_down(me, key, ascii, shift))
 		r = 1;
 
 	return r;

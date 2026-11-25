@@ -130,5 +130,5 @@ void drawNexuizCharmap(entity me)
 				gui_draw_picture(c, me.image2, '0.0625 0.1 0', '1 1 1', 1);
 		}
 	}
-	drawImage(me);
+	gui_image_draw(me);
 }

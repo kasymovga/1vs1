@@ -1,21 +1,12 @@
 entity(void) gui_inputcontainer_spawn;
-float(entity, float, float, float) keyDownInputContainer;
 .float(entity, float, float, float) keyDown;
-float(entity, vector) mouseMoveInputContainer;
 .float(entity, vector) mouseMove;
-float(entity, vector) mousePressInputContainer;
 .float(entity, vector) mousePress;
-float(entity, vector) mouseReleaseInputContainer;
 .float(entity, vector) mouseRelease;
-float(entity, vector) mouseDragInputContainer;
 .float(entity, vector) mouseDrag;
-void(entity) focusLeaveInputContainer;
 .void(entity) focusLeave;
-void(entity, vector, vector, vector, vector) resizeNotifyInputContainer;
 .void(entity, vector, vector, vector, vector) resizeNotify;
-float(entity, vector) _changeFocusXYInputContainer;
 .float(entity, vector) _changeFocusXY;
 .entity mouseFocusedChild;
 .float isTabRoot;
 .float instanceOfInputContainer;
-

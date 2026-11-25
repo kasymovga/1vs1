@@ -24,7 +24,7 @@ entity(void) gui_rexuiz_votelist_make {
 	return me;
 }
 void(entity me, float i) gui_rexuiz_votelist_select {
-	setSelectedListBox(me, i);
+	gui_listbox_select(me, i);
 	me.voteArgsList.setVoteType(me.voteArgsList, vote_commands[i]);
 	string s = strcat(vote_commands[i], " ");
 	me.textBox.setText(me.textBox, s);

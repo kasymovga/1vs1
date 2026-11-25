@@ -57,7 +57,7 @@ void(entity me) gui_rexuiz_tab_singleplayer_campaign_fill {
 		me.TD(me, 1, 0.7, gui_rexuiz_radiobutton_make(1, "menu_campaign_skill", "2", _("Hard")));
 		me.TD(me, 1, 0.7, gui_rexuiz_radiobutton_make(1, "menu_campaign_skill", "3", _("Insane")));
 		me.TD(me, 1, 1.5, e = gui_rexuiz_button_make(_("Load Game..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
+			e.onClick = gui_modalcontroller_open_click;
 			e.onClickEntity = main.saveLoadDialog;
 	gui_rexuiz_tab_singleplayer_campaign_switch(me.btnGame, me);
 	me.gotoRC(me, me.rows - 1, 0);

@@ -27,7 +27,7 @@ void(entity me, entity thOther) gui_checkbox_click {
 }
 
 string(entity me) gui_checkbox_to_string {
-	return strcat(toStringLabel(me), ", ", me.checked ? "checked" : "unchecked");
+	return strcat(gui_label_to_string(me), ", ", me.checked ? "checked" : "unchecked");
 }
 
 void(entity me, string txt, float sz, string gfx) gui_checkbox_configure {

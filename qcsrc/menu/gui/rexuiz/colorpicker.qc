@@ -165,7 +165,7 @@ float keyDownNexuizColorpicker(entity me, float key, float ascii, float shift)
 }
 void drawNexuizColorpicker(entity me)
 {
-	drawImage(me);
+	gui_image_draw(me);
 	float B, C, aC;
 	C = cvar("r_textcontrast");
 	B = cvar("r_textbrightness");

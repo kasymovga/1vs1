@@ -150,7 +150,7 @@ void(entity me) gui_rexuiz_serverlist_configure {
 void(entity me, float i) gui_rexuiz_serverlist_select {
 	float save;
 	save = me.selectedItem;
-	setSelectedListBox(me, i);
+	gui_listbox_select(me, i);
 	/*
 	if(me.selectedItem == save)
 		return;
@@ -292,7 +292,7 @@ void(entity me) gui_rexuiz_serverlist_draw {
 		}
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
-	drawListBox(me);
+	gui_listbox_draw(me);
 }
 
 void(entity btn, entity me) gui_rexuiz_serverlist_sort_ping_click {
@@ -459,7 +459,7 @@ void(entity btn, entity me) gui_rexuiz_serverlist_favorite_click {
 
 void(entity btn, entity me) gui_rexuiz_serverlist_info_click {
 	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
-	DialogOpenButton_Click(me, main.serverInfoDialog);
+	gui_modalcontroller_open_click(me, main.serverInfoDialog);
 }
 
 void(entity me, float i, vector where, float doubleclick) gui_rexuiz_serverlist_item_click {
@@ -528,14 +528,14 @@ float(entity me, float scan, float ascii, float shift) gui_rexuiz_serverlist_key
 		return 1;
 	} else if (scan == VM_K_MOUSE2 || scan == VM_K_SPACE) {
 		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
-		DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
+		gui_modalcontroller_origin_open_click(me, main.serverInfoDialog, org, sz);
 	} else if (scan == VM_K_INS || scan == VM_K_MOUSE3) {
 		i = me.selectedItem;
 		if (i < me.nItems) {
 			gui_rexuiz_serverlist_favorite_toggle(me.selectedServer);
 			me.ipAddressBoxFocused = -1;
 		}
-	} else if (keyDownListBox(me, scan, ascii, shift))
+	} else if (gui_listbox_key_down(me, scan, ascii, shift))
 		return 1;
 	else if (!me.controlledTextbox)
 		return 0;

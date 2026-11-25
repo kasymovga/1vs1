@@ -337,7 +337,7 @@ void(entity wnd) gui_activate_window {
 	if(par.instanceOfModalController) {
 		if (wnd.tabSelectingButton)
 			// tabs
-			TabButton_Click(wnd.tabSelectingButton, wnd);
+			gui_modalcontroller_tab_click(wnd.tabSelectingButton, wnd);
 		else
 			// root
 			par.initializeDialog(par, wnd);

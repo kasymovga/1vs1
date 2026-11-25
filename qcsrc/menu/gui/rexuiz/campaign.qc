@@ -120,7 +120,7 @@ void(entity me) gui_rexuiz_campaign_draw {
 	if (cvar(me.cvarName) != me.campaignIndex || cvar_string("g_campaign_name") != campaign_name)
 		me.loadCvars(me);
 
-	drawListBox(me);
+	gui_listbox_draw(me);
 }
 
 void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) gui_rexuiz_campaign_resize {
@@ -201,14 +201,14 @@ void(entity btn, entity me) gui_rexuiz_campaign_map_load {
 
 void(entity me, float i) gui_rexuiz_campaign_select {
 	// prevent too late items from being played
-	setSelectedListBox(me, min(i, me.campaignIndex));
+	gui_listbox_select(me, min(i, me.campaignIndex));
 }
 
 float(entity me, float scan, float ascii, float shift) gui_rexuiz_campaign_key_down {
 	if (scan == VM_K_ENTER || scan == VM_K_SPACE)
 		gui_rexuiz_campaign_map_load(me, me);
 	else
-		return keyDownListBox(me, scan, ascii, shift);
+		return gui_listbox_key_down(me, scan, ascii, shift);
 
 	return 1;
 }
