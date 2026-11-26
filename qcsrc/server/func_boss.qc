@@ -19,6 +19,17 @@ void(entity e) func_boss_volume_explode {
 	}
 }
 
+void(void) func_boss_touch {
+	if (self.solid != VM_SOLID_BSP) return;
+	if (other.flags & FLAG_PROJECTILE) return;
+	if not(other.iscreature) return;
+	if not(other.takedamage) return;
+	if (time >= other.triggerhurttime) {
+		other.triggerhurttime = time + 1;
+		damage(other, self, self, 50, WEAPON_MELEE, trace_endpos, '0 0 0');
+	}
+}
+
 void(string t) func_boss_controller_switch_target {
 	entity boss = self.enemy;
 	entity oldaiment = self.aiment;
@@ -333,6 +344,7 @@ void(void) spawnfunc_func_boss {
 	self.spawnorigin = self.origin;
 	self.reset = func_boss_reset;
 	self.reset();
+	self.touch = func_boss_touch;
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_boss_part_damage {
@@ -409,6 +421,7 @@ void(void) spawnfunc_func_boss_part {
 	self.spawnorigin = self.origin;
 	self.reset = func_boss_part_reset;
 	self.reset();
+	self.touch = func_boss_touch;
 }
 
 void(void) func_boss_shooter_reset {
