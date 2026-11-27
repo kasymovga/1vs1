@@ -60,3 +60,21 @@ void(void) serverlist_init {
 	SERVERLIST_URI_HANDLER = uri_register_handler(serverlist_callback);
 	serverlist_reload();
 }
+
+void(void) serverlist_fields_update {
+	SERVERLIST_FIELD_CNAME = gethostcacheindexforkey( "cname" );
+	SERVERLIST_FIELD_PING = gethostcacheindexforkey( "ping" );
+	SERVERLIST_FIELD_GAME = gethostcacheindexforkey( "game" );
+	SERVERLIST_FIELD_MOD = gethostcacheindexforkey( "mod" );
+	SERVERLIST_FIELD_MAP = gethostcacheindexforkey( "map" );
+	SERVERLIST_FIELD_NAME = gethostcacheindexforkey( "name" );
+	SERVERLIST_FIELD_MAXPLAYERS = gethostcacheindexforkey( "maxplayers" );
+	SERVERLIST_FIELD_NUMPLAYERS = gethostcacheindexforkey( "numplayers" );
+	SERVERLIST_FIELD_NUMHUMANS = gethostcacheindexforkey( "numhumans" );
+	SERVERLIST_FIELD_NUMBOTS = gethostcacheindexforkey( "numbots" );
+	SERVERLIST_FIELD_PROTOCOL = gethostcacheindexforkey( "protocol" );
+	SERVERLIST_FIELD_FREESLOTS = gethostcacheindexforkey( "freeslots" );
+	SERVERLIST_FIELD_PLAYERS = gethostcacheindexforkey( "players" );
+	SERVERLIST_FIELD_QCSTATUS = gethostcacheindexforkey( "qcstatus" );
+	SERVERLIST_FIELD_ISFAVORITE = gethostcacheindexforkey( "isfavorite" );
+}

@@ -11,7 +11,7 @@ void(entity me, float field, float direction) gui_rexuiz_serverlist_sort_order_s
 void(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc) gui_rexuiz_serverlist_sort_button_position;
 
 entity(void) gui_rexuiz_serverlist_spawn {
-	entity me; me = gui_rexuiz_listbox_spawn();
+	entity me = gui_rexuiz_listbox_spawn();
 	me.configureNexuizServerList = gui_rexuiz_serverlist_configure;
 	me.rowsPerItem = 1;
 	me.draw = gui_rexuiz_serverlist_draw;
@@ -57,40 +57,6 @@ entity(void) gui_rexuiz_serverlist_spawn {
 	me.ipAddressBoxFocused = -1;
 	me.classname = "NexuizServerList";
 	return me;
-}
-
-float SLIST_FIELD_CNAME;
-float SLIST_FIELD_PING;
-float SLIST_FIELD_GAME;
-float SLIST_FIELD_MOD;
-float SLIST_FIELD_MAP;
-float SLIST_FIELD_NAME;
-float SLIST_FIELD_MAXPLAYERS;
-float SLIST_FIELD_NUMPLAYERS;
-float SLIST_FIELD_NUMHUMANS;
-float SLIST_FIELD_NUMBOTS;
-float SLIST_FIELD_PROTOCOL;
-float SLIST_FIELD_FREESLOTS;
-float SLIST_FIELD_PLAYERS;
-float SLIST_FIELD_QCSTATUS;
-float SLIST_FIELD_ISFAVORITE;
-
-void(void) gui_rexuiz_serverlist_fields_update {
-	SLIST_FIELD_CNAME = gethostcacheindexforkey( "cname" );
-	SLIST_FIELD_PING = gethostcacheindexforkey( "ping" );
-	SLIST_FIELD_GAME = gethostcacheindexforkey( "game" );
-	SLIST_FIELD_MOD = gethostcacheindexforkey( "mod" );
-	SLIST_FIELD_MAP = gethostcacheindexforkey( "map" );
-	SLIST_FIELD_NAME = gethostcacheindexforkey( "name" );
-	SLIST_FIELD_MAXPLAYERS = gethostcacheindexforkey( "maxplayers" );
-	SLIST_FIELD_NUMPLAYERS = gethostcacheindexforkey( "numplayers" );
-	SLIST_FIELD_NUMHUMANS = gethostcacheindexforkey( "numhumans" );
-	SLIST_FIELD_NUMBOTS = gethostcacheindexforkey( "numbots" );
-	SLIST_FIELD_PROTOCOL = gethostcacheindexforkey( "protocol" );
-	SLIST_FIELD_FREESLOTS = gethostcacheindexforkey( "freeslots" );
-	SLIST_FIELD_PLAYERS = gethostcacheindexforkey( "players" );
-	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey( "qcstatus" );
-	SLIST_FIELD_ISFAVORITE = gethostcacheindexforkey( "isfavorite" );
 }
 
 float(string srv) gui_rexuiz_serverlist_is_favorite {
@@ -142,8 +108,8 @@ entity(void) gui_rexuiz_serverlist_make {
 }
 
 void(entity me) gui_rexuiz_serverlist_configure {
+	serverlist_fields_update();
 	me.configureNexuizListBox(me);
-	gui_rexuiz_serverlist_fields_update();
 	me.nItems = 0;
 }
 
@@ -158,11 +124,11 @@ void(entity me, float i) gui_rexuiz_serverlist_select {
 	if (me.nItems == 0)
 		return;
 
-	if (gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != me.nItems)
+	if (gethostcachevalue(VM_SLIST_HOSTCACHEVIEWCOUNT) != me.nItems)
 		return; // sorry, it would be wrong
 
 	str_unzone_ifneeded(me.selectedServer);
-	me.selectedServer = str_zone_ifneeded(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+	me.selectedServer = str_zone_ifneeded(gethostcachestring(SERVERLIST_FIELD_CNAME, me.selectedItem));
 	me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer);
 	me.ipAddressBox.cursorPos = strlen(me.selectedServer);
 	me.ipAddressBoxFocused = -1;
@@ -193,23 +159,23 @@ void(entity me, float mode) gui_rexuiz_serverlist_refresh {
 		} else
 			typestr = "";
 
-		m = SLIST_MASK_AND - 1;
+		m = VM_SLIST_MASK_AND - 1;
 		resethostcachemasks();
 		if (!me.filterShowFull)
-			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL);
+			sethostcachemasknumber(++m, SERVERLIST_FIELD_FREESLOTS, 1, VM_SLIST_TEST_GREATEREQUAL);
 
 		if (!me.filterShowEmpty)
-			sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
+			sethostcachemasknumber(++m, SERVERLIST_FIELD_NUMHUMANS, 1, VM_SLIST_TEST_GREATEREQUAL);
 
 		if (typestr != "")
-			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(typestr, ":"), SLIST_TEST_STARTSWITH);
+			sethostcachemaskstring(++m, SERVERLIST_FIELD_QCSTATUS, strcat(typestr, ":"), VM_SLIST_TEST_STARTSWITH);
 
-		m = SLIST_MASK_OR - 1;
+		m = VM_SLIST_MASK_OR - 1;
 		if (s != "") {
-			sethostcachemaskstring(++m, SLIST_FIELD_NAME, s, SLIST_TEST_CONTAINS);
-			sethostcachemaskstring(++m, SLIST_FIELD_MAP, s, SLIST_TEST_CONTAINS);
-			sethostcachemaskstring(++m, SLIST_FIELD_PLAYERS, s, SLIST_TEST_CONTAINS);
-			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(s, ":"), SLIST_TEST_STARTSWITH);
+			sethostcachemaskstring(++m, SERVERLIST_FIELD_NAME, s, VM_SLIST_TEST_CONTAINS);
+			sethostcachemaskstring(++m, SERVERLIST_FIELD_MAP, s, VM_SLIST_TEST_CONTAINS);
+			sethostcachemaskstring(++m, SERVERLIST_FIELD_PLAYERS, s, VM_SLIST_TEST_CONTAINS);
+			sethostcachemaskstring(++m, SERVERLIST_FIELD_QCSTATUS, strcat(s, ":"), VM_SLIST_TEST_STARTSWITH);
 		}
 		o = 2; // favorites first
 		if (me.currentSortOrder < 0)
@@ -241,7 +207,7 @@ void(entity me) gui_rexuiz_serverlist_focus_enter {
 void(entity me) gui_rexuiz_serverlist_draw {
 	float i, found, owned;
 	if (me.currentSortField == -1) {
-		me.setSortOrder(me, SLIST_FIELD_NUMHUMANS, -1);
+		me.setSortOrder(me, SERVERLIST_FIELD_NUMHUMANS, -1);
 		me.refreshServerList(me, 2);
 	} else if (me.needsRefresh == 1) {
 		me.needsRefresh = 2; // delay by one frame to make sure "slist" has been executed
@@ -250,7 +216,7 @@ void(entity me) gui_rexuiz_serverlist_draw {
 		me.refreshServerList(me, 0);
 	}
 	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
-	float n = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+	float n = gethostcachevalue(VM_SLIST_HOSTCACHEVIEWCOUNT);
 	if (me.nItems != n) {
 		me.nItems = n;
 		gui_rexuiz_serverlist_refresh(me, 0);
@@ -260,7 +226,7 @@ void(entity me) gui_rexuiz_serverlist_draw {
 	found = 0;
 	if (me.selectedServer) {
 		for (i = 0; i < me.nItems; ++i)
-			if (gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer) {
+			if (gethostcachestring(SERVERLIST_FIELD_CNAME, i) == me.selectedServer) {
 			if (i != me.selectedItem) {
 				me.selectedItem = i;
 			}
@@ -274,7 +240,7 @@ void(entity me) gui_rexuiz_serverlist_draw {
 				me.selectedItem = me.nItems - 1;
 
 			str_unzone_ifneeded(me.selectedServer);
-			me.selectedServer = str_zone_ifneeded(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+			me.selectedServer = str_zone_ifneeded(gethostcachestring(SERVERLIST_FIELD_CNAME, me.selectedItem));
 		}
 	if (owned) {
 		if (me.selectedServer != me.ipAddressBox.text) {
@@ -296,19 +262,19 @@ void(entity me) gui_rexuiz_serverlist_draw {
 }
 
 void(entity btn, entity me) gui_rexuiz_serverlist_sort_ping_click {
-	me.setSortOrder(me, SLIST_FIELD_PING, +1);
+	me.setSortOrder(me, SERVERLIST_FIELD_PING, +1);
 }
 
 void(entity btn, entity me) gui_rexuiz_serverlist_sort_name_click {
-	me.setSortOrder(me, SLIST_FIELD_NAME, -1); // why?
+	me.setSortOrder(me, SERVERLIST_FIELD_NAME, -1); // why?
 }
 
 void(entity btn, entity me) gui_rexuiz_serverlist_sort_map_click {
-	me.setSortOrder(me, SLIST_FIELD_MAP, -1); // why?
+	me.setSortOrder(me, SERVERLIST_FIELD_MAP, -1); // why?
 }
 
 void(entity btn, entity me) gui_rexuiz_serverlist_sort_player_click {
-	me.setSortOrder(me, SLIST_FIELD_NUMHUMANS, -1);
+	me.setSortOrder(me, SERVERLIST_FIELD_NUMHUMANS, -1);
 }
 
 void(entity btn, entity me) gui_rexuiz_serverlist_sort_type_click {
@@ -387,11 +353,11 @@ void(entity me, float field, float direction) gui_rexuiz_serverlist_sort_order_s
 
 	me.currentSortOrder = direction;
 	me.currentSortField = field;
-	me.sortButton1.forcePressed = (field == SLIST_FIELD_PING);
-	me.sortButton2.forcePressed = (field == SLIST_FIELD_NAME);
-	me.sortButton3.forcePressed = (field == SLIST_FIELD_MAP);
+	me.sortButton1.forcePressed = (field == SERVERLIST_FIELD_PING);
+	me.sortButton2.forcePressed = (field == SERVERLIST_FIELD_NAME);
+	me.sortButton3.forcePressed = (field == SERVERLIST_FIELD_MAP);
 	me.sortButton4.forcePressed = 0;
-	me.sortButton5.forcePressed = (field == SLIST_FIELD_NUMHUMANS);
+	me.sortButton5.forcePressed = (field == SERVERLIST_FIELD_NUMHUMANS);
 	me.selectedItem = 0;
 	str_unzone_ifneeded(me.selectedServer);
 	me.selectedServer = NULL;
@@ -458,7 +424,7 @@ void(entity btn, entity me) gui_rexuiz_serverlist_favorite_click {
 }
 
 void(entity btn, entity me) gui_rexuiz_serverlist_info_click {
-	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
+	me.onClickEntity.loadServerInfo(me.onClickEntity, me.selectedItem);
 	gui_modalcontroller_open_click(me, main.serverInfoDialog);
 }
 
@@ -476,14 +442,14 @@ void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_serverlist
 	if (isSelected)
 		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	if (gethostcachenumber(SLIST_FIELD_NUMPLAYERS, i) >= gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i))
+	if (gethostcachenumber(SERVERLIST_FIELD_NUMPLAYERS, i) >= gethostcachenumber(SERVERLIST_FIELD_MAXPLAYERS, i))
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
-	else if not(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
+	else if not(gethostcachenumber(SERVERLIST_FIELD_NUMHUMANS, i))
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
 	else
 		theAlpha = 1;
 
-	p = gethostcachenumber(SLIST_FIELD_PING, i);
+	p = gethostcachenumber(SERVERLIST_FIELD_PING, i);
 	if (p < 75)
 		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * (p / 75);
 	else if (p < 200)
@@ -495,17 +461,17 @@ void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_serverlist
 		theColor = eX;
 		theAlpha *= SKINALPHA_SERVERLIST_HIGHPING;
 	}
-	if (gethostcachenumber(SLIST_FIELD_ISFAVORITE, i)) {
+	if (gethostcachenumber(SERVERLIST_FIELD_ISFAVORITE, i)) {
 		theColor = theColor * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINCOLOR_SERVERLIST_FAVORITE * SKINALPHA_SERVERLIST_FAVORITE;
 		theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
 	}
 	s = ftos(p);
 	gui_draw_text(me.realUpperMargin * eY + (me.columnPingSize - gui_text_width(s, 0) * me.realFontSize_x) * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = gui_draw_text_shorten_to_width(gethostcachestring(SLIST_FIELD_NAME, i), me.columnNameSize / me.realFontSize_x, 0);
+	s = gui_draw_text_shorten_to_width(gethostcachestring(SERVERLIST_FIELD_NAME, i), me.columnNameSize / me.realFontSize_x, 0);
 	gui_draw_text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = gui_draw_text_shorten_to_width(gethostcachestring(SLIST_FIELD_MAP, i), me.columnMapSize / me.realFontSize_x, 0);
+	s = gui_draw_text_shorten_to_width(gethostcachestring(SERVERLIST_FIELD_MAP, i), me.columnMapSize / me.realFontSize_x, 0);
 	gui_draw_text(me.realUpperMargin * eY + (me.columnMapOrigin + (me.columnMapSize - gui_text_width(s, 0) * me.realFontSize_x) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
+	s = gethostcachestring(SERVERLIST_FIELD_QCSTATUS, i);
 	p = strstrofs(s, ":", 0);
 	if (p >= 0)
 		s = str_sub(s, 0, p);
@@ -514,7 +480,7 @@ void(entity me, float i, vector absSize, float isSelected) gui_rexuiz_serverlist
 
 	s = gui_draw_text_shorten_to_width(s, me.columnMapSize / me.realFontSize_x, 0);
 	gui_draw_text(me.realUpperMargin * eY + (me.columnTypeOrigin + (me.columnTypeSize - gui_text_width(s, 0) * me.realFontSize_x) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = strcat(ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i)), "/", ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i)));
+	s = strcat(ftos(gethostcachenumber(SERVERLIST_FIELD_NUMHUMANS, i)), "/", ftos(gethostcachenumber(SERVERLIST_FIELD_MAXPLAYERS, i)));
 	gui_draw_text(me.realUpperMargin * eY + (me.columnPlayersOrigin + (me.columnPlayersSize - gui_text_width(s, 0) * me.realFontSize_x) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 

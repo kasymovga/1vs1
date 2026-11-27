@@ -48,10 +48,11 @@ void(string theCommand) cmd { //called by engine
 
 		float f = fopen(s, FILE_WRITE);
 		if not(f < 0) {
-			float n = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+			float n = gethostcachevalue(VM_SLIST_HOSTCACHEVIEWCOUNT);
 			float i;
+			serverlist_fields_update();
 			for (i = 0; i < n; i++) {
-				fputs(f, strcat(gethostcachestring(SLIST_FIELD_CNAME, i), "//", gethostcachestring(SLIST_FIELD_NAME, i), "\n"));
+				fputs(f, strcat(gethostcachestring(SERVERLIST_FIELD_CNAME, i), "//", gethostcachestring(SERVERLIST_FIELD_NAME, i), "\n"));
 			}
 			fclose(f);
 		}
