@@ -143,7 +143,7 @@ void(entity me) gui_dialog_close {
 	if (me.parent.instanceOfNexposee) {
 		gui_nexposee_close_click(me, me.parent);
 	} else if(me.parent.instanceOfModalController) {
-		gui_modalcontroller_open_click(me, me);
+		gui_modalcontroller_close_click(me, me);
 	}
 }
 
